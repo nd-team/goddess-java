@@ -23,7 +23,6 @@ public class ProjectMeasureSummaryTO extends BaseTO {
     /**
      * 项目组
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "项目组不能为空")
     private String[] projects;
 
     /**
@@ -45,7 +44,7 @@ public class ProjectMeasureSummaryTO extends BaseTO {
      * 发送间隔
      */
     @NotNull(groups = {ADD.class, EDIT.class}, message = "发送间隔不能为空")
-    private Integer sendInterval;
+    private double sendInterval;
 
     /**
      * 发送时间格式
@@ -56,25 +55,37 @@ public class ProjectMeasureSummaryTO extends BaseTO {
     /**
      * 汇总间隔
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "汇总间隔不能为空")
     private Integer detailInterval;
 
     /**
      * 汇总时间格式
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "汇总时间格式不能为空")
     private CycleType detailCycle;
 
     /**
      * 发送对象
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "发送对象不能为空")
-    private String emails;
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "发送对象不能为空")
+    private String[] emails;
 
     /**
      * 状态
      */
     private Status status;
+
+    /**
+     * 地区数组
+     */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "汇总所需地址不能为空")
+    private String[] areas;
+
+    public String[] getAreas() {
+        return areas;
+    }
+
+    public void setAreas(String[] areas) {
+        this.areas = areas;
+    }
 
     public String[] getProjects() {
         return projects;
@@ -108,11 +119,11 @@ public class ProjectMeasureSummaryTO extends BaseTO {
         this.lastTime = lastTime;
     }
 
-    public Integer getSendInterval() {
+    public double getSendInterval() {
         return sendInterval;
     }
 
-    public void setSendInterval(Integer sendInterval) {
+    public void setSendInterval(double sendInterval) {
         this.sendInterval = sendInterval;
     }
 
@@ -140,11 +151,11 @@ public class ProjectMeasureSummaryTO extends BaseTO {
         this.detailCycle = detailCycle;
     }
 
-    public String getEmails() {
+    public String[] getEmails() {
         return emails;
     }
 
-    public void setEmails(String emails) {
+    public void setEmails(String[] emails) {
         this.emails = emails;
     }
 

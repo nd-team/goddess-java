@@ -73,6 +73,12 @@ public class ProjectPersonnelDemand extends BaseEntity {
     @Column(name = "overtimeLaborCost", nullable = false, columnDefinition = "INT(11) COMMENT '项目期间加班人工成本'")
     private Integer overtimeLaborCost;
 
+    /**
+     * 人工总成本
+     */
+    @Column(name = "totalCost", nullable = false, columnDefinition = "INT(11) COMMENT '人工总成本'")
+    private Integer totalCost;
+
 
     public String getProjectName() {
         return projectName;
@@ -144,5 +150,13 @@ public class ProjectPersonnelDemand extends BaseEntity {
 
     public void setOvertimeLaborCost(Integer overtimeLaborCost) {
         this.overtimeLaborCost = overtimeLaborCost;
+    }
+
+    public Integer getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(Integer totalCost) {
+        this.totalCost = totalCost;
     }
 }

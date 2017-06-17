@@ -25,6 +25,7 @@
 	<dubbo:reference validation="true" interface="com.bjike.goddess.projectmeasure.api.SingleProjectSingleUIAPI" id="singleProjectSingleUIApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.projectmeasure.api.CusPermissionAPI" id="cusPermissionApiImpl"></dubbo:reference>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.projectmeasure.api.CusPermissionOperateAPI" id="cusPermissionOperateApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.projectmeasure.api.ProjectOtherDemandAPI" id="projectOtherDemandApiImpl"/>
 
 
 	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
@@ -33,5 +34,6 @@
 	<dubbo:reference validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
 	<dubbo:reference validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
 	<dubbo:reference validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
-
+	<dubbo:reference validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+	<dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
 </beans>

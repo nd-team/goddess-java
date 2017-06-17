@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectmeasure.bo.MultipleProjectSingleUIBO;
 import com.bjike.goddess.projectmeasure.entity.MultipleProjectSingleUI;
 import com.bjike.goddess.projectmeasure.dto.MultipleProjectSingleUIDTO;
+import com.bjike.goddess.projectmeasure.excel.SonPermissionObject;
+import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.MultipleProjectSingleUITO;
 
 import java.util.List;
@@ -20,6 +22,18 @@ import java.util.List;
  */
 public interface MultipleProjectSingleUISer extends Ser<MultipleProjectSingleUI, MultipleProjectSingleUIDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 分页查询多项目单个界面
      *

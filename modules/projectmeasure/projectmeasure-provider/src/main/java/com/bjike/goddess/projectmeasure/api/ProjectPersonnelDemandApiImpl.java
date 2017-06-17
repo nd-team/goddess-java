@@ -6,6 +6,7 @@ import com.bjike.goddess.projectmeasure.bo.ProjectPersonnelDemandBO;
 import com.bjike.goddess.projectmeasure.dto.ProjectPersonnelDemandDTO;
 import com.bjike.goddess.projectmeasure.entity.ProjectPersonnelDemand;
 import com.bjike.goddess.projectmeasure.service.ProjectPersonnelDemandSer;
+import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.ProjectPersonnelDemandTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -94,5 +95,15 @@ public class ProjectPersonnelDemandApiImpl implements ProjectPersonnelDemandAPI 
     @Override
     public void update(ProjectPersonnelDemandTO to) throws SerException {
         projectPersonnelDemandSer.update(to);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return projectPersonnelDemandSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return projectPersonnelDemandSer.guidePermission(guidePermissionTO);
     }
 }

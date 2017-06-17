@@ -6,6 +6,7 @@ import com.bjike.goddess.projectmeasure.bo.SingleProjectMultipleUIBO;
 import com.bjike.goddess.projectmeasure.dto.SingleProjectMultipleUIDTO;
 import com.bjike.goddess.projectmeasure.entity.SingleProjectMultipleUI;
 import com.bjike.goddess.projectmeasure.service.SingleProjectMultipleUISer;
+import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.SingleProjectMultipleUITO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -94,5 +95,15 @@ public class SingleProjectMultipleUIApiImpl implements SingleProjectMultipleUIAP
     @Override
     public void update(SingleProjectMultipleUITO to) throws SerException {
         singleProjectMultipleUISer.update(to);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return singleProjectMultipleUISer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return singleProjectMultipleUISer.guidePermission(guidePermissionTO);
     }
 }

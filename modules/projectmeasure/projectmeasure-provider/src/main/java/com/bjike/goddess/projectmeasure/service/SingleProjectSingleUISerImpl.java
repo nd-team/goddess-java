@@ -7,8 +7,12 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectmeasure.bo.SingleProjectSingleUIBO;
 import com.bjike.goddess.projectmeasure.dto.SingleProjectSingleUIDTO;
 import com.bjike.goddess.projectmeasure.entity.SingleProjectSingleUI;
+import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.SingleProjectSingleUITO;
+import com.bjike.goddess.projectmeasure.type.GuideAddrStatus;
 import com.bjike.goddess.projectmeasure.type.ProjectCategory;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -34,20 +38,51 @@ public class SingleProjectSingleUISerImpl extends ServiceImpl<SingleProjectSingl
     @Autowired
     private CusPermissionSer cusPermissionSer;
 
+    @Autowired
+    private UserAPI userAPI;
+
     /**
      * 检查权限
      *
      * @throws SerException
      */
     private void checkPermission() throws SerException {
+        Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
         //商务模块权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("1");
-        if ( !permissionLevel) {
+
+        if( !"admin".equals( userName.toLowerCase())){
+            flag = cusPermissionSer.busCusPermission("1");
+        }else{
+            flag = true;
+        }
+        if ( !flag) {
             throw new SerException("您没有该操作权限");
         }
+
         RpcTransmit.transmitUserToken( userToken );
 
+    }
+
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException{
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser( );
+        RpcTransmit.transmitUserToken( userToken );
+        String userName = userBO.getUsername();
+        if( !"admin".equals( userName.toLowerCase())){
+            flag = cusPermissionSer.busCusPermission("1");
+        }else{
+            flag = true;
+        }
+        return flag;
     }
 
     /**
@@ -129,5 +164,53 @@ public class SingleProjectSingleUISerImpl extends ServiceImpl<SingleProjectSingl
     public void remove(String id) throws SerException {
         checkPermission();
         super.remove(id);
+    }
+
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken( userToken );
+        if( flagSee){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideSeeIdentity();
+                break;
+            case EDIT:
+                flag = guideSeeIdentity();
+                break;
+            case DELETE:
+                flag = guideSeeIdentity();
+                break;
+            case CONGEL:
+                flag = guideSeeIdentity();
+                break;
+            case THAW:
+                flag = guideSeeIdentity();
+                break;
+
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
     }
 }

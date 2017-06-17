@@ -4,7 +4,9 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.projectmeasure.type.CycleType;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 
@@ -24,7 +26,7 @@ public class ProjectMeasureSummary extends BaseEntity {
     /**
      * 项目组
      */
-    @Column(name = "projectGroups", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '项目组'")
+    @Column(name = "projectGroups",  columnDefinition = "VARCHAR(255) COMMENT '项目组'")
     private String projectGroups;
 
     /**
@@ -48,8 +50,8 @@ public class ProjectMeasureSummary extends BaseEntity {
     /**
      * 发送间隔
      */
-    @Column(name = "sendInterval", nullable = false, columnDefinition = "INT(11) COMMENT '发送间隔'")
-    private Integer sendInterval;
+    @Column(name = "sendInterval", nullable = false, columnDefinition = "DECIMAL(10,2) COMMENT '发送间隔'")
+    private double sendInterval;
 
     /**
      * 发送时间格式
@@ -60,20 +62,26 @@ public class ProjectMeasureSummary extends BaseEntity {
     /**
      * 汇总间隔
      */
-    @Column(name = "detailInterval", nullable = false, columnDefinition = "INT(11) COMMENT '汇总间隔'")
+    @Column(name = "detailInterval",  columnDefinition = "INT(11) COMMENT '汇总间隔'")
     private Integer detailInterval;
 
     /**
      * 汇总时间格式
      */
-    @Column(name = "detailCycle", nullable = false, columnDefinition = "TINYINT(2) COMMENT '汇总时间格式'")
+    @Column(name = "detailCycle",columnDefinition = "TINYINT(2) COMMENT '汇总时间格式'")
     private CycleType detailCycle;
 
     /**
      * 发送对象
      */
-    @Column(name = "emails", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '发送对象'")
+    @Column(name = "emails", nullable = false, columnDefinition = "MEDIUMTEXT COMMENT '发送对象'")
     private String emails;
+
+    /**
+     * 地区
+     */
+    @Column(name = "areas", nullable = false, columnDefinition = "TEXT COMMENT '地区'")
+    private String areas;
 
     /**
      * 状态
@@ -114,11 +122,11 @@ public class ProjectMeasureSummary extends BaseEntity {
         this.lastTime = lastTime;
     }
 
-    public Integer getSendInterval() {
+    public double getSendInterval() {
         return sendInterval;
     }
 
-    public void setSendInterval(Integer sendInterval) {
+    public void setSendInterval(double sendInterval) {
         this.sendInterval = sendInterval;
     }
 
@@ -160,5 +168,13 @@ public class ProjectMeasureSummary extends BaseEntity {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getAreas() {
+        return areas;
+    }
+
+    public void setAreas(String areas) {
+        this.areas = areas;
     }
 }
