@@ -1,13 +1,11 @@
 package com.bjike.goddess.customer.service;
 
 import com.bjike.goddess.common.api.dto.Restrict;
-import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.customer.api.CusPermissionAPI;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.bo.CustomerLevelBO;
 import com.bjike.goddess.customer.dto.CusFamilyMemberDTO;
@@ -30,7 +28,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -83,7 +84,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     public List<CustomerBaseInfoBO> listCustomerBaseInfo(CustomerBaseInfoDTO customerBaseInfoDTO) throws SerException {
         //列表权限
         Boolean permission = cusPermissionSer.getCusPermission("1");
-        if ( !permission) {
+        if (!permission) {
             throw new SerException("您的帐号没有权限");
         }
 
@@ -113,7 +114,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         String userToken = RpcTransmit.getUserToken();
         //商务模块添加权限
         Boolean permissionLevel = cusPermissionSer.busCusPermission("3");
-        if ( !permissionLevel) {
+        if (!permissionLevel) {
             throw new SerException("您不是商务模块的人员，不可以进行添加基本信息操作");
         }
 
@@ -144,11 +145,11 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
 
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public CustomerBaseInfoBO editCustomerBaseInfo(CustomerBaseInfoTO customerBaseInfoTO ) throws SerException {
+    public CustomerBaseInfoBO editCustomerBaseInfo(CustomerBaseInfoTO customerBaseInfoTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         //商务模块编辑权限
         Boolean permissionLevel = cusPermissionSer.busCusPermission("3");
-        if ( !permissionLevel) {
+        if (!permissionLevel) {
             throw new SerException("您不是商务模块的人员，不可以进行编辑基本信息操作");
         }
         //查一遍级别
@@ -183,7 +184,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         String userToken = RpcTransmit.getUserToken();
         //商务模块删除权限
         Boolean permissionLevel = cusPermissionSer.busCusPermission("3");
-        if ( !permissionLevel) {
+        if (!permissionLevel) {
             throw new SerException("您不是商务模块的人员，不可以进行删除基本信息操作");
         }
         RpcTransmit.transmitUserToken(userToken);
@@ -216,7 +217,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         String userToken = RpcTransmit.getUserToken();
         //商务模块冻结权限
         Boolean permissionLevel = cusPermissionSer.busCusPermission("3");
-        if ( !permissionLevel) {
+        if (!permissionLevel) {
             throw new SerException("您不是商务模块的人员，不可以进行冻结基本信息操作");
         }
         RpcTransmit.transmitUserToken(userToken);
@@ -238,7 +239,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         String userToken = RpcTransmit.getUserToken();
         //商务模块解冻权限
         Boolean permissionLevel = cusPermissionSer.busCusPermission("3");
-        if ( !permissionLevel) {
+        if (!permissionLevel) {
             throw new SerException("您不是商务模块的人员，不可以进行解冻基本信息操作");
         }
         RpcTransmit.transmitUserToken(userToken);
@@ -456,5 +457,13 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
 
 
         return customerNameList;
+    }
+
+    @Override
+    //chenjunhao
+    public List<CustomerBaseInfoBO> findByOriganizion(String origanizion) throws SerException {
+        CustomerBaseInfoDTO dto = new CustomerBaseInfoDTO();
+        dto.getConditions().add(Restrict.eq("origanizion", origanizion));
+        return BeanTransform.copyProperties(super.findByCis(dto), CustomerBaseInfoBO.class);
     }
 }

@@ -126,4 +126,13 @@ public interface SupplierInformationSer extends Ser<SupplierInformation, Supplie
         return null;
     }
 
+    /**
+     * chenjunhao
+     * 通过供应商名称查找
+     *
+     * @param name 供应商名称
+     * @return
+     * @throws SerException
+     */
+    List<SupplierInformationBO> findByName(String name) throws SerException;
 }

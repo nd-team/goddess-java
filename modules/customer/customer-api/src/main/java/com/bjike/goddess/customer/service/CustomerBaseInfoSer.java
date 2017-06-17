@@ -3,8 +3,8 @@ package com.bjike.goddess.customer.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
-import com.bjike.goddess.customer.entity.CustomerBaseInfo;
 import com.bjike.goddess.customer.dto.CustomerBaseInfoDTO;
+import com.bjike.goddess.customer.entity.CustomerBaseInfo;
 import com.bjike.goddess.customer.to.CustomerBaseInfoTO;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -20,7 +20,6 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CustomerBaseInfoSer extends Ser<CustomerBaseInfo, CustomerBaseInfoDTO> {
-
 
 
     /**
@@ -43,7 +42,6 @@ public interface CustomerBaseInfoSer extends Ser<CustomerBaseInfo, CustomerBaseI
 
     /**
      * 客户基本信息列表总条数
-     *
      */
     default Long countCustomerBaseInfo(CustomerBaseInfoDTO customerBaseInfoDTO) throws SerException {
         return null;
@@ -65,7 +63,7 @@ public interface CustomerBaseInfoSer extends Ser<CustomerBaseInfo, CustomerBaseI
      * @param customerBaseInfoTO 客户基本信息信息
      * @return class CustomerBaseInfoBO
      */
-    default CustomerBaseInfoBO editCustomerBaseInfo(CustomerBaseInfoTO customerBaseInfoTO ) throws SerException {
+    default CustomerBaseInfoBO editCustomerBaseInfo(CustomerBaseInfoTO customerBaseInfoTO) throws SerException {
         return null;
     }
 
@@ -136,7 +134,7 @@ public interface CustomerBaseInfoSer extends Ser<CustomerBaseInfo, CustomerBaseI
      * @param customerName 客户名
      * @return class CustomerBaseInfoBO
      */
-    default CustomerBaseInfoBO addMarketCustomerInfo(@NotBlank String customerName,String origanizion) throws SerException {
+    default CustomerBaseInfoBO addMarketCustomerInfo(@NotBlank String customerName, String origanizion) throws SerException {
         return null;
     }
 
@@ -147,7 +145,7 @@ public interface CustomerBaseInfoSer extends Ser<CustomerBaseInfo, CustomerBaseI
      * @param customerNum 客户编号
      * @return class CustomerBaseInfoBO
      */
-    default CustomerBaseInfoBO getCustomerInfoByNum( String customerNum) throws SerException {
+    default CustomerBaseInfoBO getCustomerInfoByNum(String customerNum) throws SerException {
         return null;
     }
 
@@ -160,4 +158,13 @@ public interface CustomerBaseInfoSer extends Ser<CustomerBaseInfo, CustomerBaseI
         return null;
     }
 
+    /**
+     * chenjunhao
+     * 通过组织机构名称查找
+     *
+     * @param origanizion 组织机构名称
+     * @return
+     * @throws SerException
+     */
+    List<CustomerBaseInfoBO> findByOriganizion(String origanizion) throws SerException;
 }

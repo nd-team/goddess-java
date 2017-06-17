@@ -29,6 +29,15 @@ dependencies {
     compile project(":common:common-jpa")
     compile project(":common:common-provider")
     compile project(":modules:businessinteraction:businessinteraction-api")
+    compile project(":modules:user:user-api")
+    compile project(":modules:organize:organize-api")
+    compile project(":modules:message:message-api")
+    compile project(":modules:competitormanage:competitormanage-api")
+    compile project(":modules:customer:customer-api")
+    compile project(":modules:market:market-api")
+    compile project(":modules:supplier:supplier-api")
+    compile project(":modules:capability:capability-api")
     compile project(":common:common-utils")
+
 }
 

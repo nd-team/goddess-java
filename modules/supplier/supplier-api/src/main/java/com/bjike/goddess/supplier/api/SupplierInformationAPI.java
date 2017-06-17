@@ -99,13 +99,13 @@ public interface SupplierInformationAPI {
 
     /**
      * 获取总条数
+     *
      * @return
      * @throws SerException
      */
-    default Long getTotal() throws SerException{
+    default Long getTotal() throws SerException {
         return null;
     }
-
 
     /**
      * 修改营业执照附件状态
@@ -134,4 +134,14 @@ public interface SupplierInformationAPI {
         return null;
     }
 
+
+    /**
+     * chenjunhao
+     * 通过供应商名称查找
+     *
+     * @param name 供应商名称
+     * @return
+     * @throws SerException
+     */
+    List<SupplierInformationBO> findByName(String name) throws SerException;
 }
