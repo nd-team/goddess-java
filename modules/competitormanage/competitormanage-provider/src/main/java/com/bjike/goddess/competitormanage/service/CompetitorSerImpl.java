@@ -146,4 +146,21 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
         }
     }
 
+    @Override
+    //chenjunhao
+    public List<CompetitorBO> findByBusinessType(String businessType) throws SerException {
+        CompetitorDTO dto = new CompetitorDTO();
+        dto.getConditions().add(Restrict.like("businessType", businessType));
+        List<Competitor> list = super.findByCis(dto);
+        return BeanTransform.copyProperties(list, CompetitorBO.class);
+    }
+
+    @Override
+    //chenjunhao
+    public List<CompetitorBO> findByOrganization(String organization) throws SerException {
+        CompetitorDTO dto = new CompetitorDTO();
+        dto.getConditions().add(Restrict.eq("organization", organization));
+        List<Competitor> list = super.findByCis(dto);
+        return BeanTransform.copyProperties(list, CompetitorBO.class);
+    }
 }

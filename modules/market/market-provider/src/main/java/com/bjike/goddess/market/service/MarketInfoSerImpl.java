@@ -143,7 +143,6 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
         }
         list.add(obj);
 
-
         Boolean flagSeeEmail = collectEmailSer.sonPermission();
         RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
@@ -158,6 +157,7 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
 
         return list;
     }
+
 
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
@@ -228,6 +228,7 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
         }
     }
 
+
     @Override
     public Long countMarketInfo(MarketInfoDTO marketInfoDTO) throws SerException {
         marketInfoDTO.getSorts().add("createTime=desc");
@@ -257,6 +258,10 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
     public MarketInfoBO insertMarketInfo(MarketInfoTO marketInfoTO) throws SerException {
         checkAddIdentity();
         checkDate(marketInfoTO);
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if (!permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
         MarketInfo marketInfo = BeanTransform.copyProperties(marketInfoTO, MarketInfo.class, true);
         try {
             //判断是否为有效信息
@@ -291,6 +296,10 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
                 customerBaseInfoAPI.addMarketCustomerInfo(customerBaseInfoBO.getCustomerName(), customerBaseInfoBO.getOriganizion());
             } else {*/
         checkAddIdentity();
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if (!permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
         MarketInfo marketInfo = super.findById(marketInfoTO.getId());
         checkDate(marketInfoTO);
         BeanTransform.copyProperties(marketInfoTO, marketInfo, true);
@@ -308,6 +317,10 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
     @Override
     public void removeMarketInfo(String id) throws SerException {
         checkAddIdentity();
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if (!permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
         try {
             super.remove(id);
         } catch (SerException e) {
@@ -340,4 +353,11 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
         return bytes;
     }
 
+    @Override
+    //chenjunhao
+    public List<MarketInfoBO> findByOriganizion(String origanizion) throws SerException {
+        MarketInfoDTO dto = new MarketInfoDTO();
+        dto.getConditions().add(Restrict.eq("origanizion", origanizion));
+        return BeanTransform.copyProperties(super.findByCis(dto), MarketInfoBO.class);
+    }
 }

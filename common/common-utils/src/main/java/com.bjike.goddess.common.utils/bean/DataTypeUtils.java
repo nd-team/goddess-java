@@ -1,5 +1,8 @@
 package com.bjike.goddess.common.utils.bean;
 
+import com.bjike.goddess.common.utils.date.DateUtil;
+import org.apache.commons.lang3.StringUtils;
+
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -53,20 +56,32 @@ public class DataTypeUtils {
                 obj = Boolean.valueOf(val);
                 break;
             case "LocalDateTime":
-                Date date = new Date(Long.valueOf(val));
-                Instant instant = date.toInstant();
-                ZoneId zoneId = ZoneId.systemDefault();
-                obj = LocalDateTime.ofInstant(instant, zoneId);
+                if (StringUtils.isNumeric(val)) {
+                    Date date = new Date(Long.valueOf(val));
+                    Instant instant = date.toInstant();
+                    ZoneId zoneId = ZoneId.systemDefault();
+                    obj = LocalDateTime.ofInstant(instant, zoneId);
+                } else {
+                    obj = DateUtil.parseDateTime(val);
+                }
                 break;
             case "LocalTime":
-                date = new Date(Long.valueOf(val));
-                obj = LocalTime.of(date.getHours(), date.getMinutes());
+                if (StringUtils.isNumeric(val)) {
+                    Date date = new Date(Long.valueOf(val));
+                    obj = LocalTime.of(date.getHours(), date.getMinutes());
+                } else {
+                    obj = DateUtil.parseTime(val);
+                }
                 break;
             case "LocalDate":
-                date = new Date(Long.valueOf(val));
-                instant = date.toInstant();
-                zoneId = ZoneId.systemDefault();
-                obj = LocalDateTime.ofInstant(instant, zoneId).toLocalDate();
+                if (StringUtils.isNumeric(val)) {
+                    Date date = new Date(Long.valueOf(val));
+                    Instant instant = date.toInstant();
+                    ZoneId zoneId = ZoneId.systemDefault();
+                    obj = LocalDateTime.ofInstant(instant, zoneId).toLocalDate();
+                } else {
+                    obj = DateUtil.parseDate(val);
+                }
                 break;
             default:
                 obj = String.valueOf(val);

@@ -78,5 +78,8 @@ public class MarketInfoApiImpl implements MarketInfoAPI {
         return marketInfoSer.exportExcel(dto);
     }
 
-
+    @Override
+    public List<MarketInfoBO> findByOriganizion(String origanizion) throws SerException {
+        return marketInfoSer.findByOriganizion(origanizion);
+    }
 }

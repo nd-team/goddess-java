@@ -11,6 +11,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectmeasure.api.SingleProjectSingleUIAPI;
 import com.bjike.goddess.projectmeasure.bo.SingleProjectSingleUIBO;
 import com.bjike.goddess.projectmeasure.dto.SingleProjectSingleUIDTO;
+import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.SingleProjectSingleUITO;
 import com.bjike.goddess.projectmeasure.vo.SingleProjectSingleUIVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,28 @@ public class SingleProjectSingleUIAct {
 
     @Autowired
     private SingleProjectSingleUIAPI singleProjectSingleUIAPI;
+
+    /**
+     * 功能导航权限
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = singleProjectSingleUIAPI.guidePermission(guidePermissionTO);
+            if(! isHasPermission ){
+                //int code, String msg
+                return new ActResult(0,"没有权限",false );
+            }else{
+                return new ActResult(0,"有权限",true );
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 根据id查询单个项目单个界面

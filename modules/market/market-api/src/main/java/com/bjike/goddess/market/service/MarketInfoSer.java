@@ -3,10 +3,10 @@ package com.bjike.goddess.market.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.market.bo.MarketInfoBO;
-import com.bjike.goddess.market.entity.MarketInfo;
 import com.bjike.goddess.market.dto.MarketInfoDTO;
 import com.bjike.goddess.market.excel.SonPermissionObject;
 import com.bjike.goddess.market.to.GuidePermissionTO;
+import com.bjike.goddess.market.entity.MarketInfo;
 import com.bjike.goddess.market.to.MarketInfoTO;
 
 import java.util.List;
@@ -35,16 +35,20 @@ public interface MarketInfoSer extends Ser<MarketInfo, MarketInfoDTO> {
         return null;
     }
     /**
-     *市场信息管理列表总条数
+     * 市场信息管理列表总条数
      */
     default Long countMarketInfo(MarketInfoDTO marketInfoDTO) throws SerException {
         return null;
     }
+
     /**
      * 一个市场信息管理
+     *
      * @return class MarketInfoBO
      */
-    default MarketInfoBO getOne(String id) throws SerException {return null;}
+    default MarketInfoBO getOne(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 市场信息
@@ -118,4 +122,13 @@ public interface MarketInfoSer extends Ser<MarketInfo, MarketInfoDTO> {
     byte[] exportExcel(MarketInfoDTO dto) throws SerException;
 
 
+    /**
+     * chenjunhao
+     * 通过组织机构名称查找
+     *
+     * @param origanizion 组织机构名称
+     * @return
+     * @throws SerException
+     */
+    List<MarketInfoBO> findByOriganizion(String origanizion) throws SerException;
 }

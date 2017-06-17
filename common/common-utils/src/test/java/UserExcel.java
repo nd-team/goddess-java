@@ -18,7 +18,7 @@ public class UserExcel {
     @ExcelHeader(name = "手机")
     private String phone  ;
     @ExcelHeader(name = "年龄")
-    private Integer sex ;
+    private Integer age ;
     @ExcelHeader(name = "创建时间")
     private LocalDateTime createTime;
     @ExcelHeader(name = "日期")
@@ -46,12 +46,12 @@ public class UserExcel {
         this.phone = phone;
     }
 
-    public Integer getSex() {
-        return sex;
+    public Integer getAge() {
+        return age;
     }
 
-    public void setSex(Integer sex) {
-        this.sex = sex;
+    public void setAge(Integer age) {
+        this.age = age;
     }
 
     public LocalDateTime getCreateTime() {

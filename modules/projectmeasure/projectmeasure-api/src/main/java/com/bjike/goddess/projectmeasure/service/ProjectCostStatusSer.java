@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectmeasure.bo.ProjectCostStatusBO;
 import com.bjike.goddess.projectmeasure.entity.ProjectCostStatus;
 import com.bjike.goddess.projectmeasure.dto.ProjectCostStatusDTO;
+import com.bjike.goddess.projectmeasure.excel.SonPermissionObject;
+import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.ProjectBasicInfoTO;
 import com.bjike.goddess.projectmeasure.to.ProjectCostStatusTO;
 
@@ -21,6 +23,18 @@ import java.util.List;
  */
 public interface ProjectCostStatusSer extends Ser<ProjectCostStatus, ProjectCostStatusDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 分页查询项目费用情况
      *

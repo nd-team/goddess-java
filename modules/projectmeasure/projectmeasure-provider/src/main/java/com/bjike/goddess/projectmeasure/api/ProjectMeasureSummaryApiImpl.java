@@ -7,6 +7,7 @@ import com.bjike.goddess.projectmeasure.bo.ProjectMeasureSummaryBO;
 import com.bjike.goddess.projectmeasure.dto.ProjectMeasureSummaryDTO;
 import com.bjike.goddess.projectmeasure.entity.ProjectMeasureSummary;
 import com.bjike.goddess.projectmeasure.service.ProjectMeasureSummarySer;
+import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.ProjectMeasureSummaryTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -130,5 +131,25 @@ public class ProjectMeasureSummaryApiImpl implements ProjectMeasureSummaryAPI {
     @Override
     public List<ProjectMeasureBO> summarize(String[] areas) throws SerException {
         return projectMeasureSummarySer.summarize(areas);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return projectMeasureSummarySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return projectMeasureSummarySer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public void checkSendEmail() throws SerException {
+        projectMeasureSummarySer.checkSendEmail();
+    }
+
+    @Override
+    public ProjectMeasureSummaryBO getOne(String id) throws SerException {
+        return projectMeasureSummarySer.getOne(id);
     }
 }

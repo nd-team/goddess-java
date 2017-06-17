@@ -6,6 +6,7 @@ import com.bjike.goddess.projectmeasure.bo.ProjectBasicInfoBO;
 import com.bjike.goddess.projectmeasure.dto.ProjectBasicInfoDTO;
 import com.bjike.goddess.projectmeasure.entity.ProjectBasicInfo;
 import com.bjike.goddess.projectmeasure.service.ProjectBasicInfoSer;
+import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.ProjectBasicInfoTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -105,5 +106,15 @@ public class ProjectBasicInfoApiImpl implements ProjectBasicInfoAPI {
     @Override
     public List<String> findAllProjectNames() throws SerException {
         return projectBasicInfoSer.findAllProjectNames();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return projectBasicInfoSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return projectBasicInfoSer.guidePermission(guidePermissionTO);
     }
 }

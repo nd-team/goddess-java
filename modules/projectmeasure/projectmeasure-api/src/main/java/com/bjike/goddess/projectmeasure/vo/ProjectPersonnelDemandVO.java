@@ -62,6 +62,11 @@ public class ProjectPersonnelDemandVO {
      */
     private Integer overtimeLaborCost;
 
+    /**
+     * 人工总成本
+     */
+    private Integer totalCost;
+
 
     public String getId() {
         return id;
@@ -141,5 +146,13 @@ public class ProjectPersonnelDemandVO {
 
     public void setOvertimeLaborCost(Integer overtimeLaborCost) {
         this.overtimeLaborCost = overtimeLaborCost;
+    }
+
+    public Integer getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(Integer totalCost) {
+        this.totalCost = totalCost;
     }
 }

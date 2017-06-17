@@ -98,4 +98,9 @@ public class CustomerBaseInfoApiImpl implements CustomerBaseInfoAPI {
     public List<String> getCustomerBaseInfoWorks() throws SerException {
         return customerBaseInfoSer.getCustomerBaseInfoWorks();
     }
+
+    @Override
+    public List<CustomerBaseInfoBO> findByOriganizion(String origanizion) throws SerException {
+        return customerBaseInfoSer.findByOriganizion(origanizion);
+    }
 }

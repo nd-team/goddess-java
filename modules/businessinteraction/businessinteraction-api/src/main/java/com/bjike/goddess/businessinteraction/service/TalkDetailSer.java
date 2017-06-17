@@ -2,6 +2,7 @@ package com.bjike.goddess.businessinteraction.service;
 
 import com.bjike.goddess.businessinteraction.bo.ContactObjectBO;
 import com.bjike.goddess.businessinteraction.bo.TalkDetailBO;
+import com.bjike.goddess.businessinteraction.to.GuidePermissionTO;
 import com.bjike.goddess.businessinteraction.to.TalkDetailTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -68,4 +69,16 @@ public interface TalkDetailSer extends Ser<TalkDetail, TalkDetailDTO> {
      */
     default List<ContactObjectBO> getContactWays(TalkDetailDTO talkDetailDTO ) throws SerException {return null;};
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

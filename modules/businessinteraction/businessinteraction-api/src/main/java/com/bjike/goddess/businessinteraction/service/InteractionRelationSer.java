@@ -1,6 +1,7 @@
 package com.bjike.goddess.businessinteraction.service;
 
 import com.bjike.goddess.businessinteraction.bo.InteractionRelationBO;
+import com.bjike.goddess.businessinteraction.to.GuidePermissionTO;
 import com.bjike.goddess.businessinteraction.to.InteractionRelationTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -80,5 +81,16 @@ public interface InteractionRelationSer extends Ser<InteractionRelation, Interac
      */
     default List<InteractionRelationBO> searchInteractionRelation(InteractionRelationDTO interactionRelationDTO) throws SerException {return null;}
 
-
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

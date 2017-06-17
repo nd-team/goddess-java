@@ -5,8 +5,6 @@ import com.bjike.goddess.projectmeasure.type.InvoiceForm;
 import com.bjike.goddess.projectmeasure.type.PaymentForm;
 import com.bjike.goddess.projectmeasure.type.RemitContent;
 
-import javax.persistence.Column;
-
 /**
  * 项目费用情况业务传输对象
  *
@@ -62,6 +60,16 @@ public class ProjectCostStatusBO extends BaseBO {
      * 需求费用
      */
     private Double demandCharge;
+
+    /**
+     * 回款形式
+     */
+    private RemitContent backForm;
+
+    /**
+     * 回款时间
+     */
+    private String backDate;
 
     /**
      * 其他
@@ -143,6 +151,22 @@ public class ProjectCostStatusBO extends BaseBO {
 
     public String getOther() {
         return other;
+    }
+
+    public RemitContent getBackForm() {
+        return backForm;
+    }
+
+    public void setBackForm(RemitContent backForm) {
+        this.backForm = backForm;
+    }
+
+    public String getBackDate() {
+        return backDate;
+    }
+
+    public void setBackDate(String backDate) {
+        this.backDate = backDate;
     }
 
     public void setOther(String other) {

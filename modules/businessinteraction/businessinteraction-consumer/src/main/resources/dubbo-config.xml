@@ -33,5 +33,5 @@
 	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.businessinteraction.api.CusPermissionAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.businessinteraction.api.CusPermissionOperateAPI" />
 
-
+	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
 </beans>

@@ -3,6 +3,7 @@ package com.bjike.goddess.projectmeasure.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectmeasure.bo.ProjectCostStatusBO;
 import com.bjike.goddess.projectmeasure.dto.ProjectCostStatusDTO;
+import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.ProjectCostStatusTO;
 import com.bjike.goddess.projectmeasure.to.ProjectCostStatusTO;
 
@@ -19,6 +20,18 @@ import java.util.List;
  */
 public interface ProjectCostStatusAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 根据id查询项目费用情况
      *

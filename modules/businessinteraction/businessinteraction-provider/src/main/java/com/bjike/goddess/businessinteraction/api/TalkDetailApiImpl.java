@@ -5,6 +5,7 @@ import com.bjike.goddess.businessinteraction.bo.TalkDetailBO;
 import com.bjike.goddess.businessinteraction.dto.TalkDetailDTO;
 import com.bjike.goddess.businessinteraction.entity.TalkDetail;
 import com.bjike.goddess.businessinteraction.service.TalkDetailSer;
+import com.bjike.goddess.businessinteraction.to.GuidePermissionTO;
 import com.bjike.goddess.businessinteraction.to.TalkDetailTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,5 +60,15 @@ public class TalkDetailApiImpl implements TalkDetailAPI {
     @Override
     public List<ContactObjectBO> getContactWays(TalkDetailDTO talkDetailDTO) throws SerException {
         return  talkDetailSer.getContactWays(talkDetailDTO);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return talkDetailSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return talkDetailSer.guidePermission(guidePermissionTO);
     }
 }

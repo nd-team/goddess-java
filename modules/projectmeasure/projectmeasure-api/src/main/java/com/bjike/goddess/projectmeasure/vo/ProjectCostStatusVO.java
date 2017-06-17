@@ -65,6 +65,16 @@ public class ProjectCostStatusVO {
     private Double demandCharge;
 
     /**
+     * 回款形式
+     */
+    private RemitContent backForm;
+
+    /**
+     * 回款时间
+     */
+    private String backDate;
+
+    /**
      * 其他
      */
     private String other;
@@ -148,6 +158,22 @@ public class ProjectCostStatusVO {
 
     public void setDemandCharge(Double demandCharge) {
         this.demandCharge = demandCharge;
+    }
+
+    public RemitContent getBackForm() {
+        return backForm;
+    }
+
+    public void setBackForm(RemitContent backForm) {
+        this.backForm = backForm;
+    }
+
+    public String getBackDate() {
+        return backDate;
+    }
+
+    public void setBackDate(String backDate) {
+        this.backDate = backDate;
     }
 
     public String getOther() {

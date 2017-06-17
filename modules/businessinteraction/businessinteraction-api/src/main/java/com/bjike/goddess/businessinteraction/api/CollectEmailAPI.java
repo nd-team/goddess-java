@@ -1,5 +1,6 @@
 package com.bjike.goddess.businessinteraction.api;
 
+import com.bjike.goddess.businessinteraction.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.businessinteraction.bo.CollectEmailBO;
 import com.bjike.goddess.businessinteraction.dto.CollectEmailDTO;
@@ -117,6 +118,23 @@ public interface CollectEmailAPI {
 
     ;
 
+    /**
+     * 定时器检测要发送的邮件
+     *
+     * @throws SerException
+     */
+    void checkSendEmail() throws SerException;
 
-
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }
