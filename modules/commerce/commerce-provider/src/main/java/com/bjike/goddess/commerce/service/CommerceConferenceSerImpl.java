@@ -6,10 +6,12 @@ import com.bjike.goddess.commerce.entity.CommerceConference;
 import com.bjike.goddess.commerce.to.CollectTO;
 import com.bjike.goddess.commerce.to.CommerceConferenceExcelTO;
 import com.bjike.goddess.commerce.to.CommerceConferenceTO;
+import com.bjike.goddess.commerce.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
@@ -48,8 +50,8 @@ public class CommerceConferenceSerImpl extends ServiceImpl<CommerceConference, C
 
     @Override
     public CommerceConferenceBO save(CommerceConferenceTO to) throws SerException {
-//        if (!cusPermissionSer.getCusPermission(manage))
-//            throw new SerException("您的帐号没有权限");
+        if (!cusPermissionSer.getCusPermission(manage))
+            throw new SerException("您的帐号没有权限");
         CommerceConference entity = BeanTransform.copyProperties(to, CommerceConference.class, true);
         entity.setType("商务会议");
         LocalDateTime[] times = {entity.getConferenceTime().withHour(0).withMinute(0).withSecond(0),
@@ -71,8 +73,8 @@ public class CommerceConferenceSerImpl extends ServiceImpl<CommerceConference, C
 
     @Override
     public CommerceConferenceBO update(CommerceConferenceTO to) throws SerException {
-//        if (!cusPermissionSer.getCusPermission(manage))
-//            throw new SerException("您的帐号没有权限");
+        if (!cusPermissionSer.getCusPermission(manage))
+            throw new SerException("您的帐号没有权限");
         CommerceConference entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("该数据不存在");
@@ -84,8 +86,8 @@ public class CommerceConferenceSerImpl extends ServiceImpl<CommerceConference, C
 
     @Override
     public CommerceConferenceBO congeal(String id) throws SerException {
-//        if (!cusPermissionSer.getCusPermission(manage))
-//            throw new SerException("您的帐号没有权限");
+        if (!cusPermissionSer.getCusPermission(manage))
+            throw new SerException("您的帐号没有权限");
         CommerceConference entity = super.findById(id);
         if (null == entity)
             throw new SerException("该数据不存在");
@@ -97,8 +99,8 @@ public class CommerceConferenceSerImpl extends ServiceImpl<CommerceConference, C
 
     @Override
     public CommerceConferenceBO getById(String id) throws SerException {
-//        if (!cusPermissionSer.getCusPermission(check))
-//            throw new SerException("您的帐号没有权限");
+        if (!cusPermissionSer.getCusPermission(check))
+            throw new SerException("您的帐号没有权限");
         CommerceConference entity = super.findById(id);
         if (null == entity)
             throw new SerException("该数据不存在");
@@ -107,8 +109,8 @@ public class CommerceConferenceSerImpl extends ServiceImpl<CommerceConference, C
 
     @Override
     public List<CommerceConferenceBO> maps(CommerceConferenceDTO dto) throws SerException {
-//        if (!cusPermissionSer.getCusPermission(check))
-//            throw new SerException("您的帐号没有权限");
+        if (!cusPermissionSer.getCusPermission(check))
+            throw new SerException("您的帐号没有权限");
         dto.getSorts().add("status=asc");
         dto.getSorts().add("conferenceTime=desc");
         List<CommerceConference> list = super.findByCis(dto);
@@ -117,16 +119,16 @@ public class CommerceConferenceSerImpl extends ServiceImpl<CommerceConference, C
 
     @Override
     public Long getTotal() throws SerException {
-//        if (!cusPermissionSer.getCusPermission(check))
-//            throw new SerException("您的帐号没有权限");
+        if (!cusPermissionSer.getCusPermission(check))
+            throw new SerException("您的帐号没有权限");
         CommerceConferenceDTO dto = new CommerceConferenceDTO();
         return super.count(dto);
     }
 
     @Override
     public void upload(List<CommerceConferenceExcelTO> list) throws SerException {
-//        if (!cusPermissionSer.getCusPermission(manage))
-//            throw new SerException("您的帐号没有权限");
+        if (!cusPermissionSer.getCusPermission(manage))
+            throw new SerException("您的帐号没有权限");
         for (int i = 1; i <= list.size(); i++) {
             CommerceConferenceExcelTO to = list.get(i - 1);
             if (null != this.findByNumber(to.getSerialNumber()))
@@ -138,8 +140,8 @@ public class CommerceConferenceSerImpl extends ServiceImpl<CommerceConference, C
 
     @Override
     public byte[] exportExcel(CollectTO to) throws SerException {
-//        if (!cusPermissionSer.getCusPermission(manage))
-//            throw new SerException("您的帐号没有权限");
+        if (!cusPermissionSer.getCusPermission(manage))
+            throw new SerException("您的帐号没有权限");
         List<CommerceConferenceBO> list = this.findByTime(to);
         if (null == list)
             throw new SerException("没有查询到数据");
@@ -178,6 +180,27 @@ public class CommerceConferenceSerImpl extends ServiceImpl<CommerceConference, C
             return null;
         else
             return BeanTransform.copyProperties(entity, CommerceConferenceBO.class);
+    }
 
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = cusPermissionSer.getCusPermission(check);
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAddSign = cusPermissionSer.getCusPermission(manage);
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj.setName("commerceconference");
+        obj.setDescribesion("商务会议");
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
     }
 }

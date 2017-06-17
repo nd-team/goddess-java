@@ -14,7 +14,10 @@ import com.bjike.goddess.projectissuehandle.enums.*;
  * @Copy: [ com.bjike ]
  */
 public class ProblemAcceptBO extends BaseBO {
-
+    /**
+     * 项目问题编号
+     */
+    private String projectNum;
     /**
      * 年份
      */
@@ -73,8 +76,7 @@ public class ProblemAcceptBO extends BaseBO {
     /**
      * 问题紧急程度
      */
-    private ProblemEmergencyDegree problemEmergencyDegree;
-
+    private String problemEmergencyDegree;
     /**
      * 问题处理时间
      */
@@ -85,6 +87,25 @@ public class ProblemAcceptBO extends BaseBO {
      */
     private AffectedDepartment affectedDepartment;
 
+
+    /**
+     * 创建时间
+     */
+    private String createTime;
+
+    /**
+     * 修改时间
+     */
+    private String modifyTime;
+
+
+    public String getProjectNum() {
+        return projectNum;
+    }
+
+    public void setProjectNum(String projectNum) {
+        this.projectNum = projectNum;
+    }
 
     public String getYear() {
         return year;
@@ -174,11 +195,11 @@ public class ProblemAcceptBO extends BaseBO {
         this.solution = solution;
     }
 
-    public ProblemEmergencyDegree getProblemEmergencyDegree() {
+    public String getProblemEmergencyDegree() {
         return problemEmergencyDegree;
     }
 
-    public void setProblemEmergencyDegree(ProblemEmergencyDegree problemEmergencyDegree) {
+    public void setProblemEmergencyDegree(String problemEmergencyDegree) {
         this.problemEmergencyDegree = problemEmergencyDegree;
     }
 
@@ -196,5 +217,21 @@ public class ProblemAcceptBO extends BaseBO {
 
     public void setAffectedDepartment(AffectedDepartment affectedDepartment) {
         this.affectedDepartment = affectedDepartment;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

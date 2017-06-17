@@ -3,12 +3,18 @@ package com.bjike.goddess.marketdevelopment.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.marketdevelopment.bo.MonthPlanBO;
 import com.bjike.goddess.marketdevelopment.bo.MonthPlanChoiceBO;
+import com.bjike.goddess.marketdevelopment.bo.MonthPlanExcelBO;
+import com.bjike.goddess.marketdevelopment.bo.YearPlanBO;
 import com.bjike.goddess.marketdevelopment.dto.MonthPlanDTO;
 import com.bjike.goddess.marketdevelopment.entity.MonthPlan;
 import com.bjike.goddess.marketdevelopment.entity.YearPlan;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.MonthPlanTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +69,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
         MonthPlanBO bo = BeanTransform.copyProperties(entity, MonthPlanBO.class);
         bo.setYearId(entity.getYear().getId());
         bo.setYearNumber(entity.getYear().getYear());
+        bo.setMonthValue(entity.getMonth().getValueString());
         bo.setType(entity.getYear().getType());
         bo.setWorkloadWeight(entity.getYear().getWorkloadWeight());
         bo.setCourse(entity.getYear().getCourse());
@@ -169,8 +176,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
 
     @Override
     public MonthPlanBO getById(String id) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketCheck)
-                && !marPermissionSer.getMarPermission(planManage) && !marPermissionSer.getMarPermission(planCheck))
+        if (!marPermissionSer.getMarPermission(planCheck))
             throw new SerException("您的帐号没有权限");
         try {
             return this.transformBO(super.findById(id));
@@ -202,4 +208,64 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
         }
         return choiceBOs;
     }
+
+    @Override
+    public List<MonthPlanBO> findByYearIds(String... ids) throws SerException {
+        MonthPlanDTO dto = new MonthPlanDTO();
+        dto.getConditions().add(Restrict.in("year.id", ids));
+        List<MonthPlan> list = super.findByCis(dto);
+        return this.transformBOList(list);
+    }
+
+    @Override
+    public List<MonthPlanBO> findByType(String type) throws SerException {
+        if (StringUtils.isBlank(type))
+            return new ArrayList<>(0);
+        List<YearPlanBO> yearPlanBOs = yearPlanSer.findByType(type);
+        if (yearPlanBOs == null || yearPlanBOs.size() == 0)
+            return new ArrayList<>(0);
+        List<MonthPlanBO> boList = this.findByYearIds(yearPlanBOs.stream()
+                .map(YearPlanBO::getId).collect(Collectors.toList())
+                .toArray(new String[0]));
+        return boList;
+    }
+
+    @Override
+    public byte[] exportExcel(CollectTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(planCheck))
+            throw new SerException("您的帐号没有权限");
+        List<MonthPlanBO> list;
+        if (StringUtils.isBlank(to.getType())) {
+            list = this.transformBOList(super.findAll());
+        } else {
+            list = this.findByType(to.getType());
+        }
+        list = list.stream()
+                .sorted(Comparator.comparing(MonthPlanBO::getYearNumber).thenComparing(MonthPlanBO::getMonth))
+                .collect(Collectors.toList());
+        List<MonthPlanExcelBO> boList = new ArrayList<>(0);
+        for (MonthPlanBO bo : list) {
+            MonthPlanExcelBO excelBO = new MonthPlanExcelBO();
+            BeanTransform.copyProperties(bo, excelBO, true);
+            excelBO.setMonthString(bo.getMonth().getValueString());
+            boList.add(excelBO);
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(boList, excel);
+        return bytes;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = marPermissionSer.getMarPermission(planCheck);
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = marPermissionSer.getMarPermission(planManage);
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

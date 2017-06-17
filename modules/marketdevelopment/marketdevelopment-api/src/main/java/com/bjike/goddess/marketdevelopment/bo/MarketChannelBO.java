@@ -19,7 +19,7 @@ public class MarketChannelBO extends BaseBO {
     private String type;
 
     /**
-     * 业务方向科目
+     * 业务对象
      */
     private String course;
 

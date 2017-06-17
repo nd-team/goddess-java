@@ -77,15 +77,6 @@ public interface BiddingInfoAPI {
 
     }
 
-    /**
-     * 导出
-     *
-     * @param projectName
-     * @throws SerException
-     */
-    default String exportExcel(String projectName) throws SerException {
-        return null;
-    }
 
     /**
      * 搜索
@@ -94,13 +85,6 @@ public interface BiddingInfoAPI {
      */
     default List<BiddingInfoBO> searchBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
         return null;
-    }
-    /**
-     * 上传
-     */
-    default void upload() throws SerException {
-        return;
-
     }
 
     /**
@@ -121,15 +105,15 @@ public interface BiddingInfoAPI {
     default List<String> getBiddingInfoCities() throws SerException {
         return null;
     }
-
     /**
-     * 发送邮件
+     * 导出Excel
      *
-     * @return class String
+     * @param dto
+     * @throws SerException
      */
-    default BiddingInfoBO sendBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {
-        return null;
-    }
+    byte[] exportExcel(BiddingInfoDTO dto) throws SerException;
+
+
 
 
 }

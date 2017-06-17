@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectissuehandle.bo.CollectBO;
 import com.bjike.goddess.projectissuehandle.bo.ProblemHandlingResultBO;
 import com.bjike.goddess.projectissuehandle.dto.ProblemHandlingResultDTO;
+import com.bjike.goddess.projectissuehandle.to.GuidePermissionTO;
 import com.bjike.goddess.projectissuehandle.to.ProblemHandlingResultTO;
 
 import java.util.List;
@@ -18,6 +19,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ProblemHandlingResultAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 确认问题处理结果列表总条数
      */
@@ -77,15 +90,6 @@ public interface ProblemHandlingResultAPI {
     }
 
     /**
-     * 导出
-     *
-     * @throws SerException
-     */
-    default String exportExcel(String internalProjectName, String projectType) throws SerException {
-        return null;
-    }
-
-    /**
      * 搜索
      *
      * @throws SerException
@@ -95,22 +99,11 @@ public interface ProblemHandlingResultAPI {
     }
 
     /**
-     * 汇总
-     *
-     * @param areas
-     * @return class CollectBO
+     * 导出Excel
+     * @param dto
+     * @throws SerException
      */
-    default List<CollectBO> collect(String[] areas) throws SerException {
-        return null;
-    }
+    byte[] exportExcel(ProblemHandlingResultDTO dto ) throws SerException;
 
-    /**
-     * 获取地区
-     *
-     * @return class String
-     */
-    default List<String> getArea() throws SerException {
-        return null;
-    }
 
 }

@@ -17,7 +17,11 @@ import javax.persistence.*;
 @Entity
 @Table(name = "projectissuehandle_involvedprocessingtask")
 public class InvolvedProcessingTask extends BaseEntity {
-
+    /**
+     * 项目问题编号
+     */
+    @Column(name = "projectNum", columnDefinition = "VARCHAR(255)   COMMENT '项目问题编号'")
+    private String projectNum;
     /**
      * 内部项目名称
      */
@@ -48,6 +52,13 @@ public class InvolvedProcessingTask extends BaseEntity {
     @Column(name = "actualCompletion",  columnDefinition = "VARCHAR(255)   COMMENT '实际完成情况'")
     private String actualCompletion;
 
+    public String getProjectNum() {
+        return projectNum;
+    }
+
+    public void setProjectNum(String projectNum) {
+        this.projectNum = projectNum;
+    }
 
     public String getInternalProjectName() {
         return internalProjectName;

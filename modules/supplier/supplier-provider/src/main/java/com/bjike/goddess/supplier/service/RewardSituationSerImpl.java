@@ -117,4 +117,10 @@ public class RewardSituationSerImpl extends ServiceImpl<RewardSituation, RewardS
         else
             return this.transformBO(entity);
     }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return supPermissionSer.getSupPermission(idFlag);
+    }
+
 }

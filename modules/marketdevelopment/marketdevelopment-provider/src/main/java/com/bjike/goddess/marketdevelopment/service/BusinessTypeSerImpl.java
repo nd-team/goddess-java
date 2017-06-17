@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.bo.BusinessTypeBO;
 import com.bjike.goddess.marketdevelopment.dto.BusinessTypeDTO;
@@ -118,4 +119,18 @@ public class BusinessTypeSerImpl extends ServiceImpl<BusinessType, BusinessTypeD
         List<BusinessType> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, BusinessTypeBO.class);
     }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = marPermissionSer.getMarPermission(marketCheck);
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = marPermissionSer.getMarPermission(marketManage);
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

@@ -12,5 +12,16 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [ com.bjike ]
  */
 public class BiddingAnswerQuestionsDTO extends BaseDTO {
+    /**
+     * 项目名称
+     */
+    private String projectName;
 
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
 }

@@ -1,5 +1,7 @@
 package com.bjike.goddess.bidding.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 招投标类型枚举
  *
@@ -13,10 +15,12 @@ public enum BiddingType {
     /**
      * 邀请招标
      */
+    @ExcelValue(name = "邀请招标")
     INVITEDTENDERING(0),
     /**
      * 公开招标
      */
+    @ExcelValue(name = "公开招标")
     OPENTENDERING(1);
 
     private int code;
@@ -47,6 +51,16 @@ public enum BiddingType {
             name = "邀请招标";
         }
         if (code == BiddingType.OPENTENDERING.getCode()) {
+            name = "公开招标";
+        }
+        return name;
+    }
+    public static String exportStrConvert(BiddingType biddingType) {
+        String name = "";
+        if (biddingType.equals(BiddingType.INVITEDTENDERING)) {
+            name = "邀请招标";
+        }
+        if (biddingType.equals(BiddingType.OPENTENDERING)) {
             name = "公开招标";
         }
         return name;

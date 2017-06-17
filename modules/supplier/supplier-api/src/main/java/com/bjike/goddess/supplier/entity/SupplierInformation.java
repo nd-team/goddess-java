@@ -96,7 +96,7 @@ public class SupplierInformation extends BaseEntity {
     /**
      * 营业执照附件
      */
-    @Column(name = "is_enclosure", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '营业执照附件'", insertable = false)
+    @Column(name = "is_enclosure", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '营业执照附件'")
     private Boolean enclosure;
 
     /**

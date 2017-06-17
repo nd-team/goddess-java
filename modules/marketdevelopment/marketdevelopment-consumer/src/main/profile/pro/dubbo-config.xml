@@ -35,5 +35,10 @@
     <dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI"/>
     <dubbo:reference validation="true" id="departmentDetailApiImpl"
                      interface="com.bjike.goddess.organize.api.DepartmentDetailAPI"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.StorageUserAPI"
+                     id="storageUserApiImpl"/>
+    <dubbo:reference validation="true" id="userSetPermissionApiImpl"
+                     interface="com.bjike.goddess.organize.api.UserSetPermissionAPI"/>
 
 </beans>

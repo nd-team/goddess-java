@@ -62,6 +62,12 @@ public class MonthPlanVO {
      */
     private MonthType month;
 
+
+    /**
+     * 月份
+     */
+    private String monthValue;
+
     /**
      * 各科目年度任务量
      */
@@ -87,6 +93,13 @@ public class MonthPlanVO {
      */
     private Double total;
 
+    public String getMonthValue() {
+        return monthValue;
+    }
+
+    public void setMonthValue(String monthValue) {
+        this.monthValue = monthValue;
+    }
 
     public String getId() {
         return id;

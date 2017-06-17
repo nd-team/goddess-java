@@ -113,4 +113,9 @@ public class CooperationSituationSerImpl extends ServiceImpl<CooperationSituatio
         else
             return this.transformBO(entity);
     }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return supPermissionSer.getSupPermission(idFlag);
+    }
 }

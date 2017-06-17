@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.type.Status;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -76,14 +77,14 @@ public class BiddingInfo extends BaseEntity {
     /**
      * 报名时间
      */
-    @Column(name = "registrationTime", columnDefinition = "DATETIME   COMMENT '报名时间'")
-    private LocalDateTime registrationTime;
+    @Column(name = "registrationTime", columnDefinition = "DATE   COMMENT '报名时间'")
+    private LocalDate registrationTime;
 
     /**
      * 投标时间
      */
-    @Column(name = "biddingTime", columnDefinition = "DATETIME   COMMENT '投标时间'")
-    private LocalDateTime biddingTime;
+    @Column(name = "biddingTime", columnDefinition = "DATE   COMMENT '投标时间'")
+    private LocalDate biddingTime;
 
     /**
      * 投标资格要求
@@ -130,14 +131,14 @@ public class BiddingInfo extends BaseEntity {
     /**
      * 状态
      */
-    @Column(name = "", columnDefinition = "VARCHAR(255)   COMMENT '状态'")
+    @Column( columnDefinition = "VARCHAR(255)   COMMENT '状态'")
     private Status status;
 
     /**
      * 购买标书时间
      */
-    @Column(name = "buyTenderTime", columnDefinition = "DATETIME   COMMENT '购买标书时间'")
-    private LocalDateTime buyTenderTime;
+    @Column(name = "buyTenderTime", columnDefinition = "DATE   COMMENT '购买标书时间'")
+    private LocalDate buyTenderTime;
 
     /**
      * 价格
@@ -154,8 +155,8 @@ public class BiddingInfo extends BaseEntity {
     /**
      * 交保证金时间
      */
-    @Column(name = "marginTime", columnDefinition = "DATETIME   COMMENT '交保证金时间'")
-    private LocalDateTime marginTime;
+    @Column(name = "marginTime", columnDefinition = "DATE   COMMENT '交保证金时间'")
+    private LocalDate marginTime;
 
     /**
      * 交保证金方式
@@ -166,8 +167,8 @@ public class BiddingInfo extends BaseEntity {
     /**
      * 保证金退回时间
      */
-    @Column(name = "backTimeDeposit", columnDefinition = "DATETIME   COMMENT '保证金退回时间'")
-    private LocalDateTime backTimeDeposit;
+    @Column(name = "backTimeDeposit", columnDefinition = "DATE   COMMENT '保证金退回时间'")
+    private LocalDate backTimeDeposit;
 
     /**
      * 备注
@@ -240,19 +241,19 @@ public class BiddingInfo extends BaseEntity {
         this.projectName = projectName;
     }
 
-    public LocalDateTime getRegistrationTime() {
+    public LocalDate getRegistrationTime() {
         return registrationTime;
     }
 
-    public void setRegistrationTime(LocalDateTime registrationTime) {
+    public void setRegistrationTime(LocalDate registrationTime) {
         this.registrationTime = registrationTime;
     }
 
-    public LocalDateTime getBiddingTime() {
+    public LocalDate getBiddingTime() {
         return biddingTime;
     }
 
-    public void setBiddingTime(LocalDateTime biddingTime) {
+    public void setBiddingTime(LocalDate biddingTime) {
         this.biddingTime = biddingTime;
     }
 
@@ -320,11 +321,11 @@ public class BiddingInfo extends BaseEntity {
         this.status = status;
     }
 
-    public LocalDateTime getBuyTenderTime() {
+    public LocalDate getBuyTenderTime() {
         return buyTenderTime;
     }
 
-    public void setBuyTenderTime(LocalDateTime buyTenderTime) {
+    public void setBuyTenderTime(LocalDate buyTenderTime) {
         this.buyTenderTime = buyTenderTime;
     }
 
@@ -344,11 +345,11 @@ public class BiddingInfo extends BaseEntity {
         this.buyTenderRequirements = buyTenderRequirements;
     }
 
-    public LocalDateTime getMarginTime() {
+    public LocalDate getMarginTime() {
         return marginTime;
     }
 
-    public void setMarginTime(LocalDateTime marginTime) {
+    public void setMarginTime(LocalDate marginTime) {
         this.marginTime = marginTime;
     }
 
@@ -360,11 +361,11 @@ public class BiddingInfo extends BaseEntity {
         this.marginMethod = marginMethod;
     }
 
-    public LocalDateTime getBackTimeDeposit() {
+    public LocalDate getBackTimeDeposit() {
         return backTimeDeposit;
     }
 
-    public void setBackTimeDeposit(LocalDateTime backTimeDeposit) {
+    public void setBackTimeDeposit(LocalDate backTimeDeposit) {
         this.backTimeDeposit = backTimeDeposit;
     }
 

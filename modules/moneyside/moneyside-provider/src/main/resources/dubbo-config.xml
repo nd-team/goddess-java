@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://code.alibabatech.com/schema/dubbo 
+		  http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<context:property-placeholder location="classpath:dubbo.properties"/>
+
+	<dubbo:application name="${dubbo.application.name}" />
+	<dubbo:provider timeout="${dubbo.provider.timeout}"  filter="userFilter"/>
+	<dubbo:consumer check="false" timeout="15000" />
+	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
+	<dubbo:registry address="${dubbo.registry.address}" />
+
+	<!--发布接口,供其他模块调用-->
+	<!--<dubbo:service interface="com.bjike.goddess.user.api.rbac.RoleAPI" ref="roleApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.rbac.GroupAPI" ref="groupApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.rbac.PermissionAPI" ref="permissionApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.UserDetailAPI" ref="userDetailApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.DepartmentAPI" ref="departmentApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.UserAPI" ref="userApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.UserLoginAPI" ref="userLoginApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.UserRegisterAPI" ref="userRegisterApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.UserAuthCodeAPI" ref="userAuthCodeApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.UserLoginLogAPI" ref="userLoginLogApiImpl"/>
+-->
+	<dubbo:service interface="com.bjike.goddess.moneyside.api.FundEntryAPI" ref="fundEntryApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.moneyside.api.FundEntryWrongRecordAPI" ref="fundEntryWrongRecordApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.moneyside.api.FundEntryConfirmedAPI" ref="fundEntryConfirmedApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.moneyside.api.AccrualAllotAPI" ref="accrualAllotApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.moneyside.api.CallInfoAPI" ref="callInfoApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.moneyside.api.ApplyInvestAPI" ref="applyInvestApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.moneyside.api.InvestFormAPI" ref="investFormApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.moneyside.api.CreditorsInvestAPI" ref="creditorsInvestApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.moneyside.api.EquityInvestAPI" ref="equityInvestApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.moneyside.api.CashInvestAPI" ref="cashInvestApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.moneyside.api.CapitalInvestAPI" ref="capitalInvestApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.moneyside.api.InvestTransferAPI" ref="investTransferApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.moneyside.api.IncomeDistributionAPI" ref="incomeDistributionApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.moneyside.api.IncomeQuotaAPI" ref="incomeQuotaApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.moneyside.api.CustomerInfoAPI" ref="customerInfoApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.moneyside.api.CustomerInfoCollectAPI" ref="customerInfoCollectApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.moneyside.api.MoneyExitApplyAPI" ref="moneyExitApplyApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.moneyside.api.MoneyExitApplyConfirmedAPI" ref="moneyExitApplyConfirmedApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.moneyside.api.MoneyExitApplyWrongRecordAPI" ref="moneyExitApplyWrongRecordApiImpl"/>
+
+	<!--<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.managepromotion.api.CusPermissionAPI" />-->
+	<!--<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.managepromotion.api.CusPermissionOperateAPI" />-->
+	<!--<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />-->
+
+
+	<!--<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />-->
+	<!--<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />-->
+	<!--<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />-->
+	<!--<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />-->
+	<!--<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />-->
+	<!--<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />-->
+</beans>

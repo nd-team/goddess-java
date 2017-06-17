@@ -3,11 +3,18 @@ package com.bjike.goddess.marketdevelopment.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.marketdevelopment.bo.YearPlanBO;
 import com.bjike.goddess.marketdevelopment.bo.YearPlanChoiceBO;
+import com.bjike.goddess.marketdevelopment.bo.YearPlanCollectBO;
+import com.bjike.goddess.marketdevelopment.bo.YearPlanExcelBO;
 import com.bjike.goddess.marketdevelopment.dto.YearPlanDTO;
+import com.bjike.goddess.marketdevelopment.entity.SonPermissionObject;
 import com.bjike.goddess.marketdevelopment.entity.YearPlan;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.YearPlanTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +22,13 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 年计划业务实现
@@ -38,6 +48,33 @@ public class YearPlanSerImpl extends ServiceImpl<YearPlan, YearPlanDTO> implemen
 
     @Autowired
     private MonthPlanSer monthPlanSer;
+
+    @Autowired
+    private WeekPlanSer weekPlanSer;
+
+    @Autowired
+    private DayPlanSer dayPlanSer;
+
+    @Autowired
+    private BusinessCourseSer businessCourseSer;
+
+    @Autowired
+    private BusinessTypeSer businessTypeSer;
+
+    @Autowired
+    private DemandAnalysisSer demandAnalysisSer;
+
+    @Autowired
+    private MarketChannelSer marketChannelSer;
+
+    @Autowired
+    private MarketMeasureSer marketMeasureSer;
+
+    @Autowired
+    private MarketResearchSer marketResearchSer;
+
+    @Autowired
+    private TargetInformationSer targetInformationSer;
 
     private static final String marketCheck = "market-check";
 
@@ -139,5 +176,223 @@ public class YearPlanSerImpl extends ServiceImpl<YearPlan, YearPlanDTO> implemen
     @Override
     public Integer getTotal() throws SerException {
         return super.findAll().size();
+    }
+
+    @Override
+    public byte[] exportExcel(CollectTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(planCheck))
+            throw new SerException("您的帐号没有权限");
+        YearPlanDTO dto = new YearPlanDTO();
+        if (StringUtils.isNotBlank(to.getType()))
+            dto.getConditions().add(Restrict.eq("type", to.getType()));
+        dto.getSorts().add("year=desc");
+        List<YearPlan> list = super.findByCis(dto);
+        List<YearPlanExcelBO> boList = new ArrayList<>(0);
+        for (YearPlan entity : list) {
+            YearPlanExcelBO bo = new YearPlanExcelBO();
+            BeanTransform.copyProperties(entity, bo, true);
+            boList.add(bo);
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(boList, excel);
+        return bytes;
+    }
+
+    @Override
+    public List<YearPlanBO> findByType(String type) throws SerException {
+        YearPlanDTO dto = new YearPlanDTO();
+        if (StringUtils.isNotBlank(type))
+            dto.getConditions().add(Restrict.eq("type", type));
+        dto.getSorts().add("year=desc");
+        List<YearPlan> list = super.findByCis(dto);
+        return BeanTransform.copyProperties(list, YearPlanBO.class);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = marPermissionSer.getMarPermission(planCheck);
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAddSign = marPermissionSer.getMarPermission(planManage);
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("yearplan");
+        obj.setDescribesion("年计划");
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSee = monthPlanSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("monthplan");
+        obj.setDescribesion("月计划");
+        if (flagSee) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        flagSee = weekPlanSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("weekplan");
+        obj.setDescribesion("周计划");
+        if (flagSee) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        flagSee = dayPlanSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("dayplan");
+        obj.setDescribesion("天计划");
+        if (flagSee) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        flagSee = businessCourseSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("businesscourse");
+        obj.setDescribesion("业务方向科目");
+        if (flagSee) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        flagSee = businessTypeSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("businesstype");
+        obj.setDescribesion("业务类型");
+        if (flagSee) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        flagSee = demandAnalysisSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("demandanalysis");
+        obj.setDescribesion("市场需求分析");
+        if (flagSee) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        flagSee = marketChannelSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("marketchannel");
+        obj.setDescribesion("市场挖掘");
+        if (flagSee) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        flagSee = marketMeasureSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("marketmeasure");
+        obj.setDescribesion("市场测算");
+        if (flagSee) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        flagSee = marketResearchSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("marketresearch");
+        obj.setDescribesion("市场调研");
+        if (flagSee) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        flagSee = targetInformationSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("targetinformation");
+        obj.setDescribesion("确定目标信息");
+        if (flagSee) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
+    }
+
+    @Override
+    public List<YearPlanCollectBO> collect() throws SerException {
+        YearPlanDTO dto = new YearPlanDTO();
+        dto.getSorts().add("year=desc");
+        dto.getSorts().add("type=desc");
+        List<YearPlan> list = super.findByCis(dto);
+        List<YearPlanCollectBO> collectBOs = new ArrayList<>(0);
+        int year = 0;
+        String type = "";
+        for (YearPlan entity : list) {
+            if (year != entity.getYear() || !type.equals(entity.getType())) {
+                year = entity.getYear();
+                type = entity.getType();
+                List<YearPlan> count = list.stream()
+                        .filter(y -> y.getYear() == entity.getYear() && y.getType().equals(entity.getType()))
+                        .collect(Collectors.toList());
+                double size = count.size();
+                YearPlanCollectBO bo = new YearPlanCollectBO();
+                bo.setYear(year);
+                bo.setType(type);
+                bo.setDevelopment(count.stream().mapToInt(YearPlan::getDevelopment).sum() + 0d);
+                bo.setWorkloadWeight(this.decimal(count.stream().mapToDouble(YearPlan::getWorkloadWeight).sum() / size) + "%");
+                collectBOs.add(bo);
+            }
+        }
+        YearPlanCollectBO bo = new YearPlanCollectBO();
+        bo.setType("总计");
+        bo.setDevelopment(collectBOs.stream().mapToDouble(YearPlanCollectBO::getDevelopment).sum());
+        bo.setWorkloadWeight(this.decimal(list.stream().mapToDouble(YearPlan::getWorkloadWeight).sum() / list.size()) + "%");
+        collectBOs.add(bo);
+        return collectBOs;
+    }
+
+    private Double decimal(double number) {
+        return new BigDecimal(number).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 }

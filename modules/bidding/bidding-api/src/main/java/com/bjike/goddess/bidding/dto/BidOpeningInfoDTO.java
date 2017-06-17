@@ -18,6 +18,10 @@ public class BidOpeningInfoDTO extends BaseDTO {
      * 竞争公司
      */
     private String competitive;
+    /**
+     * 项目名称
+     */
+    private String projectName;
 
 
 
@@ -27,5 +31,13 @@ public class BidOpeningInfoDTO extends BaseDTO {
 
     public void setCompetitive(String competitive) {
         this.competitive = competitive;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 }

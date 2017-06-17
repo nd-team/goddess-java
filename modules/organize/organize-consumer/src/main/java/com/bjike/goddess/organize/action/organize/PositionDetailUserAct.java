@@ -41,13 +41,15 @@ public class PositionDetailUserAct {
     private PositionDetailUserAPI positionDetailUserAPI;
 
     private PositionDetailUserVO assemble(PositionDetailUserVO vo) {
-        String[] names = vo.getPosition().split(","), ids = vo.getPositionIds().split(",");
-        vo.setPositionVo(new ArrayList<>(0));
-        for (int i = 0, lent = ids.length; lent > i; i++) {
-            UserPositionVO positionVO = new UserPositionVO();
-            positionVO.setId(ids[i]);
-            positionVO.setPosition(names[i]);
-            vo.getPositionVo().add(positionVO);
+        if (vo.getPosition() != null && vo.getPositionIds() != null) {
+            String[] names = vo.getPosition().split(","), ids = vo.getPositionIds().split(",");
+            vo.setPositionVo(new ArrayList<>(0));
+            for (int i = 0, lent = ids.length; lent > i; i++) {
+                UserPositionVO positionVO = new UserPositionVO();
+                positionVO.setId(ids[i]);
+                positionVO.setPosition(names[i]);
+                vo.getPositionVo().add(positionVO);
+            }
         }
         return vo;
     }

@@ -4,10 +4,8 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.projectissuehandle.enums.ProblemProcessingResult;
 import com.bjike.goddess.projectissuehandle.enums.ProblemRelevantDepartment;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.time.LocalDateTime;
+import javax.persistence.*;
+import java.time.LocalDate;
 
 
 /**
@@ -22,7 +20,11 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "projectissuehandle_problemhandlingresult")
 public class ProblemHandlingResult extends BaseEntity {
-
+    /**
+     * 项目问题编号
+     */
+    @Column(name = "projectNum", columnDefinition = "VARCHAR(255)   COMMENT '项目问题编号'")
+    private String projectNum;
     /**
      * 年份
      */
@@ -55,8 +57,8 @@ public class ProblemHandlingResult extends BaseEntity {
     /**
      * 问题受理时间
      */
-    @Column(name = "problemAcceptTime", columnDefinition = "DATETIME   COMMENT '问题受理时间'")
-    private LocalDateTime problemAcceptTime;
+    @Column(name = "problemAcceptTime", columnDefinition = "DATE   COMMENT '问题受理时间'")
+    private LocalDate problemAcceptTime;
 
     /**
      * 问题具体情况
@@ -91,8 +93,8 @@ public class ProblemHandlingResult extends BaseEntity {
     /**
      * 问题发生时间
      */
-    @Column(name = "problemOccurrenceTime", columnDefinition = "DATETIME   COMMENT '问题发生时间'")
-    private LocalDateTime problemOccurrenceTime;
+    @Column(name = "problemOccurrenceTime", columnDefinition = "DATE   COMMENT '问题发生时间'")
+    private LocalDate problemOccurrenceTime;
 
     /**
      * 问题发生地点
@@ -103,8 +105,8 @@ public class ProblemHandlingResult extends BaseEntity {
     /**
      * 问题解决时间
      */
-    @Column(name = "problemSolveTime", columnDefinition = "DATETIME   COMMENT '问题解决时间'")
-    private LocalDateTime problemSolveTime;
+    @Column(name = "problemSolveTime", columnDefinition = "DATE   COMMENT '问题解决时间'")
+    private LocalDate problemSolveTime;
 
     /**
      * 问题处理结果
@@ -117,7 +119,19 @@ public class ProblemHandlingResult extends BaseEntity {
      */
     @Column(name = "problemConclusion", columnDefinition = "VARCHAR(255)   COMMENT '问题总结'")
     private String problemConclusion;
+    /**
+     * 项目执行中的问题受理
+     */
+//    @OneToOne(fetch = FetchType.EAGER , cascade = {CascadeType.PERSIST} )
+//    @JoinColumn(name = "problemAccept_id",nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '项目执行中的问题受理'")
+//    private ProblemAccept problemAccept;
+    public String getProjectNum() {
+        return projectNum;
+    }
 
+    public void setProjectNum(String projectNum) {
+        this.projectNum = projectNum;
+    }
 
     public String getYear() {
         return year;
@@ -159,11 +173,11 @@ public class ProblemHandlingResult extends BaseEntity {
         this.projectType = projectType;
     }
 
-    public LocalDateTime getProblemAcceptTime() {
+    public LocalDate getProblemAcceptTime() {
         return problemAcceptTime;
     }
 
-    public void setProblemAcceptTime(LocalDateTime problemAcceptTime) {
+    public void setProblemAcceptTime(LocalDate problemAcceptTime) {
         this.problemAcceptTime = problemAcceptTime;
     }
 
@@ -207,11 +221,11 @@ public class ProblemHandlingResult extends BaseEntity {
         this.problemRelevantDepartment = problemRelevantDepartment;
     }
 
-    public LocalDateTime getProblemOccurrenceTime() {
+    public LocalDate getProblemOccurrenceTime() {
         return problemOccurrenceTime;
     }
 
-    public void setProblemOccurrenceTime(LocalDateTime problemOccurrenceTime) {
+    public void setProblemOccurrenceTime(LocalDate problemOccurrenceTime) {
         this.problemOccurrenceTime = problemOccurrenceTime;
     }
 
@@ -223,11 +237,11 @@ public class ProblemHandlingResult extends BaseEntity {
         this.problemOccurrencePlace = problemOccurrencePlace;
     }
 
-    public LocalDateTime getProblemSolveTime() {
+    public LocalDate getProblemSolveTime() {
         return problemSolveTime;
     }
 
-    public void setProblemSolveTime(LocalDateTime problemSolveTime) {
+    public void setProblemSolveTime(LocalDate problemSolveTime) {
         this.problemSolveTime = problemSolveTime;
     }
 
@@ -246,4 +260,12 @@ public class ProblemHandlingResult extends BaseEntity {
     public void setProblemConclusion(String problemConclusion) {
         this.problemConclusion = problemConclusion;
     }
+
+//    public ProblemAccept getProblemAccept() {
+//        return problemAccept;
+//    }
+//
+//    public void setProblemAccept(ProblemAccept problemAccept) {
+//        this.problemAccept = problemAccept;
+//    }
 }

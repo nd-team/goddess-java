@@ -78,28 +78,12 @@ public interface TenderInfoSer extends Ser<TenderInfo, TenderInfoDTO> {
     }
 
     /**
-     * 导出
+     * 导出Excel
      *
-     * @param projectName
+     * @param dto
      * @throws SerException
      */
-    default String exportExcel(String projectName) throws SerException {
-        return null;
-    }
+    byte[] exportExcel(TenderInfoDTO dto) throws SerException;
 
-    /**
-     * 上传
-     */
-    default void upload() throws SerException {
-        return;
-
-    }
-
-    /**
-     * 上传附件
-     */
-    default void uploadAttachments() throws SerException {
-        return;
-    }
 
 }

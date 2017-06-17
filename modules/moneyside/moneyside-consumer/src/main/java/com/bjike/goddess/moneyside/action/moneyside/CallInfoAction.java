@@ -1,0 +1,154 @@
+package com.bjike.goddess.moneyside.action.moneyside;
+
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
+import com.bjike.goddess.common.api.exception.ActException;
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
+import com.bjike.goddess.common.consumer.restful.ActResult;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.moneyside.api.CallInfoAPI;
+import com.bjike.goddess.moneyside.bo.AccrualAllotBO;
+import com.bjike.goddess.moneyside.bo.CallInfoBO;
+import com.bjike.goddess.moneyside.dto.AccrualAllotDTO;
+import com.bjike.goddess.moneyside.dto.CallInfoDTO;
+import com.bjike.goddess.moneyside.to.AccrualAllotTO;
+import com.bjike.goddess.moneyside.to.CallInfoTO;
+import com.bjike.goddess.moneyside.vo.AccrualAllotVO;
+import com.bjike.goddess.moneyside.vo.CallInfoVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
+/**
+ * 招投信息列表
+ *
+ * @Author: [ xiazhili ]
+ * @Date: [ 2017-06-05 02:13 ]
+ * @Description: [ 招投信息列表 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+@RestController
+@RequestMapping("callinfo")
+public class CallInfoAction {
+    @Autowired
+    private CallInfoAPI callInfoAPI;
+
+    /**
+     * 招投信息列表总条数
+     *
+     * @param callInfoDTO 招投信息列表dto
+     * @des 获取所有招投信息列表总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(CallInfoDTO callInfoDTO) throws ActException {
+        try {
+            Long count = callInfoAPI.countCallInfo(callInfoDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个招投信息列表
+     *
+     * @param id
+     * @return class CallInfoVO
+     * @des 获取一个招投信息列表
+     * @version v1
+     */
+    @GetMapping("v1/call/{id}")
+    public Result call(@PathVariable String id) throws ActException {
+        try {
+            CallInfoBO callInfoBO = callInfoAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(callInfoBO, CallInfoVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 招投信息列表
+     *
+     * @param callInfoDTO 招投信息列表dto
+     * @return class CallInfoVO
+     * @des 获取所有招投信息列表
+     * @version v1
+     */
+    @GetMapping("v1/list")
+    public Result list(CallInfoDTO callInfoDTO, HttpServletRequest request) throws ActException {
+        try {
+            List<CallInfoVO> callInfoVOS = BeanTransform.copyProperties
+                    (callInfoAPI.findListCallInfo(callInfoDTO), CallInfoVO.class, request);
+            return ActResult.initialize(callInfoVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 添加招投信息列表
+     *
+     * @param callInfoTO 招投信息列表数据to
+     * @return class CallInfoVO
+     * @des 添加招投信息列表
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/add")
+    public Result add(@Validated(ADD.class) CallInfoTO callInfoTO, BindingResult bindingResult) throws ActException {
+        try {
+            CallInfoBO callInfoBO = callInfoAPI.insertCallInfo(callInfoTO);
+            return ActResult.initialize(callInfoBO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 编辑招投信息列表
+     *
+     * @param callInfoTO 招投信息列表数据to
+     * @return class CallInfoVO
+     * @des 编辑招投信息列表
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/edit")
+    public Result edit(@Validated(EDIT.class) CallInfoTO callInfoTO, BindingResult bindingResult) throws ActException {
+        try {
+            CallInfoBO callInfoBO = callInfoAPI.editCallInfo(callInfoTO);
+            return ActResult.initialize(callInfoBO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 删除招投信息列表
+     *
+     * @param id 用户id
+     * @des 根据用户id删除招投信息列表记录
+     * @version v1
+     */
+    @LoginAuth
+    @DeleteMapping("v1/delete/{id}")
+    public Result delete(@PathVariable String id) throws ActException {
+        try {
+            callInfoAPI.removeCallInfo(id);
+            return new ActResult("delete success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+}
