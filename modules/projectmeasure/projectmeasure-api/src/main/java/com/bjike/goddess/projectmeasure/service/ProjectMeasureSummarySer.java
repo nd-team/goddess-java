@@ -6,6 +6,8 @@ import com.bjike.goddess.projectmeasure.bo.ProjectMeasureBO;
 import com.bjike.goddess.projectmeasure.bo.ProjectMeasureSummaryBO;
 import com.bjike.goddess.projectmeasure.entity.ProjectMeasureSummary;
 import com.bjike.goddess.projectmeasure.dto.ProjectMeasureSummaryDTO;
+import com.bjike.goddess.projectmeasure.excel.SonPermissionObject;
+import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.ProjectMeasureSummaryTO;
 
 import java.util.List;
@@ -21,6 +23,18 @@ import java.util.List;
  */
 public interface ProjectMeasureSummarySer extends Ser<ProjectMeasureSummary, ProjectMeasureSummaryDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 分页查询项目测算汇总邮件发送
      *
@@ -79,5 +93,19 @@ public interface ProjectMeasureSummarySer extends Ser<ProjectMeasureSummary, Pro
      * @throws SerException
      */
     List<ProjectMeasureBO> summarize(String[] areas) throws SerException;
+
+    /**
+     * 定时器检测要发送的邮件
+     *
+     */
+    default void checkSendEmail( ) throws SerException {
+        return ;
+    }
+
+    /**
+     * 一个个邮件
+     * @return class CollectEmailBO
+     */
+    default ProjectMeasureSummaryBO getOne(String id) throws SerException {return null;}
 
 }

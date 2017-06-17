@@ -73,6 +73,12 @@ public class ProjectPersonnelDemandTO extends BaseTO {
     @NotNull(groups = {ADD.class, EDIT.class}, message = "项目期间加班人工成本不能为空")
     private Integer overtimeLaborCost;
 
+    /**
+     * 人工总成本
+     */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "人工总成本不能为空")
+    private Integer totalCost;
+
 
     public String getProjectName() {
         return projectName;
@@ -144,5 +150,13 @@ public class ProjectPersonnelDemandTO extends BaseTO {
 
     public void setOvertimeLaborCost(Integer overtimeLaborCost) {
         this.overtimeLaborCost = overtimeLaborCost;
+    }
+
+    public Integer getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(Integer totalCost) {
+        this.totalCost = totalCost;
     }
 }

@@ -76,6 +76,18 @@ public class ProjectCostStatusTO extends BaseTO {
     private Double demandCharge;
 
     /**
+     * 回款形式
+     */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "回款形式不能为空")
+    private RemitContent backForm;
+
+    /**
+     * 回款时间
+     */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "回款时间不能为空")
+    private String backDate;
+
+    /**
      * 其他
      */
     private String other;
@@ -151,6 +163,22 @@ public class ProjectCostStatusTO extends BaseTO {
 
     public void setDemandCharge(Double demandCharge) {
         this.demandCharge = demandCharge;
+    }
+
+    public RemitContent getBackForm() {
+        return backForm;
+    }
+
+    public void setBackForm(RemitContent backForm) {
+        this.backForm = backForm;
+    }
+
+    public String getBackDate() {
+        return backDate;
+    }
+
+    public void setBackDate(String backDate) {
+        this.backDate = backDate;
     }
 
     public String getOther() {

@@ -68,6 +68,25 @@ public class ProjectBasicInfoVO {
     private Integer numberOfStaff;
 
     /**
+     * 工期
+     */
+    private String timeLimit;
+
+    /**
+     * 服务费用
+     */
+    private Double serviceCharge;
+
+    /**
+     * 提成
+     */
+    private Double royalties;
+
+    /**
+     * 招待费
+     */
+    private Double serveCharge;
+    /**
      * 设备费用
      */
     private Double deviceCharge;
@@ -174,6 +193,38 @@ public class ProjectBasicInfoVO {
 
     public void setNumberOfStaff(Integer numberOfStaff) {
         this.numberOfStaff = numberOfStaff;
+    }
+
+    public String getTimeLimit() {
+        return timeLimit;
+    }
+
+    public void setTimeLimit(String timeLimit) {
+        this.timeLimit = timeLimit;
+    }
+
+    public Double getServiceCharge() {
+        return serviceCharge;
+    }
+
+    public void setServiceCharge(Double serviceCharge) {
+        this.serviceCharge = serviceCharge;
+    }
+
+    public Double getRoyalties() {
+        return royalties;
+    }
+
+    public void setRoyalties(Double royalties) {
+        this.royalties = royalties;
+    }
+
+    public Double getServeCharge() {
+        return serveCharge;
+    }
+
+    public void setServeCharge(Double serveCharge) {
+        this.serveCharge = serveCharge;
     }
 
     public Double getDeviceCharge() {

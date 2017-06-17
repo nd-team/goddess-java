@@ -12,6 +12,7 @@ import com.bjike.goddess.projectmeasure.api.ProjectBasicInfoAPI;
 import com.bjike.goddess.projectmeasure.bo.ProjectBasicInfoBO;
 import com.bjike.goddess.projectmeasure.dto.ProjectBasicInfoDTO;
 import com.bjike.goddess.projectmeasure.service.ProjectBasicInfoSer;
+import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.ProjectBasicInfoTO;
 import com.bjike.goddess.projectmeasure.vo.ProjectBasicInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,28 @@ public class ProjectBasicInfoAct {
     @Autowired
     private ProjectBasicInfoAPI projectBasicInfoAPI;
 
+
+    /**
+     * 功能导航权限
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = projectBasicInfoAPI.guidePermission(guidePermissionTO);
+            if(! isHasPermission ){
+                //int code, String msg
+                return new ActResult(0,"没有权限",false );
+            }else{
+                return new ActResult(0,"有权限",true );
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 根据id查询项目基本信息
      *

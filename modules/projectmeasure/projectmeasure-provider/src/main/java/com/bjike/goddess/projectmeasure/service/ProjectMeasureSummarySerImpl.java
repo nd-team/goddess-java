@@ -6,24 +6,39 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.message.api.MessageAPI;
+import com.bjike.goddess.message.entity.Message;
+import com.bjike.goddess.message.enums.MsgType;
+import com.bjike.goddess.message.enums.RangeType;
+import com.bjike.goddess.message.enums.SendType;
+import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.projectmeasure.api.ProjectOtherDemandAPI;
+import com.bjike.goddess.projectmeasure.bo.ProjectEvaluateResultBO;
 import com.bjike.goddess.projectmeasure.bo.ProjectMeasureBO;
 import com.bjike.goddess.projectmeasure.bo.ProjectMeasureSummaryBO;
 import com.bjike.goddess.projectmeasure.dto.ProjectBasicInfoDTO;
 import com.bjike.goddess.projectmeasure.dto.ProjectMeasureSummaryDTO;
+import com.bjike.goddess.projectmeasure.dto.ProjectOtherDemandDTO;
 import com.bjike.goddess.projectmeasure.entity.*;
+import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.ProjectMeasureSummaryTO;
+import com.bjike.goddess.projectmeasure.type.CycleType;
+import com.bjike.goddess.projectmeasure.type.GuideAddrStatus;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.kafka.common.network.Send;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 项目测算汇总业务实现
@@ -59,20 +74,55 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
     @Autowired
     private UserAPI userAPI;
 
+    @Autowired
+    private MessageAPI messageAPI;
+
+    @Autowired
+    private ProjectOtherDemandSer projectOtherDemandSer;
+
+    @Autowired
+    private ProjectMeasureSummarySer projectMeasureSummarySer;
+
     /**
      * 检查权限
      *
      * @throws SerException
      */
     private void checkPermission() throws SerException {
+        Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
-        //商务模块权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("1");
-        if (!permissionLevel) {
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            //商务模块权限
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
             throw new SerException("您不是商务模块人员,没有该操作权限");
         }
         RpcTransmit.transmitUserToken(userToken);
 
+    }
+    /**
+     * 导航检查权限
+     *
+     * @throws SerException
+     */
+    private Boolean guildPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
     }
 
     /**
@@ -103,10 +153,15 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
         checkPermission();
         String curUsername = userAPI.currentUser().getUsername();
         String sb = getProjectGroup(to);
-        ProjectMeasureSummary entity = BeanTransform.copyProperties(to, ProjectMeasureSummary.class, true);
+        ProjectMeasureSummary entity = BeanTransform.copyProperties(to, ProjectMeasureSummary.class, true,"areas","emails");
         entity.setStatus(Status.THAW);
         entity.setCreateUser(curUsername);
         entity.setProjectGroups(sb);
+        String areas = StringUtils.join(to.getAreas(),",");
+        String emails = StringUtils.join(to.getEmails(),",");
+        entity.setAreas(areas);
+        entity.setEmails(emails);
+        entity.setLastTime(LocalDateTime.now());
         entity.setUpdateTime(LocalDateTime.now());
         entity = super.save(entity);
         ProjectMeasureSummaryBO bo = BeanTransform.copyProperties(entity, ProjectMeasureSummaryBO.class);
@@ -162,10 +217,18 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
      */
     private void updateProjectMeasureSummary(ProjectMeasureSummaryTO to, ProjectMeasureSummary model) throws SerException {
         String sb = getProjectGroup(to);
-        BeanTransform.copyProperties(to, model, true);
+        String areas = StringUtils.join(to.getAreas(),",");
+//       BeanTransform.copyProperties(to, model, true);
+        String emails = StringUtils.join(to.getEmails(),",");
+
+
+        model.setSendInterval( to.getSendInterval() );
+        model.setCycle( to.getCycle() );
         model.setModifyTime(LocalDateTime.now());
         model.setProjectGroups(sb);
         model.setUpdateTime(LocalDateTime.now());
+        model.setAreas(areas);
+        model.setEmails(emails);
         super.update(model);
     }
 
@@ -222,8 +285,9 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
             Integer longTermProjectNo = countLongTermProjectNo(area);//计算长期合作项目数量
             Integer matterProjectNo = countMatterProjectNo(area);//计算事项合作项目
             Integer intermediaryProjectNo = countIntermediaryProjectNo(area);//计算中介合作项目
-            // TODO: 17-3-26
-            //这里需要计算盈利项目的数量
+            Integer winProNo = countWinProNo(area,1);//计算盈利项目的数量
+            Integer deficitNo = countWinProNo(area,2);//计算亏损项目的数量
+
 
             ProjectMeasureBO bo = new ProjectMeasureBO();
             bo.setArea(area);
@@ -236,6 +300,8 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
             bo.setLongTermProjectCount(longTermProjectNo);
             bo.setMatterProjectCount(matterProjectNo);
             bo.setAgencyProjectCount(intermediaryProjectNo);
+            bo.setTestProfitProjectCount(winProNo);
+            bo.setTestDeficitProjectCount(deficitNo);
 
             projectMeasureBOList.add(bo);
         }
@@ -250,6 +316,9 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
         Integer longTermProjectNoSum = projectMeasureBOList.stream().mapToInt(c -> c.getLongTermProjectCount()).sum();//计算长期合作项目数量合计项
         Integer matterProjectNoSum = projectMeasureBOList.stream().mapToInt(c -> c.getMatterProjectCount()).sum();//计算事项合作项目数量合计项
         Integer intermediaryProjectNoSum = projectMeasureBOList.stream().mapToInt(c -> c.getAgencyProjectCount()).sum();//计算中介合作项目合计项
+        Integer winProNoSum = projectMeasureBOList.stream().mapToInt(c -> c.getTestProfitProjectCount()).sum();//计算盈利项目合计项
+        Integer deficitNoSum = projectMeasureBOList.stream().mapToInt(c -> c.getTestDeficitProjectCount()).sum();//计算亏损项目合计项
+
 
         ProjectMeasureBO boSummary = new ProjectMeasureBO();
         boSummary.setArea("合计");
@@ -262,7 +331,10 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
         boSummary.setLongTermProjectCount(longTermProjectNoSum);
         boSummary.setMatterProjectCount(matterProjectNoSum);
         boSummary.setAgencyProjectCount(intermediaryProjectNoSum);
+        boSummary.setTestProfitProjectCount(winProNoSum);
+        boSummary.setTestDeficitProjectCount(deficitNoSum);
         projectMeasureBOList.add(boSummary);
+
 
         return projectMeasureBOList;
     }
@@ -577,4 +649,288 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
         List<ProjectBasicInfo> projectBasicInfoList = projectBasicInfoSer.findByCis(dto);
         return projectBasicInfoList.size();
     }
+
+    /**
+     * 计算盈利项目数量
+     *
+     * @return 盈利项目数量
+     */
+    private Integer countWinProNo(String area , Integer value) throws SerException {
+        ProjectOtherDemandDTO projectOtherDemandDTO = new ProjectOtherDemandDTO();
+        projectOtherDemandDTO.setArea(area);
+        List<ProjectEvaluateResultBO> projectEvaluateResultBOList = projectOtherDemandSer.findEvaluateResult(projectOtherDemandDTO);
+        Integer countWin = 0;
+        Integer countDeficit = 0;
+        if( projectEvaluateResultBOList != null && projectEvaluateResultBOList.size()>0 ){
+            for ( ProjectEvaluateResultBO str : projectEvaluateResultBOList ) {
+                Double profit = str.getProfit()==null ? 0d:str.getProfit();
+                if(profit>0){
+                    countWin++;
+                }else {
+                    countDeficit++;
+                }
+            }
+        }
+        return value==1? countWin : countDeficit;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guildPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guildPermission();
+                break;
+            case ADD:
+                flag = guildPermission();
+                break;
+            case EDIT:
+                flag = guildPermission();
+                break;
+            case DELETE:
+                flag = guildPermission();
+                break;
+            case CONGEL:
+                flag = guildPermission();
+                break;
+            case THAW:
+                flag = guildPermission();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
+    @Override
+    public ProjectMeasureSummaryBO getOne(String id) throws SerException {
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空哦");
+        }
+        ProjectMeasureSummary selfCapability = super.findById(id);
+        return BeanTransform.copyProperties(selfCapability, ProjectMeasureSummaryBO.class);
+    }
+
+    /**
+     * 发送间隔单位转换
+     */
+    private String sendUnitConverse(int code) {
+        String unit = "";
+        switch (code) {
+            case 0:
+                unit = "年";
+                break;
+            case 1:
+                unit = "月";
+                break;
+            case 2:
+                unit = "周";
+                break;
+            case 3:
+                unit = "日";
+                break;
+            case 4:
+                unit = "小时";
+                break;
+            case 5:
+                unit = "分";
+                break;
+            case 6:
+                unit = "季";
+                break;
+            default:
+                unit = "";
+                break;
+        }
+        return unit;
+    }
+
+    @Override
+    public void checkSendEmail() throws SerException {
+        List<ProjectMeasureSummary> summaryEmails = new ArrayList<>();
+        List<ProjectMeasureSummary> allEmails = new ArrayList<>();
+        //检测有哪些需要发送的
+        //上次发送时间
+        //现在时间
+        //发送间隔
+        //发送单位
+        //发送类型
+        //发送对象
+        ProjectMeasureSummaryDTO dto = new ProjectMeasureSummaryDTO();
+        dto.getConditions().add(Restrict.eq("status", Status.THAW));
+        List<ProjectMeasureSummary> list = super.findByCis(dto);
+        LocalDateTime nowTime = LocalDateTime.now();
+        for (ProjectMeasureSummary str : list) {
+            //上次发送时间
+            LocalDateTime lastTime = str.getLastTime();
+            //发送间隔
+            Double sendNum = str.getSendInterval();
+            //发送单位
+            CycleType cycle = str.getCycle();
+            //发送对象;隔开
+            String sendObject = str.getEmails();
+
+            Long mis = nowTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                    - lastTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            Double temp_sendNum = 0d;
+            Boolean flag = false;
+            switch (cycle) {
+                case MINUTE:
+                    //毫秒数
+                    temp_sendNum = sendNum * 60 * 1000;
+                    if (temp_sendNum <= mis.doubleValue()) {
+                        flag = true;
+                    }
+                    break;
+                case HOUR:
+                    temp_sendNum = sendNum * 60 * 60 * 1000;
+                    if (temp_sendNum <= mis.doubleValue()) {
+                        flag = true;
+                    }
+                    break;
+                case DAY:
+                    temp_sendNum = sendNum * 24 * 60 * 60 * 1000;
+                    if (temp_sendNum <= mis.doubleValue()) {
+                        flag = true;
+                    }
+                    break;
+                case WEEK:
+                    temp_sendNum = sendNum * 7 * 24 * 60 * 60 * 1000;
+                    if (temp_sendNum <= mis.doubleValue()) {
+                        flag = true;
+                    }
+                    break;
+                case MONTH:
+                    if (nowTime.minusMonths(sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(sendNum.longValue()).isAfter(lastTime)) {
+                        flag = true;
+                    }
+                    break;
+                case QUARTER:
+                    if (nowTime.minusMonths(3 * sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(3 * sendNum.longValue()).isAfter(lastTime)) {
+                        flag = true;
+                    }
+                    break;
+                case YEAR:
+                    if (nowTime.minusYears(sendNum.longValue()).isEqual(lastTime) || nowTime.minusYears(sendNum.longValue()).isAfter(lastTime)) {
+                        flag = true;
+                    }
+                    break;
+            }
+
+            if (flag) {
+                summaryEmails.add(str);
+            }
+            //调用发邮件
+            allEmails = sendObject(summaryEmails);
+
+            //修改上次发送时间
+            super.update(allEmails);
+
+        }
+    }
+
+        private String htmlSummary(List<ProjectMeasureBO> summaryBOList) throws SerException {
+            StringBuffer sb = new StringBuffer("");
+            if (summaryBOList != null && summaryBOList.size() > 0) {
+                sb = new StringBuffer("<h4>项目测算汇总:</h4>");
+                sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
+                //拼表头
+                ProjectMeasureBO title = summaryBOList.get(summaryBOList.size() - 1);
+                sb.append("<tr>");
+                sb.append("<td>地区</td>");
+                sb.append("<td>项目数量</td>");
+                sb.append("<td>项目利润</td>");
+                sb.append("<td>多项目多界面项目数量</td>");
+                sb.append("<td>多项目单界面项目数量</td>");
+                sb.append("<td>单项目多界面项目数量</td>");
+                sb.append("<td>多项目多界面项目数量</td>");
+                sb.append("<td>长期合作项目数量</td>");
+                sb.append("<td>事项合作项目</td>");
+                sb.append("<td>中介合作项目</td>");
+                sb.append("<td>盈利项目的数量</td>");
+                sb.append("<td>亏损项目的数量</td>");
+
+                sb.append("<tr>");
+
+                //拼body部分
+                for (ProjectMeasureBO bo : summaryBOList) {
+                    sb.append("<tr>");
+                    sb.append("<td>" + bo.getArea() + "</td>");
+                    sb.append("<td>" + bo.getProjectCount() + "</td>");
+                    sb.append("<td>" + bo.getProjectProfit() + "</td>");
+                    sb.append("<td>" + bo.getMmProjectCount() + "</td>");
+                    sb.append("<td>" + bo.getMsProjectCount() + "</td>");
+                    sb.append("<td>" + bo.getSmProjectCount() + "</td>");
+                    sb.append("<td>" + bo.getSsProjectCount() + "</td>");
+                    sb.append("<td>" + bo.getLongTermProjectCount() + "</td>");
+                    sb.append("<td>" + bo.getMatterProjectCount() + "</td>");
+                    sb.append("<td>" + bo.getAgencyProjectCount() + "</td>");
+                    sb.append("<td>" + bo.getTestProfitProjectCount() + "</td>");
+                    sb.append("<td>" + bo.getTestDeficitProjectCount() + "</td>");
+
+                    sb.append("<tr>");
+                }
+
+                //结束
+                sb.append("</table>");
+            }
+            return sb.toString();
+        }
+
+
+    private List<ProjectMeasureSummary> sendObject(List<ProjectMeasureSummary> summaryEmails) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        List<ProjectMeasureSummary> allEmails = new ArrayList<>();
+        //项目测算汇总
+
+        if (summaryEmails != null && summaryEmails.size() > 0) {
+            for (ProjectMeasureSummary sign : summaryEmails) {
+
+                String area = sign.getAreas();
+                String [] condis = area.split(",");
+                List<ProjectMeasureBO> measureBOList = projectMeasureSummarySer.summarize(condis);
+                //拼表格
+                String content = htmlSummary(measureBOList);
+
+                MessageTO messageTO = new MessageTO();
+                messageTO.setContent( content );
+                messageTO.setTitle("项目测算汇总");
+                messageTO.setMsgType(MsgType.SYS);
+                messageTO.setSendType( SendType.EMAIL);
+                messageTO.setRangeType( RangeType.SPECIFIED);
+                //定时发送必须写
+                messageTO.setSenderId("SYSTEM");
+                messageTO.setSenderName("SYSTEM");
+
+                messageTO.setReceivers(sign.getEmails().split(";") );
+                messageAPI.send(  messageTO );
+
+                sign.setLastTime(LocalDateTime.now());
+                sign.setModifyTime(LocalDateTime.now());
+                allEmails.add(sign);
+            }
+        }
+
+        return allEmails;
+
+    }
+
+
 }

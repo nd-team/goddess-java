@@ -6,6 +6,7 @@ import com.bjike.goddess.projectmeasure.bo.ProjectCostStatusBO;
 import com.bjike.goddess.projectmeasure.dto.ProjectCostStatusDTO;
 import com.bjike.goddess.projectmeasure.entity.ProjectCostStatus;
 import com.bjike.goddess.projectmeasure.service.ProjectCostStatusSer;
+import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.ProjectCostStatusTO;
 import com.bjike.goddess.projectmeasure.to.ProjectCostStatusTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,5 +96,15 @@ public class ProjectCostStatusApiImpl implements ProjectCostStatusAPI {
     @Override
     public void update(ProjectCostStatusTO to) throws SerException {
         projectCostStatusSer.update(to);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return projectCostStatusSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return projectCostStatusSer.guidePermission(guidePermissionTO);
     }
 }

@@ -3,6 +3,7 @@ package com.bjike.goddess.projectmeasure.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectmeasure.bo.ProjectPersonnelDemandBO;
 import com.bjike.goddess.projectmeasure.dto.ProjectPersonnelDemandDTO;
+import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.ProjectPersonnelDemandTO;
 
 import java.util.List;
@@ -18,6 +19,18 @@ import java.util.List;
  */
 public interface ProjectPersonnelDemandAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 根据id查询项目人员需求
      *

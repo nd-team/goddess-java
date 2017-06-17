@@ -41,7 +41,7 @@ public class ProjectMeasureSummaryVO {
     /**
      * 发送间隔
      */
-    private Integer sendInterval;
+    private double sendInterval;
 
     /**
      * 发送时间格式
@@ -109,11 +109,11 @@ public class ProjectMeasureSummaryVO {
         this.lastTime = lastTime;
     }
 
-    public Integer getSendInterval() {
+    public double getSendInterval() {
         return sendInterval;
     }
 
-    public void setSendInterval(Integer sendInterval) {
+    public void setSendInterval(double sendInterval) {
         this.sendInterval = sendInterval;
     }
 
