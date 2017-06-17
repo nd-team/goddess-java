@@ -13,9 +13,9 @@ import org.apache.poi.xssf.usermodel.*;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
-import java.rmi.ServerException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -39,7 +39,7 @@ public class ExcelUtil {
      * @param <T>
      * @return
      */
-    public static <T> List<T> excelToClazz(File file, Class clazz, Excel excel) throws ActException{
+    public static <T> List<T> excelToClazz(File file, Class clazz, Excel excel) throws ActException {
         try {
             InputStream is = new FileInputStream(file);
             return excelToClazz(is, clazz, excel);
@@ -57,7 +57,7 @@ public class ExcelUtil {
      * @param <T>
      * @return
      */
-    public static <T> List<T> excelToClazz(InputStream is, Class clazz, Excel excel) throws ActException{
+    public static <T> List<T> excelToClazz(InputStream is, Class clazz, Excel excel) throws ActException {
         XSSFWorkbook wb = null;
         try {
             List<Field> fields = ClazzUtils.getFields(clazz);// 类上所有字段信息
@@ -90,9 +90,9 @@ public class ExcelUtil {
 
             }
             return objects;
-        }catch (ActException ae){
+        } catch (ActException ae) {
             throw ae;
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
 
@@ -108,7 +108,7 @@ public class ExcelUtil {
      * @param <T>
      * @return
      */
-    public static <T> List<T> mergeExcelToClazz(InputStream is, Class clazz, Excel excel)  throws ActException{
+    public static <T> List<T> mergeExcelToClazz(InputStream is, Class clazz, Excel excel) throws ActException {
         XSSFWorkbook wb = null;
         try {
             List<Field> fields = ClazzUtils.getFields(clazz);// 类上所有字段信息
@@ -135,7 +135,7 @@ public class ExcelUtil {
                             Boolean flag = isMergedRegion(sheet, rowIndex, j);
                             if (flag) {
                                 //说明是合并的单元格  j为列
-                                cellVal = getMergedRegionValue(sheet, rowIndex, j,eh);
+                                cellVal = getMergedRegionValue(sheet, rowIndex, j, eh);
                             } else {
                                 cellVal = getCellValue(row.getCell(j), eh);
                             }
@@ -154,7 +154,7 @@ public class ExcelUtil {
 
             }
             return objects;
-        }catch (ActException ae){
+        } catch (ActException ae) {
             throw ae;
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
@@ -171,7 +171,7 @@ public class ExcelUtil {
      * @param column
      * @return
      */
-    public static String getMergedRegionValue(Sheet sheet, int row, int column , ExcelHeader eh)throws ActException {
+    public static String getMergedRegionValue(Sheet sheet, int row, int column, ExcelHeader eh) throws ActException {
 
         int sheetMergeCount = sheet.getNumMergedRegions();
 
@@ -277,23 +277,18 @@ public class ExcelUtil {
                     XSSFCell cell = row.createCell(j);
                     try {
                         Object val = null;
-                        for (Field field : fields) {
-                            if (field.getAnnotation(ExcelHeader.class).name().equals(excelHeaders.get(j).name())) {
-                                field.setAccessible(true);
-                                val = field.get(obj);
-                                if (null != val && field.getType().getTypeName().equals(LocalDateTime.class.getTypeName())) { //处理时间
-                                    val = DateUtil.dateToString((LocalDateTime) val);
-                                } else if (null != val && field.getType().isEnum()) {
-                                    val = fieldToEnum(field, val);
-                                }else if (null != val && field.getType().getTypeName().equals(LocalDate.class.getTypeName())) { //处理时间
-                                    val = DateUtil.dateToString((LocalDate) val);
-                                }
+                        Field field = null;
+                        for (Field fd : fields) {
+                            if (fd.getAnnotation(ExcelHeader.class).name().equals(excelHeaders.get(j).name())) {
+                                fd.setAccessible(true);
+                                val = fd.get(obj);
+                                field = fd;
                                 break;
                             }
                         }
                         if (null != val) {
                             String cellValue = val.toString();
-                            cell.setCellValue(val.toString());
+                            setCellValue(cell, field, val);
                             if (excel.isAutoColumnWidth()) {
                                 int val_length = cellValue.getBytes().length; //获取数据值长度
                                 int name_length = excelHeaders.get(j).name().getBytes().length;//获取表头长度
@@ -405,7 +400,7 @@ public class ExcelUtil {
      * @param cell
      * @return
      */
-    private static String getCellValue(Cell cell, ExcelHeader eh) throws ActException{
+    private static String getCellValue(Cell cell, ExcelHeader eh) throws ActException {
         String val = null;
         try {
             if (null != cell) {
@@ -459,7 +454,7 @@ public class ExcelUtil {
      * @param excelHeaders 表头
      * @param row
      */
-    private static void validateHeader(List<ExcelHeader> excelHeaders, XSSFRow row) throws ActException{
+    private static void validateHeader(List<ExcelHeader> excelHeaders, XSSFRow row) throws ActException {
         int cellSize = excelHeaders.size();
         int maxSize = row.getLastCellNum();
         for (int i = 0; i < cellSize; i++) {
@@ -575,7 +570,7 @@ public class ExcelUtil {
      * @param obj
      * @param val
      */
-    private static void enumToField(Field field, Object obj, Object val)throws ActException {
+    private static void enumToField(Field field, Object obj, Object val) throws ActException {
         String value = val.toString();
         try {
             Field[] enumFields = field.getType().getFields();
@@ -586,6 +581,32 @@ public class ExcelUtil {
             }
         } catch (Exception e) {
             throw new ActException(e.getMessage());
+        }
+
+    }
+
+    /**
+     * 导出数据处理类型
+     * @param cell
+     * @param field
+     * @param val
+     * @throws ActException
+     */
+    private static void setCellValue(Cell cell, Field field, Object val) throws ActException {
+        String fileType = field.getType().getName();
+
+        if (fileType.equals(LocalDateTime.class.getName()) || //处理时间类型
+                fileType.equals(LocalDate.class.getName()) ||
+                fileType.equals(LocalTime.class.getName())) {
+            cell.setCellValue(DateUtil.dateToString(val));
+        } else if (fileType.equals(Double.class.getName())) {//Double
+            cell.setCellValue(Double.parseDouble(val.toString()));
+        } else if (fileType.equals(Integer.class.getName())) {//Integer
+            cell.setCellValue(Integer.parseInt(val.toString()));
+        } else if (field.getType().isEnum()) {//枚举
+            cell.setCellValue(fieldToEnum(field, val));
+        } else { //字符
+            cell.setCellValue(val.toString());
         }
 
     }
