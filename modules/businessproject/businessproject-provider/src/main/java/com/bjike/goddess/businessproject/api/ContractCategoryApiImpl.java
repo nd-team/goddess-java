@@ -83,4 +83,9 @@ public class ContractCategoryApiImpl implements ContractCategoryAPI {
     public void leadExcel(List<ContractCategoryExcel> toList) throws SerException {
         contractCategorySer.leadExcel(toList);
     }
+
+    @Override
+    public byte[] templateExcel() throws SerException {
+        return contractCategorySer.templateExcel();
+    }
 }

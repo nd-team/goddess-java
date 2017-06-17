@@ -134,4 +134,12 @@ public interface BaseInfoManageAPI {
      * @throws SerException
      */
     void leadExcel(List<BaseInfoManageTO> toList) throws SerException;
+
+    /**
+     * 导出模板excel
+     *
+     * @return
+     * @throws SerException
+     */
+    byte[] templateExcel() throws SerException;
 }

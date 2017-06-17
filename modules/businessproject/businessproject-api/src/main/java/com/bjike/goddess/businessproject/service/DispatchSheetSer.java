@@ -24,13 +24,13 @@ import java.util.Set;
 public interface DispatchSheetSer extends Ser<DispatchSheet, DispatchSheetDTO> {
 
 
-
     /**
      * 下拉导航权限
      */
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
@@ -150,4 +150,12 @@ public interface DispatchSheetSer extends Ser<DispatchSheet, DispatchSheetDTO> {
      * @throws SerException
      */
     void leadExcel(List<DispatchSheetTO> toList) throws SerException;
+
+    /**
+     * 导出excel模板
+     *
+     * @return
+     * @throws SerException
+     */
+    byte[] templateExcel() throws SerException;
 }

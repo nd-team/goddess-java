@@ -353,4 +353,24 @@ public class DispatchSheetAction extends BaseFileAction {
             throw new ActException(e1.getMessage());
         }
     }
+
+    /**
+     * 导出导入的excel模板
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/templateExcel")
+    public Result templateExcel(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "商务项目派工单信息管理导入excel模板.xlsx";
+            super.writeOutFile(response, dispatchSheetAPI.templateExcel(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
 }

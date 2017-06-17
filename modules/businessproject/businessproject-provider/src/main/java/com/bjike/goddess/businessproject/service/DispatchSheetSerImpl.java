@@ -4,6 +4,7 @@ import com.bjike.goddess.businessproject.bo.DispatchSheetBO;
 import com.bjike.goddess.businessproject.dto.DispatchSheetDTO;
 import com.bjike.goddess.businessproject.entity.DispatchSheet;
 import com.bjike.goddess.businessproject.enums.GuideAddrStatus;
+import com.bjike.goddess.businessproject.excel.ContractCategoryExcel;
 import com.bjike.goddess.businessproject.excel.DispatchSheetExcel;
 import com.bjike.goddess.businessproject.to.DispatchSheetTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
@@ -428,5 +429,15 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
             }
             super.save(baseInfoManage);
         }
+    }
+
+    @Override
+    public byte[] templateExcel() throws SerException {
+        List<DispatchSheetExcel> toList = new ArrayList<DispatchSheetExcel>();
+        DispatchSheetExcel baseInfoManageLeadExcel = new DispatchSheetExcel();
+        toList.add(baseInfoManageLeadExcel);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        return bytes;
     }
 }
