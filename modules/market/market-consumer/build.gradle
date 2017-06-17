@@ -41,7 +41,7 @@ dependencies {
     compile project(":modules:market:market-api")
     //compile project(":modules:customer:customer-api")
     compile project(":common:common-utils")
-
+    compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
     compile("org.springframework.boot:spring-boot-starter-web")
 }
 

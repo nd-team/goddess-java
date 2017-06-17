@@ -4,6 +4,7 @@ import com.bjike.goddess.bidding.api.BiddingWebInfoAPI;
 import com.bjike.goddess.bidding.bo.BiddingWebInfoBO;
 import com.bjike.goddess.bidding.dto.BiddingWebInfoDTO;
 import com.bjike.goddess.bidding.to.BiddingWebInfoTO;
+import com.bjike.goddess.bidding.to.GuidePermissionTO;
 import com.bjike.goddess.bidding.vo.BiddingWebInfoVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -36,6 +37,29 @@ import java.util.List;
 public class BiddingWebInfoAction {
     @Autowired
     private BiddingWebInfoAPI biddingWebInfoAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = biddingWebInfoAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 招投标网站信息列表总条数
@@ -104,7 +128,7 @@ public class BiddingWebInfoAction {
     public Result add(@Validated(ADD.class) BiddingWebInfoTO biddingWebInfoTO, BindingResult bindingResult) throws ActException {
         try {
             BiddingWebInfoBO biddingWebInfoBO = biddingWebInfoAPI.insertBiddingWebInfo(biddingWebInfoTO);
-            return ActResult.initialize(biddingWebInfoBO);
+            return ActResult.initialize(BeanTransform.copyProperties(biddingWebInfoBO, BiddingWebInfoVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -123,7 +147,7 @@ public class BiddingWebInfoAction {
     public Result edit(@Validated(EDIT.class) BiddingWebInfoTO biddingWebInfoTO, BindingResult bindingResult) throws ActException {
         try {
             BiddingWebInfoBO biddingWebInfoBO = biddingWebInfoAPI.editBiddingWebInfo(biddingWebInfoTO);
-            return ActResult.initialize(biddingWebInfoBO);
+            return ActResult.initialize(BeanTransform.copyProperties(biddingWebInfoBO, BiddingWebInfoVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -142,6 +166,38 @@ public class BiddingWebInfoAction {
         try {
             biddingWebInfoAPI.removeBiddingWebInfo(id);
             return new ActResult("delete success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取网站名称
+     *
+     * @des 获取网站名称集合
+     * @version v1
+     */
+    @GetMapping("v1/webName")
+    public Result webName() throws ActException {
+        try {
+            List<String> webNameList = biddingWebInfoAPI.getWebName();
+            return ActResult.initialize(webNameList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取网址
+     *
+     * @des 获取网址集合
+     * @version v1
+     */
+    @GetMapping("v1/url")
+    public Result url() throws ActException {
+        try {
+            List<String> urlList = biddingWebInfoAPI.getUrl();
+            return ActResult.initialize(urlList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

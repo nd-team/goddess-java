@@ -1,6 +1,7 @@
 package com.bjike.goddess.bidding.service;
 
 import com.bjike.goddess.bidding.bo.TenderInfoBO;
+import com.bjike.goddess.bidding.to.GuidePermissionTO;
 import com.bjike.goddess.bidding.to.TenderInfoTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -19,6 +20,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface TenderInfoSer extends Ser<TenderInfo, TenderInfoDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 标书资料列表总条数
      */

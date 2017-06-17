@@ -6,6 +6,7 @@ import com.bjike.goddess.bidding.dto.BiddingAnswerQuestionsDTO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.to.BiddingAnswerQuestionsTO;
 import com.bjike.goddess.bidding.to.BiddingDeleteFileTO;
+import com.bjike.goddess.bidding.to.GuidePermissionTO;
 import com.bjike.goddess.bidding.vo.BiddingAnswerQuestionsVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -47,6 +48,28 @@ public class BiddingAnswerQuestionsAction extends BaseFileAction{
     private BiddingAnswerQuestionsAPI biddingAnswerQuestionsAPI;
     @Autowired
     private FileAPI fileAPI;
+    /**
+     * 功能导航权限
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = biddingAnswerQuestionsAPI.guidePermission(guidePermissionTO);
+            if(! isHasPermission ){
+                //int code, String msg
+                return new ActResult(0,"没有权限",false );
+            }else{
+                return new ActResult(0,"有权限",true );
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
     /**
      * 投标答疑问题记录列表总条数
      *
@@ -114,7 +137,7 @@ public class BiddingAnswerQuestionsAction extends BaseFileAction{
     public Result add(@Validated(ADD.class) BiddingAnswerQuestionsTO biddingAnswerQuestionsTO, BindingResult bindingResult) throws ActException {
         try {
             BiddingAnswerQuestionsBO biddingAnswerQuestionsBO = biddingAnswerQuestionsAPI.insertBiddingAnswerQuestions(biddingAnswerQuestionsTO);
-            return ActResult.initialize(biddingAnswerQuestionsBO);
+            return ActResult.initialize(BeanTransform.copyProperties(biddingAnswerQuestionsBO, BiddingAnswerQuestionsVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -133,7 +156,7 @@ public class BiddingAnswerQuestionsAction extends BaseFileAction{
     public Result edit(@Validated(EDIT.class) BiddingAnswerQuestionsTO biddingAnswerQuestionsTO, BindingResult bindingResult) throws ActException {
         try {
             BiddingAnswerQuestionsBO biddingAnswerQuestionsBO = biddingAnswerQuestionsAPI.editBiddingAnswerQuestions(biddingAnswerQuestionsTO);
-            return ActResult.initialize(biddingAnswerQuestionsBO);
+            return ActResult.initialize(BeanTransform.copyProperties(biddingAnswerQuestionsBO, BiddingAnswerQuestionsVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -1,184 +1,176 @@
-package com.bjike.goddess.market.entity;
+package com.bjike.goddess.market.excel;
 
-import com.bjike.goddess.common.api.entity.BaseEntity;
+
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.market.enums.MarketProjectNature;
 import com.bjike.goddess.market.enums.MarketWorkType;
 import com.bjike.goddess.market.enums.Scale;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-
 /**
- * 市场信息管理
+ * 市场信息管理表现层对象
  *
  * @Author: [ xiazhili ]
- * @Date: [ 2017-03-21T11:00:01.541 ]
- * @Description: [ 市场信息管理 ]
+ * @Date: [ 2017-03-21T11:00:01.548 ]
+ * @Description: [ 市场信息管理表现层对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@Entity
-@Table(name = "market_marketinfo")
-public class MarketInfo extends BaseEntity {
+public class MarketInfoExport {
 
     /**
      * 审核人
      */
-    @Column(name = "auditor", columnDefinition = "VARCHAR(255)   COMMENT '审核人'")
+    @ExcelHeader(name = "审核人",notNull = true)
     private String auditor;
 
     /**
      * 审核意见
      */
-    @Column(name = "auditOpinion", columnDefinition = "VARCHAR(255)   COMMENT '审核意见'")
+    @ExcelHeader(name = "审核意见",notNull = true)
     private String auditOpinion;
 
     /**
      * 市场信息编号
      */
-    @Column(name = "marketInfoId", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '市场信息编号'")
+    @ExcelHeader(name = "市场信息编号",notNull = true)
     private String marketInfoId;
 
     /**
      * 市场收集日期
      */
-    @Column(name = "infoCollectionDate", columnDefinition = "DATE   COMMENT '市场收集日期'")
-    private LocalDate infoCollectionDate;
+    @ExcelHeader(name = "市场收集日期",notNull = true)
+    private String infoCollectionDate;
 
     /**
      * 行业
      */
-    @Column(name = "workType", columnDefinition = "TINYINT(2)   COMMENT '行业'")
-    private MarketWorkType workType;
+    @ExcelHeader(name = "行业",notNull = true)
+    private String workType;
 
     /**
      * 技术类别
      */
-    @Column(name = "technologyCategory", columnDefinition = "VARCHAR(255)   COMMENT '技术类别'")
+    @ExcelHeader(name = "技术类别",notNull = true)
     private String technologyCategory;
 
     /**
      * 地区
      */
-    @Column(name = "area", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @ExcelHeader(name = "地区",notNull = true)
     private String area;
 
     /**
      * 项目名称
      */
-    @Column(name = "projectName", columnDefinition = "VARCHAR(255)   COMMENT '项目名称'")
+    @ExcelHeader(name = "项目名称",notNull = true)
     private String projectName;
 
     /**
      * 规模
      */
-    @Column(name = "scale", columnDefinition = "TINYINT(2)   COMMENT '规模'")
-    private Scale scale;
+    @ExcelHeader(name = "规模",notNull = true)
+    private String scale;
 
     /**
      * 发起时间
      */
-    @Column(name = "startTime", columnDefinition = "DATE   COMMENT '发起时间'")
-    private LocalDate startTime;
+    @ExcelHeader(name = "发起时间",notNull = true)
+    private String startTime;
 
     /**
      * 重要时间点
      */
-    @Column(name = "importantPoint", nullable = false, columnDefinition = "DATETIME   COMMENT '重要时间点'")
-    private LocalDateTime importantPoint;
+    @ExcelHeader(name = "重要时间点",notNull = true)
+    private String importantPoint;
 
     /**
      * 结束时间
      */
-    @Column(name = "endTime", columnDefinition = "DATE   COMMENT '结束时间'")
-    private LocalDate endTime;
+    @ExcelHeader(name = "结束时间",notNull = true)
+    private String endTime;
 
     /**
      * 信息来源
      */
-    @Column(name = "infoSource", columnDefinition = "VARCHAR(255)   COMMENT '信息来源'")
+    @ExcelHeader(name = "信息来源",notNull = true)
     private String infoSource;
 
     /**
      * 市场信息收集人
      */
-    @Column(name = "marketInfoCollecting", columnDefinition = "VARCHAR(255)   COMMENT '市场信息收集人'")
+    @ExcelHeader(name = "市场信息收集人",notNull = true)
     private String marketInfoCollecting;
 
     /**
-     * 是否为有效信息(0是，1否)
+     * 是否为有效信息
      */
-    @Column(name = "is_effective", columnDefinition = "TINYINT(2)  COMMENT '是否为有效信息(0是，1否)'")
-    private Boolean effective;
+    @ExcelHeader(name = "是否为有效信息",notNull = true)
+    private String effective;
 
     /**
      * 项目性质
      */
-    @Column(name = "projectNature", columnDefinition = "TINYINT(2)   COMMENT '项目性质'")
-    private MarketProjectNature projectNature;
+    @ExcelHeader(name = "项目性质",notNull = true)
+    private String projectNature;
 
     /**
      * 市场分析人员
      */
-    @Column(name = "marketAnalysts", columnDefinition = "VARCHAR(255)   COMMENT '市场分析人员'")
+    @ExcelHeader(name = "市场分析人员",notNull = true)
     private String marketAnalysts;
 
     /**
      * 配置要求
      */
-    @Column(name = "configurationRequirement", columnDefinition = "VARCHAR(255)   COMMENT '配置要求'")
+    @ExcelHeader(name = "配置要求",notNull = true)
     private String configurationRequirement;
 
     /**
      * 技术要求
      */
-    @Column(name = "technicalRequirement", columnDefinition = "VARCHAR(255)   COMMENT '技术要求'")
+    @ExcelHeader(name = "技术要求",notNull = true)
     private String technicalRequirement;
 
     /**
      * 资质要求
      */
-    @Column(name = "qualificationRequirement", columnDefinition = "VARCHAR(255)   COMMENT '资质要求'")
+    @ExcelHeader(name = "资质要求",notNull = true)
     private String qualificationRequirement;
 
     /**
      * 客户信息编号
      */
-    @Column(name = "customerNum", columnDefinition = "VARCHAR(255)   COMMENT '客户信息编号'")
+    @ExcelHeader(name = "客户信息编号",notNull = true)
     private String customerNum;
 
     /**
      * 客户名称
      */
-    @Column(name = "customerName", columnDefinition = "VARCHAR(255)   COMMENT '客户名称'")
+    @ExcelHeader(name = "客户名称",notNull = true)
     private String customerName;
 
     /**
      * 组织机构名称
      */
-    @Column(name = "origanizion", columnDefinition = "VARCHAR(255)   COMMENT '组织机构名称'")
+    @ExcelHeader(name = "组织机构名称",notNull = true)
     private String origanizion;
 
     /**
      * 竞争对手名称
      */
-    @Column(name = "competitorsName", columnDefinition = "VARCHAR(255)   COMMENT '竞争对手名称'")
+    @ExcelHeader(name = "竞争对手名称",notNull = true)
     private String competitorsName;
 
     /**
      * 客户/竞争对手信息填写人
      */
-    @Column(name = "fillPerson", columnDefinition = "VARCHAR(255)   COMMENT '客户/竞争对手信息填写人'")
+    @ExcelHeader(name = "客户/竞争对手信息填写人",notNull = true)
     private String fillPerson;
 
     /**
      * 备注
      */
-    @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @ExcelHeader(name = "备注",notNull = true)
     private String remark;
 
 
@@ -206,19 +198,19 @@ public class MarketInfo extends BaseEntity {
         this.marketInfoId = marketInfoId;
     }
 
-    public LocalDate getInfoCollectionDate() {
+    public String getInfoCollectionDate() {
         return infoCollectionDate;
     }
 
-    public void setInfoCollectionDate(LocalDate infoCollectionDate) {
+    public void setInfoCollectionDate(String infoCollectionDate) {
         this.infoCollectionDate = infoCollectionDate;
     }
 
-    public MarketWorkType getWorkType() {
+    public String getWorkType() {
         return workType;
     }
 
-    public void setWorkType(MarketWorkType workType) {
+    public void setWorkType(String workType) {
         this.workType = workType;
     }
 
@@ -246,35 +238,35 @@ public class MarketInfo extends BaseEntity {
         this.projectName = projectName;
     }
 
-    public Scale getScale() {
+    public String getScale() {
         return scale;
     }
 
-    public void setScale(Scale scale) {
+    public void setScale(String scale) {
         this.scale = scale;
     }
 
-    public LocalDate getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDate startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getImportantPoint() {
+    public String getImportantPoint() {
         return importantPoint;
     }
 
-    public void setImportantPoint(LocalDateTime importantPoint) {
+    public void setImportantPoint(String importantPoint) {
         this.importantPoint = importantPoint;
     }
 
-    public LocalDate getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalDate endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
@@ -294,19 +286,19 @@ public class MarketInfo extends BaseEntity {
         this.marketInfoCollecting = marketInfoCollecting;
     }
 
-    public Boolean getEffective() {
+    public String getEffective() {
         return effective;
     }
 
-    public void setEffective(Boolean effective) {
+    public void setEffective(String effective) {
         this.effective = effective;
     }
 
-    public MarketProjectNature getProjectNature() {
+    public String getProjectNature() {
         return projectNature;
     }
 
-    public void setProjectNature(MarketProjectNature projectNature) {
+    public void setProjectNature(String projectNature) {
         this.projectNature = projectNature;
     }
 

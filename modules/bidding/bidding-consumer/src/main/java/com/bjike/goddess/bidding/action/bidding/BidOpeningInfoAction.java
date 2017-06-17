@@ -9,6 +9,7 @@ import com.bjike.goddess.bidding.dto.TenderInfoDTO;
 import com.bjike.goddess.bidding.to.BidOpeningInfoTO;
 import com.bjike.goddess.bidding.to.BiddingDeleteFileTO;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
+import com.bjike.goddess.bidding.to.GuidePermissionTO;
 import com.bjike.goddess.bidding.vo.BidOpeningCollectVO;
 import com.bjike.goddess.bidding.vo.BidOpeningInfoVO;
 import com.bjike.goddess.bidding.vo.BiddingInfoCollectVO;
@@ -50,6 +51,28 @@ import java.util.List;
 public class BidOpeningInfoAction extends BaseFileAction{
     @Autowired
     private BidOpeningInfoAPI bidOpeningInfoAPI;
+    /**
+     * 功能导航权限
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = bidOpeningInfoAPI.guidePermission(guidePermissionTO);
+            if(! isHasPermission ){
+                //int code, String msg
+                return new ActResult(0,"没有权限",false );
+            }else{
+                return new ActResult(0,"有权限",true );
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
     /**
      * 开标信息列表总条数
      *

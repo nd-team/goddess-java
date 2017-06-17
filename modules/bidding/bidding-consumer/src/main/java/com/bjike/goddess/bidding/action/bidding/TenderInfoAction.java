@@ -5,6 +5,7 @@ import com.bjike.goddess.bidding.bo.TenderInfoBO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.dto.TenderInfoDTO;
 import com.bjike.goddess.bidding.to.BiddingDeleteFileTO;
+import com.bjike.goddess.bidding.to.GuidePermissionTO;
 import com.bjike.goddess.bidding.to.TenderInfoTO;
 import com.bjike.goddess.bidding.vo.TenderInfoVO;
 import com.bjike.goddess.common.api.entity.ADD;
@@ -47,6 +48,27 @@ public class TenderInfoAction extends BaseFileAction{
     private TenderInfoAPI tenderInfoAPI;
     @Autowired
     private FileAPI fileAPI;
+    /**
+     * 功能导航权限
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = tenderInfoAPI.guidePermission(guidePermissionTO);
+            if(! isHasPermission ){
+                //int code, String msg
+                return new ActResult(0,"没有权限",false );
+            }else{
+                return new ActResult(0,"有权限",true );
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 标书资料列表总条数
@@ -116,7 +138,7 @@ public class TenderInfoAction extends BaseFileAction{
     public Result add(@Validated(ADD.class) TenderInfoTO tenderInfoTO, BindingResult bindingResult) throws ActException {
         try {
             TenderInfoBO tenderInfoBO = tenderInfoAPI.insertTenderInfo(tenderInfoTO);
-            return ActResult.initialize(tenderInfoBO);
+            return ActResult.initialize(BeanTransform.copyProperties(tenderInfoBO, TenderInfoVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -135,7 +157,7 @@ public class TenderInfoAction extends BaseFileAction{
     public Result edit(@Validated(EDIT.class) TenderInfoTO tenderInfoTO, BindingResult bindingResult) throws ActException {
         try {
             TenderInfoBO tenderInfoBO = tenderInfoAPI.editTenderInfo(tenderInfoTO);
-            return ActResult.initialize(tenderInfoBO);
+            return ActResult.initialize(BeanTransform.copyProperties(tenderInfoBO, TenderInfoVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

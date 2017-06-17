@@ -154,7 +154,7 @@ public class ProblemHandlingResultAction extends BaseFileAction {
     public Result add(@Validated(ADD.class) ProblemHandlingResultTO problemHandlingResultTO, BindingResult bindingResult) throws ActException {
         try {
             ProblemHandlingResultBO problemHandlingResultBO = problemHandlingResultAPI.insertProblemHandlingResult(problemHandlingResultTO);
-            return ActResult.initialize(problemHandlingResultBO);
+            return ActResult.initialize(BeanTransform.copyProperties(problemHandlingResultBO, ProblemHandlingResultVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -173,7 +173,7 @@ public class ProblemHandlingResultAction extends BaseFileAction {
     public Result edit(@Validated(EDIT.class) ProblemHandlingResultTO problemHandlingResultTO, BindingResult bindingResult) throws ActException {
         try {
             ProblemHandlingResultBO problemHandlingResultBO = problemHandlingResultAPI.editProblemHandlingResult(problemHandlingResultTO);
-            return ActResult.initialize(problemHandlingResultBO);
+            return ActResult.initialize(BeanTransform.copyProperties(problemHandlingResultBO, ProblemHandlingResultVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

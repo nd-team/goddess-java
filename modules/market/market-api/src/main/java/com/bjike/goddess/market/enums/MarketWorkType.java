@@ -1,5 +1,7 @@
 package com.bjike.goddess.market.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 行业类别
  *
@@ -13,18 +15,22 @@ public enum MarketWorkType {
     /**
      * 移动通信行业市场信息数量
      */
+    @ExcelValue(name = "移动通信行业市场信息数量")
     MOBILECOMMUNICATION(0),
     /**
      * 软件开发行业市场信息数量
      */
+    @ExcelValue(name = "软件开发行业市场信息数量")
     SOFTWAREDEVELOPMENT(1),
     /**
      * 智能系统集成行业市场信息数量
      */
+    @ExcelValue(name = "智能系统集成行业市场信息数量")
     INTELLIGENTSYSTEMINTEGRATION(2),
     /**
      * 策划与营销方案行业市场信息数量
      */
+    @ExcelValue(name = "策划与营销方案行业市场信息数量")
     PLANNINGMARKETINGSOLUTIONS(3),;
 
     private int code;
@@ -67,6 +73,22 @@ public enum MarketWorkType {
             name = "智能系统集成";
         }
         if (code == MarketWorkType.PLANNINGMARKETINGSOLUTIONS.getCode()) {
+            name = "策划与营销方案";
+        }
+        return name;
+    }
+    public static String exportStrConvert(MarketWorkType marketWorkType) {
+        String name = "";
+        if (marketWorkType.equals(MarketWorkType.MOBILECOMMUNICATION)) {
+            name = "移动通信";
+        }
+        if (marketWorkType.equals(MarketWorkType.SOFTWAREDEVELOPMENT)) {
+            name = "软件开发";
+        }
+        if (marketWorkType.equals(MarketWorkType.INTELLIGENTSYSTEMINTEGRATION)) {
+            name = "智能系统集成";
+        }
+        if (marketWorkType.equals(MarketWorkType.PLANNINGMARKETINGSOLUTIONS)) {
             name = "策划与营销方案";
         }
         return name;

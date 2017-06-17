@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.market.bo.MarketInfoBO;
 import com.bjike.goddess.market.entity.MarketInfo;
 import com.bjike.goddess.market.dto.MarketInfoDTO;
+import com.bjike.goddess.market.excel.SonPermissionObject;
+import com.bjike.goddess.market.to.GuidePermissionTO;
 import com.bjike.goddess.market.to.MarketInfoTO;
 
 import java.util.List;
@@ -19,6 +21,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface MarketInfoSer extends Ser<MarketInfo, MarketInfoDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      *市场信息管理列表总条数
      */
@@ -74,15 +89,6 @@ public interface MarketInfoSer extends Ser<MarketInfo, MarketInfoDTO> {
 
     }
 
-    /**
-     * 导出
-     *
-     * @param customerName
-     * @throws SerException
-     */
-    default String exportExcel(String customerName) throws SerException {
-        return null;
-    }
 
     /**
      * 汇总
@@ -103,5 +109,13 @@ public interface MarketInfoSer extends Ser<MarketInfo, MarketInfoDTO> {
     default List<String> getMarketInfoArea() throws SerException {
         return null;
     }
+    /**
+     * 导出Excel
+     *
+     * @param dto
+     * @throws SerException
+     */
+    byte[] exportExcel(MarketInfoDTO dto) throws SerException;
+
 
 }

@@ -5,6 +5,7 @@ import com.bjike.goddess.bidding.dto.BiddingAnswerQuestionsDTO;
 import com.bjike.goddess.bidding.entity.BiddingAnswerQuestions;
 import com.bjike.goddess.bidding.service.BiddingAnswerQuestionsSer;
 import com.bjike.goddess.bidding.to.BiddingAnswerQuestionsTO;
+import com.bjike.goddess.bidding.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,15 @@ import java.util.List;
 public class BiddingAnswerQuestionsApiImpl implements BiddingAnswerQuestionsAPI {
     @Autowired
     private BiddingAnswerQuestionsSer biddingAnswerQuestionsSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return biddingAnswerQuestionsSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return biddingAnswerQuestionsSer.guidePermission( guidePermissionTO );
+    }
     @Override
     public Long countBiddingAnswerQuestions(BiddingAnswerQuestionsDTO biddingAnswerQuestionsDTO) throws SerException {
         return biddingAnswerQuestionsSer.countBiddingAnswerQuestions(biddingAnswerQuestionsDTO);

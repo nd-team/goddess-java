@@ -1,30 +1,32 @@
-package com.bjike.goddess.market.vo;
+package com.bjike.goddess.market.bo;
 
+import com.bjike.goddess.market.enums.CollectSendUnit;
+import com.bjike.goddess.market.enums.CollectUnit;
+import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.type.Status;
-import com.bjike.goddess.market.enums.MarketCollectUnit;
-import com.bjike.goddess.market.enums.MarketSendUnit;
 
 import java.util.List;
 
 /**
- * 市场邮件发送定制表现层对象
+ * 市场信息邮件发送定制传输对象
  *
  * @Author: [ xiazhili ]
- * @Date: [ 2017-03-22T19:08:18.880 ]
- * @Description: [ 市场邮件发送定制表现层对象 ]
+ * @Date: [ 2017-03-16T19:08:18.877 ]
+ * @Description: [ 市场信息邮件发送定制传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class MarketEmailVO {
+public class CollectEmailBO extends BaseBO {
 
     /**
-     * id
+     * 汇总类型
      */
-    private String id;
+    private String type;
+
     /**
-     * 地区
+     * 汇总条件
      */
-    private String area;
+    private String condi;
 
     /**
      * 备注
@@ -44,12 +46,12 @@ public class MarketEmailVO {
     /**
      * 发送单位
      */
-    private MarketSendUnit marketSendUnit;
+    private CollectSendUnit collectSendUnit;
 
     /**
      * 汇总间隔
      */
-    private MarketCollectUnit marketCollectUnit;
+    private CollectUnit collectUnit;
 
     /**
      * 发送对象
@@ -87,20 +89,20 @@ public class MarketEmailVO {
     private String modifyTime;
 
 
-    public String getId() {
-        return id;
+    public String getType() {
+        return type;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getArea() {
-        return area;
+    public String getCondi() {
+        return condi;
     }
 
-    public void setArea(String area) {
-        this.area = area;
+    public void setCondi(String condi) {
+        this.condi = condi;
     }
 
     public String getRemark() {
@@ -127,20 +129,20 @@ public class MarketEmailVO {
         this.sendNumAndUnit = sendNumAndUnit;
     }
 
-    public MarketSendUnit getMarketSendUnit() {
-        return marketSendUnit;
+    public CollectSendUnit getCollectSendUnit() {
+        return collectSendUnit;
     }
 
-    public void setMarketSendUnit(MarketSendUnit marketSendUnit) {
-        this.marketSendUnit = marketSendUnit;
+    public void setCollectSendUnit(CollectSendUnit collectSendUnit) {
+        this.collectSendUnit = collectSendUnit;
     }
 
-    public MarketCollectUnit getMarketCollectUnit() {
-        return marketCollectUnit;
+    public CollectUnit getCollectUnit() {
+        return collectUnit;
     }
 
-    public void setMarketCollectUnit(MarketCollectUnit marketCollectUnit) {
-        this.marketCollectUnit = marketCollectUnit;
+    public void setCollectUnit(CollectUnit collectUnit) {
+        this.collectUnit = collectUnit;
     }
 
     public String getSendObject() {
@@ -198,4 +200,6 @@ public class MarketEmailVO {
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
     }
+
+
 }
