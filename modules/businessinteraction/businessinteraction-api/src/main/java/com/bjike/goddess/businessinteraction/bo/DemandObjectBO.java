@@ -1,5 +1,7 @@
 package com.bjike.goddess.businessinteraction.bo;
 
+import com.bjike.goddess.common.api.bo.BaseBO;
+
 /**
  * 获取合作对象联系方式
  * @Author: [tanghaixiang]
@@ -8,7 +10,7 @@ package com.bjike.goddess.businessinteraction.bo;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class DemandObjectBO {
+public class DemandObjectBO extends BaseBO{
 
     /**
      * 符合对象公司名

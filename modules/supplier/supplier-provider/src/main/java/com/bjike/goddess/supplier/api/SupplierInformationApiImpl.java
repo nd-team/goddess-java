@@ -83,4 +83,9 @@ public class SupplierInformationApiImpl implements SupplierInformationAPI {
     public List<SonPermissionObject> sonPermission() throws SerException {
         return supplierInformationSer.sonPermission();
     }
+
+    @Override
+    public List<SupplierInformationBO> findByName(String name) throws SerException {
+        return supplierInformationSer.findByName(name);
+    }
 }

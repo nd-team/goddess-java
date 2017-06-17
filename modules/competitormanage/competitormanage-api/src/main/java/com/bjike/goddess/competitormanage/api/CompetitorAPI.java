@@ -68,4 +68,24 @@ public interface CompetitorAPI {
      * @return 竞争对手记录
      */
     CompetitorBO findById(String id) throws SerException;
+
+    /**
+     * chenjunhao
+     * 通过业务类型查找
+     *
+     * @param businessType 业务类型
+     * @return
+     * @throws SerException
+     */
+    List<CompetitorBO> findByBusinessType(String businessType) throws SerException;
+
+    /**
+     * chenjunhao
+     * 通过组织机构名称查找
+     *
+     * @param organization 组织机构名称
+     * @return
+     * @throws SerException
+     */
+    List<CompetitorBO> findByOrganization(String organization) throws SerException;
 }

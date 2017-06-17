@@ -60,4 +60,14 @@ public class CompetitorApiImpl implements CompetitorAPI {
     public CompetitorBO findById(String id) throws SerException {
         return BeanTransform.copyProperties(competitorSer.findById(id),CompetitorBO.class);
     }
+
+    @Override
+    public List<CompetitorBO> findByBusinessType(String businessType) throws SerException {
+        return competitorSer.findByBusinessType(businessType);
+    }
+
+    @Override
+    public List<CompetitorBO> findByOrganization(String organization) throws SerException {
+        return competitorSer.findByOrganization(organization);
+    }
 }

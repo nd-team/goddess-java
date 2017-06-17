@@ -386,4 +386,13 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
 
         return list;
     }
+
+    @Override
+    //chenjunhao
+    public List<SupplierInformationBO>  findByName(String name) throws SerException {
+        SupplierInformationDTO dto = new SupplierInformationDTO();
+        dto.getConditions().add(Restrict.eq("name", name));
+        List<SupplierInformation> list = super.findByCis(dto);
+        return BeanTransform.copyProperties(list, SupplierInformationBO.class);
+    }
 }

@@ -54,11 +54,11 @@ public class CollectEmail extends BaseEntity {
     @Column(columnDefinition = "TINYINT(1)  COMMENT '发送单位'", nullable = false )
     private CustomerSendUnit customerSendUnit;
 
-    /**
-     * 汇总间隔
-     */
-    @Column(columnDefinition = "TINYINT(1)  COMMENT '汇总间隔'", nullable = false )
-    private CustomerCollectUnit customerCollectUnit;
+//    /**
+//     * 汇总间隔
+//     */
+//    @Column(columnDefinition = "TINYINT(1)  COMMENT '汇总间隔'", nullable = false )
+//    private CustomerCollectUnit customerCollectUnit;
 
     /**
      * 发送对象
@@ -125,13 +125,13 @@ public class CollectEmail extends BaseEntity {
         this.customerSendUnit = customerSendUnit;
     }
 
-    public CustomerCollectUnit getCustomerCollectUnit() {
-        return customerCollectUnit;
-    }
-
-    public void setCustomerCollectUnit(CustomerCollectUnit customerCollectUnit) {
-        this.customerCollectUnit = customerCollectUnit;
-    }
+//    public CustomerCollectUnit getCustomerCollectUnit() {
+//        return customerCollectUnit;
+//    }
+//
+//    public void setCustomerCollectUnit(CustomerCollectUnit customerCollectUnit) {
+//        this.customerCollectUnit = customerCollectUnit;
+//    }
 
     public String getSendObject() {
         return sendObject;
