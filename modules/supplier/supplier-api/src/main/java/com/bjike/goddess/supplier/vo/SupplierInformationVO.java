@@ -1,7 +1,5 @@
 package com.bjike.goddess.supplier.vo;
 
-import java.time.LocalDate;
-
 /**
  * 供应商基本信息表现层对象
  *
@@ -115,7 +113,7 @@ public class SupplierInformationVO {
     /**
      * 成立时间
      */
-    private LocalDate establishTime;
+    private String establishTime;
 
     /**
      * 地址
@@ -303,11 +301,11 @@ public class SupplierInformationVO {
         this.registeredCapital = registeredCapital;
     }
 
-    public LocalDate getEstablishTime() {
+    public String getEstablishTime() {
         return establishTime;
     }
 
-    public void setEstablishTime(LocalDate establishTime) {
+    public void setEstablishTime(String establishTime) {
         this.establishTime = establishTime;
     }
 

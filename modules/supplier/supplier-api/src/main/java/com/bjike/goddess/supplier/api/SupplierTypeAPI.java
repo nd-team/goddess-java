@@ -3,6 +3,7 @@ package com.bjike.goddess.supplier.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.supplier.bo.SupplierTypeBO;
 import com.bjike.goddess.supplier.dto.SupplierTypeDTO;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import com.bjike.goddess.supplier.to.SupplierTypeTO;
 
 import java.util.List;
@@ -108,10 +109,19 @@ public interface SupplierTypeAPI {
 
     /**
      * 获取总条数
+     *
      * @return
      * @throws SerException
      */
-    default Long getTotal() throws SerException{
+    default Long getTotal() throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 

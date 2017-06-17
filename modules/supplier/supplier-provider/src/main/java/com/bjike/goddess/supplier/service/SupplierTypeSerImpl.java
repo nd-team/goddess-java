@@ -4,11 +4,16 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.supplier.bo.SupplierTypeBO;
 import com.bjike.goddess.supplier.dto.SupplierTypeDTO;
 import com.bjike.goddess.supplier.entity.SupplierType;
+import com.bjike.goddess.supplier.enums.GuideAddrStatus;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import com.bjike.goddess.supplier.to.SupplierTypeTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -33,6 +38,8 @@ import java.util.List;
 public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeDTO> implements SupplierTypeSer {
     @Autowired
     private SupPermissionSer supPermissionSer;
+    @Autowired
+    private UserAPI userAPI;
 
     private static final String idFlag = "supplier-01";
 
@@ -137,6 +144,98 @@ public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeD
     @Override
     public Boolean sonPermission() throws SerException {
         return supPermissionSer.getSupPermission(idFlag);
+    }
+
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = supPermissionSer.getSupPermission(idFlag);
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = supPermissionSer.getSupPermission(idFlag);
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
     }
 
 }

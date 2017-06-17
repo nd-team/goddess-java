@@ -6,6 +6,7 @@ import com.bjike.goddess.supplier.bo.SupplierInformationBO;
 import com.bjike.goddess.supplier.dto.SupplierInformationDTO;
 import com.bjike.goddess.supplier.service.SupplierInformationSer;
 import com.bjike.goddess.supplier.to.CollectTo;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import com.bjike.goddess.supplier.to.SupplierInformationTO;
 import com.bjike.goddess.supplier.vo.SonPermissionObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,5 +88,10 @@ public class SupplierInformationApiImpl implements SupplierInformationAPI {
     @Override
     public List<SupplierInformationBO> findByName(String name) throws SerException {
         return supplierInformationSer.findByName(name);
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return supplierInformationSer.guidePermission(guidePermissionTO);
     }
 }

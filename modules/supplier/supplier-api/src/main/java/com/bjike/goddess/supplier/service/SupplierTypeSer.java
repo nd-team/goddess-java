@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.supplier.bo.SupplierTypeBO;
 import com.bjike.goddess.supplier.dto.SupplierTypeDTO;
 import com.bjike.goddess.supplier.entity.SupplierType;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import com.bjike.goddess.supplier.to.SupplierTypeTO;
 
 import java.util.List;
@@ -116,4 +117,10 @@ public interface SupplierTypeSer extends Ser<SupplierType, SupplierTypeDTO> {
     }
 
 
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

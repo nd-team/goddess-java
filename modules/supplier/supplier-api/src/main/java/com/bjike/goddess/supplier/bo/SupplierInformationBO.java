@@ -2,8 +2,6 @@ package com.bjike.goddess.supplier.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import java.time.LocalDate;
-
 /**
  * 供应商基本信息业务传输对象
  *
@@ -113,7 +111,7 @@ public class SupplierInformationBO extends BaseBO {
     /**
      * 成立时间
      */
-    private LocalDate establishTime;
+    private String establishTime;
 
     /**
      * 地址
@@ -293,11 +291,11 @@ public class SupplierInformationBO extends BaseBO {
         this.registeredCapital = registeredCapital;
     }
 
-    public LocalDate getEstablishTime() {
+    public String getEstablishTime() {
         return establishTime;
     }
 
-    public void setEstablishTime(LocalDate establishTime) {
+    public void setEstablishTime(String establishTime) {
         this.establishTime = establishTime;
     }
 
