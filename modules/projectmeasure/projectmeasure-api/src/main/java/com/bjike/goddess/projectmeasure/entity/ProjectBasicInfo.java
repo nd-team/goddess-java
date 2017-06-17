@@ -3,7 +3,9 @@ package com.bjike.goddess.projectmeasure.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.projectmeasure.type.CooperationType;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 
@@ -23,7 +25,7 @@ public class ProjectBasicInfo extends BaseEntity {
     /**
      * 项目名称
      */
-    @Column(name = "projectName", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '项目名称'")
+    @Column(name = "projectName", nullable = false, unique = true, columnDefinition = "VARCHAR(255) COMMENT '项目名称'")
     private String projectName;
 
     /**
@@ -79,6 +81,30 @@ public class ProjectBasicInfo extends BaseEntity {
      */
     @Column(name = "numberOfStaff", nullable = false, columnDefinition = "INT(11) COMMENT '人员数量'")
     private Integer numberOfStaff;
+
+    /**
+     * 工期
+     */
+    @Column(name = "timeLimit", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '工期'")
+    private String timeLimit;
+
+    /**
+     * 服务费用
+     */
+    @Column(name = "serviceCharge", columnDefinition = "DECIMAL(10,2) COMMENT '服务费用'")
+    private Double serviceCharge;
+
+    /**
+     * 提成
+     */
+    @Column(name = "royalties", columnDefinition = "DECIMAL(10,2) COMMENT '提成'")
+    private Double royalties;
+
+    /**
+     * 招待费
+     */
+    @Column(name = "serveCharge", columnDefinition = "DECIMAL(10,2) COMMENT '招待费'")
+    private Double serveCharge;
 
     /**
      * 设备费用
@@ -183,6 +209,38 @@ public class ProjectBasicInfo extends BaseEntity {
 
     public void setNumberOfStaff(Integer numberOfStaff) {
         this.numberOfStaff = numberOfStaff;
+    }
+
+    public String getTimeLimit() {
+        return timeLimit;
+    }
+
+    public void setTimeLimit(String timeLimit) {
+        this.timeLimit = timeLimit;
+    }
+
+    public Double getServiceCharge() {
+        return serviceCharge;
+    }
+
+    public void setServiceCharge(Double serviceCharge) {
+        this.serviceCharge = serviceCharge;
+    }
+
+    public Double getRoyalties() {
+        return royalties;
+    }
+
+    public void setRoyalties(Double royalties) {
+        this.royalties = royalties;
+    }
+
+    public Double getServeCharge() {
+        return serveCharge;
+    }
+
+    public void setServeCharge(Double serveCharge) {
+        this.serveCharge = serveCharge;
     }
 
     public Double getDeviceCharge() {

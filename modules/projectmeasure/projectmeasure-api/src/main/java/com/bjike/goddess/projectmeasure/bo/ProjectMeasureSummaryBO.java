@@ -38,7 +38,7 @@ public class ProjectMeasureSummaryBO extends BaseBO {
     /**
      * 发送间隔
      */
-    private Integer sendInterval;
+    private double sendInterval;
 
     /**
      * 发送时间格式
@@ -64,6 +64,11 @@ public class ProjectMeasureSummaryBO extends BaseBO {
      * 状态
      */
     private Status status;
+
+    /**
+     * 地区
+     */
+    private String areas;
 
 
     public String getProjectGroups() {
@@ -98,11 +103,11 @@ public class ProjectMeasureSummaryBO extends BaseBO {
         this.lastTime = lastTime;
     }
 
-    public Integer getSendInterval() {
+    public double getSendInterval() {
         return sendInterval;
     }
 
-    public void setSendInterval(Integer sendInterval) {
+    public void setSendInterval(double sendInterval) {
         this.sendInterval = sendInterval;
     }
 
@@ -114,7 +119,7 @@ public class ProjectMeasureSummaryBO extends BaseBO {
         this.cycle = cycle;
     }
 
-    public Integer getDetailInterval() {
+    public double getDetailInterval() {
         return detailInterval;
     }
 
@@ -144,5 +149,13 @@ public class ProjectMeasureSummaryBO extends BaseBO {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getAreas() {
+        return areas;
+    }
+
+    public void setAreas(String areas) {
+        this.areas = areas;
     }
 }

@@ -6,6 +6,7 @@ import com.bjike.goddess.projectmeasure.bo.SingleProjectSingleUIBO;
 import com.bjike.goddess.projectmeasure.dto.SingleProjectSingleUIDTO;
 import com.bjike.goddess.projectmeasure.entity.SingleProjectSingleUI;
 import com.bjike.goddess.projectmeasure.service.SingleProjectSingleUISer;
+import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.SingleProjectSingleUITO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -94,5 +95,15 @@ public class SingleProjectSingleUIApiImpl implements SingleProjectSingleUIAPI {
     @Override
     public void update(SingleProjectSingleUITO to) throws SerException {
 
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return singleProjectSingleUISer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return singleProjectSingleUISer.guidePermission(guidePermissionTO);
     }
 }

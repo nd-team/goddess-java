@@ -5,7 +5,10 @@ import com.bjike.goddess.projectmeasure.type.InvoiceForm;
 import com.bjike.goddess.projectmeasure.type.PaymentForm;
 import com.bjike.goddess.projectmeasure.type.RemitContent;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 
 /**
@@ -74,6 +77,18 @@ public class ProjectCostStatus extends BaseEntity {
      */
     @Column(name = "demandCharge", nullable = false, columnDefinition = "DECIMAL(10,2) COMMENT '需求费用'")
     private Double demandCharge;
+
+    /**
+     * 回款形式
+     */
+    @Column(name = "backForm", nullable = false, columnDefinition = "TINYINT(2) COMMENT '回款形式'")
+    private RemitContent backForm;
+
+    /**
+     * 回款时间
+     */
+    @Column(name = "backDate", nullable = false, columnDefinition = "DATETIME COMMENT '回款时间'")
+    private LocalDateTime backDate;
 
     /**
      * 其他
@@ -156,6 +171,22 @@ public class ProjectCostStatus extends BaseEntity {
 
     public String getOther() {
         return other;
+    }
+
+    public RemitContent getBackForm() {
+        return backForm;
+    }
+
+    public void setBackForm(RemitContent backForm) {
+        this.backForm = backForm;
+    }
+
+    public LocalDateTime getBackDate() {
+        return backDate;
+    }
+
+    public void setBackDate(LocalDateTime backDate) {
+        this.backDate = backDate;
     }
 
     public void setOther(String other) {
