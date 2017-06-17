@@ -59,7 +59,7 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = marPermissionSer.getMarPermission("1");
+            flag = marPermissionSer.getMarPermission(marketCheck);
         } else {
             flag = true;
         }
@@ -76,7 +76,7 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = marPermissionSer.getMarPermission("2");
+            flag = marPermissionSer.getMarPermission(marketManage);
         } else {
             flag = true;
         }

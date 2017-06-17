@@ -151,7 +151,7 @@ public class MarketResearchSerImpl extends ServiceImpl<MarketResearch, MarketRes
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = marPermissionSer.getMarPermission("1");
+            flag = marPermissionSer.getMarPermission(researchManage);
         } else {
             flag = true;
         }
@@ -168,7 +168,7 @@ public class MarketResearchSerImpl extends ServiceImpl<MarketResearch, MarketRes
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = marPermissionSer.getMarPermission("2");
+            flag = marPermissionSer.getMarPermission(researchManage);
         } else {
             flag = true;
         }

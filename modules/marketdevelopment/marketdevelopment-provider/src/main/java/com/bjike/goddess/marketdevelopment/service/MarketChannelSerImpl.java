@@ -60,7 +60,7 @@ public class MarketChannelSerImpl extends ServiceImpl<MarketChannel, MarketChann
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = marPermissionSer.getMarPermission("1");
+            flag = marPermissionSer.getMarPermission(channelManage);
         } else {
             flag = true;
         }
@@ -77,7 +77,7 @@ public class MarketChannelSerImpl extends ServiceImpl<MarketChannel, MarketChann
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = marPermissionSer.getMarPermission("2");
+            flag = marPermissionSer.getMarPermission(channelManage);
         } else {
             flag = true;
         }

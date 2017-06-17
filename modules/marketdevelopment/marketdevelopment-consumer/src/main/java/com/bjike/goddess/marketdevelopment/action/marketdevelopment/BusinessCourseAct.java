@@ -45,7 +45,6 @@ public class BusinessCourseAct {
     @GetMapping("v1/guidePermission")
     public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-
             Boolean isHasPermission = businessCourseAPI.guidePermission(guidePermissionTO);
             if (!isHasPermission) {
                 //int code, String msg

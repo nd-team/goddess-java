@@ -285,7 +285,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = marPermissionSer.getMarPermission("1");
+            flag = marPermissionSer.getMarPermission(planCheck);
         } else {
             flag = true;
         }
@@ -302,7 +302,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = marPermissionSer.getMarPermission("2");
+            flag = marPermissionSer.getMarPermission(planManage);
         } else {
             flag = true;
         }
