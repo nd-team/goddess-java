@@ -48,6 +48,7 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         bo.setHierarchyId(entity.getHierarchy().getId());
         bo.setHierarchyName(entity.getHierarchy().getHierarchy());
         bo.setHierarchyNumber(entity.getHierarchy().getSerialNumber());
+        //体系-部门
         bo.setShowNumber(String.format("%s-%s", entity.getHierarchy().getSerialNumber(), entity.getSerialNumber()));
         return bo;
     }

@@ -52,8 +52,6 @@ public class RewardSituationSerImpl extends ServiceImpl<RewardSituation, RewardS
 
     @Override
     public List<RewardSituationBO> findByInformation(String info_id) throws SerException {
-        if (!supPermissionSer.getSupPermission(idFlag))
-            throw new SerException("您的帐号没有权限");
         RewardSituationDTO dto = new RewardSituationDTO();
         dto.getConditions().add(Restrict.eq("information.id", info_id));
         List<RewardSituation> list = super.findByCis(dto);

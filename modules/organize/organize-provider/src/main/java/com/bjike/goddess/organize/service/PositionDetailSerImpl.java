@@ -63,6 +63,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         bo.setModuleId(moduleType.getId());
         bo.setModuleName(moduleType.getModule());
         bo.setCurrent(positionDetailUserSer.findByPosition(entity.getId()).size() + "人");
+        //部门编号-层级编号+体系编号+职位编号
         bo.setShowNumber(String.format("%s-%s%s%s", department.getShowNumber(), arrangement.getSerialNumber(), department.getHierarchyNumber(), entity.getSerialNumber()));
         return bo;
     }

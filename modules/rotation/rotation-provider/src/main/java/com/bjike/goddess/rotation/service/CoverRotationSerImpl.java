@@ -217,6 +217,7 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
     public CoverRotationBO generalOpinion(CoverRotationTO to) throws SerException {
         UserBO user = userAPI.currentUser();
         CoverRotation entity = super.findById(to.getId());
+        //@TODO 职位判断
         if (null == entity)
             throw new SerException("该数据不存在");
         if (entity.getAudit() != AuditType.NONE)
