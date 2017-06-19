@@ -384,6 +384,14 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
     }
 
     @Override
+    public List<BaseInfoManageBO> searchSiginManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
+        searchCondition( baseInfoManageDTO );
+        List<BaseInfoManage> list = super.findByCis( baseInfoManageDTO );
+        List<BaseInfoManageBO> listBO = BeanTransform.copyProperties(list , BaseInfoManageBO.class);
+        return listBO;
+    }
+
+    @Override
     public List<String> listFirstCompany() throws SerException {
         String[] fields = new String[]{"firstCompany"};
         List<BaseInfoManageBO> baseInfoManageBOS = super.findBySql("select firstCompany from businessproject_baseinfomanage group by firstCompany order by firstCompany asc ", BaseInfoManageBO.class, fields);
