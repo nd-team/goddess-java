@@ -247,10 +247,7 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
     @Override
     public ProblemHandlingResultBO insertProblemHandlingResult(ProblemHandlingResultTO problemHandlingResultTO) throws SerException {
 
-        Boolean permission = proPermissionSer.getProPermission("1");
-        if (!permission) {
-            throw new SerException("您不是商务人员，没有权限");
-        }
+        checkAddIdentity();
         checkDate(problemHandlingResultTO);
         ProblemHandlingResult problemHandlingResult = BeanTransform.copyProperties(problemHandlingResultTO, ProblemHandlingResult.class, true);
         problemHandlingResult.setCreateTime(LocalDateTime.now());

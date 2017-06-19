@@ -19,7 +19,7 @@
 -->
 
 	<dubbo:reference  validation="true" id="marketInfoApiImpl" interface="com.bjike.goddess.market.api.MarketInfoAPI" />
-	<dubbo:reference  validation="true" id="marketEmailApiImpl" interface="com.bjike.goddess.market.api.MarketEmailAPI" />
+	<dubbo:reference  validation="true" id="collectEmailApiImpl" interface="com.bjike.goddess.market.api.CollectEmailAPI" />
 
 	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.market.api.CusPermissionAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.market.api.CusPermissionOperateAPI" />
@@ -30,5 +30,7 @@
 	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
 	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
 	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
+	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+	<dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
 
 </beans>

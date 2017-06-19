@@ -128,16 +128,16 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
     public List<SonPermissionObject> sonPermission() throws SerException {
         List<SonPermissionObject> list = new ArrayList<>();
         String userToken = RpcTransmit.getUserToken();
-        Boolean flagSeeSign = guideSeeIdentity();
+        Boolean flagSeeProblem = guideSeeIdentity();
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAddSign = guideAddIdentity();
+        Boolean flagAddProblem = guideAddIdentity();
 
         SonPermissionObject obj = new SonPermissionObject();
 
         obj = new SonPermissionObject();
         obj.setName("problemaccept");
         obj.setDescribesion("项目执行中的问题受理");
-        if (flagSeeSign || flagAddSign) {
+        if (flagSeeProblem || flagAddProblem) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -146,24 +146,24 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
 
 
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeeDis = problemHandlingResultSer.sonPermission();
+        Boolean flagSeeResult = problemHandlingResultSer.sonPermission();
         RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("problemhandlingresult");
         obj.setDescribesion("确认问题处理结果");
-        if (flagSeeDis) {
+        if (flagSeeResult) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        Boolean flagSeeCate = involvedProcessingTaskSer.sonPermission();
+        Boolean flagSeeTask = involvedProcessingTaskSer.sonPermission();
         RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("involvedprocessingtask");
         obj.setDescribesion("参与处理人员的任务分配");
-        if (flagSeeCate) {
+        if (flagSeeTask) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -174,7 +174,7 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
         RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("collectemail");
-        obj.setDescribesion("商务项目合同邮件发送");
+        obj.setDescribesion("项目问题处理和受理邮件发送");
         if (flagSeeEmail) {
             obj.setFlag(true);
         } else {

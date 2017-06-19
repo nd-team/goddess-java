@@ -1,4 +1,4 @@
-package com.bjike.goddess.projectissuehandle.excel;
+package com.bjike.goddess.bidding.excel;
 
 import java.io.Serializable;
 

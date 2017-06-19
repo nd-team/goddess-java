@@ -3,6 +3,7 @@ package com.bjike.goddess.bidding.api;
 import com.bjike.goddess.bidding.bo.TenderInfoBO;
 import com.bjike.goddess.bidding.dto.TenderInfoDTO;
 import com.bjike.goddess.bidding.entity.TenderInfo;
+import com.bjike.goddess.bidding.to.GuidePermissionTO;
 import com.bjike.goddess.bidding.to.TenderInfoTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -18,6 +19,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface TenderInfoAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 标书资料列表总条数
      */

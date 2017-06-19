@@ -2,8 +2,8 @@ package com.bjike.goddess.bidding.api;
 
 import com.bjike.goddess.bidding.bo.TenderInfoBO;
 import com.bjike.goddess.bidding.dto.TenderInfoDTO;
-import com.bjike.goddess.bidding.entity.TenderInfo;
 import com.bjike.goddess.bidding.service.TenderInfoSer;
+import com.bjike.goddess.bidding.to.GuidePermissionTO;
 import com.bjike.goddess.bidding.to.TenderInfoTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,15 @@ import java.util.List;
 public class TenderInfoApiImpl implements TenderInfoAPI {
     @Autowired
     private TenderInfoSer tenderInfoSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return tenderInfoSer.sonPermission();
+    }
 
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return tenderInfoSer.guidePermission( guidePermissionTO );
+    }
     @Override
     public Long countTenderInfo(TenderInfoDTO tenderInfoDTO) throws SerException {
         return tenderInfoSer.countTenderInfo(tenderInfoDTO);

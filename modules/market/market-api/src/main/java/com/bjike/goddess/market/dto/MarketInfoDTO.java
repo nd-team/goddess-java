@@ -12,5 +12,16 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [ com.bjike ]
  */
 public class MarketInfoDTO extends BaseDTO {
+    /**
+     * 客户名称
+     */
+    private String customerName;
 
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
 }

@@ -3,8 +3,10 @@ package com.bjike.goddess.bidding.action.bidding;
 import com.bjike.goddess.bidding.api.BiddingInfoAPI;
 import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
+import com.bjike.goddess.bidding.excel.SonPermissionObject;
 import com.bjike.goddess.bidding.to.BiddingDeleteFileTO;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
+import com.bjike.goddess.bidding.to.GuidePermissionTO;
 import com.bjike.goddess.bidding.vo.BiddingInfoCollectVO;
 import com.bjike.goddess.bidding.vo.BiddingInfoVO;
 import com.bjike.goddess.common.api.entity.ADD;
@@ -16,6 +18,7 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
@@ -30,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,6 +52,78 @@ public class BiddingInfoAction extends BaseFileAction{
     private BiddingInfoAPI biddingInfoAPI;
     @Autowired
     private FileAPI fileAPI;
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result i() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("propermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = biddingInfoAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = biddingInfoAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 招标信息列表总条数
@@ -116,7 +192,7 @@ public class BiddingInfoAction extends BaseFileAction{
     public Result add(@Validated(ADD.class) BiddingInfoTO biddingInfoTO, BindingResult bindingResult) throws ActException {
         try {
             BiddingInfoBO biddingInfoBO = biddingInfoAPI.insertBiddingInfo(biddingInfoTO);
-            return ActResult.initialize(biddingInfoBO);
+            return ActResult.initialize(BeanTransform.copyProperties(biddingInfoBO, BiddingInfoVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -135,7 +211,7 @@ public class BiddingInfoAction extends BaseFileAction{
     public Result edit(@Validated(EDIT.class) BiddingInfoTO biddingInfoTO, BindingResult bindingResult) throws ActException {
         try {
             BiddingInfoBO biddingInfoBO = biddingInfoAPI.editBiddingInfo(biddingInfoTO);
-            return ActResult.initialize(biddingInfoBO);
+            return ActResult.initialize(BeanTransform.copyProperties(biddingInfoBO, BiddingInfoVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

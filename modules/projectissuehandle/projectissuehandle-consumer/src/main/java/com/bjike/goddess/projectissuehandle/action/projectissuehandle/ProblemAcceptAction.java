@@ -55,6 +55,7 @@ public class ProblemAcceptAction extends BaseFileAction {
     private FileAPI fileAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+
     /**
      * 模块设置导航权限
      *
@@ -193,7 +194,7 @@ public class ProblemAcceptAction extends BaseFileAction {
     public Result add(@Validated(ADD.class) ProblemAcceptTO problemAcceptTO, BindingResult result) throws ActException {
         try {
             ProblemAcceptBO problemAcceptBO = problemAcceptAPI.insertProblemAccept(problemAcceptTO);
-            return ActResult.initialize(problemAcceptBO);
+            return ActResult.initialize(BeanTransform.copyProperties(problemAcceptBO, ProblemAcceptVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -229,7 +230,7 @@ public class ProblemAcceptAction extends BaseFileAction {
     public Result editProblemAccept(@Validated(EDIT.class) ProblemAcceptTO problemAcceptTO, BindingResult result) throws ActException {
         try {
             ProblemAcceptBO problemAcceptBO = problemAcceptAPI.editProblemAccept(problemAcceptTO);
-            return ActResult.initialize(problemAcceptBO);
+            return ActResult.initialize(BeanTransform.copyProperties(problemAcceptBO, ProblemAcceptVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -247,12 +248,13 @@ public class ProblemAcceptAction extends BaseFileAction {
     public Result search(ProblemAcceptDTO problemAcceptDTO, HttpServletRequest request) throws ActException {
         try {
             List<ProblemAcceptVO> problemAcceptVOS = BeanTransform.copyProperties
-                    (problemAcceptAPI.searchProblemAccept(problemAcceptDTO), ProblemAcceptVO.class,request);
+                    (problemAcceptAPI.searchProblemAccept(problemAcceptDTO), ProblemAcceptVO.class, request);
             return ActResult.initialize(problemAcceptVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取项目执行中的问题受理
      *
@@ -286,11 +288,12 @@ public class ProblemAcceptAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 问题紧急程度
      *
      * @param problemProcessingTime 问题处理时间
-     * @param affectedDepartment 受影响部门
+     * @param affectedDepartment    受影响部门
      * @return class ProblemAcceptVO
      * @des 根据问题处理时间和受影响部门得到问题紧急程度
      * @version v1
@@ -298,7 +301,7 @@ public class ProblemAcceptAction extends BaseFileAction {
     @GetMapping("v1/degree")
     public Result degree(ProblemProcessingTime problemProcessingTime, AffectedDepartment affectedDepartment, HttpServletRequest request) throws ActException {
         try {
-            String string = problemAcceptAPI.degree(problemProcessingTime,affectedDepartment);
+            String string = problemAcceptAPI.degree(problemProcessingTime, affectedDepartment);
             return ActResult.initialize(string);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -314,7 +317,7 @@ public class ProblemAcceptAction extends BaseFileAction {
     @PostMapping("v1/uploadFile/{id}")
     public Result uploadFile(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            String paths = "/projectissuehandle/problemaccept/"+id;
+            String paths = "/projectissuehandle/problemaccept/" + id;
             List<InputStream> inputStreams = super.getInputStreams(request, paths);
             fileAPI.upload(inputStreams);
             return new ActResult("upload success!");
@@ -323,6 +326,7 @@ public class ProblemAcceptAction extends BaseFileAction {
         }
 
     }
+
     /**
      * 文件附件列表
      *
@@ -335,11 +339,11 @@ public class ProblemAcceptAction extends BaseFileAction {
         try {
             //跟前端约定好 ，文件路径是列表id
             // /projectissuehandle/id/....
-            String path = "/projectissuehandle/problemaccept/"+id;
+            String path = "/projectissuehandle/problemaccept/" + id;
             FileInfo fileInfo = new FileInfo();
-            fileInfo.setPath( path );
-            Object storageToken =  request.getAttribute("storageToken");
-            fileInfo.setStorageToken( storageToken.toString() );
+            fileInfo.setPath(path);
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
             List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
             return ActResult.initialize(files);
         } catch (SerException e) {
@@ -354,15 +358,15 @@ public class ProblemAcceptAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/downloadFile")
-    public Result download( @RequestParam String path , HttpServletRequest request ,HttpServletResponse response ) throws ActException {
+    public Result download(@RequestParam String path, HttpServletRequest request, HttpServletResponse response) throws ActException {
         try {
 
 
             //该文件的路径
-            Object storageToken =  request.getAttribute("storageToken");
+            Object storageToken = request.getAttribute("storageToken");
             FileInfo fileInfo = new FileInfo();
-            fileInfo.setPath( path );
-            fileInfo.setStorageToken( storageToken.toString() );
+            fileInfo.setPath(path);
+            fileInfo.setStorageToken(storageToken.toString());
             String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
             byte[] buffer = fileAPI.download(fileInfo);
             writeOutFile(response, buffer, filename);
@@ -372,6 +376,7 @@ public class ProblemAcceptAction extends BaseFileAction {
         }
 
     }
+
     /**
      * 删除文件或文件夹
      *
@@ -381,9 +386,9 @@ public class ProblemAcceptAction extends BaseFileAction {
     @LoginAuth
     @PostMapping("v1/deleteFile")
     public Result delFile(@Validated(ProjectDeleteFileTO.TestDEL.class) ProjectDeleteFileTO projectDeleteFileTO, HttpServletRequest request) throws SerException {
-        if(null != projectDeleteFileTO.getPaths() && projectDeleteFileTO.getPaths().length>=0 ){
+        if (null != projectDeleteFileTO.getPaths() && projectDeleteFileTO.getPaths().length >= 0) {
             Object storageToken = request.getAttribute("storageToken");
-            fileAPI.delFile(storageToken.toString(),projectDeleteFileTO.getPaths());
+            fileAPI.delFile(storageToken.toString(), projectDeleteFileTO.getPaths());
         }
         return new ActResult("delFile success");
     }
