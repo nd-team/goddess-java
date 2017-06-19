@@ -3,9 +3,9 @@ package com.bjike.goddess.projectissuehandle.excel;
 import java.io.Serializable;
 
 /**
- * 商务项目合同下拉导航权限控制
+ * 项目问题受理和处理下拉导航权限控制
  *
- * @Author: [tanghaixiang]
+ * @Author: [xiazhili]
  * @Date: [2017-06-08 10:30]
  * @Description: [ ]
  * @Version: [1.0.0]

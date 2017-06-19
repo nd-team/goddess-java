@@ -61,5 +61,7 @@
 	<!--<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.managepromotion.api.CusPermissionAPI" />-->
 	<!--<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.managepromotion.api.CusPermissionOperateAPI" />-->
 	<!--<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />-->
+	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
+	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
 
 </beans>

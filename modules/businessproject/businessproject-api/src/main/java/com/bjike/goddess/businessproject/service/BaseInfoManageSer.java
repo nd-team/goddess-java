@@ -3,7 +3,6 @@ package com.bjike.goddess.businessproject.service;
 import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
 import com.bjike.goddess.businessproject.dto.BaseInfoManageDTO;
 import com.bjike.goddess.businessproject.entity.BaseInfoManage;
-import com.bjike.goddess.businessproject.excel.BaseInfoManageExcel;
 import com.bjike.goddess.businessproject.to.BaseInfoManageTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -24,13 +23,13 @@ import java.util.Set;
 public interface BaseInfoManageSer extends Ser<BaseInfoManage, BaseInfoManageDTO> {
 
 
-
     /**
      * 下拉导航权限
      */
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
@@ -160,4 +159,12 @@ public interface BaseInfoManageSer extends Ser<BaseInfoManage, BaseInfoManageDTO
      * @throws SerException
      */
     void leadExcel(List<BaseInfoManageTO> toList) throws SerException;
+
+    /**
+     * 导出模板excel
+     *
+     * @return
+     * @throws SerException
+     */
+    byte[] templateExcel() throws SerException;
 }

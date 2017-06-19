@@ -4,6 +4,7 @@ import com.bjike.goddess.bidding.bo.BiddingWebInfoBO;
 import com.bjike.goddess.bidding.dto.BiddingWebInfoDTO;
 import com.bjike.goddess.bidding.entity.BiddingWebInfo;
 import com.bjike.goddess.bidding.to.BiddingWebInfoTO;
+import com.bjike.goddess.bidding.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -19,6 +20,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface BiddingWebInfoSer extends Ser<BiddingWebInfo, BiddingWebInfoDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 招投标网站信息列表总条数
      */
@@ -77,4 +90,22 @@ public interface BiddingWebInfoSer extends Ser<BiddingWebInfo, BiddingWebInfoDTO
     default void removeBiddingWebInfo(String id) throws SerException {
 
     }
+    /**
+     * 获取网站名称
+     *
+     * @return class String
+     */
+    default List<String> getWebName() throws SerException {
+        return null;
+    }
+    /**
+     * 获取网址
+     *
+     * @return class String
+     */
+    default List<String> getUrl() throws SerException {
+        return null;
+    }
+
+
 }

@@ -4,6 +4,7 @@ import com.bjike.goddess.bidding.bo.BiddingAnswerQuestionsBO;
 import com.bjike.goddess.bidding.dto.BiddingAnswerQuestionsDTO;
 import com.bjike.goddess.bidding.entity.BiddingAnswerQuestions;
 import com.bjike.goddess.bidding.to.BiddingAnswerQuestionsTO;
+import com.bjike.goddess.bidding.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -18,6 +19,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface BiddingAnswerQuestionsAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 投标答疑问题记录列表总条数
      */

@@ -138,7 +138,7 @@ public class InvolvedProcessingTaskAction extends BaseFileAction {
     public Result add(@Validated(ADD.class) InvolvedProcessingTaskTO involvedProcessingTaskTO, BindingResult bindingResult) throws ActException {
         try {
             InvolvedProcessingTaskBO involvedProcessingTaskBO = involvedProcessingTaskAPI.insertInvolvedProcessingTask(involvedProcessingTaskTO);
-            return ActResult.initialize(involvedProcessingTaskBO);
+            return ActResult.initialize(BeanTransform.copyProperties(involvedProcessingTaskBO, InvolvedProcessingTaskVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -157,7 +157,7 @@ public class InvolvedProcessingTaskAction extends BaseFileAction {
     public Result editInvolvedProcessingTask(@Validated(EDIT.class) InvolvedProcessingTaskTO involvedProcessingTaskTO, BindingResult bindingResult) throws ActException {
         try {
             InvolvedProcessingTaskBO involvedProcessingTaskBO = involvedProcessingTaskAPI.editInvolvedProcessingTask(involvedProcessingTaskTO);
-            return ActResult.initialize(involvedProcessingTaskBO);
+            return ActResult.initialize(BeanTransform.copyProperties(involvedProcessingTaskBO, InvolvedProcessingTaskVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

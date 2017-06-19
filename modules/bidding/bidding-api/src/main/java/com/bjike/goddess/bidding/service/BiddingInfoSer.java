@@ -4,7 +4,9 @@ import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.bo.BiddingInfoCollectBO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.entity.BiddingInfo;
+import com.bjike.goddess.bidding.excel.SonPermissionObject;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
+import com.bjike.goddess.bidding.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -20,6 +22,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface BiddingInfoSer extends Ser<BiddingInfo, BiddingInfoDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 招标信息列表总条数
      */

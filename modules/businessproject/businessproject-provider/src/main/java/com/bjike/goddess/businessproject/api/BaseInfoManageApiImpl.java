@@ -2,7 +2,6 @@ package com.bjike.goddess.businessproject.api;
 
 import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
 import com.bjike.goddess.businessproject.dto.BaseInfoManageDTO;
-import com.bjike.goddess.businessproject.excel.BaseInfoManageExcel;
 import com.bjike.goddess.businessproject.service.BaseInfoManageSer;
 import com.bjike.goddess.businessproject.to.BaseInfoManageTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
@@ -35,7 +34,7 @@ public class BaseInfoManageApiImpl implements BaseInfoManageAPI {
 
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
-        return baseInfoManageSer.guidePermission( guidePermissionTO );
+        return baseInfoManageSer.guidePermission(guidePermissionTO);
     }
 
     @Override
@@ -101,5 +100,10 @@ public class BaseInfoManageApiImpl implements BaseInfoManageAPI {
     @Override
     public void leadExcel(List<BaseInfoManageTO> toList) throws SerException {
         baseInfoManageSer.leadExcel(toList);
+    }
+
+    @Override
+    public byte[] templateExcel() throws SerException {
+        return baseInfoManageSer.templateExcel();
     }
 }

@@ -52,6 +52,14 @@ public class BiddingWebInfoApiImpl implements BiddingWebInfoAPI {
     public List<BiddingWebInfoBO> findListBiddingWebInfo(BiddingWebInfoDTO biddingWebInfoDTO) throws SerException {
         return biddingWebInfoSer.findListBiddingWebInfo(biddingWebInfoDTO);
     }
+    @Override
+    public List<String> getWebName() throws SerException {
+        return biddingWebInfoSer.getWebName();
+    }
+    @Override
+    public List<String> getUrl() throws SerException {
+        return biddingWebInfoSer.getUrl();
+    }
 
 
 }

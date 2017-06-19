@@ -121,4 +121,12 @@ public interface ContractCategoryAPI {
      * @throws SerException
      */
     void leadExcel(List<ContractCategoryExcel> toList) throws SerException;
+
+    /**
+     * 导出excel模板
+     *
+     * @return
+     * @throws SerException
+     */
+    byte[] templateExcel() throws SerException;
 }

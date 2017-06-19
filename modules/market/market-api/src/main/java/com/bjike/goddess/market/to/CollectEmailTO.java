@@ -1,29 +1,38 @@
 package com.bjike.goddess.market.to;
 
+import com.bjike.goddess.market.enums.CollectSendUnit;
+import com.bjike.goddess.market.enums.CollectUnit;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
-import com.bjike.goddess.market.enums.MarketCollectUnit;
-import com.bjike.goddess.market.enums.MarketSendUnit;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
- * 市场邮件发送定制
+ * 市场信息邮件发送定制
  *
  * @Author: [ xiazhili ]
  * @Date: [ 2017-03-16T19:08:18.879 ]
- * @Description: [ 市场邮件发送定制 ]
+ * @Description: [ 市场信息邮件发送定制 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class MarketEmailTO extends BaseTO {
+public class CollectEmailTO extends BaseTO {
+
+    public interface TestAdd{}
 
     /**
-     * 地区
+     * 汇总类型
      */
-    private String area;
+    @NotBlank(groups = {CollectEmailTO.TestAdd.class}, message = "汇总类型不能为空")
+    private String type;
+
+    /**
+     * 汇总条件
+     */
+    @NotNull(groups = {CollectEmailTO.TestAdd.class}, message = "汇总条件不能为空")
+    private String[] condis;
 
     /**
      * 备注
@@ -33,7 +42,7 @@ public class MarketEmailTO extends BaseTO {
     /**
      * 发送间隔
      */
-    @NotNull(message = "发送间隔不能为空且是double型数字")
+    @NotNull(groups = {CollectEmailTO.TestAdd.class},message = "发送间隔不能为空，且是数字")
     private Double sendNum;
 
     /**
@@ -44,14 +53,13 @@ public class MarketEmailTO extends BaseTO {
     /**
      * 发送单位
      */
-    @NotNull(message = "发送单位不能为空")
-    private MarketSendUnit marketSendUnit;
+    @NotNull(groups = {CollectEmailTO.TestAdd.class}, message = "发送单位不能为空")
+    private CollectSendUnit collectSendUnit;
 
     /**
      * 汇总间隔
      */
-    @NotNull(message = "汇总间隔不能为空")
-    private MarketCollectUnit marketCollectUnit;
+    private CollectUnit collectUnit;
 
     /**
      * 发送对象
@@ -61,6 +69,7 @@ public class MarketEmailTO extends BaseTO {
     /**
      * 发送对象数组
      */
+    @NotNull(groups = {CollectEmailTO.TestAdd.class}, message = "发送对象数组不能为空")
     private List<String> sendObjectList;
 
     /**
@@ -90,12 +99,20 @@ public class MarketEmailTO extends BaseTO {
 
 
 
-    public String getArea() {
-        return area;
+    public String getType() {
+        return type;
     }
 
-    public void setArea(String area) {
-        this.area = area;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String[] getCondis() {
+        return condis;
+    }
+
+    public void setCondis(String[] condis) {
+        this.condis = condis;
     }
 
     public String getRemark() {
@@ -122,20 +139,20 @@ public class MarketEmailTO extends BaseTO {
         this.sendNumAndUnit = sendNumAndUnit;
     }
 
-    public MarketSendUnit getMarketSendUnit() {
-        return marketSendUnit;
+    public CollectSendUnit getCollectSendUnit() {
+        return collectSendUnit;
     }
 
-    public void setMarketSendUnit(MarketSendUnit marketSendUnit) {
-        this.marketSendUnit = marketSendUnit;
+    public void setCollectSendUnit(CollectSendUnit collectSendUnit) {
+        this.collectSendUnit = collectSendUnit;
     }
 
-    public MarketCollectUnit getMarketCollectUnit() {
-        return marketCollectUnit;
+    public CollectUnit getCollectUnit() {
+        return collectUnit;
     }
 
-    public void setMarketCollectUnit(MarketCollectUnit marketCollectUnit) {
-        this.marketCollectUnit = marketCollectUnit;
+    public void setCollectUnit(CollectUnit collectUnit) {
+        this.collectUnit = collectUnit;
     }
 
     public String getSendObject() {

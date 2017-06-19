@@ -7,6 +7,7 @@ import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.entity.BidOpeningInfo;
 import com.bjike.goddess.bidding.service.BidOpeningInfoSer;
 import com.bjike.goddess.bidding.to.BidOpeningInfoTO;
+import com.bjike.goddess.bidding.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,15 @@ import java.util.List;
 public class BidOpeningInfoApiImpl implements BidOpeningInfoAPI {
     @Autowired
     private BidOpeningInfoSer bidOpeningInfoSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return bidOpeningInfoSer.sonPermission();
+    }
 
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return bidOpeningInfoSer.guidePermission( guidePermissionTO );
+    }
     @Override
     public Long countBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
         return bidOpeningInfoSer.countBidOpeningInfo(bidOpeningInfoDTO);

@@ -315,7 +315,7 @@ public class BaseInfoManageAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/deleteFile")
-    public Result delFile(@Validated(SiginManageDeleteFileTO.TestDEL.class) SiginManageDeleteFileTO siginManageDeleteFileTO,HttpServletRequest request) throws SerException {
+    public Result delFile(@Validated(SiginManageDeleteFileTO.TestDEL.class) SiginManageDeleteFileTO siginManageDeleteFileTO, HttpServletRequest request) throws SerException {
         if (null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length >= 0) {
             Object storageToken = request.getAttribute("storageToken");
             fileAPI.delFile(storageToken.toString(), siginManageDeleteFileTO.getPaths());
@@ -388,4 +388,25 @@ public class BaseInfoManageAction extends BaseFileAction {
             throw new ActException(e1.getMessage());
         }
     }
+
+    /**
+     * 导出导入的excel模板
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/templateExcel")
+    public Result templateExcel(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "商务项目合同基本信息管理导入excel模板.xlsx";
+            super.writeOutFile(response, baseInfoManageAPI.templateExcel(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
 }

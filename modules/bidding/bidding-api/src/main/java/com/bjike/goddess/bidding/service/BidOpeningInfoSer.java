@@ -4,6 +4,7 @@ import com.bjike.goddess.bidding.bo.BidOpeningCollectBO;
 import com.bjike.goddess.bidding.bo.BidOpeningInfoBO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.to.BidOpeningInfoTO;
+import com.bjike.goddess.bidding.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.bidding.entity.BidOpeningInfo;
@@ -21,6 +22,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface BidOpeningInfoSer extends Ser<BidOpeningInfo, BidOpeningInfoDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 开标信息列表总条数
      */

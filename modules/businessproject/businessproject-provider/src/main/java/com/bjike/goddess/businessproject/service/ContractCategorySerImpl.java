@@ -4,6 +4,7 @@ import com.bjike.goddess.businessproject.bo.ContractCategoryBO;
 import com.bjike.goddess.businessproject.dto.ContractCategoryDTO;
 import com.bjike.goddess.businessproject.entity.ContractCategory;
 import com.bjike.goddess.businessproject.enums.GuideAddrStatus;
+import com.bjike.goddess.businessproject.excel.BaseInfoManageLeadExcel;
 import com.bjike.goddess.businessproject.excel.ContractCategoryExcel;
 import com.bjike.goddess.businessproject.to.ContractCategoryTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
@@ -284,6 +285,16 @@ public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, Contr
                 toList.add(excel);
             }
         }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        return bytes;
+    }
+
+    @Override
+    public byte[] templateExcel() throws SerException {
+        List<ContractCategoryExcel> toList = new ArrayList<ContractCategoryExcel>();
+        ContractCategoryExcel baseInfoManageLeadExcel = new ContractCategoryExcel();
+        toList.add(baseInfoManageLeadExcel);
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
         return bytes;

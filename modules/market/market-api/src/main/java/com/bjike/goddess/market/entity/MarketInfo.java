@@ -82,8 +82,8 @@ public class MarketInfo extends BaseEntity {
     /**
      * 发起时间
      */
-    @Column(name = "startTime", columnDefinition = "DATETIME   COMMENT '发起时间'")
-    private LocalDateTime startTime;
+    @Column(name = "startTime", columnDefinition = "DATE   COMMENT '发起时间'")
+    private LocalDate startTime;
 
     /**
      * 重要时间点
@@ -94,8 +94,8 @@ public class MarketInfo extends BaseEntity {
     /**
      * 结束时间
      */
-    @Column(name = "endTime", columnDefinition = "DATETIME   COMMENT '结束时间'")
-    private LocalDateTime endTime;
+    @Column(name = "endTime", columnDefinition = "DATE   COMMENT '结束时间'")
+    private LocalDate endTime;
 
     /**
      * 信息来源
@@ -254,11 +254,11 @@ public class MarketInfo extends BaseEntity {
         this.scale = scale;
     }
 
-    public LocalDateTime getStartTime() {
+    public LocalDate getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(LocalDate startTime) {
         this.startTime = startTime;
     }
 
@@ -270,11 +270,11 @@ public class MarketInfo extends BaseEntity {
         this.importantPoint = importantPoint;
     }
 
-    public LocalDateTime getEndTime() {
+    public LocalDate getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(LocalDate endTime) {
         this.endTime = endTime;
     }
 

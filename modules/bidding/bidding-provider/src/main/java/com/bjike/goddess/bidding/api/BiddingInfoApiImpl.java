@@ -3,8 +3,10 @@ package com.bjike.goddess.bidding.api;
 import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.bo.BiddingInfoCollectBO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
+import com.bjike.goddess.bidding.excel.SonPermissionObject;
 import com.bjike.goddess.bidding.service.BiddingInfoSer;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
+import com.bjike.goddess.bidding.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,15 @@ import java.util.List;
 public class BiddingInfoApiImpl implements BiddingInfoAPI {
     @Autowired
     private BiddingInfoSer biddingInfoSer;
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return biddingInfoSer.sonPermission();
+    }
 
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return biddingInfoSer.guidePermission( guidePermissionTO );
+    }
     @Override
     public Long countBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
         return biddingInfoSer.countBiddingInfo(biddingInfoDTO);

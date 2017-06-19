@@ -5,20 +5,27 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.market.api.MarketInfoAPI;
 import com.bjike.goddess.market.bo.MarketInfoBO;
 import com.bjike.goddess.market.dto.MarketInfoDTO;
+import com.bjike.goddess.market.excel.SonPermissionObject;
+import com.bjike.goddess.market.to.GuidePermissionTO;
 import com.bjike.goddess.market.to.MarketInfoTO;
 import com.bjike.goddess.market.vo.MarketInfoVO;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,9 +39,81 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("marketinfo")
-public class MarketInfoAction {
+public class MarketInfoAction extends BaseFileAction{
     @Autowired
     private MarketInfoAPI marketInfoAPI;
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result i() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("propermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = marketInfoAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = marketInfoAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 市场信息管理列表总条数
      *
@@ -144,21 +223,25 @@ public class MarketInfoAction {
         }
     }
     /**
-     * 市场信息导出
+     * 导出excel
      *
-     * @param customerName 客户信息名称
+     * @param dto 市场信息
+     * @des 导出市场信息
      * @version v1
      */
-    @PostMapping("v1/exportExcel")
-    public Result exportExcel(String customerName) throws ActException {
-        String excel = null;
+    @LoginAuth
+    @GetMapping("v1/export")
+    public Result exportReport(MarketInfoDTO dto, HttpServletResponse response) throws ActException {
         try {
-            excel = marketInfoAPI.exportExcel(customerName);
-            return new ActResult(excel);
+            String fileName = "市场信息.xlsx";
+            super.writeOutFile(response, marketInfoAPI.exportExcel(dto), fileName);
+            return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
         }
-
     }
+
 
 }

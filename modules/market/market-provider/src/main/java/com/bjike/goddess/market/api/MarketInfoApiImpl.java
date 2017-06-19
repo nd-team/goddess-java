@@ -6,7 +6,9 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.market.bo.MarketInfoBO;
 import com.bjike.goddess.market.dto.MarketInfoDTO;
 import com.bjike.goddess.market.entity.MarketInfo;
+import com.bjike.goddess.market.excel.SonPermissionObject;
 import com.bjike.goddess.market.service.MarketInfoSer;
+import com.bjike.goddess.market.to.GuidePermissionTO;
 import com.bjike.goddess.market.to.MarketInfoTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,15 @@ import java.util.List;
 public class MarketInfoApiImpl implements MarketInfoAPI {
     @Autowired
     private MarketInfoSer marketInfoSer;
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return marketInfoSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return marketInfoSer.guidePermission( guidePermissionTO );
+    }
     @Override
     public Long countMarketInfo(MarketInfoDTO marketInfoDTO) throws SerException {
         return marketInfoSer.countMarketInfo(marketInfoDTO);
@@ -63,8 +74,8 @@ public class MarketInfoApiImpl implements MarketInfoAPI {
     }
 
     @Override
-    public String exportExcel(String customerName) throws SerException {
-        return marketInfoSer.exportExcel(customerName);
+    public byte[] exportExcel(MarketInfoDTO dto) throws SerException{
+        return marketInfoSer.exportExcel(dto);
     }
 
     @Override

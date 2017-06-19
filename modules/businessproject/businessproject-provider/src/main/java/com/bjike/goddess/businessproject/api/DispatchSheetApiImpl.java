@@ -2,7 +2,6 @@ package com.bjike.goddess.businessproject.api;
 
 import com.bjike.goddess.businessproject.bo.DispatchSheetBO;
 import com.bjike.goddess.businessproject.dto.DispatchSheetDTO;
-import com.bjike.goddess.businessproject.excel.DispatchSheetExcel;
 import com.bjike.goddess.businessproject.service.DispatchSheetSer;
 import com.bjike.goddess.businessproject.to.DispatchSheetTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
@@ -36,7 +35,7 @@ public class DispatchSheetApiImpl implements DispatchSheetAPI {
 
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
-        return dispatchSheetSer.guidePermission( guidePermissionTO );
+        return dispatchSheetSer.guidePermission(guidePermissionTO);
     }
 
 
@@ -98,5 +97,10 @@ public class DispatchSheetApiImpl implements DispatchSheetAPI {
     @Override
     public void leadExcel(List<DispatchSheetTO> toList) throws SerException {
         dispatchSheetSer.leadExcel(toList);
+    }
+
+    @Override
+    public byte[] templateExcel() throws SerException {
+        return dispatchSheetSer.templateExcel();
     }
 }
