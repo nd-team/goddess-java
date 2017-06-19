@@ -68,7 +68,7 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
     private MessageAPI messageAPI;
     @Autowired
     private EntryBasicInfoAPI entryBasicInfoAPI;
-
+    //定时器格式 : * 00 00 31 12 ?
     private static final String header = "%d年1月1日至%d年12月30日一年内您的病假天数已超过规定天数，根据公司制度您今年将不享受带薪年假。标准：";
     private static final String standard = "职员工龄%d-%d年，请病假累计%d个月以上的,";
     private static final String foot = "以上情况将不享受带薪年假。";

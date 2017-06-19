@@ -83,14 +83,14 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
     }
 
     /**
-     * 计算请节哀时间
+     * 计算请假时间
      *
      * @param entity 年假申请实体数据
      * @return
      */
     private Double countLeave(AnnualApply entity) {
         long hour = entity.getStartTime().until(entity.getEndTime(), ChronoUnit.HOURS);
-        //@TODO 计算请假时间
+        //@TODO 计算请假时间(日总工时/本次请假的时长 = 请假时间)
         return 0d;
     }
 

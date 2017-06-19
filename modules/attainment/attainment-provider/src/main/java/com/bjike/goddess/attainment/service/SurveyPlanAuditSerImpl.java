@@ -91,7 +91,7 @@ public class SurveyPlanAuditSerImpl extends ServiceImpl<SurveyPlanAudit, SurveyP
         if (entity.isPass())
             plan.setAudit(AuditType.ALLOWED);
         else
-            plan.setAudit(AuditType.NONE);
+            plan.setAudit(AuditType.DENIED);
         surveyPlanSer.update(plan);
         return this.transformBO(entity);
     }
