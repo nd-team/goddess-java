@@ -17,6 +17,7 @@ import com.bjike.goddess.supplier.api.SupplierInformationAPI;
 import com.bjike.goddess.supplier.bo.SupplierInfoCollectBO;
 import com.bjike.goddess.supplier.dto.SupplierInformationDTO;
 import com.bjike.goddess.supplier.to.CollectTo;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import com.bjike.goddess.supplier.to.SupplierInformationTO;
 import com.bjike.goddess.supplier.vo.SonPermissionObject;
 import com.bjike.goddess.supplier.vo.SupplierInfoCollectTitleVO;
@@ -54,6 +55,31 @@ public class SupplierInformationAct extends BaseFileAction {
 
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = supplierInformationAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 模块设置导航权限

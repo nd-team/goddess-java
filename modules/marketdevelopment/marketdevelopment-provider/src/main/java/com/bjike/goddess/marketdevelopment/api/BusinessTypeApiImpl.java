@@ -6,6 +6,7 @@ import com.bjike.goddess.marketdevelopment.bo.BusinessTypeBO;
 import com.bjike.goddess.marketdevelopment.dto.BusinessTypeDTO;
 import com.bjike.goddess.marketdevelopment.service.BusinessTypeSer;
 import com.bjike.goddess.marketdevelopment.to.BusinessTypeTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,11 @@ public class BusinessTypeApiImpl implements BusinessTypeAPI {
 
     @Autowired
     private BusinessTypeSer businessTypeSer;
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return businessTypeSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public BusinessTypeBO save(BusinessTypeTO to) throws SerException {

@@ -7,6 +7,7 @@ import com.bjike.goddess.marketdevelopment.bo.MarketMeasureCollectBO;
 import com.bjike.goddess.marketdevelopment.dto.MarketMeasureDTO;
 import com.bjike.goddess.marketdevelopment.entity.MarketMeasure;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.to.MarketMeasureTO;
 
 import java.util.List;
@@ -115,6 +116,13 @@ public interface MarketMeasureSer extends Ser<MarketMeasure, MarketMeasureDTO> {
      * @throws SerException
      */
     default List<MarketMeasureCollectBO> collect() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 }

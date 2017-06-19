@@ -5,6 +5,7 @@ import com.bjike.goddess.marketdevelopment.bo.WeekPlanBO;
 import com.bjike.goddess.marketdevelopment.dto.WeekPlanDTO;
 import com.bjike.goddess.marketdevelopment.service.WeekPlanSer;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.to.WeekPlanTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,11 @@ public class WeekPlanApiImpl implements WeekPlanAPI {
 
     @Autowired
     private WeekPlanSer weekPlanSer;
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return weekPlanSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public WeekPlanBO save(WeekPlanTO to) throws SerException {

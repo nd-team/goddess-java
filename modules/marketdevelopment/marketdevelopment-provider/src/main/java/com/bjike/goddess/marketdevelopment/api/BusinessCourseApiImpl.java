@@ -6,6 +6,7 @@ import com.bjike.goddess.marketdevelopment.bo.MarketMeasureCollectBO;
 import com.bjike.goddess.marketdevelopment.dto.BusinessCourseDTO;
 import com.bjike.goddess.marketdevelopment.service.BusinessCourseSer;
 import com.bjike.goddess.marketdevelopment.to.BusinessCourseTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,11 @@ public class BusinessCourseApiImpl implements BusinessCourseAPI {
 
     @Autowired
     private BusinessCourseSer businessCourseSer;
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return businessCourseSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public BusinessCourseBO save(BusinessCourseTO to) throws SerException {

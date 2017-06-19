@@ -8,6 +8,7 @@ import com.bjike.goddess.marketdevelopment.dto.YearPlanDTO;
 import com.bjike.goddess.marketdevelopment.entity.SonPermissionObject;
 import com.bjike.goddess.marketdevelopment.service.YearPlanSer;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.to.YearPlanTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,11 @@ public class YearPlanApiImpl implements YearPlanAPI {
 
     @Autowired
     private YearPlanSer yearPlanSer;
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return yearPlanSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public YearPlanBO save(YearPlanTO to) throws SerException {

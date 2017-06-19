@@ -5,6 +5,7 @@ import com.bjike.goddess.marketdevelopment.bo.DayPlanBO;
 import com.bjike.goddess.marketdevelopment.dto.DayPlanDTO;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.DayPlanTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -18,6 +19,13 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface DayPlanAPI {
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存天计划数据

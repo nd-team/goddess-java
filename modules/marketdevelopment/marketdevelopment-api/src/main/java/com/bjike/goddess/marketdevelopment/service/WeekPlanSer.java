@@ -7,6 +7,7 @@ import com.bjike.goddess.marketdevelopment.dto.WeekPlanDTO;
 import com.bjike.goddess.marketdevelopment.entity.SonPermissionObject;
 import com.bjike.goddess.marketdevelopment.entity.WeekPlan;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.to.WeekPlanTO;
 
 import java.util.List;
@@ -137,6 +138,14 @@ public interface WeekPlanSer extends Ser<WeekPlan, WeekPlanDTO> {
      * 下拉导航权限
      */
     default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 }

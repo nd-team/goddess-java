@@ -7,6 +7,7 @@ import com.bjike.goddess.supplier.bo.SupplierInformationBO;
 import com.bjike.goddess.supplier.dto.SupplierInformationDTO;
 import com.bjike.goddess.supplier.entity.SupplierInformation;
 import com.bjike.goddess.supplier.to.CollectTo;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import com.bjike.goddess.supplier.to.SupplierInformationTO;
 import com.bjike.goddess.supplier.vo.SonPermissionObject;
 
@@ -22,6 +23,13 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SupplierInformationSer extends Ser<SupplierInformation, SupplierInformationDTO> {
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 添加

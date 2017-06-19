@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.supplier.bo.SupplierTypeBO;
 import com.bjike.goddess.supplier.dto.SupplierTypeDTO;
 import com.bjike.goddess.supplier.service.SupplierTypeSer;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import com.bjike.goddess.supplier.to.SupplierTypeTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,5 +70,10 @@ public class SupplierTypeApiImpl implements SupplierTypeAPI {
     public Long getTotal() throws SerException {
         SupplierTypeDTO dto = new SupplierTypeDTO();
         return supplierTypeSer.count(dto);
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return supplierTypeSer.guidePermission(guidePermissionTO);
     }
 }

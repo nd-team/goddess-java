@@ -7,6 +7,7 @@ import com.bjike.goddess.marketdevelopment.bo.YearPlanCollectBO;
 import com.bjike.goddess.marketdevelopment.dto.YearPlanDTO;
 import com.bjike.goddess.marketdevelopment.entity.SonPermissionObject;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.to.YearPlanTO;
 
 import java.util.List;
@@ -154,6 +155,14 @@ public interface YearPlanAPI {
      * @throws SerException
      */
     default List<YearPlanCollectBO> collect() throws SerException{
+        return null;
+    }
+
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 }

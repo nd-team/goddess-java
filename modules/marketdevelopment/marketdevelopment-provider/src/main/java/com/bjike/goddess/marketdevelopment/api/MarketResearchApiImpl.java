@@ -6,6 +6,7 @@ import com.bjike.goddess.marketdevelopment.bo.MarketResearchBO;
 import com.bjike.goddess.marketdevelopment.dto.MarketResearchDTO;
 import com.bjike.goddess.marketdevelopment.service.MarketResearchSer;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.to.MarketResearchTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,11 @@ public class MarketResearchApiImpl implements MarketResearchAPI {
 
     @Autowired
     private MarketResearchSer marketResearchSer;
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return marketResearchSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public MarketResearchBO save(MarketResearchTO to) throws SerException {

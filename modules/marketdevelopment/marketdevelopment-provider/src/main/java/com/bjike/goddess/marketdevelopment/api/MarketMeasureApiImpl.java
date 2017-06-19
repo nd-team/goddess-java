@@ -7,6 +7,7 @@ import com.bjike.goddess.marketdevelopment.bo.MarketMeasureCollectBO;
 import com.bjike.goddess.marketdevelopment.dto.MarketMeasureDTO;
 import com.bjike.goddess.marketdevelopment.service.MarketMeasureSer;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.to.MarketMeasureTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,11 @@ public class MarketMeasureApiImpl implements MarketMeasureAPI {
 
     @Autowired
     private MarketMeasureSer marketMeasureSer;
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return marketMeasureSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public MarketMeasureBO save(MarketMeasureTO to) throws SerException {

@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.WeekPlanBO;
 import com.bjike.goddess.marketdevelopment.dto.WeekPlanDTO;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.to.WeekPlanTO;
 
 import java.util.List;
@@ -18,6 +19,13 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface WeekPlanAPI {
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存周计划数据

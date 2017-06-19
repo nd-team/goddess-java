@@ -6,6 +6,7 @@ import com.bjike.goddess.marketdevelopment.bo.MonthPlanBO;
 import com.bjike.goddess.marketdevelopment.bo.MonthPlanChoiceBO;
 import com.bjike.goddess.marketdevelopment.dto.MonthPlanDTO;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.to.MonthPlanTO;
 
 import java.util.List;
@@ -20,6 +21,13 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface MonthPlanAPI {
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存月计划数据

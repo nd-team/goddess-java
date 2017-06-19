@@ -5,6 +5,7 @@ import com.bjike.goddess.supplier.bo.SupplierInfoCollectBO;
 import com.bjike.goddess.supplier.bo.SupplierInformationBO;
 import com.bjike.goddess.supplier.dto.SupplierInformationDTO;
 import com.bjike.goddess.supplier.to.CollectTo;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import com.bjike.goddess.supplier.to.SupplierInformationTO;
 import com.bjike.goddess.supplier.vo.SonPermissionObject;
 
@@ -144,4 +145,12 @@ public interface SupplierInformationAPI {
      * @throws SerException
      */
     List<SupplierInformationBO> findByName(String name) throws SerException;
+
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }
