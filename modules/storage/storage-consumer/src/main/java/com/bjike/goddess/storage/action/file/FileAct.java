@@ -187,6 +187,49 @@ public class FileAct extends BaseFileAction {
     }
 
     /**
+     * 获取缩略图
+     * @param fileInfo
+     * @param response
+     * @param result
+     * @return
+     * @throws ActException
+     */
+    @GetMapping("v1/thumbnails")
+    public Result thumbnails(@Validated({FileInfo.COMMON.class}) FileInfo fileInfo, HttpServletResponse response, BindingResult result) throws ActException {
+        try {
+            handlerToken(fileInfo);
+            String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
+            byte[] buffer = fileAPI.thumbnails(fileInfo);
+            writeOutFile(response, buffer, filename);
+            return new ActResult("success");
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取原图
+     * @param fileInfo
+     * @param response
+     * @param result
+     * @return
+     * @throws ActException
+     */
+  public Result originals(@Validated({FileInfo.COMMON.class}) FileInfo fileInfo, HttpServletResponse response, BindingResult result) throws ActException {
+        try {
+            handlerToken(fileInfo);
+            String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
+            byte[] buffer = fileAPI.download(fileInfo);
+            writeOutFile(response, buffer, filename);
+            return new ActResult("success");
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
+
+
+    /**
      * 文件、文件夹移动
      *
      * @param fileInfo 文件信息
@@ -261,8 +304,9 @@ public class FileAct extends BaseFileAction {
      * @param fileInfo
      */
     private void handlerToken(FileInfo fileInfo) {
-        fileInfo.setStorageToken(RpcContext.getContext().getAttachment(RpcCommon.STORAGE_TOKEN));
-
+        if(StringUtils.isBlank(fileInfo.getStorageToken())){
+            fileInfo.setStorageToken(RpcContext.getContext().getAttachment(RpcCommon.STORAGE_TOKEN));
+        }
     }
 
 }

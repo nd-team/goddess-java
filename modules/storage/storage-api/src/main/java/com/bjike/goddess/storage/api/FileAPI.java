@@ -48,10 +48,10 @@ public interface FileAPI {
     /**
      * 删除文件
      *
-     * @param paths 文件路径
+     * @param paths        文件路径
      * @param storageToken 登录令牌
      */
-    default void delFile(String storageToken,String[] paths) throws SerException {
+    default void delFile(String storageToken, String[] paths) throws SerException {
 
     }
 
@@ -73,6 +73,18 @@ public interface FileAPI {
     default byte[] download(FileInfo fileInfo) throws SerException {
         return null;
     }
+
+    /**
+     * 获取缩略图
+     *
+     * @param fileInfo
+     * @return
+     * @throws SerException
+     */
+    default byte[] thumbnails(FileInfo fileInfo) throws SerException {
+        return null;
+    }
+
 
     /**
      * 文件是否存在

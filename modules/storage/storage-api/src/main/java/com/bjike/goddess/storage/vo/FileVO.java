@@ -49,16 +49,6 @@ public class FileVO {
      */
     private String createTime;
 
-
-    /**
-     * 大图
-     */
-    private String bigPicture;
-
-    /**
-     * 小图
-     */
-    private String minPicture;
     /**
      * 更新时间
      */
@@ -118,22 +108,6 @@ public class FileVO {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
-    }
-
-    public String getBigPicture() {
-        return bigPicture;
-    }
-
-    public void setBigPicture(String bigPicture) {
-        this.bigPicture = bigPicture;
-    }
-
-    public String getMinPicture() {
-        return minPicture;
-    }
-
-    public void setMinPicture(String minPicture) {
-        this.minPicture = minPicture;
     }
 
     public String getModifyTime() {

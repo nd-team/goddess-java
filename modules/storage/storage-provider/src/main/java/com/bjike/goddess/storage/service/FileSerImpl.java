@@ -13,11 +13,13 @@ import com.bjike.goddess.storage.dto.FileDTO;
 import com.bjike.goddess.storage.entity.File;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.utils.FileUtils;
+import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
@@ -35,6 +37,7 @@ import java.util.List;
  */
 @Service
 public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
+    private static final String[] IMAGE_SUFFIX = new String[]{"jpg", "bmp", "gif"};
 
     @Autowired
     private StorageUserAPI storageUserAPI;
@@ -203,6 +206,34 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
     public byte[] download(String path, String storageToken) throws SerException {
         String realPath = getRealPath(path, storageToken);
         return FileUtils.FileToByte(realPath);
+    }
+
+    @Override
+    public byte[] thumbnails(String path, String storageToken) throws SerException {
+        String realPath = getRealPath(path, storageToken);
+        String suffix = StringUtils.substringAfterLast(path, ".");
+        boolean exist = false;
+        for (String sx : IMAGE_SUFFIX) {
+            if (sx.equalsIgnoreCase(suffix)) {
+                exist = true;
+            }
+        }
+        if (exist) {
+            try {
+                Thumbnails.Builder<java.io.File> fileBuilder = Thumbnails.of(realPath)
+                        .forceSize(200, 180)
+                        .outputQuality(0.35f)
+                        .outputFormat(suffix);
+                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                fileBuilder.toOutputStream(os);
+                return os.toByteArray();
+            } catch (IOException e) {
+                throw new SerException("缩略图获取错误");
+            }
+        } else {
+            throw new SerException("不支持该文件类型缩略图");
+        }
+
     }
 
     @Override

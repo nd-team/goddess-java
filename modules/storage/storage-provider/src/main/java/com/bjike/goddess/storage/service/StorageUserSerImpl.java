@@ -16,11 +16,16 @@ import com.bjike.goddess.storage.session.LoginUser;
 import com.bjike.goddess.storage.session.StorageSession;
 import com.bjike.goddess.storage.to.StorageUserTO;
 import com.bjike.goddess.user.api.UserAPI;
+import net.coobird.thumbnailator.Thumbnails;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * 存储模块用户业务实现

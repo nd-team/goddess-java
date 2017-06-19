@@ -76,6 +76,13 @@ public class FileApiImpl implements FileAPI {
     }
 
     @Override
+    public byte[] thumbnails(FileInfo fileInfo) throws SerException {
+        String path = fileInfo.getPath();
+        String token = fileInfo.getStorageToken();
+        return fileSer.thumbnails(path,token);
+    }
+
+    @Override
     public Boolean existsFile(FileInfo fileInfo) throws SerException {
         String path = fileInfo.getPath();
         String token = fileInfo.getStorageToken();

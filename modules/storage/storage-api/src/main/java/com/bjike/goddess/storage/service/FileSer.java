@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.storage.bo.FileBO;
 import com.bjike.goddess.storage.dto.FileDTO;
 import com.bjike.goddess.storage.entity.File;
+import com.bjike.goddess.storage.to.FileInfo;
 
 import java.io.InputStream;
 import java.util.List;
@@ -81,6 +82,18 @@ public interface FileSer extends Ser<File, FileDTO> {
      * @param path         文件路径
      */
     default byte[] download(String path, String storageToken) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取缩略图
+     *
+     * @param path
+     * @param storageToken
+     * @return
+     * @throws SerException
+     */
+    default byte[] thumbnails(String path, String storageToken) throws SerException {
         return null;
     }
 
