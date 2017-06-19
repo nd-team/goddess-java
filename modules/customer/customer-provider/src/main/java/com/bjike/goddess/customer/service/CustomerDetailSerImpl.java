@@ -3,6 +3,7 @@ package com.bjike.goddess.customer.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.customer.bo.CusFamilyMemberBO;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
@@ -16,6 +17,8 @@ import com.bjike.goddess.customer.entity.CustomerBaseInfo;
 import com.bjike.goddess.customer.entity.CustomerDetail;
 import com.bjike.goddess.customer.to.CusFamilyMemberTO;
 import com.bjike.goddess.customer.to.CustomerDetailTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -45,6 +48,49 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
     private CusFamilyMemberSer cusFamilyMemberAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private UserAPI userAPI;
+
+
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity(String flagId ) throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission(flagId);
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity(String flagId ) throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission(flagId);
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
 
     @Override
     public Long countCustomerDetail(CustomerDetailDTO customerDetailDTO) throws SerException {
@@ -54,10 +100,8 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
 
     @Override
     public List<CustomerDetailBO> listCustomerDetail(CustomerDetailDTO customerDetailDTO) throws SerException {
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-        if ( !permission) {
-            throw new SerException("您的帐号没有权限");
-        }
+        checkSeeIdentity("1");
+
         customerDetailDTO.getSorts().add("createTime=desc");
         List<CustomerDetail> list = super.findByCis(customerDetailDTO, true);
         List<CustomerDetailBO> customerDetailBOArrayList = new ArrayList<>();
@@ -77,10 +121,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
     @Override
     public CustomerDetailBO addCustomerDetail(CustomerDetailTO customerDetailTO) throws SerException {
         //商务模块添加权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("4");
-        if ( !permissionLevel) {
-            throw new SerException("您不是商务模块的人员，不可以进行添加详细信息操作");
-        }
+        checkAddIdentity( "4");
 
         String baseInfoNum = customerDetailTO.getCustomerNum();
         CustomerBaseInfoDTO baseInfoDTO = new CustomerBaseInfoDTO();
@@ -116,10 +157,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
     @Override
     public CustomerDetailBO editCustomerDetail(CustomerDetailTO customerDetailTO) throws SerException {
         //商务模块编辑权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("4");
-        if ( !permissionLevel) {
-            throw new SerException("您不是商务模块的人员，不可以进行编辑详细信息操作");
-        }
+        checkAddIdentity( "4");
 
         //先查一遍详细
         CustomerDetailDTO dto = new CustomerDetailDTO();
@@ -158,10 +196,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
     @Override
     public void deleteCustomerDetail(String id) throws SerException {
         //商务模块删除权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("4");
-        if ( !permissionLevel) {
-            throw new SerException("您不是商务模块的人员，不可以进行删除详细信息操作");
-        }
+        checkAddIdentity( "4");
 
         CustomerDetail customerDetail = super.findById( id );
 

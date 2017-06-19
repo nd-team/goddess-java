@@ -19,6 +19,7 @@ import com.bjike.goddess.customer.entity.CustomerLevel;
 import com.bjike.goddess.customer.enums.CustomerSex;
 import com.bjike.goddess.customer.to.CustomerBaseInfoTO;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.hibernate.validator.constraints.NotBlank;
@@ -58,6 +59,48 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     private CusPermissionSer cusPermissionSer;
 
 
+
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity(String flagId ) throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission(flagId);
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity(String flagId ) throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission(flagId);
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+
     @Override
     public CustomerBaseInfoBO generateCustomerNum() throws SerException {
         String[] fields = new String[]{"customerNum", "customerName"};
@@ -82,10 +125,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     @Override
     public List<CustomerBaseInfoBO> listCustomerBaseInfo(CustomerBaseInfoDTO customerBaseInfoDTO) throws SerException {
         //列表权限
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-        if ( !permission) {
-            throw new SerException("您的帐号没有权限");
-        }
+        checkSeeIdentity("1");
 
         customerBaseInfoDTO.getSorts().add("createTime=desc");
         List<CustomerBaseInfo> list = super.findByCis(customerBaseInfoDTO, true);
@@ -112,10 +152,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     public CustomerBaseInfoBO addCustomerBaseInfo(CustomerBaseInfoTO customerBaseInfoTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         //商务模块添加权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("3");
-        if ( !permissionLevel) {
-            throw new SerException("您不是商务模块的人员，不可以进行添加基本信息操作");
-        }
+        checkAddIdentity("3");
 
         CustomerBaseInfoDTO dto = new CustomerBaseInfoDTO();
         dto.getConditions().add(Restrict.eq("customerName", customerBaseInfoTO.getCustomerName()));
@@ -147,10 +184,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     public CustomerBaseInfoBO editCustomerBaseInfo(CustomerBaseInfoTO customerBaseInfoTO ) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         //商务模块编辑权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("3");
-        if ( !permissionLevel) {
-            throw new SerException("您不是商务模块的人员，不可以进行编辑基本信息操作");
-        }
+        checkAddIdentity("3");
         //查一遍级别
         CustomerBaseInfo cusBase = null;
         try {
@@ -182,10 +216,8 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     public void deleteCustomerBaseInfo(String id) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         //商务模块删除权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("3");
-        if ( !permissionLevel) {
-            throw new SerException("您不是商务模块的人员，不可以进行删除基本信息操作");
-        }
+        checkAddIdentity("3");
+
         RpcTransmit.transmitUserToken(userToken);
         try {
             CustomerBaseInfo customerBaseInfo = super.findById(id);
@@ -215,10 +247,8 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     public void congealCustomerBaseInfo(String id) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         //商务模块冻结权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("3");
-        if ( !permissionLevel) {
-            throw new SerException("您不是商务模块的人员，不可以进行冻结基本信息操作");
-        }
+        checkAddIdentity("3");
+
         RpcTransmit.transmitUserToken(userToken);
         try {
             CustomerBaseInfo customerBaseInfo = super.findById(id);
@@ -237,10 +267,8 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     public void thawCustomerBaseInfo(String id) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         //商务模块解冻权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("3");
-        if ( !permissionLevel) {
-            throw new SerException("您不是商务模块的人员，不可以进行解冻基本信息操作");
-        }
+        checkAddIdentity("3");
+
         RpcTransmit.transmitUserToken(userToken);
         try {
             CustomerBaseInfo customerBaseInfo = super.findById(id);
@@ -263,9 +291,22 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
 
         List<String> areaList = customerBaseInfoBOS.stream().map(CustomerBaseInfoBO::getCustomerNum)
                 .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
+        List<Integer> num = new ArrayList<>();
+        areaList.stream().forEach(str->{
+            num.add( Integer.parseInt(str.substring(4,str.length())));
+        });
+        Collections.sort(num,new Comparator<Integer>(){
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o1.compareTo(o2);
+            }
+        });
+        List<String> numList = new ArrayList<>();
+        num.stream().forEach(str->{
+            numList.add( "CS000"+str );
+        });
 
-
-        return areaList;
+        return numList;
     }
 
     @Override

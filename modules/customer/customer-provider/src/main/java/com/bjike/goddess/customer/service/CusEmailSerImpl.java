@@ -13,6 +13,7 @@ import com.bjike.goddess.customer.enums.CustomerStatus;
 import com.bjike.goddess.customer.enums.CustomerType;
 import com.bjike.goddess.customer.to.CusEmailTO;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,45 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
     @Autowired
     private CusPermissionSer cusPermissionSer;
 
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity(String flagId ) throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission(flagId);
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity(String flagId ) throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission(flagId);
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
     @Override
     public Long countCusEmail(CusEmailDTO cusEmailDTO) throws SerException {
         return super.count(cusEmailDTO);
@@ -55,10 +95,8 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
     @Cacheable
     @Override
     public List<CusEmailBO> listCusEmail(CusEmailDTO cusEmailDTO) throws SerException {
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-        if ( !permission) {
-            throw new SerException("您的帐号没有权限");
-        }
+        checkSeeIdentity("1");
+
         cusEmailDTO.getSorts().add("createTime=desc");
         List<CusEmail> list = super.findByCis(cusEmailDTO, true);
         return BeanTransform.copyProperties(list, CusEmailBO.class);
@@ -75,10 +113,7 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
     public CusEmailBO addCusEmail(CusEmailTO cusEmailTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         //商务模块添加权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("5");
-        if ( !permissionLevel) {
-            throw new SerException("您不是商务模块的人员，不可以进行添加操作");
-        }
+        checkAddIdentity("5");
         RpcTransmit.transmitUserToken( userToken );
 
         if (cusEmailTO.getWorks() == null || cusEmailTO.getWorks().length <= 0) {
@@ -127,10 +162,7 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
     public CusEmailBO editCusEmail(CusEmailTO cusEmailTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         //商务模块编辑权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("5");
-        if ( !permissionLevel) {
-            throw new SerException("您不是商务模块的人员，不可以进行编辑操作");
-        }
+        checkAddIdentity("5");
         RpcTransmit.transmitUserToken( userToken );
 
 
@@ -176,10 +208,7 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
     @Override
     public void deleteCusEmail(String id) throws SerException {
         //商务模块删除权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("5");
-        if ( !permissionLevel) {
-            throw new SerException("您不是商务模块的人员，不可以进行删除操作");
-        }
+        checkAddIdentity("5");
 
         super.remove(id);
     }
@@ -188,10 +217,7 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
     @Override
     public void congealCusEmail(String id) throws SerException {
         //商务模块冻结权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("5");
-        if ( !permissionLevel) {
-            throw new SerException("您不是商务模块的人员，不可以进行冻结操作");
-        }
+        checkAddIdentity("5");
         CusEmail cusEmail = super.findById(id);
         cusEmail.setStatus(Status.CONGEAL);
         super.update(cusEmail);
@@ -202,10 +228,7 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
     @Override
     public void thawCusEmail(String id) throws SerException {
         //商务模块解冻权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("5");
-        if ( !permissionLevel) {
-            throw new SerException("您不是商务模块的人员，不可以进行解冻操作");
-        }
+        checkAddIdentity("5");
 
         CusEmail cusEmail = super.findById(id);
         cusEmail.setStatus(Status.THAW);
