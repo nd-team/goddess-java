@@ -82,5 +82,14 @@ public interface MarketInfoAPI {
         return null;
     }
 
+    /**
+     * chenjunhao
+     * 通过组织机构名称查找
+     *
+     * @param origanizion 组织机构名称
+     * @return
+     * @throws SerException
+     */
+    List<MarketInfoBO> findByOriganizion(String origanizion) throws SerException;
 
 }

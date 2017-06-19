@@ -35,6 +35,7 @@ dependencies {
     compile project(":modules:market:market-api")
     compile project(":modules:supplier:supplier-api")
     compile project(":modules:projectmeasure:projectmeasure-api")
+    compile project(":modules:businessinteraction:businessinteraction-api")
     compile project(":common:common-utils")
 }
 

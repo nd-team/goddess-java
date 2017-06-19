@@ -41,11 +41,11 @@ public class CollectEmailTO extends BaseTO {
     @NotNull(message = "发送单位不能为空")
     private CustomerSendUnit customerSendUnit;
 
-    /**
-     * 汇总间隔
-     */
-    @NotNull(message = "汇总间隔不能为空")
-    private CustomerCollectUnit customerCollectUnit;
+//    /**
+//     * 汇总间隔
+//     */
+//    @NotNull(message = "汇总间隔不能为空")
+//    private CustomerCollectUnit customerCollectUnit;
 
 
 
@@ -120,13 +120,13 @@ public class CollectEmailTO extends BaseTO {
         this.customerSendUnit = customerSendUnit;
     }
 
-    public CustomerCollectUnit getCustomerCollectUnit() {
-        return customerCollectUnit;
-    }
-
-    public void setCustomerCollectUnit(CustomerCollectUnit customerCollectUnit) {
-        this.customerCollectUnit = customerCollectUnit;
-    }
+//    public CustomerCollectUnit getCustomerCollectUnit() {
+//        return customerCollectUnit;
+//    }
+//
+//    public void setCustomerCollectUnit(CustomerCollectUnit customerCollectUnit) {
+//        this.customerCollectUnit = customerCollectUnit;
+//    }
 
     public List<String> getSendObjectList() {
         return sendObjectList;

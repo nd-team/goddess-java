@@ -3,6 +3,7 @@ package com.bjike.goddess.businessinteraction.api;
 import com.bjike.goddess.businessinteraction.bo.LeavingMessageBO;
 import com.bjike.goddess.businessinteraction.dto.LeavingMessageDTO;
 import com.bjike.goddess.businessinteraction.service.LeavingMessageSer;
+import com.bjike.goddess.businessinteraction.to.GuidePermissionTO;
 import com.bjike.goddess.businessinteraction.to.LeavingMessageTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,5 +49,15 @@ public class LeavingMessageApiImpl implements LeavingMessageAPI {
     @Override
     public void deleteLeavingMessage(String id) throws SerException {
         leavingMessageSer.deleteLeavingMessage(id);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return leavingMessageSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return leavingMessageSer.guidePermission(guidePermissionTO);
     }
 }

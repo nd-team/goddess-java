@@ -1,22 +1,26 @@
 package com.bjike.goddess.businessinteraction.action.businessinteraction;
 
+import com.bjike.goddess.businessinteraction.api.CollectEmailAPI;
+import com.bjike.goddess.businessinteraction.bo.CollectEmailBO;
+import com.bjike.goddess.businessinteraction.dto.CollectEmailDTO;
+import com.bjike.goddess.businessinteraction.to.CollectEmailTO;
+import com.bjike.goddess.businessinteraction.to.GuidePermissionTO;
+import com.bjike.goddess.businessinteraction.to.SonPermissionObject;
+import com.bjike.goddess.businessinteraction.vo.CollectEmailVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.businessinteraction.api.CollectEmailAPI;
-import com.bjike.goddess.businessinteraction.bo.CollectEmailBO;
-import com.bjike.goddess.businessinteraction.dto.CollectEmailDTO;
-import com.bjike.goddess.businessinteraction.to.CollectEmailTO;
-import com.bjike.goddess.businessinteraction.vo.CollectEmailVO;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,9 +40,32 @@ public class CollectEmailAction {
     private CollectEmailAPI collectEmailAPI;
 
     /**
-     *  列表总条数
+     * 功能导航权限
      *
-     * @param collectEmailDTO  邮件信息dto
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = collectEmailAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 列表总条数
+     *
+     * @param collectEmailDTO 邮件信息dto
      * @des 获取所有邮件信息总条数
      * @version v1
      */
@@ -56,12 +83,12 @@ public class CollectEmailAction {
      * 一个邮件
      *
      * @param id 邮件信息id
+     * @return class CollectEmailVO
      * @des 根据id获取所有邮件信息
-     * @return  class CollectEmailVO
      * @version v1
      */
     @GetMapping("v1/getOne/{id}")
-    public Result getOne( @PathVariable String id ) throws ActException {
+    public Result getOne(@PathVariable String id) throws ActException {
         try {
             CollectEmailVO collectEmailVOList = BeanTransform.copyProperties(
                     collectEmailAPI.getOneById(id), CollectEmailVO.class);
@@ -70,13 +97,13 @@ public class CollectEmailAction {
             throw new ActException(e.getMessage());
         }
     }
-    
+
     /**
      * 邮件汇总列表
      *
      * @param collectEmailDTO 邮件汇总信息dto
+     * @return class CollectEmailVO
      * @des 获取所有邮件汇总信息
-     * @return  class CollectEmailVO
      * @version v1
      */
     @GetMapping("v1/listCollectEmail")
@@ -94,16 +121,16 @@ public class CollectEmailAction {
      * 添加邮件汇总
      *
      * @param collectEmailTO 邮件汇总基本信息数据to
-     * @des 添加邮件汇总,行业不能为空发送间隔汇总间隔等都不能为空
-     * @return  class CollectEmailVO
+     * @return class CollectEmailVO
+     * @des 添加邮件汇总, 行业不能为空发送间隔汇总间隔等都不能为空
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result addCollectEmail( @Validated CollectEmailTO collectEmailTO , BindingResult bindingResult) throws ActException {
+    public Result addCollectEmail(@Validated CollectEmailTO collectEmailTO, BindingResult bindingResult) throws ActException {
         try {
             CollectEmailBO collectEmailBO1 = collectEmailAPI.addCollectEmail(collectEmailTO);
-            return ActResult.initialize(BeanTransform.copyProperties(collectEmailBO1,CollectEmailVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(collectEmailBO1, CollectEmailVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -114,16 +141,16 @@ public class CollectEmailAction {
      * 编辑邮件汇总
      *
      * @param collectEmailTO 邮件汇总基本信息数据bo
-     * @des 添加邮件汇总,行业不能为空发送间隔汇总间隔等都不能为空
-     * @return  class CollectEmailVO
+     * @return class CollectEmailVO
+     * @des 添加邮件汇总, 行业不能为空发送间隔汇总间隔等都不能为空
      * @version v1
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result editCollectEmail(@Validated CollectEmailTO collectEmailTO , BindingResult bindingResult) throws ActException {
+    public Result editCollectEmail(@Validated CollectEmailTO collectEmailTO, BindingResult bindingResult) throws ActException {
         try {
             CollectEmailBO collectEmailBO1 = collectEmailAPI.editCollectEmail(collectEmailTO);
-            return ActResult.initialize(BeanTransform.copyProperties(collectEmailBO1,CollectEmailVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(collectEmailBO1, CollectEmailVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -176,7 +203,7 @@ public class CollectEmailAction {
      */
     @LoginAuth
     @PutMapping("v1/thaw/{id}")
-    public Result thaw (@PathVariable String id) throws ActException {
+    public Result thaw(@PathVariable String id) throws ActException {
         try {
             collectEmailAPI.thawCollectEmail(id);
             return new ActResult("thaw success!");
@@ -190,12 +217,12 @@ public class CollectEmailAction {
      * 汇总
      *
      * @param collectEmailDTO 数据
+     * @return class CollectEmailVO
      * @des 根据地区汇总
-     * @return  class CollectEmailVO
      * @version v1
      */
     @GetMapping("v1/collect")
-    public Result collect ( @Validated(CollectEmailDTO.TestCollect.class) CollectEmailDTO collectEmailDTO ) throws ActException {
+    public Result collect(@Validated(CollectEmailDTO.TestCollect.class) CollectEmailDTO collectEmailDTO) throws ActException {
         String[] areas = collectEmailDTO.getAreas();
         try {
             List<CollectEmailVO> collectEmailVOList = BeanTransform.copyProperties(
@@ -212,14 +239,29 @@ public class CollectEmailAction {
      * @version v1
      */
     @GetMapping("v1/listArea")
-    public Result listArea (  ) throws ActException {
+    public Result listArea() throws ActException {
         try {
-            List<String> areas = collectEmailAPI.areaList( );
+            List<String> areas = collectEmailAPI.areaList();
             return ActResult.initialize(areas);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
+    /**
+     * 检测
+     *
+     * @des 商务邮件汇总
+     * @version v1
+     */
+    @GetMapping("v1/checkEmail")
+    public Result checkEmail() throws ActException {
+        try {
+            collectEmailAPI.checkSendEmail();
+            return ActResult.initialize("发送成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

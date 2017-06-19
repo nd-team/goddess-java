@@ -4,7 +4,6 @@ package com.bjike.goddess.businessinteraction.enums;
  * Created by ike on 17-5-15.
  */
 public enum CusPermissionType {
-
     /**
      * 层级
      */

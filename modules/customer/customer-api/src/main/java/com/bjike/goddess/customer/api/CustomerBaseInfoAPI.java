@@ -20,7 +20,6 @@ import java.util.List;
 public interface CustomerBaseInfoAPI {
 
 
-
     /**
      * 自动生成一个客户编号
      *
@@ -29,9 +28,9 @@ public interface CustomerBaseInfoAPI {
     default CustomerBaseInfoBO generateCustomerNum() throws SerException {
         return null;
     }
+
     /**
      * 客户基本信息列表总条数
-     *
      */
     default Long countCustomerBaseInfo(CustomerBaseInfoDTO customerBaseInfoDTO) throws SerException {
         return null;
@@ -62,7 +61,7 @@ public interface CustomerBaseInfoAPI {
      * @param customerBaseInfoTO 客户基本信息信息
      * @return class CustomerBaseInfoBO
      */
-    default CustomerBaseInfoBO editCustomerBaseInfo(CustomerBaseInfoTO customerBaseInfoTO ) throws SerException {
+    default CustomerBaseInfoBO editCustomerBaseInfo(CustomerBaseInfoTO customerBaseInfoTO) throws SerException {
         return null;
     }
 
@@ -134,7 +133,7 @@ public interface CustomerBaseInfoAPI {
      * @param customerName 客户名
      * @return class CustomerBaseInfoBO
      */
-    default CustomerBaseInfoBO addMarketCustomerInfo(@NotBlank String customerName,String origanizion) throws SerException {
+    default CustomerBaseInfoBO addMarketCustomerInfo(@NotBlank String customerName, String origanizion) throws SerException {
         return null;
     }
 
@@ -144,7 +143,7 @@ public interface CustomerBaseInfoAPI {
      * @param customerNum 客户编号
      * @return class CustomerBaseInfoBO
      */
-    default CustomerBaseInfoBO getCustomerInfoByNum( String customerNum) throws SerException {
+    default CustomerBaseInfoBO getCustomerInfoByNum(String customerNum) throws SerException {
         return null;
     }
 
@@ -157,4 +156,13 @@ public interface CustomerBaseInfoAPI {
         return null;
     }
 
+    /**
+     * chenjunhao
+     * 通过组织机构名称查找
+     *
+     * @param origanizion 组织机构名称
+     * @return
+     * @throws SerException
+     */
+    List<CustomerBaseInfoBO> findByOriganizion(String origanizion) throws SerException;
 }

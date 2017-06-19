@@ -1,5 +1,6 @@
 package com.bjike.goddess.market.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -11,7 +12,6 @@ import com.bjike.goddess.market.to.MarketInfoTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,12 +34,13 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
     @Autowired
     private CusPermissionSer cusPermissionSer;
 
-    private void checkSeeIdentity () throws SerException{
+    private void checkSeeIdentity() throws SerException {
         Boolean permission = cusPermissionSer.getCusPermission("1");
-        if ( !permission) {
+        if (!permission) {
             throw new SerException("您的帐号没有权限");
         }
     }
+
     @Override
     public Long countMarketInfo(MarketInfoDTO marketInfoDTO) throws SerException {
         marketInfoDTO.getSorts().add("createTime=desc");
@@ -49,7 +50,7 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
 
     @Override
     public MarketInfoBO getOne(String id) throws SerException {
-        if(StringUtils.isBlank(id)){
+        if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
         MarketInfo marketInfo = super.findById(id);
@@ -68,7 +69,7 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
     @Override
     public MarketInfoBO insertMarketInfo(MarketInfoTO marketInfoTO) throws SerException {
         Boolean permission = cusPermissionSer.getCusPermission("1");
-        if ( !permission) {
+        if (!permission) {
             throw new SerException("您不是商务人员，没有权限");
         }
         MarketInfo marketInfo = BeanTransform.copyProperties(marketInfoTO, MarketInfo.class, true);
@@ -89,10 +90,11 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
         }
         return BeanTransform.copyProperties(marketInfo, MarketInfoBO.class);
     }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketInfoBO editMarketInfo(MarketInfoTO marketInfoTO) throws SerException {
-        if(StringUtils.isBlank(marketInfoTO.getId())){
+        if (StringUtils.isBlank(marketInfoTO.getId())) {
             throw new SerException("id不能为空");
         }
         /*  try {
@@ -104,7 +106,7 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
                 customerBaseInfoAPI.addMarketCustomerInfo(customerBaseInfoBO.getCustomerName(), customerBaseInfoBO.getOriganizion());
             } else {*/
         Boolean permission = cusPermissionSer.getCusPermission("1");
-        if ( !permission) {
+        if (!permission) {
             throw new SerException("您不是商务人员，没有权限");
         }
         MarketInfo marketInfo = super.findById(marketInfoTO.getId());
@@ -123,7 +125,7 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
     @Override
     public void removeMarketInfo(String id) throws SerException {
         Boolean permission = cusPermissionSer.getCusPermission("1");
-        if ( !permission) {
+        if (!permission) {
             throw new SerException("您不是商务人员，没有权限");
         }
         try {
@@ -140,4 +142,11 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
         return null;
     }
 
+    @Override
+    //chenjunhao
+    public List<MarketInfoBO> findByOriganizion(String origanizion) throws SerException {
+        MarketInfoDTO dto = new MarketInfoDTO();
+        dto.getConditions().add(Restrict.eq("origanizion", origanizion));
+        return BeanTransform.copyProperties(super.findByCis(dto), MarketInfoBO.class);
+    }
 }

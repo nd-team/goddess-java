@@ -1,5 +1,6 @@
 package com.bjike.goddess.businessinteraction.api;
 
+import com.bjike.goddess.businessinteraction.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.businessinteraction.bo.CollectEmailBO;
 import com.bjike.goddess.businessinteraction.dto.CollectEmailDTO;
@@ -73,5 +74,20 @@ public class CollectEmailApiImpl implements CollectEmailAPI {
     @Override
     public List<String> areaList() throws SerException {
         return collectEmailSer.areaList();
+    }
+
+    @Override
+    public void checkSendEmail() throws SerException {
+        collectEmailSer.checkSendEmail();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return collectEmailSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return collectEmailSer.guidePermission(guidePermissionTO);
     }
 }

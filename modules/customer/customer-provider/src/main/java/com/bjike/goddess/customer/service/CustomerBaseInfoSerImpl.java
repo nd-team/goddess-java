@@ -1,13 +1,11 @@
 package com.bjike.goddess.customer.service;
 
 import com.bjike.goddess.common.api.dto.Restrict;
-import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.customer.api.CusPermissionAPI;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.bo.CustomerLevelBO;
 import com.bjike.goddess.customer.dto.CusFamilyMemberDTO;
@@ -181,10 +179,11 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
 
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public CustomerBaseInfoBO editCustomerBaseInfo(CustomerBaseInfoTO customerBaseInfoTO ) throws SerException {
+    public CustomerBaseInfoBO editCustomerBaseInfo(CustomerBaseInfoTO customerBaseInfoTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         //商务模块编辑权限
         checkAddIdentity("3");
+
         //查一遍级别
         CustomerBaseInfo cusBase = null;
         try {
@@ -268,7 +267,6 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         String userToken = RpcTransmit.getUserToken();
         //商务模块解冻权限
         checkAddIdentity("3");
-
         RpcTransmit.transmitUserToken(userToken);
         try {
             CustomerBaseInfo customerBaseInfo = super.findById(id);
@@ -497,5 +495,13 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
 
 
         return customerNameList;
+    }
+
+    @Override
+    //chenjunhao
+    public List<CustomerBaseInfoBO> findByOriganizion(String origanizion) throws SerException {
+        CustomerBaseInfoDTO dto = new CustomerBaseInfoDTO();
+        dto.getConditions().add(Restrict.eq("origanizion", origanizion));
+        return BeanTransform.copyProperties(super.findByCis(dto), CustomerBaseInfoBO.class);
     }
 }
