@@ -7,6 +7,7 @@ import com.bjike.goddess.businessproject.enums.BusinessCooperate;
 import com.bjike.goddess.businessproject.enums.BusinessType;
 import com.bjike.goddess.businessproject.enums.GuideAddrStatus;
 import com.bjike.goddess.businessproject.excel.BaseInfoManageExcel;
+import com.bjike.goddess.businessproject.excel.BaseInfoManageLeadExcel;
 import com.bjike.goddess.businessproject.to.BaseInfoManageTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.utils.ChineseConvert;
@@ -128,7 +129,7 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
         Boolean flagSee = guideSeeIdentity();
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagAdd = guideAddIdentity();
-        if( flagSee || flagAdd ){
+        if (flagSee || flagAdd) {
             return true;
         } else {
             return false;
@@ -414,6 +415,16 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
             set.add(b.getInnerProject());
         }
         return set;
+    }
+
+    @Override
+    public byte[] templateExcel() throws SerException {
+        List<BaseInfoManageLeadExcel> toList = new ArrayList<BaseInfoManageLeadExcel>();
+        BaseInfoManageLeadExcel baseInfoManageLeadExcel = new BaseInfoManageLeadExcel();
+        toList.add(baseInfoManageLeadExcel);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        return bytes;
     }
 
     @Override
