@@ -95,7 +95,7 @@ public class UserApiImpl implements UserAPI {
     }
 
     @Override
-    public List<UserBO> findOne(UserDTO dto) throws SerException {
+    public UserBO findOne(UserDTO dto) throws SerException {
         return BeanTransform.copyProperties(userSer.findOne(dto), UserBO.class);
     }
 

@@ -72,7 +72,7 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
                 UserBO userBO = userAPI.currentUser();
                 messageTO.setSenderId(userBO.getId());
                 messageTO.setSenderName(userBO.getUsername());
-            }catch (SerException e){ //定时器自动调用没有登录用户
+            } catch (SerException e) { //定时器自动调用没有登录用户
                 messageTO.setSenderId("sys");
                 messageTO.setSenderName("admin");
             }
@@ -161,13 +161,16 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
     @Override
     public List<MessageBO> unreadList(String userId, MsgType type) throws SerException {
         List<String> messageIds = redisClient.getList(userId + "_message");
-        MessageDTO dto = new MessageDTO();
-        dto.getConditions().add(Restrict.in("id", messageIds.toArray()));
-        if (null != type) {
-            dto.getConditions().add(Restrict.eq("msgType", type.getCode()));
+        if (messageIds.size() > 0) {
+            MessageDTO dto = new MessageDTO();
+            dto.getConditions().add(Restrict.in("id", messageIds.toArray()));
+            if (null != type) {
+                dto.getConditions().add(Restrict.eq("msgType", type.getCode()));
+            }
+            return BeanTransform.copyProperties(super.findByCis(dto), MessageBO.class);
+        } else {
+            return null;
         }
-
-        return BeanTransform.copyProperties(super.findByCis(dto), MessageBO.class);
     }
 
     @Override
