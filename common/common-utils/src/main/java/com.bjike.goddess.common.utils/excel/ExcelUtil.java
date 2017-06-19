@@ -196,34 +196,6 @@ public class ExcelUtil {
         return null;
     }
 
-    /**
-     * tanghaixiang
-     * 获取单元格的值
-     *
-     * @param cell
-     * @return
-     */
-    public static String getCellValue(Cell cell) {
-        if (cell == null)
-            return "";
-
-        if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
-
-            return cell.getStringCellValue();
-
-        } else if (cell.getCellType() == Cell.CELL_TYPE_BOOLEAN) {
-
-            return String.valueOf(cell.getBooleanCellValue());
-
-        } else if (cell.getCellType() == Cell.CELL_TYPE_FORMULA) {
-
-            return cell.getCellFormula();
-
-        } else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-            return String.valueOf(cell.getNumericCellValue());
-        }
-        return "";
-    }
 
     /**
      * tanghaixiang

@@ -100,7 +100,7 @@ public interface UserAPI {
      * @return
      * @throws SerException
      */
-    default List<UserBO> findOne(UserDTO dto) throws SerException {
+    default UserBO findOne(UserDTO dto) throws SerException {
         return null;
     }
 
