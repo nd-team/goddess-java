@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class CollectData implements Serializable{
+public class CollectData implements Serializable {
 
     /**
      * 汇总字段名
@@ -19,7 +19,7 @@ public class CollectData implements Serializable{
     /**
      * 数量
      */
-    private Integer counts;
+    private String counts;
 
     public String getName() {
         return name;
@@ -29,11 +29,11 @@ public class CollectData implements Serializable{
         this.name = name;
     }
 
-    public Integer getCounts() {
+    public String getCounts() {
         return counts;
     }
 
-    public void setCounts(Integer counts) {
+    public void setCounts(String counts) {
         this.counts = counts;
     }
 }

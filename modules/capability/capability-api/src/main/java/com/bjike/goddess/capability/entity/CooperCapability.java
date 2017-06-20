@@ -30,122 +30,152 @@ public class CooperCapability extends BaseEntity {
     /**
      * 专业资质认证
      */
-    @Column(name = "professionAuthen",  columnDefinition = "VARCHAR(255)   COMMENT '专业资质认证'")
+    @Column(name = "professionAuthen", columnDefinition = "VARCHAR(255)   COMMENT '专业资质认证'")
     private String professionAuthen;
 
     /**
      * 管理资质认证
      */
-    @Column(name = "manageAuthen",  columnDefinition = "VARCHAR(255)   COMMENT '管理资质认证'")
+    @Column(name = "manageAuthen", columnDefinition = "VARCHAR(255)   COMMENT '管理资质认证'")
     private String manageAuthen;
 
     /**
      * 公司荣誉证书
      */
-    @Column(name = "companyCertificate",  columnDefinition = "VARCHAR(255)   COMMENT '公司荣誉证书'")
+    @Column(name = "companyCertificate", columnDefinition = "VARCHAR(255)   COMMENT '公司荣誉证书'")
     private String companyCertificate;
 
     /**
      * 公司参与项目
      */
-    @Column(name = "companyProject",  columnDefinition = "VARCHAR(255)   COMMENT '公司参与项目'")
+    @Column(name = "companyProject", columnDefinition = "VARCHAR(255)   COMMENT '公司参与项目'")
     private String companyProject;
 
     /**
      * 是否独立完成
      */
-    @Column(name = "completePro",  columnDefinition = "INT(2)   COMMENT '是否独立完成'")
+    @Column(name = "completePro", columnDefinition = "INT(2)   COMMENT '是否独立完成'")
     private CompletePro completePro;
 
     /**
      * 公司联系人
      */
-    @Column(name = "contactName",  columnDefinition = "VARCHAR(255)   COMMENT '公司联系人'")
+    @Column(name = "contactName", columnDefinition = "VARCHAR(255)   COMMENT '公司联系人'")
     private String contactName;
 
     /**
      * 性别
      */
-    @Column(name = "sex",  columnDefinition = "VARCHAR(255)   COMMENT '性别'")
+    @Column(name = "sex", columnDefinition = "VARCHAR(255)   COMMENT '性别'")
     private String sex;
 
     /**
      * 联系方式
      */
-    @Column(name = "contactWay",  columnDefinition = "VARCHAR(255)   COMMENT '联系方式'")
+    @Column(name = "contactWay", columnDefinition = "VARCHAR(255)   COMMENT '联系方式'")
     private String contactWay;
 
     /**
      * 邮箱
      */
-    @Column(name = "emailName",  columnDefinition = "VARCHAR(255)   COMMENT '邮箱'")
+    @Column(name = "emailName", columnDefinition = "VARCHAR(255)   COMMENT '邮箱'")
     private String emailName;
 
     /**
      * QQ/微信
      */
-    @Column(name = "qqOrWechat",  columnDefinition = "VARCHAR(255)   COMMENT 'QQ/微信'")
+    @Column(name = "qqOrWechat", columnDefinition = "VARCHAR(255)   COMMENT 'QQ/微信'")
     private String qqOrWechat;
 
     /**
      * 籍贯
      */
-    @Column(name = "natives",  columnDefinition = "VARCHAR(255)   COMMENT '籍贯'")
+    @Column(name = "natives", columnDefinition = "VARCHAR(255)   COMMENT '籍贯'")
     private String natives;
 
     /**
      * 爱好
      */
-    @Column(name = "hobby",  columnDefinition = "VARCHAR(255)   COMMENT '爱好'")
+    @Column(name = "hobby", columnDefinition = "VARCHAR(255)   COMMENT '爱好'")
     private String hobby;
 
     /**
      * 性格评价
      */
-    @Column(name = "charact",  columnDefinition = "VARCHAR(255)   COMMENT '性格评价'")
+    @Column(name = "charact", columnDefinition = "VARCHAR(255)   COMMENT '性格评价'")
     private String charact;
 
     /**
      * 家庭成员
      */
-    @Column(name = "family",  columnDefinition = "VARCHAR(255)   COMMENT '家庭成员'")
+    @Column(name = "family", columnDefinition = "VARCHAR(255)   COMMENT '家庭成员'")
     private String family;
 
     /**
      * 家庭成员与本人关系
      */
-    @Column(name = "familyRelation",  columnDefinition = "VARCHAR(255)   COMMENT '家庭成员与本人关系'")
+    @Column(name = "familyRelation", columnDefinition = "VARCHAR(255)   COMMENT '家庭成员与本人关系'")
     private String familyRelation;
 
     /**
      * 求学和培训经历
      */
-    @Column(name = "studyExperience",  columnDefinition = "VARCHAR(255)   COMMENT '求学和培训经历'")
+    @Column(name = "studyExperience", columnDefinition = "VARCHAR(255)   COMMENT '求学和培训经历'")
     private String studyExperience;
 
     /**
      * 接触经历
      */
-    @Column(name = "connectExperience",  columnDefinition = "VARCHAR(255)   COMMENT '接触经历'")
+    @Column(name = "connectExperience", columnDefinition = "VARCHAR(255)   COMMENT '接触经历'")
     private String connectExperience;
 
     /**
      * 以往工作地区
      */
-    @Column(name = "oldWorkPlace",  columnDefinition = "VARCHAR(255)   COMMENT '以往工作地区'")
+    @Column(name = "oldWorkPlace", columnDefinition = "VARCHAR(255)   COMMENT '以往工作地区'")
     private String oldWorkPlace;
 
     /**
      * 生活地区
      */
-    @Column(name = "livePlace",  columnDefinition = "VARCHAR(255)   COMMENT '生活地区'")
+    @Column(name = "livePlace", columnDefinition = "VARCHAR(255)   COMMENT '生活地区'")
     private String livePlace;
 
     /**
      * 成长地区
      */
-    @Column(name = "growthPlace",  columnDefinition = "VARCHAR(255)   COMMENT '成长地区'")
+    @Column(name = "growthPlace", columnDefinition = "VARCHAR(255)   COMMENT '成长地区'")
     private String growthPlace;
+
+    /**
+     * 组织机构
+     */
+    @Column(name = "organization", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '组织机构'")
+    private String organization;
+
+    /**
+     * 现在工作地区
+     */
+    @Column(name = "nowWorkPlace", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '现在工作地区'")
+    private String nowWorkPlace;
+
+    /**
+     * 所在公司
+     */
+    @Column(name = "nowCompany", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '所在公司'")
+    private String nowCompany;
+
+    /**
+     * 岗位
+     */
+    @Column(name = "station", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '岗位'")
+    private String station;
+
+    /**
+     * 职权
+     */
+    @Column(name = "duty", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '职权'")
+    private String duty;
 
 
     public String getCompanyName() {
@@ -314,6 +344,46 @@ public class CooperCapability extends BaseEntity {
 
     public void setGrowthPlace(String growthPlace) {
         this.growthPlace = growthPlace;
+    }
+
+    public String getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(String organization) {
+        this.organization = organization;
+    }
+
+    public String getNowWorkPlace() {
+        return nowWorkPlace;
+    }
+
+    public void setNowWorkPlace(String nowWorkPlace) {
+        this.nowWorkPlace = nowWorkPlace;
+    }
+
+    public String getNowCompany() {
+        return nowCompany;
+    }
+
+    public void setNowCompany(String nowCompany) {
+        this.nowCompany = nowCompany;
+    }
+
+    public String getStation() {
+        return station;
+    }
+
+    public void setStation(String station) {
+        this.station = station;
+    }
+
+    public String getDuty() {
+        return duty;
+    }
+
+    public void setDuty(String duty) {
+        this.duty = duty;
     }
 
 }

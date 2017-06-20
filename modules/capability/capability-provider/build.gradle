@@ -30,5 +30,6 @@ dependencies {
     compile project(":common:common-provider")
     compile project(":modules:capability:capability-api")
     compile project(":common:common-utils")
+    compile project(":modules:message:message-api")
 }
 

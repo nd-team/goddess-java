@@ -133,6 +133,15 @@ public class SelfCapabilityTO extends BaseTO {
      */
     private String modifyTime;
 
+    /**
+     * 个人资质
+     */
+    private String[] capacitys;
+
+    /**
+     * 个人经手项目
+     */
+    private String[] selfProjects;
 
     public String getName() {
         return name;
@@ -316,5 +325,21 @@ public class SelfCapabilityTO extends BaseTO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public String[] getCapacitys() {
+        return capacitys;
+    }
+
+    public void setCapacitys(String[] capacitys) {
+        this.capacitys = capacitys;
+    }
+
+    public String[] getSelfProjects() {
+        return selfProjects;
+    }
+
+    public void setSelfProjects(String[] selfProjects) {
+        this.selfProjects = selfProjects;
     }
 }

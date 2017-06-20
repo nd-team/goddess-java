@@ -122,6 +122,32 @@ public class CompanyCapabilityTO extends BaseTO {
      */
     private String modifyTime;
 
+    /**
+     * 管理资质认证数组
+     */
+    private String[] manageAuthens;
+
+
+    /**
+     * 专业资质认证数组
+     */
+    private String[] professionAuthens;
+
+    /**
+     * 公司荣誉证书数组
+     */
+    private String[] companyCertificates;
+
+    /**
+     * 尚在进行中项目
+     */
+    private String[] inProjcts;
+
+    /**
+     * 已完成项目
+     */
+    private String[] companyProjects;
+
 
     public String getCompany() {
         return company;
@@ -289,5 +315,45 @@ public class CompanyCapabilityTO extends BaseTO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public String[] getManageAuthens() {
+        return manageAuthens;
+    }
+
+    public void setManageAuthens(String[] manageAuthens) {
+        this.manageAuthens = manageAuthens;
+    }
+
+    public String[] getProfessionAuthens() {
+        return professionAuthens;
+    }
+
+    public void setProfessionAuthens(String[] professionAuthens) {
+        this.professionAuthens = professionAuthens;
+    }
+
+    public String[] getCompanyCertificates() {
+        return companyCertificates;
+    }
+
+    public void setCompanyCertificates(String[] companyCertificates) {
+        this.companyCertificates = companyCertificates;
+    }
+
+    public String[] getInProjcts() {
+        return inProjcts;
+    }
+
+    public void setInProjcts(String[] inProjcts) {
+        this.inProjcts = inProjcts;
+    }
+
+    public String[] getCompanyProjects() {
+        return companyProjects;
+    }
+
+    public void setCompanyProjects(String[] companyProjects) {
+        this.companyProjects = companyProjects;
     }
 }

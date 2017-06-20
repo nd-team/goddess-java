@@ -38,6 +38,7 @@ public class SelfCapabilitySocialSerImpl extends ServiceImpl<SelfCapabilitySocia
     private CusPermissionSer cusPermissionSer ;
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public Long counts(SelfCapabilitySocialDTO selfCapabilitySocialDTO) throws SerException {
         if (StringUtils.isBlank(selfCapabilitySocialDTO.getSelfCapabilityId())) {
             throw new SerException("个人能力id不能为空哦");
@@ -48,6 +49,7 @@ public class SelfCapabilitySocialSerImpl extends ServiceImpl<SelfCapabilitySocia
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public SelfCapabilitySocialBO getOne(String id) throws SerException {
 
 

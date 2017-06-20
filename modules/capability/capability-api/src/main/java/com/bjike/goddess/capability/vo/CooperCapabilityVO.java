@@ -132,6 +132,31 @@ public class CooperCapabilityVO {
      */
     private String modifyTime;
 
+    /**
+     * 组织机构
+     */
+    private String organization;
+
+    /**
+     * 现在工作地区
+     */
+    private String nowWorkPlace;
+
+    /**
+     * 所在公司
+     */
+    private String nowCompany;
+
+    /**
+     * 岗位
+     */
+    private String station;
+
+    /**
+     * 职权
+     */
+    private String duty;
+
 
     public String getId() {
         return id;
@@ -323,5 +348,45 @@ public class CooperCapabilityVO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public String getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(String organization) {
+        this.organization = organization;
+    }
+
+    public String getNowWorkPlace() {
+        return nowWorkPlace;
+    }
+
+    public void setNowWorkPlace(String nowWorkPlace) {
+        this.nowWorkPlace = nowWorkPlace;
+    }
+
+    public String getNowCompany() {
+        return nowCompany;
+    }
+
+    public void setNowCompany(String nowCompany) {
+        this.nowCompany = nowCompany;
+    }
+
+    public String getStation() {
+        return station;
+    }
+
+    public void setStation(String station) {
+        this.station = station;
+    }
+
+    public String getDuty() {
+        return duty;
+    }
+
+    public void setDuty(String duty) {
+        this.duty = duty;
     }
 }

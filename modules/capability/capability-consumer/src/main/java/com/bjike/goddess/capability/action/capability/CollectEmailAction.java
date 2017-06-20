@@ -263,4 +263,20 @@ public class CollectEmailAction {
         }
     }
 
+    /**
+     * 检测
+     *
+     * @des 汇总商业能力汇总个人能力汇总合作能力
+     * @version v1
+     */
+    @GetMapping("v1/checkEmail")
+    public Result checkEmail(   ) throws ActException {
+        try {
+            collectEmailAPI.checkSendEmail( );
+            return ActResult.initialize("发送成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

@@ -16,28 +16,48 @@
 	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
 	<dubbo:registry address="${dubbo.registry.address}" />
 
+
+
 	<!--发布接口,供其他模块调用-->
 	<!--另外注意命名,UserAPI为例,UserAPI是业务接口,则userSer是实现类@Service("userSer") 里注解的名字-->
 
+    <dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.capability.api.CusPermissionAPI" />
+
+    <dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.capability.api.CusPermissionOperateAPI" />
 
 	<dubbo:service  ref="companyCapabilityApiImpl" interface="com.bjike.goddess.capability.api.CompanyCapabilityAPI" />
-	<dubbo:service  ref="collectEmailApiImpl" interface="com.bjike.goddess.capability.api.CollectEmailAPI" />
-	<dubbo:service  ref="cooperCapabilityApiImpl" interface="com.bjike.goddess.capability.api.CooperCapabilityAPI" />
-	<dubbo:service  ref="selfCapabilityApiImpl" interface="com.bjike.goddess.capability.api.SelfCapabilityAPI" />
-	<dubbo:service  ref="selfCapabilitySocialApiImpl" interface="com.bjike.goddess.capability.api.SelfCapabilitySocialAPI" />
 
-	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
-	否则不需要配置-->
+    <dubbo:service  ref="collectEmailApiImpl" interface="com.bjike.goddess.capability.api.CollectEmailAPI" />
+
+	<dubbo:service  ref="cooperCapabilityApiImpl" interface="com.bjike.goddess.capability.api.CooperCapabilityAPI" />
+
+    <dubbo:service  ref="selfCapabilityApiImpl" interface="com.bjike.goddess.capability.api.SelfCapabilityAPI" />
+
+    <dubbo:service  ref="selfCapabilitySocialApiImpl" interface="com.bjike.goddess.capability.api.SelfCapabilitySocialAPI" />
+
+
+
+    <!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
+    否则不需要配置-->
 
 	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 
 	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
-	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
-	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
-	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
-	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
 
-	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.capability.api.CusPermissionAPI" />
-	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.capability.api.CusPermissionOperateAPI" />
+    <dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+
+    <dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+
+    <dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+
+    <dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
+
+    <dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
+
+    <dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
+
+
+
+
 
 </beans>

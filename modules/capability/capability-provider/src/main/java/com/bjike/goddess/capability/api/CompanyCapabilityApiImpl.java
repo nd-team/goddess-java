@@ -3,8 +3,10 @@ package com.bjike.goddess.capability.api;
 import com.bjike.goddess.capability.bo.CompanyCapabilityBO;
 import com.bjike.goddess.capability.dto.CompanyCapabilityDTO;
 import com.bjike.goddess.capability.entity.CompanyCapability;
+import com.bjike.goddess.capability.excele.SonPermissionObject;
 import com.bjike.goddess.capability.service.CompanyCapabilitySer;
 import com.bjike.goddess.capability.to.CompanyCapabilityTO;
+import com.bjike.goddess.capability.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,6 +68,21 @@ public class CompanyCapabilityApiImpl implements CompanyCapabilityAPI {
     public List<String> listAllCompanyName() throws SerException {
         return companyCapabilitySer.listAllCompanyName();
     }
+
+    @Override
+    public byte[] exportExcel(String companyName) throws SerException {
+        return companyCapabilitySer.exportExcel(companyName);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return companyCapabilitySer.sonPermission();
+    }
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return companyCapabilitySer.guidePermission( guidePermissionTO );
+    }
+
 
 
 }

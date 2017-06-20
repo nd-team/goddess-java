@@ -73,4 +73,9 @@ public class SelfCapabilityApiImpl implements SelfCapabilityAPI {
     public List<String> listAllSelfName() throws SerException {
         return selfCapabilitySer.listAllSelfName();
     }
+
+    @Override
+    public byte[] exportExcel(String name) throws SerException {
+        return selfCapabilitySer.exportExcel(name);
+    }
 }

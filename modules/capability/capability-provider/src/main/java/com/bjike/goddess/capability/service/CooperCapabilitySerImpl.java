@@ -1,14 +1,23 @@
 package com.bjike.goddess.capability.service;
 
 import com.bjike.goddess.capability.bo.CooperCapabilityBO;
+import com.bjike.goddess.capability.enums.GuideAddrStatus;
+import com.bjike.goddess.capability.excele.CooperCapabilityExcel;
 import com.bjike.goddess.capability.to.CooperCapabilityTO;
+import com.bjike.goddess.capability.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.capability.dto.CooperCapabilityDTO;
 import com.bjike.goddess.capability.entity.CooperCapability;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -36,6 +45,15 @@ public class CooperCapabilitySerImpl extends ServiceImpl<CooperCapability, Coope
 
     @Autowired
     private CusPermissionSer cusPermissionSer ;
+    @Autowired
+    private ManageAuthenSer manageAuthenSer ;
+    @Autowired
+    private ProfessionAuthenSer professionAuthenSer ;
+    @Autowired
+    private CompanyProjectSer companyProjectSer ;
+    @Autowired
+    private UserAPI userAPI;
+
 
     @Override
     public Long counts(CooperCapabilityDTO cooperCapabilityDTO) throws SerException {
@@ -101,6 +119,19 @@ public class CooperCapabilitySerImpl extends ServiceImpl<CooperCapability, Coope
                 throw  new SerException("公司名不能相同");
             }else{
                 super.save( cooperCapability );
+
+                //添加管理资质
+                String[] managerAuths = cooperCapabilityTO.getManageAuthens();
+                manageAuthenSer.addManageAuthen(managerAuths, cooperCapability.getId());
+
+                //添加专业资质认证
+                String[] professionAuths = cooperCapabilityTO.getProfessionAuthens();
+                professionAuthenSer.addProfessionAuthen(professionAuths, cooperCapability.getId());
+
+                //添加公司参与项目
+                String[] companyProjects = cooperCapabilityTO.getCompanyProjects();
+                companyProjectSer.addCompanyProject(companyProjects, cooperCapability.getId());
+
             }
         }else{
             super.save( cooperCapability );
@@ -134,6 +165,19 @@ public class CooperCapabilitySerImpl extends ServiceImpl<CooperCapability, Coope
             str.setModifyTime(LocalDateTime.now());
         });
         super.update( cooperCapabilityList );
+
+        //编辑管理资质
+        String[] managerAuths = cooperCapabilityTO.getManageAuthens();
+        manageAuthenSer.editManageAuthen(managerAuths, cooperCapability.getId());
+
+        //编辑专业资质认证
+        String[] professionAuths = cooperCapabilityTO.getProfessionAuthens();
+        professionAuthenSer.editProfessionAuthen(professionAuths, cooperCapability.getId());
+
+        //编辑公司参与项目
+        String[] companyProjects = cooperCapabilityTO.getCompanyProjects();
+        companyProjectSer.editCompanyProject(companyProjects, cooperCapability.getId());
+
         return BeanTransform.copyProperties(cooperCapability, CooperCapabilityBO.class);
     }
 
@@ -147,6 +191,17 @@ public class CooperCapabilitySerImpl extends ServiceImpl<CooperCapability, Coope
         }
 
         super.remove(id);
+
+        //删除管理资质
+        manageAuthenSer.deleteManageAuthen(id);
+
+        //删除专业资质认证
+        professionAuthenSer.deleteProfessionAuthen(id);
+
+
+        //删除公司参与项目数
+        companyProjectSer.deleteCompanyProject(id);
+
     }
 
     
@@ -225,5 +280,106 @@ public class CooperCapabilitySerImpl extends ServiceImpl<CooperCapability, Coope
         List<CooperCapabilityBO> cooperBOS =super.findBySql("select companyName,contactName,contactWay from capability_coopercapability where  companyName ='"+companyName+"'" , CooperCapabilityBO.class, fields);
 
         return BeanTransform.copyProperties( cooperBOS , CooperCapabilityBO.class );
+    }
+
+    @Override
+    public byte[] exportExcel(String companyName) throws SerException {
+        CooperCapabilityDTO dto= new CooperCapabilityDTO();
+        if (!org.springframework.util.StringUtils.isEmpty(companyName)) {
+            dto.getConditions().add(Restrict.eq("companyName", companyName));
+        }
+        List<CooperCapability> list = super.findByCis(dto);
+        List<CooperCapabilityExcel> toList = new ArrayList<CooperCapabilityExcel>();
+        for (CooperCapability model : list) {
+            CooperCapabilityExcel excel = new CooperCapabilityExcel();
+            BeanUtils.copyProperties(model, excel);
+            toList.add(excel);
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        return bytes;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        if (flagSee) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideSeeIdentity();
+                break;
+            case EDIT:
+                flag = guideSeeIdentity();
+                break;
+            case AUDIT:
+                flag = guideSeeIdentity();
+                break;
+            case DELETE:
+                flag = guideSeeIdentity();
+                break;
+            case CONGEL:
+                flag = guideSeeIdentity();
+                break;
+            case THAW:
+                flag = guideSeeIdentity();
+                break;
+            case COLLECT:
+                flag = guideSeeIdentity();
+                break;
+            case IMPORT:
+                flag = guideSeeIdentity();
+                break;
+            case EXPORT:
+                flag = guideSeeIdentity();
+                break;
+            case UPLOAD:
+                flag = guideSeeIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideSeeIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
     }
 }

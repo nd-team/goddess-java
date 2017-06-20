@@ -84,4 +84,9 @@ public class CollectEmailApiImpl implements CollectEmailAPI {
     public List<String> listName(String type) throws SerException {
         return collectEmailSer.listName( type);
     }
+
+    @Override
+    public void checkSendEmail() throws SerException {
+        collectEmailSer.checkSendEmail();
+    }
 }

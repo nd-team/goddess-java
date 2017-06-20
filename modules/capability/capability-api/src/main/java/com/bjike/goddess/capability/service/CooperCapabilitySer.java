@@ -2,6 +2,7 @@ package com.bjike.goddess.capability.service;
 
 import com.bjike.goddess.capability.bo.CooperCapabilityBO;
 import com.bjike.goddess.capability.to.CooperCapabilityTO;
+import com.bjike.goddess.capability.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.capability.entity.CooperCapability;
@@ -98,4 +99,21 @@ public interface CooperCapabilitySer extends Ser<CooperCapability, CooperCapabil
     default List<CooperCapabilityBO> listCompanyContact( String companyName ) throws SerException {return null;}
 
 
+    /**
+     * 导出
+     */
+    byte[] exportExcel(String companyName) throws SerException;
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

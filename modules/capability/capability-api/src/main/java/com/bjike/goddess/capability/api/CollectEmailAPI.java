@@ -37,10 +37,13 @@ public interface CollectEmailAPI {
 
     /**
      * 一个个邮件
+     *
      * @return class CollectEmailBO
      */
-    default CollectEmailBO getOne(String id) throws SerException {return null;}
-    
+    default CollectEmailBO getOne(String id) throws SerException {
+        return null;
+    }
+
     /**
      * 添加
      *
@@ -139,7 +142,11 @@ public interface CollectEmailAPI {
         return null;
     }
 
-    ;
-
+    /**
+     * 定时器检测要发送的邮件
+     */
+    default void checkSendEmail() throws SerException {
+        return;
+    }
 
 }
