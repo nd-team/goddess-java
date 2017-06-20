@@ -101,22 +101,22 @@ public class CusEmailVO {
     /**
      * 行业地区汇总集合
      */
-    private Object areaMap;
+    private List<Map<String, String>> areaMap;
 
     /**
      * 行业客户级别汇总集合
      */
-    private Object levelMap;
+    private List<Map<String, String>> levelMap;
 
     /**
      * 行业客户类别汇总集合
      */
-    private Object cusTypeMap;
+    private List<Map<String, String>> cusTypeMap;
 
     /**
      * 行业客户状态汇总集合
      */
-    private Object cusStatusMap;
+    private List<Map<String, String>> cusStatusMap;
 
 
     public String getId() {
@@ -247,35 +247,35 @@ public class CusEmailVO {
         this.enumConvert = enumConvert;
     }
 
-    public Object getAreaMap() {
+    public List<Map<String, String>> getAreaMap() {
         return areaMap;
     }
 
-    public void setAreaMap(Object areaMap) {
+    public void setAreaMap(List<Map<String, String>> areaMap) {
         this.areaMap = areaMap;
     }
 
-    public Object getLevelMap() {
+    public List<Map<String, String>> getLevelMap() {
         return levelMap;
     }
 
-    public void setLevelMap(Object levelMap) {
+    public void setLevelMap(List<Map<String, String>> levelMap) {
         this.levelMap = levelMap;
     }
 
-    public Object getCusTypeMap() {
+    public List<Map<String, String>> getCusTypeMap() {
         return cusTypeMap;
     }
 
-    public void setCusTypeMap(Object cusTypeMap) {
+    public void setCusTypeMap(List<Map<String, String>> cusTypeMap) {
         this.cusTypeMap = cusTypeMap;
     }
 
-    public Object getCusStatusMap() {
+    public List<Map<String, String>> getCusStatusMap() {
         return cusStatusMap;
     }
 
-    public void setCusStatusMap(Object cusStatusMap) {
+    public void setCusStatusMap(List<Map<String, String>> cusStatusMap) {
         this.cusStatusMap = cusStatusMap;
     }
 }
