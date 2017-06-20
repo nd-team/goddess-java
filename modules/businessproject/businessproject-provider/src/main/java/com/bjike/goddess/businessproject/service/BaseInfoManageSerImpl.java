@@ -471,9 +471,6 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
         for (BaseInfoManageTO to : toList) {
             checkAddIdentity();
             checkDate(to);
-//        if(StringUtils.isNumeric(baseInfoManageTO.getMoney())){
-//
-//        }
 
             //签订年份
             String tempTime = StringUtils.isBlank(to.getSiginTime()) ? "0000" : to.getSiginTime().substring(0, 4);
@@ -486,22 +483,6 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
             BaseInfoManage baseInfoManage = BeanTransform.copyProperties(to, BaseInfoManage.class, true);
             baseInfoManage.setCreateTime(LocalDateTime.now());
 
-//            super.save(baseInfoManage);
-//
-//            BaseInfoManage baseInfoManage = new BaseInfoManage();
-//            BeanUtils.copyProperties(to, baseInfoManage);
-//            baseInfoManage.setSiginTime(DateUtil.parseDate(to.getSiginTime()));
-//            baseInfoManage.setStartProjectTime(DateUtil.parseDate(to.getStartProjectTime()));
-//            baseInfoManage.setEndProjectTime(DateUtil.parseDate(to.getEndProjectTime()));
-//            List<BaseInfoManage> list = super.findAll();
-//            for (BaseInfoManage b : list) {
-//                if (baseInfoManage.getInnerProjectNum().equals(b.getInnerProjectNum())) {
-//                    throw new SerException("该内部项目编号已存在");
-//                }
-//                if (baseInfoManage.getContractNum().equals(b.getContractNum())) {
-//                    throw new SerException("该合同档案编号已存在");
-//                }
-//            }
             String fileCondition = baseInfoManage.getFileCondition();
             if ((!"未归档".equals(fileCondition)) && (!"已归档".equals(fileCondition))) {
                 throw new SerException("合同是否已归档只能为未归档或已归档");

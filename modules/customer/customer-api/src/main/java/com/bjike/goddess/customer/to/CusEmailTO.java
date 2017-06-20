@@ -20,6 +20,7 @@ import java.util.List;
 public class CusEmailTO extends BaseTO {
 
 
+    public interface TestAdd{}
 
     /**
      * 备注
@@ -29,7 +30,7 @@ public class CusEmailTO extends BaseTO {
     /**
      * 发送间隔
      */
-    @NotNull(message = "发送间隔不能为空且是double型数字")
+    @NotNull(groups = {CusEmailTO.TestAdd.class}, message = "发送间隔不能为空且是double型数字")
     private Double sendNum;
 
     /**
@@ -40,13 +41,12 @@ public class CusEmailTO extends BaseTO {
     /**
      * 发送单位
      */
-    @NotNull(message = "发送单位不能为空")
+    @NotNull(groups = {CusEmailTO.TestAdd.class} , message = "发送单位不能为空")
     private CustomerSendUnit customerSendUnit;
 
     /**
      * 汇总间隔
      */
-    @NotNull(message = "汇总间隔不能为空")
     private CustomerCollectUnit customerCollectUnit;
 
 
@@ -54,6 +54,7 @@ public class CusEmailTO extends BaseTO {
     /**
      * 发送对象数组
      */
+    @NotNull(groups = {CusEmailTO.TestAdd.class} , message = "发送对象数组不能为空")
     private List<String> sendObjectList;
 
     /**
@@ -84,6 +85,7 @@ public class CusEmailTO extends BaseTO {
     /**
      * 行业字符串数组
      */
+    @NotNull(groups = {CusEmailTO.TestAdd.class} , message = "行业字符串数组不能为空")
     private String[] works;
 
 

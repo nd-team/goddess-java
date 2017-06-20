@@ -42,25 +42,25 @@ public class CustomerDetail extends BaseEntity {
     /**
      * 工作经历
      */
-    @Column(name = "workExperience",  columnDefinition = "TEXT   COMMENT '工作经历'")
+    @Column(name = "workExperience",  columnDefinition = "MEDIUMTEXT   COMMENT '工作经历'")
     private String workExperience;
 
     /**
      * 求学经历
      */
-    @Column(name = "studyExperience", columnDefinition = "TEXT  COMMENT '求学经历'")
+    @Column(name = "studyExperience", columnDefinition = "MEDIUMTEXT  COMMENT '求学经历'")
     private String studyExperience;
 
     /**
      * 爱好
      */
-    @Column(name = "love",  columnDefinition = "TEXT   COMMENT '爱好'")
+    @Column(name = "love",  columnDefinition = "MEDIUMTEXT   COMMENT '爱好'")
     private String love;
 
     /**
      * 性格评价
      */
-    @Column(name = "characterEvaluation",  columnDefinition = "TEXT   COMMENT '性格评价'")
+    @Column(name = "characterEvaluation",  columnDefinition = "MEDIUMTEXT   COMMENT '性格评价'")
     private String characterEvaluation;
 
 

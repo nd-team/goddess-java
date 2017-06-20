@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.customer.bo.CusFamilyMemberBO;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.bo.CustomerDetailBO;
@@ -15,10 +17,13 @@ import com.bjike.goddess.customer.dto.CustomerDetailDTO;
 import com.bjike.goddess.customer.entity.CusFamilyMember;
 import com.bjike.goddess.customer.entity.CustomerBaseInfo;
 import com.bjike.goddess.customer.entity.CustomerDetail;
+import com.bjike.goddess.customer.enums.GuideAddrStatus;
 import com.bjike.goddess.customer.to.CusFamilyMemberTO;
 import com.bjike.goddess.customer.to.CustomerDetailTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -92,6 +97,88 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
 
     }
 
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity(String flagId  ) throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission(flagId);
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity(String flagId ) throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission( flagId );
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity("1" );
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity( "4");
+        if( flagSee || flagAdd ){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity("1");
+                break;
+            case ADD:
+                flag = guideAddIdentity("4");
+                break;
+            case EDIT:
+                flag = guideAddIdentity("4");
+                break;
+            case AUDIT:
+                flag = guideAddIdentity("4");
+                break;
+            case DELETE:
+                flag = guideAddIdentity("4");
+                break;
+            case EXPORT:
+                flag = guideAddIdentity("4");
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
+
     @Override
     public Long countCustomerDetail(CustomerDetailDTO customerDetailDTO) throws SerException {
         Long count = super.count( customerDetailDTO );
@@ -105,14 +192,21 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
         customerDetailDTO.getSorts().add("createTime=desc");
         List<CustomerDetail> list = super.findByCis(customerDetailDTO, true);
         List<CustomerDetailBO> customerDetailBOArrayList = new ArrayList<>();
-        list.stream().forEach(str->{
+        for(CustomerDetail str : list){
             CustomerLevelBO customerLevelBO = BeanTransform.copyProperties(str.getCustomerBaseInfo().getCustomerLevel(), CustomerLevelBO.class);
             CustomerBaseInfoBO customerBaseInfoBO = BeanTransform.copyProperties(str.getCustomerBaseInfo(), CustomerBaseInfoBO.class);
             customerBaseInfoBO.setCustomerLevelBO( customerLevelBO );
             CustomerDetailBO customerDetailBO = BeanTransform.copyProperties(str, CustomerDetailBO.class);
             customerDetailBO.setCustomerBaseInfoBO(customerBaseInfoBO);
+
+            //获取家庭信息
+            CusFamilyMemberDTO familyMemberDTO = new CusFamilyMemberDTO();
+            familyMemberDTO.getConditions().add(Restrict.eq("customerDetail.id", str.getId()));
+            List<CusFamilyMember> familyMembers = cusFamilyMemberAPI.findByCis( familyMemberDTO );
+            List<CusFamilyMemberBO> cusFamilyMemberBOList = BeanTransform.copyProperties( familyMembers , CusFamilyMemberBO.class);
+            customerDetailBO.setCusFamilyMemberBOList( cusFamilyMemberBOList );
             customerDetailBOArrayList.add(customerDetailBO);
-        });
+        }
         List<CustomerDetailBO> boList = BeanTransform.copyProperties(customerDetailBOArrayList, CustomerDetailBO.class );
         return boList;
     }
@@ -135,11 +229,11 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
 
         //添加家庭信息4条家庭信息
         if( customerDetailTO.getCusFamilyMemberTOList() != null && customerDetailTO.getCusFamilyMemberTOList().size()>0){
-            CusFamilyMemberDTO cusFamilyMemberDTO = new CusFamilyMemberDTO();
-            cusFamilyMemberDTO.getConditions().add(Restrict.eq("customerNum",baseInfoNum));
-            Long countFamily =  cusFamilyMemberAPI.count( cusFamilyMemberDTO );
-
-            if( countFamily < 4 ){
+//            CusFamilyMemberDTO cusFamilyMemberDTO = new CusFamilyMemberDTO();
+//            cusFamilyMemberDTO.getConditions().add(Restrict.eq("customerNum",baseInfoNum));
+//            Long countFamily =  cusFamilyMemberAPI.count( cusFamilyMemberDTO );
+//
+//            if( countFamily < 4 ){
                 List<CusFamilyMemberTO> familyMemberTOList = customerDetailTO.getCusFamilyMemberTOList();
                 List<CusFamilyMember> cusFamilyMemberList = BeanTransform.copyProperties(familyMemberTOList,CusFamilyMember.class,true);
                 for( CusFamilyMember temp : cusFamilyMemberList ) {
@@ -147,7 +241,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
                     temp.setCustomerDetail(customerDetail);
                 }
                 cusFamilyMemberAPI.save( cusFamilyMemberList );
-            }
+//            }
         }
 
         return BeanTransform.copyProperties(customerDetail, CustomerDetailBO.class );
@@ -206,7 +300,6 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
         if( cfamilyList!= null && cfamilyList.size()>0 ){
             //先删除家庭成员
             cusFamilyMemberAPI.remove( cfamilyList );
-//            super.remove( customerDetail );
         }
         try {
             super.remove(customerDetail );
@@ -262,5 +355,32 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
         customerDetailBO.setCusFamilyMemberBOList( cusFamilyMemberBOList );
 
         return customerDetailBO;
+    }
+
+    @Override
+    public byte[] exportInfo(CustomerDetailDTO customerDetailDTO) throws SerException {
+//
+//        CustomerBaseInfoDTO cbaseDTO = new CustomerBaseInfoDTO();
+//        cbaseDTO.getConditions().add(Restrict.eq( ))
+//        if (StringUtils.isNotBlank(customerDetailDTO.getArea())) {
+//            customerDetailDTO.getConditions().add(Restrict.eq("area", customerDetailDTO.getArea()));
+//        } if (StringUtils.isNotBlank(customerDetailDTO.getCustomerName())) {
+//            customerDetailDTO.getConditions().add(Restrict.eq("customerName", customerDetailDTO.getCustomerName()));
+//        }
+//
+//        List<SiginManage> list = super.findByCis(dto);
+//
+//        List<SiginManageExport> siginManageExports = new ArrayList<>();
+//        list.stream().forEach(str -> {
+//            SiginManageExport excel = BeanTransform.copyProperties(str, SiginManageExport.class, "businessType", "businessCooperate", "contractProperty");
+//            excel.setBusinessType(BusinessType.exportStrConvert(str.getBusinessType()));
+//            excel.setBusinessCooperate(BusinessCooperate.exportStrConvert(str.getBusinessCooperate()));
+//            excel.setContractProperty(ContractProperty.exportStrConvert(str.getContractProperty()));
+//            siginManageExports.add(excel);
+//        });
+//        Excel excel = new Excel(0, 2);
+//        byte[] bytes = ExcelUtil.clazzToExcel(siginManageExports, excel);
+//        return bytes;
+        return null;
     }
 }

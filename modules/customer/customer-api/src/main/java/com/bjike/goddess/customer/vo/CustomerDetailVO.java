@@ -53,11 +53,6 @@ public class CustomerDetailVO {
     private String characterEvaluation;
 
     /**
-     * 家庭成员
-     */
-    private CusFamilyMemberVO cusFamilyMemberVO;
-
-    /**
      * 创建时间
      */
     private String createTime;
@@ -139,14 +134,6 @@ public class CustomerDetailVO {
 
     public void setCharacterEvaluation(String characterEvaluation) {
         this.characterEvaluation = characterEvaluation;
-    }
-
-    public CusFamilyMemberVO getCusFamilyMemberVO() {
-        return cusFamilyMemberVO;
-    }
-
-    public void setCusFamilyMemberVO(CusFamilyMemberVO cusFamilyMemberVO) {
-        this.cusFamilyMemberVO = cusFamilyMemberVO;
     }
 
     public String getCreateTime() {

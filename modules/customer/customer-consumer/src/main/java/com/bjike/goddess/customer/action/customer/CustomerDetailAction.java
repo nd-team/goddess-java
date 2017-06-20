@@ -3,6 +3,7 @@ package com.bjike.goddess.customer.action.customer;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -14,6 +15,7 @@ import com.bjike.goddess.customer.dto.CustomerDetailDTO;
 import com.bjike.goddess.customer.entity.CustomerDetail;
 import com.bjike.goddess.customer.entity.CustomerLevel;
 import com.bjike.goddess.customer.to.CustomerDetailTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 import com.bjike.goddess.customer.vo.CusFamilyMemberVO;
 import com.bjike.goddess.customer.vo.CustomerBaseInfoVO;
 import com.bjike.goddess.customer.vo.CustomerDetailVO;
@@ -23,6 +25,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,12 +42,36 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("customerdetail")
-public class CustomerDetailAction {
+public class CustomerDetailAction  extends BaseFileAction {
 
     @Autowired
     private CustomerDetailAPI customerDetailAPI;
     @Autowired
     private CusPermissionAPI cusPermissionAPI;
+
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = customerDetailAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 客户详细列表总条数
@@ -85,6 +114,9 @@ public class CustomerDetailAction {
                     customerBaseInfoVO.setCustomerLevelVO(customerLevelVO);
                     CustomerDetailVO customerDetailVO = BeanTransform.copyProperties(str, CustomerDetailVO.class, true);
                     customerDetailVO.setCustomerBaseInfoVO(customerBaseInfoVO);
+
+                    List<CusFamilyMemberVO> cusFamilyMemberVOList = BeanTransform.copyProperties( str.getCusFamilyMemberBOList(), CusFamilyMemberVO.class);
+                    customerDetailVO.setCusFamilyMemberVOList( cusFamilyMemberVOList );
                     customerDetailVOList.add(customerDetailVO);
                 });
                 return ActResult.initialize(customerDetailVOList);
@@ -191,16 +223,22 @@ public class CustomerDetailAction {
     /**
      * 导出
      *
-     * @param area         地区
-     * @param customerName 客户名
+     * @param customerDetailDTO  地区或客户名
      * @des 根据地区或客户名导出还不可以用
      * @version v1
      */
     @GetMapping("v1/exportInfo")
-    public Result exportCustomerBasicInfo(String area, String customerName) throws ActException {
+    public Result exportCustomerBasicInfo(CustomerDetailDTO customerDetailDTO, HttpServletResponse response) throws ActException {
         //TODO : tanghaixiang 2017-03-16 导出未做
-//            customerDetailAPI.deleteCustomerDetail(id);
-        return new ActResult("export success!");
+        try {
+            String fileName = "客户详细信息.xlsx";
+            super.writeOutFile(response, customerDetailAPI.exportInfo( customerDetailDTO ), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
 
     }
 
