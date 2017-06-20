@@ -85,13 +85,24 @@ public interface SubjectCollectAPI {
     default void removeSubjectCollect(String id) throws SerException {
 
     }
+
     /**
      * 汇总对比
      *
      * @return class CompareCollectBO
      * @throws SerException
      */
-    default List<CompareCollectBO> collectCompare(Integer [] months) throws SerException {
+    default List<CompareCollectBO> collectCompare(Integer[] months) throws SerException {
         return null;
     }
+
+    /**
+     * chenjunhao
+     * 根据dto条件获取合计记录
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    SubjectCollectBO getSum(SubjectCollectDTO dto) throws SerException;
 }
