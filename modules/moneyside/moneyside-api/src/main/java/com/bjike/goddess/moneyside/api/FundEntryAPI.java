@@ -79,6 +79,14 @@ public interface FundEntryAPI {
 
     }
     /**
+     * 获取投资人
+     *
+     * @return class String
+     */
+    default List<String> getInvestor() throws SerException {
+        return null;
+    }
+    /**
      * 审核
      *
      * @param fundEntryTO

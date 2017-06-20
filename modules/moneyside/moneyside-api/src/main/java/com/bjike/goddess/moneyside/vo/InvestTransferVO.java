@@ -33,7 +33,7 @@ public class InvestTransferVO {
     /**
      * 转让人
      */
-    private String transferor;
+    private String investor;
 
     /**
      * 协议投资金额
@@ -113,12 +113,12 @@ public class InvestTransferVO {
         this.transferTime = transferTime;
     }
 
-    public String getTransferor() {
-        return transferor;
+    public String getInvestor() {
+        return investor;
     }
 
-    public void setTransferor(String transferor) {
-        this.transferor = transferor;
+    public void setInvestor(String investor) {
+        this.investor = investor;
     }
 
     public Double getAmountAgreement() {

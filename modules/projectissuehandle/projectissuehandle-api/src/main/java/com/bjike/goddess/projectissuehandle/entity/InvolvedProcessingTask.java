@@ -20,7 +20,7 @@ public class InvolvedProcessingTask extends BaseEntity {
     /**
      * 项目问题编号
      */
-    @Column(name = "projectNum", columnDefinition = "VARCHAR(255)   COMMENT '项目问题编号'")
+    @Column(name = "projectNum",unique = true, columnDefinition = "VARCHAR(255)   COMMENT '项目问题编号'")
     private String projectNum;
     /**
      * 内部项目名称

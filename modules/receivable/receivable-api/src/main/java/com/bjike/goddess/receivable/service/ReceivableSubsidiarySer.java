@@ -264,17 +264,6 @@ public interface ReceivableSubsidiarySer extends Ser<ReceivableSubsidiary, Recei
         return null;
     }
 
-    default List<String> getAreas() throws SerException {
-        return null;
-    }
-
-    default List<String> getInnerNames() throws SerException {
-        return null;
-    }
-
-    default List<String> getContractors() throws SerException {
-        return null;
-    }
 
     /**
      * 发送邮件

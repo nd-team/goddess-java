@@ -40,7 +40,7 @@ public class InvestTransferTO extends BaseTO {
      * 转让人
      */
     @NotBlank(message = "转让人不能为空",groups = {ADD.class, EDIT.class})
-    private String transferor;
+    private String investor;
 
     /**
      * 协议投资金额
@@ -119,12 +119,12 @@ public class InvestTransferTO extends BaseTO {
         this.transferTime = transferTime;
     }
 
-    public String getTransferor() {
-        return transferor;
+    public String getInvestor() {
+        return investor;
     }
 
-    public void setTransferor(String transferor) {
-        this.transferor = transferor;
+    public void setInvestor(String investor) {
+        this.investor = investor;
     }
 
     public Double getAmountAgreement() {
