@@ -2,10 +2,10 @@ apply from: '../../config.gradle'
 
 dependencies {
     compile group: 'javax.servlet', name: 'javax.servlet-api', version: "$javax_servlet_version"
-    compile group: 'org.apache.poi', name: 'poi', version: '3.16'
-    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.16'
+    compile group: 'org.apache.poi', name: 'poi', version: "$poi_version"
+    compile group: 'org.apache.poi', name: 'poi-ooxml', version: "$poi_version"
     compile group: 'org.apache.commons', name: 'commons-lang3', version: "$commons_version"
-
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: "$httpclient_version"
     compile project(":common:common-api")
 
 }
