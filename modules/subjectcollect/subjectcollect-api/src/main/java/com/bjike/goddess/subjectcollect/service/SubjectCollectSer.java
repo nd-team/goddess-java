@@ -4,8 +4,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.subjectcollect.bo.CompareCollectBO;
 import com.bjike.goddess.subjectcollect.bo.SubjectCollectBO;
-import com.bjike.goddess.subjectcollect.entity.SubjectCollect;
 import com.bjike.goddess.subjectcollect.dto.SubjectCollectDTO;
+import com.bjike.goddess.subjectcollect.entity.SubjectCollect;
 import com.bjike.goddess.subjectcollect.to.SubjectCollectTO;
 
 import java.util.List;
@@ -68,6 +68,7 @@ public interface SubjectCollectSer extends Ser<SubjectCollect, SubjectCollectDTO
     default SubjectCollectBO editSubjectCollect(SubjectCollectTO subjectCollectTO) throws SerException {
         return null;
     }
+
     /**
      * 根据id删除科目汇总表
      *
@@ -86,15 +87,25 @@ public interface SubjectCollectSer extends Ser<SubjectCollect, SubjectCollectDTO
     default String exportExcel() throws SerException {
         return null;
     }
+
     /**
      * 汇总对比
      *
      * @return class CompareCollectBO
      * @throws SerException
      */
-    default List<CompareCollectBO> collectCompare(Integer [] months) throws SerException {
+    default List<CompareCollectBO> collectCompare(Integer[] months) throws SerException {
         return null;
     }
 
+    /**
+     * chenjunhao
+     * 根据dto条件获取合计记录
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    SubjectCollectBO getSum(SubjectCollectDTO dto) throws SerException;
 
 }
