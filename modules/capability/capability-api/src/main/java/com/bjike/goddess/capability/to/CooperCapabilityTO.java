@@ -129,6 +129,55 @@ public class CooperCapabilityTO extends BaseTO {
      */
     private String modifyTime;
 
+    /**
+     * 组织机构
+     */
+    private String organization;
+
+    /**
+     * 现在工作地区
+     */
+    private String nowWorkPlace;
+
+    /**
+     * 所在公司
+     */
+    private String nowCompany;
+
+    /**
+     * 岗位
+     */
+    private String station;
+
+    /**
+     * 职权
+     */
+    private String duty;
+
+    /**
+     * 公司参与项目数
+     */
+    private String[] completePros;
+    /**
+     * 专业资质认证数
+     */
+    private String[] professionAuthens;
+
+    /**
+     * 管理资质认证数
+     */
+    private String[] manageAuthens;
+
+    /**
+     * 公司荣誉证书数
+     */
+    private String[] companyCertificates;
+
+    /**
+     * 公司已完成项目数
+     */
+    private String[] companyProjects;
+
 
     public String getCompanyName() {
         return companyName;
@@ -312,5 +361,85 @@ public class CooperCapabilityTO extends BaseTO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public String getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(String organization) {
+        this.organization = organization;
+    }
+
+    public String getNowWorkPlace() {
+        return nowWorkPlace;
+    }
+
+    public void setNowWorkPlace(String nowWorkPlace) {
+        this.nowWorkPlace = nowWorkPlace;
+    }
+
+    public String getNowCompany() {
+        return nowCompany;
+    }
+
+    public void setNowCompany(String nowCompany) {
+        this.nowCompany = nowCompany;
+    }
+
+    public String getStation() {
+        return station;
+    }
+
+    public void setStation(String station) {
+        this.station = station;
+    }
+
+    public String getDuty() {
+        return duty;
+    }
+
+    public void setDuty(String duty) {
+        this.duty = duty;
+    }
+
+    public String[] getCompletePros() {
+        return completePros;
+    }
+
+    public void setCompletePros(String[] completePros) {
+        this.completePros = completePros;
+    }
+
+    public String[] getProfessionAuthens() {
+        return professionAuthens;
+    }
+
+    public void setProfessionAuthens(String[] professionAuthens) {
+        this.professionAuthens = professionAuthens;
+    }
+
+    public String[] getManageAuthens() {
+        return manageAuthens;
+    }
+
+    public void setManageAuthens(String[] manageAuthens) {
+        this.manageAuthens = manageAuthens;
+    }
+
+    public String[] getCompanyCertificates() {
+        return companyCertificates;
+    }
+
+    public void setCompanyCertificates(String[] companyCertificates) {
+        this.companyCertificates = companyCertificates;
+    }
+
+    public String[] getCompanyProjects() {
+        return companyProjects;
+    }
+
+    public void setCompanyProjects(String[] companyProjects) {
+        this.companyProjects = companyProjects;
     }
 }

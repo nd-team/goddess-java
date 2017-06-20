@@ -1,7 +1,9 @@
 package com.bjike.goddess.capability.service;
 
 import com.bjike.goddess.capability.bo.CompanyCapabilityBO;
+import com.bjike.goddess.capability.excele.SonPermissionObject;
 import com.bjike.goddess.capability.to.CompanyCapabilityTO;
+import com.bjike.goddess.capability.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.capability.entity.CompanyCapability;
@@ -71,5 +73,23 @@ public interface CompanyCapabilitySer extends Ser<CompanyCapability, CompanyCapa
     default List<String> listAllCompanyName( ) throws SerException {return null;}
 
 
+    /**
+     * 导出Excel
+     *
+     * @param companyName 公司名称
+     * @throws SerException
+     */
+    byte[] exportExcel(String companyName) throws SerException;
 
+    /**
+     * 下拉导航权限
+     */
+    List<SonPermissionObject> sonPermission() throws SerException;
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

@@ -86,4 +86,9 @@ public class CooperCapabilityApiImpl implements CooperCapabilityAPI {
     public List<CooperCapabilityBO> listCompanyContact(String companyName) throws SerException {
         return cooperCapabilitySer.listCompanyContact(companyName);
     }
+
+    @Override
+    public byte[] exportExcel(String companyName) throws SerException {
+        return cooperCapabilitySer.exportExcel(companyName);
+    }
 }

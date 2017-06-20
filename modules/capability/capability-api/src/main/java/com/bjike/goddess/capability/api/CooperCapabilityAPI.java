@@ -93,4 +93,8 @@ public interface CooperCapabilityAPI {
     default List<CooperCapabilityBO> listCompanyContact( String companyName ) throws SerException {return null;}
 
 
+    /**
+     * 导出
+     */
+    byte[] exportExcel(String companyName) throws SerException;
 }

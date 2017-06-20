@@ -107,8 +107,8 @@ public interface SelfCapabilityAPI {
         return null;
     }
 
-
-
-
-
+    /**
+     * 导出
+     */
+    byte[] exportExcel(String name) throws SerException;
 }

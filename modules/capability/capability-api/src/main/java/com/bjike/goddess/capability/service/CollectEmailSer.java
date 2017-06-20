@@ -4,6 +4,7 @@ import com.bjike.goddess.capability.bo.CollectEmailBO;
 import com.bjike.goddess.capability.dto.CollectEmailDTO;
 import com.bjike.goddess.capability.entity.CollectEmail;
 import com.bjike.goddess.capability.to.CollectEmailTO;
+import com.bjike.goddess.capability.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -143,7 +144,25 @@ public interface CollectEmailSer extends Ser<CollectEmail, CollectEmailDTO> {
         return null;
     }
 
-    ;
+    /**
+     * 定时器检测要发送的邮件
+     *
+     */
+    default void checkSendEmail( ) throws SerException {
+        return ;
+    }
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
 }
