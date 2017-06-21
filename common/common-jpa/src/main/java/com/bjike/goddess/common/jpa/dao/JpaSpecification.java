@@ -208,13 +208,24 @@ public class JpaSpecification<BE extends BaseEntity, BD extends BaseDTO> impleme
             for (int i = 0; i < fields_length; i++) {
                 String entityName = fields[i];
                 String last = entityName.substring(entityName.length() - 3, entityName.length());
-                if ("Set".equals(last)) {
-                    join = root.joinSet(entityName, JoinType.LEFT);
-                } else if ("List".equals(last)) {
-                    join = root.joinList(entityName, JoinType.LEFT);
+                if (i == 0) {
+                    if ("Set".equals(last)) {
+                        join = root.joinSet(entityName, JoinType.LEFT);
+                    } else if ("List".equals(last)) {
+                        join = root.joinList(entityName, JoinType.LEFT);
+                    } else {
+                        join = root.join(entityName, JoinType.LEFT);
+                    }
                 } else {
-                    join = root.join(entityName, JoinType.LEFT);
+                    if ("Set".equals(last)) {
+                        join = join.joinSet(entityName, JoinType.LEFT);
+                    } else if ("List".equals(last)) {
+                        join = join.joinList(entityName, JoinType.LEFT);
+                    } else {
+                        join = join.join(entityName, JoinType.LEFT);
+                    }
                 }
+
             }
 
             return join;
