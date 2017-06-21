@@ -20,6 +20,15 @@
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.projectmarketfee.api.GradeAPI" ref="gradeApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.projectmarketfee.api.ProjectMarketFeeAPI" ref="projectMarketFeeApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.projectmarketfee.api.WarnAPI" ref="warnApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.projectmarketfee.api.CusPermissionAPI" ref="cusPermissionApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.projectmarketfee.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"/>
 
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.voucher.api.VoucherGenerateAPI" id="voucherGenerateApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.ArrangementAPI" id="arrangementApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
+
 </beans>

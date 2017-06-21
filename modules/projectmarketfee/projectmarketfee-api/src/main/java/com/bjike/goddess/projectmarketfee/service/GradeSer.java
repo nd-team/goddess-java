@@ -6,6 +6,7 @@ import com.bjike.goddess.projectmarketfee.bo.GradeBO;
 import com.bjike.goddess.projectmarketfee.dto.GradeDTO;
 import com.bjike.goddess.projectmarketfee.entity.Grade;
 import com.bjike.goddess.projectmarketfee.to.GradeTO;
+import com.bjike.goddess.projectmarketfee.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +20,16 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface GradeSer extends Ser<Grade, GradeDTO> {
+    /**
+     * 下拉导航权限
+     */
+    Boolean sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
     /**
      * 添加
      *

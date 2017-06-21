@@ -4,12 +4,17 @@ import com.bjike.goddess.budget.bo.ProjectWeekBO;
 import com.bjike.goddess.budget.bo.ProjectWeekCountBO;
 import com.bjike.goddess.budget.dto.ProjectWeekDTO;
 import com.bjike.goddess.budget.entity.ProjectWeek;
+import com.bjike.goddess.budget.enums.GuideAddrStatus;
+import com.bjike.goddess.budget.to.GuidePermissionTO;
 import com.bjike.goddess.budget.to.ProjectMonthTO;
 import com.bjike.goddess.budget.to.ProjectWeekTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -35,10 +40,155 @@ import java.util.Set;
 public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO> implements ProjectWeekSer {
     @Autowired
     private ProjectMonthSer projectMonthSer;
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public ProjectWeekBO save(ProjectWeekTO to) throws SerException {
+        checkAddIdentity();
         ProjectWeek projectWeek = BeanTransform.copyProperties(to, ProjectWeek.class, true);
         super.save(projectWeek);
         projectMonthSer.deleteAll();
@@ -49,7 +199,7 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
             projectMonthTO.setProject(bo.getProject());
             projectMonthTO.setYear(bo.getYear());
             projectMonthTO.setMonth(bo.getMonth());
-            projectMonthTO.setPrice(bo.getPrice());
+//            projectMonthTO.setPrice(bo.getPrice());
             projectMonthTO.setTargetWork(bo.getTargetWorkSum());
             projectMonthTO.setActualWork(bo.getActualWorkSum());
             projectMonthTO.setWorkDifferences(bo.getWorkDifferencesSum());
@@ -64,6 +214,7 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void edit(ProjectWeekTO to) throws SerException {
+        checkAddIdentity();
         ProjectWeek projectWeek = super.findById(to.getId());
         LocalDateTime a = projectWeek.getCreateTime();
         LocalDateTime b = projectWeek.getModifyTime();
@@ -93,6 +244,7 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void delete(String id) throws SerException {
+        checkAddIdentity();
         super.remove(id);
         projectMonthSer.deleteAll();
         List<ProjectWeekCountBO> list = count();
@@ -102,7 +254,7 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
             projectMonthTO.setProject(bo.getProject());
             projectMonthTO.setYear(bo.getYear());
             projectMonthTO.setMonth(bo.getMonth());
-            projectMonthTO.setPrice(bo.getPrice());
+//            projectMonthTO.setPrice(bo.getPrice());
             projectMonthTO.setTargetWork(bo.getTargetWorkSum());
             projectMonthTO.setActualWork(bo.getActualWorkSum());
             projectMonthTO.setWorkDifferences(bo.getWorkDifferencesSum());
@@ -115,6 +267,7 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
 
     @Override
     public List<ProjectWeekBO> list(ProjectWeekDTO dto) throws SerException {
+        checkSeeIdentity();
         List<ProjectWeek> list = super.findByCis(dto, true);
         List<ProjectWeekBO> boList = new ArrayList<ProjectWeekBO>();
         for (ProjectWeek a : list) {
@@ -137,6 +290,7 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
 
     @Override
     public List<ProjectWeekCountBO> count() throws SerException {
+        checkSeeIdentity();
         List<ProjectWeekCountBO> boList = new ArrayList<ProjectWeekCountBO>();
         List<String> arrivals = findAllArrivals();
         List<String> projects = findAllProjects();
@@ -155,10 +309,10 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
             for (String project : projects) {
                 for (Integer year : years) {
                     for (Integer month : months) {
-                        for (Double price : prices) {
+//                        for (Double price : prices) {   //todo:有bug单价问题
                             for (ProjectWeek projectWeek : list) {
-                                boolean b = projectWeek.getPrice().compareTo(price) == 0 ? true : false;
-                                if (projectWeek.getArrival().equals(arrival) && projectWeek.getProject().equals(project) && projectWeek.getYear().equals(year) && projectWeek.getMonth().equals(month) && b) {
+//                                boolean b = projectWeek.getPrice().compareTo(price) == 0 ? true : false;
+                                if (projectWeek.getArrival().equals(arrival) && projectWeek.getProject().equals(project) && projectWeek.getYear().equals(year) && projectWeek.getMonth().equals(month)/* && b*/) {
                                     targetIncomeSum += projectWeek.getTargetIncome();
                                     planIncomeSum += projectWeek.getPlanIncome();
                                     double incomeDifference = projectWeek.getPlanIncome() - projectWeek.getTargetIncome();
@@ -175,7 +329,7 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
                                 projectWeekCountBO.setProject(project);
                                 projectWeekCountBO.setYear(year);
                                 projectWeekCountBO.setMonth(month);
-                                projectWeekCountBO.setPrice(price);
+//                                projectWeekCountBO.setPrice(price);
                                 projectWeekCountBO.setTargetWorkSum(targetWorkSum);
                                 projectWeekCountBO.setActualWorkSum(actualWorkSum);
                                 projectWeekCountBO.setWorkDifferencesSum(workDifferencesSum);
@@ -192,7 +346,7 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
                             }
                         }
                     }
-                }
+//                }
             }
         }
         return boList;
@@ -200,6 +354,7 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
 
     @Override
     public List<ProjectWeekCountBO> conditionsCount(String[] projects) throws SerException {
+        checkSeeIdentity();
         List<ProjectWeekCountBO> boList = new ArrayList<ProjectWeekCountBO>();
         List<String> arrivals = findAllArrivals();
         List<Integer> years = findAllYears();
@@ -219,10 +374,10 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
             for (String arrival : arrivals) {
                 for (Integer year : years) {
                     for (Integer month : months) {
-                        for (Double price : prices) {
+//                        for (Double price : prices) {
                             for (ProjectWeek a : list) {
-                                boolean b = a.getPrice().compareTo(price) == 0 ? true : false;
-                                if (a.getArrival().equals(arrival) && a.getYear().equals(year) && a.getMonth().equals(month) && b) {
+//                                boolean b = a.getPrice().compareTo(price) == 0 ? true : false;
+                                if (a.getArrival().equals(arrival) && a.getYear().equals(year) && a.getMonth().equals(month)/* && b*/) {
                                     targetIncomeSum += a.getTargetIncome();
                                     planIncomeSum += a.getPlanIncome();
                                     double incomeDifference = a.getPlanIncome() - a.getTargetIncome();
@@ -239,7 +394,7 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
                                 bo.setProject(project);
                                 bo.setYear(year);
                                 bo.setMonth(month);
-                                bo.setPrice(price);
+//                                bo.setPrice(price);
                                 bo.setTargetWorkSum(targetWorkSum);
                                 bo.setActualWorkSum(actualWorkSum);
                                 bo.setWorkDifferencesSum(workDifferencesSum);
@@ -256,7 +411,7 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
                             }
                         }
                     }
-                }
+//                }
             }
         }
         return boList;

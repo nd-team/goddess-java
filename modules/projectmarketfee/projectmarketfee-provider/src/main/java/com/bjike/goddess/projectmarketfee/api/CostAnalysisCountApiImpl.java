@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectmarketfee.bo.CostAnalysisCountBO;
 import com.bjike.goddess.projectmarketfee.service.CostAnalysisCountSer;
 import com.bjike.goddess.projectmarketfee.to.CostAnalysisCountTO;
+import com.bjike.goddess.projectmarketfee.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,5 +30,15 @@ public class CostAnalysisCountApiImpl implements CostAnalysisCountAPI {
     @Override
     public CostAnalysisCountBO findByID(String id) throws SerException {
         return costAnalysisCountSer.findByID(id);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return costAnalysisCountSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return costAnalysisCountSer.guidePermission(guidePermissionTO);
     }
 }

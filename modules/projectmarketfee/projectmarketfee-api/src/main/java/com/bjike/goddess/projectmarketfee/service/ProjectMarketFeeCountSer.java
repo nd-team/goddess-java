@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectmarketfee.bo.ProjectMarketFeeCountBO;
 import com.bjike.goddess.projectmarketfee.dto.ProjectMarketFeeCountDTO;
 import com.bjike.goddess.projectmarketfee.entity.ProjectMarketFeeCount;
+import com.bjike.goddess.projectmarketfee.to.GuidePermissionTO;
 import com.bjike.goddess.projectmarketfee.to.ProjectMarketFeeCountTO;
 
 /**
@@ -17,6 +18,16 @@ import com.bjike.goddess.projectmarketfee.to.ProjectMarketFeeCountTO;
  * @Copy: [ com.bjike ]
  */
 public interface ProjectMarketFeeCountSer extends Ser<ProjectMarketFeeCount, ProjectMarketFeeCountDTO> {
+    /**
+     * 下拉导航权限
+     */
+    Boolean sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
     /**
      * 添加
      *

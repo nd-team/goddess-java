@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectmarketfee.bo.WarnBO;
 import com.bjike.goddess.projectmarketfee.dto.WarnDTO;
 import com.bjike.goddess.projectmarketfee.entity.Warn;
+import com.bjike.goddess.projectmarketfee.to.GuidePermissionTO;
 import com.bjike.goddess.projectmarketfee.to.WarnTO;
 
 import java.util.List;
@@ -19,6 +20,16 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface WarnSer extends Ser<Warn, WarnDTO> {
+    /**
+     * 下拉导航权限
+     */
+    Boolean sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
     /**
      * 添加
      *

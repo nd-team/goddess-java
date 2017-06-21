@@ -3,6 +3,7 @@ package com.bjike.goddess.projectmarketfee.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.projectmarketfee.api.ProjectMarketFeeCountAPI;
@@ -10,8 +11,12 @@ import com.bjike.goddess.projectmarketfee.bo.ProjectMarketFeeBO;
 import com.bjike.goddess.projectmarketfee.bo.ProjectMarketFeeCountBO;
 import com.bjike.goddess.projectmarketfee.dto.ProjectMarketFeeDTO;
 import com.bjike.goddess.projectmarketfee.entity.ProjectMarketFee;
-import com.bjike.goddess.projectmarketfee.entity.ProjectMarketFeeCount;
+import com.bjike.goddess.projectmarketfee.enums.GuideAddrStatus;
+import com.bjike.goddess.projectmarketfee.to.GuidePermissionTO;
 import com.bjike.goddess.projectmarketfee.to.ProjectMarketFeeCountTO;
+import com.bjike.goddess.projectmarketfee.vo.SonPermissionObject;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.entity.VoucherGenerate;
@@ -23,10 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 项目前期的市场活动费业务实现
@@ -44,10 +46,241 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
     private VoucherGenerateAPI voucherGenerateAPI;
     @Autowired
     private ProjectMarketFeeCountAPI projectMarketFeeCountAPI;
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CostAnalysisSer costAnalysisSer;
+    @Autowired
+    private CostAnalysisCountSer costAnalysisCountSer;
+    @Autowired
+    private ProjectMarketFeeCountSer projectMarketFeeCountSer;
+    @Autowired
+    private GradeSer gradeSer;
+    @Autowired
+    private WarnSer warnSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAddSign = guideAddIdentity();
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("projectmarketfee");
+        obj.setDescribesion("项目前期的市场活动费");
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeProC = projectMarketFeeCountSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("projectmarketfeecount");
+        obj.setDescribesion("项目前期的市场活动费汇总");
+        if (flagSeeProC) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeDis = costAnalysisCountSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("costanalysiscount");
+        obj.setDescribesion("费用效益分析汇总");
+        if (flagSeeDis) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeCos = costAnalysisSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("costanalysis");
+        obj.setDescribesion("费用效益分析");
+        if (flagSeeCos) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeCate = gradeSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("grade");
+        obj.setDescribesion("等级设计");
+        if (flagSeeCate) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeEmail = warnSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("warn");
+        obj.setDescribesion("预警设计");
+        if (flagSeeEmail) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public List<ProjectMarketFeeBO> list(ProjectMarketFeeDTO dto) throws SerException {
+        checkSeeIdentity();
+        String userToken = RpcTransmit.getUserToken();
+        RpcTransmit.transmitUserToken(userToken);
         List<VoucherGenerateBO> list = voucherGenerateAPI.allSales();
         List<ProjectMarketFee> projectMarketFees = super.findAll();
         if (list != null) {
@@ -98,17 +331,19 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
             }
         }
         for (ProjectMarketFee p : super.findAll()) {
-            VoucherGenerate v = find(p.getSaleId());
+            VoucherGenerateBO v = voucherGenerateAPI.getById(p.getSaleId());
             if ((v == null) || (!("销售费用".equals(v.getFirstSubject())))) {
                 super.remove(p.getId());
             }
         }
         List<ProjectMarketFee> l = super.findByCis(dto, true);
+        RpcTransmit.transmitUserToken(userToken);
         return BeanTransform.copyProperties(l, ProjectMarketFeeBO.class);
     }
 
     @Override
     public List<ProjectMarketFeeCountBO> firstSubjectCount(String startTime, String endTime) throws SerException {
+        checkSeeIdentity();
         list(new ProjectMarketFeeDTO());
         LocalDate[] time = null;
         try {
@@ -154,6 +389,7 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
 
     @Override
     public List<ProjectMarketFeeCountBO> secondSubjectCount(String startTime, String endTime) throws SerException {
+        checkSeeIdentity();
         list(new ProjectMarketFeeDTO());
         LocalDate[] time = null;
         try {
@@ -202,6 +438,7 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
 
     @Override
     public List<ProjectMarketFeeCountBO> thirdSubjectCount(String startTime, String endTime) throws SerException {
+        checkSeeIdentity();
         list(new ProjectMarketFeeDTO());
         LocalDate[] time = null;
         try {
@@ -253,6 +490,7 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
 
     @Override
     public List<ProjectMarketFeeCountBO> areaCount(String startTime, String endTime) throws SerException {
+        checkSeeIdentity();
         list(new ProjectMarketFeeDTO());
         LocalDate[] time = null;
         try {
@@ -300,6 +538,7 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
 
     @Override
     public List<ProjectMarketFeeCountBO> projectGroupCount(String startTime, String endTime) throws SerException {
+        checkSeeIdentity();
         list(new ProjectMarketFeeDTO());
         LocalDate[] time = null;
         try {
@@ -351,6 +590,7 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
 
     @Override
     public List<ProjectMarketFeeCountBO> projectNameCount(String startTime, String endTime) throws SerException {
+        checkSeeIdentity();
         list(new ProjectMarketFeeDTO());
         LocalDate[] time = null;
         try {
@@ -406,6 +646,9 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
 
     @Override
     public ProjectMarketFeeCountBO count(String projectGroup, String area, Integer year, Integer month, String projectName) throws SerException {
+        checkSeeIdentity();
+        String userToken = RpcTransmit.getUserToken();
+        RpcTransmit.transmitUserToken(userToken);
         list(new ProjectMarketFeeDTO());
         ProjectMarketFeeDTO dto = new ProjectMarketFeeDTO();
         dto.getConditions().add(Restrict.eq("projectGroup", projectGroup));
@@ -425,6 +668,7 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
 
     @Override
     public List<ProjectMarketFeeBO> findDetail(String id) throws SerException {
+        checkSeeIdentity();
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT id,firstSubject,secondSubject,thirdSubject,projectGroup,area,projectName,borrowMoney\n" +
                 "from projectmarketfee_projectmarketfee");
@@ -653,28 +897,28 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
         return set;
     }
 
-    /**
-     * 通过销售费用id查找记账凭证信息
-     *
-     * @param id 记账凭证id
-     * @return class VoucherGenerate
-     * @throws SerException
-     */
-    private VoucherGenerate find(String id) throws SerException {
-        List<VoucherGenerate> list = null;
-        String[] s = new String[]{id};
-        for (String i : s) {
-            String sql = "SELECT firstSubject,secondSubject,thirdSubject,area,projectGroup,projectName,borrowMoney\n" +
-                    "from voucher_vouchergenerate\n" +
-                    "where id='" + i + "'";
-            String[] fields = new String[]{"firstSubject", "secondSubject", "thirdSubject", "area", "projectGroup", "projectName", "borrowMoney"};
-            list = super.findBySql(sql, VoucherGenerate.class, fields);
-        }
-        if (list != null && list.size() != 0) {
-            return list.get(0);
-        }
-        return null;
-    }
+//    /**
+//     * 通过销售费用id查找记账凭证信息
+//     *
+//     * @param id 记账凭证id
+//     * @return class VoucherGenerate
+//     * @throws SerException
+//     */
+//    private VoucherGenerate find(String id) throws SerException {
+//        List<VoucherGenerate> list = null;
+//        String[] s = new String[]{id};
+//        for (String i : s) {
+//            String sql = "SELECT firstSubject,secondSubject,thirdSubject,area,projectGroup,projectName,borrowMoney\n" +
+//                    "from voucher_vouchergenerate\n" +
+//                    "where id='" + i + "'";
+//            String[] fields = new String[]{"firstSubject", "secondSubject", "thirdSubject", "area", "projectGroup", "projectName", "borrowMoney"};
+//            list = super.findBySql(sql, VoucherGenerate.class, fields);
+//        }
+//        if (list != null && list.size() != 0) {
+//            return list.get(0);
+//        }
+//        return null;
+//    }
 
     @Override
     public ProjectMarketFeeBO countNum(ProjectMarketFeeDTO dto) throws SerException {

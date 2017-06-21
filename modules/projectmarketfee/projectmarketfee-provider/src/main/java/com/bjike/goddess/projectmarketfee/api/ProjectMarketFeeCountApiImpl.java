@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectmarketfee.bo.ProjectMarketFeeCountBO;
 import com.bjike.goddess.projectmarketfee.service.ProjectMarketFeeCountSer;
+import com.bjike.goddess.projectmarketfee.to.GuidePermissionTO;
 import com.bjike.goddess.projectmarketfee.to.ProjectMarketFeeCountTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,5 +31,15 @@ public class ProjectMarketFeeCountApiImpl implements ProjectMarketFeeCountAPI {
     @Override
     public ProjectMarketFeeCountBO findByID(String id) throws SerException {
         return projectMarketFeeCountSer.findByID(id);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return projectMarketFeeCountSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return projectMarketFeeCountSer.guidePermission(guidePermissionTO);
     }
 }

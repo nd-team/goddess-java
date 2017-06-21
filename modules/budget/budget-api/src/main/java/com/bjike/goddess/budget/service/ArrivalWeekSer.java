@@ -5,6 +5,8 @@ import com.bjike.goddess.budget.bo.ArrivalWeekCountBO;
 import com.bjike.goddess.budget.dto.ArrivalWeekDTO;
 import com.bjike.goddess.budget.entity.ArrivalWeek;
 import com.bjike.goddess.budget.to.ArrivalWeekTO;
+import com.bjike.goddess.budget.to.GuidePermissionTO;
+import com.bjike.goddess.budget.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -112,4 +114,14 @@ public interface ArrivalWeekSer extends Ser<ArrivalWeek, ArrivalWeekDTO> {
     default List<String> findAllArrivals() throws SerException {
         return null;
     }
+
+    /**
+     * 下拉导航权限
+     */
+    List<SonPermissionObject> sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 }
