@@ -2,6 +2,7 @@ package com.bjike.goddess.businessevaluate.api;
 
 import com.bjike.goddess.businessevaluate.bo.LabourCostBO;
 import com.bjike.goddess.businessevaluate.dto.LabourCostDTO;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.businessevaluate.to.LabourCostTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -64,4 +65,6 @@ public interface LabourCostAPI {
      * @return 劳动成本
      */
     LabourCostBO findById(String id) throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO to) throws SerException;
 }

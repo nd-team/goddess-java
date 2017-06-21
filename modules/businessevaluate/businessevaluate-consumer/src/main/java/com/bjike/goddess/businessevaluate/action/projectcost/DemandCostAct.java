@@ -4,6 +4,7 @@ import com.bjike.goddess.businessevaluate.api.DemandCostAPI;
 import com.bjike.goddess.businessevaluate.api.EvaluateProjectInfoAPI;
 import com.bjike.goddess.businessevaluate.dto.DemandCostDTO;
 import com.bjike.goddess.businessevaluate.to.DemandCostTO;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.businessevaluate.vo.DemandCostVO;
 import com.bjike.goddess.businessevaluate.vo.EvaluateProjectInfoVO;
 import com.bjike.goddess.common.api.entity.ADD;
@@ -52,6 +53,29 @@ public class DemandCostAct {
         try {
             Long count = demandCostAPI.count(dto);
             return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = demandCostAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

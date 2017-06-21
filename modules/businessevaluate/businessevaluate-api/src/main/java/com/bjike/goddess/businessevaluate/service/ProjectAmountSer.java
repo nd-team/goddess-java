@@ -4,6 +4,7 @@ import com.bjike.goddess.businessevaluate.bo.ProjectAmountBO;
 import com.bjike.goddess.businessevaluate.bo.ProjectAmountInfoBO;
 import com.bjike.goddess.businessevaluate.dto.ProjectAmountDTO;
 import com.bjike.goddess.businessevaluate.entity.ProjectAmount;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.businessevaluate.to.ProjectAmountTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -51,6 +52,9 @@ public interface ProjectAmountSer extends Ser<ProjectAmount, ProjectAmountDTO> {
      * @param dto 分页条件
      * @return 项目金额结果集
      */
-    List<ProjectAmountBO> pageList(ProjectAmountDTO to) throws SerException;
+    List<ProjectAmountBO> pageList(ProjectAmountDTO dto) throws SerException;
 
+    Boolean sonPermission() throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO to) throws SerException;
 }

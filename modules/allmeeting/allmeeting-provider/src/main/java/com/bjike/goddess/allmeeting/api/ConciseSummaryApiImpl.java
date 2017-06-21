@@ -48,6 +48,6 @@ public class ConciseSummaryApiImpl implements ConciseSummaryAPI {
 
     @Override
     public ConciseSummaryBO findById(String id) throws SerException {
-        return BeanTransform.copyProperties(conciseSummarySer.findById(id),ConciseSummaryBO.class);
+        return conciseSummarySer.findAndSet(id);
     }
 }

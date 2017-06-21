@@ -5,6 +5,8 @@ import com.bjike.goddess.businessevaluate.bo.ProjectProfitRateBO;
 import com.bjike.goddess.businessevaluate.dto.EvaluateProjectInfoDTO;
 import com.bjike.goddess.businessevaluate.entity.EvaluateProjectInfo;
 import com.bjike.goddess.businessevaluate.to.EvaluateProjectInfoTO;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
+import com.bjike.goddess.businessevaluate.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -77,4 +79,10 @@ public interface EvaluateProjectInfoSer extends Ser<EvaluateProjectInfo, Evaluat
      * @throws SerException
      */
     List<EvaluateProjectInfoBO> findAllProject() throws SerException;
+
+    void delete(String id) throws SerException;
+
+    List<SonPermissionObject> sonPermission() throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO to) throws SerException;
 }

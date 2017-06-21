@@ -4,6 +4,7 @@ import com.bjike.goddess.businessevaluate.bo.DemandCostBO;
 import com.bjike.goddess.businessevaluate.dto.DemandCostDTO;
 import com.bjike.goddess.businessevaluate.entity.DemandCost;
 import com.bjike.goddess.businessevaluate.to.DemandCostTO;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -43,4 +44,8 @@ public interface DemandCostSer extends Ser<DemandCost, DemandCostDTO> {
      * @return 需求成本结果集
      */
     List<DemandCostBO> pageList(DemandCostDTO dto) throws SerException;
+
+    Boolean sonPermission() throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO to) throws SerException;
 }

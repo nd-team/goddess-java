@@ -14,10 +14,10 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contractcommunicat.api.ProjectOutsourcingAPI;
 import com.bjike.goddess.contractcommunicat.dto.ProjectOutsourcingDTO;
-import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
 import com.bjike.goddess.contractcommunicat.excel.ProjectOutsourcingExcel;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.CommunicateDeleteFileTO;
+import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
 import com.bjike.goddess.contractcommunicat.vo.InProjectsVO;
 import com.bjike.goddess.contractcommunicat.vo.ProjectOutsourcingCollectVO;
@@ -53,6 +53,30 @@ public class ProjectOutsourcingAct extends BaseFileAction {
     private ProjectOutsourcingAPI projectOutsourcingAPI;
     @Autowired
     private FileAPI fileAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = projectOutsourcingAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 内部项目名称列表
@@ -254,24 +278,6 @@ public class ProjectOutsourcingAct extends BaseFileAction {
     }
 
     /**
-     * 上传附件
-     *
-     * @version v1
-     */
-    @LoginAuth
-    @PostMapping("v1/upload")
-    public Result upload(HttpServletRequest request) throws ActException {
-        try {
-            String path = "/outsource";
-            List<InputStream> inputStreams = super.getInputStreams(request, path);
-            fileAPI.upload(inputStreams);
-            return new ActResult();
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
      * 导入Excel
      *
      * @version v1
@@ -306,6 +312,25 @@ public class ProjectOutsourcingAct extends BaseFileAction {
         try {
             String fileName = "项目外包洽谈.xlsx";
             super.writeOutFile(response, projectOutsourcingAPI.exportExcel(contractInProject, startDate, endDate), fileName);
+            return new ActResult(0, "导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+
+    /**
+     * 导出Excel模板
+     *
+     * @version v1
+     */
+    @GetMapping("v1/module")
+    public Result exportModule(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "项目外包洽谈模板.xlsx";
+            super.writeOutFile(response, projectOutsourcingAPI.exportExcelModule(), fileName);
             return new ActResult(0, "导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -350,22 +375,5 @@ public class ProjectOutsourcingAct extends BaseFileAction {
         }
     }
 
-    /**
-     * 汇总周期
-     *
-     * @param cycleType 周期类型
-     * @version v1
-     */
-    @LoginAuth
-    @GetMapping("cycle")
-    public Result setCollectSend(QuartzCycleType cycleType) throws ActException {
-
-        try {
-            projectOutsourcingAPI.setCollectSend(cycleType);
-            return new ActResult("success");
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
 
 }

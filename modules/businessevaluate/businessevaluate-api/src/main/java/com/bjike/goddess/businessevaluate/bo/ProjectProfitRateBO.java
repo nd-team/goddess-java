@@ -35,7 +35,7 @@ public class ProjectProfitRateBO extends BaseBO {
     /**
      * 项目利润
      */
-    private Double Profit;
+    private Double profit;
 
     /**
      * 项目利润率含百分号
@@ -95,11 +95,11 @@ public class ProjectProfitRateBO extends BaseBO {
     }
 
     public Double getProfit() {
-        return Profit;
+        return profit;
     }
 
     public void setProfit(Double profit) {
-        Profit = profit;
+        this.profit = profit;
     }
 
     public String getProjectProfitRate() {

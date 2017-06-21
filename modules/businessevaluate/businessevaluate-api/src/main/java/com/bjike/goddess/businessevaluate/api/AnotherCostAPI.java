@@ -3,6 +3,7 @@ package com.bjike.goddess.businessevaluate.api;
 import com.bjike.goddess.businessevaluate.bo.AnotherCostBO;
 import com.bjike.goddess.businessevaluate.dto.AnotherCostDTO;
 import com.bjike.goddess.businessevaluate.to.AnotherCostTO;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -65,4 +66,6 @@ public interface AnotherCostAPI {
      * @throws SerException
      */
     AnotherCostBO findById(String id) throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO to) throws SerException;
 }
