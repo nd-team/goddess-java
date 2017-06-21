@@ -3,6 +3,7 @@ package com.bjike.goddess.businessevaluate.service;
 import com.bjike.goddess.businessevaluate.bo.MarketSesponseBO;
 import com.bjike.goddess.businessevaluate.dto.MarketSesponseDTO;
 import com.bjike.goddess.businessevaluate.entity.MarketSesponse;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.businessevaluate.to.MarketSesponseTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -43,4 +44,8 @@ public interface MarketSesponseSer extends Ser<MarketSesponse, MarketSesponseDTO
      * @return 市场反应和创新能力结果集
      */
     List<MarketSesponseBO> pageList(MarketSesponseDTO dto) throws SerException;
+
+    Boolean sonPermission() throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO to) throws SerException;
 }

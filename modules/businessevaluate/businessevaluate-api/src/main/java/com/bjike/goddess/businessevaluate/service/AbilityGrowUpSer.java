@@ -4,6 +4,7 @@ import com.bjike.goddess.businessevaluate.bo.AbilityGrowUpBO;
 import com.bjike.goddess.businessevaluate.dto.AbilityGrowUpDTO;
 import com.bjike.goddess.businessevaluate.entity.AbilityGrowUp;
 import com.bjike.goddess.businessevaluate.to.AbilityGrowUpTO;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -43,4 +44,8 @@ public interface AbilityGrowUpSer extends Ser<AbilityGrowUp, AbilityGrowUpDTO> {
      * @return 能力成长结果集
      */
     List<AbilityGrowUpBO> pageList(AbilityGrowUpDTO dto) throws SerException;
+
+    Boolean sonPermission() throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO to) throws SerException;
 }

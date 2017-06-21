@@ -4,6 +4,7 @@ import com.bjike.goddess.businessevaluate.bo.AnotherCostBO;
 import com.bjike.goddess.businessevaluate.dto.AnotherCostDTO;
 import com.bjike.goddess.businessevaluate.service.AnotherCostSer;
 import com.bjike.goddess.businessevaluate.to.AnotherCostTO;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,5 +55,10 @@ public class AnotherCostApiImpl implements AnotherCostAPI {
     @Override
     public AnotherCostBO findById(String id) throws SerException {
         return BeanTransform.copyProperties(anotherCostSer.findById(id), AnotherCostBO.class);
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO to) throws SerException {
+        return anotherCostSer.guidePermission(to);
     }
 }

@@ -6,6 +6,7 @@ import com.bjike.goddess.businessevaluate.dto.BusinessEvaluateCollectDTO;
 import com.bjike.goddess.businessevaluate.dto.EvaluateProjectInfoDTO;
 import com.bjike.goddess.businessevaluate.entity.BusinessEvaluateCollect;
 import com.bjike.goddess.businessevaluate.to.BusinessEvaluateCollectTO;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -68,4 +69,10 @@ public interface BusinessEvaluateCollectSer extends Ser<BusinessEvaluateCollect,
      * @throws SerException
      */
     List<EvaluateCollectTotalBO> collectTotal(String area, String project) throws SerException;
+
+    void sendCollectEmail() throws SerException;
+
+    Boolean sonPermission() throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO to) throws SerException;
 }

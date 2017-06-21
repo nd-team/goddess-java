@@ -4,6 +4,7 @@ import com.bjike.goddess.businessevaluate.bo.EvaluateProjectInfoBO;
 import com.bjike.goddess.businessevaluate.bo.LabourCostBO;
 import com.bjike.goddess.businessevaluate.dto.LabourCostDTO;
 import com.bjike.goddess.businessevaluate.service.LabourCostSer;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.businessevaluate.to.LabourCostTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -55,6 +56,11 @@ public class LabourCostApiImpl implements LabourCostAPI {
     @Override
     public LabourCostBO findById(String id) throws SerException {
         return BeanTransform.copyProperties(labourCostSer.findById(id),LabourCostBO.class);
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO to) throws SerException {
+        return labourCostSer.guidePermission(to);
     }
 
 

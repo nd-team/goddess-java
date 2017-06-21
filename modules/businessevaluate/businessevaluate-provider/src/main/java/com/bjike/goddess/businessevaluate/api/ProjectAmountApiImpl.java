@@ -4,6 +4,7 @@ import com.bjike.goddess.businessevaluate.bo.ProjectAmountBO;
 import com.bjike.goddess.businessevaluate.bo.ProjectAmountInfoBO;
 import com.bjike.goddess.businessevaluate.dto.ProjectAmountDTO;
 import com.bjike.goddess.businessevaluate.service.ProjectAmountSer;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.businessevaluate.to.ProjectAmountTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -61,5 +62,10 @@ public class ProjectAmountApiImpl implements ProjectAmountAPI {
     @Override
     public ProjectAmountBO findById(String id) throws SerException {
         return BeanTransform.copyProperties(projectAmountSer.findById(id), ProjectAmountBO.class);
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO to) throws SerException {
+        return projectAmountSer.guidePermission(to);
     }
 }

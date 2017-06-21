@@ -4,6 +4,7 @@ import com.bjike.goddess.businessevaluate.bo.BusinessEvaluateCollectBO;
 import com.bjike.goddess.businessevaluate.bo.EvaluateCollectTotalBO;
 import com.bjike.goddess.businessevaluate.dto.BusinessEvaluateCollectDTO;
 import com.bjike.goddess.businessevaluate.to.BusinessEvaluateCollectTO;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -89,4 +90,9 @@ public interface BusinessEvaluateCollectAPI {
      * @return 总记录数
      */
     Long count(BusinessEvaluateCollectDTO dto) throws SerException;
+
+    //定时器，每10s轮询一次该接口
+    void sendCollectEmail() throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 }

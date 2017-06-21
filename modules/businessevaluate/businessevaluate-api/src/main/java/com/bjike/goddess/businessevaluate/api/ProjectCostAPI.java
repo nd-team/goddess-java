@@ -2,6 +2,7 @@ package com.bjike.goddess.businessevaluate.api;
 
 import com.bjike.goddess.businessevaluate.bo.ProjectCostBO;
 import com.bjike.goddess.businessevaluate.dto.ProjectCostDTO;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.businessevaluate.to.ProjectCostTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -62,4 +63,6 @@ public interface ProjectCostAPI {
      * @return 项目费用
      */
     ProjectCostBO findById(String id) throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 }

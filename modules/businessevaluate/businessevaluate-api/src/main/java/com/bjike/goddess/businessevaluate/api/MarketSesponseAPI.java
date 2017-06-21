@@ -2,6 +2,7 @@ package com.bjike.goddess.businessevaluate.api;
 
 import com.bjike.goddess.businessevaluate.bo.MarketSesponseBO;
 import com.bjike.goddess.businessevaluate.dto.MarketSesponseDTO;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.businessevaluate.to.MarketSesponseTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -63,4 +64,6 @@ public interface MarketSesponseAPI {
      * @return 市场反应和创新能力
      */
     MarketSesponseBO findById(String id) throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 }

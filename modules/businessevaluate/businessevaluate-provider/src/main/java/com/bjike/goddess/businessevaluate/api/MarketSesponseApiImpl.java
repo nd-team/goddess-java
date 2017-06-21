@@ -3,6 +3,7 @@ package com.bjike.goddess.businessevaluate.api;
 import com.bjike.goddess.businessevaluate.bo.MarketSesponseBO;
 import com.bjike.goddess.businessevaluate.dto.MarketSesponseDTO;
 import com.bjike.goddess.businessevaluate.service.MarketSesponseSer;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.businessevaluate.to.MarketSesponseTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -54,5 +55,10 @@ public class MarketSesponseApiImpl implements MarketSesponseAPI {
     @Override
     public MarketSesponseBO findById(String id) throws SerException {
         return BeanTransform.copyProperties(marketSesponseSer.findById(id), MarketSesponseBO.class);
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO to) throws SerException {
+        return marketSesponseSer.guidePermission(to);
     }
 }
