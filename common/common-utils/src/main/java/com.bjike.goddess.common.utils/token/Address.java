@@ -1,4 +1,4 @@
-package com.bjike.goddess.common.utils.string;
+package com.bjike.goddess.common.utils.token;
 
 /**
  * @Author: [liguiqin]
@@ -9,9 +9,10 @@ package com.bjike.goddess.common.utils.string;
  */
 public class Address {
     private String country;
-    private String province;
+    private String area;
+    private String region;
     private String city;
-    private String type;
+    private String isp;
     private Address(){
 
     }
@@ -24,12 +25,12 @@ public class Address {
         this.country = country;
     }
 
-    public String getProvince() {
-        return province;
+    public String getRegion() {
+        return region;
     }
 
-    public void setProvince(String province) {
-        this.province = province;
+    public void setRegion(String region) {
+        this.region = region;
     }
 
     public String getCity() {
@@ -40,11 +41,19 @@ public class Address {
         this.city = city;
     }
 
-    public String getType() {
-        return type;
+    public String getIsp() {
+        return isp;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setIsp(String isp) {
+        this.isp = isp;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
     }
 }

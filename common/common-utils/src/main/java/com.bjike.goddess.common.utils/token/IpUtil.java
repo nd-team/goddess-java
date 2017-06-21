@@ -1,7 +1,6 @@
 package com.bjike.goddess.common.utils.token;
 
 import com.alibaba.fastjson.JSON;
-import com.bjike.goddess.common.utils.string.Address;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -16,7 +15,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * ip地址转换工具
+ * ip地址工具
  *
  * @Author: [liguiqin]
  * @Date: [2016-12-27 17:02]
@@ -70,15 +69,18 @@ public class IpUtil {
      */
     public static String getAddress(String ip) throws IOException {
         String address = null;
-        String url = "http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json&ip=" + ip;
+        String url = "http://ip.taobao.com/service/getIpInfo.php?ip=" + ip;
         CloseableHttpClient client = HttpClients.createDefault();
         HttpGet get = new HttpGet(url);
         HttpResponse response = client.execute(get);
         HttpEntity resEntity = response.getEntity();
         if (resEntity != null) {
             String res = EntityUtils.toString(resEntity, "UTF-8");
-           Address ad =  JSON.parseObject(res,Address.class);
-            return ad.getCountry()+"/"+ad.getProvince()+"/"+ad.getCity();
+            AddressResult result = JSON.parseObject(res,AddressResult.class);
+            if("0".equals(result.getCode())){
+                Address ad =  JSON.parseObject(result.getData(),Address.class);
+                return ad.getCountry()+"/"+ad.getArea()+"/"+ad.getRegion()+"/"+ad.getCity()+" "+ad.getIsp();
+            }
         }
         return address;
     }
