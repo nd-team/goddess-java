@@ -6,6 +6,7 @@ import com.bjike.goddess.receivable.bo.*;
 import com.bjike.goddess.receivable.dto.ReceivableSubsidiaryDTO;
 import com.bjike.goddess.receivable.entity.Contractor;
 import com.bjike.goddess.receivable.entity.ReceivableSubsidiary;
+import com.bjike.goddess.receivable.to.CollectCompareTO;
 import com.bjike.goddess.receivable.to.ProgressTO;
 import com.bjike.goddess.receivable.to.ReceivableSubsidiaryTO;
 
@@ -256,11 +257,11 @@ public interface ReceivableSubsidiarySer extends Ser<ReceivableSubsidiary, Recei
     /**
      * 对比汇总
      *
-     * @param receivableSubsidiaryTO 对比汇总数据to
-     * @return class receivableSubsidiaryBO
+     * @param to 对比汇总数据to
+     * @return class CollectCompareBO
      * @throws SerException
      */
-    default List<ReceivableSubsidiaryBO> collectCompare(ReceivableSubsidiaryTO receivableSubsidiaryTO) throws SerException {
+    default List<CollectCompareBO> collectCompare(CollectCompareTO to) throws SerException {
         return null;
     }
 

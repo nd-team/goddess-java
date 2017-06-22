@@ -1,5 +1,7 @@
 package com.bjike.goddess.bidding.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 业务类型枚举
  *
@@ -13,18 +15,22 @@ public enum BusinessType {
     /**
      * 移动通信
      */
+    @ExcelValue(name = "移动通信")
     MOBILECOMMUNICATION(0),
     /**
      * 软件开发
      */
+    @ExcelValue(name = "软件开发")
     SOFTWAREDEVELOPMENT(1),
     /**
      * 智能系统集成
      */
+    @ExcelValue(name = "智能系统集成")
     INTELLIGENTSYSTEMINTEGRATION(2),
     /**
      * 策划与营销方案
      */
+    @ExcelValue(name = "策划与营销方案")
     PLANNINGMARKETINGSOLUTIONS(3);
 
     private int code;

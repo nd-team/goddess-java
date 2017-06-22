@@ -5,8 +5,10 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.foreigntax.bo.AccountInfoManagementBO;
 import com.bjike.goddess.foreigntax.dto.AccountInfoManagementDTO;
 import com.bjike.goddess.foreigntax.entity.AccountInfoManagement;
+import com.bjike.goddess.foreigntax.excel.SonPermissionObject;
 import com.bjike.goddess.foreigntax.service.AccountInfoManagementSer;
 import com.bjike.goddess.foreigntax.to.AccountInfoManagementTO;
+import com.bjike.goddess.foreigntax.to.GuidePermissionTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,15 @@ import java.util.List;
 public class AccountInfoManagementApiImpl implements AccountInfoManagementAPI {
     @Autowired
     private AccountInfoManagementSer accountInfoManagementSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return accountInfoManagementSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return accountInfoManagementSer.guidePermission( guidePermissionTO );
+    }
     @Override
     public Long countAccountInfoManagement(AccountInfoManagementDTO accountInfoManagementDTO) throws SerException {
         return accountInfoManagementSer.countAccountInfoManagement(accountInfoManagementDTO);
@@ -54,16 +65,6 @@ public class AccountInfoManagementApiImpl implements AccountInfoManagementAPI {
     @Override
     public void removeAccountInfoManagement(String id) throws SerException {
         accountInfoManagementSer.removeAccountInfoManagement(id);
-    }
-
-    @Override
-    public void upload() throws SerException {
-        accountInfoManagementSer.upload();
-    }
-
-    @Override
-    public void download() throws SerException {
-        accountInfoManagementSer.download();
     }
 
 }

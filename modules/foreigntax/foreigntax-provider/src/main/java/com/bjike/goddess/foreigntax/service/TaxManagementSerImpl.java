@@ -3,23 +3,28 @@ package com.bjike.goddess.foreigntax.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.foreigntax.bo.TaxCollectBO;
 import com.bjike.goddess.foreigntax.bo.TaxManagementBO;
 import com.bjike.goddess.foreigntax.dto.TaxManagementDTO;
 import com.bjike.goddess.foreigntax.entity.TaxManagement;
+import com.bjike.goddess.foreigntax.enums.GuideAddrStatus;
 import com.bjike.goddess.foreigntax.enums.PaymentStatus;
-import com.bjike.goddess.foreigntax.to.CollectTo;
+import com.bjike.goddess.foreigntax.excel.SonPermissionObject;
+import com.bjike.goddess.foreigntax.to.GuidePermissionTO;
 import com.bjike.goddess.foreigntax.to.TaxManagementTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,103 +40,267 @@ import java.util.stream.Collectors;
 @CacheConfig(cacheNames = "foreigntaxSerCache")
 @Service
 public class TaxManagementSerImpl extends ServiceImpl<TaxManagement, TaxManagementDTO> implements TaxManagementSer {
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private AccountInfoManagementSer accountInfoManagementSer;
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeInfo = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAddInfo = guideAddIdentity();
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("taxmanagement");
+        obj.setDescribesion("税金管理");
+        if (flagSeeInfo || flagAddInfo) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeAnswer = accountInfoManagementSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("accountinfomanagement");
+        obj.setDescribesion("外账资料管理");
+        if (flagSeeAnswer) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
 
     @Override
     public Long countTaxManagement(TaxManagementDTO taxManagementDTO) throws SerException {
-        taxManagementDTO.getSorts().add("createTime=desc");
         Long counts = super.count(taxManagementDTO);
         return counts;
     }
+
     @Override
     public TaxManagementBO getOne(String id) throws SerException {
         TaxManagement taxManagement = super.findById(id);
-        return BeanTransform.copyProperties(taxManagement,TaxManagementBO.class);
+        return BeanTransform.copyProperties(taxManagement, TaxManagementBO.class);
     }
+
     @Override
     public List<TaxManagementBO> findListTaxManagement(TaxManagementDTO taxManagementDTO) throws SerException {
-        taxManagementDTO.getSorts().add("createTime=desc");
-        List<TaxManagement> taxManagements = super.findByCis(taxManagementDTO,true);
-        List<TaxManagementBO> taxManagementBOS = BeanTransform.copyProperties(taxManagements,TaxManagementBO.class);
-        return  taxManagementBOS;
+        checkSeeIdentity();
+        viewTaxManagement(taxManagementDTO);
+        List<TaxManagement> taxManagements = super.findByCis(taxManagementDTO, true);
+        List<TaxManagementBO> taxManagementBOS = BeanTransform.copyProperties(taxManagements, TaxManagementBO.class);
+        return taxManagementBOS;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public TaxManagementBO insertTaxManagement(TaxManagementTO taxManagementTO) throws SerException {
-        TaxManagement taxManagement = BeanTransform.copyProperties(taxManagementTO,TaxManagement.class,true);
+        checkAddIdentity();
+        TaxManagement taxManagement = BeanTransform.copyProperties(taxManagementTO, TaxManagement.class, true);
+        taxManagement.setCreateTime(LocalDateTime.now());
+        taxManagement.setCompany(taxManagementTO.getCompany());
+        taxManagement.setMonth(LocalDate.parse(taxManagementTO.getMonth()));
+        taxManagement.setTaxType(taxManagementTO.getTaxType());
+        taxManagement.setRate(taxManagement.getRate());
+        taxManagement.setTax(taxManagement.getTax());
+        taxManagement.setPaymentStatus(PaymentStatus.DIDPAY);
         taxManagement.setCreateTime(LocalDateTime.now());
         super.save(taxManagement);
-        /*if(taxManagement.getPaymentStatus().equals(PaymentStatus.DIDPAY)){
-            taxManagement.setCompany(taxManagementTO.getCompany());
-            taxManagement.setMonth(LocalDate.parse(taxManagementTO.getMonth()));
-            taxManagement.setTaxType(taxManagementTO.getTaxType());
-            taxManagement.setRate(taxManagement.getRate());
-            taxManagement.setTax(taxManagement.getTax());
-            taxManagement.setCreateTime(LocalDateTime.now());
-            super.save(taxManagement);
-        }else if(taxManagement.getPaymentStatus().equals(PaymentStatus.DUTYPAID)){
-            taxManagement.setPaymentDate(LocalDate.parse(taxManagementTO.getPaymentDate()));
-            taxManagement.setPaymentUnit(taxManagementTO.getPaymentUnit());
-
-            super.update(taxManagement);
-        }*/
-        return BeanTransform.copyProperties(taxManagement,TaxManagementBO.class);
+        return BeanTransform.copyProperties(taxManagement, TaxManagementBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public TaxManagementBO editTaxManagement(TaxManagementTO taxManagementTO) throws SerException {
+        checkAddIdentity();
         TaxManagement taxManagement = super.findById(taxManagementTO.getId());
-        BeanTransform.copyProperties(taxManagementTO,taxManagement,true);
+        BeanTransform.copyProperties(taxManagementTO, taxManagement, true);
+        taxManagement.setPaymentDate(LocalDate.parse(taxManagementTO.getPaymentDate()));
+        taxManagement.setPaymentUnit(taxManagementTO.getPaymentUnit());
+        taxManagement.setPaymentStatus(PaymentStatus.DUTYPAID);
         taxManagement.setModifyTime(LocalDateTime.now());
         super.update(taxManagement);
-        return BeanTransform.copyProperties(taxManagementTO,TaxManagementBO.class);
+        return BeanTransform.copyProperties(taxManagementTO, TaxManagementBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeTaxManagement(String id) throws SerException {
-        if(StringUtils.isBlank(id)){
+        checkAddIdentity();
+        if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
         super.remove(id);
     }
-    @Override
-    public void upload() throws SerException {
-        //todo 未做上传
-        return;
 
-    }
-    @Override
-    public List<TaxManagementBO> viewTaxManagement(TaxManagementDTO taxManagementDTO) throws SerException {
+    public void viewTaxManagement(TaxManagementDTO taxManagementDTO) throws SerException {
         /**
          * 公司
          */
-        if(StringUtils.isNotBlank(taxManagementDTO.getCompany())){
-            taxManagementDTO.getConditions().add(Restrict.eq("company",taxManagementDTO.getCompany()));
+        if (StringUtils.isNotBlank(taxManagementDTO.getCompany())) {
+            taxManagementDTO.getConditions().add(Restrict.eq("company", taxManagementDTO.getCompany()));
         }
         /**
          * 所属月份
          */
-        if(StringUtils.isNotBlank(taxManagementDTO.getMonth())){
-            taxManagementDTO.getConditions().add(Restrict.eq("month",taxManagementDTO.getMonth()));
+        if (StringUtils.isNotBlank(taxManagementDTO.getMonth())) {
+            taxManagementDTO.getConditions().add(Restrict.eq("month", taxManagementDTO.getMonth()));
         }
         /**
          * 税种
          */
-        if(StringUtils.isNotBlank(taxManagementDTO.getTaxType())){
-            taxManagementDTO.getConditions().add(Restrict.eq("taxType",taxManagementDTO.getTaxType()));
+        if (StringUtils.isNotBlank(taxManagementDTO.getTaxType())) {
+            taxManagementDTO.getConditions().add(Restrict.eq("taxType", taxManagementDTO.getTaxType()));
         }
-        List<TaxManagement> taxManagements = super.findByPage(taxManagementDTO);
-        List<TaxManagementBO> taxManagementBOS = BeanTransform.copyProperties(taxManagements,TaxManagementBO.class);
-        return taxManagementBOS;
-
     }
+
     @Override
-    public List<TaxCollectBO> collectTaxManagement(String []  company) throws SerException {
+    public List<TaxCollectBO> collectTaxManagement(String[] company) throws SerException {
         if (company == null || company.length <= 0) {
             throw new SerException("汇总失败，请选择地区");
         }
         String[] companyTemp = new String[company.length];
-        for(int i = 0;i<company.length;i++){
-            companyTemp[i] = "'"+company[i]+"'";
+        for (int i = 0; i < company.length; i++) {
+            companyTemp[i] = "'" + company[i] + "'";
         }
         String companyStr = StringUtils.join(companyTemp, ",");
 
@@ -147,16 +316,17 @@ public class TaxManagementSerImpl extends ServiceImpl<TaxManagement, TaxManageme
         sb.append(" tax AS tax FROM foreigntax_taxmanagement a WHERE company IN (%s) ");
         sb.append(" GROUP BY month,taxType,rate,tax,company ORDER BY company)A ");
         String sql = sb.toString();
-        sql = String.format(sql, companyStr,companyStr);
-        String [] fields = new String[]{"company","month","taxType","rate","tax"};
-        List<TaxCollectBO> taxCollectBOS = super.findBySql(sql,TaxCollectBO.class,fields);
+        sql = String.format(sql, companyStr, companyStr);
+        String[] fields = new String[]{"company", "month", "taxType", "rate", "tax"};
+        List<TaxCollectBO> taxCollectBOS = super.findBySql(sql, TaxCollectBO.class, fields);
         return taxCollectBOS;
 
     }
+
     @Override
     public List<String> getCompany() throws SerException {
-        String [] fields = new String[]{"company"};
-        List<TaxManagementBO> taxManagementBOS = super.findBySql("select distinct company from foreigntax_taxmanagement group by company order by company asc ",TaxManagementBO.class,fields);
+        String[] fields = new String[]{"company"};
+        List<TaxManagementBO> taxManagementBOS = super.findBySql("select distinct company from foreigntax_taxmanagement group by company order by company asc ", TaxManagementBO.class, fields);
 
         List<String> companyList = taxManagementBOS.stream().map(TaxManagementBO::getCompany)
                 .filter(company -> (StringUtils.isNotBlank(company))).distinct().collect(Collectors.toList());
@@ -165,59 +335,6 @@ public class TaxManagementSerImpl extends ServiceImpl<TaxManagement, TaxManageme
         return companyList;
     }
 
-    /*@Override
-    public List<TaxCollectBO> collectTaxManagement(CollectTo to) throws SerException {
-        List<TaxManagement> list = this.getListByFilter(to).stream()
-                .sorted(Comparator.comparing(TaxManagement::getCompany)
-                .thenComparing(TaxManagement::getTaxType)
-                .thenComparing(TaxManagement::getMonth))
-                .collect(Collectors.toList());
-        List<TaxCollectBO> taxCollectBOS = new ArrayList<>();
-        String company = "",taxType = "",month = "";
-        for(TaxManagement taxManagement:list)
-            if(!taxManagement.getCompany().equals(company) || !taxManagement.getTaxType().equals(taxType)
-                    || taxManagement.getMonth().equals(month)){
-                company = taxManagement.getCompany();
-                taxType = taxManagement.getTaxType();
-                month  = String.valueOf(taxManagement.getMonth());
-                TaxCollectBO taxCollectBO = BeanTransform.copyProperties(taxManagement,TaxCollectBO.class,true);
-                List<TaxManagement> taxManagements = list.stream()
-                        .filter(d -> d.getCompany().equals(taxManagement.getCompany()) && d.getTaxType().equals(taxManagement.getTaxType())
-                                && d.getMonth().equals(taxManagement.getMonth()))
-                        .collect(Collectors.toList());
-                taxCollectBO.setRate(taxManagement.getRate());
-                taxCollectBO.setTax(taxManagements.stream().mapToDouble(TaxManagement::getTax).sum());
-                *//*taxCollectBO.setPaymentStatus(taxManagement.getPaymentStatus());
-                taxCollectBO.setPaymentDate(String.valueOf(taxManagement.getPaymentDate()));
-                taxCollectBO.setPaymentUnit(taxManagement.getPaymentUnit());*//*
-                taxCollectBOS.add(taxCollectBO);
-            }
-
-
-        return taxCollectBOS;
-
-    }
-    *//**
-     * 根据过滤条件传获取数据
-     *
-     * @param to 过滤条件传输对象
-     * @return
-     * @throws SerException
-     */
-    /**private List<TaxManagement> getListByFilter(CollectTo to) throws SerException {
-        TaxManagementDTO dto = new TaxManagementDTO();
-        if (StringUtils.isNotBlank(to.getCompany())){
-            dto.getConditions().add(Restrict.eq("company", to.getCompany()));
-        }
-        if (StringUtils.isNotBlank(to.getTaxType())) {
-            dto.getConditions().add(Restrict.eq("taxType", to.getTaxType()));
-        }
-        if (StringUtils.isNotBlank(to.getMonth())) {
-            dto.getConditions().add(Restrict.eq("month", to.getMonth()));
-        }
-        return super.findByCis(dto);
-    }
-**/
     @Override
     public List<TaxManagementBO> listByCompany(String company, String monthStart, String monthEnd) throws SerException {
         TaxManagementDTO dto = new TaxManagementDTO();
@@ -228,6 +345,6 @@ public class TaxManagementSerImpl extends ServiceImpl<TaxManagement, TaxManageme
             dto.getConditions().add(Restrict.between("month", con));
         }
         List<TaxManagement> list = super.findByCis(dto);
-        return BeanTransform.copyProperties( list , TaxManagementBO.class);
+        return BeanTransform.copyProperties(list, TaxManagementBO.class);
     }
 }

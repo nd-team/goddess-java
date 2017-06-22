@@ -56,6 +56,15 @@ public class TaxManagementVO {
      * 付款单位
      */
     private String paymentUnit;
+    /**
+     * 创建时间
+     */
+    private String createTime;
+
+    /**
+     * 修改时间
+     */
+    private String modifyTime;
 
 
     public String getId() {
@@ -128,5 +137,21 @@ public class TaxManagementVO {
 
     public void setPaymentUnit(String paymentUnit) {
         this.paymentUnit = paymentUnit;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

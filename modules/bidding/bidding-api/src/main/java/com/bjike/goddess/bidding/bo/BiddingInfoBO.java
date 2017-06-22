@@ -15,7 +15,10 @@ import com.bjike.goddess.common.api.type.Status;
  * @Copy: [ com.bjike ]
  */
 public class BiddingInfoBO extends BaseBO {
-
+    /**
+     * 编号
+     */
+    private String biddingNumber;
     /**
      * 网站名称
      */
@@ -31,7 +34,6 @@ public class BiddingInfoBO extends BaseBO {
      */
     private BiddingType biddingType;
 
-
     /**
      * 业务类型
      */
@@ -46,11 +48,6 @@ public class BiddingInfoBO extends BaseBO {
      * 标书模块
      */
     private String tenderModule;
-
-    /**
-     * 招标编号
-     */
-    private String tenderNumber;
 
     /**
      * 项目名称
@@ -142,6 +139,14 @@ public class BiddingInfoBO extends BaseBO {
      */
     private String remark;
 
+    public String getBiddingNumber() {
+        return biddingNumber;
+    }
+
+    public void setBiddingNumber(String biddingNumber) {
+        this.biddingNumber = biddingNumber;
+    }
+
     public String getWebName() {
         return webName;
     }
@@ -190,13 +195,6 @@ public class BiddingInfoBO extends BaseBO {
         this.tenderModule = tenderModule;
     }
 
-    public String getTenderNumber() {
-        return tenderNumber;
-    }
-
-    public void setTenderNumber(String tenderNumber) {
-        this.tenderNumber = tenderNumber;
-    }
 
     public String getProjectName() {
         return projectName;

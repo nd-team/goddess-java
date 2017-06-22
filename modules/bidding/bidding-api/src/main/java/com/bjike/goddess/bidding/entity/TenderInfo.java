@@ -19,7 +19,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "bidding_tenderinfo")
 public class TenderInfo extends BaseEntity {
-
+    /**
+     * 编号
+     */
+    @Column(name = "biddingNumber", columnDefinition = "VARCHAR(255)   COMMENT '招标编号'")
+    private String biddingNumber;
     /**
      * 项目名称
      */
@@ -104,6 +108,13 @@ public class TenderInfo extends BaseEntity {
     @Column(name = "economicVolume", columnDefinition = "VARCHAR(255)   COMMENT '经济分册'")
     private String economicVolume;
 
+    public String getBiddingNumber() {
+        return biddingNumber;
+    }
+
+    public void setBiddingNumber(String biddingNumber) {
+        this.biddingNumber = biddingNumber;
+    }
 
     public String getProjectName() {
         return projectName;

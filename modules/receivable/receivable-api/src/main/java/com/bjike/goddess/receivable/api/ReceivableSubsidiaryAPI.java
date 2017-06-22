@@ -3,8 +3,8 @@ package com.bjike.goddess.receivable.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.receivable.bo.*;
 import com.bjike.goddess.receivable.dto.ReceivableSubsidiaryDTO;
-import com.bjike.goddess.receivable.entity.Contractor;
 import com.bjike.goddess.receivable.entity.ReceivableSubsidiary;
+import com.bjike.goddess.receivable.to.CollectCompareTO;
 import com.bjike.goddess.receivable.to.ProgressTO;
 import com.bjike.goddess.receivable.to.ReceivableSubsidiaryTO;
 
@@ -35,6 +35,7 @@ public interface ReceivableSubsidiaryAPI {
     default ReceivableSubsidiaryBO getOne(String id) throws SerException {
         return null;
     }
+
     /**
      * 获取回款明细
      *
@@ -76,41 +77,52 @@ public interface ReceivableSubsidiaryAPI {
     default void removeReceivableSubsidiary(String id) throws SerException {
 
     }
+
     /**
      * 签字审批时间
+     *
      * @param auditTime
      */
-    default List<String> auditTime(String auditTime) throws SerException{
+    default List<String> auditTime(String auditTime) throws SerException {
         return null;
     }
+
     /**
      * ERP结算审批时间
+     *
      * @param countTime
      */
-    default List<String> countTime(String countTime) throws SerException{
+    default List<String> countTime(String countTime) throws SerException {
         return null;
     }
+
     /**
      * 发票审核时间
+     *
      * @param billTime
      */
-    default List<String> billTime(String billTime) throws SerException{
-        return  null;
-    }
-    /**
-     * 预计支付时间
-     * @param planTime
-     */
-    default String planTime(String planTime)throws SerException{
+    default List<String> billTime(String billTime) throws SerException {
         return null;
     }
+
+    /**
+     * 预计支付时间
+     *
+     * @param planTime
+     */
+    default String planTime(String planTime) throws SerException {
+        return null;
+    }
+
     /**
      * 时间
+     *
      * @param receivableSubsidiary
      */
-    default void editTime(ReceivableSubsidiary receivableSubsidiary, String auditStatusStr, String countStatusStr, String billStatusStr, String planStatusStr)throws SerException{
+    default void editTime(ReceivableSubsidiary receivableSubsidiary, String auditStatusStr, String countStatusStr, String billStatusStr, String planStatusStr) throws SerException {
 
     }
+
     /**
      * 结算进度
      *
@@ -127,7 +139,7 @@ public interface ReceivableSubsidiaryAPI {
      *
      * @throws SerException
      */
-    default String exportExcel(String area,String start,String end) throws SerException {
+    default String exportExcel(String area, String start, String end) throws SerException {
         return null;
     }
 
@@ -139,6 +151,7 @@ public interface ReceivableSubsidiaryAPI {
         return;
 
     }
+
     /**
      * 获取地区
      *
@@ -147,6 +160,7 @@ public interface ReceivableSubsidiaryAPI {
     default List<String> getArea() throws SerException {
         return null;
     }
+
     /**
      * 获取项目名称
      *
@@ -155,6 +169,7 @@ public interface ReceivableSubsidiaryAPI {
     default List<String> getInnerName() throws SerException {
         return null;
     }
+
     /**
      * 获取总包单位
      *
@@ -163,6 +178,7 @@ public interface ReceivableSubsidiaryAPI {
     default List<String> getContractor() throws SerException {
         return null;
     }
+
     /**
      * 地区汇总
      *
@@ -173,6 +189,7 @@ public interface ReceivableSubsidiaryAPI {
     default List<CollectAreaBO> collectArea(String[] areas) throws SerException {
         return null;
     }
+
     /**
      * 项目名称汇总
      *
@@ -183,6 +200,7 @@ public interface ReceivableSubsidiaryAPI {
     default List<CollectProjectNameBO> collectInnerName(String[] innerNames) throws SerException {
         return null;
     }
+
     /**
      * 总包单位汇总
      *
@@ -226,6 +244,7 @@ public interface ReceivableSubsidiaryAPI {
     default List<CollectContractorDetailBO> collectContractorDetail(String[] contractors) throws SerException {
         return null;
     }
+
     /**
      * id获取汇总详情
      *
@@ -239,13 +258,14 @@ public interface ReceivableSubsidiaryAPI {
     /**
      * 对比汇总
      *
-     * @param receivableSubsidiaryTO 对比汇总数据to
-     * @return class receivableSubsidiaryBO
+     * @param to 对比汇总数据to
+     * @return class CollectCompareBO
      * @throws SerException
      */
-    default List<ReceivableSubsidiaryBO> collectCompare(ReceivableSubsidiaryTO receivableSubsidiaryTO) throws SerException {
+    default List<CollectCompareBO> collectCompare(CollectCompareTO to) throws SerException {
         return null;
     }
+
     /**
      * 发送邮件
      *

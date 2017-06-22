@@ -123,7 +123,7 @@ public class BiddingInfoExport {
      * 状态
      */
     @ExcelHeader(name = "状态", notNull = true)
-    private Status status;
+    private String status;
 
     /**
      * 购买标书时间
@@ -304,11 +304,11 @@ public class BiddingInfoExport {
         this.registrationInfo = registrationInfo;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

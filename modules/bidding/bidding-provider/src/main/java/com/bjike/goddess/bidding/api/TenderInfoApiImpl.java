@@ -60,7 +60,6 @@ public class TenderInfoApiImpl implements TenderInfoAPI {
     public List<TenderInfoBO> findListTenderInfo(TenderInfoDTO tenderInfoDTO) throws SerException {
         return tenderInfoSer.findListTenderInfo(tenderInfoDTO);
     }
-
     @Override
     public byte[] exportExcel(TenderInfoDTO dto) throws SerException{
         return tenderInfoSer.exportExcel(dto);

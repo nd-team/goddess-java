@@ -37,6 +37,15 @@ public class AccountInfoManagementTO extends BaseTO {
      * 跟进人
      */
     private String followUpPeople;
+    /**
+     * 创建时间
+     */
+    private String createTime;
+
+    /**
+     * 修改时间
+     */
+    private String modifyTime;
 
 
     public String getCompany() {
@@ -69,5 +78,21 @@ public class AccountInfoManagementTO extends BaseTO {
 
     public void setFollowUpPeople(String followUpPeople) {
         this.followUpPeople = followUpPeople;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

@@ -134,7 +134,7 @@ public class CallInfoSerImpl extends ServiceImpl<CallInfo, CallInfoDTO> implemen
                 CallInfo temp = callInfos.get(i);
                 String temp_aName = temp.getInvestor();
                 String temp_bName = temp.getInvestObject();
-                if(temp == null){
+                if(temp != null){
                 if (aName.equals(temp_aName) && bName.equals(temp_bName) && i == 0) {
                     accMoney = temp.getThisInvestMoney() == null ? 0d : temp.getThisInvestMoney();
                 } else if (aName.equals(temp_aName) && bName.equals(temp_bName) && i != 0) {

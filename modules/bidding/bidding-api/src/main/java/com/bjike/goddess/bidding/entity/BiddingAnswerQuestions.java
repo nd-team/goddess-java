@@ -21,7 +21,11 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "bidding_biddinganswerquestions")
 public class BiddingAnswerQuestions extends BaseEntity {
-
+    /**
+     * 编号
+     */
+    @Column(name = "biddingNumber", columnDefinition = "VARCHAR(255)   COMMENT '招标编号'")
+    private String biddingNumber;
     /**
      * 项目名称
      */
@@ -58,6 +62,13 @@ public class BiddingAnswerQuestions extends BaseEntity {
     @Column(name = "reply", columnDefinition = "VARCHAR(255)   COMMENT '回复'")
     private String reply;
 
+    public String getBiddingNumber() {
+        return biddingNumber;
+    }
+
+    public void setBiddingNumber(String biddingNumber) {
+        this.biddingNumber = biddingNumber;
+    }
 
     public String getProjectName() {
         return projectName;
