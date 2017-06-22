@@ -2,6 +2,7 @@ package com.bjike.goddess.businessevaluate.api;
 
 import com.bjike.goddess.businessevaluate.bo.ProblemDisposeBO;
 import com.bjike.goddess.businessevaluate.dto.ProblemDisposeDTO;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.businessevaluate.to.ProblemDisposeTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -64,4 +65,6 @@ public interface ProblemDisposeAPI {
      * @return 项目问题受理和处理
      */
     ProblemDisposeBO findById(String id) throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO to) throws SerException;
 }

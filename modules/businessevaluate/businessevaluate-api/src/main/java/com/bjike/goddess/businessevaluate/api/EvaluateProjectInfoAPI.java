@@ -4,6 +4,8 @@ import com.bjike.goddess.businessevaluate.bo.EvaluateProjectInfoBO;
 import com.bjike.goddess.businessevaluate.bo.ProjectProfitRateBO;
 import com.bjike.goddess.businessevaluate.dto.EvaluateProjectInfoDTO;
 import com.bjike.goddess.businessevaluate.to.EvaluateProjectInfoTO;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
+import com.bjike.goddess.businessevaluate.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -105,4 +107,7 @@ public interface EvaluateProjectInfoAPI {
      */
     List<EvaluateProjectInfoBO> findAllProejct() throws SerException;
 
+    List<SonPermissionObject> sonPermission() throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 }

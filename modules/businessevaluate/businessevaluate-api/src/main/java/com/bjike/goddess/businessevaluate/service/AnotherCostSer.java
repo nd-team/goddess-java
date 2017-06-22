@@ -4,6 +4,7 @@ import com.bjike.goddess.businessevaluate.bo.AnotherCostBO;
 import com.bjike.goddess.businessevaluate.dto.AnotherCostDTO;
 import com.bjike.goddess.businessevaluate.entity.AnotherCost;
 import com.bjike.goddess.businessevaluate.to.AnotherCostTO;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -43,4 +44,8 @@ public interface AnotherCostSer extends Ser<AnotherCost, AnotherCostDTO> {
      * @return 其它成本结果集
      */
     List<AnotherCostBO> pageList(AnotherCostDTO dto) throws SerException;
+
+    Boolean sonPermission() throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO to) throws SerException;
 }

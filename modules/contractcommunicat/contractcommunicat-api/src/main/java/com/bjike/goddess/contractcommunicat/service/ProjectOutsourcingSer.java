@@ -7,7 +7,9 @@ import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectOutsourcingDTO;
 import com.bjike.goddess.contractcommunicat.entity.ProjectOutsourcing;
 import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
+import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
+import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
 
 import java.util.List;
@@ -81,4 +83,10 @@ public interface ProjectOutsourcingSer extends Ser<ProjectOutsourcing, ProjectOu
     byte[] exportExcel(String contractInProject, String startDate, String endDate) throws SerException;
 
     List<ProjectOutsourcingBO> prjects() throws SerException;
+
+    List<SonPermissionObject> sonPermission() throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO to) throws SerException;
+
+    byte[] exportExcelModule() throws SerException;
 }

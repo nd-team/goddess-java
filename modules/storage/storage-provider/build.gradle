@@ -36,7 +36,7 @@ dependencies {
     }
     compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
     compile group: 'org.mortbay.jetty', name: 'jetty', version: "$jetty_version"
-    compile group: 'net.coobird', name: 'thumbnailator', version: '0.4.8'
+    compile group: 'net.coobird', name: 'thumbnailator', version: "$thumbnailator_version"
 
 }
 

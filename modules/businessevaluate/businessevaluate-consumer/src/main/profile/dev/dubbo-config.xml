@@ -66,5 +66,7 @@
 
 	<dubbo:reference id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.businessevaluate.api.CusPermissionOperateAPI" />
 
+	<dubbo:reference id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+
 
 </beans>

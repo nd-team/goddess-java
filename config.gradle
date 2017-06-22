@@ -85,5 +85,8 @@ allprojects {
         javax_el_version = '2.2.6'
         hessian_version = '4.0.33'
         jetty_version = '7.0.0.pre5'
+        poi_version = '3.16'
+        httpclient_version= '4.5.3'
+        thumbnailator_version= '0.4.8'
     }
 }

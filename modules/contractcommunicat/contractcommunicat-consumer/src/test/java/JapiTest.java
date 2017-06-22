@@ -24,6 +24,7 @@ public class JapiTest {
                 "modules/contractcommunicat/contractcommunicat-api",
                 "modules/user/user-api",
                 "modules/organize/organize-api",
+                "modules/storage/storage-api",
                 "common/common-api"
         });
 //        JapiClient.saveHistory(false);

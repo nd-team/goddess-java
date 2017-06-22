@@ -5,10 +5,15 @@ import com.bjike.goddess.businessevaluate.bo.SwapMonthBO;
 import com.bjike.goddess.businessevaluate.dto.AbilityGrowUpDTO;
 import com.bjike.goddess.businessevaluate.entity.AbilityGrowUp;
 import com.bjike.goddess.businessevaluate.entity.EvaluateProjectInfo;
+import com.bjike.goddess.businessevaluate.enums.GuideAddrStatus;
 import com.bjike.goddess.businessevaluate.to.AbilityGrowUpTO;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -36,9 +41,10 @@ public class AbilityGrowUpSerImpl extends ServiceImpl<AbilityGrowUp, AbilityGrow
 
     @Autowired
     private EvaluateProjectInfoSer evaluateProjectInfoSer;
-
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private UserAPI userAPI;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
@@ -98,6 +104,63 @@ public class AbilityGrowUpSerImpl extends ServiceImpl<AbilityGrowUp, AbilityGrow
         return boList;
     }
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = to.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = sonPermission();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（部门级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
     /**
      * 计算月差额（对于一月差额，需要考虑项目周期是否需要减去上一年12月）
      *
@@ -120,8 +183,8 @@ public class AbilityGrowUpSerImpl extends ServiceImpl<AbilityGrowUp, AbilityGrow
         Double gap8 = bo.getAugustMoney() - bo.getJulyMoney();
         Double gap9 = bo.getSeptemberMoney() - bo.getAugustMoney();
         Double gap10 = bo.getOctoberMoney() - bo.getSeptemberMoney();
-        Double gap11 = bo.getNovemberMoney() - bo.getNovemberMoney();
-        Double gap12 = bo.getDecemberMoney() - bo.getDecemberMoney();
+        Double gap11 = bo.getNovemberMoney() - bo.getOctoberMoney();
+        Double gap12 = bo.getDecemberMoney() - bo.getNovemberMoney();
 
         bo.setJanuaryGapMoney(gap1);
         bo.setFebruaryGapMoney(gap2);
@@ -151,7 +214,7 @@ public class AbilityGrowUpSerImpl extends ServiceImpl<AbilityGrowUp, AbilityGrow
         bos.add(new SwapMonthBO("十二月", gap12, bo.getDecemberMoney()));
         swapSpeed(bo, bos);
 
-        //添加易于分比较各月份金额大小
+        //添加一月份，比较各月份金额大小
         bos.add(new SwapMonthBO("一月", gap1, bo.getJanuaryMoney()));
         swapSize(bo, bos);
 
@@ -165,11 +228,55 @@ public class AbilityGrowUpSerImpl extends ServiceImpl<AbilityGrowUp, AbilityGrow
         Collections.sort(bos, new Comparator<SwapMonthBO>() {
             @Override
             public int compare(SwapMonthBO bo1, SwapMonthBO bo2) {
+
                 return bo1.getGapMoney().compareTo(bo2.getGapMoney());
             }
         });
-        bo.setSlowMonth(bos.get(0).getMonth());
-        bo.setFastMonth(bos.get(bos.size() - 1).getMonth());
+
+        List<String> slowMonthStr = new ArrayList<String>();
+        List<String> fastMonthStr = new ArrayList<String>();
+
+        Double slowMoney = bos.get(0).getGapMoney();
+        Double fastMoney = bos.get(0).getGapMoney();
+
+        for (SwapMonthBO tempBO : bos) {
+            if (tempBO.getGapMoney().doubleValue() == slowMoney) {
+                slowMonthStr.add(tempBO.getMonth());
+            }
+        }
+        for (SwapMonthBO tempBO : bos) {
+            if (tempBO.getGapMoney().doubleValue() == fastMoney) {
+                fastMonthStr.add(tempBO.getMonth());
+            }
+        }
+        //是否存在增速与最快相同的月份，相同都设置
+        if (!slowMonthStr.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < slowMonthStr.size(); i++) {
+                if (i == slowMonthStr.size() - 1) {
+                    sb.append(slowMonthStr.get(i));
+                } else {
+                    sb.append(slowMonthStr.get(i) + "、");
+                }
+            }
+            bo.setSlowMonth(sb.toString());
+        } else {
+            bo.setSlowMonth(bos.get(0).getMonth());
+        }
+        //是否存在增速与最快相同的月份，相同都设置
+        if (!fastMonthStr.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < fastMonthStr.size(); i++) {
+                if (i == fastMonthStr.size() - 1) {
+                    sb.append(fastMonthStr.get(i));
+                } else {
+                    sb.append(fastMonthStr.get(i) + "、");
+                }
+            }
+            bo.setFastMonth(sb.toString());
+        } else {
+            bo.setFastMonth(bos.get(bos.size() - 1).getMonth());
+        }
 
         return bo;
     }

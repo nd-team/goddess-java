@@ -1,13 +1,21 @@
 package com.bjike.goddess.common.utils.token;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * ip地址转换工具
+ * ip地址工具
  *
  * @Author: [liguiqin]
  * @Date: [2016-12-27 17:02]
@@ -19,6 +27,7 @@ public class IpUtil {
 
     /**
      * 获取真实ip地址
+     *
      * @param request
      * @return
      */
@@ -52,6 +61,29 @@ public class IpUtil {
         return ipAddress;
     }
 
+    /**
+     * 获取ip地址所在城市
+     *
+     * @param ip
+     * @return
+     */
+    public static String getAddress(String ip) throws IOException {
+        String address = null;
+        String url = "http://ip.taobao.com/service/getIpInfo.php?ip=" + ip;
+        CloseableHttpClient client = HttpClients.createDefault();
+        HttpGet get = new HttpGet(url);
+        HttpResponse response = client.execute(get);
+        HttpEntity resEntity = response.getEntity();
+        if (resEntity != null) {
+            String res = EntityUtils.toString(resEntity, "UTF-8");
+            AddressResult result = JSON.parseObject(res,AddressResult.class);
+            if("0".equals(result.getCode())){
+                Address ad =  JSON.parseObject(result.getData(),Address.class);
+                return ad.getCountry()+"/"+ad.getArea()+"/"+ad.getRegion()+"/"+ad.getCity()+" "+ad.getIsp();
+            }
+        }
+        return address;
+    }
 
     public static long ipToLong(String sip) {
         long[] ip = new long[4];
@@ -79,5 +111,6 @@ public class IpUtil {
         sb.append(String.valueOf(longIp & 0x000000FF));
         return sb.toString();
     }
+
 
 }

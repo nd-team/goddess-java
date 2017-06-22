@@ -3,8 +3,10 @@ package com.bjike.goddess.businessevaluate.api;
 import com.bjike.goddess.businessevaluate.bo.ProjectAmountBO;
 import com.bjike.goddess.businessevaluate.bo.ProjectAmountInfoBO;
 import com.bjike.goddess.businessevaluate.dto.ProjectAmountDTO;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.businessevaluate.to.ProjectAmountTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.service.Ser;
 
 import java.util.List;
 
@@ -73,4 +75,6 @@ public interface ProjectAmountAPI {
      * @return 项目金额
      */
     ProjectAmountBO findById(String id) throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO to) throws SerException;
 }

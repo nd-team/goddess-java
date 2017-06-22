@@ -3,6 +3,7 @@ package com.bjike.goddess.contractcommunicat.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
@@ -11,11 +12,16 @@ import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectOutsourcingDTO;
 import com.bjike.goddess.contractcommunicat.entity.ProjectOutsourcing;
 import com.bjike.goddess.contractcommunicat.enums.CommunicateResult;
+import com.bjike.goddess.contractcommunicat.enums.GuideAddrStatus;
 import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
 import com.bjike.goddess.contractcommunicat.excel.ProjectOutsourcingExcel;
+import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.ExportExcelTO;
+import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -42,6 +48,8 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private UserAPI userAPI;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
@@ -280,6 +288,112 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
         List<ProjectOutsourcingBO> list = super.findBySql(sql, ProjectOutsourcingBO.class, new String[]{"contractInProject"});
 
         return list;
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+
+        Boolean flagAddSign = guideSeeIdentity();
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("outsource");
+        obj.setDescribesion("项目外包洽谈");
+        if (flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = to.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
+
+    @Override
+    public byte[] exportExcelModule() throws SerException {
+        Excel excel = new Excel(0, 2);
+        List<ProjectOutsourcingExcel> list = new ArrayList<ProjectOutsourcingExcel>();
+        list.add(new ProjectOutsourcingExcel());
+        byte[] bytes = ExcelUtil.clazzToExcel(list , excel);
+        return bytes;
+    }
+
+    /**
+     *  导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（部门级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
     }
 
     //设置汇总字段
