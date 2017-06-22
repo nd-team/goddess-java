@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -142,12 +143,13 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
         if (entity == null) {
             throw new SerException("该对象不存在");
         }
+        if ((entity.getHaveExamine()!=null)&&(entity.getHaveExamine())) {
+            throw new SerException("您已审批过该记录");
+        }
         if (!"已提交，待审批".equals(entity.getAduitStatus())) {
             throw new SerException("您还没提交，不能进行审批");
         }
-        if (entity.getHaveExamine()){
-            throw new SerException("您已审批过该记录");
-        }
+        entity.setAduitStatus("已审批");
         entity.setHaveExamine(true);
         entity.setExamine(name);
         entity.setExamineTime(LocalDateTime.now());
@@ -401,15 +403,17 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
                 bankRecordPageListBOs.add(bankRecordPageListBO);
             }
         }
-        for (int i = 0; i < debtorDifferBOs.size(); i++) {
-            BankRecordPageListBO bankRecordPageListBO = bankRecordPageListBOs.get(i);
-            String bankRecorId = bankRecordPageListBO.getId();
-            List<Detail> detailList = bankRecordPageListBO.getDetailList();
-            DebtorDifferBO debtorDifferBO = debtorDifferBOs.get(i);
-            debtorDifferBO.setId(bankRecorId);
-            List<com.bjike.goddess.checkfunds.beanlist.Detail> details = debtorDifferBO.getDetailList();
-            details = BeanTransform.copyProperties(detailList, com.bjike.goddess.checkfunds.beanlist.Detail.class);
-            debtorDifferBO.setDetailList(details);
+        if ((debtorDifferBOs != null) && (!debtorDifferBOs.isEmpty())) {
+            for (int i = 0; i < debtorDifferBOs.size(); i++) {
+                BankRecordPageListBO bankRecordPageListBO = bankRecordPageListBOs.get(i);
+                String bankRecorId = bankRecordPageListBO.getId();
+                List<Detail> detailList = bankRecordPageListBO.getDetailList();
+                DebtorDifferBO debtorDifferBO = debtorDifferBOs.get(i);
+                debtorDifferBO.setId(bankRecorId);
+                List<com.bjike.goddess.checkfunds.beanlist.Detail> details = debtorDifferBO.getDetailList();
+                details = BeanTransform.copyProperties(detailList, com.bjike.goddess.checkfunds.beanlist.Detail.class);
+                debtorDifferBO.setDetailList(details);
+            }
         }
         return debtorDifferBOs;
     }
@@ -433,15 +437,17 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
                 bankRecordPageListBOs.add(bankRecordPageListBO);
             }
         }
-        for (int i = 0; i < creditorDifferBOs.size(); i++) {
-            BankRecordPageListBO bankRecordPageListBO = bankRecordPageListBOs.get(i);
-            String bankRecorId = bankRecordPageListBO.getId();
-            List<Detail> detailList = bankRecordPageListBO.getDetailList();
-            CreditorDifferBO creditorDifferBO = creditorDifferBOs.get(i);
-            creditorDifferBO.setId(bankRecorId);
-            List<com.bjike.goddess.checkfunds.beanlist.Detail> details = creditorDifferBO.getDetailList();
-            details = BeanTransform.copyProperties(detailList, com.bjike.goddess.checkfunds.beanlist.Detail.class);
-            creditorDifferBO.setDetailList(details);
+        if ((creditorDifferBOs != null) && (!creditorDifferBOs.isEmpty())) {
+            for (int i = 0; i < creditorDifferBOs.size(); i++) {
+                BankRecordPageListBO bankRecordPageListBO = bankRecordPageListBOs.get(i);
+                String bankRecorId = bankRecordPageListBO.getId();
+                List<Detail> detailList = bankRecordPageListBO.getDetailList();
+                CreditorDifferBO creditorDifferBO = creditorDifferBOs.get(i);
+                creditorDifferBO.setId(bankRecorId);
+                List<com.bjike.goddess.checkfunds.beanlist.Detail> details = creditorDifferBO.getDetailList();
+                details = BeanTransform.copyProperties(detailList, com.bjike.goddess.checkfunds.beanlist.Detail.class);
+                creditorDifferBO.setDetailList(details);
+            }
         }
         return creditorDifferBOs;
     }

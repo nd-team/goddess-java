@@ -3,7 +3,9 @@ package com.bjike.goddess.accruedtax.api;
 import com.bjike.goddess.accruedtax.bo.PayTaxBO;
 import com.bjike.goddess.accruedtax.dto.PayTaxDTO;
 import com.bjike.goddess.accruedtax.service.PayTaxSer;
+import com.bjike.goddess.accruedtax.to.GuidePermissionTO;
 import com.bjike.goddess.accruedtax.to.PayTaxTO;
+import com.bjike.goddess.accruedtax.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -78,5 +80,15 @@ public class PayTaxApiImpl implements PayTaxAPI {
     @Override
     public List<String> listTaxType() throws SerException {
         return payTaxSer.listTaxType();
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return payTaxSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return payTaxSer.guidePermission(guidePermissionTO);
     }
 }

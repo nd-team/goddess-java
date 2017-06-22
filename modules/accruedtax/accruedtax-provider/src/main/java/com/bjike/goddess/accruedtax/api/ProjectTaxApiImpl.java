@@ -3,6 +3,7 @@ package com.bjike.goddess.accruedtax.api;
 import com.bjike.goddess.accruedtax.bo.ProjectTaxBO;
 import com.bjike.goddess.accruedtax.dto.ProjectTaxDTO;
 import com.bjike.goddess.accruedtax.service.ProjectTaxSer;
+import com.bjike.goddess.accruedtax.to.GuidePermissionTO;
 import com.bjike.goddess.accruedtax.to.ProjectTaxTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,4 +77,13 @@ public class ProjectTaxApiImpl implements ProjectTaxAPI {
         return projectTaxSer.listTaxType();
     }
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return projectTaxSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return projectTaxSer.guidePermission(guidePermissionTO);
+    }
 }

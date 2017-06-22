@@ -5,6 +5,8 @@ import com.bjike.goddess.incomecheck.bo.CheckIncomeBO;
 import com.bjike.goddess.incomecheck.dto.CheckIncomeDTO;
 import com.bjike.goddess.incomecheck.service.CheckIncomeSer;
 import com.bjike.goddess.incomecheck.to.CheckIncomeTO;
+import com.bjike.goddess.incomecheck.to.GuidePermissionTO;
+import com.bjike.goddess.incomecheck.vo.SonPermissionObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -99,5 +101,15 @@ public class CheckIncomeApiImpl implements CheckIncomeAPI {
     @Override
     public List<String> projectList() throws SerException {
         return checkIncomeSer.projectList();
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return checkIncomeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return checkIncomeSer.guidePermission(guidePermissionTO);
     }
 }
