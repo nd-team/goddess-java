@@ -1,6 +1,7 @@
 package com.bjike.goddess.customer.service;
 
 import com.alibaba.fastjson.JSON;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -9,9 +10,17 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.customer.bo.CusEmailBO;
 import com.bjike.goddess.customer.dto.CusEmailDTO;
 import com.bjike.goddess.customer.entity.CusEmail;
+import com.bjike.goddess.customer.enums.CustomerSendUnit;
 import com.bjike.goddess.customer.enums.CustomerStatus;
 import com.bjike.goddess.customer.enums.CustomerType;
+import com.bjike.goddess.customer.enums.GuideAddrStatus;
 import com.bjike.goddess.customer.to.CusEmailTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
+import com.bjike.goddess.message.api.MessageAPI;
+import com.bjike.goddess.message.enums.MsgType;
+import com.bjike.goddess.message.enums.RangeType;
+import com.bjike.goddess.message.enums.SendType;
+import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -24,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 /**
@@ -47,6 +57,10 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
     private CustomerLevelSer customerLevelAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private CusEmailSer cusEmailSer;
+    @Autowired
+    private MessageAPI messageAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -85,6 +99,89 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
         }
         RpcTransmit.transmitUserToken(userToken);
 
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity( String flagId ) throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission(flagId);
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity( String flagId ) throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission(flagId );
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity("1" );
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity( "5"  );
+        if( flagSee || flagAdd ){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity( "1" );
+                break;
+            case ADD:
+                flag = guideAddIdentity( "5" );
+                break;
+            case EDIT:
+                flag = guideAddIdentity( "5" );
+                break;
+            case DELETE:
+                flag = guideAddIdentity( "5" );
+                break;
+            case CONGEL:
+                flag = guideAddIdentity( "5" );
+                break;
+            case THAW:
+                flag = guideAddIdentity( "5");
+                break;
+            case COLLECT:
+                flag = guideAddIdentity( "5" );
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
     }
 
     @Override
@@ -588,6 +685,179 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
             }
         });
         return mapList;
+    }
+
+
+
+    @Override
+    public void checkSendEmail() throws SerException {
+        List<CusEmail> allEmails = new ArrayList<>();
+        List<CusEmail> baseEmails = new ArrayList<>();
+
+        //检测有哪些需要发送的
+        //上次发送时间
+        //现在时间
+        //发送间隔
+        //发送单位
+        //发送类型
+        //发送对象
+        CusEmailDTO dto = new CusEmailDTO();
+        dto.getConditions().add(Restrict.eq("status",Status.THAW));
+        List<CusEmail> list = super.findByCis(dto);
+        LocalDateTime nowTime = LocalDateTime.now();
+        for (CusEmail str : list) {
+            //上次发送时间
+            LocalDateTime lastTime = str.getLastSendTime();
+            //发送间隔
+            Double sendNum = str.getSendNum();
+            //发送单位
+            CustomerSendUnit collectSendUnit = str.getCustomerSendUnit();
+            //发送对象;隔开
+            String sendObject = str.getSendObject();
+
+            Long mis = nowTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                    - lastTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            Double temp_sendNum = 0d;
+            Boolean flag = false;
+            switch (collectSendUnit) {
+                case MINUTE:
+                    //毫秒数
+                    temp_sendNum = sendNum * 60 * 1000;
+                    if (temp_sendNum <= mis.doubleValue()) {
+                        flag = true;
+                    }
+                    break;
+                case HOURS:
+                    temp_sendNum = sendNum * 60 * 60 * 1000;
+                    if (temp_sendNum <= mis.doubleValue()) {
+                        flag = true;
+                    }
+                    break;
+                case DAY:
+                    temp_sendNum = sendNum * 24 * 60 * 60 * 1000;
+                    if (temp_sendNum <= mis.doubleValue()) {
+                        flag = true;
+                    }
+                    break;
+                case WEEK:
+                    temp_sendNum = sendNum * 7 * 24 * 60 * 60 * 1000;
+                    if (temp_sendNum <= mis.doubleValue()) {
+                        flag = true;
+                    }
+                    break;
+                case MONTH:
+                    if (nowTime.minusMonths(sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(sendNum.longValue()).isAfter(lastTime)) {
+                        flag = true;
+                    }
+                    break;
+                case QUARTER:
+                    if (nowTime.minusMonths(3*sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(3*sendNum.longValue()).isAfter(lastTime)) {
+                        flag = true;
+                    }
+                    break;
+                case YEAR:
+                    if (nowTime.minusYears(sendNum.longValue()).isEqual(lastTime) || nowTime.minusYears(sendNum.longValue()).isAfter(lastTime)) {
+                        flag = true;
+                    }
+                    break;
+            }
+
+                baseEmails.add(str);
+                allEmails.add(str);
+
+
+
+        }
+
+        //调用发邮件
+        allEmails = sendObject(baseEmails);
+
+        //修改上次发送时间
+        super.update(allEmails);
+
+    }
+
+    private List<CusEmail> sendObject(List<CusEmail> baseEmails ) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        List<CusEmail> allEmails = new ArrayList<>();
+        //客户基本信息汇总
+        if (baseEmails != null && baseEmails.size() > 0) {
+            for (CusEmail sign : baseEmails) {
+                String[] condis = sign.getWork().split(";");
+                List<CusEmailBO> signBOList = cusEmailSer.collectCusEmail(condis);
+                //拼表格
+                String content = htmlSign(signBOList);
+
+                MessageTO messageTO = new MessageTO();
+                messageTO.setContent( content );
+                messageTO.setTitle("定时发送商务合同签订与立项汇总");
+                messageTO.setMsgType(MsgType.SYS);
+                messageTO.setSendType( SendType.EMAIL);
+                messageTO.setRangeType( RangeType.SPECIFIED);
+                //定时发送必须写
+                messageTO.setSenderId("SYSTEM");
+                messageTO.setSenderName("SYSTEM");
+
+                messageTO.setReceivers(sign.getSendObject().split(";") );
+                messageAPI.send(  messageTO );
+
+                sign.setLastSendTime(LocalDateTime.now());
+                sign.setModifyTime(LocalDateTime.now());
+                allEmails.add(sign);
+            }
+        }
+
+        return allEmails;
+
+    }
+
+
+    private String htmlSign(List<CusEmailBO> signBOList) throws SerException {
+        StringBuffer sb = new StringBuffer("");
+        if (signBOList != null && signBOList.size() > 0) {
+            sb = new StringBuffer("<h4>客户基本信息汇总:</h4>");
+            sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
+            //拼表头
+            CusEmailBO title = signBOList.get(signBOList.size() - 1);
+            sb.append("<tr>");
+            sb.append("<td>行业</td>");
+            for (Map<String, String> map : title.getAreaMap()) {
+                sb.append("<td>" + map.get("remark") + "</td>");
+            }
+            for (Map<String, String> map : title.getCusStatusMap()) {
+                sb.append("<td>" + map.get("remark") + "</td>");
+            }
+            for (Map<String, String> map : title.getCusTypeMap()) {
+                sb.append("<td>" + map.get("remark") + "</td>");
+            }
+            for (Map<String, String> map : title.getLevelMap()) {
+                sb.append("<td>" + map.get("remark") + "</td>");
+            }
+            sb.append("<tr>");
+
+            //拼body部分
+            for (CusEmailBO bo : signBOList) {
+                sb.append("<tr>");
+                sb.append("<td>" + bo.getWork() + "</td>");
+                for (Map<String, String> map : bo.getAreaMap()) {
+                    sb.append("<td>" + map.get("count") + "</td>");
+                }
+                for (Map<String, String> map : bo.getCusStatusMap()) {
+                    sb.append("<td>" + map.get("count") + "</td>");
+                }
+                for (Map<String, String> map : bo.getCusTypeMap()) {
+                    sb.append("<td>" + map.get("count") + "</td>");
+                }
+                for (Map<String, String> map : bo.getLevelMap()) {
+                    sb.append("<td>" + map.get("count") + "</td>");
+                }
+                sb.append("<tr>");
+            }
+
+            //结束
+            sb.append("</table>");
+        }
+        return sb.toString();
     }
 
 

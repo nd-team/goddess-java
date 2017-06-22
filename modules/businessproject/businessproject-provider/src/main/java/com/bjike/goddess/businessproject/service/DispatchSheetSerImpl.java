@@ -376,6 +376,26 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     }
 
     @Override
+    public List<String> allDispatchNum() throws SerException {
+        List<DispatchSheet> list = super.findAll();
+        List<String> nums = new ArrayList<>();
+        for (DispatchSheet b : list) {
+            nums.add(b.getDispatchNum());
+        }
+        return nums;
+    }
+
+    @Override
+    public List<DispatchSheetBO> getInfoByDispatchNum(String dispatchNum) throws SerException {
+        DispatchSheetDTO dto = new DispatchSheetDTO();
+        if( StringUtils.isNotBlank(dispatchNum)){
+            dto.getConditions().add(Restrict.eq("dispatchNum",dispatchNum));
+        }
+        List<DispatchSheet> list =  super.findByCis( dto );
+        return BeanTransform.copyProperties( list , DispatchSheetBO.class);
+    }
+
+    @Override
     public byte[] exportExcel(DispatchSheetDTO dto) throws SerException {
         String[] innerProjects = dto.getInnerProjects();
         List<DispatchSheetExcel> toList = new ArrayList<DispatchSheetExcel>();

@@ -90,6 +90,16 @@ public class DispatchSheetApiImpl implements DispatchSheetAPI {
     }
 
     @Override
+    public List<String> allDispatchNum() throws SerException {
+        return dispatchSheetSer.allDispatchNum();
+    }
+
+    @Override
+    public List<DispatchSheetBO> getInfoByDispatchNum(String dispatchNum ) throws SerException {
+        return dispatchSheetSer.getInfoByDispatchNum(dispatchNum);
+    }
+
+    @Override
     public byte[] exportExcel(DispatchSheetDTO dto) throws SerException {
         return dispatchSheetSer.exportExcel(dto);
     }

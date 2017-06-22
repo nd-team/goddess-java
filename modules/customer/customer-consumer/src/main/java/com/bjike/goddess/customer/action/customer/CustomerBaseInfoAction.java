@@ -12,6 +12,7 @@ import com.bjike.goddess.customer.api.CustomerBaseInfoAPI;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.dto.CustomerBaseInfoDTO;
 import com.bjike.goddess.customer.to.CustomerBaseInfoTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 import com.bjike.goddess.customer.vo.CustomerBaseInfoVO;
 import com.bjike.goddess.customer.vo.CustomerLevelVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +42,30 @@ public class CustomerBaseInfoAction {
     private CustomerBaseInfoAPI customerBaseInfoAPI;
     @Autowired
     private CusPermissionAPI cusPermissionAPI;
+
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = customerBaseInfoAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 客户基本列表总条数
@@ -245,7 +271,7 @@ public class CustomerBaseInfoAction {
     /**
      * 获取客户名
      *
-     * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
+     * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'获取客户名集合'}
      * @des 获取客户名集合
      * @version v1
      */

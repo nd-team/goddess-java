@@ -6,6 +6,7 @@ import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.dto.CustomerBaseInfoDTO;
 import com.bjike.goddess.customer.service.CustomerBaseInfoSer;
 import com.bjike.goddess.customer.to.CustomerBaseInfoTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,16 @@ public class CustomerBaseInfoApiImpl implements CustomerBaseInfoAPI {
     @Autowired
     private CustomerBaseInfoSer customerBaseInfoSer;
 
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return customerBaseInfoSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return customerBaseInfoSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countCustomerBaseInfo(CustomerBaseInfoDTO customerBaseInfoDTO) throws SerException {

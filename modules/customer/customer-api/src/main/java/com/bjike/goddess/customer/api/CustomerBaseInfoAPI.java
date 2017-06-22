@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.dto.CustomerBaseInfoDTO;
 import com.bjike.goddess.customer.to.CustomerBaseInfoTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 import org.hibernate.validator.constraints.NotBlank;
 
 import java.util.List;
@@ -19,6 +20,19 @@ import java.util.List;
  */
 public interface CustomerBaseInfoAPI {
 
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 自动生成一个客户编号
