@@ -221,7 +221,7 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
         if (exist) {
             try {
                 Thumbnails.Builder<java.io.File> fileBuilder = Thumbnails.of(realPath)
-                        .forceSize(200, 180)
+                        .forceSize(200, 160)
                         .outputQuality(0.35f)
                         .outputFormat(suffix);
                 ByteArrayOutputStream os = new ByteArrayOutputStream();

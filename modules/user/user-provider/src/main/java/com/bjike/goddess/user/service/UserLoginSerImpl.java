@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.token.IpUtil;
 import com.bjike.goddess.common.utils.token.TokenUtil;
 import com.bjike.goddess.redis.client.RedisClient;
 import com.bjike.goddess.user.bo.UserBO;
@@ -94,14 +95,18 @@ public class UserLoginSerImpl implements UserLoginSer {
 
     private void saveLoginLog(UserLoginTO loginTO, User user) throws SerException {
         UserLoginLogTO userLoginLogTO = new UserLoginLogTO();
-        userLoginLogTO.setLoginIp(loginTO.getIp());
-        userLoginLogTO.setLoginType(loginTO.getLoginType());
-        userLoginLogTO.setLoginAddress("not has address");
-        userLoginLogTO.setLoginType(loginTO.getLoginType());
-        userLoginLogTO.setUser(user);
-        userLoginLogTO.setLoginTime(DateUtil.dateToString(LocalDateTime.now()));
-        userLoginLogSer.saveLoginLog(userLoginLogTO);
-
+        try {
+            userLoginLogTO.setLoginIp(loginTO.getIp());
+            userLoginLogTO.setLoginType(loginTO.getLoginType());
+            userLoginLogTO.setUser(user);
+            userLoginLogTO.setLoginTime(DateUtil.dateToString(LocalDateTime.now()));
+            String address = IpUtil.getAddress(loginTO.getIp());
+            userLoginLogTO.setLoginAddress(address);
+            userLoginLogSer.saveLoginLog(userLoginLogTO);
+        }catch (Exception e){
+            userLoginLogTO.setLoginAddress("not has address");
+            userLoginLogSer.saveLoginLog(userLoginLogTO);
+        }
     }
 
     /**

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 
 /**
- * 商务负责人评价
+ * 商务评估结果汇总
  *
  * @Author: [ Jason ]
  * @Date: [ 2017-03-30 03:12 ]

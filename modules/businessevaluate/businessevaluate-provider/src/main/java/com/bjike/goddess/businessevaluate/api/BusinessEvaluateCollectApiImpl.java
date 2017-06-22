@@ -5,6 +5,7 @@ import com.bjike.goddess.businessevaluate.bo.EvaluateCollectTotalBO;
 import com.bjike.goddess.businessevaluate.dto.BusinessEvaluateCollectDTO;
 import com.bjike.goddess.businessevaluate.service.BusinessEvaluateCollectSer;
 import com.bjike.goddess.businessevaluate.to.BusinessEvaluateCollectTO;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,5 +71,15 @@ public class BusinessEvaluateCollectApiImpl implements BusinessEvaluateCollectAP
     @Override
     public Long count(BusinessEvaluateCollectDTO dto) throws SerException {
         return businessEvaluateCollectSer.count(dto);
+    }
+
+    @Override
+    public void sendCollectEmail() throws SerException {
+        businessEvaluateCollectSer.sendCollectEmail();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO to) throws SerException {
+        return businessEvaluateCollectSer.guidePermission(to);
     }
 }

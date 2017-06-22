@@ -3,9 +3,10 @@ package com.bjike.goddess.businessevaluate.api;
 import com.bjike.goddess.businessevaluate.bo.EvaluateProjectInfoBO;
 import com.bjike.goddess.businessevaluate.bo.ProjectProfitRateBO;
 import com.bjike.goddess.businessevaluate.dto.EvaluateProjectInfoDTO;
-import com.bjike.goddess.businessevaluate.entity.EvaluateProjectInfo;
 import com.bjike.goddess.businessevaluate.service.EvaluateProjectInfoSer;
 import com.bjike.goddess.businessevaluate.to.EvaluateProjectInfoTO;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
+import com.bjike.goddess.businessevaluate.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class EvaluateProjectInfoApiImpl implements EvaluateProjectInfoAPI {
 
     @Override
     public void delete(String id) throws SerException {
-        evaluateProjectInfoSer.remove(id);
+        evaluateProjectInfoSer.delete(id);
     }
 
     @Override
@@ -81,5 +82,15 @@ public class EvaluateProjectInfoApiImpl implements EvaluateProjectInfoAPI {
     @Override
     public List<EvaluateProjectInfoBO> findAllProejct() throws SerException {
         return evaluateProjectInfoSer.findAllProject();
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return evaluateProjectInfoSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO to) throws SerException {
+        return evaluateProjectInfoSer.guidePermission(to);
     }
 }

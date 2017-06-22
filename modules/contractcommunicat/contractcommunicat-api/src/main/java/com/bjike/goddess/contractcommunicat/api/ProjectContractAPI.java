@@ -5,7 +5,9 @@ import com.bjike.goddess.contractcommunicat.bo.ProjectContractBO;
 import com.bjike.goddess.contractcommunicat.bo.ProjectContractCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectContractDTO;
 import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
+import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
+import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectContractTO;
 
 import java.util.List;
@@ -108,4 +110,10 @@ public interface ProjectContractAPI {
      * @return 内部项目名称结果集
      */
     List<ProjectContractBO> projects() throws SerException;
+
+    List<SonPermissionObject> sonPermission() throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO to) throws SerException;
+
+    byte[] exportExcelModule() throws SerException;
 }

@@ -16,20 +16,27 @@
 
 	<!-- 注册接口-->
 
+	<!-- 项目承包-->
 	<dubbo:reference id="projectContractApiImpl" interface="com.bjike.goddess.contractcommunicat.api.ProjectContractAPI" />
+
+	<!-- 项目外包-->
 	<dubbo:reference id="projectOutsourcingApiImpl" interface="com.bjike.goddess.contractcommunicat.api.ProjectOutsourcingAPI" />
 
-	<!-- 注册接口 -->
-
+	<!-- storageAPI -->
 	<dubbo:reference interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
 
+	<dubbo:reference interface="com.bjike.goddess.storage.api.StorageUserAPI" id="storageUserApiImpl"/>
+
+	<!-- userAPI -->
 	<dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
+	<!-- 权限API -->
 	<dubbo:reference interface="com.bjike.goddess.user.api.rbac.PermissionAPI" id="permissionApiImpl"/>
 
 	<dubbo:reference id="cusPermissionApiImpl" interface="com.bjike.goddess.contractcommunicat.api.CusPermissionAPI" />
 
 	<dubbo:reference id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.contractcommunicat.api.CusPermissionOperateAPI" />
 
+	<dubbo:reference id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
 
 </beans>

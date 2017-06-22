@@ -3,6 +3,7 @@ package com.bjike.goddess.businessevaluate.api;
 import com.bjike.goddess.businessevaluate.bo.AbilityGrowUpBO;
 import com.bjike.goddess.businessevaluate.dto.AbilityGrowUpDTO;
 import com.bjike.goddess.businessevaluate.to.AbilityGrowUpTO;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -57,4 +58,6 @@ public interface AbilityGrowUpAPI {
     Long count(AbilityGrowUpDTO dto) throws SerException;
 
     AbilityGrowUpBO findById(String id) throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO to) throws SerException;
 }

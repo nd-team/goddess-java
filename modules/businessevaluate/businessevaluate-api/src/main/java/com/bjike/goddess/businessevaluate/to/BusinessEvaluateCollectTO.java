@@ -59,8 +59,8 @@ public class BusinessEvaluateCollectTO extends BaseTO {
     /**
      * 发送对象
      */
-    @NotBlank(message = "项目不能为空",groups = {ADD.class, EDIT.class})
-    private String sendUser;
+    @NotNull(message = "发送对象不能为空",groups = {ADD.class, EDIT.class})
+    private String[] sendUsers;
 
     public String getArea() {
         return area;
@@ -110,12 +110,11 @@ public class BusinessEvaluateCollectTO extends BaseTO {
         this.collectInterval = collectInterval;
     }
 
-    public String getSendUser() {
-        return sendUser;
+    public String[] getSendUsers() {
+        return sendUsers;
     }
 
-    public void setSendUser(String sendUser) {
-        this.sendUser = sendUser;
+    public void setSendUsers(String[] sendUsers) {
+        this.sendUsers = sendUsers;
     }
-
 }

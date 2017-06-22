@@ -1,5 +1,6 @@
 package com.bjike.goddess.allmeeting.service;
 
+import com.bjike.goddess.allmeeting.entity.MeetingLay;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -8,6 +9,7 @@ import com.bjike.goddess.allmeeting.bo.MeetingTopicBO;
 import com.bjike.goddess.allmeeting.dto.MeetingTopicDTO;
 import com.bjike.goddess.allmeeting.entity.MeetingTopic;
 import com.bjike.goddess.allmeeting.to.MeetingTopicTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +30,9 @@ import java.util.List;
 @CacheConfig(cacheNames = "allmeetingSerCache")
 @Service
 public class MeetingTopicSerImpl extends ServiceImpl<MeetingTopic, MeetingTopicDTO> implements MeetingTopicSer {
+
+    @Autowired
+    private MeetingLaySer meetingLaySer;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
@@ -69,7 +74,7 @@ public class MeetingTopicSerImpl extends ServiceImpl<MeetingTopic, MeetingTopicD
             model.setModifyTime(LocalDateTime.now());
             super.update(model);
         } else {
-            throw new SerException("非法Id，更新对象不能为空");
+            throw new SerException("非法Id，更新对象不能为空!");
         }
         return BeanTransform.copyProperties(model,MeetingTopicBO.class);
     }
@@ -79,5 +84,15 @@ public class MeetingTopicSerImpl extends ServiceImpl<MeetingTopic, MeetingTopicD
     public List<MeetingTopicBO> pageList(MeetingTopicDTO dto) throws SerException {
         dto.getSorts().add("createTime=desc");
         return BeanTransform.copyProperties(super.findByPage(dto),MeetingTopicBO.class);
+    }
+
+    @Override
+    public MeetingTopicBO findByLay(String layId) throws SerException {
+        MeetingLay lay = meetingLaySer.findById(layId);
+        if(lay!=null){
+            return BeanTransform.copyProperties(super.findById(lay.getTopicId()),MeetingTopicBO.class);
+        }else{
+            throw new SerException("非法层面id，层面对象不存在!");
+        }
     }
 }
