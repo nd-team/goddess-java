@@ -6,6 +6,7 @@ import com.bjike.goddess.projectmarketfee.bo.CostAnalysisCountBO;
 import com.bjike.goddess.projectmarketfee.dto.CostAnalysisDTO;
 import com.bjike.goddess.projectmarketfee.service.CostAnalysisSer;
 import com.bjike.goddess.projectmarketfee.to.CostAnalysisTO;
+import com.bjike.goddess.projectmarketfee.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -84,5 +85,15 @@ public class CostAnalysisApiImpl implements CostAnalysisAPI {
     @Override
     public Set<Integer> allMonths() throws SerException {
         return costAnalysisSer.allMonths();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return costAnalysisSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return costAnalysisSer.guidePermission(guidePermissionTO);
     }
 }

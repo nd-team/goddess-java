@@ -3,6 +3,7 @@ package com.bjike.goddess.budget.api;
 import com.bjike.goddess.budget.bo.WarnBO;
 import com.bjike.goddess.budget.dto.WarnDTO;
 import com.bjike.goddess.budget.service.WarnSer;
+import com.bjike.goddess.budget.to.GuidePermissionTO;
 import com.bjike.goddess.budget.to.WarnTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,5 +53,15 @@ public class WarnApiImpl implements WarnAPI {
     @Override
     public Long countNum(WarnDTO dto) throws SerException {
         return warnSer.countNum(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return warnSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return warnSer.guidePermission(guidePermissionTO);
     }
 }

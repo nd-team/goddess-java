@@ -6,6 +6,7 @@ import com.bjike.goddess.budget.bo.ProjectWeekBO;
 import com.bjike.goddess.budget.dto.ArrivalWeekDTO;
 import com.bjike.goddess.budget.dto.ProjectMonthDTO;
 import com.bjike.goddess.budget.entity.ProjectMonth;
+import com.bjike.goddess.budget.to.GuidePermissionTO;
 import com.bjike.goddess.budget.to.ProjectMonthTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -22,6 +23,16 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ProjectMonthSer extends Ser<ProjectMonth, ProjectMonthDTO> {
+    /**
+     * 下拉导航权限
+     */
+    Boolean sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
     /**
      * 添加
      *

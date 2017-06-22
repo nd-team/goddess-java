@@ -3,6 +3,7 @@ package com.bjike.goddess.budget.service;
 import com.bjike.goddess.budget.bo.WarnBO;
 import com.bjike.goddess.budget.dto.WarnDTO;
 import com.bjike.goddess.budget.entity.Warn;
+import com.bjike.goddess.budget.to.GuidePermissionTO;
 import com.bjike.goddess.budget.to.WarnTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -19,6 +20,16 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface WarnSer extends Ser<Warn, WarnDTO> {
+    /**
+     * 下拉导航权限
+     */
+    Boolean sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
     /**
      * 添加
      *

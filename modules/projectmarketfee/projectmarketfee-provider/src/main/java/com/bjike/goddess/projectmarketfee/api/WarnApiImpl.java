@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectmarketfee.bo.WarnBO;
 import com.bjike.goddess.projectmarketfee.dto.WarnDTO;
 import com.bjike.goddess.projectmarketfee.service.WarnSer;
+import com.bjike.goddess.projectmarketfee.to.GuidePermissionTO;
 import com.bjike.goddess.projectmarketfee.to.WarnTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,5 +53,15 @@ public class WarnApiImpl implements WarnAPI {
     @Override
     public WarnBO countNum(WarnDTO dto) throws SerException {
         return warnSer.countNum(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return warnSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return warnSer.guidePermission(guidePermissionTO);
     }
 }

@@ -2,6 +2,7 @@ package com.bjike.goddess.budget.api;
 
 import com.bjike.goddess.budget.bo.WarnBO;
 import com.bjike.goddess.budget.dto.WarnDTO;
+import com.bjike.goddess.budget.to.GuidePermissionTO;
 import com.bjike.goddess.budget.to.WarnTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -77,4 +78,14 @@ public interface WarnAPI {
     default Long countNum(WarnDTO dto) throws SerException {
         return null;
     }
+
+    /**
+     * 下拉导航权限
+     */
+    Boolean sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 }
