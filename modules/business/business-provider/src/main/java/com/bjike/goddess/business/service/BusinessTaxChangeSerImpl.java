@@ -1,13 +1,17 @@
 package com.bjike.goddess.business.service;
 
 import com.bjike.goddess.business.bo.BusinessTaxChangeBO;
-import com.bjike.goddess.business.entity.CusPermission;
-import com.bjike.goddess.business.to.BusinessTaxChangeTO;
-import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.business.dto.BusinessTaxChangeDTO;
 import com.bjike.goddess.business.entity.BusinessTaxChange;
+import com.bjike.goddess.business.enums.GuideAddrStatus;
+import com.bjike.goddess.business.to.BusinessTaxChangeTO;
+import com.bjike.goddess.business.to.GuidePermissionTO;
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -31,82 +35,205 @@ import java.util.List;
 public class BusinessTaxChangeSerImpl extends ServiceImpl<BusinessTaxChange, BusinessTaxChangeDTO> implements BusinessTaxChangeSer {
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private UserAPI userAPI;
+
+    /**
+     * 核对查看权限(部门级别)
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相对应部门的人员,不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加编辑删除操作(岗位级别)
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("你不是相对应部门的人员,不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对查看权限(部门级别)
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加编辑删除权限(岗位级别)
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
     @Override
     public Long countBusinessTaxChange(BusinessTaxChangeDTO businessTaxChangeDTO) throws SerException {
         businessTaxChangeDTO.getSorts().add("createTime=desc");
         Long counts = super.count(businessTaxChangeDTO);
         return counts;
     }
+
     @Override
     public BusinessTaxChangeBO getOne(String id) throws SerException {
-        if(StringUtils.isBlank(id)){
+        if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
         BusinessTaxChange businessTaxChange = super.findById(id);
-        return BeanTransform.copyProperties(businessTaxChange,BusinessTaxChangeBO.class);
+        return BeanTransform.copyProperties(businessTaxChange, BusinessTaxChangeBO.class);
     }
+
     @Override
     public List<BusinessTaxChangeBO> findListBusinessTaxChange(BusinessTaxChangeDTO businessTaxChangeDTO) throws SerException {
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-        if ( !permission) {
-            throw new SerException("您的帐号没有权限");
-        }
-        List<BusinessTaxChange> businessTaxChanges = super.findByCis(businessTaxChangeDTO,true);
-        List<BusinessTaxChangeBO> businessTaxChangeBOS = BeanTransform.copyProperties(businessTaxChanges,BusinessTaxChangeBO.class);
+        checkSeeIdentity();
+        List<BusinessTaxChange> businessTaxChanges = super.findByCis(businessTaxChangeDTO, true);
+        List<BusinessTaxChangeBO> businessTaxChangeBOS = BeanTransform.copyProperties(businessTaxChanges, BusinessTaxChangeBO.class);
         return businessTaxChangeBOS;
     }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessTaxChangeBO insertBusinessTaxChange(BusinessTaxChangeTO businessTaxChangeTO) throws SerException {
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-        if ( !permission) {
-            throw new SerException("您不是财务人员，没有权限");
-        }
-        BusinessTaxChange businessTaxChange = BeanTransform.copyProperties(businessTaxChangeTO,BusinessTaxChange.class,true);
+        checkAddIdentity();
+        BusinessTaxChange businessTaxChange = BeanTransform.copyProperties(businessTaxChangeTO, BusinessTaxChange.class, true);
         businessTaxChange.setCreateTime(LocalDateTime.now());
         super.save(businessTaxChange);
-        return BeanTransform.copyProperties(businessTaxChange,BusinessTaxChangeBO.class);
+        return BeanTransform.copyProperties(businessTaxChange, BusinessTaxChangeBO.class);
     }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessTaxChangeBO editBusinessTaxChange(BusinessTaxChangeTO businessTaxChangeTO) throws SerException {
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-        if ( !permission) {
-            throw new SerException("您不是财务人员，没有权限");
-        }
-        if(StringUtils.isBlank(businessTaxChangeTO.getId())){
+        checkAddIdentity();
+        if (StringUtils.isBlank(businessTaxChangeTO.getId())) {
             throw new SerException("id不能为空");
         }
         BusinessTaxChange businessTaxChange = super.findById(businessTaxChangeTO.getId());
-        BeanTransform.copyProperties(businessTaxChangeTO,businessTaxChange,true);
+        BeanTransform.copyProperties(businessTaxChangeTO, businessTaxChange, true);
         businessTaxChange.setModifyTime(LocalDateTime.now());
         super.update(businessTaxChange);
-        return BeanTransform.copyProperties(businessTaxChangeTO,BusinessTaxChangeBO.class);
+        return BeanTransform.copyProperties(businessTaxChangeTO, BusinessTaxChangeBO.class);
     }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeBusinessTaxChange(String id) throws SerException {
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-        if ( !permission) {
-            throw new SerException("您不是财务人员，没有权限");
-        }
-        if (StringUtils.isBlank(id)){
-            throw  new SerException("id不能为空");
+        checkAddIdentity();
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空");
         }
         super.remove(id);
     }
 
-    @Override
-    public void upload() throws SerException {
-        //todo 未做上传
-        return;
-
-    }
-
-    @Override
-    public void download() throws SerException {
-        //todo 未做下载
-        return;
-
-    }
 }

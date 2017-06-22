@@ -5,5 +5,7 @@ dependencies {
     compile project(":modules:voucher:voucher-api")
     compile project(":modules:financeinit:financeinit-api")
     compile project(":modules:user:user-api")
+    compile project(":modules:organize:organize-api")
+    compile project(":modules:storage:storage-api")
 
 }

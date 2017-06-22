@@ -71,6 +71,10 @@ public class BiddingInfoApiImpl implements BiddingInfoAPI {
     public List<BiddingInfoBO> searchBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
         return biddingInfoSer.searchBiddingInfo(biddingInfoDTO);
     }
+    @Override
+    public BiddingInfoBO getBidding(String biddingNumber) throws SerException {
+        return biddingInfoSer.getBidding(biddingNumber);
+    }
 
     @Override
     public List<BiddingInfoCollectBO> collectBiddingInfo(String[] cities) throws SerException {

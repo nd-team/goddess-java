@@ -66,7 +66,7 @@ public class TaxManagementAction extends BaseFileAction {
         List<SonPermissionObject> list = new ArrayList<>();
         try {
             SonPermissionObject obj = new SonPermissionObject();
-            obj.setName("propermission");
+            obj.setName("cuspermission");
             obj.setDescribesion("设置");
             Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
             if (!isHasPermission) {

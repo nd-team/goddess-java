@@ -2,7 +2,9 @@ package com.bjike.goddess.business.api;
 
 import com.bjike.goddess.business.bo.BusinessRegisterBO;
 import com.bjike.goddess.business.dto.BusinessRegisterDTO;
+import com.bjike.goddess.business.excel.SonPermissionObject;
 import com.bjike.goddess.business.to.BusinessRegisterTO;
+import com.bjike.goddess.business.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -17,6 +19,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface BusinessRegisterAPI {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 工商注册列表总条数
      */
@@ -73,20 +88,5 @@ public interface BusinessRegisterAPI {
     default void removeBusinessRegister(String id) throws SerException {
 
     }
-    /**
-     * 上传
-     */
-    default void upload() throws SerException {
-        return;
-
-    }
-    /**
-     * 下载
-     */
-    default void download() throws SerException {
-        return;
-
-    }
-
 
 }

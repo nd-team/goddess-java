@@ -66,7 +66,7 @@ public class BiddingInfoAction extends BaseFileAction{
         List<SonPermissionObject> list = new ArrayList<>();
         try {
             SonPermissionObject obj = new SonPermissionObject();
-            obj.setName("propermission");
+            obj.setName("cuspermission");
             obj.setDescribesion("设置");
             Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
             if (!isHasPermission) {
@@ -284,6 +284,23 @@ public class BiddingInfoAction extends BaseFileAction{
         try {
             List<String> citiesList = biddingInfoAPI.getBiddingInfoCities();
             return ActResult.initialize(citiesList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取招标信息
+     *
+     * @param biddingNumber 编号
+     * @return class BiddingInfoVO
+     * @des 根据编号获取招标信息
+     * @version v1
+     */
+    @GetMapping("v1/getBiddingNum")
+    public Result getBidding(String biddingNumber) throws ActException {
+        try {
+            BiddingInfoBO biddingInfoBO = biddingInfoAPI.getBidding(biddingNumber);
+            return ActResult.initialize(BeanTransform.copyProperties(biddingInfoBO, BiddingInfoVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

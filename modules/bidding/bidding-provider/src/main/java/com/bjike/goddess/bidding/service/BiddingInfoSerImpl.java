@@ -2,7 +2,6 @@ package com.bjike.goddess.bidding.service;
 
 import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.bo.BiddingInfoCollectBO;
-import com.bjike.goddess.bidding.bo.TenderInfoBO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.entity.BiddingInfo;
 import com.bjike.goddess.bidding.enums.BiddingType;
@@ -414,6 +413,18 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
     }
 
     @Override
+    public BiddingInfoBO getBidding(String biddingNumber) throws SerException {
+        if (StringUtils.isNotBlank(biddingNumber)) {
+            BiddingInfoDTO dto = new BiddingInfoDTO();
+            dto.getConditions().add(Restrict.eq("biddingNumber", biddingNumber));
+            BiddingInfo biddingInfo = super.findOne(dto);
+            BiddingInfoBO bo = BeanTransform.copyProperties(biddingInfo, BiddingInfoBO.class);
+            return bo;
+        }
+        return null;
+    }
+
+    @Override
     public List<String> getBiddingInfoCities() throws SerException {
         String[] fields = new String[]{"cities"};
         List<BiddingInfoBO> biddingInfoBOS = super.findBySql("select distinct cities from bidding_biddinginfo group by cities order by cities asc ", BiddingInfoBO.class, fields);
@@ -424,6 +435,7 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
 
         return citiesList;
     }
+
     @Override
     public List<String> getProjectName() throws SerException {
         String[] fields = new String[]{"projectName"};
@@ -435,6 +447,7 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
 
         return projectNameList;
     }
+
     @Override
     public List<String> getTenderNumber() throws SerException {
         String[] fields = new String[]{"biddingNumber"};
@@ -449,25 +462,25 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
 
     @Override
     public byte[] exportExcel(BiddingInfoDTO dto) throws SerException {
-        if (StringUtils.isNotBlank(dto.getProjectName())) {
-            dto.getConditions().add(Restrict.eq("projectName", dto.getProjectName()));
+        if (null != dto.getProjectName()) {
+            dto.getConditions().add(Restrict.in("projectName", dto.getProjectName()));
         }
         List<BiddingInfo> list = super.findByCis(dto);
 
         List<BiddingInfoExport> biddingInfoExports = new ArrayList<>();
         list.stream().forEach(str -> {
-            BiddingInfoExport export = BeanTransform.copyProperties(str, BiddingInfoExport.class, "biddingType", "businessType","status");
+            BiddingInfoExport export = BeanTransform.copyProperties(str, BiddingInfoExport.class, "biddingType", "businessType", "status");
             export.setBiddingType(BiddingType.exportStrConvert(str.getBiddingType()));
             export.setBusinessType(BusinessType.exportStrConvert(str.getBusinessType()));
-            if(str.getStatus().equals(Status.THAW)){
+            if (str.getStatus().equals(Status.THAW)) {
                 export.setStatus("解冻");
-            }else if(str.getStatus().equals(Status.CONGEAL)){
+            } else if (str.getStatus().equals(Status.CONGEAL)) {
                 export.setStatus("冻结");
-            }else if(str.getStatus().equals(Status.DELETE)){
+            } else if (str.getStatus().equals(Status.DELETE)) {
                 export.setStatus("删除");
-            }else if(str.getStatus().equals(Status.NOACTIVE)){
+            } else if (str.getStatus().equals(Status.NOACTIVE)) {
                 export.setStatus("未激活");
-            }else if(str.getStatus().equals(Status.UNREVIEW)){
+            } else if (str.getStatus().equals(Status.UNREVIEW)) {
                 export.setStatus("未审核");
             }
             biddingInfoExports.add(export);
