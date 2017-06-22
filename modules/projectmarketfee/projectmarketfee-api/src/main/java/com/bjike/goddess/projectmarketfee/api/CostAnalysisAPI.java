@@ -5,6 +5,7 @@ import com.bjike.goddess.projectmarketfee.bo.CostAnalysisBO;
 import com.bjike.goddess.projectmarketfee.bo.CostAnalysisCountBO;
 import com.bjike.goddess.projectmarketfee.dto.CostAnalysisDTO;
 import com.bjike.goddess.projectmarketfee.to.CostAnalysisTO;
+import com.bjike.goddess.projectmarketfee.to.GuidePermissionTO;
 
 import java.util.List;
 import java.util.Set;
@@ -19,6 +20,16 @@ import java.util.Set;
  * @Copy: [ com.bjike ]
  */
 public interface CostAnalysisAPI {
+    /**
+     * 下拉导航权限
+     */
+    Boolean sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
     /**
      * 添加
      *

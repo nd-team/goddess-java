@@ -20,6 +20,9 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.budget.api.ProjectMonthAPI" id="projectMonthApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.budget.api.ProjectWeekAPI" id="projectWeekApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.budget.api.WarnAPI" id="warnApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.budget.api.CusPermissionAPI" id="cusPermissionApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.budget.api.CusPermissionOperateAPI" id="cusPermissionOperateApiImpl"/>
 
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl"/>
 </beans>

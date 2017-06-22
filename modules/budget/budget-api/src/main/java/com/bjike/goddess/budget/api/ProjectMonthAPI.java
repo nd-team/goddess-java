@@ -4,6 +4,7 @@ import com.bjike.goddess.budget.bo.ProjectMonthBO;
 import com.bjike.goddess.budget.bo.ProjectMonthCountBO;
 import com.bjike.goddess.budget.bo.ProjectWeekBO;
 import com.bjike.goddess.budget.dto.ProjectMonthDTO;
+import com.bjike.goddess.budget.to.GuidePermissionTO;
 import com.bjike.goddess.budget.to.ProjectMonthTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -121,4 +122,14 @@ public interface ProjectMonthAPI {
     default List<String> findAllProjects() throws SerException {
         return null;
     }
+
+    /**
+     * 下拉导航权限
+     */
+    Boolean sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 }

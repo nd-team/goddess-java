@@ -7,6 +7,8 @@ import com.bjike.goddess.budget.dto.ArrivalMonthDTO;
 import com.bjike.goddess.budget.dto.ArrivalWeekDTO;
 import com.bjike.goddess.budget.service.ArrivalWeekSer;
 import com.bjike.goddess.budget.to.ArrivalWeekTO;
+import com.bjike.goddess.budget.to.GuidePermissionTO;
+import com.bjike.goddess.budget.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,5 +72,15 @@ public class ArrivalWeekApiImpl implements ArrivalWeekAPI {
     @Override
     public List<String> findAllArrivals() throws SerException {
         return arrivalWeekSer.findAllArrivals();
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return arrivalWeekSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return arrivalWeekSer.guidePermission(guidePermissionTO);
     }
 }
