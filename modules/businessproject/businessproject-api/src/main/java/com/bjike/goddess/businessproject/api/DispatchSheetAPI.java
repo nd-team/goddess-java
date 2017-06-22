@@ -5,6 +5,7 @@ import com.bjike.goddess.businessproject.dto.DispatchSheetDTO;
 import com.bjike.goddess.businessproject.excel.DispatchSheetExcel;
 import com.bjike.goddess.businessproject.to.DispatchSheetTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
+import com.bjike.goddess.businessproject.vo.DispatchSheetVO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -130,6 +131,21 @@ public interface DispatchSheetAPI {
      * @throws SerException
      */
     Set<String> allInnerProjects() throws SerException;
+    /**
+     * 查找所有派工单编号
+     *
+     * @return
+     * @throws SerException
+     */
+    List<String> allDispatchNum() throws SerException;
+    /**
+     * 根据派工单编号获取派工信息
+     *
+     * @param dispatchNum 派工单编号
+     * @return calss DispatchSheetBO
+     * @throws SerException
+     */
+    List<DispatchSheetBO> getInfoByDispatchNum( String dispatchNum  ) throws SerException;
 
     /**
      * 导出excel

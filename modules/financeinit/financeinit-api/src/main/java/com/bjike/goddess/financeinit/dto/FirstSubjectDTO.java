@@ -13,4 +13,16 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  */
 public class FirstSubjectDTO extends BaseDTO {
 
+    /**
+     * 类别名
+     */
+    private String[] categoryName;
+
+    public String[] getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String[] categoryName) {
+        this.categoryName = categoryName;
+    }
 }

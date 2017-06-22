@@ -271,7 +271,7 @@ public class CustomerBaseInfoAction {
     /**
      * 获取客户名
      *
-     * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
+     * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'获取客户名集合'}
      * @des 获取客户名集合
      * @version v1
      */

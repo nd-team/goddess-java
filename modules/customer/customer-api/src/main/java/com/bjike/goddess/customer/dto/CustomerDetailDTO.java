@@ -15,27 +15,27 @@ public class CustomerDetailDTO extends BaseDTO {
 
 
     /**
-     * 地区
+     * 地区数组
      */
-    private String area;
+    private String[] areas;
     /**
-     * 客户名
+     * 客户名数组
      */
-    private String customerName;
+    private String[] customerNames;
 
-    public String getArea() {
-        return area;
+    public String[] getAreas() {
+        return areas;
     }
 
-    public void setArea(String area) {
-        this.area = area;
+    public void setAreas(String[] areas) {
+        this.areas = areas;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public String[] getCustomerNames() {
+        return customerNames;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setCustomerNames(String[] customerNames) {
+        this.customerNames = customerNames;
     }
 }

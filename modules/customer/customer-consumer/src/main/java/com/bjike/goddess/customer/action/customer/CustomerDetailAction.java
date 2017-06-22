@@ -221,15 +221,14 @@ public class CustomerDetailAction  extends BaseFileAction {
 
 
     /**
-     * 导出
+     * 多选或不选导出
      *
      * @param customerDetailDTO  地区或客户名
-     * @des 根据地区或客户名导出还不可以用
+     * @des 根据地区或客户名导出
      * @version v1
      */
     @GetMapping("v1/exportInfo")
     public Result exportCustomerBasicInfo(CustomerDetailDTO customerDetailDTO, HttpServletResponse response) throws ActException {
-        //TODO : tanghaixiang 2017-03-16 导出未做
         try {
             String fileName = "客户详细信息.xlsx";
             super.writeOutFile(response, customerDetailAPI.exportInfo( customerDetailDTO ), fileName);

@@ -3,7 +3,9 @@ package com.bjike.goddess.financeinit.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.financeinit.bo.FirstSubjectBO;
 import com.bjike.goddess.financeinit.dto.FirstSubjectDTO;
+import com.bjike.goddess.financeinit.excel.SonPermissionObject;
 import com.bjike.goddess.financeinit.to.FirstSubjectTO;
+import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -17,6 +19,23 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface FirstSubjectAPI {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+
 
     /**
      * 一级科目列表总条数
@@ -69,6 +88,30 @@ public interface FirstSubjectAPI {
      */
     default List<String> listAllFirst( ) throws SerException {return null;}
 
+
+
+    /**
+     * 导入
+     *
+     * @param firstSubjectTO 一级科目信息
+     * @return class FirstSubjectBO
+     */
+    default FirstSubjectBO importExcel(List<FirstSubjectTO> firstSubjectTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出Excel
+     * @param dto
+     * @throws SerException
+     */
+    byte[] exportExcel(FirstSubjectDTO dto ) throws SerException;
+
+    /**
+     * 导出Excel导入模板
+     * @throws SerException
+     */
+    byte[] templateExport(  ) throws SerException;
 
 
 }
