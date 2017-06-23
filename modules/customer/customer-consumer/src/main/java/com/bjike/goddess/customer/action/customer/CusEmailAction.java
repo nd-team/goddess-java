@@ -11,12 +11,14 @@ import com.bjike.goddess.customer.api.CusPermissionAPI;
 import com.bjike.goddess.customer.bo.CusEmailBO;
 import com.bjike.goddess.customer.dto.CusEmailDTO;
 import com.bjike.goddess.customer.to.CusEmailTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 import com.bjike.goddess.customer.vo.CusEmailVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -36,6 +38,30 @@ public class CusEmailAction {
     private CusEmailAPI cusEmailAPI;
     @Autowired
     private CusPermissionAPI cusPermissionAPI;
+
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = cusEmailAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 客户邮件汇总列表总条数
@@ -85,7 +111,7 @@ public class CusEmailAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result addCusEmail(@Validated CusEmailTO cusEmailTO, BindingResult bindingResult) throws ActException {
+    public Result addCusEmail(@Validated(CusEmailTO.TestAdd.class) CusEmailTO cusEmailTO, BindingResult bindingResult) throws ActException {
         try {
 
             CusEmailBO cusEmailBO1 = cusEmailAPI.addCusEmail(cusEmailTO);
@@ -107,7 +133,7 @@ public class CusEmailAction {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result editCusEmail(@Validated CusEmailTO cusEmailTO, BindingResult bindingResult) throws ActException {
+    public Result editCusEmail(@Validated(CusEmailTO.TestAdd.class) CusEmailTO cusEmailTO, BindingResult bindingResult) throws ActException {
         try {
 
             CusEmailBO cusEmailBO1 = cusEmailAPI.editCusEmail(cusEmailTO);

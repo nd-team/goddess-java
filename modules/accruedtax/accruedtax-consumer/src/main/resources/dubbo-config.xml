@@ -19,9 +19,11 @@
 	<dubbo:reference validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
 
 	<dubbo:reference validation="true" id="taxManagementApiImpl" interface="com.bjike.goddess.foreigntax.api.TaxManagementAPI" />
+	<dubbo:reference validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
 
 	<dubbo:reference  validation="true" id="payTaxApiImpl" interface="com.bjike.goddess.accruedtax.api.PayTaxAPI" />
 	<dubbo:reference  validation="true" id="projectTaxApiImpl" interface="com.bjike.goddess.accruedtax.api.ProjectTaxAPI" />
-
+	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.accruedtax.api.CusPermissionAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.accruedtax.api.CusPermissionOperateAPI" />
 
 </beans>

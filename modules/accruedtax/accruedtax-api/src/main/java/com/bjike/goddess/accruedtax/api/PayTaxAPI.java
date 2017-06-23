@@ -2,7 +2,9 @@ package com.bjike.goddess.accruedtax.api;
 
 import com.bjike.goddess.accruedtax.bo.PayTaxBO;
 import com.bjike.goddess.accruedtax.dto.PayTaxDTO;
+import com.bjike.goddess.accruedtax.to.GuidePermissionTO;
 import com.bjike.goddess.accruedtax.to.PayTaxTO;
+import com.bjike.goddess.accruedtax.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -17,6 +19,15 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface PayTaxAPI {
+    /**
+     * 下拉导航权限
+     */
+    List<SonPermissionObject> sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 
     /**
      * 应交税金列表总条数

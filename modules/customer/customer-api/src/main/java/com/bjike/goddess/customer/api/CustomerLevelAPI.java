@@ -4,6 +4,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.customer.bo.CustomerLevelBO;
 import com.bjike.goddess.customer.dto.CustomerLevelDTO;
 import com.bjike.goddess.customer.to.CustomerLevelTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
+import com.bjike.goddess.customer.vo.SonPermissionObject;
 
 import java.util.List;
 
@@ -17,6 +19,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CustomerLevelAPI {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 客户级别列表总条数

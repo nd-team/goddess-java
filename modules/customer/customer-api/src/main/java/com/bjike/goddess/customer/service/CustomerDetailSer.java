@@ -6,6 +6,7 @@ import com.bjike.goddess.customer.bo.CustomerDetailBO;
 import com.bjike.goddess.customer.entity.CustomerDetail;
 import com.bjike.goddess.customer.dto.CustomerDetailDTO;
 import com.bjike.goddess.customer.to.CustomerDetailTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +20,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CustomerDetailSer extends Ser<CustomerDetail, CustomerDetailDTO> {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
 
     /**
      * 客户详细列表总条数
@@ -85,5 +101,16 @@ public interface CustomerDetailSer extends Ser<CustomerDetail, CustomerDetailDTO
     default CustomerDetailBO getCustomerDetailByNum(String customerNum) throws SerException {
         return null;
     }
+
+
+
+    /**
+     * 导出Excel
+     * @param customerDetailDTO 地区和客户名
+     * @throws SerException
+     */
+    byte[] exportInfo(CustomerDetailDTO customerDetailDTO ) throws SerException;
+
+
 
 }

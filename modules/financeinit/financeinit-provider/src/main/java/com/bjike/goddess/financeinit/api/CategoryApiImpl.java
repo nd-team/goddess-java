@@ -3,8 +3,10 @@ package com.bjike.goddess.financeinit.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.financeinit.bo.CategoryBO;
 import com.bjike.goddess.financeinit.dto.CategoryDTO;
+import com.bjike.goddess.financeinit.excel.SonPermissionObject;
 import com.bjike.goddess.financeinit.service.CategorySer;
 import com.bjike.goddess.financeinit.to.CategoryTO;
+import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,16 @@ public class CategoryApiImpl implements CategoryAPI {
 
     @Autowired
     private CategorySer categorySer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return categorySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return categorySer.guidePermission(guidePermissionTO);
+    }
 
 
     @Override

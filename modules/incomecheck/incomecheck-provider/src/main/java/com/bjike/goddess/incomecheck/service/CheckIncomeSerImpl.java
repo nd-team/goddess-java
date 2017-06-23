@@ -1,17 +1,20 @@
 package com.bjike.goddess.incomecheck.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.incomecheck.api.CheckIncomeAPI;
-import com.bjike.goddess.incomecheck.api.CheckIndexAPI;
 import com.bjike.goddess.incomecheck.bo.CheckIncomeBO;
 import com.bjike.goddess.incomecheck.dto.CheckIncomeDTO;
 import com.bjike.goddess.incomecheck.dto.CheckIndexDTO;
 import com.bjike.goddess.incomecheck.entity.CheckIncome;
 import com.bjike.goddess.incomecheck.entity.CheckIndex;
+import com.bjike.goddess.incomecheck.enums.GuideAddrStatus;
 import com.bjike.goddess.incomecheck.to.CheckIncomeTO;
+import com.bjike.goddess.incomecheck.to.GuidePermissionTO;
+import com.bjike.goddess.incomecheck.vo.SonPermissionObject;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,6 +43,174 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
 
     @Autowired
     private CheckIndexSer checkIndexSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private UserAPI userAPI;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAddSign = guideAddIdentity();
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("checkincome");
+        obj.setDescribesion("收入核算资金回笼");
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeDis = checkIndexSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("checkindex");
+        obj.setDescribesion("指标设置");
+        if (flagSeeDis) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
 
     @Override
     public Long countCheckIncome(CheckIncomeDTO checkIncomeDTO) throws SerException {
@@ -59,6 +229,7 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
 
     @Override
     public List<CheckIncomeBO> listCheckIncome(CheckIncomeDTO checkIncomeDTO) throws SerException {
+        checkSeeIdentity();
         checkIncomeDTO.getSorts().add("createTime=desc");
         List<CheckIncome> list = super.findByCis(checkIncomeDTO, true);
 
@@ -69,6 +240,7 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CheckIncomeBO addCheckIncome(CheckIncomeTO checkIncomeTO) throws SerException {
+        checkAddIdentity();
         if (checkIncomeTO.getPlanIncome() == null) {
             throw new SerException("计划收入不能为空");
         }
@@ -88,6 +260,7 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CheckIncomeBO editCheckIncome(CheckIncomeTO checkIncomeTO) throws SerException {
+        checkAddIdentity();
         if (checkIncomeTO.getPlanIncome() == null) {
             throw new SerException("计划收入不能为空");
         }
@@ -110,6 +283,7 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteCheckIncome(String id) throws SerException {
+        checkAddIdentity();
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
@@ -118,15 +292,16 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
 
     @Override
     public List<CheckIncomeBO> collectArea(CheckIncomeDTO checkIncomeDTO) throws SerException {
+        checkSeeIdentity();
         String startTime = checkIncomeDTO.getStartTime();
         String endTime = checkIncomeDTO.getEndTime();
 
         LocalDate start = LocalDate.now();
         LocalDate end = LocalDate.now();
-        if( StringUtils.isNotBlank(startTime) ){
+        if (StringUtils.isNotBlank(startTime)) {
             start = LocalDate.parse(startTime);
         }
-        if(  StringUtils.isNotBlank( endTime) ){
+        if (StringUtils.isNotBlank(endTime)) {
             end = LocalDate.parse(endTime);
         }
         //如果没有选地区，汇总表头：（地区/日期/目标管理费/实际管理费/比例/差额）
@@ -154,7 +329,7 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
             if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
                 sql = sql + " and time between '" + start + "' and '" + end + "'  ";
             }
-            sql = sql + " and area='"+checkIncomeDTO.getArea()+"' order by area desc ";
+            sql = sql + " and area='" + checkIncomeDTO.getArea() + "' order by area desc ";
             list = super.findBySql(sql, CheckIncomeBO.class, field);
         }
 
@@ -164,15 +339,16 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
 
     @Override
     public List<CheckIncomeBO> collectGroup(CheckIncomeDTO checkIncomeDTO) throws SerException {
+        checkSeeIdentity();
         String startTime = checkIncomeDTO.getStartTime();
         String endTime = checkIncomeDTO.getEndTime();
 
         LocalDate start = LocalDate.now();
         LocalDate end = LocalDate.now();
-        if( StringUtils.isNotBlank(startTime) ){
+        if (StringUtils.isNotBlank(startTime)) {
             start = LocalDate.parse(startTime);
         }
-        if(  StringUtils.isNotBlank( endTime) ){
+        if (StringUtils.isNotBlank(endTime)) {
             end = LocalDate.parse(endTime);
         }
         //如果没有选地区，汇总表头：（地区/日期/目标管理费/实际管理费/比例/差额）
@@ -200,7 +376,7 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
             if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
                 sql = sql + " and time between '" + start + "' and '" + end + "'  ";
             }
-            sql = sql + " and projectGroup='"+checkIncomeDTO.getProjectGroup()+"'  order by projectGroup desc ";
+            sql = sql + " and projectGroup='" + checkIncomeDTO.getProjectGroup() + "'  order by projectGroup desc ";
             list = super.findBySql(sql, CheckIncomeBO.class, field);
         }
 
@@ -210,15 +386,16 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
 
     @Override
     public List<CheckIncomeBO> collectProject(CheckIncomeDTO checkIncomeDTO) throws SerException {
+        checkSeeIdentity();
         String startTime = checkIncomeDTO.getStartTime();
         String endTime = checkIncomeDTO.getEndTime();
 
         LocalDate start = LocalDate.now();
         LocalDate end = LocalDate.now();
-        if( StringUtils.isNotBlank(startTime) ){
+        if (StringUtils.isNotBlank(startTime)) {
             start = LocalDate.parse(startTime);
         }
-        if(  StringUtils.isNotBlank( endTime) ){
+        if (StringUtils.isNotBlank(endTime)) {
             end = LocalDate.parse(endTime);
         }
         //如果没有选地区，汇总表头：（地区/日期/目标管理费/实际管理费/比例/差额）
@@ -246,7 +423,7 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
             if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
                 sql = sql + " and time between '" + start + "' and '" + end + "'  ";
             }
-            sql = sql + "  and projectName='"+checkIncomeDTO.getProjectName()+"'  order by projectName desc ";
+            sql = sql + "  and projectName='" + checkIncomeDTO.getProjectName() + "'  order by projectName desc ";
             list = super.findBySql(sql, CheckIncomeBO.class, field);
         }
 
@@ -290,6 +467,7 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
 
     @Override
     public List<CheckIncomeBO> areaDiff(CheckIncomeDTO checkIncomeDTO) throws SerException {
+        checkSeeIdentity();
         List<CheckIncomeBO> collectList = new ArrayList<>();
         if (StringUtils.isBlank(checkIncomeDTO.getArea())) {
             throw new SerException("地区不能为空");
@@ -314,7 +492,7 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
         while (start.getYear() != end.getYear() || start.getMonthValue() != end.getMonthValue()) {
             if (flag == 0) {
                 System.out.println(start);
-                caculateRate("area",area,start,end,checkIndex,collectList);
+                caculateRate("area", area, start, end, checkIndex, collectList);
             }
             start = start.plusMonths(1);
             if (flag != 3) {//!=3
@@ -322,27 +500,27 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
             }
             if (flag != 3 && start.getMonthValue() == 12) {
                 System.out.println(start);
-                caculateRate("area",area,start,end,checkIndex,collectList);
+                caculateRate("area", area, start, end, checkIndex, collectList);
                 flag = 1;
 
                 if (start.plusYears(1).getYear() <= end.getYear()) {
                     start = start.plusYears(1);
                     start = LocalDate.of(start.getYear(), 1, 1);
                     System.out.println(start);
-                    caculateRate("area",area,start,end,checkIndex,collectList);
+                    caculateRate("area", area, start, end, checkIndex, collectList);
                     flag = 2;
                 }
             }
             if (flag == 0 && start.getYear() == end.getYear() && start.getMonthValue() != 12) {
                 if (start.getYear() == end.getYear() && start.plusMonths(1).getMonthValue() == end.getMonthValue()) {
                     System.out.println(start);
-                    caculateRate("area",area,start,end,checkIndex,collectList);
+                    caculateRate("area", area, start, end, checkIndex, collectList);
                     System.out.println(start.plusMonths(1));
-                    caculateRate("area",area,start,end,checkIndex,collectList);
+                    caculateRate("area", area, start, end, checkIndex, collectList);
                     flag = 3;
                 } else if (start.getYear() == end.getYear() && start.getMonthValue() == end.getMonthValue()) {
                     System.out.println(start);
-                    caculateRate("area",area,start,end,checkIndex,collectList);
+                    caculateRate("area", area, start, end, checkIndex, collectList);
                     flag = 3;
                 }
             }
@@ -354,6 +532,7 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
 
     @Override
     public List<CheckIncomeBO> groupDiff(CheckIncomeDTO checkIncomeDTO) throws SerException {
+        checkSeeIdentity();
         List<CheckIncomeBO> collectList = new ArrayList<>();
         if (StringUtils.isBlank(checkIncomeDTO.getArea())) {
             throw new SerException("项目组不能为空");
@@ -378,7 +557,7 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
         while (start.getYear() != end.getYear() || start.getMonthValue() != end.getMonthValue()) {
             if (flag == 0) {
                 System.out.println(start);
-                caculateRate("projectGroup",group,start,end,checkIndex,collectList);
+                caculateRate("projectGroup", group, start, end, checkIndex, collectList);
             }
             start = start.plusMonths(1);
             if (flag != 3) {//!=3
@@ -386,27 +565,27 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
             }
             if (flag != 3 && start.getMonthValue() == 12) {
                 System.out.println(start);
-                caculateRate("projectGroup",group,start,end,checkIndex,collectList);
+                caculateRate("projectGroup", group, start, end, checkIndex, collectList);
                 flag = 1;
 
                 if (start.plusYears(1).getYear() <= end.getYear()) {
                     start = start.plusYears(1);
                     start = LocalDate.of(start.getYear(), 1, 1);
                     System.out.println(start);
-                    caculateRate("projectGroup",group,start,end,checkIndex,collectList);
+                    caculateRate("projectGroup", group, start, end, checkIndex, collectList);
                     flag = 2;
                 }
             }
             if (flag == 0 && start.getYear() == end.getYear() && start.getMonthValue() != 12) {
                 if (start.getYear() == end.getYear() && start.plusMonths(1).getMonthValue() == end.getMonthValue()) {
                     System.out.println(start);
-                    caculateRate("projectGroup",group,start,end,checkIndex,collectList);
+                    caculateRate("projectGroup", group, start, end, checkIndex, collectList);
                     System.out.println(start.plusMonths(1));
-                    caculateRate("projectGroup",group,start,end,checkIndex,collectList);
+                    caculateRate("projectGroup", group, start, end, checkIndex, collectList);
                     flag = 3;
                 } else if (start.getYear() == end.getYear() && start.getMonthValue() == end.getMonthValue()) {
                     System.out.println(start);
-                    caculateRate("projectGroup",group,start,end,checkIndex,collectList);
+                    caculateRate("projectGroup", group, start, end, checkIndex, collectList);
                     flag = 3;
                 }
             }
@@ -418,6 +597,7 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
 
     @Override
     public List<CheckIncomeBO> projectDiff(CheckIncomeDTO checkIncomeDTO) throws SerException {
+        checkSeeIdentity();
         List<CheckIncomeBO> collectList = new ArrayList<>();
         if (StringUtils.isBlank(checkIncomeDTO.getArea())) {
             throw new SerException("项目名称不能为空");
@@ -442,7 +622,7 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
         while (start.getYear() != end.getYear() || start.getMonthValue() != end.getMonthValue()) {
             if (flag == 0) {
                 System.out.println(start);
-                caculateRate("projectName",pName,start,end,checkIndex,collectList);
+                caculateRate("projectName", pName, start, end, checkIndex, collectList);
             }
             start = start.plusMonths(1);
             if (flag != 3) {//!=3
@@ -450,27 +630,27 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
             }
             if (flag != 3 && start.getMonthValue() == 12) {
                 System.out.println(start);
-                caculateRate("projectName",pName,start,end,checkIndex,collectList);
+                caculateRate("projectName", pName, start, end, checkIndex, collectList);
                 flag = 1;
 
                 if (start.plusYears(1).getYear() <= end.getYear()) {
                     start = start.plusYears(1);
                     start = LocalDate.of(start.getYear(), 1, 1);
                     System.out.println(start);
-                    caculateRate("projectName",pName,start,end,checkIndex,collectList);
+                    caculateRate("projectName", pName, start, end, checkIndex, collectList);
                     flag = 2;
                 }
             }
             if (flag == 0 && start.getYear() == end.getYear() && start.getMonthValue() != 12) {
                 if (start.getYear() == end.getYear() && start.plusMonths(1).getMonthValue() == end.getMonthValue()) {
                     System.out.println(start);
-                    caculateRate("projectName",pName,start,end,checkIndex,collectList);
+                    caculateRate("projectName", pName, start, end, checkIndex, collectList);
                     System.out.println(start.plusMonths(1));
-                    caculateRate("projectName",pName,start,end,checkIndex,collectList);
+                    caculateRate("projectName", pName, start, end, checkIndex, collectList);
                     flag = 3;
                 } else if (start.getYear() == end.getYear() && start.getMonthValue() == end.getMonthValue()) {
                     System.out.println(start);
-                    caculateRate("projectName",pName,start,end,checkIndex,collectList);
+                    caculateRate("projectName", pName, start, end, checkIndex, collectList);
                     flag = 3;
                 }
             }

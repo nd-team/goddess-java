@@ -6,6 +6,8 @@ import com.bjike.goddess.incomecheck.bo.CheckIncomeBO;
 import com.bjike.goddess.incomecheck.entity.CheckIncome;
 import com.bjike.goddess.incomecheck.dto.CheckIncomeDTO;
 import com.bjike.goddess.incomecheck.to.CheckIncomeTO;
+import com.bjike.goddess.incomecheck.to.GuidePermissionTO;
+import com.bjike.goddess.incomecheck.vo.SonPermissionObject;
 
 import java.util.List;
 
@@ -19,7 +21,15 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CheckIncomeSer extends Ser<CheckIncome, CheckIncomeDTO> {
+    /**
+     * 下拉导航权限
+     */
+    List<SonPermissionObject> sonPermission() throws SerException;
 
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 
     /**
      * 收入核算资金回笼列表总条数

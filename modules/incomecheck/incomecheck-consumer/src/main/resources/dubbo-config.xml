@@ -17,9 +17,11 @@
 	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
 	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 	<dubbo:reference validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
+	<dubbo:reference validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
 
 	<dubbo:reference  validation="true" id="checkIncomeApiImpl" interface="com.bjike.goddess.incomecheck.api.CheckIncomeAPI" />
 	<dubbo:reference  validation="true" id="checkIndexApiImpl" interface="com.bjike.goddess.incomecheck.api.CheckIndexAPI" />
-
+	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.incomecheck.api.CusPermissionAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.incomecheck.api.CusPermissionOperateAPI" />
 
 </beans>

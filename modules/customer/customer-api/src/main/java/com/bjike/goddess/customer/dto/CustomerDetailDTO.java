@@ -13,4 +13,29 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  */
 public class CustomerDetailDTO extends BaseDTO {
 
+
+    /**
+     * 地区数组
+     */
+    private String[] areas;
+    /**
+     * 客户名数组
+     */
+    private String[] customerNames;
+
+    public String[] getAreas() {
+        return areas;
+    }
+
+    public void setAreas(String[] areas) {
+        this.areas = areas;
+    }
+
+    public String[] getCustomerNames() {
+        return customerNames;
+    }
+
+    public void setCustomerNames(String[] customerNames) {
+        this.customerNames = customerNames;
+    }
 }

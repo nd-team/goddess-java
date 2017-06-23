@@ -222,7 +222,7 @@ public class BankReconciliationAct {
      * 查找银行流水明细
      *
      * @param id 银行对账id
-     * @return class FundDetailVO
+     * @return class BankDetailVO
      * @throws ActException
      * @version v1
      */

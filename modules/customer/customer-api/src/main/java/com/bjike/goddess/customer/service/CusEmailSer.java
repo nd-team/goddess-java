@@ -6,6 +6,7 @@ import com.bjike.goddess.customer.bo.CusEmailBO;
 import com.bjike.goddess.customer.entity.CusEmail;
 import com.bjike.goddess.customer.dto.CusEmailDTO;
 import com.bjike.goddess.customer.to.CusEmailTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +20,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CusEmailSer extends Ser<CusEmail, CusEmailDTO> {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
 
     /**
@@ -116,6 +131,16 @@ public interface CusEmailSer extends Ser<CusEmail, CusEmailDTO> {
 
     ;
 
+
+    /**
+     * 定时器检测要发送的邮件
+     *
+     */
+    default void checkSendEmail( ) throws SerException {
+        return ;
+    }
+
+    ;
 
 
 }
