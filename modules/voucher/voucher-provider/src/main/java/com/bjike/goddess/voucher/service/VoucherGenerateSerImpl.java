@@ -1272,7 +1272,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         CategoryDTO cdto = new CategoryDTO();
         cdto.setFirstSubjectName(firstSub);
         cdto.setSecondSubject(secondSub);
-        List<String> list = categoryAPI.getSecondSubject(cdto);
+        List<String> list = categoryAPI.getThirdSubject(cdto);
         return list;
     }
 
