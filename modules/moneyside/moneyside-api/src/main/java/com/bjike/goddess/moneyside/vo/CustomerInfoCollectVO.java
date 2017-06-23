@@ -12,13 +12,9 @@ package com.bjike.goddess.moneyside.vo;
 public class CustomerInfoCollectVO {
 
     /**
-     * id
-     */
-    private String id;
-    /**
      * 姓名
      */
-    private String name;
+    private String investor;
 
     /**
      * 资金进入方式
@@ -28,12 +24,12 @@ public class CustomerInfoCollectVO {
     /**
      * 资金进入时间
      */
-    private String fundEntryAime;
+    private String fundEntryTime;
 
     /**
      * 进入金额
      */
-    private Double enterMoney;
+    private Double thisInvestMoney;
 
     /**
      * 投资项目
@@ -73,38 +69,29 @@ public class CustomerInfoCollectVO {
     /**
      * 转让金额
      */
-    private Double transferAmount;
+    private Double needInvestAmount;
 
     /**
      * 收益分配时间
      */
-    private String incomeAllotTime;
+    private String incomeDistributionTime;
 
     /**
      * 分配利率(%)
      */
-    private Double allotInterestRate;
+    private Double proportionInvestment;
 
     /**
      * 分配额
      */
-    private Double quota;
+    private Double totalQuota;
 
-
-    public String getId() {
-        return id;
+    public String getInvestor() {
+        return investor;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setInvestor(String investor) {
+        this.investor = investor;
     }
 
     public String getAccessToFund() {
@@ -115,20 +102,20 @@ public class CustomerInfoCollectVO {
         this.accessToFund = accessToFund;
     }
 
-    public String getFundEntryAime() {
-        return fundEntryAime;
+    public String getFundEntryTime() {
+        return fundEntryTime;
     }
 
-    public void setFundEntryAime(String fundEntryAime) {
-        this.fundEntryAime = fundEntryAime;
+    public void setFundEntryTime(String fundEntryTime) {
+        this.fundEntryTime = fundEntryTime;
     }
 
-    public Double getEnterMoney() {
-        return enterMoney;
+    public Double getThisInvestMoney() {
+        return thisInvestMoney;
     }
 
-    public void setEnterMoney(Double enterMoney) {
-        this.enterMoney = enterMoney;
+    public void setThisInvestMoney(Double thisInvestMoney) {
+        this.thisInvestMoney = thisInvestMoney;
     }
 
     public String getInvestProject() {
@@ -187,35 +174,35 @@ public class CustomerInfoCollectVO {
         this.transferee = transferee;
     }
 
-    public Double getTransferAmount() {
-        return transferAmount;
+    public Double getNeedInvestAmount() {
+        return needInvestAmount;
     }
 
-    public void setTransferAmount(Double transferAmount) {
-        this.transferAmount = transferAmount;
+    public void setNeedInvestAmount(Double needInvestAmount) {
+        this.needInvestAmount = needInvestAmount;
     }
 
-    public String getIncomeAllotTime() {
-        return incomeAllotTime;
+    public String getIncomeDistributionTime() {
+        return incomeDistributionTime;
     }
 
-    public void setIncomeAllotTime(String incomeAllotTime) {
-        this.incomeAllotTime = incomeAllotTime;
+    public void setIncomeDistributionTime(String incomeDistributionTime) {
+        this.incomeDistributionTime = incomeDistributionTime;
     }
 
-    public Double getAllotInterestRate() {
-        return allotInterestRate;
+    public Double getProportionInvestment() {
+        return proportionInvestment;
     }
 
-    public void setAllotInterestRate(Double allotInterestRate) {
-        this.allotInterestRate = allotInterestRate;
+    public void setProportionInvestment(Double proportionInvestment) {
+        this.proportionInvestment = proportionInvestment;
     }
 
-    public Double getQuota() {
-        return quota;
+    public Double getTotalQuota() {
+        return totalQuota;
     }
 
-    public void setQuota(Double quota) {
-        this.quota = quota;
+    public void setTotalQuota(Double totalQuota) {
+        this.totalQuota = totalQuota;
     }
 }

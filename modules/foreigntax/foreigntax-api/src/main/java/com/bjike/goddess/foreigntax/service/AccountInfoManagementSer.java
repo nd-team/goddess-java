@@ -5,7 +5,9 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.foreigntax.bo.AccountInfoManagementBO;
 import com.bjike.goddess.foreigntax.entity.AccountInfoManagement;
 import com.bjike.goddess.foreigntax.dto.AccountInfoManagementDTO;
+import com.bjike.goddess.foreigntax.excel.SonPermissionObject;
 import com.bjike.goddess.foreigntax.to.AccountInfoManagementTO;
+import com.bjike.goddess.foreigntax.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +21,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface AccountInfoManagementSer extends Ser<AccountInfoManagement, AccountInfoManagementDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 外账资料管理列表总条数
@@ -78,19 +92,4 @@ public interface AccountInfoManagementSer extends Ser<AccountInfoManagement, Acc
 
     }
 
-    /**
-     * 上传
-     */
-    default void upload() throws SerException {
-        return;
-
-    }
-
-    /**
-     * 下载
-     */
-    default void download() throws SerException {
-        return;
-
-    }
 }

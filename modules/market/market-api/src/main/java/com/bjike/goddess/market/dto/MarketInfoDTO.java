@@ -15,13 +15,13 @@ public class MarketInfoDTO extends BaseDTO {
     /**
      * 客户名称
      */
-    private String customerName;
+    private String[] customerName;
 
-    public String getCustomerName() {
+    public String[] getCustomerName() {
         return customerName;
     }
 
-    public void setCustomerName(String customerName) {
+    public void setCustomerName(String[] customerName) {
         this.customerName = customerName;
     }
 }

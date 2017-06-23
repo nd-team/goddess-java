@@ -2,8 +2,10 @@ package com.bjike.goddess.business.api;
 
 import com.bjike.goddess.business.bo.BusinessRegisterBO;
 import com.bjike.goddess.business.dto.BusinessRegisterDTO;
+import com.bjike.goddess.business.excel.SonPermissionObject;
 import com.bjike.goddess.business.service.BusinessRegisterSer;
 import com.bjike.goddess.business.to.BusinessRegisterTO;
+import com.bjike.goddess.business.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,15 @@ import java.util.List;
 public class BusinessRegisterApiImpl implements BusinessRegisterAPI {
     @Autowired
     private BusinessRegisterSer businessRegisterSer;
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return businessRegisterSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return businessRegisterSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countBusinessRegister(BusinessRegisterDTO businessRegisterDTO) throws SerException {
         return businessRegisterSer.countBusinessRegister(businessRegisterDTO);
@@ -49,16 +60,6 @@ public class BusinessRegisterApiImpl implements BusinessRegisterAPI {
     @Override
     public void removeBusinessRegister(String id) throws SerException {
         businessRegisterSer.removeBusinessRegister(id);
-    }
-    @Override
-    public void upload() throws SerException {
-        businessRegisterSer.upload();
-
-    }
-    @Override
-    public void download() throws SerException {
-        businessRegisterSer.download();
-
     }
 
 }

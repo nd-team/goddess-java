@@ -66,7 +66,7 @@ public class BiddingInfoAction extends BaseFileAction{
         List<SonPermissionObject> list = new ArrayList<>();
         try {
             SonPermissionObject obj = new SonPermissionObject();
-            obj.setName("propermission");
+            obj.setName("cuspermission");
             obj.setDescribesion("设置");
             Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
             if (!isHasPermission) {
@@ -288,6 +288,53 @@ public class BiddingInfoAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 获取招标信息
+     *
+     * @param biddingNumber 编号
+     * @return class BiddingInfoVO
+     * @des 根据编号获取招标信息
+     * @version v1
+     */
+    @GetMapping("v1/getBiddingNum")
+    public Result getBidding(String biddingNumber) throws ActException {
+        try {
+            BiddingInfoBO biddingInfoBO = biddingInfoAPI.getBidding(biddingNumber);
+            return ActResult.initialize(BeanTransform.copyProperties(biddingInfoBO, BiddingInfoVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取项目名称
+     *
+     * @des 获取项目名称集合
+     * @version v1
+     */
+    @GetMapping("v1/projectName")
+    public Result projectName() throws ActException {
+        try {
+            List<String> projectNameList = biddingInfoAPI.getProjectName();
+            return ActResult.initialize(projectNameList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取编号
+     *
+     * @des 获取编号集合
+     * @version v1
+     */
+    @GetMapping("v1/biddingNumber")
+    public Result biddingNumber() throws ActException {
+        try {
+            List<String> biddingNumberList = biddingInfoAPI.getTenderNumber();
+            return ActResult.initialize(biddingNumberList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 上传附件
@@ -301,7 +348,7 @@ public class BiddingInfoAction extends BaseFileAction{
         try {
             //跟前端约定好 ，文件路径是列表id
             // /id/....
-            String paths = "/bidding/biddinginfo/" + id;
+            String paths = "/" + id;
             List<InputStream> inputStreams = getInputStreams(request, paths);
             fileAPI.upload(inputStreams);
             return new ActResult("upload success");
@@ -322,7 +369,7 @@ public class BiddingInfoAction extends BaseFileAction{
         try {
             //跟前端约定好 ，文件路径是列表id
             // /bidding/id/....
-            String path = "/bidding/biddinginfo/" + id;
+            String path = "/" + id;
             FileInfo fileInfo = new FileInfo();
             fileInfo.setPath(path);
             Object storageToken = request.getAttribute("storageToken");

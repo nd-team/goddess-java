@@ -3,7 +3,7 @@ package com.bjike.goddess.bidding.excel;
 import java.io.Serializable;
 
 /**
- * 项目问题受理和处理下拉导航权限控制
+ * 招投标下拉导航权限控制
  *
  * @Author: [xiazhili]
  * @Date: [2017-06-08 10:30]

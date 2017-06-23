@@ -4,7 +4,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.subjectcollect.bo.CompareCollectBO;
 import com.bjike.goddess.subjectcollect.bo.SubjectCollectBO;
 import com.bjike.goddess.subjectcollect.dto.SubjectCollectDTO;
+import com.bjike.goddess.subjectcollect.excel.SonPermissionObject;
 import com.bjike.goddess.subjectcollect.service.SubjectCollectSer;
+import com.bjike.goddess.subjectcollect.to.GuidePermissionTO;
 import com.bjike.goddess.subjectcollect.to.SubjectCollectTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,12 +28,19 @@ import java.util.List;
 public class SubjectCollectApiImpl implements SubjectCollectAPI {
     @Autowired
     private SubjectCollectSer subjectCollectSer;
-
     @Override
-    public String exportExcel() throws SerException {
-        return subjectCollectSer.exportExcel();
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return subjectCollectSer.sonPermission();
     }
 
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return subjectCollectSer.guidePermission(guidePermissionTO);
+    }
+    @Override
+    public byte[] exportExcel(SubjectCollectDTO dto) throws SerException{
+        return subjectCollectSer.exportExcel(dto);
+    }
     @Override
     public void removeSubjectCollect(String id) throws SerException {
         subjectCollectSer.removeSubjectCollect(id);
@@ -52,13 +61,11 @@ public class SubjectCollectApiImpl implements SubjectCollectAPI {
         return subjectCollectSer.findListSubjectCollect(subjectCollectDTO);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public SubjectCollectBO insertSubjectCollect(SubjectCollectTO subjectCollectTO) throws SerException {
         return subjectCollectSer.insertSubjectCollect(subjectCollectTO);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public SubjectCollectBO editSubjectCollect(SubjectCollectTO subjectCollectTO) throws SerException {
         return subjectCollectSer.editSubjectCollect(subjectCollectTO);

@@ -1,11 +1,14 @@
 package com.bjike.goddess.moneyside.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.moneyside.bo.ApplyInvestBO;
 import com.bjike.goddess.moneyside.bo.CallInfoBO;
 import com.bjike.goddess.moneyside.dto.CallInfoDTO;
+import com.bjike.goddess.moneyside.to.ApplyInvestTO;
 import com.bjike.goddess.moneyside.to.CallInfoTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 招投信息列表业务接口
@@ -76,4 +79,36 @@ public interface CallInfoAPI {
     default void removeCallInfo(String id) throws SerException {
 
     }
+    /**
+     * 申请投资
+     *
+     * @param callInfoTO 申请投资数据to
+     * @return class CallInfoBO
+     * @throws SerException
+     */
+    default CallInfoBO applyInvest(CallInfoTO callInfoTO) throws SerException {
+        return null;
+    }
+    /**
+     * 根据项目名称拿值
+     *
+     * @param innerProject 内部项目名称
+     * @return class CallInfoBO
+     * @throws SerException
+     */
+    default CallInfoBO getInnerProject(String innerProject) throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有内部项目名称
+     *
+     * @return class String
+     * @throws SerException
+     */
+    default Set<String> getInnerProject() throws SerException {
+        return null;
+    }
+
+
+
 }

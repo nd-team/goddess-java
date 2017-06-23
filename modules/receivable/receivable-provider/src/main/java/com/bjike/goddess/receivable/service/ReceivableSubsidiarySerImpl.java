@@ -1,5 +1,6 @@
 package com.bjike.goddess.receivable.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -8,6 +9,7 @@ import com.bjike.goddess.receivable.dto.ReceivableSubsidiaryDTO;
 import com.bjike.goddess.receivable.entity.Contractor;
 import com.bjike.goddess.receivable.entity.ReceivableSubsidiary;
 import com.bjike.goddess.receivable.enums.AuditStatus;
+import com.bjike.goddess.receivable.to.CollectCompareTO;
 import com.bjike.goddess.receivable.to.ProgressTO;
 import com.bjike.goddess.receivable.to.ReceivableSubsidiaryTO;
 import org.apache.commons.lang3.StringUtils;
@@ -641,142 +643,156 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         return bo;
 
     }
-
-    /*@Override
-    public List<ReceivableSubsidiaryBO> collectCompare(ReceivableSubsidiaryTO receivableSubsidiaryTO) throws SerException {
-        try {
-            if (StringUtils.isBlank(receivableSubsidiaryTO.getStartTime()) && StringUtils.isBlank(receivableSubsidiaryTO.getEndTime())) {
-                throw new SerException("对比汇总日期不能为空");
-            }
-            ReceivableSubsidiaryDTO dto = new ReceivableSubsidiaryDTO();
-            String accountTime = receivableSubsidiaryTO.getAccountTime();
-            dto.getConditions().add(Restrict.eq("accountDate", accountTime));
-            List<ReceivableSubsidiary> list = super.findByCis(dto);
-            Double accountAll = list.stream().mapToDouble(ReceivableSubsidiary::getAccountMoney).sum();
-
-            List<ReceivableSubsidiaryBO> pageList = new ArrayList<>();
-            if (receivableSubsidiaryTO.equals("area")) {
-                List<String> receivableString = this.getAreas();
-                for (String rs : receivableString) {
-                    List<ReceivableSubsidiary> receivableSubsidiarie = new ArrayList<ReceivableSubsidiary>();
-                    for (ReceivableSubsidiary all : list) {
-                        if (all.getArea().equals(rs)) {
-                            receivableSubsidiarie.add(all);
-                        }
-                    }
-                    Double taskPrice = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaskPrice).sum();//派工单价
-                    Double pactSize = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum();//派工数量
-                    Double managementFee = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getManagementFee).sum();//管理费
-                    Double accountMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getAccountMoney).sum();//到账金额
-                    Double taxes = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaxes).sum();//税金
-                    Double taskMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaskMoney).sum();//税后金额
-                    Double minusMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum()
-                            - receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum();//差额
-                    Double increase = 0.0;//增长率
-                    if (accountMoney != 0) {
-                        increase = minusMoney / accountMoney;
-                    }
-                    Double percentageTemp = 0.0;//百分比转换
-                    Double percentage = 0.0;//百分比
-                    String percentageStr = "0.00%";//百分比
-                    if (accountMoney != 0) {
-                        percentageTemp = accountMoney / accountAll * 100;
-                        percentage = percentageTemp;
-                        DecimalFormat df = new DecimalFormat("0.00");
-                        percentageStr = df.format(percentageTemp) + "%";
-                    }
-                    ReceivableSubsidiaryBO receivableSubsidiaryBO = new ReceivableSubsidiaryBO(rs, taskPrice, pactSize, managementFee, accountMoney, taxes, taskMoney, minusMoney, increase, percentageStr, percentage);
-                    pageList.add(receivableSubsidiaryBO);
-                }
-            } else if (receivableSubsidiaryTO.equals("innerName")) {
-                List<String> receivableString = this.getInnerNames();
-                for (String rs : receivableString) {
-                    List<ReceivableSubsidiary> receivableSubsidiarie = new ArrayList<ReceivableSubsidiary>();
-                    for (ReceivableSubsidiary all : list) {
-                        if (all.getInnerName().equals(rs)) {
-                            receivableSubsidiarie.add(all);
-                        }
-                    }
-                    Double taskPrice = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaskPrice).sum();//派工单价
-                    Double pactSize = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum();//派工数量
-                    Double managementFee = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getManagementFee).sum();//管理费
-                    Double accountMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getAccountMoney).sum();//到账金额
-                    Double taxes = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaxes).sum();//税金
-                    Double taskMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaskMoney).sum();//税后金额
-                    Double minusMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum()
-                            - receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum();//差额
-                    Double increase = 0.0;//增长率
-                    if (accountMoney != 0) {
-                        increase = minusMoney / accountMoney;
-                    }
-                    Double percentageTemp = 0.0;//百分比转换
-                    Double percentage = 0.0;//百分比
-                    String percentageStr = "0.00%";//百分比
-                    if (accountMoney != 0) {
-                        percentageTemp = accountMoney / accountAll * 100;
-                        percentage = percentageTemp;
-                        DecimalFormat df = new DecimalFormat("0.00");
-                        percentageStr = df.format(percentageTemp) + "%";
-                    }
-                    ReceivableSubsidiaryBO receivableSubsidiaryBO = new ReceivableSubsidiaryBO(rs, taskPrice, pactSize, managementFee, accountMoney, taxes, taskMoney, minusMoney, increase, percentageStr, percentage);
-                    pageList.add(receivableSubsidiaryBO);
-                }
-
-            } else if (receivableSubsidiaryTO.equals("contractor")) {
-                List<String> receivableString = this.getContractors();
-                for (String rs : receivableString) {
-                    List<ReceivableSubsidiary> receivableSubsidiarie = new ArrayList<ReceivableSubsidiary>();
-                    for (ReceivableSubsidiary all : list) {
-                        if (all.getContractor().equals(rs)) {
-                            receivableSubsidiarie.add(all);
-                        }
-                    }
-                    Double taskPrice = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaskPrice).sum();//派工单价
-                    Double pactSize = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum();//派工数量
-                    Double managementFee = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getManagementFee).sum();//管理费
-                    Double accountMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getAccountMoney).sum();//到账金额
-                    Double taxes = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaxes).sum();//税金
-                    Double taskMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaskMoney).sum();//税后金额
-                    Double minusMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum()
-                            - receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum();//差额
-                    Double increase = 0.0;//增长率
-                    if (accountMoney != 0) {
-                        increase = minusMoney / accountMoney;
-                    }
-                    Double percentageTemp = 0.0;//百分比转换
-                    Double percentage = 0.0;//百分比
-                    String percentageStr = "0.00%";//百分比
-                    if (accountMoney != 0) {
-                        percentageTemp = accountMoney / accountAll * 100;
-                        percentage = percentageTemp;
-                        DecimalFormat df = new DecimalFormat("0.00");
-                        percentageStr = df.format(percentageTemp) + "%";
-                    }
-                    ReceivableSubsidiaryBO receivableSubsidiaryBO = new ReceivableSubsidiaryBO(rs, taskPrice, pactSize, managementFee, accountMoney, taxes, taskMoney, minusMoney, increase, percentageStr, percentage);
-                    pageList.add(receivableSubsidiaryBO);
-                }
-            }
-            //合计
-            Double taskPrice = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getTaskPrice).sum();//派工单价
-            Double pactSize = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getPactSize).sum();//派工数量
-            Double managementFee = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getManagementFee).sum();//管理费
-            Double accountMoney = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getAccountMoney).sum();//到账金额
-            Double taxes = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getTaxes).sum();//税金
-            Double taskMoney = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getTaskMoney).sum();//税后金额
-            Double minusMoney = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getMinusMoney).sum();//差额
-            Double increase = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getIncrease).sum();//增长率
-            Double percentageDouble = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getPercentage).sum();//百分比
-            DecimalFormat df = new DecimalFormat("0.00");
-            String percentageStr = df.format(percentageDouble) + "%";
-            Double percentage = 0.0;
-            ReceivableSubsidiaryBO receivableSubsidiaryBO = new ReceivableSubsidiaryBO("合计", taskPrice, pactSize, managementFee, accountMoney, taxes, taskMoney, minusMoney, increase, percentageStr, percentage);
-            pageList.add(receivableSubsidiaryBO);
-            return pageList;
-        } catch (SerException e) {
-            throw new SerException(e.getMessage());
+    @Override
+    public List<CollectCompareBO> collectCompare(CollectCompareTO to) throws SerException {
+        ReceivableSubsidiaryDTO dto = new ReceivableSubsidiaryDTO();
+        String startTime = to.getStartTime();
+        String endTime = to.getEndTime();
+        if(StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)){
+            String [] condi = new String[]{startTime,endTime};
+            dto.getConditions().add(Restrict.eq("accountTime",condi));
         }
+        List<ReceivableSubsidiary> list = super.findByCis(dto);
+        if(null != to.getArea()){
+            dto.getConditions().add(Restrict.eq("area",to.getArea()));
+        }
+        return null;
     }
-*/
+//    @Override
+//    public List<ReceivableSubsidiaryBO> collectCompare(ReceivableSubsidiaryTO receivableSubsidiaryTO) throws SerException {
+//        try {
+//            if (StringUtils.isBlank(receivableSubsidiaryTO.getStartTime()) && StringUtils.isBlank(receivableSubsidiaryTO.getEndTime())) {
+//                throw new SerException("对比汇总日期不能为空");
+//            }
+//            ReceivableSubsidiaryDTO dto = new ReceivableSubsidiaryDTO();
+//            String accountTime = receivableSubsidiaryTO.getAccountTime();
+//            dto.getConditions().add(Restrict.eq("accountDate", accountTime));
+//            List<ReceivableSubsidiary> list = super.findByCis(dto);
+//            Double accountAll = list.stream().mapToDouble(ReceivableSubsidiary::getAccountMoney).sum();
+//
+//            List<ReceivableSubsidiaryBO> pageList = new ArrayList<>();
+//            if (receivableSubsidiaryTO.equals("area")) {
+//                List<String> receivableString = this.getAreas();
+//                for (String rs : receivableString) {
+//                    List<ReceivableSubsidiary> receivableSubsidiarie = new ArrayList<ReceivableSubsidiary>();
+//                    for (ReceivableSubsidiary all : list) {
+//                        if (all.getArea().equals(rs)) {
+//                            receivableSubsidiarie.add(all);
+//                        }
+//                    }
+//                    Double taskPrice = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaskPrice).sum();//派工单价
+//                    Double pactSize = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum();//派工数量
+//                    Double managementFee = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getManagementFee).sum();//管理费
+//                    Double accountMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getAccountMoney).sum();//到账金额
+//                    Double taxes = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaxes).sum();//税金
+//                    Double taskMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaskMoney).sum();//税后金额
+//                    Double minusMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum()
+//                            - receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum();//差额
+//                    Double increase = 0.0;//增长率
+//                    if (accountMoney != 0) {
+//                        increase = minusMoney / accountMoney;
+//                    }
+//                    Double percentageTemp = 0.0;//百分比转换
+//                    Double percentage = 0.0;//百分比
+//                    String percentageStr = "0.00%";//百分比
+//                    if (accountMoney != 0) {
+//                        percentageTemp = accountMoney / accountAll * 100;
+//                        percentage = percentageTemp;
+//                        DecimalFormat df = new DecimalFormat("0.00");
+//                        percentageStr = df.format(percentageTemp) + "%";
+//                    }
+//                    ReceivableSubsidiaryBO receivableSubsidiaryBO = new ReceivableSubsidiaryBO(rs, taskPrice, pactSize, managementFee, accountMoney, taxes, taskMoney, minusMoney, increase, percentageStr, percentage);
+//                    pageList.add(receivableSubsidiaryBO);
+//                }
+//            } else if (receivableSubsidiaryTO.equals("innerName")) {
+//                List<String> receivableString = this.getInnerNames();
+//                for (String rs : receivableString) {
+//                    List<ReceivableSubsidiary> receivableSubsidiarie = new ArrayList<ReceivableSubsidiary>();
+//                    for (ReceivableSubsidiary all : list) {
+//                        if (all.getInnerName().equals(rs)) {
+//                            receivableSubsidiarie.add(all);
+//                        }
+//                    }
+//                    Double taskPrice = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaskPrice).sum();//派工单价
+//                    Double pactSize = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum();//派工数量
+//                    Double managementFee = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getManagementFee).sum();//管理费
+//                    Double accountMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getAccountMoney).sum();//到账金额
+//                    Double taxes = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaxes).sum();//税金
+//                    Double taskMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaskMoney).sum();//税后金额
+//                    Double minusMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum()
+//                            - receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum();//差额
+//                    Double increase = 0.0;//增长率
+//                    if (accountMoney != 0) {
+//                        increase = minusMoney / accountMoney;
+//                    }
+//                    Double percentageTemp = 0.0;//百分比转换
+//                    Double percentage = 0.0;//百分比
+//                    String percentageStr = "0.00%";//百分比
+//                    if (accountMoney != 0) {
+//                        percentageTemp = accountMoney / accountAll * 100;
+//                        percentage = percentageTemp;
+//                        DecimalFormat df = new DecimalFormat("0.00");
+//                        percentageStr = df.format(percentageTemp) + "%";
+//                    }
+//                    ReceivableSubsidiaryBO receivableSubsidiaryBO = new ReceivableSubsidiaryBO(rs, taskPrice, pactSize, managementFee, accountMoney, taxes, taskMoney, minusMoney, increase, percentageStr, percentage);
+//                    pageList.add(receivableSubsidiaryBO);
+//                }
+//
+//            } else if (receivableSubsidiaryTO.equals("contractor")) {
+//                List<String> receivableString = this.getContractors();
+//                for (String rs : receivableString) {
+//                    List<ReceivableSubsidiary> receivableSubsidiarie = new ArrayList<ReceivableSubsidiary>();
+//                    for (ReceivableSubsidiary all : list) {
+//                        if (all.getContractor().equals(rs)) {
+//                            receivableSubsidiarie.add(all);
+//                        }
+//                    }
+//                    Double taskPrice = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaskPrice).sum();//派工单价
+//                    Double pactSize = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum();//派工数量
+//                    Double managementFee = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getManagementFee).sum();//管理费
+//                    Double accountMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getAccountMoney).sum();//到账金额
+//                    Double taxes = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaxes).sum();//税金
+//                    Double taskMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaskMoney).sum();//税后金额
+//                    Double minusMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum()
+//                            - receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum();//差额
+//                    Double increase = 0.0;//增长率
+//                    if (accountMoney != 0) {
+//                        increase = minusMoney / accountMoney;
+//                    }
+//                    Double percentageTemp = 0.0;//百分比转换
+//                    Double percentage = 0.0;//百分比
+//                    String percentageStr = "0.00%";//百分比
+//                    if (accountMoney != 0) {
+//                        percentageTemp = accountMoney / accountAll * 100;
+//                        percentage = percentageTemp;
+//                        DecimalFormat df = new DecimalFormat("0.00");
+//                        percentageStr = df.format(percentageTemp) + "%";
+//                    }
+//                    ReceivableSubsidiaryBO receivableSubsidiaryBO = new ReceivableSubsidiaryBO(rs, taskPrice, pactSize, managementFee, accountMoney, taxes, taskMoney, minusMoney, increase, percentageStr, percentage);
+//                    pageList.add(receivableSubsidiaryBO);
+//                }
+//            }
+//            //合计
+//            Double taskPrice = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getTaskPrice).sum();//派工单价
+//            Double pactSize = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getPactSize).sum();//派工数量
+//            Double managementFee = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getManagementFee).sum();//管理费
+//            Double accountMoney = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getAccountMoney).sum();//到账金额
+//            Double taxes = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getTaxes).sum();//税金
+//            Double taskMoney = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getTaskMoney).sum();//税后金额
+//            Double minusMoney = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getMinusMoney).sum();//差额
+//            Double increase = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getIncrease).sum();//增长率
+//            Double percentageDouble = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getPercentage).sum();//百分比
+//            DecimalFormat df = new DecimalFormat("0.00");
+//            String percentageStr = df.format(percentageDouble) + "%";
+//            Double percentage = 0.0;
+//            ReceivableSubsidiaryBO receivableSubsidiaryBO = new ReceivableSubsidiaryBO("合计", taskPrice, pactSize, managementFee, accountMoney, taxes, taskMoney, minusMoney, increase, percentageStr, percentage);
+//            pageList.add(receivableSubsidiaryBO);
+//            return pageList;
+//        } catch (SerException e) {
+//            throw new SerException(e.getMessage());
+//        }
+//    }
+
     @Override
     public ReceivableSubsidiaryBO sendReceivableSubsidiary(ReceivableSubsidiaryTO receivableSubsidiaryTO) throws SerException {
         //todo:未做发送邮件

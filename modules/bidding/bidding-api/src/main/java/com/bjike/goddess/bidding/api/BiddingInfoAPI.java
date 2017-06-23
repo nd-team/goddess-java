@@ -122,6 +122,30 @@ public interface BiddingInfoAPI {
         return null;
     }
     /**
+     * 根据编号查找招投信息
+     *
+     * @return class String
+     */
+    default BiddingInfoBO getBidding(String biddingNumber) throws SerException {
+        return null;
+    }
+    /**
+     * 获取项目名称
+     *
+     * @return class String
+     */
+    default List<String> getProjectName() throws SerException {
+        return null;
+    }
+    /**
+     * 获取招投编号
+     *
+     * @return class String
+     */
+    default List<String> getTenderNumber() throws SerException {
+        return null;
+    }
+    /**
      * 导出Excel
      *
      * @param dto

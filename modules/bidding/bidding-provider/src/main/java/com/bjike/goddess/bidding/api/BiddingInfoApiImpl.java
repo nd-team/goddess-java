@@ -49,11 +49,6 @@ public class BiddingInfoApiImpl implements BiddingInfoAPI {
 
     @Override
     public BiddingInfoBO insertBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {
-        biddingInfoTO.setRegistrationTime(DateUtil.dateToString(LocalDateTime.now()));
-        biddingInfoTO.setBiddingTime(DateUtil.dateToString(LocalDateTime.now()));
-        biddingInfoTO.setBuyTenderTime(DateUtil.dateToString(LocalDateTime.now()));
-        biddingInfoTO.setMarginTime(DateUtil.dateToString(LocalDateTime.now()));
-        biddingInfoTO.setBackTimeDeposit(DateUtil.dateToString(LocalDateTime.now()));
         return biddingInfoSer.insertBiddingInfo(biddingInfoTO);
     }
 
@@ -76,6 +71,10 @@ public class BiddingInfoApiImpl implements BiddingInfoAPI {
     public List<BiddingInfoBO> searchBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
         return biddingInfoSer.searchBiddingInfo(biddingInfoDTO);
     }
+    @Override
+    public BiddingInfoBO getBidding(String biddingNumber) throws SerException {
+        return biddingInfoSer.getBidding(biddingNumber);
+    }
 
     @Override
     public List<BiddingInfoCollectBO> collectBiddingInfo(String[] cities) throws SerException {
@@ -84,6 +83,14 @@ public class BiddingInfoApiImpl implements BiddingInfoAPI {
     @Override
     public List<String> getBiddingInfoCities() throws SerException {
         return biddingInfoSer.getBiddingInfoCities();
+    }
+    @Override
+    public List<String> getProjectName() throws SerException {
+        return biddingInfoSer.getProjectName();
+    }
+    @Override
+    public List<String> getTenderNumber() throws SerException {
+        return biddingInfoSer.getTenderNumber();
     }
     @Override
     public byte[] exportExcel(BiddingInfoDTO dto) throws SerException{

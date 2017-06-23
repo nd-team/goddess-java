@@ -5,6 +5,7 @@ import com.bjike.goddess.business.bo.BusinessTaxChangeBO;
 import com.bjike.goddess.business.dto.BusinessAnnualInfoDTO;
 import com.bjike.goddess.business.to.BusinessAnnualInfoTO;
 import com.bjike.goddess.business.to.BusinessTaxChangeTO;
+import com.bjike.goddess.business.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.business.entity.BusinessTaxChange;
@@ -22,6 +23,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface BusinessTaxChangeSer extends Ser<BusinessTaxChange, BusinessTaxChangeDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 工商税务变更列表总条数
      */
@@ -80,20 +93,5 @@ public interface BusinessTaxChangeSer extends Ser<BusinessTaxChange, BusinessTax
 
     }
 
-    /**
-     * 上传
-     */
-    default void upload() throws SerException {
-        return;
-
-    }
-
-    /**
-     * 下载
-     */
-    default void download() throws SerException {
-        return;
-
-    }
 
 }

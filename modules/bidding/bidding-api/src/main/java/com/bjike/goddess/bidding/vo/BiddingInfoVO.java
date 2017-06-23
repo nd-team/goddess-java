@@ -20,7 +20,10 @@ public class BiddingInfoVO {
      * id
      */
     private String id;
-
+    /**
+     * 编号
+     */
+    private String biddingNumber;
     /**
      * 网站名称
      */
@@ -51,10 +54,6 @@ public class BiddingInfoVO {
      */
     private String tenderModule;
 
-    /**
-     * 招标编号
-     */
-    private String tenderNumber;
 
     /**
      * 项目名称
@@ -154,6 +153,14 @@ public class BiddingInfoVO {
         this.id = id;
     }
 
+    public String getBiddingNumber() {
+        return biddingNumber;
+    }
+
+    public void setBiddingNumber(String biddingNumber) {
+        this.biddingNumber = biddingNumber;
+    }
+
     public String getWebName() {
         return webName;
     }
@@ -202,13 +209,6 @@ public class BiddingInfoVO {
         this.tenderModule = tenderModule;
     }
 
-    public String getTenderNumber() {
-        return tenderNumber;
-    }
-
-    public void setTenderNumber(String tenderNumber) {
-        this.tenderNumber = tenderNumber;
-    }
 
     public String getProjectName() {
         return projectName;

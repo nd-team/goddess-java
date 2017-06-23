@@ -1,11 +1,11 @@
 package com.bjike.goddess.market.vo;
 
 /**
- * 招投标权限配置操作对象表现层对象
+ * 市场信息权限配置操作对象表现层对象
  *
  * @Author: [ xiazhili ]
  * @Date: [ 2017-05-25 02:12 ]
- * @Description: [ 招投标权限配置操作对象表现层对象 ]
+ * @Description: [ 市场信息权限配置操作对象表现层对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -21,7 +21,7 @@ public class CusPermissionOperateVO {
     private String operator;
 
     /**
-     * 招投标权限id
+     * 市场信息权限id
      */
     private String cuspermissionId;
 

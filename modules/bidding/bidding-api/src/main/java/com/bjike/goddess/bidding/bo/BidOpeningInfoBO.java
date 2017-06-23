@@ -14,9 +14,9 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 public class BidOpeningInfoBO extends BaseBO {
 
     /**
-     * 招标编号
+     * 编号
      */
-    private String tenderNumber;
+    private String biddingNumber;
 
     /**
      * 项目名称
@@ -63,13 +63,12 @@ public class BidOpeningInfoBO extends BaseBO {
     private Double ratio;
 
 
-
-    public String getTenderNumber() {
-        return tenderNumber;
+    public String getBiddingNumber() {
+        return biddingNumber;
     }
 
-    public void setTenderNumber(String tenderNumber) {
-        this.tenderNumber = tenderNumber;
+    public void setBiddingNumber(String biddingNumber) {
+        this.biddingNumber = biddingNumber;
     }
 
     public String getProjectName() {

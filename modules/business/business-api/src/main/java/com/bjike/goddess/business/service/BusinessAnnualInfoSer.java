@@ -2,6 +2,7 @@ package com.bjike.goddess.business.service;
 
 import com.bjike.goddess.business.bo.BusinessAnnualInfoBO;
 import com.bjike.goddess.business.to.BusinessAnnualInfoTO;
+import com.bjike.goddess.business.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.business.entity.BusinessAnnualInfo;
@@ -19,6 +20,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface BusinessAnnualInfoSer extends Ser<BusinessAnnualInfo, BusinessAnnualInfoDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 工商年检信息列表总条数
      */
@@ -77,20 +90,5 @@ public interface BusinessAnnualInfoSer extends Ser<BusinessAnnualInfo, BusinessA
 
     }
 
-    /**
-     * 上传
-     */
-    default void upload() throws SerException {
-        return;
-
-    }
-
-    /**
-     * 下载
-     */
-    default void download() throws SerException {
-        return;
-
-    }
 
 }

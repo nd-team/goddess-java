@@ -56,7 +56,7 @@ public class MarketInfoAction extends BaseFileAction{
         List<SonPermissionObject> list = new ArrayList<>();
         try {
             SonPermissionObject obj = new SonPermissionObject();
-            obj.setName("propermission");
+            obj.setName("cuspermission");
             obj.setDescribesion("设置");
             Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
             if (!isHasPermission) {
@@ -223,13 +223,28 @@ public class MarketInfoAction extends BaseFileAction{
         }
     }
     /**
+     * 获取客户名称
+     *
+     * @des 获取客户名称集合
+     * @version v1
+     */
+    @GetMapping("v1/names")
+    public Result names() throws ActException {
+        try {
+            List<String> namesList = marketInfoAPI.getCustomerName();
+            return ActResult.initialize(namesList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
      * 导出excel
      *
      * @param dto 市场信息
      * @des 导出市场信息
      * @version v1
      */
-    @LoginAuth
+    //@LoginAuth
     @GetMapping("v1/export")
     public Result exportReport(MarketInfoDTO dto, HttpServletResponse response) throws ActException {
         try {
