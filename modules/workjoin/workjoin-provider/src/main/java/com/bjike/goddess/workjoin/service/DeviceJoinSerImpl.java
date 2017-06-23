@@ -68,18 +68,4 @@ public class DeviceJoinSerImpl extends ServiceImpl<DeviceJoin, DeviceJoinDTO> im
 
     }
 
-    @Override
-    public void upload() throws SerException {
-        //TODO 未做上传
-        return;
-
-    }
-
-    @Override
-    public void download() throws SerException {
-        //todo 未做下载
-        return;
-
-    }
-
 }

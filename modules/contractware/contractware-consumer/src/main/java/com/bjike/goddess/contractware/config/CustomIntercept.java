@@ -1,4 +1,4 @@
-package com.bjike.goddess.workjoin.config;
+package com.bjike.goddess.contractware.config;
 
 import com.bjike.goddess.common.consumer.config.HIInfo;
 import com.bjike.goddess.common.consumer.config.Interceptor;
@@ -45,7 +45,7 @@ public class CustomIntercept implements Interceptor {
          * 登录拦截器
          */
         HIInfo loginInfo = new HIInfo(new LoginIntercept(userAPI), "/**");
-        HIInfo storage = new HIInfo(new StorageIntercept(storageUserAPI,"workjoin","123456","workjoin"), "/**");
+        HIInfo storage = new HIInfo(new StorageIntercept(storageUserAPI,"contractware","123456","contractware"), "/**");
 
         /**
          * 权限拦截器

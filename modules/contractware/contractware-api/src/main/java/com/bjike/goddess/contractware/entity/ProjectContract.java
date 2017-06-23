@@ -67,7 +67,7 @@ public class ProjectContract extends BaseEntity {
     /**
      * 交接数量
      */
-    @Column(name = "", columnDefinition = "VARCHAR(255)   COMMENT '交接数量'")
+    @Column( columnDefinition = "VARCHAR(255)   COMMENT '交接数量'")
     private Integer heirCount;
 
     /**
