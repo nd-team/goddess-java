@@ -21,4 +21,15 @@
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.budget.api.ProjectMonthAPI" ref="projectMonthApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.budget.api.ProjectWeekAPI" ref="projectWeekApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.budget.api.WarnAPI" ref="warnApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.budget.api.CusPermissionAPI" ref="cusPermissionApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.budget.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"/>
+
+
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.ArrangementAPI" id="arrangementApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
+
 </beans>

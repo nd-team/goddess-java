@@ -22,6 +22,9 @@
     <dubbo:reference validation="true" interface="com.bjike.goddess.projectmarketfee.api.ProjectMarketFeeAPI"
                      id="projectMarketFeeApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.projectmarketfee.api.WarnAPI" id="warnApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.projectmarketfee.api.CusPermissionAPI" id="cusPermissionApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.projectmarketfee.api.CusPermissionOperateAPI" id="cusPermissionOperateApiImpl"/>
 
     <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl"/>
 </beans>

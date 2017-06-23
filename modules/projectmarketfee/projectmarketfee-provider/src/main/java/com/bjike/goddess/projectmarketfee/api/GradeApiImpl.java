@@ -5,6 +5,7 @@ import com.bjike.goddess.projectmarketfee.bo.GradeBO;
 import com.bjike.goddess.projectmarketfee.dto.GradeDTO;
 import com.bjike.goddess.projectmarketfee.service.GradeSer;
 import com.bjike.goddess.projectmarketfee.to.GradeTO;
+import com.bjike.goddess.projectmarketfee.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,4 +55,13 @@ public class GradeApiImpl implements GradeAPI {
         return gradeSer.countNum(dto);
     }
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return gradeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return gradeSer.guidePermission(guidePermissionTO);
+    }
 }

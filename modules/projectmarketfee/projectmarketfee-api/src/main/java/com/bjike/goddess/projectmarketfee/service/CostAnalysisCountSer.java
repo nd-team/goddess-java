@@ -6,6 +6,7 @@ import com.bjike.goddess.projectmarketfee.bo.CostAnalysisCountBO;
 import com.bjike.goddess.projectmarketfee.dto.CostAnalysisCountDTO;
 import com.bjike.goddess.projectmarketfee.entity.CostAnalysisCount;
 import com.bjike.goddess.projectmarketfee.to.CostAnalysisCountTO;
+import com.bjike.goddess.projectmarketfee.to.GuidePermissionTO;
 
 /**
  * 费用效益分析业务汇总业务接口
@@ -17,6 +18,16 @@ import com.bjike.goddess.projectmarketfee.to.CostAnalysisCountTO;
  * @Copy: [ com.bjike ]
  */
 public interface CostAnalysisCountSer extends Ser<CostAnalysisCount, CostAnalysisCountDTO> {
+    /**
+     * 下拉导航权限
+     */
+    Boolean sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
     /**
      * 添加
      *

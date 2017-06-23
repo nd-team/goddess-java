@@ -5,7 +5,9 @@ import com.bjike.goddess.projectmarketfee.bo.ProjectMarketFeeBO;
 import com.bjike.goddess.projectmarketfee.bo.ProjectMarketFeeCountBO;
 import com.bjike.goddess.projectmarketfee.dto.ProjectMarketFeeDTO;
 import com.bjike.goddess.projectmarketfee.service.ProjectMarketFeeSer;
+import com.bjike.goddess.projectmarketfee.to.GuidePermissionTO;
 import com.bjike.goddess.projectmarketfee.to.ProjectMarketFeeTO;
+import com.bjike.goddess.projectmarketfee.vo.SonPermissionObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -89,5 +91,15 @@ public class ProjectMarketFeeApiImpl implements ProjectMarketFeeAPI {
     @Override
     public Set<Integer> allMonths() throws SerException {
         return projectMarketFeeSer.allMonths();
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return projectMarketFeeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return projectMarketFeeSer.guidePermission(guidePermissionTO);
     }
 }

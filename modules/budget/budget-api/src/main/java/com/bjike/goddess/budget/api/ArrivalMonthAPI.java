@@ -5,6 +5,7 @@ import com.bjike.goddess.budget.bo.ArrivalMonthCountBO;
 import com.bjike.goddess.budget.bo.ArrivalWeekBO;
 import com.bjike.goddess.budget.dto.ArrivalMonthDTO;
 import com.bjike.goddess.budget.to.ArrivalMonthTO;
+import com.bjike.goddess.budget.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -121,4 +122,14 @@ public interface ArrivalMonthAPI {
     default List<String> findAllArrivals() throws SerException {
         return null;
     }
+
+    /**
+     * 下拉导航权限
+     */
+    Boolean sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 }
