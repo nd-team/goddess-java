@@ -314,7 +314,9 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         //先查询获操作对象
         List<String> idList = new ArrayList<>();
         CusPermissionOperateDTO cpoDTO = new CusPermissionOperateDTO();
-        cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", cusPermission.getId()));
+        if (cusPermission != null) {
+            cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", cusPermission.getId()));
+        }
         List<CusPermissionOperate> operateList = cusPermissionOperateSer.findByCis(cpoDTO);
         if (operateList != null && operateList.size() > 0) {
             operateList.stream().forEach(op -> {
@@ -342,7 +344,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
 
         //TODO 部门
-        if (  depart) {
+        if (depart) {
             flag = true;
         } else {
             flag = false;

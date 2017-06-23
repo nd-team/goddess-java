@@ -6,6 +6,7 @@ import com.bjike.goddess.incomecheck.bo.CheckIndexBO;
 import com.bjike.goddess.incomecheck.entity.CheckIndex;
 import com.bjike.goddess.incomecheck.dto.CheckIndexDTO;
 import com.bjike.goddess.incomecheck.to.CheckIndexTO;
+import com.bjike.goddess.incomecheck.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,7 +20,15 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CheckIndexSer extends Ser<CheckIndex, CheckIndexDTO> {
+    /**
+     * 下拉导航权限
+     */
+    Boolean sonPermission() throws SerException;
 
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 
     /**
      * 指标设置列表总条数
