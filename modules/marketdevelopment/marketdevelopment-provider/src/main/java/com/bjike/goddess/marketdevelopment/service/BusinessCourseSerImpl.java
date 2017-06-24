@@ -274,6 +274,7 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
             throw new SerException("您的帐号没有权限");
         dto.getSorts().add("typeId=desc");
         dto.getSorts().add("course=asc");
+        dto.getSorts().add("modifyTime=desc");
         return this.transformBOList(super.findByPage(dto));
     }
 
