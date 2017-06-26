@@ -1,12 +1,12 @@
-package com.bjike.goddess.fundrecords.entity;
+package com.bjike.goddess.fundrecords.excel;
 
-import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
+import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
+import org.hibernate.validator.constraints.NotBlank;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.time.LocalDate;
-
+import javax.validation.constraints.NotNull;
 
 /**
  * 资金流水
@@ -17,64 +17,55 @@ import java.time.LocalDate;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@Entity
-@Table(name = "fundrecords_fundrecord")
-public class FundRecord extends BaseEntity {
+public class FundRecordExcel extends BaseTO {
 
     /**
      * 流水日期
      */
-    @Column(name = "recordDate", nullable = false, columnDefinition = "DATE   COMMENT '流水日期'")
-    private LocalDate recordDate;
+    @ExcelHeader(name = "流水日期", notNull = true)
+    private String recordDate;
 
     /**
      * 地区
      */
-    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @ExcelHeader(name = "地区", notNull = true)
     private String area;
 
     /**
      * 项目组
      */
-    @Column(name = "projectGroup", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目组'")
+    @ExcelHeader(name = "项目组", notNull = true)
     private String projectGroup;
 
     /**
      * 项目名称
      */
-    @Column(name = "project", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目名称'")
+    @ExcelHeader(name = "项目名称", notNull = true)
     private String project;
 
     /**
      * 摘要
      */
-    @Column(name = "digest", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '摘要'")
+    @ExcelHeader(name = "摘要", notNull = true)
     private String digest;
 
     /**
      * 收入
      */
-    @Column(name = "income", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '收入'")
+    @ExcelHeader(name = "收入", notNull = true)
     private Double income;
 
     /**
      * 支出
      */
-    @Column(name = "expenditure", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '支出'")
+    @ExcelHeader(name = "支出", notNull = true)
     private Double expenditure;
 
-    /**
-     * 数据来源
-     */
-    @Column(name = "dataSource", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '数据来源'")
-    private String dataSource;
-
-
-    public LocalDate getRecordDate() {
+    public String getRecordDate() {
         return recordDate;
     }
 
-    public void setRecordDate(LocalDate recordDate) {
+    public void setRecordDate(String recordDate) {
         this.recordDate = recordDate;
     }
 
@@ -126,11 +117,4 @@ public class FundRecord extends BaseEntity {
         this.expenditure = expenditure;
     }
 
-    public String getDataSource() {
-        return dataSource;
-    }
-
-    public void setDataSource(String dataSource) {
-        this.dataSource = dataSource;
-    }
 }
