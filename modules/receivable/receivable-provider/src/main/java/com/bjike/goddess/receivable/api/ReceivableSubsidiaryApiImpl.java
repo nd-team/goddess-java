@@ -8,6 +8,7 @@ import com.bjike.goddess.receivable.dto.ReceivableSubsidiaryDTO;
 import com.bjike.goddess.receivable.entity.Contractor;
 import com.bjike.goddess.receivable.entity.ReceivableSubsidiary;
 import com.bjike.goddess.receivable.service.ReceivableSubsidiarySer;
+import com.bjike.goddess.receivable.to.CollectCompareTO;
 import com.bjike.goddess.receivable.to.ProgressTO;
 import com.bjike.goddess.receivable.to.ReceivableSubsidiaryTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,13 +48,13 @@ public class ReceivableSubsidiaryApiImpl implements ReceivableSubsidiaryAPI {
 
     @Override
     public ReceivableSubsidiaryBO insertReceivableSubsidiary(ReceivableSubsidiaryTO receivableSubsidiaryTO) throws SerException {
-        receivableSubsidiaryTO.setFinishTime(DateUtil.dateToString(LocalDate.now()));
-        receivableSubsidiaryTO.setCheckTime(DateUtil.dateToString(LocalDate.now()));
-        receivableSubsidiaryTO.setAuditTime(DateUtil.dateToString(LocalDate.now()));
-        receivableSubsidiaryTO.setCountTime(DateUtil.dateToString(LocalDate.now()));
-        receivableSubsidiaryTO.setBillTime(DateUtil.dateToString(LocalDate.now()));
-        receivableSubsidiaryTO.setPlanTime(DateUtil.dateToString(LocalDate.now()));
-        receivableSubsidiaryTO.setAccountTime(DateUtil.dateToString(LocalDate.now()));
+//        receivableSubsidiaryTO.setFinishTime(DateUtil.dateToString(LocalDate.now()));
+//        receivableSubsidiaryTO.setCheckTime(DateUtil.dateToString(LocalDate.now()));
+//        receivableSubsidiaryTO.setAuditTime(DateUtil.dateToString(LocalDate.now()));
+//        receivableSubsidiaryTO.setCountTime(DateUtil.dateToString(LocalDate.now()));
+//        receivableSubsidiaryTO.setBillTime(DateUtil.dateToString(LocalDate.now()));
+//        receivableSubsidiaryTO.setPlanTime(DateUtil.dateToString(LocalDate.now()));
+//        receivableSubsidiaryTO.setAccountTime(DateUtil.dateToString(LocalDate.now()));
         return receivableSubsidiarySer.insertReceivableSubsidiary(receivableSubsidiaryTO);
     }
 
@@ -70,17 +71,6 @@ public class ReceivableSubsidiaryApiImpl implements ReceivableSubsidiaryAPI {
     @Override
     public void editTime(ReceivableSubsidiary receivableSubsidiary, String auditStatusStr, String countStatusStr, String billStatusStr, String planStatusStr) throws SerException {
         receivableSubsidiarySer.editTime(receivableSubsidiary, auditStatusStr, countStatusStr, billStatusStr, planStatusStr);
-    }
-
-    @Override
-    public String exportExcel(String area, String start, String end) throws SerException {
-        return receivableSubsidiarySer.exportExcel(area, start, end);
-    }
-
-    @Override
-    public void input() throws SerException {
-        receivableSubsidiarySer.input();
-
     }
     @Override
     public ReceivableSubsidiaryBO progress(ProgressTO to) throws SerException {
@@ -132,13 +122,17 @@ public class ReceivableSubsidiaryApiImpl implements ReceivableSubsidiaryAPI {
         return receivableSubsidiarySer.collectId(id);
     }
     @Override
-    public List<ReceivableSubsidiaryBO> collectCompare(ReceivableSubsidiaryTO receivableSubsidiaryTO) throws SerException {
-        return receivableSubsidiarySer.collectCompare(receivableSubsidiaryTO);
+    public List<CollectCompareBO> collectCompare(CollectCompareTO to) throws SerException {
+        return receivableSubsidiarySer.collectCompare(to);
+    }
+    @Override
+    public ReceivableSubsidiaryBO importExcel(List<ReceivableSubsidiaryTO> receivableSubsidiaryTOS) throws SerException {
+        return receivableSubsidiarySer.importExcel(receivableSubsidiaryTOS);
     }
 
     @Override
-    public ReceivableSubsidiaryBO sendReceivableSubsidiary(ReceivableSubsidiaryTO receivableSubsidiaryTO) throws SerException {
-        return receivableSubsidiarySer.sendReceivableSubsidiary(receivableSubsidiaryTO);
+    public byte[] exportExcel(ReceivableSubsidiaryDTO dto) throws SerException{
+        return receivableSubsidiarySer.exportExcel(dto);
     }
 
 

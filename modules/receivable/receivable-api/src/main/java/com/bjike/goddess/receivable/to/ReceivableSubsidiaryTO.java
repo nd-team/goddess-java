@@ -17,17 +17,18 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class ReceivableSubsidiaryTO extends BaseTO {
-
+    public interface TestAdd{}
+    public interface TestEdit{}
     /**
      * 地区
      */
-    @NotBlank(message = "地区不能为空")
+    @NotBlank(message = "地区不能为空",groups = {ReceivableSubsidiaryTO.TestAdd.class,ReceivableSubsidiaryTO.TestEdit.class})
     private String area;
 
     /**
      * 项目内部名称
      */
-    @NotBlank(message = "项目内部名称不能为空")
+    @NotBlank(message = "项目内部名称不能为空",groups = {ReceivableSubsidiaryTO.TestAdd.class,ReceivableSubsidiaryTO.TestEdit.class})
     private String innerName;
 
     /**
@@ -38,13 +39,13 @@ public class ReceivableSubsidiaryTO extends BaseTO {
     /**
      * 派工单价
      */
-    @NotNull(message = "地区不能为空")
+    @NotNull(message = "派工单价不能为空",groups = {ReceivableSubsidiaryTO.TestAdd.class,ReceivableSubsidiaryTO.TestEdit.class})
     private Double taskPrice;
 
     /**
      * 合同规模数
      */
-    @NotNull(message = "合同规模数不能为空")
+    @NotNull(message = "合同规模数不能为空",groups = {ReceivableSubsidiaryTO.TestAdd.class,ReceivableSubsidiaryTO.TestEdit.class})
     private Double pactNum;
 
     /**
@@ -55,7 +56,7 @@ public class ReceivableSubsidiaryTO extends BaseTO {
     /**
      * 已派工量
      */
-    @NotNull(message = "已派工量不能为空")
+    @NotNull(message = "已派工量不能为空",groups = {ReceivableSubsidiaryTO.TestAdd.class,ReceivableSubsidiaryTO.TestEdit.class})
     private Double pactSize;
 
     /**
@@ -66,7 +67,7 @@ public class ReceivableSubsidiaryTO extends BaseTO {
     /**
      * 已完工量
      */
-    @NotNull(message = "已完工量不能为空")
+    @NotNull(message = "已完工量不能为空",groups = {ReceivableSubsidiaryTO.TestAdd.class,ReceivableSubsidiaryTO.TestEdit.class})
     private Double finishNum;
 
     /**
@@ -77,7 +78,7 @@ public class ReceivableSubsidiaryTO extends BaseTO {
     /**
      * 未完工量
      */
-    @NotNull(message = "未完工量不能为空")
+    @NotNull(message = "未完工量不能为空",groups = {ReceivableSubsidiaryTO.TestAdd.class,ReceivableSubsidiaryTO.TestEdit.class})
     private Double unfinishNum;
 
     /**
@@ -88,43 +89,43 @@ public class ReceivableSubsidiaryTO extends BaseTO {
     /**
      * 已交维数量
      */
-    @NotNull(message = "已交维数量不能为空")
+    @NotNull(message = "已交维数量不能为空",groups = {ReceivableSubsidiaryTO.TestAdd.class,ReceivableSubsidiaryTO.TestEdit.class})
     private Double payTax;
 
     /**
      * 未交维数量
      */
-    @NotNull(message = "未交维数量不能为空")
+    @NotNull(message = "未交维数量不能为空",groups = {ReceivableSubsidiaryTO.TestAdd.class,ReceivableSubsidiaryTO.TestEdit.class})
     private Double undeal;
 
     /**
      * 违约金
      */
-    @NotNull(message = "违约金不能为空")
+    @NotNull(message = "违约金不能为空",groups = {ReceivableSubsidiaryTO.TestAdd.class,ReceivableSubsidiaryTO.TestEdit.class})
     private Double penalty;
 
     /**
      * 实际结算数量
      */
-    @NotNull(message = "实际结算数量不能为空")
+    @NotNull(message = "实际结算数量不能为空",groups = {ReceivableSubsidiaryTO.TestAdd.class,ReceivableSubsidiaryTO.TestEdit.class})
     private Double realCountNum;
 
     /**
      * 实际数量金额
      */
-    @NotNull(message = "实际数量金额不能为空")
+    @NotNull(message = "实际数量金额不能为空",groups = {ReceivableSubsidiaryTO.TestAdd.class,ReceivableSubsidiaryTO.TestEdit.class})
     private Double realCountMoney;
 
     /**
      * 完工时间
      */
-    @NotBlank(message = "完工时间不能为空")
+    @NotBlank(message = "完工时间不能为空",groups = {ReceivableSubsidiaryTO.TestAdd.class,ReceivableSubsidiaryTO.TestEdit.class})
     private String finishTime;
 
     /**
      * 验收交维时间
      */
-    @NotBlank(message = "验收交维时间不能为空")
+    @NotBlank(message = "验收交维时间不能为空",groups = {ReceivableSubsidiaryTO.TestAdd.class,ReceivableSubsidiaryTO.TestEdit.class})
     private String checkTime;
 
     /**
@@ -205,31 +206,31 @@ public class ReceivableSubsidiaryTO extends BaseTO {
     /**
      * 承包商
      */
-    @NotBlank(message = "承包商不能为空")
+    @NotBlank(message = "承包商不能为空",groups = {ReceivableSubsidiaryTO.TestAdd.class,ReceivableSubsidiaryTO.TestEdit.class})
     private String contractorId;
 
     /**
      * 是否已支付
      */
-    @NotNull(message = "是否已支付不能为空")
+    @NotNull(message = "是否已支付不能为空",groups = {ReceivableSubsidiaryTO.TestAdd.class,ReceivableSubsidiaryTO.TestEdit.class})
     private Boolean pay;
 
     /**
      * 是否框架内
      */
-    @NotNull(message = "是否框架内不能为空")
+    @NotNull(message = "是否框架内不能为空",groups = {ReceivableSubsidiaryTO.TestAdd.class,ReceivableSubsidiaryTO.TestEdit.class})
     private Boolean frame;
 
     /**
      * 是否有单次合同
      */
-    @NotNull(message = "是否有单次合同不能为空")
+    @NotNull(message = "是否有单次合同不能为空",groups = {ReceivableSubsidiaryTO.TestAdd.class,ReceivableSubsidiaryTO.TestEdit.class})
     private Boolean pact;
 
     /**
      * 是否已走结算流程
      */
-    @NotNull(message = "是否已走结算流程不能为空")
+    @NotNull(message = "是否已走结算流程不能为空",groups = {ReceivableSubsidiaryTO.TestAdd.class,ReceivableSubsidiaryTO.TestEdit.class})
     private Boolean flow;
 
     /*//开始时间

@@ -1,11 +1,48 @@
 package com.bjike.goddess.receivable.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.receivable.enums.CompareStatus;
 
 /**
  * Created by ike on 17-6-20.
  */
-public class CollectCompareBO extends BaseBO{
+public class CollectCompareBO extends BaseBO {
+    public CollectCompareBO() {
+    }
+
+    public CollectCompareBO(String cons, CompareStatus status, Double taskPrice, Double pactSize, Double accountMoney, Double managementFee, Double taxes, Double afterTax) {
+        switch (status) {
+            case AREA:
+                this.area = cons;
+                break;
+            case UNIT:
+                this.contractor = cons;
+                break;
+            case PROJECT:
+                this.innerName = cons;
+                break;
+        }
+        this.taskPrice = taskPrice;
+        this.pactSize = pactSize;
+        this.accountMoney = accountMoney;
+        this.managementFee = managementFee;
+        this.taxes = taxes;
+        this.afterTax = afterTax;
+    }
+
+    /**
+     * 地区
+     */
+    private String area;
+
+    /**
+     * 项目名称
+     */
+    private String innerName;
+    /**
+     * 总包单位
+     */
+    private String contractor;
     /**
      * 派工单价
      */
@@ -78,6 +115,30 @@ public class CollectCompareBO extends BaseBO{
      * 税后金额百分比
      */
     private Double afterTaxPercentage;
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getInnerName() {
+        return innerName;
+    }
+
+    public void setInnerName(String innerName) {
+        this.innerName = innerName;
+    }
+
+    public String getContractor() {
+        return contractor;
+    }
+
+    public void setContractor(String contractor) {
+        this.contractor = contractor;
+    }
 
     public Double getTaskPrice() {
         return taskPrice;
@@ -222,4 +283,5 @@ public class CollectCompareBO extends BaseBO{
     public void setAfterTaxPercentage(Double afterTaxPercentage) {
         this.afterTaxPercentage = afterTaxPercentage;
     }
+
 }

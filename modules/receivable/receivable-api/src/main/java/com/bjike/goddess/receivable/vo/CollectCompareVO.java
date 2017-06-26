@@ -7,6 +7,19 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  */
 public class CollectCompareVO{
     /**
+     * 地区
+     */
+    private String area;
+
+    /**
+     * 项目名称
+     */
+    private String innerName;
+    /**
+     * 总包单位
+     */
+    private String contractor;
+    /**
      * 派工单价
      */
     private Double taskPrice;
@@ -78,6 +91,30 @@ public class CollectCompareVO{
      * 税后金额百分比
      */
     private Double afterTaxPercentage;
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getInnerName() {
+        return innerName;
+    }
+
+    public void setInnerName(String innerName) {
+        this.innerName = innerName;
+    }
+
+    public String getContractor() {
+        return contractor;
+    }
+
+    public void setContractor(String contractor) {
+        this.contractor = contractor;
+    }
 
     public Double getTaskPrice() {
         return taskPrice;

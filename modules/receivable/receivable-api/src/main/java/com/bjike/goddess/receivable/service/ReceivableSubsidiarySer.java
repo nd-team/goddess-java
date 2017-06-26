@@ -135,22 +135,6 @@ public interface ReceivableSubsidiarySer extends Ser<ReceivableSubsidiary, Recei
         return null;
     }
 
-    /**
-     * 导出
-     *
-     * @throws SerException
-     */
-    default String exportExcel(String area, String start, String end) throws SerException {
-        return null;
-    }
-
-    /**
-     * 导入
-     */
-    default void input() throws SerException {
-        return;
-
-    }
 
     /**
      * 获取地区
@@ -264,16 +248,20 @@ public interface ReceivableSubsidiarySer extends Ser<ReceivableSubsidiary, Recei
     default List<CollectCompareBO> collectCompare(CollectCompareTO to) throws SerException {
         return null;
     }
-
+    /**
+     *  导入
+     * @param receivableSubsidiaryTOS 回款管理
+     * @return class ReceivableSubsidiaryBO
+     */
+    default ReceivableSubsidiaryBO importExcel(List<ReceivableSubsidiaryTO> receivableSubsidiaryTOS) throws SerException { return null;}
 
     /**
-     * 发送邮件
+     * 导出Excel
      *
-     * @return class String
+     * @param dto
+     * @throws SerException
      */
-    default ReceivableSubsidiaryBO sendReceivableSubsidiary(ReceivableSubsidiaryTO receivableSubsidiaryTO) throws SerException {
-        return null;
-    }
+    byte[] exportExcel(ReceivableSubsidiaryDTO dto) throws SerException;
 
 
 }

@@ -5,6 +5,7 @@ import com.bjike.goddess.staffpay.bo.CollectCompareBO;
 import com.bjike.goddess.staffpay.bo.MoneyReadyBO;
 import com.bjike.goddess.staffpay.dto.MoneyReadyDTO;
 import com.bjike.goddess.staffpay.service.MoneyReadySer;
+import com.bjike.goddess.staffpay.to.GuidePermissionTO;
 import com.bjike.goddess.staffpay.to.MoneyReadyTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,14 @@ public class MoneyReadyApiImpl implements MoneyReadyAPI {
 
     @Autowired
     private MoneyReadySer moneyReadySer;
-
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return moneyReadySer.sonPermission();
+    }
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return moneyReadySer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countMoneyReady(MoneyReadyDTO moneyReadyDTO) throws SerException {
         return moneyReadySer.countMoneyReady(moneyReadyDTO);
