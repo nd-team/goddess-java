@@ -5,9 +5,11 @@ import com.bjike.goddess.dispatchcar.bo.*;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.enums.CollectIntervalType;
 import com.bjike.goddess.dispatchcar.enums.CollectType;
+import com.bjike.goddess.dispatchcar.excel.SonPermissionObject;
 import com.bjike.goddess.dispatchcar.to.ConditionTO;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
 import com.bjike.goddess.dispatchcar.to.FinanceCollectTO;
+import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -218,4 +220,8 @@ public interface DispatchCarInfoAPI {
      * @return
      */
     List<DispatchCarInfoBO> getByConfition(ConditionTO to) throws SerException;
+
+    List<SonPermissionObject> financeSonPermission() throws SerException;
+
+    Boolean financeGuidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 }

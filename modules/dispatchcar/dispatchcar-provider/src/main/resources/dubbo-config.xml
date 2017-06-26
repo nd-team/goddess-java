@@ -22,6 +22,10 @@
     <!-- 出车记录API -->
     <dubbo:service interface="com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI" ref="dispatchCarInfoApiImpl"/>
 
+    <dubbo:service interface="com.bjike.goddess.dispatchcar.api.CusPermissionAPI" ref="cusPermissionApiImpl"/>
+
+    <dubbo:service interface="com.bjike.goddess.dispatchcar.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"/>
+
     <!-- 租车费用基本信息API -->
     <dubbo:service interface="com.bjike.goddess.dispatchcar.api.LeaseCarCostAPI" ref="leaseCarCostApiImpl"/>
 
@@ -39,5 +43,15 @@
     <!-- 司机API -->
     <dubbo:reference interface="com.bjike.goddess.driverinfo.api.DriverInfoAPI" id="driverInfoApiImpl"/>
 
+    <!-- 组织结构API -->
+    <dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+
+    <dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+
+    <dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+
+    <dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+
+    <dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
 
 </beans>

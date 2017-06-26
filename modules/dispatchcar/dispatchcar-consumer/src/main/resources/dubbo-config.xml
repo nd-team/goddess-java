@@ -25,6 +25,21 @@
     <!-- 文件上传API -->
 	<dubbo:reference interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl" />
 
+    <!-- userAPI -->
+	<dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl" />
+
+    <!-- userAPI -->
+	<dubbo:reference interface="com.bjike.goddess.user.api.rbac.PermissionAPI" id="permissionApiImpl" />
+
+    <!-- 组织结构API -->
+	<dubbo:reference interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl" />
+
+    <!-- 文件上传API -->
+	<dubbo:reference interface="com.bjike.goddess.storage.api.StorageUserAPI" id="storageUserApiImpl" />
+
+    <!-- 权限API -->
+	<dubbo:reference interface="com.bjike.goddess.dispatchcar.api.CusPermissionAPI" id="cusPermissionApiImpl" />
+
 
 
 
