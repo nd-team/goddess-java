@@ -1,138 +1,140 @@
-package com.bjike.goddess.competitormanage.vo;
+package com.bjike.goddess.competitormanage.excel;
 
-import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.competitormanage.enums.BusinessType;
 
 /**
- * 竞争对手信息表现层对象
+ * 竞争对手信息
  *
  * @Author: [ Jason ]
- * @Date: [ 2017-03-21 04:49 ]
- * @Description: [ 竞争对手信息表现层对象 ]
+ * @Date: [ 2017-06-12 11:35 ]
+ * @Description: [ 竞争对手信息 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class CompetitorVO {
-    /**
-     * 数据状态
-     */
-    private Status status;
-    /**
-     * id
-     */
-    private String id;
+public class CompetitorExcel extends BaseTO {
+
     /**
      * 市场信息收集序号
      */
+    @ExcelHeader(name = "市场信息收集序号", notNull = false)
     private String markInfoCode;
 
     /**
      * 项目名称
      */
+    @ExcelHeader(name = "项目名称", notNull = true)
     private String project;
 
     /**
      * 地区
      */
+    @ExcelHeader(name = "地区", notNull = true)
     private String area;
 
     /**
      * 竞争对手名称
      */
+    @ExcelHeader(name = "竞争对手名称", notNull = true)
     private String competitor;
 
     /**
      * 业务类型
      */
+    @ExcelHeader(name = "业务类型", notNull = true)
     private BusinessType businessType;
 
     /**
      * 基本资料描述
      */
+    @ExcelHeader(name = "基本资料描述", notNull = true)
     private String basicInfoDesc;
 
     /**
      * 电话
      */
+    @ExcelHeader(name = "电话", notNull = true)
     private String phoneNum;
 
     /**
      * 地址
      */
+    @ExcelHeader(name = "地址", notNull = true)
     private String address;
 
     /**
      * 组织结构
      */
+    @ExcelHeader(name = "组织结构", notNull = true)
     private String organization;
 
     /**
      * 级别定义方式
      */
+    @ExcelHeader(name = "级别定义方式", notNull = true)
     private String leveldefinition;
 
     /**
      * 其他备注
      */
+    @ExcelHeader(name = "其他备注", notNull = false)
     private String remark;
 
     /**
      * 主管部门
      */
+    @ExcelHeader(name = "主管部门", notNull = true)
     private String directDepartment;
 
     /**
      * 主管名称
      */
+    @ExcelHeader(name = "主管名称", notNull = true)
     private String director;
 
     /**
      * 主管职权
      */
+    @ExcelHeader(name = "主管职权", notNull = true)
     private String directAuthority;
 
     /**
      * 负责事项
      */
+    @ExcelHeader(name = "负责事项", notNull = true)
     private String chargeItems;
 
     /**
      * 客户信息表序号
      */
+    @ExcelHeader(name = "客户信息表序号", notNull = true)
     private String customerInfoCode;
 
     /**
      * 分管部门
      */
+    @ExcelHeader(name = "分管部门", notNull = true)
     private String branchedDepartment;
 
     /**
      * 负责人名称
      */
+    @ExcelHeader(name = "负责人名称", notNull = true)
     private String chargeMan;
 
     /**
      * 负责人职权
      */
+    @ExcelHeader(name = "负责人职权", notNull = true)
     private String chargeManAuthority;
 
     /**
      * 接口人
      */
+    @ExcelHeader(name = "接口人", notNull = true)
     private String interfaceMan;
 
-    /**
-     * 创建时间
-     */
-    private String createTime;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getMarkInfoCode() {
         return markInfoCode;
@@ -292,21 +294,5 @@ public class CompetitorVO {
 
     public void setInterfaceMan(String interfaceMan) {
         this.interfaceMan = interfaceMan;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
     }
 }
