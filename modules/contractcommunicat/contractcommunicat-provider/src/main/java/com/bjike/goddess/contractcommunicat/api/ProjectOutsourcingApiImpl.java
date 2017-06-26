@@ -6,8 +6,10 @@ import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingBO;
 import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectOutsourcingDTO;
 import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
+import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.service.ProjectOutsourcingSer;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
+import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -82,5 +84,20 @@ public class ProjectOutsourcingApiImpl implements ProjectOutsourcingAPI {
     @Override
     public List<ProjectOutsourcingBO> projects() throws SerException {
         return projectOutsourcingSer.prjects();
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return projectOutsourcingSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO to) throws SerException {
+        return projectOutsourcingSer.guidePermission(to);
+    }
+
+    @Override
+    public byte[] exportExcelModule() throws SerException {
+        return projectOutsourcingSer.exportExcelModule();
     }
 }

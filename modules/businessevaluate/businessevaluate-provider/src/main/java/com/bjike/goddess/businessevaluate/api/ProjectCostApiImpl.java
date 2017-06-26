@@ -3,6 +3,7 @@ package com.bjike.goddess.businessevaluate.api;
 import com.bjike.goddess.businessevaluate.bo.ProjectCostBO;
 import com.bjike.goddess.businessevaluate.dto.ProjectCostDTO;
 import com.bjike.goddess.businessevaluate.service.ProjectCostSer;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.businessevaluate.to.ProjectCostTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -54,5 +55,10 @@ public class ProjectCostApiImpl implements ProjectCostAPI {
     @Override
     public ProjectCostBO findById(String id) throws SerException {
         return BeanTransform.copyProperties(projectCostSer.findById(id),ProjectCostBO.class);
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO to) throws SerException {
+        return projectCostSer.guidePermission(to);
     }
 }

@@ -4,6 +4,7 @@ import com.bjike.goddess.budget.bo.ProjectWeekBO;
 import com.bjike.goddess.budget.bo.ProjectWeekCountBO;
 import com.bjike.goddess.budget.dto.ProjectWeekDTO;
 import com.bjike.goddess.budget.service.ProjectWeekSer;
+import com.bjike.goddess.budget.to.GuidePermissionTO;
 import com.bjike.goddess.budget.to.ProjectWeekTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,5 +69,15 @@ public class ProjectWeekApiImpl implements ProjectWeekAPI {
     @Override
     public List<String> findAllProjects() throws SerException {
         return projectWeekSer.findAllProjects();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return projectWeekSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return projectWeekSer.guidePermission(guidePermissionTO);
     }
 }

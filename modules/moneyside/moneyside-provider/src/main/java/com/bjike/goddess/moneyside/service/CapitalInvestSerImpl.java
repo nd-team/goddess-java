@@ -78,6 +78,7 @@ public class CapitalInvestSerImpl extends ServiceImpl<CapitalInvest, CapitalInve
     public CapitalInvestBO insertCapitalInvest(CapitalInvestTO capitalInvestTO) throws SerException {
         checkDate(capitalInvestTO);
         CapitalInvest capitalInvest = BeanTransform.copyProperties(capitalInvestTO,CapitalInvest.class,true);
+
         CallInfoDTO dto = new CallInfoDTO();
         List<CallInfo> callInfos = callInfoSer.findByCis(dto);
         //筹资总额

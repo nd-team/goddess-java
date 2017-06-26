@@ -2,6 +2,7 @@ package com.bjike.goddess.accruedtax.api;
 
 import com.bjike.goddess.accruedtax.bo.ProjectTaxBO;
 import com.bjike.goddess.accruedtax.dto.ProjectTaxDTO;
+import com.bjike.goddess.accruedtax.to.GuidePermissionTO;
 import com.bjike.goddess.accruedtax.to.ProjectTaxTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -17,6 +18,15 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ProjectTaxAPI {
+    /**
+     * 下拉导航权限
+     */
+    Boolean sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 
     /**
      * 项目上税金列表总条数

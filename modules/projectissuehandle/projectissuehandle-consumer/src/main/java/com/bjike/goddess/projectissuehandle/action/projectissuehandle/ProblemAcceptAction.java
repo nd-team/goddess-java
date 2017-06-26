@@ -317,7 +317,7 @@ public class ProblemAcceptAction extends BaseFileAction {
     @PostMapping("v1/uploadFile/{id}")
     public Result uploadFile(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            String paths = "/projectissuehandle/problemaccept/" + id;
+            String paths = "/" + id;
             List<InputStream> inputStreams = super.getInputStreams(request, paths);
             fileAPI.upload(inputStreams);
             return new ActResult("upload success!");
@@ -339,7 +339,7 @@ public class ProblemAcceptAction extends BaseFileAction {
         try {
             //跟前端约定好 ，文件路径是列表id
             // /projectissuehandle/id/....
-            String path = "/projectissuehandle/problemaccept/" + id;
+            String path = "/" + id;
             FileInfo fileInfo = new FileInfo();
             fileInfo.setPath(path);
             Object storageToken = request.getAttribute("storageToken");

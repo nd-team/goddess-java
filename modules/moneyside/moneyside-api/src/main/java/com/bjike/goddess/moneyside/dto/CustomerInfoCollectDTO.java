@@ -12,5 +12,16 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [ com.bjike ]
  */
 public class CustomerInfoCollectDTO extends BaseDTO {
+    /**
+     * 投资人
+     */
+    private String []investor;
 
+    public String[] getInvestor() {
+        return investor;
+    }
+
+    public void setInvestor(String[] investor) {
+        this.investor = investor;
+    }
 }

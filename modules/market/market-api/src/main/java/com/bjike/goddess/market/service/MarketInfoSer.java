@@ -114,6 +114,14 @@ public interface MarketInfoSer extends Ser<MarketInfo, MarketInfoDTO> {
         return null;
     }
     /**
+     * 获取客户名称
+     *
+     * @return class String
+     */
+    default List<String> getCustomerName() throws SerException {
+        return null;
+    }
+    /**
      * 导出Excel
      *
      * @param dto

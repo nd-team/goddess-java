@@ -33,19 +33,19 @@ include ':modules:assemble:assemble-consumer'
 include ':modules:assemble:assemble-provider'
 
 ////#客户信息tanghaixiang
-//include ':modules:customer:customer-api'
-//include ':modules:customer:customer-consumer'
-//include ':modules:customer:customer-provider'
+include ':modules:customer:customer-api'
+include ':modules:customer:customer-consumer'
+include ':modules:customer:customer-provider'
 //
-//#竞争对手管理
-include ':modules:competitormanage:competitormanage-api'
-include ':modules:competitormanage:competitormanage-consumer'
-include ':modules:competitormanage:competitormanage-provider'
+////#竞争对手管理
+//include ':modules:competitormanage:competitormanage-api'
+//include ':modules:competitormanage:competitormanage-consumer'
+//include ':modules:competitormanage:competitormanage-provider'
 ////#商务项目合同管理tanghaixiang
-//include ':modules:businessproject:businessproject-api'
-//include ':modules:businessproject:businessproject-consumer'
-//include ':modules:businessproject:businessproject-provider'
-////#商业能力展示tanghaixiang
+include ':modules:businessproject:businessproject-api'
+include ':modules:businessproject:businessproject-consumer'
+include ':modules:businessproject:businessproject-provider'
+//#商业能力展示tanghaixiang
 //include ':modules:capability:capability-api'
 //include ':modules:capability:capability-consumer'
 //include ':modules:capability:capability-provider'
@@ -54,11 +54,12 @@ include ':modules:competitormanage:competitormanage-provider'
 //include ':modules:businessinteraction:businessinteraction-api'
 //include ':modules:businessinteraction:businessinteraction-consumer'
 //include ':modules:businessinteraction:businessinteraction-provider'
+//
+////#简介管理
+//include ':modules:intromanage:intromanage-api'
+//include ':modules:intromanage:intromanage-consumer'
+//include ':modules:intromanage:intromanage-provider'
 
-//#简介管理
-include ':modules:intromanage:intromanage-api'
-include ':modules:intromanage:intromanage-consumer'
-include ':modules:intromanage:intromanage-provider'
 
 //#marketdevelopment 市场计划进度管理
 //include ':modules:marketdevelopment:marketdevelopment-api'
@@ -72,7 +73,8 @@ include ':modules:intromanage:intromanage-provider'
 //include ':modules:market:market-api'
 //include ':modules:market:market-consumer'
 //include ':modules:market:market-provider'
-////#商业能力互动tanghaixiang
+
+//#商业能力互动tanghaixiang
 //include ':modules:businessinteraction:businessinteraction-api'
 //include ':modules:businessinteraction:businessinteraction-consumer'
 //include ':modules:businessinteraction:businessinteraction-provider'
@@ -86,20 +88,22 @@ include ':modules:intromanage:intromanage-provider'
 //include ':modules:bidding:bidding-api'
 //include ':modules:bidding:bidding-consumer'
 //include ':modules:bidding:bidding-provider'
-//
-////#财务初始化tanghaixiang
-//include ':modules:financeinit:financeinit-api'
-//include ':modules:financeinit:financeinit-consumer'
-//include ':modules:financeinit:financeinit-provider'
-//
-////#项目验收、签字、结算进度管理tanghaixiang
-//include ':modules:projectprocing:projectprocing-api'
-//include ':modules:projectprocing:projectprocing-consumer'
-//include ':modules:projectprocing:projectprocing-provider'
+
+
+//#财务初始化tanghaixiang
+include ':modules:financeinit:financeinit-api'
+include ':modules:financeinit:financeinit-consumer'
+include ':modules:financeinit:financeinit-provider'
+
+//#项目验收、签字、结算进度管理tanghaixiang
+include ':modules:projectprocing:projectprocing-api'
+include ':modules:projectprocing:projectprocing-consumer'
+include ':modules:projectprocing:projectprocing-provider'
 ////#法定节假日tanghaixiang
-//include ':modules:festival:festival-api'
-//include ':modules:festival:festival-consumer'
-//include ':modules:festival:festival-provider'
+include ':modules:festival:festival-api'
+include ':modules:festival:festival-consumer'
+include ':modules:festival:festival-provider'
+
 ////#businessevaluate 商务评估
 //include ':modules:businessevaluate:businessevaluate-api'
 //include ':modules:businessevaluate:businessevaluate-consumer'
@@ -144,78 +148,85 @@ include ':modules:intromanage:intromanage-provider'
 //include ':modules:eggert:eggert-provider'
 //
 ////#voucher 记账凭证tanghaixiang
-//include ':modules:voucher:voucher-api'
-//include ':modules:voucher:voucher-consumer'
-//include ':modules:voucher:voucher-provider'
+
+include ':modules:voucher:voucher-api'
+include ':modules:voucher:voucher-consumer'
+include ':modules:voucher:voucher-provider'
 //
 ////#socialfee 社会缴费tanghaixiang
-//include ':modules:socialfee:socialfee-api'
-//include ':modules:socialfee:socialfee-consumer'
-//include ':modules:socialfee:socialfee-provider'
-//#staffactivity 员工活动
-include ':modules:staffactivity:staffactivity-api'
-include ':modules:staffactivity:staffactivity-consumer'
-include ':modules:staffactivity:staffactivity-provider'
-//#firmreward 公司奖励
-include ':modules:firmreward:firmreward-api'
-include ':modules:firmreward:firmreward-consumer'
-include ':modules:firmreward:firmreward-provider'
-//#regularization 员工转正
-include ':modules:regularization:regularization-api'
-include ':modules:regularization:regularization-consumer'
-include ':modules:regularization:regularization-provider'
+include ':modules:socialfee:socialfee-api'
+include ':modules:socialfee:socialfee-consumer'
+include ':modules:socialfee:socialfee-provider'
+////#staffactivity 员工活动
+//include ':modules:staffactivity:staffactivity-api'
+//include ':modules:staffactivity:staffactivity-consumer'
+//include ':modules:staffactivity:staffactivity-provider'
+////#firmreward 公司奖励
+//include ':modules:firmreward:firmreward-api'
+//include ':modules:firmreward:firmreward-consumer'
+//include ':modules:firmreward:firmreward-provider'
+////#regularization 员工转正
+//include ':modules:regularization:regularization-api'
+//include ':modules:regularization:regularization-consumer'
+//include ':modules:regularization:regularization-provider'
+//
 
 ////#interior-recommend 内部推荐
 //include ':modules:interiorrecommend:interiorrecommend-api'
 //include ':modules:interiorrecommend:interiorrecommend-consumer'
 //include ':modules:interiorrecommend:interiorrecommend-provider'
 
-//#dispatchcar 出车管理
-//include ':modules:dispatchcar:dispatchcar-api'
-//include ':modules:dispatchcar:dispatchcar-consumer'
-//include ':modules:dispatchcar:dispatchcar-provider'
-
-//include ':modules:staffwelfare:staffwelfaremanage-api'
-//include ':modules:staffwelfare:staffwelfaremanage-consumer'
-//include ':modules:staffwelfare:staffwelfaremanage-provider'
-
-//#materialbuy 物资购买
-include ':modules:materialbuy:materialbuy-api'
-include ':modules:materialbuy:materialbuy-consumer'
-include ':modules:materialbuy:materialbuy-provider'
+//
+////#dispatchcar 出车管理
+////include ':modules:dispatchcar:dispatchcar-api'
+////include ':modules:dispatchcar:dispatchcar-consumer'
+////include ':modules:dispatchcar:dispatchcar-provider'
+//
+////include ':modules:staffwelfare:staffwelfaremanage-api'
+////include ':modules:staffwelfare:staffwelfaremanage-consumer'
+////include ':modules:staffwelfare:staffwelfaremanage-provider'
+//
+////#materialbuy 物资购买
+//include ':modules:materialbuy:materialbuy-api'
+//include ':modules:materialbuy:materialbuy-consumer'
+//include ':modules:materialbuy:materialbuy-provider'
+//
 
 ////#dimission 离职模块
 //include ':modules:dimission:dimission-api'
 //include ':modules:dimission:dimission-consumer'
 //include ':modules:dimission:dimission-provider'
 ////#businsurance 商业保险tanghaixiang
-//include ':modules:businsurance:businsurance-api'
-//include ':modules:businsurance:businsurance-consumer'
-//include ':modules:businsurance:businsurance-provider'
-////#accruedtax 应交税金tanghaixiang
-//include ':modules:accruedtax:accruedtax-api'
-//include ':modules:accruedtax:accruedtax-consumer'
-//include ':modules:accruedtax:accruedtax-provider'
-//#foreigntax foreigntax
 
-////#foreigntax 对外税务
-//include ':modules:foreigntax:foreigntax-api'
-//include ':modules:foreigntax:foreigntax-consumer'
-//include ':modules:foreigntax:foreigntax-provider'
+include ':modules:businsurance:businsurance-api'
+include ':modules:businsurance:businsurance-consumer'
+include ':modules:businsurance:businsurance-provider'
+////#accruedtax 应交税金tanghaixiang
+include ':modules:accruedtax:accruedtax-api'
+include ':modules:accruedtax:accruedtax-consumer'
+include ':modules:accruedtax:accruedtax-provider'
+////#foreigntax foreigntax
 //
-////#managefee 管理费tanghaixiang
-//include ':modules:managefee:managefee-api'
-//include ':modules:managefee:managefee-consumer'
-//include ':modules:managefee:managefee-provider'
+////#foreigntax 对外税务
+include ':modules:foreigntax:foreigntax-api'
+include ':modules:foreigntax:foreigntax-consumer'
+include ':modules:foreigntax:foreigntax-provider'
+
+//#managefee 管理费tanghaixiang
+include ':modules:managefee:managefee-api'
+include ':modules:managefee:managefee-consumer'
+include ':modules:managefee:managefee-provider'
 ////#staffentry 员工入职tanghaixiang
-//include ':modules:staffentry:staffentry-api'
-//include ':modules:staffentry:staffentry-consumer'
-//include ':modules:staffentry:staffentry-provider'
+include ':modules:staffentry:staffentry-api'
+include ':modules:staffentry:staffentry-consumer'
+include ':modules:staffentry:staffentry-provider'
+
 ////#oilcardmanage
 //include ':modules:oilcardmanage:oilcardmanage-api'
 //include ':modules:oilcardmanage:oilcardmanage-consumer'
 //include ':modules:oilcardmanage:oilcardmanage-provider'
-//#organize
+
+////#organize
 include ':modules:organize:organize-api'
 include ':modules:organize:organize-consumer'
 include ':modules:organize:organize-provider'
@@ -234,7 +245,8 @@ include ':modules:organize:organize-provider'
 //include ':modules:subjectcollect:subjectcollect-consumer'
 //include ':modules:subjectcollect:subjectcollect-provider'
 
-////#checkhost 入住，离宿登记
+
+//#checkhost 入住，离宿登记
 //include ':modules:checkhost:checkhost-api'
 //include ':modules:checkhost:checkhost-consumer'
 //include ':modules:checkhost:checkhost-provider'
@@ -273,9 +285,9 @@ include ':modules:organize:organize-provider'
 //include ':modules:contractware:contractware-provider'
 //
 ////#voucher 记账凭证
-//include ':modules:voucher:voucher-api'
-//include ':modules:voucher:voucher-consumer'
-//include ':modules:voucher:voucher-provider'
+include ':modules:voucher:voucher-api'
+include ':modules:voucher:voucher-consumer'
+include ':modules:voucher:voucher-provider'
 //
 ////#otherexpenses 其他费用
 //include ':modules:otherexpenses:otherexpenses-api'
@@ -297,58 +309,64 @@ include ':modules:organize:organize-provider'
 //include ':modules:budget:budget-consumer'
 //include ':modules:budget:budget-provider'
 
-//#devicerepair 设备维修
-include ':modules:devicerepair:devicerepair-api'
-include ':modules:devicerepair:devicerepair-consumer'
-include ':modules:devicerepair:devicerepair-provider'
-
-//#contractquotemanager 合同单价
-//include ':modules:contractquotemanager:contractquotemanager-api'
-//include ':modules:contractquotemanager:contractquotemanager-consumer'
-//include ':modules:contractquotemanager:contractquotemanager-provider'
-
+//
+////#devicerepair 设备维修
+//include ':modules:devicerepair:devicerepair-api'
+//include ':modules:devicerepair:devicerepair-consumer'
+//include ':modules:devicerepair:devicerepair-provider'
+//
+////#contractquotemanager 合同单价
+////include ':modules:contractquotemanager:contractquotemanager-api'
+////include ':modules:contractquotemanager:contractquotemanager-consumer'
+////include ':modules:contractquotemanager:contractquotemanager-provider'
+//
 ////#incomecheck 收入核算资金回笼 tanghaixiang
-//include ':modules:incomecheck:incomecheck-api'
-//include ':modules:incomecheck:incomecheck-consumer'
-//include ':modules:incomecheck:incomecheck-provider'
+include ':modules:incomecheck:incomecheck-api'
+include ':modules:incomecheck:incomecheck-consumer'
+include ':modules:incomecheck:incomecheck-provider'
+
 ////#businessproject 项目合同 tanghaixiang
 //include ':modules:businessproject:businessproject-api'
 //include ':modules:businessproject:businessproject-consumer'
 //include ':modules:businessproject:businessproject-provider'
-////#lendreimbursement 借款与报销 tanghaixiang
-//include ':modules:lendreimbursement:lendreimbursement-api'
-//include ':modules:lendreimbursement:lendreimbursement-consumer'
-//include ':modules:lendreimbursement:lendreimbursement-provider'
 
-//#outcarfare 出车费资金准备与支付业务流程
-//include ':modules:outcarfare:outcarfare-api'
-//include ':modules:outcarfare:outcarfare-consumer'
-//include ':modules:outcarfare:outcarfare-provider'
+//#lendreimbursement 借款与报销 tanghaixiang
+include ':modules:lendreimbursement:lendreimbursement-api'
+include ':modules:lendreimbursement:lendreimbursement-consumer'
+include ':modules:lendreimbursement:lendreimbursement-provider'
+
+////#outcarfare 出车费资金准备与支付业务流程
+////include ':modules:outcarfare:outcarfare-api'
+////include ':modules:outcarfare:outcarfare-consumer'
+////include ':modules:outcarfare:outcarfare-provider'
+//
 
 ////#projectmarketfee 项目前期的市场活动费
 //include ':modules:projectmarketfee:projectmarketfee-api'
 //include ':modules:projectmarketfee:projectmarketfee-consumer'
 //include ':modules:projectmarketfee:projectmarketfee-provider'
 ////#contractcommunicat 商务洽谈
-//include ':modules:contractcommunicat:contractcommunicat-api'
-//include ':modules:contractcommunicat:contractcommunicat-consumer'
-//include ':modules:contractcommunicat:contractcommunicat-provider'
-//#materialinstock 物资入库
-include ':modules:materialinstock:materialinstock-api'
-include ':modules:materialinstock:materialinstock-consumer'
-include ':modules:materialinstock:materialinstock-provider'
-//#materialreceive 物资领用
-include ':modules:materialreceive:materialreceive-api'
-include ':modules:materialreceive:materialreceive-consumer'
-include ':modules:materialreceive:materialreceive-provider'
-//#materialtransfer 物资调用
-include ':modules:materialtransfer:materialtransfer-api'
-include ':modules:materialtransfer:materialtransfer-consumer'
-include ':modules:materialtransfer:materialtransfer-provider'
-//#materialcheck 物资盘点
-include ':modules:materialcheck:materialcheck-api'
-include ':modules:materialcheck:materialcheck-consumer'
-include ':modules:materialcheck:materialcheck-provider'
+
+include ':modules:contractcommunicat:contractcommunicat-api'
+include ':modules:contractcommunicat:contractcommunicat-consumer'
+include ':modules:contractcommunicat:contractcommunicat-provider'
+////#materialinstock 物资入库
+//include ':modules:materialinstock:materialinstock-api'
+//include ':modules:materialinstock:materialinstock-consumer'
+//include ':modules:materialinstock:materialinstock-provider'
+////#materialreceive 物资领用
+//include ':modules:materialreceive:materialreceive-api'
+//include ':modules:materialreceive:materialreceive-consumer'
+//include ':modules:materialreceive:materialreceive-provider'
+////#materialtransfer 物资调用
+//include ':modules:materialtransfer:materialtransfer-api'
+//include ':modules:materialtransfer:materialtransfer-consumer'
+//include ':modules:materialtransfer:materialtransfer-provider'
+////#materialcheck 物资盘点
+//include ':modules:materialcheck:materialcheck-api'
+//include ':modules:materialcheck:materialcheck-consumer'
+//include ':modules:materialcheck:materialcheck-provider'
+//
 
 ////#archive 员工档案 dengjunren
 //include ':modules:archive:archive-api'
@@ -370,10 +388,12 @@ include ':modules:materialcheck:materialcheck-provider'
 //include ':modules:employee-contract:employee-contract-consumer'
 //include ':modules:employee-contract:employee-contract-provider'
 
-//#projectcost 项目上费用 dengjunren
-//include ':modules:projectcost:projectcost-api'
-//include ':modules:projectcost:projectcost-consumer'
-//include ':modules:projectcost:projectcost-provider'
+//
+////#projectcost 项目上费用 dengjunren
+////include ':modules:projectcost:projectcost-api'
+////include ':modules:projectcost:projectcost-consumer'
+////include ':modules:projectcost:projectcost-provider'
+//
 
 ////#qualifications 公司资质管理 dengjunren
 //include ':modules:qualifications:qualifications-api'
@@ -395,29 +415,45 @@ include ':modules:materialcheck:materialcheck-provider'
 //include ':modules:rotation:rotation-consumer'
 //include ':modules:rotation:rotation-provider'
 
-//#marketactivitymanage 市场活动管理 sunfengtao
-include ':modules:marketactivitymanage:marketactivitymanage-api'
-include ':modules:marketactivitymanage:marketactivitymanage-consumer'
-include ':modules:marketactivitymanage:marketactivitymanage-provider'
-
-//#projectmeasure 项目测算 sunfengtao
-include ':modules:projectmeasure:projectmeasure-api'
-include ':modules:projectmeasure:projectmeasure-consumer'
-include ':modules:projectmeasure:projectmeasure-provider'
-
-//#materialsummary 物资汇总 sunfengtao
-include ':modules:materialsummary:materialsummary-api'
-include ':modules:materialsummary:materialsummary-consumer'
-include ':modules:materialsummary:materialsummary-provider'
+//
+////#marketactivitymanage 市场活动管理 sunfengtao
+//include ':modules:marketactivitymanage:marketactivitymanage-api'
+//include ':modules:marketactivitymanage:marketactivitymanage-consumer'
+//include ':modules:marketactivitymanage:marketactivitymanage-provider'
+//
+////#projectmeasure 项目测算 sunfengtao
+//include ':modules:projectmeasure:projectmeasure-api'
+//include ':modules:projectmeasure:projectmeasure-consumer'
+//include ':modules:projectmeasure:projectmeasure-provider'
+//
+////#projectmeasure 项目测算 sunfengtao
+//include ':modules:projectmeasure:projectmeasure-api'
+//include ':modules:projectmeasure:projectmeasure-consumer'
+//include ':modules:projectmeasure:projectmeasure-provider'
+//
 
 ////#fundrecords 资金流水 Jason
-//include ':modules:fundrecords:fundrecords-api'
-//include ':modules:fundrecords:fundrecords-consumer'
-//include ':modules:fundrecords:fundrecords-provider'
+include ':modules:fundrecords:fundrecords-api'
+include ':modules:fundrecords:fundrecords-consumer'
+include ':modules:fundrecords:fundrecords-provider'
 //
 ////#bankrecords 银行流水 Jason
 //include ':modules:bankrecords:bankrecords-api'
 //include ':modules:bankrecords:bankrecords-consumer'
 //include ':modules:bankrecords:bankrecords-provider'
+
+
+////#balancecard 平衡记分卡 tanghaixiang
+//include ':modules:balancecard:balancecard-api'
+//include ':modules:balancecard:balancecard-consumer'
+//include ':modules:balancecard:balancecard-provider'
+//#democraticmeet 民主生活会议 tanghaixiang
+include ':modules:democraticmeet:democraticmeet-api'
+include ':modules:democraticmeet:democraticmeet-consumer'
+include ':modules:democraticmeet:democraticmeet-provider'
+//#assistance 公司补助 tanghaixiang
+//include ':modules:assistance:assistance-api'
+//include ':modules:assistance:assistance-consumer'
+//include ':modules:assistance:assistance-provider'
 
 

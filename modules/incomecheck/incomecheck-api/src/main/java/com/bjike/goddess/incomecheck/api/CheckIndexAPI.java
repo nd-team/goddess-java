@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.incomecheck.bo.CheckIndexBO;
 import com.bjike.goddess.incomecheck.dto.CheckIndexDTO;
 import com.bjike.goddess.incomecheck.to.CheckIndexTO;
+import com.bjike.goddess.incomecheck.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -74,5 +75,13 @@ public interface CheckIndexAPI {
         return;
     }
 
-    
+    /**
+     * 下拉导航权限
+     */
+    Boolean sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 }

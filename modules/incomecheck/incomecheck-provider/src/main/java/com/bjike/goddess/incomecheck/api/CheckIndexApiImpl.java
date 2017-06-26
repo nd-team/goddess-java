@@ -5,6 +5,7 @@ import com.bjike.goddess.incomecheck.bo.CheckIndexBO;
 import com.bjike.goddess.incomecheck.dto.CheckIndexDTO;
 import com.bjike.goddess.incomecheck.service.CheckIndexSer;
 import com.bjike.goddess.incomecheck.to.CheckIndexTO;
+import com.bjike.goddess.incomecheck.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,5 +56,13 @@ public class CheckIndexApiImpl implements CheckIndexAPI {
         checkIndexSer.deleteCheckIndex(id);
     }
 
-    
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return checkIndexSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return checkIndexSer.guidePermission(guidePermissionTO);
+    }
 }

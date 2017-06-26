@@ -23,10 +23,10 @@ import java.time.LocalDateTime;
 public class BidOpeningInfo extends BaseEntity {
 
     /**
-     * 招标编号
+     * 编号
      */
-    @Column(name = "tenderNumber", columnDefinition = "VARCHAR(255)   COMMENT '招标编号'")
-    private String tenderNumber;
+    @Column(name = "biddingNumber", columnDefinition = "VARCHAR(255)   COMMENT '招标编号'")
+    private String biddingNumber;
 
     /**
      * 项目名称
@@ -82,12 +82,12 @@ public class BidOpeningInfo extends BaseEntity {
     private Double ratio;
 
 
-    public String getTenderNumber() {
-        return tenderNumber;
+    public String getBiddingNumber() {
+        return biddingNumber;
     }
 
-    public void setTenderNumber(String tenderNumber) {
-        this.tenderNumber = tenderNumber;
+    public void setBiddingNumber(String biddingNumber) {
+        this.biddingNumber = biddingNumber;
     }
 
     public String getProjectName() {

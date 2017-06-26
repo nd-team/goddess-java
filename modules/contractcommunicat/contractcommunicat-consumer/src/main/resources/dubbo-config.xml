@@ -37,5 +37,6 @@
 
 	<dubbo:reference id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.contractcommunicat.api.CusPermissionOperateAPI" />
 
+	<dubbo:reference id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
 
 </beans>

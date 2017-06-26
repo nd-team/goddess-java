@@ -5,6 +5,8 @@ import com.bjike.goddess.customer.bo.CustomerLevelBO;
 import com.bjike.goddess.customer.dto.CustomerLevelDTO;
 import com.bjike.goddess.customer.service.CustomerLevelSer;
 import com.bjike.goddess.customer.to.CustomerLevelTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
+import com.bjike.goddess.customer.vo.SonPermissionObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,18 @@ public class CustomerLevelApiImpl implements CustomerLevelAPI {
 
     @Autowired
     private CustomerLevelSer customerLevelSer;
+
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return customerLevelSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return customerLevelSer.guidePermission( guidePermissionTO );
+    }
+
 
     @Override
     public Long countCustomerLevel(CustomerLevelDTO customerLevelDTO) throws SerException {

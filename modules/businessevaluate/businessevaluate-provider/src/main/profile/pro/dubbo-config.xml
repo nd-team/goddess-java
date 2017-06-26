@@ -82,5 +82,7 @@
 
 	<!--****************组织结构api***************-->
 
+	<dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
+
 
 </beans>

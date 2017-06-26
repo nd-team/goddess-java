@@ -17,10 +17,9 @@ import org.hibernate.validator.constraints.NotBlank;
 public class BidOpeningInfoTO extends BaseTO {
 
     /**
-     * 招标编号
+     * 编号
      */
-    @NotBlank(message = "招标编号不能为空", groups = {ADD.class, EDIT.class})
-    private String tenderNumber;
+    private String biddingNumber;
 
     /**
      * 项目名称
@@ -68,12 +67,12 @@ public class BidOpeningInfoTO extends BaseTO {
     private Double ratio;
 
 
-    public String getTenderNumber() {
-        return tenderNumber;
+    public String getBiddingNumber() {
+        return biddingNumber;
     }
 
-    public void setTenderNumber(String tenderNumber) {
-        this.tenderNumber = tenderNumber;
+    public void setBiddingNumber(String biddingNumber) {
+        this.biddingNumber = biddingNumber;
     }
 
     public String getProjectName() {

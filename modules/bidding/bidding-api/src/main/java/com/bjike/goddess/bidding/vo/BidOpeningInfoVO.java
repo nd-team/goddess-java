@@ -17,9 +17,9 @@ public class BidOpeningInfoVO {
     private String id;
 
     /**
-     * 招标编号
+     * 编号
      */
-    private String tenderNumber;
+    private String biddingNumber;
 
     /**
      * 项目名称
@@ -73,12 +73,12 @@ public class BidOpeningInfoVO {
         this.id = id;
     }
 
-    public String getTenderNumber() {
-        return tenderNumber;
+    public String getBiddingNumber() {
+        return biddingNumber;
     }
 
-    public void setTenderNumber(String tenderNumber) {
-        this.tenderNumber = tenderNumber;
+    public void setBiddingNumber(String biddingNumber) {
+        this.biddingNumber = biddingNumber;
     }
 
     public String getProjectName() {

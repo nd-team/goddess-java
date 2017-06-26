@@ -3,15 +3,21 @@ package com.bjike.goddess.accruedtax.service;
 import com.bjike.goddess.accruedtax.bo.PayTaxBO;
 import com.bjike.goddess.accruedtax.dto.ProjectTaxDTO;
 import com.bjike.goddess.accruedtax.entity.ProjectTax;
+import com.bjike.goddess.accruedtax.enums.GuideAddrStatus;
+import com.bjike.goddess.accruedtax.to.GuidePermissionTO;
 import com.bjike.goddess.accruedtax.to.PayTaxTO;
+import com.bjike.goddess.accruedtax.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.accruedtax.dto.PayTaxDTO;
 import com.bjike.goddess.accruedtax.entity.PayTax;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.foreigntax.api.TaxManagementAPI;
 import com.bjike.goddess.foreigntax.bo.TaxManagementBO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +31,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,6 +52,174 @@ public class PayTaxSerImpl extends ServiceImpl<PayTax, PayTaxDTO> implements Pay
     private TaxManagementAPI taxManagementAPI;
     @Autowired
     private ProjectTaxSer projectTaxSer;
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAddSign = guideAddIdentity();
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("paytax");
+        obj.setDescribesion("应交税金");
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeDis = projectTaxSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("projecttax");
+        obj.setDescribesion("项目上税金");
+        if (flagSeeDis) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
 
     @Override
     public Long countPayTax(PayTaxDTO payTaxDTO) throws SerException {
@@ -54,6 +229,7 @@ public class PayTaxSerImpl extends ServiceImpl<PayTax, PayTaxDTO> implements Pay
 
     @Override
     public List<PayTaxBO> listPayTax(PayTaxDTO payTaxDTO) throws SerException {
+        checkSeeIdentity();
         payTaxDTO.getSorts().add("createTime=desc");
         List<PayTax> list = super.findByCis(payTaxDTO,true);
 
@@ -63,6 +239,7 @@ public class PayTaxSerImpl extends ServiceImpl<PayTax, PayTaxDTO> implements Pay
     @Transactional(rollbackFor = SerException.class)
     @Override
     public PayTaxBO addPayTax(PayTaxTO payTaxTO) throws SerException {
+        checkAddIdentity();
         LocalDate time = LocalDate.parse(payTaxTO.getTaxDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String month = time.getMonthValue() < 10 ? "0"+time.getMonthValue():time.getMonthValue()+"";
         String startTime = time.getYear()+"-"+month+"-01";
@@ -90,6 +267,7 @@ public class PayTaxSerImpl extends ServiceImpl<PayTax, PayTaxDTO> implements Pay
     @Transactional(rollbackFor = SerException.class)
     @Override
     public PayTaxBO editPayTax(PayTaxTO payTaxTO) throws SerException {
+        checkAddIdentity();
         PayTax payTax = BeanTransform.copyProperties(payTaxTO,PayTax.class,true);
         PayTax cusLevel = super.findById( payTaxTO.getId() );
 
@@ -104,6 +282,7 @@ public class PayTaxSerImpl extends ServiceImpl<PayTax, PayTaxDTO> implements Pay
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deletePayTax(String id) throws SerException {
+        checkAddIdentity();
         if(StringUtils.isBlank( id)){
             throw  new SerException("id不能为空");
         }
@@ -119,6 +298,7 @@ public class PayTaxSerImpl extends ServiceImpl<PayTax, PayTaxDTO> implements Pay
     @Transactional(rollbackFor = SerException.class)
     @Override
     public PayTaxBO splitTax(PayTaxTO payTaxTO) throws SerException {
+        checkAddIdentity();
         if(StringUtils.isBlank( payTaxTO.getId())){
             throw  new SerException("id不能为空");
         }
@@ -143,6 +323,7 @@ public class PayTaxSerImpl extends ServiceImpl<PayTax, PayTaxDTO> implements Pay
 
     @Override
     public List<PayTaxBO> collectCompany(PayTaxDTO payTaxDTO) throws SerException {
+        checkSeeIdentity();
         String company = payTaxDTO.getCompany();
         String[] field = new String[]{"company","targetTax","planTax","actualTax","rate","balance"};
         String sql = "select company , sum(targetTax) as targetTax, sum(planTax) as planTax, sum(actualTax) as actualTax " +
@@ -171,6 +352,7 @@ public class PayTaxSerImpl extends ServiceImpl<PayTax, PayTaxDTO> implements Pay
 
     @Override
     public List<PayTaxBO> collectTaxType(PayTaxDTO payTaxDTO) throws SerException {
+        checkSeeIdentity();
         String taxType = payTaxDTO.getTaxType();
         String[] field = new String[]{"taxType","targetTax","planTax","actualTax","rate","balance"};
         String sql = "select taxType , sum(targetTax) as targetTax, sum(planTax) as planTax, sum(actualTax) as actualTax " +

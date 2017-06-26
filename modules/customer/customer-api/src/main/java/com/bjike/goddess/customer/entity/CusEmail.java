@@ -55,13 +55,13 @@ public class CusEmail extends BaseEntity {
     /**
      * 汇总间隔
      */
-    @Column(columnDefinition = "TINYINT(1)  COMMENT '汇总间隔'", nullable = false )
+    @Column(columnDefinition = "TINYINT(1)  COMMENT '汇总间隔'" )
     private CustomerCollectUnit customerCollectUnit;
 
     /**
      * 发送对象
      */
-    @Column(name = "sendObject", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '发送对象'")
+    @Column(name = "sendObject", nullable = false, columnDefinition = "MEDIUMTEXT   COMMENT '发送对象'")
     private String sendObject;
 
     /**

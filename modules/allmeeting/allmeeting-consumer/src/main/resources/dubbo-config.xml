@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://code.alibabatech.com/schema/dubbo
+		  http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <context:property-placeholder location="classpath:dubbo.properties"/>
+
+    <dubbo:application name="${dubbo.application.name}"/>
+    <dubbo:consumer check="false" timeout="15000"/>
+    <dubbo:registry address="${dubbo.registry.address}"/>
+
+    <!-- 注册接口-->
+
+    <!-- 议题管理API -->
+    <dubbo:reference interface="com.bjike.goddess.allmeeting.api.MeetingTopicAPI" id="meetingTopicApiImpl"/>
+
+    <!-- 会议层面API -->
+    <dubbo:reference interface="com.bjike.goddess.allmeeting.api.MeetingLayAPI" id="meetingLayApiImpl"/>
+
+    <!-- 会议组织API -->
+    <dubbo:reference interface="com.bjike.goddess.allmeeting.api.AllMeetingOrganizeAPI" id="allMeetingOrganizeApiImpl"/>
+
+    <!-- 工作汇总准备API -->
+    <dubbo:reference interface="com.bjike.goddess.allmeeting.api.WorkCollectPrepareAPI" id="workCollectPrepareApiImpl"/>
+
+    <!-- 问题责任分配API -->
+    <dubbo:reference interface="com.bjike.goddess.allmeeting.api.ProblesAllotPrepareAPI"
+                     id="problesAllotPrepareApiImpl"/>
+
+    <!-- 问题分类API -->
+    <dubbo:reference interface="com.bjike.goddess.allmeeting.api.ProblesClassifyPrepareAPI"
+                     id="problesClassifyPrepareApiImpl"/>
+
+    <!-- 简洁交流讨论纪要API -->
+    <dubbo:reference interface="com.bjike.goddess.allmeeting.api.ConciseSummaryAPI" id="conciseSummaryApiImpl"/>
+
+    <!-- 多轮交流讨论纪要API -->
+    <dubbo:reference interface="com.bjike.goddess.allmeeting.api.MultiwheelSummaryAPI" id="multiwheelSummaryApiImpl"/>
+
+    <!-- 交流讨论意见API -->
+    <dubbo:reference interface="com.bjike.goddess.allmeeting.api.MeetingDiscussionAPI" id="meetingDiscussionApiImpl"/>
+
+    <!-- 意见投票API -->
+    <dubbo:reference interface="com.bjike.goddess.allmeeting.api.DiscussionVoteAPI" id="discussionVoteApiImpl"/>
+
+    <!-- userAPI -->
+    <dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+
+</beans>

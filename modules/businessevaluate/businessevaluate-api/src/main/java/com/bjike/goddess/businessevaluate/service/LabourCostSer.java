@@ -3,6 +3,7 @@ package com.bjike.goddess.businessevaluate.service;
 import com.bjike.goddess.businessevaluate.bo.LabourCostBO;
 import com.bjike.goddess.businessevaluate.dto.LabourCostDTO;
 import com.bjike.goddess.businessevaluate.entity.LabourCost;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.businessevaluate.to.LabourCostTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -44,4 +45,7 @@ public interface LabourCostSer extends Ser<LabourCost, LabourCostDTO> {
      */
     List<LabourCostBO> pageList(LabourCostDTO dto) throws SerException;
 
+    Boolean sonPermission()throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO to) throws SerException;
 }

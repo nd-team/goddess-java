@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 市场信息管理业务实现
@@ -287,14 +288,6 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
         if (StringUtils.isBlank(marketInfoTO.getId())) {
             throw new SerException("id不能为空");
         }
-        /*  try {
-            String customerNum = "";
-            CustomerBaseInfoBO customerBaseInfoBO = customerBaseInfoAPI.getCustomerInfoByNum(customerNum);
-            if (StringUtils.isNotEmpty(customerBaseInfoBO.getCustomerName())) {
-                customerBaseInfoAPI.generateCustomerNum();
-            } else if (StringUtils.isNotEmpty(customerBaseInfoBO.getCustomerNum())) {
-                customerBaseInfoAPI.addMarketCustomerInfo(customerBaseInfoBO.getCustomerName(), customerBaseInfoBO.getOriganizion());
-            } else {*/
         checkAddIdentity();
         Boolean permission = cusPermissionSer.getCusPermission("1");
         if (!permission) {
@@ -306,11 +299,6 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
         marketInfo.setModifyTime(LocalDateTime.now());
         super.update(marketInfo);
         return BeanTransform.copyProperties(marketInfoTO, MarketInfoBO.class);
-        /*    }
-        } catch (SerException e) {
-            throw new SerException(e.getMessage());
-        }
-*/
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -326,18 +314,30 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
         } catch (SerException e) {
             throw new SerException(e.getMessage());
         }
+
+    }
+    @Override
+    public List<String> getCustomerName() throws SerException {
+        String[] fields = new String[]{"customerName"};
+        List<MarketInfoBO> marketInfoBOS = super.findBySql("select distinct customerName from market_marketinfo group by customerName order by customerName asc ", MarketInfoBO.class, fields);
+
+        List<String> collectList = marketInfoBOS.stream().map(MarketInfoBO::getCustomerName)
+                .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
+
+
+        return collectList;
     }
 
     @Override
     public byte[] exportExcel(MarketInfoDTO dto) throws SerException {
-        if (StringUtils.isNotBlank(dto.getCustomerName())) {
-            dto.getConditions().add(Restrict.eq("customerName", dto.getCustomerName()));
+        if (null != dto.getCustomerName()) {
+            dto.getConditions().add(Restrict.in("customerName", dto.getCustomerName()));
         }
         List<MarketInfo> list = super.findByCis(dto);
 
         List<MarketInfoExport> exports = new ArrayList<>();
         list.stream().forEach(str -> {
-            MarketInfoExport export = BeanTransform.copyProperties(str, MarketInfoExport.class, "projectNature", "workType", "scale", "effective");
+            MarketInfoExport export = BeanTransform.copyProperties(str, MarketInfoExport.class, "projectNature","scale", "workType",  "effective");
             export.setProjectNature(MarketProjectNature.exportStrConvert(str.getProjectNature()));
             export.setScale(Scale.exportStrConvert(str.getScale()));
             export.setWorkType(MarketWorkType.exportStrConvert(str.getWorkType()));

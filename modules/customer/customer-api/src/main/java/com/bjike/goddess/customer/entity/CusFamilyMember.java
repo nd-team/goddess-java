@@ -39,19 +39,19 @@ public class CusFamilyMember extends BaseEntity {
     /**
      * 性格爱好
      */
-    @Column(name = "charactLove",  columnDefinition = "VARCHAR(255)   COMMENT '性格爱好'")
+    @Column(name = "charactLove",  columnDefinition = "MEDIUMTEXT   COMMENT '性格爱好'")
     private String charactLove;
 
     /**
      * 工作单位
      */
-    @Column(name = "workPlace",  columnDefinition = "VARCHAR(255)   COMMENT '工作单位'")
+    @Column(name = "workPlace",  columnDefinition = "MEDIUMTEXT   COMMENT '工作单位'")
     private String workPlace;
 
     /**
      * 职位
      */
-    @Column(name = "jobPost",  columnDefinition = "VARCHAR(255)   COMMENT '职位'")
+    @Column(name = "jobPost",  columnDefinition = "MEDIUMTEXT   COMMENT '职位'")
     private String jobPost;
 
     /**

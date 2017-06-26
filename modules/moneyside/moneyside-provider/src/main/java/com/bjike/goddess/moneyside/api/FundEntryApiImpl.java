@@ -56,6 +56,10 @@ public class FundEntryApiImpl implements FundEntryAPI {
         fundEntrySer.removeFundEntry(id);
     }
     @Override
+    public List<String> getInvestor() throws SerException {
+        return fundEntrySer.getInvestor();
+    }
+    @Override
     public FundEntryBO audit (FundEntryTO fundEntryTO) throws SerException {
         return fundEntrySer.audit(fundEntryTO);
     }

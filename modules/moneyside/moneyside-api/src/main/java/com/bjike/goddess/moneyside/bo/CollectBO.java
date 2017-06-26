@@ -7,9 +7,9 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  */
 public class CollectBO extends BaseBO{
     /**
-     * 申请人
+     * 投资人
      */
-    private String applyPeople;
+    private String investor;
 
     /**
      * 资金进入方式
@@ -26,12 +26,12 @@ public class CollectBO extends BaseBO{
      */
     private Double money;
 
-    public String getApplyPeople() {
-        return applyPeople;
+    public String getInvestor() {
+        return investor;
     }
 
-    public void setApplyPeople(String applyPeople) {
-        this.applyPeople = applyPeople;
+    public void setInvestor(String investor) {
+        this.investor = investor;
     }
 
     public String getAccessToFund() {
@@ -60,8 +60,8 @@ public class CollectBO extends BaseBO{
     public CollectBO(){
 
     }
-    public CollectBO(String applyPeople,String accessToFund,String fundEntryTime,Double money){
-        this.applyPeople = applyPeople;
+    public CollectBO(String investor,String accessToFund,String fundEntryTime,Double money){
+        this.investor = investor;
         this.accessToFund = accessToFund;
         this.fundEntryTime = fundEntryTime;
         this.money = money;

@@ -12,5 +12,16 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [ com.bjike ]
  */
 public class CallInfoDTO extends BaseDTO {
+    /**
+     * 项目内部名称
+     */
+    private String innerProject;
 
+    public String getInnerProject() {
+        return innerProject;
+    }
+
+    public void setInnerProject(String innerProject) {
+        this.innerProject = innerProject;
+    }
 }

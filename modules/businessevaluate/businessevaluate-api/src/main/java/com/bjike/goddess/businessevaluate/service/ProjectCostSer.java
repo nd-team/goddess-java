@@ -3,6 +3,7 @@ package com.bjike.goddess.businessevaluate.service;
 import com.bjike.goddess.businessevaluate.bo.ProjectCostBO;
 import com.bjike.goddess.businessevaluate.dto.ProjectCostDTO;
 import com.bjike.goddess.businessevaluate.entity.ProjectCost;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.businessevaluate.to.ProjectCostTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -43,4 +44,8 @@ public interface ProjectCostSer extends Ser<ProjectCost, ProjectCostDTO> {
      * @return 项目费用结果集
      */
     List<ProjectCostBO> pageList(ProjectCostDTO dto) throws SerException;
+
+    Boolean sonPermission() throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO to) throws SerException;
 }

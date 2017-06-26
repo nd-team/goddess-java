@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://code.alibabatech.com/schema/dubbo 
+		  http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <context:property-placeholder location="classpath:dubbo.properties"/>
+
+    <dubbo:application name="${dubbo.application.name}"/>
+    <dubbo:consumer check="false" timeout="15000"/>
+    <dubbo:registry address="${dubbo.registry.address}"/>
+
+    <!-- 注册接口-->
+
+    <!-- 项目信息API-->
+    <dubbo:reference interface="com.bjike.goddess.progressmanage.api.ProjectInfoAPI" id="projectInfoApiImpl"/>
+
+    <!-- 进度表API-->
+    <dubbo:reference interface="com.bjike.goddess.progressmanage.api.ProgressTableAPI" id="progressTableApiImpl"/>
+
+    <!-- 进度表头API-->
+    <dubbo:reference interface="com.bjike.goddess.progressmanage.api.TableHeadAPI" id="tableHeadApiImpl"/>
+
+    <!-- 节点API-->
+    <dubbo:reference interface="com.bjike.goddess.progressmanage.api.ProgressNodeAPI" id="progressNodeApiImpl"/>
+
+    <!-- 节点表头API-->
+    <dubbo:reference interface="com.bjike.goddess.progressmanage.api.NodeHeadAPI" id="nodeHeadApiImpl"/>
+
+    <!-- 进度表表头值API-->
+    <dubbo:reference interface="com.bjike.goddess.progressmanage.api.TableHeadValueAPI" id="tableHeadValueApiImpl"/>
+
+    <!-- 进度表表头值API-->
+    <dubbo:reference interface="com.bjike.goddess.progressmanage.api.TableHeadRowSignAPI" id="tableHeadRowSignApiImpl"/>
+
+
+    <!-- userAPI-->
+    <dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+
+    <!-- permissionAPI-->
+    <dubbo:reference interface="com.bjike.goddess.user.api.rbac.PermissionAPI" id="permissionApiImpl"/>
+
+    <!-- 组织结构API-->
+    <dubbo:reference interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
+
+
+</beans>

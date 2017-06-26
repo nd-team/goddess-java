@@ -3,6 +3,7 @@ package com.bjike.goddess.businessevaluate.api;
 import com.bjike.goddess.businessevaluate.bo.ProblemDisposeBO;
 import com.bjike.goddess.businessevaluate.dto.ProblemDisposeDTO;
 import com.bjike.goddess.businessevaluate.service.ProblemDisposeSer;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.businessevaluate.to.ProblemDisposeTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -54,5 +55,10 @@ public class ProblemDisposeApiImpl implements ProblemDisposeAPI {
     @Override
     public ProblemDisposeBO findById(String id) throws SerException {
         return BeanTransform.copyProperties(problemDisposeSer.findById(id), ProblemDisposeBO.class);
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO to) throws SerException {
+        return problemDisposeSer.guidePermission(to);
     }
 }

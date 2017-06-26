@@ -6,6 +6,7 @@ import com.bjike.goddess.financeinit.bo.AccountBO;
 import com.bjike.goddess.financeinit.dto.AccountDTO;
 import com.bjike.goddess.financeinit.entity.Account;
 import com.bjike.goddess.financeinit.to.AccountTO;
+import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 
 import java.util.List;
 import java.util.Set;
@@ -20,6 +21,20 @@ import java.util.Set;
  * @Copy: [ com.bjike ]
  */
 public interface AccountSer extends Ser<Account, AccountDTO> {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 账户来源列表总条数

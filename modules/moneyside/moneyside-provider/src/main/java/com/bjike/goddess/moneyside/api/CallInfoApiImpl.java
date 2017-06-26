@@ -1,19 +1,15 @@
 package com.bjike.goddess.moneyside.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.moneyside.bo.CallInfoBO;
 import com.bjike.goddess.moneyside.dto.CallInfoDTO;
-import com.bjike.goddess.moneyside.entity.CallInfo;
 import com.bjike.goddess.moneyside.service.CallInfoSer;
 import com.bjike.goddess.moneyside.to.CallInfoTO;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 招投信息列表业务接口实现
@@ -57,5 +53,20 @@ public class CallInfoApiImpl implements CallInfoAPI {
     @Override
     public void removeCallInfo(String id) throws SerException {
         callInfoSer.removeCallInfo(id);
+    }
+
+    @Override
+    public CallInfoBO applyInvest(CallInfoTO callInfoTO) throws SerException {
+        return callInfoSer.applyInvest(callInfoTO);
+    }
+
+    @Override
+    public CallInfoBO getInnerProject(String innerProject) throws SerException {
+        return callInfoSer.getInnerProject(innerProject);
+    }
+
+    @Override
+    public Set<String> getInnerProject() throws SerException {
+        return callInfoSer.getInnerProject();
     }
 }

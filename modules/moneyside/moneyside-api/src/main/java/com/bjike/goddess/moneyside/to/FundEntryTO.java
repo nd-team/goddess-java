@@ -20,10 +20,10 @@ import javax.validation.constraints.NotNull;
 public class FundEntryTO extends BaseTO {
 
     /**
-     * 申请人
+     * 投资人
      */
-    @NotBlank(message = "申请人不能为空",groups = {ADD.class, EDIT.class})
-    private String applyPeople;
+    @NotBlank(message = "投资人不能为空",groups = {ADD.class, EDIT.class})
+    private String investor;
 
     /**
      * 资金进入方式
@@ -80,12 +80,12 @@ public class FundEntryTO extends BaseTO {
     private String modifyTime;
 
 
-    public String getApplyPeople() {
-        return applyPeople;
+    public String getInvestor() {
+        return investor;
     }
 
-    public void setApplyPeople(String applyPeople) {
-        this.applyPeople = applyPeople;
+    public void setInvestor(String investor) {
+        this.investor = investor;
     }
 
     public String getAccessToFund() {

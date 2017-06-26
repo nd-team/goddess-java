@@ -5,6 +5,7 @@ import com.bjike.goddess.budget.bo.ProjectMonthCountBO;
 import com.bjike.goddess.budget.bo.ProjectWeekBO;
 import com.bjike.goddess.budget.dto.ProjectMonthDTO;
 import com.bjike.goddess.budget.service.ProjectMonthSer;
+import com.bjike.goddess.budget.to.GuidePermissionTO;
 import com.bjike.goddess.budget.to.ProjectMonthTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,5 +75,15 @@ public class ProjectMonthApiImpl implements ProjectMonthAPI {
     @Override
     public List<String> findAllProjects() throws SerException {
         return projectMonthSer.findAllProjects();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return projectMonthSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return projectMonthSer.guidePermission(guidePermissionTO);
     }
 }

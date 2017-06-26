@@ -3,6 +3,7 @@ package com.bjike.goddess.businessevaluate.api;
 import com.bjike.goddess.businessevaluate.bo.DemandCostBO;
 import com.bjike.goddess.businessevaluate.dto.DemandCostDTO;
 import com.bjike.goddess.businessevaluate.to.DemandCostTO;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -64,4 +65,6 @@ public interface DemandCostAPI {
      * @return 需求成本
      */
     DemandCostBO findById(String id) throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO to) throws SerException;
 }

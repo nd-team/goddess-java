@@ -39,6 +39,11 @@ public class IncomeDistributionVO {
      * 入资信用度比例(%)
      */
     private Double creditScale;
+    /**
+     * 投资分配时间
+     */
+    private String incomeDistributionTime;
+
 
     /**
      * 其他
@@ -96,6 +101,14 @@ public class IncomeDistributionVO {
 
     public void setInnerProject(String innerProject) {
         this.innerProject = innerProject;
+    }
+
+    public String getIncomeDistributionTime() {
+        return incomeDistributionTime;
+    }
+
+    public void setIncomeDistributionTime(String incomeDistributionTime) {
+        this.incomeDistributionTime = incomeDistributionTime;
     }
 
     public Double getPrimaryProportion() {

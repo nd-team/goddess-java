@@ -88,6 +88,7 @@ public class MeetingLaySerImpl extends ServiceImpl<MeetingLay, MeetingLayDTO> im
                 MeetingTopic topic = meetingTopicSer.findById(bo.getTopicId());
                 if (topic != null) {
                     bo.setTopicName(topic.getTopic());
+                    bo.setTopicContent(topic.getTopicContent());
                 }
             }
         }

@@ -3,6 +3,7 @@ package com.bjike.goddess.business.api;
 import com.bjike.goddess.business.bo.BusinessTaxChangeBO;
 import com.bjike.goddess.business.dto.BusinessTaxChangeDTO;
 import com.bjike.goddess.business.to.BusinessTaxChangeTO;
+import com.bjike.goddess.business.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -17,6 +18,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface BusinessTaxChangeAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 工商税务变更列表总条数
      */
@@ -72,22 +85,6 @@ public interface BusinessTaxChangeAPI {
      * @throws SerException
      */
     default void removeBusinessTaxChange(String id) throws SerException {
-
-    }
-
-    /**
-     * 上传
-     */
-    default void upload() throws SerException {
-        return;
-
-    }
-
-    /**
-     * 下载
-     */
-    default void download() throws SerException {
-        return;
 
     }
 

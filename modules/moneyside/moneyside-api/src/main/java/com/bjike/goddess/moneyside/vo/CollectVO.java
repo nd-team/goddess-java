@@ -6,9 +6,9 @@ package com.bjike.goddess.moneyside.vo;
 public class CollectVO {
 
     /**
-     * 申请人
+     * 投资人
      */
-    private String applyPeople;
+    private String investor;
 
     /**
      * 资金进入方式
@@ -25,12 +25,12 @@ public class CollectVO {
      */
     private Double money;
 
-    public String getApplyPeople() {
-        return applyPeople;
+    public String getInvestor() {
+        return investor;
     }
 
-    public void setApplyPeople(String applyPeople) {
-        this.applyPeople = applyPeople;
+    public void setInvestor(String investor) {
+        this.investor = investor;
     }
 
     public String getAccessToFund() {

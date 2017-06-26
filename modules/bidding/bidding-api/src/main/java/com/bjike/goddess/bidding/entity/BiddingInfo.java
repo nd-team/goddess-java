@@ -9,7 +9,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 
 /**
@@ -24,7 +23,11 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "bidding_biddinginfo")
 public class BiddingInfo extends BaseEntity {
-
+    /**
+     * 编号
+     */
+    @Column(name = "biddingNumber",unique = true,columnDefinition = "VARCHAR(255)   COMMENT '招标编号'")
+    private String biddingNumber;
     /**
      * 网站名称
      */
@@ -62,11 +65,6 @@ public class BiddingInfo extends BaseEntity {
     @Column(name = "tenderModule", columnDefinition = "VARCHAR(255)   COMMENT '标书模块'")
     private String tenderModule;
 
-    /**
-     * 招标编号
-     */
-    @Column(name = "tenderNumber", columnDefinition = "VARCHAR(255)   COMMENT '招标编号'")
-    private String tenderNumber;
 
     /**
      * 项目名称
@@ -131,7 +129,7 @@ public class BiddingInfo extends BaseEntity {
     /**
      * 状态
      */
-    @Column( columnDefinition = "VARCHAR(255)   COMMENT '状态'")
+    @Column(columnDefinition = "VARCHAR(255)   COMMENT '状态'")
     private Status status;
 
     /**
@@ -176,6 +174,13 @@ public class BiddingInfo extends BaseEntity {
     @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
+    public String getBiddingNumber() {
+        return biddingNumber;
+    }
+
+    public void setBiddingNumber(String biddingNumber) {
+        this.biddingNumber = biddingNumber;
+    }
 
     public String getWebName() {
         return webName;
@@ -225,13 +230,6 @@ public class BiddingInfo extends BaseEntity {
         this.tenderModule = tenderModule;
     }
 
-    public String getTenderNumber() {
-        return tenderNumber;
-    }
-
-    public void setTenderNumber(String tenderNumber) {
-        this.tenderNumber = tenderNumber;
-    }
 
     public String getProjectName() {
         return projectName;

@@ -4,6 +4,7 @@ import com.bjike.goddess.allmeeting.bo.MultiwheelSummaryBO;
 import com.bjike.goddess.allmeeting.dto.MultiwheelSummaryDTO;
 import com.bjike.goddess.allmeeting.entity.MultiwheelSummary;
 import com.bjike.goddess.allmeeting.to.MultiwheelSummaryTO;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -54,6 +55,7 @@ public class MultiwheelSummarySerImpl extends ServiceImpl<MultiwheelSummary, Mul
 
     @Override
     public List<MultiwheelSummaryBO> pageList(MultiwheelSummaryDTO dto) throws SerException {
+        dto.getConditions().add(Restrict.eq("status", Status.THAW));
         dto.getSorts().add("createTime=desc");
         return BeanTransform.copyProperties(super.findByPage(dto), MultiwheelSummaryBO.class);
     }

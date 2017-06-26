@@ -17,7 +17,10 @@ import java.time.LocalDate;
  * @Copy: [ com.bjike ]
  */
 public class BiddingAnswerQuestionsTO extends BaseTO {
-
+    /**
+     * 编号
+     */
+    private String biddingNumber;
     /**
      * 项目名称
      */
@@ -49,6 +52,13 @@ public class BiddingAnswerQuestionsTO extends BaseTO {
      */
     private String reply;
 
+    public String getBiddingNumber() {
+        return biddingNumber;
+    }
+
+    public void setBiddingNumber(String biddingNumber) {
+        this.biddingNumber = biddingNumber;
+    }
 
     public String getProjectName() {
         return projectName;

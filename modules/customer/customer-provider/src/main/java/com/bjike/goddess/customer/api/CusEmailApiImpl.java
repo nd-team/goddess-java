@@ -5,6 +5,7 @@ import com.bjike.goddess.customer.bo.CusEmailBO;
 import com.bjike.goddess.customer.dto.CusEmailDTO;
 import com.bjike.goddess.customer.service.CusEmailSer;
 import com.bjike.goddess.customer.to.CusEmailTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,16 @@ public class CusEmailApiImpl implements CusEmailAPI {
 
     @Autowired
     private CusEmailSer cusEmailSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return cusEmailSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return cusEmailSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countCusEmail(CusEmailDTO cusEmailDTO) throws SerException {
@@ -68,5 +79,10 @@ public class CusEmailApiImpl implements CusEmailAPI {
     @Override
     public CusEmailBO getCusEmailById(String id) throws SerException {
         return cusEmailSer.getCusEmailById(id);
+    }
+
+    @Override
+    public void checkSendEmail() throws SerException {
+        cusEmailSer.checkSendEmail();
     }
 }

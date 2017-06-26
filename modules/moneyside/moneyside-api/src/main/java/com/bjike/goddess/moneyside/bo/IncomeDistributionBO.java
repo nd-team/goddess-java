@@ -32,6 +32,10 @@ public class IncomeDistributionBO extends BaseBO {
      * 入资到账时间比例(%)
      */
     private Double proportionGroup;
+    /**
+     * 投资分配时间
+     */
+    private String incomeDistributionTime;
 
     /**
      * 入资信用度比例(%)
@@ -127,6 +131,14 @@ public class IncomeDistributionBO extends BaseBO {
 
     public void setProportionInvestment(Double proportionInvestment) {
         this.proportionInvestment = proportionInvestment;
+    }
+
+    public String getIncomeDistributionTime() {
+        return incomeDistributionTime;
+    }
+
+    public void setIncomeDistributionTime(String incomeDistributionTime) {
+        this.incomeDistributionTime = incomeDistributionTime;
     }
 
     public Double getRiskControlMarginRatio() {

@@ -360,7 +360,6 @@ public class DispatchSheetAction extends BaseFileAction {
      * @throws ActException
      * @version v1
      */
-    @LoginAuth
     @GetMapping("v1/templateExcel")
     public Result templateExcel(HttpServletResponse response) throws ActException {
         try {

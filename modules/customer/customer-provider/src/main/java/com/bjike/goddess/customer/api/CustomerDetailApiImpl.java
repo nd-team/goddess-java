@@ -5,6 +5,7 @@ import com.bjike.goddess.customer.bo.CustomerDetailBO;
 import com.bjike.goddess.customer.dto.CustomerDetailDTO;
 import com.bjike.goddess.customer.service.CustomerDetailSer;
 import com.bjike.goddess.customer.to.CustomerDetailTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,17 @@ public class CustomerDetailApiImpl implements CustomerDetailAPI {
 
     @Autowired
     private CustomerDetailSer customerDetailSer;
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return customerDetailSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return customerDetailSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countCustomerDetail(CustomerDetailDTO customerDetailDTO) throws SerException {
@@ -58,5 +70,10 @@ public class CustomerDetailApiImpl implements CustomerDetailAPI {
     @Override
     public CustomerDetailBO getCustomerDetailByNum(String customerNum) throws SerException {
         return customerDetailSer.getCustomerDetailByNum(customerNum);
+    }
+
+    @Override
+    public byte[] exportInfo(CustomerDetailDTO customerDetailDTO) throws SerException {
+        return customerDetailSer.exportInfo( customerDetailDTO);
     }
 }

@@ -14,7 +14,10 @@ import javax.persistence.Column;
  * @Copy: [ com.bjike ]
  */
 public class TenderInfoBO extends BaseBO {
-
+    /**
+     * 编号
+     */
+    private String biddingNumber;
     /**
      * 项目名称
      */
@@ -85,6 +88,13 @@ public class TenderInfoBO extends BaseBO {
      */
     private String economicVolume;
 
+    public String getBiddingNumber() {
+        return biddingNumber;
+    }
+
+    public void setBiddingNumber(String biddingNumber) {
+        this.biddingNumber = biddingNumber;
+    }
 
     public String getProjectName() {
         return projectName;

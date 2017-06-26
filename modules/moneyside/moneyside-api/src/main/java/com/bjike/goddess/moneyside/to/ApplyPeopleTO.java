@@ -9,13 +9,13 @@ public class ApplyPeopleTO {
     /**
      * 申请人
      */
-    private String[] applyPeople;
+    private String[] investor;
 
-    public String[] getApplyPeople() {
-        return applyPeople;
+    public String[] getInvestor() {
+        return investor;
     }
 
-    public void setApplyPeople(String[] applyPeople) {
-        this.applyPeople = applyPeople;
+    public void setInvestor(String[] investor) {
+        this.investor = investor;
     }
 }

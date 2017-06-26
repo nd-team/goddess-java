@@ -36,7 +36,7 @@ public class BiddingInfoDTO extends BaseDTO {
     /**
      * 项目名称
      */
-    private String projectName;
+    private String[] projectName;
 
 
 
@@ -72,11 +72,11 @@ public class BiddingInfoDTO extends BaseDTO {
         this.cities = cities;
     }
 
-    public String getProjectName() {
+    public String[] getProjectName() {
         return projectName;
     }
 
-    public void setProjectName(String projectName) {
+    public void setProjectName(String[] projectName) {
         this.projectName = projectName;
     }
 }

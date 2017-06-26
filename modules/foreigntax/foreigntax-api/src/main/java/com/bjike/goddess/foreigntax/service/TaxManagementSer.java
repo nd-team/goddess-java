@@ -6,7 +6,9 @@ import com.bjike.goddess.foreigntax.bo.TaxCollectBO;
 import com.bjike.goddess.foreigntax.bo.TaxManagementBO;
 import com.bjike.goddess.foreigntax.entity.TaxManagement;
 import com.bjike.goddess.foreigntax.dto.TaxManagementDTO;
+import com.bjike.goddess.foreigntax.excel.SonPermissionObject;
 import com.bjike.goddess.foreigntax.to.CollectTo;
+import com.bjike.goddess.foreigntax.to.GuidePermissionTO;
 import com.bjike.goddess.foreigntax.to.TaxManagementTO;
 
 import java.util.List;
@@ -21,6 +23,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface TaxManagementSer extends Ser<TaxManagement, TaxManagementDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 税金管理列表总条数
      */
@@ -75,21 +90,6 @@ public interface TaxManagementSer extends Ser<TaxManagement, TaxManagementDTO> {
      * @throws SerException
      */
     default void removeTaxManagement(String id) throws SerException {
-
-    }
-    /**
-     * 上传
-     */
-    default void upload() throws SerException {
-        return;
-
-    }
-    /**
-     * 查看功能
-     * @return class TaxManagementBO
-     */
-    default List<TaxManagementBO> viewTaxManagement(TaxManagementDTO taxManagementDTO) throws SerException {
-        return null;
 
     }
     /**

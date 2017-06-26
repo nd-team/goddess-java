@@ -45,7 +45,7 @@ public class ProjectMonth extends BaseEntity {
     /**
      * 参考单价
      */
-    @Column(name = "price", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '参考单价'")
+    @Column(name = "price", columnDefinition = "DECIMAL(10,2)   COMMENT '参考单价'")
     private Double price;
 
     /**

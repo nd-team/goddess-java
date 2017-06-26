@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 资金进入申请业务实现
@@ -108,6 +109,17 @@ public class FundEntrySerImpl extends ServiceImpl<FundEntry, FundEntryDTO> imple
         }
         super.remove(id);
     }
+    @Override
+    public List<String> getInvestor() throws SerException {
+        String[] fields = new String[]{"investor"};
+        List<FundEntryBO> fundEntryBOS = super.findBySql("select investor from moneyside_fundentry group by investor order by investor asc ", FundEntryBO.class, fields);
+
+        List<String> investorList = fundEntryBOS.stream().map(FundEntryBO::getInvestor)
+                .filter(investor -> (investor != null || !"".equals(investor.trim()))).distinct().collect(Collectors.toList());
+
+
+        return investorList;
+    }
 
     @Override
     public FundEntryBO audit(FundEntryTO fundEntryTO) throws SerException {
@@ -143,8 +155,8 @@ public class FundEntrySerImpl extends ServiceImpl<FundEntry, FundEntryDTO> imple
             dto.getConditions().add(Restrict.between("fundEntryTime", condition));
         }
 
-        if (null != to.getApplyPeople()) {
-            dto.getConditions().add(Restrict.in("applyPeople", to.getApplyPeople()));
+        if (null != to.getInvestor()) {
+            dto.getConditions().add(Restrict.in("investor", to.getInvestor()));
         }
         if (null != to.getAccessToFund()) {
             dto.getConditions().add(Restrict.in("accessToFund", to.getAccessToFund()));
@@ -157,7 +169,7 @@ public class FundEntrySerImpl extends ServiceImpl<FundEntry, FundEntryDTO> imple
         List<CollectBO> boList = new ArrayList<>();
         for (FundEntry model : list) {
             CollectBO bo = new CollectBO();
-            bo.setApplyPeople(model.getApplyPeople());
+            bo.setInvestor(model.getInvestor());
             bo.setAccessToFund(model.getAccessToFund());
             bo.setFundEntryTime(DateUtil.dateToString(model.getFundEntryTime()));
             bo.setMoney(model.getMoney());

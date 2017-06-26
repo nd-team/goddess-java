@@ -6,6 +6,8 @@ import com.bjike.goddess.projectmarketfee.bo.ProjectMarketFeeBO;
 import com.bjike.goddess.projectmarketfee.bo.ProjectMarketFeeCountBO;
 import com.bjike.goddess.projectmarketfee.dto.ProjectMarketFeeDTO;
 import com.bjike.goddess.projectmarketfee.entity.ProjectMarketFee;
+import com.bjike.goddess.projectmarketfee.to.GuidePermissionTO;
+import com.bjike.goddess.projectmarketfee.vo.SonPermissionObject;
 
 import java.util.List;
 import java.util.Set;
@@ -20,6 +22,16 @@ import java.util.Set;
  * @Copy: [ com.bjike ]
  */
 public interface ProjectMarketFeeSer extends Ser<ProjectMarketFee, ProjectMarketFeeDTO> {
+    /**
+     * 下拉导航权限
+     */
+    List<SonPermissionObject> sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
     /**
      * 查找
      *
