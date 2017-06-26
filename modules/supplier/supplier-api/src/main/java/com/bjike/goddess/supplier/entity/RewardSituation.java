@@ -29,8 +29,8 @@ public class RewardSituation extends BaseEntity {
     /**
      * 获奖名称
      */
-    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(50)   COMMENT '获奖名称'")
-    private String name;
+    @Column(name = "awardName", nullable = false, columnDefinition = "VARCHAR(50)   COMMENT '获奖名称'")
+    private String awardName;
 
     /**
      * 获得时间
@@ -47,12 +47,12 @@ public class RewardSituation extends BaseEntity {
         this.information = information;
     }
 
-    public String getName() {
-        return name;
+    public String getAwardName() {
+        return awardName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setAwardName(String awardName) {
+        this.awardName = awardName;
     }
 
     public LocalDate getAcquisition() {

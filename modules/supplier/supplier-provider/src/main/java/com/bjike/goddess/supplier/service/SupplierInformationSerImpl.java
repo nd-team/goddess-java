@@ -9,8 +9,8 @@ import com.bjike.goddess.supplier.bo.EnterpriseQualificationBO;
 import com.bjike.goddess.supplier.bo.SupplierInfoCollectBO;
 import com.bjike.goddess.supplier.bo.SupplierInfoCollectTitleBO;
 import com.bjike.goddess.supplier.bo.SupplierInformationBO;
-import com.bjike.goddess.supplier.dto.SupplierInformationDTO;
-import com.bjike.goddess.supplier.entity.SupplierInformation;
+import com.bjike.goddess.supplier.dto.*;
+import com.bjike.goddess.supplier.entity.*;
 import com.bjike.goddess.supplier.enums.GuideAddrStatus;
 import com.bjike.goddess.supplier.to.CollectTo;
 import com.bjike.goddess.supplier.to.GuidePermissionTO;
@@ -157,27 +157,49 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
         if (!supPermissionSer.getSupPermission(idFlag))
             throw new SerException("您的帐号没有权限");
         SupplierInformationDTO dto = new SupplierInformationDTO();
-        dto.getSorts().add("name");
+        dto.getSorts().add("supplierName");
         List<SupplierInformation> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, SupplierInformationBO.class);
     }
 
     @Override
     public SupplierInformationBO delete(String id) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         if (!supPermissionSer.getSupPermission(idFlag))
             throw new SerException("您的帐号没有权限");
         SupplierInformation entity = super.findById(id);
         if (null == entity)
             throw new SerException("数据对象不能为空");
         String message = "存在依赖关系,无法删除";
-        if (contactSituationSer.findByInformation(id).size() > 0)
-            throw new SerException(message);
-        if (cooperationSituationSer.findByInformation(id).size() > 0)
-            throw new SerException(message);
-        if (enterpriseQualificationSer.findByInformation(id).size() > 0)
-            throw new SerException(message);
-        if (rewardSituationSer.findByInformation(id).size() > 0)
-            throw new SerException(message);
+
+        ContactSituationDTO dto = new ContactSituationDTO();
+        dto.getConditions().add(Restrict.eq("id","information.id"));
+        List<ContactSituation> listContact = contactSituationSer.findByCis( dto );
+        if (listContact.size() > 0) {
+            contactSituationSer.remove(  listContact );
+        }
+
+        CooperationSituationDTO cooperationSituationDTO = new CooperationSituationDTO();
+        cooperationSituationDTO.getConditions().add(Restrict.eq("id","information_id"));
+        List<CooperationSituation> listcoop = cooperationSituationSer.findByCis(cooperationSituationDTO);
+        if (listcoop.size() > 0){
+            cooperationSituationSer.remove(listcoop);
+        }
+
+        EnterpriseQualificationDTO enterpriseQualificationDTO = new EnterpriseQualificationDTO();
+        enterpriseQualificationDTO.getConditions().add(Restrict.eq("id","information_id"));
+        List<EnterpriseQualification> listEnterp = enterpriseQualificationSer.findByCis(enterpriseQualificationDTO);
+        if (listEnterp.size() > 0){
+            enterpriseQualificationSer.remove(listEnterp);
+        }
+
+        RewardSituationDTO rewardSituationDTO = new RewardSituationDTO();
+        rewardSituationDTO.getConditions().add(Restrict.eq("id","information_id"));
+        List<RewardSituation> listrew = rewardSituationSer.findByCis(rewardSituationDTO);
+
+        if (listrew.size() > 0){
+            rewardSituationSer.remove(listrew);
+        }
         super.remove(entity);
         return BeanTransform.copyProperties(entity, SupplierInformationBO.class);
     }
@@ -397,7 +419,7 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
     //chenjunhao
     public List<SupplierInformationBO>  findByName(String name) throws SerException {
         SupplierInformationDTO dto = new SupplierInformationDTO();
-        dto.getConditions().add(Restrict.eq("name", name));
+        dto.getConditions().add(Restrict.eq("supplierName", name));
         List<SupplierInformation> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, SupplierInformationBO.class);
     }

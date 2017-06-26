@@ -36,8 +36,8 @@ public class SupplierInformation extends BaseEntity {
     /**
      * 供应商名称
      */
-    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(50)   COMMENT '供应商名称'")
-    private String name;
+    @Column(name = "supplierName", nullable = false, columnDefinition = "VARCHAR(50)   COMMENT '供应商名称'")
+    private String supplierName;
 
     /**
      * 供应商类型
@@ -188,12 +188,12 @@ public class SupplierInformation extends BaseEntity {
         this.area = area;
     }
 
-    public String getName() {
-        return name;
+    public String getSupplierName() {
+        return supplierName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSupplierName(String supplierName) {
+        this.supplierName = supplierName;
     }
 
     public String getType() {
