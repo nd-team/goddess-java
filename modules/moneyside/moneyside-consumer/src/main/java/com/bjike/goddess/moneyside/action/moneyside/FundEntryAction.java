@@ -146,6 +146,21 @@ public class FundEntryAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 获取投资人
+     *
+     * @des 获取投资人
+     * @version v1
+     */
+    @GetMapping("v1/getInvestor")
+    public Result getInvestor() throws ActException {
+        try {
+            List<String> list = fundEntryAPI.getInvestor();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 审核
@@ -171,8 +186,8 @@ public class FundEntryAction {
      * @return class CollectVO
      * @version v1
      */
-    @GetMapping("v1/applyCollect")
-    public Result applyCollect(@Validated({ApplyPeopleTO.Collect.class}) ApplyPeopleTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/investor")
+    public Result investor(@Validated({ApplyPeopleTO.Collect.class}) ApplyPeopleTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             CollectTO collectTO = BeanTransform.copyProperties(to, CollectTO.class);
             List<CollectVO> voList = BeanTransform.copyProperties(fundEntryAPI.collect(collectTO), CollectVO.class, request);

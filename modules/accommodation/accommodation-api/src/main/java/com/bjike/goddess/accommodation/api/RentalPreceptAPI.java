@@ -16,21 +16,50 @@ import java.util.List;
  */
 public interface RentalPreceptAPI {
     /**
+     * 租房方案列表总条数
+     */
+    default Long countRentalPrecept(RentalPreceptDTO rentalPreceptDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 一个租房方案
+     *
+     * @return class RentalPreceptBO
+     */
+    default RentalPreceptBO getOne(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 租房方案列表
+     *
+     * @param rentalPreceptDTO 租房方案dto
+     * @return class RentalPreceptBO
+     * @throws SerException
+     */
+    default List<RentalPreceptBO> findListRentalPrecept(RentalPreceptDTO rentalPreceptDTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 添加租房方案
+     *
      * @param preceptTO 租房方案数据集合
      * @throws SerException
      */
     default RentalPreceptBO insertPecept(RentalPreceptTO preceptTO) throws SerException {
         return null;
     }
+
     /**
      * 编辑租房方案
      *
-     * @param preceptTO   租房方案信息数据to
-     * @return class rentalPreceptBO
+     * @param preceptTO 租房方案信息数据to
+     * @return class RentalPreceptBO
      * @throws SerException
      */
-    default RentalPreceptBO editPecept(RentalPreceptTO preceptTO ) throws SerException {
+    default RentalPreceptBO editPecept(RentalPreceptTO preceptTO) throws SerException {
         return null;
     }
 
@@ -44,31 +73,26 @@ public interface RentalPreceptAPI {
     default void removePecept(String id) throws SerException {
         return;
     }
+
+
     /**
-     * 获取所有租房方案
-     * @param rentalPreceptDTO 租房方案dto
-     * @return class entryBasicInfo
+     * 项目经理审核
+     *
+     * @param preceptTO
+     * @return class RentalPreceptBO
      * @throws SerException
      */
-    default List<RentalPreceptBO> findListRentalPrecept(RentalPreceptDTO rentalPreceptDTO) throws SerException {
+    default RentalPreceptBO manageAudit(RentalPreceptTO preceptTO) throws SerException {
         return null;
     }
-
-
     /**
-     * 审核
+     * 总经办审核
+     *
      * @param preceptTO
+     * @return class RentalPreceptBO
      * @throws SerException
      */
-    default  void audit(RentalPreceptTO preceptTO) throws SerException{
-        return ;
-    }
-    /**
-     * 邮箱
-     * @param preceptTO
-     * @throws SerException
-     */
-    default RentalPreceptBO mail(RentalPreceptTO preceptTO) throws SerException{
+    default RentalPreceptBO generalAudit(RentalPreceptTO preceptTO) throws SerException {
         return null;
     }
 

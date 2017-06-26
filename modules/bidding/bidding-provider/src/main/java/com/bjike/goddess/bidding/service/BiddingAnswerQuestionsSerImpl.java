@@ -1,6 +1,7 @@
 package com.bjike.goddess.bidding.service;
 
 import com.bjike.goddess.bidding.bo.BiddingAnswerQuestionsBO;
+import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.dto.BiddingAnswerQuestionsDTO;
 import com.bjike.goddess.bidding.entity.BiddingAnswerQuestions;
 import com.bjike.goddess.bidding.enums.GuideAddrStatus;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 投标答疑问题记录业务接口实现

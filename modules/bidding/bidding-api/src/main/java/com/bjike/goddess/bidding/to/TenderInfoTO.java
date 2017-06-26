@@ -15,7 +15,10 @@ import org.hibernate.validator.constraints.NotBlank;
  * @Copy: [ com.bjike ]
  */
 public class TenderInfoTO extends BaseTO {
-
+    /**
+     * 编号
+     */
+    private String biddingNumber;
     /**
      * 项目名称
      */
@@ -88,6 +91,13 @@ public class TenderInfoTO extends BaseTO {
      */
     private String economicVolume;
 
+    public String getBiddingNumber() {
+        return biddingNumber;
+    }
+
+    public void setBiddingNumber(String biddingNumber) {
+        this.biddingNumber = biddingNumber;
+    }
 
     public String getProjectName() {
         return projectName;

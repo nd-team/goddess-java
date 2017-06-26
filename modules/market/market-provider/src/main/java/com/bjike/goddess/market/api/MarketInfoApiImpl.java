@@ -55,10 +55,10 @@ public class MarketInfoApiImpl implements MarketInfoAPI {
 
     @Override
     public MarketInfoBO insertMarketInfo(MarketInfoTO marketInfoTO) throws SerException {
-        marketInfoTO.setInfoCollectionDate(DateUtil.dateToString(LocalDate.now()));
-        marketInfoTO.setStartTime(DateUtil.dateToString(LocalDateTime.now()));
-        marketInfoTO.setImportantPoint(DateUtil.dateToString(LocalDateTime.now()));
-        marketInfoTO.setEndTime(DateUtil.dateToString(LocalDateTime.now()));
+//        marketInfoTO.setInfoCollectionDate(DateUtil.dateToString(LocalDate.now()));
+//        marketInfoTO.setStartTime(DateUtil.dateToString(LocalDateTime.now()));
+//        marketInfoTO.setImportantPoint(DateUtil.dateToString(LocalDateTime.now()));
+//        marketInfoTO.setEndTime(DateUtil.dateToString(LocalDateTime.now()));
         return marketInfoSer.insertMarketInfo(marketInfoTO);
     }
 
@@ -72,7 +72,10 @@ public class MarketInfoApiImpl implements MarketInfoAPI {
     public void removeMarketInfo(String id) throws SerException {
         marketInfoSer.remove(id);
     }
-
+    @Override
+    public List<String> getCustomerName() throws SerException {
+        return marketInfoSer.getCustomerName();
+    }
     @Override
     public byte[] exportExcel(MarketInfoDTO dto) throws SerException{
         return marketInfoSer.exportExcel(dto);

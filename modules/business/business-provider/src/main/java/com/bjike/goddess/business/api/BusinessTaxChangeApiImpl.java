@@ -4,6 +4,7 @@ import com.bjike.goddess.business.bo.BusinessTaxChangeBO;
 import com.bjike.goddess.business.dto.BusinessTaxChangeDTO;
 import com.bjike.goddess.business.service.BusinessTaxChangeSer;
 import com.bjike.goddess.business.to.BusinessTaxChangeTO;
+import com.bjike.goddess.business.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,14 @@ import java.util.List;
 public class BusinessTaxChangeApiImpl implements BusinessTaxChangeAPI {
     @Autowired
     private BusinessTaxChangeSer businessTaxChangeSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return businessTaxChangeSer.sonPermission();
+    }
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return businessTaxChangeSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countBusinessTaxChange(BusinessTaxChangeDTO businessTaxChangeDTO) throws SerException {
         return businessTaxChangeSer.countBusinessTaxChange(businessTaxChangeDTO);
@@ -52,16 +61,5 @@ public class BusinessTaxChangeApiImpl implements BusinessTaxChangeAPI {
         businessTaxChangeSer.removeBusinessTaxChange(id);
     }
 
-    @Override
-    public void upload() throws SerException {
-        businessTaxChangeSer.upload();
-
-    }
-
-    @Override
-    public void download() throws SerException {
-        businessTaxChangeSer.download();
-
-    }
 
 }

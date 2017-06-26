@@ -14,9 +14,9 @@ import com.bjike.goddess.common.api.to.BaseTO;
 public class FundEntryWrongRecordTO extends BaseTO {
 
     /**
-     * 申请人
+     * 投资人
      */
-    private String applyPeople;
+    private String investor;
 
     /**
      * 资金进入方式
@@ -59,12 +59,12 @@ public class FundEntryWrongRecordTO extends BaseTO {
     private Boolean pass;
 
 
-    public String getApplyPeople() {
-        return applyPeople;
+    public String getInvestor() {
+        return investor;
     }
 
-    public void setApplyPeople(String applyPeople) {
-        this.applyPeople = applyPeople;
+    public void setInvestor(String investor) {
+        this.investor = investor;
     }
 
     public String getAccessToFund() {

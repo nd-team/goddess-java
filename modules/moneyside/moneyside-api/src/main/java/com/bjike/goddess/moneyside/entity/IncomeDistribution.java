@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 
 /**
@@ -55,7 +56,11 @@ public class IncomeDistribution extends BaseEntity {
      */
     @Column(name = "other", columnDefinition = "VARCHAR(255)   COMMENT '其他'")
     private String other;
-
+    /**
+     * 投资分配时间
+     */
+    @Column(name = "incomeDistributionTime", columnDefinition = "DATE   COMMENT '投资分配时间'")
+    private LocalDate incomeDistributionTime;
     /**
      * 投资分配比例(%)
      */
@@ -135,6 +140,14 @@ public class IncomeDistribution extends BaseEntity {
 
     public void setProportionInvestment(Double proportionInvestment) {
         this.proportionInvestment = proportionInvestment;
+    }
+
+    public LocalDate getIncomeDistributionTime() {
+        return incomeDistributionTime;
+    }
+
+    public void setIncomeDistributionTime(LocalDate incomeDistributionTime) {
+        this.incomeDistributionTime = incomeDistributionTime;
     }
 
     public Double getRiskControlMarginRatio() {

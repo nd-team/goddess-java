@@ -12,5 +12,16 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [ com.bjike ]
  */
 public class SubjectCollectDTO extends BaseDTO {
+    /**
+     * 地区
+     */
+    private String []area;
 
+    public String[] getArea() {
+        return area;
+    }
+
+    public void setArea(String[] area) {
+        this.area = area;
+    }
 }

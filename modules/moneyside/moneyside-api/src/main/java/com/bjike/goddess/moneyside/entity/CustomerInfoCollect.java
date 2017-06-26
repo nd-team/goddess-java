@@ -24,91 +24,91 @@ public class CustomerInfoCollect extends BaseEntity {
     /**
      * 姓名
      */
-    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '姓名'")
+    @Column(name = "name", columnDefinition = "VARCHAR(255)   COMMENT '姓名'")
     private String name;
 
     /**
      * 资金进入方式
      */
-    @Column(name = "accessToFund", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '资金进入方式'")
+    @Column(name = "accessToFund", columnDefinition = "VARCHAR(255)   COMMENT '资金进入方式'")
     private String accessToFund;
 
     /**
      * 资金进入时间
      */
-    @Column(name = "fundEntryAime", nullable = false, columnDefinition = "DATE   COMMENT '资金进入时间'")
+    @Column(name = "fundEntryAime",  columnDefinition = "DATE   COMMENT '资金进入时间'")
     private LocalDate fundEntryAime;
 
     /**
      * 进入金额
      */
-    @Column(name = "enterMoney", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '进入金额'")
+    @Column(name = "enterMoney",  columnDefinition = "DECIMAL(10,2)   COMMENT '进入金额'")
     private Double enterMoney;
 
     /**
      * 投资项目
      */
-    @Column(name = "investProject", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '投资项目'")
+    @Column(name = "investProject", columnDefinition = "VARCHAR(255)   COMMENT '投资项目'")
     private String investProject;
 
     /**
      * 投资总额
      */
-    @Column(name = "investTotal", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '投资总额'")
+    @Column(name = "investTotal", columnDefinition = "DECIMAL(10,2)   COMMENT '投资总额'")
     private Double investTotal;
 
     /**
      * 投资占比(%)
      */
-    @Column(name = "investProportion", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '投资占比(%)'")
+    @Column(name = "investProportion",columnDefinition = "DECIMAL(10,2)   COMMENT '投资占比(%)'")
     private Double investProportion;
 
     /**
      * 资金退出时间
      */
-    @Column(name = "exitTime", nullable = false, columnDefinition = "DATE   COMMENT '资金退出时间'")
+    @Column(name = "exitTime", columnDefinition = "DATE   COMMENT '资金退出时间'")
     private LocalDate exitTime;
 
     /**
      * 退出金额
      */
-    @Column(name = "exitMoney", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '退出金额'")
+    @Column(name = "exitMoney", columnDefinition = "DECIMAL(10,2)   COMMENT '退出金额'")
     private Double exitMoney;
 
     /**
      * 退出利息
      */
-    @Column(name = "exitInterest", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '退出利息'")
+    @Column(name = "exitInterest", columnDefinition = "DECIMAL(10,2)   COMMENT '退出利息'")
     private Double exitInterest;
 
     /**
      * 被转让人
      */
-    @Column(name = "transferee", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '被转让人'")
+    @Column(name = "transferee", columnDefinition = "VARCHAR(255)   COMMENT '被转让人'")
     private String transferee;
 
     /**
      * 转让金额
      */
-    @Column(name = "transferAmount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '转让金额'")
+    @Column(name = "transferAmount", columnDefinition = "DECIMAL(10,2)   COMMENT '转让金额'")
     private Double transferAmount;
 
     /**
      * 收益分配时间
      */
-    @Column(name = "incomeAllotTime", nullable = false, columnDefinition = "DATE   COMMENT '收益分配时间'")
+    @Column(name = "incomeAllotTime", columnDefinition = "DATE   COMMENT '收益分配时间'")
     private LocalDate incomeAllotTime;
 
     /**
      * 分配利率
      */
-    @Column(name = "allotInterestRate", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '分配利率'")
+    @Column(name = "allotInterestRate", columnDefinition = "DECIMAL(10,2)   COMMENT '分配利率'")
     private Double allotInterestRate;
 
     /**
      * 分配额
      */
-    @Column(name = "quota", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '分配额'")
+    @Column(name = "quota", columnDefinition = "DECIMAL(10,2)   COMMENT '分配额'")
     private Double quota;
 
 

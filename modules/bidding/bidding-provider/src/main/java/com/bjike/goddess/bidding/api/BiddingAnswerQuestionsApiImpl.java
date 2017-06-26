@@ -62,7 +62,6 @@ public class BiddingAnswerQuestionsApiImpl implements BiddingAnswerQuestionsAPI 
     public List<BiddingAnswerQuestionsBO> findListBiddingAnswerQuestions(BiddingAnswerQuestionsDTO biddingAnswerQuestionsDTO) throws SerException {
         return biddingAnswerQuestionsSer.findListBiddingAnswerQuestions(biddingAnswerQuestionsDTO);
     }
-
     @Override
     public byte[] exportExcel(BiddingAnswerQuestionsDTO dto) throws SerException {
         return biddingAnswerQuestionsSer.exportExcel(dto);

@@ -6,6 +6,8 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.foreigntax.enums.PaymentStatus;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 税金管理
  *
@@ -38,11 +40,13 @@ public class TaxManagementTO extends BaseTO {
     /**
      * 税率(%)
      */
+    @NotNull(message = "税率(%)不能为空",groups = {ADD.class, EDIT.class})
     private Double rate;
 
     /**
      * 税金
      */
+    @NotNull(message = "税金不能为空",groups = {ADD.class, EDIT.class})
     private Double tax;
 
     /**
@@ -53,12 +57,23 @@ public class TaxManagementTO extends BaseTO {
     /**
      * 付款日期
      */
+    @NotBlank(message = "付款日期不能为空",groups = {EDIT.class})
     private String paymentDate;
 
     /**
      * 付款单位
      */
+    @NotBlank(message = "付款单位不能为空",groups = {EDIT.class})
     private String paymentUnit;
+    /**
+     * 创建时间
+     */
+    private String createTime;
+
+    /**
+     * 修改时间
+     */
+    private String modifyTime;
 
 
     public String getCompany() {
@@ -123,5 +138,21 @@ public class TaxManagementTO extends BaseTO {
 
     public void setPaymentUnit(String paymentUnit) {
         this.paymentUnit = paymentUnit;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

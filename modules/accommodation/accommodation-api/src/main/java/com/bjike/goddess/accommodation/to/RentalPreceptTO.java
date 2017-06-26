@@ -17,8 +17,12 @@ public class RentalPreceptTO extends BaseTO {
     /**
      * 姓名（用户名称）
      */
-    @NotBlank(message = "组名不能为空", groups = ADD.class)
+    @NotBlank(message = "姓名不能为空", groups = ADD.class)
     private String name;
+    /**
+     * 员工编号
+     */
+    private String employeeNum;
     /**
      * 地区
      */
@@ -42,7 +46,7 @@ public class RentalPreceptTO extends BaseTO {
     /**
      * 住宿人数
      */
-    private String accommodationPeople;
+    private Integer accommodationPeople;
     /**
      * 租房规格
      */
@@ -56,9 +60,13 @@ public class RentalPreceptTO extends BaseTO {
      */
     private String deadline;
     /**
-     * 完成租房时间
+     * 完成租房开始时间
      */
-    private LocalDate completeTime;
+    private LocalDate completeStartTime;
+    /**
+     * 完成租房结束时间
+     */
+    private LocalDate completeEndTime;
     /**
      * 资金意见
      */
@@ -80,14 +88,30 @@ public class RentalPreceptTO extends BaseTO {
      */
     private String comprehensiveRemark;
     /**
-     * 项目经理审批
+     * 项目经理
      */
-    private String manageApproval;
+    private String manage;
+    /**
+     * 项目经理意见
+     */
+    private String manageOpinion;
+    /**
+     * 项目经理是否通过(是/否)
+     */
+    private String managePass;
 
     /**
-     * 总经办审批
+     * 总经办
      */
-    private String generalApproval;
+    private String general;
+    /**
+     * 总经办意见
+     */
+    private String generalOpinion;
+    /**
+     * 总经办是否通过(是/否)
+     */
+    private String generalPass;
     /**
      * 备注
      */
@@ -99,6 +123,14 @@ public class RentalPreceptTO extends BaseTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmployeeNum() {
+        return employeeNum;
+    }
+
+    public void setEmployeeNum(String employeeNum) {
+        this.employeeNum = employeeNum;
     }
 
     public String getArea() {
@@ -141,11 +173,11 @@ public class RentalPreceptTO extends BaseTO {
         this.purpose = purpose;
     }
 
-    public String getAccommodationPeople() {
+    public Integer getAccommodationPeople() {
         return accommodationPeople;
     }
 
-    public void setAccommodationPeople(String accommodationPeople) {
+    public void setAccommodationPeople(Integer accommodationPeople) {
         this.accommodationPeople = accommodationPeople;
     }
 
@@ -173,12 +205,20 @@ public class RentalPreceptTO extends BaseTO {
         this.deadline = deadline;
     }
 
-    public LocalDate getCompleteTime() {
-        return completeTime;
+    public LocalDate getCompleteStartTime() {
+        return completeStartTime;
     }
 
-    public void setCompleteTime(LocalDate completeTime) {
-        this.completeTime = completeTime;
+    public void setCompleteStartTime(LocalDate completeStartTime) {
+        this.completeStartTime = completeStartTime;
+    }
+
+    public LocalDate getCompleteEndTime() {
+        return completeEndTime;
+    }
+
+    public void setCompleteEndTime(LocalDate completeEndTime) {
+        this.completeEndTime = completeEndTime;
     }
 
     public String getMoneyOn() {
@@ -221,20 +261,52 @@ public class RentalPreceptTO extends BaseTO {
         this.comprehensiveRemark = comprehensiveRemark;
     }
 
-    public String getManageApproval() {
-        return manageApproval;
+    public String getManage() {
+        return manage;
     }
 
-    public void setManageApproval(String manageApproval) {
-        this.manageApproval = manageApproval;
+    public void setManage(String manage) {
+        this.manage = manage;
     }
 
-    public String getGeneralApproval() {
-        return generalApproval;
+    public String getManageOpinion() {
+        return manageOpinion;
     }
 
-    public void setGeneralApproval(String generalApproval) {
-        this.generalApproval = generalApproval;
+    public void setManageOpinion(String manageOpinion) {
+        this.manageOpinion = manageOpinion;
+    }
+
+    public String getManagePass() {
+        return managePass;
+    }
+
+    public void setManagePass(String managePass) {
+        this.managePass = managePass;
+    }
+
+    public String getGeneral() {
+        return general;
+    }
+
+    public void setGeneral(String general) {
+        this.general = general;
+    }
+
+    public String getGeneralOpinion() {
+        return generalOpinion;
+    }
+
+    public void setGeneralOpinion(String generalOpinion) {
+        this.generalOpinion = generalOpinion;
+    }
+
+    public String getGeneralPass() {
+        return generalPass;
+    }
+
+    public void setGeneralPass(String generalPass) {
+        this.generalPass = generalPass;
     }
 
     public String getRemark() {

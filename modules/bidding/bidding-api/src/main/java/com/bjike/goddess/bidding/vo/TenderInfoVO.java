@@ -14,6 +14,10 @@ public class TenderInfoVO {
      * id
      */
     private String id;
+    /**
+     * 编号
+     */
+    private String biddingNumber;
 
     /**
      * 项目名称
@@ -91,6 +95,14 @@ public class TenderInfoVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getBiddingNumber() {
+        return biddingNumber;
+    }
+
+    public void setBiddingNumber(String biddingNumber) {
+        this.biddingNumber = biddingNumber;
     }
 
     public String getProjectName() {

@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 招投信息列表
@@ -104,7 +105,7 @@ public class CallInfoAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class) CallInfoTO callInfoTO, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(CallInfoTO.TestAdd.class) CallInfoTO callInfoTO, BindingResult bindingResult) throws ActException {
         try {
             CallInfoBO callInfoBO = callInfoAPI.insertCallInfo(callInfoTO);
             return ActResult.initialize(callInfoBO);
@@ -123,7 +124,7 @@ public class CallInfoAction {
      */
     @LoginAuth
     @PostMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class) CallInfoTO callInfoTO, BindingResult bindingResult) throws ActException {
+    public Result edit(@Validated(CallInfoTO.TestEdit.class) CallInfoTO callInfoTO, BindingResult bindingResult) throws ActException {
         try {
             CallInfoBO callInfoBO = callInfoAPI.editCallInfo(callInfoTO);
             return ActResult.initialize(callInfoBO);
@@ -149,6 +150,57 @@ public class CallInfoAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 申请投资
+     *
+     * @param callInfoTO 申请投资数据to
+     * @return class CallInfoVO
+     * @des 申请投资
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/apply")
+    public Result apply(@Validated(CallInfoTO.TestApply.class) CallInfoTO callInfoTO, BindingResult bindingResult) throws ActException {
+        try {
+            CallInfoBO callInfoBO = callInfoAPI.applyInvest(callInfoTO);
+            return ActResult.initialize(callInfoBO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
+    /**
+     * 获取招投信息列表
+     *
+     * @param innerProject 内部项目名称
+     * @return class CallInfoVO
+     * @des 根据内部项目名称获取招投信息列表
+     * @version v1
+     */
+    @GetMapping("v1/getProject")
+    public Result getProject(String innerProject) throws ActException {
+        try {
+            CallInfoBO callInfoBO = callInfoAPI.getInnerProject(innerProject);
+            return ActResult.initialize(BeanTransform.copyProperties(callInfoBO, CallInfoVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取内部项目名称
+     *
+     * @des 获取内部项目名称
+     * @version v1
+     */
+    @GetMapping("v1/getInnerProject")
+    public Result getInnerProject() throws ActException {
+        try {
+            Set<String> set = callInfoAPI.getInnerProject();
+            return ActResult.initialize(set);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

@@ -18,9 +18,9 @@ public class FundEntryWrongRecordVO {
      */
     private String id;
     /**
-     * 申请人
+     * 投资人
      */
-    private String applyPeople;
+    private String investor;
 
     /**
      * 资金进入方式
@@ -71,12 +71,12 @@ public class FundEntryWrongRecordVO {
         this.id = id;
     }
 
-    public String getApplyPeople() {
-        return applyPeople;
+    public String getInvestor() {
+        return investor;
     }
 
-    public void setApplyPeople(String applyPeople) {
-        this.applyPeople = applyPeople;
+    public void setInvestor(String investor) {
+        this.investor = investor;
     }
 
     public String getAccessToFund() {

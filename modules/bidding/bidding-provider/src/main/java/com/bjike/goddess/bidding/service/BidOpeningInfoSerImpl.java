@@ -2,6 +2,7 @@ package com.bjike.goddess.bidding.service;
 
 import com.bjike.goddess.bidding.bo.BidOpeningCollectBO;
 import com.bjike.goddess.bidding.bo.BidOpeningInfoBO;
+import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.dto.BidOpeningInfoDTO;
 import com.bjike.goddess.bidding.entity.BidOpeningInfo;
 import com.bjike.goddess.bidding.enums.GuideAddrStatus;

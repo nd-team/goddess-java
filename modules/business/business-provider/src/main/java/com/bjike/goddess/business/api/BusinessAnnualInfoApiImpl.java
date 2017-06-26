@@ -4,6 +4,7 @@ import com.bjike.goddess.business.bo.BusinessAnnualInfoBO;
 import com.bjike.goddess.business.dto.BusinessAnnualInfoDTO;
 import com.bjike.goddess.business.service.BusinessAnnualInfoSer;
 import com.bjike.goddess.business.to.BusinessAnnualInfoTO;
+import com.bjike.goddess.business.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,14 @@ import java.util.List;
 public class BusinessAnnualInfoApiImpl implements BusinessAnnualInfoAPI {
     @Autowired
     private BusinessAnnualInfoSer businessAnnualInfoSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return businessAnnualInfoSer.sonPermission();
+    }
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return businessAnnualInfoSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countBusinessAnnualInfo(BusinessAnnualInfoDTO businessAnnualInfoDTO) throws SerException {
         return businessAnnualInfoSer.countBusinessAnnualInfo(businessAnnualInfoDTO);
@@ -55,16 +64,5 @@ public class BusinessAnnualInfoApiImpl implements BusinessAnnualInfoAPI {
         businessAnnualInfoSer.removeBusinessAnnualInfo(id);
     }
 
-    @Override
-    public void upload() throws SerException {
-        businessAnnualInfoSer.upload();
-
-    }
-
-    @Override
-    public void download() throws SerException {
-        businessAnnualInfoSer.download();
-
-    }
 
 }

@@ -2,8 +2,6 @@ package com.bjike.goddess.foreigntax.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import javax.persistence.Column;
-
 /**
  * 外账资料管理业务传输对象
  *
@@ -34,6 +32,15 @@ public class AccountInfoManagementBO extends BaseBO {
      * 跟进人
      */
     private String followUpPeople;
+    /**
+     * 创建时间
+     */
+    private String createTime;
+
+    /**
+     * 修改时间
+     */
+    private String modifyTime;
 
 
     public String getCompany() {
@@ -66,5 +73,21 @@ public class AccountInfoManagementBO extends BaseBO {
 
     public void setFollowUpPeople(String followUpPeople) {
         this.followUpPeople = followUpPeople;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

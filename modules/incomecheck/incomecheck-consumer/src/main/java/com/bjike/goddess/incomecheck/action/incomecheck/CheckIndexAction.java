@@ -10,6 +10,7 @@ import com.bjike.goddess.incomecheck.api.CheckIndexAPI;
 import com.bjike.goddess.incomecheck.bo.CheckIndexBO;
 import com.bjike.goddess.incomecheck.dto.CheckIndexDTO;
 import com.bjike.goddess.incomecheck.to.CheckIndexTO;
+import com.bjike.goddess.incomecheck.to.GuidePermissionTO;
 import com.bjike.goddess.incomecheck.vo.CheckIndexVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -17,7 +18,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -37,6 +37,29 @@ public class CheckIndexAction {
     private CheckIndexAPI checkIndexAPI;
 
     /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = checkIndexAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 列表总条数
      *
      * @param checkIndexDTO 指标设置 信息dto
@@ -54,7 +77,7 @@ public class CheckIndexAction {
     }
 
     /**
-     * 一个指标设置 
+     * 一个指标设置
      *
      * @param id 指标设置 信息id
      * @return class CheckIndexVO
@@ -76,7 +99,7 @@ public class CheckIndexAction {
      * 指标设置 列表
      *
      * @param checkIndexDTO 指标设置 信息dto
-     * @param request      前端过滤参数
+     * @param request       前端过滤参数
      * @return class CheckIndexVO
      * @des 获取所有指标设置 信息
      * @version v1
@@ -93,11 +116,11 @@ public class CheckIndexAction {
     }
 
     /**
-     * 添加指标设置 
+     * 添加指标设置
      *
      * @param checkIndexTO 指标设置 基本信息数据to
      * @return class CheckIndexVO
-     * @des 添加指标设置 
+     * @des 添加指标设置
      * @version v1
      */
     @LoginAuth
@@ -113,11 +136,11 @@ public class CheckIndexAction {
 
 
     /**
-     * 编辑指标设置 
+     * 编辑指标设置
      *
      * @param checkIndexTO 指标设置 基本信息数据bo
      * @return class CheckIndexVO
-     * @des 编辑指标设置 
+     * @des 编辑指标设置
      * @version v1
      */
     @LoginAuth
@@ -149,5 +172,5 @@ public class CheckIndexAction {
         }
     }
 
-    
+
 }

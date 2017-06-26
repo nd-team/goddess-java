@@ -23,10 +23,10 @@ import java.time.LocalDate;
 public class FundEntryWrongRecord extends BaseEntity {
 
     /**
-     * 申请人
+     * 投资人
      */
-    @Column(name = "applyPeople", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '申请人'")
-    private String applyPeople;
+    @Column(name = "investor", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '申请人'")
+    private String investor;
 
     /**
      * 资金进入方式
@@ -76,13 +76,12 @@ public class FundEntryWrongRecord extends BaseEntity {
     @Column(name = "pass",  columnDefinition = "TINYINT(2) COMMENT '是否通过'")
     private PassStatus pass;
 
-
-    public String getApplyPeople() {
-        return applyPeople;
+    public String getInvestor() {
+        return investor;
     }
 
-    public void setApplyPeople(String applyPeople) {
-        this.applyPeople = applyPeople;
+    public void setInvestor(String investor) {
+        this.investor = investor;
     }
 
     public String getAccessToFund() {
