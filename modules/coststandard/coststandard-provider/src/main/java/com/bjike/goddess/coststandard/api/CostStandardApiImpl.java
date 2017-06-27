@@ -4,8 +4,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.coststandard.bo.CostStandardBO;
 import com.bjike.goddess.coststandard.bo.CostStandardOpinionBO;
 import com.bjike.goddess.coststandard.dto.CostStandardDTO;
+import com.bjike.goddess.coststandard.excel.SonPermissionObject;
 import com.bjike.goddess.coststandard.service.CostStandardSer;
 import com.bjike.goddess.coststandard.to.CostStandardTO;
+import com.bjike.goddess.coststandard.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -74,5 +76,14 @@ public class CostStandardApiImpl implements CostStandardAPI {
     @Override
     public List<CostStandardOpinionBO> findOpinion() throws SerException {
         return costStandardSer.findOpinion();
+    }
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return costStandardSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return costStandardSer.guidePermission( guidePermissionTO );
     }
 }

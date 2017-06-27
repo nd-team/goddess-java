@@ -5,7 +5,9 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.coststandard.bo.CostStandardContrastBO;
 import com.bjike.goddess.coststandard.dto.CostStandardContrastDTO;
 import com.bjike.goddess.coststandard.entity.CostStandardContrast;
+import com.bjike.goddess.coststandard.excel.SonPermissionObject;
 import com.bjike.goddess.coststandard.to.CostStandardContrastTO;
+import com.bjike.goddess.coststandard.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -85,4 +87,18 @@ public interface CostStandardContrastSer extends Ser<CostStandardContrast, CostS
         return null;
     }
 
+
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }
