@@ -3,6 +3,7 @@ package com.bjike.goddess.qualifications.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.qualifications.bo.QualificationsInfoBO;
 import com.bjike.goddess.qualifications.dto.QualificationsInfoDTO;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 import com.bjike.goddess.qualifications.to.QualificationsInfoStatusTO;
 import com.bjike.goddess.qualifications.to.QualificationsInfoTO;
 
@@ -103,6 +104,12 @@ public interface QualificationsInfoAPI {
      * @throws SerException
      */
     default QualificationsInfoBO getById(String id) throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 }

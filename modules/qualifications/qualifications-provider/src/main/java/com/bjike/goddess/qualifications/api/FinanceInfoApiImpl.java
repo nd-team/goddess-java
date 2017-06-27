@@ -5,6 +5,7 @@ import com.bjike.goddess.qualifications.bo.FinanceInfoBO;
 import com.bjike.goddess.qualifications.dto.FinanceInfoDTO;
 import com.bjike.goddess.qualifications.service.FinanceInfoSer;
 import com.bjike.goddess.qualifications.to.FinanceInfoTO;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,5 +59,9 @@ public class FinanceInfoApiImpl implements FinanceInfoAPI {
     @Override
     public FinanceInfoBO getById(String id) throws SerException {
         return financeInfoSer.getById(id);
+    }
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return financeInfoSer.guidePermission( guidePermissionTO );
     }
 }

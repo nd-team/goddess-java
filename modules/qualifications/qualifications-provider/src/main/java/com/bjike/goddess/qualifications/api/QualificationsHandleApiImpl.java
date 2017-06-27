@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.qualifications.bo.*;
 import com.bjike.goddess.qualifications.dto.QualificationsHandleDTO;
 import com.bjike.goddess.qualifications.service.QualificationsHandleSer;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 import com.bjike.goddess.qualifications.to.QualificationsHandleForeignTO;
 import com.bjike.goddess.qualifications.to.QualificationsHandleTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,5 +95,9 @@ public class QualificationsHandleApiImpl implements QualificationsHandleAPI {
     @Override
     public QualificationsHandleBO getById(String id) throws SerException {
         return qualificationsHandleSer.getById(id);
+    }
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return qualificationsHandleSer.guidePermission( guidePermissionTO );
     }
 }
