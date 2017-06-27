@@ -544,7 +544,10 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
             cell.setCellStyle(contentStyle);   //设置样式
         }
 
-        createRowDetail(list, row, sheet);//填充数据
+        if( list != null && list.size()>0 ){
+            createRowDetail(list, row, sheet);//填充数据
+
+        }
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
@@ -558,7 +561,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
 
 
     /**
-     * @param list  报销记录集合
+     * @param list  客户详细信息集合
      * @param row
      * @param sheet Excel表单
      * @description 创建数据行
@@ -585,14 +588,32 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
 //            String ss1 = customerNum;
 //            int f = firstRow;
 //            int l = lastRow;
+//            if (!exportEntity.getCustomerNum().equals(customerNum) && firstRow == lastRow) {
+//                //不合并
+//                firstRow ++ ;
+//                showFlag = 1;
+//            }else if (exportEntity.getCustomerNum().equals(customerNum) && firstRow == lastRow) {
+//                //合并
+//                if( index <= list.size()-1 && !customerNum.equals(list.get(index+1).getCustomerNum())  ){
+//                    sheet = assiableMergeData(sheet, firstRow - showFlag, lastRow);
+//                }
+//                firstRow++;
+//                customerNum = exportEntity.getCustomerNum();
+//            }
+
             if (!exportEntity.getCustomerNum().equals(customerNum) && firstRow == lastRow) {
                 //不合并
-                firstRow ++ ;
+                firstRow++;
                 showFlag = 1;
-            }else if (exportEntity.getCustomerNum().equals(customerNum) && firstRow == lastRow) {
+            } else if (exportEntity.getCustomerNum().equals(customerNum) && firstRow == lastRow) {
                 //合并
-                if( index <= list.size()-1 && customerNum != list.get(index+1).getCustomerNum()  ){
-                    sheet = assiableMergeData(sheet, firstRow - showFlag, lastRow);
+                if (index != 0 && index < list.size() - 1 && !customerNum.equals(list.get(index + 1).getCustomerNum())) {
+//                    sheet = assiableMergeData(sheet, firstRow - showFlag, lastRow);
+                    sheet = assiableMergeData(sheet, lastRow+1 - showFlag, lastRow+1);
+
+                }
+                if (index == list.size() - 1) {
+                    sheet = assiableMergeData(sheet, lastRow+1 - showFlag, lastRow+1);
                 }
                 firstRow++;
                 customerNum = exportEntity.getCustomerNum();

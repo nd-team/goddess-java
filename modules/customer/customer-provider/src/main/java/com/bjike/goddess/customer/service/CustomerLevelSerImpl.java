@@ -235,6 +235,12 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
     public CustomerLevelBO addCustomerLevel(CustomerLevelTO customerLevelTO) throws SerException {
         //商务模块添加权限
         checkAddIdentity();
+        CustomerLevelDTO dto = new CustomerLevelDTO();
+        dto.getConditions().add(Restrict.eq("name" , customerLevelTO.getName()));
+        List<CustomerLevel> temp_level = super.findByCis( dto );
+        if( temp_level != null && temp_level.size()>0 ){
+            throw new SerException("已存在相同的级别名，不能重复添加");
+        }
         CustomerLevel customerLevel = BeanTransform.copyProperties(customerLevelTO,CustomerLevel.class,true);
         customerLevel.setCreateTime(LocalDateTime.now());
         super.save( customerLevel );
@@ -246,8 +252,17 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
     public CustomerLevelBO editCustomerLevel(CustomerLevelTO customerLevelTO) throws SerException {
         //商务模块编辑权限
         checkAddIdentity();
+
         CustomerLevel customerLevel = BeanTransform.copyProperties(customerLevelTO,CustomerLevel.class,true);
         CustomerLevel cusLevel = super.findById( customerLevelTO.getId() );
+
+        CustomerLevelDTO dto = new CustomerLevelDTO();
+        dto.getConditions().add(Restrict.eq("name" , customerLevelTO.getName()));
+        CustomerLevel temp_level = super.findOne( dto );
+        if( temp_level != null && !cusLevel.getName().equals(temp_level.getName()) ){
+            throw new SerException("已存在相同的级别名，不能重复编辑加");
+        }
+
 
         cusLevel.setName( customerLevel.getName() );
         cusLevel.setRemark( customerLevel.getRemark() );
