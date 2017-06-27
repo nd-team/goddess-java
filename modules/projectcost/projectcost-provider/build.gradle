@@ -32,5 +32,6 @@ dependencies {
     compile project(":modules:otherexpenses:otherexpenses-api")
     compile project(":modules:dispatchcar:dispatchcar-api")
     compile project(":common:common-utils")
+    compile project(":modules:user:user-api")
 }
 

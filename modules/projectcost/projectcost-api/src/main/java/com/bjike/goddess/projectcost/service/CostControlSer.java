@@ -8,6 +8,7 @@ import com.bjike.goddess.projectcost.dto.CostControlDTO;
 import com.bjike.goddess.projectcost.entity.CostControl;
 import com.bjike.goddess.projectcost.to.CostControlTO;
 import com.bjike.goddess.projectcost.to.FindTO;
+import com.bjike.goddess.projectcost.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -120,4 +121,17 @@ public interface CostControlSer extends Ser<CostControl, CostControlDTO> {
         return null;
     }
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

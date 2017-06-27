@@ -5,6 +5,7 @@ import com.bjike.goddess.projectcost.bo.OtherExpensesBO;
 import com.bjike.goddess.projectcost.dto.OtherExpensesDTO;
 import com.bjike.goddess.projectcost.service.OtherExpensesSer;
 import com.bjike.goddess.projectcost.to.FindTO;
+import com.bjike.goddess.projectcost.to.GuidePermissionTO;
 import com.bjike.goddess.projectcost.to.OtherExpensesTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,5 +60,10 @@ public class OtherExpensesApiImpl implements OtherExpensesAPI {
     @Override
     public List<OtherExpensesBO> findByTO(FindTO to) throws SerException {
         return otherExpensesSer.findByTO(to);
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return otherExpensesSer.guidePermission( guidePermissionTO );
     }
 }

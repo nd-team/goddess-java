@@ -6,6 +6,7 @@ import com.bjike.goddess.projectcost.bo.HistogramBO;
 import com.bjike.goddess.projectcost.dto.CostControlDTO;
 import com.bjike.goddess.projectcost.to.CostControlTO;
 import com.bjike.goddess.projectcost.to.FindTO;
+import com.bjike.goddess.projectcost.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -118,4 +119,10 @@ public interface CostControlAPI {
         return null;
     }
 
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }
