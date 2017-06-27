@@ -4,7 +4,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.voucher.bo.PartBO;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
+import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
 import com.bjike.goddess.voucher.entity.VoucherGenerate;
+import com.bjike.goddess.voucher.excel.SonPermissionObject;
+import com.bjike.goddess.voucher.to.GuidePermissionTO;
 import com.bjike.goddess.voucher.to.VoucherGenerateTO;
 
 import java.util.List;
@@ -19,6 +22,23 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface VoucherGenerateAPI {
+
+
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
 
     /**
      * 记账凭证列表总条数
@@ -496,4 +516,32 @@ public interface VoucherGenerateAPI {
     default List<PartBO> findByCondition( String condition ) throws SerException{
         return null;
     }
+
+
+    /**
+     * 导出Excel
+     * @param dto
+     * @throws SerException
+     */
+    byte[] exportExcel(VoucherGenerateExportDTO dto ) throws SerException;
+
+    /**
+     * 导出Excel导入模板
+     * @throws SerException
+     */
+    byte[] templateExport(  ) throws SerException;
+
+
+
+    /**
+     * 导入
+     *
+     * @param voucherGenerateTO 记账凭证导入
+     * @return class VoucherGenerateBO
+     */
+    default VoucherGenerateBO importExcel(List<VoucherGenerateTO> voucherGenerateTO) throws SerException {
+        return null;
+    }
+
+
 }
