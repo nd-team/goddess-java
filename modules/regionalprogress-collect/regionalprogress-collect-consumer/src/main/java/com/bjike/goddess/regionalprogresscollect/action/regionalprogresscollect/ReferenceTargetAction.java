@@ -10,6 +10,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.regionalprogresscollect.api.ReferenceTargetAPI;
 import com.bjike.goddess.regionalprogresscollect.dto.ReferenceTargetDTO;
 import com.bjike.goddess.regionalprogresscollect.to.FindTO;
+import com.bjike.goddess.regionalprogresscollect.to.GuidePermissionTO;
 import com.bjike.goddess.regionalprogresscollect.to.ReferenceTargetTO;
 import com.bjike.goddess.regionalprogresscollect.vo.ReferenceTargetVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,6 +141,29 @@ public class ReferenceTargetAction {
     public Result findListByTO(FindTO to, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(referenceTargetAPI.findListByTO(to), ReferenceTargetVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = referenceTargetAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

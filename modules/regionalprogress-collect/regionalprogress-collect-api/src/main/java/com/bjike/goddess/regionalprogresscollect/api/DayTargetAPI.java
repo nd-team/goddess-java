@@ -3,7 +3,9 @@ package com.bjike.goddess.regionalprogresscollect.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.regionalprogresscollect.bo.DayTargetBO;
 import com.bjike.goddess.regionalprogresscollect.dto.DayTargetDTO;
+import com.bjike.goddess.regionalprogresscollect.excel.SonPermissionObject;
 import com.bjike.goddess.regionalprogresscollect.to.DayTargetTO;
+import com.bjike.goddess.regionalprogresscollect.to.GuidePermissionTO;
 import com.bjike.goddess.regionalprogresscollect.to.StandardTO;
 
 import java.util.List;
@@ -95,4 +97,17 @@ public interface DayTargetAPI {
         return null;
     }
 
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }
