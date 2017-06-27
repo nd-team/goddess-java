@@ -14,6 +14,7 @@ import com.bjike.goddess.contractware.bo.CarRentalAgreementBO;
 import com.bjike.goddess.contractware.dto.CarRentalAgreementDTO;
 import com.bjike.goddess.contractware.to.CarRentalAgreementTO;
 import com.bjike.goddess.contractware.to.ContractwareDeleteFileTO;
+import com.bjike.goddess.contractware.to.GuidePermissionTO;
 import com.bjike.goddess.contractware.vo.CarRentalAgreementVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
@@ -45,6 +46,28 @@ public class CarRentalAgreementAction extends BaseFileAction{
     private CarRentalAgreementAPI carRentalAgreementAPI;
     @Autowired
     private FileAPI fileAPI;
+    /**
+     * 功能导航权限
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = carRentalAgreementAPI.guidePermission(guidePermissionTO);
+            if(! isHasPermission ){
+                //int code, String msg
+                return new ActResult(0,"没有权限",false );
+            }else{
+                return new ActResult(0,"有权限",true );
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 租车协议列表总条数

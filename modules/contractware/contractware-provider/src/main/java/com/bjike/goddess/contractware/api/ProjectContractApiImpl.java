@@ -5,7 +5,9 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contractware.bo.ProjectContractBO;
 import com.bjike.goddess.contractware.dto.ProjectContractDTO;
 import com.bjike.goddess.contractware.entity.ProjectContract;
+import com.bjike.goddess.contractware.excel.SonPermissionObject;
 import com.bjike.goddess.contractware.service.ProjectContractSer;
+import com.bjike.goddess.contractware.to.GuidePermissionTO;
 import com.bjike.goddess.contractware.to.ProjectContractTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,15 @@ public class ProjectContractApiImpl implements ProjectContractAPI {
 
     @Autowired
     private ProjectContractSer projectContractSer;
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return projectContractSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return projectContractSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countProjectContract(ProjectContractDTO projectContractDTO) throws SerException {
         return projectContractSer.countProjectContract(projectContractDTO);

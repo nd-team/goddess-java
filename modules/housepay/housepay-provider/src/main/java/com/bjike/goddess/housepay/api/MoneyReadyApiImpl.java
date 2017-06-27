@@ -7,6 +7,7 @@ import com.bjike.goddess.housepay.bo.MoneyReadyBO;
 import com.bjike.goddess.housepay.dto.MoneyReadyDTO;
 import com.bjike.goddess.housepay.entity.MoneyReady;
 import com.bjike.goddess.housepay.service.MoneyReadySer;
+import com.bjike.goddess.housepay.to.GuidePermissionTO;
 import com.bjike.goddess.housepay.to.MoneyReadyTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,14 @@ import java.util.List;
 public class MoneyReadyApiImpl implements MoneyReadyAPI {
     @Autowired
     private MoneyReadySer moneyReadySer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return moneyReadySer.sonPermission();
+    }
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return moneyReadySer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countMoneyReady(MoneyReadyDTO moneyReadyDTO) throws SerException {
         return moneyReadySer.countMoneyReady(moneyReadyDTO);

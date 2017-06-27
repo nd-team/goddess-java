@@ -42,8 +42,8 @@ public class CusPermissionAction {
     /**
      * 列表总条数
      *
-     * @param cusPermissionDTO 市场信息权限信息dto
-     * @des 获取所有市场信息权限信息总条数
+     * @param cusPermissionDTO 员工工资资金准备与支付权限信息dto
+     * @des 获取所有员工工资资金准备与支付权限信息总条数
      * @version v1
      */
     @GetMapping("v1/count")
@@ -57,11 +57,11 @@ public class CusPermissionAction {
     }
 
     /**
-     * 一个市场信息权限
+     * 一个员工工资资金准备与支付权限
      *
-     * @param id 市场信息权限信息id
+     * @param id 员工工资资金准备与支付权限信息id
      * @return class CusPermissionVO
-     * @des 根据id获取所有市场信息权限信息
+     * @des 根据id获取所有员工工资资金准备与支付权限信息
      * @version v1
      */
     @GetMapping("v1/getOneById/{id}")
@@ -88,9 +88,9 @@ public class CusPermissionAction {
     /**
      * 获取类型下对象
      *
-     * @param id 市场信息权限信息id
+     * @param id 员工工资资金准备与支付权限信息id
      * @return class CusPermissionVO
-     * @des 根据id获取所有市场信息权限获取类型下对象
+     * @des 根据id获取所有员工工资资金准备与支付权限获取类型下对象
      * @version v1
      */
     @GetMapping("v1/listOperateById/{id}")
@@ -104,12 +104,12 @@ public class CusPermissionAction {
     }
 
     /**
-     * 市场信息权限列表
+     * 员工工资资金准备与支付权限列表
      *
-     * @param cusPermissionDTO 市场信息权限信息dto
+     * @param cusPermissionDTO 员工工资资金准备与支付权限信息dto
      * @param request          前端过滤参数
      * @return class CusPermissionVO
-     * @des 获取所有市场信息权限信息
+     * @des 获取所有员工工资资金准备与支付权限信息
      * @version v1
      */
     @GetMapping("v1/list")
@@ -135,11 +135,11 @@ public class CusPermissionAction {
 
 
     /**
-     * 编辑市场信息权限
+     * 编辑员工工资资金准备与支付权限
      *
-     * @param cusPermissionTO 市场信息权限基本信息数据bo
+     * @param cusPermissionTO 员工工资资金准备与支付权限基本信息数据bo
      * @return class CusPermissionVO
-     * @des 编辑市场信息权限
+     * @des 编辑员工工资资金准备与支付权限
      * @version v1
      */
     @LoginAuth

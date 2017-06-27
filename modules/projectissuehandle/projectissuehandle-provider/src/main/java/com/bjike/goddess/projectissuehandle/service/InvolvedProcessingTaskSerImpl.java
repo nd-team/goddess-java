@@ -199,7 +199,7 @@ public class InvolvedProcessingTaskSerImpl extends ServiceImpl<InvolvedProcessin
             throw new SerException("id不能为空");
         }
         InvolvedProcessingTask involvedProcessingTask = super.findById(id);
-        return BeanTransform.copyProperties(involvedProcessingTask,InvolvedProcessingTaskBO.class,true);
+        return BeanTransform.copyProperties(involvedProcessingTask,InvolvedProcessingTaskBO.class);
     }
 
     @Override
