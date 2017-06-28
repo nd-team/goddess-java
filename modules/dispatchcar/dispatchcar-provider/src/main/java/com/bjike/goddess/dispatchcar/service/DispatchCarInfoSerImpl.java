@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.dispatchcar.bean.AuditResult;
@@ -16,8 +17,11 @@ import com.bjike.goddess.dispatchcar.entity.LeaseCarCost;
 import com.bjike.goddess.dispatchcar.enums.CollectIntervalType;
 import com.bjike.goddess.dispatchcar.enums.CollectType;
 import com.bjike.goddess.dispatchcar.enums.FindType;
+import com.bjike.goddess.dispatchcar.enums.GuideAddrStatus;
+import com.bjike.goddess.dispatchcar.excel.SonPermissionObject;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
 import com.bjike.goddess.dispatchcar.to.FinanceCollectTO;
+import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
 import com.bjike.goddess.driverinfo.api.DriverInfoAPI;
 import com.bjike.goddess.driverinfo.bo.DriverInfoBO;
 import com.bjike.goddess.oilcardmanage.api.OilCardBasicAPI;
@@ -64,6 +68,8 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     private OilCardBasicAPI oilCardBasicAPI;
     @Autowired
     private DriverInfoAPI driverInfoAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
@@ -471,6 +477,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public List<FinanceCollectBO> weekCollect(String startDate, String endDate) throws SerException {
         DispatchCarInfoDTO dto = new DispatchCarInfoDTO();
         LocalDate start = null;
@@ -494,6 +501,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public FinanceCollectBO findCollectDetail(String id) throws SerException {
         DispatchCarInfo model = super.findById(id);
         FinanceCollectBO bo = new FinanceCollectBO();
@@ -518,6 +526,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void predict(String id, String budgetPayDate, String payPlan) throws SerException {
         DispatchCarInfo model = super.findById(id);
         if(model!=null){
@@ -529,6 +538,140 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
+    public List<SonPermissionObject> financeSonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+
+        Boolean flagAddSign = financeGuideSeeIdentity();
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("finance");
+        obj.setDescribesion("财务出车汇总");
+        if (flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
+    }
+
+    /**
+     *  出车管理导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 出车管理导航栏核对删除添加编辑..审核权限（部门级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
+
+    /**
+     *  财务出车管理导航栏核对查看权限（部门级别）
+     */
+    private Boolean financeGuideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 财务出车管理导航栏核对功能审核权限（部门级别）
+     */
+    private Boolean financeGuideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public Boolean financeGuidePermission(GuidePermissionTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = to.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case WEEK:
+                flag = financeGuideAddIdentity();
+                break;
+            case MONTH:
+                flag = financeGuideAddIdentity();
+                break;
+            case AREACOLLECT:
+                flag = financeGuideAddIdentity();
+                break;
+            case GROUPCOLLECT:
+                flag = financeGuideAddIdentity();
+                break;
+            case DRIVERCOLLECT:
+                flag = financeGuideAddIdentity();
+                break;
+            case AREAANALYZE:
+                flag = financeGuideAddIdentity();
+                break;
+            case groupAnalyze:
+                flag = financeGuideAddIdentity();
+                break;
+            case DRIVERANALYZE:
+                flag = financeGuideAddIdentity();
+                break;
+            case DETAIL:
+                flag = financeGuideAddIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
+
+    @Override
+    @Transactional(rollbackFor = SerException.class)
     public List<FinanceCollectBO> monthCollect(Integer year, Integer month) throws SerException {
         DispatchCarInfoDTO dto = new DispatchCarInfoDTO();
         LocalDate start = null;
@@ -548,6 +691,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public List<FinanceCollectBO> selectCollect(FinanceCollectTO to) throws SerException {
         DispatchCarInfoDTO dto = new DispatchCarInfoDTO();
 
@@ -580,6 +724,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public List<FinanceAnalyzeBO> selectAnalyze(FinanceCollectTO to) throws SerException {
         DispatchCarInfoDTO currentDTO = new DispatchCarInfoDTO();
         DispatchCarInfoDTO lastDTO = new DispatchCarInfoDTO();

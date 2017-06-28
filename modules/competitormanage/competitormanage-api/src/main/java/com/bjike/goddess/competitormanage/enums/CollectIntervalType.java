@@ -26,6 +26,7 @@ public enum CollectIntervalType {
 
     private int code;
 
+
     CollectIntervalType(int code) {
         this.code = code;
     }

@@ -7,6 +7,7 @@ import com.bjike.goddess.competitormanage.bo.CompetitorCollectBO;
 import com.bjike.goddess.competitormanage.dto.CompetitorCollectDTO;
 import com.bjike.goddess.competitormanage.entity.CompetitorCollect;
 import com.bjike.goddess.competitormanage.to.CompetitorCollectTO;
+import com.bjike.goddess.competitormanage.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -69,4 +70,8 @@ public interface CompetitorCollectSer extends Ser<CompetitorCollect, CompetitorC
      * @throws SerException
      */
     void sendCollectEmail() throws SerException;
+
+    Boolean sonPermission() throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO to) throws SerException;
 }

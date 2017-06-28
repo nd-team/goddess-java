@@ -1,41 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
-	xsi:schemaLocation="http://www.springframework.org/schema/context
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/context
           http://www.springframework.org/schema/context/spring-context-3.0.xsd
           http://www.springframework.org/schema/beans
           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
           http://code.alibabatech.com/schema/dubbo 
 		  http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
-	<context:property-placeholder location="classpath:dubbo.properties"/>
+    <context:property-placeholder location="classpath:dubbo.properties"/>
 
-	<dubbo:application name="${dubbo.application.name}" />
-	<dubbo:provider timeout="${dubbo.provider.timeout}" />
-	<dubbo:consumer check="false" timeout="15000" />
-	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
-	<dubbo:registry address="${dubbo.registry.address}" />
+    <dubbo:application name="${dubbo.application.name}"/>
+    <dubbo:provider timeout="${dubbo.provider.timeout}"/>
+    <dubbo:consumer check="false" timeout="15000"/>
+    <dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}"/>
+    <dubbo:registry address="${dubbo.registry.address}"/>
 
-	<!-- 发布接口 -->
-	<dubbo:service interface="com.bjike.goddess.competitormanage.api.CompetitorAPI" ref="competitorApiImpl"/>
+    <!-- 发布接口 -->
+    <dubbo:service interface="com.bjike.goddess.competitormanage.api.CompetitorAPI" ref="competitorApiImpl"/>
 
-	<dubbo:service interface="com.bjike.goddess.competitormanage.api.CompetitorCollectAPI" ref="competitorCollectApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.competitormanage.api.CompetitorCollectAPI"
+                   ref="competitorCollectApiImpl"/>
 
-	<dubbo:service interface="com.bjike.goddess.competitormanage.api.CusPermissionAPI" ref="cusPermissionApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.competitormanage.api.CusPermissionAPI" ref="cusPermissionApiImpl"/>
 
-	<dubbo:service interface="com.bjike.goddess.competitormanage.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.competitormanage.api.CusPermissionOperateAPI"
+                   ref="cusPermissionOperateApiImpl"/>
 
-	<dubbo:reference validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
-	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+    <dubbo:reference validation="true" id="departmentDetailApiImpl"
+                     interface="com.bjike.goddess.organize.api.DepartmentDetailAPI"/>
 
-	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+    <dubbo:reference validation="true" id="arrangementApiImpl"
+                     interface="com.bjike.goddess.organize.api.ArrangementAPI"/>
 
-	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+    <dubbo:reference validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI"/>
 
-	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+    <dubbo:reference validation="true" id="positionDetailApiImpl"
+                     interface="com.bjike.goddess.organize.api.PositionDetailAPI"/>
 
-	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
+    <dubbo:reference validation="true" id="positionDetailUserApiImpl"
+                     interface="com.bjike.goddess.organize.api.PositionDetailUserAPI"/>
 
-	<!--<dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />-->
+    <dubbo:reference validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI"/>
 </beans>

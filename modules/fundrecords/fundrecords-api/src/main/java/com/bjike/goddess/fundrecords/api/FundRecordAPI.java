@@ -3,8 +3,10 @@ package com.bjike.goddess.fundrecords.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.fundrecords.bo.*;
 import com.bjike.goddess.fundrecords.dto.FundRecordDTO;
+import com.bjike.goddess.fundrecords.excel.SonPermissionObject;
 import com.bjike.goddess.fundrecords.to.CollectTO;
 import com.bjike.goddess.fundrecords.to.FundRecordTO;
+import com.bjike.goddess.fundrecords.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -112,4 +114,14 @@ public interface FundRecordAPI {
      * @return
      */
     List<ProjectAnalyzeBO> projectAnalyze(Integer year, Integer month, String project) throws SerException;
+
+    void leadExcel(List<FundRecordTO> toList) throws SerException;
+
+    byte[] exportExcel(String startDate, String endDate)  throws SerException;
+
+    byte[] exportExcelModule() throws SerException;
+
+    List<SonPermissionObject> sonPermission() throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 }

@@ -63,7 +63,7 @@ public class CompetitorCollect extends BaseEntity {
     /**
      * 发送对象
      */
-    @Column(name = "sendUser", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '发送对象'")
+    @Column(name = "sendUser", nullable = false, columnDefinition = "TEXT   COMMENT '发送对象'")
     private String sendUser;
 
     /**
