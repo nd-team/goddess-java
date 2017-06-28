@@ -4,7 +4,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.voucher.bo.PartBO;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
+import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
+import com.bjike.goddess.voucher.excel.SonPermissionObject;
 import com.bjike.goddess.voucher.service.VoucherGenerateSer;
+import com.bjike.goddess.voucher.to.GuidePermissionTO;
 import com.bjike.goddess.voucher.to.VoucherGenerateTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,17 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
 
     @Autowired
     private VoucherGenerateSer voucherGenerateSer;
+
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return voucherGenerateSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return voucherGenerateSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public VoucherGenerateBO getById(String id) throws SerException {
@@ -285,4 +299,22 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     public List<PartBO> findByCondition(String condition) throws SerException {
         return voucherGenerateSer.findByCondition(condition);
     }
+
+    @Override
+    public byte[] exportExcel(VoucherGenerateExportDTO dto) throws SerException {
+        return voucherGenerateSer.exportExcel( dto );
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return voucherGenerateSer.templateExport();
+    }
+
+    @Override
+    public VoucherGenerateBO importExcel(List<VoucherGenerateTO> voucherGenerateTO) throws SerException {
+        return voucherGenerateSer.importExcel(voucherGenerateTO);
+    }
+
+
+
 }

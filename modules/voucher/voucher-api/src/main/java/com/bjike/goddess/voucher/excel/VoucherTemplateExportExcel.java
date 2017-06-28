@@ -1,5 +1,6 @@
 package com.bjike.goddess.voucher.excel;
 
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.voucher.enums.AuditStatus;
 import com.bjike.goddess.voucher.enums.CheckStatus;
 import com.bjike.goddess.voucher.enums.TransferStatus;
@@ -16,8 +17,12 @@ import java.time.LocalDate;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class VoucherTemplateExportVO implements Serializable{
+public class VoucherTemplateExportExcel implements Serializable{
 
+    /**
+     * 序号
+     */
+    private String num;
     /**
      * 凭证字
      */
@@ -123,6 +128,14 @@ public class VoucherTemplateExportVO implements Serializable{
      */
     private String totalId;
 
+
+    public String getNum() {
+        return num;
+    }
+
+    public void setNum(String num) {
+        this.num = num;
+    }
 
     public String getVoucherWord() {
         return voucherWord;

@@ -1,13 +1,13 @@
-package com.bjike.goddess.businessproject.service;
+package com.bjike.goddess.voucher.service;
 
-import com.bjike.goddess.businessproject.bo.CusOperateBO;
-import com.bjike.goddess.businessproject.bo.CusPermissionBO;
-import com.bjike.goddess.businessproject.dto.CusPermissionDTO;
-import com.bjike.goddess.businessproject.dto.CusPermissionOperateDTO;
-import com.bjike.goddess.businessproject.entity.CusPermission;
-import com.bjike.goddess.businessproject.entity.CusPermissionOperate;
-import com.bjike.goddess.businessproject.enums.CusPermissionType;
-import com.bjike.goddess.businessproject.to.CusPermissionTO;
+import com.bjike.goddess.voucher.bo.VoucherOperateBO;
+import com.bjike.goddess.voucher.bo.VoucherPermissionBO;
+import com.bjike.goddess.voucher.dto.VoucherPermissionDTO;
+import com.bjike.goddess.voucher.dto.VoucherPermissionOperateDTO;
+import com.bjike.goddess.voucher.entity.VoucherPermission;
+import com.bjike.goddess.voucher.entity.VoucherPermissionOperate;
+import com.bjike.goddess.voucher.enums.VoucherPermissionType;
+import com.bjike.goddess.voucher.to.VoucherPermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -37,9 +37,9 @@ import java.util.stream.Collectors;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@CacheConfig(cacheNames = "businessprojectSerCache")
+@CacheConfig(cacheNames = "voucherSerCache")
 @Service
-public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissionDTO> implements CusPermissionSer {
+public class VoucherPermissionSerImpl extends ServiceImpl<VoucherPermission, VoucherPermissionDTO> implements VoucherPermissionSer {
 
     @Autowired
     private UserAPI userAPI;
@@ -54,10 +54,10 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
-    private CusPermissionOperateSer cusPermissionOperateSer;
+    private VoucherPermissionOperateSer voucherPermissionOperateSer;
 
     @Override
-    public Long countPermission(CusPermissionDTO cusPermissionDTO) throws SerException {
+    public Long countPermission(VoucherPermissionDTO cusPermissionDTO) throws SerException {
         if (StringUtils.isNotBlank(cusPermissionDTO.getDescription())) {
             cusPermissionDTO.getConditions().add(Restrict.like("description", cusPermissionDTO.getDescription()));
         }
@@ -67,21 +67,21 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     }
 
     @Override
-    public List<CusPermissionBO> list(CusPermissionDTO cusPermissionDTO) throws SerException {
+    public List<VoucherPermissionBO> list(VoucherPermissionDTO cusPermissionDTO) throws SerException {
         if (StringUtils.isNotBlank(cusPermissionDTO.getDescription())) {
             cusPermissionDTO.getConditions().add(Restrict.like("description", cusPermissionDTO.getDescription()));
         }
 
-        List<CusPermission> list = super.findByCis(cusPermissionDTO, true);
-        List<CusPermissionBO> bo = new ArrayList<>();
-        for (CusPermission str : list) {
-            CusPermissionBO temp = BeanTransform.copyProperties(str, CusPermissionBO.class);
+        List<VoucherPermission> list = super.findByCis(cusPermissionDTO, true);
+        List<VoucherPermissionBO> bo = new ArrayList<>();
+        for (VoucherPermission str : list) {
+            VoucherPermissionBO temp = BeanTransform.copyProperties(str, VoucherPermissionBO.class);
 
             //先查询操作对象
             List<String> idList = new ArrayList<>();
-            CusPermissionOperateDTO cpoDTO = new CusPermissionOperateDTO();
+            VoucherPermissionOperateDTO cpoDTO = new VoucherPermissionOperateDTO();
             cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", temp.getId()));
-            List<CusPermissionOperate> operateList = cusPermissionOperateSer.findByCis(cpoDTO);
+            List<VoucherPermissionOperate> operateList = voucherPermissionOperateSer.findByCis(cpoDTO);
             if (operateList != null && operateList.size() > 0) {
                 operateList.stream().forEach(op -> {
                     idList.add(op.getOperator());
@@ -96,24 +96,24 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
                 }
 
             }
-            CusPermissionType type = str.getType();
+            VoucherPermissionType type = str.getType();
             List<OpinionBO> opinionBOS = new ArrayList<>();
-            List<CusOperateBO> coboList = null;
+            List<VoucherOperateBO> coboList = null;
             if (null != ids && ids.length != 0) {
 
-                if (CusPermissionType.LEVEL.equals(type)) {
+                if (VoucherPermissionType.LEVEL.equals(type)) {
                     opinionBOS = arrangementAPI.findByIds(ids);
-                } else if (CusPermissionType.MODULE.equals(type)) {
+                } else if (VoucherPermissionType.MODULE.equals(type)) {
                     opinionBOS = moduleTypeAPI.findByIds(ids);
-                } else if (CusPermissionType.POSITION.equals(type)) {
+                } else if (VoucherPermissionType.POSITION.equals(type)) {
                     opinionBOS = positionDetailAPI.findByIds(ids);
-                } else if (CusPermissionType.DEPART.equals(type)) {
+                } else if (VoucherPermissionType.DEPART.equals(type)) {
                     opinionBOS = departmentDetailAPI.findByIds(ids);
                 }
 
                 coboList = new ArrayList<>();
                 for (OpinionBO op : opinionBOS) {
-                    CusOperateBO cobo = new CusOperateBO();
+                    VoucherOperateBO cobo = new VoucherOperateBO();
                     cobo.setId(op.getId());
                     cobo.setOperator(op.getValue());
                     coboList.add(cobo);
@@ -127,18 +127,18 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     }
 
     @Override
-    public CusPermissionBO getOneById(String id) throws SerException {
+    public VoucherPermissionBO getOneById(String id) throws SerException {
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
-        CusPermission cusPermission = super.findById(id);
+        VoucherPermission cusPermission = super.findById(id);
 
 
         //先查询操作对象
         List<String> idList = new ArrayList<>();
-        CusPermissionOperateDTO cpoDTO = new CusPermissionOperateDTO();
+        VoucherPermissionOperateDTO cpoDTO = new VoucherPermissionOperateDTO();
         cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", cusPermission.getId()));
-        List<CusPermissionOperate> operateList = cusPermissionOperateSer.findByCis(cpoDTO);
+        List<VoucherPermissionOperate> operateList = voucherPermissionOperateSer.findByCis(cpoDTO);
         if (operateList != null && operateList.size() > 0) {
             operateList.stream().forEach(op -> {
                 idList.add(op.getOperator());
@@ -153,31 +153,31 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
             }
 
         }
-        CusPermissionType type = cusPermission.getType();
+        VoucherPermissionType type = cusPermission.getType();
         List<OpinionBO> opinionBOS = new ArrayList<>();
-        List<CusOperateBO> coboList = new ArrayList<>();
+        List<VoucherOperateBO> coboList = new ArrayList<>();
         if (null != ids && ids.length != 0) {
 
-            if (CusPermissionType.LEVEL.equals(type)) {
+            if (VoucherPermissionType.LEVEL.equals(type)) {
                 //根据id数组查询名字和id
                 opinionBOS = arrangementAPI.findByIds(ids);
-            } else if (CusPermissionType.MODULE.equals(type)) {
+            } else if (VoucherPermissionType.MODULE.equals(type)) {
                 opinionBOS = moduleTypeAPI.findByIds(ids);
-            } else if (CusPermissionType.POSITION.equals(type)) {
+            } else if (VoucherPermissionType.POSITION.equals(type)) {
                 opinionBOS = positionDetailAPI.findByIds(ids);
-            } else if (CusPermissionType.DEPART.equals(type)) {
+            } else if (VoucherPermissionType.DEPART.equals(type)) {
                 opinionBOS = departmentDetailAPI.findByIds(ids);
             }
 
 
             for (OpinionBO op : opinionBOS) {
-                CusOperateBO cobo = new CusOperateBO();
+                VoucherOperateBO cobo = new VoucherOperateBO();
                 cobo.setId(op.getId());
                 cobo.setOperator(op.getValue());
                 coboList.add(cobo);
             }
         }
-        CusPermissionBO bo = BeanTransform.copyProperties(cusPermission, CusPermissionBO.class);
+        VoucherPermissionBO bo = BeanTransform.copyProperties(cusPermission, VoucherPermissionBO.class);
 
         bo.setCusOperateBO(coboList);
 
@@ -190,15 +190,15 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
-        CusPermission cusPermission = super.findById(id);
-        CusPermissionType type = cusPermission.getType();
-        if (CusPermissionType.LEVEL.equals(type)) {
+        VoucherPermission cusPermission = super.findById(id);
+        VoucherPermissionType type = cusPermission.getType();
+        if (VoucherPermissionType.LEVEL.equals(type)) {
             list = arrangementAPI.findThawOpinion();
-        } else if (CusPermissionType.MODULE.equals(type)) {
+        } else if (VoucherPermissionType.MODULE.equals(type)) {
             list = moduleTypeAPI.findThawOpinion();
-        } else if (CusPermissionType.POSITION.equals(type)) {
+        } else if (VoucherPermissionType.POSITION.equals(type)) {
             list = positionDetailAPI.findThawOpinion();
-        } else if (CusPermissionType.DEPART.equals(type)) {
+        } else if (VoucherPermissionType.DEPART.equals(type)) {
             //TODO 部门查询
             list = departmentDetailAPI.findThawOpinion();
         }
@@ -207,20 +207,20 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     }
 
     @Override
-    public CusPermissionBO add(List<CusPermissionTO> cusPermissionTO) throws SerException {
-        List<CusPermission> list = BeanTransform.copyProperties(cusPermissionTO, CusPermission.class, true);
+    public VoucherPermissionBO add(List<VoucherPermissionTO> cusPermissionTO) throws SerException {
+        List<VoucherPermission> list = BeanTransform.copyProperties(cusPermissionTO, VoucherPermission.class, true);
         list = list.stream().filter(str -> StringUtils.isNotBlank(str.getIdFlag())).collect(Collectors.toList());
-        List<String> idList = list.stream().map(CusPermission::getIdFlag).collect(Collectors.toList());
+        List<String> idList = list.stream().map(VoucherPermission::getIdFlag).collect(Collectors.toList());
         String[] ids = idList.toArray(new String[idList.size()]);
 
-        CusPermissionDTO dto = new CusPermissionDTO();
+        VoucherPermissionDTO dto = new VoucherPermissionDTO();
         dto.getConditions().add(Restrict.in("idFlag", ids));
-        List<CusPermission> cusPermissionList = super.findByCis(dto);
-        List<CusPermission> cusPermissionTempList = new ArrayList<>();
+        List<VoucherPermission> cusPermissionList = super.findByCis(dto);
+        List<VoucherPermission> cusPermissionTempList = new ArrayList<>();
         if (cusPermissionList != null && cusPermissionList.size() > 0) {
             for (int i = 0; i < cusPermissionList.size(); i++) {
-                CusPermission temp = cusPermissionList.get(i);
-                Optional<CusPermission> cp = list.stream().filter(l -> l.getIdFlag().equals(temp.getIdFlag())).findFirst();
+                VoucherPermission temp = cusPermissionList.get(i);
+                Optional<VoucherPermission> cp = list.stream().filter(l -> l.getIdFlag().equals(temp.getIdFlag())).findFirst();
                 if (cp.isPresent()) {
                     if (StringUtils.isBlank(temp.getDescription())) {
                         temp.setDescription(cp.get().getDescription());
@@ -237,15 +237,15 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
         //传进来的list>cusPermissionList数据库的，则添加
         //list ids cus ids
-        List<String> listIdFlag = list.stream().map(CusPermission::getIdFlag).collect(Collectors.toList());
-        List<String> databaseIdFlag = cusPermissionList.stream().map(CusPermission::getIdFlag).collect(Collectors.toList());
+        List<String> listIdFlag = list.stream().map(VoucherPermission::getIdFlag).collect(Collectors.toList());
+        List<String> databaseIdFlag = cusPermissionList.stream().map(VoucherPermission::getIdFlag).collect(Collectors.toList());
 
         List<String> addIdFlag = listIdFlag.stream().filter(str -> !databaseIdFlag.contains(str)).collect(Collectors.toList());
 
         //传进来的新增的添加
-        List<CusPermission> addList = new ArrayList<>();
+        List<VoucherPermission> addList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
-            CusPermission cPermission = list.get(i);
+            VoucherPermission cPermission = list.get(i);
             cPermission.setCreateTime(LocalDateTime.now());
             cPermission.setModifyTime(LocalDateTime.now());
             if (addIdFlag.contains(cPermission.getIdFlag())) {
@@ -254,16 +254,16 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         }
         super.save(addList);
         //没有的删除
-        dto = new CusPermissionDTO();
+        dto = new VoucherPermissionDTO();
         dto.getConditions().add(Restrict.notIn("idFlag", ids));
-        List<CusPermission> deleteList = super.findByCis(dto);
+        List<VoucherPermission> deleteList = super.findByCis(dto);
         super.remove(deleteList);
 
-        return new CusPermissionBO();
+        return new VoucherPermissionBO();
     }
 
     @Override
-    public CusPermissionBO edit(CusPermissionTO cusPermissionTO) throws SerException {
+    public VoucherPermissionBO edit(VoucherPermissionTO cusPermissionTO) throws SerException {
         if (StringUtils.isBlank(cusPermissionTO.getId())) {
             throw new SerException("id不能为空");
         }
@@ -273,28 +273,28 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         }
         String[] operators = cusPermissionTO.getOperators();
 
-        CusPermission temp = super.findById(cusPermissionTO.getId());
+        VoucherPermission temp = super.findById(cusPermissionTO.getId());
         temp.setDescription(cusPermissionTO.getDescription());
         temp.setModifyTime(LocalDateTime.now());
         super.update(temp);
 
         //先删除
-        CusPermissionOperateDTO cpoDTO = new CusPermissionOperateDTO();
+        VoucherPermissionOperateDTO cpoDTO = new VoucherPermissionOperateDTO();
         cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", temp.getId()));
-        List<CusPermissionOperate> deleteList = cusPermissionOperateSer.findByCis(cpoDTO);
+        List<VoucherPermissionOperate> deleteList = voucherPermissionOperateSer.findByCis(cpoDTO);
         if (deleteList != null && deleteList.size() > 0) {
-            cusPermissionOperateSer.remove(deleteList);
+            voucherPermissionOperateSer.remove(deleteList);
         }
-        List<CusPermissionOperate> list = new ArrayList<>();
+        List<VoucherPermissionOperate> list = new ArrayList<>();
         for (String operateId : operators) {
-            CusPermissionOperate cpo = new CusPermissionOperate();
+            VoucherPermissionOperate cpo = new VoucherPermissionOperate();
             cpo.setOperator(operateId);
             cpo.setCuspermissionId(temp.getId());
             list.add(cpo);
         }
-        cusPermissionOperateSer.save(list);
+        voucherPermissionOperateSer.save(list);
 
-        return BeanTransform.copyProperties(temp, CusPermissionBO.class);
+        return BeanTransform.copyProperties(temp, VoucherPermissionBO.class);
     }
 
     @Override
@@ -307,15 +307,15 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         if (StringUtils.isBlank(idFlag)) {
             throw new SerException("idFlag不能为空");
         }
-        CusPermissionDTO dto = new CusPermissionDTO();
+        VoucherPermissionDTO dto = new VoucherPermissionDTO();
         dto.getConditions().add(Restrict.eq("idFlag", idFlag));
-        CusPermission cusPermission = super.findOne(dto);
+        VoucherPermission cusPermission = super.findOne(dto);
 
         //先查询获操作对象
         List<String> idList = new ArrayList<>();
-        CusPermissionOperateDTO cpoDTO = new CusPermissionOperateDTO();
+        VoucherPermissionOperateDTO cpoDTO = new VoucherPermissionOperateDTO();
         cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", cusPermission.getId()));
-        List<CusPermissionOperate> operateList = cusPermissionOperateSer.findByCis(cpoDTO);
+        List<VoucherPermissionOperate> operateList = voucherPermissionOperateSer.findByCis(cpoDTO);
         if (operateList != null && operateList.size() > 0) {
             operateList.stream().forEach(op -> {
                 idList.add(op.getOperator());
@@ -362,16 +362,16 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         if (StringUtils.isBlank(idFlag)) {
             throw new SerException("idFlag不能为空");
         }
-        CusPermissionDTO dto = new CusPermissionDTO();
+        VoucherPermissionDTO dto = new VoucherPermissionDTO();
         dto.getConditions().add(Restrict.eq("idFlag", idFlag));
-        CusPermission cusPermission = super.findOne(dto);
+        VoucherPermission cusPermission = super.findOne(dto);
 
 
         //先查询操作对象
         List<String> idList = new ArrayList<>();
-        CusPermissionOperateDTO cpoDTO = new CusPermissionOperateDTO();
+        VoucherPermissionOperateDTO cpoDTO = new VoucherPermissionOperateDTO();
         cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", cusPermission.getId()));
-        List<CusPermissionOperate> operateList = cusPermissionOperateSer.findByCis(cpoDTO);
+        List<VoucherPermissionOperate> operateList = voucherPermissionOperateSer.findByCis(cpoDTO);
         if (operateList != null && operateList.size() > 0) {
             operateList.stream().forEach(op -> {
                 idList.add(op.getOperator());

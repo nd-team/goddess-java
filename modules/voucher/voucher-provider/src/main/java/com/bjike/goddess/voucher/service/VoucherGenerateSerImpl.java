@@ -1,11 +1,14 @@
 package com.bjike.goddess.voucher.service;
 
+import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.financeinit.api.CategoryAPI;
 import com.bjike.goddess.financeinit.api.FirstSubjectAPI;
 import com.bjike.goddess.financeinit.dto.CategoryDTO;
@@ -14,19 +17,30 @@ import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.bo.PartBO;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
+import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
 import com.bjike.goddess.voucher.entity.VoucherGenerate;
 import com.bjike.goddess.voucher.entity.VoucherTotal;
-import com.bjike.goddess.voucher.enums.AuditStatus;
-import com.bjike.goddess.voucher.enums.CheckStatus;
-import com.bjike.goddess.voucher.enums.TransferStatus;
+import com.bjike.goddess.voucher.enums.*;
+import com.bjike.goddess.voucher.excel.SonPermissionObject;
+import com.bjike.goddess.voucher.excel.VoucherExportExcel;
+import com.bjike.goddess.voucher.excel.VoucherTemplateExportExcel;
+import com.bjike.goddess.voucher.to.GuidePermissionTO;
 import com.bjike.goddess.voucher.to.VoucherGenerateTO;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
@@ -57,6 +71,190 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     @Autowired
     private CategoryAPI categoryAPI;
 
+    @Autowired
+    private VoucherPermissionSer voucherPermissionSer;
+
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = voucherPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = voucherPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAddSign = guideAddIdentity();
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("voucherGenerate");
+        obj.setDescribesion("记账凭证生成设置");
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        obj = new SonPermissionObject();
+        obj.setName("voucherAudit");
+        obj.setDescribesion("记账凭证审核");
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        obj = new SonPermissionObject();
+        obj.setName("voucherHasAudit");
+        obj.setDescribesion("已审核凭证");
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        obj = new SonPermissionObject();
+        obj.setName("voucherPassAccount");
+        obj.setDescribesion("已过帐");
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        obj = new SonPermissionObject();
+        obj.setName("voucherPayAccount");
+        obj.setDescribesion("结帐记录");
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        obj = new SonPermissionObject();
+        obj.setName("voucherRecord");
+        obj.setDescribesion("记账凭证记录");
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            case SPLIT:
+                flag = guideAddIdentity();
+                break;
+            case PASSACCOUNT:
+                flag = guideAddIdentity();
+                break;
+            case ANTIAUDIT:
+                flag = guideAddIdentity();
+                break;
+            case ANTIPASSACCOUNT:
+                flag = guideAddIdentity();
+                break;
+            case PAYACCOUNT:
+                flag = guideAddIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
+
+
+
     @Override
     public VoucherGenerateBO getById(String id) throws SerException {
         VoucherGenerate vg = super.findById(id);
@@ -84,8 +282,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.NONE));
 
         List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
+        List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        for (VoucherGenerateBO str : listBO) {
+            VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
+            str.setMoneyTotal(vt.getMoney());
+        }
 
-        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+
+        return listBO;
     }
 
     @Override
@@ -135,8 +339,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             throw new SerException("一级科目条数必须为两条");
         }
         //处理多个一级科目
-
-        UserBO userBO = userAPI.currentUser();
+//        UserBO userBO = userAPI.currentUser();
         List<String> first = voucherGenerateTO.getFirstSubjects();
         List<String> second = voucherGenerateTO.getSecondSubjects();
         List<String> third = voucherGenerateTO.getThirdSubjects();
@@ -159,7 +362,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         vt.setModifyTime(LocalDateTime.now());
         voucherTotalSer.save(vt);
 
-        String userName = userBO.getUsername();
+        String userName = voucherGenerateTO.getTicketer();
+//        String userName = userBO.getUsername();
         for (int i = 0; i < voucherGenerateTO.getFirstSubjects().size(); i++) {
 
             VoucherGenerate temp = new VoucherGenerate();
@@ -206,9 +410,27 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         if (!borrowSum.equals(loanSum)) {
             throw new SerException("借方和贷方金额不相等，不能编辑");
         }
+
         Double totalMoney = borrowSum;
 
         VoucherGenerate voucherGenerate = BeanTransform.copyProperties(voucherGenerateTO, VoucherGenerate.class, true);
+
+        //修改同一合计金额的其他数据
+        if (otherList != null && otherList.size() > 0) {
+            for (VoucherGenerate other : otherList) {
+                other.setVoucherWord(voucherGenerate.getVoucherWord());
+                other.setVoucherDate(voucherGenerate.getVoucherDate());
+                other.setSumary(voucherGenerate.getSumary());
+                other.setArea(voucherGenerate.getArea());
+                other.setProjectName(voucherGenerate.getProjectName());
+                other.setProjectGroup(voucherGenerate.getProjectGroup());
+                other.setTicketNum(voucherGenerate.getTicketNum());
+                other.setTicketer(voucherGenerate.getTicketer());
+                other.setExtraFile(voucherGenerate.getExtraFile());
+            }
+
+            super.update(otherList);
+        }
 
         //修改合计金额
         VoucherTotal vt = voucherTotalSer.findById(temp.getTotalId());
@@ -226,7 +448,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         temp.setBorrowMoney(voucherGenerateTO.getBorrowMoneys().get(0));
         temp.setLoanMoney(voucherGenerateTO.getLoanMoneys().get(0));
         temp.setModifyTime(LocalDateTime.now());
-        temp.setTicketer(userAPI.currentUser().getUsername());
+        temp.setTicketer(voucherGenerateTO.getTicketer());
         temp.setCheckStatus(CheckStatus.NONE);
         temp.setTransferStatus(TransferStatus.NONE);
         temp.setAuditStatus(AuditStatus.NONE);
@@ -243,7 +465,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             throw new SerException("id不能为空");
         }
         VoucherGenerate voucherGenerate = super.findById(id);
-        if( voucherGenerate != null ){
+        if (voucherGenerate != null) {
 
             Double borrow = voucherGenerate.getBorrowMoney();
             Double loan = voucherGenerate.getLoanMoney();
@@ -259,7 +481,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             VoucherGenerateDTO vgDTO = new VoucherGenerateDTO();
             vgDTO.getConditions().add(Restrict.eq("totalId", totalId));
             List<VoucherGenerate> list = super.findByCis(vgDTO);
-            if (list == null) {
+            if (list == null || list.size() <= 0) {
                 voucherTotalSer.remove(totalId);
             }
         }
@@ -280,8 +502,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.NONE));
 
         List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
+        List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        for (VoucherGenerateBO str : listBO) {
+            VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
+            str.setMoneyTotal(vt.getMoney());
+        }
 
-        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+
+        return listBO;
 
     }
 
@@ -382,7 +610,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         voucherGenerateDTO.getConditions().add(Restrict.eq("checkStatus", CheckStatus.NONE));
         voucherGenerateDTO.getSorts().add("createTime=desc");
         List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
-        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        for (VoucherGenerateBO str : listBO) {
+            VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
+            str.setMoneyTotal(vt.getMoney());
+        }
+
+
+        return listBO;
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -616,7 +851,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         voucherGenerateDTO.getSorts().add("createTime=desc");
         voucherGenerateDTO.getSorts().add("totalId=desc");
         List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
-        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        for (VoucherGenerateBO str : listBO) {
+            VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
+            str.setMoneyTotal(vt.getMoney());
+        }
+
+
+        return listBO;
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -859,7 +1101,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         voucherGenerateDTO.getConditions().add(Restrict.eq("checkStatus", CheckStatus.CHECK));
         voucherGenerateDTO.getSorts().add("voucherDate=desc");
         List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
-        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        for (VoucherGenerateBO str : listBO) {
+            VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
+            str.setMoneyTotal(vt.getMoney());
+        }
+
+
+        return listBO;
     }
 
     @Override
@@ -1061,7 +1310,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         voucherGenerateDTO.getSorts().add("createTime=desc");
         voucherGenerateDTO.getSorts().add("totalId=desc");
         List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
-        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        for (VoucherGenerateBO str : listBO) {
+            VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
+            str.setMoneyTotal(vt.getMoney());
+        }
+
+
+        return listBO;
     }
 
     @Override
@@ -1458,5 +1714,526 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         return boList;
     }
 
+    public static final String[] EXCELHEAD = {"凭证字", "凭证字号", "凭证日期", "一级科目",
+            "二级科目", "三级科目", "借方金额", "贷方金额", "摘要", "地区", "项目名称", "项目组",
+            "制单人", "票据数量", "附件", "审核人", "审核状态", "过帐状态", "结帐状态", "借贷金额合计"};
 
+    @Override
+    public byte[] exportExcel(VoucherGenerateExportDTO dto) throws SerException {
+        VoucherGenerateDTO voucherGenerateDTO = new VoucherGenerateDTO();
+        if (StringUtils.isNotBlank(dto.getFirstSubject())) {
+            voucherGenerateDTO.getConditions().add(Restrict.eq("firstSubject", dto.getFirstSubject()));
+        }
+        if (StringUtils.isNotBlank(dto.getSecondSubject())) {
+            voucherGenerateDTO.getConditions().add(Restrict.eq("secondSubject", dto.getSecondSubject()));
+        }
+        if (StringUtils.isNotBlank(dto.getThirdSubject())) {
+            voucherGenerateDTO.getConditions().add(Restrict.eq("thirdSubject", dto.getThirdSubject()));
+        }
+        if (StringUtils.isNotBlank(dto.getArea())) {
+            voucherGenerateDTO.getConditions().add(Restrict.eq("area", dto.getArea()));
+        }
+        if (StringUtils.isNotBlank(dto.getProjectName())) {
+            voucherGenerateDTO.getConditions().add(Restrict.eq("projectName", dto.getProjectName()));
+        }
+        if (StringUtils.isNotBlank(dto.getStartTime()) && StringUtils.isNotBlank(dto.getEndTime())) {
+            String[] voucherDate = new String[]{dto.getStartTime(), dto.getEndTime()};
+            voucherGenerateDTO.getConditions().add(Restrict.between("voucherDate", voucherDate));
+        }
+        ExportStatus exportStatus = dto.getExportStatus();
+        switch (exportStatus) {
+            case NONE:
+                voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.NONE));
+                break;
+            case AUDIT:
+                voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.CHECK));
+                break;
+            case TRANS:
+                voucherGenerateDTO.getConditions().add(Restrict.eq("transferStatus", TransferStatus.CHECK));
+                break;
+            case CHECK:
+                voucherGenerateDTO.getConditions().add(Restrict.eq("checkStatus", CheckStatus.CHECK));
+                break;
+            case RECORD:
+                break;
+            default:
+                throw new SerException("请输入正确的数据状态");
+        }
+        voucherGenerateDTO.getSorts().add("totalId=desc");
+        List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO);
+        System.out.println(JSON.toJSON(list));
+
+        List<VoucherExportExcel> firstSubjectExports = BeanTransform.copyProperties(list, VoucherExportExcel.class);
+        for (VoucherExportExcel str : firstSubjectExports) {
+            VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
+            str.setMoneyTotal(vt.getMoney());
+
+        }
+        Excel excel = new Excel(0, 2);
+        String tempString = excel.getSheetName();
+        XSSFWorkbook wb = new XSSFWorkbook();//创建一个Excel文件
+        XSSFSheet sheet = wb.createSheet(tempString);//创建报销明细工作薄
+        sheet.setDefaultRowHeight((short) 300);//设置默认行高
+        // 设置execl工作簿中的列名
+        String[] excelHeader = EXCELHEAD;//Excel表头
+        XSSFCellStyle contentStyle = getStyle(wb, excel.getContentBGColor()); // 设置标题样式
+        XSSFRow row = sheet.createRow(0);//创建第一行
+        row.setHeight((short) 400);//设置第一行单元格的高度
+
+        for (int i = 0, length = excelHeader.length; i < length; i++) {
+            XSSFCell cell = row.createCell(i);
+            if (i == 0 || i == 4 || i == 8) {
+                sheet.setColumnWidth(i, 2000); //设置单元格的宽
+            } else if (i == 18) {
+                sheet.setColumnWidth(i, 5000);
+            } else {
+                sheet.setColumnWidth(i, 4000);
+            }
+            cell.setCellValue(excelHeader[i]);//设置单元格的值
+            cell.setCellStyle(contentStyle);   //设置样式
+        }
+
+        if( firstSubjectExports != null && firstSubjectExports.size()>0 ) {
+            createRowDetail(firstSubjectExports, row, sheet);//填充数据
+        }
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            wb.write(os);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return os.toByteArray();
+    }
+
+    /**
+     * @param list  记账凭证信息集合
+     * @param row
+     * @param sheet Excel表单
+     * @description 创建数据行
+     */
+    public void createRowDetail(List<VoucherExportExcel> list, XSSFRow row, XSSFSheet sheet) {
+
+        int firstRow = 0;
+        int lastRow = 0;
+        int firstCol = 0;
+        int lastCol = 0;
+        String totalId = list.get(0).getTotalId();
+        if (list != null && list.size() > 0) {
+            firstRow = 1;
+            lastRow = 1;
+            firstCol = 0;
+            lastCol = 0;
+        }
+        int index = 0;
+        int showFlag = 0;
+        for (VoucherExportExcel exportEntity : list) {
+            lastRow = index;
+
+//            String ss = exportEntity.getTotalId();
+//            String ss1 = totalId;
+//            int f = firstRow;
+//            int l = lastRow;
+            if (!exportEntity.getTotalId().equals(totalId) && firstRow == lastRow) {
+                //不合并
+                firstRow++;
+                showFlag = 1;
+            } else if (exportEntity.getTotalId().equals(totalId) && firstRow == lastRow) {
+                //合并
+                if (index != 0 && index < list.size() - 1 && !totalId.equals(list.get(index + 1).getTotalId())) {
+//                    sheet = assiableMergeData(sheet, firstRow - showFlag, lastRow);
+                    sheet = assiableMergeData(sheet, lastRow + 1 - showFlag, lastRow + 1);
+
+                }
+                if (index == list.size() - 1) {
+                    sheet = assiableMergeData(sheet, lastRow + 1 - showFlag, lastRow + 1);
+                }
+                firstRow++;
+                totalId = exportEntity.getTotalId();
+            }
+
+            if (exportEntity.getTotalId().equals(totalId)) {
+                showFlag++;
+            } else if (!exportEntity.getTotalId().equals(totalId)) {
+                totalId = exportEntity.getTotalId();
+            }
+
+            ++index;
+            row = sheet.createRow(index);    // 每循环一次创建一行
+            int callIndex = 0;
+//            row.createCell(callIndex++).setCellValue(index);//设置行的索引
+            row.createCell(callIndex++).setCellValue(exportEntity.getVoucherWord());
+            row.createCell(callIndex++).setCellValue(exportEntity.getVoucherNum());
+            row.createCell(callIndex++).setCellValue(exportEntity.getVoucherDate());
+            row.createCell(callIndex++).setCellValue(exportEntity.getFirstSubject());
+            row.createCell(callIndex++).setCellValue(exportEntity.getSecondSubject());
+            row.createCell(callIndex++).setCellValue(exportEntity.getThirdSubject());
+            row.createCell(callIndex++).setCellValue(exportEntity.getBorrowMoney());
+            row.createCell(callIndex++).setCellValue(exportEntity.getLoanMoney());
+            row.createCell(callIndex++).setCellValue(exportEntity.getSumary());
+            row.createCell(callIndex++).setCellValue(exportEntity.getArea());
+            row.createCell(callIndex++).setCellValue(exportEntity.getProjectName());
+            row.createCell(callIndex++).setCellValue(exportEntity.getProjectGroup());
+            row.createCell(callIndex++).setCellValue(exportEntity.getTicketer());
+            row.createCell(callIndex++).setCellValue(exportEntity.getTicketNum());
+            row.createCell(callIndex++).setCellValue(exportEntity.getExtraFile());
+            row.createCell(callIndex++).setCellValue(exportEntity.getAuditor());
+            row.createCell(callIndex++).setCellValue(auditStr(exportEntity.getAuditStatus()));
+            row.createCell(callIndex++).setCellValue(transferStr(exportEntity.getTransferStatus()));
+            row.createCell(callIndex++).setCellValue(checkStr(exportEntity.getCheckStatus()));
+            row.createCell(callIndex++).setCellValue(exportEntity.getMoneyTotal());
+//            row.createCell(callIndex++).setCellValue(exportEntity.getTotalId());
+
+
+        }
+    }
+
+    private XSSFSheet assiableMergeData(XSSFSheet sheet, int firstRow, int lastRow) {
+        CellRangeAddress cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 0, 0);
+        sheet.addMergedRegion(cellRangeAddress);
+        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 1, 1);
+        sheet.addMergedRegion(cellRangeAddress);
+        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 2, 2);
+        sheet.addMergedRegion(cellRangeAddress);
+        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 8, 8);
+        sheet.addMergedRegion(cellRangeAddress);
+        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 9, 9);
+        sheet.addMergedRegion(cellRangeAddress);
+        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 10, 10);
+        sheet.addMergedRegion(cellRangeAddress);
+        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 11, 11);
+        sheet.addMergedRegion(cellRangeAddress);
+        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 12, 12);
+        sheet.addMergedRegion(cellRangeAddress);
+        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 13, 13);
+        sheet.addMergedRegion(cellRangeAddress);
+        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 14, 14);
+        sheet.addMergedRegion(cellRangeAddress);
+        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 15, 15);
+        sheet.addMergedRegion(cellRangeAddress);
+//        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 16, 16);
+//        sheet.addMergedRegion(cellRangeAddress);
+//        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 17, 17);
+//        sheet.addMergedRegion(cellRangeAddress);
+//        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 18, 18);
+//        sheet.addMergedRegion(cellRangeAddress);
+        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 19, 19);
+        sheet.addMergedRegion(cellRangeAddress);
+
+        return sheet;
+    }
+
+    /**
+     * 获取样式
+     *
+     * @param wb
+     * @param color
+     * @return
+     */
+    private static XSSFCellStyle getStyle(XSSFWorkbook wb, short color) {
+        // 内容的样式
+        XSSFCellStyle style = wb.createCellStyle();
+        style.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中
+        if (color != IndexedColors.WHITE.getIndex()) {
+            style.setFillForegroundColor(color);
+            style.setFillPattern(FillPatternType.SOLID_FOREGROUND); //设置单元格颜色
+            style.setBorderLeft(BorderStyle.THIN); // 单元格边框粗细
+            style.setBorderRight(BorderStyle.THIN);// 单元格边框粗细
+            style.setBorderTop(BorderStyle.THIN);// 单元格边框假粗细
+            style.setBorderBottom(BorderStyle.THIN);// 单元格边框粗细
+        }
+        return style;
+    }
+
+
+    private String auditStr(AuditStatus auditStatus) {
+        String str = "";
+        switch (auditStatus) {
+            case NONE:
+                str = "未审核";
+                break;
+            case CHECK:
+                str = "已审核";
+                break;
+            default:
+                str = "";
+                break;
+        }
+        return str;
+    }
+
+    private String transferStr(TransferStatus transferStatus) {
+        String str = "";
+        switch (transferStatus) {
+            case NONE:
+                str = "未过帐";
+                break;
+            case CHECK:
+                str = "已过帐";
+                break;
+            default:
+                str = "";
+                break;
+        }
+        return str;
+    }
+
+    private String checkStr(CheckStatus checkStatus) {
+        String str = "";
+        switch (checkStatus) {
+            case NONE:
+                str = "未结帐";
+                break;
+            case CHECK:
+                str = "已结帐";
+                break;
+            default:
+                str = "";
+                break;
+        }
+        return str;
+    }
+
+    public static final String[] EXCELHEAD2 = {"序号","凭证字",  "凭证日期", "一级科目",
+            "二级科目", "三级科目", "借方金额", "贷方金额", "摘要", "地区", "项目名称", "项目组",
+            "制单人", "票据数量", "附件" };
+
+
+    @Override
+    public byte[] templateExport() throws SerException {
+
+        List<VoucherTemplateExportExcel> voucherExportVOS = new ArrayList<>();
+
+        VoucherTemplateExportExcel excel = new VoucherTemplateExportExcel();
+        excel.setNum("1");
+        excel.setVoucherWord("记");
+        excel.setVoucherDate(LocalDate.now());
+        excel.setFirstSubject("银行存款");
+        excel.setSecondSubject("test");
+        excel.setThirdSubject("test");
+        excel.setBorrowMoney( 11d );
+        excel.setLoanMoney( 0d );
+        excel.setSumary( "test");
+        excel.setArea( "广州");
+        excel.setProjectName( "测试");
+        excel.setProjectGroup("测试");
+        excel.setTicketer("测试人员");
+        excel.setTicketNum( 1d );
+        excel.setExtraFile(" ");
+        excel.setTotalId("1");
+        voucherExportVOS.add(excel);
+
+        VoucherTemplateExportExcel excel2 = new VoucherTemplateExportExcel();
+        excel2.setNum("1");
+        excel2.setVoucherWord("记");
+        excel2.setVoucherDate(LocalDate.now());
+        excel2.setFirstSubject("应付职工薪酬");
+        excel2.setSecondSubject("test");
+        excel2.setThirdSubject("test");
+        excel2.setBorrowMoney( 0d );
+        excel2.setLoanMoney( 11d );
+        excel2.setSumary( "test");
+        excel2.setArea( "广州");
+        excel2.setProjectName( "测试");
+        excel2.setProjectGroup("测试");
+        excel2.setTicketer("测试人员");
+        excel2.setTicketNum( 1d );
+        excel2.setExtraFile(" ");
+        excel2.setTotalId("1");
+        voucherExportVOS.add(excel2);
+
+        excel = new VoucherTemplateExportExcel();
+        excel.setNum("2");
+        excel.setVoucherWord("付");
+        excel.setVoucherDate(LocalDate.now());
+        excel.setFirstSubject("其他应收款");
+        excel.setSecondSubject("test");
+        excel.setThirdSubject("test");
+        excel.setBorrowMoney( 55d );
+        excel.setLoanMoney( 0d );
+        excel.setSumary( "test");
+        excel.setArea( "湖南");
+        excel.setProjectName( "测试");
+        excel.setProjectGroup("测试");
+        excel.setTicketer("测试人员");
+        excel.setTicketNum( 0d );
+        excel.setExtraFile(" ");
+        excel.setTotalId("2");
+        voucherExportVOS.add(excel);
+
+        excel2 = new VoucherTemplateExportExcel();
+        excel2.setNum("2");
+        excel2.setVoucherWord("付");
+        excel2.setVoucherDate(LocalDate.now());
+        excel2.setFirstSubject("应收利息");
+        excel2.setSecondSubject("test");
+        excel2.setThirdSubject("test");
+        excel2.setBorrowMoney( 0d );
+        excel2.setLoanMoney( 55d );
+        excel2.setSumary( "test");
+        excel2.setArea( "湖南");
+        excel2.setProjectName( "测试");
+        excel2.setProjectGroup("测试");
+        excel2.setTicketer("测试人员");
+        excel2.setTicketNum( 0d );
+        excel2.setExtraFile(" ");
+        excel2.setTotalId("2");
+        voucherExportVOS.add(excel2);
+
+        Excel exceltemp = new Excel(0, 2);
+        String tempString = exceltemp.getSheetName();
+        XSSFWorkbook wb = new XSSFWorkbook();//创建一个Excel文件
+        XSSFSheet sheet = wb.createSheet(tempString);//创建报销明细工作薄
+        sheet.setDefaultRowHeight((short) 300);//设置默认行高
+        // 设置execl工作簿中的列名
+        String[] excelHeader = EXCELHEAD2;//Excel表头
+        XSSFCellStyle contentStyle = getStyle(wb, exceltemp.getContentBGColor()); // 设置标题样式
+        XSSFRow row = sheet.createRow(0);//创建第一行
+        row.setHeight((short) 400);//设置第一行单元格的高度
+
+        for (int i = 0, length = excelHeader.length; i < length; i++) {
+            XSSFCell cell = row.createCell(i);
+            if (i == 0 || i == 4 || i == 8) {
+                sheet.setColumnWidth(i, 2000); //设置单元格的宽
+            } else if (i == 18) {
+                sheet.setColumnWidth(i, 5000);
+            } else {
+                sheet.setColumnWidth(i, 4000);
+            }
+            cell.setCellValue(excelHeader[i]);//设置单元格的值
+            cell.setCellStyle(contentStyle);   //设置样式
+        }
+        if( voucherExportVOS != null && voucherExportVOS.size()>0 ) {
+            createRowDetail_temp(voucherExportVOS, row, sheet);//填充数据
+        }
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            wb.write(os);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return os.toByteArray();
+    }
+
+
+    /**
+     * @param list  记账凭证信息集合
+     * @param row
+     * @param sheet Excel表单
+     * @description 创建数据行
+     */
+    public void createRowDetail_temp(List<VoucherTemplateExportExcel> list, XSSFRow row, XSSFSheet sheet) {
+
+        int firstRow = 0;
+        int lastRow = 0;
+        int firstCol = 0;
+        int lastCol = 0;
+        String totalId = list.get(0).getTotalId();
+        if (list != null && list.size() > 0) {
+            firstRow = 1;
+            lastRow = 1;
+            firstCol = 0;
+            lastCol = 0;
+        }
+        int index = 0;
+        int showFlag = 0;
+        for (VoucherTemplateExportExcel exportEntity : list) {
+            lastRow = index;
+
+            if (!exportEntity.getTotalId().equals(totalId) && firstRow == lastRow) {
+                //不合并
+                firstRow++;
+                showFlag = 1;
+            } else if (exportEntity.getTotalId().equals(totalId) && firstRow == lastRow) {
+                //合并
+                if (index != 0 && index < list.size() - 1 && !totalId.equals(list.get(index + 1).getTotalId())) {
+                    sheet = assiableMergeData_temp(sheet, lastRow + 1 - showFlag, lastRow + 1);
+
+                }
+                if (index == list.size() - 1) {
+                    sheet = assiableMergeData_temp(sheet, lastRow + 1 - showFlag, lastRow + 1);
+                }
+                firstRow++;
+                totalId = exportEntity.getTotalId();
+            }
+
+            if (exportEntity.getTotalId().equals(totalId)) {
+                showFlag++;
+            } else if (!exportEntity.getTotalId().equals(totalId)) {
+                totalId = exportEntity.getTotalId();
+            }
+
+            ++index;
+            row = sheet.createRow(index);    // 每循环一次创建一行
+            int callIndex = 0;
+            row.createCell(callIndex++).setCellValue(exportEntity.getNum());
+            row.createCell(callIndex++).setCellValue(exportEntity.getVoucherWord());
+            row.createCell(callIndex++).setCellValue(DateUtil.dateToString(exportEntity.getVoucherDate()));
+            row.createCell(callIndex++).setCellValue(exportEntity.getFirstSubject());
+            row.createCell(callIndex++).setCellValue(exportEntity.getSecondSubject());
+            row.createCell(callIndex++).setCellValue(exportEntity.getThirdSubject());
+            row.createCell(callIndex++).setCellValue(exportEntity.getBorrowMoney());
+            row.createCell(callIndex++).setCellValue(exportEntity.getLoanMoney());
+            row.createCell(callIndex++).setCellValue(exportEntity.getSumary());
+            row.createCell(callIndex++).setCellValue(exportEntity.getArea());
+            row.createCell(callIndex++).setCellValue(exportEntity.getProjectName());
+            row.createCell(callIndex++).setCellValue(exportEntity.getProjectGroup());
+            row.createCell(callIndex++).setCellValue(exportEntity.getTicketer());
+            row.createCell(callIndex++).setCellValue(exportEntity.getTicketNum());
+            row.createCell(callIndex++).setCellValue(exportEntity.getExtraFile());
+//            row.createCell(callIndex++).setCellValue(exportEntity.getTotalId());
+
+
+        }
+    }
+
+// public static final String[] EXCELHEAD2 = {"序号","凭证字",  "凭证日期", "一级科目",
+//            "二级科目", "三级科目", "借方金额", "贷方金额", "摘要", "地区", "项目名称", "项目组",
+//                    "制单人", "票据数量", "附件" };
+
+private XSSFSheet assiableMergeData_temp(XSSFSheet sheet, int firstRow, int lastRow) {
+        CellRangeAddress cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 0, 0);
+        sheet.addMergedRegion(cellRangeAddress);
+        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 1, 1);
+        sheet.addMergedRegion(cellRangeAddress);
+        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 2, 2);
+        sheet.addMergedRegion(cellRangeAddress);
+        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 8, 8);
+        sheet.addMergedRegion(cellRangeAddress);
+        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 9, 9);
+        sheet.addMergedRegion(cellRangeAddress);
+        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 10, 10);
+        sheet.addMergedRegion(cellRangeAddress);
+        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 11, 11);
+        sheet.addMergedRegion(cellRangeAddress);
+        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 12, 12);
+        sheet.addMergedRegion(cellRangeAddress);
+        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 13, 13);
+        sheet.addMergedRegion(cellRangeAddress);
+        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 14, 14);
+        sheet.addMergedRegion(cellRangeAddress);
+
+        return sheet;
+    }
+
+    @Transactional(rollbackFor = SerException.class )
+    @Override
+    public VoucherGenerateBO importExcel(List<VoucherGenerateTO> voucherGenerateTOs) throws SerException {
+//        List<VoucherGenerate> voucherGenerate = BeanTransform.copyProperties(voucherGenerateTOs, VoucherGenerate.class, true);
+//        voucherGenerate.stream().forEach(str -> {
+//            str.setCreateTime(LocalDateTime.now());
+//            str.setModifyTime(LocalDateTime.now());
+//        });
+
+        for( VoucherGenerateTO str : voucherGenerateTOs){
+            addVoucherGenerate(str);
+        }
+
+        VoucherGenerateBO voucherGenerateBO = BeanTransform.copyProperties(new VoucherGenerate(), VoucherGenerateBO.class);
+        return voucherGenerateBO;
+    }
+
+
+    
 }

@@ -1,8 +1,8 @@
-package com.bjike.goddess.staffentry.service;
+package com.bjike.goddess.voucher.service;
 
+import com.bjike.goddess.voucher.dto.VoucherPermissionOperateDTO;
+import com.bjike.goddess.voucher.entity.VoucherPermissionOperate;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.staffentry.dto.CusPermissionOperateDTO;
-import com.bjike.goddess.staffentry.entity.CusPermissionOperate;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 * @Version:		[ v1.0.0 ]
 * @Copy:   		[ com.bjike ]
 */
-@CacheConfig(cacheNames ="staffentrySerCache")
+@CacheConfig(cacheNames ="voucherSerCache")
 @Service
-public class CusPermissionOperateSerImpl extends ServiceImpl<CusPermissionOperate, CusPermissionOperateDTO> implements CusPermissionOperateSer {
+public class VoucherPermissionOperateSerImpl extends ServiceImpl<VoucherPermissionOperate, VoucherPermissionOperateDTO> implements VoucherPermissionOperateSer {
 
  }

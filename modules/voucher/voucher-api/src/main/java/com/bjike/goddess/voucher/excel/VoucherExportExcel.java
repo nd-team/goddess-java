@@ -17,7 +17,7 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class VoucherExportVO implements Serializable{
+public class VoucherExportExcel implements Serializable{
 
     /**
      * 凭证字

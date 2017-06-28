@@ -437,6 +437,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         return areaList;
     }
 
+    @Transactional(rollbackFor = SerException.class )
     @Override
     public SiginManageBO importExcel(List<SiginManageTO> siginManageTO) throws SerException {
 
