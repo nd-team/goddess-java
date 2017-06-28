@@ -173,7 +173,7 @@ public class Salaryconfirm extends BaseEntity {
     /**
      * 扣分合计
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '扣分合计'")
+    @Column(name = "deduction", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '扣分合计'")
     private Integer deduction;
 
     /**
