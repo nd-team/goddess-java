@@ -1,14 +1,15 @@
 package com.bjike.goddess.allmeeting.api;
 
 import com.bjike.goddess.allmeeting.bo.ConciseSummaryBO;
+import com.bjike.goddess.allmeeting.bo.OrganizeForSummaryBO;
 import com.bjike.goddess.allmeeting.dto.ConciseSummaryDTO;
 import com.bjike.goddess.allmeeting.service.ConciseSummarySer;
 import com.bjike.goddess.allmeeting.to.ConciseSummaryTO;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.List;
 
 /**
@@ -49,5 +50,15 @@ public class ConciseSummaryApiImpl implements ConciseSummaryAPI {
     @Override
     public ConciseSummaryBO findById(String id) throws SerException {
         return conciseSummarySer.findAndSet(id);
+    }
+
+    @Override
+    public OrganizeForSummaryBO organize(String id) throws SerException {
+        return conciseSummarySer.organize(id);
+    }
+
+    @Override
+    public void unfreeze(String id) throws SerException {
+        conciseSummarySer.unfreeze(id);
     }
 }

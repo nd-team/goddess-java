@@ -51,4 +51,6 @@ public interface MeetingTopicSer extends Ser<MeetingTopic, MeetingTopicDTO> {
      * @return 分页结果集
      */
     MeetingTopicBO findByLay(String layId) throws SerException;
+
+    void delete(String id) throws SerException;
 }

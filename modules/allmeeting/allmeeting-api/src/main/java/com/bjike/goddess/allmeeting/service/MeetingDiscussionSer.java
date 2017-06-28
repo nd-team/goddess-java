@@ -1,6 +1,8 @@
 package com.bjike.goddess.allmeeting.service;
 
 import com.bjike.goddess.allmeeting.bo.MeetingDiscussionBO;
+import com.bjike.goddess.allmeeting.to.FirstDiscussionTO;
+import com.bjike.goddess.allmeeting.to.SecondDiscussionTO;
 import com.bjike.goddess.allmeeting.to.MeetingDiscussionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -21,7 +23,9 @@ public interface MeetingDiscussionSer extends Ser<MeetingDiscussion, MeetingDisc
 
     List<MeetingDiscussionBO> listBySummaryId(String id) throws SerException;
 
-    MeetingDiscussionBO addByCon(MeetingDiscussionTO to) throws SerException;
+    MeetingDiscussionBO addFrist(FirstDiscussionTO to) throws SerException;
 
-    MeetingDiscussionBO addByMulti(MeetingDiscussionTO to) throws SerException;
+    MeetingDiscussionBO addSecond(SecondDiscussionTO to) throws SerException;
+
+    MeetingDiscussionBO addFirstByCon(MeetingDiscussionTO to) throws SerException;
 }

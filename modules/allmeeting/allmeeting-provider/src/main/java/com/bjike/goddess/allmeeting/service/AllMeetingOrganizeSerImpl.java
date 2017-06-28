@@ -4,10 +4,7 @@ import com.bjike.goddess.allmeeting.api.MeetingLayAPI;
 import com.bjike.goddess.allmeeting.bo.AllMeetingOrganizeBO;
 import com.bjike.goddess.allmeeting.bo.MeetingLayBO;
 import com.bjike.goddess.allmeeting.dto.AllMeetingOrganizeDTO;
-import com.bjike.goddess.allmeeting.entity.AllMeetingOrganize;
-import com.bjike.goddess.allmeeting.entity.ConciseSummary;
-import com.bjike.goddess.allmeeting.entity.MeetingTopic;
-import com.bjike.goddess.allmeeting.entity.MultiwheelSummary;
+import com.bjike.goddess.allmeeting.entity.*;
 import com.bjike.goddess.allmeeting.to.AllMeetingOrganizeTO;
 import com.bjike.goddess.allmeeting.util.ChineseCharToEn;
 import com.bjike.goddess.common.api.dto.Restrict;
@@ -20,9 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,7 +42,7 @@ public class AllMeetingOrganizeSerImpl extends ServiceImpl<AllMeetingOrganize, A
     @Autowired
     private MeetingLayAPI meetingLayAPI;
     @Autowired
-    private MeetingTopicSer meetingTopicSer;
+    private MeetingLaySer meetingLaySer;
     @Autowired
     private ConciseSummarySer conciseSummarySer;
     @Autowired
@@ -52,72 +51,74 @@ public class AllMeetingOrganizeSerImpl extends ServiceImpl<AllMeetingOrganize, A
     @Override
     @Transactional(rollbackFor = SerException.class)
     public AllMeetingOrganizeBO insertModel(AllMeetingOrganizeTO to) throws SerException {
-        AllMeetingOrganize model = BeanTransform.copyProperties(to, AllMeetingOrganize.class, true);
-        model.setStatus(Status.THAW);
-        model.setOrganizer(userAPI.currentUser().getUsername());
-        model.setMeetingNum(getNumber(model));
-        super.save(model);
 
-        insertSummary(model);
+        MeetingLay meetingLay = meetingLaySer.findById(to.getLayId());
+        if (meetingLay != null) {
+            AllMeetingOrganize model = BeanTransform.copyProperties(to, AllMeetingOrganize.class, true);
+            model.setStatus(Status.THAW);
+            model.setOrganizer(userAPI.currentUser().getUsername());
+            model.setMeetingLay(meetingLay);
+            model.setMeetingNum(getNumber(model));
+            super.save(model);
 
-        return BeanTransform.copyProperties(model, AllMeetingOrganizeBO.class);
+            insertSummary(model, meetingLay.getMeetingTopic());
+
+            return BeanTransform.copyProperties(model, AllMeetingOrganizeBO.class);
+        } else {
+            throw new SerException("非法层面ID,层面对象不能为空!");
+        }
+
     }
 
     //根据议题生成对应的纪要模板--(简洁讨论纪要或三轮讨论纪要)
-    public void insertSummary(AllMeetingOrganize model) throws SerException {
-        MeetingLayBO lay = meetingLayAPI.findById(model.getLayId());
-        if (lay != null) {
-            MeetingTopic topic = meetingTopicSer.findById(lay.getTopicId());
-            if (topic != null) {
-                //简洁讨论纪要模板
-                if (topic.getTopic().equals("财务报表通报") ||
-                        topic.getTopic().equals("问题分配责任模块【仅福利模块召开】") ||
-                        topic.getTopic().equals("工作汇总和计划") ||
-                        topic.getTopic().equals("问题分类【仅福利模块召开】") ||
-                        topic.getTopic().equals("组织结构调整【人事任命】") ||
-                        topic.getTopic().equals("组织结构调整【人事调整】") ||
-                        topic.getTopic().equals("动员--统一思想") ||
-                        topic.getTopic().equals("制度推行") ||
-                        topic.getTopic().equals("每月资金准备") ||
-                        topic.getTopic().equals("节点标准") ||
-                        topic.getTopic().equals("费用标准")) {
+    public void insertSummary(AllMeetingOrganize model, MeetingTopic topic) throws SerException {
+        if (topic != null) {
+            //简洁讨论纪要模板
+            if (topic.getTopic().equals("财务报表通报") ||
+                    topic.getTopic().equals("问题分配责任模块【仅福利模块召开】") ||
+                    topic.getTopic().equals("工作汇总和计划") ||
+                    topic.getTopic().equals("问题分类【仅福利模块召开】") ||
+                    topic.getTopic().equals("组织结构调整【人事任命】") ||
+                    topic.getTopic().equals("组织结构调整【人事调整】") ||
+                    topic.getTopic().equals("动员--统一思想") ||
+                    topic.getTopic().equals("制度推行") ||
+                    topic.getTopic().equals("每月资金准备") ||
+                    topic.getTopic().equals("节点标准") ||
+                    topic.getTopic().equals("费用标准")) {
 
-                    ConciseSummary conciseSummary = new ConciseSummary();
-                    conciseSummary.setMeetingNum(model.getMeetingNum());
-                    //默认实际时间为计划时间
-                    conciseSummary.setActualTime(model.getPlanTime());
-                    //默认会议主持人
-                    conciseSummary.setCompere(model.getCompere());
-                    conciseSummary.setStatus(Status.THAW);
-                    conciseSummarySer.save(conciseSummary);
+                ConciseSummary conciseSummary = new ConciseSummary();
+                conciseSummary.setMeetingNum(model.getMeetingNum());
+                //默认实际时间为计划时间
+                conciseSummary.setActualTime(model.getPlanTime());
+                //默认会议主持人
+                conciseSummary.setCompere(model.getCompere());
+                conciseSummary.setStatus(Status.THAW);
+                conciseSummarySer.save(conciseSummary);
 
-                } else if (topic.getTopic().equals("临时事件") ||
-                        topic.getTopic().equals("制度制定") ||
-                        topic.getTopic().equals("集思广益") ||
-                        topic.getTopic().equals("定指标") ||
-                        topic.getTopic().equals("处罚方案、奖励方案讨论")) {
-                    MultiwheelSummary multiwheelSummary = new MultiwheelSummary();
-                    multiwheelSummary.setMeetingNum(model.getMeetingNum());
-                    //默认实际时间为计划时间
-                    multiwheelSummary.setActualTime(model.getPlanTime());
-                    //默认会议主持人
-                    multiwheelSummary.setCompere(model.getCompere());
-                    multiwheelSummary.setStatus(Status.THAW);
-                    multiwheelSummarySer.save(multiwheelSummary);
-                }else{
-                    throw new SerException("议题不符合流程图规则，无法生成对应的会议纪要，请联系管理员!");
-                }
+            } else if (topic.getTopic().equals("临时事件") ||
+                    topic.getTopic().equals("制度制定") ||
+                    topic.getTopic().equals("集思广益") ||
+                    topic.getTopic().equals("定指标") ||
+                    topic.getTopic().equals("处罚方案、奖励方案讨论")) {
+                MultiwheelSummary multiwheelSummary = new MultiwheelSummary();
+                multiwheelSummary.setMeetingNum(model.getMeetingNum());
+                //默认实际时间为计划时间
+                multiwheelSummary.setActualTime(model.getPlanTime());
+                //默认会议主持人
+                multiwheelSummary.setCompere(model.getCompere());
+                multiwheelSummary.setStatus(Status.THAW);
+                multiwheelSummarySer.save(multiwheelSummary);
             } else {
-                throw new SerException("层面对应的议题不存在，请联系管理员!");
+                throw new SerException("议题不符合流程图规则，无法生成对应的会议纪要，请联系管理员!");
             }
         } else {
-            throw new SerException("非法议题层面id，议题层面不存在!");
+            throw new SerException("层面对应的议题不存在，请联系管理员!");
         }
     }
 
     public String getNumber(AllMeetingOrganize model) throws SerException {
         StringBuilder number = new StringBuilder("ALL-");
-        MeetingLayBO meetingLayBO = meetingLayAPI.findById(model.getLayId());
+        MeetingLayBO meetingLayBO = meetingLayAPI.findById(model.getMeetingLay().getId());
         //获取层面名称首字母大写
         String layName = ChineseCharToEn.getAllFirstLetter(meetingLayBO.getName());
         number.append(layName);
@@ -196,8 +197,23 @@ public class AllMeetingOrganizeSerImpl extends ServiceImpl<AllMeetingOrganize, A
     @Transactional(rollbackFor = SerException.class)
     public List<AllMeetingOrganizeBO> pageList(AllMeetingOrganizeDTO dto) throws SerException {
         dto.getSorts().add("createTime=desc");
-        dto.getConditions().add(Restrict.eq("status", Status.THAW));
-        return BeanTransform.copyProperties(super.findByPage(dto), AllMeetingOrganizeBO.class);
+        if (dto.getStatus() != null) {
+            dto.getConditions().add(Restrict.eq("status", dto.getStatus()));
+        }
+        List<AllMeetingOrganize> list = super.findByPage(dto);
+        List<AllMeetingOrganizeBO> boList = null;
+        if (!CollectionUtils.isEmpty(list)) {
+            boList = new ArrayList<AllMeetingOrganizeBO>();
+            for (AllMeetingOrganize model : list) {
+                AllMeetingOrganizeBO bo = BeanTransform.copyProperties(model, AllMeetingOrganizeBO.class);
+                bo.setTopic(model.getMeetingLay().getMeetingTopic().getTopic());
+                bo.setTopicContent(model.getMeetingLay().getMeetingTopic().getTopicContent());
+                bo.setLayName(model.getMeetingLay().getName());
+                bo.setPosition(model.getMeetingLay().getPosition());
+                boList.add(bo);
+            }
+        }
+        return boList;
     }
 
     @Override

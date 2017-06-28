@@ -4,9 +4,7 @@ import com.bjike.goddess.allmeeting.enums.MeetingType;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 
@@ -32,8 +30,9 @@ public class AllMeetingOrganize extends BaseEntity {
     /**
      * 层面Id
      */
-    @Column(name = "layId", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '层面Id'")
-    private String layId;
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "meetingLay_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '层面'")
+    private MeetingLay meetingLay;
 
     /**
      * 会议内容
@@ -91,12 +90,12 @@ public class AllMeetingOrganize extends BaseEntity {
         this.meetingNum = meetingNum;
     }
 
-    public String getLayId() {
-        return layId;
+    public MeetingLay getMeetingLay() {
+        return meetingLay;
     }
 
-    public void setLayId(String layId) {
-        this.layId = layId;
+    public void setMeetingLay(MeetingLay meetingLay) {
+        this.meetingLay = meetingLay;
     }
 
     public String getContent() {

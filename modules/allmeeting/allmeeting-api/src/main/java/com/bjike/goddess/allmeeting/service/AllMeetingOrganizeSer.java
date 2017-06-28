@@ -1,6 +1,7 @@
 package com.bjike.goddess.allmeeting.service;
 
 import com.bjike.goddess.allmeeting.bo.AllMeetingOrganizeBO;
+import com.bjike.goddess.allmeeting.bo.MeetingLayBO;
 import com.bjike.goddess.allmeeting.to.AllMeetingOrganizeTO;
 import com.bjike.goddess.allmeeting.to.WorkCollectPrepareTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -32,4 +33,5 @@ public interface AllMeetingOrganizeSer extends Ser<AllMeetingOrganize, AllMeetin
 
     //会议编号校验，防止非法数据提交
     void validNum(String meetingNum) throws SerException;
+
 }

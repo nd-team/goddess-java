@@ -52,10 +52,18 @@
     <!-- 意见投票API -->
     <dubbo:service interface="com.bjike.goddess.allmeeting.api.DiscussionVoteAPI" ref="discussionVoteApiImpl"/>
 
+    <!-- userAPI -->
+    <dubbo:service interface="com.bjike.goddess.allmeeting.api.ConcisePermissionAPI" ref="concisePermissionApiImpl"/>
+
+    <!-- userAPI -->
+    <dubbo:service interface="com.bjike.goddess.allmeeting.api.MultiPermissionAPI" ref="multiPermissionApiImpl"/>
 
     <!-- 注册接口 -->
 
     <!-- 用户API -->
     <dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+
+    <!-- 组织结构API -->
+    <dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
 
 </beans>
