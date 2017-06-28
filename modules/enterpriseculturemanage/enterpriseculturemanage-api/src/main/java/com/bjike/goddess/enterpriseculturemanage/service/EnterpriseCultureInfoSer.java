@@ -7,6 +7,7 @@ import com.bjike.goddess.enterpriseculturemanage.bo.PeriodicalProgramInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.bo.PublicizeProgramInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.dto.EnterpriseCultureInfoDTO;
 import com.bjike.goddess.enterpriseculturemanage.entity.EnterpriseCultureInfo;
+import com.bjike.goddess.enterpriseculturemanage.to.EnterpriseCultureInfoEditTO;
 import com.bjike.goddess.enterpriseculturemanage.to.EnterpriseCultureInfoTO;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public interface EnterpriseCultureInfoSer extends Ser<EnterpriseCultureInfo, Ent
      * @param to 企业文化信息
      * @return 企业文化信息
      */
-    EnterpriseCultureInfoBO updateModel(EnterpriseCultureInfoTO to) throws SerException;
+    EnterpriseCultureInfoBO updateModel(EnterpriseCultureInfoEditTO to) throws SerException;
 
     /**
      * 企业文化信息分页查询

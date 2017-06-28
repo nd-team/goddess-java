@@ -1,12 +1,12 @@
-package com.bjike.goddess.enterpriseculturemanage.entity;
+package com.bjike.goddess.enterpriseculturemanage.to;
 
-import com.bjike.goddess.common.api.entity.BaseEntity;
-import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
+import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.enterpriseculturemanage.enums.UpdateType;
+import org.hibernate.validator.constraints.NotBlank;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
+import javax.validation.constraints.NotNull;
 
 /**
  * 企业文化信息
@@ -17,45 +17,44 @@ import javax.persistence.Table;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@Entity
-@Table(name = "enterpriseculture_info")
-public class EnterpriseCultureInfo extends BaseEntity {
+public class EnterpriseCultureInfoEditTO extends BaseTO {
 
     /**
      * 主题
      */
-    @Column(name = "theme", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '主题'")
+    @NotBlank(message = "主题不能为空",groups = {EDIT.class})
     private String theme;
 
     /**
      * 执行阶段
      */
-    @Column(name = "executeStage", columnDefinition = "VARCHAR(255)   COMMENT '执行阶段'")
+    @NotBlank(message = "执行阶段不能为空",groups = {EDIT.class})
     private String executeStage;
 
     /**
      * 执行问题
      */
-    @Column(name = "executeQuestion", columnDefinition = "TEXT   COMMENT '执行问题'")
+    @NotBlank(message = "执行问题不能为空",groups = {EDIT.class})
     private String executeQuestion;
 
     /**
      * 解决方案
      */
-    @Column(name = "solution", columnDefinition = "TEXT   COMMENT '解决方案'")
+    @NotBlank(message = "解决方案不能为空",groups = {EDIT.class})
     private String solution;
 
     /**
      * 员工意见
      */
-    @Column(name = "employeeSuggest", columnDefinition = "TEXT   COMMENT '员工意见'")
+    @NotBlank(message = "员工意见不能为空",groups = {EDIT.class})
     private String employeeSuggest;
 
     /**
-     * 数据状态
+     * 更新类型
      */
-    @Column(name = "status", columnDefinition = "TINYINT(2)   COMMENT '数据状态'")
-    private Status status;
+    @NotNull(message = "员工意见不能为空",groups = {EDIT.class})
+    private UpdateType updateType;
+
 
     public String getTheme() {
         return theme;
@@ -97,11 +96,11 @@ public class EnterpriseCultureInfo extends BaseEntity {
         this.employeeSuggest = employeeSuggest;
     }
 
-    public Status getStatus() {
-        return status;
+    public UpdateType getUpdateType() {
+        return updateType;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setUpdateType(UpdateType updateType) {
+        this.updateType = updateType;
     }
 }

@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.enterpriseculturemanage.bo.PeriodicalProgramInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.dto.PeriodicalProgramInfoDTO;
 import com.bjike.goddess.enterpriseculturemanage.entity.PeriodicalProgramInfo;
+import com.bjike.goddess.enterpriseculturemanage.enums.AuditResult;
 import com.bjike.goddess.enterpriseculturemanage.to.PeriodicalProgramInfoTO;
 
 import java.util.List;
@@ -39,9 +40,11 @@ public interface PeriodicalProgramInfoSer extends Ser<PeriodicalProgramInfo, Per
     /**
      * 审核刊物方案信息
      *
-     * @param to 刊物方案信息
+     * @param id id
+     * @param auditResult 审核结果
+     * @param auditSuggestion 审核意见
      */
-    void audit(PeriodicalProgramInfoTO to) throws SerException;
+    void audit(String id , AuditResult auditResult, String  auditSuggestion) throws SerException;
 
     /**
      * 刊物方案信息分页查询

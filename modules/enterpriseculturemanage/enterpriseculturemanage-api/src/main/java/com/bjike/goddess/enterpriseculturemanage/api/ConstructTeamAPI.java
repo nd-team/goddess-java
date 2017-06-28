@@ -49,5 +49,7 @@ public interface ConstructTeamAPI {
      */
     List<ConstructTeamBO> pageList(ConstructTeamDTO dto) throws SerException;
 
-//    void findUserInfo();
+    ConstructTeamBO findById(String id) throws SerException;
+
+    Long count(ConstructTeamDTO dto) throws SerException;
 }

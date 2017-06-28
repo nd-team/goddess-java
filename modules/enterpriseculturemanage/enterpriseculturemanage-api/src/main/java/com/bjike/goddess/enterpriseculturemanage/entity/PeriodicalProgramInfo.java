@@ -85,7 +85,7 @@ public class PeriodicalProgramInfo extends BaseEntity {
     /**
      * 审核结果
      */
-    @Column(name = "auditResult", columnDefinition = "VARCHAR(255)   COMMENT '审核结果'")
+    @Column(name = "auditResult", columnDefinition = "TINYINT(2)   COMMENT '审核结果'")
     private AuditResult auditResult;
 
     /**

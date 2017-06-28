@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.enterpriseculturemanage.bo.EnterpriseCultureInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.bo.PeriodicalProgramInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.dto.PeriodicalProgramInfoDTO;
+import com.bjike.goddess.enterpriseculturemanage.enums.AuditResult;
 import com.bjike.goddess.enterpriseculturemanage.to.PeriodicalProgramInfoTO;
 
 import java.util.List;
@@ -52,9 +53,11 @@ public interface PeriodicalProgramInfoAPI {
     /**
      * 审核刊物方案信息
      *
-     * @param to 刊物方案信息
+     * @param id id
+     * @param auditResult 审核结果
+     * @param auditSuggestion 审核意见
      */
-    void audit(PeriodicalProgramInfoTO to) throws SerException;
+    void audit(String id ,AuditResult auditResult,String  auditSuggestion) throws SerException;
 
     /**
      * 刊物方案信息分页查询
@@ -64,4 +67,7 @@ public interface PeriodicalProgramInfoAPI {
      */
     List<PeriodicalProgramInfoBO> pageList(PeriodicalProgramInfoDTO dto) throws SerException;
 
+    Long count(PeriodicalProgramInfoDTO dto) throws SerException;
+
+    PeriodicalProgramInfoBO findById(String id) throws SerException;
 }

@@ -7,6 +7,7 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.enterpriseculturemanage.api.PublicizeProgramInfoAPI;
 import com.bjike.goddess.enterpriseculturemanage.dto.PublicizeProgramInfoDTO;
+import com.bjike.goddess.enterpriseculturemanage.enums.AuditResult;
 import com.bjike.goddess.enterpriseculturemanage.to.PublicizeProgramInfoTO;
 import com.bjike.goddess.enterpriseculturemanage.vo.EnterpriseCultureInfoVO;
 import com.bjike.goddess.enterpriseculturemanage.vo.PublicizeProgramInfoVO;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -31,6 +33,40 @@ public class PublicizeProgramInfoAct {
 
     @Autowired
     private PublicizeProgramInfoAPI publicizeProgramInfoAPI;
+
+
+    /**
+     * 根据id查询宣传方案信息
+     *
+     * @param id 宣传方案信息id
+     * @return class PublicizeProgramInfoVO
+     * @version v1
+     */
+    @GetMapping("v1/find/{id}")
+    public Result find(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            PublicizeProgramInfoVO vo = BeanTransform.copyProperties(publicizeProgramInfoAPI.findById(id), PublicizeProgramInfoVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(PublicizeProgramInfoDTO dto) throws ActException {
+        try {
+            Long count = publicizeProgramInfoAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 查询企业文化信息
@@ -82,12 +118,18 @@ public class PublicizeProgramInfoAct {
     /**
      * 审核宣传方案信息
      *
-     * @param to 审核内容
+     * @param id              id
+     * @param auditResult     审核结果
+     * @param auditSuggestion 审核意见
      * @version v1
      */
     @PostMapping("v1/audit")
-    public Result audit(PublicizeProgramInfoTO to, BindingResult bindingResult) throws ActException {
+    public Result audit(@PathVariable String id, @RequestParam AuditResult auditResult, @RequestParam String auditSuggestion) throws ActException {
         try {
+            PublicizeProgramInfoTO to = new PublicizeProgramInfoTO();
+            to.setId(id);
+            to.setAuditResult(auditResult);
+            to.setAuditSuggestion(auditSuggestion);
             publicizeProgramInfoAPI.audit(to);
             return new ActResult();
         } catch (SerException e) {
@@ -117,7 +159,7 @@ public class PublicizeProgramInfoAct {
      * @param dto 分页条件
      * @version v1
      */
-    @GetMapping("v1/pageList")
+    @GetMapping("v1/list")
     public Result pageList(PublicizeProgramInfoDTO dto) throws ActException {
         try {
             List<PublicizeProgramInfoVO> voList = BeanTransform.copyProperties(publicizeProgramInfoAPI.pageList(dto), PublicizeProgramInfoVO.class);
