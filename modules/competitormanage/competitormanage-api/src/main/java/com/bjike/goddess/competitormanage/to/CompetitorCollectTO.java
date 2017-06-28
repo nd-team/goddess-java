@@ -58,8 +58,8 @@ public class CompetitorCollectTO extends BaseTO {
     /**
      * 发送对象
      */
-    @NotBlank(message = "发送对象不能为空", groups = {ADD.class, EDIT.class})
-    private String sendUser;
+    @NotNull(message = "发送对象不能为空", groups = {ADD.class, EDIT.class})
+    private String[] sendUsers;
 
     /**
      * 状态
@@ -120,12 +120,12 @@ public class CompetitorCollectTO extends BaseTO {
         this.sendInterval = sendInterval;
     }
 
-    public String getSendUser() {
-        return sendUser;
+    public String[] getSendUsers() {
+        return sendUsers;
     }
 
-    public void setSendUser(String sendUser) {
-        this.sendUser = sendUser;
+    public void setSendUsers(String[] sendUsers) {
+        this.sendUsers = sendUsers;
     }
 
     public Status getStatus() {

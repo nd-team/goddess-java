@@ -4,6 +4,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contractware.bo.ProjectBO;
 import com.bjike.goddess.contractware.bo.ProjectContractBO;
 import com.bjike.goddess.contractware.dto.ProjectContractDTO;
+import com.bjike.goddess.contractware.excel.SonPermissionObject;
+import com.bjike.goddess.contractware.to.GuidePermissionTO;
 import com.bjike.goddess.contractware.to.ProjectContractTO;
 
 import java.util.List;
@@ -18,6 +20,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ProjectContractAPI {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
 
     /**
      * 项目合同列表总条数

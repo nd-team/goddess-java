@@ -8,11 +8,16 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.competitormanage.api.CompetitorAPI;
 import com.bjike.goddess.competitormanage.api.CompetitorCollectAPI;
 import com.bjike.goddess.competitormanage.dto.CompetitorCollectDTO;
 import com.bjike.goddess.competitormanage.to.CompetitorCollectTO;
+import com.bjike.goddess.competitormanage.to.GuidePermissionTO;
 import com.bjike.goddess.competitormanage.vo.CollectionTotalVO;
 import com.bjike.goddess.competitormanage.vo.CompetitorCollectVO;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -36,6 +41,50 @@ public class CompetitorCollectAct {
 
     @Autowired
     private CompetitorCollectAPI competitorCollectAPI;
+    @Autowired
+    private PositionDetailUserAPI detailUserAPI;
+    @Autowired
+    private CompetitorAPI competitorAPI;
+
+
+    /**
+     * 地区列表
+     *
+     * @return class AreaBO
+     * @version v1
+     */
+    @GetMapping("v1/areas")
+    public Result areas(HttpServletRequest request) throws ActException {
+        try {
+            List<AreaBO> voList = BeanTransform.copyProperties(competitorAPI.areas(), AreaBO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = competitorCollectAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 新增竞争对手汇总
@@ -50,6 +99,22 @@ public class CompetitorCollectAct {
         try {
             CompetitorCollectVO vo = BeanTransform.copyProperties(competitorCollectAPI.save(to), CompetitorCollectVO.class, request);
             return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 对象列表
+     *
+     * @return class UserBO
+     * @version v1
+     */
+    @GetMapping("v1/users")
+    public Result users(HttpServletRequest request) throws ActException {
+        try {
+            List<UserBO> voList = BeanTransform.copyProperties(detailUserAPI.findUserList(), UserBO.class, request);
+            return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -80,7 +145,7 @@ public class CompetitorCollectAct {
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/freeze/{id}")
+    @PutMapping("v1/freeze/{id}")
     public Result freeze(@PathVariable String id) throws ActException {
         try {
             competitorCollectAPI.freeze(id);
@@ -97,7 +162,7 @@ public class CompetitorCollectAct {
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/breakfreeze/{id}")
+    @PutMapping("v1/breakfreeze/{id}")
     public Result breakFreeze(@PathVariable String id) throws ActException {
         try {
             competitorCollectAPI.breakFreeze(id);

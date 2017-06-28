@@ -23,11 +23,6 @@ public class CompetitorTO extends BaseTO {
     }
 
     /**
-     * 市场信息收集序号
-     */
-    private String markInfoCode;
-
-    /**
      * 项目名称
      */
     @NotBlank(message = "项目名称不能为空", groups = {ADD.class, EDIT.class})
@@ -140,14 +135,6 @@ public class CompetitorTO extends BaseTO {
     @NotBlank(message = "接口人不能为空", groups = {CompetitorTO.Organization.class})
     private String interfaceMan;
 
-
-    public String getMarkInfoCode() {
-        return markInfoCode;
-    }
-
-    public void setMarkInfoCode(String markInfoCode) {
-        this.markInfoCode = markInfoCode;
-    }
 
     public String getProject() {
         return project;

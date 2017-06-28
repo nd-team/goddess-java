@@ -120,6 +120,10 @@ public class CompetitorBO extends BaseBO {
      */
     private String interfaceMan;
 
+    /**
+     * 创建时间
+     */
+    private String createTime;
 
     public String getMarkInfoCode() {
         return markInfoCode;
@@ -287,5 +291,13 @@ public class CompetitorBO extends BaseBO {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 }

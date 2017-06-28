@@ -7,7 +7,9 @@ import com.bjike.goddess.staffpay.bo.WaitPayBO;
 import com.bjike.goddess.staffpay.dto.WaitPayDTO;
 import com.bjike.goddess.staffpay.entity.WaitPay;
 import com.bjike.goddess.staffpay.enums.ConfirmStatus;
+import com.bjike.goddess.staffpay.excel.SonPermissionObject;
 import com.bjike.goddess.staffpay.service.WaitPaySer;
+import com.bjike.goddess.staffpay.to.GuidePermissionTO;
 import com.bjike.goddess.staffpay.to.WaitPayTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +31,15 @@ import java.util.List;
 public class WaitPayApiImpl implements WaitPayAPI {
     @Autowired
     private WaitPaySer waitPaySer;
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return waitPaySer.sonPermission();
+    }
 
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return waitPaySer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countWaitPay(WaitPayDTO waitPayDTO) throws SerException {
         return waitPaySer.countWaitPay(waitPayDTO);

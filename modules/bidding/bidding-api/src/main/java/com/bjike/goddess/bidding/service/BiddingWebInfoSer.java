@@ -106,6 +106,14 @@ public interface BiddingWebInfoSer extends Ser<BiddingWebInfo, BiddingWebInfoDTO
     default List<String> getUrl() throws SerException {
         return null;
     }
+    /**
+     * 根据网站名称获取网站信息
+     *
+     * @return class String
+     */
+    default BiddingWebInfoBO getWebInfo(String webName) throws SerException {
+        return null;
+    }
 
 
 }

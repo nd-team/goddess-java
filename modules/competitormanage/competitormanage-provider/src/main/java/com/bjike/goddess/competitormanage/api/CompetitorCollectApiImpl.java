@@ -7,6 +7,7 @@ import com.bjike.goddess.competitormanage.bo.CompetitorCollectBO;
 import com.bjike.goddess.competitormanage.dto.CompetitorCollectDTO;
 import com.bjike.goddess.competitormanage.service.CompetitorCollectSer;
 import com.bjike.goddess.competitormanage.to.CompetitorCollectTO;
+import com.bjike.goddess.competitormanage.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,5 +71,15 @@ public class CompetitorCollectApiImpl implements CompetitorCollectAPI {
     @Override
     public CompetitorCollectBO findById(String id) throws SerException {
         return BeanTransform.copyProperties(competitorCollectSer.findById(id), CompetitorCollectBO.class);
+    }
+
+    @Override
+    public void sendCollectEmail() throws SerException {
+        competitorCollectSer.sendCollectEmail();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO to) throws SerException {
+        return competitorCollectSer.guidePermission(to);
     }
 }

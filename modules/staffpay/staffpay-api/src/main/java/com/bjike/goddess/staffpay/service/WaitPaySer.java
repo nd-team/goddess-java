@@ -6,6 +6,8 @@ import com.bjike.goddess.staffpay.bo.FirstPayRecordBO;
 import com.bjike.goddess.staffpay.bo.WaitPayBO;
 import com.bjike.goddess.staffpay.dto.WaitPayDTO;
 import com.bjike.goddess.staffpay.entity.WaitPay;
+import com.bjike.goddess.staffpay.excel.SonPermissionObject;
+import com.bjike.goddess.staffpay.to.GuidePermissionTO;
 import com.bjike.goddess.staffpay.to.WaitPayTO;
 
 import java.util.List;
@@ -20,6 +22,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface WaitPaySer extends Ser<WaitPay, WaitPayDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
 
     /**
      * 等待付款列表总条数

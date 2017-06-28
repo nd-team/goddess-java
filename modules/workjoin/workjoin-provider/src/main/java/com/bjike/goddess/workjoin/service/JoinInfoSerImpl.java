@@ -68,18 +68,5 @@ public class JoinInfoSerImpl extends ServiceImpl<JoinInfo, JoinInfoDTO> implemen
         super.remove(id);
     }
 
-    @Override
-    public void upload() throws SerException {
-       //todo 未做上传
-        return;
-
-    }
-
-    @Override
-    public void download() throws SerException {
-       //todo 未做下载
-        return;
-
-    }
 
 }

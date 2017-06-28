@@ -7,8 +7,10 @@ import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.entity.DispatchCarInfo;
 import com.bjike.goddess.dispatchcar.enums.CollectIntervalType;
 import com.bjike.goddess.dispatchcar.enums.CollectType;
+import com.bjike.goddess.dispatchcar.excel.SonPermissionObject;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
 import com.bjike.goddess.dispatchcar.to.FinanceCollectTO;
+import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -181,4 +183,8 @@ public interface DispatchCarInfoSer extends Ser<DispatchCarInfo, DispatchCarInfo
      * @param payPlan       付款计划
      */
     void predict(String id, String budgetPayDate, String payPlan) throws SerException;
+
+    List<SonPermissionObject> financeSonPermission() throws SerException;
+
+    Boolean financeGuidePermission(GuidePermissionTO to) throws SerException;
 }

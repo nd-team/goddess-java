@@ -66,7 +66,7 @@ public class FundRecord extends BaseEntity {
     /**
      * 数据来源
      */
-    @Column(name = "dataSource", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '支出'")
+    @Column(name = "dataSource", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '数据来源'")
     private String dataSource;
 
 

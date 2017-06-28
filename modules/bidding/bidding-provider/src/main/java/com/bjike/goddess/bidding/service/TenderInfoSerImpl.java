@@ -202,6 +202,7 @@ public class TenderInfoSerImpl extends ServiceImpl<TenderInfo, TenderInfoDTO> im
     @Override
     public List<TenderInfoBO> findListTenderInfo(TenderInfoDTO tenderInfoDTO) throws SerException {
         checkSeeIdentity();
+        tenderInfoDTO.getSorts().add("createTime=desc");
         List<TenderInfo> tenderInfo = super.findByCis(tenderInfoDTO,true);
         List<TenderInfoBO> tenderInfoBOS = BeanTransform.copyProperties(tenderInfo,TenderInfoBO.class);
         return tenderInfoBOS;

@@ -13,6 +13,7 @@ import com.bjike.goddess.staffpay.bo.WaitPayBO;
 import com.bjike.goddess.staffpay.dto.FirstPayRecordDTO;
 import com.bjike.goddess.staffpay.dto.WaitPayDTO;
 import com.bjike.goddess.staffpay.to.FirstPayRecordTO;
+import com.bjike.goddess.staffpay.to.GuidePermissionTO;
 import com.bjike.goddess.staffpay.to.WaitPayTO;
 import com.bjike.goddess.staffpay.vo.FirstPayRecordVO;
 import com.bjike.goddess.staffpay.vo.WaitPayVO;
@@ -38,6 +39,27 @@ import java.util.List;
 public class FirstPayRecordAction {
     @Autowired
     private FirstPayRecordAPI firstPayRecordAPI;
+    /**
+     * 功能导航权限
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = firstPayRecordAPI.guidePermission(guidePermissionTO);
+            if(! isHasPermission ){
+                //int code, String msg
+                return new ActResult(0,"没有权限",false );
+            }else{
+                return new ActResult(0,"有权限",true );
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 第一次已付款记录列表总条数

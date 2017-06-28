@@ -8,10 +8,12 @@ import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.enums.CollectIntervalType;
 import com.bjike.goddess.dispatchcar.enums.CollectType;
 import com.bjike.goddess.dispatchcar.enums.FindType;
+import com.bjike.goddess.dispatchcar.excel.SonPermissionObject;
 import com.bjike.goddess.dispatchcar.service.DispatchCarInfoSer;
 import com.bjike.goddess.dispatchcar.to.ConditionTO;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
 import com.bjike.goddess.dispatchcar.to.FinanceCollectTO;
+import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -172,5 +174,15 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
             dto.getConditions().add(Restrict.between("dispatchDate",to.getDispatchDate()));
         }
         return BeanTransform.copyProperties(dispatchCarInfoSer.findByCis(dto), DispatchCarInfoBO.class);
+    }
+
+    @Override
+    public List<SonPermissionObject> financeSonPermission() throws SerException {
+        return dispatchCarInfoSer.financeSonPermission();
+    }
+
+    @Override
+    public Boolean financeGuidePermission(GuidePermissionTO to) throws SerException {
+        return dispatchCarInfoSer.financeGuidePermission(to);
     }
 }

@@ -22,7 +22,7 @@ public class CollectEmailVO {
      */
     private String id;
     /**
-     * 行业
+     * 汇总类型
      */
     private String type;
     /**

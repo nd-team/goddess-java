@@ -8,6 +8,7 @@ import com.bjike.goddess.contractware.dto.CarRentalAgreementDTO;
 import com.bjike.goddess.contractware.dto.HousingContractDTO;
 import com.bjike.goddess.contractware.entity.CarRentalAgreement;
 import com.bjike.goddess.contractware.to.CarRentalAgreementTO;
+import com.bjike.goddess.contractware.to.GuidePermissionTO;
 import com.bjike.goddess.contractware.to.HousingContractTO;
 
 import java.util.List;
@@ -22,7 +23,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CarRentalAgreementSer extends Ser<CarRentalAgreement, CarRentalAgreementDTO> {
-
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 租车协议列表总条数
      */

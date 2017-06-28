@@ -7,6 +7,7 @@ import com.bjike.goddess.bidding.entity.BiddingWebInfo;
 import com.bjike.goddess.bidding.enums.GuideAddrStatus;
 import com.bjike.goddess.bidding.to.BiddingWebInfoTO;
 import com.bjike.goddess.bidding.to.GuidePermissionTO;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -199,6 +200,7 @@ public class BiddingWebInfoSerImpl extends ServiceImpl<BiddingWebInfo, BiddingWe
     @Override
     public List<BiddingWebInfoBO> findListBiddingWebInfo(BiddingWebInfoDTO biddingWebInfoDTO) throws SerException {
         checkSeeIdentity();
+        biddingWebInfoDTO.getSorts().add("createTime=desc");
         List<BiddingWebInfo> biddingWebInfos = super.findByCis(biddingWebInfoDTO, true);
         List<BiddingWebInfoBO> biddingWebInfoBOS = BeanTransform.copyProperties(biddingWebInfos, BiddingWebInfoBO.class);
         return biddingWebInfoBOS;
@@ -258,6 +260,17 @@ public class BiddingWebInfoSerImpl extends ServiceImpl<BiddingWebInfo, BiddingWe
 
 
         return urlList;
+    }
+    @Override
+    public BiddingWebInfoBO getWebInfo(String webName) throws SerException {
+        if(StringUtils.isNotBlank(webName)){
+            BiddingWebInfoDTO dto = new BiddingWebInfoDTO();
+            dto.getConditions().add(Restrict.eq("webName",webName));
+            BiddingWebInfo biddingWebInfo = super.findOne(dto);
+            BiddingWebInfoBO bo = BeanTransform.copyProperties(biddingWebInfo,BiddingWebInfoBO.class);
+            return bo;
+        }
+        return null;
     }
 
 

@@ -35,6 +35,19 @@ public class AccountCollectVO implements Serializable {
      * 三级科目
      */
     private String thirdSubject;
+    /**
+     * 日期
+     */
+    private String date;
+    /**
+     * 借方金额
+     */
+    private Double debitAmount;
+
+    /**
+     * 贷方金额
+     */
+    private Double creditAmount;
 
     public String getArea() {
         return area;
@@ -82,5 +95,29 @@ public class AccountCollectVO implements Serializable {
 
     public void setThirdSubject(String thirdSubject) {
         this.thirdSubject = thirdSubject;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public Double getDebitAmount() {
+        return debitAmount;
+    }
+
+    public void setDebitAmount(Double debitAmount) {
+        this.debitAmount = debitAmount;
+    }
+
+    public Double getCreditAmount() {
+        return creditAmount;
+    }
+
+    public void setCreditAmount(Double creditAmount) {
+        this.creditAmount = creditAmount;
     }
 }

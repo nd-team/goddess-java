@@ -4,8 +4,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.competitormanage.bo.CompetitorBO;
 import com.bjike.goddess.competitormanage.dto.CompetitorDTO;
+import com.bjike.goddess.competitormanage.excel.SonPermissionObject;
 import com.bjike.goddess.competitormanage.service.CompetitorSer;
 import com.bjike.goddess.competitormanage.to.CompetitorTO;
+import com.bjike.goddess.competitormanage.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,5 +71,33 @@ public class CompetitorApiImpl implements CompetitorAPI {
     @Override
     public List<CompetitorBO> findByOrganization(String organization) throws SerException {
         return competitorSer.findByOrganization(organization);
+    }
+
+    public void leadExcel(List<CompetitorTO> toList) throws SerException {
+        competitorSer.leadExcel(toList);
+    }
+
+    @Override
+    public byte[] exportExcel(String startDate, String endDate) throws SerException {
+        return competitorSer.exportExcel(startDate,endDate);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return competitorSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO to) throws SerException {
+        return competitorSer.guidePermission(to);
+    }
+
+    @Override
+    public byte[] exportExcelModule() throws SerException {
+        return competitorSer.exportExcelModule();
+    }
+
+    public List<CompetitorBO> areas() throws SerException {
+        return competitorSer.areas();
     }
 }

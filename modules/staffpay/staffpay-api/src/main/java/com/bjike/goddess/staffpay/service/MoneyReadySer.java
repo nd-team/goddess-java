@@ -6,6 +6,7 @@ import com.bjike.goddess.staffpay.bo.CollectCompareBO;
 import com.bjike.goddess.staffpay.bo.MoneyReadyBO;
 import com.bjike.goddess.staffpay.dto.MoneyReadyDTO;
 import com.bjike.goddess.staffpay.entity.MoneyReady;
+import com.bjike.goddess.staffpay.to.GuidePermissionTO;
 import com.bjike.goddess.staffpay.to.MoneyReadyTO;
 
 import java.util.List;
@@ -20,6 +21,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface MoneyReadySer extends Ser<MoneyReady, MoneyReadyDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 资金准备审核表列表总条数
      */
