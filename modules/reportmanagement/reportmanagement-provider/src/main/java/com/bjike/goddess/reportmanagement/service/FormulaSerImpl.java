@@ -54,8 +54,9 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
         endMonth = e.getMonthValue();
         List<FormulaBO> boList = new ArrayList<FormulaBO>();
         if ((list != null) && (!list.isEmpty())) {
-            Double beginSum = 0.00;
-            Double endSum = 0.00;
+            double beginSum = 0;
+            double endSum = 0;
+            double currentSum=0;
             FormulaBO addBO = new FormulaBO();
             addBO.setProject("加：");
             boList.add(addBO);
@@ -79,13 +80,10 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
                         FormulaBO bo = BeanTransform.copyProperties(f, FormulaBO.class);
                         if (Form.DEBIT.equals(bo.getForm())) {
                             bo.setEnd(subjectCollectBO.getEndDebitAmount());
+                            bo.setCurrent(subjectCollectBO.getIssueDebitAmount());
                         }else if(Form.CREDIT.equals(bo.getForm())){
                             bo.setEnd(subjectCollectBO.getEndCreditAmount());
-                        }
-                        if ("1".equals(f.getType())) {     //1代表加
-                            endSum += bo.getEnd();
-                        } else if ("2".equals(f.getType())) {  //2代表减
-                            endSum = endSum - bo.getEnd();
+                            bo.setCurrent(subjectCollectBO.getIssueCreditAmount());
                         }
                         if (startMonth != 1) {
                             beginDTO.getConditions().add(Restrict.eq("months", startMonth - 1));
@@ -97,8 +95,12 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
                             }
                             if ("1".equals(f.getType())) {     //1代表加
                                 beginSum += bo.getBegin();
+                                endSum += bo.getEnd();
+                                currentSum+=bo.getCurrent();
                             } else if ("2".equals(f.getType())) {  //2代表减
                                 beginSum = beginSum - bo.getBegin();
+                                endSum = endSum - bo.getEnd();
+                                currentSum=currentSum-bo.getCurrent();
                             }
                         } else {
                             beginDTO.getConditions().add(Restrict.eq("months", 1));
@@ -110,10 +112,16 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
                             }
                             if ("1".equals(f.getType())) {     //1代表加
                                 beginSum += bo.getBegin();
+                                endSum += bo.getEnd();
+                                currentSum+=bo.getCurrent();
                             } else if ("2".equals(f.getType())) {  //2代表减
                                 beginSum = beginSum - bo.getBegin();
+                                endSum = endSum - bo.getEnd();
+                                currentSum=currentSum-bo.getCurrent();
                             }
                         }
+                        bo.setDigest(subjectCollectBO.getProjectName());
+                        bo.setTerm(startTime+"~"+endTime);
                         boList.add(bo);
                     } else {
                         Integer[] months = new Integer[]{1, endMonth};
@@ -122,8 +130,10 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
                         FormulaBO bo = BeanTransform.copyProperties(f, FormulaBO.class);
                         if (Form.DEBIT.equals(bo.getForm())) {
                             bo.setEnd(subjectCollectBO.getEndDebitAmount());
+                            bo.setCurrent(subjectCollectBO.getIssueDebitAmount());
                         }else if(Form.CREDIT.equals(bo.getForm())){
                             bo.setEnd(subjectCollectBO.getEndCreditAmount());
+                            bo.setCurrent(subjectCollectBO.getIssueCreditAmount());
                         }
                         beginDTO.getConditions().add(Restrict.eq("months", 1));
                         SubjectCollectBO beginBO = subjectCollectAPI.getSum(beginDTO);
@@ -133,12 +143,17 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
                             bo.setBegin(beginBO.getBeginningCreditAmount());
                         }
                         if ("1".equals(f.getType())) {     //1代表加
+                            currentSum+=bo.getCurrent();
                             beginSum += bo.getBegin();
                             endSum += bo.getEnd();
                         } else if ("2".equals(f.getType())) {  //2代表减
+                            currentSum=currentSum-bo.getCurrent();
                             beginSum = beginSum - bo.getBegin();
                             endSum = endSum - bo.getEnd();
                         }
+                        bo.setDigest(subjectCollectBO.getProjectName());
+                        bo.setTerm(startTime+"~"+endTime);
+                        boList.add(bo);
                     }
                 }
             }
@@ -146,25 +161,26 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
             bo.setProject("合计：");
             bo.setBegin(beginSum);
             bo.setEnd(endSum);
+            bo.setCurrent(currentSum);
             boList.add(bo);
             return boList;
         }
         return null;
     }
 
-//    @Override
-//    public FormulaBO add(FormulaTO to) throws SerException {
-//        Formula entity = BeanTransform.copyProperties(to, Formula.class, true);
-//        entity.setType("1");
-//        super.save(entity);
-//        return BeanTransform.copyProperties(entity, FormulaBO.class);
-//    }
+    @Override
+    public FormulaBO add(FormulaTO to) throws SerException {
+        Formula entity = BeanTransform.copyProperties(to, Formula.class, true);
+        entity.setType("1");
+        super.save(entity);
+        return BeanTransform.copyProperties(entity, FormulaBO.class);
+    }
 
-//    @Override
-//    public FormulaBO remove(FormulaTO to) throws SerException {
-//        Formula entity = BeanTransform.copyProperties(to, Formula.class, true);
-//        entity.setType("2");
-//        super.save(entity);
-//        return BeanTransform.copyProperties(entity, FormulaBO.class);
-//    }
+    @Override
+    public FormulaBO remove(FormulaTO to) throws SerException {
+        Formula entity = BeanTransform.copyProperties(to, Formula.class, true);
+        entity.setType("2");
+        super.save(entity);
+        return BeanTransform.copyProperties(entity, FormulaBO.class);
+    }
 }

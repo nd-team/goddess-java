@@ -6,7 +6,9 @@ import com.bjike.goddess.oilcardprepared.bo.MoneyReadyBO;
 import com.bjike.goddess.oilcardprepared.bo.MoneyReadyCountBO;
 import com.bjike.goddess.oilcardprepared.dto.MoneyReadyDTO;
 import com.bjike.goddess.oilcardprepared.entity.MoneyReady;
+import com.bjike.goddess.oilcardprepared.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardprepared.to.MoneyReadyTO;
+import com.bjike.goddess.oilcardprepared.vo.SonPermissionObject;
 
 import java.util.List;
 
@@ -20,6 +22,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface MoneyReadySer extends Ser<MoneyReady, MoneyReadyDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 添加
      *

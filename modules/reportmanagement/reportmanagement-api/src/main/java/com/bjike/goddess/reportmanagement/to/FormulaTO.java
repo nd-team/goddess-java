@@ -20,7 +20,7 @@ public class FormulaTO extends BaseTO {
     private String project;
 
     /**
-     * 公式添加的形式
+     * 公式方向
      */
     private Form form;
 

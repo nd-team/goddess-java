@@ -18,6 +18,15 @@
 
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.oilcardprepared.api.MoneyReadyAPI" ref="moneyReadyApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.oilcardprepared.api.WaitPayAPI" ref="waitPayApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.oilcardprepared.api.CusPermissionAPI" ref="cusPermissionApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.oilcardprepared.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"/>
 
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI" id="dispatchCarInfoApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.ArrangementAPI" id="arrangementApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
+
 </beans>

@@ -5,9 +5,12 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.deviceinventory.bo.InventoryBO;
 import com.bjike.goddess.deviceinventory.dto.InventoryDTO;
 import com.bjike.goddess.deviceinventory.entity.Inventory;
+import com.bjike.goddess.deviceinventory.to.GuidePermissionTO;
 import com.bjike.goddess.deviceinventory.to.InventoryTO;
+import com.bjike.goddess.deviceinventory.vo.SonPermissionObject;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 盘点业务接口
@@ -19,6 +22,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface InventorySer extends Ser<Inventory, InventoryDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 通过id查找
      *
@@ -51,18 +68,6 @@ public interface InventorySer extends Ser<Inventory, InventoryDTO> {
     }
 
     /**
-     * 导出
-     *
-     * @param startTime 开始时间
-     * @param endTime   结束时间
-     * @return class InventoryBO
-     * @throws SerException
-     */
-    default List<InventoryBO> export(String startTime, String endTime) throws SerException {
-        return null;
-    }
-
-    /**
      * 查询盘点总记录数
      *
      * @param dto 盘点dto
@@ -71,4 +76,22 @@ public interface InventorySer extends Ser<Inventory, InventoryDTO> {
     default Long count(InventoryDTO dto) throws SerException {
         return null;
     }
+
+    /**
+     * 根据时间段导出excel
+     *
+     * @param startTime
+     * @param endTime
+     * @return
+     * @throws SerException
+     */
+    byte[] export(String startTime, String endTime) throws SerException;
+
+    /**
+     * 查找所有入库编号
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allstockEncoding() throws SerException;
 }

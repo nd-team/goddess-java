@@ -55,8 +55,8 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
      * 根据物资状态和物资使用状态查询物资入库
      *
      * @param materialState 物资状态
-     * @param useState 物资使用状态
-     * @param dto 物资入库dto
+     * @param useState      物资使用状态
+     * @param dto           物资入库dto
      * @return
      * @throws SerException
      */
@@ -89,7 +89,7 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
      * 更新物资使用状态
      *
      * @param materialNum 物资编号集合
-     * @param useState 使用状态
+     * @param useState    使用状态
      * @throws SerException
      */
     @Override
@@ -244,10 +244,21 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
         MaterialInStockDTO dto = new MaterialInStockDTO();
         dto.getConditions().add(Restrict.eq("storageArea", bo.getStorageArea())); //存储地区
         dto.getConditions().add(Restrict.eq("projectGroup", bo.getProjectGroup()));//项目组
-        dto.getConditions().add(Restrict.eq("materialType",bo.getMaterialType())); //物资类型
+        dto.getConditions().add(Restrict.eq("materialType", bo.getMaterialType())); //物资类型
         dto.getConditions().add(Restrict.eq("materialName", bo.getMaterialName()));//物资名称
         List<MaterialInStock> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, MaterialInStockBO.class);
+    }
+
+    @Override
+    //cjh
+    public Set<String> allstockEncoding() throws SerException {
+        Set<String> set = new HashSet<String>();
+        List<MaterialInStock> list = super.findAll();
+        for (MaterialInStock m : list) {
+            set.add(m.getStockEncoding());
+        }
+        return set;
     }
 
 }

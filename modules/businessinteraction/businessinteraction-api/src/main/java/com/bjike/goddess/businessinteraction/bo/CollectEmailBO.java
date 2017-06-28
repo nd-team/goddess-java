@@ -48,10 +48,10 @@ public class CollectEmailBO extends BaseBO {
      */
     private CustomerSendUnit customerSendUnit;
 
-    /**
-     * 汇总间隔
-     */
-    private CustomerCollectUnit customerCollectUnit;
+//    /**
+//     * 汇总间隔
+//     */
+//    private CustomerCollectUnit customerCollectUnit;
 
     /**
      * 发送对象
@@ -144,13 +144,13 @@ public class CollectEmailBO extends BaseBO {
         this.customerSendUnit = customerSendUnit;
     }
 
-    public CustomerCollectUnit getCustomerCollectUnit() {
-        return customerCollectUnit;
-    }
-
-    public void setCustomerCollectUnit(CustomerCollectUnit customerCollectUnit) {
-        this.customerCollectUnit = customerCollectUnit;
-    }
+//    public CustomerCollectUnit getCustomerCollectUnit() {
+//        return customerCollectUnit;
+//    }
+//
+//    public void setCustomerCollectUnit(CustomerCollectUnit customerCollectUnit) {
+//        this.customerCollectUnit = customerCollectUnit;
+//    }
 
     public String getSendObject() {
         return sendObject;

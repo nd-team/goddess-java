@@ -5,7 +5,9 @@ import com.bjike.goddess.oilcardprepared.bo.MoneyReadyBO;
 import com.bjike.goddess.oilcardprepared.bo.MoneyReadyCountBO;
 import com.bjike.goddess.oilcardprepared.dto.MoneyReadyDTO;
 import com.bjike.goddess.oilcardprepared.service.MoneyReadySer;
+import com.bjike.goddess.oilcardprepared.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardprepared.to.MoneyReadyTO;
+import com.bjike.goddess.oilcardprepared.vo.SonPermissionObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,5 +60,15 @@ public class MoneyReadyApiImpl implements MoneyReadyAPI {
     @Override
     public Long countSum(MoneyReadyDTO dto) throws SerException {
         return moneyReadySer.countSum(dto);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return moneyReadySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return moneyReadySer.guidePermission(guidePermissionTO);
     }
 }

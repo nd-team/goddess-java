@@ -193,6 +193,12 @@ public class TalkDetailSerImpl extends ServiceImpl<TalkDetail, TalkDetailDTO> im
             case SEEFILE:
                 flag = guideSeeIdentity();
                 break;
+            case MESSAGE:
+                flag = guideSeeIdentity();
+                break;
+            case ADDMESSAGE:
+                flag = guideAddIdentity();
+                break;
             default:
                 flag = true;
                 break;

@@ -11,7 +11,7 @@ import java.io.IOException;
 
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.bjike.goddess.oilcardprepared.action","com.bjike.goddess.common.consumer"})
+@ComponentScan(basePackages = {"com.bjike.goddess.oilcardprepared.action","com.bjike.goddess.oilcardprepared.config","com.bjike.goddess.common.consumer"})
 @ImportResource("classpath:app.xml")
 @EnableAutoConfiguration(exclude = {ValidationAutoConfiguration.class})
 public class Application {

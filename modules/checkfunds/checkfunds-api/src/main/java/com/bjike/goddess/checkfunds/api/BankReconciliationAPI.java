@@ -5,6 +5,8 @@ import com.bjike.goddess.bankrecords.bo.BankRecordPageListBO;
 import com.bjike.goddess.checkfunds.bo.*;
 import com.bjike.goddess.checkfunds.dto.BankReconciliationDTO;
 import com.bjike.goddess.checkfunds.to.BankReconciliationTO;
+import com.bjike.goddess.checkfunds.to.GuidePermissionTO;
+import com.bjike.goddess.checkfunds.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -21,6 +23,20 @@ import java.util.Set;
  * @Copy: [ com.bjike ]
  */
 public interface BankReconciliationAPI {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 经办
      *

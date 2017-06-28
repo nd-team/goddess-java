@@ -5,6 +5,7 @@ import com.bjike.goddess.oilcardprepared.bo.ContrastBO;
 import com.bjike.goddess.oilcardprepared.bo.WaitPayBO;
 import com.bjike.goddess.oilcardprepared.dto.WaitPayDTO;
 import com.bjike.goddess.oilcardprepared.service.WaitPaySer;
+import com.bjike.goddess.oilcardprepared.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardprepared.to.WaitPayTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,5 +64,15 @@ public class WaitPayApiImpl implements WaitPayAPI {
     @Override
     public Long payCountSum(WaitPayDTO dto) throws SerException {
         return waitPaySer.payCountSum(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return waitPaySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return waitPaySer.guidePermission(guidePermissionTO);
     }
 }
