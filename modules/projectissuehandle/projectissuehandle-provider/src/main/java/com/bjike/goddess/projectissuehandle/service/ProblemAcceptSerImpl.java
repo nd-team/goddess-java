@@ -253,7 +253,7 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
             throw new SerException("id不能为空");
         }
         ProblemAccept problemAccept = super.findById(id);
-        return BeanTransform.copyProperties(problemAccept, ProblemAcceptBO.class, true);
+        return BeanTransform.copyProperties(problemAccept, ProblemAcceptBO.class);
     }
 
     @Override

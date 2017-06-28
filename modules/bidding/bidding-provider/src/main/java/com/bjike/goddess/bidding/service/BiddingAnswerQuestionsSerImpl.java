@@ -216,6 +216,7 @@ public class BiddingAnswerQuestionsSerImpl extends ServiceImpl<BiddingAnswerQues
     @Override
     public List<BiddingAnswerQuestionsBO> findListBiddingAnswerQuestions(BiddingAnswerQuestionsDTO biddingAnswerQuestionsDTO) throws SerException {
         checkSeeIdentity();
+        biddingAnswerQuestionsDTO.getSorts().add("createTime=desc");
         List<BiddingAnswerQuestions> biddingAnswerQuestionss = super.findByCis(biddingAnswerQuestionsDTO, true);
         List<BiddingAnswerQuestionsBO> biddingAnswerQuestionsBOS = BeanTransform.copyProperties(biddingAnswerQuestionss, BiddingAnswerQuestionsBO.class);
         return biddingAnswerQuestionsBOS;

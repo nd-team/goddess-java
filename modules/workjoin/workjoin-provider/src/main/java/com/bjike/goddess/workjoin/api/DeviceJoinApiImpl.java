@@ -57,15 +57,4 @@ public class DeviceJoinApiImpl implements DeviceJoinAPI {
 
     }
 
-    @Override
-    public void upload() throws SerException {
-        deviceJoinSer.upload();
-
-    }
-
-    @Override
-    public void download() throws SerException {
-        deviceJoinSer.download();
-    }
-
 }

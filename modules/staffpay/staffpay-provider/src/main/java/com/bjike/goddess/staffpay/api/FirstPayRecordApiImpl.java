@@ -8,6 +8,7 @@ import com.bjike.goddess.staffpay.dto.FirstPayRecordDTO;
 import com.bjike.goddess.staffpay.entity.FirstPayRecord;
 import com.bjike.goddess.staffpay.service.FirstPayRecordSer;
 import com.bjike.goddess.staffpay.to.FirstPayRecordTO;
+import com.bjike.goddess.staffpay.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +28,14 @@ import java.util.List;
 public class FirstPayRecordApiImpl implements FirstPayRecordAPI {
     @Autowired
     private FirstPayRecordSer firstPayRecordSer;
-
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return firstPayRecordSer.sonPermission();
+    }
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return firstPayRecordSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countFirstPayRecord(FirstPayRecordDTO firstPayRecordDTO) throws SerException {
         return firstPayRecordSer.countFirstPayRecord(firstPayRecordDTO);

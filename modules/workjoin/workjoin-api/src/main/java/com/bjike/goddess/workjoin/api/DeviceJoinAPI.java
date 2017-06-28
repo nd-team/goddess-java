@@ -76,21 +76,5 @@ public interface DeviceJoinAPI {
 
     }
 
-    /**
-     * 上传
-     */
-    default void upload() throws SerException {
-        return;
-
-    }
-
-    /**
-     * 下载
-     */
-    default void download() throws SerException {
-        return;
-
-    }
-
 
 }

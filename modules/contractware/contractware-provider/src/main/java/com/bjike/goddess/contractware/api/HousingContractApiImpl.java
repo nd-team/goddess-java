@@ -6,6 +6,7 @@ import com.bjike.goddess.contractware.bo.HousingContractBO;
 import com.bjike.goddess.contractware.dto.HousingContractDTO;
 import com.bjike.goddess.contractware.entity.HousingContract;
 import com.bjike.goddess.contractware.service.HousingContractSer;
+import com.bjike.goddess.contractware.to.GuidePermissionTO;
 import com.bjike.goddess.contractware.to.HousingContractTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,14 @@ public class HousingContractApiImpl implements HousingContractAPI {
 
     @Autowired
     private HousingContractSer housingContractSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return housingContractSer.sonPermission();
+    }
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return housingContractSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countHousingContract(HousingContractDTO housingContractDTO) throws SerException {
         return housingContractSer.countHousingContract(housingContractDTO);
