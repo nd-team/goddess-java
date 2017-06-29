@@ -11,7 +11,7 @@ import java.io.IOException;
 
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.bjike.goddess.outcarfare.action", "com.bjike.goddess.dispatchcar.enums", "com.bjike.goddess.common.consumer"})
+@ComponentScan(basePackages = {"com.bjike.goddess.outcarfare.action","com.bjike.goddess.outcarfare.config", "com.bjike.goddess.dispatchcar.enums", "com.bjike.goddess.common.consumer"})
 @ImportResource("classpath:app.xml")
 @EnableAutoConfiguration(exclude = {ValidationAutoConfiguration.class})
 public class Application {

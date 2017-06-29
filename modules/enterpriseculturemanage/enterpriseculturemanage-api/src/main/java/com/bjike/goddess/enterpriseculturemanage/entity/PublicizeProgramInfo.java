@@ -37,7 +37,7 @@ public class PublicizeProgramInfo extends BaseEntity {
     /**
      * 宣传形式
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '宣传形式'")
+    @Column(name = "way", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '宣传形式'")
     private PublicizeWay way;
 
     /**
@@ -61,7 +61,7 @@ public class PublicizeProgramInfo extends BaseEntity {
     /**
      * 审核结果
      */
-    @Column(name = "", columnDefinition = "VARCHAR(255)   COMMENT '审核结果'")
+    @Column(name = "auditResult", columnDefinition = "TINYINT(2)   COMMENT '审核结果'")
     private AuditResult auditResult;
 
     /**

@@ -1,6 +1,7 @@
 package com.bjike.goddess.allmeeting.api;
 
 import com.bjike.goddess.allmeeting.bo.AllMeetingOrganizeBO;
+import com.bjike.goddess.allmeeting.bo.MeetingLayBO;
 import com.bjike.goddess.allmeeting.dto.AllMeetingOrganizeDTO;
 import com.bjike.goddess.allmeeting.service.AllMeetingOrganizeSer;
 import com.bjike.goddess.allmeeting.to.AllMeetingOrganizeTO;
@@ -62,4 +63,5 @@ public class AllMeetingOrganizeApiImpl implements AllMeetingOrganizeAPI {
     public List<AllMeetingOrganizeBO> pageList(AllMeetingOrganizeDTO dto) throws SerException {
         return allMeetingOrganizeSer.pageList(dto);
     }
+
 }

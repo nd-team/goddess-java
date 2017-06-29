@@ -2,10 +2,7 @@ package com.bjike.goddess.allmeeting.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 
 
 /**
@@ -18,14 +15,15 @@ import javax.persistence.UniqueConstraint;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "allmeeting_meetinglay", uniqueConstraints = {@UniqueConstraint(columnNames = {"topicId", "name"})})
+@Table(name = "allmeeting_meetinglay", uniqueConstraints = {@UniqueConstraint(columnNames = {"meetingTopic_id", "name"})})
 public class MeetingLay extends BaseEntity {
 
     /**
-     * 议题Id
+     * 议题
      */
-    @Column(name = "topicId", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '议题Id'")
-    private String topicId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "meetingTopic_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '议题'")
+    private MeetingTopic meetingTopic;
 
     /**
      * 层面名称
@@ -40,12 +38,12 @@ public class MeetingLay extends BaseEntity {
     private String position;
 
 
-    public String getTopicId() {
-        return topicId;
+    public MeetingTopic getMeetingTopic() {
+        return meetingTopic;
     }
 
-    public void setTopicId(String topicId) {
-        this.topicId = topicId;
+    public void setMeetingTopic(MeetingTopic meetingTopic) {
+        this.meetingTopic = meetingTopic;
     }
 
     public String getName() {

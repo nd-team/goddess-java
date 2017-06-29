@@ -24,4 +24,6 @@ public interface DiscussionVoteSer extends Ser<DiscussionVote, DiscussionVoteDTO
     DiscussionVoteBO insertModel(DiscussionVoteTO to) throws SerException;
 
     List<SummaryVoteBO> listBySummary(String summaryId) throws SerException;
+
+    List<SummaryVoteBO> listByConSummary(String summaryId) throws SerException;
 }

@@ -1,5 +1,6 @@
 package com.bjike.goddess.allmeeting.service;
 
+import com.bjike.goddess.allmeeting.dto.MeetingLayDTO;
 import com.bjike.goddess.allmeeting.entity.MeetingLay;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -90,9 +92,20 @@ public class MeetingTopicSerImpl extends ServiceImpl<MeetingTopic, MeetingTopicD
     public MeetingTopicBO findByLay(String layId) throws SerException {
         MeetingLay lay = meetingLaySer.findById(layId);
         if(lay!=null){
-            return BeanTransform.copyProperties(super.findById(lay.getTopicId()),MeetingTopicBO.class);
+            return BeanTransform.copyProperties(super.findById(lay.getMeetingTopic().getId()),MeetingTopicBO.class);
         }else{
             throw new SerException("非法层面id，层面对象不存在!");
+        }
+    }
+
+    @Override
+    public void delete(String id) throws SerException {
+        MeetingLayDTO layDTO = new MeetingLayDTO();
+        List<MeetingLay> layList = meetingLaySer.findByCis(layDTO);
+        if(CollectionUtils.isEmpty(layList)){
+            super.remove(id);
+        }else{
+            throw new SerException("该会议主题存在层面关联,请确保会议主题无数据关联!");
         }
     }
 }

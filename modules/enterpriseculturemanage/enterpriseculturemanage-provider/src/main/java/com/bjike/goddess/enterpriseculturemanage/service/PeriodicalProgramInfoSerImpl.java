@@ -5,7 +5,6 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.enterpriseculturemanage.bo.PeriodicalProgramInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.dto.PeriodicalProgramInfoDTO;
-import com.bjike.goddess.enterpriseculturemanage.entity.EnterpriseCultureInfo;
 import com.bjike.goddess.enterpriseculturemanage.entity.PeriodicalProgramInfo;
 import com.bjike.goddess.enterpriseculturemanage.enums.AuditResult;
 import com.bjike.goddess.enterpriseculturemanage.to.PeriodicalProgramInfoTO;
@@ -30,8 +29,6 @@ import java.util.List;
 @CacheConfig(cacheNames = "enterpriseculturemanageSerCache")
 @Service
 public class PeriodicalProgramInfoSerImpl extends ServiceImpl<PeriodicalProgramInfo, PeriodicalProgramInfoDTO> implements PeriodicalProgramInfoSer {
-    @Autowired
-    private EnterpriseCultureInfoSer enterpriseCultureInfoSer;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
@@ -53,7 +50,11 @@ public class PeriodicalProgramInfoSerImpl extends ServiceImpl<PeriodicalProgramI
 
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public void audit(PeriodicalProgramInfoTO to) throws SerException {
+    public void audit(String id ,AuditResult auditResult,String  auditSuggestion) throws SerException {
+        PeriodicalProgramInfoTO to = new PeriodicalProgramInfoTO();
+        to.setId(id);
+        to.setAuditResult(auditResult);
+        to.setAuditSuggestion(auditSuggestion);
         updateModule(to);
     }
 
@@ -75,16 +76,6 @@ public class PeriodicalProgramInfoSerImpl extends ServiceImpl<PeriodicalProgramI
         if (!StringUtils.isEmpty(to.getId())) {
             PeriodicalProgramInfo model = super.findById(to.getId());
             if (model != null) {
-                if(!model.getInfoId().equals(to.getInfoId())){
-                    //设置企业文化信息关联
-                    EnterpriseCultureInfo oldInfo = enterpriseCultureInfoSer.findById(model.getInfoId());
-                    oldInfo.setPublicizeId(null);
-                    enterpriseCultureInfoSer.update(oldInfo);
-
-                    EnterpriseCultureInfo newInfo = enterpriseCultureInfoSer.findById(to.getInfoId());
-                    newInfo.setPublicizeId(model.getId());
-                    enterpriseCultureInfoSer.update(newInfo);
-                }
                 BeanTransform.copyProperties(to, model, true);
                 model.setModifyTime(LocalDateTime.now());
                 super.update(model);

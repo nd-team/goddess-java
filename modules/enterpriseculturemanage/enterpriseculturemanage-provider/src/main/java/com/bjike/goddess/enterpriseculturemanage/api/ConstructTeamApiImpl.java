@@ -1,6 +1,7 @@
 package com.bjike.goddess.enterpriseculturemanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.enterpriseculturemanage.bo.ConstructTeamBO;
 import com.bjike.goddess.enterpriseculturemanage.dto.ConstructTeamDTO;
 import com.bjike.goddess.enterpriseculturemanage.service.ConstructTeamSer;
@@ -43,5 +44,15 @@ public class ConstructTeamApiImpl implements ConstructTeamAPI {
     @Override
     public List<ConstructTeamBO> pageList(ConstructTeamDTO dto) throws SerException {
         return constructTeamSer.pageList(dto);
+    }
+
+    @Override
+    public ConstructTeamBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(constructTeamSer.findById(id),ConstructTeamBO.class);
+    }
+
+    @Override
+    public Long count(ConstructTeamDTO dto) throws SerException {
+        return constructTeamSer.count(dto);
     }
 }

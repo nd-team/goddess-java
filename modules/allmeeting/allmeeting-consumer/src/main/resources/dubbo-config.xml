@@ -53,4 +53,12 @@
     <!-- userAPI -->
     <dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
+    <!-- userAPI -->
+    <dubbo:reference interface="com.bjike.goddess.allmeeting.api.ConcisePermissionAPI" id="concisePermissionApiImpl"/>
+
+   <!-- userAPI -->
+    <dubbo:reference interface="com.bjike.goddess.allmeeting.api.MultiPermissionAPI" id="multiPermissionApiImpl"/>
+
+
+
 </beans>

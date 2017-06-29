@@ -1,9 +1,9 @@
 package com.bjike.goddess.allmeeting.api;
 
-import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.allmeeting.bo.MeetingTopicBO;
 import com.bjike.goddess.allmeeting.dto.MeetingTopicDTO;
 import com.bjike.goddess.allmeeting.to.MeetingTopicTO;
+import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
 
@@ -64,4 +64,6 @@ public interface MeetingTopicAPI {
      * @return 议题信息
      */
     MeetingTopicBO findById(String id) throws SerException;
+
+    List<MeetingTopicBO> topics() throws SerException;
 }

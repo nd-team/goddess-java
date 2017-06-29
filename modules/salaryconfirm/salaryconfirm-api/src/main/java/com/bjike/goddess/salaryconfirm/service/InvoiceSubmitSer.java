@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.salaryconfirm.bo.InvoiceSubmitBO;
 import com.bjike.goddess.salaryconfirm.entity.InvoiceSubmit;
 import com.bjike.goddess.salaryconfirm.dto.InvoiceSubmitDTO;
+import com.bjike.goddess.salaryconfirm.excel.SonPermissionObject;
+import com.bjike.goddess.salaryconfirm.to.GuidePermissionTO;
 import com.bjike.goddess.salaryconfirm.to.InvoiceSubmitTO;
 
 import java.util.List;
@@ -45,4 +47,8 @@ public interface InvoiceSubmitSer extends Ser<InvoiceSubmit, InvoiceSubmitDTO> {
     List<InvoiceSubmitBO> pageList(InvoiceSubmitDTO dto) throws SerException;
 
     List<InvoiceSubmitBO> findByCondition(String employeeNumber, Integer year, Integer month) throws SerException;
+
+    List<SonPermissionObject> sonPermission() throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO to) throws SerException;
 }

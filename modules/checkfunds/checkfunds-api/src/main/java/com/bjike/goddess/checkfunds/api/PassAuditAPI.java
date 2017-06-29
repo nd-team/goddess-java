@@ -3,6 +3,7 @@ package com.bjike.goddess.checkfunds.api;
 
 import com.bjike.goddess.checkfunds.bo.PassAuditBO;
 import com.bjike.goddess.checkfunds.dto.PassAuditDTO;
+import com.bjike.goddess.checkfunds.to.GuidePermissionTO;
 import com.bjike.goddess.checkfunds.to.PassAuditTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -18,6 +19,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface PassAuditAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 添加
      *

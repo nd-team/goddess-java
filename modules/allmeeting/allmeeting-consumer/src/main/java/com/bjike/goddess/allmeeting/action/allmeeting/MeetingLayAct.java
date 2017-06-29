@@ -1,9 +1,11 @@
 package com.bjike.goddess.allmeeting.action.allmeeting;
 
 import com.bjike.goddess.allmeeting.api.MeetingLayAPI;
+import com.bjike.goddess.allmeeting.api.MeetingTopicAPI;
 import com.bjike.goddess.allmeeting.dto.MeetingLayDTO;
 import com.bjike.goddess.allmeeting.to.MeetingLayTO;
 import com.bjike.goddess.allmeeting.vo.MeetingLayVO;
+import com.bjike.goddess.allmeeting.vo.MeetingTopicVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -30,11 +32,14 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-    @RequestMapping("meetinglay")
+@RequestMapping("lay")
 public class MeetingLayAct {
 
     @Autowired
     private MeetingLayAPI meetingLayAPI;
+    @Autowired
+    private MeetingTopicAPI meetingTopicAPI;
+
 
     /**
      * 新增会议层面
@@ -101,6 +106,22 @@ public class MeetingLayAct {
         try {
             List<MeetingLayVO> voList = BeanTransform.copyProperties(meetingLayAPI.pageList(dto), MeetingLayVO.class);
             return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 会议议题列表
+     *
+     * @return class MeetingLayVO
+     * @version v1
+     */
+    @GetMapping("v1/topics")
+    public Result topics(HttpServletRequest request) throws ActException {
+        try {
+            List<MeetingTopicVO> vo = BeanTransform.copyProperties(meetingTopicAPI.topics(), MeetingTopicVO.class, request);
+            return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -3,6 +3,8 @@ package com.bjike.goddess.salaryconfirm.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.salaryconfirm.bo.InvoiceSubmitBO;
 import com.bjike.goddess.salaryconfirm.dto.InvoiceSubmitDTO;
+import com.bjike.goddess.salaryconfirm.excel.SonPermissionObject;
+import com.bjike.goddess.salaryconfirm.to.GuidePermissionTO;
 import com.bjike.goddess.salaryconfirm.to.InvoiceSubmitTO;
 
 import java.util.List;
@@ -75,4 +77,8 @@ public interface InvoiceSubmitAPI {
      * @throws SerException
      */
     Long count(InvoiceSubmitDTO dto) throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
+    List<SonPermissionObject> sonPermission() throws SerException;
 }

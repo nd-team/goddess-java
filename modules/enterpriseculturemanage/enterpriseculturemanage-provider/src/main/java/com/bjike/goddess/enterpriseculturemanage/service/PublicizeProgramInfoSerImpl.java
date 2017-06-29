@@ -31,17 +31,12 @@ import java.util.List;
 @Service
 public class PublicizeProgramInfoSerImpl extends ServiceImpl<PublicizeProgramInfo, PublicizeProgramInfoDTO> implements PublicizeProgramInfoSer {
 
-    @Autowired
-    private EnterpriseCultureInfoSer enterpriseCultureInfoSer;
-
     @Override
     @Transactional(rollbackFor = SerException.class)
     public PublicizeProgramInfoBO insertModel(PublicizeProgramInfoTO to) throws SerException {
         PublicizeProgramInfo model = BeanTransform.copyProperties(to, PublicizeProgramInfo.class);
         model.setAuditResult(AuditResult.NOTDEAL);
         super.save(model);
-        EnterpriseCultureInfo cultureInfo = enterpriseCultureInfoSer.findById(to.getInfoId());
-        cultureInfo.setPublicizeId(model.getId());
         to.setId(model.getId());
         return BeanTransform.copyProperties(to, PublicizeProgramInfoBO.class);
     }
@@ -77,16 +72,7 @@ public class PublicizeProgramInfoSerImpl extends ServiceImpl<PublicizeProgramInf
         if (!StringUtils.isEmpty(to.getId())) {
             PublicizeProgramInfo model = super.findById(to.getId());
             if (model != null) {
-                if(!model.getInfoId().equals(to.getInfoId())){
-                    //设置企业文化信息关联
-                    EnterpriseCultureInfo oldInfo = enterpriseCultureInfoSer.findById(model.getInfoId());
-                    oldInfo.setPublicizeId(null);
-                    enterpriseCultureInfoSer.update(oldInfo);
 
-                    EnterpriseCultureInfo newInfo = enterpriseCultureInfoSer.findById(to.getInfoId());
-                    newInfo.setPublicizeId(model.getId());
-                    enterpriseCultureInfoSer.update(newInfo);
-                }
                 BeanTransform.copyProperties(to, model, true);
                 model.setModifyTime(LocalDateTime.now());
                 super.update(model);

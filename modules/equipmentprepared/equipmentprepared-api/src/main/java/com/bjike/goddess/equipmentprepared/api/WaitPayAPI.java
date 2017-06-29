@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.equipmentprepared.bo.PayCountBO;
 import com.bjike.goddess.equipmentprepared.bo.WaitPayBO;
 import com.bjike.goddess.equipmentprepared.dto.WaitPayDTO;
+import com.bjike.goddess.equipmentprepared.to.GuidePermissionTO;
 import com.bjike.goddess.equipmentprepared.to.WaitPayTO;
 
 import java.util.List;
@@ -18,6 +19,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface WaitPayAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 等待付款列表
@@ -81,18 +95,6 @@ public interface WaitPayAPI {
     }
 
     /**
-     * 导出数据
-     *
-     * @param year  年份
-     * @param month 月份
-     * @return class WaitPayBO
-     * @throws SerException
-     */
-    default List<WaitPayBO> export(Integer year, Integer month) throws SerException {
-        return null;
-    }
-
-    /**
      * 通过id查找
      *
      * @param id 等待付款id
@@ -122,4 +124,14 @@ public interface WaitPayAPI {
     default Long payCountSum(WaitPayDTO dto) throws SerException {
         return null;
     }
+
+    /**
+     * 根据年份和月份导出excel
+     *
+     * @param year  年份
+     * @param month 月份
+     * @return
+     * @throws SerException
+     */
+    byte[] export(Integer year, Integer month) throws SerException;
 }

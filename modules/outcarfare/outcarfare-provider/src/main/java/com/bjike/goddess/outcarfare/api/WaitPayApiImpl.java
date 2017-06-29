@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.outcarfare.bo.*;
 import com.bjike.goddess.outcarfare.dto.WaitPayDTO;
 import com.bjike.goddess.outcarfare.service.WaitPaySer;
+import com.bjike.goddess.outcarfare.to.GuidePermissionTO;
 import com.bjike.goddess.outcarfare.to.WaitPayTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -77,5 +78,15 @@ public class WaitPayApiImpl implements WaitPayAPI {
     @Override
     public Long payCountSum(WaitPayDTO dto) throws SerException {
         return waitPaySer.payCountSum(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return waitPaySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return waitPaySer.guidePermission(guidePermissionTO);
     }
 }

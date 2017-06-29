@@ -20,9 +20,17 @@
 	<dubbo:service validation="true" interface="com.bjike.goddess.checkfunds.api.NotPassAuditAPI" ref="notPassAuditApiImpl"/>
 	<dubbo:service validation="true" interface="com.bjike.goddess.checkfunds.api.PassAuditAPI" ref="passAuditApiImpl"/>
 	<dubbo:service validation="true" interface="com.bjike.goddess.checkfunds.api.RemainAdjustAPI" ref="remainAdjustApiImpl"/>
+	<dubbo:service validation="true" interface="com.bjike.goddess.checkfunds.api.CusPermissionAPI" ref="cusPermissionApiImpl"/>
+	<dubbo:service validation="true" interface="com.bjike.goddess.checkfunds.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"/>
 
 	<dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.bankrecords.api.BankRecordAPI" id="bankRecordApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.fundrecords.api.FundRecordAPI" id="fundRecordApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.financeinit.api.AccountAPI" id="accountApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.ArrangementAPI" id="arrangementApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
+
 </beans>

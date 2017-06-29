@@ -5,7 +5,9 @@ import com.bjike.goddess.outcarfare.bo.MoneyReadyBO;
 import com.bjike.goddess.outcarfare.bo.MoneyReadyCountBO;
 import com.bjike.goddess.outcarfare.dto.MoneyReadyDTO;
 import com.bjike.goddess.outcarfare.service.MoneyReadySer;
+import com.bjike.goddess.outcarfare.to.GuidePermissionTO;
 import com.bjike.goddess.outcarfare.to.MoneyReadyTO;
+import com.bjike.goddess.outcarfare.vo.SonPermissionObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,5 +55,15 @@ public class MoneyReadyApiImpl implements MoneyReadyAPI {
     @Override
     public List<MoneyReadyCountBO> count(Integer month) throws SerException {
         return moneyReadySer.count(month);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return moneyReadySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return moneyReadySer.guidePermission(guidePermissionTO);
     }
 }

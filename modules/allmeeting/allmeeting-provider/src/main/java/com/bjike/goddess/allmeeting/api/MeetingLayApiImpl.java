@@ -38,7 +38,7 @@ public class MeetingLayApiImpl implements MeetingLayAPI {
 
     @Override
     public void delete(String id) throws SerException {
-        meetingLaySer.remove(id);
+        meetingLaySer.delete(id);
     }
 
     @Override
@@ -54,5 +54,10 @@ public class MeetingLayApiImpl implements MeetingLayAPI {
     @Override
     public MeetingLayBO findById(String id) throws SerException {
         return BeanTransform.copyProperties(meetingLaySer.findById(id), MeetingLayBO.class);
+    }
+
+    @Override
+    public List<MeetingLayBO> lays() throws SerException {
+        return meetingLaySer.lays();
     }
 }

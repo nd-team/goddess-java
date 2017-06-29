@@ -4,6 +4,7 @@ import com.bjike.goddess.checkfunds.bo.PassAuditBO;
 import com.bjike.goddess.checkfunds.dto.PassAuditDTO;
 import com.bjike.goddess.checkfunds.dto.RemainAdjustDTO;
 import com.bjike.goddess.checkfunds.entity.PassAudit;
+import com.bjike.goddess.checkfunds.to.GuidePermissionTO;
 import com.bjike.goddess.checkfunds.to.PassAuditTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -20,6 +21,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface PassAuditSer extends Ser<PassAudit, PassAuditDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 添加
      *

@@ -1,11 +1,11 @@
 package com.bjike.goddess.allmeeting.api;
 
-import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.allmeeting.bo.MeetingTopicBO;
 import com.bjike.goddess.allmeeting.dto.MeetingTopicDTO;
 import com.bjike.goddess.allmeeting.service.MeetingTopicSer;
 import com.bjike.goddess.allmeeting.to.MeetingTopicTO;
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +38,7 @@ public class MeetingTopicApiImpl implements MeetingTopicAPI {
 
     @Override
     public void delete(String id) throws SerException {
-        meetingTopicSer.remove(id);
+        meetingTopicSer.delete(id);
     }
 
     @Override
@@ -53,6 +53,11 @@ public class MeetingTopicApiImpl implements MeetingTopicAPI {
 
     @Override
     public MeetingTopicBO findById(String id) throws SerException {
-        return BeanTransform.copyProperties(meetingTopicSer.findById(id),MeetingTopicBO.class);
+        return BeanTransform.copyProperties(meetingTopicSer.findById(id), MeetingTopicBO.class);
+    }
+
+    @Override
+    public List<MeetingTopicBO> topics() throws SerException {
+        return BeanTransform.copyProperties(meetingTopicSer.findAll(), MeetingTopicBO.class);
     }
 }

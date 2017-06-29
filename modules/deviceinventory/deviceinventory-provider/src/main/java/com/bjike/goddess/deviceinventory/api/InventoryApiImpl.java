@@ -4,11 +4,14 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.deviceinventory.bo.InventoryBO;
 import com.bjike.goddess.deviceinventory.dto.InventoryDTO;
 import com.bjike.goddess.deviceinventory.service.InventorySer;
+import com.bjike.goddess.deviceinventory.to.GuidePermissionTO;
 import com.bjike.goddess.deviceinventory.to.InventoryTO;
+import com.bjike.goddess.deviceinventory.vo.SonPermissionObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 盘点业务接口实现
@@ -40,12 +43,27 @@ public class InventoryApiImpl implements InventoryAPI {
     }
 
     @Override
-    public List<InventoryBO> export(String startTime, String endTime) throws SerException {
+    public byte[] export(String startTime, String endTime) throws SerException {
         return inventorySer.export(startTime, endTime);
     }
 
     @Override
     public Long count(InventoryDTO dto) throws SerException {
         return inventorySer.count(dto);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return inventorySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return inventorySer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public Set<String> allstockEncoding() throws SerException {
+        return inventorySer.allstockEncoding();
     }
 }

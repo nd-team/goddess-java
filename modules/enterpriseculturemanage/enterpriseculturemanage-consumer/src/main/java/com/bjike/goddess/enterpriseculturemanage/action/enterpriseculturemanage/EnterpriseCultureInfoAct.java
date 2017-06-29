@@ -1,5 +1,7 @@
 package com.bjike.goddess.enterpriseculturemanage.action.enterpriseculturemanage;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -7,12 +9,17 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.enterpriseculturemanage.api.EnterpriseCultureInfoAPI;
 import com.bjike.goddess.enterpriseculturemanage.dto.EnterpriseCultureInfoDTO;
+import com.bjike.goddess.enterpriseculturemanage.to.EnterpriseCultureInfoEditTO;
 import com.bjike.goddess.enterpriseculturemanage.to.EnterpriseCultureInfoTO;
 import com.bjike.goddess.enterpriseculturemanage.vo.EnterpriseCultureInfoVO;
+import com.bjike.goddess.enterpriseculturemanage.vo.PeriodicalProgramInfoVO;
+import com.bjike.goddess.enterpriseculturemanage.vo.PublicizeProgramInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -31,14 +38,49 @@ public class EnterpriseCultureInfoAct {
     @Autowired
     private EnterpriseCultureInfoAPI enterpriseCultureInfoAPI;
 
+
+    /**
+     * 根据id查询企业文化信息
+     *
+     * @param id 企业文化信息id
+     * @return class EnterpriseCultureInfoVO
+     * @version v1
+     */
+    @GetMapping("v1/find/{id}")
+    public Result find(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            EnterpriseCultureInfoVO vo = BeanTransform.copyProperties(enterpriseCultureInfoAPI.findById(id), EnterpriseCultureInfoVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(EnterpriseCultureInfoDTO dto) throws ActException {
+        try {
+            Long count = enterpriseCultureInfoAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
     /**
      * 新增企业文化信息
      *
      * @param to 企业文化信息
+     * @return class EnterpriseCultureInfoVO
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(EnterpriseCultureInfoTO to, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated({ADD.class}) EnterpriseCultureInfoTO to, BindingResult bindingResult) throws ActException {
         try {
             EnterpriseCultureInfoVO vo = BeanTransform.copyProperties(enterpriseCultureInfoAPI.addModel(to), EnterpriseCultureInfoVO.class);
             return ActResult.initialize(vo);
@@ -51,10 +93,11 @@ public class EnterpriseCultureInfoAct {
      * 编辑企业文化信息
      *
      * @param to 企业文化信息
+     * @return class EnterpriseCultureInfoVO
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result edit(EnterpriseCultureInfoTO to, BindingResult bindingResult) throws ActException {
+    public Result edit(@Validated({EDIT.class}) EnterpriseCultureInfoEditTO to, BindingResult bindingResult) throws ActException {
         try {
             EnterpriseCultureInfoVO vo = BeanTransform.copyProperties(enterpriseCultureInfoAPI.editModel(to), EnterpriseCultureInfoVO.class);
             return ActResult.initialize(vo);
@@ -80,12 +123,13 @@ public class EnterpriseCultureInfoAct {
     }
 
     /**
-     * 企业文化信息分页查询
+     * 列表
      *
      * @param dto 分页条件
+     * @return class EnterpriseCultureInfoVO
      * @version v1
      */
-    @GetMapping("v1/pageList")
+    @GetMapping("v1/list")
     public Result pageList(EnterpriseCultureInfoDTO dto) throws ActException {
         try {
             List<EnterpriseCultureInfoVO> voList = BeanTransform.copyProperties(enterpriseCultureInfoAPI.pageList(dto), EnterpriseCultureInfoVO.class);
@@ -100,14 +144,15 @@ public class EnterpriseCultureInfoAct {
      * 根据企业文化信息id查询宣传方案
      *
      * @param id 企业文化信息id
+     * @return class PublicizeProgramInfoVO
      * @version v1
      */
 
-    @GetMapping("v1/findPublicize")
-    public Result findPublicize(String id) throws ActException {
+    @GetMapping("v1/publicize/{id}")
+    public Result findPublicize(@PathVariable String id) throws ActException {
         try {
-            List<EnterpriseCultureInfoVO> voList = BeanTransform.copyProperties(enterpriseCultureInfoAPI.findPublicize(id), EnterpriseCultureInfoVO.class);
-            return ActResult.initialize(voList);
+            PublicizeProgramInfoVO vo = BeanTransform.copyProperties(enterpriseCultureInfoAPI.findPublicize(id), PublicizeProgramInfoVO.class);
+            return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -117,13 +162,14 @@ public class EnterpriseCultureInfoAct {
      * 根据企业文化信息id查询刊物方案
      *
      * @param id 企业文化信息id
+     * @return class EnterpriseCultureInfoVO
      * @version v1
      */
-    @GetMapping("v1/findPeriodical")
-    public Result findPeriodical(String id) throws ActException {
+    @GetMapping("v1/periodical/{id}")
+    public Result findPeriodical(@PathVariable String id) throws ActException {
         try {
-            List<EnterpriseCultureInfoVO> voList = BeanTransform.copyProperties(enterpriseCultureInfoAPI.findPeriodical(id), EnterpriseCultureInfoVO.class);
-            return ActResult.initialize(voList);
+            PeriodicalProgramInfoVO vo = BeanTransform.copyProperties(enterpriseCultureInfoAPI.findPeriodical(id), PeriodicalProgramInfoVO.class);
+            return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
