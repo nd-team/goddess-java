@@ -4,12 +4,14 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.oilcardprepared.api.WaitPayAPI;
 import com.bjike.goddess.oilcardprepared.bo.ContrastBO;
 import com.bjike.goddess.oilcardprepared.bo.WaitPayBO;
 import com.bjike.goddess.oilcardprepared.dto.WaitPayDTO;
+import com.bjike.goddess.oilcardprepared.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardprepared.to.WaitPayTO;
 import com.bjike.goddess.oilcardprepared.vo.ContrastVO;
 import com.bjike.goddess.oilcardprepared.vo.WaitPayVO;
@@ -37,13 +39,37 @@ public class WaitPayAct {
     private WaitPayAPI waitPayAPI;
 
     /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = waitPayAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 确认是否付款
      *
      * @param to 等待付款信息
      * @throws ActException
      * @version v1
      */
-    @PatchMapping("v1/confirmPay")
+    @LoginAuth
+    @PutMapping("v1/confirmPay")
     public Result confirmPay(@Validated({EDIT.class}) WaitPayTO to, BindingResult result) throws ActException {
         try {
             waitPayAPI.confirmPay(to);

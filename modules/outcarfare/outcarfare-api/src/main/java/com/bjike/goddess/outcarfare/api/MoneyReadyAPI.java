@@ -4,7 +4,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.outcarfare.bo.MoneyReadyBO;
 import com.bjike.goddess.outcarfare.bo.MoneyReadyCountBO;
 import com.bjike.goddess.outcarfare.dto.MoneyReadyDTO;
+import com.bjike.goddess.outcarfare.to.GuidePermissionTO;
 import com.bjike.goddess.outcarfare.to.MoneyReadyTO;
+import com.bjike.goddess.outcarfare.vo.SonPermissionObject;
 
 import java.util.List;
 
@@ -18,6 +20,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface MoneyReadyAPI {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 添加
      *

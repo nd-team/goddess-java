@@ -3,6 +3,7 @@ package com.bjike.goddess.checkfunds.service;
 import com.bjike.goddess.checkfunds.bo.RemainAdjustBO;
 import com.bjike.goddess.checkfunds.dto.RemainAdjustDTO;
 import com.bjike.goddess.checkfunds.entity.RemainAdjust;
+import com.bjike.goddess.checkfunds.to.GuidePermissionTO;
 import com.bjike.goddess.checkfunds.to.RemainAdjustTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -19,6 +20,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface RemainAdjustSer extends Ser<RemainAdjust, RemainAdjustDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 添加
      *

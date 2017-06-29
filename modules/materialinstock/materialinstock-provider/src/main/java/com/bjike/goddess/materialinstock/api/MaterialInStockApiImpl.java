@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 物资入库业务接口实现
@@ -205,4 +206,9 @@ public class MaterialInStockApiImpl implements MaterialInStockAPI {
         return BeanTransform.copyProperties(list, MaterialInStockBO.class);
     }
 
+    @Override
+    //cjh
+    public Set<String> allstockEncoding() throws SerException {
+        return materialInStockSer.allstockEncoding();
+    }
 }

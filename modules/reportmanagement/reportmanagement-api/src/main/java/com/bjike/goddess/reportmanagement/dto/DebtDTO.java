@@ -22,6 +22,19 @@ public class DebtDTO extends BaseDTO {
      */
     private String endTime;
 
+    /**
+     * 项目组/部门
+     */
+    private String projectGroup;
+
+    public String getProjectGroup() {
+        return projectGroup;
+    }
+
+    public void setProjectGroup(String projectGroup) {
+        this.projectGroup = projectGroup;
+    }
+
     public String getStartTime() {
         return startTime;
     }

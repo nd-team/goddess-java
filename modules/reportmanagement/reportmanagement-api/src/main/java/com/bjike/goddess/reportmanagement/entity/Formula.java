@@ -34,9 +34,9 @@ public class Formula extends BaseEntity {
     private String type;
 
     /**
-     * 公式添加的形式
+     * 公式方向
      */
-    @Column(name = "form", columnDefinition = "TINYINT(2)   COMMENT '公式添加的形式'")
+    @Column(name = "form", columnDefinition = "TINYINT(2)   COMMENT '公式方向'")
     private Form form;
 
     /**

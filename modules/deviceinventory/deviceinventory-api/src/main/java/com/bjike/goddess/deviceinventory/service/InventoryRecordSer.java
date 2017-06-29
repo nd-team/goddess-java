@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.deviceinventory.bo.InventoryRecordBO;
 import com.bjike.goddess.deviceinventory.dto.InventoryRecordDTO;
 import com.bjike.goddess.deviceinventory.entity.InventoryRecord;
+import com.bjike.goddess.deviceinventory.to.GuidePermissionTO;
 import com.bjike.goddess.deviceinventory.to.InventoryRecordTO;
 
 import java.util.List;
@@ -19,6 +20,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface InventoryRecordSer extends Ser<InventoryRecord, InventoryRecordDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 添加
      *
@@ -36,18 +51,6 @@ public interface InventoryRecordSer extends Ser<InventoryRecord, InventoryRecord
      * @throws SerException
      */
     default List<InventoryRecordBO> list(InventoryRecordDTO dto) throws SerException {
-        return null;
-    }
-
-    /**
-     * 导出
-     *
-     * @param startTime 开始时间
-     * @param endTime   结束时间
-     * @return class InventoryRecordBO
-     * @throws SerException
-     */
-    default List<InventoryRecordBO> export(String startTime, String endTime) throws SerException {
         return null;
     }
 
@@ -100,4 +103,14 @@ public interface InventoryRecordSer extends Ser<InventoryRecord, InventoryRecord
     default Long count(InventoryRecordDTO dto) throws SerException {
         return null;
     }
+
+    /**
+     * 根据时间段导出excel
+     *
+     * @param startTime 开始时间
+     * @param endTime   结束时间
+     * @return
+     * @throws SerException
+     */
+    byte[] export(String startTime, String endTime) throws SerException;
 }

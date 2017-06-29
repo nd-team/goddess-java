@@ -5,10 +5,19 @@ import com.bjike.goddess.checkfunds.bo.BankReconciliationBO;
 import com.bjike.goddess.checkfunds.bo.RemainAdjustBO;
 import com.bjike.goddess.checkfunds.dto.RemainAdjustDTO;
 import com.bjike.goddess.checkfunds.entity.RemainAdjust;
+import com.bjike.goddess.checkfunds.enums.GuideAddrStatus;
+import com.bjike.goddess.checkfunds.to.GuidePermissionTO;
 import com.bjike.goddess.checkfunds.to.RemainAdjustTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.organize.entity.PositionDetail;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -30,6 +39,150 @@ import java.util.List;
 public class RemainAdjustSerImpl extends ServiceImpl<RemainAdjust, RemainAdjustDTO> implements RemainAdjustSer {
     @Autowired
     private BankReconciliationSer bankReconciliationSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private UserAPI userAPI;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
 
     @Override
     @Transactional(rollbackFor = SerException.class)
@@ -52,6 +205,7 @@ public class RemainAdjustSerImpl extends ServiceImpl<RemainAdjust, RemainAdjustD
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<RemainAdjustBO> addFund(RemainAdjustTO to, String id) throws SerException {
+        checkAddIdentity();
         BankReconciliationBO bankReconciliationBO = bankReconciliationSer.findByID(id);
         Integer year = bankReconciliationBO.getYear();
         Integer month = bankReconciliationBO.getMonth();
@@ -88,6 +242,7 @@ public class RemainAdjustSerImpl extends ServiceImpl<RemainAdjust, RemainAdjustD
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<RemainAdjustBO> removeFund(RemainAdjustTO to, String id) throws SerException {
+        checkAddIdentity();
         BankReconciliationBO bankReconciliationBO = bankReconciliationSer.findByID(id);
         Integer year = bankReconciliationBO.getYear();
         Integer month = bankReconciliationBO.getMonth();
@@ -124,6 +279,7 @@ public class RemainAdjustSerImpl extends ServiceImpl<RemainAdjust, RemainAdjustD
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<RemainAdjustBO> addBank(RemainAdjustTO to, String id) throws SerException {
+        checkAddIdentity();
         BankReconciliationBO bankReconciliationBO = bankReconciliationSer.findByID(id);
         Integer year = bankReconciliationBO.getYear();
         Integer month = bankReconciliationBO.getMonth();
@@ -160,6 +316,7 @@ public class RemainAdjustSerImpl extends ServiceImpl<RemainAdjust, RemainAdjustD
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<RemainAdjustBO> removeBank(RemainAdjustTO to, String id) throws SerException {
+        checkAddIdentity();
         BankReconciliationBO bankReconciliationBO = bankReconciliationSer.findByID(id);
         Integer year = bankReconciliationBO.getYear();
         Integer month = bankReconciliationBO.getMonth();
@@ -197,6 +354,7 @@ public class RemainAdjustSerImpl extends ServiceImpl<RemainAdjust, RemainAdjustD
     @Transactional(rollbackFor = SerException.class)
     //前端拿最后一条记录的余额
     public void confirmAdjust(String id, Double fundBalance, Double bankBalance) throws SerException {
+        checkAddIdentity();
         boolean b = fundBalance.equals(bankBalance);
         if (!b) {
             throw new SerException("两边余额不相等，不能确认调整");

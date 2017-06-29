@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.deviceinventory.bo.InventoryRecordBO;
 import com.bjike.goddess.deviceinventory.dto.InventoryRecordDTO;
 import com.bjike.goddess.deviceinventory.service.InventoryRecordSer;
+import com.bjike.goddess.deviceinventory.to.GuidePermissionTO;
 import com.bjike.goddess.deviceinventory.to.InventoryRecordTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class InventoryRecordApiImpl implements InventoryRecordAPI {
     }
 
     @Override
-    public List<InventoryRecordBO> export(String startTime, String endTime) throws SerException {
+    public byte[] export(String startTime, String endTime) throws SerException {
         return inventoryRecordSer.export(startTime, endTime);
     }
 
@@ -62,5 +63,15 @@ public class InventoryRecordApiImpl implements InventoryRecordAPI {
     @Override
     public Long count(InventoryRecordDTO dto) throws SerException {
         return inventoryRecordSer.count(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return inventoryRecordSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return inventoryRecordSer.guidePermission(guidePermissionTO);
     }
 }

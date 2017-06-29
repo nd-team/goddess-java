@@ -38,7 +38,7 @@ public class DebtVO {
     /**
      * 负债期末数
      */
-    private Double endAsset;
+    private Double endDebt;
 
 
     public String getId() {
@@ -81,11 +81,11 @@ public class DebtVO {
         this.beginDebt = beginDebt;
     }
 
-    public Double getEndAsset() {
-        return endAsset;
+    public Double getEndDebt() {
+        return endDebt;
     }
 
-    public void setEndAsset(Double endAsset) {
-        this.endAsset = endAsset;
+    public void setEndDebt(Double endDebt) {
+        this.endDebt = endDebt;
     }
 }
