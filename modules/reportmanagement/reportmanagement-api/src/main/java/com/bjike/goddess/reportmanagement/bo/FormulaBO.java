@@ -20,7 +20,7 @@ public class FormulaBO extends BaseBO {
     private String project;
 
     /**
-     * 公式添加的形式
+     * 公式方向
      */
     private Form form;
 
@@ -33,6 +33,45 @@ public class FormulaBO extends BaseBO {
      * 期末数
      */
     private Double end;
+
+    /**
+     * 本期发生额
+     */
+    private Double current;
+
+    /**
+     * 期间
+     */
+    private String term;
+
+    /**
+     * 摘要
+     */
+    private String digest;
+
+    public Double getCurrent() {
+        return current;
+    }
+
+    public void setCurrent(Double current) {
+        this.current = current;
+    }
+
+    public String getTerm() {
+        return term;
+    }
+
+    public void setTerm(String term) {
+        this.term = term;
+    }
+
+    public String getDigest() {
+        return digest;
+    }
+
+    public void setDigest(String digest) {
+        this.digest = digest;
+    }
 
     public Double getBegin() {
         return begin;

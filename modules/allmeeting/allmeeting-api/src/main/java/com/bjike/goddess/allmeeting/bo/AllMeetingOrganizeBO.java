@@ -21,9 +21,24 @@ public class AllMeetingOrganizeBO extends BaseBO {
     private String meetingNum;
 
     /**
-     * 层面Id
+     * 会议议题
      */
-    private String layId;
+    private String topic;
+
+    /**
+     * 会议议题
+     */
+    private String topicContent;
+
+    /**
+     * 会议层面
+     */
+    private String layName;
+
+    /**
+     * 计划参会岗位
+     */
+    private String position;
 
     /**
      * 会议内容
@@ -73,12 +88,36 @@ public class AllMeetingOrganizeBO extends BaseBO {
         this.meetingNum = meetingNum;
     }
 
-    public String getLayId() {
-        return layId;
+    public String getTopic() {
+        return topic;
     }
 
-    public void setLayId(String layId) {
-        this.layId = layId;
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    public String getTopicContent() {
+        return topicContent;
+    }
+
+    public void setTopicContent(String topicContent) {
+        this.topicContent = topicContent;
+    }
+
+    public String getLayName() {
+        return layName;
+    }
+
+    public void setLayName(String layName) {
+        this.layName = layName;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public String getContent() {

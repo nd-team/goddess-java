@@ -5,6 +5,7 @@ import com.bjike.goddess.allmeeting.bo.SummaryVoteBO;
 import com.bjike.goddess.allmeeting.dto.DiscussionVoteDTO;
 import com.bjike.goddess.allmeeting.entity.ConciseSummary;
 import com.bjike.goddess.allmeeting.entity.DiscussionVote;
+import com.bjike.goddess.allmeeting.entity.MultiwheelSummary;
 import com.bjike.goddess.allmeeting.to.DiscussionVoteTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -15,7 +16,9 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -47,22 +50,35 @@ public class DiscussionVoteSerImpl extends ServiceImpl<DiscussionVote, Discussio
         String currentUser = userBO.getUsername();
         String currentNum = userBO.getEmployeeNumber();
         ConciseSummary summary = conciseSummarySer.findById(to.getSummaryId());
-        String actualUsers = summary.getActualUsers();
-        if (actualUsers.contains(currentNum)) {
+        String actualUsers = null;
+        if (summary == null) {
+            MultiwheelSummary multiwheelSummary = multiwheelSummarySer.findById(to.getSummaryId());
+            if (multiwheelSummary != null) {
+                actualUsers = multiwheelSummary.getActualUsers();
+            } else {
+                throw new SerException("非法纪要Id,纪要对象不存在!");
+            }
+        } else {
+            actualUsers = summary.getActualUsers();
+        }
+        List<String> users = Arrays.asList(actualUsers.split(","));
+        if (users.contains(currentUser)) {
             DiscussionVoteDTO dto = new DiscussionVoteDTO();
             dto.getConditions().add(Restrict.eq("summaryId", to.getSummaryId()));
             dto.getConditions().add(Restrict.eq("voteUserNum", currentNum));
             dto.setLimit(1);
             List<DiscussionVote> list = super.findByPage(dto);
-            if (list != null && !list.isEmpty()) {
+            if (!CollectionUtils.isEmpty(list)) {
                 throw new SerException("亲，您已经投过票了!");
             }
             DiscussionVote model = BeanTransform.copyProperties(to, DiscussionVote.class);
+            model.setVoteUserNum(currentNum);
             super.save(model);
             return BeanTransform.copyProperties(model, DiscussionVoteBO.class);
         } else {
             throw new SerException("只有参会人员可填写!");
         }
+
     }
 
     @Override
@@ -73,8 +89,21 @@ public class DiscussionVoteSerImpl extends ServiceImpl<DiscussionVote, Discussio
                 "WHERE dis.summaryId ='" + summaryId +
                 "' " +
                 "GROUP BY id, discussionId";
-        String[] fields = new String[]{"id","user","finalDis","voteSum"};
-        List<SummaryVoteBO> boList = super.findBySql(sql,SummaryVoteBO.class,fields);
+        String[] fields = new String[]{"id", "user", "finalDis", "voteSum"};
+        List<SummaryVoteBO> boList = super.findBySql(sql, SummaryVoteBO.class, fields);
+
+        return boList;
+    }
+
+    @Override
+    public List<SummaryVoteBO> listByConSummary(String summaryId) throws SerException {
+        String sql = "select dis.id as id, dis.user as user, dis.firstDis as finalDis, count(vote.discussionId) as voteSum from allmeeting_discussion dis" +
+                " left JOIN allmeeting_vote vote  ON dis.id =vote.discussionId  " +
+                "WHERE dis.summaryId ='" + summaryId +
+                "' " +
+                "GROUP BY id, discussionId";
+        String[] fields = new String[]{"id", "user", "finalDis", "voteSum"};
+        List<SummaryVoteBO> boList = super.findBySql(sql, SummaryVoteBO.class, fields);
 
         return boList;
     }

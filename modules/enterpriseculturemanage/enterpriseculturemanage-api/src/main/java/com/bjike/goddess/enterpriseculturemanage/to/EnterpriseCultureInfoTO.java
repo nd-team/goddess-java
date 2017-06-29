@@ -1,7 +1,10 @@
 package com.bjike.goddess.enterpriseculturemanage.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.enterpriseculturemanage.enums.UpdateType;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 企业文化信息
@@ -17,42 +20,32 @@ public class EnterpriseCultureInfoTO extends BaseTO {
     /**
      * 主题
      */
+    @NotBlank(message = "主题不能为空",groups = {ADD.class})
     private String theme;
 
     /**
      * 执行阶段
      */
+    @NotBlank(message = "执行阶段不能为空",groups = {ADD.class})
     private String executeStage;
 
     /**
      * 执行问题
      */
+    @NotBlank(message = "执行问题不能为空",groups = {ADD.class})
     private String executeQuestion;
 
     /**
      * 解决方案
      */
+    @NotBlank(message = "解决方案不能为空",groups = {ADD.class})
     private String solution;
 
     /**
      * 员工意见
      */
+    @NotBlank(message = "员工意见不能为空",groups = {ADD.class})
     private String employeeSuggest;
-
-    /**
-     * 宣传方案Id
-     */
-    private String publicizeId;
-
-    /**
-     * 刊物方案Id
-     */
-    private String periodicalId;
-
-    /**
-     * 更新类型
-     */
-    private UpdateType updateType;
 
 
     public String getTheme() {
@@ -95,27 +88,4 @@ public class EnterpriseCultureInfoTO extends BaseTO {
         this.employeeSuggest = employeeSuggest;
     }
 
-    public String getPublicizeId() {
-        return publicizeId;
-    }
-
-    public void setPublicizeId(String publicizeId) {
-        this.publicizeId = publicizeId;
-    }
-
-    public String getPeriodicalId() {
-        return periodicalId;
-    }
-
-    public void setPeriodicalId(String periodicalId) {
-        this.periodicalId = periodicalId;
-    }
-
-    public UpdateType getUpdateType() {
-        return updateType;
-    }
-
-    public void setUpdateType(UpdateType updateType) {
-        this.updateType = updateType;
-    }
 }

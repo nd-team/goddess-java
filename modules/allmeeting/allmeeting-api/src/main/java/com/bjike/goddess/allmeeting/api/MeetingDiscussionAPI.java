@@ -1,7 +1,10 @@
 package com.bjike.goddess.allmeeting.api;
 
 import com.bjike.goddess.allmeeting.bo.MeetingDiscussionBO;
+import com.bjike.goddess.allmeeting.dto.MeetingDiscussionDTO;
+import com.bjike.goddess.allmeeting.to.FirstDiscussionTO;
 import com.bjike.goddess.allmeeting.to.MeetingDiscussionTO;
+import com.bjike.goddess.allmeeting.to.SecondDiscussionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -16,9 +19,17 @@ import java.util.List;
 */
 public interface MeetingDiscussionAPI  {
 
-    MeetingDiscussionBO addByCon(MeetingDiscussionTO to) throws SerException;
 
-    MeetingDiscussionBO addByMulti(MeetingDiscussionTO to) throws SerException;
 
     List<MeetingDiscussionBO> listBySummaryId(String id) throws SerException;
+
+    MeetingDiscussionBO addFirst(FirstDiscussionTO to) throws SerException;
+
+    MeetingDiscussionBO addSecond(SecondDiscussionTO to) throws SerException;
+
+    MeetingDiscussionBO findById(String id) throws SerException;
+
+    Long count(MeetingDiscussionDTO dto) throws SerException;
+
+    MeetingDiscussionBO addFirstByCon(MeetingDiscussionTO to) throws SerException;
 }

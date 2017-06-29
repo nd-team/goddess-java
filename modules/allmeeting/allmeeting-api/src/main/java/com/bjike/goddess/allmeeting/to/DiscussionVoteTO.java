@@ -28,14 +28,6 @@ public class DiscussionVoteTO extends BaseTO {
     @NotBlank(message = "纪要Id不能为空",groups = {ADD.class, EDIT.class})
     private String summaryId;
 
-
-    /**
-     * 投票人员工编号
-     */
-    @NotBlank(message = "投票人员工编号不能为空",groups = {ADD.class, EDIT.class})
-    private String voteUserNum;
-
-
     public String getDiscussionId() {
         return discussionId;
     }
@@ -52,11 +44,4 @@ public class DiscussionVoteTO extends BaseTO {
         this.summaryId = summaryId;
     }
 
-    public String getVoteUserNum() {
-        return voteUserNum;
-    }
-
-    public void setVoteUserNum(String voteUserNum) {
-        this.voteUserNum = voteUserNum;
-    }
 }

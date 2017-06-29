@@ -11,6 +11,7 @@ import com.bjike.goddess.materialinstock.type.MaterialState;
 import com.bjike.goddess.materialinstock.type.UseState;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 物资入库业务接口
@@ -111,4 +112,12 @@ public interface MaterialInStockSer extends Ser<MaterialInStock, MaterialInStock
      */
     List<MaterialInStockBO> findByAttribute(AttributeBO bo) throws SerException;
 
+    /**
+     * cjh
+     * 查找所有入库编号
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allstockEncoding() throws SerException;
 }

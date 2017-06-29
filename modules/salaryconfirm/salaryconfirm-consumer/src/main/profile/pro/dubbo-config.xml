@@ -23,6 +23,8 @@
 	<!-- userAPI -->
 	<dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl" />
 
+	<dubbo:reference interface="com.bjike.goddess.storage.api.StorageUserAPI" id="storageUserApiImpl" />
+
 	<!-- 组织结构API -->
 	<dubbo:reference interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl" />
 
@@ -30,5 +32,11 @@
 
 	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
 
+	<!-- 权限 -->
+	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.salaryconfirm.api.CusPermissionAPI" />
+
+	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
+
+	<dubbo:reference id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
 
 </beans>

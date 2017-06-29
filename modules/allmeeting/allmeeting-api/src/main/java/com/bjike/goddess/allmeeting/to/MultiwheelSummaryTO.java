@@ -1,7 +1,12 @@
 package com.bjike.goddess.allmeeting.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 简洁交流讨论纪要
@@ -15,24 +20,28 @@ import com.bjike.goddess.common.api.type.Status;
 public class MultiwheelSummaryTO extends BaseTO {
 
     /**
-     * 会议编号
-     */
-    private String meetingNum;
-
-    /**
      * 实际会议时间
      */
+    @NotBlank(message = "实际会议时间不能为空",groups = {EDIT.class})
     private String actualTime;
 
     /**
      * 会议地点
      */
+    @NotBlank(message = "会议地点不能为空",groups = {EDIT.class})
     private String place;
 
     /**
      * 实际参会人员
      */
+    @NotBlank(message = "实际参会人员不能为空",groups = {EDIT.class})
     private String actualUsers;
+
+    /**
+     * 会议主持人
+     */
+    @NotBlank(message = "会议主持人不能为空",groups = {EDIT.class})
+    private String compere;
 
     /**
      * 新增参会人员
@@ -47,41 +56,26 @@ public class MultiwheelSummaryTO extends BaseTO {
     /**
      * 参会人数
      */
+    @NotNull(message = "参会人数不能为空",groups = {EDIT.class})
     private Integer attendAccount;
 
     /**
      * 会议所属模块
      */
+    @NotBlank(message = "会议所属模块不能为空",groups = {EDIT.class})
     private String module;
 
     /**
      * 会议所属部门
      */
+    @NotBlank(message = "会议所属部门不能为空",groups = {EDIT.class})
     private String department;
-
-    /**
-     * 最终结论
-     */
-    private String ultimatelyResult;
 
     /**
      * 备注
      */
     private String remark;
 
-    /**
-     * 状态
-     */
-    private Status status;
-
-
-    public String getMeetingNum() {
-        return meetingNum;
-    }
-
-    public void setMeetingNum(String meetingNum) {
-        this.meetingNum = meetingNum;
-    }
 
     public String getActualTime() {
         return actualTime;
@@ -147,14 +141,6 @@ public class MultiwheelSummaryTO extends BaseTO {
         this.department = department;
     }
 
-    public String getUltimatelyResult() {
-        return ultimatelyResult;
-    }
-
-    public void setUltimatelyResult(String ultimatelyResult) {
-        this.ultimatelyResult = ultimatelyResult;
-    }
-
     public String getRemark() {
         return remark;
     }
@@ -163,11 +149,11 @@ public class MultiwheelSummaryTO extends BaseTO {
         this.remark = remark;
     }
 
-    public Status getStatus() {
-        return status;
+    public String getCompere() {
+        return compere;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setCompere(String compere) {
+        this.compere = compere;
     }
 }

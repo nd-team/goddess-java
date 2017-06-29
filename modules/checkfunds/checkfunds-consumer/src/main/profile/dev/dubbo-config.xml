@@ -19,6 +19,9 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.checkfunds.api.NotPassAuditAPI" id="notPassAuditApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.checkfunds.api.PassAuditAPI" id="passAuditApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.checkfunds.api.RemainAdjustAPI" id="remainAdjustApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.checkfunds.api.CusPermissionAPI" id="cusPermissionApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.checkfunds.api.CusPermissionOperateAPI" id="cusPermissionOperateApiImpl"/>
 
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl"/>
 </beans>

@@ -3,6 +3,7 @@ package com.bjike.goddess.deviceinventory.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.deviceinventory.bo.InventoryRecordBO;
 import com.bjike.goddess.deviceinventory.dto.InventoryRecordDTO;
+import com.bjike.goddess.deviceinventory.to.GuidePermissionTO;
 import com.bjike.goddess.deviceinventory.to.InventoryRecordTO;
 
 import java.util.List;
@@ -17,6 +18,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface InventoryRecordAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 添加
      *
@@ -38,16 +53,14 @@ public interface InventoryRecordAPI {
     }
 
     /**
-     * 导出
+     * 根据时间段导出excel
      *
      * @param startTime 开始时间
      * @param endTime   结束时间
-     * @return class InventoryRecordBO
+     * @return
      * @throws SerException
      */
-    default List<InventoryRecordBO> export(String startTime, String endTime) throws SerException {
-        return null;
-    }
+    byte[] export(String startTime, String endTime) throws SerException;
 
     /**
      * 地区汇总

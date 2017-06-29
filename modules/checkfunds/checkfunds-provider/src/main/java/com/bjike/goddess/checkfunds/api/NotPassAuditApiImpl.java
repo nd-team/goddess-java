@@ -4,6 +4,7 @@ package com.bjike.goddess.checkfunds.api;
 import com.bjike.goddess.checkfunds.bo.NotPassAuditBO;
 import com.bjike.goddess.checkfunds.dto.NotPassAuditDTO;
 import com.bjike.goddess.checkfunds.service.NotPassAuditSer;
+import com.bjike.goddess.checkfunds.to.GuidePermissionTO;
 import com.bjike.goddess.checkfunds.to.NotPassAuditTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,16 @@ public class NotPassAuditApiImpl implements NotPassAuditAPI {
     @Override
     public Long countNum(NotPassAuditDTO dto) throws SerException {
         return notPassAuditSer.countNum(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return notPassAuditSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return notPassAuditSer.guidePermission(guidePermissionTO);
     }
 }
 

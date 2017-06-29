@@ -20,7 +20,6 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "deviceinventory_inventory")
 public class Inventory extends BaseEntity {
-
     /**
      * 盘点时间
      */
@@ -122,6 +121,20 @@ public class Inventory extends BaseEntity {
      */
     @Column(name = "materialinstock_id", unique = true, nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '入库id'")
     private String materialinstockId;
+
+    /**
+     * 是否已盘点
+     */
+    @Column(name = "is_inventory", columnDefinition = "TINYINT(1) COMMENT '是否已盘点'")
+    private Boolean isInventory;
+
+    public Boolean getIsInventory() {
+        return isInventory;
+    }
+
+    public void setIsInventory(Boolean inventory) {
+        isInventory = inventory;
+    }
 
     public String getMaterialinstockId() {
         return materialinstockId;

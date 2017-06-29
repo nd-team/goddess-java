@@ -21,4 +21,6 @@ public interface DiscussionVoteAPI {
     DiscussionVoteBO add(DiscussionVoteTO to) throws SerException;
 
     List<SummaryVoteBO> listBySummary(String summaryId) throws SerException;
+
+    List<SummaryVoteBO> listByConSummary(String summaryId) throws SerException;
 }

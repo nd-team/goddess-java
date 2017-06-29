@@ -20,24 +20,32 @@ import javax.persistence.Table;
 @Table(name = "enterpriseculture_constructteam")
 public class ConstructTeam extends BaseEntity {
 
+
+    /**
+     * 员工Id
+     */
+    @Column(name = "userId", unique = true, nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '员工Id'")
+    private String userId;
+
     /**
      * 员工姓名
      */
-    @Column(name = "userName", unique = true, nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '员工姓名'")
+    @Column(name = "userName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '员工姓名'")
     private String userName;
 
     /**
      * 员工编号
      */
-    @Column(name = "userNumber", columnDefinition = "VARCHAR(255)   COMMENT '员工编号'")
+    @Column(name = "userNumber",unique = true,nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '员工编号'")
     private String userNumber;
 
-    /**
-     * 项目组
-     */
-    @Column(name = "projectGroup", columnDefinition = "VARCHAR(255)   COMMENT '项目组'")
-    private String projectGroup;
+    public String getUserId() {
+        return userId;
+    }
 
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getUserName() {
         return userName;
@@ -55,11 +63,4 @@ public class ConstructTeam extends BaseEntity {
         this.userNumber = userNumber;
     }
 
-    public String getProjectGroup() {
-        return projectGroup;
-    }
-
-    public void setProjectGroup(String projectGroup) {
-        this.projectGroup = projectGroup;
-    }
 }

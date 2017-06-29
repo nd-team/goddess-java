@@ -29,5 +29,23 @@
     <!-- userAPI -->
     <dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
+    <!-- userAPI -->
+    <dubbo:reference interface="com.bjike.goddess.archive.api.StaffRecordsAPI" id="staffRecordsApiImpl"/>
+
+    <!-- 组织结构APi -->
+    <dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
+
+    <dubbo:reference interface="com.bjike.goddess.organize.api.ArrangementAPI" id="arrangementApiImpl"/>
+
+    <dubbo:reference interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
+
+    <dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
+
+    <dubbo:reference interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
+
+    <dubbo:service ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.salaryconfirm.api.CusPermissionOperateAPI" />
+
+    <dubbo:service ref="cusPermissionApiImpl" interface="com.bjike.goddess.salaryconfirm.api.CusPermissionAPI" />
+
 
 </beans>

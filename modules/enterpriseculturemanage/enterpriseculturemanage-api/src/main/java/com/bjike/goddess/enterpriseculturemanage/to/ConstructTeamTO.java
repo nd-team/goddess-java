@@ -1,6 +1,9 @@
 package com.bjike.goddess.enterpriseculturemanage.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 建设小组
@@ -14,27 +17,30 @@ import com.bjike.goddess.common.api.to.BaseTO;
 public class ConstructTeamTO extends BaseTO {
 
     /**
-     * 员工姓名
+     * 员工Id
      */
-    private String userName;
+    @NotBlank(message = "员工Id不能为空",groups = {ADD.class, EDIT.class})
+    private String userId;
 
     /**
      * 员工编号
      */
+    @NotBlank(message = "员工编号不能为空",groups = {ADD.class, EDIT.class})
     private String userNumber;
 
+
     /**
-     * 项目组
+     * 员工姓名
      */
-    private String group;
+    @NotBlank(message = "员工姓名不能为空",groups = {ADD.class, EDIT.class})
+    private String userName;
 
-
-    public String getUserName() {
-        return userName;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getUserNumber() {
@@ -45,11 +51,11 @@ public class ConstructTeamTO extends BaseTO {
         this.userNumber = userNumber;
     }
 
-    public String getGroup() {
-        return group;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

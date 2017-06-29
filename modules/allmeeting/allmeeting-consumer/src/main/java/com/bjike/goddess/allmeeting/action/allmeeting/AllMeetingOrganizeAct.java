@@ -1,16 +1,17 @@
 package com.bjike.goddess.allmeeting.action.allmeeting;
 
 import com.bjike.goddess.allmeeting.api.AllMeetingOrganizeAPI;
+import com.bjike.goddess.allmeeting.api.MeetingLayAPI;
 import com.bjike.goddess.allmeeting.dto.AllMeetingOrganizeDTO;
 import com.bjike.goddess.allmeeting.to.AllMeetingOrganizeTO;
 import com.bjike.goddess.allmeeting.vo.AllMeetingOrganizeVO;
+import com.bjike.goddess.allmeeting.vo.MeetingLayVO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -32,11 +33,13 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("allmeetingorganize")
+@RequestMapping("organize")
 public class AllMeetingOrganizeAct {
 
     @Autowired
     private AllMeetingOrganizeAPI allMeetingOrganizeAPI;
+    @Autowired
+    private MeetingLayAPI meetingLayAPI;
 
     /**
      * 新增会议组织
@@ -49,7 +52,6 @@ public class AllMeetingOrganizeAct {
     @PostMapping("v1/add")
     public Result add(@Validated({ADD.class}) AllMeetingOrganizeTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-
             AllMeetingOrganizeVO voList = BeanTransform.copyProperties(allMeetingOrganizeAPI.add(to), AllMeetingOrganizeVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
@@ -76,7 +78,7 @@ public class AllMeetingOrganizeAct {
     }
 
     /**
-     * 冻结会议组织
+     * 冻结
      *
      * @param id 会议组织ID
      * @version v1
@@ -93,6 +95,23 @@ public class AllMeetingOrganizeAct {
     }
 
     /**
+     * 解冻
+     *
+     * @param id 会议组织ID
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/unfreeze/{id}")
+    public Result unfreeze(@PathVariable String id) throws ActException {
+        try {
+            allMeetingOrganizeAPI.unfreeze(id);
+            return new ActResult("冻结成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 列表分页查询
      *
      * @param dto 分页条件
@@ -100,9 +119,25 @@ public class AllMeetingOrganizeAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result pageList(AllMeetingOrganizeDTO dto) throws ActException {
+    public Result pageList(AllMeetingOrganizeDTO dto, HttpServletRequest request) throws ActException {
         try {
-            List<AllMeetingOrganizeVO> voList = BeanTransform.copyProperties(allMeetingOrganizeAPI.pageList(dto), AllMeetingOrganizeVO.class);
+            List<AllMeetingOrganizeVO> voList = BeanTransform.copyProperties(allMeetingOrganizeAPI.pageList(dto), AllMeetingOrganizeVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 会议层面列表
+     *
+     * @return class AllMeetingOrganizeVO
+     * @version v1
+     */
+    @GetMapping("v1/lays")
+    public Result lays(HttpServletRequest request) throws ActException {
+        try {
+            List<MeetingLayVO> voList = BeanTransform.copyProperties(meetingLayAPI.lays(), MeetingLayVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -118,7 +153,9 @@ public class AllMeetingOrganizeAct {
     @GetMapping("v1/count")
     public Result count(AllMeetingOrganizeDTO dto) throws ActException {
         try {
-            dto.getConditions().add(Restrict.eq("status", Status.THAW));
+            if (dto.getStatus() != null) {
+                dto.getConditions().add(Restrict.eq("status", dto.getStatus()));
+            }
             Long count = allMeetingOrganizeAPI.count(dto);
             return ActResult.initialize(count);
         } catch (SerException e) {

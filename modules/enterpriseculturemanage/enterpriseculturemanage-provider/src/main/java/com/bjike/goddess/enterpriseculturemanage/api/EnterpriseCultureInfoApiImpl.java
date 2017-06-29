@@ -1,11 +1,13 @@
 package com.bjike.goddess.enterpriseculturemanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.enterpriseculturemanage.bo.EnterpriseCultureInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.bo.PeriodicalProgramInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.bo.PublicizeProgramInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.dto.EnterpriseCultureInfoDTO;
 import com.bjike.goddess.enterpriseculturemanage.service.EnterpriseCultureInfoSer;
+import com.bjike.goddess.enterpriseculturemanage.to.EnterpriseCultureInfoEditTO;
 import com.bjike.goddess.enterpriseculturemanage.to.EnterpriseCultureInfoTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +35,7 @@ public class EnterpriseCultureInfoApiImpl implements EnterpriseCultureInfoAPI {
     }
 
     @Override
-    public EnterpriseCultureInfoBO editModel(EnterpriseCultureInfoTO to) throws SerException {
+    public EnterpriseCultureInfoBO editModel(EnterpriseCultureInfoEditTO to) throws SerException {
         return enterpriseCultureInfoSer.updateModel(to);
     }
 
@@ -55,5 +57,15 @@ public class EnterpriseCultureInfoApiImpl implements EnterpriseCultureInfoAPI {
     @Override
     public PeriodicalProgramInfoBO findPeriodical(String id) throws SerException {
         return enterpriseCultureInfoSer.findPeriodical(id);
+    }
+
+    @Override
+    public EnterpriseCultureInfoBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(enterpriseCultureInfoSer.findById(id), EnterpriseCultureInfoBO.class);
+    }
+
+    @Override
+    public Long count(EnterpriseCultureInfoDTO dto) throws SerException {
+        return enterpriseCultureInfoSer.count(dto);
     }
 }

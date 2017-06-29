@@ -5,6 +5,7 @@ import com.bjike.goddess.salaryconfirm.bo.AnalyzeBO;
 import com.bjike.goddess.salaryconfirm.bo.SalaryconfirmBO;
 import com.bjike.goddess.salaryconfirm.dto.SalaryconfirmDTO;
 import com.bjike.goddess.salaryconfirm.to.ConditionTO;
+import com.bjike.goddess.salaryconfirm.to.GuidePermissionTO;
 import com.bjike.goddess.salaryconfirm.to.SalaryconfirmTO;
 import com.bjike.goddess.salaryconfirm.vo.AreaAnalyzeVO;
 import com.bjike.goddess.salaryconfirm.vo.DepartmentAnalyzeVO;
@@ -141,4 +142,10 @@ public interface SalaryconfirmAPI {
     void importExcel(List<SalaryconfirmTO> toList) throws SerException;
 
     byte[] exportExcel(Integer year, Integer month) throws SerException;
+
+    byte[] exportExcelModule() throws SerException;
+
+    void sendEmail() throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 }

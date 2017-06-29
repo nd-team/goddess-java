@@ -1,5 +1,6 @@
 package com.bjike.goddess.allmeeting.bo;
 
+import com.bjike.goddess.allmeeting.entity.MeetingTopic;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
@@ -12,11 +13,6 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Copy: [ com.bjike ]
  */
 public class MeetingLayBO extends BaseBO {
-
-    /**
-     * 议题Id
-     */
-    private String topicId;
 
     /**
      * 议题名称
@@ -38,14 +34,6 @@ public class MeetingLayBO extends BaseBO {
      */
     private String position;
 
-
-    public String getTopicId() {
-        return topicId;
-    }
-
-    public void setTopicId(String topicId) {
-        this.topicId = topicId;
-    }
 
     public String getTopicContent() {
         return topicContent;
