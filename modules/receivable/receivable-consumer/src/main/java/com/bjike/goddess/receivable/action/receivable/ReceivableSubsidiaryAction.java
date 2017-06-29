@@ -421,8 +421,8 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
             List<ReceivableSubsidiaryTO> tocs = new ArrayList<>();
             for (ReceivableSubsidiaryExcel str : tos) {
                 ReceivableSubsidiaryTO receivableSubsidiaryTO = BeanTransform.copyProperties(str, ReceivableSubsidiaryTO.class,"contractor","pay","frame","pact","flow");
-//                if(null != str.getContractor().getName()) {
-//                    receivableSubsidiaryTO.setContractorId(str.getContractor().getId());
+//                if(null != str.getContractor()) {
+//                  receivableSubsidiaryTO.setContractorName(str.getContractor());
 //                }
                 if(str.getPay().equals("是")){
                     receivableSubsidiaryTO.setPay(true);
@@ -444,12 +444,6 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
                 }else{
                     receivableSubsidiaryTO.setFlow(false);
                 }
-//                siginManageTO.setStartProjectTime(String.valueOf(str.getStartProjectTime()));
-//                siginManageTO.setEndProjectTime(String.valueOf(str.getEndProjectTime()));
-//                siginManageTO.setSiginStatus(convertSiginStatus(str.getSiginStatus()));
-//                siginManageTO.setMakeProject(convertMakeProject(str.getMakeProject()));
-//                siginManageTO.setManager("");
-//                siginManageTO.setAuditAdvice("");
                 tocs.add(receivableSubsidiaryTO);
             }
             //注意序列化
@@ -472,6 +466,24 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
         try {
             String fileName = "回款管理.xlsx";
             super.writeOutFile(response, receivableSubsidiaryAPI.exportExcel(dto), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板回款管理
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "回款管理导入模板.xlsx";
+            super.writeOutFile(response, receivableSubsidiaryAPI.templateExport( ), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

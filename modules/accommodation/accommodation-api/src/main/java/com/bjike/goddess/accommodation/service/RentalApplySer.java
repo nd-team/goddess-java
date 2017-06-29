@@ -16,10 +16,39 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface RentalApplySer extends Ser<RentalApply,RentalApplyDTO> {
+public interface RentalApplySer extends Ser<RentalApply, RentalApplyDTO> {
+    /**
+     * 租房方案列表总条数
+     */
+    default Long count(RentalApplyDTO rentalApplyDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 一个租房方案
+     *
+     * @return class RentalApplyBO
+     */
+    default RentalApplyBO getOne(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 租房申请列表
+     *
+     * @param rentalApplyDTO 租房申请dto
+     * @return class RentalApplyBO
+     * @throws SerException
+     */
+    default List<RentalApplyBO> findListRentalApply(RentalApplyDTO rentalApplyDTO) throws SerException {
+        return null;
+    }
+
     /**
      * 添加租房申请
+     *
      * @param applyTO 租房申请数据集合
+     * @return class RentalApplyBO
      * @throws SerException
      */
     default RentalApplyBO insertApply(RentalApplyTO applyTO) throws SerException {
@@ -29,11 +58,11 @@ public interface RentalApplySer extends Ser<RentalApply,RentalApplyDTO> {
     /**
      * 编辑租房申请
      *
-     * @param applyTO   租房申请信息数据to
-     * @return class rentalPreceptBO
+     * @param applyTO 租房申请信息数据to
+     * @return class RentalApplyBO
      * @throws SerException
      */
-    default RentalApplyBO editApply(RentalApplyTO applyTO ) throws SerException {
+    default RentalApplyBO editApply(RentalApplyTO applyTO) throws SerException {
         return null;
     }
 
@@ -47,40 +76,37 @@ public interface RentalApplySer extends Ser<RentalApply,RentalApplyDTO> {
     default void removeApply(String id) throws SerException {
         return;
     }
+
     /**
-     * 获取所有租房申请
-     * @param rentalApplyDTO 租房申请dto
-     * @return class rentalApply
+     * 项目经理审核
+     *
+     * @param applyTO
+     * @return class RentalApplyBO
      * @throws SerException
      */
-    default List<RentalApplyBO> findListRentalApply(RentalApplyDTO rentalApplyDTO) throws SerException {
+    default RentalApplyBO manageAudit(RentalApplyTO applyTO) throws SerException {
         return null;
     }
     /**
-     * 审核
-     * @param applyTO
-     * @throws SerException
+     * 租房申请汇总到租房信息中
      */
-    default void audit(RentalApplyTO applyTO) throws SerException{
-        return ;
+    default void summary() throws SerException {
     }
 
     /**
-     *租房申请导出明细
+     * 导出Excel
+     *
+     * @param dto
+     * @throws SerException
      */
-    default String exportExcel (String startTime, String endTime)throws SerException{
-        return null;
-    }
+    byte[] exportExcel(RentalApplyDTO dto) throws SerException;
+
     /**
-     *自动生成记账凭证
+     * 自动生成记账凭证
      */
-    default String generateCredentials ()throws SerException{
+    default String generateCredentials() throws SerException {
         return null;
     }
-    /**
-     *租房申请汇总到租房信息中
-     */
-    default RentalApplyBO summary (RentalApplyTO rentalApplyTO)throws SerException{
-        return null;
-    }
+
+
 }

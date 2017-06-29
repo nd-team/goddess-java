@@ -263,5 +263,19 @@ public interface ReceivableSubsidiarySer extends Ser<ReceivableSubsidiary, Recei
      */
     byte[] exportExcel(ReceivableSubsidiaryDTO dto) throws SerException;
 
-
+    /**
+     * Excel下载模板
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
+    /**
+     * 更新发送邮件
+     *
+     * @param to 回款明细数据to
+     * @return class receivableSubsidiaryBO
+     * @throws SerException
+     */
+    default ReceivableSubsidiaryBO updateSend(ReceivableSubsidiaryTO to) throws SerException {
+        return null;
+    }
 }

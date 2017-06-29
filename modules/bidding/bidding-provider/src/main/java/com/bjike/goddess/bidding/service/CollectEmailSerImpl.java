@@ -15,6 +15,7 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
@@ -246,6 +247,9 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         StringBuffer emails = new StringBuffer("");
         if (sendObjectList != null && sendObjectList.size() > 0) {
             for (String emailStr : sendObjectList) {
+                if (!Validator.isEmail(emailStr)) {
+                    throw new SerException("邮箱输入不正确");
+                }
                 emails.append(emailStr + ";");
             }
         }
@@ -307,6 +311,9 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         StringBuffer emails = new StringBuffer("");
         if (sendObjectList != null && sendObjectList.size() > 0) {
             for (String emailStr : sendObjectList) {
+                if (!Validator.isEmail(emailStr)) {
+                    throw new SerException("邮箱输入不正确");
+                }
                 emails.append(emailStr + ";");
             }
         }
@@ -484,7 +491,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
             if (flag && type.equals("招标信息汇总")) {
                 biddingEmails.add(str);
                 allEmails.add(str);
-            }else if(flag && type.equals("开标信息汇总")){
+            } else if (flag && type.equals("开标信息汇总")) {
                 bidOpenEmails.add(str);
                 allEmails.add(str);
             }
@@ -493,7 +500,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         }
 
         //调用发邮件
-        allEmails = sendObject(biddingEmails,bidOpenEmails);
+        allEmails = sendObject(biddingEmails, bidOpenEmails);
 
         //修改上次发送时间
         super.update(allEmails);
@@ -521,13 +528,13 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
             //拼body部分
             for (BiddingInfoCollectBO bo : biddingBOS) {
                 sb.append("<tr>");
-                sb.append("<td>" + (StringUtils.isBlank(bo.getCities())? "" : bo.getCities()) + "</td>");
+                sb.append("<td>" + (StringUtils.isBlank(bo.getCities()) ? "" : bo.getCities()) + "</td>");
                 sb.append("<td>" + (null == bo.getInvite() ? "" : bo.getInvite()) + "</td>");
                 sb.append("<td>" + (null == bo.getOpenly() ? "" : bo.getOpenly()) + "</td>");
                 sb.append("<td>" + (null == bo.getMobile() ? "" : bo.getMobile()) + "</td>");
                 sb.append("<td>" + (null == bo.getSoft() ? "" : bo.getSoft()) + "</td>");
-                sb.append("<td>" + (null == bo.getSystem()? "" :bo.getSystem()) + "</td>");
-                sb.append("<td>" + (null == bo.getPlan() ?"" : bo.getPlan()) + "</td>");
+                sb.append("<td>" + (null == bo.getSystem() ? "" : bo.getSystem()) + "</td>");
+                sb.append("<td>" + (null == bo.getPlan() ? "" : bo.getPlan()) + "</td>");
 
                 sb.append("<tr>");
             }
@@ -537,6 +544,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         }
         return sb.toString();
     }
+
     private String htmlBidOpen(List<BidOpeningCollectBO> bidOpeningBOS) throws SerException {
         StringBuffer sb = new StringBuffer("");
         if (bidOpeningBOS != null && bidOpeningBOS.size() > 0) {
@@ -564,7 +572,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         return sb.toString();
     }
 
-    private List<CollectEmail> sendObject(List<CollectEmail> biddingEmails,List<CollectEmail> bidOpenEmails) throws SerException {
+    private List<CollectEmail> sendObject(List<CollectEmail> biddingEmails, List<CollectEmail> bidOpenEmails) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         List<CollectEmail> allEmails = new ArrayList<>();
         //招投信息汇总

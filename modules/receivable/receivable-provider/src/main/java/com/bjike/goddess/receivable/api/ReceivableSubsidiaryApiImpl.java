@@ -134,6 +134,10 @@ public class ReceivableSubsidiaryApiImpl implements ReceivableSubsidiaryAPI {
     public byte[] exportExcel(ReceivableSubsidiaryDTO dto) throws SerException{
         return receivableSubsidiarySer.exportExcel(dto);
     }
+    @Override
+    public byte[] templateExport() throws SerException {
+        return receivableSubsidiarySer.templateExport();
+    }
 
 
 }

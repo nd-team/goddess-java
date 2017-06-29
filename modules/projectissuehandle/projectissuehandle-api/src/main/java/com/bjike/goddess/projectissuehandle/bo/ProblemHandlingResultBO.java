@@ -1,10 +1,7 @@
 package com.bjike.goddess.projectissuehandle.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.projectissuehandle.enums.ProblemObject;
 import com.bjike.goddess.projectissuehandle.enums.ProblemProcessingResult;
-import com.bjike.goddess.projectissuehandle.enums.ProblemRelevantDepartment;
-import com.bjike.goddess.projectissuehandle.enums.ProjectType;
 
 
 /**
@@ -73,7 +70,7 @@ public class ProblemHandlingResultBO extends BaseBO {
     /**
      * 问题相关部门
      */
-    private ProblemRelevantDepartment problemRelevantDepartment;
+    private String problemRelevantDepartment;
 
     /**
      * 问题发生时间
@@ -201,11 +198,11 @@ public class ProblemHandlingResultBO extends BaseBO {
         this.problemHandler = problemHandler;
     }
 
-    public ProblemRelevantDepartment getProblemRelevantDepartment() {
+    public String getProblemRelevantDepartment() {
         return problemRelevantDepartment;
     }
 
-    public void setProblemRelevantDepartment(ProblemRelevantDepartment problemRelevantDepartment) {
+    public void setProblemRelevantDepartment(String problemRelevantDepartment) {
         this.problemRelevantDepartment = problemRelevantDepartment;
     }
 

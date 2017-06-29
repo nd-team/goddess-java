@@ -23,7 +23,19 @@ import java.util.List;
 public class RentalApplyApiImpl implements RentalApplyAPI{
     @Autowired
     private RentalApplySer rentalApplySer;
+    @Override
+    public Long count(RentalApplyDTO rentalApplyDTO) throws SerException {
+        return rentalApplySer.count(rentalApplyDTO);
+    }
 
+    @Override
+    public RentalApplyBO getOne(String id) throws SerException {
+        return rentalApplySer.getOne(id);
+    }
+    @Override
+    public List<RentalApplyBO> findListRentalApply(RentalApplyDTO rentalApplyDTO) throws SerException {
+        return rentalApplySer.findListRentalApply(rentalApplyDTO);
+    }
     @Override
     public RentalApplyBO insertApply(RentalApplyTO applyTO) throws SerException {
         return rentalApplySer.insertApply(applyTO);
@@ -39,20 +51,17 @@ public class RentalApplyApiImpl implements RentalApplyAPI{
     }
 
     @Override
-    public List<RentalApplyBO> findListRentalApply(RentalApplyDTO rentalApplyDTO) throws SerException {
-        return rentalApplySer.findListRentalApply(rentalApplyDTO);
+    public RentalApplyBO manageAudit(RentalApplyTO applyTO) throws SerException {
+        return rentalApplySer.manageAudit(applyTO);
     }
     @Override
-    public void audit(RentalApplyTO applyTO) throws SerException{
-        rentalApplySer.audit(applyTO);
+    public void summary() throws SerException {
+        rentalApplySer.summary();
     }
 
-    /**
-     *租房申请导出明细
-     */
     @Override
-    public String exportExcel (String startTime, String endTime)throws SerException{
-        return rentalApplySer.exportExcel(startTime,endTime);
+    public byte[] exportExcel(RentalApplyDTO dto) throws SerException{
+        return rentalApplySer.exportExcel(dto);
     }
     /**
      *自动生成记账凭证
@@ -60,12 +69,5 @@ public class RentalApplyApiImpl implements RentalApplyAPI{
     @Override
     public String generateCredentials ()throws SerException{
         return rentalApplySer.generateCredentials();
-    }
-    /**
-     *租房申请汇总到租房信息中
-     */
-    @Override
-    public RentalApplyBO summary (RentalApplyTO rentalApplyTO)throws SerException{
-        return rentalApplySer.summary(rentalApplyTO);
     }
 }

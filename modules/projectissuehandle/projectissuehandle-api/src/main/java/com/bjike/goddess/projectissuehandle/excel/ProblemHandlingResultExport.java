@@ -2,8 +2,6 @@ package com.bjike.goddess.projectissuehandle.excel;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
-import com.bjike.goddess.projectissuehandle.enums.ProblemProcessingResult;
-import com.bjike.goddess.projectissuehandle.enums.ProblemRelevantDepartment;
 
 /**
  * 确认问题处理结果导出
