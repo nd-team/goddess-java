@@ -6,8 +6,10 @@ import com.bjike.goddess.lendreimbursement.bo.ApplyLendBO;
 import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
 import com.bjike.goddess.lendreimbursement.bo.LendAuditDetailBO;
 import com.bjike.goddess.lendreimbursement.dto.ApplyLendDTO;
+import com.bjike.goddess.lendreimbursement.excel.SonPermissionObject;
 import com.bjike.goddess.lendreimbursement.service.ApplyLendSer;
 import com.bjike.goddess.lendreimbursement.to.ApplyLendTO;
+import com.bjike.goddess.lendreimbursement.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,15 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
     @Autowired
     private ApplyLendSer applyLendSer;
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return applyLendSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return applyLendSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countApplyLend(ApplyLendDTO applyLendDTO) throws SerException {
@@ -297,5 +308,30 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
     @Override
     public List<String> listAccountCom() throws SerException {
         return applyLendSer.listAccountCom();
+    }
+
+    @Override
+    public byte[] exportExcel(ApplyLendDTO applyLendDTO) throws SerException {
+        return applyLendSer.exportExcel(applyLendDTO);
+    }
+
+    @Override
+    public byte[] waitingPayExcel(ApplyLendDTO applyLendDTO) throws SerException {
+        return applyLendSer.waitingPayExcel(applyLendDTO);
+    }
+
+    @Override
+    public byte[] borrowExcel(ApplyLendDTO applyLendDTO) throws SerException {
+        return applyLendSer.borrowExcel(applyLendDTO);
+    }
+
+    @Override
+    public byte[] returnExcel(ApplyLendDTO applyLendDTO) throws SerException {
+        return applyLendSer.returnExcel(applyLendDTO);
+    }
+
+    @Override
+    public byte[] receiveExcel(ApplyLendDTO applyLendDTO) throws SerException {
+        return applyLendSer.receiveExcel(applyLendDTO);
     }
 }
