@@ -3,9 +3,8 @@ package com.bjike.goddess.projectmeasure.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectmeasure.bo.ProjectPersonnelDemandBO;
-import com.bjike.goddess.projectmeasure.entity.ProjectPersonnelDemand;
 import com.bjike.goddess.projectmeasure.dto.ProjectPersonnelDemandDTO;
-import com.bjike.goddess.projectmeasure.excel.SonPermissionObject;
+import com.bjike.goddess.projectmeasure.entity.ProjectPersonnelDemand;
 import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.ProjectPersonnelDemandTO;
 
@@ -67,4 +66,14 @@ public interface ProjectPersonnelDemandSer extends Ser<ProjectPersonnelDemand, P
      */
     void update(ProjectPersonnelDemandTO to) throws SerException;
 
+    /**
+     * 根据id查询项目人员需求
+     *
+     * @param id 项目人员需求唯一标识
+     * @return class ProjectPersonnelDemandBO
+     * @throws SerException
+     */
+    default ProjectPersonnelDemandBO getOne(String id) throws SerException{
+        return null;
+    }
 }

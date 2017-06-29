@@ -32,13 +32,15 @@ public interface MultipleProjectMultipleUIAPI {
         return null;
     }
     /**
-     * 根据id查询多项目多个界面
+     * 根据id查询多项目单个界面
      *
-     * @param id 多项目多个界面唯一标识
+     * @param id 多项目单个界面唯一标识
      * @return class MultipleProjectMultipleUIBO
      * @throws SerException
      */
-    MultipleProjectMultipleUIBO findById(String id) throws SerException;
+    default MultipleProjectMultipleUIBO getOne(String id) throws SerException{
+        return null;
+    }
 
     /**
      * 计算总条数
@@ -80,5 +82,6 @@ public interface MultipleProjectMultipleUIAPI {
      * @throws SerException
      */
     void update(MultipleProjectMultipleUITO to) throws SerException;
+
 
 }

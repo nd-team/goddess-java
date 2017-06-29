@@ -3,9 +3,8 @@ package com.bjike.goddess.projectmeasure.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectmeasure.bo.ProjectBasicInfoBO;
-import com.bjike.goddess.projectmeasure.entity.ProjectBasicInfo;
 import com.bjike.goddess.projectmeasure.dto.ProjectBasicInfoDTO;
-import com.bjike.goddess.projectmeasure.excel.SonPermissionObject;
+import com.bjike.goddess.projectmeasure.entity.ProjectBasicInfo;
 import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.ProjectBasicInfoTO;
 
@@ -74,5 +73,24 @@ public interface ProjectBasicInfoSer extends Ser<ProjectBasicInfo, ProjectBasicI
      * @throws SerException
      */
     List<String> findAllProjectNames() throws SerException;
+
+    /**
+     * 查询所有的地址
+     *
+     * @return list
+     */
+    default List<String> findAllAreas() throws SerException{
+        return null;
+    }
+
+    /**
+     * 根据id查询
+     *
+     * @param id
+     * @return ProjectBasicInfo对象
+     */
+    default ProjectBasicInfoBO getOne(String id) throws SerException{
+        return null;
+    }
 
 }

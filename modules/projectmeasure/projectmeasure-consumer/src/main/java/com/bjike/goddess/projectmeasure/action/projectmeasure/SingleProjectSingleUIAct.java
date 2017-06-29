@@ -74,7 +74,7 @@ public class SingleProjectSingleUIAct {
     @GetMapping("v1/ssui/{id}")
     public Result findById(@PathVariable(value = "id") String id, HttpServletRequest request) throws ActException {
         try {
-            SingleProjectSingleUIBO bo = singleProjectSingleUIAPI.findById(id);
+            SingleProjectSingleUIBO bo = singleProjectSingleUIAPI.getOne(id);
             SingleProjectSingleUIVO vo = BeanTransform.copyProperties(bo, SingleProjectSingleUIVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {

@@ -3,9 +3,8 @@ package com.bjike.goddess.projectmeasure.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectmeasure.bo.SingleProjectSingleUIBO;
-import com.bjike.goddess.projectmeasure.entity.SingleProjectSingleUI;
 import com.bjike.goddess.projectmeasure.dto.SingleProjectSingleUIDTO;
-import com.bjike.goddess.projectmeasure.excel.SonPermissionObject;
+import com.bjike.goddess.projectmeasure.entity.SingleProjectSingleUI;
 import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.SingleProjectSingleUITO;
 
@@ -67,4 +66,14 @@ public interface SingleProjectSingleUISer extends Ser<SingleProjectSingleUI, Sin
      */
     void update(SingleProjectSingleUITO to) throws SerException;
 
+    /**
+     * 根据id查询单个项目单个界面
+     *
+     * @param id 单个项目单个界面唯一标识
+     * @return class SingleProjectSingleUIBO
+     * @throws SerException
+     */
+    default SingleProjectSingleUIBO getOne(String id) throws SerException{
+        return null;
+    }
 }

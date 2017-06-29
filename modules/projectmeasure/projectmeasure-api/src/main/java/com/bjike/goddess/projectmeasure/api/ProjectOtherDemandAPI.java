@@ -4,11 +4,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectmeasure.bo.ProjectEvaluateResultBO;
 import com.bjike.goddess.projectmeasure.bo.ProjectOtherDemandBO;
 import com.bjike.goddess.projectmeasure.dto.ProjectOtherDemandDTO;
-import com.bjike.goddess.projectmeasure.entity.ProjectOtherDemand;
 import com.bjike.goddess.projectmeasure.excel.SonPermissionObject;
 import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.ProjectOtherDemandTO;
-import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory;
 
 import java.util.List;
 
@@ -77,15 +75,10 @@ public interface ProjectOtherDemandAPI {
     }
 
     /**
-     * 根据id查询其他需求界面数据
-     *
-     * @param id 其他需求界面数据唯一标识
+     * 根据id查询其他项目界面
      * @return class ProjectOtherDemandBO
-     * @throws SerException
      */
-    default ProjectOtherDemandBO findById(String id) throws SerException {
-        return null;
-    }
+    default ProjectOtherDemandBO getOne(String id) throws SerException {return null;}
     /**
      * 输出评估结果
      *
@@ -107,14 +100,6 @@ public interface ProjectOtherDemandAPI {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
-
-     /**
-     * 测试普通邮件发送
-     */
-    default void emailSend(   ) throws SerException {
-        return ;
-    }
-
 
 
 }
