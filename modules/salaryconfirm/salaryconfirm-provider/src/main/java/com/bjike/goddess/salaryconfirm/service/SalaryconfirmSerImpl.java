@@ -1,27 +1,36 @@
 package com.bjike.goddess.salaryconfirm.service;
 
+import com.bjike.goddess.archive.api.StaffRecordsAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.message.enums.SendType;
+import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.salaryconfirm.bo.AnalyzeBO;
 import com.bjike.goddess.salaryconfirm.bo.InvoiceSubmitBO;
 import com.bjike.goddess.salaryconfirm.bo.SalaryconfirmBO;
 import com.bjike.goddess.salaryconfirm.dto.SalaryconfirmDTO;
 import com.bjike.goddess.salaryconfirm.entity.Salaryconfirm;
 import com.bjike.goddess.salaryconfirm.enums.FindType;
+import com.bjike.goddess.salaryconfirm.enums.GuideAddrStatus;
 import com.bjike.goddess.salaryconfirm.enums.Ratepaying;
 import com.bjike.goddess.salaryconfirm.excel.SalaryconfirmExcel;
 import com.bjike.goddess.salaryconfirm.to.ConditionTO;
+import com.bjike.goddess.salaryconfirm.to.GuidePermissionTO;
 import com.bjike.goddess.salaryconfirm.to.SalaryconfirmTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.text.DecimalFormat;
@@ -45,6 +54,12 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
 
     @Autowired
     private InvoiceSubmitSer invoiceSubmitSer;
+    @Autowired
+    private StaffRecordsAPI staffRecordsAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private UserAPI userAPI;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
@@ -208,6 +223,15 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
 
     @Override
     public List<SalaryconfirmBO> pageList(SalaryconfirmDTO dto) throws SerException {
+        //有权限:admin 或者 财务部
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        if (!guideSeeIdentity()) {
+            //不具有查看对应权限的只能查看当前用户数据
+            dto.getConditions().add(Restrict.eq("employeeNumber", userBO.getEmployeeNumber()));
+        }
+
         dto.getSorts().add("createTime=desc");
         List<SalaryconfirmBO> boList = BeanTransform.copyProperties(super.findByPage(dto), SalaryconfirmBO.class);
 
@@ -465,15 +489,151 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
         dto.getConditions().add(Restrict.eq("year", year));
         dto.getConditions().add(Restrict.eq("month", month));
         List<Salaryconfirm> list = super.findByCis(dto);
-        List<SalaryconfirmExcel> toList = new ArrayList<SalaryconfirmExcel>();
-        for (Salaryconfirm model : list) {
-            SalaryconfirmExcel excel = new SalaryconfirmExcel();
-            BeanUtils.copyProperties(model, excel);
-            toList.add(excel);
+        List<SalaryconfirmExcel> excelList = new ArrayList<SalaryconfirmExcel>();
+        if (!CollectionUtils.isEmpty(list)) {
+            for (Salaryconfirm model : list) {
+                SalaryconfirmExcel excel = new SalaryconfirmExcel();
+                BeanUtils.copyProperties(model, excel);
+                excelList.add(excel);
+            }
+        } else {
+            excelList.add(new SalaryconfirmExcel());
         }
+
         Excel excel = new Excel(0, 2);
-        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        byte[] bytes = ExcelUtil.clazzToExcel(excelList, excel);
         return bytes;
+    }
+
+    @Override
+    public byte[] exportExcelModule() throws SerException {
+        Excel excel = new Excel(0, 2);
+        List<SalaryconfirmExcel> list = new ArrayList<SalaryconfirmExcel>();
+        list.add(new SalaryconfirmExcel());
+        byte[] bytes = ExcelUtil.clazzToExcel(list, excel);
+        return bytes;
+    }
+
+    // 定时器规则 "0 0 10 13 * ?" 每月13日上午10:00发送邮件
+    @Override
+    public void sendEmail() throws SerException {
+        //比如现在为6月 则本月发的工资为五月工资(计薪周期为4.21-5.20)
+        int month = LocalDate.now().getMonthValue();
+        int year = LocalDate.now().getYear();
+        SalaryconfirmDTO dto = new SalaryconfirmDTO();
+        if (month == 1) {
+            dto.getConditions().add(Restrict.eq("year", month - 1));
+            dto.getConditions().add(Restrict.eq("month", 12));
+        } else {
+            dto.getConditions().add(Restrict.eq("year", year));
+            dto.getConditions().add(Restrict.eq("month", month - 1));
+        }
+        dto.getConditions().add(Restrict.eq("findType", FindType.WAIT));
+        List<Salaryconfirm> list = super.findByCis(dto);
+        if (!CollectionUtils.isEmpty(list)) {
+            List<String> sendUserStr = new ArrayList<String>();
+
+            for (Salaryconfirm model : list) {
+                //需求为查询员工档案的邮箱地址,可是邮箱发送为用户ID数组
+//                StaffRecordsBO staffRecordsBO = staffRecordsAPI.findByNumber(model.getEmployeeNumber());
+                UserBO userBO = userAPI.findByUsername(model.getName());
+                sendUserStr.add(userBO.getId());
+            }
+            String[] sendUsers = (String[]) sendUserStr.toArray(new String[sendUserStr.size()]);
+
+            MessageTO to = new MessageTO("薪资核算确认提醒", "请于今天下班前到\"薪资核算确认模块\"确认薪资!");
+            to.setSendType(SendType.EMAIL);
+            to.setReceivers(sendUsers);
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = to.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（部门级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
     }
 
     //组合分析数据

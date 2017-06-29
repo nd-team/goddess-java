@@ -7,6 +7,7 @@ import com.bjike.goddess.salaryconfirm.bo.SalaryconfirmBO;
 import com.bjike.goddess.salaryconfirm.dto.SalaryconfirmDTO;
 import com.bjike.goddess.salaryconfirm.service.SalaryconfirmSer;
 import com.bjike.goddess.salaryconfirm.to.ConditionTO;
+import com.bjike.goddess.salaryconfirm.to.GuidePermissionTO;
 import com.bjike.goddess.salaryconfirm.to.SalaryconfirmTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -111,6 +112,21 @@ public class SalaryconfirmApiImpl implements SalaryconfirmAPI {
     @Override
     public byte[] exportExcel(Integer year, Integer month) throws SerException {
         return salaryconfirmSer.exportExcel(year,month);
+    }
+
+    @Override
+    public byte[] exportExcelModule() throws SerException {
+        return salaryconfirmSer.exportExcelModule();
+    }
+
+    @Override
+    public void sendEmail() throws SerException {
+        salaryconfirmSer.sendEmail();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO to) throws SerException {
+        return salaryconfirmSer.guidePermission(to);
     }
 
 }

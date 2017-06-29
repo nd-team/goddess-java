@@ -42,16 +42,6 @@ public class InvoiceSubmitTO extends BaseTO {
     @NotBlank(message = "员工编号不能为空",groups = {ADD.class, EDIT.class})
     private String employeeNumber;
 
-    /**
-     * 创建人
-     */
-    private String createUser;
-
-    /**
-     * 修改人
-     */
-    private String modifyUser;
-
 
     public String getSubmitDate() {
         return submitDate;
@@ -75,22 +65,6 @@ public class InvoiceSubmitTO extends BaseTO {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(String createUser) {
-        this.createUser = createUser;
-    }
-
-    public String getModifyUser() {
-        return modifyUser;
-    }
-
-    public void setModifyUser(String modifyUser) {
-        this.modifyUser = modifyUser;
     }
 
     public String getEmployeeNumber() {

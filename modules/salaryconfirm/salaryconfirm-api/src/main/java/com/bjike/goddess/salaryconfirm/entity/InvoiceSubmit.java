@@ -18,7 +18,7 @@ import java.time.LocalDate;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "invoicesubmit")
+@Table(name = "salaryconfirm_invoicesubmit")
 public class InvoiceSubmit extends BaseEntity {
 
     /**

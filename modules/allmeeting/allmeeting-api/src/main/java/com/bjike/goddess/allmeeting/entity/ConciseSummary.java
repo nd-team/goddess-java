@@ -25,7 +25,7 @@ public class ConciseSummary extends BaseEntity {
     /**
      * 会议编号
      */
-    @Column(name = "meetingNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '会议编号'")
+    @Column(name = "meetingNum", nullable = false, unique = true, columnDefinition = "VARCHAR(255)   COMMENT '会议编号'")
     private String meetingNum;
 
     /**

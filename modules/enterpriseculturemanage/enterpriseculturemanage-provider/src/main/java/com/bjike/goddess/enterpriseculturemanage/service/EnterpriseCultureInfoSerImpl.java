@@ -9,10 +9,12 @@ import com.bjike.goddess.enterpriseculturemanage.bo.EnterpriseCultureInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.bo.PeriodicalProgramInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.bo.PublicizeProgramInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.dto.EnterpriseCultureInfoDTO;
+import com.bjike.goddess.enterpriseculturemanage.dto.PeriodicalProgramInfoDTO;
 import com.bjike.goddess.enterpriseculturemanage.entity.EnterpriseCultureInfo;
 import com.bjike.goddess.enterpriseculturemanage.entity.PeriodicalProgramInfo;
 import com.bjike.goddess.enterpriseculturemanage.entity.PublicizeProgramInfo;
 import com.bjike.goddess.enterpriseculturemanage.enums.UpdateType;
+import com.bjike.goddess.enterpriseculturemanage.to.EnterpriseCultureInfoEditTO;
 import com.bjike.goddess.enterpriseculturemanage.to.EnterpriseCultureInfoTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,10 +49,8 @@ public class EnterpriseCultureInfoSerImpl extends ServiceImpl<EnterpriseCultureI
     public EnterpriseCultureInfoBO insertModel(EnterpriseCultureInfoTO to) throws SerException {
         //需要检查theme是否与解冻状态记录存在相同
         EnterpriseCultureInfoDTO dto = new EnterpriseCultureInfoDTO();
-        if (StringUtils.isEmpty(to.getTheme())) {
-            throw new SerException("主题不能为空!");
-        }
         dto.getConditions().add(Restrict.eq("theme", to.getTheme()));
+        dto.getConditions().add(Restrict.eq("status", Status.THAW));
         List<EnterpriseCultureInfo> infoList = super.findByCis(dto);
         if (infoList != null && !infoList.isEmpty()) {
             throw new SerException("主题已经存在!");
@@ -64,7 +64,7 @@ public class EnterpriseCultureInfoSerImpl extends ServiceImpl<EnterpriseCultureI
 
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public EnterpriseCultureInfoBO updateModel(EnterpriseCultureInfoTO to) throws SerException {
+    public EnterpriseCultureInfoBO updateModel(EnterpriseCultureInfoEditTO to) throws SerException {
         if (!StringUtils.isEmpty(to.getId())) {
             EnterpriseCultureInfo newmodel = super.findById(to.getId());
             if (newmodel != null) {
@@ -98,9 +98,14 @@ public class EnterpriseCultureInfoSerImpl extends ServiceImpl<EnterpriseCultureI
 
     @Override
     public PublicizeProgramInfoBO findPublicize(String id) throws SerException {
-        PublicizeProgramInfo publicizeProgramInfo = publicizeProgramInfoSer.findById(id);
-        if (publicizeProgramInfo != null) {
-            return BeanTransform.copyProperties(publicizeProgramInfo, PublicizeProgramInfoBO.class);
+        EnterpriseCultureInfo model = super.findById(id);
+        if (model != null) {
+            PublicizeProgramInfo publicizeProgramInfo = publicizeProgramInfoSer.findById(model.getId());
+            if (publicizeProgramInfo != null) {
+                return BeanTransform.copyProperties(publicizeProgramInfo, PublicizeProgramInfoBO.class);
+            }
+        } else {
+            throw new SerException("非法Id,企业文化对象不存在!");
         }
         return new PublicizeProgramInfoBO();
     }
@@ -108,9 +113,16 @@ public class EnterpriseCultureInfoSerImpl extends ServiceImpl<EnterpriseCultureI
     @Override
     @Transactional(rollbackFor = SerException.class)
     public PeriodicalProgramInfoBO findPeriodical(String id) throws SerException {
-        PeriodicalProgramInfo publicizeProgramInfo = periodicalProgramInfoSer.findById(id);
-        if (publicizeProgramInfo != null) {
-            return BeanTransform.copyProperties(publicizeProgramInfo, PeriodicalProgramInfoBO.class);
+        EnterpriseCultureInfo model = super.findById(id);
+        if (model != null) {
+            PeriodicalProgramInfoDTO programInfoDTO = new PeriodicalProgramInfoDTO();
+            programInfoDTO.getConditions().add(Restrict.eq("infoId", model.getId()));
+            PeriodicalProgramInfo publicizeProgramInfo = periodicalProgramInfoSer.findOne(programInfoDTO);
+            if (publicizeProgramInfo != null) {
+                return BeanTransform.copyProperties(publicizeProgramInfo, PeriodicalProgramInfoBO.class);
+            }
+        } else {
+            throw new SerException("非法Id,企业文化对象不存在!");
         }
         return new PeriodicalProgramInfoBO();
     }

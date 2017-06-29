@@ -1,6 +1,7 @@
 package com.bjike.goddess.allmeeting.service;
 
 import com.bjike.goddess.allmeeting.bo.ConciseSummaryBO;
+import com.bjike.goddess.allmeeting.bo.OrganizeForSummaryBO;
 import com.bjike.goddess.allmeeting.dto.ConciseSummaryDTO;
 import com.bjike.goddess.allmeeting.entity.ConciseSummary;
 import com.bjike.goddess.allmeeting.to.ConciseSummaryTO;
@@ -28,4 +29,8 @@ public interface ConciseSummarySer extends Ser<ConciseSummary, ConciseSummaryDTO
     List<ConciseSummaryBO> pageList(ConciseSummaryDTO dto) throws SerException;
 
     ConciseSummaryBO findAndSet(String id) throws SerException;
+
+    OrganizeForSummaryBO organize(String id) throws SerException;
+
+    void unfreeze(String id) throws SerException;
 }

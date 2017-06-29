@@ -63,4 +63,8 @@ public interface PublicizeProgramInfoAPI {
      * @return 宣传方案信息结果集
      */
     List<PublicizeProgramInfoBO> pageList(PublicizeProgramInfoDTO dto) throws SerException;
+
+    PublicizeProgramInfoBO findById(String id) throws SerException;
+
+    Long count(PublicizeProgramInfoDTO dto) throws SerException;
 }

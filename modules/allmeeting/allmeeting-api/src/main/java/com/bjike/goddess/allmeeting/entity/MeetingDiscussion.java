@@ -29,13 +29,13 @@ public class MeetingDiscussion extends BaseEntity {
     /**
      * 二轮意见
      */
-    @Column(name = "secondDis", nullable = false, columnDefinition = "TEXT  COMMENT '二轮意见'")
+    @Column(name = "secondDis", columnDefinition = "TEXT  COMMENT '二轮意见'")
     private String secondDis;
 
     /**
      * 最终意见
      */
-    @Column(name = "finalDis", nullable = false, columnDefinition = "TEXT   COMMENT '最终意见'")
+    @Column(name = "finalDis", columnDefinition = "TEXT   COMMENT '最终意见'")
     private String finalDis;
 
     /**

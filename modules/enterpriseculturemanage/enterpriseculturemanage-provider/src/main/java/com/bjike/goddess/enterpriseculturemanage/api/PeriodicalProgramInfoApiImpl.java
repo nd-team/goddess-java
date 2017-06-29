@@ -1,9 +1,11 @@
 package com.bjike.goddess.enterpriseculturemanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.enterpriseculturemanage.bo.EnterpriseCultureInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.bo.PeriodicalProgramInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.dto.PeriodicalProgramInfoDTO;
+import com.bjike.goddess.enterpriseculturemanage.enums.AuditResult;
 import com.bjike.goddess.enterpriseculturemanage.service.EnterpriseCultureInfoSer;
 import com.bjike.goddess.enterpriseculturemanage.service.PeriodicalProgramInfoSer;
 import com.bjike.goddess.enterpriseculturemanage.to.PeriodicalProgramInfoTO;
@@ -51,12 +53,22 @@ public class PeriodicalProgramInfoApiImpl implements PeriodicalProgramInfoAPI {
     }
 
     @Override
-    public void audit(PeriodicalProgramInfoTO to) throws SerException {
-        periodicalProgramInfoSer.audit(to);
+    public void audit(String id , AuditResult auditResult, String  auditSuggestion) throws SerException {
+        periodicalProgramInfoSer.audit(id,auditResult,auditSuggestion);
     }
 
     @Override
     public List<PeriodicalProgramInfoBO> pageList(PeriodicalProgramInfoDTO dto) throws SerException {
         return periodicalProgramInfoSer.pageList(dto);
+    }
+
+    @Override
+    public Long count(PeriodicalProgramInfoDTO dto) throws SerException {
+        return periodicalProgramInfoSer.count(dto);
+    }
+
+    @Override
+    public PeriodicalProgramInfoBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(periodicalProgramInfoSer.findById(id),PeriodicalProgramInfoBO.class);
     }
 }
