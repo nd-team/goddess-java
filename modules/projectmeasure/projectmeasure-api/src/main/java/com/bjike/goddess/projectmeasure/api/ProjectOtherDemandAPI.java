@@ -4,11 +4,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectmeasure.bo.ProjectEvaluateResultBO;
 import com.bjike.goddess.projectmeasure.bo.ProjectOtherDemandBO;
 import com.bjike.goddess.projectmeasure.dto.ProjectOtherDemandDTO;
-import com.bjike.goddess.projectmeasure.entity.ProjectOtherDemand;
 import com.bjike.goddess.projectmeasure.excel.SonPermissionObject;
 import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.ProjectOtherDemandTO;
-import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory;
 
 import java.util.List;
 
@@ -30,9 +28,10 @@ public interface ProjectOtherDemandAPI {
      * @return class ProjectOtherDemandBO
      * @throws SerException
      */
-    default List<ProjectOtherDemandBO> findProjectOtherDemand(ProjectOtherDemandDTO dto) throws SerException{
+    default List<ProjectOtherDemandBO> findProjectOtherDemand(ProjectOtherDemandDTO dto) throws SerException {
         return null;
     }
+
     /**
      * 添加其他需求界面数据
      *
@@ -72,7 +71,7 @@ public interface ProjectOtherDemandAPI {
      * @return ProjectOtherDemandBO
      * @throws SerException
      */
-    default Long count(ProjectOtherDemandDTO projectOtherDemandDTO) throws SerException{
+    default Long count(ProjectOtherDemandDTO projectOtherDemandDTO) throws SerException {
         return null;
     }
 
@@ -86,14 +85,16 @@ public interface ProjectOtherDemandAPI {
     default ProjectOtherDemandBO findById(String id) throws SerException {
         return null;
     }
+
     /**
      * 输出评估结果
      *
      * @throws SerException
      */
-    default List<ProjectEvaluateResultBO> findEvaluateResult(ProjectOtherDemandDTO demandDTO) throws SerException{
+    default List<ProjectEvaluateResultBO> findEvaluateResult(ProjectOtherDemandDTO demandDTO) throws SerException {
         return null;
     }
+
     /**
      * 下拉导航权限
      */
@@ -108,13 +109,12 @@ public interface ProjectOtherDemandAPI {
         return null;
     }
 
-     /**
+    /**
      * 测试普通邮件发送
      */
-    default void emailSend(   ) throws SerException {
-        return ;
+    default void emailSend() throws SerException {
+        return;
     }
-
 
 
 }

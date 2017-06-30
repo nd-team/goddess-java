@@ -43,8 +43,8 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
 
     @Override
     public Long countComputerAssist(ComputerAssistDTO computerAssistDTO) throws SerException {
-        if( StringUtils.isNotBlank(computerAssistDTO.getEmpName() )){
-            computerAssistDTO.getConditions().add(Restrict.like("empName",computerAssistDTO.getEmpName() ));
+        if (StringUtils.isNotBlank(computerAssistDTO.getEmpName())) {
+            computerAssistDTO.getConditions().add(Restrict.like("empName", computerAssistDTO.getEmpName()));
         }
         computerAssistDTO.getSorts().add("createTime=desc");
         Long count = super.count(computerAssistDTO);
@@ -53,34 +53,34 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
 
     @Override
     public List<ComputerAssistBO> listComputerAssist(ComputerAssistDTO computerAssistDTO) throws SerException {
-        if( StringUtils.isNotBlank(computerAssistDTO.getEmpName() )){
-            computerAssistDTO.getConditions().add(Restrict.like("empName",computerAssistDTO.getEmpName() ));
+        if (StringUtils.isNotBlank(computerAssistDTO.getEmpName())) {
+            computerAssistDTO.getConditions().add(Restrict.like("empName", computerAssistDTO.getEmpName()));
         }
         computerAssistDTO.getSorts().add("createTime=desc");
-        List<ComputerAssist> list = super.findByCis(computerAssistDTO,true);
+        List<ComputerAssist> list = super.findByCis(computerAssistDTO, true);
 
-        return BeanTransform.copyProperties(list, ComputerAssistBO.class );
+        return BeanTransform.copyProperties(list, ComputerAssistBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ComputerAssistBO addComputerAssist(ComputerAssistTO computerAssistTO) throws SerException {
-        ComputerAssist computerAssist = BeanTransform.copyProperties(computerAssistTO,ComputerAssist.class,true);
-        if(Double.isNaN(computerAssistTO.getAssistDays())  ){
-            throw  new SerException("补助天数不能为非数字");
+        ComputerAssist computerAssist = BeanTransform.copyProperties(computerAssistTO, ComputerAssist.class, true);
+        if (Double.isNaN(computerAssistTO.getAssistDays())) {
+            throw new SerException("补助天数不能为非数字");
         }
 
         //补助金额补助金额（100元/月） 后台计算公式(100×（补助天数/补助计薪周期相减总天数）)
-        if(StringUtils.isNotBlank(computerAssistTO.getSalaryStartTime())
-                || StringUtils.isNotBlank(computerAssistTO.getSalaryEndTime())){
-            throw  new SerException("计薪开始时间和结束时间不能为空");
+        if (StringUtils.isNotBlank(computerAssistTO.getSalaryStartTime())
+                || StringUtils.isNotBlank(computerAssistTO.getSalaryEndTime())) {
+            throw new SerException("计薪开始时间和结束时间不能为空");
         }
         //设置钱
-        Long day = computerAssist.getSalaryEndTime().toEpochDay()-computerAssist.getSalaryStartTime().toEpochDay();
-        Double money = computerAssistTO.getAssistDays()*(computerAssistTO.getAssistDays()/day);
-        computerAssist.setAssistMoney( money );
+        Long day = computerAssist.getSalaryEndTime().toEpochDay() - computerAssist.getSalaryStartTime().toEpochDay();
+        Double money = computerAssistTO.getAssistDays() * (computerAssistTO.getAssistDays() / day);
+        computerAssist.setAssistMoney(money);
         computerAssist.setCreateTime(LocalDateTime.now());
-        super.save( computerAssist );
+        super.save(computerAssist);
         return BeanTransform.copyProperties(computerAssist, ComputerAssistBO.class);
     }
 
@@ -88,77 +88,77 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ComputerAssistBO editComputerAssist(ComputerAssistTO computerAssistTO) throws SerException {
-        if(Double.isNaN(computerAssistTO.getAssistDays())  ){
-            throw  new SerException("补助天数不能为非数字");
+        if (Double.isNaN(computerAssistTO.getAssistDays())) {
+            throw new SerException("补助天数不能为非数字");
         }
-        ComputerAssist computerAssist = BeanTransform.copyProperties(computerAssistTO,ComputerAssist.class,true);
-        ComputerAssist rs = super.findById( computerAssistTO.getId() );
+        ComputerAssist computerAssist = BeanTransform.copyProperties(computerAssistTO, ComputerAssist.class, true);
+        ComputerAssist rs = super.findById(computerAssistTO.getId());
 
-        rs.setEmpName( computerAssist.getEmpName() );
-        rs.setRemark( computerAssist.getRemark() );
+        rs.setEmpName(computerAssist.getEmpName());
+        rs.setRemark(computerAssist.getRemark());
 
         //补助金额补助金额（100元/月） 后台计算公式(100×（补助天数/补助计薪周期相减总天数）)
-        if(StringUtils.isNotBlank(computerAssistTO.getSalaryStartTime())
-                || StringUtils.isNotBlank(computerAssistTO.getSalaryEndTime())){
-            throw  new SerException("计薪开始时间和结束时间不能为空");
+        if (StringUtils.isNotBlank(computerAssistTO.getSalaryStartTime())
+                || StringUtils.isNotBlank(computerAssistTO.getSalaryEndTime())) {
+            throw new SerException("计薪开始时间和结束时间不能为空");
         }
         //设置钱
-        Long day = computerAssist.getSalaryEndTime().toEpochDay()-computerAssist.getSalaryStartTime().toEpochDay();
-        Double money = computerAssistTO.getAssistDays()*(computerAssistTO.getAssistDays()/day);
-        rs.setAssistMoney( money );
+        Long day = computerAssist.getSalaryEndTime().toEpochDay() - computerAssist.getSalaryStartTime().toEpochDay();
+        Double money = computerAssistTO.getAssistDays() * (computerAssistTO.getAssistDays() / day);
+        rs.setAssistMoney(money);
 
         rs.setModifyTime(LocalDateTime.now());
-        super.update( rs );
+        super.update(rs);
         return BeanTransform.copyProperties(rs, ComputerAssistBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteComputerAssist(String id) throws SerException {
-        if (StringUtils.isBlank(id)){
+        if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
-        super.remove( id );
+        super.remove(id);
     }
 
     @Override
     public List<ComputerAssistBO> collectByArea(ComputerAssistDTO computerAssistDTO) throws SerException {
         //地区不为空
-        String [] fields = new String[]{"empName","projectGroup","area","assistStartTime","assistEndTime",
-                "salaryStartTime","salaryEndTime","assistDays","assistMoney"};
+        String[] fields = new String[]{"empName", "projectGroup", "area", "assistStartTime", "assistEndTime",
+                "salaryStartTime", "salaryEndTime", "assistDays", "assistMoney"};
         String sql = "";
         List<ComputerAssist> list = new ArrayList<>();
-        if ( StringUtils.isNotBlank( computerAssistDTO.getArea()) ){
-            sql = "select empName,projectGroup,area,assistStartTime,assistEndTime, "+
+        if (StringUtils.isNotBlank(computerAssistDTO.getArea())) {
+            sql = "select empName,projectGroup,area,assistStartTime,assistEndTime, " +
                     " salaryStartTime,salaryEndTime,assistDays,assistMoney " +
-                    " from assistance_computerassist where area ='"+computerAssistDTO.getArea()+"'";
-            list = super.findBySql( sql , ComputerAssist.class,fields );
-        }else{
-            fields = new String[]{ "area", "assistMoney"};
+                    " from assistance_computerassist where area ='" + computerAssistDTO.getArea() + "'";
+            list = super.findBySql(sql, ComputerAssist.class, fields);
+        } else {
+            fields = new String[]{"area", "assistMoney"};
             sql = "select area ,count(assistMoney) as  assistMoney  from assistance_computerassist group by area ";
-            list = super.findBySql( sql , ComputerAssist.class,fields );
+            list = super.findBySql(sql, ComputerAssist.class, fields);
         }
-        return BeanTransform.copyProperties(list,ComputerAssistBO.class);
+        return BeanTransform.copyProperties(list, ComputerAssistBO.class);
     }
 
     @Override
     public List<ComputerAssistBO> collectByProGroup(ComputerAssistDTO computerAssistDTO) throws SerException {
         //项目组不为空
-        String [] fields = new String[]{"empName","projectGroup","area","assistStartTime","assistEndTime",
-                "salaryStartTime","salaryEndTime","assistDays","assistMoney"};
+        String[] fields = new String[]{"empName", "projectGroup", "area", "assistStartTime", "assistEndTime",
+                "salaryStartTime", "salaryEndTime", "assistDays", "assistMoney"};
         String sql = "";
         List<ComputerAssist> list = new ArrayList<>();
-        if ( StringUtils.isNotBlank( computerAssistDTO.getArea()) ){
-            sql = "select empName,projectGroup,area,assistStartTime,assistEndTime, "+
+        if (StringUtils.isNotBlank(computerAssistDTO.getArea())) {
+            sql = "select empName,projectGroup,area,assistStartTime,assistEndTime, " +
                     " salaryStartTime,salaryEndTime,assistDays,assistMoney " +
-                    " from assistance_computerassist where projectGroup ='"+computerAssistDTO.getProjectGroup()+"'";
-            list = super.findBySql( sql , ComputerAssist.class,fields );
-        }else{
-            fields = new String[]{ "projectGroup", "assistMoney"};
+                    " from assistance_computerassist where projectGroup ='" + computerAssistDTO.getProjectGroup() + "'";
+            list = super.findBySql(sql, ComputerAssist.class, fields);
+        } else {
+            fields = new String[]{"projectGroup", "assistMoney"};
             sql = "select projectGroup , count(assistMoney) as  assistMoney  from assistance_computerassist group by projectGroup ";
-            list = super.findBySql( sql , ComputerAssist.class,fields );
+            list = super.findBySql(sql, ComputerAssist.class, fields);
         }
-        return BeanTransform.copyProperties(list,ComputerAssistBO.class);
+        return BeanTransform.copyProperties(list, ComputerAssistBO.class);
     }
 
     @Override
@@ -170,10 +170,11 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
 
     @Override
     public EntryBasicInfoBO getUserByName(ComputerAssistDTO computerAssistDTO) throws SerException {
-        if( StringUtils.isBlank( computerAssistDTO.getEmpName())){
+        if (StringUtils.isBlank(computerAssistDTO.getEmpName())) {
             throw new SerException("员工姓名不能为空");
         }
-        EntryBasicInfoBO entryBasicInfoBO = entryBasicInfoAPI.getEntryBasicInfoByName( computerAssistDTO.getEmpName() );
-        return entryBasicInfoBO;
+//            此處錯誤,注釋人:黎貴欽
+//        EntryBasicInfoVO entryBasicInfoBO = entryBasicInfoAPI.getEntryBasicInfoByName( computerAssistDTO.getEmpName() );
+        return null;
     }
 }
