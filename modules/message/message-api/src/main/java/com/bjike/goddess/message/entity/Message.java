@@ -31,7 +31,7 @@ public class Message extends BaseEntity {
     /**
      * 消息内容
      */
-    @Column(name = "content", nullable = false, columnDefinition = "VARCHAR(1000)   COMMENT '消息内容'")
+    @Column(name = "content", nullable = false, columnDefinition = "TEXT   COMMENT '消息内容'")
     private String content;
 
     /**
