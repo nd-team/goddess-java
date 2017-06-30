@@ -3,8 +3,10 @@ package com.bjike.goddess.managefee.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.managefee.bo.OutFeeBO;
-import com.bjike.goddess.managefee.entity.OutFee;
 import com.bjike.goddess.managefee.dto.OutFeeDTO;
+import com.bjike.goddess.managefee.entity.OutFee;
+import com.bjike.goddess.managefee.excel.SonPermissionObject;
+import com.bjike.goddess.managefee.to.GuidePermissionTO;
 import com.bjike.goddess.managefee.to.OutFeeTO;
 
 import java.util.List;
@@ -19,6 +21,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface OutFeeSer extends Ser<OutFee, OutFeeDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 外包费列表总条数
@@ -89,7 +106,9 @@ public interface OutFeeSer extends Ser<OutFee, OutFeeDTO> {
         return null;
     }
 
-    ;/**
+    ;
+
+    /**
      * 根据项目组汇总
      *
      * @param outFeeDTO outFeeDTO
@@ -99,7 +118,9 @@ public interface OutFeeSer extends Ser<OutFee, OutFeeDTO> {
         return null;
     }
 
-    ;/**
+    ;
+
+    /**
      * 根据项目汇总
      *
      * @param outFeeDTO outFeeDTO
@@ -109,7 +130,9 @@ public interface OutFeeSer extends Ser<OutFee, OutFeeDTO> {
         return null;
     }
 
-    ;/**
+    ;
+
+    /**
      * 根据类别汇总
      *
      * @param outFeeDTO outFeeDTO
@@ -123,9 +146,8 @@ public interface OutFeeSer extends Ser<OutFee, OutFeeDTO> {
 
     /**
      * 获取所有年份
-     *
      */
-    default List<String> yearList( ) throws SerException {
+    default List<String> yearList() throws SerException {
 
         return null;
     }
@@ -134,27 +156,28 @@ public interface OutFeeSer extends Ser<OutFee, OutFeeDTO> {
 
     /**
      * 获取所有地区
-     *
      */
-    default List<String> areaList( ) throws SerException {
+    default List<String> areaList() throws SerException {
 
         return null;
     }
 
-    ;/**
+    ;
+
+    /**
      * 获取所有项目组
-     *
      */
-    default List<String> groupList( ) throws SerException {
+    default List<String> groupList() throws SerException {
 
         return null;
     }
 
-    ;/**
+    ;
+
+    /**
      * 获取所有项目
-     *
      */
-    default List<String> projectList( ) throws SerException {
+    default List<String> projectList() throws SerException {
 
         return null;
     }

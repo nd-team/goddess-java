@@ -2,6 +2,7 @@ package com.bjike.goddess.managefee.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.managefee.bo.OutFeeBO;
 import com.bjike.goddess.managefee.bo.OutFeeBO;
@@ -10,7 +11,12 @@ import com.bjike.goddess.managefee.dto.OutFeeDTO;
 import com.bjike.goddess.managefee.dto.OutFeeDTO;
 import com.bjike.goddess.managefee.entity.OutFee;
 import com.bjike.goddess.managefee.entity.OutFee;
+import com.bjike.goddess.managefee.excel.SonPermissionObject;
+import com.bjike.goddess.managefee.to.GuidePermissionTO;
 import com.bjike.goddess.managefee.to.OutFeeTO;
+import com.bjike.goddess.managefee.type.GuideAddrStatus;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
@@ -44,6 +50,124 @@ public class OutFeeSerImpl extends ServiceImpl<OutFee, OutFeeDTO> implements Out
     @Autowired
     private VoucherGenerateAPI voucherGenerateAPI;
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    @Autowired
+    private UserAPI userAPI;
+
+    @Autowired
+    private ManageFeeSer manageFeeSer;
+
+    /**
+     * 检查权限
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        //财务模块权限
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是财务模块人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 导航检查权限
+     *
+     * @throws SerException
+     */
+    private Boolean guildPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag =  cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagoutfee = guildPermission();
+        RpcTransmit.transmitUserToken(userToken);
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("outfeeserimpl");
+        obj.setDescribesion("外部费用管理");
+        if (flagoutfee) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAppMulM = manageFeeSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("managefeeser");
+        obj.setDescribesion("内部管理费用");
+        if (flagAppMulM) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guildPermission();
+                break;
+            case ADD:
+                flag = guildPermission();
+                break;
+            case EDIT:
+                flag = guildPermission();
+                break;
+            case DELETE:
+                flag = guildPermission();
+                break;
+            case COLLECT:
+                flag = guildPermission();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
     @Override
     public Long countOutFee(OutFeeDTO outFeeDTO) throws SerException {
         Long count = super.count(outFeeDTO);
@@ -60,6 +184,7 @@ public class OutFeeSerImpl extends ServiceImpl<OutFee, OutFeeDTO> implements Out
 
     @Override
     public List<OutFeeBO> listOutFee(OutFeeDTO outFeeDTO) throws SerException {
+        checkPermission();
         outFeeDTO.getSorts().add("createTime=desc");
         List<OutFee> list = super.findByCis(outFeeDTO,true);
 
@@ -77,6 +202,7 @@ public class OutFeeSerImpl extends ServiceImpl<OutFee, OutFeeDTO> implements Out
     @Transactional(rollbackFor = SerException.class)
     @Override
     public OutFeeBO addOutFee(OutFeeTO outFeeTO) throws SerException {
+        checkPermission();
         if( outFeeTO.getTargetFee()==null){
             throw new SerException("目标管理费不能为空");
         }
@@ -112,6 +238,7 @@ public class OutFeeSerImpl extends ServiceImpl<OutFee, OutFeeDTO> implements Out
     @Transactional(rollbackFor = SerException.class)
     @Override
     public OutFeeBO editOutFee(OutFeeTO outFeeTO) throws SerException {
+        checkPermission();
         if( outFeeTO.getTargetFee()==null){
             throw new SerException("目标管理费不能为空");
         }
@@ -143,6 +270,7 @@ public class OutFeeSerImpl extends ServiceImpl<OutFee, OutFeeDTO> implements Out
 
     @Override
     public List<OutFeeBO> collectArea(OutFeeDTO outFeeDTO) throws SerException {
+        checkPermission();
         String startTime = outFeeDTO.getStartTime();
         String endTime = outFeeDTO.getEndTime();
 
@@ -190,6 +318,7 @@ public class OutFeeSerImpl extends ServiceImpl<OutFee, OutFeeDTO> implements Out
 
     @Override
     public List<OutFeeBO> collectGroup(OutFeeDTO outFeeDTO) throws SerException {
+        checkPermission();
         String startTime = outFeeDTO.getStartTime();
         String endTime = outFeeDTO.getEndTime();
 
@@ -237,6 +366,7 @@ public class OutFeeSerImpl extends ServiceImpl<OutFee, OutFeeDTO> implements Out
 
     @Override
     public List<OutFeeBO> collectProject(OutFeeDTO outFeeDTO) throws SerException {
+        checkPermission();
         String startTime = outFeeDTO.getStartTime();
         String endTime = outFeeDTO.getEndTime();
 
@@ -285,6 +415,7 @@ public class OutFeeSerImpl extends ServiceImpl<OutFee, OutFeeDTO> implements Out
 
     @Override
     public List<OutFeeBO> collectType(OutFeeDTO outFeeDTO) throws SerException {
+        checkPermission();
         String startTime = outFeeDTO.getStartTime();
         String endTime = outFeeDTO.getEndTime();
 
