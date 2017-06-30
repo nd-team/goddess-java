@@ -27,6 +27,7 @@ sourceSets {
 
 dependencies {
     compile project(":common:common-jpa")
+    compile project(":common:common-utils")
     compile project(":common:common-provider")
     compile project(":modules:quartz:quartz-api")
     compile project(":modules:businessproject:businessproject-api")
@@ -36,6 +37,7 @@ dependencies {
     compile project(":modules:supplier:supplier-api")
     compile project(":modules:projectmeasure:projectmeasure-api")
     compile project(":modules:businessinteraction:businessinteraction-api")
-    compile project(":common:common-utils")
+    compile project(":modules:customer:customer-api")
+
 }
 
