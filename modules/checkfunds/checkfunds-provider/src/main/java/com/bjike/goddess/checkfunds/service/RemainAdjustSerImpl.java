@@ -136,43 +136,28 @@ public class RemainAdjustSerImpl extends ServiceImpl<RemainAdjust, RemainAdjustD
             case LIST:
                 flag = guideSeeIdentity();
                 break;
-            case ADD:
+            case HANDLE:
                 flag = guideAddIdentity();
                 break;
-            case EDIT:
+            case COMMIT:
                 flag = guideAddIdentity();
                 break;
             case AUDIT:
                 flag = guideAddIdentity();
                 break;
-            case DELETE:
+            case ADJUST:
                 flag = guideAddIdentity();
                 break;
-            case CONGEL:
-                flag = guideAddIdentity();
+            case DETAIL:
+                flag = guideSeeIdentity();
                 break;
-            case THAW:
-                flag = guideAddIdentity();
+            case DIFFER:
+                flag = guideSeeIdentity();
                 break;
-            case COLLECT:
-                flag = guideAddIdentity();
-                break;
-            case IMPORT:
-                flag = guideAddIdentity();
-                break;
-            case EXPORT:
-                flag = guideAddIdentity();
-                break;
-            case UPLOAD:
-                flag = guideAddIdentity();
-                break;
-            case DOWNLOAD:
+            case CONFIRM:
                 flag = guideAddIdentity();
                 break;
             case SEE:
-                flag = guideSeeIdentity();
-                break;
-            case SEEFILE:
                 flag = guideSeeIdentity();
                 break;
             default:

@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.reportmanagement.bo.FormulaBO;
 import com.bjike.goddess.reportmanagement.dto.FormulaDTO;
 import com.bjike.goddess.reportmanagement.entity.Formula;
+import com.bjike.goddess.reportmanagement.to.FormulaTO;
 
 import java.util.List;
 
@@ -21,11 +22,49 @@ public interface FormulaSer extends Ser<Formula, FormulaDTO> {
     /**
      * 根据对应科目id查找公式详细
      *
-     * @param foreignId 对应科目id
-     * @param startTime 起始时间
-     * @param endTime   结束时间
+     * @param foreignId
+     * @param startTime
+     * @param endTime
+     * @param projectGroup
      * @return
      * @throws SerException
      */
-    List<FormulaBO> findByFid(String foreignId, String startTime, String endTime) throws SerException;
+    List<FormulaBO> findByFid(String foreignId, String startTime, String endTime, String projectGroup) throws SerException;
+
+    /**
+     * 利润分析
+     *
+     * @param foreignId
+     * @param time
+     * @param projectGroup
+     * @return
+     * @throws SerException
+     */
+    List<FormulaBO> profitAnalyze(String foreignId, String time, String projectGroup) throws SerException;
+
+    /**
+     * 加公式科目
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    FormulaBO add(FormulaTO to) throws SerException;
+
+    /**
+     * 减公式科目
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    FormulaBO remove(FormulaTO to) throws SerException;
+
+    /**
+     * 删除科目
+     *
+     * @param id
+     * @throws SerException
+     */
+    void delete(String id) throws SerException;
 }

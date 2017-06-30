@@ -38,29 +38,42 @@ public class FormulaVO {
     private Double end;
 
     /**
-     * 期间
+     * 本期发生额
      */
-    private String term;
+    private Double current;
 
     /**
-     * 摘要
+     * 运算方式
      */
-    private String digest;
+    private String operation;
 
-    public String getTerm() {
-        return term;
+    /**
+     * 本年累计数
+     */
+    private Double year;
+
+    public Double getYear() {
+        return year;
     }
 
-    public void setTerm(String term) {
-        this.term = term;
+    public void setYear(Double year) {
+        this.year = year;
     }
 
-    public String getDigest() {
-        return digest;
+    public String getOperation() {
+        return operation;
     }
 
-    public void setDigest(String digest) {
-        this.digest = digest;
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
+
+    public Double getCurrent() {
+        return current;
+    }
+
+    public void setCurrent(Double current) {
+        this.current = current;
     }
 
     public Double getBegin() {
@@ -77,14 +90,6 @@ public class FormulaVO {
 
     public void setEnd(Double end) {
         this.end = end;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getProject() {

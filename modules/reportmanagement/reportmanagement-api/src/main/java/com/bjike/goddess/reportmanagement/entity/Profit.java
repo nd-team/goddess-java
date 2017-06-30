@@ -1,6 +1,8 @@
 package com.bjike.goddess.reportmanagement.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.reportmanagement.enums.ProfitType;
+import com.bjike.goddess.reportmanagement.enums.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,6 +40,33 @@ public class Profit extends BaseEntity {
     @Column(name = "currentYearAmount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '本年累计数'")
     private Double currentYearAmount;
 
+    /**
+     * 利润类型
+     */
+    @Column(name = "profitType", columnDefinition = "TINYINT(2)   COMMENT '利润类型'")
+    private ProfitType profitType;
+
+    /**
+     * 运算类型
+     */
+    @Column(name = "type", columnDefinition = "TINYINT(2)   COMMENT '运算类型'")
+    private Type type;
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public ProfitType getProfitType() {
+        return profitType;
+    }
+
+    public void setProfitType(ProfitType profitType) {
+        this.profitType = profitType;
+    }
 
     public String getProject() {
         return project;

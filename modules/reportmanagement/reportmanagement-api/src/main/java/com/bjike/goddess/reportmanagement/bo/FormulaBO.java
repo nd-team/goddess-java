@@ -40,14 +40,30 @@ public class FormulaBO extends BaseBO {
     private Double current;
 
     /**
-     * 期间
+     * 运算方式
      */
-    private String term;
+    private String operation;
 
     /**
-     * 摘要
+     * 本年累计数
      */
-    private String digest;
+    private Double year;
+
+    public Double getYear() {
+        return year;
+    }
+
+    public void setYear(Double year) {
+        this.year = year;
+    }
+
+    public String getOperation() {
+        return operation;
+    }
+
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
 
     public Double getCurrent() {
         return current;
@@ -55,22 +71,6 @@ public class FormulaBO extends BaseBO {
 
     public void setCurrent(Double current) {
         this.current = current;
-    }
-
-    public String getTerm() {
-        return term;
-    }
-
-    public void setTerm(String term) {
-        this.term = term;
-    }
-
-    public String getDigest() {
-        return digest;
-    }
-
-    public void setDigest(String digest) {
-        this.digest = digest;
     }
 
     public Double getBegin() {

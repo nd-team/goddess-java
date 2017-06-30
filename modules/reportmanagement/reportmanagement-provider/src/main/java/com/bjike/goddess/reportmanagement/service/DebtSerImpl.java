@@ -3,12 +3,14 @@ package com.bjike.goddess.reportmanagement.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.reportmanagement.bo.DebtBO;
-import com.bjike.goddess.reportmanagement.bo.FormulaBO;
-import com.bjike.goddess.reportmanagement.bo.StructureBO;
+import com.bjike.goddess.reportmanagement.bo.*;
+import com.bjike.goddess.reportmanagement.dto.AssetDTO;
 import com.bjike.goddess.reportmanagement.dto.DebtDTO;
+import com.bjike.goddess.reportmanagement.dto.DebtStructureAdviceDTO;
 import com.bjike.goddess.reportmanagement.entity.Debt;
 import com.bjike.goddess.reportmanagement.enums.DebtType;
+import com.bjike.goddess.reportmanagement.enums.Form;
+import com.bjike.goddess.reportmanagement.enums.Type;
 import com.bjike.goddess.reportmanagement.to.DebtTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -31,6 +33,8 @@ import java.util.List;
 public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
     @Autowired
     private FormulaSer formulaSer;
+    @Autowired
+    private DebtStructureAdviceSer debtStructureAdviceSer;
 
     @Override
     public DebtBO save(DebtTO to) throws SerException {
@@ -38,22 +42,23 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
         return BeanTransform.copyProperties(entity, DebtBO.class);
     }
 
-    @Override
-    public DebtBO find(String id, String startTime, String endTime) throws SerException {
-        Debt entity = super.findById(id);
-        if (entity == null) {
-            throw new SerException("该对象不存在");
-        }
-        DebtBO bo = BeanTransform.copyProperties(entity, DebtBO.class);
-        bo.setStartTime(startTime);
-        bo.setEndTime(endTime);
-        return bo;
-    }
+//    @Override
+//    public DebtBO find(String id, String startTime, String endTime) throws SerException {
+//        Debt entity = super.findById(id);
+//        if (entity == null) {
+//            throw new SerException("该对象不存在");
+//        }
+//        DebtBO bo = BeanTransform.copyProperties(entity, DebtBO.class);
+//        bo.setStartTime(startTime);
+//        bo.setEndTime(endTime);
+//        return bo;
+//    }
 
     @Override
     public List<DebtBO> list(DebtDTO dto) throws SerException {
         String startTime = dto.getStartTime();
         String endTime = dto.getEndTime();
+        String projectGroup=dto.getProjectGroup();
         dto.getSorts().add("debtType=ASC");
         List<Debt> list = super.findByCis(dto);
         List<DebtBO> boList = new ArrayList<DebtBO>();
@@ -68,7 +73,7 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
         double countBegin = 0;
         double countEnd = 0;       //负债和所有权益合计
         for (Debt debt : list) {
-            List<FormulaBO> formulaBOs = formulaSer.findByFid(debt.getId(), startTime, endTime);
+            List<FormulaBO> formulaBOs = formulaSer.findByFid(debt.getId(), startTime, endTime,projectGroup);
             if (formulaBOs != null) {
                 if (DebtType.AFLOW.equals(debt.getDebtType()) && b1) {
                     DebtBO debtBO = new DebtBO();
@@ -122,10 +127,17 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
                 DebtBO bo = BeanTransform.copyProperties(debt, DebtBO.class);
                 bo.setBeginDebt(formulaBO.getBegin());
                 bo.setEndDebt(formulaBO.getEnd());
-                beginSum += bo.getBeginDebt();
-                endSum += bo.getEndDebt();
-                countBegin += bo.getBeginDebt();
-                countEnd += bo.getEndDebt();
+                if (Type.ADD.equals(debt.getType())) {
+                    beginSum += bo.getBeginDebt();
+                    endSum += bo.getEndDebt();
+                    countBegin += bo.getBeginDebt();
+                    countEnd += bo.getEndDebt();
+                } else if (Type.REMOVE.equals(debt.getType())) {
+                    beginSum -= bo.getBeginDebt();
+                    endSum -= bo.getEndDebt();
+                    countBegin -= bo.getBeginDebt();
+                    countEnd -= bo.getEndDebt();
+                }
                 boList.add(bo);
             }
         }
@@ -146,6 +158,7 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
     public List<StructureBO> debtStructure(DebtDTO dto) throws SerException {
         String startTime = dto.getStartTime();
         String endTime = dto.getEndTime();
+        String projectGroup=dto.getProjectGroup();
         dto.getSorts().add("debtType=ASC");
         List<Debt> list = super.findByCis(dto);
         List<StructureBO> boList = new ArrayList<StructureBO>();
@@ -155,51 +168,155 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
         double flowSum = 0;
         double longSum = 0;
         double allSum = 0;
-        double endSum = 0;
-        double countEnd = 0;       //负债和所有权益合计
+        double currentSum = 0;
+        double countCurrent = 0;       //负债和所有权益合计
         for (Debt debt : list) {
-            List<FormulaBO> formulaBOs = formulaSer.findByFid(debt.getId(), startTime, endTime);
+            List<FormulaBO> formulaBOs = formulaSer.findByFid(debt.getId(), startTime, endTime,projectGroup);
             if (formulaBOs != null) {
                 if (DebtType.BLONG.equals(debt.getDebtType()) && b1) {
-                    flowSum = endSum;
-                    endSum = 0;    //置为0
+                    flowSum = currentSum;
+                    currentSum = 0;    //置为0
                     b1 = false;
                 } else if (DebtType.CTAX.equals(debt.getDebtType()) && b2) {
-                    longSum = endSum;
-                    endSum = 0;    //置为0
+                    longSum = currentSum;
+                    currentSum = 0;    //置为0
                     b2 = false;
                 } else if (DebtType.DALL.equals(debt.getDebtType()) && b3) {
-                    endSum = 0;    //置为0
+                    currentSum = 0;    //置为0
                     b3 = false;
                 }
                 FormulaBO formulaBO = formulaBOs.get(formulaBOs.size() - 1);
                 DebtBO bo = BeanTransform.copyProperties(debt, DebtBO.class);
-                bo.setEndDebt(formulaBO.getEnd());
-                endSum += bo.getEndDebt();
-                countEnd += bo.getEndDebt();
+                bo.setCurrent(formulaBO.getCurrent());
+                if (Type.ADD.equals(debt.getType())) {
+                    currentSum += bo.getCurrent();
+                    countCurrent += bo.getCurrent();
+                } else if (Type.REMOVE.equals(debt.getType())) {
+                    currentSum -= bo.getCurrent();
+                    countCurrent -= bo.getCurrent();
+                }
             }
         }
-        allSum = endSum;
+        allSum = currentSum;
         StructureBO flowBO = new StructureBO();
         flowBO.setProject("流动负债合计");
         flowBO.setFee(flowSum);
-        flowBO.setScale(String.format("%.2f",(flowSum / countEnd) * 100) + "%");
+        String flow = String.format("%.2f", (flowSum / countCurrent) * 100);
+        flowBO.setScale(flow + "%");
         boList.add(flowBO);
         StructureBO longBO = new StructureBO();
         longBO.setProject("长期负债合计");
         longBO.setFee(longSum);
-        longBO.setScale(String.format("%.2f",(longSum / countEnd) * 100) + "%");
+        String l = String.format("%.2f", (longSum / countCurrent) * 100);
+        longBO.setScale(l + "%");
         boList.add(longBO);
         StructureBO allBO = new StructureBO();
         allBO.setProject("所有者权益合计");
-        allBO.setFee(longSum);
-        allBO.setScale(String.format("%.2f",(allSum / countEnd) * 100) + "%");
+        allBO.setFee(allSum);
+        String all = String.format("%.2f", (allSum / countCurrent) * 100);
+        allBO.setScale(all + "%");
         boList.add(allBO);
         StructureBO sumBO = new StructureBO();
         sumBO.setProject("负债与所有者权益总计");
-        sumBO.setFee(countEnd);
+        sumBO.setFee(countCurrent);
         allBO.setScale("100%");
         boList.add(allBO);
+        StructureBO rate = new StructureBO();
+        rate.setProject("比例说明");
+        rate.setBestScale("低负债资本、高权益资本可以降低企业财务风险，" +
+                "减少企业发生债务危机的比率，但是会增加企业资本成本，不能有效发挥债务资本的财务杠杆效益。");
+        boList.add(rate);
+        String advice = debtStructureAdvice(flow, l, all);
+        StructureBO adviceBO = new StructureBO();
+        adviceBO.setProject("管理建议");
+        adviceBO.setBestScale(advice);
+        boList.add(adviceBO);
         return boList;
+    }
+
+    /**
+     * 获取负债与权益结构管理建议
+     *
+     * @param flow
+     * @param l
+     * @param all
+     * @return
+     * @throws SerException
+     */
+    private String debtStructureAdvice(String flow, String l, String all) throws SerException {
+        List<DebtStructureAdviceBO> advices = debtStructureAdviceSer.list(new DebtStructureAdviceDTO());
+        String advice = null;
+        if (advices != null && !advices.isEmpty()) {
+            for (DebtStructureAdviceBO r : advices) {
+                boolean b1 = Double.parseDouble(flow) >= r.getFlowMin() && Double.parseDouble(flow) <= r.getFlowMax();
+                boolean b2 = Double.parseDouble(l) >= r.getLongMin() && Double.parseDouble(l) <= r.getLongMax();
+                boolean b3 = Double.parseDouble(all) >= r.getAllMin() && Double.parseDouble(all) <= r.getAllMax();
+                if (b1 && b2 && b3) {
+                    advice = r.getAdvice();
+                }
+            }
+        }
+        return advice;
+    }
+
+    @Override
+    public List<DetailBO> findDetails(String id, AssetDTO dto) throws SerException {
+        String startTime = dto.getStartTime();
+        String endTime = dto.getEndTime();
+        String projectGroup=dto.getProjectGroup();
+        List<FormulaBO> list = formulaSer.findByFid(id, startTime, endTime,projectGroup);
+        List<DetailBO> boList = new ArrayList<>();
+        if ((list != null) && (!list.isEmpty())) {
+            FormulaBO last = list.get(list.size() - 1);
+            double begin = last.getBegin();
+            double current = last.getCurrent();
+            Form form = last.getForm();
+            double currentSum = 0;
+            String project = findByID(id).getDebt();
+            String term = startTime + "~" + endTime;
+            DetailBO currentBO = new DetailBO();
+            currentBO.setProject(project);
+            currentBO.setTerm(term);
+            currentBO.setState("本期合计");
+            currentBO.setForm(form);
+            if (Form.DEBIT.equals(form)) {
+                currentSum = begin + current;
+                currentBO.setDebit(current);
+            } else if (Form.CREDIT.equals(form)) {
+                currentSum = begin - current;
+                currentBO.setCredit(current);
+            }
+            currentBO.setRemain(currentSum);
+            double year = currentSum;
+            DetailBO beginBO = new DetailBO();
+            beginBO.setProject(project);
+            beginBO.setTerm(term);
+            beginBO.setState("期初余额");
+            beginBO.setForm(form);
+            beginBO.setRemain(begin);
+            boList.add(beginBO);
+            boList.add(currentBO);
+            DetailBO yearBO = new DetailBO();
+            yearBO.setTerm(term);
+            yearBO.setState("本年累计");
+            yearBO.setForm(form);
+            yearBO.setRemain(year);
+            boList.add(yearBO);
+        }
+        return boList;
+    }
+
+    @Override
+    public DebtBO findByID(String id) throws SerException {
+        Debt entity = super.findById(id);
+        if (entity == null) {
+            throw new SerException("该对象不存在");
+        }
+        return BeanTransform.copyProperties(entity, DebtBO.class);
+    }
+
+    @Override
+    public Long count(DebtDTO dto) throws SerException {
+        return super.count(dto);
     }
 }

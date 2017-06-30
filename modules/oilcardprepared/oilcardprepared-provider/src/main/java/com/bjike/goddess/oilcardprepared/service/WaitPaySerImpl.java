@@ -153,32 +153,17 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
             case DELETE:
                 flag = guideAddIdentity();
                 break;
-            case CONGEL:
-                flag = guideAddIdentity();
-                break;
-            case THAW:
-                flag = guideAddIdentity();
-                break;
             case COLLECT:
                 flag = guideAddIdentity();
                 break;
-            case IMPORT:
-                flag = guideAddIdentity();
-                break;
-            case EXPORT:
-                flag = guideAddIdentity();
-                break;
-            case UPLOAD:
-                flag = guideAddIdentity();
-                break;
-            case DOWNLOAD:
+            case CONTRAST:
                 flag = guideAddIdentity();
                 break;
             case SEE:
                 flag = guideSeeIdentity();
                 break;
-            case SEEFILE:
-                flag = guideSeeIdentity();
+            case PAY:
+                flag = guideAddIdentity();
                 break;
             default:
                 flag = true;

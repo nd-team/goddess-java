@@ -44,29 +44,13 @@ public enum GuideAddrStatus {
      */
     COLLECT(7),
     /**
-     * 上传附件
-     */
-    UPLOAD(8),
-    /**
-     * 下载附件
-     */
-    DOWNLOAD(9),
-    /**
-     * 导入
-     */
-    IMPORT(10),
-    /**
-     * 导出
-     */
-    EXPORT(11),
-    /**
      * 查看
      */
-    SEE(12),
+    SEE(8),
     /**
-     * 查看附件
+     * 差异分析
      */
-    SEEFILE(13);
+    DIFFER(9);
 
     private int code;
 

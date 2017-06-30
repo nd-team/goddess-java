@@ -36,17 +36,21 @@ public class DebtVO {
     private Double beginDebt;
 
     /**
+     * 当前月发生额
+     */
+    private Double current;
+
+    /**
      * 负债期末数
      */
     private Double endDebt;
 
-
-    public String getId() {
-        return id;
+    public Double getCurrent() {
+        return current;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setCurrent(Double current) {
+        this.current = current;
     }
 
     public String getStartTime() {

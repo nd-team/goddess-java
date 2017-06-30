@@ -12,7 +12,7 @@ public enum Form {
     /**
      * 贷方
      */
-    CREDIT(1);
+    CREDIT(1);  
     private int code;
 
     Form(int code) {

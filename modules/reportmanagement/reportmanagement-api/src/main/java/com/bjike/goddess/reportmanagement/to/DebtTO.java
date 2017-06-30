@@ -1,6 +1,7 @@
 package com.bjike.goddess.reportmanagement.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.reportmanagement.enums.Type;
 
 /**
  * 负债表
@@ -38,6 +39,18 @@ public class DebtTO extends BaseTO {
      */
     private Double endAsset;
 
+    /**
+     * 运算类型
+     */
+    private Type type;
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
 
     public String getStartTime() {
         return startTime;

@@ -146,31 +146,13 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
             case DELETE:
                 flag = guideAddIdentity();
                 break;
-            case CONGEL:
-                flag = guideAddIdentity();
-                break;
-            case THAW:
-                flag = guideAddIdentity();
-                break;
             case COLLECT:
-                flag = guideAddIdentity();
-                break;
-            case IMPORT:
-                flag = guideAddIdentity();
-                break;
-            case EXPORT:
-                flag = guideAddIdentity();
-                break;
-            case UPLOAD:
-                flag = guideAddIdentity();
-                break;
-            case DOWNLOAD:
                 flag = guideAddIdentity();
                 break;
             case SEE:
                 flag = guideSeeIdentity();
                 break;
-            case SEEFILE:
+            case DETAIL:
                 flag = guideSeeIdentity();
                 break;
             default:
