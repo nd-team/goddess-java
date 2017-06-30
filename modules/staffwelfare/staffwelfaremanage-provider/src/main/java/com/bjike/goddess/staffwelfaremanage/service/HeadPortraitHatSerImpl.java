@@ -51,7 +51,7 @@ public class HeadPortraitHatSerImpl extends ServiceImpl<HeadPortraitHat, HeadPor
         if(null!=o){
             RpcContext.getContext().setAttachment("storageToken",o.toString());
         }
-        fileAPI.upload(to.getMap(), path);
+//        fileAPI.upload(to.getMap(), path);
         model.setUrl(path);
       //  super.save(model);
         to.setId(model.getId());
