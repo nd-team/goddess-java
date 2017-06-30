@@ -21,5 +21,15 @@
 
 	<dubbo:reference validation="true" id="socialFeeApiImpl" interface="com.bjike.goddess.socialfee.api.SocialFeeAPI" />
 	<dubbo:reference validation="true" id="socialFeeVoucherApiImpl" interface="com.bjike.goddess.socialfee.api.SocialFeeVoucherAPI" />
+	<dubbo:reference validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.socialfee.api.CusPermissionAPI" />
+	<dubbo:reference validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.socialfee.api.CusPermissionOperateAPI"/>
+
+
+	<dubbo:reference validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
 
 </beans>
