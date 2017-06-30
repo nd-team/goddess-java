@@ -4,6 +4,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeSummaryBO;
 import com.bjike.goddess.marketactivitymanage.bo.ServeSummaryBO;
 import com.bjike.goddess.marketactivitymanage.dto.MarketServeSummaryDTO;
+import com.bjike.goddess.marketactivitymanage.excel.SonPermissionObject;
+import com.bjike.goddess.marketactivitymanage.to.GuidePermissionTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeSummaryTO;
 
 import java.util.List;
@@ -19,6 +21,21 @@ import java.util.List;
  */
 public interface MarketServeSummaryAPI {
 
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 根据id查询市场招待汇总邮件发送
      *
@@ -96,5 +113,11 @@ public interface MarketServeSummaryAPI {
      * @return class MarketServeSummaryVO
      * @throws SerException
      */
-    List<ServeSummaryBO> summarize(Boolean type, String[] projectGroups, String startTimeString, String endTimeString) throws SerException;
+    default List<ServeSummaryBO> summarize(Boolean type, String[] projectGroups, String startTimeString, String endTimeString) throws SerException{return  null;};
+    /**
+     * 定时器检测要发送的邮件
+     */
+    default void checkSendEmail() throws SerException {
+        return;
+    }
 }

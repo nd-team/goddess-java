@@ -51,7 +51,7 @@ public class MarketServeSummaryVO {
     /**
      * 发送间隔
      */
-    private Integer sendInterval;
+    private Double sendInterval;
 
     /**
      * 发送时间格式
@@ -59,14 +59,15 @@ public class MarketServeSummaryVO {
     private CycleType cycle;
 
     /**
-     * 汇总间隔
+     * 汇总间隔开始时间
      */
-    private Integer detailInterval;
+    private String startTime;
 
     /**
-     * 汇总时间格式
+     * 汇总间隔结束时间
      */
-    private CycleType detailCycle;
+    private String endTime;
+
 
     /**
      * 发送对象
@@ -135,11 +136,11 @@ public class MarketServeSummaryVO {
         this.note = note;
     }
 
-    public Integer getSendInterval() {
+    public Double getSendInterval() {
         return sendInterval;
     }
 
-    public void setSendInterval(Integer sendInterval) {
+    public void setSendInterval(Double sendInterval) {
         this.sendInterval = sendInterval;
     }
 
@@ -151,21 +152,22 @@ public class MarketServeSummaryVO {
         this.cycle = cycle;
     }
 
-    public Integer getDetailInterval() {
-        return detailInterval;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public void setDetailInterval(Integer detailInterval) {
-        this.detailInterval = detailInterval;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 
-    public CycleType getDetailCycle() {
-        return detailCycle;
+    public String getEndTime() {
+        return endTime;
     }
 
-    public void setDetailCycle(CycleType detailCycle) {
-        this.detailCycle = detailCycle;
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
+
 
     public String getEmails() {
         return emails;

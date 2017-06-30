@@ -22,79 +22,79 @@ public class MarketServeApplyImprotTO extends BaseTO {
     /**
      * 计划活动时间点
      */
-    @NotNull(groups = {MarketServeApplyImprotTO.TestAdd.class}, message = "计划活动时间点不能为空")
+    @NotNull(groups = {TestAdd.class}, message = "计划活动时间点不能为空")
     private String planActivityTiming;
 
     /**
      * 地区
      */
-    @NotNull(groups = {MarketServeApplyImprotTO.TestAdd.class}, message = "地区不能为空")
+    @NotNull(groups = {TestAdd.class}, message = "地区不能为空")
     private String area;
 
     /**
      * 目的
      */
-    @NotNull(groups = {MarketServeApplyImprotTO.TestAdd.class}, message = "目的不能为空")
+    @NotNull(groups = {TestAdd.class}, message = "目的不能为空")
     private String purpose;
 
     /**
      * 市场信息编号
      */
-    @NotNull(groups = {MarketServeApplyImprotTO.TestAdd.class}, message = "市场信息编号不能为空")
+    @NotNull(groups = {TestAdd.class}, message = "市场信息编号不能为空")
     private String marketInfoNo;
 
     /**
      * 项目代号
      */
-    @NotNull(groups = {MarketServeApplyImprotTO.TestAdd.class}, message = "项目代号不能为空")
+    @NotNull(groups = {TestAdd.class}, message = "项目代号不能为空")
     private String projectCode;
 
     /**
      * 项目名称
      */
-    @NotNull(groups = {MarketServeApplyImprotTO.TestAdd.class}, message = "项目名称不能为空")
+    @NotNull(groups = {TestAdd.class}, message = "项目名称不能为空")
     private String projectName;
 
     /**
      * 项目性质
      */
-    @NotNull(groups = {MarketServeApplyImprotTO.TestAdd.class}, message = "项目性质不能为空")
+    @NotNull(groups = {TestAdd.class}, message = "项目性质不能为空")
     private String projectNature;
 
     /**
      * 预计参加人数
      */
-    @NotNull(groups = {MarketServeApplyImprotTO.TestAdd.class}, message = "预计参加人数不能为空")
+    @NotNull(groups = {TestAdd.class}, message = "预计参加人数不能为空")
     private Integer predictAttendNo;
 
     /**
      * 计划活动类型
      */
-    @NotNull(groups = {MarketServeApplyImprotTO.TestAdd.class}, message = "计划活动类型不能为空")
+    @NotNull(groups = {TestAdd.class}, message = "计划活动类型不能为空")
     private String planActivityType;
 
     /**
      * 分类
      */
-    @NotNull(groups = {MarketServeApplyImprotTO.TestAdd.class}, message = "分类不能为空")
+    @NotNull(groups = {TestAdd.class}, message = "分类不能为空")
     private String classify;
 
     /**
      * 预计费用
      */
-    @NotNull(groups = {MarketServeApplyImprotTO.TestAdd.class}, message = "预计费用不能为空")
+    @NotNull(groups = {TestAdd.class}, message = "预计费用不能为空")
     private Double predictCharge;
 
     /**
      * 招待负责人
      */
-    @NotNull(groups = {MarketServeApplyImprotTO.TestAdd.class}, message = "招待负责人不能为空")
+    @NotNull(groups = {TestAdd.class}, message = "招待负责人不能为空")
     private String servePrincipal;
 
     /**
      * 是否临时招待
      */
-    @NotNull(groups = {MarketServeApplyImprotTO.TestAdd.class}, message = "是否临时招待不能为空")
+    @NotNull(groups = {TestAdd.class}, message = "是否临时招待不能为空")
     private Boolean whetherTemporaryServe;
 
     /**

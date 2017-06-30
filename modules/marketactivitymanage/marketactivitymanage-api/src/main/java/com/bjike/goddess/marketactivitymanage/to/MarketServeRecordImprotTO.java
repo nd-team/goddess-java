@@ -24,13 +24,13 @@ public class MarketServeRecordImprotTO extends BaseTO {
     /**
      * 计划活动时间点
      */
-    @NotNull(groups = {MarketServeRecordImprotTO.TestAdd.class}, message = "计划活动时间点不能为空")
+    @NotNull(groups = {TestAdd.class}, message = "计划活动时间点不能为空")
     private String planActivityTiming;
 
     /**
      * 实际活动时间点
      */
-    @NotNull(groups = {MarketServeRecordImprotTO.TestAdd.class}, message = "实际活动时间点不能为空")
+    @NotNull(groups = {TestAdd.class}, message = "实际活动时间点不能为空")
     private String actualActivityTiming;
 
     /**

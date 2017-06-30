@@ -3,10 +3,14 @@ package com.bjike.goddess.marketactivitymanage.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeApplyBO;
+import com.bjike.goddess.marketactivitymanage.bo.MarketServeApplyDetailBO;
 import com.bjike.goddess.marketactivitymanage.dto.MarketServeApplyDTO;
 import com.bjike.goddess.marketactivitymanage.entity.MarketServeApply;
+import com.bjike.goddess.marketactivitymanage.excel.MarketServeApplyExcel;
 import com.bjike.goddess.marketactivitymanage.service.MarketServeApplySer;
 import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
+import com.bjike.goddess.marketactivitymanage.to.GuidePermissionTO;
+import com.bjike.goddess.marketactivitymanage.to.MarketServeApplyImprotTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeApplyTO;
 import com.bjike.goddess.marketactivitymanage.type.AuditType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +35,16 @@ public class MarketServeApplyApiImpl implements MarketServeApplyAPI {
     @Autowired
     private MarketServeApplySer marketServeApplySer;
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return marketServeApplySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return marketServeApplySer.guidePermission(guidePermissionTO);
+    }
+
     /**
      * 根据id查询市场招待申请
      *
@@ -39,9 +53,8 @@ public class MarketServeApplyApiImpl implements MarketServeApplyAPI {
      * @throws SerException
      */
     @Override
-    public MarketServeApplyBO findById(String id) throws SerException {
-        MarketServeApply model = marketServeApplySer.findById(id);
-        return BeanTransform.copyProperties(model, MarketServeApplyBO.class);
+    public MarketServeApplyBO getOne(String id) throws SerException {
+        return marketServeApplySer.getOne(id);
     }
 
     /**
@@ -144,7 +157,7 @@ public class MarketServeApplyApiImpl implements MarketServeApplyAPI {
      * @throws SerException
      */
     @Override
-    public MarketServeApplyBO checkDetails(String id) throws SerException {
+    public MarketServeApplyDetailBO checkDetails(String id) throws SerException {
         return marketServeApplySer.checkDetails(id);
     }
 
@@ -157,5 +170,30 @@ public class MarketServeApplyApiImpl implements MarketServeApplyAPI {
     @Override
     public void editClientInfo(CustomerInfoTO to) throws SerException {
         marketServeApplySer.editClientInfo(to);
+    }
+
+    @Override
+    public List<String> findAllProjectName() throws SerException {
+        return marketServeApplySer.findAllProjectName();
+    }
+
+    @Override
+    public byte[] exportExcel(String[] areas, String startTime, String endTime) throws SerException {
+        return marketServeApplySer.exportExcel(areas,startTime,endTime);
+    }
+
+    @Override
+    public void importExcel(List<MarketServeApplyImprotTO> marketServeApplyImprotTOS) throws SerException {
+        marketServeApplySer.importExcel(marketServeApplyImprotTOS);
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return marketServeApplySer.templateExport();
+    }
+
+    @Override
+    public List<String> findAllAreas() throws SerException {
+        return marketServeApplySer.findAllAreas();
     }
 }
