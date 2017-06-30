@@ -1,8 +1,11 @@
 package com.bjike.goddess.accommodation.to;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * @Author: [xiazhili]
@@ -12,42 +15,56 @@ import org.hibernate.validator.constraints.NotBlank;
  * @Copy: [com.bjike]
  */
 public class RentalApplyTO extends BaseTO {
+    public interface TestManage{}
     /**
      * 姓名（用户名称）
      */
-    @NotBlank(message = "组名不能为空", groups = ADD.class)
+    @NotBlank(message = "姓名不能为空", groups = {ADD.class, EDIT.class})
     private String name;
+    /**
+     * 员工编号
+     */
+    @NotBlank(message = "员工编号不能为空", groups = {ADD.class, EDIT.class})
+    private String employeeNum;
     /**
      * 地区
      */
+    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private String area;
     /**
      * 岗位
      */
+    @NotBlank(message = "岗位不能为空", groups = {ADD.class, EDIT.class})
     private String jobs;
     /**
      * 项目组
      */
+    @NotBlank(message = "项目组不能为空", groups = {ADD.class, EDIT.class})
     private String projectGroup;
     /**
      * 项目名称
      */
-    private String projectName;
+    @NotNull(message = "项目名称不能为空", groups = {ADD.class, EDIT.class})
+    private String[] projectName;
     /**
      * 租赁人
      */
+    @NotBlank(message = "租赁人不能为空", groups = {ADD.class, EDIT.class})
     private String lessee;
     /**
      * 住宿人
      */
+    @NotBlank(message = "住宿人不能为空", groups = {ADD.class, EDIT.class})
     private String stayPeople;
     /**
      * 申请原因
      */
+    @NotBlank(message = "申请原因不能为空", groups = {ADD.class, EDIT.class})
     private String reason;
     /**
      * 租房用途
      */
+    @NotBlank(message = "租房用途不能为空", groups = {ADD.class, EDIT.class})
     private String purpose;
     /**
      * 租房地址
@@ -94,9 +111,18 @@ public class RentalApplyTO extends BaseTO {
      */
     private Double network;
     /**
-     * 项目经理审批
+     * 项目经理
      */
-    private String manageApproval;
+    private String manage;
+    /**
+     * 项目经理意见
+     */
+    private String manageOpinion;
+    /**
+     * 项目经理是否通过(是/否)
+     */
+    @NotBlank(message = "项目经理是否通过不能为空",groups = {RentalApplyTO.TestManage.class})
+    private String managePass;
     /**
      * 商务发展部意见
      */
@@ -120,6 +146,14 @@ public class RentalApplyTO extends BaseTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmployeeNum() {
+        return employeeNum;
+    }
+
+    public void setEmployeeNum(String employeeNum) {
+        this.employeeNum = employeeNum;
     }
 
     public String getArea() {
@@ -146,11 +180,11 @@ public class RentalApplyTO extends BaseTO {
         this.projectGroup = projectGroup;
     }
 
-    public String getProjectName() {
+    public String[] getProjectName() {
         return projectName;
     }
 
-    public void setProjectName(String projectName) {
+    public void setProjectName(String[] projectName) {
         this.projectName = projectName;
     }
 
@@ -274,12 +308,28 @@ public class RentalApplyTO extends BaseTO {
         this.network = network;
     }
 
-    public String getManageApproval() {
-        return manageApproval;
+    public String getManage() {
+        return manage;
     }
 
-    public void setManageApproval(String manageApproval) {
-        this.manageApproval = manageApproval;
+    public void setManage(String manage) {
+        this.manage = manage;
+    }
+
+    public String getManageOpinion() {
+        return manageOpinion;
+    }
+
+    public void setManageOpinion(String manageOpinion) {
+        this.manageOpinion = manageOpinion;
+    }
+
+    public String getManagePass() {
+        return managePass;
+    }
+
+    public void setManagePass(String managePass) {
+        this.managePass = managePass;
     }
 
     public String getCommerceRemark() {

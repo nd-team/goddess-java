@@ -13,7 +13,11 @@ import com.bjike.goddess.common.utils.excel.ExcelHeader;
  * @Copy: [ com.bjike ]
  */
 public class BiddingAnswerQuestionsExport {
-
+    /**
+     * 编号
+     */
+    @ExcelHeader(name = "编号",notNull = true)
+    private String biddingNumber;
     /**
      * 项目名称
      */
@@ -50,6 +54,13 @@ public class BiddingAnswerQuestionsExport {
     @ExcelHeader(name = "回复" ,notNull = true)
     private String reply;
 
+    public String getBiddingNumber() {
+        return biddingNumber;
+    }
+
+    public void setBiddingNumber(String biddingNumber) {
+        this.biddingNumber = biddingNumber;
+    }
 
     public String getProjectName() {
         return projectName;

@@ -9,9 +9,7 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.projectissuehandle.bo.ProblemAcceptBO;
 import com.bjike.goddess.projectissuehandle.dto.ProblemAcceptDTO;
-import com.bjike.goddess.projectissuehandle.entity.InvolvedProcessingTask;
 import com.bjike.goddess.projectissuehandle.entity.ProblemAccept;
-import com.bjike.goddess.projectissuehandle.entity.ProblemHandlingResult;
 import com.bjike.goddess.projectissuehandle.enums.*;
 import com.bjike.goddess.projectissuehandle.excel.ProblemAcceptExport;
 import com.bjike.goddess.projectissuehandle.excel.SonPermissionObject;
@@ -52,6 +50,7 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
     private InvolvedProcessingTaskSer involvedProcessingTaskSer;
     @Autowired
     private CollectEmailSer collectEmailSer;
+
     /**
      * 核对查看权限（部门级别）
      */
@@ -242,7 +241,6 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
 
     @Override
     public Long countProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
-        problemAcceptDTO.getSorts().add("createTime=desc");
         Long counts = super.count(problemAcceptDTO);
         return counts;
     }
@@ -258,10 +256,8 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
 
     @Override
     public List<ProblemAcceptBO> findListProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
-        Boolean permission = proPermissionSer.getProPermission("1");
-        if (!permission) {
-            throw new SerException("您的帐号没有权限");
-        }
+        checkSeeIdentity();
+        problemAcceptDTO.getSorts().add("createTime=desc");
         List<ProblemAccept> problemAccepts = super.findByCis(problemAcceptDTO, true);
         List<ProblemAcceptBO> problemAcceptBOS = BeanTransform.copyProperties(problemAccepts, ProblemAcceptBO.class);
         return problemAcceptBOS;
@@ -270,19 +266,15 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProblemAcceptBO insertProblemAccept(ProblemAcceptTO problemAcceptTO) throws SerException {
-        Boolean permission = proPermissionSer.getProPermission("1");
-        if (!permission) {
-            throw new SerException("您不是商务人员，没有权限");
-        }
-
+        checkAddIdentity();
         ProblemAccept problemAccept = BeanTransform.copyProperties(problemAcceptTO, ProblemAccept.class, true);
         //String employeeNumber = userSer.findByMaxField("employeeNumber", User.class);
 //        ProblemAcceptDTO dto = new ProblemAcceptDTO();
 //        dto.getConditions().add(Restrict.eq("projectNum",ProblemAccept.class));
-        String a = super.findByMaxField("projectNum",ProblemAccept.class);
+        String a = super.findByMaxField("projectNum", ProblemAccept.class);
         //项目问题编号
         problemAccept.setProjectNum(generateNum(a));
-       // generateProjectNum(problemAcceptTO);
+        // generateProjectNum(problemAcceptTO);
         problemAccept.setCreateTime(LocalDateTime.now());
         super.save(problemAccept);
 //        ProblemHandlingResult problemHandlingResult = new ProblemHandlingResult();
@@ -303,10 +295,7 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProblemAcceptBO editProblemAccept(ProblemAcceptTO problemAcceptTO) throws SerException {
-        Boolean permission = proPermissionSer.getProPermission("1");
-        if (!permission) {
-            throw new SerException("您不是商务人员，没有权限");
-        }
+        checkAddIdentity();
         if (StringUtils.isBlank(problemAcceptTO.getId())) {
             throw new SerException("id不能为空");
         }
@@ -320,10 +309,7 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeProblemAccept(String id) throws SerException {
-        Boolean permission = proPermissionSer.getProPermission("1");
-        if (!permission) {
-            throw new SerException("您不是商务人员，没有权限");
-        }
+        checkAddIdentity();
         try {
             super.remove(id);
         } catch (SerException e) {
@@ -368,6 +354,7 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
     private static final Integer PRO_NUMBER_LENGTH = 8; // 员工编号长度
     private static final String START_NUMBER = "00000"; // 编号开始
     private static final String ZERO_NUMBER = "000000"; // 员工编号0位数
+
     /**
      * 生成下一个编号
      *
@@ -390,7 +377,6 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
         }
 
     }
-
 
 
     @Transactional(rollbackFor = SerException.class)
@@ -452,17 +438,19 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
 //        }
         return problemEmergencyDegree;
     }
+
     @Override
     public ProblemAcceptBO getProjectNum(String projectNum) throws SerException {
         ProblemAccept problemAccept = new ProblemAccept();
-        if(StringUtils.isNotBlank(projectNum)){
+        if (StringUtils.isNotBlank(projectNum)) {
             ProblemAcceptDTO dto = new ProblemAcceptDTO();
-            dto.getConditions().add(Restrict.eq("projectNum",projectNum));
+            dto.getConditions().add(Restrict.eq("projectNum", projectNum));
             problemAccept = super.findOne(dto);
         }
-        ProblemAcceptBO problemAcceptBO = BeanTransform.copyProperties(problemAccept,ProblemAcceptBO.class);
+        ProblemAcceptBO problemAcceptBO = BeanTransform.copyProperties(problemAccept, ProblemAcceptBO.class);
         return problemAcceptBO;
     }
+
     @Override
     public List<String> getProjectNum() throws SerException {
         String[] fields = new String[]{"projectNum"};
@@ -477,17 +465,17 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
 
     @Override
     public byte[] exportExcel(ProblemAcceptDTO dto) throws SerException {
-        if (StringUtils.isNotBlank(dto.getInternalProjectName())) {
-            dto.getConditions().add(Restrict.eq("internalProjectName", dto.getInternalProjectName()));
+        if (null != dto.getName()) {
+            dto.getConditions().add(Restrict.in("internalProjectName", dto.getName()));
         }
-        if (StringUtils.isNotBlank(dto.getProjectType())) {
-            dto.getConditions().add(Restrict.eq("projectType", dto.getProjectType()));
+        if (null != dto.getType()) {
+            dto.getConditions().add(Restrict.in("projectType", dto.getType()));
         }
         List<ProblemAccept> list = super.findByCis(dto);
 
         List<ProblemAcceptExport> problemAcceptExports = new ArrayList<>();
         list.stream().forEach(str -> {
-            ProblemAcceptExport excel = BeanTransform.copyProperties(str, ProblemAcceptExport.class, "noticeWay", "problemTypes", "problemProcessingTime","affectedDepartment");
+            ProblemAcceptExport excel = BeanTransform.copyProperties(str, ProblemAcceptExport.class, "noticeWay", "problemTypes", "problemProcessingTime", "affectedDepartment");
             excel.setNoticeWay(NoticeWay.exportStrConvert(str.getNoticeWay()));
             excel.setProblemTypes(ProblemTypes.exportStrConvert(str.getProblemTypes()));
             excel.setProblemProcessingTime(ProblemProcessingTime.exportStrConvert(str.getProblemProcessingTime()));
@@ -498,6 +486,30 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
         byte[] bytes = ExcelUtil.clazzToExcel(problemAcceptExports, excel);
         return bytes;
 
+    }
+
+    @Override
+    public List<String> getName() throws SerException {
+        String[] fields = new String[]{"internalProjectName"};
+        List<ProblemAcceptBO> problemAcceptBOS = super.findBySql("select distinct internalProjectName from projectissuehandle_problemaccept group by internalProjectName order by internalProjectName asc ", ProblemAcceptBO.class, fields);
+
+        List<String> collectList = problemAcceptBOS.stream().map(ProblemAcceptBO::getInternalProjectName)
+                .filter(internalProjectName -> (internalProjectName != null || !"".equals(internalProjectName.trim()))).distinct().collect(Collectors.toList());
+
+
+        return collectList;
+    }
+
+    @Override
+    public List<String> getType() throws SerException {
+        String[] fields = new String[]{"projectType"};
+        List<ProblemAcceptBO> problemAcceptBOS = super.findBySql("select distinct projectType from projectissuehandle_problemaccept group by projectType order by projectType asc ", ProblemAcceptBO.class, fields);
+
+        List<String> collectList = problemAcceptBOS.stream().map(ProblemAcceptBO::getInternalProjectName)
+                .filter(projectType -> (projectType != null || !"".equals(projectType.trim()))).distinct().collect(Collectors.toList());
+
+
+        return collectList;
     }
 
 }

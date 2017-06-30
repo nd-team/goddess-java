@@ -1,5 +1,6 @@
 package com.bjike.goddess.market.service;
 
+import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.market.bo.CollectEmailBO;
 import com.bjike.goddess.market.bo.MarketCollectBO;
 import com.bjike.goddess.market.bo.MarketInfoBO;
@@ -245,6 +246,9 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         StringBuffer emails = new StringBuffer("");
         if (sendObjectList != null && sendObjectList.size() > 0) {
             for (String emailStr : sendObjectList) {
+                if (!Validator.isEmail(emailStr)) {
+                    throw new SerException("邮箱输入不正确");
+                }
                 emails.append(emailStr + ";");
             }
         }
@@ -306,6 +310,9 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         StringBuffer emails = new StringBuffer("");
         if (sendObjectList != null && sendObjectList.size() > 0) {
             for (String emailStr : sendObjectList) {
+                if (!Validator.isEmail(emailStr)) {
+                    throw new SerException("邮箱输入不正确");
+                }
                 emails.append(emailStr + ";");
             }
         }

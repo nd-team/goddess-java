@@ -7,7 +7,13 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.message.api.MessageAPI;
+import com.bjike.goddess.message.enums.MsgType;
+import com.bjike.goddess.message.enums.RangeType;
+import com.bjike.goddess.message.enums.SendType;
+import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.receivable.bo.*;
+import com.bjike.goddess.receivable.dto.ContractorDTO;
 import com.bjike.goddess.receivable.dto.ReceivableSubsidiaryDTO;
 import com.bjike.goddess.receivable.entity.Contractor;
 import com.bjike.goddess.receivable.entity.ReceivableSubsidiary;
@@ -15,6 +21,7 @@ import com.bjike.goddess.receivable.enums.AuditStatus;
 import com.bjike.goddess.receivable.enums.CompareStatus;
 import com.bjike.goddess.receivable.enums.TimeStatus;
 import com.bjike.goddess.receivable.excel.ReceivableSubsidiaryExport;
+import com.bjike.goddess.receivable.excel.ReceivableSubsidiaryTemplateExport;
 import com.bjike.goddess.receivable.to.CollectCompareTO;
 import com.bjike.goddess.receivable.to.ProgressTO;
 import com.bjike.goddess.receivable.to.ReceivableSubsidiaryTO;
@@ -27,7 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,6 +55,8 @@ import java.util.stream.Collectors;
 public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiary, ReceivableSubsidiaryDTO> implements ReceivableSubsidiarySer {
     @Autowired
     private ContractorSer contractorSer;
+    @Autowired
+    private MessageAPI messageAPI;
 
 
     @Override
@@ -157,6 +165,20 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         receivableSubsidiary.setMoreMoney(moreNum * receivableSubsidiary.getTaskPrice());
         //receivableSubsidiary = count(receivableSubsidiary);
         super.update(receivableSubsidiary);
+        List<ReceivableSubsidiary> receivableSubsidiaries = new ArrayList<>();
+        for(ReceivableSubsidiary r:receivableSubsidiaries){
+            if(r.getArea().equals(receivableSubsidiaryTO.getArea())){
+
+            }
+            MessageTO to = new MessageTO();
+            to.setContent("您修改了...");
+            to.setTitle("发送项目问题受理和处理修改的东西");
+            to.setMsgType(MsgType.SYS);
+            to.setSendType(SendType.EMAIL);
+            to.setRangeType(RangeType.SPECIFIED);
+
+            messageAPI.send(to);
+        }
         return BeanTransform.copyProperties(receivableSubsidiary, ReceivableSubsidiaryBO.class);
     }
 
@@ -602,14 +624,14 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         String startTime = to.getStartTime();
         String endTime = to.getEndTime();
         List<ReceivableSubsidiary> receivableSubsidiaries = new ArrayList<>();
-        for(ReceivableSubsidiary receivableSubsidiary : receivableSubsidiaries){
-            if(receivableSubsidiary.getAccountTime().equals(TimeStatus.MONTH)){
-                startTime=DateUtil.getStartMonth().toString();
-                endTime=DateUtil.getEndMonth().toString();
-            }else if(receivableSubsidiary.getAccountTime().equals(TimeStatus.QUARTER)){
+        for (ReceivableSubsidiary receivableSubsidiary : receivableSubsidiaries) {
+            if (receivableSubsidiary.getAccountTime().equals(TimeStatus.MONTH)) {
                 startTime = DateUtil.getStartMonth().toString();
                 endTime = DateUtil.getEndMonth().toString();
-            }else if(receivableSubsidiary.getAccountTime().equals(TimeStatus.YEAR)){
+            } else if (receivableSubsidiary.getAccountTime().equals(TimeStatus.QUARTER)) {
+                startTime = DateUtil.getStartMonth().toString();
+                endTime = DateUtil.getEndMonth().toString();
+            } else if (receivableSubsidiary.getAccountTime().equals(TimeStatus.YEAR)) {
                 startTime = DateUtil.getStartYear().toString();
                 endTime = DateUtil.getEndYear().toString();
             }
@@ -667,62 +689,105 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         return collectCompareBOS;
 
     }
-   @Override
-    public ReceivableSubsidiaryBO importExcel(List<ReceivableSubsidiaryTO> receivableSubsidiaryTOS) throws SerException {
-       List<ReceivableSubsidiary> receivableSubsidiaries = BeanTransform.copyProperties(receivableSubsidiaryTOS, ReceivableSubsidiary.class, true);
-       receivableSubsidiaries.stream().forEach(str -> {
-           str.setCreateTime(LocalDateTime.now());
-           str.setModifyTime(LocalDateTime.now());
-       });
-       super.save(receivableSubsidiaries);
 
-       ReceivableSubsidiaryBO bo = BeanTransform.copyProperties(new ReceivableSubsidiary(), ReceivableSubsidiaryBO.class);
-       return bo;
+    @Override
+    public ReceivableSubsidiaryBO importExcel(List<ReceivableSubsidiaryTO> receivableSubsidiaryTOS) throws SerException {
+
+        List<ReceivableSubsidiary> receivableSubsidiaries = new ArrayList<>(receivableSubsidiaryTOS.size());
+        for (ReceivableSubsidiaryTO to : receivableSubsidiaryTOS) {
+            ReceivableSubsidiary receivableSubsidiary = BeanTransform.copyProperties(to, ReceivableSubsidiary.class, true);
+            //ContractorDTO dto = new ContractorDTO();
+            //dto.getConditions().add(Restrict.eq("name", to.getContractorName()));
+            //receivableSubsidiary.setContractor(contractorSer.findOne(dto));
+            receivableSubsidiaries.add(receivableSubsidiary);
+        }
+        super.save(receivableSubsidiaries);
+
+        ReceivableSubsidiaryBO bo = BeanTransform.copyProperties(new ReceivableSubsidiary(), ReceivableSubsidiaryBO.class);
+        return bo;
     }
 
     @Override
-    public byte[] exportExcel(ReceivableSubsidiaryDTO dto) throws SerException{
-        if(null != dto.getArea()){
-            dto.getConditions().add(Restrict.in("area",dto.getArea()));
+    public byte[] exportExcel(ReceivableSubsidiaryDTO dto) throws SerException {
+        if (null != dto.getArea()) {
+            dto.getConditions().add(Restrict.in("area", dto.getArea()));
         }
         String startTime = dto.getStartTime();
         String endTime = dto.getEndTime();
-        if(StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)){
-            String [] condi = new String[]{startTime,endTime};
-            dto.getConditions().add(Restrict.between("accountTime",condi));
+        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+            String[] condi = new String[]{startTime, endTime};
+            dto.getConditions().add(Restrict.between("accountTime", condi));
         }
         List<ReceivableSubsidiary> list = super.findByCis(dto);
         List<ReceivableSubsidiaryExport> exports = new ArrayList<>();
-        list.stream().forEach(str->{
-            ReceivableSubsidiaryExport export = BeanTransform.copyProperties(str,ReceivableSubsidiaryExport.class,"contractor","pay","frame","pact","flow");
-            if(null != str.getContractor().getName()){
-                export.setContractor( str.getContractor().getName());
+        list.stream().forEach(str -> {
+            ReceivableSubsidiaryExport export = BeanTransform.copyProperties(str, ReceivableSubsidiaryExport.class, "contractor", "pay", "frame", "pact", "flow");
+            if (null != str.getContractor().getName()) {
+                export.setContractor(str.getContractor().getName());
             }
-            if(str.getPay().equals(true)){
+            if (str.getPay().equals(true)) {
                 export.setPay("是");
-            }else{
+            } else {
                 export.setPay("否");
             }
-            if(str.getFrame().equals(true)){
+            if (str.getFrame().equals(true)) {
                 export.setFrame("是");
-            }else{
+            } else {
                 export.setFrame("否");
             }
-            if(str.getPact().equals(true)){
+            if (str.getPact().equals(true)) {
                 export.setPact("是");
-            }else{
+            } else {
                 export.setPact("否");
             }
-            if(str.getFlow().equals(true)){
+            if (str.getFlow().equals(true)) {
                 export.setFlow("是");
-            }else{
+            } else {
                 export.setFlow("否");
             }
             exports.add(export);
         });
-        Excel excel = new Excel(0,2);
-        byte [] bytes = ExcelUtil.clazzToExcel(exports,excel);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(exports, excel);
         return bytes;
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<ReceivableSubsidiaryTemplateExport> templateExports = new ArrayList<>();
+        ReceivableSubsidiaryTemplateExport export = new ReceivableSubsidiaryTemplateExport();
+        //export.setContractor("");
+        export.setArea("test");
+        export.setInnerName("test");
+        export.setTaskPrice(10.0d);
+        export.setPactNum(10.0d);
+        export.setPactSize(10.0d);
+        export.setFinishNum(10.0d);
+        export.setUnfinishNum(10.0d);
+        export.setPayTax(10.0d);
+        export.setUndeal(10.0d);
+        export.setPenalty(10.0d);
+        export.setRealCountNum(10.0d);
+        export.setRealCountMoney(10.0d);
+        export.setPay("test");
+        export.setFrame("test");
+        export.setPact("test");
+        export.setFlow("test");
+        templateExports.add(export);
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(templateExports, exce);
+        return bytes;
+    }
+    @Override
+    public ReceivableSubsidiaryBO updateSend(ReceivableSubsidiaryTO to) throws SerException {
+//        Contractor contractor = contractorSer.findById(to.getContractorId());
+//        ReceivableSubsidiary receivableSubsidiary = super.findById(to.getId());
+//        BeanUtils.copyProperties(to, receivableSubsidiary);
+//        //receivableSubsidiary.setContractor(contractor);
+//        if(receivableSubsidiary.getArea().equals(to.getArea())){
+//            messageAPI.send();
+//        }
+        return null;
     }
 
 

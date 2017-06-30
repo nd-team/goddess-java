@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
@@ -245,6 +246,9 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         StringBuffer emails = new StringBuffer("");
         if (sendObjectList != null && sendObjectList.size() > 0) {
             for (String emailStr : sendObjectList) {
+                if (!Validator.isEmail(emailStr)) {
+                    throw new SerException("邮箱输入不正确");
+                }
                 emails.append(emailStr + ";");
             }
         }
@@ -306,6 +310,9 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         StringBuffer emails = new StringBuffer("");
         if (sendObjectList != null && sendObjectList.size() > 0) {
             for (String emailStr : sendObjectList) {
+                if (!Validator.isEmail(emailStr)) {
+                    throw new SerException("邮箱输入不正确");
+                }
                 emails.append(emailStr + ";");
             }
         }

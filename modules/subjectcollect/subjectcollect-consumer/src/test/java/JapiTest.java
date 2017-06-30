@@ -17,7 +17,7 @@ public class JapiTest {
 		JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
 				"modules/subjectcollect/subjectcollect-api",
 				"modules/voucher/voucher-api",
-				"modules/user/user-api",
+				"modules/storage/storage-api",
 				"modules/financeinit/financeinit-api",
 				"common/common-api"
 		});
@@ -26,7 +26,7 @@ public class JapiTest {
 		JapiClientStorage japiClientStorage = JapiClientStorage.getInstance();
 		japiClientStorage.setProject(project);
 		japiClientStorage.autoSaveToDisk();
-		//JapiClient.delete(true);
+//		JapiClient.delete(true);
 		new JapiClientTransfer().autoTransfer(japiClientStorage);
 	}
 

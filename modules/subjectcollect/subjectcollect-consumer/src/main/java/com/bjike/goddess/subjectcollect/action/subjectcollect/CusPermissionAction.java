@@ -107,7 +107,7 @@ public class CusPermissionAction {
      * 科目汇总表权限列表
      *
      * @param cusPermissionDTO 科目汇总表权限信息dto
-     * @param request          前端过滤参数
+     * @param request 前端过滤参数
      * @return class CusPermissionVO
      * @des 获取所有科目汇总表权限信息
      * @version v1

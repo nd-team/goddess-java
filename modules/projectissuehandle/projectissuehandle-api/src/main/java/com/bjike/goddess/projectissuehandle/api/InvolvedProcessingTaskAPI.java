@@ -104,5 +104,20 @@ public interface InvolvedProcessingTaskAPI {
      */
     byte[] exportExcel(InvolvedProcessingTaskDTO dto) throws SerException;
 
-
+    /**
+     * 获取内部项目名称
+     *
+     * @return class String
+     */
+    default List<String> getName() throws SerException {
+        return null;
+    }
+    /**
+     * 获取处理人员
+     *
+     * @return class String
+     */
+    default List<String> getHandler() throws SerException {
+        return null;
+    }
 }

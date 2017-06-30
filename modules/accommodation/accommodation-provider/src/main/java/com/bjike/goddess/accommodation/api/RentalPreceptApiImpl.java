@@ -3,10 +3,12 @@ package com.bjike.goddess.accommodation.api;
 import com.bjike.goddess.accommodation.bo.RentalPreceptBO;
 import com.bjike.goddess.accommodation.dto.RentalPreceptDTO;
 import com.bjike.goddess.accommodation.entity.RentalPrecept;
+import com.bjike.goddess.accommodation.enums.PassStatus;
 import com.bjike.goddess.accommodation.service.RentalPreceptSer;
 import com.bjike.goddess.accommodation.to.RentalPreceptTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +25,19 @@ import java.util.List;
 public class RentalPreceptApiImpl implements RentalPreceptAPI{
     @Autowired
     private RentalPreceptSer rentalPreceptSer;
+    @Override
+    public Long countRentalPrecept(RentalPreceptDTO rentalPreceptDTO) throws SerException {
+        return rentalPreceptSer.countRentalPrecept(rentalPreceptDTO);
+    }
 
+    @Override
+    public RentalPreceptBO getOne(String id) throws SerException {
+        return rentalPreceptSer.getOne(id);
+    }
+    @Override
+    public List<RentalPreceptBO> findListRentalPrecept(RentalPreceptDTO rentalPreceptDTO) throws SerException {
+        return rentalPreceptSer.findListRentalPrecept(rentalPreceptDTO);
+    }
     @Override
     public RentalPreceptBO insertPecept(RentalPreceptTO preceptTO) throws SerException {
         return rentalPreceptSer.insertPecept(preceptTO);
@@ -38,16 +52,14 @@ public class RentalPreceptApiImpl implements RentalPreceptAPI{
         rentalPreceptSer.removePecept(id);
     }
 
+
     @Override
-    public List<RentalPreceptBO> findListRentalPrecept(RentalPreceptDTO rentalPreceptDTO) throws SerException {
-        return rentalPreceptSer.findListRentalPrecept(rentalPreceptDTO);
+    public RentalPreceptBO manageAudit(RentalPreceptTO preceptTO) throws SerException {
+        return rentalPreceptSer.manageAudit(preceptTO);
     }
+
     @Override
-    public void audit(RentalPreceptTO preceptTO) throws  SerException {
-        rentalPreceptSer.audit(preceptTO);
-    }
-    @Override
-    public RentalPreceptBO mail(RentalPreceptTO preceptTO) throws SerException{
-        return rentalPreceptSer.mail(preceptTO);
+    public RentalPreceptBO generalAudit(RentalPreceptTO preceptTO) throws SerException {
+        return rentalPreceptSer.generalAudit(preceptTO);
     }
 }

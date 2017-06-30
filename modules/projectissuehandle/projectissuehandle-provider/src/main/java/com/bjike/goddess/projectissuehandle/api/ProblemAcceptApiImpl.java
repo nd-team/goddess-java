@@ -88,4 +88,13 @@ public class ProblemAcceptApiImpl implements ProblemAcceptAPI {
     public byte[] exportExcel(ProblemAcceptDTO dto) throws SerException {
         return problemAcceptSer.exportExcel(dto);
     }
+    @Override
+    public List<String> getName() throws SerException {
+        return problemAcceptSer.getName();
+    }
+    @Override
+    public List<String> getType() throws SerException {
+        return problemAcceptSer.getType();
+    }
+
 }

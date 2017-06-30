@@ -3,18 +3,23 @@ package com.bjike.goddess.accommodation.service;
 import com.bjike.goddess.accommodation.bo.RentalBO;
 import com.bjike.goddess.accommodation.dto.RentalDTO;
 import com.bjike.goddess.accommodation.entity.Rental;
+import com.bjike.goddess.accommodation.excel.RentalApplyExport;
+import com.bjike.goddess.accommodation.excel.RentalExport;
 import com.bjike.goddess.accommodation.to.RentalTO;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import org.apache.commons.lang3.StringUtils;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 租房信息 业务实现
@@ -27,17 +32,33 @@ import java.util.List;
  */
 @CacheConfig(cacheNames = "accommodationSerCache")
 @Service
-public class RentalSerImpl extends ServiceImpl<Rental,RentalDTO> implements RentalSer{
+public class RentalSerImpl extends ServiceImpl<Rental, RentalDTO> implements RentalSer {
+    @Override
+    public Long count(RentalDTO rentalDTO) throws SerException {
+        Long count = super.count(rentalDTO);
+        return count;
+    }
+
+    @Override
+    public RentalBO getOne(String id) throws SerException {
+        Rental rental = super.findById(id);
+        return BeanTransform.copyProperties(rental, RentalBO.class);
+    }
+
+    @Override
+    public List<RentalBO> findListRental(RentalDTO rentalDTO) throws SerException {
+
+        List<Rental> rentals = super.findByCis(rentalDTO, true);
+        List<RentalBO> rentalBOS = BeanTransform.copyProperties(rentals, RentalBO.class);
+        return rentalBOS;
+    }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public RentalBO insertRental(RentalTO rentalTO) throws SerException {
-        Rental rental = BeanTransform.copyProperties(rentalTO,Rental.class,true);
-        try {
-            rental.setCreateTime(LocalDateTime.now());
-            super.save(rental);
-        } catch (SerException e) {
-            throw new SerException(e.getMessage());
-        }
+        Rental rental = BeanTransform.copyProperties(rentalTO, Rental.class, true);
+        rental.setCreateTime(LocalDateTime.now());
+        super.save(rental);
         return BeanTransform.copyProperties(rental, RentalBO.class);
     }
 
@@ -46,15 +67,11 @@ public class RentalSerImpl extends ServiceImpl<Rental,RentalDTO> implements Rent
     @Override
     public RentalBO editRental(RentalTO rentalTO) throws SerException {
 
-        if(!StringUtils.isEmpty(rentalTO.getId())){
-            Rental rental = super.findById(rentalTO.getId());
-            BeanTransform.copyProperties(rentalTO,rental,true);
-            rental.setModifyTime(LocalDateTime.now());
-            super.update(rental);
-        }else{
-            throw new SerException("更新ID不能为空!");
-        }
-        return BeanTransform.copyProperties(rentalTO,RentalBO.class);
+        Rental rental = super.findById(rentalTO.getId());
+        BeanTransform.copyProperties(rentalTO, rental, true);
+        rental.setModifyTime(LocalDateTime.now());
+        super.update(rental);
+        return BeanTransform.copyProperties(rentalTO, RentalBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -66,54 +83,33 @@ public class RentalSerImpl extends ServiceImpl<Rental,RentalDTO> implements Rent
             throw new SerException(e.getMessage());
         }
     }
-    @Cacheable
-    @Override
-    public List<RentalBO> findListRental(RentalDTO rentalDTO) throws SerException {
 
-        List<Rental> rentals = super.findByCis(rentalDTO,true);
-        return BeanTransform.copyProperties(rentals,RentalBO.class);
-    }
-
-    /**
-     * 上传附件
-     */
     @Override
-    public void uploadAttachments() throws SerException {
-        //TODO: xiazhili 2017-03-10 未做上传附件
-        return ;
-    }
-    /**
-     * 附件
-     */
-    @Override
-    public void attachments() throws SerException {
-        //TODO: xiazhili 2017-03-10 未做附件
-        return ;
-    }
-    /**
-     * 上传
-     */
-    @Override
-    public void upload() throws SerException {
-        //TODO: xiazhili 2017-03-10 未做上传
-        return ;
-    }
-    /**
-     *租房状态
-     */
-    @Override
-    public RentalBO rentalStatus(RentalTO rentalTO)throws SerException {
-        //TODO: xiazhili 2017-03-10 未做租房状态
-        return null;
+    public byte[] exportExcel(RentalDTO dto) throws SerException {
+        if (null != dto.getArea()) {
+            dto.getConditions().add(Restrict.in("area", dto.getArea()));
+        }
+        List<Rental> list = super.findByCis(dto);
+        List<RentalExport> exports = new ArrayList<>();
+        list.stream().forEach(str -> {
+            RentalExport export = BeanTransform.copyProperties(str, RentalExport.class);
+            exports.add(export);
+        });
+        Excel excel = new Excel(0,2);
+        byte [] bytes = ExcelUtil.clazzToExcel(exports,excel);
+        return bytes;
     }
 
-    /**
-     *租房信息导出明细
-     */
     @Override
-    public String exportExcel(String area)throws SerException {
-        //TODO: xiazhili 2017-03-10 未做导出明细
-        return null;
+    public List<String> getArea() throws SerException {
+        String[] fields = new String[]{"area"};
+        List<RentalBO> rentalBOS = super.findBySql("select distinct area from accommodation_rental group by area order by area asc ", RentalBO.class, fields);
+
+        List<String> areasList = rentalBOS.stream().map(RentalBO::getArea)
+                .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
+
+
+        return areasList;
     }
 
 

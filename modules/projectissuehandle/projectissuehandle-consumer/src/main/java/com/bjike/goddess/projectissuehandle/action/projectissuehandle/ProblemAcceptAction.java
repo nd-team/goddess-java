@@ -414,6 +414,36 @@ public class ProblemAcceptAction extends BaseFileAction {
             throw new ActException(e1.getMessage());
         }
     }
+    /**
+     * 获取内部项目名称
+     *
+     * @des 获取内部项目名称集合
+     * @version v1
+     */
+    @GetMapping("v1/name")
+    public Result name() throws ActException {
+        try {
+            List<String> areaList = problemAcceptAPI.getName();
+            return ActResult.initialize(areaList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取工程类型
+     *
+     * @des 获取工程类型集合
+     * @version v1
+     */
+    @GetMapping("v1/type")
+    public Result type() throws ActException {
+        try {
+            List<String> areaList = problemAcceptAPI.getType();
+            return ActResult.initialize(areaList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
 }

@@ -2,7 +2,6 @@ package com.bjike.goddess.projectissuehandle.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.projectissuehandle.enums.ProblemProcessingResult;
-import com.bjike.goddess.projectissuehandle.enums.ProblemRelevantDepartment;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -87,8 +86,8 @@ public class ProblemHandlingResult extends BaseEntity {
     /**
      * 问题相关部门
      */
-    @Column(name = "problemRelevantDepartment", columnDefinition = "TINYINT(2)   COMMENT '问题相关部门'")
-    private ProblemRelevantDepartment problemRelevantDepartment;
+    @Column(name = "problemRelevantDepartment", columnDefinition = "VARCHAR(255)   COMMENT '问题相关部门'")
+    private String problemRelevantDepartment;
 
     /**
      * 问题发生时间
@@ -213,11 +212,11 @@ public class ProblemHandlingResult extends BaseEntity {
         this.problemHandler = problemHandler;
     }
 
-    public ProblemRelevantDepartment getProblemRelevantDepartment() {
+    public String getProblemRelevantDepartment() {
         return problemRelevantDepartment;
     }
 
-    public void setProblemRelevantDepartment(ProblemRelevantDepartment problemRelevantDepartment) {
+    public void setProblemRelevantDepartment(String problemRelevantDepartment) {
         this.problemRelevantDepartment = problemRelevantDepartment;
     }
 

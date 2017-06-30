@@ -71,5 +71,13 @@ public class InvolvedProcessingTaskApiImpl implements InvolvedProcessingTaskAPI 
     public byte[] exportExcel(InvolvedProcessingTaskDTO dto) throws SerException {
         return involvedProcessingTaskSer.exportExcel(dto);
     }
+    @Override
+    public List<String> getName() throws SerException {
+        return involvedProcessingTaskSer.getName();
+    }
+    @Override
+    public List<String> getHandler() throws SerException {
+        return involvedProcessingTaskSer.getHandler();
+    }
 
 }
