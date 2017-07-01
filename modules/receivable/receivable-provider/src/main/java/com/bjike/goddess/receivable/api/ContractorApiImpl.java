@@ -5,8 +5,10 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.receivable.bo.ContractorBO;
 import com.bjike.goddess.receivable.dto.ContractorDTO;
 import com.bjike.goddess.receivable.entity.Contractor;
+import com.bjike.goddess.receivable.excel.SonPermissionObject;
 import com.bjike.goddess.receivable.service.ContractorSer;
 import com.bjike.goddess.receivable.to.ContractorTO;
+import com.bjike.goddess.receivable.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +28,15 @@ import java.util.List;
 public class ContractorApiImpl implements ContractorAPI {
     @Autowired
     private ContractorSer contractorSer;
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return contractorSer.sonPermission();
+    }
 
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return contractorSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countContractor(ContractorDTO contractorDTO) throws SerException {
         return contractorSer.countContractor(contractorDTO);

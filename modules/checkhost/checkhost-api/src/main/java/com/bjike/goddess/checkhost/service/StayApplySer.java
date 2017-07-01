@@ -79,12 +79,13 @@ public interface StayApplySer extends Ser<StayApply, StayApplyDTO> {
     }
 
     /**
-     * 审核
+     * 福利模块负责人审核
      *
-     * @param stayApplyTO 住宿申请
+     * @param applyTO
      * @return class StayApplyBO
+     * @throws SerException
      */
-    default StayApplyBO auditStayApply(StayApplyTO stayApplyTO) throws SerException {
+    default StayApplyBO manageAudit(StayApplyTO applyTO) throws SerException {
         return null;
     }
 

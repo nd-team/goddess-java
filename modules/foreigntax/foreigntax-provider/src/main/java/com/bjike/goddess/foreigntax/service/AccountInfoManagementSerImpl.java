@@ -198,7 +198,7 @@ public class AccountInfoManagementSerImpl extends ServiceImpl<AccountInfoManagem
     public List<AccountInfoManagementBO> findListAccountInfoManagement(AccountInfoManagementDTO accountInfoManagementDTO) throws SerException {
         checkSeeIdentity();
         List<AccountInfoManagement> accountInfoManagements = super.findByCis(accountInfoManagementDTO, true);
-        List<AccountInfoManagementBO> accountInfoManagementBOS = BeanTransform.copyProperties(accountInfoManagements, AccountInfoManagementBO.class, true);
+        List<AccountInfoManagementBO> accountInfoManagementBOS = BeanTransform.copyProperties(accountInfoManagements, AccountInfoManagementBO.class);
         return accountInfoManagementBOS;
     }
 
