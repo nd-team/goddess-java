@@ -2,7 +2,9 @@ package com.bjike.goddess.contractquotemanager.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 
 /**
@@ -27,8 +29,8 @@ public class ContractProjectInfo extends BaseEntity {
     /**
      * 项目组
      */
-    @Column(name = "project", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '项目组'")
-    private String project;
+    @Column(name = "projectGroup", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '项目组'")
+    private String projectGroup;
 
     /**
      * 项目内部结构
@@ -39,32 +41,32 @@ public class ContractProjectInfo extends BaseEntity {
     /**
      * 派工项目名称
      */
-    @Column(name = "projectDispatch", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '派工项目名称'")
-    private String projectDispatch;
+    @Column(name = "dispatchProject", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '派工项目名称'")
+    private String dispatchProject;
 
     /**
      * 派工单编号
      */
-    @Column(name = "dispatchCode", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '派工单编号'")
-    private String dispatchCode;
+    @Column(name = "dispatchNum", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '派工单编号'")
+    private String dispatchNum;
 
     /**
      * 派工合同号
      */
-    @Column(name = "dispatchContraCode", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '派工合同号'")
-    private String dispatchContraCode;
+    @Column(name = "outProjectNum", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '派工合同号'")
+    private String outProjectNum;
 
     /**
      * 开工时间
      */
-    @Column(name = "startTime", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '开工时间'")
-    private String startTime;
+    @Column(name = "startProjectTime", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '开工时间'")
+    private String startProjectTime;
 
     /**
      * 完工时间
      */
-    @Column(name = "endTime", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '完工时间'")
-    private String endTime;
+    @Column(name = "endProjectTime", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '完工时间'")
+    private String endProjectTime;
 
     /**
      * 完工时间(单位：个月)
@@ -75,14 +77,14 @@ public class ContractProjectInfo extends BaseEntity {
     /**
      * 合同金额(单位:万元)
      */
-    @Column(name = "contractMoney", nullable = false, columnDefinition = "DECIMAL(10,2) COMMENT '合同金额(单位:万元)'")
-    private Double contractMoney;
+    @Column(name = "money", nullable = false, columnDefinition = "DECIMAL(10,2) COMMENT '合同金额(单位:万元)'")
+    private Double money;
 
     /**
      * 派工单位
      */
-    @Column(name = "dispatchUnit", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '派工单位'")
-    private String dispatchUnit;
+    @Column(name = "majorCompany", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '派工单位'")
+    private String majorCompany;
 
     /**
      * 合同规模数
@@ -117,12 +119,12 @@ public class ContractProjectInfo extends BaseEntity {
         this.area = area;
     }
 
-    public String getProject() {
-        return project;
+    public String getProjectGroup() {
+        return projectGroup;
     }
 
-    public void setProject(String project) {
-        this.project = project;
+    public void setProjectGroup(String projectGroup) {
+        this.projectGroup = projectGroup;
     }
 
     public String getProjectInner() {
@@ -133,44 +135,44 @@ public class ContractProjectInfo extends BaseEntity {
         this.projectInner = projectInner;
     }
 
-    public String getProjectDispatch() {
-        return projectDispatch;
+    public String getDispatchProject() {
+        return dispatchProject;
     }
 
-    public void setProjectDispatch(String projectDispatch) {
-        this.projectDispatch = projectDispatch;
+    public void setDispatchProject(String dispatchProject) {
+        this.dispatchProject = dispatchProject;
     }
 
-    public String getDispatchCode() {
-        return dispatchCode;
+    public String getDispatchNum() {
+        return dispatchNum;
     }
 
-    public void setDispatchCode(String dispatchCode) {
-        this.dispatchCode = dispatchCode;
+    public void setDispatchNum(String dispatchNum) {
+        this.dispatchNum = dispatchNum;
     }
 
-    public String getDispatchContraCode() {
-        return dispatchContraCode;
+    public String getOutProjectNum() {
+        return outProjectNum;
     }
 
-    public void setDispatchContraCode(String dispatchContraCode) {
-        this.dispatchContraCode = dispatchContraCode;
+    public void setOutProjectNum(String outProjectNum) {
+        this.outProjectNum = outProjectNum;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public String getStartProjectTime() {
+        return startProjectTime;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
+    public void setStartProjectTime(String startProjectTime) {
+        this.startProjectTime = startProjectTime;
     }
 
-    public String getEndTime() {
-        return endTime;
+    public String getEndProjectTime() {
+        return endProjectTime;
     }
 
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
+    public void setEndProjectTime(String endProjectTime) {
+        this.endProjectTime = endProjectTime;
     }
 
     public Integer getCompleteTime() {
@@ -181,20 +183,20 @@ public class ContractProjectInfo extends BaseEntity {
         this.completeTime = completeTime;
     }
 
-    public Double getContractMoney() {
-        return contractMoney;
+    public Double getMoney() {
+        return money;
     }
 
-    public void setContractMoney(Double contractMoney) {
-        this.contractMoney = contractMoney;
+    public void setMoney(Double money) {
+        this.money = money;
     }
 
-    public String getDispatchUnit() {
-        return dispatchUnit;
+    public String getMajorCompany() {
+        return majorCompany;
     }
 
-    public void setDispatchUnit(String dispatchUnit) {
-        this.dispatchUnit = dispatchUnit;
+    public void setMajorCompany(String majorCompany) {
+        this.majorCompany = majorCompany;
     }
 
     public String getContractScale() {

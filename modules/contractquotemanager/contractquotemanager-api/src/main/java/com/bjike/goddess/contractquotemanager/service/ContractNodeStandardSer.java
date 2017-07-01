@@ -4,10 +4,11 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.contractquotemanager.bo.ColationBO;
 import com.bjike.goddess.contractquotemanager.bo.ContractNodeStandardBO;
-import com.bjike.goddess.contractquotemanager.to.FilterTO;
 import com.bjike.goddess.contractquotemanager.dto.ContractNodeStandardDTO;
 import com.bjike.goddess.contractquotemanager.entity.ContractNodeStandard;
 import com.bjike.goddess.contractquotemanager.to.ContractNodeStandardTO;
+import com.bjike.goddess.contractquotemanager.to.FilterTO;
+import com.bjike.goddess.contractquotemanager.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -22,6 +23,19 @@ import java.util.List;
  */
 public interface ContractNodeStandardSer extends Ser<ContractNodeStandard, ContractNodeStandardDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 添加合同节点标准信息

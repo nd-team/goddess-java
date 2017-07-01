@@ -3,6 +3,7 @@ package com.bjike.goddess.contractquotemanager.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contractquotemanager.bo.ColationBO;
 import com.bjike.goddess.contractquotemanager.bo.ContractNodeStandardBO;
@@ -10,7 +11,12 @@ import com.bjike.goddess.contractquotemanager.to.FilterTO;
 import com.bjike.goddess.contractquotemanager.dto.ContractNodeStandardDTO;
 import com.bjike.goddess.contractquotemanager.entity.ContractNodeStandard;
 import com.bjike.goddess.contractquotemanager.to.ContractNodeStandardTO;
+import com.bjike.goddess.contractquotemanager.to.GuidePermissionTO;
+import com.bjike.goddess.contractquotemanager.type.GuideAddrStatus;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +39,116 @@ import java.util.stream.Collectors;
 @Service
 public class ContractNodeStandardSerImpl extends ServiceImpl<ContractNodeStandard, ContractNodeStandardDTO> implements ContractNodeStandardSer {
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    @Autowired
+    private UserAPI userAPI;
+
+
+    /**
+     * 检查权限
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        //财务模块权限
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是财务人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideIdentity();
+                break;
+            case ADD:
+                flag = guideIdentity();
+                break;
+            case EDIT:
+                flag = guideIdentity();
+                break;
+            case DELETE:
+                flag = guideIdentity();
+                break;
+            case CONGEL:
+                flag = guideIdentity();
+                break;
+            case THAW:
+                flag = guideIdentity();
+                break;
+            case COLLECT:
+                flag = guideIdentity();
+                break;
+            case UPLOAD:
+                flag = guideIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideIdentity();
+                break;
+            case SEEFILE:
+                flag = guideIdentity();
+                break;
+            case IMPORT:
+                flag = guideIdentity();
+                break;
+            case EXPORT:
+                flag = guideIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
     /**
      * 分页查询合同节点标准信息
      *
@@ -43,6 +159,7 @@ public class ContractNodeStandardSerImpl extends ServiceImpl<ContractNodeStandar
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<ContractNodeStandardBO> list(ContractNodeStandardDTO dto) throws SerException {
+        checkPermission();
         List<ContractNodeStandard> list = super.findByPage(dto);
         List<ContractNodeStandardBO> boList = BeanTransform.copyProperties(list, ContractNodeStandardBO.class);
         return boList;
@@ -58,6 +175,7 @@ public class ContractNodeStandardSerImpl extends ServiceImpl<ContractNodeStandar
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ContractNodeStandardBO save(ContractNodeStandardTO to) throws SerException {
+        checkPermission();
         ContractNodeStandard entity = BeanTransform.copyProperties(to, ContractNodeStandard.class, true);
         entity = super.save(entity);
         ContractNodeStandardBO bo = BeanTransform.copyProperties(entity, ContractNodeStandardBO.class);
@@ -73,6 +191,7 @@ public class ContractNodeStandardSerImpl extends ServiceImpl<ContractNodeStandar
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
+        checkPermission();
         super.remove(id);
     }
 
@@ -85,6 +204,7 @@ public class ContractNodeStandardSerImpl extends ServiceImpl<ContractNodeStandar
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(ContractNodeStandardTO to) throws SerException {
+        checkPermission();
         if (StringUtils.isNotEmpty(to.getId())) {
             ContractNodeStandard model = super.findById(to.getId());
             if (model != null) {
@@ -112,7 +232,7 @@ public class ContractNodeStandardSerImpl extends ServiceImpl<ContractNodeStandar
 
     @Override
     public List<ContractNodeStandardBO> collect(ContractNodeStandardTO to) throws SerException {
-
+        checkPermission();
         ContractNodeStandardDTO dto = new ContractNodeStandardDTO();
 
         if (to.getDate() != null && !to.getDate().equals("")) {
