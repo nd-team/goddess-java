@@ -4,6 +4,7 @@ import com.bjike.goddess.capability.bo.CollectEmailBO;
 import com.bjike.goddess.capability.dto.CollectEmailDTO;
 import com.bjike.goddess.capability.service.CollectEmailSer;
 import com.bjike.goddess.capability.to.CollectEmailTO;
+import com.bjike.goddess.capability.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -88,5 +89,10 @@ public class CollectEmailApiImpl implements CollectEmailAPI {
     @Override
     public void checkSendEmail() throws SerException {
         collectEmailSer.checkSendEmail();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return collectEmailSer.guidePermission( guidePermissionTO );
     }
 }

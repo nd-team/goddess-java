@@ -1,159 +1,128 @@
-package com.bjike.goddess.capability.bo;
+package com.bjike.goddess.capability.excele;
 
-import com.bjike.goddess.capability.enums.CompletePro;
-import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
 /**
- * 公司能力展示业务传输对象
- *
- * @Author: [ tanghaixiang ]
- * @Date: [ 2017-03-23 04:08 ]
- * @Description: [ 公司能力展示业务传输对象 ]
- * @Version: [ v1.0.0 ]
- * @Copy: [ com.bjike ]
+ * @Author: [zhuangkaiqin]
+ * @Date 17-6-16下午4:38
+ * @Description: [公司能力展示]
+ * @Version: [1.0.0]
  */
-public class CompanyCapabilityBO extends BaseBO {
-
+public class CompanyCapabilityTemplateExcele extends BaseTO {
     /**
      * 公司名称
      */
+    @ExcelHeader(name = "公司名称", notNull = true)
     private String company;
 
     /**
      * 专业资质认证
      */
+    @ExcelHeader(name = "专业资质认证", notNull = true)
     private String professionAuthen;
 
     /**
      * 管理资质认证
      */
+    @ExcelHeader(name = "管理资质认证", notNull = true)
     private String manageAuthen;
 
     /**
      * 公司荣誉证书
      */
+    @ExcelHeader(name = "公司荣誉证书", notNull = true)
     private String companyCertificate;
 
     /**
      * 公司发展规划
      */
+    @ExcelHeader(name = "公司发展规划", notNull = true)
     private String companyDevelop;
 
     /**
      * 项目发展规划
      */
+    @ExcelHeader(name = "项目发展规划", notNull = true)
     private String projectDevelop;
 
     /**
      * 公司所在地区
      */
+    @ExcelHeader(name = "公司所在地区", notNull = true)
     private String area;
 
     /**
      * 公司资金
      */
+    @ExcelHeader(name = "公司资金", notNull = true)
     private String money;
 
     /**
      * 人员组成
      */
+    @ExcelHeader(name = "人员组成", notNull = true)
     private String personForm;
 
     /**
      * 配置
      */
+    @ExcelHeader(name = "配置", notNull = true)
     private String config;
 
     /**
      * 设备
      */
+    @ExcelHeader(name = "设备", notNull = true)
     private String device;
 
     /**
      * 公司占地面积
      */
+    @ExcelHeader(name = "公司占地面积", notNull = true)
     private String companyArea;
 
     /**
      * 公司业务
      */
+    @ExcelHeader(name = "公司业务", notNull = true)
     private String companyBusiness;
 
     /**
      * 公司合作对象
      */
+    @ExcelHeader(name = "公司合作对象", notNull = true)
     private String cooperate;
 
     /**
      * 已完成项目
      */
-    private CompletePro completePro;
+    @ExcelHeader(name = "已完成项目", notNull = true)
+    private String companyProject;
 
     /**
      * 尚在进行中项目
      */
+    @ExcelHeader(name = "尚在进行中项目", notNull = true)
     private String inProjct;
 
     /**
      * 公司文化体系交流
      */
+    @ExcelHeader(name = "公司文化体系交流", notNull = true)
     private String culture;
 
     /**
      * 员工节假日活动
      */
+    @ExcelHeader(name = "员工节假日活动", notNull = true)
     private String holidayActive;
 
     /**
      * 公司公告栏
      */
+    @ExcelHeader(name = "公司公告栏", notNull = true)
     private String bulletinBoard;
-
-    /**
-     * 创建时间
-     */
-    private String createTime;
-
-    /**
-     * 修改时间
-     */
-    private String modifyTime;
-
-    /**
-     * 管理资质认证数组
-     */
-    private String[] manageAuthens;
-
-
-    /**
-     * 专业资质认证数组
-     */
-    private String[] professionAuthens;
-
-    /**
-     * 公司荣誉证书数组
-     */
-    private String[] companyCertificates;
-
-    /**
-     * 尚在进行中项目
-     */
-    private String[] inProjcts;
-
-    /**
-     * 已完成项目数组
-     */
-    private String[] companyProjects;
-
-    /**
-     * 已完成项目
-     */
-    private String companyProject;
-
-    /**
-     * 公司合作对象
-     */
-    private String[] cooperates;
 
 
     public String getCompany() {
@@ -268,14 +237,6 @@ public class CompanyCapabilityBO extends BaseBO {
         this.cooperate = cooperate;
     }
 
-    public CompletePro getCompletePro() {
-        return completePro;
-    }
-
-    public void setCompletePro(CompletePro completePro) {
-        this.completePro = completePro;
-    }
-
     public String getInProjct() {
         return inProjct;
     }
@@ -308,69 +269,6 @@ public class CompanyCapabilityBO extends BaseBO {
         this.bulletinBoard = bulletinBoard;
     }
 
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(String modifyTime) {
-        this.modifyTime = modifyTime;
-    }
-
-    public String[] getManageAuthens() {
-        return manageAuthens;
-    }
-
-    public void setManageAuthens(String[] manageAuthens) {
-        this.manageAuthens = manageAuthens;
-    }
-
-    public String[] getProfessionAuthens() {
-        return professionAuthens;
-    }
-
-    public void setProfessionAuthens(String[] professionAuthens) {
-        this.professionAuthens = professionAuthens;
-    }
-
-    public String[] getCompanyCertificates() {
-        return companyCertificates;
-    }
-
-    public void setCompanyCertificates(String[] companyCertificates) {
-        this.companyCertificates = companyCertificates;
-    }
-
-    public String[] getInProjcts() {
-        return inProjcts;
-    }
-
-    public void setInProjcts(String[] inProjcts) {
-        this.inProjcts = inProjcts;
-    }
-
-    public String[] getCompanyProjects() {
-        return companyProjects;
-    }
-
-    public void setCompanyProjects(String[] companyProjects) {
-        this.companyProjects = companyProjects;
-    }
-
-    public String[] getCooperates() {
-        return cooperates;
-    }
-
-    public void setCooperates(String[] cooperates) {
-        this.cooperates = cooperates;
-    }
 
     public String getCompanyProject() {
         return companyProject;
@@ -379,4 +277,5 @@ public class CompanyCapabilityBO extends BaseBO {
     public void setCompanyProject(String companyProject) {
         this.companyProject = companyProject;
     }
+
 }
