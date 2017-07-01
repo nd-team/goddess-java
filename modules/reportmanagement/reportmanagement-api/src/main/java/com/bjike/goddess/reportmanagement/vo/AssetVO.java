@@ -45,6 +45,14 @@ public class AssetVO {
      */
     private Double endAsset;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public Double getCurrent() {
         return current;
     }

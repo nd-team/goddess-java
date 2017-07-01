@@ -13,6 +13,7 @@ import com.bjike.goddess.reportmanagement.enums.AssetType;
 import com.bjike.goddess.reportmanagement.enums.Form;
 import com.bjike.goddess.reportmanagement.enums.Type;
 import com.bjike.goddess.reportmanagement.to.AssetTO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
     @Transactional(rollbackFor = SerException.class)
     public AssetBO save(AssetTO to) throws SerException {
         Asset entity = BeanTransform.copyProperties(to, Asset.class, true);
+        super.save(entity);
         return BeanTransform.copyProperties(entity, AssetBO.class);
     }
 
@@ -92,7 +94,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         String endTime = dto.getEndTime();
         String projectGroup = dto.getProjectGroup();
         dto.getSorts().add("assetType=ASC");
-        List<Asset> list = super.findByCis(dto);
+        List<Asset> list = super.findAll();
         List<AssetBO> boList = new ArrayList<AssetBO>();
         boolean b1 = true;
         boolean b2 = true;
@@ -209,7 +211,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         String endTime = dto.getEndTime();
         String projectGroup = dto.getProjectGroup();
         dto.getSorts().add("assetType=ASC");
-        List<Asset> list = super.findByCis(dto);
+        List<Asset> list = super.findAll();
         List<StructureBO> boList = new ArrayList<StructureBO>();
         boolean b = true;
         double flowSum = 0;
@@ -445,7 +447,8 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
      * @throws SerException
      */
     private List<Double> finds(AssetDTO dto) throws SerException {
-        DebtDTO debtDTO = BeanTransform.copyProperties(dto, DebtDTO.class);
+        DebtDTO debtDTO = new DebtDTO();
+        BeanUtils.copyProperties(dto,debtDTO);
         List<StructureBO> list = debtSer.debtStructure(debtDTO);
         double flow = 0;
         double all = 0;

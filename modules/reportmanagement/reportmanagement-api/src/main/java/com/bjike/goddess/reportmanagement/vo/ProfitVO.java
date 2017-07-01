@@ -82,6 +82,15 @@ public class ProfitVO {
 //        this.fourthSeason = fourthSeason;
 //    }
 
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getProject() {
         return project;
     }

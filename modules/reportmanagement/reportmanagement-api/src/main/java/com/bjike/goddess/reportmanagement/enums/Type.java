@@ -2,6 +2,7 @@ package com.bjike.goddess.reportmanagement.enums;
 
 /**
  * 运算类型
+ *
  * @Author: [chenjunhao]
  * @Date: [2017-06-29 16:19]
  * @Description: [ ]

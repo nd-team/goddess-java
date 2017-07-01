@@ -43,7 +43,7 @@ public class DebtApiImpl implements DebtAPI {
     }
 
     @Override
-    public List<DetailBO> findDetails(String id, AssetDTO dto) throws SerException {
+    public List<DetailBO> findDetails(String id, DebtDTO dto) throws SerException {
         return debtSer.findDetails(id, dto);
     }
 
@@ -55,5 +55,15 @@ public class DebtApiImpl implements DebtAPI {
     @Override
     public DebtBO findByID(String id) throws SerException {
         return debtSer.findByID(id);
+    }
+
+    @Override
+    public void edit(DebtTO to) throws SerException {
+        debtSer.edit(to);
+    }
+
+    @Override
+    public void delete(String id) throws SerException {
+        debtSer.delete(id);
     }
 }

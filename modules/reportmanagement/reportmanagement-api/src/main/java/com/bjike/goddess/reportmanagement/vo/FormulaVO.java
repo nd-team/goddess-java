@@ -33,12 +33,12 @@ public class FormulaVO {
     private Double begin;
 
     /**
-     * 期末数
+     * 年末数
      */
     private Double end;
 
     /**
-     * 本期发生额
+     * 本月数
      */
     private Double current;
 
@@ -51,6 +51,14 @@ public class FormulaVO {
      * 本年累计数
      */
     private Double year;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public Double getYear() {
         return year;

@@ -9,6 +9,7 @@ import com.bjike.goddess.subjectcollect.to.GuidePermissionTO;
 import com.bjike.goddess.subjectcollect.to.SubjectCollectTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 科目汇总表业务接口
@@ -118,4 +119,22 @@ public interface SubjectCollectAPI {
      * @throws SerException
      */
     SubjectCollectBO getSum(SubjectCollectDTO dto) throws SerException;
+
+    /**
+     * chenjunhao
+     * 获取所有一级科目
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allFirstSubjects() throws SerException;
+
+    /**
+     * chenjunhao
+     * 获取所有项目组/部门
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allProjectGroups() throws SerException;
 }

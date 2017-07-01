@@ -3,7 +3,6 @@ package com.bjike.goddess.reportmanagement.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.reportmanagement.bo.*;
-import com.bjike.goddess.reportmanagement.dto.AssetDTO;
 import com.bjike.goddess.reportmanagement.dto.ProfitDTO;
 import com.bjike.goddess.reportmanagement.entity.Profit;
 import com.bjike.goddess.reportmanagement.to.ProfitTO;
@@ -73,7 +72,7 @@ public interface ProfitSer extends Ser<Profit, ProfitDTO> {
      * @return
      * @throws SerException
      */
-    List<DetailBO> findDetails(String id, AssetDTO dto) throws SerException;
+    List<DetailBO> findDetails(String id, ProfitDTO dto) throws SerException;
 
     /**
      * 通过id查找
@@ -83,4 +82,29 @@ public interface ProfitSer extends Ser<Profit, ProfitDTO> {
      * @throws SerException
      */
     ProfitBO findByID(String id) throws SerException;
+
+    /**
+     * 编辑
+     *
+     * @param to
+     * @throws SerException
+     */
+    void edit(ProfitTO to) throws SerException;
+
+    /**
+     * 删除
+     *
+     * @param id
+     * @throws SerException
+     */
+    void delete(String id) throws SerException;
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(ProfitDTO dto) throws SerException;
 }

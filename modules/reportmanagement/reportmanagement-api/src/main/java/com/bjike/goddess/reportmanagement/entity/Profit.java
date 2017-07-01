@@ -28,17 +28,17 @@ public class Profit extends BaseEntity {
     @Column(name = "project", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目'")
     private String project;
 
-    /**
-     * 本月数
-     */
-    @Column(name = "currentMonthAmount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '本月数'")
-    private Double currentMonthAmount;
-
-    /**
-     * 本年累计数
-     */
-    @Column(name = "currentYearAmount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '本年累计数'")
-    private Double currentYearAmount;
+//    /**
+//     * 本月数
+//     */
+//    @Column(name = "currentMonthAmount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '本月数'")
+//    private Double currentMonthAmount;
+//
+//    /**
+//     * 本年累计数
+//     */
+//    @Column(name = "currentYearAmount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '本年累计数'")
+//    private Double currentYearAmount;
 
     /**
      * 利润类型
@@ -76,19 +76,4 @@ public class Profit extends BaseEntity {
         this.project = project;
     }
 
-    public Double getCurrentMonthAmount() {
-        return currentMonthAmount;
-    }
-
-    public void setCurrentMonthAmount(Double currentMonthAmount) {
-        this.currentMonthAmount = currentMonthAmount;
-    }
-
-    public Double getCurrentYearAmount() {
-        return currentYearAmount;
-    }
-
-    public void setCurrentYearAmount(Double currentYearAmount) {
-        this.currentYearAmount = currentYearAmount;
-    }
 }

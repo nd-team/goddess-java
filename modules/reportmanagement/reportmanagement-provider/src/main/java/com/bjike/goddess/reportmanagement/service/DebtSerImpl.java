@@ -7,15 +7,19 @@ import com.bjike.goddess.reportmanagement.bo.*;
 import com.bjike.goddess.reportmanagement.dto.AssetDTO;
 import com.bjike.goddess.reportmanagement.dto.DebtDTO;
 import com.bjike.goddess.reportmanagement.dto.DebtStructureAdviceDTO;
+import com.bjike.goddess.reportmanagement.entity.Asset;
 import com.bjike.goddess.reportmanagement.entity.Debt;
 import com.bjike.goddess.reportmanagement.enums.DebtType;
 import com.bjike.goddess.reportmanagement.enums.Form;
 import com.bjike.goddess.reportmanagement.enums.Type;
+import com.bjike.goddess.reportmanagement.to.AssetTO;
 import com.bjike.goddess.reportmanagement.to.DebtTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +43,7 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
     @Override
     public DebtBO save(DebtTO to) throws SerException {
         Debt entity = BeanTransform.copyProperties(to, Debt.class, true);
+        super.save(entity);
         return BeanTransform.copyProperties(entity, DebtBO.class);
     }
 
@@ -60,7 +65,7 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
         String endTime = dto.getEndTime();
         String projectGroup=dto.getProjectGroup();
         dto.getSorts().add("debtType=ASC");
-        List<Debt> list = super.findByCis(dto);
+        List<Debt> list = super.findAll();
         List<DebtBO> boList = new ArrayList<DebtBO>();
         boolean b1 = true;
         boolean b2 = true;
@@ -160,7 +165,7 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
         String endTime = dto.getEndTime();
         String projectGroup=dto.getProjectGroup();
         dto.getSorts().add("debtType=ASC");
-        List<Debt> list = super.findByCis(dto);
+        List<Debt> list = super.findAll();
         List<StructureBO> boList = new ArrayList<StructureBO>();
         boolean b1 = true;
         boolean b2 = true;
@@ -260,7 +265,7 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
     }
 
     @Override
-    public List<DetailBO> findDetails(String id, AssetDTO dto) throws SerException {
+    public List<DetailBO> findDetails(String id, DebtDTO dto) throws SerException {
         String startTime = dto.getStartTime();
         String endTime = dto.getEndTime();
         String projectGroup=dto.getProjectGroup();
@@ -318,5 +323,29 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
     @Override
     public Long count(DebtDTO dto) throws SerException {
         return super.count(dto);
+    }
+
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public void edit(DebtTO to) throws SerException {
+        Debt entity = super.findById(to.getId());
+        if (entity == null) {
+            throw new SerException("该对象不存在");
+        }
+        LocalDateTime a = entity.getCreateTime();
+        entity = BeanTransform.copyProperties(to, Asset.class, true);
+        entity.setCreateTime(a);
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+    }
+
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public void delete(String id) throws SerException {
+        Debt entity = super.findById(id);
+        if (entity == null) {
+            throw new SerException("该对象不存在");
+        }
+        super.remove(id);
     }
 }

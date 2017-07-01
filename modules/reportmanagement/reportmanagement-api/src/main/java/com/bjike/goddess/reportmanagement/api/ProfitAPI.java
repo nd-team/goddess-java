@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.reportmanagement.bo.*;
 import com.bjike.goddess.reportmanagement.dto.AssetDTO;
 import com.bjike.goddess.reportmanagement.dto.ProfitDTO;
+import com.bjike.goddess.reportmanagement.to.DebtTO;
 import com.bjike.goddess.reportmanagement.to.ProfitTO;
 
 import java.util.List;
@@ -71,7 +72,7 @@ public interface ProfitAPI {
      * @return
      * @throws SerException
      */
-    List<DetailBO> findDetails(String id, AssetDTO dto) throws SerException;
+    List<DetailBO> findDetails(String id, ProfitDTO dto) throws SerException;
 
     /**
      * 通过id查找
@@ -81,4 +82,29 @@ public interface ProfitAPI {
      * @throws SerException
      */
     ProfitBO findByID(String id) throws SerException;
+
+    /**
+     * 编辑
+     *
+     * @param to
+     * @throws SerException
+     */
+    void edit(ProfitTO to) throws SerException;
+
+    /**
+     * 删除
+     *
+     * @param id
+     * @throws SerException
+     */
+    void delete(String id) throws SerException;
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(ProfitDTO dto) throws SerException;
 }

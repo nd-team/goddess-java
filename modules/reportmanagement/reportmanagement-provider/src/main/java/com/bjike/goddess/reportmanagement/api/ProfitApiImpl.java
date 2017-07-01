@@ -5,6 +5,7 @@ import com.bjike.goddess.reportmanagement.bo.*;
 import com.bjike.goddess.reportmanagement.dto.AssetDTO;
 import com.bjike.goddess.reportmanagement.dto.ProfitDTO;
 import com.bjike.goddess.reportmanagement.service.ProfitSer;
+import com.bjike.goddess.reportmanagement.to.DebtTO;
 import com.bjike.goddess.reportmanagement.to.ProfitTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,12 +52,27 @@ public class ProfitApiImpl implements ProfitAPI {
     }
 
     @Override
-    public List<DetailBO> findDetails(String id, AssetDTO dto) throws SerException {
+    public List<DetailBO> findDetails(String id, ProfitDTO dto) throws SerException {
         return profitSer.findDetails(id, dto);
     }
 
     @Override
     public ProfitBO findByID(String id) throws SerException {
         return profitSer.findByID(id);
+    }
+
+    @Override
+    public void edit(ProfitTO to) throws SerException {
+        profitSer.edit(to);
+    }
+
+    @Override
+    public void delete(String id) throws SerException {
+        profitSer.delete(id);
+    }
+
+    @Override
+    public Long count(ProfitDTO dto) throws SerException {
+        return profitSer.count(dto);
     }
 }

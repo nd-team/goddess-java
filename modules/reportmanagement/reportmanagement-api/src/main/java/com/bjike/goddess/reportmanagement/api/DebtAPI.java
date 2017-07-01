@@ -55,7 +55,7 @@ public interface DebtAPI {
      * @return
      * @throws SerException
      */
-    List<DetailBO> findDetails(String id, AssetDTO dto) throws SerException;
+    List<DetailBO> findDetails(String id, DebtDTO dto) throws SerException;
 
     /**
      * 查找总记录数
@@ -74,4 +74,20 @@ public interface DebtAPI {
      * @throws SerException
      */
     DebtBO findByID(String id) throws SerException;
+
+    /**
+     * 编辑
+     *
+     * @param to
+     * @throws SerException
+     */
+    void edit(DebtTO to) throws SerException;
+
+    /**
+     * 删除
+     *
+     * @param id
+     * @throws SerException
+     */
+    void delete(String id) throws SerException;
 }

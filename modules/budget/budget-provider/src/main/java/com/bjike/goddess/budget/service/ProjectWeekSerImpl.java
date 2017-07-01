@@ -292,42 +292,42 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
                 for (Integer year : years) {
                     for (Integer month : months) {
 //                        for (Double price : prices) {   //todo:有bug单价问题
-                            for (ProjectWeek projectWeek : list) {
+                        for (ProjectWeek projectWeek : list) {
 //                                boolean b = projectWeek.getPrice().compareTo(price) == 0 ? true : false;
-                                if (projectWeek.getArrival().equals(arrival) && projectWeek.getProject().equals(project) && projectWeek.getYear().equals(year) && projectWeek.getMonth().equals(month)/* && b*/) {
-                                    targetIncomeSum += projectWeek.getTargetIncome();
-                                    planIncomeSum += projectWeek.getPlanIncome();
-                                    double incomeDifference = projectWeek.getPlanIncome() - projectWeek.getTargetIncome();
-                                    incomeDifferencesSum += incomeDifference;
-                                    targetWorkSum += projectWeek.getTargetWork();
-                                    actualWorkSum += projectWeek.getActualWork();
-                                    int workDifference = projectWeek.getActualWork() - projectWeek.getTargetWork();
-                                    workDifferencesSum += workDifference;
-                                }
-                            }
-                            if (targetWorkSum != 0) {
-                                ProjectWeekCountBO projectWeekCountBO = new ProjectWeekCountBO();
-                                projectWeekCountBO.setArrival(arrival);
-                                projectWeekCountBO.setProject(project);
-                                projectWeekCountBO.setYear(year);
-                                projectWeekCountBO.setMonth(month);
-//                                projectWeekCountBO.setPrice(price);
-                                projectWeekCountBO.setTargetWorkSum(targetWorkSum);
-                                projectWeekCountBO.setActualWorkSum(actualWorkSum);
-                                projectWeekCountBO.setWorkDifferencesSum(workDifferencesSum);
-                                projectWeekCountBO.setTargetIncomeSum(targetIncomeSum);
-                                projectWeekCountBO.setPlanIncomeSum(planIncomeSum);
-                                projectWeekCountBO.setIncomeDifferencesSum(incomeDifferencesSum);
-                                boList.add(projectWeekCountBO);
-                                targetWorkSum = 0;
-                                actualWorkSum = 0;
-                                workDifferencesSum = 0;
-                                targetIncomeSum = 0.00;
-                                planIncomeSum = 0.00;
-                                incomeDifferencesSum = 0.00;   //置为0
+                            if (projectWeek.getArrival().equals(arrival) && projectWeek.getProject().equals(project) && projectWeek.getYear().equals(year) && projectWeek.getMonth().equals(month)/* && b*/) {
+                                targetIncomeSum += projectWeek.getTargetIncome();
+                                planIncomeSum += projectWeek.getPlanIncome();
+                                double incomeDifference = projectWeek.getPlanIncome() - projectWeek.getTargetIncome();
+                                incomeDifferencesSum += incomeDifference;
+                                targetWorkSum += projectWeek.getTargetWork();
+                                actualWorkSum += projectWeek.getActualWork();
+                                int workDifference = projectWeek.getActualWork() - projectWeek.getTargetWork();
+                                workDifferencesSum += workDifference;
                             }
                         }
+                        if (targetWorkSum != 0) {
+                            ProjectWeekCountBO projectWeekCountBO = new ProjectWeekCountBO();
+                            projectWeekCountBO.setArrival(arrival);
+                            projectWeekCountBO.setProject(project);
+                            projectWeekCountBO.setYear(year);
+                            projectWeekCountBO.setMonth(month);
+//                                projectWeekCountBO.setPrice(price);
+                            projectWeekCountBO.setTargetWorkSum(targetWorkSum);
+                            projectWeekCountBO.setActualWorkSum(actualWorkSum);
+                            projectWeekCountBO.setWorkDifferencesSum(workDifferencesSum);
+                            projectWeekCountBO.setTargetIncomeSum(targetIncomeSum);
+                            projectWeekCountBO.setPlanIncomeSum(planIncomeSum);
+                            projectWeekCountBO.setIncomeDifferencesSum(incomeDifferencesSum);
+                            boList.add(projectWeekCountBO);
+                            targetWorkSum = 0;
+                            actualWorkSum = 0;
+                            workDifferencesSum = 0;
+                            targetIncomeSum = 0.00;
+                            planIncomeSum = 0.00;
+                            incomeDifferencesSum = 0.00;   //置为0
+                        }
                     }
+                }
 //                }
             }
         }
@@ -335,7 +335,7 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
     }
 
     @Override
-    public List<ProjectWeekCountBO> conditionsCount(String[] projects) throws SerException {
+    public List<ProjectWeekCountBO> conditionsCount(ProjectWeekDTO dto1) throws SerException {
         checkSeeIdentity();
         List<ProjectWeekCountBO> boList = new ArrayList<ProjectWeekCountBO>();
         List<String> arrivals = findAllArrivals();
@@ -349,13 +349,15 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
         Double targetIncomeSum = 0.00;
         Double planIncomeSum = 0.00;
         Double incomeDifferencesSum = 0.00;
-        for (String project : projects) {
-            ProjectWeekDTO dto = new ProjectWeekDTO();
-            dto.getConditions().add(Restrict.eq("project", project));
-            list = super.findByCis(dto);
-            for (String arrival : arrivals) {
-                for (Integer year : years) {
-                    for (Integer month : months) {
+        String[] projects = dto1.getProjects();
+        if (projects != null) {
+            for (String project : projects) {
+                ProjectWeekDTO dto = new ProjectWeekDTO();
+                dto.getConditions().add(Restrict.eq("project", project));
+                list = super.findByCis(dto);
+                for (String arrival : arrivals) {
+                    for (Integer year : years) {
+                        for (Integer month : months) {
 //                        for (Double price : prices) {
                             for (ProjectWeek a : list) {
 //                                boolean b = a.getPrice().compareTo(price) == 0 ? true : false;
@@ -394,6 +396,7 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
                         }
                     }
 //                }
+                }
             }
         }
         return boList;

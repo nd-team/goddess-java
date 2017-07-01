@@ -12,19 +12,19 @@ public enum ProfitType {
     /**
      * 营业收入
      */
-    INCOME(0),
+    AINCOME(0),
     /**
      * 营业利润
      */
-    PROFIT(1),
+    BPROFIT(1),
     /**
      * 利润总额
      */
-    SUM(2),
+    CSUM(2),
     /**
      * 净利润
      */
-    NETPROFIT(3);
+    DNETPROFIT(3);
     private int code;
 
     ProfitType(int code) {

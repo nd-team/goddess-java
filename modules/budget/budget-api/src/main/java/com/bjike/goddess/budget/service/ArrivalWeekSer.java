@@ -87,13 +87,11 @@ public interface ArrivalWeekSer extends Ser<ArrivalWeek, ArrivalWeekDTO> {
     /**
      * 分地区汇总
      *
-     * @param arrivals 地区数组
-     * @return class ArrivalWeekCountBO
+     * @param dto1
+     * @return
      * @throws SerException
      */
-    default List<ArrivalWeekCountBO> conditionsCount(String[] arrivals) throws SerException {
-        return null;
-    }
+    List<ArrivalWeekCountBO> conditionsCount(ArrivalWeekDTO dto1) throws SerException;
 
     /**
      * 查询总记录数

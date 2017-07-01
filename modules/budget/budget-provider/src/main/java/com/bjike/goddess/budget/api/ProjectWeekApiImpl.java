@@ -57,8 +57,8 @@ public class ProjectWeekApiImpl implements ProjectWeekAPI {
     }
 
     @Override
-    public List<ProjectWeekCountBO> conditionsCount(String[] projects) throws SerException {
-        return projectWeekSer.conditionsCount(projects);
+    public List<ProjectWeekCountBO> conditionsCount(ProjectWeekDTO dto1) throws SerException {
+        return projectWeekSer.conditionsCount(dto1);
     }
 
     @Override

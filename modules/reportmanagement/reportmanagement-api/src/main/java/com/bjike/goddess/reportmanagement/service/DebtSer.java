@@ -5,7 +5,6 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.reportmanagement.bo.DebtBO;
 import com.bjike.goddess.reportmanagement.bo.DetailBO;
 import com.bjike.goddess.reportmanagement.bo.StructureBO;
-import com.bjike.goddess.reportmanagement.dto.AssetDTO;
 import com.bjike.goddess.reportmanagement.dto.DebtDTO;
 import com.bjike.goddess.reportmanagement.entity.Debt;
 import com.bjike.goddess.reportmanagement.to.DebtTO;
@@ -42,6 +41,7 @@ public interface DebtSer extends Ser<Debt, DebtDTO> {
 
     /**
      * 添加
+     *
      * @param to
      * @return
      * @throws SerException
@@ -50,15 +50,17 @@ public interface DebtSer extends Ser<Debt, DebtDTO> {
 
     /**
      * 查找金额明细
+     *
      * @param id
      * @param dto
      * @return
      * @throws SerException
      */
-    List<DetailBO> findDetails(String id, AssetDTO dto) throws SerException;
+    List<DetailBO> findDetails(String id, DebtDTO dto) throws SerException;
 
     /**
      * 查找总记录数
+     *
      * @param dto
      * @return
      * @throws SerException
@@ -67,9 +69,26 @@ public interface DebtSer extends Ser<Debt, DebtDTO> {
 
     /**
      * 通过id查找
+     *
      * @param id
      * @return
      * @throws SerException
      */
     DebtBO findByID(String id) throws SerException;
+
+    /**
+     * 编辑
+     *
+     * @param to
+     * @throws SerException
+     */
+    void edit(DebtTO to) throws SerException;
+
+    /**
+     * 删除
+     *
+     * @param id
+     * @throws SerException
+     */
+    void delete(String id) throws SerException;
 }

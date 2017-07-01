@@ -41,9 +41,9 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
         String[] strings = new String[]{foreignId};
         List<Formula> list = null;
         for (String s : strings) {
-            String sql = "select project,type from reportmanagement_formula" +
-                    " where foreign_id='" + s + "' ORDER BY type ASC";
-            String[] fileds = new String[]{"project", "type"};
+            String sql = "select project,type1,form from reportmanagement_formula" +
+                    " where foreign_id='" + s + "' ORDER BY type1 ASC";
+            String[] fileds = new String[]{"project", "type1", "form"};
             list = super.findBySql(sql, Formula.class, fileds);
         }
         Integer startMonth = 0;
@@ -84,9 +84,9 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
                         FormulaBO bo = BeanTransform.copyProperties(f, FormulaBO.class);
                         bo.setYear(year);
                         form = bo.getForm();
-                        if ("1".equals(f.getType())) {
+                        if ("1".equals(f.getType1())) {
                             bo.setOperation("+");
-                        } else if ("2".equals(f.getType())) {
+                        } else if ("2".equals(f.getType1())) {
                             bo.setOperation("-");
                         }
                         if (Form.DEBIT.equals(bo.getForm())) {
@@ -104,12 +104,12 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
                             } else if (Form.CREDIT.equals(bo.getForm())) {
                                 bo.setBegin(beginBO.getEndCreditAmount());
                             }
-                            if ("1".equals(f.getType())) {     //1代表加
+                            if ("1".equals(f.getType1())) {     //1代表加
                                 beginSum += bo.getBegin();
                                 endSum += bo.getEnd();
                                 currentSum += bo.getCurrent();
                                 yearSum += bo.getYear();
-                            } else if ("2".equals(f.getType())) {  //2代表减
+                            } else if ("2".equals(f.getType1())) {  //2代表减
                                 beginSum = beginSum - bo.getBegin();
                                 endSum = endSum - bo.getEnd();
                                 currentSum = currentSum - bo.getCurrent();
@@ -123,12 +123,12 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
                             } else if (Form.CREDIT.equals(bo.getForm())) {
                                 bo.setBegin(beginBO.getBeginningCreditAmount());
                             }
-                            if ("1".equals(f.getType())) {     //1代表加
+                            if ("1".equals(f.getType1())) {     //1代表加
                                 beginSum += bo.getBegin();
                                 endSum += bo.getEnd();
                                 currentSum += bo.getCurrent();
                                 yearSum += bo.getYear();
-                            } else if ("2".equals(f.getType())) {  //2代表减
+                            } else if ("2".equals(f.getType1())) {  //2代表减
                                 beginSum = beginSum - bo.getBegin();
                                 endSum = endSum - bo.getEnd();
                                 currentSum = currentSum - bo.getCurrent();
@@ -143,9 +143,9 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
                         FormulaBO bo = BeanTransform.copyProperties(f, FormulaBO.class);
                         form = bo.getForm();
                         bo.setYear(year);
-                        if ("1".equals(f.getType())) {
+                        if ("1".equals(f.getType1())) {
                             bo.setOperation("+");
-                        } else if ("2".equals(f.getType())) {
+                        } else if ("2".equals(f.getType1())) {
                             bo.setOperation("-");
                         }
                         if (Form.DEBIT.equals(bo.getForm())) {
@@ -162,12 +162,12 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
                         } else if (Form.CREDIT.equals(bo.getForm())) {
                             bo.setBegin(beginBO.getBeginningCreditAmount());
                         }
-                        if ("1".equals(f.getType())) {     //1代表加
+                        if ("1".equals(f.getType1())) {     //1代表加
                             currentSum += bo.getCurrent();
                             beginSum += bo.getBegin();
                             endSum += bo.getEnd();
                             yearSum += bo.getYear();
-                        } else if ("2".equals(f.getType())) {  //2代表减
+                        } else if ("2".equals(f.getType1())) {  //2代表减
                             currentSum = currentSum - bo.getCurrent();
                             beginSum = beginSum - bo.getBegin();
                             endSum = endSum - bo.getEnd();
@@ -195,9 +195,9 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
         String[] strings = new String[]{foreignId};
         List<Formula> list = null;
         for (String s : strings) {
-            String sql = "select project,type from reportmanagement_formula" +
-                    " where foreign_id='" + s + "' ORDER BY type ASC";
-            String[] fileds = new String[]{"project", "type"};
+            String sql = "select project,type1,form from reportmanagement_formula" +
+                    " where foreign_id='" + s + "' ORDER BY type1 ASC";
+            String[] fileds = new String[]{"project", "type1", "form"};
             list = super.findBySql(sql, Formula.class, fileds);
         }
         Integer month = 0;
@@ -211,7 +211,7 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
             boList.add(addBO);
             boolean b = true;
             for (Formula f : list) {
-                if ("2".equals(f.getType()) && b) {    //2代表减
+                if ("2".equals(f.getType1()) && b) {    //2代表减
                     FormulaBO bo = new FormulaBO();
                     bo.setProject("减：");
                     boList.add(bo);
@@ -229,9 +229,9 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
                     } else if (Form.CREDIT.equals(bo.getForm())) {
                         bo.setCurrent(subjectCollectBO.getIssueCreditAmount());
                     }
-                    if ("1".equals(f.getType())) {     //1代表加
+                    if ("1".equals(f.getType1())) {     //1代表加
                         currentSum += bo.getCurrent();
-                    } else if ("2".equals(f.getType())) {  //2代表减
+                    } else if ("2".equals(f.getType1())) {  //2代表减
                         currentSum = currentSum - bo.getCurrent();
                     }
                     boList.add(bo);
@@ -249,7 +249,7 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
     @Override
     public FormulaBO add(FormulaTO to) throws SerException {
         Formula entity = BeanTransform.copyProperties(to, Formula.class, true);
-        entity.setType("1");
+        entity.setType1("1");
         super.save(entity);
         return BeanTransform.copyProperties(entity, FormulaBO.class);
     }
@@ -257,7 +257,7 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
     @Override
     public FormulaBO remove(FormulaTO to) throws SerException {
         Formula entity = BeanTransform.copyProperties(to, Formula.class, true);
-        entity.setType("2");
+        entity.setType1("2");
         super.save(entity);
         return BeanTransform.copyProperties(entity, FormulaBO.class);
     }
@@ -269,5 +269,12 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
             throw new SerException("该对象不存在");
         }
         super.remove(id);
+    }
+
+    @Override
+    public FormulaBO save(FormulaTO to) throws SerException {
+        Formula entity = BeanTransform.copyProperties(to, Formula.class, true);
+        super.save(entity);
+        return BeanTransform.copyProperties(entity, FormulaBO.class);
     }
 }

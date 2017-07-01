@@ -410,7 +410,7 @@ public class ArrivalWeekSerImpl extends ServiceImpl<ArrivalWeek, ArrivalWeekDTO>
     }
 
     @Override
-    public List<ArrivalWeekCountBO> conditionsCount(String[] arrivals) throws SerException {
+    public List<ArrivalWeekCountBO> conditionsCount(ArrivalWeekDTO dto1) throws SerException {
         checkSeeIdentity();
         List<ArrivalWeekCountBO> boList = new ArrayList<ArrivalWeekCountBO>();
         List<Integer> years = findAllYears();
@@ -423,51 +423,54 @@ public class ArrivalWeekSerImpl extends ServiceImpl<ArrivalWeek, ArrivalWeekDTO>
         Double targetIncomeSum = 0.00;
         Double planIncomeSum = 0.00;
         Double incomeDifferencesSum = 0.00;
-        for (String arrival : arrivals) {
-            ArrivalWeekDTO dto = new ArrivalWeekDTO();
-            dto.getConditions().add(Restrict.eq("arrival", arrival));
-            list = super.findByCis(dto);
-            //    for (Double price : prices) {
-            for (Integer year : years) {
-                for (Integer month : months) {
-                    for (ArrivalWeek a : list) {
+        String[] arrivals = dto1.getArrivals();
+        if (arrivals != null) {
+            for (String arrival : arrivals) {
+                ArrivalWeekDTO dto = new ArrivalWeekDTO();
+                dto.getConditions().add(Restrict.eq("arrival", arrival));
+                list = super.findByCis(dto);
+                //    for (Double price : prices) {
+                for (Integer year : years) {
+                    for (Integer month : months) {
+                        for (ArrivalWeek a : list) {
 //                            Double price1 = a.getPrice();
 //                            int aa = price1.compareTo(price);
 //                            boolean b = aa == 0 ? true : false;
-                        if (/*b &&*/ a.getYear().equals(year) && a.getMonth().equals(month)) {
-                            targetIncomeSum += a.getTargetIncome();
-                            planIncomeSum += a.getPlanIncome();
-                            double incomeDifference = a.getPlanIncome() - a.getTargetIncome();
-                            incomeDifferencesSum += incomeDifference;
-                            targetWorkSum += a.getTargetWork();
-                            actualWorkSum += a.getActualWork();
-                            int workDifference = a.getActualWork() - a.getTargetWork();
-                            workDifferencesSum += workDifference;
+                            if (/*b &&*/ a.getYear().equals(year) && a.getMonth().equals(month)) {
+                                targetIncomeSum += a.getTargetIncome();
+                                planIncomeSum += a.getPlanIncome();
+                                double incomeDifference = a.getPlanIncome() - a.getTargetIncome();
+                                incomeDifferencesSum += incomeDifference;
+                                targetWorkSum += a.getTargetWork();
+                                actualWorkSum += a.getActualWork();
+                                int workDifference = a.getActualWork() - a.getTargetWork();
+                                workDifferencesSum += workDifference;
+                            }
+                        }
+                        if (targetWorkSum != 0) {
+                            ArrivalWeekCountBO arrivalWeekCountBO = new ArrivalWeekCountBO();
+                            arrivalWeekCountBO.setArrival(arrival);
+                            //        arrivalWeekCountBO.setPrice(price);
+                            arrivalWeekCountBO.setYear(year);
+                            arrivalWeekCountBO.setMonth(month);
+                            arrivalWeekCountBO.setTargetWorkSum(targetWorkSum);
+                            arrivalWeekCountBO.setActualWorkSum(actualWorkSum);
+                            arrivalWeekCountBO.setWorkDifferencesSum(workDifferencesSum);
+                            arrivalWeekCountBO.setTargetIncomeSum(targetIncomeSum);
+                            arrivalWeekCountBO.setPlanIncome(planIncomeSum);
+                            arrivalWeekCountBO.setIncomeDifferencesSum(incomeDifferencesSum);
+                            boList.add(arrivalWeekCountBO);
+                            targetWorkSum = 0;
+                            actualWorkSum = 0;
+                            workDifferencesSum = 0;
+                            targetIncomeSum = 0.00;
+                            planIncomeSum = 0.00;
+                            incomeDifferencesSum = 0.00;     //置为0
                         }
                     }
-                    if (targetWorkSum != 0) {
-                        ArrivalWeekCountBO arrivalWeekCountBO = new ArrivalWeekCountBO();
-                        arrivalWeekCountBO.setArrival(arrival);
-                        //        arrivalWeekCountBO.setPrice(price);
-                        arrivalWeekCountBO.setYear(year);
-                        arrivalWeekCountBO.setMonth(month);
-                        arrivalWeekCountBO.setTargetWorkSum(targetWorkSum);
-                        arrivalWeekCountBO.setActualWorkSum(actualWorkSum);
-                        arrivalWeekCountBO.setWorkDifferencesSum(workDifferencesSum);
-                        arrivalWeekCountBO.setTargetIncomeSum(targetIncomeSum);
-                        arrivalWeekCountBO.setPlanIncome(planIncomeSum);
-                        arrivalWeekCountBO.setIncomeDifferencesSum(incomeDifferencesSum);
-                        boList.add(arrivalWeekCountBO);
-                        targetWorkSum = 0;
-                        actualWorkSum = 0;
-                        workDifferencesSum = 0;
-                        targetIncomeSum = 0.00;
-                        planIncomeSum = 0.00;
-                        incomeDifferencesSum = 0.00;     //置为0
-                    }
                 }
+                //}
             }
-            //}
         }
         return boList;
     }

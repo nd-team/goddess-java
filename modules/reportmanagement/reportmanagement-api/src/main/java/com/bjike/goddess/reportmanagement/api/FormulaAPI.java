@@ -64,4 +64,13 @@ public interface FormulaAPI {
      * @throws SerException
      */
     void delete(String id) throws SerException;
+
+    /**
+     * 添加公式
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    FormulaBO save(FormulaTO to) throws SerException;
 }

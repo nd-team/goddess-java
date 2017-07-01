@@ -47,4 +47,9 @@ public class FormulaApiImpl implements FormulaAPI {
     public void delete(String id) throws SerException {
         formulaSer.delete(id);
     }
+
+    @Override
+    public FormulaBO save(FormulaTO to) throws SerException {
+        return formulaSer.save(to);
+    }
 }

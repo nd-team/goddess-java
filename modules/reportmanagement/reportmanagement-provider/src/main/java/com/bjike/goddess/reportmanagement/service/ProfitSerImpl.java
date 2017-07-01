@@ -8,17 +8,22 @@ import com.bjike.goddess.reportmanagement.dto.AssetDTO;
 import com.bjike.goddess.reportmanagement.dto.DebtDTO;
 import com.bjike.goddess.reportmanagement.dto.ProfitDTO;
 import com.bjike.goddess.reportmanagement.dto.ProfitIndicatorAdviceDTO;
+import com.bjike.goddess.reportmanagement.entity.Asset;
 import com.bjike.goddess.reportmanagement.entity.Profit;
 import com.bjike.goddess.reportmanagement.enums.Form;
 import com.bjike.goddess.reportmanagement.enums.ProfitType;
 import com.bjike.goddess.reportmanagement.enums.Type;
+import com.bjike.goddess.reportmanagement.to.AssetTO;
 import com.bjike.goddess.reportmanagement.to.ProfitTO;
 import com.bjike.goddess.reportmanagement.utils.Utils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +51,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
     @Override
     public ProfitBO save(ProfitTO to) throws SerException {
         Profit entity = BeanTransform.copyProperties(to, Profit.class, true);
+        super.save(entity);
         return BeanTransform.copyProperties(entity, ProfitBO.class);
     }
 
@@ -56,6 +62,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         String projectGroup=dto.getProjectGroup();
         LocalDate a = Utils.tranTime(endTime);
         String startYear = a.getYear() + "-01" + "-01";
+        dto.getSorts().add("profitType=ASC");
         List<Profit> list = super.findByCis(dto);
         List<ProfitBO> boList = new ArrayList<ProfitBO>();
         boolean b = true;
@@ -79,7 +86,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                     if ((startYearBOs != null) && (!startYearBOs.isEmpty())) {
                         bo.setCurrentYearAmount(startYearBOs.get(startYearBOs.size() - 1).getCurrent());
                     }
-                    if (ProfitType.INCOME.equals(profit.getProfitType())) {
+                    if (ProfitType.AINCOME.equals(profit.getProfitType())) {
                         if (Type.ADD.equals(profit.getType())) {
                             incomeMonth += bo.getCurrentMonthAmount();
                             incomeYear += bo.getCurrentYearAmount();
@@ -98,7 +105,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                         if (profit == list.get(0)) {
                             bo.setProject("一、" + profit.getProject());
                         }
-                    } else if (ProfitType.PROFIT.equals(profit.getProfitType())) {
+                    } else if (ProfitType.BPROFIT.equals(profit.getProfitType())) {
                         if (b2) {
                             ProfitBO twoBO = new ProfitBO();
                             twoBO.setProject("二、营业利润");
@@ -122,7 +129,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                                 b4 = false;
                             }
                         }
-                    } else if (ProfitType.SUM.equals(profit.getProfitType())) {
+                    } else if (ProfitType.CSUM.equals(profit.getProfitType())) {
                         if (b5) {
                             ProfitBO twoBO = new ProfitBO();
                             twoBO.setProject("三、利润总额");
@@ -164,6 +171,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         String startTime = dto.getStartTime();
         String endTime = dto.getEndTime();
         String projectGroup=dto.getProjectGroup();
+        dto.getSorts().add("profitType=ASC");
         List<Profit> list = super.findByCis(dto);
         List<ProfitLevelBO> boList = new ArrayList<>();
         boolean b = true;
@@ -197,11 +205,14 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                 bo.setStart(start);
                 bo.setEnd(end);
                 bo.setChange(change);
+                if (end==0){
+                    throw new SerException("结束时间数据为0，不能计算");
+                }
                 bo.setChangeScale(String.format("%.2f", (change / end) * 100) + "%");
                 if (p == list.get(0)) {
                     bo.setProject("一、" + p.getProject());
                 }
-                if (ProfitType.INCOME.equals(p.getProfitType())) {
+                if (ProfitType.AINCOME.equals(p.getProfitType())) {
                     bo.setProfitType(p.getProfitType());
                     if (Type.ADD.equals(p.getType())) {
                         startSum += bo.getStart();
@@ -218,7 +229,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                             b1 = false;
                         }
                     }
-                } else if (ProfitType.PROFIT.equals(p.getProfitType())) {
+                } else if (ProfitType.BPROFIT.equals(p.getProfitType())) {
                     bo.setProfitType(p.getProfitType());
                     if (b2) {
                         ProfitLevelBO twoBO = new ProfitLevelBO();
@@ -229,6 +240,9 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                         double changeSum = startSum - endSum;
                         if (changeSum < 0) {
                             changeSum = -changeSum;
+                        }
+                        if (endSum==0){
+                            throw new SerException("结束时间数据为0，不能计算");
                         }
                         bo.setChangeScale(String.format("%.2f", (changeSum / endSum) * 100) + "%");
                         boList.add(twoBO);
@@ -249,7 +263,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                             b4 = false;
                         }
                     }
-                } else if (ProfitType.SUM.equals(p.getProfitType())) {
+                } else if (ProfitType.CSUM.equals(p.getProfitType())) {
                     bo.setProfitType(p.getProfitType());
                     if (b5) {
                         ProfitLevelBO twoBO = new ProfitLevelBO();
@@ -260,6 +274,9 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                         double changeSum = startSum - endSum;
                         if (changeSum < 0) {
                             changeSum = -changeSum;
+                        }
+                        if (endSum==0){
+                            throw new SerException("结束时间数据为0，不能计算");
                         }
                         bo.setChangeScale(String.format("%.2f", (changeSum / endSum) * 100) + "%");
                         boList.add(twoBO);
@@ -287,10 +304,13 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
             lastBO.setProject("四、净利润");
             lastBO.setStart(startSum);
             lastBO.setEnd(endSum);
-            lastBO.setProfitType(ProfitType.NETPROFIT);
+            lastBO.setProfitType(ProfitType.DNETPROFIT);
             double changeSum = startSum - endSum;
             if (changeSum < 0) {
                 changeSum = -changeSum;
+            }
+            if (endSum==0){
+                throw new SerException("结束时间数据为0，不能计算");
             }
             lastBO.setChangeScale(String.format("%.2f", (changeSum / endSum) * 100) + "%");
             boList.add(lastBO);
@@ -308,7 +328,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
             for (ProfitLevelBO level : levelBOs) {
                 ProfitVerticalBO verticalBO = new ProfitVerticalBO();
                 verticalBO.setProject(level.getProject());
-                if (ProfitType.INCOME.equals(level.getProfitType())) {
+                if (ProfitType.AINCOME.equals(level.getProfitType())) {
                     if (level.getProject().contains("、")) {
                         incomeStart = level.getStart();
                         incomeEnd = level.getEnd();
@@ -324,7 +344,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                         verticalBO.setChange(change);
                         boList.add(verticalBO);
                     }
-                } else if (ProfitType.PROFIT.equals(level.getProfitType())) {
+                } else if (ProfitType.BPROFIT.equals(level.getProfitType())) {
                     if (level.getProject().contains("、")) {
                         incomeStart = level.getStart();
                         incomeEnd = level.getEnd();
@@ -340,7 +360,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                         verticalBO.setChange(change);
                         boList.add(verticalBO);
                     }
-                } else if (ProfitType.SUM.equals(level.getProfitType())) {
+                } else if (ProfitType.CSUM.equals(level.getProfitType())) {
                     if (level.getProject().contains("、")) {
                         incomeStart = level.getStart();
                         incomeEnd = level.getEnd();
@@ -356,7 +376,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                         verticalBO.setChange(change);
                         boList.add(verticalBO);
                     }
-                } else if (ProfitType.NETPROFIT.equals(level.getProfitType())) {
+                } else if (ProfitType.DNETPROFIT.equals(level.getProfitType())) {
                     if (level.getProject().contains("、")) {
                         incomeStart = level.getStart();
                         incomeEnd = level.getEnd();
@@ -374,8 +394,10 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
     public List<ProfitAnalyzeIndicatorBO> analyzeIndicator(ProfitDTO dto) throws SerException {
         List<ProfitBO> profits = list(dto);
         List<ProfitAnalyzeIndicatorBO> boList = new ArrayList<>();
-        AssetDTO assetDTO = BeanTransform.copyProperties(dto, AssetDTO.class);
-        DebtDTO debtDTO = BeanTransform.copyProperties(dto, DebtDTO.class);
+        AssetDTO assetDTO =new AssetDTO();
+        BeanUtils.copyProperties(dto,assetDTO);
+        DebtDTO debtDTO = new DebtDTO();
+        BeanUtils.copyProperties(dto,debtDTO);
         List<AssetBO> assetBOs = assetSer.list(assetDTO);
         List<DebtBO> debtBOs = debtSer.list(debtDTO);
         double income = 0;    //营业收入
@@ -471,7 +493,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
     }
 
     @Override
-    public List<DetailBO> findDetails(String id, AssetDTO dto) throws SerException {
+    public List<DetailBO> findDetails(String id, ProfitDTO dto) throws SerException {
         String startTime = dto.getStartTime();
         String endTime = dto.getEndTime();
         String projectGroup=dto.getProjectGroup();
@@ -524,5 +546,34 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
             throw new SerException("该对象不存在");
         }
         return BeanTransform.copyProperties(entity, ProfitBO.class);
+    }
+
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public void edit(ProfitTO to) throws SerException {
+        Profit entity = super.findById(to.getId());
+        if (entity == null) {
+            throw new SerException("该对象不存在");
+        }
+        LocalDateTime a = entity.getCreateTime();
+        entity = BeanTransform.copyProperties(to, Asset.class, true);
+        entity.setCreateTime(a);
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+    }
+
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public void delete(String id) throws SerException {
+        Profit entity = super.findById(id);
+        if (entity == null) {
+            throw new SerException("该对象不存在");
+        }
+        super.remove(id);
+    }
+
+    @Override
+    public Long count(ProfitDTO dto) throws SerException {
+        return super.count(dto);
     }
 }
