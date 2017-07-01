@@ -145,8 +145,8 @@ public class MarketChannelSerImpl extends ServiceImpl<MarketChannel, MarketChann
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketChannelBO save(MarketChannelTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(channelManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(channelManage))
+//            throw new SerException("您的帐号没有权限");
         MarketChannel entity = BeanTransform.copyProperties(to, MarketChannel.class);
         super.save(entity);
         return BeanTransform.copyProperties(entity, MarketChannelBO.class);
@@ -155,8 +155,8 @@ public class MarketChannelSerImpl extends ServiceImpl<MarketChannel, MarketChann
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketChannelBO update(MarketChannelTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(channelManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(channelManage))
+//            throw new SerException("您的帐号没有权限");
         if (StringUtils.isNotBlank(to.getId())) {
             try {
                 MarketChannel entity = super.findById(to.getId());
@@ -174,8 +174,8 @@ public class MarketChannelSerImpl extends ServiceImpl<MarketChannel, MarketChann
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketChannelBO delete(MarketChannelTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(channelManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(channelManage))
+//            throw new SerException("您的帐号没有权限");
         MarketChannel entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");
@@ -210,15 +210,15 @@ public class MarketChannelSerImpl extends ServiceImpl<MarketChannel, MarketChann
 
     @Override
     public List<MarketChannel> findByPage(MarketChannelDTO dto) throws SerException {
-        if (!marPermissionSer.getMarPermission(channelManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(channelManage))
+//            throw new SerException("您的帐号没有权限");
         return super.findByPage(dto);
     }
 
     @Override
     public byte[] exportExcel(CollectTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(channelManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(channelManage))
+//            throw new SerException("您的帐号没有权限");
         MarketChannelDTO dto = new MarketChannelDTO();
         if (StringUtils.isNotBlank(to.getType()))
             dto.getConditions().add(Restrict.eq("type", to.getType()));
