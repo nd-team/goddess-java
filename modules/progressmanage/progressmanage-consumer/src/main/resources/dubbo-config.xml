@@ -33,10 +33,13 @@
     <!-- 节点表头API-->
     <dubbo:reference interface="com.bjike.goddess.progressmanage.api.NodeHeadAPI" id="nodeHeadApiImpl"/>
 
+    <!-- 节点表头行API-->
+    <dubbo:reference interface="com.bjike.goddess.progressmanage.api.NodeHeadRowSignAPI" id="nodeHeadRowSignApiImpl"/>
+
     <!-- 进度表表头值API-->
     <dubbo:reference interface="com.bjike.goddess.progressmanage.api.TableHeadValueAPI" id="tableHeadValueApiImpl"/>
 
-    <!-- 进度表表头值API-->
+    <!-- 进度表表头行API-->
     <dubbo:reference interface="com.bjike.goddess.progressmanage.api.TableHeadRowSignAPI" id="tableHeadRowSignApiImpl"/>
 
 

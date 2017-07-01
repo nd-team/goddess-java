@@ -1,6 +1,5 @@
 package com.bjike.goddess.progressmanage.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.progressmanage.enums.HeadType;
 

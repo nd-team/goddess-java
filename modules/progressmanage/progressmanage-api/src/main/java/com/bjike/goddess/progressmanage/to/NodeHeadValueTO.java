@@ -1,4 +1,4 @@
-package com.bjike.goddess.progressmanage.vo;
+package com.bjike.goddess.progressmanage.to;
 
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -6,21 +6,22 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
- * 进度表表头对应Value
+ * 节点表头值
  *
  * @Author: [ Jason ]
- * @Date: [ 2017-06-19 04:48 ]
- * @Description: [ 进度表表头对应Value ]
+ * @Date: [ 2017-06-26 09:54 ]
+ * @Description: [ 节点表头值 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class TableHeadValueReceiveVO {
+public class NodeHeadValueTO extends BaseTO {
 
 
     /**
-     * 表头Id
+     * 节点表头Id
      */
-    private String tableHeadId;
+    @NotBlank(message = "节点表头Id不能为空", groups = {ADD.class, EDIT.class})
+    private String nodeHeadId;
 
     /**
      * 值
@@ -28,12 +29,12 @@ public class TableHeadValueReceiveVO {
     private String value;
 
 
-    public String getTableHeadId() {
-        return tableHeadId;
+    public String getNodeHeadId() {
+        return nodeHeadId;
     }
 
-    public void setTableHeadId(String tableHeadId) {
-        this.tableHeadId = tableHeadId;
+    public void setNodeHeadId(String nodeHeadId) {
+        this.nodeHeadId = nodeHeadId;
     }
 
     public String getValue() {
