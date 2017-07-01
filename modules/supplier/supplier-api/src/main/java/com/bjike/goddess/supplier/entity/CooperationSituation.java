@@ -28,7 +28,7 @@ public class CooperationSituation extends BaseEntity {
     /**
      * 公司名称
      */
-    @Column(name = "companyName", nullable = false, columnDefinition = "VARCHAR(50)   COMMENT '公司名称'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(100)   COMMENT '公司名称'")
     private String companyName;
 
     /**

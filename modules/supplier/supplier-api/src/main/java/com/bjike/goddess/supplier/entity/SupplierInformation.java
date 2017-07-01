@@ -36,7 +36,7 @@ public class SupplierInformation extends BaseEntity {
     /**
      * 供应商名称
      */
-    @Column(name = "supplierName", nullable = false, columnDefinition = "VARCHAR(50)   COMMENT '供应商名称'")
+    @Column( nullable = false, columnDefinition = "VARCHAR(100)   COMMENT '供应商名称'")
     private String supplierName;
 
     /**
