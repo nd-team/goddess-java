@@ -165,6 +165,21 @@ public interface ProblemAcceptSer extends Ser<ProblemAccept, ProblemAcceptDTO> {
      * @throws SerException
      */
     byte[] exportExcel(ProblemAcceptDTO dto ) throws SerException;
-
+    /**
+     * 获取内部项目名称
+     *
+     * @return class String
+     */
+    default List<String> getName() throws SerException {
+        return null;
+    }
+    /**
+     * 获取工程类型
+     *
+     * @return class String
+     */
+    default List<String> getType() throws SerException {
+        return null;
+    }
 
 }

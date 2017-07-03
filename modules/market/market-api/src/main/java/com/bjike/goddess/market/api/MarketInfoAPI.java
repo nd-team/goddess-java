@@ -112,5 +112,13 @@ public interface MarketInfoAPI {
      * @throws SerException
      */
     List<MarketInfoBO> findByOriganizion(String origanizion) throws SerException;
-
+    /**
+     * 根据地区,项目组查找
+     * zhuangkaiqin
+     *
+     * @return class String
+     */
+    default List<MarketInfoBO> getCollecting(String area, String projectName) throws SerException {
+        return null;
+    }
 }

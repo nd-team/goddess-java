@@ -3,6 +3,7 @@ package com.bjike.goddess.bidding.action.bidding;
 import com.bjike.goddess.bidding.api.BiddingInfoAPI;
 import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
+import com.bjike.goddess.bidding.entity.BiddingInfo;
 import com.bjike.goddess.bidding.excel.SonPermissionObject;
 import com.bjike.goddess.bidding.to.BiddingDeleteFileTO;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
@@ -24,6 +25,7 @@ import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -54,6 +56,8 @@ public class BiddingInfoAction extends BaseFileAction{
     private FileAPI fileAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+
+    private static  Logger logger = Logger.getLogger(BiddingInfoAction.class);
     /**
      * 模块设置导航权限
      *
@@ -299,7 +303,9 @@ public class BiddingInfoAction extends BaseFileAction{
     @GetMapping("v1/getBiddingNum")
     public Result getBidding(String biddingNumber) throws ActException {
         try {
+            logger.info("获取招标信息开始:"+biddingNumber);
             BiddingInfoBO biddingInfoBO = biddingInfoAPI.getBidding(biddingNumber);
+            logger.info("获取招标信息结果:"+biddingNumber);
             return ActResult.initialize(BeanTransform.copyProperties(biddingInfoBO, BiddingInfoVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

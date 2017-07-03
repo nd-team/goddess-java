@@ -237,6 +237,7 @@ public class ReceivableSubsidiaryTO extends BaseTO {
     private String startTime;
     //结束时间
     private String endTime;*/
+    private String contractorName;
 
 
     public String getArea() {
@@ -551,7 +552,14 @@ public class ReceivableSubsidiaryTO extends BaseTO {
         this.flow = flow;
     }
 
-/*public String getStartTime() {
+    public String getContractorName() {
+        return contractorName;
+    }
+
+    public void setContractorName(String contractorName) {
+        this.contractorName = contractorName;
+    }
+    /*public String getStartTime() {
         return startTime;
     }
 

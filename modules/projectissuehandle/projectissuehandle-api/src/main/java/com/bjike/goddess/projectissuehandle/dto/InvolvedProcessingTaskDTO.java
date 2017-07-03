@@ -21,6 +21,15 @@ public class InvolvedProcessingTaskDTO extends BaseDTO {
      * 处理人员
      */
     private String handler;
+    /**
+     * 内部项目名称
+     */
+    private String[] name;
+
+    /**
+     * 处理人员
+     */
+    private String[] handlers;
 
     public String getInternalProjectName() {
         return internalProjectName;
@@ -36,5 +45,21 @@ public class InvolvedProcessingTaskDTO extends BaseDTO {
 
     public void setHandler(String handler) {
         this.handler = handler;
+    }
+
+    public String[] getName() {
+        return name;
+    }
+
+    public void setName(String[] name) {
+        this.name = name;
+    }
+
+    public String[] getHandlers() {
+        return handlers;
+    }
+
+    public void setHandlers(String[] handlers) {
+        this.handlers = handlers;
     }
 }

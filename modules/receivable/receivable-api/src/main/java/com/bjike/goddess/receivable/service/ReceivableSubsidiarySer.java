@@ -4,9 +4,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.receivable.bo.*;
 import com.bjike.goddess.receivable.dto.ReceivableSubsidiaryDTO;
-import com.bjike.goddess.receivable.entity.Contractor;
 import com.bjike.goddess.receivable.entity.ReceivableSubsidiary;
 import com.bjike.goddess.receivable.to.CollectCompareTO;
+import com.bjike.goddess.receivable.to.GuidePermissionTO;
 import com.bjike.goddess.receivable.to.ProgressTO;
 import com.bjike.goddess.receivable.to.ReceivableSubsidiaryTO;
 
@@ -22,6 +22,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ReceivableSubsidiarySer extends Ser<ReceivableSubsidiary, ReceivableSubsidiaryDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 回款明细列表总条数
      */
@@ -119,16 +131,19 @@ public interface ReceivableSubsidiarySer extends Ser<ReceivableSubsidiary, Recei
     /**
      * 时间
      *
-     * @param receivableSubsidiary
+     * @param receivableSubsidiaryTO
+     * @return class ReceivableSubsidiaryBO
+     * @throws SerException
      */
-    default void editTime(ReceivableSubsidiary receivableSubsidiary, String auditStatusStr, String countStatusStr, String billStatusStr, String planStatusStr) throws SerException {
-
+    default ReceivableSubsidiaryBO editTime(ReceivableSubsidiaryTO receivableSubsidiaryTO, String auditStatusStr, String countStatusStr, String billStatusStr, String planStatusStr) throws SerException {
+        return null;
     }
+
     /**
      * 结算进度
      *
      * @param to 结算进度数据to
-     * @return class receivableSubsidiaryBO
+     * @return class ReceivableSubsidiaryBO
      * @throws SerException
      */
     default ReceivableSubsidiaryBO progress(ProgressTO to) throws SerException {
@@ -228,6 +243,7 @@ public interface ReceivableSubsidiarySer extends Ser<ReceivableSubsidiary, Recei
     default List<CollectContractorDetailBO> collectContractorDetail(String[] contractors) throws SerException {
         return null;
     }
+
     /**
      * id获取汇总详情
      *
@@ -248,12 +264,16 @@ public interface ReceivableSubsidiarySer extends Ser<ReceivableSubsidiary, Recei
     default List<CollectCompareBO> collectCompare(CollectCompareTO to) throws SerException {
         return null;
     }
+
     /**
-     *  导入
+     * 导入
+     *
      * @param receivableSubsidiaryTOS 回款管理
      * @return class ReceivableSubsidiaryBO
      */
-    default ReceivableSubsidiaryBO importExcel(List<ReceivableSubsidiaryTO> receivableSubsidiaryTOS) throws SerException { return null;}
+    default ReceivableSubsidiaryBO importExcel(List<ReceivableSubsidiaryTO> receivableSubsidiaryTOS) throws SerException {
+        return null;
+    }
 
     /**
      * 导出Excel
@@ -263,5 +283,32 @@ public interface ReceivableSubsidiarySer extends Ser<ReceivableSubsidiary, Recei
      */
     byte[] exportExcel(ReceivableSubsidiaryDTO dto) throws SerException;
 
+    /**
+     * Excel下载模板
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
 
+    /**
+     * 更新发送邮件
+     *
+     * @param to 回款明细数据to
+     * @return class receivableSubsidiaryBO
+     * @throws SerException
+     */
+    default ReceivableSubsidiaryBO updateSend(ReceivableSubsidiaryTO to) throws SerException {
+        return null;
+    }
+    /**
+     * 根据到账时间拿数据(资金核对)
+     *
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return class ReceivableSubsidiaryBO
+     * @throws SerException
+     */
+    default List<ReceivableSubsidiaryBO> receivable(String startTime,String endTime) throws SerException {
+        return null;
+    }
 }

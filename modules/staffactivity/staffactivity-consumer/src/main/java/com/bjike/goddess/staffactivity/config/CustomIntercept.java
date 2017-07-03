@@ -30,8 +30,11 @@ public class CustomIntercept implements Interceptor {
 
     @Override
     public List<HIInfo> customerInterceptors() {
+        String account ="staffactivity";
+        String password ="123456";
+        String name ="staffactivity";
         HIInfo loginInfo = new HIInfo(new LoginIntercept(userAPI), "/**");
-        HIInfo storage = new HIInfo(new StorageIntercept(storageUserAPI), "/**");
+        HIInfo storage = new HIInfo(new StorageIntercept(storageUserAPI,account,password,name), "/**");
 
         return Arrays.asList(loginInfo, storage);
     }

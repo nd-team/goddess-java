@@ -44,9 +44,13 @@ public class StayApplyTO extends BaseTO {
     private String stayHead;
 
     /**
-     * 福利模块负责人审核
+     * 福利模块负责人
      */
     private String headAudit;
+    /**
+     * 福利模块负责人审核
+     */
+    private String headAuditPass;
 
     /**
      * 新员工确认入住
@@ -113,6 +117,14 @@ public class StayApplyTO extends BaseTO {
 
     public void setHeadAudit(String headAudit) {
         this.headAudit = headAudit;
+    }
+
+    public String getHeadAuditPass() {
+        return headAuditPass;
+    }
+
+    public void setHeadAuditPass(String headAuditPass) {
+        this.headAuditPass = headAuditPass;
     }
 
     public Boolean getStay() {

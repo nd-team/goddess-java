@@ -8,15 +8,11 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
-import com.bjike.goddess.projectissuehandle.bo.CollectBO;
 import com.bjike.goddess.projectissuehandle.bo.ProblemHandlingResultBO;
-import com.bjike.goddess.projectissuehandle.dto.ProblemAcceptDTO;
 import com.bjike.goddess.projectissuehandle.dto.ProblemHandlingResultDTO;
-import com.bjike.goddess.projectissuehandle.entity.ProblemAccept;
 import com.bjike.goddess.projectissuehandle.entity.ProblemHandlingResult;
 import com.bjike.goddess.projectissuehandle.enums.GuideAddrStatus;
 import com.bjike.goddess.projectissuehandle.enums.ProblemProcessingResult;
-import com.bjike.goddess.projectissuehandle.enums.ProblemRelevantDepartment;
 import com.bjike.goddess.projectissuehandle.excel.ProblemHandlingResultExport;
 import com.bjike.goddess.projectissuehandle.to.GuidePermissionTO;
 import com.bjike.goddess.projectissuehandle.to.ProblemHandlingResultTO;
@@ -86,18 +82,19 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
         }
         RpcTransmit.transmitUserToken(userToken);
     }
+
     /**
      * 核对查看权限（部门级别）
      */
-    private Boolean guideSeeIdentity() throws SerException{
+    private Boolean guideSeeIdentity() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser( );
-        RpcTransmit.transmitUserToken( userToken );
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        if( !"admin".equals( userName.toLowerCase())){
+        if (!"admin".equals(userName.toLowerCase())) {
             flag = proPermissionSer.getProPermission("1");
-        }else{
+        } else {
             flag = true;
         }
         return flag;
@@ -106,15 +103,15 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
     /**
      * 核对添加修改删除审核权限（岗位级别）
      */
-    private Boolean guideAddIdentity() throws SerException{
+    private Boolean guideAddIdentity() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser( );
-        RpcTransmit.transmitUserToken( userToken );
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        if( !"admin".equals( userName.toLowerCase())){
+        if (!"admin".equals(userName.toLowerCase())) {
             flag = proPermissionSer.busProPermission("2");
-        }else{
+        } else {
             flag = true;
         }
         return flag;
@@ -124,11 +121,11 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
     public Boolean sonPermission() throws SerException {
         String userToken = RpcTransmit.getUserToken();
         Boolean flagSee = guideSeeIdentity();
-        RpcTransmit.transmitUserToken( userToken );
+        RpcTransmit.transmitUserToken(userToken);
         Boolean flagAdd = guideAddIdentity();
-        if( flagSee || flagAdd ){
+        if (flagSee || flagAdd) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -222,6 +219,7 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
     @Override
     public List<ProblemHandlingResultBO> findListProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws SerException {
         checkSeeIdentity();
+        problemHandlingResultDTO.getSorts().add("createTime=desc");
         List<ProblemHandlingResult> list = super.findByCis(problemHandlingResultDTO, true);
 //        List<ProblemHandlingResultBO> problemHandlingResultBOS = new ArrayList<>();
 //        list.stream().forEach(str ->{
@@ -249,12 +247,13 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
 
         checkAddIdentity();
         checkDate(problemHandlingResultTO);
-        ProblemHandlingResult problemHandlingResult = BeanTransform.copyProperties(problemHandlingResultTO, ProblemHandlingResult.class, true);
+        ProblemHandlingResult problemHandlingResult = BeanTransform.copyProperties(problemHandlingResultTO, ProblemHandlingResult.class, true,"problemRelevantDepartment");
+        problemHandlingResult.setProblemRelevantDepartment(StringUtils.join(problemHandlingResultTO.getProblemRelevantDepartment(), ","));
         problemHandlingResult.setCreateTime(LocalDateTime.now());
         super.save(problemHandlingResult);
 
 
-       ProblemHandlingResultBO bo = BeanTransform.copyProperties(problemHandlingResult, ProblemHandlingResultBO.class);
+        ProblemHandlingResultBO bo = BeanTransform.copyProperties(problemHandlingResult, ProblemHandlingResultBO.class);
         return bo;
 
 
@@ -294,7 +293,8 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
         }
         ProblemHandlingResult problemHandlingResult = super.findById(problemHandlingResultTO.getId());
         checkDate(problemHandlingResultTO);
-        BeanUtils.copyProperties(problemHandlingResultTO, problemHandlingResult);
+        BeanUtils.copyProperties(problemHandlingResultTO, problemHandlingResult,"problemRelevantDepartment");
+        problemHandlingResult.setProblemRelevantDepartment(StringUtils.join(problemHandlingResultTO.getProblemRelevantDepartment(), ","));
 
         problemHandlingResult.setModifyTime(LocalDateTime.now());
         super.update(problemHandlingResult);
@@ -347,27 +347,61 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
 
     @Override
     public byte[] exportExcel(ProblemHandlingResultDTO dto) throws SerException {
-        if (StringUtils.isNotBlank(dto.getInternalProjectName())) {
-            dto.getConditions().add(Restrict.eq("internalProjectName", dto.getInternalProjectName()));
+        if (null != dto.getName()) {
+            dto.getConditions().add(Restrict.in("internalProjectName", dto.getName()));
         }
-        if (StringUtils.isNotBlank(dto.getProjectType())) {
-            dto.getConditions().add(Restrict.eq("projectType", dto.getProjectType()));
+        if (null != dto.getType()) {
+            dto.getConditions().add(Restrict.in("projectType", dto.getType()));
         }
-        if (StringUtils.isNotBlank(dto.getProblemObject())) {
-            dto.getConditions().add(Restrict.eq("problemObject", dto.getProblemObject()));
+        if (null != dto.getObject()) {
+            dto.getConditions().add(Restrict.in("problemObject", dto.getObject()));
         }
         List<ProblemHandlingResult> list = super.findByCis(dto);
 
         List<ProblemHandlingResultExport> problemHandlingResultExports = new ArrayList<>();
         list.stream().forEach(str -> {
-            ProblemHandlingResultExport export = BeanTransform.copyProperties(str, ProblemHandlingResultExport.class, "problemRelevantDepartment", "problemProcessingResult");
-            export.setProblemRelevantDepartment(ProblemRelevantDepartment.exportStrConvert(str.getProblemRelevantDepartment()));
+            ProblemHandlingResultExport export = BeanTransform.copyProperties(str, ProblemHandlingResultExport.class,  "problemProcessingResult");
             export.setProblemProcessingResult(ProblemProcessingResult.exportStrConvert(str.getProblemProcessingResult()));
             problemHandlingResultExports.add(export);
         });
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(problemHandlingResultExports, excel);
         return bytes;
+    }
+
+    @Override
+    public List<String> getName() throws SerException {
+        String[] fields = new String[]{"internalProjectName"};
+        List<ProblemHandlingResultBO> problemHandlingResultBOS = super.findBySql("select distinct internalProjectName from projectissuehandle_problemhandlingresult group by internalProjectName order by internalProjectName asc ", ProblemHandlingResultBO.class, fields);
+
+            List<String> collectList = problemHandlingResultBOS.stream().map(ProblemHandlingResultBO::getInternalProjectName)
+                    .filter(internalProjectName -> (internalProjectName != null || !"".equals(internalProjectName.trim()))).distinct().collect(Collectors.toList());
+
+        return collectList;
+    }
+
+    @Override
+    public List<String> getType() throws SerException {
+        String[] fields = new String[]{"projectType"};
+        List<ProblemHandlingResultBO> problemHandlingResultBOS = super.findBySql("select distinct projectType from projectissuehandle_problemhandlingresult group by projectType order by projectType asc ", ProblemHandlingResultBO.class, fields);
+
+        List<String> collectList = problemHandlingResultBOS.stream().map(ProblemHandlingResultBO::getProjectType)
+                .filter(projectType -> (projectType != null || !"".equals(projectType.trim()))).distinct().collect(Collectors.toList());
+
+
+        return collectList;
+    }
+
+    @Override
+    public List<String> getObject() throws SerException {
+        String[] fields = new String[]{"problemObject"};
+        List<ProblemHandlingResultBO> problemHandlingResultBOS = super.findBySql("select distinct problemObject from projectissuehandle_problemhandlingresult group by problemObject order by problemObject asc ", ProblemHandlingResultBO.class, fields);
+
+        List<String> collectList = problemHandlingResultBOS.stream().map(ProblemHandlingResultBO::getProblemObject)
+                .filter(problemObject -> (problemObject != null || !"".equals(problemObject.trim()))).distinct().collect(Collectors.toList());
+
+
+        return collectList;
     }
 
 

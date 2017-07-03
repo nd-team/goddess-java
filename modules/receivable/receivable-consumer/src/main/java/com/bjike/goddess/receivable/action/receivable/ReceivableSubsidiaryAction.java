@@ -1,5 +1,6 @@
 package com.bjike.goddess.receivable.action.receivable;
 
+import ch.qos.logback.core.joran.util.beans.BeanUtil;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -18,9 +19,11 @@ import com.bjike.goddess.receivable.entity.ReceivableSubsidiary;
 import com.bjike.goddess.receivable.enums.CompareStatus;
 import com.bjike.goddess.receivable.excel.ReceivableSubsidiaryExcel;
 import com.bjike.goddess.receivable.to.CollectCompareTO;
+import com.bjike.goddess.receivable.to.GuidePermissionTO;
 import com.bjike.goddess.receivable.to.ProgressTO;
 import com.bjike.goddess.receivable.to.ReceivableSubsidiaryTO;
 import com.bjike.goddess.receivable.vo.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -47,6 +50,28 @@ import java.util.List;
 public class ReceivableSubsidiaryAction extends BaseFileAction{
     @Autowired
     private ReceivableSubsidiaryAPI receivableSubsidiaryAPI;
+    /**
+     * 功能导航权限
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = receivableSubsidiaryAPI.guidePermission(guidePermissionTO);
+            if(! isHasPermission ){
+                //int code, String msg
+                return new ActResult(0,"没有权限",false );
+            }else{
+                return new ActResult(0,"有权限",true );
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 回款明细列表总条数
@@ -123,7 +148,7 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
     public Result add(@Validated(ReceivableSubsidiaryTO.TestAdd.class) ReceivableSubsidiaryTO receivableSubsidiaryTO, BindingResult bindingResult) throws ActException {
         try {
             ReceivableSubsidiaryBO receivableSubsidiaryBO = receivableSubsidiaryAPI.insertReceivableSubsidiary(receivableSubsidiaryTO);
-            return ActResult.initialize(receivableSubsidiaryBO);
+            return ActResult.initialize(BeanTransform.copyProperties(receivableSubsidiaryBO,ReceivableSubsidiaryVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -142,7 +167,7 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
     public Result edit(@Validated(ReceivableSubsidiaryTO.TestEdit.class) ReceivableSubsidiaryTO receivableSubsidiaryTO, BindingResult bindingResult) throws ActException {
         try {
             ReceivableSubsidiaryBO receivableSubsidiaryBO = receivableSubsidiaryAPI.editReceivableSubsidiary(receivableSubsidiaryTO);
-            return ActResult.initialize(receivableSubsidiaryBO);
+            return ActResult.initialize(BeanTransform.copyProperties(receivableSubsidiaryBO,ReceivableSubsidiaryVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -165,17 +190,81 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 签字审批时间
+     *
+     * @param auditTime
+     * @version v1
+     */
+    @GetMapping("v1/auditTime")
+    public Result auditTime(String auditTime) throws ActException {
+        try {
+            List<String> audit = receivableSubsidiaryAPI.auditTime(auditTime);
+            return ActResult.initialize(audit);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * ERP结算审批时间
+     *
+     * @param countTime
+     * @version v1
+     */
+    @GetMapping("v1/countTime")
+    public Result countTime(String countTime) throws ActException {
+        try {
+            List<String> count = receivableSubsidiaryAPI.countTime(countTime);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
+    /**
+     * 发票审核时间
+     *
+     * @param billTime
+     * @version v1
+     */
+    @GetMapping("v1/billTime")
+    public Result billTime(String billTime) throws ActException {
+        try {
+            List<String> bill = receivableSubsidiaryAPI.billTime(billTime);
+            return ActResult.initialize(bill);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 预计支付时间
+     *
+     * @param planTime
+     * @version v1
+     */
+    @GetMapping("v1/planTime")
+    public Result planTime(String planTime) throws ActException {
+        try {
+            String plan = receivableSubsidiaryAPI.planTime(planTime);
+            return ActResult.initialize(plan);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 时间
      *
+     * @param receivableSubsidiaryTO 回款明细数据to
+     * @return class ReceivableSubsidiaryVO
+     * @des 时间
      * @version v1
      */
-    @GetMapping("v1/editTime")
-    public Result editTime(ReceivableSubsidiary receivableSubsidiary, String auditStatusStr, String countStatusStr, String billStatusStr, String planStatusStr) throws ActException {
+    @PostMapping("v1/editTime")
+    public Result editTime(ReceivableSubsidiaryTO receivableSubsidiaryTO, String auditStatusStr, String countStatusStr, String billStatusStr, String planStatusStr) throws ActException {
         try {
-            receivableSubsidiaryAPI.editTime(receivableSubsidiary, auditStatusStr, countStatusStr, billStatusStr, planStatusStr);
-            return new ActResult("edit success");
+            ReceivableSubsidiaryBO receivableSubsidiaryBO = receivableSubsidiaryAPI.editTime(receivableSubsidiaryTO,auditStatusStr,countStatusStr,billStatusStr,planStatusStr);
+            return ActResult.initialize(BeanTransform.copyProperties(receivableSubsidiaryBO,ReceivableSubsidiaryVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -421,8 +510,8 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
             List<ReceivableSubsidiaryTO> tocs = new ArrayList<>();
             for (ReceivableSubsidiaryExcel str : tos) {
                 ReceivableSubsidiaryTO receivableSubsidiaryTO = BeanTransform.copyProperties(str, ReceivableSubsidiaryTO.class,"contractor","pay","frame","pact","flow");
-//                if(null != str.getContractor().getName()) {
-//                    receivableSubsidiaryTO.setContractorId(str.getContractor().getId());
+//                if(null != str.getContractor()) {
+//                  receivableSubsidiaryTO.setContractorName(str.getContractor());
 //                }
                 if(str.getPay().equals("是")){
                     receivableSubsidiaryTO.setPay(true);
@@ -444,12 +533,6 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
                 }else{
                     receivableSubsidiaryTO.setFlow(false);
                 }
-//                siginManageTO.setStartProjectTime(String.valueOf(str.getStartProjectTime()));
-//                siginManageTO.setEndProjectTime(String.valueOf(str.getEndProjectTime()));
-//                siginManageTO.setSiginStatus(convertSiginStatus(str.getSiginStatus()));
-//                siginManageTO.setMakeProject(convertMakeProject(str.getMakeProject()));
-//                siginManageTO.setManager("");
-//                siginManageTO.setAuditAdvice("");
                 tocs.add(receivableSubsidiaryTO);
             }
             //注意序列化
@@ -479,5 +562,33 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
             throw new ActException(e1.getMessage());
         }
     }
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板回款管理
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "回款管理导入模板.xlsx";
+            super.writeOutFile(response, receivableSubsidiaryAPI.templateExport( ), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
 
+//    @GetMapping("v1/r")
+//    public Result r(@RequestParam String startTime,String endTime) throws ActException {
+//        try {
+//            List<ReceivableSubsidiaryVO> collectAreaVOS = BeanTransform.copyProperties(
+//                    receivableSubsidiaryAPI.receivable(startTime,endTime), ReceivableSubsidiaryVO.class);
+//            return ActResult.initialize(collectAreaVOS);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 }

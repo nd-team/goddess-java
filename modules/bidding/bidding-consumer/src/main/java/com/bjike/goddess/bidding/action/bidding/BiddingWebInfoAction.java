@@ -16,6 +16,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -39,6 +40,7 @@ import java.util.List;
 public class BiddingWebInfoAction {
     @Autowired
     private BiddingWebInfoAPI biddingWebInfoAPI;
+    private static Logger logger = Logger.getLogger(BiddingInfoAction.class);
 
     /**
      * 功能导航权限
@@ -213,10 +215,12 @@ public class BiddingWebInfoAction {
      * @version v1
      */
     @GetMapping("v1/getWebInfo")
-    public Result getWebInfo(String webName) throws ActException {
+    public Result getWebInfo(String webName,HttpServletRequest request) throws ActException {
         try {
+            logger.info("获取网站信息开始:"+webName);
             BiddingWebInfoBO biddingWebInfoBO = biddingWebInfoAPI.getWebInfo(webName);
-            return ActResult.initialize(BeanTransform.copyProperties(biddingWebInfoBO, BiddingWebInfoVO.class));
+            logger.info("获取网站信息结果:"+webName);
+            return ActResult.initialize(BeanTransform.copyProperties(biddingWebInfoBO, BiddingWebInfoVO.class,request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

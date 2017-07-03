@@ -3,11 +3,7 @@ package com.bjike.goddess.projectissuehandle.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.projectissuehandle.bo.ProblemAcceptBO;
-import com.bjike.goddess.projectissuehandle.enums.ProblemObject;
 import com.bjike.goddess.projectissuehandle.enums.ProblemProcessingResult;
-import com.bjike.goddess.projectissuehandle.enums.ProblemRelevantDepartment;
-import com.bjike.goddess.projectissuehandle.enums.ProjectType;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -84,8 +80,7 @@ public class ProblemHandlingResultTO extends BaseTO {
     /**
      * 问题相关部门
      */
-    @NotNull(message = "问题相关部门不能为空",groups = {ADD.class, EDIT.class})
-    private ProblemRelevantDepartment problemRelevantDepartment;
+    private String[] problemRelevantDepartment;
 
     /**
      * 问题发生时间
@@ -217,11 +212,11 @@ public class ProblemHandlingResultTO extends BaseTO {
         this.problemHandler = problemHandler;
     }
 
-    public ProblemRelevantDepartment getProblemRelevantDepartment() {
+    public String[] getProblemRelevantDepartment() {
         return problemRelevantDepartment;
     }
 
-    public void setProblemRelevantDepartment(ProblemRelevantDepartment problemRelevantDepartment) {
+    public void setProblemRelevantDepartment(String[] problemRelevantDepartment) {
         this.problemRelevantDepartment = problemRelevantDepartment;
     }
 

@@ -232,16 +232,15 @@ public class ArrivalWeekAct {
     /**
      * 分地区汇总
      *
-     * @param arrivals 地区数组
-     * @param request  请求对象
+     * @param dto 地区收入周dto
      * @return class ArrivalWeekCountVO
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/conditionsCount/{arrivals}")
-    public Result conditionsCount(@PathVariable String[] arrivals, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/conditionsCount")
+    public Result conditionsCount(ArrivalWeekDTO dto, HttpServletRequest request) throws ActException {
         try {
-            List<ArrivalWeekCountBO> list = arrivalWeekAPI.conditionsCount(arrivals);
+            List<ArrivalWeekCountBO> list = arrivalWeekAPI.conditionsCount(dto);
             return ActResult.initialize(BeanTransform.copyProperties(list, ArrivalWeekCountVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

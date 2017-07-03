@@ -1,28 +1,30 @@
 package com.bjike.goddess.reportmanagement.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.reportmanagement.enums.ProfitType;
 
 /**
  * 利润水平分析
+ *
  * @Author: [chenjunhao]
  * @Date: [2017-06-26 17:59]
  * @Description: [ ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class ProfitLevelBO extends BaseBO{
+public class ProfitLevelBO extends BaseBO {
     /**
      * 项目
      */
     private String project;
     /**
-     * 起始时间
+     * 开始值
      */
-    private String startTime;
+    private Double start;
     /**
-     * 结束时间
+     * 结束值
      */
-    private String endTime;
+    private Double end;
     /**
      * 增减额
      */
@@ -32,6 +34,19 @@ public class ProfitLevelBO extends BaseBO{
      */
     private String changeScale;
 
+    /**
+     * 利润类型
+     */
+    private ProfitType profitType;
+
+    public ProfitType getProfitType() {
+        return profitType;
+    }
+
+    public void setProfitType(ProfitType profitType) {
+        this.profitType = profitType;
+    }
+
     public String getProject() {
         return project;
     }
@@ -40,20 +55,20 @@ public class ProfitLevelBO extends BaseBO{
         this.project = project;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public Double getStart() {
+        return start;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
+    public void setStart(Double start) {
+        this.start = start;
     }
 
-    public String getEndTime() {
-        return endTime;
+    public Double getEnd() {
+        return end;
     }
 
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
+    public void setEnd(Double end) {
+        this.end = end;
     }
 
     public Double getChange() {

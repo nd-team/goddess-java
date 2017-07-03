@@ -1,9 +1,11 @@
 package com.bjike.goddess.accommodation.to;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 /**
@@ -14,42 +16,52 @@ import java.time.LocalDate;
  * @Copy: [com.bjike]
  */
 public class RentalPreceptTO extends BaseTO {
+    public interface TestManager{}
+    public interface TestGeneral{}
     /**
      * 姓名（用户名称）
      */
-    @NotBlank(message = "姓名不能为空", groups = ADD.class)
+    @NotBlank(message = "姓名不能为空", groups = {ADD.class, EDIT.class})
     private String name;
     /**
      * 员工编号
      */
+    @NotBlank(message = "员工编号不能为空", groups = {ADD.class, EDIT.class})
     private String employeeNum;
     /**
      * 地区
      */
+    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private String area;
     /**
      * 岗位
      */
+    @NotBlank(message = "岗位不能为空", groups = {ADD.class, EDIT.class})
     private String jobs;
     /**
      * 项目组
      */
+    @NotBlank(message = "项目组不能为空", groups = {ADD.class, EDIT.class})
     private String projectGroup;
     /**
      * 项目名称
      */
-    private String projectName;
+    @NotNull(message = "项目名称不能为空", groups = {ADD.class, EDIT.class})
+    private String[] projectName;
     /**
      * 租房用途
      */
+    @NotBlank(message = "租房用途不能为空", groups = {ADD.class, EDIT.class})
     private String purpose;
     /**
      * 住宿人数
      */
+    @NotBlank(message = "住宿人数不能为空", groups = {ADD.class, EDIT.class})
     private Integer accommodationPeople;
     /**
      * 租房规格
      */
+    @NotBlank(message = "租房规格不能为空", groups = {ADD.class, EDIT.class})
     private String norms;
     /**
      * 租房要求
@@ -62,11 +74,11 @@ public class RentalPreceptTO extends BaseTO {
     /**
      * 完成租房开始时间
      */
-    private LocalDate completeStartTime;
+    private String completeStartTime;
     /**
      * 完成租房结束时间
      */
-    private LocalDate completeEndTime;
+    private String completeEndTime;
     /**
      * 资金意见
      */
@@ -98,6 +110,7 @@ public class RentalPreceptTO extends BaseTO {
     /**
      * 项目经理是否通过(是/否)
      */
+    @NotBlank(message = "项目经理是否通过不能为空",groups = {RentalPreceptTO.TestManager.class})
     private String managePass;
 
     /**
@@ -111,6 +124,7 @@ public class RentalPreceptTO extends BaseTO {
     /**
      * 总经办是否通过(是/否)
      */
+    @NotBlank(message = "总经办是否通过不能为空",groups = {RentalPreceptTO.TestGeneral.class})
     private String generalPass;
     /**
      * 备注
@@ -157,11 +171,11 @@ public class RentalPreceptTO extends BaseTO {
         this.projectGroup = projectGroup;
     }
 
-    public String getProjectName() {
+    public String[] getProjectName() {
         return projectName;
     }
 
-    public void setProjectName(String projectName) {
+    public void setProjectName(String[] projectName) {
         this.projectName = projectName;
     }
 
@@ -205,19 +219,19 @@ public class RentalPreceptTO extends BaseTO {
         this.deadline = deadline;
     }
 
-    public LocalDate getCompleteStartTime() {
+    public String getCompleteStartTime() {
         return completeStartTime;
     }
 
-    public void setCompleteStartTime(LocalDate completeStartTime) {
+    public void setCompleteStartTime(String completeStartTime) {
         this.completeStartTime = completeStartTime;
     }
 
-    public LocalDate getCompleteEndTime() {
+    public String getCompleteEndTime() {
         return completeEndTime;
     }
 
-    public void setCompleteEndTime(LocalDate completeEndTime) {
+    public void setCompleteEndTime(String completeEndTime) {
         this.completeEndTime = completeEndTime;
     }
 

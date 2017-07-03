@@ -146,31 +146,13 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
             case DELETE:
                 flag = guideAddIdentity();
                 break;
-            case CONGEL:
-                flag = guideAddIdentity();
-                break;
-            case THAW:
-                flag = guideAddIdentity();
-                break;
             case COLLECT:
-                flag = guideAddIdentity();
-                break;
-            case IMPORT:
-                flag = guideAddIdentity();
-                break;
-            case EXPORT:
-                flag = guideAddIdentity();
-                break;
-            case UPLOAD:
-                flag = guideAddIdentity();
-                break;
-            case DOWNLOAD:
                 flag = guideAddIdentity();
                 break;
             case SEE:
                 flag = guideSeeIdentity();
                 break;
-            case SEEFILE:
+            case DETAIL:
                 flag = guideSeeIdentity();
                 break;
             default:
@@ -319,7 +301,7 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
     }
 
     @Override
-    public List<ArrivalMonthCountBO> conditionsCount(String[] arrivals) throws SerException {
+    public List<ArrivalMonthCountBO> conditionsCount(ArrivalMonthDTO dto1) throws SerException {
         checkSeeIdentity();
         List<Integer> years = findAllYears();
         List<ArrivalMonthCountBO> boList = new ArrayList<ArrivalMonthCountBO>();
@@ -329,42 +311,45 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
         Integer targetWorkSum = 0;
         Integer actualWorkSum = 0;
         Integer workDifferencesSum = 0;
-        for (String arrival : arrivals) {
-            ArrivalMonthDTO dto = new ArrivalMonthDTO();
-            dto.getConditions().add(Restrict.eq("arrival", arrival));
-            List<ArrivalMonth> list = super.findByCis(dto);
-            for (Integer year : years) {
-                for (ArrivalMonth arrivalMonth : list) {
-                    if (arrivalMonth.getYear().equals(year)) {
-                        targetIncomeSum += arrivalMonth.getTargetIncome();
-                        planIncomeSum += arrivalMonth.getPlanIncome();
-                        double incomeDifference = arrivalMonth.getPlanIncome() - arrivalMonth.getTargetIncome();
-                        incomeDifferencesSum += incomeDifference;
-                        targetWorkSum += arrivalMonth.getTargetWork();
-                        actualWorkSum += arrivalMonth.getActualWork();
-                        int workDifference = arrivalMonth.getActualWork() - arrivalMonth.getTargetWork();
-                        workDifferencesSum += workDifference;
+        String[] arrivals = dto1.getArrivals();
+        if (arrivals != null) {
+            for (String arrival : arrivals) {
+                ArrivalMonthDTO dto = new ArrivalMonthDTO();
+                dto.getConditions().add(Restrict.eq("arrival", arrival));
+                List<ArrivalMonth> list = super.findByCis(dto);
+                for (Integer year : years) {
+                    for (ArrivalMonth arrivalMonth : list) {
+                        if (arrivalMonth.getYear().equals(year)) {
+                            targetIncomeSum += arrivalMonth.getTargetIncome();
+                            planIncomeSum += arrivalMonth.getPlanIncome();
+                            double incomeDifference = arrivalMonth.getPlanIncome() - arrivalMonth.getTargetIncome();
+                            incomeDifferencesSum += incomeDifference;
+                            targetWorkSum += arrivalMonth.getTargetWork();
+                            actualWorkSum += arrivalMonth.getActualWork();
+                            int workDifference = arrivalMonth.getActualWork() - arrivalMonth.getTargetWork();
+                            workDifferencesSum += workDifference;
+                        }
                     }
-                }
-                if (targetWorkSum != 0) {
-                    ArrivalMonthCountBO bo = new ArrivalMonthCountBO();
-                    bo.setArrival(arrival);
-                    bo.setYear(year);
-                    bo.setTargetIncomeSum(targetIncomeSum);
-                    bo.setPlanIncomeSum(planIncomeSum);
-                    bo.setIncomeDifferencesSum(incomeDifferencesSum);
-                    bo.setTargetWorkSum(targetWorkSum);
-                    bo.setActualWorkSum(actualWorkSum);
-                    bo.setWorkDifferencesSum(workDifferencesSum);
-                    Double scale = planIncomeSum / targetIncomeSum;
-                    bo.setScale(scale);
-                    boList.add(bo);
-                    targetIncomeSum = 0.00;
-                    planIncomeSum = 0.00;
-                    incomeDifferencesSum = 0.00;
-                    targetWorkSum = 0;
-                    actualWorkSum = 0;
-                    workDifferencesSum = 0;
+                    if (targetWorkSum != 0) {
+                        ArrivalMonthCountBO bo = new ArrivalMonthCountBO();
+                        bo.setArrival(arrival);
+                        bo.setYear(year);
+                        bo.setTargetIncomeSum(targetIncomeSum);
+                        bo.setPlanIncomeSum(planIncomeSum);
+                        bo.setIncomeDifferencesSum(incomeDifferencesSum);
+                        bo.setTargetWorkSum(targetWorkSum);
+                        bo.setActualWorkSum(actualWorkSum);
+                        bo.setWorkDifferencesSum(workDifferencesSum);
+                        Double scale = planIncomeSum / targetIncomeSum;
+                        bo.setScale(scale);
+                        boList.add(bo);
+                        targetIncomeSum = 0.00;
+                        planIncomeSum = 0.00;
+                        incomeDifferencesSum = 0.00;
+                        targetWorkSum = 0;
+                        actualWorkSum = 0;
+                        workDifferencesSum = 0;
+                    }
                 }
             }
         }

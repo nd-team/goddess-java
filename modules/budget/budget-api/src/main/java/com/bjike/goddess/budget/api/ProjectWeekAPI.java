@@ -85,13 +85,11 @@ public interface ProjectWeekAPI {
     /**
      * 分项目汇总
      *
-     * @param projects 项目数组
+     * @param dto1 dto
      * @return class ProjectWeekCountBO
      * @throws SerException
      */
-    default List<ProjectWeekCountBO> conditionsCount(String[] projects) throws SerException {
-        return null;
-    }
+    List<ProjectWeekCountBO> conditionsCount(ProjectWeekDTO dto1) throws SerException;
 
     /**
      * 查询总记录数

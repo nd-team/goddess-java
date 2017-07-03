@@ -33,6 +33,7 @@ public class CustomIntercept implements Interceptor {
 
     @Override
     public List<HIInfo> customerInterceptors() {
+
         /**
          * 添加限流器
          */
@@ -65,5 +66,6 @@ public class CustomIntercept implements Interceptor {
          * 顺序
          */
         return Arrays.asList(storage, loginInfo);
+
     }
 }

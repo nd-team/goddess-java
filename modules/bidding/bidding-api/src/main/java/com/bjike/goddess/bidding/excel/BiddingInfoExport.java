@@ -16,6 +16,11 @@ import com.bjike.goddess.common.utils.excel.ExcelValue;
  * @Copy: [ com.bjike ]
  */
 public class BiddingInfoExport {
+    /**
+     * 编号
+     */
+    @ExcelHeader(name = "编号",notNull = true)
+    private String biddingNumber;
 
     /**
      * 网站名称
@@ -53,11 +58,6 @@ public class BiddingInfoExport {
     @ExcelHeader(name = "标书模块", notNull = true)
     private String tenderModule;
 
-    /**
-     * 招标编号
-     */
-    @ExcelHeader(name = "招标编号", notNull = true)
-    private String tenderNumber;
 
     /**
      * 项目名称
@@ -167,6 +167,13 @@ public class BiddingInfoExport {
     @ExcelHeader(name = "备注", notNull = true)
     private String remark;
 
+    public String getBiddingNumber() {
+        return biddingNumber;
+    }
+
+    public void setBiddingNumber(String biddingNumber) {
+        this.biddingNumber = biddingNumber;
+    }
 
     public String getWebName() {
         return webName;
@@ -216,13 +223,6 @@ public class BiddingInfoExport {
         this.tenderModule = tenderModule;
     }
 
-    public String getTenderNumber() {
-        return tenderNumber;
-    }
-
-    public void setTenderNumber(String tenderNumber) {
-        this.tenderNumber = tenderNumber;
-    }
 
     public String getProjectName() {
         return projectName;

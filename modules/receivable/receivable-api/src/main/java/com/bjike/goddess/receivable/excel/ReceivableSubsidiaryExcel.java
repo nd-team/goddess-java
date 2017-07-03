@@ -13,11 +13,6 @@ import com.bjike.goddess.receivable.entity.Contractor;
  * @Copy: [ com.bjike ]
  */
 public class ReceivableSubsidiaryExcel {
-    /**
-     * 承包商
-     */
-    @ExcelHeader(name = "承包商",notNull = true)
-    private String contractor;
 
     /**
      * 地区
@@ -119,13 +114,6 @@ public class ReceivableSubsidiaryExcel {
     @ExcelHeader(name = "是否已走结算流程",notNull = true)
     private String flow;
 
-    public String getContractor() {
-        return contractor;
-    }
-
-    public void setContractor(String contractor) {
-        this.contractor = contractor;
-    }
 
     public String getArea() {
         return area;

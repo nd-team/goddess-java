@@ -2,6 +2,7 @@ package com.bjike.goddess.reportmanagement.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.reportmanagement.enums.DebtType;
+import com.bjike.goddess.reportmanagement.enums.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -45,6 +46,12 @@ public class Debt extends BaseEntity {
     @Column(name = "debtType", columnDefinition = "TINYINT(2)   COMMENT '负债类型'")
     private DebtType debtType;
 
+    /**
+     * 运算类型
+     */
+    @Column(name = "type", columnDefinition = "TINYINT(2)   COMMENT '运算类型'")
+    private Type type;
+
 //    /**
 //     * 负债年初数
 //     */
@@ -74,6 +81,14 @@ public class Debt extends BaseEntity {
 //        this.endTime = endTime;
 //    }
 
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
 
     public DebtType getDebtType() {
         return debtType;

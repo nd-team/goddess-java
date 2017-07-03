@@ -7,7 +7,9 @@ import com.bjike.goddess.receivable.bo.ReceivableSubsidiaryBO;
 import com.bjike.goddess.receivable.dto.ReceivableSubsidiaryDTO;
 import com.bjike.goddess.receivable.entity.Contractor;
 import com.bjike.goddess.receivable.dto.ContractorDTO;
+import com.bjike.goddess.receivable.excel.SonPermissionObject;
 import com.bjike.goddess.receivable.to.ContractorTO;
+import com.bjike.goddess.receivable.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -21,6 +23,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ContractorSer extends Ser<Contractor, ContractorDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 承包商列表总条数
      */

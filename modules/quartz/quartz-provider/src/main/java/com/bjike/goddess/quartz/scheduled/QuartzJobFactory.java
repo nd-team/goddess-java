@@ -10,6 +10,7 @@ import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,14 +57,20 @@ public class QuartzJobFactory implements Job {
         try {
             String url = "dubbo://" + scheduleJob.getAddress() + "/" + scheduleJob.getClazz();//Dubbo服务暴露的ip地址&端口
             ReferenceConfig referenceConfig = new ReferenceConfig();
-            referenceConfig.setTimeout(3000);
+            referenceConfig.setTimeout(10000);
             referenceConfig.setInterface(Class.forName(scheduleJob.getClazz()));
             referenceConfig.setUrl(url);
             Object obj = referenceConfig.get();
             Method clazzMethod = obj.getClass().getMethod(scheduleJob.getMethod());
             Object o = clazzMethod.invoke(obj);
-        } catch (Exception e) {
-            throw new SerException(e.getMessage());
+        } catch (ClassNotFoundException e) {
+            console.error(e.getMessage());
+        }catch (NoSuchMethodException e){
+            console.error(e.getMessage());
+        }catch (IllegalAccessException e){
+            console.error(e.getMessage());
+        }catch (InvocationTargetException e){
+            console.error("Exception:"+e.getTargetException().getMessage());
         }
     }
 }

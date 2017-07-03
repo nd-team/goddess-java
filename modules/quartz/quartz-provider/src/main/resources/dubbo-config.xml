@@ -18,8 +18,9 @@
 
 	<!--发布接口,供其他模块调用-->
 	<dubbo:service  ref="scheduleJobApiImpl" interface="com.bjike.goddess.quartz.api.ScheduleJobAPI" />
-	<dubbo:service  ref="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 	<dubbo:service  ref="scheduleJobGroupApiImpl" interface="com.bjike.goddess.quartz.api.ScheduleJobGroupAPI" />
+
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.customer.api.CusEmailAPI" id="cusEmailApiImpl"/>
 
 </beans>
