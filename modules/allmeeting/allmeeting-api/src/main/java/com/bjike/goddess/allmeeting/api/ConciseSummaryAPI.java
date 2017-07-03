@@ -1,6 +1,7 @@
 package com.bjike.goddess.allmeeting.api;
 
 import com.bjike.goddess.allmeeting.bo.ConciseSummaryBO;
+import com.bjike.goddess.allmeeting.bo.OrganizeForSummaryBO;
 import com.bjike.goddess.allmeeting.dto.ConciseSummaryDTO;
 import com.bjike.goddess.allmeeting.to.ConciseSummaryTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -56,4 +57,8 @@ public interface ConciseSummaryAPI {
      * @return 简洁交流讨论
      */
     ConciseSummaryBO findById(String id) throws SerException;
+
+    OrganizeForSummaryBO organize(String id) throws SerException;
+
+    void unfreeze(String id) throws SerException;
 }

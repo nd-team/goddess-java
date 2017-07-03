@@ -23,9 +23,9 @@ public class CustomIntercept implements Interceptor {
     @Autowired
     private StorageUserAPI storageUserAPI;
 
-
     @Override
     public List<HIInfo> customerInterceptors() {
-        return Arrays.asList(new HIInfo(new StorageIntercept(storageUserAPI), "/**"));
+        HIInfo storage = new HIInfo(new StorageIntercept(storageUserAPI,"businessproject","123456","businessproject"), "/**");
+        return Arrays.asList(storage);
     }
 }

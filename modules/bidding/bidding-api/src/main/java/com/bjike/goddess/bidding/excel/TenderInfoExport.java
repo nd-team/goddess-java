@@ -12,6 +12,11 @@ import com.bjike.goddess.common.utils.excel.ExcelHeader;
  * @Copy: [ com.bjike ]
  */
 public class TenderInfoExport {
+    /**
+     * 编号
+     */
+    @ExcelHeader(name = "编号",notNull = true)
+    private String biddingNumber;
 
     /**
      * 项目名称
@@ -96,6 +101,14 @@ public class TenderInfoExport {
      */
     @ExcelHeader(name = "经济分册" ,notNull = true)
     private String economicVolume;
+
+    public String getBiddingNumber() {
+        return biddingNumber;
+    }
+
+    public void setBiddingNumber(String biddingNumber) {
+        this.biddingNumber = biddingNumber;
+    }
 
     public String getProjectName() {
         return projectName;

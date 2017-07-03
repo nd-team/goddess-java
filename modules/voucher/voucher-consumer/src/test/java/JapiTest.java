@@ -23,6 +23,7 @@ public class JapiTest {
 				"modules/voucher/voucher-api",
 				"modules/user/user-api",
 				"modules/financeinit/financeinit-api",
+				"modules/storage/storage-api",
 				"common/common-api"
 		});
 		JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索

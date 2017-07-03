@@ -17,4 +17,10 @@
 	<!--配置暴露的公共接口-->
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.deviceinventory.api.InventoryAPI" id="inventoryApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.deviceinventory.api.InventoryRecordAPI" id="inventoryRecordApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.deviceinventory.api.CusPermissionAPI" id="cusPermissionApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.deviceinventory.api.CusPermissionOperateAPI" id="cusPermissionOperateApiImpl"/>
+
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+
 </beans>

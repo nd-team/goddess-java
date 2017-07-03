@@ -40,6 +40,7 @@ dependencies {
     compile project(":modules:checkfunds:checkfunds-api")
     compile project(":modules:user:user-api")
     compile project(":modules:bankrecords:bankrecords-api")
+    compile project(":modules:organize:organize-api")
     compile("org.springframework.boot:spring-boot-starter-web")
 }
 

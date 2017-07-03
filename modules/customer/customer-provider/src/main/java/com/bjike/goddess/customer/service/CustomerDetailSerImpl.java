@@ -16,6 +16,9 @@ import com.bjike.goddess.customer.dto.CustomerDetailDTO;
 import com.bjike.goddess.customer.entity.CusFamilyMember;
 import com.bjike.goddess.customer.entity.CustomerBaseInfo;
 import com.bjike.goddess.customer.entity.CustomerDetail;
+import com.bjike.goddess.customer.enums.CustomerSex;
+import com.bjike.goddess.customer.enums.CustomerStatus;
+import com.bjike.goddess.customer.enums.CustomerType;
 import com.bjike.goddess.customer.enums.GuideAddrStatus;
 import com.bjike.goddess.customer.excel.CustomerDetailExport;
 import com.bjike.goddess.customer.to.CusFamilyMemberTO;
@@ -374,10 +377,10 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
     public byte[] exportInfo(CustomerDetailDTO customerDetailDTO) throws SerException {
         List<CustomerDetailExport> list = new ArrayList<>();
         CustomerBaseInfoDTO baseDto = new CustomerBaseInfoDTO();
-        if (null != customerDetailDTO.getAreas() && customerDetailDTO.getAreas().length>0 ) {
+        if (null != customerDetailDTO.getAreas() && customerDetailDTO.getAreas().length > 0) {
             baseDto.getConditions().add(Restrict.in("area", customerDetailDTO.getAreas()));
         }
-        if (null !=customerDetailDTO.getCustomerNames() && customerDetailDTO.getCustomerNames().length>0) {
+        if (null != customerDetailDTO.getCustomerNames() && customerDetailDTO.getCustomerNames().length > 0) {
             baseDto.getConditions().add(Restrict.in("customerName", customerDetailDTO.getCustomerNames()));
         }
         baseDto.getSorts().add("customerNum=asc");
@@ -386,12 +389,12 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
             for (CustomerBaseInfo str : baseList) {
                 String customerNum = str.getCustomerNum();//客户信息编号
                 String level = str.getCustomerLevel().getName();//客户级别
-                String customerType = str.getCustomerType().name();//客户类别
-                String customerStatus = str.getCustomerStatus().name();//客户状态
+                String customerType = covertCustomerType( str.getCustomerType() );//客户类别
+                String customerStatus =covertCustomerStatus( str.getCustomerStatus() );//客户状态
                 String origin = str.getOrigin();//客户来源
                 Double relation = str.getRelation();//关系程度
                 String customerName = str.getCustomerName();//客户姓名
-                String customerSex = str.getCustomerSex().name();//性别
+                String customerSex = covertCustomerSex( str.getCustomerSex() );//性别
 //                Integer age = str.getArea();//年龄
 //                String customerName = str.getCustomerName();//出生年月日
                 String area = str.getArea();//地区
@@ -415,7 +418,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
                 if (detailList != null && detailList.size() > 0) {
                     for (CustomerDetail customerDetail : detailList) {
                         Integer age = customerDetail.getAge();//年龄
-                        String birthday = customerDetail.getBirthday().toString();//出生年月日
+                        String birthday = (null == customerDetail.getBirthday()? "":customerDetail.getBirthday().toString());//出生年月日
                         String workExperience = customerDetail.getWorkExperience();//工作经历
                         String studyExperience = customerDetail.getStudyExperience();//求学经历
                         String love = customerDetail.getLove();//爱好
@@ -544,7 +547,10 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
             cell.setCellStyle(contentStyle);   //设置样式
         }
 
-        createRowDetail(list, row, sheet);//填充数据
+        if (list != null && list.size() > 0) {
+            createRowDetail(list, row, sheet);//填充数据
+
+        }
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
@@ -556,9 +562,67 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
         return os.toByteArray();
     }
 
+    private String covertCustomerType(CustomerType customerType) throws SerException {
+        String str = "";
+        switch (customerType) {
+            case VIP:
+                str = "VIP客户";
+                break;
+            case ORDINARY:
+                str = "普通客户";
+                break;
+            case COOPERATOR:
+                str = "合作伙伴";
+                break;
+            case OLD:
+                str = "老客户";
+                break;
+            default:
+                str = "";
+                break;
+        }
+        return str;
+    }
+    private String covertCustomerStatus(CustomerStatus customerStatus) throws SerException {
+        String str = "";
+        switch (customerStatus) {
+            case COMPLETEPROJECT:
+                str = "已完成项目客户";
+                break;
+            case PROJECTING:
+                str = "现项目客户";
+                break;
+            case POTENTIAL:
+                str = "潜在客户";
+                break;
+            default:
+                str = "";
+                break;
+        }
+        return str;
+    }
+    private String covertCustomerSex(CustomerSex customerSex) throws SerException {
+        String str = "";
+        switch (customerSex) {
+            case NONE:
+                str = "无";
+                break;
+            case MAN:
+                str = "男";
+                break;
+            case WOMAN:
+                str = "女";
+                break;
+            default:
+                str = "";
+                break;
+        }
+        return str;
+    }
+
 
     /**
-     * @param list  报销记录集合
+     * @param list  客户详细信息集合
      * @param row
      * @param sheet Excel表单
      * @description 创建数据行
@@ -585,14 +649,32 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
 //            String ss1 = customerNum;
 //            int f = firstRow;
 //            int l = lastRow;
+//            if (!exportEntity.getCustomerNum().equals(customerNum) && firstRow == lastRow) {
+//                //不合并
+//                firstRow ++ ;
+//                showFlag = 1;
+//            }else if (exportEntity.getCustomerNum().equals(customerNum) && firstRow == lastRow) {
+//                //合并
+//                if( index <= list.size()-1 && !customerNum.equals(list.get(index+1).getCustomerNum())  ){
+//                    sheet = assiableMergeData(sheet, firstRow - showFlag, lastRow);
+//                }
+//                firstRow++;
+//                customerNum = exportEntity.getCustomerNum();
+//            }
+
             if (!exportEntity.getCustomerNum().equals(customerNum) && firstRow == lastRow) {
                 //不合并
-                firstRow ++ ;
+                firstRow++;
                 showFlag = 1;
-            }else if (exportEntity.getCustomerNum().equals(customerNum) && firstRow == lastRow) {
+            } else if (exportEntity.getCustomerNum().equals(customerNum) && firstRow == lastRow) {
                 //合并
-                if( index <= list.size()-1 && customerNum != list.get(index+1).getCustomerNum()  ){
-                    sheet = assiableMergeData(sheet, firstRow - showFlag, lastRow);
+                if (index != 0 && index < list.size() - 1 && !customerNum.equals(list.get(index + 1).getCustomerNum())) {
+//                    sheet = assiableMergeData(sheet, firstRow - showFlag, lastRow);
+                    sheet = assiableMergeData(sheet, lastRow + 1 - showFlag, lastRow + 1);
+
+                }
+                if (index == list.size() - 1) {
+                    sheet = assiableMergeData(sheet, lastRow + 1 - showFlag, lastRow + 1);
                 }
                 firstRow++;
                 customerNum = exportEntity.getCustomerNum();
@@ -600,7 +682,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
 
             if (exportEntity.getCustomerNum().equals(customerNum)) {
                 showFlag++;
-            }else if ( !exportEntity.getCustomerNum().equals(customerNum)) {
+            } else if (!exportEntity.getCustomerNum().equals(customerNum)) {
                 customerNum = exportEntity.getCustomerNum();
             }
 

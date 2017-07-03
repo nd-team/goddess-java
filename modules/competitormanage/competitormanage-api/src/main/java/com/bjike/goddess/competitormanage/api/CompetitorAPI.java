@@ -3,7 +3,9 @@ package com.bjike.goddess.competitormanage.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.competitormanage.bo.CompetitorBO;
 import com.bjike.goddess.competitormanage.dto.CompetitorDTO;
+import com.bjike.goddess.competitormanage.excel.SonPermissionObject;
 import com.bjike.goddess.competitormanage.to.CompetitorTO;
+import com.bjike.goddess.competitormanage.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -88,4 +90,16 @@ public interface CompetitorAPI {
      * @throws SerException
      */
     List<CompetitorBO> findByOrganization(String organization) throws SerException;
+
+    void leadExcel(List<CompetitorTO> toList) throws SerException;
+
+    byte[] exportExcel(String startDate, String endDate) throws SerException;
+
+    List<SonPermissionObject> sonPermission() throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
+    byte[] exportExcelModule() throws SerException;
+
+    List<CompetitorBO> areas() throws SerException;
 }

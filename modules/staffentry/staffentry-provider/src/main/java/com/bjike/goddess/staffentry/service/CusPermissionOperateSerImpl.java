@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 * @Version:		[ v1.0.0 ]
 * @Copy:   		[ com.bjike ]
 */
-@CacheConfig(cacheNames ="customerSerCache")
+@CacheConfig(cacheNames ="staffentrySerCache")
 @Service
 public class CusPermissionOperateSerImpl extends ServiceImpl<CusPermissionOperate, CusPermissionOperateDTO> implements CusPermissionOperateSer {
 

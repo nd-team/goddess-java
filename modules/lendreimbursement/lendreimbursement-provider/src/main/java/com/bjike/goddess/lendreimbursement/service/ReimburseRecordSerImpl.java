@@ -4,14 +4,22 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
 import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
 import com.bjike.goddess.lendreimbursement.bo.ReimburseRecordBO;
 import com.bjike.goddess.lendreimbursement.dto.*;
 import com.bjike.goddess.lendreimbursement.entity.*;
+import com.bjike.goddess.lendreimbursement.enums.GuideAddrStatus;
 import com.bjike.goddess.lendreimbursement.enums.ReimStatus;
 import com.bjike.goddess.lendreimbursement.enums.Words;
+import com.bjike.goddess.lendreimbursement.excel.ReimburseRecordExcel;
+import com.bjike.goddess.lendreimbursement.excel.SonPermissionObject;
+import com.bjike.goddess.lendreimbursement.to.GuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseRecordTO;
 import com.bjike.goddess.user.api.PositionAPI;
 import com.bjike.goddess.user.api.UserAPI;
@@ -60,8 +68,361 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Autowired
     private FinoddinforSer finoddinforSer;
     @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
     private ApplyLendSer applyLendSer;
+    /**
+     * 检查权限
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        //商务模块权限
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是财务模块人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
 
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagAppAccount = guideIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("applyAccount");
+        obj.setDescribesion("申请报销记录");
+        if (flagAppAccount) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAppAccWrong = guideIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("applyAccountWrong");
+        obj.setDescribesion("申请报销有误记录");
+        if (flagAppAccWrong) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagWaiAuditAcc = guideIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("waitingauditaccount");
+        obj.setDescribesion("报销等待审核记录");
+        if (flagWaiAuditAcc) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAuditAcc = guideIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("auditaccount");
+        obj.setDescribesion("报销审核记录");
+        if (flagAuditAcc) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAnalysisAcc = guideIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("analysisaccount");
+        obj.setDescribesion("已分析记录");
+        if (flagAnalysisAcc) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAccCheck = guideIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("AccountCheck");
+        obj.setDescribesion("账户核对记录");
+        if (flagAccCheck) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagWaitingPayAcc = guideIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("flagWaitingPay");
+        obj.setDescribesion("等待付款记录");
+        if (flagWaitingPayAcc) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagPayAcc = guideIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("payaccount");
+        obj.setDescribesion("已付款报销记录");
+        if (flagPayAcc) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAppErrBorr = applyLendSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("applyerrorborrow");
+        obj.setDescribesion("申请借款有误记录");
+        if (flagAppErrBorr) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagWaitAudBorr = applyLendSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("WaitingAuditBorrow");
+        obj.setDescribesion("等待审核借款记录");
+        if (flagWaitAudBorr) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAuditBorr = applyLendSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("AuditBorrow");
+        obj.setDescribesion("已审核借款记录");
+        if (flagAuditBorr) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagWaitPayBorr = applyLendSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("applyborrow");
+        obj.setDescribesion("等待付款借款记录");
+        if (flagWaitPayBorr) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagPayBorr = applyLendSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("payborrow");
+        obj.setDescribesion("已付款借款记录");
+        if (flagPayBorr) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAppBorr = applyLendSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("applyborrow");
+        obj.setDescribesion("申请借款记录");
+        if (flagAppBorr) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagBorr = applyLendSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("borrow");
+        obj.setDescribesion("借款记录");
+        if (flagBorr) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagReturn = applyLendSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("returnmo");
+        obj.setDescribesion("还款记录");
+        if (flagReturn) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAccCheckBor = applyLendSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("accountcheckborrow");
+        obj.setDescribesion("账户核对借款记录");
+        if (flagAccCheckBor) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagClosed = applyLendSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("closed");
+        obj.setDescribesion("已收票记录");
+        if (flagClosed) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAnalSitu = applyLendSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("analysissitusion");
+        obj.setDescribesion("分析情况记录");
+        if (flagAnalSitu) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO)  throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideIdentity();
+                break;
+            case ADD:
+                flag = guideIdentity();
+                break;
+            case EDIT:
+                flag = guideIdentity();
+                break;
+            case DELETE:
+                flag = guideIdentity();
+                break;
+            case CONGEL:
+                flag = guideIdentity();
+                break;
+            case THAW:
+                flag = guideIdentity();
+                break;
+            case COLLECT:
+                flag = guideIdentity();
+                break;
+            case UPLOAD:
+                flag = guideIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideIdentity();
+                break;
+            case IMPORT:
+                flag = guideIdentity();
+                break;
+            case EXPORT:
+                flag = guideIdentity();
+                break;
+            case SEE:
+                flag = guideIdentity();
+                break;
+            case SEEFILE:
+                flag = guideIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
     @Override
     public Long countReimburseRecord(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         reimburseRecordDTO.getSorts().add("createTime=desc");
@@ -86,6 +447,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
     @Override
     public List<ReimburseRecordBO> listReimburseRecord(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        checkPermission();
         reimburseRecordDTO.getSorts().add("createTime=desc");
         reimburseRecordDTO.getConditions().add(Restrict.eq("payCondition", "否"));
 
@@ -111,6 +473,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ReimburseRecordBO addReimburseRecord(ReimburseRecordTO reimburseRecordTO) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(reimburseRecordTO.getReimer())) {
             throw new SerException("报销人不能为空");
         }
@@ -176,6 +539,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ReimburseRecordBO editReimburseRecord(ReimburseRecordTO reimburseRecordTO) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(reimburseRecordTO.getReimer())) {
             throw new SerException("报销人不能为空");
         }
@@ -278,6 +642,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteReimburseRecord(String id) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
@@ -304,6 +669,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
     @Override
     public ReimburseRecordBO getReimburseRecordById(String id) throws SerException {
+        checkPermission();
         if(StringUtils.isBlank(id)){
             throw new SerException("id不能为空");
         }
@@ -337,6 +703,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
     @Override
     public List<ReimburseRecordBO> listErrorRecord(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        checkPermission();
         reimburseRecordDTO.getConditions().add(Restrict.eq("chargerAuditStatus", "不通过"));
         //ReimStatus.CHARGECONGEL
         reimburseRecordDTO.getConditions().add(Restrict.or("reimStatus", 6));
@@ -362,6 +729,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ReimburseRecordBO editErrorRecord(ReimburseRecordTO reimburseRecordTO) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(reimburseRecordTO.getId())) {
             throw new SerException("id不能为空");
         }
@@ -399,6 +767,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
     @Override
     public Long countAuditRecord(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        checkPermission();
         reimburseRecordDTO.getConditions().add(Restrict.isNull("chargerAuditStatus"));
 //        reimburseRecordDTO.getConditions().add(Restrict.or("chargerAuditStatus", null));
         reimburseRecordDTO.getConditions().add(Restrict.in("reimStatus", new Integer[]{5, 0}));
@@ -425,6 +794,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     public List<ReimburseRecordBO> listAuditRecord(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
 //        reimburseRecordDTO.getConditions().add(Restrict.isNull("chargerAuditStatus"));
 //        reimburseRecordDTO.getConditions().add(Restrict.or("chargerAuditStatus", null));
+        checkPermission();
         reimburseRecordDTO.getConditions().add(Restrict.in("reimStatus", new Integer[]{5, 0}));
 
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
@@ -449,6 +819,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ReimburseRecordBO auditRecord(ReimburseRecordTO reimburseRecordTO) throws SerException {
+        checkPermission();
         UserBO userBO = userAPI.currentUser();
         String userName = userBO.getUsername();
         UserDetailBO udetailBO = userDetailAPI.findByUserId(userBO.getId());
@@ -503,6 +874,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ReimburseRecordBO congelAuditRecord(ReimburseRecordTO reimburseRecordTO) throws SerException {
+        checkPermission();
         UserBO userBO = userAPI.currentUser();
         String userName = userBO.getUsername();
         UserDetailBO udetailBO = userDetailAPI.findByUserId(userBO.getId());
@@ -591,6 +963,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
     @Override
     public List<ReimburseRecordBO> listAnalisysRecord(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        checkPermission();
         //负责人审核通过的记录
         ReimburseRecordDTO dto = reimburseRecordDTO;
         dto.getConditions().add(Restrict.eq("reimStatus", 1));
@@ -618,6 +991,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ReimburseRecordBO analisysRecord(ReimburseRecordTO reimburseRecordTO) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(reimburseRecordTO.getId())) {
             throw new SerException("id不能为空");
         }
@@ -670,6 +1044,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ReimburseRecordBO congelAnalisysRecord(ReimburseRecordTO reimburseRecordTO) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(reimburseRecordTO.getId())) {
             throw new SerException("id不能为空");
         }
@@ -731,6 +1106,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
     @Override
     public List<ReimburseRecordBO> listHasAnalisys(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        checkPermission();
         ReimburseRecordDTO dto = reimburseRecordDTO;
         dto.getConditions().add(Restrict.in("reimStatus", new Integer[]{3, 4}));
         dto.getSorts().add("modifyTime=desc");
@@ -766,6 +1142,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Override
     public List<ReimburseRecordBO> listAccountCheck(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
 //        reimburseRecordDTO.getConditions().equals(Restrict.eq("chargerAuditStatus", "通过"));
+        checkPermission();
         reimburseRecordDTO.getConditions().add(Restrict.in("reimStatus", new Integer[]{1, 3, 4}));
         reimburseRecordDTO.getConditions().add(Restrict.eq("ticketCondition", "是"));
         reimburseRecordDTO.getConditions().equals(Restrict.eq("receiveTicketCheck", "否"));
@@ -777,6 +1154,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ReimburseRecordBO recieveTicketCondition(ReimburseRecordTO reimburseRecordTO) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(reimburseRecordTO.getId())) {
             throw new SerException("id不能为空");
         } if (StringUtils.isBlank(reimburseRecordTO.getReceiveTicketCheck())) {
@@ -827,6 +1205,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
     @Override
     public List<ReimburseRecordBO> listWaitPay(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        checkPermission();
         ReimburseRecordDTO dto = reimburseRecordDTO;
         dto.getConditions().add(Restrict.ne("payCondition", "是"));
         dto.getConditions().add(Restrict.eq("receiveTicketCheck", "是"));
@@ -853,6 +1232,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ReimburseRecordBO prePay(ReimburseRecordTO reimburseRecordTO) throws SerException {
+        checkPermission();
         if (reimburseRecordTO.getReimNumbers() == null || reimburseRecordTO.getReimNumbers().length <= 0) {
             throw new SerException("报销单号不能为空，至少要有一个");
         }
@@ -879,6 +1259,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ReimburseRecordBO waitPay(ReimburseRecordTO reimburseRecordTO) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(reimburseRecordTO.getId())) {
             throw new SerException("id不能为空");
         }
@@ -916,6 +1297,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
     @Override
     public List<ReimburseRecordBO> listHasPay(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        checkPermission();
         ReimburseRecordDTO dto = reimburseRecordDTO;
         dto.getConditions().add(Restrict.eq("payCondition", "是"));
 
@@ -940,6 +1322,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
     @Override
     public List<AccountVoucherBO> listAccountVoucherByRecord(String id) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(id)) {
             throw new SerException("生成记账凭证失败，id不能为空");
         }
@@ -994,6 +1377,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     //汇总已付款记录
     @Override
     public List<CollectDataBO> collectLender(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        checkPermission();
         if ((StringUtils.isBlank(reimburseRecordDTO.getStartTime()) && StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()))) {
             throw new SerException("两个时间必须同时选");
         }
@@ -1051,6 +1435,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
     @Override
     public List<CollectDataBO> collectArea(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        checkPermission();
         if ((StringUtils.isBlank(reimburseRecordDTO.getStartTime()) && StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()))) {
             throw new SerException("两个时间必须同时选");
         }
@@ -1108,6 +1493,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
     @Override
     public List<CollectDataBO> collectFirstSubject(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        checkPermission();
         if ((StringUtils.isBlank(reimburseRecordDTO.getStartTime()) && StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()))) {
             throw new SerException("两个时间必须同时选");
         }
@@ -1165,6 +1551,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
     @Override
     public List<CollectDataBO> collectProjectName(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        checkPermission();
         if ((StringUtils.isBlank(reimburseRecordDTO.getStartTime()) && StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()))) {
             throw new SerException("两个时间必须同时选");
         }
@@ -1252,5 +1639,83 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         List<ReimburseRecord> list = super.findBySql(sql, ReimburseRecord.class, fields);
         List<String> project = list.stream().map(ReimburseRecord::getProject).collect(Collectors.toList());
         return project;
+    }
+
+    /**
+     * 等待付款导出
+     * @param reimburseRecordDTO
+     * @return
+     * @throws SerException
+     */
+    @Override
+    public byte[] exportExcel(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        checkPermission();
+        LocalDate start = LocalDate.now();
+        LocalDate end = LocalDate.now();
+        if(StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())){
+            start = DateUtil.parseDate(reimburseRecordDTO.getStartTime());
+        }
+        if(StringUtils.isNotBlank(reimburseRecordDTO.getEndTime())){
+            end = DateUtil.parseDate(reimburseRecordDTO.getEndTime());
+        }
+        LocalDate budgetPayTime [] = new LocalDate[]{start,end};
+
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime()) || StringUtils.isNotBlank(reimburseRecordDTO.getEndTime())) {
+            reimburseRecordDTO.getConditions().add(Restrict.between("budgetPayTime", budgetPayTime));//借款时间段查询
+        }
+        reimburseRecordDTO.getConditions().add(Restrict.ne("payCondition", "是"));
+        reimburseRecordDTO.getConditions().add(Restrict.eq("receiveTicketCheck", "是"));
+        reimburseRecordDTO.getConditions().add(Restrict.in("reimStatus", new Integer[]{3,4}));
+
+        List<ReimburseRecord> list = super.findByCis(reimburseRecordDTO);
+
+        List<ReimburseRecordExcel> reimburseRecordExcels = new ArrayList<>();
+        list.stream().forEach(str -> {
+            ReimburseRecordExcel excel = BeanTransform.copyProperties(str, ReimburseRecordExcel.class, "lendStatus");
+            excel.setReimStatus(ReimStatus.exportStrConvert(str.getReimStatus()));
+
+            reimburseRecordExcels.add(excel);
+        });
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(reimburseRecordExcels, excel);
+        return bytes;
+    }
+
+    /**
+     * 已付款记录导出
+     * @param reimburseRecordDTO
+     * @return
+     * @throws SerException
+     */
+    @Override
+    public byte[] exportAlPayExcel(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        checkPermission();
+        LocalDate start = LocalDate.now();
+        LocalDate end = LocalDate.now();
+        if(StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())){
+            start = DateUtil.parseDate(reimburseRecordDTO.getStartTime());
+        }
+        if(StringUtils.isNotBlank(reimburseRecordDTO.getEndTime())){
+            end = DateUtil.parseDate(reimburseRecordDTO.getEndTime());
+        }
+        LocalDate budgetPayTime [] = new LocalDate[]{start,end};
+
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime()) || StringUtils.isNotBlank(reimburseRecordDTO.getEndTime())) {
+            reimburseRecordDTO.getConditions().add(Restrict.between("budgetPayTime", budgetPayTime));//借款时间段查询
+        }
+        reimburseRecordDTO.getConditions().add(Restrict.eq("payCondition", "是"));
+
+        List<ReimburseRecord> list = super.findByCis(reimburseRecordDTO);
+
+        List<ReimburseRecordExcel> reimburseRecordExcels = new ArrayList<>();
+        list.stream().forEach(str -> {
+            ReimburseRecordExcel excel = BeanTransform.copyProperties(str, ReimburseRecordExcel.class, "lendStatus");
+            excel.setReimStatus(ReimStatus.exportStrConvert(str.getReimStatus()));
+
+            reimburseRecordExcels.add(excel);
+        });
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(reimburseRecordExcels, excel);
+        return bytes;
     }
 }

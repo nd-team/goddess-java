@@ -19,6 +19,5 @@ import java.util.List;
  */
 public interface TableHeadValueAPI {
 
-    List<TableHeadValueBO> pageList(TableHeadValueDTO dto) throws SerException;
 
 }

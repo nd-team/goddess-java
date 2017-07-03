@@ -23,12 +23,4 @@ import java.util.List;
 @Service("tableHeadValueApiImpl")
 public class TableHeadValueApiImpl implements TableHeadValueAPI {
 
-    @Autowired
-    private TableHeadValueSer tableHeadValueSer;
-
-    @Override
-    public List<TableHeadValueBO> pageList(TableHeadValueDTO dto) throws SerException {
-        return tableHeadValueSer.pageList(dto);
-    }
-
 }

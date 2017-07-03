@@ -4,7 +4,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.salaryconfirm.bo.InvoiceSubmitBO;
 import com.bjike.goddess.salaryconfirm.dto.InvoiceSubmitDTO;
+import com.bjike.goddess.salaryconfirm.excel.SonPermissionObject;
 import com.bjike.goddess.salaryconfirm.service.InvoiceSubmitSer;
+import com.bjike.goddess.salaryconfirm.to.GuidePermissionTO;
 import com.bjike.goddess.salaryconfirm.to.InvoiceSubmitTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,5 +61,15 @@ public class InvoiceSubmitApiImpl implements InvoiceSubmitAPI {
     @Override
     public Long count(InvoiceSubmitDTO dto) throws SerException {
         return invoiceSubmitSer.count(dto);
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO to) throws SerException {
+        return invoiceSubmitSer.guidePermission(to);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return invoiceSubmitSer.sonPermission();
     }
 }

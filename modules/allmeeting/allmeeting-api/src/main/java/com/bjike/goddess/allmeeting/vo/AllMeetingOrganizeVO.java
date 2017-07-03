@@ -15,18 +15,33 @@ import com.bjike.goddess.common.api.type.Status;
 public class AllMeetingOrganizeVO {
 
     /**
+     * id
+     */
+    private String id;
+    /**
      * 会议编号
      */
     private String meetingNum;
 
     /**
-     * id
+     * 会议议题
      */
-    private String id;
+    private String topic;
+
     /**
-     * 层面Id
+     * 会议议题
      */
-    private String layId;
+    private String topicContent;
+
+    /**
+     * 会议层面
+     */
+    private String layName;
+
+    /**
+     * 计划参会岗位
+     */
+    private String position;
 
     /**
      * 会议内容
@@ -68,14 +83,6 @@ public class AllMeetingOrganizeVO {
      */
     private Status status;
 
-    public String getMeetingNum() {
-        return meetingNum;
-    }
-
-    public void setMeetingNum(String meetingNum) {
-        this.meetingNum = meetingNum;
-    }
-
     public String getId() {
         return id;
     }
@@ -84,12 +91,44 @@ public class AllMeetingOrganizeVO {
         this.id = id;
     }
 
-    public String getLayId() {
-        return layId;
+    public String getMeetingNum() {
+        return meetingNum;
     }
 
-    public void setLayId(String layId) {
-        this.layId = layId;
+    public void setMeetingNum(String meetingNum) {
+        this.meetingNum = meetingNum;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    public String getTopicContent() {
+        return topicContent;
+    }
+
+    public void setTopicContent(String topicContent) {
+        this.topicContent = topicContent;
+    }
+
+    public String getLayName() {
+        return layName;
+    }
+
+    public void setLayName(String layName) {
+        this.layName = layName;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public String getContent() {

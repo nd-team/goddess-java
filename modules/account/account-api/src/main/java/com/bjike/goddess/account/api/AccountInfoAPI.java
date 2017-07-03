@@ -3,7 +3,9 @@ package com.bjike.goddess.account.api;
 import com.bjike.goddess.account.bo.AccountCollectBO;
 import com.bjike.goddess.account.bo.AccountInfoBO;
 import com.bjike.goddess.account.dto.AccountInfoDTO;
+import com.bjike.goddess.account.excel.SonPermissionObject;
 import com.bjike.goddess.account.to.AccountInfoTO;
+import com.bjike.goddess.account.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -18,6 +20,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface AccountInfoAPI {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 明细账信息列表总条数
      */
@@ -75,14 +90,41 @@ public interface AccountInfoAPI {
 
     }
     /**
-     * 汇总
+     * 科目汇总
      *
-     * @param areas
-     * @return AccountCollectBO
+     * @return class AccountCollectBO
      */
-    default List<AccountCollectBO> collectAccountInfo(String[] areas) throws SerException{
+    default List<AccountCollectBO> subCollect(AccountInfoDTO dto) throws SerException {
         return null;
     }
+
+    /**
+     * 地区汇总
+     *
+     * @return class AccountCollectBO
+     */
+    default List<AccountCollectBO> areaCollect(AccountInfoDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 项目组汇总
+     *
+     * @return class AccountCollectBO
+     */
+    default List<AccountCollectBO> groupCollect(AccountInfoDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 项目名称汇总
+     *
+     * @return class AccountCollectBO
+     */
+    default List<AccountCollectBO> nameCollect(AccountInfoDTO dto) throws SerException {
+        return null;
+    }
+
     /**
      * 地区
      *
@@ -91,6 +133,55 @@ public interface AccountInfoAPI {
     default List<String> getArea() throws SerException {
         return null;
     }
+    /**
+     * 项目名称
+     *
+     * @return class String
+     */
+    default List<String> getProjectName() throws SerException {
+        return null;
+    }
+    /**
+     * 项目组/部门
+     *
+     * @return class String
+     */
+    default List<String> getProjectGroup() throws SerException {
+        return null;
+    }
+    /**
+     * 查询所有一级科目
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> listFirstSubject() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据一级科目查询二级科目
+     *
+     * @param firstSub 一级科目
+     * @return
+     * @throws SerException
+     */
+    default List<String> listSubByFirst(String firstSub) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据一级二级查询三级科目
+     *
+     * @param firstSub  一级科目
+     * @param secondSub 二级科目
+     * @return
+     * @throws SerException
+     */
+    default List<String> listTubByFirst(String firstSub, String secondSub) throws SerException {
+        return null;
+    }
+
 
 
 

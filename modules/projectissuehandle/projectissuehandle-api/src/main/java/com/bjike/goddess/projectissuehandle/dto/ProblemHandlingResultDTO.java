@@ -25,6 +25,19 @@ public class ProblemHandlingResultDTO extends BaseDTO {
      * 问题对象
      */
     private String problemObject;
+    /**
+     * 内部项目名称
+     */
+    private String[] name;
+
+    /**
+     * 工程类型
+     */
+    private String[] type;
+    /**
+     * 问题对象
+     */
+    private String[] object;
 
     public String getInternalProjectName() {
         return internalProjectName;
@@ -49,5 +62,29 @@ public class ProblemHandlingResultDTO extends BaseDTO {
 
     public void setProblemObject(String problemObject) {
         this.problemObject = problemObject;
+    }
+
+    public String[] getName() {
+        return name;
+    }
+
+    public void setName(String[] name) {
+        this.name = name;
+    }
+
+    public String[] getType() {
+        return type;
+    }
+
+    public void setType(String[] type) {
+        this.type = type;
+    }
+
+    public String[] getObject() {
+        return object;
+    }
+
+    public void setObject(String[] object) {
+        this.object = object;
     }
 }

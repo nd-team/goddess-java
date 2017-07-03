@@ -4,9 +4,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectmeasure.bo.ProjectMeasureBO;
 import com.bjike.goddess.projectmeasure.bo.ProjectMeasureSummaryBO;
-import com.bjike.goddess.projectmeasure.entity.ProjectMeasureSummary;
 import com.bjike.goddess.projectmeasure.dto.ProjectMeasureSummaryDTO;
-import com.bjike.goddess.projectmeasure.excel.SonPermissionObject;
+import com.bjike.goddess.projectmeasure.entity.ProjectMeasureSummary;
 import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.ProjectMeasureSummaryTO;
 
@@ -29,12 +28,14 @@ public interface ProjectMeasureSummarySer extends Ser<ProjectMeasureSummary, Pro
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 分页查询项目测算汇总邮件发送
      *
@@ -96,16 +97,18 @@ public interface ProjectMeasureSummarySer extends Ser<ProjectMeasureSummary, Pro
 
     /**
      * 定时器检测要发送的邮件
-     *
      */
-    default void checkSendEmail( ) throws SerException {
-        return ;
+    default void checkSendEmail() throws SerException {
+        return;
     }
 
     /**
      * 一个个邮件
-     * @return class CollectEmailBO
+     *
+     * @return class ProjectMeasureSummaryBO
      */
-    default ProjectMeasureSummaryBO getOne(String id) throws SerException {return null;}
+    default ProjectMeasureSummaryBO getOne(String id) throws SerException {
+        return null;
+    }
 
 }

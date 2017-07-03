@@ -22,7 +22,7 @@ public class ReceivableSubsidiaryDTO extends BaseDTO {
     /**
      * 地区
      */
-    private String area;
+    private String[] area;
 
     /**
      * 项目名称
@@ -55,11 +55,11 @@ public class ReceivableSubsidiaryDTO extends BaseDTO {
      */
     private String endTime;
 
-    public String getArea() {
+    public String[] getArea() {
         return area;
     }
 
-    public void setArea(String area) {
+    public void setArea(String[] area) {
         this.area = area;
     }
 

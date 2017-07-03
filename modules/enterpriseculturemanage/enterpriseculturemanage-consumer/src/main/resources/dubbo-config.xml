@@ -28,5 +28,8 @@
 	<!-- 企业文化信息管理API -->
 	<dubbo:reference interface="com.bjike.goddess.enterpriseculturemanage.api.PeriodicalProgramInfoAPI" id="periodicalProgramInfoApiImpl" />
 
+	<!-- 企业文化信息管理API -->
+	<dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl" />
+
 
 </beans>

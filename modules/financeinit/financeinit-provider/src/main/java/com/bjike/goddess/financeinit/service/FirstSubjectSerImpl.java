@@ -259,7 +259,7 @@ public class FirstSubjectSerImpl extends ServiceImpl<FirstSubject, FirstSubjectD
         }
         FirstSubjectDTO dto = new FirstSubjectDTO();
         dto.getConditions().add(Restrict.eq("name", firstSubjectTO.getName()));
-        dto.getConditions().add(Restrict.eq("category", firstSubjectTO.getCategory()));
+//        dto.getConditions().add(Restrict.eq("category", firstSubjectTO.getCategory()));
         Long count = super.count(dto);
         if (count > 0) {
             throw new SerException("该级别所属类别下的一级类别名已经存在，不可以再填");
@@ -283,7 +283,7 @@ public class FirstSubjectSerImpl extends ServiceImpl<FirstSubject, FirstSubjectD
         dto.getConditions().add(Restrict.eq("name", firstSubjectTO.getName()));
         dto.getConditions().add(Restrict.eq("category", firstSubjectTO.getCategory()));
         FirstSubject first = super.findOne(dto);
-        if (first != null && firstSubjectTO.getCode().equals(first.getCode())) {
+        if (first != null && firstSubjectTO.getName().equals(first.getName()) && !firstSubjectTO.getId().equals(first.getId())) {
             throw new SerException("该级别所属类别下的一级类别名已经存在，不可以修改成这个名字");
         }
 

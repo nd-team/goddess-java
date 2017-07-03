@@ -14,6 +14,10 @@ public class RentalApplyVO {
      */
     private String name;
     /**
+     * 员工编号
+     */
+    private String employeeNum;
+    /**
      * 地区
      */
     private String area;
@@ -60,39 +64,47 @@ public class RentalApplyVO {
     /**
      * 中介费
      */
-    private String agency;
+    private Double agency;
     /**
      * 押金
      */
-    private String deposit;
+    private Double deposit;
     /**
      * 房租
      */
-    private String rent;
+    private Double rent;
     /**
      * 房租管理费
      */
-    private String rentFee;
+    private Double rentFee;
     /**
      * 卫生费
      */
-    private String sanitation;
+    private Double sanitation;
     /**
      * 水费计价
      */
-    private String water;
+    private Double water;
     /**
      * 电费计价
      */
-    private String energy;
+    private Double energy;
     /**
      * 网络套餐费用
      */
-    private String network;
+    private Double network;
     /**
-     * 项目经理审批
+     * 项目经理
      */
-    private String manageApproval;
+    private String manage;
+    /**
+     * 项目经理意见
+     */
+    private String manageOpinion;
+    /**
+     * 项目经理是否通过(是/否)
+     */
+    private String managePass;
     /**
      * 商务发展部意见
      */
@@ -116,6 +128,14 @@ public class RentalApplyVO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmployeeNum() {
+        return employeeNum;
+    }
+
+    public void setEmployeeNum(String employeeNum) {
+        this.employeeNum = employeeNum;
     }
 
     public String getArea() {
@@ -206,76 +226,92 @@ public class RentalApplyVO {
         this.contact = contact;
     }
 
-    public String getAgency() {
+    public Double getAgency() {
         return agency;
     }
 
-    public void setAgency(String agency) {
+    public void setAgency(Double agency) {
         this.agency = agency;
     }
 
-    public String getDeposit() {
+    public Double getDeposit() {
         return deposit;
     }
 
-    public void setDeposit(String deposit) {
+    public void setDeposit(Double deposit) {
         this.deposit = deposit;
     }
 
-    public String getRent() {
+    public Double getRent() {
         return rent;
     }
 
-    public void setRent(String rent) {
+    public void setRent(Double rent) {
         this.rent = rent;
     }
 
-    public String getRentFee() {
+    public Double getRentFee() {
         return rentFee;
     }
 
-    public void setRentFee(String rentFee) {
+    public void setRentFee(Double rentFee) {
         this.rentFee = rentFee;
     }
 
-    public String getSanitation() {
+    public Double getSanitation() {
         return sanitation;
     }
 
-    public void setSanitation(String sanitation) {
+    public void setSanitation(Double sanitation) {
         this.sanitation = sanitation;
     }
 
-    public String getWater() {
+    public Double getWater() {
         return water;
     }
 
-    public void setWater(String water) {
+    public void setWater(Double water) {
         this.water = water;
     }
 
-    public String getEnergy() {
+    public Double getEnergy() {
         return energy;
     }
 
-    public void setEnergy(String energy) {
+    public void setEnergy(Double energy) {
         this.energy = energy;
     }
 
-    public String getNetwork() {
+    public Double getNetwork() {
         return network;
     }
 
-    public void setNetwork(String network) {
+    public void setNetwork(Double network) {
         this.network = network;
     }
 
-    public String getManageApproval() {
-        return manageApproval;
+    public String getManage() {
+        return manage;
     }
 
-    public void setManageApproval(String manageApproval) {
-        this.manageApproval = manageApproval;
+    public void setManage(String manage) {
+        this.manage = manage;
+    }
+
+    public String getManageOpinion() {
+        return manageOpinion;
+    }
+
+    public void setManageOpinion(String manageOpinion) {
+        this.manageOpinion = manageOpinion;
+    }
+
+    public String getManagePass() {
+        return managePass;
+    }
+
+    public void setManagePass(String managePass) {
+        this.managePass = managePass;
     }
 
     public String getCommerceRemark() {

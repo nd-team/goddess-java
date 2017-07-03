@@ -66,4 +66,9 @@ public class CusPermissionApiImpl implements CusPermissionAPI {
     public Boolean busCusPermission(String idFlag) throws SerException {
         return cusPermissionSer.busCusPermission(idFlag);
     }
+
+    @Override
+    public Boolean arrCusPermission(String idFlag) throws SerException {
+        return cusPermissionSer.arrCusPermission(idFlag);
+    }
 }

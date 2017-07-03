@@ -4,9 +4,11 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.fundrecords.bo.*;
 import com.bjike.goddess.fundrecords.dto.FundRecordDTO;
+import com.bjike.goddess.fundrecords.excel.SonPermissionObject;
 import com.bjike.goddess.fundrecords.service.FundRecordSer;
 import com.bjike.goddess.fundrecords.to.CollectTO;
 import com.bjike.goddess.fundrecords.to.FundRecordTO;
+import com.bjike.goddess.fundrecords.to.GuidePermissionTO;
 import com.bjike.goddess.fundrecords.vo.GroupAnalyzeVO;
 import com.bjike.goddess.fundrecords.vo.ProjectAnalyzeVO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
@@ -83,6 +85,31 @@ public class FundRecordApiImpl implements FundRecordAPI {
     @Override
     public List<ProjectAnalyzeBO> projectAnalyze(Integer year, Integer month, String project) throws SerException {
         return fundRecordSer.projectAnalyze(year,month,project);
+    }
+
+    @Override
+    public void leadExcel(List<FundRecordTO> toList) throws SerException {
+        fundRecordSer.leadExcel(toList);
+    }
+
+    @Override
+    public byte[] exportExcel(String startDate, String endDate) throws SerException {
+        return fundRecordSer.exportExcel(startDate,endDate);
+    }
+
+    @Override
+    public byte[] exportExcelModule() throws SerException {
+        return fundRecordSer.exportExcelModule();
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return fundRecordSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO to) throws SerException {
+        return fundRecordSer.guidePermission(to);
     }
 
 }

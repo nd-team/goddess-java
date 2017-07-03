@@ -6,12 +6,8 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectmeasure.bo.ProjectBasicInfoBO;
-import com.bjike.goddess.projectmeasure.dto.ProjectBasicInfoDTO;
-import com.bjike.goddess.projectmeasure.dto.ProjectCostStatusDTO;
-import com.bjike.goddess.projectmeasure.dto.ProjectPersonnelDemandDTO;
-import com.bjike.goddess.projectmeasure.entity.ProjectBasicInfo;
-import com.bjike.goddess.projectmeasure.entity.ProjectCostStatus;
-import com.bjike.goddess.projectmeasure.entity.ProjectPersonnelDemand;
+import com.bjike.goddess.projectmeasure.dto.*;
+import com.bjike.goddess.projectmeasure.entity.*;
 import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.ProjectBasicInfoTO;
 import com.bjike.goddess.projectmeasure.type.GuideAddrStatus;
@@ -45,6 +41,16 @@ public class ProjectBasicInfoSerImpl extends ServiceImpl<ProjectBasicInfo, Proje
 
     @Autowired
     private ProjectPersonnelDemandSer projectPersonnelDemandSer;//项目人员需求
+    @Autowired
+    private MultipleProjectMultipleUISer multipleProjectMultipleUISer;//多项目多界面
+    @Autowired
+    private MultipleProjectSingleUISer multipleProjectSingleUISer;//多项目单界面
+    @Autowired
+    private SingleProjectSingleUISer singleProjectSingleUISer;//单项目单界面
+    @Autowired
+    private SingleProjectMultipleUISer singleProjectMultipleUISer;//单项目多界面
+    @Autowired
+    private ProjectOtherDemandSer projectOtherDemandSer;//其他需求界面
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
@@ -73,9 +79,9 @@ public class ProjectBasicInfoSerImpl extends ServiceImpl<ProjectBasicInfo, Proje
 
 
     /**
-     * 核对查看权限（部门级别）
+     * 导航权限（部门级别）
      */
-    private Boolean guideSeeIdentity() throws SerException {
+    private Boolean guideIdentity() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
@@ -93,7 +99,7 @@ public class ProjectBasicInfoSerImpl extends ServiceImpl<ProjectBasicInfo, Proje
     @Override
     public Boolean sonPermission() throws SerException {
         String userToken = RpcTransmit.getUserToken();
-        Boolean flagSee = guideSeeIdentity();
+        Boolean flagSee = guideIdentity();
         RpcTransmit.transmitUserToken(userToken);
         if (flagSee) {
             return true;
@@ -109,22 +115,28 @@ public class ProjectBasicInfoSerImpl extends ServiceImpl<ProjectBasicInfo, Proje
         Boolean flag = true;
         switch (guideAddrStatus) {
             case LIST:
-                flag = guideSeeIdentity();
+                flag = guideIdentity();
                 break;
             case ADD:
-                flag = guideSeeIdentity();
+                flag = guideIdentity();
                 break;
             case EDIT:
-                flag = guideSeeIdentity();
+                flag = guideIdentity();
                 break;
             case DELETE:
-                flag = guideSeeIdentity();
+                flag = guideIdentity();
                 break;
             case CONGEL:
-                flag = guideSeeIdentity();
+                flag = guideIdentity();
                 break;
             case THAW:
-                flag = guideSeeIdentity();
+                flag = guideIdentity();
+                break;
+            case COLLECT:
+                flag = guideIdentity();
+                break;
+            case SEE:
+                flag = guideIdentity();
                 break;
             default:
                 flag = true;
@@ -216,9 +228,11 @@ public class ProjectBasicInfoSerImpl extends ServiceImpl<ProjectBasicInfo, Proje
         String projectName = entity.getProjectName();//获取项目名称
         deleteProjectCostByName(projectName);//删除项目费用情况
         deleteProjectPersonnelDemandByName(projectName);//删除项目人员需求管理
-        // TODO: 17-3-23
-        //删除单项目单个界面,单项目多个界面,项目基本信息,多项目多个界面
-
+        deleteMultipleProjectMultipleByName(projectName);//d删除多项目多界面
+        deleteMultipleProjectSingleByName(projectName);//删除多项目单界面
+        deleteOtherDemandByName(projectName);//删除其他项目
+        deleteSingleProjectMultpleByName(projectName);//删除单项目多界面
+        deleteSingleProjectSingleByName(projectName);//删除单项目单界面
         super.remove(id);
     }
 
@@ -250,6 +264,71 @@ public class ProjectBasicInfoSerImpl extends ServiceImpl<ProjectBasicInfo, Proje
     }
 
     /**
+     * 根据项目名称删除多项目单界面
+     *
+     * @param projectName 项目名称
+     * @throws SerException
+     */
+    private void deleteMultipleProjectSingleByName(String projectName) throws SerException {
+        MultipleProjectSingleUIDTO dto = new MultipleProjectSingleUIDTO();
+        dto.getConditions().add(Restrict.eq("projectName", projectName));
+        List<MultipleProjectSingleUI> list = multipleProjectSingleUISer.findByCis(dto);
+        multipleProjectSingleUISer.remove(list);//批量删除多项目单界面
+    }
+
+    /**
+     * 根据项目名称删除单项目多界面
+     *
+     * @param projectName 项目名称
+     * @throws SerException
+     */
+    private void deleteSingleProjectMultpleByName(String projectName) throws SerException {
+        SingleProjectMultipleUIDTO dto = new SingleProjectMultipleUIDTO();
+        dto.getConditions().add(Restrict.eq("projectName", projectName));
+        List<SingleProjectMultipleUI> list = singleProjectMultipleUISer.findByCis(dto);
+        singleProjectMultipleUISer.remove(list);//批量删除单项目多界面
+    }
+
+    /**
+     * 根据项目名称删除其他需求页面
+     *
+     * @param projectName 项目名称
+     * @throws SerException
+     */
+    private void deleteOtherDemandByName(String projectName) throws SerException {
+        ProjectOtherDemandDTO dto = new ProjectOtherDemandDTO();
+        dto.getConditions().add(Restrict.eq("projectName", projectName));
+        List<ProjectOtherDemand> list = projectOtherDemandSer.findByCis(dto);
+        projectOtherDemandSer.remove(list);//批量删除其他需求页面
+    }
+
+    /**
+     * 根据项目名称删除单项目单界面
+     *
+     * @param projectName 项目名称
+     * @throws SerException
+     */
+    private void deleteSingleProjectSingleByName(String projectName) throws SerException {
+        SingleProjectSingleUIDTO dto = new SingleProjectSingleUIDTO();
+        dto.getConditions().add(Restrict.eq("projectName", projectName));
+        List<SingleProjectSingleUI> list = singleProjectSingleUISer.findByCis(dto);
+        singleProjectSingleUISer.remove(list);//批量删除单项目单界面
+    }
+
+    /**
+     * 根据项目名称删除多项目多界面
+     *
+     * @param projectName 项目名称
+     * @throws SerException
+     */
+    private void deleteMultipleProjectMultipleByName(String projectName) throws SerException {
+        MultipleProjectMultipleUIDTO dto = new MultipleProjectMultipleUIDTO();
+        dto.getConditions().add(Restrict.eq("projectName", projectName));
+        List<MultipleProjectMultipleUI> list = multipleProjectMultipleUISer.findByCis(dto);
+        multipleProjectMultipleUISer.remove(list);//批量删除项目费用情况
+    }
+
+    /**
      * 查询所有的项目名称
      *
      * @return
@@ -270,4 +349,31 @@ public class ProjectBasicInfoSerImpl extends ServiceImpl<ProjectBasicInfo, Proje
         }
         return new ArrayList<>(set);
     }
+
+    @Override
+    public List<String> findAllAreas() throws SerException {
+        List<ProjectBasicInfo> list = super.findAll();
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (ProjectBasicInfo model : list) {
+            String areas = model.getArea();
+            if (StringUtils.isNotBlank(model.getArea())) {
+                set.add(areas);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public ProjectBasicInfoBO getOne(String id) throws SerException{
+        checkPermission();
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空哦");
+        }
+        ProjectBasicInfo projectBasicInfo = super.findById(id);
+        return BeanTransform.copyProperties(projectBasicInfo, ProjectBasicInfoBO.class);
+    }
+
 }

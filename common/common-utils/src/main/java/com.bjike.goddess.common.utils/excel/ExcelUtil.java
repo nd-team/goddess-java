@@ -546,11 +546,20 @@ public class ExcelUtil {
         String value = val.toString();
         try {
             Field[] enumFields = field.getType().getFields();
+            List<String> fields = new ArrayList<>();
+            boolean exist = false;
             for (Field f : enumFields) {
-                if (value.equals(f.getAnnotation(ExcelValue.class).name())) {
+                String titleValue = f.getAnnotation(ExcelValue.class).name();
+                fields.add(titleValue);
+                if (value.equals(titleValue)) {
                     field.set(obj, field.getType().getField(f.getName()).get(f.getName()));
+                    exist = true;
                 }
             }
+            if (!exist) {
+                throw new ActException("["+field.getAnnotation(ExcelHeader.class).name()+ "]字段只能填写:[" + StringUtils.join(fields, ",") + "]");
+            }
+
         } catch (Exception e) {
             throw new ActException(e.getMessage());
         }
@@ -559,6 +568,7 @@ public class ExcelUtil {
 
     /**
      * 导出数据处理类型
+     *
      * @param cell
      * @param field
      * @param val

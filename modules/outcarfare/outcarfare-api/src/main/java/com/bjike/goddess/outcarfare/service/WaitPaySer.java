@@ -8,6 +8,7 @@ import com.bjike.goddess.outcarfare.bo.DriverCountBO;
 import com.bjike.goddess.outcarfare.bo.WaitPayBO;
 import com.bjike.goddess.outcarfare.dto.WaitPayDTO;
 import com.bjike.goddess.outcarfare.entity.WaitPay;
+import com.bjike.goddess.outcarfare.to.GuidePermissionTO;
 import com.bjike.goddess.outcarfare.to.WaitPayTO;
 
 import java.util.List;
@@ -22,6 +23,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface WaitPaySer extends Ser<WaitPay, WaitPayDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 添加
      *

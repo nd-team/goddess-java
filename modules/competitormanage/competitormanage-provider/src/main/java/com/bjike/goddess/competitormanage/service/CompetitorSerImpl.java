@@ -4,18 +4,30 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.competitormanage.bo.CompetitorBO;
 import com.bjike.goddess.competitormanage.dto.CompetitorDTO;
 import com.bjike.goddess.competitormanage.entity.Competitor;
+import com.bjike.goddess.competitormanage.enums.GuideAddrStatus;
+import com.bjike.goddess.competitormanage.excel.CompetitorExcel;
+import com.bjike.goddess.competitormanage.excel.SonPermissionObject;
 import com.bjike.goddess.competitormanage.to.CompetitorTO;
+import com.bjike.goddess.competitormanage.to.GuidePermissionTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +45,10 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CompetitorCollectSer competitorCollectSer;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
@@ -41,6 +57,13 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
         getCusPermission();
 
         Competitor model = BeanTransform.copyProperties(to, Competitor.class, true);
+        setMarkInfoCode(model);
+        super.save(model);
+        to.setId(model.getId());
+        return BeanTransform.copyProperties(to, CompetitorBO.class);
+    }
+
+    public void setMarkInfoCode(Competitor model) throws SerException {
         //save前查询当前数据库最新的编号
         CompetitorDTO dto = new CompetitorDTO();
         dto.getSorts().add("createTime=desc");
@@ -66,10 +89,8 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
         } else {
             model.setMarkInfoCode("MI-0000001");
         }
-        super.save(model);
-        to.setId(model.getId());
-        return BeanTransform.copyProperties(to, CompetitorBO.class);
     }
+
 
     @Override
     @Transactional(rollbackFor = SerException.class)
@@ -116,6 +137,174 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
         }
     }
 
+    @Override
+    public void leadExcel(List<CompetitorTO> toList) throws SerException {
+        List<Competitor> list = BeanTransform.copyProperties(toList, Competitor.class);
+
+        for (Competitor model : list) {
+            setMarkInfoCode(model);
+            super.save(model);
+        }
+    }
+
+    @Override
+    public byte[] exportExcel(String startDate, String endDate) throws SerException {
+        CompetitorDTO dto = new CompetitorDTO();
+        if (!StringUtils.isEmpty(startDate)) {
+            dto.getConditions().add(Restrict.gt("createTime", startDate));
+        }
+        if (!StringUtils.isEmpty(endDate)) {
+            dto.getConditions().add(Restrict.lt("createTime", endDate));
+        }
+        List<Competitor> list = super.findByCis(dto);
+        List<CompetitorExcel> excelList = new ArrayList<CompetitorExcel>();
+        if (!CollectionUtils.isEmpty(list)) {
+            for (Competitor model : list) {
+                CompetitorExcel excel = new CompetitorExcel();
+                BeanUtils.copyProperties(model, excel);
+                excelList.add(excel);
+            }
+        }else{
+            excelList.add(new CompetitorExcel());
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(excelList, excel);
+        return bytes;
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+
+        List<SonPermissionObject> list = new ArrayList<>();
+
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagAddSign = guideSeeIdentity();
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("competitor");
+        obj.setDescribesion("竞争对手信息");
+        if (flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeDis = competitorCollectSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("collect");
+        obj.setDescribesion("竞争对手管理汇总");
+        if (flagSeeDis) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = to.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case ORGANIZE:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
+
+    @Override
+    public byte[] exportExcelModule() throws SerException {
+        Excel excel = new Excel(0, 2);
+        List<CompetitorExcel> list = new ArrayList<CompetitorExcel>();
+        list.add(new CompetitorExcel());
+        byte[] bytes = ExcelUtil.clazzToExcel(list , excel);
+        return bytes;
+    }
+
+    @Override
+    public List<CompetitorBO> areas() throws SerException {
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("select distinct area from competitormanage_competitor ");
+
+        return super.findBySql(sql.toString(),CompetitorBO.class,new String[]{"area"});
+    }
+
+    /**
+     *  导航栏核对查看权限（岗位级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
     /**
      * 更新数据（编辑、审核）
      *
@@ -123,17 +312,13 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
      */
     public void updateModel(CompetitorTO to) throws SerException {
 
-        if (!StringUtils.isEmpty(to.getId())) {
-            Competitor model = super.findById(to.getId());
-            if (model != null) {
-                BeanTransform.copyProperties(to, model, true);
-                model.setModifyTime(LocalDateTime.now());
-                super.update(model);
-            } else {
-                throw new SerException("更新对象不能为空");
-            }
+        Competitor model = super.findById(to.getId());
+        if (model != null) {
+            BeanTransform.copyProperties(to, model, true);
+            model.setModifyTime(LocalDateTime.now());
+            super.update(model);
         } else {
-            throw new SerException("更新ID不能为空!");
+            throw new SerException("更新对象不能为空");
         }
     }
 

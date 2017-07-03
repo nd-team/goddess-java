@@ -52,18 +52,6 @@ public class EnterpriseCultureInfo extends BaseEntity {
     private String employeeSuggest;
 
     /**
-     * 宣传方案Id
-     */
-    @Column(name = "publicizeId", columnDefinition = "VARCHAR(36)   COMMENT '宣传方案Id'")
-    private String publicizeId;
-
-    /**
-     * 刊物方案Id
-     */
-    @Column(name = "periodicalId", columnDefinition = "VARCHAR(36)   COMMENT '刊物方案Id'")
-    private String periodicalId;
-
-    /**
      * 数据状态
      */
     @Column(name = "status", columnDefinition = "TINYINT(2)   COMMENT '数据状态'")
@@ -107,22 +95,6 @@ public class EnterpriseCultureInfo extends BaseEntity {
 
     public void setEmployeeSuggest(String employeeSuggest) {
         this.employeeSuggest = employeeSuggest;
-    }
-
-    public String getPublicizeId() {
-        return publicizeId;
-    }
-
-    public void setPublicizeId(String publicizeId) {
-        this.publicizeId = publicizeId;
-    }
-
-    public String getPeriodicalId() {
-        return periodicalId;
-    }
-
-    public void setPeriodicalId(String periodicalId) {
-        this.periodicalId = periodicalId;
     }
 
     public Status getStatus() {

@@ -185,6 +185,12 @@ public class LeavingMessageSerImpl extends ServiceImpl<LeavingMessage, LeavingMe
             case SEEFILE:
                 flag = guideSeeIdentity();
                 break;
+            case MESSAGE:
+                flag = guideSeeIdentity();
+                break;
+            case ADDMESSAGE:
+                flag = guideAddIdentity();
+                break;
             default:
                 flag = true;
                 break;

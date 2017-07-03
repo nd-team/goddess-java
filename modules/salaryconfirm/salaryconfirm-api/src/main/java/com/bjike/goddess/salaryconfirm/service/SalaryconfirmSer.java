@@ -7,6 +7,7 @@ import com.bjike.goddess.salaryconfirm.bo.SalaryconfirmBO;
 import com.bjike.goddess.salaryconfirm.dto.SalaryconfirmDTO;
 import com.bjike.goddess.salaryconfirm.entity.Salaryconfirm;
 import com.bjike.goddess.salaryconfirm.to.ConditionTO;
+import com.bjike.goddess.salaryconfirm.to.GuidePermissionTO;
 import com.bjike.goddess.salaryconfirm.to.SalaryconfirmTO;
 
 import java.util.List;
@@ -112,4 +113,12 @@ public interface SalaryconfirmSer extends Ser<Salaryconfirm, SalaryconfirmDTO> {
      * @return 导出结果集字节数组
      */
     byte[] exportExcel(Integer year, Integer month) throws SerException;
+
+    byte[] exportExcelModule() throws SerException;
+
+    void sendEmail() throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO to) throws SerException;
+
+    Boolean sonPermission() throws SerException;
 }

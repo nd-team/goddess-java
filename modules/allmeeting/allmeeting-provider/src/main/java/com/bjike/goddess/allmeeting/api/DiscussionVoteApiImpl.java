@@ -34,4 +34,9 @@ public class DiscussionVoteApiImpl implements DiscussionVoteAPI {
     public List<SummaryVoteBO> listBySummary(String summaryId) throws SerException {
         return voteSer.listBySummary(summaryId);
     }
+
+    @Override
+    public List<SummaryVoteBO> listByConSummary(String summaryId) throws SerException {
+        return voteSer.listByConSummary(summaryId);
+    }
 }

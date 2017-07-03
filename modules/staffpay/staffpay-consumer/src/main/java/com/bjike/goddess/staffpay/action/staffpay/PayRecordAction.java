@@ -9,12 +9,15 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffpay.api.PayRecordAPI;
 import com.bjike.goddess.staffpay.bo.PayRecordBO;
 import com.bjike.goddess.staffpay.dto.PayRecordDTO;
+import com.bjike.goddess.staffpay.to.GuidePermissionTO;
 import com.bjike.goddess.staffpay.vo.AreaCollectVO;
 import com.bjike.goddess.staffpay.vo.DepartmentCollectVO;
 import com.bjike.goddess.staffpay.vo.NameCollectVO;
 import com.bjike.goddess.staffpay.vo.PayRecordVO;
 import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +37,27 @@ import java.util.List;
 public class PayRecordAction {
     @Autowired
     private PayRecordAPI payRecordAPI;
+    /**
+     * 功能导航权限
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = payRecordAPI.guidePermission(guidePermissionTO);
+            if(! isHasPermission ){
+                //int code, String msg
+                return new ActResult(0,"没有权限",false );
+            }else{
+                return new ActResult(0,"有权限",true );
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 已付款记录列表总条数
      *

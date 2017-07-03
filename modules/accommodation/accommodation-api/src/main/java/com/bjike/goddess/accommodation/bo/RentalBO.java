@@ -2,8 +2,6 @@ package com.bjike.goddess.accommodation.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import java.time.LocalDate;
-
 /**
  * @Author: [xiazhili]
  * @Date: [2017-3-9 16:16]
@@ -63,11 +61,11 @@ public class RentalBO extends BaseBO {
     /**
      * 租房开始时间
      */
-    private LocalDate rentBeginTime;
+    private String rentBeginTime;
     /**
      * 租房截止时间
      */
-    private LocalDate rentEndTime;
+    private String rentEndTime;
     /**
      * 房屋交租方式（转账，现金）
      */
@@ -79,7 +77,7 @@ public class RentalBO extends BaseBO {
     /**
      * 房租缴费日期
      */
-    private LocalDate rentTime;
+    private String rentTime;
     /**
      * 水电费缴费频率
      */
@@ -87,31 +85,31 @@ public class RentalBO extends BaseBO {
     /**
      * 中介费
      */
-    private String agency;
+    private Double agency;
     /**
      * 押金
      */
-    private String deposit;
+    private Double deposit;
     /**
      * 房租
      */
-    private String rent;
+    private Double rent;
     /**
      * 水费计价
      */
-    private String water;
+    private Double water;
     /**
      * 电费计价
      */
-    private String energy;
+    private Double energy;
     /**
      * 网络套餐费用
      */
-    private String network;
+    private Double network;
     /**
      * 燃气费
      */
-    private String gas;
+    private Double gas;
     /**
      * 备注
      */
@@ -213,19 +211,19 @@ public class RentalBO extends BaseBO {
         this.tenancyAgreement = tenancyAgreement;
     }
 
-    public LocalDate getRentBeginTime() {
+    public String getRentBeginTime() {
         return rentBeginTime;
     }
 
-    public void setRentBeginTime(LocalDate rentBeginTime) {
+    public void setRentBeginTime(String rentBeginTime) {
         this.rentBeginTime = rentBeginTime;
     }
 
-    public LocalDate getRentEndTime() {
+    public String getRentEndTime() {
         return rentEndTime;
     }
 
-    public void setRentEndTime(LocalDate rentEndTime) {
+    public void setRentEndTime(String rentEndTime) {
         this.rentEndTime = rentEndTime;
     }
 
@@ -245,11 +243,11 @@ public class RentalBO extends BaseBO {
         this.taxesFequency = taxesFequency;
     }
 
-    public LocalDate getRentTime() {
+    public String getRentTime() {
         return rentTime;
     }
 
-    public void setRentTime(LocalDate rentTime) {
+    public void setRentTime(String rentTime) {
         this.rentTime = rentTime;
     }
 
@@ -261,59 +259,59 @@ public class RentalBO extends BaseBO {
         this.paymentFrequency = paymentFrequency;
     }
 
-    public String getAgency() {
+    public Double getAgency() {
         return agency;
     }
 
-    public void setAgency(String agency) {
+    public void setAgency(Double agency) {
         this.agency = agency;
     }
 
-    public String getDeposit() {
+    public Double getDeposit() {
         return deposit;
     }
 
-    public void setDeposit(String deposit) {
+    public void setDeposit(Double deposit) {
         this.deposit = deposit;
     }
 
-    public String getRent() {
+    public Double getRent() {
         return rent;
     }
 
-    public void setRent(String rent) {
+    public void setRent(Double rent) {
         this.rent = rent;
     }
 
-    public String getWater() {
+    public Double getWater() {
         return water;
     }
 
-    public void setWater(String water) {
+    public void setWater(Double water) {
         this.water = water;
     }
 
-    public String getEnergy() {
+    public Double getEnergy() {
         return energy;
     }
 
-    public void setEnergy(String energy) {
+    public void setEnergy(Double energy) {
         this.energy = energy;
     }
 
-    public String getNetwork() {
+    public Double getNetwork() {
         return network;
     }
 
-    public void setNetwork(String network) {
+    public void setNetwork(Double network) {
         this.network = network;
     }
 
-    public String getGas() {
+    public Double getGas() {
         return gas;
     }
 
-    public void setGas(String gas) {
+    public void setGas(Double gas) {
         this.gas = gas;
     }
 

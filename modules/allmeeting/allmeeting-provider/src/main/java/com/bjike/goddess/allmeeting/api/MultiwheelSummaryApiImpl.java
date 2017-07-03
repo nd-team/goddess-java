@@ -1,6 +1,7 @@
 package com.bjike.goddess.allmeeting.api;
 
 import com.bjike.goddess.allmeeting.bo.MultiwheelSummaryBO;
+import com.bjike.goddess.allmeeting.bo.OrganizeForSummaryBO;
 import com.bjike.goddess.allmeeting.dto.ConciseSummaryDTO;
 import com.bjike.goddess.allmeeting.dto.MultiwheelSummaryDTO;
 import com.bjike.goddess.allmeeting.service.MultiwheelSummarySer;
@@ -50,5 +51,15 @@ public class MultiwheelSummaryApiImpl implements MultiwheelSummaryAPI {
     @Override
     public void freeze(String id) throws SerException {
         multiwheelSummarySer.freeze(id);
+    }
+
+    @Override
+    public OrganizeForSummaryBO organize(String id) throws SerException {
+        return multiwheelSummarySer.organize(id);
+    }
+
+    @Override
+    public void unfreeze(String id) throws SerException {
+        multiwheelSummarySer.unfreeze(id);
     }
 }

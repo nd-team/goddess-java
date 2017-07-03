@@ -147,7 +147,6 @@ public class ProjectInfoSerImpl extends ServiceImpl<ProjectInfo, ProjectInfoDTO>
     }
 
     @Override
-    @Transactional(rollbackFor = SerException.class)
     public List<ProjectInfoBO> pageList(ProjectInfoDTO dto) throws SerException {
         dto.getConditions().add(Restrict.ne("status", Status.DELETE));
         dto.getSorts().add("createTime=desc");

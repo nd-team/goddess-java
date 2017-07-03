@@ -3,6 +3,7 @@ package com.bjike.goddess.outcarfare.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
 import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
@@ -10,7 +11,11 @@ import com.bjike.goddess.dispatchcar.entity.DispatchCarInfo;
 import com.bjike.goddess.outcarfare.bo.*;
 import com.bjike.goddess.outcarfare.dto.WaitPayDTO;
 import com.bjike.goddess.outcarfare.entity.WaitPay;
+import com.bjike.goddess.outcarfare.enums.GuideAddrStatus;
+import com.bjike.goddess.outcarfare.to.GuidePermissionTO;
 import com.bjike.goddess.outcarfare.to.WaitPayTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -37,9 +42,136 @@ import java.util.Set;
 public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements WaitPaySer {
     @Autowired
     private DispatchCarInfoAPI dispatchCarInfoAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private UserAPI userAPI;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case pay:
+                flag = guideAddIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
 
     @Override
     public WaitPayBO save(WaitPayTO to) throws SerException {
+        checkAddIdentity();
         WaitPay waitPay = BeanTransform.copyProperties(to, WaitPay.class, true);
         super.save(waitPay);
         return BeanTransform.copyProperties(waitPay, WaitPayBO.class);
@@ -47,6 +179,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
 
     @Override
     public void pay(WaitPayTO to) throws SerException {
+        checkAddIdentity();
         WaitPay waitPay = super.findById(to.getId());
         waitPay.setIsPay(to.getIsPay());
         super.update(waitPay);
@@ -60,6 +193,8 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public List<WaitPayBO> list(WaitPayDTO dto) throws SerException {
+        checkSeeIdentity();
+        String userToken=RpcTransmit.getUserToken();
         List<DispatchCarInfoBO> list = dispatchCarInfoAPI.allWaitPay();
         List<WaitPay> waitPays = super.findAll();
         if (list != null) {
@@ -140,6 +275,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
         }
         dto.getConditions().add(Restrict.eq("isPay", Boolean.TRUE));
         List<WaitPay> l = super.findByCis(dto, true);
+        RpcTransmit.transmitUserToken(userToken);
         return BeanTransform.copyProperties(l, WaitPayBO.class);
     }
 
@@ -274,6 +410,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
 
     @Override
     public List<WaitPayBO> pays(WaitPayDTO dto) throws SerException {
+        checkSeeIdentity();
         dto.getConditions().add(Restrict.eq("isPay", Boolean.FALSE));
         List<WaitPay> l = super.findByCis(dto, true);
         return BeanTransform.copyProperties(l, WaitPayBO.class);
@@ -368,28 +505,5 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
             set.add(w.getCarPrice());
         }
         return set;
-    }
-
-    /**
-     * 通过id查找出车记录
-     *
-     * @param id 出车记录id
-     * @return class DispatchCarInfo
-     * @throws SerException
-     */
-    private DispatchCarInfo find(String id) throws SerException {
-        String[] ids = new String[]{id};
-        List<DispatchCarInfo> list = null;
-        for (String i : ids) {
-            String sql = "SELECT id,is_pay\n" +
-                    "from dispatchcar_basicinfo \n" +
-                    "where id='" + i + "'";
-            String[] fields = new String[]{"id", "is_pay"};
-            list = super.findBySql(sql, DispatchCarInfo.class, fields);
-        }
-        if ((list != null) && (list.size() != 0)) {
-            return list.get(0);
-        }
-        return null;
     }
 }

@@ -11,6 +11,7 @@ import com.bjike.goddess.projectissuehandle.to.ProblemHandlingResultTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.awt.event.PaintEvent;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -78,5 +79,18 @@ public class ProblemHandlingResultApiImpl implements ProblemHandlingResultAPI {
     public byte[] exportExcel(ProblemHandlingResultDTO dto ) throws SerException{
         return problemHandlingResultSer.exportExcel(dto);
     }
+    @Override
+    public List<String> getName() throws SerException {
+        return problemHandlingResultSer.getName();
+    }
+    @Override
+    public List<String> getType() throws SerException {
+        return problemHandlingResultSer.getType();
+    }
+    @Override
+    public List<String> getObject() throws SerException {
+        return problemHandlingResultSer.getObject();
+    }
+
 
 }

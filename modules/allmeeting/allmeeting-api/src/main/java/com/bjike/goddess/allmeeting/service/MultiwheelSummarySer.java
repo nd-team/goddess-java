@@ -1,6 +1,7 @@
 package com.bjike.goddess.allmeeting.service;
 
 import com.bjike.goddess.allmeeting.bo.MultiwheelSummaryBO;
+import com.bjike.goddess.allmeeting.bo.OrganizeForSummaryBO;
 import com.bjike.goddess.allmeeting.to.MultiwheelSummaryTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -24,4 +25,8 @@ public interface MultiwheelSummarySer extends Ser<MultiwheelSummary, MultiwheelS
     void freeze(String id) throws SerException;
 
     List<MultiwheelSummaryBO> pageList(MultiwheelSummaryDTO dto) throws SerException;
+
+    OrganizeForSummaryBO organize(String id) throws SerException;
+
+    void unfreeze(String id) throws SerException;
 }

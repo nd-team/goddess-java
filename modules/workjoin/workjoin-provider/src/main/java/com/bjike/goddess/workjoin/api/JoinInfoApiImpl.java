@@ -57,15 +57,4 @@ public class JoinInfoApiImpl implements JoinInfoAPI {
         joinInfoSer.removeJoinInfo(id);
     }
 
-    @Override
-    public void upload() throws SerException {
-        joinInfoSer.upload();
-
-    }
-
-    @Override
-    public void download() throws SerException {
-        joinInfoSer.download();
-    }
-
 }

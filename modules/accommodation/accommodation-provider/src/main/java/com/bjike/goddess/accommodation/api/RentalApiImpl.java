@@ -24,6 +24,15 @@ public class RentalApiImpl implements RentalAPI{
     @Autowired
     private RentalSer rentalSer;
     @Override
+    public Long count(RentalDTO rentalDTO) throws SerException {
+        return rentalSer.count(rentalDTO);
+    }
+
+    @Override
+    public RentalBO getOne(String id) throws SerException {
+        return rentalSer.getOne(id);
+    }
+    @Override
     public RentalBO insertRental(RentalTO rentalTO) throws SerException {
         return rentalSer.insertRental(rentalTO);
     }
@@ -41,41 +50,14 @@ public class RentalApiImpl implements RentalAPI{
     public List<RentalBO> findListRental(RentalDTO rentalDTO) throws SerException {
         return rentalSer.findListRental(rentalDTO);
     }
-    /**
-     * 上传附件
-     */
     @Override
-    public void uploadAttachments() throws SerException {
-        rentalSer.uploadAttachments();
+    public byte[] exportExcel(RentalDTO dto) throws SerException {
+        return rentalSer.exportExcel(dto);
     }
-    /**
-     * 附件
-     */
     @Override
-    public void attachments() throws SerException {
-        rentalSer.attachments();
-    }
-    /**
-     * 上传
-     */
-    @Override
-    public void upload() throws SerException {
-        rentalSer.upload();
-    }
-    /**
-     *租房状态
-     */
-    @Override
-    public RentalBO rentalStatus(RentalTO rentalTO)throws SerException {
-        return rentalSer.rentalStatus(rentalTO);
+    public List<String> getArea() throws SerException {
+        return rentalSer.getArea();
     }
 
-    /**
-     *租房信息导出明细
-     */
-    @Override
-    public String exportExcel(String area)throws SerException {
-        return rentalSer.exportExcel(area);
-    }
 
 }

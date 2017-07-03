@@ -1,7 +1,7 @@
 package com.bjike.goddess.allmeeting.service;
 
 import com.bjike.goddess.allmeeting.bo.ConciseSummaryBO;
-import com.bjike.goddess.allmeeting.bo.MeetingTopicBO;
+import com.bjike.goddess.allmeeting.bo.OrganizeForSummaryBO;
 import com.bjike.goddess.allmeeting.dto.AllMeetingOrganizeDTO;
 import com.bjike.goddess.allmeeting.dto.ConciseSummaryDTO;
 import com.bjike.goddess.allmeeting.entity.AllMeetingOrganize;
@@ -12,11 +12,16 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -35,7 +40,10 @@ public class ConciseSummarySerImpl extends ServiceImpl<ConciseSummary, ConciseSu
     @Autowired
     private AllMeetingOrganizeSer allMeetingOrganizeSer;
     @Autowired
-    private MeetingTopicSer meetingTopicSer;
+    private UserAPI userAPI;
+    @Autowired
+    private ConcisePermissionSer concisePermissionSer;
+
 
     @Override
     public ConciseSummaryBO updateModel(ConciseSummaryTO to) throws SerException {
@@ -65,10 +73,35 @@ public class ConciseSummarySerImpl extends ServiceImpl<ConciseSummary, ConciseSu
     @Override
     public List<ConciseSummaryBO> pageList(ConciseSummaryDTO dto) throws SerException {
         dto.getSorts().add("createTime=desc");
-        dto.getConditions().add(Restrict.eq("status",Status.THAW));
-        List<ConciseSummaryBO> boList = BeanTransform.copyProperties(super.findByPage(dto), ConciseSummaryBO.class);
+        UserBO user = userAPI.currentUser();
 
-        if (boList != null && !boList.isEmpty()) {
+        if (dto.getStatus() != null) {
+            dto.getConditions().add(Restrict.eq("status", dto.getStatus()));
+        }
+        //没有申请权限的只能查看自己参与的会议数据
+        List<ConciseSummary> list = null;
+        List<ConciseSummary> summaries = null;
+        List<ConciseSummaryBO> boList = null;
+        if (!concisePermissionSer.getPermission(user.getEmployeeNumber())) {
+            dto.getConditions().add(Restrict.like("actualUsers", user.getUsername()));
+            list = super.findByPage(dto);
+            summaries = new ArrayList<ConciseSummary>();
+            if (!CollectionUtils.isEmpty(list)) {
+                for (ConciseSummary model : list) {
+                    String actualUsers = model.getActualUsers();
+                    List<String> users = Arrays.asList(actualUsers.split(","));
+                    if (users.contains(user.getUsername())) {
+                        summaries.add(model);
+                    }
+                }
+            }
+            boList= BeanTransform.copyProperties(summaries, ConciseSummaryBO.class);
+        } else {
+            list = super.findByPage(dto);
+            boList= BeanTransform.copyProperties(list, ConciseSummaryBO.class);
+        }
+
+        if (!CollectionUtils.isEmpty(boList)) {
             for (ConciseSummaryBO bo : boList) {
                 setProperties(bo);
             }
@@ -76,36 +109,56 @@ public class ConciseSummarySerImpl extends ServiceImpl<ConciseSummary, ConciseSu
         return boList;
     }
 
+
     @Override
     public ConciseSummaryBO findAndSet(String id) throws SerException {
         ConciseSummary model = super.findById(id);
         if (model != null) {
-            ConciseSummaryBO bo = BeanTransform.copyProperties(model, ConciseSummary.class);
+            ConciseSummaryBO bo = BeanTransform.copyProperties(model, ConciseSummaryBO.class);
             setProperties(bo);
             return bo;
         } else {
             throw new SerException("非法id,纪要对象不存在!");
         }
+    }
 
+    @Override
+    public OrganizeForSummaryBO organize(String id) throws SerException {
+        ConciseSummary model = super.findById(id);
+        if (model != null) {
+            AllMeetingOrganizeDTO organizeDTO = new AllMeetingOrganizeDTO();
+            organizeDTO.getConditions().add(Restrict.eq("meetingNum", model.getMeetingNum()));
+            return BeanTransform.copyProperties(allMeetingOrganizeSer.findOne(organizeDTO), OrganizeForSummaryBO.class);
+        } else {
+            throw new SerException("非法ID,纪要对象不存在");
+        }
+    }
+
+    @Override
+    public void unfreeze(String id) throws SerException {
+        ConciseSummary model = super.findById(id);
+        if (model != null) {
+            model.setModifyTime(LocalDateTime.now());
+            model.setStatus(Status.THAW);
+            super.update(model);
+        } else {
+            throw new SerException("非法Id，更新对象不能为空");
+        }
     }
 
     public void setProperties(ConciseSummaryBO bo) throws SerException {
         AllMeetingOrganizeDTO organizeDTO = new AllMeetingOrganizeDTO();
         organizeDTO.getConditions().add(Restrict.eq("meetingNum", bo.getMeetingNum()));
-        AllMeetingOrganize organizeBO = allMeetingOrganizeSer.findOne(organizeDTO);
+        AllMeetingOrganize organize = allMeetingOrganizeSer.findOne(organizeDTO);
         //设置会议组织信息
-        if (organizeBO != null) {
-            bo.setMeetingType(organizeBO.getMeetingType());
-            bo.setContent(organizeBO.getContent());
-            bo.setRelation(organizeBO.getRelation());
-            bo.setOrganizer(organizeBO.getOrganizer());
-            bo.setCompere(organizeBO.getCompere());
-            bo.setMeetingNum(organizeBO.getMeetingNum());
-            //查询
-            MeetingTopicBO topic = meetingTopicSer.findByLay(organizeBO.getLayId());
-            if (topic != null) {
-                bo.setTopic(topic.getTopic());
-            }
+        if (organize != null) {
+            bo.setMeetingType(organize.getMeetingType());
+            bo.setContent(organize.getContent());
+            bo.setRelation(organize.getRelation());
+            bo.setOrganizer(organize.getOrganizer());
+            bo.setCompere(organize.getCompere());
+            bo.setMeetingNum(organize.getMeetingNum());
+            bo.setTopic(organize.getMeetingLay().getMeetingTopic().getTopic());
         }
     }
 }

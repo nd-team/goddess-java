@@ -5,8 +5,10 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contractquotemanager.bo.ContractQuoteDataBO;
 import com.bjike.goddess.contractquotemanager.dto.ContractQuoteDataDTO;
 import com.bjike.goddess.contractquotemanager.entity.ContractQuoteData;
+import com.bjike.goddess.contractquotemanager.excel.SonPermissionObject;
 import com.bjike.goddess.contractquotemanager.service.ContractQuoteDataSer;
 import com.bjike.goddess.contractquotemanager.to.ContractQuoteDataTO;
+import com.bjike.goddess.contractquotemanager.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,16 @@ public class ContractQuoteDataApiImpl implements ContractQuoteDataAPI {
 
     @Autowired
     private ContractQuoteDataSer contractQuoteDataSer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return contractQuoteDataSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return contractQuoteDataSer.guidePermission(guidePermissionTO);
+    }
 
     /**
      * 根据id查询合同单价资料信息

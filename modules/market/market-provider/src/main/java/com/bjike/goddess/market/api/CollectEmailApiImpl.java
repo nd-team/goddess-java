@@ -1,6 +1,7 @@
 package com.bjike.goddess.market.api;
 
 import com.bjike.goddess.market.bo.CollectEmailBO;
+import com.bjike.goddess.market.bo.MarketCollectBO;
 import com.bjike.goddess.market.dto.CollectEmailDTO;
 import com.bjike.goddess.market.service.CollectEmailSer;
 import com.bjike.goddess.market.to.CollectEmailTO;
@@ -72,6 +73,15 @@ public class CollectEmailApiImpl implements CollectEmailAPI {
     @Override
     public void thawCollectEmail(String id) throws SerException {
         collectEmailSer.thawCollectEmail(id);
+    }
+    @Override
+    public List<MarketCollectBO> marketCollect(String[] areas) throws SerException {
+        return collectEmailSer.marketCollect(areas);
+    }
+
+    @Override
+    public List<String> getArea() throws SerException {
+        return collectEmailSer.getArea();
     }
     @Override
     public void checkSendEmail() throws SerException {

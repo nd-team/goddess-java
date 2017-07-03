@@ -65,4 +65,6 @@ public interface MeetingLayAPI {
      * @return 会议层面
      */
     MeetingLayBO findById(String id) throws SerException;
+
+    List<MeetingLayBO> lays() throws SerException;
 }

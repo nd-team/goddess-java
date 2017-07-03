@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.lendreimbursement.bo.LendAuditDetailBO;
 import com.bjike.goddess.lendreimbursement.entity.LendAuditDetail;
 import com.bjike.goddess.lendreimbursement.dto.LendAuditDetailDTO;
+import com.bjike.goddess.lendreimbursement.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public interface LendAuditDetailSer extends Ser<LendAuditDetail, LendAuditDetail
      * @param lendAuditDetailDTO lendAuditDetailDTO
      * @return class LendAuditDetailBO
      */
-    default List<LendAuditDetailBO> listLendAuditDetail (LendAuditDetailDTO lendAuditDetailDTO ) throws SerException { return null;}
+    default List<LendAuditDetailBO> listLendAuditDetail(LendAuditDetailDTO lendAuditDetailDTO) throws SerException { return null;}
 
 
 }

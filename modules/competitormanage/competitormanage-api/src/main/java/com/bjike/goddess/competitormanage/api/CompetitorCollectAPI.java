@@ -5,6 +5,7 @@ import com.bjike.goddess.competitormanage.bo.CollectionTotalBO;
 import com.bjike.goddess.competitormanage.bo.CompetitorCollectBO;
 import com.bjike.goddess.competitormanage.dto.CompetitorCollectDTO;
 import com.bjike.goddess.competitormanage.to.CompetitorCollectTO;
+import com.bjike.goddess.competitormanage.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -79,4 +80,10 @@ public interface CompetitorCollectAPI {
      */
     CompetitorCollectBO findById(String id) throws SerException;
 
+    /**
+     * 定时器，每10s轮询一次该接口
+     */
+    void sendCollectEmail() throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 }

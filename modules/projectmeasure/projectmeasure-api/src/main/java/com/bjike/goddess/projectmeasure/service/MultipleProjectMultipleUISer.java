@@ -3,9 +3,8 @@ package com.bjike.goddess.projectmeasure.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectmeasure.bo.MultipleProjectMultipleUIBO;
-import com.bjike.goddess.projectmeasure.entity.MultipleProjectMultipleUI;
 import com.bjike.goddess.projectmeasure.dto.MultipleProjectMultipleUIDTO;
-import com.bjike.goddess.projectmeasure.excel.SonPermissionObject;
+import com.bjike.goddess.projectmeasure.entity.MultipleProjectMultipleUI;
 import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.MultipleProjectMultipleUITO;
 
@@ -66,5 +65,16 @@ public interface MultipleProjectMultipleUISer extends Ser<MultipleProjectMultipl
      * @throws SerException
      */
     void update(MultipleProjectMultipleUITO to) throws SerException;
+
+    /**
+     * 根据id查询多项目多个界面
+     *
+     * @param id 多项目多个界面唯一标识
+     * @return class MultipleProjectMultipleUIBO
+     * @throws SerException
+     */
+    default MultipleProjectMultipleUIBO getOne(String id) throws SerException{
+        return null;
+    }
 
 }

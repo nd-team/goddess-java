@@ -1,6 +1,7 @@
 package com.bjike.goddess.enterpriseculturemanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.enterpriseculturemanage.bo.EnterpriseCultureInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.bo.PublicizeProgramInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.dto.PublicizeProgramInfoDTO;
@@ -57,5 +58,15 @@ public class PublicizeProgramInfoApiImpl implements PublicizeProgramInfoAPI {
     @Override
     public List<PublicizeProgramInfoBO> pageList(PublicizeProgramInfoDTO dto) throws SerException {
         return publicizeProgramInfoSer.pageList(dto);
+    }
+
+    @Override
+    public PublicizeProgramInfoBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(publicizeProgramInfoSer.findById(id),PublicizeProgramInfoBO.class);
+    }
+
+    @Override
+    public Long count(PublicizeProgramInfoDTO dto) throws SerException {
+        return publicizeProgramInfoSer.count(dto);
     }
 }

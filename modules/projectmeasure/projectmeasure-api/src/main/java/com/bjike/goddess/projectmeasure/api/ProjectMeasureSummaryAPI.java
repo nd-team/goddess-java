@@ -32,14 +32,7 @@ public interface ProjectMeasureSummaryAPI {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
-    /**
-     * 根据id查询项目测算汇总
-     *
-     * @param id 项目测算汇总唯一标识
-     * @return class ProjectMeasureSummaryBO
-     * @throws SerException
-     */
-    ProjectMeasureSummaryBO findById(String id) throws SerException;
+
 
     /**
      * 计算总条数
@@ -112,7 +105,7 @@ public interface ProjectMeasureSummaryAPI {
      * 定时器检测要发送的邮件
      *
      */
-    default void checkSendEmail( ) throws SerException {
+    default void checkSendEmail() throws SerException {
         return ;
     }
 

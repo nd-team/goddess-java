@@ -5,6 +5,9 @@ import com.bjike.goddess.enterpriseculturemanage.bo.EnterpriseCultureInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.bo.PeriodicalProgramInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.bo.PublicizeProgramInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.dto.EnterpriseCultureInfoDTO;
+import com.bjike.goddess.enterpriseculturemanage.dto.PeriodicalProgramInfoDTO;
+import com.bjike.goddess.enterpriseculturemanage.dto.PublicizeProgramInfoDTO;
+import com.bjike.goddess.enterpriseculturemanage.to.EnterpriseCultureInfoEditTO;
 import com.bjike.goddess.enterpriseculturemanage.to.EnterpriseCultureInfoTO;
 
 import java.util.List;
@@ -34,7 +37,7 @@ public interface EnterpriseCultureInfoAPI {
      * @param to 企业文化信息
      * @return 企业文化信息
      */
-    EnterpriseCultureInfoBO editModel(EnterpriseCultureInfoTO to) throws SerException;
+    EnterpriseCultureInfoBO editModel(EnterpriseCultureInfoEditTO to) throws SerException;
 
     /**
      * 删除企业文化信息
@@ -68,4 +71,8 @@ public interface EnterpriseCultureInfoAPI {
      * @throws SerException
      */
     PeriodicalProgramInfoBO findPeriodical(String id) throws SerException;
+
+    EnterpriseCultureInfoBO findById(String id) throws SerException;
+
+    Long count(EnterpriseCultureInfoDTO dto) throws SerException;
 }

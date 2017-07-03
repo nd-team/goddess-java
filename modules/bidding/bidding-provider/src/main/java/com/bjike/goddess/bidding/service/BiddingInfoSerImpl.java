@@ -292,6 +292,7 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
     @Override
     public List<BiddingInfoBO> findListBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
         checkSeeIdentity();
+        biddingInfoDTO.getSorts().add("createTime=desc");
         List<BiddingInfo> biddingInfo = super.findByCis(biddingInfoDTO, true);
         List<BiddingInfoBO> biddingInfoBOS = BeanTransform.copyProperties(biddingInfo, BiddingInfoBO.class);
         return biddingInfoBOS;

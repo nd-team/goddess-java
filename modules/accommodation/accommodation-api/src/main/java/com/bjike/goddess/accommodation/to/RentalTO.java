@@ -2,8 +2,6 @@ package com.bjike.goddess.accommodation.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
 
-import java.time.LocalDate;
-
 /**
  * @Author: [xiazhili]
  * @Date: [2017-3-13 10:16]
@@ -23,7 +21,7 @@ public class RentalTO extends BaseTO {
     /**
      * 项目名称
      */
-    private String projectName;
+    private String[] projectName;
     /**
      * 租赁人
      */
@@ -63,11 +61,11 @@ public class RentalTO extends BaseTO {
     /**
      * 租房开始时间
      */
-    private LocalDate rentBeginTime;
+    private String rentBeginTime;
     /**
      * 租房截止时间
      */
-    private LocalDate rentEndTime;
+    private String rentEndTime;
     /**
      * 房屋交租方式（转账，现金）
      */
@@ -79,7 +77,7 @@ public class RentalTO extends BaseTO {
     /**
      * 房租缴费日期
      */
-    private LocalDate rentTime;
+    private String rentTime;
     /**
      * 水电费缴费频率
      */
@@ -133,11 +131,11 @@ public class RentalTO extends BaseTO {
         this.projectGroup = projectGroup;
     }
 
-    public String getProjectName() {
+    public String[] getProjectName() {
         return projectName;
     }
 
-    public void setProjectName(String projectName) {
+    public void setProjectName(String[] projectName) {
         this.projectName = projectName;
     }
 
@@ -213,19 +211,19 @@ public class RentalTO extends BaseTO {
         this.tenancyAgreement = tenancyAgreement;
     }
 
-    public LocalDate getRentBeginTime() {
+    public String getRentBeginTime() {
         return rentBeginTime;
     }
 
-    public void setRentBeginTime(LocalDate rentBeginTime) {
+    public void setRentBeginTime(String rentBeginTime) {
         this.rentBeginTime = rentBeginTime;
     }
 
-    public LocalDate getRentEndTime() {
+    public String getRentEndTime() {
         return rentEndTime;
     }
 
-    public void setRentEndTime(LocalDate rentEndTime) {
+    public void setRentEndTime(String rentEndTime) {
         this.rentEndTime = rentEndTime;
     }
 
@@ -245,11 +243,11 @@ public class RentalTO extends BaseTO {
         this.taxesFequency = taxesFequency;
     }
 
-    public LocalDate getRentTime() {
+    public String getRentTime() {
         return rentTime;
     }
 
-    public void setRentTime(LocalDate rentTime) {
+    public void setRentTime(String rentTime) {
         this.rentTime = rentTime;
     }
 

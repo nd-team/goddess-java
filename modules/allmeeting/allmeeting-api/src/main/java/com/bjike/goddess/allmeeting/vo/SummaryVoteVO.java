@@ -22,7 +22,7 @@ public class SummaryVoteVO {
     private String user;
 
     /**
-     * 最终结论
+     * 发言内容
      */
     private String finalDis;
 

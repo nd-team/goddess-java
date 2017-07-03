@@ -1,7 +1,7 @@
 package com.bjike.goddess.reportmanagement.enums;
 
 /**
- * 对应公式添加科目的形式
+ * 公式方向
  */
 public enum Form {
 
@@ -12,7 +12,7 @@ public enum Form {
     /**
      * 贷方
      */
-    CREDIT(1);
+    CREDIT(1);  
     private int code;
 
     Form(int code) {

@@ -23,7 +23,7 @@ public class FormulaVO {
     private String project;
 
     /**
-     * 公式添加的形式
+     * 公式方向
      */
     private Form form;
 
@@ -33,9 +33,56 @@ public class FormulaVO {
     private Double begin;
 
     /**
-     * 期末数
+     * 年末数
      */
     private Double end;
+
+    /**
+     * 本月数
+     */
+    private Double current;
+
+    /**
+     * 运算方式
+     */
+    private String operation;
+
+    /**
+     * 本年累计数
+     */
+    private Double year;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Double getYear() {
+        return year;
+    }
+
+    public void setYear(Double year) {
+        this.year = year;
+    }
+
+    public String getOperation() {
+        return operation;
+    }
+
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
+
+    public Double getCurrent() {
+        return current;
+    }
+
+    public void setCurrent(Double current) {
+        this.current = current;
+    }
 
     public Double getBegin() {
         return begin;
@@ -51,14 +98,6 @@ public class FormulaVO {
 
     public void setEnd(Double end) {
         this.end = end;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getProject() {

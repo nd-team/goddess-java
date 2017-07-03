@@ -6,6 +6,8 @@ import com.bjike.goddess.marketactivitymanage.bo.MarketServeRecordBO;
 import com.bjike.goddess.marketactivitymanage.dto.MarketServeRecordDTO;
 import com.bjike.goddess.marketactivitymanage.entity.MarketServeRecord;
 import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
+import com.bjike.goddess.marketactivitymanage.to.GuidePermissionTO;
+import com.bjike.goddess.marketactivitymanage.to.MarketServeRecordImprotTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeRecordTO;
 import com.bjike.goddess.marketactivitymanage.type.AuditType;
 
@@ -24,6 +26,19 @@ import java.util.List;
  */
 public interface MarketServeRecordSer extends Ser<MarketServeRecord, MarketServeRecordDTO> {
 
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 分页查询市场招待记录
      *
@@ -100,4 +115,38 @@ public interface MarketServeRecordSer extends Ser<MarketServeRecord, MarketServe
      * @throws SerException
      */
     void editClientInfo(CustomerInfoTO to) throws SerException;
+
+    /**
+     * 查看所有的项目名
+     *
+     * @throws SerException
+     */
+    List<String> findAllProjectName() throws SerException;
+
+    /**
+     * 查看所有的地区
+     *
+     * @throws SerException
+     */
+    List<String> findAllAreas() throws SerException;
+    /**
+     * 导出Excel
+     * @param areas
+     * @param startTime
+     * @param endTime
+     * @throws SerException
+     */
+    byte[] exportExcel(String[] areas, String startTime, String endTime) throws SerException;
+
+    /**
+     * 导出Excel
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
+
+    /**
+     *  导入
+     * @param marketServeRecordImprotTOS 市场活动申请记录
+     */
+    void importExcel(List<MarketServeRecordImprotTO> marketServeRecordImprotTOS) throws SerException;
 }

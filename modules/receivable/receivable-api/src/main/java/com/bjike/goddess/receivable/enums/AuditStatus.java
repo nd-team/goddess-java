@@ -2,6 +2,7 @@ package com.bjike.goddess.receivable.enums;
 
 /**
  * 审核枚举
+ *
  * @Author: [xiazhili]
  * @Date: [17-3-29]
  * @Description: [审核枚举]

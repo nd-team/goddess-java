@@ -80,7 +80,7 @@ public class WorkCollectPrepareAct {
      * @param id 工作汇总议题准备ID
      * @version v1
      */
-    @PatchMapping("v1/freeze/{id}")
+    @PutMapping("v1/freeze/{id}")
     public Result freeze(@PathVariable String id) throws ActException {
         try {
             collectPrepareAPI.freeze(id);

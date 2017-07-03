@@ -4,6 +4,7 @@ package com.bjike.goddess.checkfunds.api;
 import com.bjike.goddess.checkfunds.bo.PassAuditBO;
 import com.bjike.goddess.checkfunds.dto.PassAuditDTO;
 import com.bjike.goddess.checkfunds.service.PassAuditSer;
+import com.bjike.goddess.checkfunds.to.GuidePermissionTO;
 import com.bjike.goddess.checkfunds.to.PassAuditTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,5 +39,15 @@ public class PassAuditApiImpl implements PassAuditAPI {
     @Override
     public Long countNum(PassAuditDTO dto) throws SerException {
         return passAuditSer.countNum(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return passAuditSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return passAuditSer.guidePermission(guidePermissionTO);
     }
 }

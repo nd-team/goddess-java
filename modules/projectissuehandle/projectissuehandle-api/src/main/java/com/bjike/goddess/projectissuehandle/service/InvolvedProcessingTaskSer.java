@@ -3,12 +3,14 @@ package com.bjike.goddess.projectissuehandle.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectissuehandle.bo.InvolvedProcessingTaskBO;
+import com.bjike.goddess.projectissuehandle.bo.ProblemHandlingResultBO;
 import com.bjike.goddess.projectissuehandle.dto.InvolvedProcessingTaskDTO;
 import com.bjike.goddess.projectissuehandle.entity.InvolvedProcessingTask;
 import com.bjike.goddess.projectissuehandle.to.GuidePermissionTO;
 import com.bjike.goddess.projectissuehandle.to.InvolvedProcessingTaskTO;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 参与处理人员的任务分配业务接口
@@ -26,12 +28,14 @@ public interface InvolvedProcessingTaskSer extends Ser<InvolvedProcessingTask, I
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 参与处理人员的任务分配列表总条数
      */
@@ -109,5 +113,21 @@ public interface InvolvedProcessingTaskSer extends Ser<InvolvedProcessingTask, I
      */
     byte[] exportExcel(InvolvedProcessingTaskDTO dto) throws SerException;
 
+    /**
+     * 获取内部项目名称
+     *
+     * @return class String
+     */
+    default List<String> getName() throws SerException {
+        return null;
+    }
 
+    /**
+     * 获取处理人员
+     *
+     * @return class String
+     */
+    default List<String> getHandler() throws SerException {
+        return null;
+    }
 }

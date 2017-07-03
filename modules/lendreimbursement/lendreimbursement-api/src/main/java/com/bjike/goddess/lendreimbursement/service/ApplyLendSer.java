@@ -2,6 +2,7 @@ package com.bjike.goddess.lendreimbursement.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.lendreimbursement.to.GuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
 import com.bjike.goddess.lendreimbursement.bo.ApplyLendBO;
 import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
@@ -23,6 +24,19 @@ import java.util.List;
  */
 public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 申请借款列表总条数
      *
@@ -60,20 +74,20 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
      * 删除
      * @param id id
      */
-    default void deleteApplyLend(String id ) throws SerException {return;};
+    default void deleteApplyLend(String id) throws SerException {return;};
 
     /**
      * 申请借款审核详情
      * @return class ApplyLendBO
      */
-    default ApplyLendBO getApplyLendDetail(String id ) throws SerException {return null;}
+    default ApplyLendBO getApplyLendDetail(String id) throws SerException {return null;}
 
 
     /**
      * 申请借款审核人员情况
      * @return class LendAuditDetailBO
      */
-    default List<LendAuditDetailBO> getLendAuditDetailByApplyLendId (String applyLendId ) throws SerException {return null;}
+    default List<LendAuditDetailBO> getLendAuditDetailByApplyLendId(String applyLendId) throws SerException {return null;}
 
 
     /**
@@ -163,18 +177,18 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
      * 申请单有误删除
      * @param id id
      */
-    default void deleteApplyError(String id ) throws SerException {return;};
+    default void deleteApplyError(String id) throws SerException {return;};
 
     /**
      * 申请单有误审核详情
      * @return class ApplyLendBO
      */
-    default ApplyLendBO getApplyApplyError(String id ) throws SerException {return null;}
+    default ApplyLendBO getApplyApplyError(String id) throws SerException {return null;}
     /**
      * 申请单有误审核详情副本
      * @return class ApplyLendBO
      */
-    default ApplyLendBO getApplyApplyErrorCopy(String id ) throws SerException {return null;}
+    default ApplyLendBO getApplyApplyErrorCopy(String id) throws SerException {return null;}
 
     /**
      * 已审核/分析记录列表列表总条数
@@ -263,7 +277,7 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
      * @param id 申请借款信息id
      * @return class ApplyLendBO
      */
-    default List<AccountVoucherBO> listAccountVoucherByRecord (String id ) throws SerException { return null;}
+    default List<AccountVoucherBO> listAccountVoucherByRecord(String id) throws SerException { return null;}
 
     /**
      * 还款记录总条数
@@ -277,7 +291,7 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
      * @param applyLendDTO applyLendDTO
      * @return class ApplyLendBO
      */
-    default List<ApplyLendBO> listReturnMoneyRecord (ApplyLendDTO applyLendDTO ) throws SerException { return null;}
+    default List<ApplyLendBO> listReturnMoneyRecord(ApplyLendDTO applyLendDTO) throws SerException { return null;}
 
 
     /**
@@ -285,7 +299,7 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
      * @param id 申请借款信息id
      * @return class AccountVoucherBO
      */
-    default List<AccountVoucherBO> listAccountVoucherByReturnMoney (String id ) throws SerException { return null;}
+    default List<AccountVoucherBO> listAccountVoucherByReturnMoney(String id) throws SerException { return null;}
 
 
     /**
@@ -308,7 +322,7 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
      * @param applyLendDTO applyLendDTO
      * @return class ApplyLendBO
      */
-    default List<ApplyLendBO> listBusinessCheck (ApplyLendDTO applyLendDTO ) throws SerException { return null;}
+    default List<ApplyLendBO> listBusinessCheck(ApplyLendDTO applyLendDTO) throws SerException { return null;}
 
     /**
      *  帐务核对收到单据确认
@@ -329,7 +343,7 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
      * @param applyLendDTO applyLendDTO
      * @return class ApplyLendBO
      */
-    default List<ApplyLendBO> listRecieveTicketRecord (ApplyLendDTO applyLendDTO ) throws SerException { return null;}
+    default List<ApplyLendBO> listRecieveTicketRecord(ApplyLendDTO applyLendDTO) throws SerException { return null;}
 
 
     /**
@@ -337,28 +351,28 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
      * @param applyLendDTO applyLendDTO
      * @return class CollectDataBO
      */
-    default List<CollectDataBO> collectLender (ApplyLendDTO applyLendDTO ) throws SerException { return null;}
+    default List<CollectDataBO> collectLender(ApplyLendDTO applyLendDTO) throws SerException { return null;}
 
     /**
      *  汇总地区
      * @param applyLendDTO applyLendDTO
      * @return class CollectDataBO
      */
-    default List<CollectDataBO> collectArea (ApplyLendDTO applyLendDTO ) throws SerException { return null;}
+    default List<CollectDataBO> collectArea(ApplyLendDTO applyLendDTO) throws SerException { return null;}
 
     /**
      *  汇总项目组
      * @param applyLendDTO applyLendDTO
      * @return class CollectDataBO
      */
-    default List<CollectDataBO> collectProjectGroup (ApplyLendDTO applyLendDTO ) throws SerException { return null;}
+    default List<CollectDataBO> collectProjectGroup(ApplyLendDTO applyLendDTO) throws SerException { return null;}
 
     /**
      *  汇总项目名称
      * @param applyLendDTO applyLendDTO
      * @return class CollectDataBO
      */
-    default List<CollectDataBO> collectProjectName (ApplyLendDTO applyLendDTO ) throws SerException { return null;}
+    default List<CollectDataBO> collectProjectName(ApplyLendDTO applyLendDTO) throws SerException { return null;}
 
 
     /**
@@ -405,8 +419,50 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
     default List<String> listAccountCom() throws SerException {
         return null;
     }
+    /**
+     * 申请记录导出excel
+     *
+     * @param applyLendDTO
+     * @return
+     * @throws SerException
+     */
+    byte[] exportExcel(ApplyLendDTO applyLendDTO) throws SerException;
 
+    /**
+     * 待付款记录导出excel
+     *
+     * @param applyLendDTO
+     * @return
+     * @throws SerException
+     */
+    byte[] waitingPayExcel(ApplyLendDTO applyLendDTO) throws SerException;
 
+    /**
+     * 借款记录导出excel
+     *
+     * @param applyLendDTO
+     * @return
+     * @throws SerException
+     */
+    byte[] borrowExcel(ApplyLendDTO applyLendDTO) throws SerException;
+
+    /**
+     * 还款记录导出excel
+     *
+     * @param applyLendDTO
+     * @return
+     * @throws SerException
+     */
+    byte[] returnExcel(ApplyLendDTO applyLendDTO) throws SerException;
+
+    /**
+     * 已收票导出excel
+     *
+     * @param applyLendDTO
+     * @return
+     * @throws SerException
+     */
+    byte[] receiveExcel(ApplyLendDTO applyLendDTO) throws SerException;
 
 
 }

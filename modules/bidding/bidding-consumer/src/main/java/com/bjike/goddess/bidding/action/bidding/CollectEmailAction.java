@@ -163,7 +163,7 @@ public class CollectEmailAction {
      */
     @LoginAuth
     @DeleteMapping("v1/delete/{id}")
-    public Result deleteCollectEmail(@PathVariable String id, BindingResult bindingResult) throws ActException {
+    public Result deleteCollectEmail(@PathVariable String id) throws ActException {
         try {
             collectEmailAPI.deleteCollectEmail(id);
             return new ActResult("delete success!");

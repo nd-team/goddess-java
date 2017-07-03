@@ -16,10 +16,39 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface RentalSer extends Ser<Rental,RentalDTO> {
+public interface RentalSer extends Ser<Rental, RentalDTO> {
+    /**
+     * 租房信息列表总条数
+     */
+    default Long count(RentalDTO rentalDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 一个租房信息
+     *
+     * @return class RentalBO
+     */
+    default RentalBO getOne(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 租房信息列表
+     *
+     * @param rentalDTO 租房信息dto
+     * @return class RentalBO
+     * @throws SerException
+     */
+    default List<RentalBO> findListRental(RentalDTO rentalDTO) throws SerException {
+        return null;
+    }
+
     /**
      * 添加租房信息
+     *
      * @param rentalTO 租房信息数据集合
+     * @return class RentalBO
      * @throws SerException
      */
     default RentalBO insertRental(RentalTO rentalTO) throws SerException {
@@ -29,11 +58,11 @@ public interface RentalSer extends Ser<Rental,RentalDTO> {
     /**
      * 编辑租房信息
      *
-     * @param rentalTO   租房信息数据to
-     * @return class rentalBO
+     * @param rentalTO 租房信息数据to
+     * @return class RentalBO
      * @throws SerException
      */
-    default RentalBO editRental(RentalTO rentalTO ) throws SerException {
+    default RentalBO editRental(RentalTO rentalTO) throws SerException {
         return null;
     }
 
@@ -47,49 +76,23 @@ public interface RentalSer extends Ser<Rental,RentalDTO> {
     default void removeRental(String id) throws SerException {
         return;
     }
+
     /**
-     * 获取所有租房信息
-     * @param rentalDTO 租房信息dto
-     * @return class rental
+     * 导出Excel
+     *
+     * @param dto
      * @throws SerException
      */
-    default List<RentalBO> findListRental(RentalDTO rentalDTO) throws SerException {
+    byte[] exportExcel(RentalDTO dto) throws SerException;
+
+
+    /**
+     * 获取地区
+     *
+     * @return class String
+     */
+    default List<String> getArea() throws SerException {
         return null;
     }
-    /**
-     * 上传附件
-     */
-    default void uploadAttachments() throws SerException {
-        return ;
-    }
-    /**
-     * 附件
-     */
-    default void attachments() throws SerException {
-        return ;
-    }
-    /**
-     * 上传
-     */
-    default void upload() throws SerException {
-        return ;
-
-    }
-    /**
-     *租房状态
-     */
-
-    default RentalBO rentalStatus(RentalTO rentalTO)throws SerException {
-        return null;
-    }
-
-    /**
-     *租房信息导出明细
-     */
-
-    default String exportExcel(String area)throws SerException {
-        return null;
-    }
-
 
 }

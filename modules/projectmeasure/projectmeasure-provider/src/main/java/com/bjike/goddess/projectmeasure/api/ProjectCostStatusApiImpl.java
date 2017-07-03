@@ -37,9 +37,8 @@ public class ProjectCostStatusApiImpl implements ProjectCostStatusAPI {
      * @throws SerException
      */
     @Override
-    public ProjectCostStatusBO findById(String id) throws SerException {
-        ProjectCostStatus model = projectCostStatusSer.findById(id);
-        return BeanTransform.copyProperties(model, ProjectCostStatusBO.class);
+    public ProjectCostStatusBO getOne(String id) throws SerException {
+        return projectCostStatusSer.getOne(id);
     }
 
     /**

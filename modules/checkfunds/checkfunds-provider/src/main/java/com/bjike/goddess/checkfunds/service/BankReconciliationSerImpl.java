@@ -11,13 +11,13 @@ import com.bjike.goddess.checkfunds.dto.NotPassAuditDTO;
 import com.bjike.goddess.checkfunds.dto.PassAuditDTO;
 import com.bjike.goddess.checkfunds.dto.RemainAdjustDTO;
 import com.bjike.goddess.checkfunds.entity.BankReconciliation;
-import com.bjike.goddess.checkfunds.to.BankReconciliationTO;
-import com.bjike.goddess.checkfunds.to.NotPassAuditTO;
-import com.bjike.goddess.checkfunds.to.PassAuditTO;
-import com.bjike.goddess.checkfunds.to.RemainAdjustTO;
+import com.bjike.goddess.checkfunds.enums.GuideAddrStatus;
+import com.bjike.goddess.checkfunds.to.*;
+import com.bjike.goddess.checkfunds.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.financeinit.api.AccountAPI;
 import com.bjike.goddess.financeinit.dto.AccountDTO;
@@ -25,7 +25,11 @@ import com.bjike.goddess.fundrecords.api.FundRecordAPI;
 import com.bjike.goddess.fundrecords.bo.ConditionCollectBO;
 import com.bjike.goddess.fundrecords.bo.MonthCollectBO;
 import com.bjike.goddess.fundrecords.to.CollectTO;
+import com.bjike.goddess.organize.api.PositionDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -62,6 +66,220 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
     private PassAuditSer passAuditSer;
     @Autowired
     private NotPassAuditSer notPassAuditSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private PositionDetailAPI positionDetailAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 审批权限
+     */
+    private void checkAuditIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        List<PositionDetailBO> boList = positionDetailAPI.findStatus();
+        List<UserBO> list = null;
+        if ((boList != null) && (!boList.isEmpty())) {
+            for (PositionDetailBO bo : boList) {
+                if ("管理层".equals(bo.getArrangementName()) && "资金模块".equals(bo.getModuleName()) && "资金模块负责人".equals(bo.getPosition())) {
+                    list = positionDetailUserAPI.findByPosition(bo.getId());
+                }
+            }
+        }
+        boolean b = false;
+        if ((list != null) && (!list.isEmpty())) {
+            for (UserBO bo : list) {
+                if (userName.equals(bo.getUsername())) {
+                    b = true;
+                }
+            }
+        }
+        if (!b) {
+            RpcTransmit.transmitUserToken(userToken);
+            flag = cusPermissionSer.getCusPermission("3");
+            if (!flag) {
+                throw new SerException("您不是资金模块负责人，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAddSign = guideAddIdentity();
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("bankreconciliation");
+        obj.setDescribesion("银企对账（核对）");
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeDis = notPassAuditSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("notpassaudit");
+        obj.setDescribesion("审批不通过记录");
+        if (flagSeeDis) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeCate = passAuditSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("passaudit");
+        obj.setDescribesion("已完成核对记录");
+        if (flagSeeCate) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeEmail = remainAdjustSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("remainadjust");
+        obj.setDescribesion("余额调节");
+        if (flagSeeEmail) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case HANDLE:
+                flag = guideAddIdentity();
+                break;
+            case COMMIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case ADJUST:
+                flag = guideAddIdentity();
+                break;
+            case DETAIL:
+                flag = guideSeeIdentity();
+                break;
+            case DIFFER:
+                flag = guideSeeIdentity();
+                break;
+            case CONFIRM:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
 
     @Override
     public Set<String> allNames() throws SerException {
@@ -69,19 +287,20 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
         return accountAPI.allNames(dto);
     }
 
-    private String findAccountByNfame(String name) throws SerException {
+    private String findAccountByName(String name) throws SerException {
         return accountAPI.findByName(name);
     }
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public BankReconciliationBO save(BankReconciliationTO to) throws SerException {
+        checkAddIdentity();
         String name = userAPI.currentUser().getUsername();
         BankReconciliation entity = BeanTransform.copyProperties(to, BankReconciliation.class, true);
         entity.setAduitStatus("已经办，未提交");
         entity.setHandleTime(LocalDateTime.now());
         entity.setHandler(name);
-        String account = findAccountByNfame(entity.getName());
+        String account = findAccountByName(entity.getName());
         if (account == null) {
             throw new SerException("没有该用户名对应的账号");
         }
@@ -92,6 +311,7 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void commit(String id) throws SerException {
+        checkAddIdentity();
         String name = userAPI.currentUser().getUsername();
         BankReconciliation entity = super.findById(id);
         if (entity == null) {
@@ -108,8 +328,10 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
     @Transactional(rollbackFor = SerException.class)
     public void aduitPass(String id) throws SerException {
         aduit(id);
+        String userToken = RpcTransmit.getUserToken();
         PassAuditDTO dto = new PassAuditDTO();
         dto.getConditions().add(Restrict.eq("bankReconciliationId", id));
+        RpcTransmit.transmitUserToken(userToken);
         List<PassAuditBO> list = passAuditSer.list(dto);
         if ((list != null) && (!list.isEmpty())) {
             throw new SerException("您已审批过该记录");
@@ -124,8 +346,10 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
     @Transactional(rollbackFor = SerException.class)
     public void aduitNotPass(String id) throws SerException {
         aduit(id);
+        String userToken = RpcTransmit.getUserToken();
         NotPassAuditDTO dto = new NotPassAuditDTO();
         dto.getConditions().add(Restrict.eq("bankReconciliationId", id));
+        RpcTransmit.transmitUserToken(userToken);
         List<NotPassAuditBO> list = notPassAuditSer.list(dto);
         if ((list != null) && (!list.isEmpty())) {
             throw new SerException("您已审批过该记录");
@@ -138,12 +362,14 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
 
     @Transactional(rollbackFor = SerException.class)
     private void aduit(String id) throws SerException {
+        checkAuditIdentity();
+        String userToken = RpcTransmit.getUserToken();
         String name = userAPI.currentUser().getUsername();
         BankReconciliation entity = super.findById(id);
         if (entity == null) {
             throw new SerException("该对象不存在");
         }
-        if ((entity.getHaveExamine()!=null)&&(entity.getHaveExamine())) {
+        if ((entity.getHaveExamine() != null) && (entity.getHaveExamine())) {
             throw new SerException("您已审批过该记录");
         }
         if (!"已提交，待审批".equals(entity.getAduitStatus())) {
@@ -155,10 +381,12 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
         entity.setExamineTime(LocalDateTime.now());
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
+        RpcTransmit.transmitUserToken(userToken);
     }
 
     @Override
     public List<RemainAdjustBO> adjust(String id) throws SerException {
+        checkAddIdentity();
         BankReconciliationBO bo = findByID(id);
         Double bankBalance = bo.getBankBalance();
         Double fundBalance = bo.getFundBalance();
@@ -278,6 +506,7 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
 
     @Override
     public List<BankReconciliationBO> list(BankReconciliationDTO dto) throws SerException {
+        checkSeeIdentity();
         List<BankReconciliation> list = super.findByCis(dto);
         List<BankReconciliationBO> boList = new ArrayList<BankReconciliationBO>();
         for (BankReconciliation b : list) {
@@ -298,7 +527,7 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
     }
 
     private BankReconciliationBO showBO(BankReconciliationBO bo) throws SerException {
-        String account = findAccountByNfame(bo.getName());
+        String account = findAccountByName(bo.getName());
         List<BankRecordCollectBO> boList = bankRecordAPI.collectByCondition(bo.getYear(), bo.getMonth(), account);
         Double bankDebtor = 0.00;
         Double bankCreditor = 0.00;
@@ -344,6 +573,7 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void confirmAdjust(String id, Double balance) throws SerException {
+        checkAddIdentity();
         String name = userAPI.currentUser().getUsername();
         BankReconciliation entity = super.findById(id);
         if (entity == null) {
@@ -359,6 +589,7 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
 
     @Override
     public List<FundDetailBO> fundDetail(String id) throws SerException {
+        checkSeeIdentity();
         BankReconciliationBO bo = findByID(id);
         CollectTO collectTO = new CollectTO();
         collectTO.setYear(bo.getYear());
@@ -369,6 +600,7 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
 
     @Override
     public List<BankRecordPageListBO> bankDetail(String id) throws SerException {
+        checkSeeIdentity();
         BankReconciliationBO bo = findByID(id);
         String account = bo.getAccount();
         Integer month = bo.getMonth();
@@ -386,6 +618,7 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
 
     @Override
     public List<DebtorDifferBO> debtorDiffer(String id) throws SerException {
+        checkSeeIdentity();
         BankReconciliationBO bo = findByID(id);
         CollectTO collectTO = new CollectTO();
         collectTO.setYear(bo.getYear());
@@ -420,6 +653,7 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
 
     @Override
     public List<CreditorDifferBO> creditorDiffer(String id) throws SerException {
+        checkSeeIdentity();
         BankReconciliationBO bo = findByID(id);
         CollectTO collectTO = new CollectTO();
         collectTO.setYear(bo.getYear());

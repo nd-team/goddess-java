@@ -13,4 +13,16 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  */
 public class ContractProjectInfoDTO extends BaseDTO {
 
+    /**
+     * 地区
+     */
+    private String[] areas;
+
+    public String[] getAreas() {
+        return areas;
+    }
+
+    public void setAreas(String[] areas) {
+        this.areas = areas;
+    }
 }

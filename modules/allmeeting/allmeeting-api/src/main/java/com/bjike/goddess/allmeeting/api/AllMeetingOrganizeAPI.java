@@ -1,6 +1,7 @@
 package com.bjike.goddess.allmeeting.api;
 
 import com.bjike.goddess.allmeeting.bo.AllMeetingOrganizeBO;
+import com.bjike.goddess.allmeeting.bo.MeetingLayBO;
 import com.bjike.goddess.allmeeting.dto.AllMeetingOrganizeDTO;
 import com.bjike.goddess.allmeeting.to.AllMeetingOrganizeTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -72,4 +73,5 @@ public interface AllMeetingOrganizeAPI {
      * @return 分页结果集
      */
     List<AllMeetingOrganizeBO> pageList(AllMeetingOrganizeDTO dto) throws SerException;
+
 }

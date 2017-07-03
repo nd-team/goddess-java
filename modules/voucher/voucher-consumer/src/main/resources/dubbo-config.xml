@@ -18,9 +18,13 @@
 	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 	<dubbo:reference  validation="true" id="firstSubjectApiImpl" interface="com.bjike.goddess.financeinit.api.FirstSubjectAPI" />
 	<dubbo:reference  validation="true" id="categoryApiImpl" interface="com.bjike.goddess.financeinit.api.CategoryAPI" />
+	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
+	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
 
 	<dubbo:reference  validation="true" id="voucherGenerateApiImpl" interface="com.bjike.goddess.voucher.api.VoucherGenerateAPI" />
 	<dubbo:reference  validation="true" id="voucherTotalApiImpl" interface="com.bjike.goddess.voucher.api.VoucherTotalAPI" />
+	<dubbo:reference  validation="true" id="voucherPermissionApiImpl" interface="com.bjike.goddess.voucher.api.VoucherPermissionAPI" />
+	<dubbo:reference  validation="true" id="voucherPermissionOperateApiImpl" interface="com.bjike.goddess.voucher.api.VoucherPermissionOperateAPI" />
 
 
 </beans>

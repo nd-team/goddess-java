@@ -177,6 +177,12 @@ public class InteractionRelationSerImpl extends ServiceImpl<InteractionRelation,
             case SEEFILE:
                 flag = guideSeeIdentity();
                 break;
+            case MESSAGE:
+                flag = guideSeeIdentity();
+                break;
+            case ADDMESSAGE:
+                flag = guideAddIdentity();
+                break;
             default:
                 flag = true;
                 break;

@@ -182,7 +182,7 @@ public class AccountInfoManagementAction extends BaseFileAction {
     /**
      * 上传附件
      *
-     * @des 税金管理
+     * @des 外账资料管理
      * @version v1
      */
     @LoginAuth
@@ -203,7 +203,7 @@ public class AccountInfoManagementAction extends BaseFileAction {
     /**
      * 文件附件列表
      *
-     * @param id 税金管理id
+     * @param id 外账资料管理id
      * @return class FileVO
      * @version v1
      */

@@ -41,7 +41,7 @@ public class ProjectMeasureSummaryVO {
     /**
      * 发送间隔
      */
-    private double sendInterval;
+    private Double sendInterval;
 
     /**
      * 发送时间格式
@@ -62,6 +62,10 @@ public class ProjectMeasureSummaryVO {
      * 发送对象
      */
     private String emails;
+    /**
+     * 地区
+     */
+    private String areas;
 
     /**
      * 状态
@@ -109,11 +113,11 @@ public class ProjectMeasureSummaryVO {
         this.lastTime = lastTime;
     }
 
-    public double getSendInterval() {
+    public Double getSendInterval() {
         return sendInterval;
     }
 
-    public void setSendInterval(double sendInterval) {
+    public void setSendInterval(Double sendInterval) {
         this.sendInterval = sendInterval;
     }
 
@@ -155,5 +159,13 @@ public class ProjectMeasureSummaryVO {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getAreas() {
+        return areas;
+    }
+
+    public void setAreas(String areas) {
+        this.areas = areas;
     }
 }

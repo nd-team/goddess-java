@@ -6,6 +6,7 @@ import com.bjike.goddess.lendreimbursement.bo.FinoddinforBO;
 import com.bjike.goddess.lendreimbursement.entity.Finoddinfor;
 import com.bjike.goddess.lendreimbursement.dto.FinoddinforDTO;
 import com.bjike.goddess.lendreimbursement.to.FinoddinforTO;
+import com.bjike.goddess.lendreimbursement.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -20,6 +21,19 @@ import java.util.List;
  */
 public interface FinoddinforSer extends Ser<Finoddinfor, FinoddinforDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 报销单号列表总条数
@@ -53,19 +67,19 @@ public interface FinoddinforSer extends Ser<Finoddinfor, FinoddinforDTO> {
      * 删除级别
      * @param id id
      */
-    default void deleteFinoddinfor(String id ) throws SerException {return;};
+    default void deleteFinoddinfor(String id) throws SerException {return;};
 
     /**
      * 冻结报销单号
      * @param id id
      */
-    default void congealFinoddinfor(String id ) throws SerException {return;};
+    default void congealFinoddinfor(String id) throws SerException {return;};
 
     /**
      * 解冻报销单号
      * @param id id
      */
-    default void thawFinoddinfor(String id ) throws SerException {return;};
+    default void thawFinoddinfor(String id) throws SerException {return;};
 
     /**
      * 获取最小报销单号

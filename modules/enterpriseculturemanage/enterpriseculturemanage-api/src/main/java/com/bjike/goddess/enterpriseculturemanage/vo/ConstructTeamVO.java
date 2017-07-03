@@ -25,12 +25,6 @@ public class ConstructTeamVO {
      */
     private String userNumber;
 
-    /**
-     * 项目组
-     */
-    private String group;
-
-
     public String getId() {
         return id;
     }
@@ -55,11 +49,4 @@ public class ConstructTeamVO {
         this.userNumber = userNumber;
     }
 
-    public String getGroup() {
-        return group;
-    }
-
-    public void setGroup(String group) {
-        this.group = group;
-    }
 }

@@ -1,10 +1,12 @@
 package com.bjike.goddess.bidding.action.bidding;
 
 import com.bjike.goddess.bidding.api.BiddingWebInfoAPI;
+import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.bo.BiddingWebInfoBO;
 import com.bjike.goddess.bidding.dto.BiddingWebInfoDTO;
 import com.bjike.goddess.bidding.to.BiddingWebInfoTO;
 import com.bjike.goddess.bidding.to.GuidePermissionTO;
+import com.bjike.goddess.bidding.vo.BiddingInfoVO;
 import com.bjike.goddess.bidding.vo.BiddingWebInfoVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -14,6 +16,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -37,6 +40,7 @@ import java.util.List;
 public class BiddingWebInfoAction {
     @Autowired
     private BiddingWebInfoAPI biddingWebInfoAPI;
+    private static Logger logger = Logger.getLogger(BiddingInfoAction.class);
 
     /**
      * 功能导航权限
@@ -198,6 +202,25 @@ public class BiddingWebInfoAction {
         try {
             List<String> urlList = biddingWebInfoAPI.getUrl();
             return ActResult.initialize(urlList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取网站信息
+     *
+     * @param webName 网站名称
+     * @return class BiddingWebInfoVO
+     * @des 根据网站名称获取网站信息
+     * @version v1
+     */
+    @GetMapping("v1/getWebInfo")
+    public Result getWebInfo(String webName,HttpServletRequest request) throws ActException {
+        try {
+            logger.info("获取网站信息开始:"+webName);
+            BiddingWebInfoBO biddingWebInfoBO = biddingWebInfoAPI.getWebInfo(webName);
+            logger.info("获取网站信息结果:"+webName);
+            return ActResult.initialize(BeanTransform.copyProperties(biddingWebInfoBO, BiddingWebInfoVO.class,request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

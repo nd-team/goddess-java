@@ -7,6 +7,7 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.customer.bo.CusEmailBO;
 import com.bjike.goddess.customer.dto.CusEmailDTO;
 import com.bjike.goddess.customer.entity.CusEmail;
@@ -230,6 +231,9 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
         StringBuffer emails = new StringBuffer("");
         if (sendObjectList != null && sendObjectList.size() > 0) {
             for (String emailStr : sendObjectList) {
+                if(!Validator.isEmail( emailStr)){
+                    throw new SerException("邮箱书写不正确");
+                }
                 emails.append(emailStr + ";");
             }
         }
@@ -276,6 +280,9 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
         StringBuffer emails = new StringBuffer("");
         if (sendObjectList != null && sendObjectList.size() > 0) {
             for (String emailStr : sendObjectList) {
+                if(!Validator.isEmail( emailStr)){
+                    throw new SerException("邮箱书写不正确");
+                }
                 emails.append(emailStr + ";");
             }
         }
@@ -790,7 +797,7 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
 
                 MessageTO messageTO = new MessageTO();
                 messageTO.setContent( content );
-                messageTO.setTitle("定时发送商务合同签订与立项汇总");
+                messageTO.setTitle("定时发送客户基本信息汇总");
                 messageTO.setMsgType(MsgType.SYS);
                 messageTO.setSendType( SendType.EMAIL);
                 messageTO.setRangeType( RangeType.SPECIFIED);
