@@ -24,21 +24,4 @@ import java.time.LocalDateTime;
 @CacheConfig(cacheNames = "reportmanagementSerCache")
 @Service
 public class AssetDebtSerImpl extends ServiceImpl<AssetDebt, AssetDebtDTO> implements AssetDebtSer {
-    @Override
-    public AssetDebtBO save(AssetDebtTO to) throws SerException {
-        AssetDebt entity = BeanTransform.copyProperties(to, AssetDebt.class, true);
-        entity.setNum(1);
-        return BeanTransform.copyProperties(entity, AssetDebtBO.class);
-    }
-
-    @Override
-    public void editNum(String id) throws SerException{
-        AssetDebt entity=super.findById(id);
-        if (entity==null){
-            throw new SerException("该对象不存在");
-        }
-        entity.setNum(entity.getNum()+1);
-        entity.setModifyTime(LocalDateTime.now());
-        super.update(entity);
-    }
 }

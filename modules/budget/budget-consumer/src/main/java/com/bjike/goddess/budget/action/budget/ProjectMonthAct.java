@@ -4,7 +4,6 @@ import com.bjike.goddess.budget.api.ProjectMonthAPI;
 import com.bjike.goddess.budget.bo.ProjectMonthBO;
 import com.bjike.goddess.budget.bo.ProjectMonthCountBO;
 import com.bjike.goddess.budget.bo.ProjectWeekBO;
-import com.bjike.goddess.budget.dto.ArrivalMonthDTO;
 import com.bjike.goddess.budget.dto.ProjectMonthDTO;
 import com.bjike.goddess.budget.to.GuidePermissionTO;
 import com.bjike.goddess.budget.vo.ProjectMonthCountVO;
@@ -104,16 +103,15 @@ public class ProjectMonthAct {
     /**
      * 按项目汇总
      *
-     * @param projects 项目数组
-     * @param request  请求对象
+     * @param dto 项目收入月dto
      * @return class ProjectMonthCountVO
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/conditionsCount/{projects}")
-    public Result conditionsCount(@PathVariable String[] projects, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/conditionsCount")
+    public Result conditionsCount(ProjectMonthDTO dto, HttpServletRequest request) throws ActException {
         try {
-            List<ProjectMonthCountBO> list = projectMonthAPI.conditionsCount(projects);
+            List<ProjectMonthCountBO> list = projectMonthAPI.conditionsCount(dto);
             return ActResult.initialize(BeanTransform.copyProperties(list, ProjectMonthCountVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -3,7 +3,6 @@ package com.bjike.goddess.budget.service;
 import com.bjike.goddess.budget.bo.ProjectMonthBO;
 import com.bjike.goddess.budget.bo.ProjectMonthCountBO;
 import com.bjike.goddess.budget.bo.ProjectWeekBO;
-import com.bjike.goddess.budget.dto.ArrivalWeekDTO;
 import com.bjike.goddess.budget.dto.ProjectMonthDTO;
 import com.bjike.goddess.budget.entity.ProjectMonth;
 import com.bjike.goddess.budget.to.GuidePermissionTO;
@@ -97,13 +96,11 @@ public interface ProjectMonthSer extends Ser<ProjectMonth, ProjectMonthDTO> {
     /**
      * 分项目汇总
      *
-     * @param projects 项目数组
+     * @param dto1 dto
      * @return class ProjectMonthCountBO
      * @throws SerException
      */
-    default List<ProjectMonthCountBO> conditionsCount(String[] projects) throws SerException {
-        return null;
-    }
+    List<ProjectMonthCountBO> conditionsCount(ProjectMonthDTO dto1) throws SerException;
 
     /**
      * 查找该月明细

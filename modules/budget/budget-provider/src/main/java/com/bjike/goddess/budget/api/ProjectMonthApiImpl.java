@@ -58,8 +58,8 @@ public class ProjectMonthApiImpl implements ProjectMonthAPI {
     }
 
     @Override
-    public List<ProjectMonthCountBO> conditionsCount(String[] projects) throws SerException {
-        return projectMonthSer.conditionsCount(projects);
+    public List<ProjectMonthCountBO> conditionsCount(ProjectMonthDTO dto1) throws SerException {
+        return projectMonthSer.conditionsCount(dto1);
     }
 
     @Override

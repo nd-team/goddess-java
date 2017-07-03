@@ -124,6 +124,7 @@ public class MoneyReadyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/save")
     public Result save(@Validated({ADD.class}) MoneyReadyTO to,BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -141,6 +142,7 @@ public class MoneyReadyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) MoneyReadyTO to, BindingResult result) throws ActException {
         try {
@@ -158,6 +160,7 @@ public class MoneyReadyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
