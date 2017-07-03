@@ -31,5 +31,6 @@ dependencies {
     compile project(":modules:regionalprogress-collect:regionalprogress-collect-api")
     compile project(":modules:contractquotemanager:contractquotemanager-api")
     compile project(":common:common-utils")
+    compile project(":modules:user:user-api")
 }
 

@@ -25,4 +25,11 @@
                      id="projectOtherExpensesApiImpl"/>
 
 
+
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI"
+                     id="userSetPermissionApiImpl"/>
+    <dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.projectcost.api.CusPermissionAPI" />
+    <dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.projectcost.api.CusPermissionOperateAPI" />
+
+
 </beans>

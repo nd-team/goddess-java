@@ -6,6 +6,7 @@ import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.PropertySource;
 
 import javax.servlet.MultipartConfigElement;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.io.IOException;
  */
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.bjike.goddess.qualifications.action", "com.bjike.goddess.common.consumer", "com.bjike.goddess.qualifications.config"})
+@PropertySource(value = {"classpath:permission.properties"},encoding="utf-8")
 @ImportResource("classpath:app.xml")
 public class Application {
     @Bean

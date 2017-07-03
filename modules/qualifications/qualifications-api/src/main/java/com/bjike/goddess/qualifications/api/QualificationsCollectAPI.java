@@ -3,6 +3,8 @@ package com.bjike.goddess.qualifications.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.qualifications.bo.QualificationsCollectBO;
 import com.bjike.goddess.qualifications.dto.QualificationsCollectDTO;
+import com.bjike.goddess.qualifications.excel.SonPermissionObject;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 import com.bjike.goddess.qualifications.to.QualificationsCollectFilterTO;
 import com.bjike.goddess.qualifications.to.QualificationsCollectTO;
 
@@ -92,6 +94,20 @@ public interface QualificationsCollectAPI {
      * @throws SerException
      */
     default QualificationsCollectBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 }

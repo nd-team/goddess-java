@@ -6,6 +6,7 @@ import com.bjike.goddess.regionalprogresscollect.bo.ReferenceTargetBO;
 import com.bjike.goddess.regionalprogresscollect.dto.ReferenceTargetDTO;
 import com.bjike.goddess.regionalprogresscollect.entity.ReferenceTarget;
 import com.bjike.goddess.regionalprogresscollect.to.FindTO;
+import com.bjike.goddess.regionalprogresscollect.to.GuidePermissionTO;
 import com.bjike.goddess.regionalprogresscollect.to.ReferenceTargetTO;
 
 import java.util.List;
@@ -108,4 +109,17 @@ public interface ReferenceTargetSer extends Ser<ReferenceTarget, ReferenceTarget
         return null;
     }
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

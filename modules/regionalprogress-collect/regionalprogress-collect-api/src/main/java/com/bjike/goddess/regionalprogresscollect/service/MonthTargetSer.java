@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.regionalprogresscollect.bo.MonthTargetBO;
 import com.bjike.goddess.regionalprogresscollect.dto.MonthTargetDTO;
 import com.bjike.goddess.regionalprogresscollect.entity.MonthTarget;
+import com.bjike.goddess.regionalprogresscollect.to.GuidePermissionTO;
 import com.bjike.goddess.regionalprogresscollect.to.MonthTargetTO;
 import com.bjike.goddess.regionalprogresscollect.to.StandardTO;
 
@@ -97,4 +98,17 @@ public interface MonthTargetSer extends Ser<MonthTarget, MonthTargetDTO> {
         return null;
     }
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

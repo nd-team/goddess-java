@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.qualifications.bo.QualificationsGatherBO;
 import com.bjike.goddess.qualifications.dto.QualificationsGatherDTO;
 import com.bjike.goddess.qualifications.service.QualificationsGatherSer;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 import com.bjike.goddess.qualifications.to.QualificationsGatherTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,5 +59,9 @@ public class QualificationsGatherApiImpl implements QualificationsGatherAPI {
     @Override
     public QualificationsGatherBO getById(String id) throws SerException {
         return qualificationsGatherSer.getById(id);
+    }
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return qualificationsGatherSer.guidePermission( guidePermissionTO );
     }
 }

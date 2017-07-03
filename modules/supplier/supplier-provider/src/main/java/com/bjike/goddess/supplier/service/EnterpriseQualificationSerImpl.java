@@ -64,8 +64,8 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
     @Transactional(rollbackFor = SerException.class)
     @Override
     public EnterpriseQualificationBO save(EnterpriseQualificationTO to) throws SerException {
-        if (!supPermissionSer.getSupPermission(idFlag))
-            throw new SerException("您的帐号没有权限");
+//        if (!supPermissionSer.getSupPermission(idFlag))
+//            throw new SerException("您的帐号没有权限");
         EnterpriseQualification entity = BeanTransform.copyProperties(to, EnterpriseQualification.class);
         entity.setInformation(supplierInformationSer.findById(to.getInformationId()));
         if (null == entity.getInformation())
@@ -77,8 +77,8 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
     @Transactional(rollbackFor = SerException.class)
     @Override
     public EnterpriseQualificationBO update(EnterpriseQualificationTO to) throws SerException {
-        if (!supPermissionSer.getSupPermission(idFlag))
-            throw new SerException("您的帐号没有权限");
+//        if (!supPermissionSer.getSupPermission(idFlag))
+//            throw new SerException("您的帐号没有权限");
         if (StringUtils.isBlank(to.getId()))
             throw new SerException("数据ID不能为空");
         EnterpriseQualification entity = super.findById(to.getId());
@@ -96,8 +96,8 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
     @Transactional(rollbackFor = SerException.class)
     @Override
     public EnterpriseQualificationBO delete(String id) throws SerException {
-        if (!supPermissionSer.getSupPermission(idFlag))
-            throw new SerException("您的帐号没有权限");
+//        if (!supPermissionSer.getSupPermission(idFlag))
+//            throw new SerException("您的帐号没有权限");
         EnterpriseQualification entity = super.findById(id);
         if (null == entity)
             throw new SerException("数据对象不能为空");
@@ -107,8 +107,8 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
 
     @Override
     public EnterpriseQualificationBO getById(String id) throws SerException {
-        if (!supPermissionSer.getSupPermission(idFlag))
-            throw new SerException("您的帐号没有权限");
+//        if (!supPermissionSer.getSupPermission(idFlag))
+//            throw new SerException("您的帐号没有权限");
         EnterpriseQualification entity = super.findById(id);
         if (null == entity)
             return null;

@@ -2,6 +2,7 @@ package com.bjike.goddess.qualifications.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.qualifications.bo.PersonnelInformationBO;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 import com.bjike.goddess.qualifications.to.PersonnelInformationTO;
 
 import java.util.List;
@@ -68,6 +69,12 @@ public interface PersonnelInformationAPI {
      * @throws SerException
      */
     default PersonnelInformationBO getById(String id) throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 }

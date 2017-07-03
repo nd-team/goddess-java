@@ -3,6 +3,7 @@ package com.bjike.goddess.qualifications.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.qualifications.bo.PersonnelInformationBO;
 import com.bjike.goddess.qualifications.service.PersonnelInformationSer;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 import com.bjike.goddess.qualifications.to.PersonnelInformationTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,5 +48,9 @@ public class PersonnelInformationApiImpl implements PersonnelInformationAPI {
     @Override
     public PersonnelInformationBO getById(String id) throws SerException {
         return personnelInformationSer.getById(id);
+    }
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return personnelInformationSer.guidePermission( guidePermissionTO );
     }
 }

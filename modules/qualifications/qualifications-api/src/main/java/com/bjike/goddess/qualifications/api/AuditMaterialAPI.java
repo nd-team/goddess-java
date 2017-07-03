@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.qualifications.bo.AuditMaterialBO;
 import com.bjike.goddess.qualifications.dto.AuditMaterialDTO;
 import com.bjike.goddess.qualifications.to.AuditMaterialTO;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -91,6 +92,13 @@ public interface AuditMaterialAPI {
      * @throws SerException
      */
     default AuditMaterialBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 }

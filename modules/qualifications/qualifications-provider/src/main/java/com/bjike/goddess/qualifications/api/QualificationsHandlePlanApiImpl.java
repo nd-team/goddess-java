@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.qualifications.bo.QualificationsHandlePlanBO;
 import com.bjike.goddess.qualifications.dto.QualificationsHandlePlanDTO;
 import com.bjike.goddess.qualifications.service.QualificationsHandlePlanSer;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 import com.bjike.goddess.qualifications.to.QualificationsHandlePlanTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,5 +59,9 @@ public class QualificationsHandlePlanApiImpl implements QualificationsHandlePlan
     @Override
     public QualificationsHandlePlanBO getById(String id) throws SerException {
         return qualificationsHandlePlanSer.getById(id);
+    }
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return qualificationsHandlePlanSer.guidePermission( guidePermissionTO );
     }
 }

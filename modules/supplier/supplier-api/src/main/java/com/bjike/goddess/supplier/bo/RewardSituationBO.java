@@ -21,7 +21,7 @@ public class RewardSituationBO extends BaseBO {
     /**
      * 获奖名称
      */
-    private String name;
+    private String awardName;
 
     /**
      * 获得时间
@@ -29,12 +29,12 @@ public class RewardSituationBO extends BaseBO {
     private String acquisition;
 
 
-    public String getName() {
-        return name;
+    public String getAwardName() {
+        return awardName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setAwardName(String awardName) {
+        this.awardName = awardName;
     }
 
     public String getInformationId() {
