@@ -22,6 +22,7 @@ public class JapiTest {
         JapiClient.setActionReletivePath("com/bjike/goddess/bankrecords/action");//主项目action位置
         JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
                 "modules/bankrecords/bankrecords-api",
+                "modules/storage/storage-api",
                 "common/common-api"
         });
 //                JapiClient.saveHistory(false);

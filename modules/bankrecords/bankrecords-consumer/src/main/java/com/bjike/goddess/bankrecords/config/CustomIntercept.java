@@ -2,10 +2,14 @@ package com.bjike.goddess.bankrecords.config;
 
 import com.bjike.goddess.common.consumer.config.HIInfo;
 import com.bjike.goddess.common.consumer.config.Interceptor;
+import com.bjike.goddess.common.consumer.interceptor.auth.AuthIntercept;
+import com.bjike.goddess.common.consumer.interceptor.limit.SmoothBurstyInterceptor;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginIntercept;
 import com.bjike.goddess.common.consumer.interceptor.login.StorageIntercept;
 import com.bjike.goddess.storage.api.StorageUserAPI;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.api.rbac.PermissionAPI;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,19 +24,49 @@ import java.util.List;
 public class CustomIntercept implements Interceptor {
 
     @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private PermissionAPI permissionAPI;
+    @Autowired
     private StorageUserAPI storageUserAPI;
-
 
     @Override
     public List<HIInfo> customerInterceptors() {
-        String account ="bankrecords";
-        String password="123456";
-        String name="bankrecords";
-        HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI,account,password,name), "/**");
+        String account = "bankrecords";
+        String password = "123456";
+        String name = "bankrecords";
+        HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI, account, password, name), "/**");
+        /**
+         * 添加限流器
+         */
+        SmoothBurstyInterceptor smoothInterceptor = new SmoothBurstyInterceptor(100, SmoothBurstyInterceptor.LimitType.DROP);
+        HIInfo smoothInfo = new HIInfo(smoothInterceptor, "/**");
 
         /**
-         * 暂时不加权限
+         * 登录拦截器
          */
-        return Arrays.asList(storageInfo);
+        HIInfo loginInfo = new HIInfo(new LoginIntercept(userAPI), "/**");
+
+        /**
+         * 权限拦截器
+         */
+//        String[] excludes = new String[]{
+//                "*/login",
+//                "*/register",
+//                "/user/version/verifyPhone/*",
+//                "/user/version/register/*",
+//                "public/version/key"
+//        };
+        String[] excludes = new String[]{
+                "*/login",
+                "*/register"
+        };
+        HIInfo authInfo = new HIInfo(new AuthIntercept(permissionAPI, excludes), "/**");
+
+        /**
+         * 顺序
+         */
+        return Arrays.asList(smoothInfo, storageInfo, loginInfo);
     }
+
 }

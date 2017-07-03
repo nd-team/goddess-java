@@ -9,15 +9,20 @@ import com.bjike.goddess.bankrecords.dto.BankRecordDetailDTO;
 import com.bjike.goddess.bankrecords.entity.BankAccountInfo;
 import com.bjike.goddess.bankrecords.entity.BankRecord;
 import com.bjike.goddess.bankrecords.entity.BankRecordDetail;
+import com.bjike.goddess.bankrecords.enums.GuideAddrStatus;
 import com.bjike.goddess.bankrecords.to.BankRecordTO;
+import com.bjike.goddess.bankrecords.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.fundrecords.api.FundRecordAPI;
 import com.bjike.goddess.fundrecords.bo.MonthCollectBO;
 import com.bjike.goddess.storage.to.FileInfo;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -58,6 +63,10 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
     private BankAccountInfoSer bankAccountInfoSer;
     @Autowired
     private FundRecordAPI fundRecordAPI;
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
@@ -363,7 +372,9 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
             if (!StringUtils.isEmpty(accountInfo)) {
                 BankRecordDTO dto = new BankRecordDTO();
                 dto.getSorts().add("createTime=desc");
-                dto.getConditions().add(Restrict.eq("accountId", dto.getAccountId()));
+                dto.getConditions().add(Restrict.eq("accountId", accountInfo.getId()));
+                dto.getConditions().add(Restrict.eq("year", year));
+                dto.getConditions().add(Restrict.eq("month", month));
                 List<BankRecordBO> boList = BeanTransform.copyProperties(super.findByCis(dto), BankRecordBO.class);
                 if (boList != null && !boList.isEmpty()) {
                     for (BankRecordBO bo : boList) {
@@ -400,6 +411,86 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
         dto.getConditions().add(Restrict.eq("year", year));
         dto.getConditions().add(Restrict.eq("month", month));
         return collectCombine(dto, bank, year, month);
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = to.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            case COLLECT:
+                flag = guideSeeIdentity();
+                break;
+            case ANALYZE:
+                flag = guideSeeIdentity();
+                break;
+            case COMPARE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
+
+    /**
+     *  导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（部门级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
     }
 
     public void insertModels(HSSFSheet sheet, BankRecordTO to) throws SerException {
