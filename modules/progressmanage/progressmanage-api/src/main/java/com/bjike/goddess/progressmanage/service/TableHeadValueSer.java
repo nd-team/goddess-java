@@ -20,7 +20,6 @@ import java.util.List;
 */
 public interface TableHeadValueSer extends Ser<TableHeadValue, TableHeadValueDTO> {
 
-    List<TableHeadValueBO> pageList(TableHeadValueDTO dto) throws SerException;
 
 
 }

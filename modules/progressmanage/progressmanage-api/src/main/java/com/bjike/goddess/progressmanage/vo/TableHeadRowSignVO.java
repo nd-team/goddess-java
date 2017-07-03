@@ -26,7 +26,7 @@ public class TableHeadRowSignVO {
     /**
      * 进度表表头信息List
      */
-    private List<TableHeadValueTO> toList;
+    private List<TableHeadValueVO> tableHeadValueList;
 
     public String getId() {
         return id;
@@ -36,12 +36,11 @@ public class TableHeadRowSignVO {
         this.id = id;
     }
 
-    public List<TableHeadValueTO> getToList() {
-        return toList;
+    public List<TableHeadValueVO> getTableHeadValueList() {
+        return tableHeadValueList;
     }
 
-    public void setToList(List<TableHeadValueTO> toList) {
-        this.toList = toList;
+    public void setTableHeadValueList(List<TableHeadValueVO> tableHeadValueList) {
+        this.tableHeadValueList = tableHeadValueList;
     }
-
 }

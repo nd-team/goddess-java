@@ -3,15 +3,15 @@ package com.bjike.goddess.progressmanage.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
- * 进度表表头对应Value业务传输对象
+ * 节点表头值业务传输对象
  *
  * @Author: [ Jason ]
- * @Date: [ 2017-06-19 04:48 ]
- * @Description: [ 进度表表头对应Value业务传输对象 ]
+ * @Date: [ 2017-06-26 09:54 ]
+ * @Description: [ 节点表头值业务传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class TableHeadValueBO extends BaseBO {
+public class NodeHeadValueBO extends BaseBO {
 
     /**
      * 值

@@ -23,8 +23,7 @@ public class TableHeadValue extends BaseEntity {
      * 表头
      */
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "tableHead_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '表头'")
-    @OrderBy(value = "sortIndex asc")
+    @JoinColumn(name = "tableHead_id", referencedColumnName = "id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '表头'")
     private TableHead tableHead;
 
     /**
@@ -37,7 +36,7 @@ public class TableHeadValue extends BaseEntity {
     /**
      * 值
      */
-    @Column(name = "value", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '值'")
+    @Column(name = "value", columnDefinition = "VARCHAR(255)   COMMENT '值'")
     private String value;
 
 

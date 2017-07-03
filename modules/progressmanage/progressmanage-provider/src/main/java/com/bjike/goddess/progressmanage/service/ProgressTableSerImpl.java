@@ -83,7 +83,6 @@ public class ProgressTableSerImpl extends ServiceImpl<ProgressTable, ProgressTab
     }
 
     @Override
-    @Transactional(rollbackFor = SerException.class)
     public List<TableListForHeadBO> tables() throws SerException {
 
         ProgressTableDTO dto = new ProgressTableDTO();

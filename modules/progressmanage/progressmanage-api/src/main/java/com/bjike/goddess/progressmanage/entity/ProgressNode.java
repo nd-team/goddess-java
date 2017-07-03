@@ -4,6 +4,8 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -26,6 +28,13 @@ public class ProgressNode extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "project_id",nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '所属项目'")
     private ProjectInfo project;
+
+    /**
+     * 表头对应值
+     */
+    @OneToMany(cascade ={CascadeType.REMOVE} , fetch = FetchType.EAGER, mappedBy = "progressNode")
+    private Set<NodeHead> nodeHeadSet = new HashSet<NodeHead>();
+
 
     /**
      * 节点名称
@@ -103,5 +112,13 @@ public class ProgressNode extends BaseEntity {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Set<NodeHead> getNodeHeadSet() {
+        return nodeHeadSet;
+    }
+
+    public void setNodeHeadSet(Set<NodeHead> nodeHeadSet) {
+        this.nodeHeadSet = nodeHeadSet;
     }
 }

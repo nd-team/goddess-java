@@ -15,6 +15,7 @@ import com.bjike.goddess.user.api.UserAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -39,6 +40,7 @@ public class ProgressNodeSerImpl extends ServiceImpl<ProgressNode, ProgressNodeD
     private UserAPI userAPI;
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public ProgressNodeBO insertModel(ProgressNodeTO to) throws SerException {
         ProjectInfo project = projectInfoSer.findById(to.getProjectId());
         if (project != null) {
@@ -77,6 +79,7 @@ public class ProgressNodeSerImpl extends ServiceImpl<ProgressNode, ProgressNodeD
 
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public ProgressNodeBO editModel(ProgressNodeTO to) throws SerException {
         ProgressNode model = super.findById(to.getId());
         if (model != null) {
@@ -106,6 +109,7 @@ public class ProgressNodeSerImpl extends ServiceImpl<ProgressNode, ProgressNodeD
 
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void delete(String id) throws SerException {
         ProgressNode model = super.findById(id);
         if (model != null) {
@@ -129,6 +133,9 @@ public class ProgressNodeSerImpl extends ServiceImpl<ProgressNode, ProgressNodeD
 
     @Override
     public List<NodeListForHeadBO> nodes(String projectId) throws SerException {
-        return null;
+        ProgressNodeDTO dto = new ProgressNodeDTO();
+        dto.getConditions().add(Restrict.eq("project.id",projectId));
+        dto.getSorts().add("sortIndex=asc");
+        return  BeanTransform.copyProperties(super.findByCis(dto),NodeListForHeadBO.class);
     }
 }

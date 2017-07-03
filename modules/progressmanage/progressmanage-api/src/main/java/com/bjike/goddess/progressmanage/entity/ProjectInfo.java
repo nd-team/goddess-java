@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.progressmanage.enums.PermissionType;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -27,6 +29,11 @@ public class ProjectInfo extends BaseEntity {
     @OneToOne(cascade=CascadeType.REFRESH,mappedBy = "project",fetch = FetchType.LAZY)
     private ProgressTable progressTable;
 
+    /**
+     * 进度节点
+     */
+    @OneToMany(cascade=CascadeType.REFRESH,mappedBy = "project",fetch = FetchType.EAGER)
+    private Set<ProgressNode> progressNodeSet = new HashSet<ProgressNode>();
 
     /**
      * 地区
@@ -203,5 +210,13 @@ public class ProjectInfo extends BaseEntity {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Set<ProgressNode> getProgressNodeSet() {
+        return progressNodeSet;
+    }
+
+    public void setProgressNodeSet(Set<ProgressNode> progressNodeSet) {
+        this.progressNodeSet = progressNodeSet;
     }
 }
