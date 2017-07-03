@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://code.alibabatech.com/schema/dubbo
+		  http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<context:property-placeholder location="classpath:dubbo.properties"/>
+
+	<dubbo:application name="${dubbo.application.name}" />
+	<dubbo:consumer check="false" timeout="15000" />
+	<dubbo:registry address="${dubbo.registry.address}" />
+
+	<!-- 注册接口-->
+
+    <!-- 出车API -->
+	<dubbo:reference interface="com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI" id="dispatchCarInfoApiImpl" />
+
+    <!-- 租车费用基本信息API -->
+	<dubbo:reference interface="com.bjike.goddess.dispatchcar.api.LeaseCarCostAPI" id="leaseCarCostApiImpl" />
+
+    <!-- 文件上传API -->
+	<dubbo:reference interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl" />
+
+    <!-- userAPI -->
+	<dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl" />
+
+    <!-- userAPI -->
+	<dubbo:reference interface="com.bjike.goddess.user.api.rbac.PermissionAPI" id="permissionApiImpl" />
+
+    <!-- 组织结构API -->
+	<dubbo:reference interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl" />
+
+    <!-- 文件上传API -->
+	<dubbo:reference interface="com.bjike.goddess.storage.api.StorageUserAPI" id="storageUserApiImpl" />
+
+    <!-- 权限API -->
+	<dubbo:reference interface="com.bjike.goddess.dispatchcar.api.CusPermissionAPI" id="cusPermissionApiImpl" />
+
+
+
+
+</beans>

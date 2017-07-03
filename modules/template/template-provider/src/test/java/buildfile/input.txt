@@ -1,0 +1,13 @@
+模块名:materialinstock456
+类名:ModuleApply
+作者:liguiqin
+描述:模块应用
+
+#参数[变量类型  变量名 ]
+#parameter--------------
+
+(
+String module 模块;
+String company 公司;
+String company1 公司;
+)

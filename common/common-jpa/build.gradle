@@ -1,0 +1,45 @@
+apply from: '../../config.gradle'
+
+dependencies {
+    compile(project(":common:common-api")) {
+        exclude group: 'com.google.guava', module: 'guava'
+        exclude group: ' redis.clients', module: 'jedis'
+    }
+
+    compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version: "$hibernate_jpa_version"
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: "$commons_version"
+    compile group: 'com.alibaba', name: 'druid', version: "$druid_version"
+    compile group: 'org.slf4j', name: 'slf4j-api', version: "$slf4j_version"
+    compile group: 'commons-io', name: 'commons-io', version: "$commons_io_version"
+    compile group: 'mysql', name: 'mysql-connector-java', version: "$mysql_connector_version"
+    compile group: 'org.springframework', name: 'spring-context', version: "$spring_version"
+
+    compile(group: 'org.springframework.data', name: 'spring-data-jpa', version: "$spring_jpa_version") {
+        exclude group: 'org.springframework', module: 'spring-context'
+        exclude group: 'org.springframework', module: 'spring-aop'
+        exclude group: 'org.springframework', module: 'spring-beans'
+        exclude group: 'org.springframework', module: 'spring-core'
+        exclude group: 'org.springframework', module: 'spring-tx'
+        exclude group: 'org.springframework.data', module: 'spring-data-commons'
+        exclude group: 'org.springframework', module: 'spring-jdbc'
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+        exclude group: 'org.slf4j', module: 'jcl-over-slf4j'
+    }
+    compile(group: 'org.springframework', name: 'spring-jdbc', version: "$spring_jdbc_version") {
+        exclude group: 'org.springframework', module: 'spring-beans'
+        exclude group: 'org.springframework', module: 'spring-core'
+    }
+
+    compile(group: 'org.springframework.data', name: 'spring-data-commons', version: "$spring_data_commons_version") {
+        exclude group: 'org.springframework', module: 'spring-beans'
+        exclude group: 'org.springframework', module: 'spring-core'
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
+
+    compile("org.hibernate:hibernate-ehcache:$hibernate_ehcache_version") {
+        exclude group: 'org.hibernate', module: 'hibernate-core'
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
+
+
+}

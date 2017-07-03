@@ -1,0 +1,59 @@
+package com.bjike.goddess.moneyside.service;
+
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.moneyside.bo.MoneyExitApplyBO;
+import com.bjike.goddess.moneyside.bo.MoneyExitApplyWrongRecordBO;
+import com.bjike.goddess.moneyside.dto.MoneyExitApplyDTO;
+import com.bjike.goddess.moneyside.dto.MoneyExitApplyWrongRecordDTO;
+import com.bjike.goddess.moneyside.entity.MoneyExitApplyWrongRecord;
+
+import java.util.List;
+
+/**
+ * 资金退出申请有误记录业务接口
+ *
+ * @Author: [ xiazhili ]
+ * @Date: [ 2017-06-09 05:58 ]
+ * @Description: [ 资金退出申请有误记录业务接口 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+public interface MoneyExitApplyWrongRecordSer extends Ser<MoneyExitApplyWrongRecord, MoneyExitApplyWrongRecordDTO> {
+    /**
+     * 资金退出申请有误记录列表总条数
+     */
+    default Long countMoneyExitApplyWrongRecord(MoneyExitApplyWrongRecordDTO moneyExitApplyWrongRecordDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 一个资金退出申请有误记录
+     *
+     * @return class MoneyExitApplyWrongRecordBO
+     */
+    default MoneyExitApplyWrongRecordBO getOne(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 资金退出申请有误记录
+     *
+     * @param moneyExitApplyWrongRecordDTO 资金退出申请有误记录dto
+     * @return class MoneyExitApplyWrongRecordBO
+     * @throws SerException
+     */
+    default List<MoneyExitApplyWrongRecordBO> findListMoneyExitApplyWrongRecord(MoneyExitApplyWrongRecordDTO moneyExitApplyWrongRecordDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 根据id删除资金退出申请有误记录
+     *
+     * @param id
+     * @throws SerException
+     */
+    default void removeMoneyExitApplyWrongRecord(String id) throws SerException {
+
+    }
+
+}

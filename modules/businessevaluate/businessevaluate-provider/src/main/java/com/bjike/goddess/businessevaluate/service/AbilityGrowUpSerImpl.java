@@ -1,0 +1,308 @@
+package com.bjike.goddess.businessevaluate.service;
+
+import com.bjike.goddess.businessevaluate.bo.AbilityGrowUpBO;
+import com.bjike.goddess.businessevaluate.bo.SwapMonthBO;
+import com.bjike.goddess.businessevaluate.dto.AbilityGrowUpDTO;
+import com.bjike.goddess.businessevaluate.entity.AbilityGrowUp;
+import com.bjike.goddess.businessevaluate.entity.EvaluateProjectInfo;
+import com.bjike.goddess.businessevaluate.enums.GuideAddrStatus;
+import com.bjike.goddess.businessevaluate.to.AbilityGrowUpTO;
+import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+/**
+ * 能力成长业务实现
+ *
+ * @Author: [ Jason ]
+ * @Date: [ 2017-03-28 04:13 ]
+ * @Description: [ 能力成长业务实现 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+@CacheConfig(cacheNames = "businessevaluateSerCache")
+@Service
+public class AbilityGrowUpSerImpl extends ServiceImpl<AbilityGrowUp, AbilityGrowUpDTO> implements AbilityGrowUpSer {
+
+    @Autowired
+    private EvaluateProjectInfoSer evaluateProjectInfoSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private UserAPI userAPI;
+
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public AbilityGrowUpBO insertModel(AbilityGrowUpTO to) throws SerException {
+
+        getCusPermission();
+
+        AbilityGrowUp model = BeanTransform.copyProperties(to, AbilityGrowUp.class);
+        super.save(model);
+        to.setId(model.getId());
+        return BeanTransform.copyProperties(to, AbilityGrowUpBO.class);
+    }
+
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public AbilityGrowUpBO updateModel(AbilityGrowUpTO to) throws SerException {
+
+        getCusPermission();
+
+        if (!StringUtils.isEmpty(to.getId())) {
+            AbilityGrowUp model = super.findById(to.getId());
+            if (model != null) {
+                BeanTransform.copyProperties(to, model, true);
+                model.setModifyTime(LocalDateTime.now());
+                super.update(model);
+                return BeanTransform.copyProperties(to, AbilityGrowUpBO.class);
+            } else {
+                throw new SerException("更新对象不能为空");
+            }
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public List<AbilityGrowUpBO> pageList(AbilityGrowUpDTO dto) throws SerException {
+
+        getCusPermission();
+
+        dto.getSorts().add("createTime=desc");
+        List<AbilityGrowUp> list = super.findByPage(dto);
+        List<AbilityGrowUpBO> boList = BeanTransform.copyProperties(list, AbilityGrowUpBO.class);
+        //设置项目信息
+        if (boList != null && !boList.isEmpty()) {
+            for (AbilityGrowUpBO bo : boList) {
+                EvaluateProjectInfo info = evaluateProjectInfoSer.findById(bo.getProjectInfoId());
+                if (info != null) {
+                    bo.setArea(info.getArea());
+                    bo.setProject(info.getProject());
+                    bo.setStartTime(info.getStartTime().toString());
+                    bo.setEndTime(info.getEndTime().toString());
+                }
+                countGapMoney(bo, info);
+            }
+        }
+        return boList;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = to.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = sonPermission();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（部门级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 计算月差额（对于一月差额，需要考虑项目周期是否需要减去上一年12月）
+     *
+     * @param bo   能力成长信息
+     * @param info 项目信息
+     * @return 能力成长信息
+     */
+    public AbilityGrowUpBO countGapMoney(AbilityGrowUpBO bo, EvaluateProjectInfo info) throws SerException {
+        //如果开始时间和结束时间不在同一年内，则需要与上一年的对应月份比较差额
+        //由于工期不稳定，不应该定死字段，应该用List的接受显示而表格显示不满足
+        //因此先处理每个月与上月差额
+
+        Double gap1 = 0.0;
+        Double gap2 = bo.getFebruaryMoney() - bo.getJanuaryMoney();
+        Double gap3 = bo.getMarchMoney() - bo.getFebruaryMoney();
+        Double gap4 = bo.getAprilMoney() - bo.getMarchMoney();
+        Double gap5 = bo.getMayMoney() - bo.getAprilMoney();
+        Double gap6 = bo.getJuneMoney() - bo.getMayMoney();
+        Double gap7 = bo.getJulyMoney() - bo.getJuneMoney();
+        Double gap8 = bo.getAugustMoney() - bo.getJulyMoney();
+        Double gap9 = bo.getSeptemberMoney() - bo.getAugustMoney();
+        Double gap10 = bo.getOctoberMoney() - bo.getSeptemberMoney();
+        Double gap11 = bo.getNovemberMoney() - bo.getOctoberMoney();
+        Double gap12 = bo.getDecemberMoney() - bo.getNovemberMoney();
+
+        bo.setJanuaryGapMoney(gap1);
+        bo.setFebruaryGapMoney(gap2);
+        bo.setMarchGapMoney(gap3);
+        bo.setAprilGapMoney(gap4);
+        bo.setMayGapMoney(gap5);
+        bo.setJuneGapMoney(gap6);
+        bo.setJulyGapMoney(gap7);
+        bo.setAugustGapMoney(gap8);
+        bo.setSeptemberGapMoney(gap9);
+        bo.setOctoberGapMoney(gap10);
+        bo.setNovemberGapMoney(gap11);
+        bo.setDecemberGapMoney(gap12);
+
+        //比较各月份差额，除了一月差额
+        List<SwapMonthBO> bos = new ArrayList<SwapMonthBO>();
+        bos.add(new SwapMonthBO("二月", gap2, bo.getFebruaryMoney()));
+        bos.add(new SwapMonthBO("三月", gap3, bo.getMarchMoney()));
+        bos.add(new SwapMonthBO("四月", gap4, bo.getAprilMoney()));
+        bos.add(new SwapMonthBO("五月", gap5, bo.getMayMoney()));
+        bos.add(new SwapMonthBO("六月", gap6, bo.getJuneMoney()));
+        bos.add(new SwapMonthBO("七月", gap7, bo.getJulyMoney()));
+        bos.add(new SwapMonthBO("八月", gap8, bo.getAugustMoney()));
+        bos.add(new SwapMonthBO("九月", gap9, bo.getSeptemberMoney()));
+        bos.add(new SwapMonthBO("十月", gap10, bo.getOctoberMoney()));
+        bos.add(new SwapMonthBO("十一月", gap11, bo.getNovemberMoney()));
+        bos.add(new SwapMonthBO("十二月", gap12, bo.getDecemberMoney()));
+        swapSpeed(bo, bos);
+
+        //添加一月份，比较各月份金额大小
+        bos.add(new SwapMonthBO("一月", gap1, bo.getJanuaryMoney()));
+        swapSize(bo, bos);
+
+        return bo;
+
+    }
+
+    //排序并设置增速最快最慢月份
+    public AbilityGrowUpBO swapSpeed(AbilityGrowUpBO bo, List<SwapMonthBO> bos) throws SerException {
+        //设置最快最慢月份
+        Collections.sort(bos, new Comparator<SwapMonthBO>() {
+            @Override
+            public int compare(SwapMonthBO bo1, SwapMonthBO bo2) {
+
+                return bo1.getGapMoney().compareTo(bo2.getGapMoney());
+            }
+        });
+
+        List<String> slowMonthStr = new ArrayList<String>();
+        List<String> fastMonthStr = new ArrayList<String>();
+
+        Double slowMoney = bos.get(0).getGapMoney();
+        Double fastMoney = bos.get(0).getGapMoney();
+
+        for (SwapMonthBO tempBO : bos) {
+            if (tempBO.getGapMoney().doubleValue() == slowMoney) {
+                slowMonthStr.add(tempBO.getMonth());
+            }
+        }
+        for (SwapMonthBO tempBO : bos) {
+            if (tempBO.getGapMoney().doubleValue() == fastMoney) {
+                fastMonthStr.add(tempBO.getMonth());
+            }
+        }
+        //是否存在增速与最快相同的月份，相同都设置
+        if (!slowMonthStr.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < slowMonthStr.size(); i++) {
+                if (i == slowMonthStr.size() - 1) {
+                    sb.append(slowMonthStr.get(i));
+                } else {
+                    sb.append(slowMonthStr.get(i) + "、");
+                }
+            }
+            bo.setSlowMonth(sb.toString());
+        } else {
+            bo.setSlowMonth(bos.get(0).getMonth());
+        }
+        //是否存在增速与最快相同的月份，相同都设置
+        if (!fastMonthStr.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < fastMonthStr.size(); i++) {
+                if (i == fastMonthStr.size() - 1) {
+                    sb.append(fastMonthStr.get(i));
+                } else {
+                    sb.append(fastMonthStr.get(i) + "、");
+                }
+            }
+            bo.setFastMonth(sb.toString());
+        } else {
+            bo.setFastMonth(bos.get(bos.size() - 1).getMonth());
+        }
+
+        return bo;
+    }
+
+    //排序月收入最多最少月份
+    public AbilityGrowUpBO swapSize(AbilityGrowUpBO bo, List<SwapMonthBO> bos) throws SerException {
+        //设置最快最慢月份
+        Collections.sort(bos, new Comparator<SwapMonthBO>() {
+            @Override
+            public int compare(SwapMonthBO bo1, SwapMonthBO bo2) {
+                return bo1.getMonthMoney().compareTo(bo2.getMonthMoney());
+            }
+        });
+        bo.setLeastMonth(bos.get(0).getMonth());
+        bo.setMaximumMonth(bos.get(bos.size() - 1).getMonth());
+
+        return bo;
+    }
+
+
+    public void getCusPermission() throws SerException {
+
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+
+        if (!permission) {
+            throw new SerException("该功能只有商务部可操作，您的帐号尚无权限");
+        }
+    }
+}

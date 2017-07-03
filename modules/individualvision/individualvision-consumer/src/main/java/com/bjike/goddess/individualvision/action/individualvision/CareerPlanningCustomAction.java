@@ -1,0 +1,163 @@
+package com.bjike.goddess.individualvision.action.individualvision;
+
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
+import com.bjike.goddess.common.api.exception.ActException;
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.restful.ActResult;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.individualvision.api.CareerPlanningCustomAPI;
+import com.bjike.goddess.individualvision.bo.CareerPlanningCustomBO;
+import com.bjike.goddess.individualvision.dto.CareerPlanningCustomDTO;
+import com.bjike.goddess.individualvision.to.CareerPlanningCustomTO;
+import com.bjike.goddess.individualvision.vo.CareerPlanningCustomVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
+
+/**
+ * 职业规划定制
+ *
+ * @Author: [ xiazhili ]
+ * @Date: [ 2017-03-30 06:45 ]
+ * @Description: [ 职业规划定制 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+@RestController
+@RequestMapping("careerplanningcustom")
+public class CareerPlanningCustomAction {
+    @Autowired
+    private CareerPlanningCustomAPI careerPlanningCustomAPI;
+    /**
+     * 职业规划定制列表总条数
+     *
+     * @param careerPlanningCustomDTO 职业规划定制dto
+     * @des 获取所有职业规划定制
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(CareerPlanningCustomDTO careerPlanningCustomDTO) throws ActException {
+        try {
+            Long count = careerPlanningCustomAPI.countCareerPlanningCustom(careerPlanningCustomDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个职业规划定制
+     *
+     * @param id
+     * @return class CareerPlanningCustomVO
+     * @des 获取一个职业规划定制
+     * @version v1
+     */
+    @GetMapping("v1/career/{id}")
+    public Result career(@PathVariable String id) throws ActException {
+        try {
+            CareerPlanningCustomBO careerPlanningCustomBO = careerPlanningCustomAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(careerPlanningCustomBO, CareerPlanningCustomVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 职业规划定制列表
+     *
+     * @param careerPlanningCustomDTO 职业规划定制dto
+     * @return class CareerPlanningCustomVO
+     * @des 获取所有职业规划定制
+     * @version v1
+     */
+    @GetMapping("v1/list")
+    public Result list(CareerPlanningCustomDTO careerPlanningCustomDTO, HttpServletRequest request) throws ActException {
+        try {
+            List<CareerPlanningCustomVO> careerPlanningCustomVOS = BeanTransform.copyProperties
+                    (careerPlanningCustomAPI.findListCareerPlanningCustom(careerPlanningCustomDTO),CareerPlanningCustomVO.class,request);
+            return ActResult.initialize(careerPlanningCustomVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 添加职业规划定制
+     *
+     * @param careerPlanningCustomTO 职业规划定制数据to
+     * @return class CareerPlanningCustomVO
+     * @des 添加职业规划定制
+     * @version v1
+     */
+    @PostMapping("v1/add")
+    public Result add(@Validated(ADD.class) CareerPlanningCustomTO careerPlanningCustomTO, BindingResult bindingResult) throws ActException {
+        try {
+            CareerPlanningCustomBO careerPlanningCustomBO = careerPlanningCustomAPI.insertCareerPlanningCustom(careerPlanningCustomTO);
+            return ActResult.initialize(careerPlanningCustomBO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 编辑职业规划定制
+     *
+     * @param careerPlanningCustomTO 职业规划定制数据to
+     * @return class CareerPlanningCustomVO
+     * @des 编辑职业规划定制
+     * @version v1
+     */
+    @PostMapping("v1/edit")
+    public Result edit(@Validated(EDIT.class) CareerPlanningCustomTO careerPlanningCustomTO, BindingResult bindingResult) throws ActException {
+        try {
+            CareerPlanningCustomBO careerPlanningCustomBO = careerPlanningCustomAPI.editCareerPlanningCustom(careerPlanningCustomTO);
+            return ActResult.initialize(careerPlanningCustomBO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 删除职业规划定制
+     *
+     * @param id 用户id
+     * @des 根据用户id删除职业规划定制记录
+     * @version v1
+     */
+    @DeleteMapping("v1/delete/{id}")
+    public Result delete(@PathVariable String id) throws ActException {
+        try {
+            careerPlanningCustomAPI.removeCareerPlanningCustom(id);
+            return new ActResult("delete success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 发送邮件
+     *
+     * @param careerPlanningCustomTO 发送邮件数据to
+     * @return class CareerPlanningCustomVO
+     * @des 发送邮件职业规划定制
+     * @version v1
+     */
+    @PostMapping("v1/send")
+    public Result send(@Validated CareerPlanningCustomTO careerPlanningCustomTO) throws ActException {
+        try {
+            CareerPlanningCustomBO careerPlanningCustomBO = careerPlanningCustomAPI.sendCareerPlanningCustom(careerPlanningCustomTO);
+            return ActResult.initialize(careerPlanningCustomBO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+}

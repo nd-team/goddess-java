@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://code.alibabatech.com/schema/dubbo 
+		  http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<context:property-placeholder location="classpath:dubbo.properties"/>
+
+	<dubbo:application name="${dubbo.application.name}" />
+	<dubbo:consumer check="false" timeout="15000" />
+	<dubbo:registry address="${dubbo.registry.address}" />
+
+	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+
+	<!--配置暴露的公共接口-->
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.AreaBuyStatusDaySumAPI" id="areaBuyStatusDaySumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.AreaBuyStatusMonthSumAPI" id="areaBuyStatusMonthSumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.AreaBuyStatusWeekSumAPI" id="areaBuyStatusWeekSumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.AreaBuyStatusYearSumAPI" id="areaBuyStatusYearSumApiImpl"></dubbo:reference>
+
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.AreaDepartReceiveDaySumAPI" id="areaDepartReceiveDaySumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.AreaDepartReceiveMonthSumAPI" id="areaDepartReceiveMonthSumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.AreaDepartReceiveWeekSumAPI" id="areaDepartReceiveWeekSumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.AreaDepartReceiveYearSumAPI" id="areaDepartReceiveYearSumApiImpl"></dubbo:reference>
+
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.AreaTransferDaySumAPI" id="areaTransferDaySumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.AreaTransferMonthSumAPI" id="areaTransferMonthSumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.AreaTransferWeekSumAPI" id="areaTransferWeekSumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.AreaTransferYearSumAPI" id="areaTransferYearSumApiImpl"></dubbo:reference>
+
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.InStockAreaDaySumAPI" id="inStockAreaDaySumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.InStockAreaMonthSumAPI" id="inStockAreaMonthSumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.InStockAreaWeekSumAPI" id="inStockAreaWeekSumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.InStockAreaYearSumAPI" id="inStockAreaYearSumApiImpl"></dubbo:reference>
+
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.InStockSoruceDaySumAPI" id="inStockSoruceDaySumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.InStockSoruceMonthSumAPI" id="inStockSoruceMonthSumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.InStockSoruceWeekSumAPI" id="inStockSoruceWeekSumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.InStockSoruceYearSumAPI" id="inStockSoruceYearSumApiImpl"></dubbo:reference>
+
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.MaterialClassifyDaySumAPI" id="materialClassifyDaySumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.MaterialClassifyMonthSumAPI" id="materialClassifyMonthSumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.MaterialClassifyWeekSumAPI" id="materialClassifyWeekSumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.MaterialClassifyYearSumAPI" id="materialClassifyYearSumApiImpl"></dubbo:reference>
+
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.MaterialStatusDaySumAPI" id="materialStatusDaySumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.MaterialStatusMonthSumAPI" id="materialStatusMonthSumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.MaterialStatusWeekSumAPI" id="materialStatusWeekSumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.MaterialStatusYearSumAPI" id="materialStatusYearSumApiImpl"></dubbo:reference>
+
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.RepairStateDaySumAPI" id="repairStateDaySumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.RepairStateMonthSumAPI" id="repairStateMonthSumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.RepairStateWeekSumAPI" id="repairStateWeekSumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.RepairStateYearSumAPI" id="repairStateYearSumApiImpl"></dubbo:reference>
+
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.TransferHandlerDaySumAPI" id="transferHandlerDaySumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.TransferHandlerMonthSumAPI" id="transferHandlerMonthSumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.TransferHandlerWeekSumAPI" id="transferHandlerWeekSumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.TransferHandlerYearSumAPI" id="transferHandlerYearSumApiImpl"></dubbo:reference>
+
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.TransferTypeDaySumAPI" id="transferTypeDaySumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.TransferTypeMonthSumAPI" id="transferTypeMonthSumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.TransferTypeWeekSumAPI" id="transferTypeWeekSumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.TransferTypeYearSumAPI" id="transferTypeYearSumApiImpl"></dubbo:reference>
+
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.WarrantyStateDaySumAPI" id="warrantyStateDaySumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.WarrantyStateMonthSumAPI" id="warrantyStateMonthSumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.WarrantyStateWeekSumAPI" id="warrantyStateWeekSumApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.WarrantyStateYearSumAPI" id="warrantyStateYearSumApiImpl"></dubbo:reference>
+
+</beans>
