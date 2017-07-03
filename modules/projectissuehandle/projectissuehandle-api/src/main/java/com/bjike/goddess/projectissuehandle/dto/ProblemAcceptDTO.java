@@ -22,6 +22,15 @@ public class ProblemAcceptDTO extends BaseDTO {
      * 工程类型
      */
     private String projectType;
+    /**
+     * 内部项目名称
+     */
+    private String[] name;
+
+    /**
+     * 工程类型
+     */
+    private String[] type;
 
 
     public String getInternalProjectName() {
@@ -38,5 +47,21 @@ public class ProblemAcceptDTO extends BaseDTO {
 
     public void setProjectType(String projectType) {
         this.projectType = projectType;
+    }
+
+    public String[] getName() {
+        return name;
+    }
+
+    public void setName(String[] name) {
+        this.name = name;
+    }
+
+    public String[] getType() {
+        return type;
+    }
+
+    public void setType(String[] type) {
+        this.type = type;
     }
 }

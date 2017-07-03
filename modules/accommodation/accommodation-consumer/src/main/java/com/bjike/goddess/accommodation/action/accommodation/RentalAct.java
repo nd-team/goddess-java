@@ -3,18 +3,33 @@ package com.bjike.goddess.accommodation.action.accommodation;
 
 import com.bjike.goddess.accommodation.api.RentalAPI;
 import com.bjike.goddess.accommodation.bo.RentalBO;
+import com.bjike.goddess.accommodation.dto.RentalApplyDTO;
 import com.bjike.goddess.accommodation.dto.RentalDTO;
+import com.bjike.goddess.accommodation.to.RentalDeleteFileTO;
 import com.bjike.goddess.accommodation.to.RentalTO;
 import com.bjike.goddess.accommodation.vo.RentalVO;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.storage.api.FileAPI;
+import com.bjike.goddess.storage.to.FileInfo;
+import com.bjike.goddess.storage.vo.FileVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 
@@ -29,22 +44,60 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("rentalAct")
-public class RentalAct {
+@RequestMapping("rental")
+public class RentalAct extends BaseFileAction{
     @Autowired
     private RentalAPI rentalAPI;
-
+    @Autowired
+    private FileAPI fileAPI;
     /**
-     * 获取租房信息
+     * 租房信息列表总条数
      *
-     * @param rentalDTO 租房信息dto
+     * @param rentalDTO 租房信息记录dto
+     * @des 获取所有租房信息
      * @version v1
      */
-    @GetMapping("v1/listRentalApply")
-    public Result findListRental(RentalDTO rentalDTO) throws ActException {
+    @GetMapping("v1/count")
+    public Result count(RentalDTO rentalDTO) throws ActException {
+        try {
+            Long count = rentalAPI.count(rentalDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 一个租房信息
+     *
+     * @param id
+     * @return class RentalVO
+     * @des 获取一个租房信息
+     * @version v1
+     */
+    @GetMapping("v1/rental/{id}")
+    public Result rental(@PathVariable String id) throws ActException {
+        try {
+            RentalBO bo = rentalAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, RentalVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 租房信息列表
+     *
+     * @param rentalDTO 租房信息dto
+     * @return class RentalVO
+     * @des 获取租房信息
+     * @version v1
+     */
+    @GetMapping("v1/list")
+    public Result list(RentalDTO rentalDTO, HttpServletRequest request) throws ActException {
         try {
             List<RentalVO> rentalVOS = BeanTransform.copyProperties(
-                    rentalAPI.findListRental(rentalDTO), RentalVO.class, true);
+                    rentalAPI.findListRental(rentalDTO), RentalVO.class,request);
             return ActResult.initialize(rentalVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -55,10 +108,12 @@ public class RentalAct {
      * 添加租房信息
      *
      * @param rentalTO 租房信息to
+     * @return class RentalVO
+     * @des 添加租房信息
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addRental(@Validated RentalTO rentalTO) throws ActException {
+    public Result add(@Validated(ADD.class) RentalTO rentalTO, BindingResult bindingResult) throws ActException {
         try {
             RentalBO rentalBO = rentalAPI.insertRental(rentalTO);
             return ActResult.initialize(rentalBO);
@@ -71,10 +126,12 @@ public class RentalAct {
      * 编辑租房信息
      *
      * @param rentalTO 租房信息数据bo
+     * @return class RentalVO
+     * @des 编辑租房信息
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result editRental(@Validated RentalTO rentalTO) throws ActException {
+    public Result edit(@Validated(EDIT.class) RentalTO rentalTO, BindingResult bindingResult) throws ActException {
         try {
             RentalBO rentalBO = rentalAPI.editRental(rentalTO);
             return ActResult.initialize(rentalBO);
@@ -91,7 +148,7 @@ public class RentalAct {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result deleteRental(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             rentalAPI.removeRental(id);
             return new ActResult("delete success!");
@@ -99,84 +156,126 @@ public class RentalAct {
             throw new ActException(e.getMessage());
         }
     }
-
     /**
      * 上传附件
      *
+     * @des 房租信息
      * @version v1
      */
-    @PostMapping("v1/uploadAttachments")
-    public Result uploadAttachments() throws ActException {
+    @LoginAuth
+    @PostMapping("v1/uploadFile/{id}")
+    public Result uploadFile(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            rentalAPI.uploadAttachments();
-            return new ActResult("uploadAttachments success!");
+            //跟前端约定好 ，文件路径是列表id
+            // /id/....
+            String paths = "/" + id;
+            List<InputStream> inputStreams = getInputStreams(request, paths);
+            fileAPI.upload(inputStreams);
+            return new ActResult("upload success");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
     /**
-     * 附件
+     * 文件附件列表
      *
+     * @param id 房租信息id
+     * @return class FileVO
      * @version v1
      */
-    @PostMapping("v1/attachments")
-    public Result attachments() throws ActException {
+    @GetMapping("v1/listFile/{id}")
+    public Result list(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            rentalAPI.attachments();
-            return new ActResult("attachments success!");
+            //跟前端约定好 ，文件路径是列表id
+            // /bidding/id/....
+            String path = "/" + id;
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
+            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
+            return ActResult.initialize(files);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
     /**
-     * 上传
+     * 文件下载
      *
+     * @param path 文件信息路径
      * @version v1
      */
-    @PostMapping("v1/upload")
-    public Result upload() throws ActException {
+    @GetMapping("v1/downloadFile")
+    public Result download(@RequestParam String path, HttpServletRequest request, HttpServletResponse response) throws ActException {
         try {
-            rentalAPI.upload();
-            return new ActResult("upload success!");
-        } catch (SerException e) {
+
+
+            //该文件的路径
+            Object storageToken = request.getAttribute("storageToken");
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            fileInfo.setStorageToken(storageToken.toString());
+            String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
+            byte[] buffer = fileAPI.download(fileInfo);
+            writeOutFile(response, buffer, filename);
+            return new ActResult("download success");
+        } catch (Exception e) {
             throw new ActException(e.getMessage());
         }
 
     }
 
     /**
-     * 租房状态
+     * 删除文件或文件夹
      *
+     * @param rentalDeleteFileTO 多文件信息路径
      * @version v1
      */
-    @PostMapping("v1/rentalStatus")
-    public Result rentalStatus(@Validated RentalTO rentalTO) throws ActException {
+    @LoginAuth
+    @PostMapping("v1/deleteFile")
+    public Result delFile(@Validated(RentalDeleteFileTO.TestDEL.class) RentalDeleteFileTO rentalDeleteFileTO, HttpServletRequest request) throws SerException {
+        if(null != rentalDeleteFileTO.getPaths() && rentalDeleteFileTO.getPaths().length>=0 ){
+            Object storageToken = request.getAttribute("storageToken");
+            fileAPI.delFile(storageToken.toString(),rentalDeleteFileTO.getPaths());
+        }
+        return new ActResult("delFile success");
+    }
+    /**
+     * 导出excel
+     *
+     * @param dto 租房信息
+     * @des 导出租房信息
+     * @version v1
+     */
+    //@LoginAuth
+    @GetMapping("v1/export")
+    public Result exportReport(RentalDTO dto, HttpServletResponse response) throws ActException {
         try {
-            RentalBO rentalBO = rentalAPI.rentalStatus(rentalTO);
-            return ActResult.initialize(rentalBO);
+            String fileName = "租房信息.xlsx";
+            super.writeOutFile(response, rentalAPI.exportExcel(dto), fileName);
+            return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
         }
     }
-
     /**
-     * 租房信息导出明细
+     * 获取地区
      *
-     * @param area 地区
+     * @des 获取地区集合
      * @version v1
      */
-    @PostMapping("v1/exportExcel")
-    public Result exportExcel(String area) throws ActException {
-        String excel = null;
+    @GetMapping("v1/areas")
+    public Result areas() throws ActException {
         try {
-            excel = rentalAPI.exportExcel(area);
-            return new ActResult(excel);
+            List<String> areasList = rentalAPI.getArea();
+            return ActResult.initialize(areasList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
-
     }
 
 }

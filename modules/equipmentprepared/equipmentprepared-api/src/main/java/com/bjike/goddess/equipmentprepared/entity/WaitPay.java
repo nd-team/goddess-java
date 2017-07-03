@@ -95,7 +95,7 @@ public class WaitPay extends BaseEntity {
     private Boolean ifPayment;
 
     /**
-     * 等待付款
+     * 付款时间
      */
     @Column(name = "payTime", columnDefinition = "DATETIME   COMMENT '付款时间'")
     private LocalDateTime payTime;

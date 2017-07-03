@@ -56,13 +56,4 @@ public class TaskJoinApiImpl implements TaskJoinAPI {
         taskJoinSer.removeTaskJoin(id);
     }
 
-    @Override
-    public void upload() throws SerException {
-        taskJoinSer.upload();
-    }
-
-    @Override
-    public void download() throws SerException {
-        taskJoinSer.download();
-    }
 }

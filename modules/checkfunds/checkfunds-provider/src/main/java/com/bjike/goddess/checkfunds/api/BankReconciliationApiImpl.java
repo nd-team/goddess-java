@@ -5,6 +5,8 @@ import com.bjike.goddess.checkfunds.bo.*;
 import com.bjike.goddess.checkfunds.dto.BankReconciliationDTO;
 import com.bjike.goddess.checkfunds.service.BankReconciliationSer;
 import com.bjike.goddess.checkfunds.to.BankReconciliationTO;
+import com.bjike.goddess.checkfunds.to.GuidePermissionTO;
+import com.bjike.goddess.checkfunds.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -99,5 +101,15 @@ public class BankReconciliationApiImpl implements BankReconciliationAPI {
     @Override
     public List<CreditorDifferBO> creditorDiffer(String id) throws SerException {
         return bankReconciliationSer.creditorDiffer(id);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return bankReconciliationSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return bankReconciliationSer.guidePermission(guidePermissionTO);
     }
 }

@@ -17,4 +17,9 @@
 	<!--配置暴露的公共接口-->
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.outcarfare.api.MoneyReadyAPI" id="moneyReadyApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.outcarfare.api.WaitPayAPI" id="waitPayApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.outcarfare.api.CusPermissionAPI" id="cusPermissionApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.outcarfare.api.CusPermissionOperateAPI" id="cusPermissionOperateApiImpl"/>
+
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl"/>
+
 </beans>

@@ -7,6 +7,7 @@ import com.bjike.goddess.staffpay.bo.PayRecordBO;
 import com.bjike.goddess.staffpay.dto.FirstPayRecordDTO;
 import com.bjike.goddess.staffpay.entity.FirstPayRecord;
 import com.bjike.goddess.staffpay.to.FirstPayRecordTO;
+import com.bjike.goddess.staffpay.to.GuidePermissionTO;
 import com.bjike.goddess.staffpay.to.WaitPayTO;
 
 import java.util.List;
@@ -21,7 +22,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface FirstPayRecordSer extends Ser<FirstPayRecord, FirstPayRecordDTO> {
-
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 第一次已付款记录列表总条数
      */

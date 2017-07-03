@@ -4,12 +4,15 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.equipmentprepared.api.WaitPayAPI;
 import com.bjike.goddess.equipmentprepared.bo.PayCountBO;
 import com.bjike.goddess.equipmentprepared.bo.WaitPayBO;
 import com.bjike.goddess.equipmentprepared.dto.WaitPayDTO;
+import com.bjike.goddess.equipmentprepared.to.GuidePermissionTO;
 import com.bjike.goddess.equipmentprepared.to.WaitPayTO;
 import com.bjike.goddess.equipmentprepared.vo.PayCountVO;
 import com.bjike.goddess.equipmentprepared.vo.WaitPayVO;
@@ -19,6 +22,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -32,9 +37,32 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("waitpay")
-public class WaitPayAct {
+public class WaitPayAct extends BaseFileAction {
     @Autowired
     private WaitPayAPI waitPayAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = waitPayAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 确认付款
@@ -43,7 +71,8 @@ public class WaitPayAct {
      * @throws ActException
      * @version v1
      */
-    @PatchMapping("v1/confirmPay")
+    @LoginAuth
+    @PutMapping("v1/confirmPay")
     public Result confirmPay(@Validated({EDIT.class}) WaitPayTO to, BindingResult result) throws ActException {
         try {
             waitPayAPI.confirmPay(to);
@@ -73,22 +102,24 @@ public class WaitPayAct {
     }
 
     /**
-     * 导出（按时间选择数据）
+     * 根据年份和月份导出excel
      *
-     * @param year    年份
-     * @param month   月份
-     * @param request 请求对象
-     * @return class WaitPayVO
+     * @param year  年份
+     * @param month 月份
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/export/{year}/{month}")
-    public Result export(@PathVariable Integer year, @PathVariable Integer month, HttpServletRequest request) throws ActException {
+    public Result export(@PathVariable Integer year, @PathVariable Integer month, HttpServletResponse response) throws ActException {
         try {
-            List<WaitPayBO> list = waitPayAPI.export(year, month);
-            return ActResult.initialize(BeanTransform.copyProperties(list, WaitPayVO.class, request));
+            String fileName = "设备购买资金准备与支付等待付款.xlsx";
+            super.writeOutFile(response, waitPayAPI.export(year, month), fileName);
+            return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
         }
     }
 
@@ -173,7 +204,7 @@ public class WaitPayAct {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/pays")
+        @GetMapping("v1/pays")
     public Result pays(WaitPayDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<WaitPayBO> list = waitPayAPI.pays(dto);

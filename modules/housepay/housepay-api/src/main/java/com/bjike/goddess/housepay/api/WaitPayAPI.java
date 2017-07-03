@@ -4,6 +4,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.housepay.bo.PayRecordBO;
 import com.bjike.goddess.housepay.bo.WaitPayBO;
 import com.bjike.goddess.housepay.dto.WaitPayDTO;
+import com.bjike.goddess.housepay.excel.SonPermissionObject;
+import com.bjike.goddess.housepay.to.GuidePermissionTO;
 import com.bjike.goddess.housepay.to.WaitPayTO;
 
 import java.util.List;
@@ -18,6 +20,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface WaitPayAPI {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 等待付款列表总条数
      */

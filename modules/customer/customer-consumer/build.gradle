@@ -11,21 +11,21 @@ apply plugin: 'org.springframework.boot'
 jar {
     String buildDir = project.buildDir
     manifest {
-        attributes (
+        attributes(
                 "Main-Class": "com.bjike.goddess.customer.Application",//main主函数加载入口
-                "Class-Path": new File(buildDir+'/libs/lib').list().collect { "lib/${it}" }.join(" ")
+                "Class-Path": new File(buildDir + '/libs/lib').list().collect { "lib/${it}" }.join(" ")
         )
     }
 
 }
 
-task copyJars(type:Copy) {
+task copyJars(type: Copy) {
     from configurations.runtime
     into new File('build/libs/lib') // 目标位置
 }
 compileJava.dependsOn copyJars
 
-def env = hasProperty("pro")?"pro":(hasProperty("dev")?"dev":null)
+def env = hasProperty("pro") ? "pro" : (hasProperty("dev") ? "dev" : null)
 sourceSets {
     main {
         resources {
@@ -35,12 +35,13 @@ sourceSets {
 }
 
 dependencies {
-compile(project(":common:common-consumer")){
-    exclude group: 'org.slf4j', module: 'slf4j-log4j12'
-}
+    compile(project(":common:common-consumer")) {
+        exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    }
 
-compile project(":modules:customer:customer-api")
+    compile project(":modules:customer:customer-api")
 
-compile("org.springframework.boot:spring-boot-starter-web")
+    compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
+    compile("org.springframework.boot:spring-boot-starter-web")
 }
 

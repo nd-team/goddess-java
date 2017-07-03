@@ -5,7 +5,10 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.voucher.bo.PartBO;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
+import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
 import com.bjike.goddess.voucher.entity.VoucherGenerate;
+import com.bjike.goddess.voucher.excel.SonPermissionObject;
+import com.bjike.goddess.voucher.to.GuidePermissionTO;
 import com.bjike.goddess.voucher.to.VoucherGenerateTO;
 
 import java.util.List;
@@ -21,6 +24,20 @@ import java.util.List;
  */
 public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerateDTO> {
 
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 根据id查找记账凭证
@@ -503,4 +520,32 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
      * @return 分页结果集
      */
     List<VoucherGenerateBO> projectAnalyze(Integer year, Integer month, String project) throws SerException;
+
+    /**
+     * 导出Excel
+     * @param dto
+     * @throws SerException
+     */
+    byte[] exportExcel(VoucherGenerateExportDTO dto ) throws SerException;
+
+    /**
+     * 导出Excel导入模板
+     * @throws SerException
+     */
+    byte[] templateExport(  ) throws SerException;
+
+
+    /**
+     * 导入
+     *
+     * @param voucherGenerateTO 记账凭证导入
+     * @return class VoucherGenerateBO
+     */
+    default VoucherGenerateBO importExcel(List<VoucherGenerateTO> voucherGenerateTO) throws SerException {
+        return null;
+    }
+
+
+
+
 }

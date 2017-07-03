@@ -25,8 +25,10 @@ public class CustomIntercept implements Interceptor {
 
     @Override
     public List<HIInfo> customerInterceptors() {
-
-        HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI), "/**");
+        String account ="bankrecords";
+        String password="123456";
+        String name="bankrecords";
+        HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI,account,password,name), "/**");
 
         /**
          * 暂时不加权限

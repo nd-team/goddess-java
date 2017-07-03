@@ -6,6 +6,7 @@ import com.bjike.goddess.accommodation.entity.RentalPrecept;
 import com.bjike.goddess.accommodation.enums.PassStatus;
 import com.bjike.goddess.accommodation.to.RentalPreceptTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
@@ -48,6 +49,7 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
 
     @Override
     public List<RentalPreceptBO> findListRentalPrecept(RentalPreceptDTO rentalPreceptDTO) throws SerException {
+        rentalPreceptDTO.getSorts().add("createTime=desc");
         List<RentalPrecept> rentalPrecepts = super.findByCis(rentalPreceptDTO, true);
         List<RentalPreceptBO> rentalPreceptBOS = BeanTransform.copyProperties(rentalPrecepts, RentalPreceptBO.class);
         return rentalPreceptBOS;
@@ -57,8 +59,9 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
     @Override
     public RentalPreceptBO insertPecept(RentalPreceptTO preceptTO) throws SerException {
 
-        RentalPrecept precept = BeanTransform.copyProperties(preceptTO, RentalPrecept.class, true);
+        RentalPrecept precept = BeanTransform.copyProperties(preceptTO, RentalPrecept.class, true,"projectName");
         precept.setCreateTime(LocalDateTime.now());
+        precept.setProjectName(StringUtils.join(preceptTO.getProjectName(),","));
         super.save(precept);
         return BeanTransform.copyProperties(precept, RentalPreceptBO.class);
     }
@@ -102,11 +105,28 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
         }else if("否".equals(preceptTO.getManagePass())){
             precept.setManagePass(String.valueOf(PassStatus.MANAGENOPASS));
         }
-        return  null;
+        super.update(precept);
+        RentalPreceptBO bo = BeanTransform.copyProperties(precept,RentalPreceptBO.class);
+        return bo;
     }
 
     @Override
     public RentalPreceptBO generalAudit(RentalPreceptTO preceptTO) throws SerException {
-        return null;
+        RentalPrecept rentalPrecept = super.findById(preceptTO.getId());
+        if(rentalPrecept.getPassStatus().getCode() == 0){
+            throw new SerException("总经办审核失败,项目经理还未审核");
+        }
+        UserBO userBO = userAPI.currentUser();
+        rentalPrecept.setGeneral(userBO.getUsername());
+        rentalPrecept.setGeneralOpinion(preceptTO.getGeneralOpinion());
+        rentalPrecept.setGeneralPass(preceptTO.getGeneralPass());
+        if("是".equals(preceptTO.getGeneralPass())){
+            rentalPrecept.setGeneralPass(String.valueOf(PassStatus.GENERALPASS));
+        }else if("否".equals(preceptTO.getGeneralPass())){
+            rentalPrecept.setGeneralPass(String.valueOf(PassStatus.GENERALNOPASS));
+        }
+        super.update(rentalPrecept);
+        RentalPreceptBO bo = BeanTransform.copyProperties(rentalPrecept,RentalPreceptBO.class);
+        return bo;
     }
 }

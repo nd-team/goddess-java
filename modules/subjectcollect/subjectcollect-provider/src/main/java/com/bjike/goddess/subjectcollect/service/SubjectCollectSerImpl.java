@@ -291,21 +291,30 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
     //chenjunhao
     public SubjectCollectBO getSum(SubjectCollectDTO dto) throws SerException {
         List<SubjectCollect> subjectCollects = super.findByCis(dto);
-        Double beginDebit = 0.00;  //借方
-        Double beginCredit = 0.00;    //贷方
-        Double endDebit = 0.00;
-        Double endCredit = 0.00;
+        double beginDebit = 0;  //借方
+        double beginCredit = 0;    //贷方
+        double endDebit = 0;
+        double endCredit = 0;
+        double currentDebit=0;
+        double currentCredit=0;
+        String projectName=null;
         for (SubjectCollect subjectCollect : subjectCollects) {
             beginDebit += subjectCollect.getBeginningDebitAmount();
             beginCredit += subjectCollect.getBeginningCreditAmount();
             endDebit += subjectCollect.getEndDebitAmount();
             endCredit += subjectCollect.getEndCreditAmount();
+            currentDebit+=subjectCollect.getIssueDebitAmount();
+            currentCredit+=subjectCollect.getIssueCreditAmount();
+            projectName=subjectCollect.getProjectName();
         }
         SubjectCollectBO bo = new SubjectCollectBO();
         bo.setBeginningDebitAmount(beginDebit);
         bo.setBeginningCreditAmount(beginCredit);
         bo.setEndDebitAmount(endDebit);
         bo.setEndCreditAmount(endCredit);
+        bo.setIssueDebitAmount(currentDebit);
+        bo.setIssueCreditAmount(currentCredit);
+        bo.setProjectName(projectName);
         return bo;
     }
 }

@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contractware.bo.CarRentalAgreementBO;
 import com.bjike.goddess.contractware.dto.CarRentalAgreementDTO;
 import com.bjike.goddess.contractware.to.CarRentalAgreementTO;
+import com.bjike.goddess.contractware.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -17,6 +18,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CarRentalAgreementAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 租车协议列表总条数
      */

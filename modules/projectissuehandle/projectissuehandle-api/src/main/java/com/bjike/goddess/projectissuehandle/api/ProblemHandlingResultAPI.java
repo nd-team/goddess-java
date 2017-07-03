@@ -105,5 +105,28 @@ public interface ProblemHandlingResultAPI {
      */
     byte[] exportExcel(ProblemHandlingResultDTO dto ) throws SerException;
 
-
+    /**
+     * 获取内部项目名称
+     *
+     * @return class String
+     */
+    default List<String> getName() throws SerException {
+        return null;
+    }
+    /**
+     * 获取工程类型
+     *
+     * @return class String
+     */
+    default List<String> getType() throws SerException {
+        return null;
+    }
+    /**
+     * 获取问题对象
+     *
+     * @return class String
+     */
+    default List<String> getObject() throws SerException {
+        return null;
+    }
 }

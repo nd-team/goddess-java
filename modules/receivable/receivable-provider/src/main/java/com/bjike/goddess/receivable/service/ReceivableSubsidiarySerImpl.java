@@ -4,11 +4,24 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.message.api.MessageAPI;
+import com.bjike.goddess.message.enums.MsgType;
+import com.bjike.goddess.message.enums.RangeType;
+import com.bjike.goddess.message.enums.SendType;
+import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.receivable.bo.*;
+import com.bjike.goddess.receivable.dto.ContractorDTO;
 import com.bjike.goddess.receivable.dto.ReceivableSubsidiaryDTO;
 import com.bjike.goddess.receivable.entity.Contractor;
 import com.bjike.goddess.receivable.entity.ReceivableSubsidiary;
 import com.bjike.goddess.receivable.enums.AuditStatus;
+import com.bjike.goddess.receivable.enums.CompareStatus;
+import com.bjike.goddess.receivable.enums.TimeStatus;
+import com.bjike.goddess.receivable.excel.ReceivableSubsidiaryExport;
+import com.bjike.goddess.receivable.excel.ReceivableSubsidiaryTemplateExport;
 import com.bjike.goddess.receivable.to.CollectCompareTO;
 import com.bjike.goddess.receivable.to.ProgressTO;
 import com.bjike.goddess.receivable.to.ReceivableSubsidiaryTO;
@@ -42,6 +55,8 @@ import java.util.stream.Collectors;
 public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiary, ReceivableSubsidiaryDTO> implements ReceivableSubsidiarySer {
     @Autowired
     private ContractorSer contractorSer;
+    @Autowired
+    private MessageAPI messageAPI;
 
 
     @Override
@@ -58,6 +73,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
 
     @Override
     public List<ReceivableSubsidiaryBO> findListReceivableSubsidiary(ReceivableSubsidiaryDTO receivableSubsidiaryDTO) throws SerException {
+        receivableSubsidiaryDTO.getSorts().add("createTime=desc");
         List<ReceivableSubsidiary> receivableSubsidiaries = super.findByCis(receivableSubsidiaryDTO, true);
         List<ReceivableSubsidiaryBO> bo = BeanTransform.copyProperties(receivableSubsidiaries, ReceivableSubsidiaryBO.class);
         for (int i = 0; i < receivableSubsidiaries.size(); i++) {
@@ -149,50 +165,23 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         receivableSubsidiary.setMoreMoney(moreNum * receivableSubsidiary.getTaskPrice());
         //receivableSubsidiary = count(receivableSubsidiary);
         super.update(receivableSubsidiary);
+        List<ReceivableSubsidiary> receivableSubsidiaries = new ArrayList<>();
+        for(ReceivableSubsidiary r:receivableSubsidiaries){
+            if(r.getArea().equals(receivableSubsidiaryTO.getArea())){
+
+            }
+            MessageTO to = new MessageTO();
+            to.setContent("您修改了...");
+            to.setTitle("发送项目问题受理和处理修改的东西");
+            to.setMsgType(MsgType.SYS);
+            to.setSendType(SendType.EMAIL);
+            to.setRangeType(RangeType.SPECIFIED);
+
+            messageAPI.send(to);
+        }
         return BeanTransform.copyProperties(receivableSubsidiary, ReceivableSubsidiaryBO.class);
     }
 
-
-
-    /**
-     * 计算方法
-     */
-    /*public ReceivableSubsidiary count(ReceivableSubsidiary receivableSubsidiary) throws SerException {
-        *//*Contractor contractor = receivableSubsidiary.getContractor();
-        if (null != contractor) {*//*
-        Contractor contractor = receivableSubsidiary.getContractor();
-        //合同规模金额(派工单价*合同规模数)
-        Double pactMoney = receivableSubsidiary.getTaskPrice() * receivableSubsidiary.getPactNum();
-        receivableSubsidiary.setPactMoney(pactMoney);
-        //中兴派工金额(派工单价*已派工量)
-        Double taskMoney = receivableSubsidiary.getTaskPrice() * receivableSubsidiary.getPactSize();
-        receivableSubsidiary.setTaskMoney(taskMoney);
-        //已完工金额(派工单价*已完工量)
-        receivableSubsidiary.setFinishMoney(receivableSubsidiary.getTaskPrice() * receivableSubsidiary.getFinishNum());
-        //未完工金额(派工单价*未完工量)
-        receivableSubsidiary.setUnfinishMoney(receivableSubsidiary.getTaskPrice() * receivableSubsidiary.getUnfinishNum());
-        //管理费(实际数量金额*承包商比例)
-        Double managementFee = contractor.getPercent() * receivableSubsidiary.getRealCountMoney();
-        receivableSubsidiary.setManagementFee(managementFee);
-        //到帐金额(实际数量金额-管理费)
-        Double accountMoney = receivableSubsidiary.getRealCountMoney() - managementFee;
-        receivableSubsidiary.setAccountMoney(accountMoney);
-        //税金(到帐金额*6.79%)
-        receivableSubsidiary.setTaxes(accountMoney * 0.0679);
-        //税后金额(到帐金额-税金)
-        Double afterTax = accountMoney - (accountMoney * 0.0679);
-        receivableSubsidiary.setAfterTax(afterTax);
-        //剩余结算量(已派工量-实际结算数量)
-        Double moreNum = receivableSubsidiary.getPactSize() - receivableSubsidiary.getRealCountNum();
-        receivableSubsidiary.setMoreNum(moreNum);
-        //剩余结算金额(剩余结算量*派工单价)
-        receivableSubsidiary.setMoreMoney(moreNum * receivableSubsidiary.getTaskPrice());
-        return receivableSubsidiary;
-        *//*} else {
-            throw new SerException(receivableSubsidiary.getContractor() + "承包商不存在，请在承包商列表添加,谢谢！");
-        }*//*
-    }
-*/
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeReceivableSubsidiary(String id) throws SerException {
@@ -355,37 +344,22 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
     }
 
     @Override
-    public String exportExcel(String area, String start, String end) throws SerException {
-        //todo:未做导出
-        return null;
-    }
-
-
-    @Override
-    public void input() throws SerException {
-        //todo:未做导入
-        return;
-
-    }
-
-
-    @Override
     public ReceivableSubsidiaryBO progress(ProgressTO to) throws SerException {
         ReceivableSubsidiary receivableSubsidiary = super.findById(to.getId());
-        String a = StringUtils.substring(to.getGroup(),0,1);
+        String a = StringUtils.substring(to.getGroup(), 0, 1);
         //StringUtils.substring("结算进度A","结算进度A".length()-1))
-        if(a.equals("A")){
+        if (a.equals("A")) {
             receivableSubsidiary.setProgressA(to.getProgress());
-        }else if (a.equals("B")){
+        } else if (a.equals("B")) {
             receivableSubsidiary.setProgressB(to.getProgress());
-        }else if (a.equals("C")){
+        } else if (a.equals("C")) {
             receivableSubsidiary.setProgressC(to.getProgress());
-        }else if (a.equals("D")){
+        } else if (a.equals("D")) {
             receivableSubsidiary.setProgressD(to.getProgress());
         }
 
         super.update(receivableSubsidiary);
-        return BeanTransform.copyProperties(receivableSubsidiary,ReceivableSubsidiaryBO.class);
+        return BeanTransform.copyProperties(receivableSubsidiary, ReceivableSubsidiaryBO.class);
     }
 
 
@@ -393,7 +367,6 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
     public List<String> getArea() throws SerException {
         String[] fields = new String[]{"area"};
         List<ReceivableSubsidiaryBO> receivableSubsidiaryBOS = super.findBySql("select distinct area from receivable_receivablesubsidiary group by area order by area asc ", ReceivableSubsidiaryBO.class, fields);
-
         List<String> areasList = receivableSubsidiaryBOS.stream().map(ReceivableSubsidiaryBO::getArea)
                 .filter(area -> (StringUtils.isNotBlank(area))).distinct().collect(Collectors.toList());
 
@@ -631,173 +604,192 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         List<CollectContractorDetailBO> collectContractorDetailBOS = super.findBySql(sql, CollectContractorDetailBO.class, fields);
         return collectContractorDetailBOS;
     }
+
     @Override
     public ReceivableSubsidiaryBO collectId(String id) throws SerException {
         ReceivableSubsidiary receivableSubsidiary = super.findById(id);
-        ReceivableSubsidiaryBO bo = BeanTransform.copyProperties(receivableSubsidiary,ReceivableSubsidiaryBO.class);
+        ReceivableSubsidiaryBO bo = BeanTransform.copyProperties(receivableSubsidiary, ReceivableSubsidiaryBO.class);
         ContractorBO cbo = new ContractorBO();
-        if(null != receivableSubsidiary.getContractor()){
+        if (null != receivableSubsidiary.getContractor()) {
             cbo = BeanTransform.copyProperties(receivableSubsidiary.getContractor(), ContractorBO.class);
         }
         bo.setContractorBO(cbo);
         return bo;
 
     }
+
     @Override
     public List<CollectCompareBO> collectCompare(CollectCompareTO to) throws SerException {
         ReceivableSubsidiaryDTO dto = new ReceivableSubsidiaryDTO();
         String startTime = to.getStartTime();
         String endTime = to.getEndTime();
-        if(StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)){
-            String [] condi = new String[]{startTime,endTime};
-            dto.getConditions().add(Restrict.eq("accountTime",condi));
+        List<ReceivableSubsidiary> receivableSubsidiaries = new ArrayList<>();
+        for (ReceivableSubsidiary receivableSubsidiary : receivableSubsidiaries) {
+            if (receivableSubsidiary.getAccountTime().equals(TimeStatus.MONTH)) {
+                startTime = DateUtil.getStartMonth().toString();
+                endTime = DateUtil.getEndMonth().toString();
+            } else if (receivableSubsidiary.getAccountTime().equals(TimeStatus.QUARTER)) {
+                startTime = DateUtil.getStartMonth().toString();
+                endTime = DateUtil.getEndMonth().toString();
+            } else if (receivableSubsidiary.getAccountTime().equals(TimeStatus.YEAR)) {
+                startTime = DateUtil.getStartYear().toString();
+                endTime = DateUtil.getEndYear().toString();
+            }
+        }
+
+
+        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+            dto.getConditions().add(Restrict.between("accountTime", new String[]{startTime, endTime}));
         }
         List<ReceivableSubsidiary> list = super.findByCis(dto);
-        if(null != to.getArea()){
-            dto.getConditions().add(Restrict.eq("area",to.getArea()));
-        }
-        return null;
+
+        return collectCount(list, to.getCompareStatus());
+
     }
-//    @Override
-//    public List<ReceivableSubsidiaryBO> collectCompare(ReceivableSubsidiaryTO receivableSubsidiaryTO) throws SerException {
-//        try {
-//            if (StringUtils.isBlank(receivableSubsidiaryTO.getStartTime()) && StringUtils.isBlank(receivableSubsidiaryTO.getEndTime())) {
-//                throw new SerException("对比汇总日期不能为空");
-//            }
-//            ReceivableSubsidiaryDTO dto = new ReceivableSubsidiaryDTO();
-//            String accountTime = receivableSubsidiaryTO.getAccountTime();
-//            dto.getConditions().add(Restrict.eq("accountDate", accountTime));
-//            List<ReceivableSubsidiary> list = super.findByCis(dto);
-//            Double accountAll = list.stream().mapToDouble(ReceivableSubsidiary::getAccountMoney).sum();
-//
-//            List<ReceivableSubsidiaryBO> pageList = new ArrayList<>();
-//            if (receivableSubsidiaryTO.equals("area")) {
-//                List<String> receivableString = this.getAreas();
-//                for (String rs : receivableString) {
-//                    List<ReceivableSubsidiary> receivableSubsidiarie = new ArrayList<ReceivableSubsidiary>();
-//                    for (ReceivableSubsidiary all : list) {
-//                        if (all.getArea().equals(rs)) {
-//                            receivableSubsidiarie.add(all);
-//                        }
-//                    }
-//                    Double taskPrice = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaskPrice).sum();//派工单价
-//                    Double pactSize = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum();//派工数量
-//                    Double managementFee = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getManagementFee).sum();//管理费
-//                    Double accountMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getAccountMoney).sum();//到账金额
-//                    Double taxes = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaxes).sum();//税金
-//                    Double taskMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaskMoney).sum();//税后金额
-//                    Double minusMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum()
-//                            - receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum();//差额
-//                    Double increase = 0.0;//增长率
-//                    if (accountMoney != 0) {
-//                        increase = minusMoney / accountMoney;
-//                    }
-//                    Double percentageTemp = 0.0;//百分比转换
-//                    Double percentage = 0.0;//百分比
-//                    String percentageStr = "0.00%";//百分比
-//                    if (accountMoney != 0) {
-//                        percentageTemp = accountMoney / accountAll * 100;
-//                        percentage = percentageTemp;
-//                        DecimalFormat df = new DecimalFormat("0.00");
-//                        percentageStr = df.format(percentageTemp) + "%";
-//                    }
-//                    ReceivableSubsidiaryBO receivableSubsidiaryBO = new ReceivableSubsidiaryBO(rs, taskPrice, pactSize, managementFee, accountMoney, taxes, taskMoney, minusMoney, increase, percentageStr, percentage);
-//                    pageList.add(receivableSubsidiaryBO);
-//                }
-//            } else if (receivableSubsidiaryTO.equals("innerName")) {
-//                List<String> receivableString = this.getInnerNames();
-//                for (String rs : receivableString) {
-//                    List<ReceivableSubsidiary> receivableSubsidiarie = new ArrayList<ReceivableSubsidiary>();
-//                    for (ReceivableSubsidiary all : list) {
-//                        if (all.getInnerName().equals(rs)) {
-//                            receivableSubsidiarie.add(all);
-//                        }
-//                    }
-//                    Double taskPrice = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaskPrice).sum();//派工单价
-//                    Double pactSize = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum();//派工数量
-//                    Double managementFee = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getManagementFee).sum();//管理费
-//                    Double accountMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getAccountMoney).sum();//到账金额
-//                    Double taxes = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaxes).sum();//税金
-//                    Double taskMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaskMoney).sum();//税后金额
-//                    Double minusMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum()
-//                            - receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum();//差额
-//                    Double increase = 0.0;//增长率
-//                    if (accountMoney != 0) {
-//                        increase = minusMoney / accountMoney;
-//                    }
-//                    Double percentageTemp = 0.0;//百分比转换
-//                    Double percentage = 0.0;//百分比
-//                    String percentageStr = "0.00%";//百分比
-//                    if (accountMoney != 0) {
-//                        percentageTemp = accountMoney / accountAll * 100;
-//                        percentage = percentageTemp;
-//                        DecimalFormat df = new DecimalFormat("0.00");
-//                        percentageStr = df.format(percentageTemp) + "%";
-//                    }
-//                    ReceivableSubsidiaryBO receivableSubsidiaryBO = new ReceivableSubsidiaryBO(rs, taskPrice, pactSize, managementFee, accountMoney, taxes, taskMoney, minusMoney, increase, percentageStr, percentage);
-//                    pageList.add(receivableSubsidiaryBO);
-//                }
-//
-//            } else if (receivableSubsidiaryTO.equals("contractor")) {
-//                List<String> receivableString = this.getContractors();
-//                for (String rs : receivableString) {
-//                    List<ReceivableSubsidiary> receivableSubsidiarie = new ArrayList<ReceivableSubsidiary>();
-//                    for (ReceivableSubsidiary all : list) {
-//                        if (all.getContractor().equals(rs)) {
-//                            receivableSubsidiarie.add(all);
-//                        }
-//                    }
-//                    Double taskPrice = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaskPrice).sum();//派工单价
-//                    Double pactSize = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum();//派工数量
-//                    Double managementFee = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getManagementFee).sum();//管理费
-//                    Double accountMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getAccountMoney).sum();//到账金额
-//                    Double taxes = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaxes).sum();//税金
-//                    Double taskMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getTaskMoney).sum();//税后金额
-//                    Double minusMoney = receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum()
-//                            - receivableSubsidiarie.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum();//差额
-//                    Double increase = 0.0;//增长率
-//                    if (accountMoney != 0) {
-//                        increase = minusMoney / accountMoney;
-//                    }
-//                    Double percentageTemp = 0.0;//百分比转换
-//                    Double percentage = 0.0;//百分比
-//                    String percentageStr = "0.00%";//百分比
-//                    if (accountMoney != 0) {
-//                        percentageTemp = accountMoney / accountAll * 100;
-//                        percentage = percentageTemp;
-//                        DecimalFormat df = new DecimalFormat("0.00");
-//                        percentageStr = df.format(percentageTemp) + "%";
-//                    }
-//                    ReceivableSubsidiaryBO receivableSubsidiaryBO = new ReceivableSubsidiaryBO(rs, taskPrice, pactSize, managementFee, accountMoney, taxes, taskMoney, minusMoney, increase, percentageStr, percentage);
-//                    pageList.add(receivableSubsidiaryBO);
-//                }
-//            }
-//            //合计
-//            Double taskPrice = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getTaskPrice).sum();//派工单价
-//            Double pactSize = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getPactSize).sum();//派工数量
-//            Double managementFee = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getManagementFee).sum();//管理费
-//            Double accountMoney = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getAccountMoney).sum();//到账金额
-//            Double taxes = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getTaxes).sum();//税金
-//            Double taskMoney = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getTaskMoney).sum();//税后金额
-//            Double minusMoney = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getMinusMoney).sum();//差额
-//            Double increase = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getIncrease).sum();//增长率
-//            Double percentageDouble = pageList.stream().mapToDouble(ReceivableSubsidiaryBO::getPercentage).sum();//百分比
-//            DecimalFormat df = new DecimalFormat("0.00");
-//            String percentageStr = df.format(percentageDouble) + "%";
-//            Double percentage = 0.0;
-//            ReceivableSubsidiaryBO receivableSubsidiaryBO = new ReceivableSubsidiaryBO("合计", taskPrice, pactSize, managementFee, accountMoney, taxes, taskMoney, minusMoney, increase, percentageStr, percentage);
-//            pageList.add(receivableSubsidiaryBO);
-//            return pageList;
-//        } catch (SerException e) {
-//            throw new SerException(e.getMessage());
-//        }
-//    }
+
+    private List<CollectCompareBO> collectCount(List<ReceivableSubsidiary> list, CompareStatus status) throws SerException {
+        List<CollectCompareBO> collectCompareBOS = new ArrayList<>();
+
+        List<String> conis = null;
+        if (status.equals(CompareStatus.AREA)) {
+            conis = this.getArea();
+        } else if (status.equals(CompareStatus.PROJECT)) {
+            conis = this.getInnerName();
+        } else if (status.equals(CompareStatus.UNIT)) {
+            conis = this.getContractor();
+        }
+        if (null != conis) {
+            for (String con : conis) {
+                List<ReceivableSubsidiary> receivableSubsidiaries = new ArrayList<>();
+                for (ReceivableSubsidiary receivableSubsidiary : list) {
+                    if (receivableSubsidiary.getArea().equals(con) || receivableSubsidiary.getInnerName().equals(con)
+                            || receivableSubsidiary.getContractor().getName().equals(con)) {
+                        receivableSubsidiaries.add(receivableSubsidiary);
+                    }
+
+                }
+                //派工单价
+                Double taskPrice = receivableSubsidiaries.stream().mapToDouble(ReceivableSubsidiary::getTaskPrice).sum();
+                //派工数量
+                Double pactSize = receivableSubsidiaries.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum();
+                //到账金额
+                Double accountMoney = receivableSubsidiaries.stream().mapToDouble(ReceivableSubsidiary::getAccountMoney).sum();
+                //管理费
+                Double managementFee = receivableSubsidiaries.stream().mapToDouble(ReceivableSubsidiary::getManagementFee).sum();
+                //税金
+                Double taxes = receivableSubsidiaries.stream().mapToDouble(ReceivableSubsidiary::getTaxes).sum();
+                //税后金额
+                Double afterTax = receivableSubsidiaries.stream().mapToDouble(ReceivableSubsidiary::getAfterTax).sum();
+
+                CollectCompareBO bo = new CollectCompareBO(con, status, taskPrice, pactSize, accountMoney, managementFee, taxes, afterTax);
+                collectCompareBOS.add(bo);
+            }
+
+        }
+        return collectCompareBOS;
+
+    }
 
     @Override
-    public ReceivableSubsidiaryBO sendReceivableSubsidiary(ReceivableSubsidiaryTO receivableSubsidiaryTO) throws SerException {
-        //todo:未做发送邮件
+    public ReceivableSubsidiaryBO importExcel(List<ReceivableSubsidiaryTO> receivableSubsidiaryTOS) throws SerException {
+
+        List<ReceivableSubsidiary> receivableSubsidiaries = new ArrayList<>(receivableSubsidiaryTOS.size());
+        for (ReceivableSubsidiaryTO to : receivableSubsidiaryTOS) {
+            ReceivableSubsidiary receivableSubsidiary = BeanTransform.copyProperties(to, ReceivableSubsidiary.class, true);
+            //ContractorDTO dto = new ContractorDTO();
+            //dto.getConditions().add(Restrict.eq("name", to.getContractorName()));
+            //receivableSubsidiary.setContractor(contractorSer.findOne(dto));
+            receivableSubsidiaries.add(receivableSubsidiary);
+        }
+        super.save(receivableSubsidiaries);
+
+        ReceivableSubsidiaryBO bo = BeanTransform.copyProperties(new ReceivableSubsidiary(), ReceivableSubsidiaryBO.class);
+        return bo;
+    }
+
+    @Override
+    public byte[] exportExcel(ReceivableSubsidiaryDTO dto) throws SerException {
+        if (null != dto.getArea()) {
+            dto.getConditions().add(Restrict.in("area", dto.getArea()));
+        }
+        String startTime = dto.getStartTime();
+        String endTime = dto.getEndTime();
+        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+            String[] condi = new String[]{startTime, endTime};
+            dto.getConditions().add(Restrict.between("accountTime", condi));
+        }
+        List<ReceivableSubsidiary> list = super.findByCis(dto);
+        List<ReceivableSubsidiaryExport> exports = new ArrayList<>();
+        list.stream().forEach(str -> {
+            ReceivableSubsidiaryExport export = BeanTransform.copyProperties(str, ReceivableSubsidiaryExport.class, "contractor", "pay", "frame", "pact", "flow");
+            if (null != str.getContractor().getName()) {
+                export.setContractor(str.getContractor().getName());
+            }
+            if (str.getPay().equals(true)) {
+                export.setPay("是");
+            } else {
+                export.setPay("否");
+            }
+            if (str.getFrame().equals(true)) {
+                export.setFrame("是");
+            } else {
+                export.setFrame("否");
+            }
+            if (str.getPact().equals(true)) {
+                export.setPact("是");
+            } else {
+                export.setPact("否");
+            }
+            if (str.getFlow().equals(true)) {
+                export.setFlow("是");
+            } else {
+                export.setFlow("否");
+            }
+            exports.add(export);
+        });
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(exports, excel);
+        return bytes;
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<ReceivableSubsidiaryTemplateExport> templateExports = new ArrayList<>();
+        ReceivableSubsidiaryTemplateExport export = new ReceivableSubsidiaryTemplateExport();
+        //export.setContractor("");
+        export.setArea("test");
+        export.setInnerName("test");
+        export.setTaskPrice(10.0d);
+        export.setPactNum(10.0d);
+        export.setPactSize(10.0d);
+        export.setFinishNum(10.0d);
+        export.setUnfinishNum(10.0d);
+        export.setPayTax(10.0d);
+        export.setUndeal(10.0d);
+        export.setPenalty(10.0d);
+        export.setRealCountNum(10.0d);
+        export.setRealCountMoney(10.0d);
+        export.setPay("test");
+        export.setFrame("test");
+        export.setPact("test");
+        export.setFlow("test");
+        templateExports.add(export);
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(templateExports, exce);
+        return bytes;
+    }
+    @Override
+    public ReceivableSubsidiaryBO updateSend(ReceivableSubsidiaryTO to) throws SerException {
+//        Contractor contractor = contractorSer.findById(to.getContractorId());
+//        ReceivableSubsidiary receivableSubsidiary = super.findById(to.getId());
+//        BeanUtils.copyProperties(to, receivableSubsidiary);
+//        //receivableSubsidiary.setContractor(contractor);
+//        if(receivableSubsidiary.getArea().equals(to.getArea())){
+//            messageAPI.send();
+//        }
         return null;
     }
+
 
 }
 

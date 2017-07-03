@@ -1,7 +1,7 @@
 package com.bjike.goddess.reportmanagement.enums;
 
 /**
- * 对应公式添加科目的形式
+ * 公式方向
  */
 public enum Form {
 

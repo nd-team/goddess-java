@@ -15,7 +15,7 @@ public class SubjectCollectDTO extends BaseDTO {
     /**
      * 地区
      */
-    private String []area;
+    private String[] area;
 
     public String[] getArea() {
         return area;

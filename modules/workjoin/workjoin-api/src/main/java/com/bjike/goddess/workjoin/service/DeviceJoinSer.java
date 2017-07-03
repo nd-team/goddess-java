@@ -82,20 +82,4 @@ public interface DeviceJoinSer extends Ser<DeviceJoin, DeviceJoinDTO> {
 
     }
 
-    /**
-     * 上传
-     */
-    default void upload() throws SerException {
-        return;
-
-    }
-
-    /**
-     * 下载
-     */
-    default void download() throws SerException {
-        return;
-
-    }
-
 }

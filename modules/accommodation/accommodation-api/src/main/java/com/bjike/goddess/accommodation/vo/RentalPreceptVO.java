@@ -1,8 +1,6 @@
 package com.bjike.goddess.accommodation.vo;
 
 
-import java.time.LocalDate;
-
 /**
  * @Author: [xiazhili]
  * @Date: [2017-3-9 10:16]
@@ -58,11 +56,11 @@ public class RentalPreceptVO {
     /**
      * 完成租房开始时间
      */
-    private LocalDate completeStartTime;
+    private String completeStartTime;
     /**
      * 完成租房结束时间
      */
-    private LocalDate completeEndTime;
+    private String completeEndTime;
     /**
      * 资金意见
      */
@@ -201,19 +199,19 @@ public class RentalPreceptVO {
         this.deadline = deadline;
     }
 
-    public LocalDate getCompleteStartTime() {
+    public String getCompleteStartTime() {
         return completeStartTime;
     }
 
-    public void setCompleteStartTime(LocalDate completeStartTime) {
+    public void setCompleteStartTime(String completeStartTime) {
         this.completeStartTime = completeStartTime;
     }
 
-    public LocalDate getCompleteEndTime() {
+    public String getCompleteEndTime() {
         return completeEndTime;
     }
 
-    public void setCompleteEndTime(LocalDate completeEndTime) {
+    public void setCompleteEndTime(String completeEndTime) {
         this.completeEndTime = completeEndTime;
     }
 

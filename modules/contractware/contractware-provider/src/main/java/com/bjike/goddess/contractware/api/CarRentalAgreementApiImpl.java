@@ -7,6 +7,7 @@ import com.bjike.goddess.contractware.dto.CarRentalAgreementDTO;
 import com.bjike.goddess.contractware.entity.CarRentalAgreement;
 import com.bjike.goddess.contractware.service.CarRentalAgreementSer;
 import com.bjike.goddess.contractware.to.CarRentalAgreementTO;
+import com.bjike.goddess.contractware.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,15 @@ public class CarRentalAgreementApiImpl implements CarRentalAgreementAPI {
 
     @Autowired
     private CarRentalAgreementSer carRentalAgreementSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return carRentalAgreementSer.sonPermission();
+    }
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return carRentalAgreementSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long countCarRentalAgreement(CarRentalAgreementDTO carRentalAgreementDTO) throws SerException {
         return carRentalAgreementSer.countCarRentalAgreement(carRentalAgreementDTO);

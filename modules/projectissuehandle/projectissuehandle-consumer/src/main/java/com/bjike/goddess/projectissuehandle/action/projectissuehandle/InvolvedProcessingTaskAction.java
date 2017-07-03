@@ -289,7 +289,8 @@ public class InvolvedProcessingTaskAction extends BaseFileAction {
      *
      * @version v1
      */
-    @PostMapping("v1/exportExcel")
+//    @LoginAuth
+    @GetMapping("v1/exportExcel")
     public Result exportExcel(InvolvedProcessingTaskDTO dto, HttpServletResponse response) throws ActException {
         try {
             String fileName = "参与处理人员的任务分配.xlsx";
@@ -299,6 +300,36 @@ public class InvolvedProcessingTaskAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         } catch (IOException e1) {
             throw new ActException(e1.getMessage());
+        }
+    }
+    /**
+     * 获取内部项目名称
+     *
+     * @des 获取内部项目名称集合
+     * @version v1
+     */
+    @GetMapping("v1/name")
+    public Result name() throws ActException {
+        try {
+            List<String> areaList = involvedProcessingTaskAPI.getName();
+            return ActResult.initialize(areaList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取处理人员
+     *
+     * @des 获取处理人员集合
+     * @version v1
+     */
+    @GetMapping("v1/handler")
+    public Result handler() throws ActException {
+        try {
+            List<String> areaList = involvedProcessingTaskAPI.getHandler();
+            return ActResult.initialize(areaList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
         }
     }
 

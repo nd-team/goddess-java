@@ -39,7 +39,7 @@ dependencies {
     }
     compile project(":modules:accommodation:accommodation-api")
     compile project(":common:common-utils")
-
+    compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
     compile("org.springframework.boot:spring-boot-starter-web")
 }
 

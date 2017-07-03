@@ -1,5 +1,6 @@
 package com.bjike.goddess.accommodation.entity;
 
+import com.bjike.goddess.accommodation.enums.PassStatus;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
 import javax.persistence.Column;
@@ -138,6 +139,11 @@ public class RentalPrecept extends BaseEntity {
      */
     @Column(columnDefinition = "VARCHAR(255) COMMENT '总经办是否通过(是/否)'")
     private String generalPass;
+    /**
+     * 状态
+     */
+    @Column(name = "passStatus",  columnDefinition = "INT(2)   COMMENT '状态'")
+    private PassStatus passStatus;
     /**
      * 备注
      */
@@ -334,6 +340,14 @@ public class RentalPrecept extends BaseEntity {
 
     public void setGeneralPass(String generalPass) {
         this.generalPass = generalPass;
+    }
+
+    public PassStatus getPassStatus() {
+        return passStatus;
+    }
+
+    public void setPassStatus(PassStatus passStatus) {
+        this.passStatus = passStatus;
     }
 
     public String getRemark() {

@@ -3,6 +3,7 @@ package com.bjike.goddess.checkfunds.api;
 import com.bjike.goddess.checkfunds.bo.RemainAdjustBO;
 import com.bjike.goddess.checkfunds.dto.RemainAdjustDTO;
 import com.bjike.goddess.checkfunds.service.RemainAdjustSer;
+import com.bjike.goddess.checkfunds.to.GuidePermissionTO;
 import com.bjike.goddess.checkfunds.to.RemainAdjustTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,16 @@ public class RemainAdjustApiImpl implements RemainAdjustAPI {
     @Override
     public Long countNum(RemainAdjustDTO dto) throws SerException {
         return remainAdjustSer.countNum(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return remainAdjustSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return remainAdjustSer.guidePermission(guidePermissionTO);
     }
 }
 

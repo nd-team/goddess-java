@@ -29,8 +29,12 @@ public class CustomIntercept implements Interceptor {
 
     @Override
     public List<HIInfo> customerInterceptors() {
+        String account="materialreceive";
+        String password="123456";
+        String name="materialreceive";
+
         HIInfo loginInfo = new HIInfo(new LoginIntercept(userAPI), "/**");
-        HIInfo storage = new HIInfo(new StorageIntercept(storageUserAPI), "/**");
+        HIInfo storage = new HIInfo(new StorageIntercept(storageUserAPI,account,password,name), "/**");
 
         return Arrays.asList(loginInfo, storage);
     }

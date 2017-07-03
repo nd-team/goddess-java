@@ -2,7 +2,6 @@ package com.bjike.goddess.bidding.service;
 
 import com.bjike.goddess.bidding.bo.BidOpeningCollectBO;
 import com.bjike.goddess.bidding.bo.BidOpeningInfoBO;
-import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.dto.BidOpeningInfoDTO;
 import com.bjike.goddess.bidding.entity.BidOpeningInfo;
 import com.bjike.goddess.bidding.enums.GuideAddrStatus;
@@ -44,6 +43,7 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private UserAPI userAPI;
+
     /**
      * 核对查看权限（部门级别）
      */
@@ -79,18 +79,19 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
         }
         RpcTransmit.transmitUserToken(userToken);
     }
+
     /**
      * 核对查看权限（部门级别）
      */
-    private Boolean guideSeeIdentity() throws SerException{
+    private Boolean guideSeeIdentity() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser( );
-        RpcTransmit.transmitUserToken( userToken );
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        if( !"admin".equals( userName.toLowerCase())){
+        if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.getCusPermission("1");
-        }else{
+        } else {
             flag = true;
         }
         return flag;
@@ -99,15 +100,15 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
     /**
      * 核对添加修改删除审核权限（岗位级别）
      */
-    private Boolean guideAddIdentity() throws SerException{
+    private Boolean guideAddIdentity() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser( );
-        RpcTransmit.transmitUserToken( userToken );
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        if( !"admin".equals( userName.toLowerCase())){
+        if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.busCusPermission("2");
-        }else{
+        } else {
             flag = true;
         }
         return flag;
@@ -117,11 +118,11 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
     public Boolean sonPermission() throws SerException {
         String userToken = RpcTransmit.getUserToken();
         Boolean flagSee = guideSeeIdentity();
-        RpcTransmit.transmitUserToken( userToken );
+        RpcTransmit.transmitUserToken(userToken);
         Boolean flagAdd = guideAddIdentity();
-        if( flagSee || flagAdd ){
+        if (flagSee || flagAdd) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -182,6 +183,7 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
+
     /**
      * 核对时间格式(年月日)
      */
@@ -211,11 +213,8 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
 
     @Override
     public List<BidOpeningInfoBO> findListBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
-
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-        if (!permission) {
-            throw new SerException("您的帐号没有权限");
-        }
+        checkSeeIdentity();
+        bidOpeningInfoDTO.getSorts().add("createTime=desc");
         List<BidOpeningInfo> bidOpeningInfos = super.findByCis(bidOpeningInfoDTO, true);
         List<BidOpeningInfoBO> bidOpeningInfoBOS = BeanTransform.copyProperties(bidOpeningInfos, BidOpeningInfoBO.class);
         return bidOpeningInfoBOS;
@@ -224,10 +223,7 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BidOpeningInfoBO insertBidOpeningInfo(BidOpeningInfoTO bidOpeningInfoTO) throws SerException {
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-        if (!permission) {
-            throw new SerException("您不是商务人员，没有权限");
-        }
+        checkAddIdentity();
         checkDate(bidOpeningInfoTO);
         BidOpeningInfo bidOpeningInfo = BeanTransform.copyProperties(bidOpeningInfoTO, BidOpeningInfo.class, true);
         bidOpeningInfo.setModifyTime(LocalDateTime.now());
@@ -238,10 +234,7 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BidOpeningInfoBO editBidOpeningInfo(BidOpeningInfoTO bidOpeningInfoTO) throws SerException {
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-        if (!permission) {
-            throw new SerException("您不是商务人员，没有权限");
-        }
+        checkAddIdentity();
         if (StringUtils.isBlank(bidOpeningInfoTO.getId())) {
             throw new SerException("id不能为空");
         }
@@ -256,10 +249,7 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeBidOpeningInfo(String id) throws SerException {
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-        if (!permission) {
-            throw new SerException("您不是商务人员，没有权限");
-        }
+       checkAddIdentity();
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
@@ -321,12 +311,12 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
         }
         List<BidOpeningInfo> list = super.findByCis(dto);
         List<BidOpeningInfoExport> exports = new ArrayList<>();
-        list.stream().forEach(str->{
-            BidOpeningInfoExport export = BeanTransform.copyProperties(str,BidOpeningInfoExport.class);
+        list.stream().forEach(str -> {
+            BidOpeningInfoExport export = BeanTransform.copyProperties(str, BidOpeningInfoExport.class);
             exports.add(export);
         });
-        Excel excel = new Excel(0,2);
-        byte [] bytes = ExcelUtil.clazzToExcel(exports,excel);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(exports, excel);
         return bytes;
     }
 
