@@ -39,7 +39,9 @@ public interface MultipleProjectSingleUIAPI {
      * @return class MultipleProjectSingleUIBO
      * @throws SerException
      */
-    MultipleProjectSingleUIBO findById(String id) throws SerException;
+    default MultipleProjectSingleUIBO getOne(String id) throws SerException{
+        return null;
+    }
 
     /**
      * 计算总条数
@@ -81,5 +83,6 @@ public interface MultipleProjectSingleUIAPI {
      * @throws SerException
      */
     void update(MultipleProjectSingleUITO to) throws SerException;
+
 
 }

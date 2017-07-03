@@ -55,9 +55,8 @@ public class ProjectOtherDemandApiImpl implements ProjectOtherDemandAPI {
         return projectOtherDemandSer.count(projectOtherDemandDTO);
     }
 
-    public ProjectOtherDemandBO findById(String id) throws SerException {
-        ProjectOtherDemand projectOtherDemand = projectOtherDemandSer.findById(id);
-        return BeanTransform.copyProperties(projectOtherDemand, ProjectOtherDemandBO.class);
+    public ProjectOtherDemandBO getOne(String id) throws SerException {
+        return projectOtherDemandSer.getOne(id);
     }
 
     public List<SonPermissionObject> sonPermission() throws SerException {
@@ -66,10 +65,6 @@ public class ProjectOtherDemandApiImpl implements ProjectOtherDemandAPI {
 
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return projectOtherDemandSer.guidePermission(guidePermissionTO);
-    }
-
-    public void emailSend() throws SerException {
-        projectOtherDemandSer.emailSend();
     }
 
 }

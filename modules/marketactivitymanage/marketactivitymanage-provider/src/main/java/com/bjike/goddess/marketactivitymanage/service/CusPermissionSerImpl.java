@@ -294,7 +294,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
         return BeanTransform.copyProperties(temp, CusPermissionBO.class);
     }
-
+    //模块
     @Override
     public Boolean getCusPermission(String idFlag) throws SerException {
         Boolean flag = false;
@@ -332,23 +332,21 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         //checkAsUserPosition
         //checkAsUserArrangement
         //checkAsUserModule
-        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
-        Boolean arrangementFlag = positionDetailUserAPI.checkAsUserArrangement(userId, operateIds);
+        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);//岗位
+        Boolean arrangementFlag = positionDetailUserAPI.checkAsUserArrangement(userId, operateIds);//层次
         Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId, operateIds);
-        Boolean depart = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
 
 
         //TODO 部门
-        if (positionFlag || arrangementFlag || moduleFlag || depart) {
+        if ( moduleFlag) {
             flag = true;
         } else {
             flag = false;
         }
-
-
         return flag;
     }
 
+    //部门
     @Override
     public Boolean busCusPermission(String idFlag) throws SerException {
         String userToken = RpcTransmit.getUserToken();
@@ -385,16 +383,68 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
 
         //TODO 部门id 商务部
-//        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId,operateIds);
-        Boolean moduleFlag = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
 
-        if (moduleFlag) {
+        Boolean departmentFlag = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
+
+        if (departmentFlag) {
             flag = true;
         } else {
             flag = false;
         }
         RpcTransmit.transmitUserToken(userToken);
         String aa = RpcTransmit.getUserToken();
+        return flag;
+    }
+
+    //层次
+    @Override
+    public Boolean arrCusPermission(String idFlag) throws SerException {
+        Boolean flag = false;
+        //但前用户
+        UserBO userBO = userAPI.currentUser();
+        String userId = userBO.getId();
+        if (StringUtils.isBlank(idFlag)) {
+            throw new SerException("idFlag不能为空");
+        }
+        CusPermissionDTO dto = new CusPermissionDTO();
+        dto.getConditions().add(Restrict.eq("idFlag", idFlag));
+        CusPermission cusPermission = super.findOne(dto);
+
+        //先查询获操作对象
+        List<String> idList = new ArrayList<>();
+        CusPermissionOperateDTO cpoDTO = new CusPermissionOperateDTO();
+        cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", cusPermission.getId()));
+        List<CusPermissionOperate> operateList = cusPermissionOperateSer.findByCis(cpoDTO);
+        if (operateList != null && operateList.size() > 0) {
+            operateList.stream().forEach(op -> {
+                idList.add(op.getOperator());
+            });
+        }
+
+
+        String[] operateIds = null;
+        if (null != idList && idList.size() > 0) {
+            operateIds = new String[idList.size()];
+            for (int i = 0; i < idList.size(); i++) {
+                operateIds[i] = idList.get(i);
+            }
+
+        }
+
+        //checkAsUserPosition
+        //checkAsUserArrangement
+        //checkAsUserModule
+//        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);//岗位
+        Boolean arrangementFlag = positionDetailUserAPI.checkAsUserArrangement(userId, operateIds);//层次
+//        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId, operateIds);
+
+
+        //TODO 部门
+        if ( arrangementFlag) {
+            flag = true;
+        } else {
+            flag = false;
+        }
         return flag;
     }
 }

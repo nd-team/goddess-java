@@ -3,6 +3,7 @@ package com.bjike.goddess.managefee.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.managefee.bo.ManageFeeBO;
 import com.bjike.goddess.managefee.dto.ManageFeeDTO;
+import com.bjike.goddess.managefee.to.GuidePermissionTO;
 import com.bjike.goddess.managefee.to.ManageFeeTO;
 
 import java.util.List;
@@ -18,6 +19,20 @@ import java.util.List;
  */
 public interface ManageFeeAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 管理费列表总条数
      */

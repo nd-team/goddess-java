@@ -3,13 +3,20 @@ package com.bjike.goddess.socialfee.action.socialfee;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.socialfee.to.GuidePermissionTO;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.socialfee.api.SocialFeeAPI;
 import com.bjike.goddess.socialfee.bo.SocialFeeBO;
 import com.bjike.goddess.socialfee.bo.VoucherDataBO;
 import com.bjike.goddess.socialfee.dto.SocialFeeDTO;
+import com.bjike.goddess.socialfee.excle.SocialFeeExcel;
+import com.bjike.goddess.socialfee.excle.SonPermissionObject;
 import com.bjike.goddess.socialfee.to.SocialFeeTO;
 import com.bjike.goddess.socialfee.to.VoucherDataTO;
 import com.bjike.goddess.socialfee.vo.SocialFeeVO;
@@ -19,6 +26,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,11 +44,83 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("socialfee")
-public class SocialFeeAction {
+public class SocialFeeAction extends BaseFileAction {
 
     @Autowired
     private SocialFeeAPI socialFeeAPI;
 
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result setButtonPermission() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = socialFeeAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = socialFeeAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 社会缴费列表总条数
      *
@@ -202,18 +286,30 @@ public class SocialFeeAction {
     }
 
     /**
-     * 导入
+     * 导入Excel
      *
-     * @des 导入
+     * @param request 注入HttpServletRequest对象
      * @version v1
      */
-    @LoginAuth
+    //@LoginAuth
     @PostMapping("v1/importExcel")
-    public Result importExcel() throws ActException {
-
-        //TODO :导入未做
-        return ActResult.initialize(null);
-
+    public Result importExcel(HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<SocialFeeExcel> tos = ExcelUtil.excelToClazz(is, SocialFeeExcel.class, excel);
+            List<SocialFeeTO> tocs = new ArrayList<>();
+            for (SocialFeeExcel str : tos) {
+                SocialFeeTO socialFeeTO = BeanTransform.copyProperties(str, SocialFeeTO.class);
+                tocs.add(socialFeeTO);
+            }
+            //注意序列化
+            socialFeeAPI.importExcel(tocs);
+            return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
     }
 
     /**
@@ -224,19 +320,20 @@ public class SocialFeeAction {
      * @des 汇总获取所有社会缴费信息
      * @version v1
      */
-    @GetMapping("v1/export")
-    public Result export(SocialFeeDTO socialFeeDTO, BindingResult bindingResult) throws ActException {
-        try {
-            String exportAddr = socialFeeAPI.export(socialFeeDTO);
-            return ActResult.initialize(exportAddr);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    @GetMapping("v1/export")
+//    public Result export(SocialFeeDTO socialFeeDTO, BindingResult bindingResult) throws ActException {
+//        try {
+//            String exportAddr = socialFeeAPI.export(socialFeeDTO);
+//            return ActResult.initialize(exportAddr);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
 
     /**
      * 生成记账凭证
+     *
      * @param ids 列表id数组
      * @return class VoucherDataVO
      * @throws ActException
@@ -255,6 +352,7 @@ public class SocialFeeAction {
 
     /**
      * 提交记账凭证
+     *
      * @param voucherDataTO voucherDataTO数据
      * @return class VoucherDataVO
      * @throws ActException
@@ -271,5 +369,44 @@ public class SocialFeeAction {
         }
     }
 
+    /**
+     * 导出excel
+     *
+     * @param dto 社会缴纳
+     * @des 导出社会缴费记录
+     * @version v1
+     */
+    //@LoginAuth
+    @GetMapping("v1/export")
+    public Result exportReport(SocialFeeDTO dto, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "社会缴费记录.xlsx";
+            super.writeOutFile(response, socialFeeAPI.exportExcel(dto), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板项目签订与立项
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "社会缴费记录.xlsx";
+            super.writeOutFile(response, socialFeeAPI.templateExport( ), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
 
 }

@@ -3,6 +3,7 @@ package com.bjike.goddess.lendreimbursement.action.lendreimbursement;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -10,23 +11,33 @@ import com.bjike.goddess.financeinit.api.AccountAPI;
 import com.bjike.goddess.financeinit.api.CategoryAPI;
 import com.bjike.goddess.financeinit.bo.CategoryBO;
 import com.bjike.goddess.financeinit.dto.CategoryDTO;
-import com.bjike.goddess.financeinit.entity.Category;
-import com.bjike.goddess.financeinit.service.AccountSer;
 import com.bjike.goddess.lendreimbursement.api.ReimburseRecordAPI;
 import com.bjike.goddess.lendreimbursement.bo.ReimburseRecordBO;
 import com.bjike.goddess.lendreimbursement.dto.ReimburseRecordDTO;
+import com.bjike.goddess.lendreimbursement.excel.SonPermissionObject;
 import com.bjike.goddess.lendreimbursement.to.AccountVoucherTO;
+import com.bjike.goddess.lendreimbursement.to.GuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseRecordTO;
+import com.bjike.goddess.lendreimbursement.to.SiginManageDeleteFileTO;
 import com.bjike.goddess.lendreimbursement.vo.AccountVoucherVO;
 import com.bjike.goddess.lendreimbursement.vo.CollectDataVO;
 import com.bjike.goddess.lendreimbursement.vo.ReimburseRecordVO;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.organize.entity.UserSetPermission;
+import com.bjike.goddess.storage.api.FileAPI;
+import com.bjike.goddess.storage.to.FileInfo;
+import com.bjike.goddess.storage.vo.FileVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,7 +51,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("reimburserecord")
-public class ReimburseRecordAction {
+public class ReimburseRecordAction extends BaseFileAction {
 
     @Autowired
     private ReimburseRecordAPI reimburseRecordAPI;
@@ -48,6 +59,80 @@ public class ReimburseRecordAction {
     private CategoryAPI categoryAPI;
     @Autowired
     private AccountAPI accountAPI;
+    @Autowired
+    private FileAPI fileAPI;
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result setButtonPermission() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = reimburseRecordAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = reimburseRecordAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 申请报销列表总条数
@@ -140,21 +225,6 @@ public class ReimburseRecordAction {
         } catch (SerException e) {
             throw new ActException("删除失败：" + e.getMessage());
         }
-    }
-
-
-    /**
-     * 上传附件
-     *
-     * @param reimburseRecordTO 申请报销基本信息数据to
-     * @des 上传附件
-     * @version v1
-     */
-    @LoginAuth
-    @PostMapping("v1/upload")
-    public Result uploadReimburseRecord(ReimburseRecordTO reimburseRecordTO, BindingResult bindingResult) throws ActException {
-        //TODO: tanghaixiang 2017-04-11 上传附件未做
-        return ActResult.initialize("暂时不可上传");
     }
 
 
@@ -288,19 +358,6 @@ public class ReimburseRecordAction {
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
-    }
-
-    /**
-     * 等待审核附件
-     *
-     * @return class ReimburseRecordVO
-     * @des 等待审核报销附件
-     * @version v1
-     */
-    @PutMapping("v1/auditFile")
-    public Result auditFile(ReimburseRecordTO reimburseRecordTO) throws ActException {
-        //TODO : tanghaixiang 附件未做
-        return new ActResult(null);
     }
 
     /**
@@ -532,17 +589,23 @@ public class ReimburseRecordAction {
     /**
      * 等待付款导出
      *
-     * @param reimburseRecordTO 申请报销基本信息数据bo
+     * @param reimburseRecordDTO
      * @return class ReimburseRecordVO
      * @des 等待付款导出
      * @version v1
      */
     @LoginAuth
     @GetMapping("v1/exportPay")
-    public Result exportPay(ReimburseRecordTO reimburseRecordTO) throws ActException {
-        //TODO: tanghaixiang 2017-04-12 导出
-        return ActResult.initialize(null);
-
+    public Result exportPay(ReimburseRecordDTO reimburseRecordDTO, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "等待付款.xlsx";
+            super.writeOutFile(response, reimburseRecordAPI.exportExcel(reimburseRecordDTO), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
     }
 
     /**
@@ -623,17 +686,23 @@ public class ReimburseRecordAction {
     /**
      * 已付款记录导出
      *
-     * @param reimburseRecordTO 申请报销基本信息数据bo
+     * @param reimburseRecordDTO 申请报销基本信息数据bo
      * @return class ReimburseRecordVO
      * @des 已付款记录导出
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @GetMapping("v1/exportHasPay")
-    public Result exportHasPay(ReimburseRecordTO reimburseRecordTO) throws ActException {
-        //TODO: tanghaixiang 2017-04-12 已付款记录导出
-        return ActResult.initialize(null);
-
+    public Result exportHasPay(ReimburseRecordDTO reimburseRecordDTO, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "等待付款.xlsx";
+            super.writeOutFile(response, reimburseRecordAPI.exportAlPayExcel(reimburseRecordDTO), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
     }
 
     /**
@@ -761,14 +830,15 @@ public class ReimburseRecordAction {
      * @version v1
      */
     @GetMapping("v1/listFirstSubject")
-    public Result listFirstSubject( ) throws ActException {
+    public Result listFirstSubject() throws ActException {
         try {
-            List<String> userList = reimburseRecordAPI.listFirstSubject( );
+            List<String> userList = reimburseRecordAPI.listFirstSubject();
             return ActResult.initialize(userList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有地区
      *
@@ -776,14 +846,15 @@ public class ReimburseRecordAction {
      * @version v1
      */
     @GetMapping("v1/listArea")
-    public Result listArea( ) throws ActException {
+    public Result listArea() throws ActException {
         try {
-            List<String> userList = reimburseRecordAPI.listArea( );
+            List<String> userList = reimburseRecordAPI.listArea();
             return ActResult.initialize(userList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有项目名称
      *
@@ -791,9 +862,9 @@ public class ReimburseRecordAction {
      * @version v1
      */
     @GetMapping("v1/listProject")
-    public Result listProject( ) throws ActException {
+    public Result listProject() throws ActException {
         try {
-            List<String> userList = reimburseRecordAPI.listProject( );
+            List<String> userList = reimburseRecordAPI.listProject();
             return ActResult.initialize(userList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -807,9 +878,9 @@ public class ReimburseRecordAction {
      * @version v1
      */
     @GetMapping("v1/listUser")
-    public Result listUser( ) throws ActException {
+    public Result listUser() throws ActException {
         try {
-            List<String> userList = reimburseRecordAPI.listAllUser( );
+            List<String> userList = reimburseRecordAPI.listAllUser();
             return ActResult.initialize(userList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -823,10 +894,10 @@ public class ReimburseRecordAction {
      * @version v1
      */
     @GetMapping("v1/listThirdSubject")
-    public Result listThirdSubject( ) throws ActException {
+    public Result listThirdSubject() throws ActException {
         try {
             CategoryDTO categoryDTO = new CategoryDTO();
-            List<CategoryBO> categories = categoryAPI.listAllCategory( categoryDTO );
+            List<CategoryBO> categories = categoryAPI.listAllCategory(categoryDTO);
             return ActResult.initialize(categories);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -840,14 +911,14 @@ public class ReimburseRecordAction {
      * @version v1
      */
     @GetMapping("v1/listPlains")
-    public Result listPlain(ReimburseRecordTO reimburseRecordTO ) throws ActException {
+    public Result listPlain(ReimburseRecordTO reimburseRecordTO) throws ActException {
         try {
             CategoryDTO categoryDTO = new CategoryDTO();
-            if(StringUtils.isBlank(reimburseRecordTO.getThirdSubject() )){
+            if (StringUtils.isBlank(reimburseRecordTO.getThirdSubject())) {
                 throw new SerException("三级科目(thirdSubject)不能为空");
             }
-            categoryDTO.setThirdSubject( reimburseRecordTO.getThirdSubject());
-            List<CategoryBO> categories = categoryAPI.listAllCategory( categoryDTO );
+            categoryDTO.setThirdSubject(reimburseRecordTO.getThirdSubject());
+            List<CategoryBO> categories = categoryAPI.listAllCategory(categoryDTO);
             return ActResult.initialize(categories);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -861,16 +932,16 @@ public class ReimburseRecordAction {
      * @version v1
      */
     @GetMapping("v1/listFirstAndSecond")
-    public Result listFirstAndSecond(ReimburseRecordTO reimburseRecordTO ) throws ActException {
+    public Result listFirstAndSecond(ReimburseRecordTO reimburseRecordTO) throws ActException {
         try {
             CategoryDTO categoryDTO = new CategoryDTO();
-            if(StringUtils.isBlank(reimburseRecordTO.getThirdSubject() )
-                    && StringUtils.isBlank(reimburseRecordTO.getPlainInfo() ) ){
+            if (StringUtils.isBlank(reimburseRecordTO.getThirdSubject())
+                    && StringUtils.isBlank(reimburseRecordTO.getPlainInfo())) {
                 throw new SerException("三级科目(thirdSubject)或说明(plainInfo)不能为空");
             }
-            categoryDTO.setThirdSubject( reimburseRecordTO.getThirdSubject());
-            categoryDTO.setRemark( reimburseRecordTO.getPlainInfo());
-            List<CategoryBO> categories = categoryAPI.listAllCategory( categoryDTO );
+            categoryDTO.setThirdSubject(reimburseRecordTO.getThirdSubject());
+            categoryDTO.setRemark(reimburseRecordTO.getPlainInfo());
+            List<CategoryBO> categories = categoryAPI.listAllCategory(categoryDTO);
             return ActResult.initialize(categories);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -885,17 +956,98 @@ public class ReimburseRecordAction {
      * @version v1
      */
     @GetMapping("v1/listAccountOrigin")
-    public Result listAccountOrigin(ReimburseRecordTO reimburseRecordTO ) throws ActException {
+    public Result listAccountOrigin(ReimburseRecordTO reimburseRecordTO) throws ActException {
         try {
 
-            List<String> accountOrigins = accountAPI.listAccountOrigin(  );
+            List<String> accountOrigins = accountAPI.listAccountOrigin();
             return ActResult.initialize(accountOrigins);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
+    /**
+     * 上传附件
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/uploadFile/{id}")
+    public Result uploadFile(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            // /id/....
+            String path = "/" + id;
+            List<InputStream> inputStreams = getInputStreams(request, path);
+            fileAPI.upload(inputStreams);
+            return new ActResult("upload success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
+    /**
+     * 文件附件列表
+     *
+     * @param id id
+     * @return class FileVO
+     * @version v1
+     */
+    @GetMapping("v1/listFile/{id}")
+    public Result list(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            String path = "/" + id;
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
+            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
+            return ActResult.initialize(files);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param path 文件路径
+     * @version v1
+     */
+    @GetMapping("v1/downloadFile")
+    public Result download(@RequestParam String path, HttpServletRequest request, HttpServletResponse response) throws ActException {
+        try {
+            //该文件的路径
+            FileInfo fileInfo = new FileInfo();
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
+            fileInfo.setPath(path);
+            String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
+            byte[] buffer = fileAPI.download(fileInfo);
+            writeOutFile(response, buffer, filename);
+            return new ActResult("download success");
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
+
+    /**
+     * 删除文件或文件夹
+     *
+     * @param siginManageDeleteFileTO 多文件信息路径
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/deleteFile")
+    public Result delFile(@Validated(SiginManageDeleteFileTO.TestDEL.class) SiginManageDeleteFileTO siginManageDeleteFileTO, HttpServletRequest request) throws SerException {
+        if (null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length >= 0) {
+            Object storageToken = request.getAttribute("storageToken");
+            fileAPI.delFile(storageToken.toString(), siginManageDeleteFileTO.getPaths());
+        }
+        return new ActResult("delFile success");
+    }
 
 
 }

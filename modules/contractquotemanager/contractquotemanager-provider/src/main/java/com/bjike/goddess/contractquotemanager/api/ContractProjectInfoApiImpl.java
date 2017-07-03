@@ -10,6 +10,7 @@ import com.bjike.goddess.contractquotemanager.entity.ContractProjectInfo;
 import com.bjike.goddess.contractquotemanager.service.ContractProjectInfoSer;
 import com.bjike.goddess.contractquotemanager.to.ContractProjectInfoTO;
 import com.bjike.goddess.contractquotemanager.to.ContractQuoteDataTO;
+import com.bjike.goddess.contractquotemanager.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,16 @@ import java.util.List;
  */
 @Service("contractProjectInfoApiImpl")
 public class ContractProjectInfoApiImpl implements ContractProjectInfoAPI {
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return contractProjectInfoSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return contractProjectInfoSer.guidePermission(guidePermissionTO);
+    }
 
     @Autowired
     private ContractProjectInfoSer contractProjectInfoSer;
@@ -100,4 +111,23 @@ public class ContractProjectInfoApiImpl implements ContractProjectInfoAPI {
         contractProjectInfoSer.remove(id);
     }
 
+    @Override
+    public byte[] exportExcel(ContractProjectInfoDTO contractProjectInfoDTO) throws SerException {
+        return contractProjectInfoSer.exportExcel(contractProjectInfoDTO);
+    }
+
+    @Override
+    public void importExcel(List<ContractProjectInfoTO> contractProjectInfoTOS) throws SerException {
+        contractProjectInfoSer.importExcel(contractProjectInfoTOS);
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return contractProjectInfoSer.templateExport();
+    }
+
+    @Override
+    public List<String> findAllAreas() throws SerException {
+        return contractProjectInfoSer.findAllAreas();
+    }
 }

@@ -62,8 +62,8 @@ public class MarketServeSummary extends BaseEntity {
     /**
      * 发送间隔
      */
-    @Column(name = "sendInterval", nullable = false, columnDefinition = "INT(11) COMMENT '发送间隔'")
-    private Integer sendInterval;
+    @Column(name = "sendInterval", nullable = false, columnDefinition = "DECIMAL(10,2) COMMENT '发送间隔'")
+    private Double sendInterval;
 
     /**
      * 发送时间格式
@@ -72,16 +72,16 @@ public class MarketServeSummary extends BaseEntity {
     private CycleType cycle;
 
     /**
-     * 汇总间隔
+     * 汇总间隔开始时间
      */
-    @Column(name = "detailInterval", nullable = false, columnDefinition = "INT(11) COMMENT '汇总间隔'")
-    private Integer detailInterval;
+    @Column(name = "startTime", nullable = false, columnDefinition = "DATETIME COMMENT '汇总间隔开始时间'")
+    private LocalDateTime startTime;
 
     /**
-     * 汇总时间格式
+     * 汇总间隔结束时间
      */
-    @Column(name = "detailCycle", nullable = false, columnDefinition = "TINYINT(2) COMMENT '汇总时间格式'")
-    private CycleType detailCycle;
+    @Column(name = "endTime", nullable = false, columnDefinition = "DATETIME COMMENT '汇总间隔结束时间'")
+    private LocalDateTime endTime;
 
     /**
      * 发送对象
@@ -144,11 +144,11 @@ public class MarketServeSummary extends BaseEntity {
         this.note = note;
     }
 
-    public Integer getSendInterval() {
+    public Double getSendInterval() {
         return sendInterval;
     }
 
-    public void setSendInterval(Integer sendInterval) {
+    public void setSendInterval(Double sendInterval) {
         this.sendInterval = sendInterval;
     }
 
@@ -160,20 +160,20 @@ public class MarketServeSummary extends BaseEntity {
         this.cycle = cycle;
     }
 
-    public Integer getDetailInterval() {
-        return detailInterval;
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
-    public void setDetailInterval(Integer detailInterval) {
-        this.detailInterval = detailInterval;
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
-    public CycleType getDetailCycle() {
-        return detailCycle;
+    public LocalDateTime getEndTime() {
+        return endTime;
     }
 
-    public void setDetailCycle(CycleType detailCycle) {
-        this.detailCycle = detailCycle;
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
     public String getEmails() {

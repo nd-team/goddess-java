@@ -21,12 +21,12 @@ import com.bjike.goddess.projectmeasure.vo.ProjectEvaluateResultVO;
 import com.bjike.goddess.projectmeasure.vo.ProjectOtherDemandVO;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.comparator.ComparableComparator;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 其他需求界面
@@ -206,7 +206,7 @@ public class ProjectOtherDemandAct {
      */
     @LoginAuth
     @GetMapping("v1/evaluateResult")
-    public Result evaluateResult(ProjectOtherDemandDTO demandDTO,HttpServletRequest request) throws ActException {
+    public Result evaluateResult(ProjectOtherDemandDTO demandDTO, HttpServletRequest request) throws ActException {
         try {
             List<ProjectEvaluateResultBO> projectEvaluateResultBOS = projectOtherDemandAPI.findEvaluateResult(demandDTO);
             List<ProjectEvaluateResultVO> projectEvaluateResultVOS = BeanTransform.copyProperties(projectEvaluateResultBOS, ProjectEvaluateResultVO.class, request);
@@ -228,7 +228,7 @@ public class ProjectOtherDemandAct {
     @GetMapping("v1/projectOtherDemand/{id}")
     public Result findById(@PathVariable(value = "id") String id, HttpServletRequest request) throws ActException {
         try {
-            ProjectOtherDemandBO projectOtherDemandBO = projectOtherDemandAPI.findById(id);
+            ProjectOtherDemandBO projectOtherDemandBO = projectOtherDemandAPI.getOne(id);
             ProjectOtherDemandVO projectOtherDemandVO = BeanTransform.copyProperties(projectOtherDemandBO, ProjectOtherDemandVO.class, request);
             return ActResult.initialize(projectOtherDemandVO);
         } catch (SerException e) {

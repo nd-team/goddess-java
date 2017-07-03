@@ -36,9 +36,8 @@ public class ProjectBasicInfoApiImpl implements ProjectBasicInfoAPI {
      * @throws SerException
      */
     @Override
-    public ProjectBasicInfoBO findById(String id) throws SerException {
-        ProjectBasicInfo model = projectBasicInfoSer.findById(id);
-        return BeanTransform.copyProperties(model, ProjectBasicInfoBO.class);
+    public ProjectBasicInfoBO getOne(String id) throws SerException {
+        return projectBasicInfoSer.getOne(id);
     }
 
     /**
@@ -116,5 +115,16 @@ public class ProjectBasicInfoApiImpl implements ProjectBasicInfoAPI {
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return projectBasicInfoSer.guidePermission(guidePermissionTO);
+    }
+
+    /**
+     * 查询所有地址
+     *
+     * @return
+     * @throws SerException
+     */
+    @Override
+    public List<String> findAllAreas() throws SerException {
+        return projectBasicInfoSer.findAllAreas();
     }
 }

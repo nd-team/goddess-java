@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 public class ContractProjectInfoTO extends BaseTO {
 
     /**
-     * 所属用户
+     * 地区
      */
     @NotBlank(groups = {ADD.class, EDIT.class}, message = "所属地区不能为空")
     private String area;
@@ -27,44 +27,44 @@ public class ContractProjectInfoTO extends BaseTO {
     /**
      * 项目组
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "所属地区不能为空")
-    private String project;
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "所属项目组不能为空")
+    private String projectGroup;
 
     /**
      * 项目内部结构
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "所属地区不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "所属项目内部结构不能为空")
     private String projectInner;
 
     /**
      * 派工项目名称
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "所属地区不能为空")
-    private String projectDispatch;
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "所属派工项目名称不能为空")
+    private String dispatchProject;
 
     /**
      * 派工单编号
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "所属地区不能为空")
-    private String dispatchCode;
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "所属派工单编号不能为空")
+    private String dispatchNum;
 
     /**
      * 派工合同号
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "所属地区不能为空")
-    private String dispatchContraCode;
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "所属派工合同号不能为空")
+    private String outProjectNum;
 
     /**
      * 开工时间
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "所属地区不能为空")
-    private String startTime;
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "所属开工时间不能为空")
+    private String startProjectTime;
 
     /**
      * 完工时间
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "所属地区不能为空")
-    private String endTime;
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "所属完工时间不能为空")
+    private String endProjectTime;
 
     /**
      * 完工时间(单位：个月)
@@ -76,13 +76,13 @@ public class ContractProjectInfoTO extends BaseTO {
      * 合同金额(单位:万元)
      */
     @NotNull(groups = {ADD.class, EDIT.class}, message = "合同金额(单位:万元)")
-    private Double contractMoney;
+    private Double money;
 
     /**
      * 派工单位
      */
     @NotBlank(groups = {ADD.class, EDIT.class}, message = "派工单位不能为空")
-    private String dispatchUnit;
+    private String majorCompany;
 
     /**
      * 合同规模数
@@ -117,12 +117,12 @@ public class ContractProjectInfoTO extends BaseTO {
         this.area = area;
     }
 
-    public String getProject() {
-        return project;
+    public String getProjectGroup() {
+        return projectGroup;
     }
 
-    public void setProject(String project) {
-        this.project = project;
+    public void setProjectGroup(String projectGroup) {
+        this.projectGroup = projectGroup;
     }
 
     public String getProjectInner() {
@@ -133,44 +133,44 @@ public class ContractProjectInfoTO extends BaseTO {
         this.projectInner = projectInner;
     }
 
-    public String getProjectDispatch() {
-        return projectDispatch;
+    public String getDispatchProject() {
+        return dispatchProject;
     }
 
-    public void setProjectDispatch(String projectDispatch) {
-        this.projectDispatch = projectDispatch;
+    public void setDispatchProject(String dispatchProject) {
+        this.dispatchProject = dispatchProject;
     }
 
-    public String getDispatchCode() {
-        return dispatchCode;
+    public String getDispatchNum() {
+        return dispatchNum;
     }
 
-    public void setDispatchCode(String dispatchCode) {
-        this.dispatchCode = dispatchCode;
+    public void setDispatchNum(String dispatchNum) {
+        this.dispatchNum = dispatchNum;
     }
 
-    public String getDispatchContraCode() {
-        return dispatchContraCode;
+    public String getOutProjectNum() {
+        return outProjectNum;
     }
 
-    public void setDispatchContraCode(String dispatchContraCode) {
-        this.dispatchContraCode = dispatchContraCode;
+    public void setOutProjectNum(String outProjectNum) {
+        this.outProjectNum = outProjectNum;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public String getStartProjectTime() {
+        return startProjectTime;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
+    public void setStartProjectTime(String startProjectTime) {
+        this.startProjectTime = startProjectTime;
     }
 
-    public String getEndTime() {
-        return endTime;
+    public String getEndProjectTime() {
+        return endProjectTime;
     }
 
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
+    public void setEndProjectTime(String endProjectTime) {
+        this.endProjectTime = endProjectTime;
     }
 
     public Integer getCompleteTime() {
@@ -181,20 +181,20 @@ public class ContractProjectInfoTO extends BaseTO {
         this.completeTime = completeTime;
     }
 
-    public Double getContractMoney() {
-        return contractMoney;
+    public Double getMoney() {
+        return money;
     }
 
-    public void setContractMoney(Double contractMoney) {
-        this.contractMoney = contractMoney;
+    public void setMoney(Double money) {
+        this.money = money;
     }
 
-    public String getDispatchUnit() {
-        return dispatchUnit;
+    public String getMajorCompany() {
+        return majorCompany;
     }
 
-    public void setDispatchUnit(String dispatchUnit) {
-        this.dispatchUnit = dispatchUnit;
+    public void setMajorCompany(String majorCompany) {
+        this.majorCompany = majorCompany;
     }
 
     public String getContractScale() {
@@ -228,5 +228,4 @@ public class ContractProjectInfoTO extends BaseTO {
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
     }
-
 }

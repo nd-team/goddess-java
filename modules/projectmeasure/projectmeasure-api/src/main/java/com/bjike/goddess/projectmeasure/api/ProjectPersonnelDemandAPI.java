@@ -38,7 +38,7 @@ public interface ProjectPersonnelDemandAPI {
      * @return class ProjectPersonnelDemandBO
      * @throws SerException
      */
-    ProjectPersonnelDemandBO findById(String id) throws SerException;
+    ProjectPersonnelDemandBO getOne(String id) throws SerException;
 
     /**
      * 计算总条数

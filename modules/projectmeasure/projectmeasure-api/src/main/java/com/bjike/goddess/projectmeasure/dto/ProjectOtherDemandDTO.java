@@ -5,13 +5,13 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
 /**
  * 其他需求界面数据传输对象
  *
- * @Author: [ liguiqin ]
+ * @Author: [ lijuntao ]
  * @Date: [ 2017-06-12 04:21 ]
  * @Description: [ 其他需求界面数据传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class ProjectOtherDemandDTO extends BaseDTO {
+public class ProjectOtherDemandDTO extends BaseDTO{
 
     /**
      * 地区

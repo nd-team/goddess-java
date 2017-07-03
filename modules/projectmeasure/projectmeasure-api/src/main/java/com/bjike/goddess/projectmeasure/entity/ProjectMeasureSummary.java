@@ -51,7 +51,7 @@ public class ProjectMeasureSummary extends BaseEntity {
      * 发送间隔
      */
     @Column(name = "sendInterval", nullable = false, columnDefinition = "DECIMAL(10,2) COMMENT '发送间隔'")
-    private double sendInterval;
+    private Double sendInterval;
 
     /**
      * 发送时间格式

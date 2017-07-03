@@ -50,4 +50,29 @@ public enum ReimStatus {
         return this.code;
     }
 
+    public static String exportStrConvert(ReimStatus reimStatus) {
+        String name = "";
+        if (reimStatus.equals(ReimStatus.NONE)) {
+            name = "未处理";
+        }
+        if (reimStatus.equals(ReimStatus.CHARGEPASS)) {
+            name = "负责人审核通过";
+        }
+        if (reimStatus.equals(ReimStatus.CHARGENOTPASS)) {
+            name = "负责人审核不通过";
+        }
+        if (reimStatus.equals(ReimStatus.PASS)) {
+            name = "分析审核通过";
+        }
+        if (reimStatus.equals(ReimStatus.NOTPASS)) {
+            name = "分析审核不通过";
+        }
+        if (reimStatus.equals(ReimStatus.CONGEL)) {
+            name = "分析申请冻结";
+        }
+        if (reimStatus.equals(ReimStatus.CHARGECONGEL)) {
+            name = "负责人确认冻结";
+        }
+        return name;
+    }
 }

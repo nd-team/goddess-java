@@ -16,7 +16,8 @@ import javax.validation.constraints.Size;
  */
 public class ContractQuoteDataDTO extends BaseDTO {
 
-    public interface Collect{}
+    public interface Collect {
+    }
 
     /**
      * 地区

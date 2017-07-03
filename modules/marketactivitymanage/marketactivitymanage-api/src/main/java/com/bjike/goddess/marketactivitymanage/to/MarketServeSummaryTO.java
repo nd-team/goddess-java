@@ -22,6 +22,7 @@ import javax.validation.constraints.Size;
  */
 public class MarketServeSummaryTO extends BaseTO {
 
+
     /**
      * 项目组
      */
@@ -33,16 +34,6 @@ public class MarketServeSummaryTO extends BaseTO {
      */
     @NotNull(groups = {ADD.class, EDIT.class}, message = "类型不能为空")
     private Boolean type;
-
-    /**
-     * 开始活动时间点
-     */
-    private String startTime;
-
-    /**
-     * 结束活动时间点
-     */
-    private String endTime;
 
     /**
      * 创建人
@@ -67,32 +58,28 @@ public class MarketServeSummaryTO extends BaseTO {
     /**
      * 发送间隔
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "发送间隔不能为空")
-    private Integer sendInterval;
+    private Double sendInterval;
 
     /**
      * 发送时间格式
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "发送时间格式不能为空")
     private CycleType cycle;
 
     /**
-     * 汇总间隔
+     * 汇总间隔开始时间
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "汇总间隔不能为空")
-    private Integer detailInterval;
+    private String startTime;
 
     /**
-     * 汇总时间格式
+     * 汇总间隔结束时间
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "汇总时间格式不能为空")
-    private CycleType detailCycle;
+    private String endTime;
 
     /**
      * 发送对象
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "发送对象不能为空")
-    private String emails;
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "发送对象不能为空")
+    private String[] emails;
 
     /**
      * 状态
@@ -163,11 +150,11 @@ public class MarketServeSummaryTO extends BaseTO {
         this.note = note;
     }
 
-    public Integer getSendInterval() {
+    public Double getSendInterval() {
         return sendInterval;
     }
 
-    public void setSendInterval(Integer sendInterval) {
+    public void setSendInterval(Double sendInterval) {
         this.sendInterval = sendInterval;
     }
 
@@ -179,27 +166,13 @@ public class MarketServeSummaryTO extends BaseTO {
         this.cycle = cycle;
     }
 
-    public Integer getDetailInterval() {
-        return detailInterval;
-    }
 
-    public void setDetailInterval(Integer detailInterval) {
-        this.detailInterval = detailInterval;
-    }
 
-    public CycleType getDetailCycle() {
-        return detailCycle;
-    }
-
-    public void setDetailCycle(CycleType detailCycle) {
-        this.detailCycle = detailCycle;
-    }
-
-    public String getEmails() {
+    public String [] getEmails() {
         return emails;
     }
 
-    public void setEmails(String emails) {
+    public void setEmails(String [] emails) {
         this.emails = emails;
     }
 

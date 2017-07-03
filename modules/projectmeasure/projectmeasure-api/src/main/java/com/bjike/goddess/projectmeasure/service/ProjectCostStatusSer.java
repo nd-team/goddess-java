@@ -3,11 +3,9 @@ package com.bjike.goddess.projectmeasure.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectmeasure.bo.ProjectCostStatusBO;
-import com.bjike.goddess.projectmeasure.entity.ProjectCostStatus;
 import com.bjike.goddess.projectmeasure.dto.ProjectCostStatusDTO;
-import com.bjike.goddess.projectmeasure.excel.SonPermissionObject;
+import com.bjike.goddess.projectmeasure.entity.ProjectCostStatus;
 import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
-import com.bjike.goddess.projectmeasure.to.ProjectBasicInfoTO;
 import com.bjike.goddess.projectmeasure.to.ProjectCostStatusTO;
 
 import java.util.List;
@@ -68,4 +66,14 @@ public interface ProjectCostStatusSer extends Ser<ProjectCostStatus, ProjectCost
      */
     void update(ProjectCostStatusTO to) throws SerException;
 
+    /**
+     * 根据id查询项目费用情况
+     *
+     * @param id 项目费用情况唯一标识
+     * @return class ProjectCostStatusBO
+     * @throws SerException
+     */
+    default ProjectCostStatusBO getOne(String id) throws SerException{
+        return null;
+    }
 }
