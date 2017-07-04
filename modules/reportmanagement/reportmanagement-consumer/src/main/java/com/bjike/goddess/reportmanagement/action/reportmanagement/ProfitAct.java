@@ -10,11 +10,11 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.reportmanagement.api.FormulaAPI;
 import com.bjike.goddess.reportmanagement.api.ProfitAPI;
 import com.bjike.goddess.reportmanagement.bo.*;
-import com.bjike.goddess.reportmanagement.dto.DebtDTO;
+import com.bjike.goddess.reportmanagement.dto.FormulaDTO;
 import com.bjike.goddess.reportmanagement.dto.ProfitDTO;
-import com.bjike.goddess.reportmanagement.entity.Profit;
 import com.bjike.goddess.reportmanagement.to.ProfitTO;
 import com.bjike.goddess.reportmanagement.vo.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -67,7 +67,7 @@ public class ProfitAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) ProfitTO to,BindingResult result, HttpServletRequest request) throws ActException {
+    public Result save(@Validated(ADD.class) ProfitTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             ProfitBO bo = profitAPI.save(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, ProfitVO.class, request));
@@ -85,7 +85,7 @@ public class ProfitAct {
      * @version v1
      */
     @GetMapping("v1/levelAnalyze")
-    public Result levelAnalyze(@Validated(ProfitDTO.A.class) ProfitDTO dto,BindingResult result, HttpServletRequest request) throws ActException {
+    public Result levelAnalyze(@Validated(ProfitDTO.A.class) ProfitDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             List<ProfitLevelBO> list = profitAPI.levelAnalyze(dto);
             return ActResult.initialize(BeanTransform.copyProperties(list, ProfitLevelVO.class, request));
@@ -103,7 +103,7 @@ public class ProfitAct {
      * @version v1
      */
     @GetMapping("v1/verticalAnalyze")
-    public Result verticalAnalyze(@Validated(ProfitDTO.A.class) ProfitDTO dto,BindingResult result, HttpServletRequest request) throws ActException {
+    public Result verticalAnalyze(@Validated(ProfitDTO.A.class) ProfitDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             List<ProfitVerticalBO> list = profitAPI.verticalAnalyze(dto);
             return ActResult.initialize(BeanTransform.copyProperties(list, ProfitVerticalVO.class, request));
@@ -121,7 +121,7 @@ public class ProfitAct {
      * @version v1
      */
     @GetMapping("v1/analyzeIndicator")
-    public Result analyzeIndicator(@Validated(ProfitDTO.A.class) ProfitDTO dto, BindingResult result,HttpServletRequest request) throws ActException {
+    public Result analyzeIndicator(@Validated(ProfitDTO.A.class) ProfitDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             List<ProfitAnalyzeIndicatorBO> list = profitAPI.analyzeIndicator(dto);
             return ActResult.initialize(BeanTransform.copyProperties(list, ProfitAnalyzeIndicatorVO.class, request));
@@ -140,7 +140,7 @@ public class ProfitAct {
      * @version v1
      */
     @GetMapping("v1/findDetails/{id}")
-    public Result findDetails(@PathVariable String id,@Validated(ProfitDTO.A.class) ProfitDTO dto,BindingResult result, HttpServletRequest request) throws ActException {
+    public Result findDetails(@PathVariable String id, @Validated(ProfitDTO.A.class) ProfitDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             List<DetailBO> list = profitAPI.findDetails(id, dto);
             return ActResult.initialize(BeanTransform.copyProperties(list, DetailVO.class, request));
@@ -159,13 +159,12 @@ public class ProfitAct {
      * @version v1
      */
     @GetMapping("v1/lookFormula/{id}")
-    public Result lookFormula(@PathVariable String id, @Validated(ProfitDTO.A.class) ProfitDTO dto,BindingResult result, HttpServletRequest request) throws ActException {
-        String startTime = dto.getStartTime();
-        String endTime = dto.getEndTime();
-        String projectGroup = dto.getProjectGroup();
+    public Result lookFormula(@PathVariable String id, @Validated(ProfitDTO.A.class) ProfitDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
+        FormulaDTO formulaDTO = new FormulaDTO();
+        BeanUtils.copyProperties(dto, formulaDTO);
         request.getSession().setAttribute("id", id);
         try {
-            List<FormulaBO> list = formulaAPI.findByFid(id, startTime, endTime, projectGroup);
+            List<FormulaBO> list = formulaAPI.findByFid(id, formulaDTO);
             return ActResult.initialize(BeanTransform.copyProperties(list, FormulaVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -198,7 +197,7 @@ public class ProfitAct {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class) ProfitTO to,BindingResult result) throws ActException {
+    public Result edit(@Validated(EDIT.class) ProfitTO to, BindingResult result) throws ActException {
         try {
             profitAPI.edit(to);
             return new ActResult("编辑成功");

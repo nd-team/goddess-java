@@ -4,10 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.reportmanagement.bo.*;
-import com.bjike.goddess.reportmanagement.dto.AssetDTO;
-import com.bjike.goddess.reportmanagement.dto.AssetStructureAdviceDTO;
-import com.bjike.goddess.reportmanagement.dto.DebtDTO;
-import com.bjike.goddess.reportmanagement.dto.RepayAnalyzeAdviceDTO;
+import com.bjike.goddess.reportmanagement.dto.*;
 import com.bjike.goddess.reportmanagement.entity.Asset;
 import com.bjike.goddess.reportmanagement.enums.AssetType;
 import com.bjike.goddess.reportmanagement.enums.Form;
@@ -90,9 +87,8 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
 
     @Override
     public List<AssetBO> list(AssetDTO dto) throws SerException {
-        String startTime = dto.getStartTime();
-        String endTime = dto.getEndTime();
-        String projectGroup = dto.getProjectGroup();
+        FormulaDTO formulaDTO = new FormulaDTO();
+        BeanUtils.copyProperties(dto, formulaDTO);
         dto.getSorts().add("assetType=ASC");
         List<Asset> list = super.findAll();
         List<AssetBO> boList = new ArrayList<AssetBO>();
@@ -108,7 +104,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         double countCurrent = 0;
         double countEnd = 0;       //总资产
         for (Asset asset : list) {
-            List<FormulaBO> formulaBOs = formulaSer.findByFid(asset.getId(), startTime, endTime, projectGroup);
+            List<FormulaBO> formulaBOs = formulaSer.findByFid(asset.getId(), formulaDTO);
             if ((formulaBOs != null) && (!formulaBOs.isEmpty())) {
                 if (AssetType.AFLOW.equals(asset.getAssetType()) && b1) {
                     AssetBO assetBO = new AssetBO();
@@ -194,6 +190,8 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
                     countEnd = countEnd - bo.getEndAsset();
                 }
                 boList.add(bo);
+            } else {
+                boList.add(BeanTransform.copyProperties(asset, AssetBO.class));
             }
         }
         AssetBO lastBO = new AssetBO();
@@ -207,9 +205,8 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
 
     @Override
     public List<StructureBO> assetStructure(AssetDTO dto) throws SerException {
-        String startTime = dto.getStartTime();
-        String endTime = dto.getEndTime();
-        String projectGroup = dto.getProjectGroup();
+        FormulaDTO formulaDTO = new FormulaDTO();
+        BeanUtils.copyProperties(dto, formulaDTO);
         dto.getSorts().add("assetType=ASC");
         List<Asset> list = super.findAll();
         List<StructureBO> boList = new ArrayList<StructureBO>();
@@ -218,7 +215,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         double currentSum = 0;
         double countCurrent = 0;       //总资产
         for (Asset asset : list) {
-            List<FormulaBO> formulaBOs = formulaSer.findByFid(asset.getId(), startTime, endTime, projectGroup);
+            List<FormulaBO> formulaBOs = formulaSer.findByFid(asset.getId(), formulaDTO);
             if ((formulaBOs != null) && (!formulaBOs.isEmpty())) {
                 if (AssetType.BLONG.equals(asset.getAssetType()) && b) {
                     flowSum = currentSum;
@@ -387,8 +384,9 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
     public List<DetailBO> findDetails(String id, AssetDTO dto) throws SerException {
         String startTime = dto.getStartTime();
         String endTime = dto.getEndTime();
-        String projectGroup = dto.getProjectGroup();
-        List<FormulaBO> list = formulaSer.findByFid(id, startTime, endTime, projectGroup);
+        FormulaDTO formulaDTO = new FormulaDTO();
+        BeanUtils.copyProperties(dto, formulaDTO);
+        List<FormulaBO> list = formulaSer.findByFid(id, formulaDTO);
         List<DetailBO> boList = new ArrayList<>();
         if ((list != null) && (!list.isEmpty())) {
             FormulaBO last = list.get(list.size() - 1);
@@ -448,7 +446,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
      */
     private List<Double> finds(AssetDTO dto) throws SerException {
         DebtDTO debtDTO = new DebtDTO();
-        BeanUtils.copyProperties(dto,debtDTO);
+        BeanUtils.copyProperties(dto, debtDTO);
         List<StructureBO> list = debtSer.debtStructure(debtDTO);
         double flow = 0;
         double all = 0;

@@ -15,11 +15,11 @@ public class ProfitVerticalVO {
      */
     private String project;
     /**
-     * 起始时间
+     * 起始时间值
      */
     private String startTime;
     /**
-     * 结束时间
+     * 结束时间值
      */
     private String endTime;
     /**
