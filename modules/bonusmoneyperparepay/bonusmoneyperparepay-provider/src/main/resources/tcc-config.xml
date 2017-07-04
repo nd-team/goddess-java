@@ -28,17 +28,13 @@
 	</bean>
 
 	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
-		<property name="maxTotal" value="8"/>
+		<property name="maxTotal" value="1000"/>
 		<property name="maxWaitMillis" value="1000"/>
-		<property name="testOnBorrow" value="true"/>
-		<property name="testOnReturn" value="true"/>
-		<property name="maxIdle" value="8"/>
-
 	</bean>
 
 	<bean id="jedisPool" class="redis.clients.jedis.JedisPool">
 		<constructor-arg index="0" ref="jedisPoolConfig"/>
-		<constructor-arg index="1" value="redis" type="java.lang.String"/>
+		<constructor-arg index="1" value="127.0.0.1" type="java.lang.String"/>
 		<constructor-arg index="2" value="6379" type="int"/>
 		<constructor-arg index="3" value="1000" type="int"/>
 		<!--<constructor-arg index="4" value="${redis.password}"/>-->
