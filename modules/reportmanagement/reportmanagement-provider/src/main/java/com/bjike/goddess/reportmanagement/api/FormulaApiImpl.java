@@ -2,6 +2,7 @@ package com.bjike.goddess.reportmanagement.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.reportmanagement.bo.FormulaBO;
+import com.bjike.goddess.reportmanagement.dto.FormulaDTO;
 import com.bjike.goddess.reportmanagement.service.FormulaSer;
 import com.bjike.goddess.reportmanagement.to.FormulaTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +25,13 @@ public class FormulaApiImpl implements FormulaAPI {
     private FormulaSer formulaSer;
 
     @Override
-    public List<FormulaBO> findByFid(String foreignId, String startTime, String endTime, String projectGroup) throws SerException {
-        return formulaSer.findByFid(foreignId, startTime, endTime, projectGroup);
+    public List<FormulaBO> findByFid(String foreignId, FormulaDTO dto) throws SerException {
+        return formulaSer.findByFid(foreignId, dto);
     }
 
     @Override
-    public List<FormulaBO> profitAnalyze(String foreignId, String time, String projectGroup) throws SerException {
-        return formulaSer.profitAnalyze(foreignId, time, projectGroup);
+    public List<FormulaBO> profitAnalyze(String foreignId, String time, String[] projectNames) throws SerException {
+        return formulaSer.profitAnalyze(foreignId, time, projectNames);
     }
 
     @Override

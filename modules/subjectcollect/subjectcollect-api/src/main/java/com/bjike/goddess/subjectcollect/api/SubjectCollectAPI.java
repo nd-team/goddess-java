@@ -131,10 +131,10 @@ public interface SubjectCollectAPI {
 
     /**
      * chenjunhao
-     * 获取所有项目组/部门
+     * 获取所有项目名称
      *
      * @return
      * @throws SerException
      */
-    Set<String> allProjectGroups() throws SerException;
+    Set<String> allProjectNames() throws SerException;
 }

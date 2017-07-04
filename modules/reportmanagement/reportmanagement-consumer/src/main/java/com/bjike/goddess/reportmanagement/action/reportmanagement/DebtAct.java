@@ -14,11 +14,13 @@ import com.bjike.goddess.reportmanagement.bo.DetailBO;
 import com.bjike.goddess.reportmanagement.bo.FormulaBO;
 import com.bjike.goddess.reportmanagement.bo.StructureBO;
 import com.bjike.goddess.reportmanagement.dto.DebtDTO;
+import com.bjike.goddess.reportmanagement.dto.FormulaDTO;
 import com.bjike.goddess.reportmanagement.to.DebtTO;
 import com.bjike.goddess.reportmanagement.vo.DebtVO;
 import com.bjike.goddess.reportmanagement.vo.DetailVO;
 import com.bjike.goddess.reportmanagement.vo.FormulaVO;
 import com.bjike.goddess.reportmanagement.vo.StructureVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -128,12 +130,11 @@ public class DebtAct {
      */
     @GetMapping("v1/lookFormula/{id}")
     public Result lookFormula(@PathVariable String id, @Validated(DebtDTO.A.class) DebtDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
-        String startTime = dto.getStartTime();
-        String endTime = dto.getEndTime();
-        String projectGroup = dto.getProjectGroup();
+        FormulaDTO formulaDTO=new FormulaDTO();
+        BeanUtils.copyProperties(dto,formulaDTO);
         request.getSession().setAttribute("id", id);
         try {
-            List<FormulaBO> list = formulaAPI.findByFid(id, startTime, endTime, projectGroup);
+            List<FormulaBO> list = formulaAPI.findByFid(id, formulaDTO);
             return ActResult.initialize(BeanTransform.copyProperties(list, FormulaVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

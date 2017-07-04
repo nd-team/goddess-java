@@ -29,10 +29,17 @@ public class ProfitDTO extends BaseDTO {
     private String endTime;
 
     /**
-     * 项目组/部门
+     * 项目名称数组
      */
-//    @NotBlank(groups = {ProfitDTO.A.class}, message = "项目组/部门不能为空")
-    private String projectGroup;
+    private String[] projectNames;
+
+    public String[] getProjectNames() {
+        return projectNames;
+    }
+
+    public void setProjectNames(String[] projectNames) {
+        this.projectNames = projectNames;
+    }
 
     public String getStartTime() {
         return startTime;
@@ -48,13 +55,5 @@ public class ProfitDTO extends BaseDTO {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
-    }
-
-    public String getProjectGroup() {
-        return projectGroup;
-    }
-
-    public void setProjectGroup(String projectGroup) {
-        this.projectGroup = projectGroup;
     }
 }
