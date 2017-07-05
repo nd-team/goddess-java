@@ -1,12 +1,7 @@
 package com.bjike.goddess.capability.action.capability;
 
-import com.bjike.goddess.common.api.exception.ActException;
-import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.consumer.restful.ActResult;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 管理资质认证

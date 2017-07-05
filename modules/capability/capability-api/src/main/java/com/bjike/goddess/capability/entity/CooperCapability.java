@@ -150,31 +150,31 @@ public class CooperCapability extends BaseEntity {
     /**
      * 组织机构
      */
-    @Column(name = "organization", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '组织机构'")
+    @Column(name = "organization", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '组织机构'")
     private String organization;
 
     /**
      * 现在工作地区
      */
-    @Column(name = "nowWorkPlace", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '现在工作地区'")
+    @Column(name = "nowWorkPlace", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '现在工作地区'")
     private String nowWorkPlace;
 
     /**
      * 所在公司
      */
-    @Column(name = "nowCompany", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '所在公司'")
+    @Column(name = "nowCompany", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '所在公司'")
     private String nowCompany;
 
     /**
      * 岗位
      */
-    @Column(name = "station", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '岗位'")
+    @Column(name = "station", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '岗位'")
     private String station;
 
     /**
      * 职权
      */
-    @Column(name = "duty", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '职权'")
+    @Column(name = "duty", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '职权'")
     private String duty;
 
 

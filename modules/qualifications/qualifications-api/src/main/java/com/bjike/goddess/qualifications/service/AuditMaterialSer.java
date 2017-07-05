@@ -6,6 +6,7 @@ import com.bjike.goddess.qualifications.bo.AuditMaterialBO;
 import com.bjike.goddess.qualifications.dto.AuditMaterialDTO;
 import com.bjike.goddess.qualifications.entity.AuditMaterial;
 import com.bjike.goddess.qualifications.to.AuditMaterialTO;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -92,6 +93,20 @@ public interface AuditMaterialSer extends Ser<AuditMaterial, AuditMaterialDTO> {
      * @throws SerException
      */
     default AuditMaterialBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 

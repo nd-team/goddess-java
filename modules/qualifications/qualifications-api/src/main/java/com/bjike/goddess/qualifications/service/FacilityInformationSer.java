@@ -7,6 +7,7 @@ import com.bjike.goddess.qualifications.bo.FacilityInformationBO;
 import com.bjike.goddess.qualifications.dto.FacilityInformationDTO;
 import com.bjike.goddess.qualifications.entity.FacilityInformation;
 import com.bjike.goddess.qualifications.to.FacilityInformationTO;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -96,4 +97,17 @@ public interface FacilityInformationSer extends Ser<FacilityInformation, Facilit
         return null;
     }
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

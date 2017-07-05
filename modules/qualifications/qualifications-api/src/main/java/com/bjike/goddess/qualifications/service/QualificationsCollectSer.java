@@ -6,6 +6,8 @@ import com.bjike.goddess.qualifications.bo.AuditMaterialBO;
 import com.bjike.goddess.qualifications.bo.QualificationsCollectBO;
 import com.bjike.goddess.qualifications.dto.QualificationsCollectDTO;
 import com.bjike.goddess.qualifications.entity.QualificationsCollect;
+import com.bjike.goddess.qualifications.excel.SonPermissionObject;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 import com.bjike.goddess.qualifications.to.QualificationsCollectFilterTO;
 import com.bjike.goddess.qualifications.to.QualificationsCollectTO;
 
@@ -98,4 +100,17 @@ public interface QualificationsCollectSer extends Ser<QualificationsCollect, Qua
         return null;
     }
 
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

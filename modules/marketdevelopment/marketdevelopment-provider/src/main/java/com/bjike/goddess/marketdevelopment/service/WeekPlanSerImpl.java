@@ -81,8 +81,8 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
     @Transactional(rollbackFor = SerException.class)
     @Override
     public WeekPlanBO save(WeekPlanTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(planManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(planManage))
+//            throw new SerException("您的帐号没有权限");
         WeekPlan entity = BeanTransform.copyProperties(to, WeekPlan.class, true);
         entity.setMonth(monthPlanSer.findById(to.getMonthId()));
         entity.setTotal(entity.getActivity() + entity.getVisit() + entity.getContact() + entity.getKnow() + entity.getInquire());
@@ -93,8 +93,8 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
     @Transactional(rollbackFor = SerException.class)
     @Override
     public WeekPlanBO update(WeekPlanTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(planManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(planManage))
+//            throw new SerException("您的帐号没有权限");
         if (StringUtils.isNotBlank(to.getId())) {
             try {
                 WeekPlan entity = super.findById(to.getId());
@@ -112,8 +112,8 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
     @Transactional(rollbackFor = SerException.class)
     @Override
     public WeekPlanBO delete(WeekPlanTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(planManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(planManage))
+//            throw new SerException("您的帐号没有权限");
         WeekPlan entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");
@@ -143,8 +143,8 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
 
     @Override
     public WeekPlanBO getById(String id) throws SerException {
-        if (!marPermissionSer.getMarPermission(planCheck))
-            throw new SerException("您的帐号没有权限");
+//        if (!isPermission(planCheck))
+//            throw new SerException("您的帐号没有权限");
         try {
             return this.transformBO(super.findById(id));
         } catch (SerException e) {
@@ -154,8 +154,8 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
 
     @Override
     public List<WeekPlanBO> maps(WeekPlanDTO dto) throws SerException {
-        if (!marPermissionSer.getMarPermission(planCheck))
-            throw new SerException("您的帐号没有权限");
+//        if (!isPermission(planCheck))
+//            throw new SerException("您的帐号没有权限");
         dto.getSorts().add("startCycle=desc");
         return this.transformBOList(super.findByPage(dto));
     }
@@ -186,8 +186,8 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
 
     @Override
     public byte[] exportExcel(CollectTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(planCheck))
-            throw new SerException("您的帐号没有权限");
+//        if (!isPermission(planCheck))
+//            throw new SerException("您的帐号没有权限");
         List<WeekPlanBO> list;
         if (StringUtils.isBlank(to.getType())) {
             list = this.transformBOList(super.findAll().stream()
@@ -308,6 +308,21 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
         }
 
         RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
+    public Boolean isPermission(String planCheck) throws SerException{
+
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = marPermissionSer.getMarPermission(planCheck);
+        } else {
+            flag = true;
+        }
         return flag;
     }
 

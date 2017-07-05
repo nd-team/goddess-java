@@ -6,8 +6,10 @@ import com.bjike.goddess.coststandard.bo.CostStandardContrastBO;
 import com.bjike.goddess.coststandard.bo.CostStandardOpinionBO;
 import com.bjike.goddess.coststandard.dto.CostStandardContrastDTO;
 import com.bjike.goddess.coststandard.dto.CostStandardDTO;
+import com.bjike.goddess.coststandard.excel.SonPermissionObject;
 import com.bjike.goddess.coststandard.to.CostStandardContrastTO;
 import com.bjike.goddess.coststandard.to.CostStandardTO;
+import com.bjike.goddess.coststandard.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -128,6 +130,19 @@ public interface CostStandardAPI {
      * @throws SerException
      */
     default List<CostStandardOpinionBO> findOpinion() throws SerException {
+        return null;
+    }
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 }

@@ -4,6 +4,7 @@ import com.bjike.goddess.capability.bo.SelfCapabilityBO;
 import com.bjike.goddess.capability.dto.SelfCapabilityDTO;
 import com.bjike.goddess.capability.entity.SelfCapability;
 import com.bjike.goddess.capability.service.SelfCapabilitySer;
+import com.bjike.goddess.capability.to.GuidePermissionTO;
 import com.bjike.goddess.capability.to.SelfCapabilityTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,5 +78,10 @@ public class SelfCapabilityApiImpl implements SelfCapabilityAPI {
     @Override
     public byte[] exportExcel(String name) throws SerException {
         return selfCapabilitySer.exportExcel(name);
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return selfCapabilitySer.guidePermission( guidePermissionTO );
     }
 }

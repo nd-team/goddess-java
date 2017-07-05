@@ -21,7 +21,7 @@ public class CooperationSituationBO extends BaseBO {
     /**
      * 公司名称
      */
-    private String name;
+    private String companyName;
 
     /**
      * 产品服务内容
@@ -39,9 +39,6 @@ public class CooperationSituationBO extends BaseBO {
     private String cooperationTerm;
 
 
-    public String getName() {
-        return name;
-    }
 
     public String getInformationId() {
         return informationId;
@@ -51,8 +48,12 @@ public class CooperationSituationBO extends BaseBO {
         this.informationId = informationId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public String getProduct() {

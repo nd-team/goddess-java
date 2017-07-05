@@ -1,5 +1,7 @@
 package com.bjike.goddess.capability.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 合作对象商务展示是否独立完成
  * @Author: [tanghaixiang]
@@ -13,14 +15,17 @@ public enum CompletePro {
     /**
      * 独立完成
      */
+    @ExcelValue(name = "独立完成")
     INDEPENDENT(0),
     /**
      * 合作完成
      */
+    @ExcelValue(name = "独立完成")
     COOPER(1),
     /**
      * 阶段参与
      */
+    @ExcelValue(name = "阶段参与")
     STAGEPARTICIPATION(2)
     ;
 

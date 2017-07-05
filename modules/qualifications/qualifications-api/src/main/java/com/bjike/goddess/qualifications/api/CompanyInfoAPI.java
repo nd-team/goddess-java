@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.qualifications.bo.CompanyInfoBO;
 import com.bjike.goddess.qualifications.dto.CompanyInfoDTO;
 import com.bjike.goddess.qualifications.to.CompanyInfoTO;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -90,6 +91,12 @@ public interface CompanyInfoAPI {
      * @throws SerException
      */
     default CompanyInfoBO getById(String id) throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 }

@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.regionalprogresscollect.bo.WeekTargetBO;
 import com.bjike.goddess.regionalprogresscollect.dto.WeekTargetDTO;
 import com.bjike.goddess.regionalprogresscollect.entity.WeekTarget;
+import com.bjike.goddess.regionalprogresscollect.to.GuidePermissionTO;
 import com.bjike.goddess.regionalprogresscollect.to.StandardTO;
 import com.bjike.goddess.regionalprogresscollect.to.WeekTargetTO;
 
@@ -97,4 +98,17 @@ public interface WeekTargetSer extends Ser<WeekTarget, WeekTargetDTO> {
         return null;
     }
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

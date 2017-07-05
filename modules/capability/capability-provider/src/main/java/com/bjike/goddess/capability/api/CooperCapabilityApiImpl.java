@@ -5,6 +5,7 @@ import com.bjike.goddess.capability.dto.CooperCapabilityDTO;
 import com.bjike.goddess.capability.entity.CooperCapability;
 import com.bjike.goddess.capability.service.CooperCapabilitySer;
 import com.bjike.goddess.capability.to.CooperCapabilityTO;
+import com.bjike.goddess.capability.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -90,5 +91,19 @@ public class CooperCapabilityApiImpl implements CooperCapabilityAPI {
     @Override
     public byte[] exportExcel(String companyName) throws SerException {
         return cooperCapabilitySer.exportExcel(companyName);
+    }
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return cooperCapabilitySer.guidePermission( guidePermissionTO );
+    }
+
+    @Override
+    public CooperCapabilityBO importExcel(List<CooperCapabilityTO> cooperCapabilityTO) throws SerException {
+        return cooperCapabilitySer.importExcel( cooperCapabilityTO );
+    }
+
+    @Override
+    public byte[] templateExport( ) throws SerException {
+        return cooperCapabilitySer.templateExport(   );
     }
 }

@@ -207,9 +207,9 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
             costAnalysisBO = BeanTransform.copyProperties(costAnalysis, CostAnalysisBO.class);
             Double actualMarketCost = projectMarketFeeSer.count(costAnalysis.getProject(), costAnalysis.getArrival(), costAnalysis.getYear(), costAnalysis.getMonth(), costAnalysis.getProjectName()).getBorrowMoney();
             costAnalysisBO.setActualMarketCost(actualMarketCost);
-            costAnalysisBO.setExpectedScale(costAnalysis.getExpectedMarketCost() / costAnalysis.getExpectedIncome());
+            costAnalysisBO.setExpectedScale(Double.parseDouble(String.format("%.2f", costAnalysis.getExpectedMarketCost() / costAnalysis.getExpectedIncome())));
             costAnalysisBO.setDifferences(costAnalysis.getExpectedMarketCost() - costAnalysisBO.getActualMarketCost());
-            costAnalysisBO.setActualScale(costAnalysisBO.getActualMarketCost() / costAnalysis.getExpectedIncome());
+            costAnalysisBO.setActualScale(Double.parseDouble(String.format("%.2f", costAnalysisBO.getActualMarketCost() / costAnalysis.getExpectedIncome())));
             if (warns.size() != 0) {
                 Double a = costAnalysisBO.getActualScale() - costAnalysisBO.getExpectedScale();
                 if (a > warns.get(0).getWarnValue()) {
@@ -265,8 +265,8 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
                 bo.setExpectedMarketCostSum(expectedMarketCostSum);
                 bo.setActualMarketCostSum(actualMarketCostSum);
                 bo.setDifferences(differences);
-                bo.setExpectedScale(expectedMarketCostSum / expectedIncomeSum);
-                bo.setActualScale(actualMarketCostSum / expectedIncomeSum);
+                bo.setExpectedScale(Double.parseDouble(String.format("%.2f", expectedMarketCostSum / expectedIncomeSum)));
+                bo.setActualScale(Double.parseDouble(String.format("%.2f", actualMarketCostSum / expectedIncomeSum)));
                 Double a = bo.getActualScale() - bo.getExpectedScale();
                 if (warns.size() != 0) {
                     if (a > warns.get(0).getWarnValue()) {
@@ -315,8 +315,8 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
                     bo.setExpectedMarketCostSum(expectedMarketCostSum);
                     bo.setActualMarketCostSum(actualMarketCostSum);
                     bo.setDifferences(differences);
-                    bo.setExpectedScale(expectedMarketCostSum / expectedIncomeSum);
-                    bo.setActualScale(actualMarketCostSum / expectedIncomeSum);
+                    bo.setExpectedScale(Double.parseDouble(String.format("%.2f", expectedMarketCostSum / expectedIncomeSum)));
+                    bo.setActualScale(Double.parseDouble(String.format("%.2f", actualMarketCostSum / expectedIncomeSum)));
                     Double a = bo.getActualScale() - bo.getExpectedScale();
                     if (warns.size() != 0) {
                         if (a > warns.get(0).getWarnValue()) {
@@ -369,8 +369,8 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
                         bo.setExpectedMarketCostSum(expectedMarketCostSum);
                         bo.setActualMarketCostSum(actualMarketCostSum);
                         bo.setDifferences(differences);
-                        bo.setExpectedScale(expectedMarketCostSum / expectedIncomeSum);
-                        bo.setActualScale(actualMarketCostSum / expectedIncomeSum);
+                        bo.setExpectedScale(Double.parseDouble(String.format("%.2f", expectedMarketCostSum / expectedIncomeSum)));
+                        bo.setActualScale(Double.parseDouble(String.format("%.2f", actualMarketCostSum / expectedIncomeSum)));
                         Double a = bo.getActualScale() - bo.getExpectedScale();
                         if (warns.size() != 0) {
                             if (a > warns.get(0).getWarnValue()) {
@@ -415,9 +415,9 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
                 costAnalysisBO = BeanTransform.copyProperties(costAnalysis, CostAnalysisBO.class);
                 Double actualMarketCost = projectMarketFeeSer.count(costAnalysis.getProject(), costAnalysis.getArrival(), costAnalysis.getYear(), costAnalysis.getMonth(), costAnalysis.getProjectName()).getBorrowMoney();
                 costAnalysisBO.setActualMarketCost(actualMarketCost);
-                costAnalysisBO.setExpectedScale(costAnalysis.getExpectedMarketCost() / costAnalysis.getExpectedIncome());
+                costAnalysisBO.setExpectedScale(Double.parseDouble(String.format("%.2f", costAnalysis.getExpectedMarketCost() / costAnalysis.getExpectedIncome())));
                 costAnalysisBO.setDifferences(costAnalysis.getExpectedMarketCost() - costAnalysisBO.getActualMarketCost());
-                costAnalysisBO.setActualScale(costAnalysisBO.getActualMarketCost() / costAnalysis.getExpectedIncome());
+                costAnalysisBO.setActualScale(Double.parseDouble(String.format("%.2f", costAnalysisBO.getActualMarketCost() / costAnalysis.getExpectedIncome())));
                 if (warns.size() != 0) {
                     Double a = costAnalysisBO.getActualScale() - costAnalysisBO.getExpectedScale();
                     if (a > warns.get(0).getWarnValue()) {
@@ -438,9 +438,9 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
                 costAnalysisBO = BeanTransform.copyProperties(costAnalysis, CostAnalysisBO.class);
                 Double actualMarketCost = projectMarketFeeSer.count(costAnalysis.getProject(), costAnalysis.getArrival(), costAnalysis.getYear(), costAnalysis.getMonth(), costAnalysis.getProjectName()).getBorrowMoney();
                 costAnalysisBO.setActualMarketCost(actualMarketCost);
-                costAnalysisBO.setExpectedScale(costAnalysis.getExpectedMarketCost() / costAnalysis.getExpectedIncome());
+                costAnalysisBO.setExpectedScale(Double.parseDouble(String.format("%.2f", costAnalysis.getExpectedMarketCost() / costAnalysis.getExpectedIncome())));
                 costAnalysisBO.setDifferences(costAnalysis.getExpectedMarketCost() - costAnalysisBO.getActualMarketCost());
-                costAnalysisBO.setActualScale(costAnalysisBO.getActualMarketCost() / costAnalysis.getExpectedIncome());
+                costAnalysisBO.setActualScale(Double.parseDouble(String.format("%.2f", costAnalysisBO.getActualMarketCost() / costAnalysis.getExpectedIncome())));
                 if (warns.size() != 0) {
                     Double a = costAnalysisBO.getActualScale() - costAnalysisBO.getExpectedScale();
                     if (a > warns.get(0).getWarnValue()) {
@@ -461,9 +461,9 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
                 costAnalysisBO = BeanTransform.copyProperties(costAnalysis, CostAnalysisBO.class);
                 Double actualMarketCost = projectMarketFeeSer.count(costAnalysis.getProject(), costAnalysis.getArrival(), costAnalysis.getYear(), costAnalysis.getMonth(), costAnalysis.getProjectName()).getBorrowMoney();
                 costAnalysisBO.setActualMarketCost(actualMarketCost);
-                costAnalysisBO.setExpectedScale(costAnalysis.getExpectedMarketCost() / costAnalysis.getExpectedIncome());
+                costAnalysisBO.setExpectedScale(Double.parseDouble(String.format("%.2f", costAnalysis.getExpectedMarketCost() / costAnalysis.getExpectedIncome())));
                 costAnalysisBO.setDifferences(costAnalysis.getExpectedMarketCost() - costAnalysisBO.getActualMarketCost());
-                costAnalysisBO.setActualScale(costAnalysisBO.getActualMarketCost() / costAnalysis.getExpectedIncome());
+                costAnalysisBO.setActualScale(Double.parseDouble(String.format("%.2f", costAnalysisBO.getActualMarketCost() / costAnalysis.getExpectedIncome())));
                 if (warns.size() != 0) {
                     Double a = costAnalysisBO.getActualScale() - costAnalysisBO.getExpectedScale();
                     if (a > warns.get(0).getWarnValue()) {
@@ -573,9 +573,9 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
             RpcTransmit.transmitUserToken(userToken);
             Double actualMarketCost = projectMarketFeeSer.count(costAnalysis.getProject(), costAnalysis.getArrival(), costAnalysis.getYear(), costAnalysis.getMonth(), costAnalysis.getProjectName()).getBorrowMoney();
             costAnalysisBO.setActualMarketCost(actualMarketCost);
-            costAnalysisBO.setExpectedScale(costAnalysis.getExpectedMarketCost() / costAnalysis.getExpectedIncome());
+            costAnalysisBO.setExpectedScale(Double.parseDouble(String.format("%.2f", costAnalysis.getExpectedMarketCost() / costAnalysis.getExpectedIncome())));
             costAnalysisBO.setDifferences(costAnalysis.getExpectedMarketCost() - costAnalysisBO.getActualMarketCost());
-            costAnalysisBO.setActualScale(costAnalysisBO.getActualMarketCost() / costAnalysis.getExpectedIncome());
+            costAnalysisBO.setActualScale(Double.parseDouble(String.format("%.2f", costAnalysisBO.getActualMarketCost() / costAnalysis.getExpectedIncome())));
             if (warns.size() != 0) {
                 Double a = costAnalysisBO.getActualScale() - costAnalysisBO.getExpectedScale();
                 if (a > warns.get(0).getWarnValue()) {

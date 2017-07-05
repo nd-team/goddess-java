@@ -25,4 +25,6 @@ public interface TableHeadSer extends Ser<TableHead, TableHeadDTO> {
     TableHeadBO insertModel(TableHeadTO to) throws SerException;
 
     TableHeadBO editModel(TableHeadTO to) throws SerException;
+
+    void delete(String id) throws SerException;
 }

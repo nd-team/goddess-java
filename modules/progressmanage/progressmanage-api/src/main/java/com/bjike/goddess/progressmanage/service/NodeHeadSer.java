@@ -24,4 +24,6 @@ public interface NodeHeadSer extends Ser<NodeHead, NodeHeadDTO> {
     NodeHeadBO updateModel(NodeHeadTO to) throws SerException;
 
     List<NodeHeadBO> pageList(NodeHeadDTO dto) throws SerException;
+
+    void delete(String id) throws SerException;
 }
