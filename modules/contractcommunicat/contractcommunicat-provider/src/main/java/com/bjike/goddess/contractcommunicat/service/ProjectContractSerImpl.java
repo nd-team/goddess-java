@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -236,14 +237,19 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
             dto.getConditions().add(Restrict.lt("communicateDate", endDate));
         }
         List<ProjectContract> list = super.findByCis(dto);
-        List<ProjectContractExcel> toList = new ArrayList<ProjectContractExcel>();
-        for (ProjectContract model : list) {
-            ProjectContractExcel excel = new ProjectContractExcel();
-            BeanUtils.copyProperties(model, excel);
-            toList.add(excel);
+        List<ProjectContractExcel> excelList = new ArrayList<ProjectContractExcel>();
+        if (!CollectionUtils.isEmpty(list)) {
+            for (ProjectContract model : list) {
+                ProjectContractExcel excel = new ProjectContractExcel();
+                BeanUtils.copyProperties(model, excel);
+                excelList.add(excel);
+            }
+        } else {
+            excelList.add(new ProjectContractExcel());
         }
+
         Excel excel = new Excel(0, 2);
-        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        byte[] bytes = ExcelUtil.clazzToExcel(excelList, excel);
         return bytes;
     }
 
@@ -325,12 +331,12 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
         Excel excel = new Excel(0, 2);
         List<ProjectContractExcel> list = new ArrayList<ProjectContractExcel>();
         list.add(new ProjectContractExcel());
-        byte[] bytes = ExcelUtil.clazzToExcel(list , excel);
+        byte[] bytes = ExcelUtil.clazzToExcel(list, excel);
         return bytes;
     }
 
     /**
-     *  导航栏核对查看权限（部门级别）
+     * 导航栏核对查看权限（部门级别）
      */
     private Boolean guideSeeIdentity() throws SerException {
         Boolean flag = false;

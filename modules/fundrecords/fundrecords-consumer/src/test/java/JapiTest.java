@@ -23,6 +23,7 @@ public class JapiTest {
         JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
                 "modules/fundrecords/fundrecords-api",
                 "modules/organize/organize-api",
+                "modules/storage/storage-api",
                 "common/common-api"
         });
 //                JapiClient.saveHistory(false);

@@ -3,6 +3,8 @@ package com.bjike.goddess.bankrecords.api;
 import com.bjike.goddess.bankrecords.bo.BankAccountInfoBO;
 import com.bjike.goddess.bankrecords.dto.BankAccountInfoDTO;
 import com.bjike.goddess.bankrecords.to.BankAccountInfoTO;
+import com.bjike.goddess.bankrecords.to.GuidePermissionTO;
+import com.bjike.goddess.bankrecords.to.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -71,4 +73,8 @@ public interface BankAccountInfoAPI {
      * @return 账户信息结果集
      */
     List<BankAccountInfoBO> findAll() throws SerException;
+
+    List<SonPermissionObject> sonPermission() throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 }

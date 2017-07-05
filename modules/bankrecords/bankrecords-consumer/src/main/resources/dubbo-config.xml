@@ -22,7 +22,19 @@
     <!-- 银行流水API -->
 	<dubbo:reference interface="com.bjike.goddess.bankrecords.api.BankRecordAPI" id="bankRecordApiImpl" />
 
+	<dubbo:reference interface="com.bjike.goddess.bankrecords.api.CusPermissionAPI" id="cusPermissionApiImpl" />
+
+
 	<!-- 存储API -->
 	<dubbo:reference  interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
+
+	<!-- 组织结构API -->
+	<dubbo:reference  interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl"/>
+
+	<dubbo:reference interface="com.bjike.goddess.user.api.rbac.PermissionAPI" id="permissionApiImpl"/>
+
+
+	<dubbo:reference id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.bankrecords.api.CusPermissionOperateAPI" />
+
 
 </beans>

@@ -53,12 +53,6 @@ public class EvaluateProjectInfo extends BaseEntity {
     private String workload;
 
     /**
-     * 成本
-     */
-    @Column(name = "cost", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '成本'")
-    private Double cost;
-
-    /**
      * 总金额
      */
     @Column(name = "totalAmount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '总金额'")
@@ -143,14 +137,6 @@ public class EvaluateProjectInfo extends BaseEntity {
 
     public void setWorkload(String workload) {
         this.workload = workload;
-    }
-
-    public Double getCost() {
-        return cost;
-    }
-
-    public void setCost(Double cost) {
-        this.cost = cost;
     }
 
     public Double getTotalAmount() {

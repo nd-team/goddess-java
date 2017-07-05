@@ -59,7 +59,6 @@ public interface EnterpriseCultureInfoAPI {
      *
      * @param id
      * @return
-     * @throws SerException
      */
     PublicizeProgramInfoBO findPublicize(String id) throws SerException;
 
@@ -68,11 +67,22 @@ public interface EnterpriseCultureInfoAPI {
      *
      * @param id
      * @return
-     * @throws SerException
      */
     PeriodicalProgramInfoBO findPeriodical(String id) throws SerException;
 
+    /**
+     * 根据ID查询
+     * @param id id
+     */
     EnterpriseCultureInfoBO findById(String id) throws SerException;
 
+    /**
+     * 查询总记录数
+     * @param dto
+     * @return
+     * @throws SerException
+     */
     Long count(EnterpriseCultureInfoDTO dto) throws SerException;
+
+    List<EnterpriseCultureInfoBO> infos() throws SerException;
 }

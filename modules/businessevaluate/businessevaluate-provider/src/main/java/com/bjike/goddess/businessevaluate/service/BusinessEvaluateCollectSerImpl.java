@@ -70,7 +70,6 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
     @Transactional(rollbackFor = SerException.class)
     public BusinessEvaluateCollectBO insertModel(BusinessEvaluateCollectTO to) throws SerException {
         String token = RpcTransmit.getUserToken();
-        getCusPermission();
 
         if (to.getSendIntervalType() == SendIntervalType.MINUTE && to.getSendInterval() < 30) {
             throw new SerException("汇总发送间隔不能低于30分钟!");
@@ -103,8 +102,6 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
     public BusinessEvaluateCollectBO updateModel(BusinessEvaluateCollectTO to) throws SerException {
         String token = RpcTransmit.getUserToken();
 
-        getCusPermission();
-
         if (to.getSendIntervalType() == SendIntervalType.MINUTE && to.getSendInterval() < 30) {
             throw new SerException("汇总发送间隔不能低于30分钟!");
         }
@@ -131,8 +128,6 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
     @Transactional(rollbackFor = SerException.class)
     public void freeze(String id) throws SerException {
 
-        getCusPermission();
-
         if (!StringUtils.isEmpty(id)) {
             BusinessEvaluateCollect model = super.findById(id);
             if (model != null) {
@@ -152,8 +147,6 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
     @Transactional(rollbackFor = SerException.class)
     public void breakFreeze(String id) throws SerException {
 
-        getCusPermission();
-
         if (!StringUtils.isEmpty(id)) {
             BusinessEvaluateCollect model = super.findById(id);
             if (model != null) {
@@ -172,8 +165,6 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<BusinessEvaluateCollectBO> pageList(BusinessEvaluateCollectDTO dto) throws SerException {
-
-        getCusPermission();
 
         dto.getSorts().add("createTime=desc");
         List<BusinessEvaluateCollect> list = super.findByPage(dto);
@@ -195,8 +186,6 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<EvaluateCollectTotalBO> collectTotal(String area, String project) throws SerException {
-
-        getCusPermission();
 
         return collect(area, project, null, null);
     }
@@ -256,12 +245,12 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
 
                             //设置总金额、成本、税金、项目管理费、费用、项目利润
                             areaTotalAmount = areaTotalAmount + info.getTotalAmount();
-                            areaTotalCost = areaTotalCost + info.getCost();
+                            areaTotalCost = areaTotalCost + evaluateProjectInfoSer.getCost(info.getId());
                             areaTotalTaxes = areaTotalTaxes + info.getTaxes();
                             areaTotalManageCost = areaTotalManageCost + info.getManageCost();
 
                             areaTotalFee = areaTotalFee + findProjectCost(info.getId());
-                            areaTotalProfit = areaTotalProfit + (info.getTotalAmount() - info.getCost() - info.getManageCost() - info.getTaxes() - areaTotalFee);
+                            areaTotalProfit = areaTotalProfit + (info.getTotalAmount() - evaluateProjectInfoSer.getCost(info.getId()) - info.getManageCost() - info.getTaxes() - areaTotalFee);
 
                             if (info.getCooperateWay() == CooperateWay.LONGTERM) {
                                 longtermCount++;
@@ -357,15 +346,6 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
             problemSize = list.size();
         }
         return problemSize;
-    }
-
-    public void getCusPermission() throws SerException {
-
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-
-        if (!permission) {
-            throw new SerException("该功能只有商务部可操作，您的帐号尚无权限");
-        }
     }
 
     @Override

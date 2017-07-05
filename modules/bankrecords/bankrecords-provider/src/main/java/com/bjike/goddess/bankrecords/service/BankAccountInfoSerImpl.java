@@ -4,6 +4,8 @@ import com.bjike.goddess.bankrecords.bo.BankAccountInfoBO;
 import com.bjike.goddess.bankrecords.dto.BankAccountInfoDTO;
 import com.bjike.goddess.bankrecords.entity.BankAccountInfo;
 import com.bjike.goddess.bankrecords.to.BankAccountInfoTO;
+import com.bjike.goddess.bankrecords.to.GuidePermissionTO;
+import com.bjike.goddess.bankrecords.to.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -56,5 +58,15 @@ public class BankAccountInfoSerImpl extends ServiceImpl<BankAccountInfo, BankAcc
     public List<BankAccountInfoBO> pageList(BankAccountInfoDTO dto) throws SerException {
         dto.getSorts().add("createTime=desc");
         return BeanTransform.copyProperties(super.findByPage(dto), BankAccountInfoBO.class);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO to) throws SerException {
+        return null;
     }
 }

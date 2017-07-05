@@ -46,8 +46,6 @@ public class LabourCostSerImpl extends ServiceImpl<LabourCost, LabourCostDTO> im
     @Transactional(rollbackFor = SerException.class)
     public LabourCostBO insertModel(LabourCostTO to) throws SerException {
 
-        getCusPermission();
-
         LabourCost model = BeanTransform.copyProperties(to, LabourCost.class, true);
         super.save(model);
         to.setId(model.getId());
@@ -57,8 +55,6 @@ public class LabourCostSerImpl extends ServiceImpl<LabourCost, LabourCostDTO> im
     @Override
     @Transactional(rollbackFor = SerException.class)
     public LabourCostBO updateModel(LabourCostTO to) throws SerException {
-
-        getCusPermission();
 
         if (!StringUtils.isEmpty(to.getId())) {
             LabourCost model = super.findById(to.getId());
@@ -78,8 +74,6 @@ public class LabourCostSerImpl extends ServiceImpl<LabourCost, LabourCostDTO> im
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<LabourCostBO> pageList(LabourCostDTO dto) throws SerException {
-
-        getCusPermission();
 
         dto.getSorts().add("createTime=desc");
         List<LabourCost> list = super.findByPage(dto);
@@ -155,15 +149,6 @@ public class LabourCostSerImpl extends ServiceImpl<LabourCost, LabourCostDTO> im
             flag = true;
         }
         return flag;
-    }
-
-    public void getCusPermission() throws SerException {
-
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-
-        if (!permission) {
-            throw new SerException("该功能只有商务部可操作，您的帐号尚无权限");
-        }
     }
 
 }

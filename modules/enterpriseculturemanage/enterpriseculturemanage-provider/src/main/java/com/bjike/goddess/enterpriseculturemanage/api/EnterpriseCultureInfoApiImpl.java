@@ -68,4 +68,9 @@ public class EnterpriseCultureInfoApiImpl implements EnterpriseCultureInfoAPI {
     public Long count(EnterpriseCultureInfoDTO dto) throws SerException {
         return enterpriseCultureInfoSer.count(dto);
     }
+
+    @Override
+    public List<EnterpriseCultureInfoBO> infos() throws SerException {
+        return enterpriseCultureInfoSer.findThawAll();
+    }
 }

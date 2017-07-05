@@ -44,12 +44,6 @@ public class EvaluateProjectInfoTO extends BaseTO {
     private String workload;
 
     /**
-     * 成本
-     */
-    @NotNull(message = "成本不能为空", groups = {ADD.class, EDIT.class})
-    private Double cost;
-
-    /**
      * 总金额
      */
     @NotNull(message = "总金额不能为空", groups = {ADD.class, EDIT.class})
@@ -131,14 +125,6 @@ public class EvaluateProjectInfoTO extends BaseTO {
 
     public void setWorkload(String workload) {
         this.workload = workload;
-    }
-
-    public Double getCost() {
-        return cost;
-    }
-
-    public void setCost(Double cost) {
-        this.cost = cost;
     }
 
     public Double getTotalAmount() {
