@@ -6,6 +6,8 @@ import com.bjike.goddess.marketactivitymanage.bo.MarketServeSummaryBO;
 import com.bjike.goddess.marketactivitymanage.bo.ServeSummaryBO;
 import com.bjike.goddess.marketactivitymanage.dto.MarketServeSummaryDTO;
 import com.bjike.goddess.marketactivitymanage.entity.MarketServeSummary;
+import com.bjike.goddess.marketactivitymanage.excel.SonPermissionObject;
+import com.bjike.goddess.marketactivitymanage.to.GuidePermissionTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeSummaryTO;
 
 import java.util.List;
@@ -20,6 +22,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface MarketServeSummarySer extends Ser<MarketServeSummary, MarketServeSummaryDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 分页查询市场招待汇总邮件发送
@@ -74,13 +91,32 @@ public interface MarketServeSummarySer extends Ser<MarketServeSummary, MarketSer
     /**
      * 市场招待汇总
      *
-     * @param type 汇总类型
-     * @param projectGroups 部门/项目组
+     * @param type            汇总类型
+     * @param projectGroups   部门/项目组
      * @param startTimeString 起始时间
-     * @param endTimeString 结束时间
+     * @param endTimeString   结束时间
      * @return class MarketServeSummaryVO
      * @throws SerException
      */
-    List<ServeSummaryBO> summarize(Boolean type, String[] projectGroups, String startTimeString, String endTimeString) throws SerException;
+    default List<ServeSummaryBO> summarize(Boolean type, String[] projectGroups, String startTimeString, String endTimeString) throws SerException {
+        return null;
+    }
 
+    ;
+
+    /**
+     * 定时器检测要发送的邮件
+     */
+    default void checkSendEmail() throws SerException {
+        return;
+    }
+
+    /**
+     * 一个个邮件
+     *
+     * @return class ProjectMeasureSummaryBO
+     */
+    default MarketServeSummaryBO getOne(String id) throws SerException {
+        return null;
+    }
 }

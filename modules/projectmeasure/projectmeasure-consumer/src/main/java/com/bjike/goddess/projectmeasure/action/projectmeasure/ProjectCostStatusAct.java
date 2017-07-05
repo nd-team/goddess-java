@@ -77,7 +77,7 @@ public class ProjectCostStatusAct {
     @GetMapping("v1/projectcoststatus/{id}")
     public Result findById(@PathVariable(value = "id") String id, HttpServletRequest request) throws ActException {
         try {
-            ProjectCostStatusBO bo = projectCostStatusAPI.findById(id);
+            ProjectCostStatusBO bo = projectCostStatusAPI.getOne(id);
             ProjectCostStatusVO vo = BeanTransform.copyProperties(bo, ProjectCostStatusVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {

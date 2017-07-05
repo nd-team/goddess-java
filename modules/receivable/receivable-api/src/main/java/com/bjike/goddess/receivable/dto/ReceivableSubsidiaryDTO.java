@@ -22,7 +22,7 @@ public class ReceivableSubsidiaryDTO extends BaseDTO {
     /**
      * 地区
      */
-    private String []area;
+    private String[] area;
 
     /**
      * 项目名称

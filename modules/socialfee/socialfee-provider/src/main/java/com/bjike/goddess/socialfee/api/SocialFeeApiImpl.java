@@ -4,8 +4,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.socialfee.bo.SocialFeeBO;
 import com.bjike.goddess.socialfee.bo.VoucherDataBO;
 import com.bjike.goddess.socialfee.dto.SocialFeeDTO;
-import com.bjike.goddess.socialfee.entity.SocialFee;
+import com.bjike.goddess.socialfee.excle.SonPermissionObject;
 import com.bjike.goddess.socialfee.service.SocialFeeSer;
+import com.bjike.goddess.socialfee.to.GuidePermissionTO;
 import com.bjike.goddess.socialfee.to.SocialFeeTO;
 import com.bjike.goddess.socialfee.to.VoucherDataTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,16 @@ public class SocialFeeApiImpl implements SocialFeeAPI {
     private SocialFeeSer socialFeeSer;
 
     @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return socialFeeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return socialFeeSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
     public Long countSocialFee(SocialFeeDTO socialFeeDTO) throws SerException {
         return socialFeeSer.countSocialFee(socialFeeDTO);
     }
@@ -40,7 +51,7 @@ public class SocialFeeApiImpl implements SocialFeeAPI {
 
     @Override
     public SocialFeeBO addSocialFee(SocialFeeTO socialFeeTO) throws SerException {
-        return socialFeeSer.addSocialFee( socialFeeTO);
+        return socialFeeSer.addSocialFee(socialFeeTO);
     }
 
     @Override
@@ -84,7 +95,17 @@ public class SocialFeeApiImpl implements SocialFeeAPI {
     }
 
     @Override
-    public String export(SocialFeeDTO socialFeeDTO) throws SerException {
-        return socialFeeSer.export(socialFeeDTO);
+    public byte[] exportExcel(SocialFeeDTO socialFeeDTO) throws SerException {
+        return socialFeeSer.exportExcel(socialFeeDTO);
+    }
+
+    @Override
+    public SocialFeeBO importExcel(List<SocialFeeTO> socialFeeTOS) throws SerException {
+        return socialFeeSer.importExcel(socialFeeTOS);
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return socialFeeSer.templateExport();
     }
 }

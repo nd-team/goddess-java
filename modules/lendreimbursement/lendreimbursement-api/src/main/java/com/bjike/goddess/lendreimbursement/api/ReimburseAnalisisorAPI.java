@@ -19,6 +19,20 @@ import java.util.List;
 public interface ReimburseAnalisisorAPI {
 
     /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(com.bjike.goddess.lendreimbursement.to.GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 报销分析人员列表总条数
      */
     default Long countReimburseAnalisisor(ReimburseAnalisisorDTO reimburseAnalisisorDTO) throws SerException {
@@ -64,6 +78,6 @@ public interface ReimburseAnalisisorAPI {
     }
 
     ;
-    
-    
+
+
 }

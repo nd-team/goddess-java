@@ -100,4 +100,14 @@ public interface CusPermissionAPI {
     default Boolean busCusPermission(String idFlag) throws SerException {
         return null;
     }
+
+    /**
+     * 根据idFlag查询可以某种操作的客户权限层次
+     *
+     * @param idFlag 客户权限idFlag
+     * @throws SerException
+     */
+    default Boolean arrCusPermission(String idFlag) throws SerException {
+        return null;
+    }
 }

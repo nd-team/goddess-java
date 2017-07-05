@@ -3,8 +3,10 @@ package com.bjike.goddess.otherexpenses.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.otherexpenses.bo.*;
 import com.bjike.goddess.otherexpenses.dto.OtherExpensesDTO;
+import com.bjike.goddess.otherexpenses.excel.SonPermissionObject;
 import com.bjike.goddess.otherexpenses.service.OtherExpensesSer;
 import com.bjike.goddess.otherexpenses.to.CollectTO;
+import com.bjike.goddess.otherexpenses.to.GuidePermissionTO;
 import com.bjike.goddess.otherexpenses.to.OtherExpensesTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -76,4 +78,30 @@ public class OtherExpensesApiImpl implements OtherExpensesAPI {
         OtherExpensesDTO dto = new OtherExpensesDTO();
         return otherExpensesSer.count(dto);
     }
+
+    @Override
+    public void leadExcel(List<OtherExpensesTO> toList) throws SerException {
+        otherExpensesSer.leadExcel(toList);
+    }
+
+    @Override
+    public byte[] exportExcel(OtherExpensesDTO dto) throws SerException {
+        return otherExpensesSer.exportExcel(dto);
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return otherExpensesSer.templateExport();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return otherExpensesSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return otherExpensesSer.sonPermission();
+    }
+
 }

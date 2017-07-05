@@ -116,4 +116,21 @@ public interface CooperCapabilitySer extends Ser<CooperCapability, CooperCapabil
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
+    /**
+     * 导入
+     *
+     * @param cooperCapabilityTO 公司能力
+     * @return class CooperCapabilityBO
+     */
+    default CooperCapabilityBO importExcel(List<CooperCapabilityTO> cooperCapabilityTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出Excel模板下载
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
 }

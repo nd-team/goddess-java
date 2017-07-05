@@ -5,7 +5,6 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.projectmeasure.type.CycleType;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
@@ -19,6 +18,8 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class ProjectMeasureSummaryTO extends BaseTO {
+
+    public interface  TestCollect{}
 
     /**
      * 项目组
@@ -44,7 +45,7 @@ public class ProjectMeasureSummaryTO extends BaseTO {
      * 发送间隔
      */
     @NotNull(groups = {ADD.class, EDIT.class}, message = "发送间隔不能为空")
-    private double sendInterval;
+    private Double sendInterval;
 
     /**
      * 发送时间格式
@@ -76,7 +77,7 @@ public class ProjectMeasureSummaryTO extends BaseTO {
     /**
      * 地区数组
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "汇总所需地址不能为空")
+    @NotNull(groups = {TestCollect.class, ADD.class, EDIT.class}, message = "汇总所需地区不能为空")
     private String[] areas;
 
     public String[] getAreas() {
@@ -119,11 +120,11 @@ public class ProjectMeasureSummaryTO extends BaseTO {
         this.lastTime = lastTime;
     }
 
-    public double getSendInterval() {
+    public Double getSendInterval() {
         return sendInterval;
     }
 
-    public void setSendInterval(double sendInterval) {
+    public void setSendInterval(Double sendInterval) {
         this.sendInterval = sendInterval;
     }
 

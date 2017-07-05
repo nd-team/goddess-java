@@ -19,8 +19,21 @@ import java.util.List;
 public interface FinoddinforAPI {
 
     /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(com.bjike.goddess.lendreimbursement.to.GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 报销单号列表总条数
-     *
      */
     default Long countFinoddinfor(FinoddinforDTO finoddinforDTO) throws SerException {
         return null;
@@ -29,44 +42,73 @@ public interface FinoddinforAPI {
 
     /**
      * 根据id获取报销单号
+     *
      * @return class FinoddinforBO
      */
-    default FinoddinforBO getOneById(String id) throws SerException {return null;}
+    default FinoddinforBO getOneById(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 报销单号列表
+     *
      * @return class FinoddinforBO
      */
-    default List<FinoddinforBO> listFinoddinfor(FinoddinforDTO finoddinforDTO) throws SerException {return null;}
+    default List<FinoddinforBO> listFinoddinfor(FinoddinforDTO finoddinforDTO) throws SerException {
+        return null;
+    }
+
     /**
-     *  添加
+     * 添加
+     *
      * @param finoddinforTO 报销单号信息
      * @return class FinoddinforBO
      */
-    default FinoddinforBO addFinoddinfor(FinoddinforTO finoddinforTO) throws SerException { return null;}
+    default FinoddinforBO addFinoddinfor(FinoddinforTO finoddinforTO) throws SerException {
+        return null;
+    }
 
 
     /**
      * 删除级别
+     *
      * @param id id
      */
-    default void deleteFinoddinfor(String id ) throws SerException {return;};
+    default void deleteFinoddinfor(String id) throws SerException {
+        return;
+    }
+
+    ;
 
     /**
      * 冻结报销单号
+     *
      * @param id id
      */
-    default void congealFinoddinfor(String id ) throws SerException {return;};
+    default void congealFinoddinfor(String id) throws SerException {
+        return;
+    }
+
+    ;
 
     /**
      * 解冻报销单号
+     *
      * @param id id
      */
-    default void thawFinoddinfor(String id ) throws SerException {return;};
+    default void thawFinoddinfor(String id) throws SerException {
+        return;
+    }
+
+    ;
 
     /**
      * 获取最小报销单号
      */
-    default String getMinRunNum()throws SerException {return null;};
-    
+    default String getMinRunNum() throws SerException {
+        return null;
+    }
+
+    ;
+
 }

@@ -37,9 +37,8 @@ public class ProjectMeasureSummaryApiImpl implements ProjectMeasureSummaryAPI {
      * @throws SerException
      */
     @Override
-    public ProjectMeasureSummaryBO findById(String id) throws SerException {
-        ProjectMeasureSummary model = projectMeasureSummarySer.findById(id);
-        return BeanTransform.copyProperties(model, ProjectMeasureSummaryBO.class);
+    public ProjectMeasureSummaryBO getOne(String id) throws SerException {
+        return projectMeasureSummarySer.getOne(id);
     }
 
     /**
@@ -148,8 +147,4 @@ public class ProjectMeasureSummaryApiImpl implements ProjectMeasureSummaryAPI {
         projectMeasureSummarySer.checkSendEmail();
     }
 
-    @Override
-    public ProjectMeasureSummaryBO getOne(String id) throws SerException {
-        return projectMeasureSummarySer.getOne(id);
-    }
 }

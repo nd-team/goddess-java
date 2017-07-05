@@ -1,13 +1,93 @@
 package com.bjike.goddess.reportmanagement.api;
 
-/**
-* 负债表业务接口
-* @Author:			[ chenjunhao ]
-* @Date:			[  2017-06-19 11:21 ]
-* @Description:	[ 负债表业务接口 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
-*/
-public interface DebtAPI  { 
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.reportmanagement.bo.DebtBO;
+import com.bjike.goddess.reportmanagement.bo.DetailBO;
+import com.bjike.goddess.reportmanagement.bo.StructureBO;
+import com.bjike.goddess.reportmanagement.dto.AssetDTO;
+import com.bjike.goddess.reportmanagement.dto.DebtDTO;
+import com.bjike.goddess.reportmanagement.to.DebtTO;
 
- }
+import java.util.List;
+
+/**
+ * 负债表业务接口
+ *
+ * @Author: [ chenjunhao ]
+ * @Date: [ 2017-06-19 11:21 ]
+ * @Description: [ 负债表业务接口 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+public interface DebtAPI {
+    /**
+     * 查看负债与权益结构分析
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<StructureBO> debtStructure(DebtDTO dto) throws SerException;
+
+    /**
+     * 列表
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<DebtBO> list(DebtDTO dto) throws SerException;
+
+    /**
+     * 添加
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    DebtBO save(DebtTO to) throws SerException;
+
+    /**
+     * 查找金额明细
+     *
+     * @param id
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<DetailBO> findDetails(String id, DebtDTO dto) throws SerException;
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(DebtDTO dto) throws SerException;
+
+    /**
+     * 通过id查找
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    DebtBO findByID(String id) throws SerException;
+
+    /**
+     * 编辑
+     *
+     * @param to
+     * @throws SerException
+     */
+    void edit(DebtTO to) throws SerException;
+
+    /**
+     * 删除
+     *
+     * @param id
+     * @throws SerException
+     */
+    void delete(String id) throws SerException;
+}

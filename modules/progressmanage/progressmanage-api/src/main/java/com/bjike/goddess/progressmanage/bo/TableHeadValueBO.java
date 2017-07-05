@@ -14,16 +14,9 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 public class TableHeadValueBO extends BaseBO {
 
     /**
-     * 表头
-     */
-//    private TableHeadBO tableHead;
-
-    /**
      * 值
      */
     private String value;
-
-
 
     public String getValue() {
         return value;

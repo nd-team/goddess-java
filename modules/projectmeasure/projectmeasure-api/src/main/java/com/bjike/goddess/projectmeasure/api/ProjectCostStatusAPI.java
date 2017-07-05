@@ -5,7 +5,6 @@ import com.bjike.goddess.projectmeasure.bo.ProjectCostStatusBO;
 import com.bjike.goddess.projectmeasure.dto.ProjectCostStatusDTO;
 import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.ProjectCostStatusTO;
-import com.bjike.goddess.projectmeasure.to.ProjectCostStatusTO;
 
 import java.util.List;
 
@@ -33,13 +32,15 @@ public interface ProjectCostStatusAPI {
         return null;
     }
     /**
-     * 根据id查询项目费用情况
+     * 根据id查询项目费用
      *
-     * @param id 项目费用情况唯一标识
+     * @param id 项目费用唯一标识
      * @return class ProjectCostStatusBO
      * @throws SerException
      */
-    ProjectCostStatusBO findById(String id) throws SerException;
+    default ProjectCostStatusBO getOne(String id) throws SerException{
+        return null;
+    }
 
     /**
      * 计算总条数

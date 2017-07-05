@@ -76,15 +76,11 @@ public interface ProjectOtherDemandAPI {
     }
 
     /**
-     * 根据id查询其他需求界面数据
-     *
-     * @param id 其他需求界面数据唯一标识
+     * 根据id查询其他项目界面
      * @return class ProjectOtherDemandBO
-     * @throws SerException
      */
-    default ProjectOtherDemandBO findById(String id) throws SerException {
-        return null;
-    }
+    default ProjectOtherDemandBO getOne(String id) throws SerException {return null;}
+
 
     /**
      * 输出评估结果

@@ -2,6 +2,7 @@ package com.bjike.goddess.capability.api;
 
 import com.bjike.goddess.capability.bo.SelfCapabilityBO;
 import com.bjike.goddess.capability.dto.SelfCapabilityDTO;
+import com.bjike.goddess.capability.to.GuidePermissionTO;
 import com.bjike.goddess.capability.to.SelfCapabilityTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -111,4 +112,11 @@ public interface SelfCapabilityAPI {
      * 导出
      */
     byte[] exportExcel(String name) throws SerException;
+
+    /**
+     * 功能导航权限
+     * @throws SerException
+     * @version v1
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 }

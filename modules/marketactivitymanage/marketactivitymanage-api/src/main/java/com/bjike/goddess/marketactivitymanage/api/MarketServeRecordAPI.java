@@ -4,11 +4,11 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeRecordBO;
 import com.bjike.goddess.marketactivitymanage.dto.MarketServeRecordDTO;
 import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
+import com.bjike.goddess.marketactivitymanage.to.GuidePermissionTO;
+import com.bjike.goddess.marketactivitymanage.to.MarketServeRecordImprotTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeRecordTO;
 import com.bjike.goddess.marketactivitymanage.type.AuditType;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -21,6 +21,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface MarketServeRecordAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 根据id查询市场招待记录
@@ -82,7 +96,7 @@ public interface MarketServeRecordAPI {
     /**
      * 运营商务部资金模块审核
      *
-     * @param id 市场招待记录唯一标识
+     * @param id                市场招待记录唯一标识
      * @param fundModuleOpinion 运营商务部资金模块
      * @throws SerException
      */
@@ -91,7 +105,7 @@ public interface MarketServeRecordAPI {
     /**
      * 决策层意见
      *
-     * @param id 市场招待记录唯一标识
+     * @param id                    市场招待记录唯一标识
      * @param executiveAuditOpinion 决策层审核意见
      * @throws SerException
      */
@@ -121,4 +135,41 @@ public interface MarketServeRecordAPI {
      * @throws SerException
      */
     void editClientInfo(CustomerInfoTO to) throws SerException;
+
+    /**
+     * 查看所有的项目名
+     *
+     * @throws SerException
+     */
+    List<String> findAllProjectName() throws SerException;
+
+    /**
+     * 查看所有的地区
+     *
+     * @throws SerException
+     */
+    List<String> findAllAreas() throws SerException;
+    /**
+     * 导出Excel
+     *
+     * @param areas
+     * @param startTime
+     * @param endTime
+     * @throws SerException
+     */
+    byte[] exportExcel(String[] areas, String startTime, String endTime) throws SerException;
+
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
+
+    /**
+     * 导入
+     *
+     * @param marketServeRecordImprotTOS 市场活动申请记录
+     */
+    void importExcel(List<MarketServeRecordImprotTO> marketServeRecordImprotTOS) throws SerException;
 }

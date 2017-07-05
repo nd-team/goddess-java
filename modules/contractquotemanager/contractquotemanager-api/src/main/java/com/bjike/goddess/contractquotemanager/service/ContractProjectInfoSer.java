@@ -6,6 +6,7 @@ import com.bjike.goddess.contractquotemanager.bo.ContractProjectInfoBO;
 import com.bjike.goddess.contractquotemanager.dto.ContractProjectInfoDTO;
 import com.bjike.goddess.contractquotemanager.entity.ContractProjectInfo;
 import com.bjike.goddess.contractquotemanager.to.ContractProjectInfoTO;
+import com.bjike.goddess.contractquotemanager.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -20,6 +21,19 @@ import java.util.List;
  */
 public interface ContractProjectInfoSer extends Ser<ContractProjectInfo, ContractProjectInfoDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 添加合同项目基本信息
      *
@@ -61,5 +75,34 @@ public interface ContractProjectInfoSer extends Ser<ContractProjectInfo, Contrac
     default void remove(String id) throws SerException {
 
     }
+
+    /**
+     * 查看所有的地区
+     *
+     * @throws SerException
+     */
+    List<String> findAllAreas() throws SerException;
+
+    /**
+     * 导出excel
+     *
+     * @param contractProjectInfoDTO
+     * @return
+     * @throws SerException
+     */
+    byte[] exportExcel(ContractProjectInfoDTO contractProjectInfoDTO) throws SerException;
+
+
+    /**
+     *  导入
+     * @param contractProjectInfoTOS
+     */
+    void importExcel(List<ContractProjectInfoTO> contractProjectInfoTOS) throws SerException;
+
+    /**
+     * 导出Excel
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
 
 }

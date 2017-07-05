@@ -23,19 +23,19 @@ public class RewardSituation extends BaseEntity {
      * 供应商基本信息
      */
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinColumn(name = "information_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '供应商基本信息'")
+    @JoinColumn(name = "information_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '供应商基本信息sdfsd'")
     private SupplierInformation information;
 
     /**
      * 获奖名称
      */
-    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(50)   COMMENT '获奖名称'")
-    private String name;
+    @Column( nullable = false, columnDefinition = "VARCHAR(100)   COMMENT '获奖名称jhgfouyhgjh'")
+    private String awardName;
 
     /**
      * 获得时间
      */
-    @Column(name = "acquisition", nullable = false, columnDefinition = "DATE   COMMENT '获得时间'")
+    @Column(name = "acquisition", nullable = false, columnDefinition = "DATE   COMMENT '获得时间ss'")
     private LocalDate acquisition;
 
 
@@ -47,12 +47,12 @@ public class RewardSituation extends BaseEntity {
         this.information = information;
     }
 
-    public String getName() {
-        return name;
+    public String getAwardName() {
+        return awardName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setAwardName(String awardName) {
+        this.awardName = awardName;
     }
 
     public LocalDate getAcquisition() {

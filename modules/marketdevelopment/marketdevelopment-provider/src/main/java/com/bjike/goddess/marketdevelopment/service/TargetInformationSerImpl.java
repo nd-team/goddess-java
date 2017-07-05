@@ -51,8 +51,8 @@ public class TargetInformationSerImpl extends ServiceImpl<TargetInformation, Tar
     @Transactional(rollbackFor = SerException.class)
     @Override
     public TargetInformationBO save(TargetInformationTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(marketManage))
+//            throw new SerException("您的帐号没有权限");
         TargetInformation entity = BeanTransform.copyProperties(to, TargetInformation.class);
         super.save(entity);
         return BeanTransform.copyProperties(entity, TargetInformationBO.class);
@@ -61,8 +61,8 @@ public class TargetInformationSerImpl extends ServiceImpl<TargetInformation, Tar
     @Transactional(rollbackFor = SerException.class)
     @Override
     public TargetInformationBO update(TargetInformationTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(marketManage))
+//            throw new SerException("您的帐号没有权限");
         if (StringUtils.isNotBlank(to.getId())) {
             try {
                 TargetInformation entity = super.findById(to.getId());
@@ -80,8 +80,8 @@ public class TargetInformationSerImpl extends ServiceImpl<TargetInformation, Tar
     @Transactional(rollbackFor = SerException.class)
     @Override
     public TargetInformationBO delete(TargetInformationTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(marketManage))
+//            throw new SerException("您的帐号没有权限");
         TargetInformation entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");
@@ -124,15 +124,15 @@ public class TargetInformationSerImpl extends ServiceImpl<TargetInformation, Tar
 
     @Override
     public List<TargetInformation> findByPage(TargetInformationDTO dto) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketCheck))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(marketCheck))
+//            throw new SerException("您的帐号没有权限");
         return super.findByPage(dto);
     }
 
     @Override
     public byte[] exportExcel(CollectTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketCheck))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(marketCheck))
+//            throw new SerException("您的帐号没有权限");
         TargetInformationDTO dto = new TargetInformationDTO();
         if (StringUtils.isNotBlank(to.getArea()))
             dto.getConditions().add(Restrict.eq("area", to.getArea()));

@@ -6,7 +6,6 @@ import com.bjike.goddess.contractquotemanager.dto.CusPermissionDTO;
 import com.bjike.goddess.contractquotemanager.to.CusPermissionTO;
 import com.bjike.goddess.organize.bo.OpinionBO;
 
-
 import java.util.List;
 
 /**
@@ -56,7 +55,7 @@ public interface CusPermissionAPI {
      *
      * @throws SerException
      */
-    default List<OpinionBO>  listOperateById(String id) throws SerException {
+    default List<OpinionBO> listOperateById(String id) throws SerException {
         return null;
     }
 

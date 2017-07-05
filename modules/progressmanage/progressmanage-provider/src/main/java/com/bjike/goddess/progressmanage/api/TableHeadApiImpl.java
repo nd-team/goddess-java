@@ -38,7 +38,7 @@ public class TableHeadApiImpl implements TableHeadAPI {
 
     @Override
     public void delete(String id) throws SerException {
-        tableHeadSer.remove(id);
+        tableHeadSer.delete(id);
     }
 
     @Override
