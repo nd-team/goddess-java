@@ -6,6 +6,7 @@ import com.bjike.goddess.competitormanage.bo.CompetitorBO;
 import com.bjike.goddess.competitormanage.dto.CompetitorDTO;
 import com.bjike.goddess.competitormanage.excel.SonPermissionObject;
 import com.bjike.goddess.competitormanage.service.CompetitorSer;
+import com.bjike.goddess.competitormanage.to.CompetitorOrganizaeTO;
 import com.bjike.goddess.competitormanage.to.CompetitorTO;
 import com.bjike.goddess.competitormanage.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class CompetitorApiImpl implements CompetitorAPI {
     }
 
     @Override
-    public CompetitorBO editOrganization(CompetitorTO to) throws SerException {
+    public CompetitorBO editOrganization(CompetitorOrganizaeTO to) throws SerException {
         return competitorSer.editOrganization(to);
     }
 
