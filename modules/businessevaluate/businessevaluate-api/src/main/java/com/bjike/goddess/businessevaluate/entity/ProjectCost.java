@@ -23,19 +23,19 @@ public class ProjectCost extends BaseEntity {
     /**
      * 服务费用
      */
-    @Column(name = "serviceCost", columnDefinition = "DECIMAL(10,2)   COMMENT '服务费用'")
+    @Column(name = "serviceCost", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '服务费用'")
     private Double serviceCost;
 
     /**
      * 招待费用
      */
-    @Column(name = "entertainCost", columnDefinition = "DECIMAL(10,2)   COMMENT '招待费用'")
+    @Column(name = "entertainCost", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '招待费用'")
     private Double entertainCost;
 
     /**
      * 提成
      */
-    @Column(name = "commission", columnDefinition = "DECIMAL(10,2)   COMMENT '提成'")
+    @Column(name = "commission", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '提成'")
     private Double commission;
 
     /**

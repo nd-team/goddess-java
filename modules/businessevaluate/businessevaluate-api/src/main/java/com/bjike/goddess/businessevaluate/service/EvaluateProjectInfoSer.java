@@ -85,4 +85,6 @@ public interface EvaluateProjectInfoSer extends Ser<EvaluateProjectInfo, Evaluat
     List<SonPermissionObject> sonPermission() throws SerException;
 
     Boolean guidePermission(GuidePermissionTO to) throws SerException;
+
+    Double getCost(String infoId) throws SerException;
 }
