@@ -18,7 +18,7 @@ import java.util.Set;
  */
 public class RedisClientImpl implements RedisClient {
 
-    private static final String MSG = "服务调用失败";
+    private static final String MSG = "服务不可用";
 
     @Autowired(required = false)
     private JedisPool jedisPool;

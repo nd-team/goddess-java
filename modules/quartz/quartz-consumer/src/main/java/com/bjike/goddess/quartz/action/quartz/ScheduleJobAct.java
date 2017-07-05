@@ -38,13 +38,14 @@ public class ScheduleJobAct {
     /**
      * 任务调度列表
      *
-     * @param dto
+     * @param dto 分页数据
+     * @return class ScheduleJobVO
      * @version v1
      */
     @GetMapping("v1/list")
     public Result list(ScheduleJobDTO dto, HttpServletRequest request) throws ActException {
         try {
-            List<ScheduleJobVO> scheduleJobVOs = BeanTransform.copyProperties(scheduleJobAPI.list(dto), ScheduleJobVO.class,request);
+            List<ScheduleJobVO> scheduleJobVOs = BeanTransform.copyProperties(scheduleJobAPI.list(dto), ScheduleJobVO.class, request);
             return ActResult.initialize(scheduleJobVOs);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -52,9 +53,9 @@ public class ScheduleJobAct {
     }
 
     /**
-     * 任务调度列表
+     * 任务调度列表量
      *
-     * @param dto
+     * @param dto 分页数据
      * @version v1
      */
     @GetMapping("v1/count")
@@ -71,7 +72,7 @@ public class ScheduleJobAct {
     /**
      * 添加任务调度
      *
-     * @param scheduleJobTO
+     * @param scheduleJobTO 实体数据
      * @version v1
      */
     @PostMapping("v1/add")
@@ -87,7 +88,7 @@ public class ScheduleJobAct {
     /**
      * 编辑任务调度
      *
-     * @param scheduleJobTO
+     * @param scheduleJobTO 实体数据
      * @version v1
      */
     @PutMapping("v1/edit")
@@ -120,7 +121,7 @@ public class ScheduleJobAct {
      * 开启关闭任务调度
      *
      * @param id
-     * @param enable 开启：true，关闭：false
+     * @param enable 开启
      * @version v1
      */
     @PutMapping("v1/enable/{id}/{enable}")
