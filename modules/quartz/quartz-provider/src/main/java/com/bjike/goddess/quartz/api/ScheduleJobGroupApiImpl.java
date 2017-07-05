@@ -57,4 +57,14 @@ public class ScheduleJobGroupApiImpl implements ScheduleJobGroupAPI {
     public Long count(ScheduleJobGroupDTO dto) throws SerException {
         return scheduleJobGroupSer.count(dto);
     }
+
+    @Override
+    public ScheduleJobGroupBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(scheduleJobGroupSer.findById(id),ScheduleJobGroupBO.class);
+    }
+
+    @Override
+    public List<ScheduleJobGroupBO> all(ScheduleJobGroupDTO dto) throws SerException {
+        return BeanTransform.copyProperties(scheduleJobGroupSer.findByCis(dto),ScheduleJobGroupBO.class);
+    }
 }
