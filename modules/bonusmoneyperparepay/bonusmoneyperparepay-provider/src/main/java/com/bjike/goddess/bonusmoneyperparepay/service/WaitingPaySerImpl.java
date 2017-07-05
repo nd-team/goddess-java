@@ -9,6 +9,7 @@ import com.bjike.goddess.bonusmoneyperparepay.excel.AlreadyPayExcel;
 import com.bjike.goddess.bonusmoneyperparepay.excel.SonPermissionObject;
 import com.bjike.goddess.bonusmoneyperparepay.excel.WaitingPayExcel;
 import com.bjike.goddess.bonusmoneyperparepay.to.GuidePermissionTO;
+import com.bjike.goddess.bonusmoneyperparepay.type.GuideAddrStatus;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -145,7 +146,35 @@ public class WaitingPaySerImpl extends ServiceImpl<WaitingPay, WaitingPayDTO> im
 
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
-        return null;
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideIdentity();
+                break;
+            case ADD:
+                flag = guideIdentity();
+                break;
+            case EDIT:
+                flag = guideIdentity();
+                break;
+            case DELETE:
+                flag = guideIdentity();
+                break;
+            case COLLECT:
+                flag = guideIdentity();
+                break;
+            case EXPORT:
+                flag = guideIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
     }
 
     @Override
@@ -377,10 +406,13 @@ public class WaitingPaySerImpl extends ServiceImpl<WaitingPay, WaitingPayDTO> im
     }
 
     @Override
-    public byte[] exportExcel(Integer startMonth, Integer endMonth) throws SerException {
+    public byte[] exportExcel(Integer years,Integer startMonth, Integer endMonth) throws SerException {
 
         Integer start = LocalDate.now().getMonthValue();
         Integer end = LocalDate.now().getMonthValue();
+        if(years == null){
+            years = LocalDateTime.now().getYear();
+        }
         if (startMonth != null) {
             start = startMonth;
         }
@@ -390,6 +422,7 @@ public class WaitingPaySerImpl extends ServiceImpl<WaitingPay, WaitingPayDTO> im
 
         WaitingPayDTO waitingPayDTO = new WaitingPayDTO();
         if (startMonth != null || endMonth != null) {
+            waitingPayDTO.getConditions().add(Restrict.eq("years", years));
             waitingPayDTO.getConditions().add(Restrict.between("month", new Integer[]{start, end}));
         }
         waitingPayDTO.getConditions().add(Restrict.eq("turntable", "否"));
@@ -407,7 +440,7 @@ public class WaitingPaySerImpl extends ServiceImpl<WaitingPay, WaitingPayDTO> im
     }
 
     @Override
-    public byte[] exportArealdyExcel(Integer startMonth, Integer endMonth) throws SerException {
+    public byte[] exportArealdyExcel(Integer years,Integer startMonth, Integer endMonth) throws SerException {
 
         Integer start = LocalDate.now().getMonthValue();
         Integer end = LocalDate.now().getMonthValue();
@@ -417,9 +450,13 @@ public class WaitingPaySerImpl extends ServiceImpl<WaitingPay, WaitingPayDTO> im
         if (endMonth != null) {
             end = endMonth;
         }
+        if(years == null){
+            years = LocalDateTime.now().getYear();
+        }
 
         WaitingPayDTO waitingPayDTO = new WaitingPayDTO();
         if (startMonth != null || endMonth != null) {
+            waitingPayDTO.getConditions().add(Restrict.between("years", years));
             waitingPayDTO.getConditions().add(Restrict.between("month", new Integer[]{start, end}));
         }
         waitingPayDTO.getConditions().add(Restrict.eq("turntable", "是"));

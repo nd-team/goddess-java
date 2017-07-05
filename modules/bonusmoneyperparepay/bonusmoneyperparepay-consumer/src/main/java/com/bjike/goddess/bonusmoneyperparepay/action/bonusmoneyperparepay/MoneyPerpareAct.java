@@ -28,11 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 奖金资金准备与支付
+ * 奖金资金准备
  *
  * @Author: [ lijuntao ]
  * @Date: [ 2017-06-30 04:44 ]
- * @Description: [ 奖金资金准备与支付 ]
+ * @Description: [ 奖金资金准备 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -264,9 +264,9 @@ public class MoneyPerpareAct {
      * @version v1
      */
     @GetMapping("v1/collect")
-    public Result collect(@RequestParam Integer month, Integer years) throws ActException {
+    public Result collect(Integer years,@RequestParam Integer month) throws ActException {
         try {
-            List<MoneyPerpareContrastBO> moneyPerpareContrastBOS = moneyPerpareAPI.contrastCompare(month, years);
+            List<MoneyPerpareContrastBO> moneyPerpareContrastBOS = moneyPerpareAPI.contrastCompare( years,month);
             return ActResult.initialize(BeanTransform.copyProperties(moneyPerpareContrastBOS, MoneyPerpareContrastVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

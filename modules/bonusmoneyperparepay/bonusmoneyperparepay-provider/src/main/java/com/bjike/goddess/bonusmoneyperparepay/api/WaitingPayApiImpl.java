@@ -78,15 +78,14 @@ public class WaitingPayApiImpl implements WaitingPayAPI {
     public List<WaitingBO> yearsCompare(Integer years) throws SerException {
         return waitingPaySer.yearsCompare(years);
     }
-
     @Override
-    public byte[] exportExcel(Integer startMonth, Integer endMonth) throws SerException {
-        return waitingPaySer.exportExcel(startMonth, endMonth);
+    public byte[] exportExcel(Integer years,Integer startMonth, Integer endMonth) throws SerException {
+        return waitingPaySer.exportExcel(years,startMonth, endMonth);
     }
 
     @Override
-    public byte[] exportArealdyExcel(Integer startMonth, Integer endMonth) throws SerException {
-        return waitingPaySer.exportArealdyExcel(startMonth, endMonth);
+    public byte[] exportArealdyExcel(Integer years,Integer startMonth, Integer endMonth) throws SerException {
+        return waitingPaySer.exportArealdyExcel(years,startMonth, endMonth);
     }
 
     @Override

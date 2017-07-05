@@ -138,7 +138,7 @@ public interface WaitingPayAPI {
      * @return
      * @throws SerException
      */
-    byte[] exportExcel(Integer startMonth, Integer endMonth) throws SerException;
+    byte[] exportExcel(Integer years,Integer startMonth, Integer endMonth) throws SerException;
 
     /**
      * 已付款导出excel
@@ -148,7 +148,7 @@ public interface WaitingPayAPI {
      * @return
      * @throws SerException
      */
-    byte[] exportArealdyExcel(Integer startMonth, Integer endMonth) throws SerException;
+    byte[] exportArealdyExcel(Integer years,Integer startMonth, Integer endMonth) throws SerException;
 
     /**
      * 资金准备与实际支付差异

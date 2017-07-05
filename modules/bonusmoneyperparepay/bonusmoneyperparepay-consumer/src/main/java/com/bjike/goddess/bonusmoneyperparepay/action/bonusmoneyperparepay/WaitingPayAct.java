@@ -29,11 +29,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 等待付款
+ * 付款
  *
  * @Author: [ lijuntao ]
  * @Date: [ 2017-06-30 05:32 ]
- * @Description: [ 等待付款 ]
+ * @Description: [ 付款 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -293,10 +293,10 @@ public class WaitingPayAct extends BaseFileAction {
      */
     @LoginAuth
     @GetMapping("v1/exportExcel")
-    public Result exportExcel(Integer startMonth, Integer endMonth, HttpServletResponse response) throws ActException {
+    public Result exportExcel(Integer years,Integer startMonth, Integer endMonth, HttpServletResponse response) throws ActException {
         try {
             String fileName = "等待付款.xlsx";
-            super.writeOutFile(response, waitingPayAPI.exportExcel(startMonth, endMonth), fileName);
+            super.writeOutFile(response, waitingPayAPI.exportExcel(years,startMonth, endMonth), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -314,10 +314,10 @@ public class WaitingPayAct extends BaseFileAction {
      */
     //@LoginAuth
     @GetMapping("v1/exportAlreadyExcel")
-    public Result exportAlreadyExcel(Integer startMonth, Integer endMonth, HttpServletResponse response) throws ActException {
+    public Result exportAlreadyExcel(Integer years,Integer startMonth, Integer endMonth, HttpServletResponse response) throws ActException {
         try {
             String fileName = "已付款.xlsx";
-            super.writeOutFile(response, waitingPayAPI.exportArealdyExcel(startMonth, endMonth), fileName);
+            super.writeOutFile(response, waitingPayAPI.exportArealdyExcel(years,startMonth, endMonth), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
