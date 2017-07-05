@@ -43,4 +43,9 @@ public class OilCardRechargeApiImpl implements OilCardRechargeAPI {
     public List<OilCardRechargeBO> pageList(OilCardRechargeDTO dto) throws SerException {
         return oilCardRechargeSer.pageList(dto);
     }
+
+    @Override
+    public List<OilCardRechargeBO> findByBasicId(String id) throws SerException {
+        return oilCardRechargeSer.findByBasicId(id);
+    }
 }

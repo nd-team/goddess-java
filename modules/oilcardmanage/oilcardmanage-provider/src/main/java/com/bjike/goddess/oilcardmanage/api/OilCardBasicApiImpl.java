@@ -90,5 +90,10 @@ public class OilCardBasicApiImpl implements OilCardBasicAPI {
         return oilCardBasicSer.pageList(dto);
     }
 
+    @Override
+    public OilCardBasicBO findByCode(String oilCardCode) throws SerException {
+        return oilCardBasicSer.findByCode(oilCardCode);
+    }
+
 
 }
