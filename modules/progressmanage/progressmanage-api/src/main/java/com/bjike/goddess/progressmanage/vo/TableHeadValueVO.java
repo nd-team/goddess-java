@@ -16,12 +16,10 @@ public class TableHeadValueVO {
      */
     private String id;
 
-
     /**
      * 值
      */
     private String value;
-
 
     public String getId() {
         return id;

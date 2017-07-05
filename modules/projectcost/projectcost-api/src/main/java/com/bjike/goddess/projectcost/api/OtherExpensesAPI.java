@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectcost.bo.OtherExpensesBO;
 import com.bjike.goddess.projectcost.dto.OtherExpensesDTO;
 import com.bjike.goddess.projectcost.to.FindTO;
+import com.bjike.goddess.projectcost.to.GuidePermissionTO;
 import com.bjike.goddess.projectcost.to.OtherExpensesTO;
 
 import java.util.List;
@@ -95,4 +96,10 @@ public interface OtherExpensesAPI {
         return null;
     }
 
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

@@ -5,6 +5,7 @@ import com.bjike.goddess.regionalprogresscollect.bo.ReferenceTargetBO;
 import com.bjike.goddess.regionalprogresscollect.dto.ReferenceTargetDTO;
 import com.bjike.goddess.regionalprogresscollect.service.ReferenceTargetSer;
 import com.bjike.goddess.regionalprogresscollect.to.FindTO;
+import com.bjike.goddess.regionalprogresscollect.to.GuidePermissionTO;
 import com.bjike.goddess.regionalprogresscollect.to.ReferenceTargetTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,5 +65,10 @@ public class ReferenceTargetApiImpl implements ReferenceTargetAPI {
     @Override
     public List<ReferenceTargetBO> findListByTO(FindTO to) throws SerException {
         return referenceTargetSer.findListByTO(to);
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return referenceTargetSer.guidePermission( guidePermissionTO );
     }
 }

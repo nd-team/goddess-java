@@ -36,9 +36,8 @@ public class SingleProjectMultipleUIApiImpl implements SingleProjectMultipleUIAP
      * @throws SerException
      */
     @Override
-    public SingleProjectMultipleUIBO findById(String id) throws SerException {
-        SingleProjectMultipleUI model = singleProjectMultipleUISer.findById(id);
-        return BeanTransform.copyProperties(model, SingleProjectMultipleUIBO.class);
+    public SingleProjectMultipleUIBO getOne(String id) throws SerException {
+        return singleProjectMultipleUISer.getOne(id);
     }
 
     /**

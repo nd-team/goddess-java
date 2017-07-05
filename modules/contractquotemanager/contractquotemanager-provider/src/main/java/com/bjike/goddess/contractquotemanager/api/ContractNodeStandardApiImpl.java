@@ -9,6 +9,7 @@ import com.bjike.goddess.contractquotemanager.dto.ContractNodeStandardDTO;
 import com.bjike.goddess.contractquotemanager.entity.ContractNodeStandard;
 import com.bjike.goddess.contractquotemanager.service.ContractNodeStandardSer;
 import com.bjike.goddess.contractquotemanager.to.ContractNodeStandardTO;
+import com.bjike.goddess.contractquotemanager.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,16 @@ import java.util.List;
  */
 @Service("contractNodeStandardApiImpl")
 public class ContractNodeStandardApiImpl implements ContractNodeStandardAPI {
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return contractNodeStandardSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return contractNodeStandardSer.guidePermission(guidePermissionTO);
+    }
 
     @Autowired
     private ContractNodeStandardSer contractNodeStandardSer;

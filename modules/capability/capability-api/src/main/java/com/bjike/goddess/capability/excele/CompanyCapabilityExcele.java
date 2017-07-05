@@ -98,8 +98,15 @@ public class CompanyCapabilityExcele extends BaseTO{
     /**
      * 已完成项目
      */
-    @ExcelHeader(name = "已完成项目",notNull = true)
-    private CompletePro completePro;
+//    @ExcelHeader(name = "已完成项目",notNull = true)
+//    private CompletePro completePro;
+
+
+    /**
+     * 已完成项目
+     */
+    @ExcelHeader(name = "已完成项目", notNull = true)
+    private String companyProject;
 
     /**
      * 尚在进行中项目
@@ -124,6 +131,8 @@ public class CompanyCapabilityExcele extends BaseTO{
      */
     @ExcelHeader(name = "公司公告栏",notNull = true)
     private String bulletinBoard;
+
+
 
     public String getCompany() {
         return company;
@@ -237,12 +246,12 @@ public class CompanyCapabilityExcele extends BaseTO{
         this.cooperate = cooperate;
     }
 
-    public CompletePro getCompletePro() {
-        return completePro;
+    public String getCompanyProject() {
+        return companyProject;
     }
 
-    public void setCompletePro(CompletePro completePro) {
-        this.completePro = completePro;
+    public void setCompanyProject(String companyProject) {
+        this.companyProject = companyProject;
     }
 
     public String getInProjct() {

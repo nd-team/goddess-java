@@ -5,6 +5,7 @@ import com.bjike.goddess.qualifications.bo.FacilityInformationBO;
 import com.bjike.goddess.qualifications.dto.FacilityInformationDTO;
 import com.bjike.goddess.qualifications.service.FacilityInformationSer;
 import com.bjike.goddess.qualifications.to.FacilityInformationTO;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,5 +59,9 @@ public class FacilityInformationApiImpl implements FacilityInformationAPI {
     @Override
     public FacilityInformationBO getById(String id) throws SerException {
         return facilityInformationSer.getById(id);
+    }
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return facilityInformationSer.guidePermission( guidePermissionTO );
     }
 }

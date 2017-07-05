@@ -2,6 +2,7 @@ package com.bjike.goddess.reportmanagement.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.reportmanagement.enums.AssetType;
+import com.bjike.goddess.reportmanagement.enums.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -57,6 +58,20 @@ public class Asset extends BaseEntity {
      */
     @Column(name = "assetType", columnDefinition = "TINYINT(2)   COMMENT '资产类型'")
     private AssetType assetType;
+
+    /**
+     * 运算类型
+     */
+    @Column(name = "type", columnDefinition = "TINYINT(2)   COMMENT '运算类型'")
+    private Type type;
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
 
     public AssetType getAssetType() {
         return assetType;

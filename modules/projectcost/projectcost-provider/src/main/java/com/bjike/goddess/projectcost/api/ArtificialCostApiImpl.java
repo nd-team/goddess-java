@@ -3,9 +3,11 @@ package com.bjike.goddess.projectcost.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectcost.bo.ArtificialCostBO;
 import com.bjike.goddess.projectcost.dto.ArtificialCostDTO;
+import com.bjike.goddess.projectcost.excel.SonPermissionObject;
 import com.bjike.goddess.projectcost.service.ArtificialCostSer;
 import com.bjike.goddess.projectcost.to.ArtificialCostTO;
 import com.bjike.goddess.projectcost.to.FindTO;
+import com.bjike.goddess.projectcost.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,5 +66,15 @@ public class ArtificialCostApiImpl implements ArtificialCostAPI {
     @Override
     public List<ArtificialCostBO> findByTO(FindTO to) throws SerException {
         return artificialCostSer.findByTO(to);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return artificialCostSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return artificialCostSer.guidePermission( guidePermissionTO );
     }
 }

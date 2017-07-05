@@ -1,10 +1,12 @@
 package com.bjike.goddess.lendreimbursement.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.lendreimbursement.to.GuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
 import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
 import com.bjike.goddess.lendreimbursement.bo.ReimburseRecordBO;
 import com.bjike.goddess.lendreimbursement.dto.ReimburseRecordDTO;
+import com.bjike.goddess.lendreimbursement.excel.SonPermissionObject;
 import com.bjike.goddess.lendreimbursement.to.ReimburseRecordTO;
 
 import java.util.List;
@@ -20,6 +22,20 @@ import java.util.List;
  */
 public interface ReimburseRecordAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 申请报销列表总条数
      */
@@ -324,32 +340,46 @@ public interface ReimburseRecordAPI {
      * 所有报销人
      *
      */
-    default List<String> listAllUser( ) throws SerException {
+    default List<String> listAllUser() throws SerException {
         return null;
     }
     /**
      * 所有一级科目
      *
      */
-    default List<String> listFirstSubject( ) throws SerException {
+    default List<String> listFirstSubject() throws SerException {
         return null;
     }
     /**
      * 所有地区
      *
      */
-    default List<String> listArea( ) throws SerException {
+    default List<String> listArea() throws SerException {
         return null;
     }
     /**
      * 所有项目
      *
      */
-    default List<String> listProject( ) throws SerException {
+    default List<String> listProject() throws SerException {
         return null;
     }
+    /**
+     * 等待付款导出excel
+     *
+     * @param reimburseRecordDTO
+     * @return
+     * @throws SerException
+     */
+    byte[] exportExcel(ReimburseRecordDTO reimburseRecordDTO) throws SerException;
 
-
-
+    /**
+     * 已付款记录导出excel
+     *
+     * @param reimburseRecordDTO
+     * @return
+     * @throws SerException
+     */
+    byte[] exportAlPayExcel(ReimburseRecordDTO reimburseRecordDTO) throws SerException;
 
 }

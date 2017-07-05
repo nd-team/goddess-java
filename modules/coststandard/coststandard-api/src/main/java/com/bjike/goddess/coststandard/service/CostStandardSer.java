@@ -6,7 +6,9 @@ import com.bjike.goddess.coststandard.bo.CostStandardBO;
 import com.bjike.goddess.coststandard.bo.CostStandardOpinionBO;
 import com.bjike.goddess.coststandard.dto.CostStandardDTO;
 import com.bjike.goddess.coststandard.entity.CostStandard;
+import com.bjike.goddess.coststandard.excel.SonPermissionObject;
 import com.bjike.goddess.coststandard.to.CostStandardTO;
+import com.bjike.goddess.coststandard.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -129,4 +131,18 @@ public interface CostStandardSer extends Ser<CostStandard, CostStandardDTO> {
     }
 
 
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

@@ -3,8 +3,10 @@ package com.bjike.goddess.coststandard.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.coststandard.bo.CostStandardContrastBO;
 import com.bjike.goddess.coststandard.dto.CostStandardContrastDTO;
+import com.bjike.goddess.coststandard.excel.SonPermissionObject;
 import com.bjike.goddess.coststandard.service.CostStandardContrastSer;
 import com.bjike.goddess.coststandard.to.CostStandardContrastTO;
+import com.bjike.goddess.coststandard.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,5 +55,11 @@ public class CostStandardContrastApiImpl implements CostStandardContrastAPI {
     @Override
     public Long getTotal() throws SerException {
         return costStandardContrastSer.getTotal();
+    }
+
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return costStandardContrastSer.guidePermission( guidePermissionTO );
     }
 }

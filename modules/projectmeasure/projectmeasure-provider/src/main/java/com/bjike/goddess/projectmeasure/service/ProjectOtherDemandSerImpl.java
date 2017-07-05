@@ -5,10 +5,6 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.message.api.MessageAPI;
-import com.bjike.goddess.message.enums.MsgType;
-import com.bjike.goddess.message.enums.RangeType;
-import com.bjike.goddess.message.enums.SendType;
-import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.projectmeasure.bo.ProjectEvaluateResultBO;
 import com.bjike.goddess.projectmeasure.bo.ProjectOtherDemandBO;
 import com.bjike.goddess.projectmeasure.dto.ProjectOtherDemandDTO;
@@ -89,6 +85,7 @@ public class ProjectOtherDemandSerImpl extends ServiceImpl<ProjectOtherDemand, P
         RpcTransmit.transmitUserToken(userToken);
 
     }
+
     /**
      * 导航检查权限
      *
@@ -150,9 +147,10 @@ public class ProjectOtherDemandSerImpl extends ServiceImpl<ProjectOtherDemand, P
 
     @Override
     public List<ProjectEvaluateResultBO> findEvaluateResult(ProjectOtherDemandDTO demandDTO) throws SerException {
+        checkPermission();
         String con = "";
         if (StringUtils.isNotBlank(demandDTO.getArea())) {
-            con = " and a.area = '" + demandDTO.getArea()+"'";
+            con = " and a.area = '" + demandDTO.getArea() + "'";
         }
         String[] field = {"projectName", "area", "amount", "timeLimit", "labour", "serviceCharge", "royalties", "serveCharge", "deviceCharge", "vehicleCharge", "configCharge", "otherCharge", "taxes", "backDate", "workInterface", "totalCost"};
         String sql = "select a.projectName as projectName ,a.area as area, IFNULL(a.amount,0) as amount, a.timeLimit as timeLimit, IFNULL(a.labour,0) as labour," +
@@ -164,8 +162,7 @@ public class ProjectOtherDemandSerImpl extends ServiceImpl<ProjectOtherDemand, P
                 " on b.projectName = c.projectName left join" +
                 " projectmeasure_projectpersonneldemand d on c.projectName = d.projectName where 1=1 " + con + " limit 0," + demandDTO.getLimit();
 
-        System.out.println(sql);
-        List<ProjectEvaluateResultBO> projectEvaluateResultBOS= new ArrayList<>();
+        List<ProjectEvaluateResultBO> projectEvaluateResultBOS = new ArrayList<>();
         projectEvaluateResultBOS = projectBasicInfoSer.findBySql(sql, ProjectEvaluateResultBO.class, field);
         if (projectEvaluateResultBOS != null && projectEvaluateResultBOS.size() > 0) {
             for (ProjectEvaluateResultBO str : projectEvaluateResultBOS) {
@@ -189,7 +186,7 @@ public class ProjectOtherDemandSerImpl extends ServiceImpl<ProjectOtherDemand, P
             }
         }
 
-        if( projectEvaluateResultBOS!= null && projectEvaluateResultBOS.size()>0){
+        if (projectEvaluateResultBOS != null && projectEvaluateResultBOS.size() > 0) {
 
             Collections.sort(projectEvaluateResultBOS, new Comparator<ProjectEvaluateResultBO>() {
                 @Override
@@ -206,7 +203,7 @@ public class ProjectOtherDemandSerImpl extends ServiceImpl<ProjectOtherDemand, P
     public List<SonPermissionObject> sonPermission() throws SerException {
         List<SonPermissionObject> list = new ArrayList<>();
         String userToken = RpcTransmit.getUserToken();
-        Boolean flagSeeSign = guildPermission();
+        Boolean flagOtherSign = guildPermission();
         RpcTransmit.transmitUserToken(userToken);
 
         SonPermissionObject obj = new SonPermissionObject();
@@ -214,7 +211,7 @@ public class ProjectOtherDemandSerImpl extends ServiceImpl<ProjectOtherDemand, P
         obj = new SonPermissionObject();
         obj.setName("projectotherdemand");
         obj.setDescribesion("其他项目需求界面");
-        if (flagSeeSign ) {
+        if (flagOtherSign) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -329,6 +326,17 @@ public class ProjectOtherDemandSerImpl extends ServiceImpl<ProjectOtherDemand, P
         }
         list.add(obj);
 
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("outevaluateresult");
+        obj.setDescribesion("输出评估结果界面");
+        if (flagOtherSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
 
         return list;
     }
@@ -358,11 +366,27 @@ public class ProjectOtherDemandSerImpl extends ServiceImpl<ProjectOtherDemand, P
                 case THAW:
                     flag = guildPermission();
                     break;
+                case COLLECT:
+                    flag = guildPermission();
+                    break;
+                case SEE:
+                    flag = guildPermission();
+                    break;
                 default:
                     flag = true;
                     break;
             }
             return flag;
         }
+    }
+
+    @Override
+    public ProjectOtherDemandBO getOne(String id) throws SerException {
+        checkPermission();
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空哦");
+        }
+        ProjectOtherDemand projectBasicInfo = super.findById(id);
+        return BeanTransform.copyProperties(projectBasicInfo, ProjectOtherDemandBO.class);
     }
 }

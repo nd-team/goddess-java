@@ -64,8 +64,8 @@ public class ContactSituationSerImpl extends ServiceImpl<ContactSituation, Conta
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ContactSituationBO save(ContactSituationTO to) throws SerException {
-        if (!supPermissionSer.getSupPermission(idFlag))
-            throw new SerException("您的帐号没有权限");
+//        if (!supPermissionSer.getSupPermission(idFlag))
+//            throw new SerException("您的帐号没有权限");
         ContactSituation entity = BeanTransform.copyProperties(to, ContactSituation.class);
         entity.setInformation(supplierInformationSer.findById(to.getInformationId()));
         if (null == entity.getInformation())
@@ -77,8 +77,8 @@ public class ContactSituationSerImpl extends ServiceImpl<ContactSituation, Conta
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ContactSituationBO update(ContactSituationTO to) throws SerException {
-        if (!supPermissionSer.getSupPermission(idFlag))
-            throw new SerException("您的帐号没有权限");
+//        if (!supPermissionSer.getSupPermission(idFlag))
+//            throw new SerException("您的帐号没有权限");
         ContactSituation entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据对象不能为空");
@@ -105,8 +105,8 @@ public class ContactSituationSerImpl extends ServiceImpl<ContactSituation, Conta
 
     @Override
     public ContactSituationBO getById(String id) throws SerException {
-        if (!supPermissionSer.getSupPermission(idFlag))
-            throw new SerException("您的帐号没有权限");
+//        if (!supPermissionSer.getSupPermission(idFlag))
+//            throw new SerException("您的帐号没有权限");
         ContactSituation entity = super.findById(id);
         if (null == entity)
             return null;

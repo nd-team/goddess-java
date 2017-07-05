@@ -21,5 +21,6 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.outcarfare.api.CusPermissionOperateAPI" id="cusPermissionOperateApiImpl"/>
 
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
 </beans>

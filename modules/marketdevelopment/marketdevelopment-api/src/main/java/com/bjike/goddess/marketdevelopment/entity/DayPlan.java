@@ -36,7 +36,7 @@ public class DayPlan extends BaseEntity {
     /**
      * 业务状态(立项前/立项后)
      */
-    @Column(name = "is_business", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '业务状态(立项前/立项后)'", insertable = false)
+    @Column(name = "is_business", nullable = false, columnDefinition = "TINYINT(2)    COMMENT '业务状态(立项前/立项后)'")
     private Boolean business;
 
     /**

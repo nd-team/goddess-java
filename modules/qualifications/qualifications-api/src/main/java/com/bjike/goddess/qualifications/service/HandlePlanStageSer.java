@@ -6,6 +6,7 @@ import com.bjike.goddess.qualifications.bo.AuditMaterialBO;
 import com.bjike.goddess.qualifications.bo.HandlePlanStageBO;
 import com.bjike.goddess.qualifications.dto.HandlePlanStageDTO;
 import com.bjike.goddess.qualifications.entity.HandlePlanStage;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 import com.bjike.goddess.qualifications.to.HandlePlanStageTO;
 
 import java.util.List;
@@ -95,6 +96,20 @@ public interface HandlePlanStageSer extends Ser<HandlePlanStage, HandlePlanStage
      * @throws SerException
      */
     default HandlePlanStageBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 }

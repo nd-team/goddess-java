@@ -3,28 +3,28 @@ package com.bjike.goddess.receivable.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.message.api.MessageAPI;
-import com.bjike.goddess.message.enums.MsgType;
-import com.bjike.goddess.message.enums.RangeType;
-import com.bjike.goddess.message.enums.SendType;
-import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.receivable.bo.*;
-import com.bjike.goddess.receivable.dto.ContractorDTO;
 import com.bjike.goddess.receivable.dto.ReceivableSubsidiaryDTO;
 import com.bjike.goddess.receivable.entity.Contractor;
 import com.bjike.goddess.receivable.entity.ReceivableSubsidiary;
 import com.bjike.goddess.receivable.enums.AuditStatus;
 import com.bjike.goddess.receivable.enums.CompareStatus;
+import com.bjike.goddess.receivable.enums.GuideAddrStatus;
 import com.bjike.goddess.receivable.enums.TimeStatus;
 import com.bjike.goddess.receivable.excel.ReceivableSubsidiaryExport;
 import com.bjike.goddess.receivable.excel.ReceivableSubsidiaryTemplateExport;
 import com.bjike.goddess.receivable.to.CollectCompareTO;
+import com.bjike.goddess.receivable.to.GuidePermissionTO;
 import com.bjike.goddess.receivable.to.ProgressTO;
 import com.bjike.goddess.receivable.to.ReceivableSubsidiaryTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +34,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -53,11 +51,154 @@ import java.util.stream.Collectors;
 @CacheConfig(cacheNames = "receivableSerCache")
 @Service
 public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiary, ReceivableSubsidiaryDTO> implements ReceivableSubsidiarySer {
+
     @Autowired
     private ContractorSer contractorSer;
     @Autowired
     private MessageAPI messageAPI;
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
 
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
 
     @Override
     public Long countReceivableSubsidiary(ReceivableSubsidiaryDTO receivableSubsidiaryDTO) throws SerException {
@@ -165,22 +306,9 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         receivableSubsidiary.setMoreMoney(moreNum * receivableSubsidiary.getTaskPrice());
         //receivableSubsidiary = count(receivableSubsidiary);
         super.update(receivableSubsidiary);
-        List<ReceivableSubsidiary> receivableSubsidiaries = new ArrayList<>();
-        for(ReceivableSubsidiary r:receivableSubsidiaries){
-            if(r.getArea().equals(receivableSubsidiaryTO.getArea())){
-
-            }
-            MessageTO to = new MessageTO();
-            to.setContent("您修改了...");
-            to.setTitle("发送项目问题受理和处理修改的东西");
-            to.setMsgType(MsgType.SYS);
-            to.setSendType(SendType.EMAIL);
-            to.setRangeType(RangeType.SPECIFIED);
-
-            messageAPI.send(to);
-        }
         return BeanTransform.copyProperties(receivableSubsidiary, ReceivableSubsidiaryBO.class);
     }
+
 
     @Transactional(rollbackFor = SerException.class)
     @Override
@@ -193,11 +321,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
 
     }
 
-    /**
-     * 签字审批时间
-     *
-     * @param auditTime
-     */
+    @Override
     public List<String> auditTime(String auditTime) throws SerException {
         List<String> list = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -229,11 +353,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         return list;
     }
 
-    /**
-     * ERP结算审批时间
-     *
-     * @param countTime
-     */
+    @Override
     public List<String> countTime(String countTime) throws SerException {
         List<String> list = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -261,11 +381,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         return list;
     }
 
-    /**
-     * 发票审核时间
-     *
-     * @param billTime
-     */
+    @Override
     public List<String> billTime(String billTime) throws SerException {
         List<String> list = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -288,11 +404,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         return list;
     }
 
-    /**
-     * 预计支付时间
-     *
-     * @param planTime
-     */
+    @Override
     public String planTime(String planTime) throws SerException {
         List<String> list = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -304,6 +416,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
             cal.setTime(date);
             cal.add(Calendar.MONTH, 3);
             accountTime = sdf.format(cal.getTime());//到账时间
+            list.add(accountTime);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -311,8 +424,8 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
     }
 
     @Override
-    public void editTime(ReceivableSubsidiary receivableSubsidiary, String auditStatusStr, String countStatusStr, String billStatusStr, String planStatusStr) throws SerException {
-        ReceivableSubsidiary subsidiary = super.findById(receivableSubsidiary.getId());
+    public ReceivableSubsidiaryBO editTime(ReceivableSubsidiaryTO receivableSubsidiaryTO, String auditStatusStr, String countStatusStr, String billStatusStr, String planStatusStr) throws SerException {
+        ReceivableSubsidiary subsidiary = super.findById(receivableSubsidiaryTO.getId());
         if (auditStatusStr != null) {
             subsidiary.setAuditStatus(AuditStatus.PASS);
         } else {
@@ -333,14 +446,43 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         } else {
             subsidiary.setPlanStatus(AuditStatus.NOT);
         }
-        subsidiary.setFinishTime(receivableSubsidiary.getFinishTime());
-        subsidiary.setCheckTime(receivableSubsidiary.getCheckTime());
-        subsidiary.setAuditTime(receivableSubsidiary.getAuditTime());
-        subsidiary.setCountTime(receivableSubsidiary.getCountTime());
-        subsidiary.setBillTime(receivableSubsidiary.getBillTime());
-        subsidiary.setPlanTime(receivableSubsidiary.getPlanTime());
-        subsidiary.setAccountTime(receivableSubsidiary.getAccountTime());
+
+//        List<String> msgs = new ArrayList();
+//        if (DateUtil.dateToString(subsidiary.getAuditTime()).equals(receivableSubsidiaryTO.getAuditTime())) {
+//            msgs.add("签字审批时间");
+//        }
+//        if (DateUtil.dateToString(subsidiary.getCountTime()).equals(receivableSubsidiaryTO.getCountTime())) {
+//            msgs.add("ERP结算审批时间");
+//        }
+//        if (DateUtil.dateToString(subsidiary.getPlanTime()).equals(receivableSubsidiaryTO.getBillTime())) {
+//            msgs.add("发票审核时间");
+//        }
+//        if (DateUtil.dateToString(subsidiary.getPlanTime()).equals(receivableSubsidiaryTO.getPlanTime())) {
+//            msgs.add("预计支付时间");
+//        }
+//        if (DateUtil.dateToString(subsidiary.getAccountTime()).equals(receivableSubsidiaryTO.getAccountTime())) {
+//            msgs.add("到账时间");
+//        }
+//        String[] temp = new String[msgs.size()];
+//        MessageTO to = new MessageTO();
+//        to.setContent("您修改了" + StringUtils.join(msgs.toArray(temp),","));
+//        to.setTitle("发送回款管理修改的东西");
+//        to.setReceivers(new String[]{"xiazhili_aj@163.com"});
+//        to.setSendType(SendType.EMAIL);
+//        to.setRangeType(RangeType.SPECIFIED);
+//
+//        messageAPI.send(to);
+        //todo 编辑时间时发送邮件
+        subsidiary.setFinishTime(LocalDate.parse(receivableSubsidiaryTO.getFinishTime()));
+        subsidiary.setCheckTime(LocalDate.parse(receivableSubsidiaryTO.getCheckTime()));
+        subsidiary.setAuditTime(LocalDate.parse(receivableSubsidiaryTO.getAuditTime()));
+        subsidiary.setCountTime(LocalDate.parse(receivableSubsidiaryTO.getCountTime()));
+        subsidiary.setBillTime(LocalDate.parse(receivableSubsidiaryTO.getBillTime()));
+        subsidiary.setPlanTime(LocalDate.parse(receivableSubsidiaryTO.getPlanTime()));
+        subsidiary.setAccountTime(LocalDate.parse(receivableSubsidiaryTO.getAccountTime()));
         super.update(subsidiary);
+        ReceivableSubsidiaryBO bo = BeanTransform.copyProperties(subsidiary,ReceivableSubsidiaryBO.class);
+        return bo;
     }
 
     @Override
@@ -621,31 +763,41 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
     @Override
     public List<CollectCompareBO> collectCompare(CollectCompareTO to) throws SerException {
         ReceivableSubsidiaryDTO dto = new ReceivableSubsidiaryDTO();
+
         String startTime = to.getStartTime();
         String endTime = to.getEndTime();
-        List<ReceivableSubsidiary> receivableSubsidiaries = new ArrayList<>();
-        for (ReceivableSubsidiary receivableSubsidiary : receivableSubsidiaries) {
-            if (receivableSubsidiary.getAccountTime().equals(TimeStatus.MONTH)) {
-                startTime = DateUtil.getStartMonth().toString();
-                endTime = DateUtil.getEndMonth().toString();
-            } else if (receivableSubsidiary.getAccountTime().equals(TimeStatus.QUARTER)) {
-                startTime = DateUtil.getStartMonth().toString();
-                endTime = DateUtil.getEndMonth().toString();
-            } else if (receivableSubsidiary.getAccountTime().equals(TimeStatus.YEAR)) {
-                startTime = DateUtil.getStartYear().toString();
-                endTime = DateUtil.getEndYear().toString();
-            }
-        }
-
-
         if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
             dto.getConditions().add(Restrict.between("accountTime", new String[]{startTime, endTime}));
         }
         List<ReceivableSubsidiary> list = super.findByCis(dto);
 
+
+//        List<ReceivableSubsidiary> receivableSubsidiaries = new ArrayList<>();
+//        for (ReceivableSubsidiary receivableSubsidiary : receivableSubsidiaries) {
+//            if (receivableSubsidiary.getAccountTime().equals(TimeStatus.MONTH)) {
+//                startTime = DateUtil.getStartMonth().toString();
+//                endTime = DateUtil.getEndMonth().toString();
+//            } else if (receivableSubsidiary.getAccountTime().equals(TimeStatus.QUARTER)) {
+//                startTime = DateUtil.getStartMonth().toString();
+//                endTime = DateUtil.getEndMonth().toString();
+//            } else if (receivableSubsidiary.getAccountTime().equals(TimeStatus.YEAR)) {
+//                startTime = DateUtil.getStartYear().toString();
+//                endTime = DateUtil.getEndYear().toString();
+//            }
+//        }
+
         return collectCount(list, to.getCompareStatus());
 
     }
+//    private List<CollectCompareBO> collectDate(List<ReceivableSubsidiary> list,TimeStatus status){
+//        List<CollectCompareBO> collectCompareBOS = new ArrayList<>();
+//
+//        String month = null;
+//        if(status.equals(TimeStatus.MONTH)){
+//            month = DateUtil.getStartMonth().toString();
+//        }
+//        return null;
+//    }
 
     private List<CollectCompareBO> collectCount(List<ReceivableSubsidiary> list, CompareStatus status) throws SerException {
         List<CollectCompareBO> collectCompareBOS = new ArrayList<>();
@@ -689,6 +841,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         return collectCompareBOS;
 
     }
+
 
     @Override
     public ReceivableSubsidiaryBO importExcel(List<ReceivableSubsidiaryTO> receivableSubsidiaryTOS) throws SerException {
@@ -778,6 +931,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         byte[] bytes = ExcelUtil.clazzToExcel(templateExports, exce);
         return bytes;
     }
+
     @Override
     public ReceivableSubsidiaryBO updateSend(ReceivableSubsidiaryTO to) throws SerException {
 //        Contractor contractor = contractorSer.findById(to.getContractorId());
@@ -789,8 +943,85 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
 //        }
         return null;
     }
+    @Override
+    public List<ReceivableSubsidiaryBO> receivable(String startTime,String endTime) throws SerException {
+        ReceivableSubsidiaryDTO dto = new ReceivableSubsidiaryDTO();
+        String[] condi = new String[]{startTime,endTime};
+        if(StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)){
+            dto.getConditions().add(Restrict.between("accountTime",condi));
+        }
+        List<ReceivableSubsidiary> receivableSubsidiaries = super.findByCis(dto);
+        List<ReceivableSubsidiaryBO> receivableSubsidiaryBOS = BeanTransform.copyProperties(receivableSubsidiaries,ReceivableSubsidiaryBO.class);
+        return receivableSubsidiaryBOS;
+    }
 
 
-}
+    public Map<String,String> getLastMonth(String dateStr) throws Exception{
+                SimpleDateFormat simpleDateFormat= new SimpleDateFormat("yyyy-MM-dd");
+                Date date = simpleDateFormat.parse(dateStr);
+                Map<String,String> map=new HashMap<String,String>();
+                int year = Integer.parseInt(new SimpleDateFormat("yyyy").format(date));
+                int month=date.getMonth();
+                Calendar a = Calendar.getInstance();
+                a.set(Calendar.YEAR, year);
+                a.set(Calendar.MONTH, month - 1);
+                a.set(Calendar.DATE, 1);//???????????
+                a.roll(Calendar.DATE, -1);//??????????????
+                int maxDate = a.get(Calendar.DATE);//?????????
+                String monthFormatFr=""+year+"-"+month+"-"+"01";
+                String monthFormatLs=""+year+"-"+month+"-"+maxDate;
+                map.put("monthFormatFr",monthFormatFr);
+                map.put("monthFormatLs",monthFormatLs);
+                return map;
+            }
+    public Map<String,String> getLastQuarter(String dateStr) throws Exception{
+                SimpleDateFormat simpleDateFormat= new SimpleDateFormat("yyyy-MM-dd");
+                Date date = simpleDateFormat.parse(dateStr);
+                Map<String,String> map=new HashMap<String,String>();
+                int year = Integer.parseInt(new SimpleDateFormat("yyyy").format(date));
+                int month=date.getMonth();
+                int sessionFrist=0;
+                if(month==1||month==2||month==3){
+                    month=3;
+                    sessionFrist=1;
+                }
+                if(month==4||month==5||month==6){
+                    month=6;
+                    sessionFrist=4;
+                }
+                if(month==7||month==8||month==9){
+                    month=9;
+                    sessionFrist=7;
+                }
+                if(month==10||month==11||month==12){
+                    month=12;
+                    sessionFrist=10;
+                }
+                Calendar a = Calendar.getInstance();
+                a.set(Calendar.YEAR, year);
+                a.set(Calendar.MONTH, month - 1);
+                a.set(Calendar.DATE, 1);
+                a.roll(Calendar.DATE, -1);
+                int maxDate = a.get(Calendar.DATE);
+                String monthFormatFr=""+year+"-"+sessionFrist+"-"+"01";
+                String monthFormatLs=""+year+"-"+month+"-"+maxDate;
+                map.put("monthFormatFr",monthFormatFr);
+                map.put("monthFormatLs",monthFormatLs);
+                return map;
+            }
+    public Map<String,String> getLastYear(String dateStr) throws Exception{
+                SimpleDateFormat simpleDateFormat= new SimpleDateFormat("yyyy-MM-dd");
+                Date date=simpleDateFormat.parse(dateStr);
+                Map<String,String> map=new HashMap<String,String>();
+                int year = Integer.parseInt(new SimpleDateFormat("yyyy").format(date))-1;
+                String monthFormatFr=""+year+"-"+"01"+"-"+"01";
+                String monthFormatLs=""+year+"-"+"12"+"-"+"31";
+                map.put("monthFormatFr",monthFormatFr);
+                map.put("monthFormatLs",monthFormatLs);
+                return map;
+            }
+
+
+        }
 
 

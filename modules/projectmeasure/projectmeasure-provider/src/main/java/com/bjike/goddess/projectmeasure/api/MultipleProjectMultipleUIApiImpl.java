@@ -36,9 +36,8 @@ public class MultipleProjectMultipleUIApiImpl implements MultipleProjectMultiple
      * @throws SerException
      */
     @Override
-    public MultipleProjectMultipleUIBO findById(String id) throws SerException {
-        MultipleProjectMultipleUI model = multipleProjectMultipleUISer.findById(id);
-        return BeanTransform.copyProperties(model, MultipleProjectMultipleUIBO.class);
+    public MultipleProjectMultipleUIBO getOne(String id) throws SerException {
+        return multipleProjectMultipleUISer.getOne(id);
     }
 
     /**
@@ -106,4 +105,5 @@ public class MultipleProjectMultipleUIApiImpl implements MultipleProjectMultiple
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return multipleProjectMultipleUISer.guidePermission(guidePermissionTO);
     }
+
 }

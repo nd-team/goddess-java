@@ -3,6 +3,7 @@ package com.bjike.goddess.qualifications.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.qualifications.bo.QualificationsHandlePlanBO;
 import com.bjike.goddess.qualifications.dto.QualificationsHandlePlanDTO;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 import com.bjike.goddess.qualifications.to.QualificationsHandlePlanTO;
 
 import java.util.List;
@@ -91,6 +92,12 @@ public interface QualificationsHandlePlanAPI {
      * @throws SerException
      */
     default QualificationsHandlePlanBO getById(String id) throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 }

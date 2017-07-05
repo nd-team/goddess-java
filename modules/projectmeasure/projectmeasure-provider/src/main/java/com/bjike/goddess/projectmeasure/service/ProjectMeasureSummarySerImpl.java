@@ -12,7 +12,6 @@ import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
-import com.bjike.goddess.projectmeasure.api.ProjectOtherDemandAPI;
 import com.bjike.goddess.projectmeasure.bo.ProjectEvaluateResultBO;
 import com.bjike.goddess.projectmeasure.bo.ProjectMeasureBO;
 import com.bjike.goddess.projectmeasure.bo.ProjectMeasureSummaryBO;
@@ -221,7 +220,8 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
 //       BeanTransform.copyProperties(to, model, true);
         String emails = StringUtils.join(to.getEmails(),",");
 
-
+        model.setDetailInterval(to.getDetailInterval());
+        model.setDetailCycle(to.getDetailCycle());
         model.setSendInterval( to.getSendInterval() );
         model.setCycle( to.getCycle() );
         model.setModifyTime(LocalDateTime.now());
@@ -710,6 +710,12 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
             case THAW:
                 flag = guildPermission();
                 break;
+            case COLLECT:
+                flag = guildPermission();
+                break;
+            case SEE:
+                flag = guildPermission();
+                break;
             default:
                 flag = true;
                 break;
@@ -721,11 +727,12 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
 
     @Override
     public ProjectMeasureSummaryBO getOne(String id) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空哦");
         }
-        ProjectMeasureSummary selfCapability = super.findById(id);
-        return BeanTransform.copyProperties(selfCapability, ProjectMeasureSummaryBO.class);
+        ProjectMeasureSummary projectMeasureSummary = super.findById(id);
+        return BeanTransform.copyProperties(projectMeasureSummary, ProjectMeasureSummaryBO.class);
     }
 
     /**
@@ -919,7 +926,7 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
                 messageTO.setSenderId("SYSTEM");
                 messageTO.setSenderName("SYSTEM");
 
-                messageTO.setReceivers(sign.getEmails().split(";") );
+                messageTO.setReceivers(sign.getEmails().split(",") );
                 messageAPI.send(  messageTO );
 
                 sign.setLastTime(LocalDateTime.now());
@@ -931,6 +938,5 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
         return allEmails;
 
     }
-
 
 }

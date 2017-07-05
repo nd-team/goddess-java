@@ -7,6 +7,8 @@ import com.bjike.goddess.marketactivitymanage.dto.MarketServeRecordDTO;
 import com.bjike.goddess.marketactivitymanage.entity.MarketServeRecord;
 import com.bjike.goddess.marketactivitymanage.service.MarketServeRecordSer;
 import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
+import com.bjike.goddess.marketactivitymanage.to.GuidePermissionTO;
+import com.bjike.goddess.marketactivitymanage.to.MarketServeRecordImprotTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeRecordTO;
 import com.bjike.goddess.marketactivitymanage.type.AuditType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,16 @@ public class MarketServeRecordApiImpl implements MarketServeRecordAPI {
 
     @Autowired
     private MarketServeRecordSer marketServeRecordSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return marketServeRecordSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return marketServeRecordSer.guidePermission(guidePermissionTO);
+    }
 
     /**
      * 根据id查询市场招待记录
@@ -159,4 +171,37 @@ public class MarketServeRecordApiImpl implements MarketServeRecordAPI {
         marketServeRecordSer.editClientInfo(to);
     }
 
+    /**
+     * 查看所有的项目名
+     *
+     * @throws SerException
+     */
+    @Override
+    public List<String> findAllProjectName() throws SerException {
+        return marketServeRecordSer.findAllProjectName();
+    }
+
+    public MarketServeRecordSer getMarketServeRecordSer() {
+        return marketServeRecordSer;
+    }
+
+    @Override
+    public byte[] exportExcel(String[] areas, String startTime, String endTime) throws SerException {
+        return marketServeRecordSer.exportExcel(areas,startTime,endTime);
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return marketServeRecordSer.templateExport();
+    }
+
+    @Override
+    public void importExcel(List<MarketServeRecordImprotTO> marketServeRecordImprotTOS) throws SerException {
+        marketServeRecordSer.importExcel(marketServeRecordImprotTOS);
+    }
+
+    @Override
+    public List<String> findAllAreas() throws SerException {
+        return marketServeRecordSer.findAllAreas();
+    }
 }

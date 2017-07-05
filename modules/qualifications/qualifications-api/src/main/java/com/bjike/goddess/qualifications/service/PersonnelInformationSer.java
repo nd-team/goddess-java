@@ -6,6 +6,7 @@ import com.bjike.goddess.qualifications.bo.AuditMaterialBO;
 import com.bjike.goddess.qualifications.bo.PersonnelInformationBO;
 import com.bjike.goddess.qualifications.dto.PersonnelInformationDTO;
 import com.bjike.goddess.qualifications.entity.PersonnelInformation;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 import com.bjike.goddess.qualifications.to.PersonnelInformationTO;
 
 import java.util.List;
@@ -76,4 +77,17 @@ public interface PersonnelInformationSer extends Ser<PersonnelInformation, Perso
     }
 
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

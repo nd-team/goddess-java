@@ -1,5 +1,6 @@
 package com.bjike.goddess.supplier.service;
 
+import com.alibaba.druid.support.spring.stat.annotation.Stat;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
@@ -70,7 +71,7 @@ public class CollectSendSerImpl extends ServiceImpl<CollectSend, CollectSendDTO>
     @Override
     public void sendEmail() throws SerException {
         CollectSendDTO dto = new CollectSendDTO();
-        dto.getConditions().add(Restrict.eq("status", Status.THAW));
+        dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
         List<CollectSend> list = super.findByCis(dto), editList = new ArrayList<>(0);
         LocalDateTime now = LocalDateTime.now();
         for (CollectSend entity : list) {
@@ -237,8 +238,8 @@ public class CollectSendSerImpl extends ServiceImpl<CollectSend, CollectSendDTO>
 
     @Override
     public CollectSendBO save(CollectSendTO to) throws SerException {
-        if (!supPermissionSer.getSupPermission(idFlag))
-            throw new SerException("您的帐号没有权限");
+//        if (!supPermissionSer.getSupPermission(idFlag))
+//            throw new SerException("您的帐号没有权限");
         CollectSend entity = BeanTransform.copyProperties(to, CollectSend.class);
         entity.setLastTime(LocalDateTime.now());
         this.setEmail(entity, to);
@@ -260,8 +261,8 @@ public class CollectSendSerImpl extends ServiceImpl<CollectSend, CollectSendDTO>
 
     @Override
     public CollectSendBO update(CollectSendTO to) throws SerException {
-        if (!supPermissionSer.getSupPermission(idFlag))
-            throw new SerException("您的帐号没有权限");
+//        if (!supPermissionSer.getSupPermission(idFlag))
+//            throw new SerException("您的帐号没有权限");
         CollectSend entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("该数据不存在");
@@ -274,8 +275,8 @@ public class CollectSendSerImpl extends ServiceImpl<CollectSend, CollectSendDTO>
 
     @Override
     public CollectSendBO delete(String id) throws SerException {
-        if (!supPermissionSer.getSupPermission(idFlag))
-            throw new SerException("您的帐号没有权限");
+//        if (!supPermissionSer.getSupPermission(idFlag))
+//            throw new SerException("您的帐号没有权限");
         CollectSend entity = super.findById(id);
         if (null == entity)
             throw new SerException("该数据不存在");
@@ -285,8 +286,8 @@ public class CollectSendSerImpl extends ServiceImpl<CollectSend, CollectSendDTO>
 
     @Override
     public CollectSendBO congeal(String id) throws SerException {
-        if (!supPermissionSer.getSupPermission(idFlag))
-            throw new SerException("您的帐号没有权限");
+//        if (!supPermissionSer.getSupPermission(idFlag))
+//            throw new SerException("您的帐号没有权限");
         CollectSend entity = super.findById(id);
         if (null == entity)
             throw new SerException("该数据不存在");
@@ -298,8 +299,8 @@ public class CollectSendSerImpl extends ServiceImpl<CollectSend, CollectSendDTO>
 
     @Override
     public CollectSendBO thaw(String id) throws SerException {
-        if (!supPermissionSer.getSupPermission(idFlag))
-            throw new SerException("您的帐号没有权限");
+//        if (!supPermissionSer.getSupPermission(idFlag))
+//            throw new SerException("您的帐号没有权限");
         CollectSend entity = super.findById(id);
         if (null == entity)
             throw new SerException("该数据不存在");
@@ -311,8 +312,8 @@ public class CollectSendSerImpl extends ServiceImpl<CollectSend, CollectSendDTO>
 
     @Override
     public CollectSendBO getById(String id) throws SerException {
-        if (!supPermissionSer.getSupPermission(idFlag))
-            throw new SerException("您的帐号没有权限");
+//        if (!supPermissionSer.getSupPermission(idFlag))
+//            throw new SerException("您的帐号没有权限");
         CollectSend entity = super.findById(id);
         if (null == entity)
             throw new SerException("该数据不存在");
@@ -321,8 +322,8 @@ public class CollectSendSerImpl extends ServiceImpl<CollectSend, CollectSendDTO>
 
     @Override
     public List<CollectSendBO> maps(CollectSendDTO dto) throws SerException {
-        if (!supPermissionSer.getSupPermission(idFlag))
-            throw new SerException("您的帐号没有权限");
+//        if (!supPermissionSer.getSupPermission(idFlag))
+//            throw new SerException("您的帐号没有权限");
         dto.getSorts().add("status=asc");
         dto.getSorts().add("createTime=desc");
         return this.transform(super.findByPage(dto));
@@ -330,8 +331,8 @@ public class CollectSendSerImpl extends ServiceImpl<CollectSend, CollectSendDTO>
 
     @Override
     public List<CollectSendBO> findThaw() throws SerException {
-        if (!supPermissionSer.getSupPermission(idFlag))
-            throw new SerException("您的帐号没有权限");
+//        if (!supPermissionSer.getSupPermission(idFlag))
+//            throw new SerException("您的帐号没有权限");
         CollectSendDTO dto = new CollectSendDTO();
         dto.getConditions().add(Restrict.eq("status", Status.THAW));
         return this.transform(super.findByCis(dto));

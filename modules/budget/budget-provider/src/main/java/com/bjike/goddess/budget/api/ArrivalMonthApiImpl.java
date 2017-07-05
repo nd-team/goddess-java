@@ -58,8 +58,8 @@ public class ArrivalMonthApiImpl implements ArrivalMonthAPI {
     }
 
     @Override
-    public List<ArrivalMonthCountBO> conditionsCount(String[] arrivals) throws SerException {
-        return arrivalMonthSer.conditionsCount(arrivals);
+    public List<ArrivalMonthCountBO> conditionsCount(ArrivalMonthDTO dto1) throws SerException {
+        return arrivalMonthSer.conditionsCount(dto1);
     }
 
     @Override

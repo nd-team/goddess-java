@@ -5,6 +5,7 @@ import com.bjike.goddess.capability.dto.SelfCapabilityDTO;
 import com.bjike.goddess.capability.dto.SelfCapabilitySocialDTO;
 import com.bjike.goddess.capability.service.SelfCapabilitySer;
 import com.bjike.goddess.capability.service.SelfCapabilitySocialSer;
+import com.bjike.goddess.capability.to.GuidePermissionTO;
 import com.bjike.goddess.capability.to.SelfCapabilitySocialTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,5 +59,9 @@ public class SelfCapabilitySocialApiImpl implements SelfCapabilitySocialAPI {
     }
 
 
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return selfCapabilitySocialSer.guidePermission( guidePermissionTO );
+    }
 
 }

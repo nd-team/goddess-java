@@ -38,7 +38,7 @@ public interface SingleProjectSingleUIAPI {
      * @return class SingleProjectSingleUIBO
      * @throws SerException
      */
-    SingleProjectSingleUIBO findById(String id) throws SerException;
+    SingleProjectSingleUIBO getOne(String id) throws SerException;
 
     /**
      * 计算总条数

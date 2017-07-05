@@ -6,13 +6,12 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.market.api.CollectEmailAPI;
-import com.bjike.goddess.market.bo.CollectEmailBO;
-import com.bjike.goddess.market.dto.CollectEmailDTO;
-import com.bjike.goddess.market.to.CollectEmailTO;
-import com.bjike.goddess.market.to.GuidePermissionTO;
-import com.bjike.goddess.market.vo.CollectEmailVO;
-import com.bjike.goddess.market.vo.MarketCollectVO;
+import com.bjike.goddess.receivable.api.CollectEmailAPI;
+import com.bjike.goddess.receivable.bo.CollectEmailBO;
+import com.bjike.goddess.receivable.dto.CollectEmailDTO;
+import com.bjike.goddess.receivable.to.CollectEmailTO;
+import com.bjike.goddess.receivable.to.GuidePermissionTO;
+import com.bjike.goddess.receivable.vo.CollectEmailVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -64,8 +63,8 @@ public class CollectEmailAction {
     /**
      * 列表总条数
      *
-     * @param collectEmailDTO 市场信息邮件信息dto
-     * @des 获取所有市场信息邮件信息总条数
+     * @param collectEmailDTO 回款管理邮件信息dto
+     * @des 获取所有回款管理邮件信息总条数
      * @version v1
      */
     @GetMapping("v1/count")
@@ -79,11 +78,11 @@ public class CollectEmailAction {
     }
 
     /**
-     * 一个市场信息邮件
+     * 一个回款管理邮件
      *
-     * @param id 市场信息邮件信息id
+     * @param id 回款管理邮件信息id
      * @return class CollectEmailVO
-     * @des 根据id获取市场信息邮件信息
+     * @des 根据id获取回款管理邮件信息
      * @version v1
      */
     @GetMapping("v1/getOneById/{id}")
@@ -98,11 +97,11 @@ public class CollectEmailAction {
     }
 
     /**
-     * 市场信息邮件汇总列表
+     * 回款管理邮件汇总列表
      *
-     * @param collectEmailDTO 市场信息邮件汇总信息dto
+     * @param collectEmailDTO 回款管理邮件汇总信息dto
      * @return class CollectEmailVO
-     * @des 获取所有市场信息邮件汇总信息
+     * @des 获取所有回款管理邮件汇总信息
      * @version v1
      */
     @GetMapping("v1/list")
@@ -117,11 +116,11 @@ public class CollectEmailAction {
     }
 
     /**
-     * 添加市场信息邮件汇总
+     * 添加回款管理邮件汇总
      *
-     * @param collectEmailTO 市场信息邮件汇总基本信息数据to
+     * @param collectEmailTO 回款管理邮件汇总基本信息数据to
      * @return class CollectEmailVO
-     * @des 添加市场信息邮件汇总
+     * @des 添加回款管理邮件汇总
      * @version v1
      */
     @LoginAuth
@@ -137,11 +136,11 @@ public class CollectEmailAction {
 
 
     /**
-     * 编辑市场信息邮件汇总
+     * 编辑回款管理邮件汇总
      *
-     * @param collectEmailTO 市场信息邮件汇总基本信息数据bo
+     * @param collectEmailTO 回款管理邮件汇总基本信息数据bo
      * @return class CollectEmailVO
-     * @des 添加市场信息邮件汇总
+     * @des 添加回款管理邮件汇总
      * @version v1
      */
     @LoginAuth
@@ -159,7 +158,7 @@ public class CollectEmailAction {
      * 删除
      *
      * @param id id
-     * @des 根据id删除市场信息邮件汇总信息记录
+     * @des 根据id删除回款管理邮件汇总信息记录
      * @version v1
      */
     @LoginAuth
@@ -176,7 +175,7 @@ public class CollectEmailAction {
      * 冻结
      *
      * @param id id
-     * @des 根据id冻结市场信息邮件汇总记录
+     * @des 根据id冻结回款管理邮件汇总记录
      * @version v1
      */
     @LoginAuth
@@ -195,7 +194,7 @@ public class CollectEmailAction {
      * 解冻
      *
      * @param id id
-     * @des 根据id解冻招投标信息邮件汇总记录
+     * @des 根据id解冻回款管理邮件汇总记录
      * @version v1
      */
     @LoginAuth
@@ -208,46 +207,12 @@ public class CollectEmailAction {
             throw new ActException(e.getMessage());
         }
     }
-    /**
-     * 汇总市场信息
-     *
-     * @param areas 地区
-     * @return class MarketCollectVO
-     * @des 汇总市场信息
-     * @version v1
-     */
-    @GetMapping("v1/collect")
-    public Result collect(@RequestParam String[] areas) throws ActException {
-        try {
-            List<MarketCollectVO> marketCollectVOS = BeanTransform.copyProperties(
-                    collectEmailAPI.marketCollect(areas), MarketCollectVO.class);
-            return ActResult.initialize(marketCollectVOS);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 获取地区
-     *
-     * @des 获取地区集合
-     * @version v1
-     */
-    @GetMapping("v1/areas")
-    public Result areas() throws ActException {
-        try {
-            List<String> areasList = collectEmailAPI.getArea();
-            return ActResult.initialize(areasList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
 
 
     /**
      * 检测
      *
-     * @des 市场信息邮件汇总
+     * @des 回款管理邮件汇总
      * @version v1
      */
     @GetMapping("v1/checkEmail")

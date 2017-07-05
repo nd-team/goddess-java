@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketactivitymanage.bo.CustomerInfoBO;
 import com.bjike.goddess.marketactivitymanage.dto.CustomerInfoDTO;
 import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
+import com.bjike.goddess.marketactivitymanage.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -17,6 +18,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CustomerInfoAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 根据id查询客户信息

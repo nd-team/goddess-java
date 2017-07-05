@@ -7,6 +7,7 @@ import com.bjike.goddess.qualifications.bo.CompanyInfoBO;
 import com.bjike.goddess.qualifications.dto.CompanyInfoDTO;
 import com.bjike.goddess.qualifications.entity.CompanyInfo;
 import com.bjike.goddess.qualifications.to.CompanyInfoTO;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -96,4 +97,17 @@ public interface CompanyInfoSer extends Ser<CompanyInfo, CompanyInfoDTO> {
         return null;
     }
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

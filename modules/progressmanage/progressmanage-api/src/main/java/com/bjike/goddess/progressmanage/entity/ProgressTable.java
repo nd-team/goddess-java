@@ -1,10 +1,11 @@
 package com.bjike.goddess.progressmanage.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -17,15 +18,18 @@ import javax.persistence.*;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "progressmanage_progresstable", uniqueConstraints = {@UniqueConstraint(columnNames = {"tabName","project_id"})})
+@Table(name = "progressmanage_progresstable", uniqueConstraints = {@UniqueConstraint(columnNames = {"tabName", "project_id"})})
 public class ProgressTable extends BaseEntity {
 
     /**
      * 所属项目
      */
-    @OneToOne(fetch = FetchType.EAGER , cascade = CascadeType.ALL )
-    @JoinColumn(name = "project_id",nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '所属项目'")
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "project_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '所属项目'")
     private ProjectInfo project;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH, mappedBy = "progressTable")
+    private Set<TableHead> tableHeadSet = new HashSet<TableHead>();
 
     /**
      * 表名
@@ -90,5 +94,13 @@ public class ProgressTable extends BaseEntity {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Set<TableHead> getTableHeadSet() {
+        return tableHeadSet;
+    }
+
+    public void setTableHeadSet(Set<TableHead> tableHeadSet) {
+        this.tableHeadSet = tableHeadSet;
     }
 }

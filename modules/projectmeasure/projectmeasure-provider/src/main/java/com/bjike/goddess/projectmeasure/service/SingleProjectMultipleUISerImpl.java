@@ -67,9 +67,9 @@ public class SingleProjectMultipleUISerImpl extends ServiceImpl<SingleProjectMul
 
 
     /**
-     * 核对查看权限（部门级别）
+     * 导航权限（部门级别）
      */
-    private Boolean guideSeeIdentity() throws SerException{
+    private Boolean guildPermission() throws SerException{
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser( );
@@ -168,7 +168,7 @@ public class SingleProjectMultipleUISerImpl extends ServiceImpl<SingleProjectMul
     @Override
     public Boolean sonPermission() throws SerException {
         String userToken = RpcTransmit.getUserToken();
-        Boolean flagSee = guideSeeIdentity();
+        Boolean flagSee = guildPermission();
         RpcTransmit.transmitUserToken( userToken );
         if( flagSee ){
             return true;
@@ -184,24 +184,29 @@ public class SingleProjectMultipleUISerImpl extends ServiceImpl<SingleProjectMul
         Boolean flag = true;
         switch (guideAddrStatus) {
             case LIST:
-                flag = guideSeeIdentity();
+                flag = guildPermission();
                 break;
             case ADD:
-                flag = guideSeeIdentity();
+                flag = guildPermission();
                 break;
             case EDIT:
-                flag = guideSeeIdentity();
+                flag = guildPermission();
                 break;
             case DELETE:
-                flag = guideSeeIdentity();
+                flag = guildPermission();
                 break;
             case CONGEL:
-                flag = guideSeeIdentity();
+                flag = guildPermission();
                 break;
             case THAW:
-                flag = guideSeeIdentity();
+                flag = guildPermission();
                 break;
-
+            case COLLECT:
+                flag = guildPermission();
+                break;
+            case SEE:
+                flag = guildPermission();
+                break;
             default:
                 flag = true;
                 break;
@@ -209,5 +214,15 @@ public class SingleProjectMultipleUISerImpl extends ServiceImpl<SingleProjectMul
 
         RpcTransmit.transmitUserToken(userToken);
         return flag;
+    }
+
+    @Override
+    public SingleProjectMultipleUIBO getOne(String id) throws SerException{
+        checkPermission();
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空哦");
+        }
+        SingleProjectMultipleUI projectBasicInfo = super.findById(id);
+        return BeanTransform.copyProperties(projectBasicInfo, SingleProjectMultipleUIBO.class);
     }
 }
