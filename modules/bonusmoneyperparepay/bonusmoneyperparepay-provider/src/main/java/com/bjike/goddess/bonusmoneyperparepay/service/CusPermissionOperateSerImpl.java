@@ -1,8 +1,8 @@
-package com.bjike.goddess.marketactivitymanage.service;
+package com.bjike.goddess.bonusmoneyperparepay.service;
 
+import com.bjike.goddess.bonusmoneyperparepay.dto.CusPermissionOperateDTO;
+import com.bjike.goddess.bonusmoneyperparepay.entity.CusPermissionOperate;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.marketactivitymanage.dto.CusPermissionOperateDTO;
-import com.bjike.goddess.marketactivitymanage.entity.CusPermissionOperate;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 

@@ -2,10 +2,10 @@ package com.bjike.goddess.bonusmoneyperparepay.api;
 
 import com.bjike.goddess.bonusmoneyperparepay.bo.MoneyPerpareBO;
 import com.bjike.goddess.bonusmoneyperparepay.bo.MoneyPerpareContrastBO;
-import com.bjike.goddess.bonusmoneyperparepay.bo.PerpareActualDifferencesBO;
 import com.bjike.goddess.bonusmoneyperparepay.bo.PerpareBO;
 import com.bjike.goddess.bonusmoneyperparepay.dto.MoneyPerpareDTO;
 import com.bjike.goddess.bonusmoneyperparepay.service.MoneyPerpareSer;
+import com.bjike.goddess.bonusmoneyperparepay.to.GuidePermissionTO;
 import com.bjike.goddess.bonusmoneyperparepay.to.MoneyPerpareTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +27,17 @@ public class MoneyPerpareApiImpl implements MoneyPerpareAPI {
 
     @Autowired
     private MoneyPerpareSer moneyPerpareSer;
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return moneyPerpareSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return moneyPerpareSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countMoney(MoneyPerpareDTO moneyPerpareDTO) throws SerException {
@@ -59,13 +70,13 @@ public class MoneyPerpareApiImpl implements MoneyPerpareAPI {
     }
 
     @Override
-    public List<PerpareBO> projectCompare(Integer month, String[] projectGroup) throws SerException {
-        return moneyPerpareSer.projectCompare(month,projectGroup);
+    public List<PerpareBO> projectCompare(Integer years, Integer month, String[] projectGroup) throws SerException {
+        return moneyPerpareSer.projectCompare(years, month, projectGroup);
     }
 
     @Override
-    public List<PerpareBO> monthCompare(Integer month) throws SerException {
-        return moneyPerpareSer.monthCompare(month);
+    public List<PerpareBO> monthCompare(Integer years, Integer month) throws SerException {
+        return moneyPerpareSer.monthCompare(years, month);
     }
 
     @Override
@@ -74,17 +85,12 @@ public class MoneyPerpareApiImpl implements MoneyPerpareAPI {
     }
 
     @Override
+    public List<MoneyPerpareContrastBO> contrastCompare(Integer years, Integer month) throws SerException {
+        return moneyPerpareSer.contrastCompare(years, month);
+    }
+
+    @Override
     public List<String> findAllProject() throws SerException {
         return moneyPerpareSer.findAllProject();
-    }
-
-    @Override
-    public List<MoneyPerpareContrastBO> contrastCompare(Integer month) throws SerException {
-        return moneyPerpareSer.contrastCompare(month);
-    }
-
-    @Override
-    public List<PerpareActualDifferencesBO> differencesCompare(Integer month) throws SerException {
-        return moneyPerpareSer.differencesCompare(month);
     }
 }

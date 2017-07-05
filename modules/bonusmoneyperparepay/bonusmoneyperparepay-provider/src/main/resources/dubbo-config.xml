@@ -21,13 +21,13 @@
 
 	<dubbo:service  ref="moneyPerpareApiImpl" interface="com.bjike.goddess.bonusmoneyperparepay.api.MoneyPerpareAPI" />
 	<dubbo:service  ref="waitingPayApiImpl" interface="com.bjike.goddess.bonusmoneyperparepay.api.WaitingPayAPI" />
-
+	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.bonusmoneyperparepay.api.CusPermissionAPI" />
+	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.bonusmoneyperparepay.api.CusPermissionOperateAPI" />
 	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
 	否则不需要配置-->
 
 	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
-	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
 	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
 
 
@@ -38,7 +38,6 @@
 	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
 	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
 
-	<!--<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.businessproject.api.CusPermissionAPI" />-->
-	<!--<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.businessproject.api.CusPermissionOperateAPI" />-->
+
 
 </beans>

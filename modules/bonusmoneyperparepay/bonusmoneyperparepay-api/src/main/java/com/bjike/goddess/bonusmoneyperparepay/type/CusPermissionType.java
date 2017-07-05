@@ -1,4 +1,4 @@
-package com.bjike.goddess.marketactivitymanage.type;
+package com.bjike.goddess.bonusmoneyperparepay.type;
 
 /**
  * Created by ike on 17-5-15.
@@ -20,8 +20,7 @@ public enum CusPermissionType {
     /**
      * 部门
      */
-    DEPART(3)
-    ;
+    DEPART(3);
     private int code;
 
     CusPermissionType(int code) {

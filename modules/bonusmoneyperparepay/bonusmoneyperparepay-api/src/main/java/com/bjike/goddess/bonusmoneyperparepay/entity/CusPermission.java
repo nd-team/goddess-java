@@ -1,7 +1,7 @@
-package com.bjike.goddess.marketactivitymanage.entity;
+package com.bjike.goddess.bonusmoneyperparepay.entity;
 
+import com.bjike.goddess.bonusmoneyperparepay.type.CusPermissionType;
 import com.bjike.goddess.common.api.entity.BaseEntity;
-import com.bjike.goddess.marketactivitymanage.type.CusPermissionType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,13 +18,13 @@ import javax.persistence.Table;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "marketactivitymanage_cuspermission")
+@Table(name = "bonusmoneyperparepay_cuspermission")
 public class CusPermission extends BaseEntity {
 
     /**
      * 辅助id
      */
-    @Column(name = "idFlag", nullable = false, unique = true ,columnDefinition = "VARCHAR(255)   COMMENT '辅助id'")
+    @Column(name = "idFlag", nullable = false, unique = true, columnDefinition = "VARCHAR(255)   COMMENT '辅助id'")
     private String idFlag;
     /**
      * 描述
@@ -35,7 +35,7 @@ public class CusPermission extends BaseEntity {
     /**
      * 操作对象
      */
-    @Column(name = "operator",  columnDefinition = "TEXT   COMMENT '操作对象'")
+    @Column(name = "operator", columnDefinition = "TEXT   COMMENT '操作对象'")
     private String operator;
 
     /**

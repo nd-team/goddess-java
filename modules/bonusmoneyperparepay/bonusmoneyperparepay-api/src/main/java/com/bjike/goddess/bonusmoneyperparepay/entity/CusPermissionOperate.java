@@ -1,4 +1,4 @@
-package com.bjike.goddess.marketactivitymanage.entity;
+package com.bjike.goddess.bonusmoneyperparepay.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
@@ -17,20 +17,20 @@ import javax.persistence.Table;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "marketactivitymanage_cuspermissionoperate")
+@Table(name = "bonusmoneyperparepay_cuspermissionoperate")
 public class CusPermissionOperate extends BaseEntity {
 
 
     /**
      * 操作对象
      */
-    @Column(name = "operator",  columnDefinition = "VARCHAR(255)   COMMENT '操作对象'")
+    @Column(name = "operator", columnDefinition = "VARCHAR(255)   COMMENT '操作对象'")
     private String operator;
 
     /**
      * 客户权限id,一对多关系
      */
-    @Column(name = "cuspermissionId",  columnDefinition = "VARCHAR(255)   COMMENT '客户权限id'")
+    @Column(name = "cuspermissionId", columnDefinition = "VARCHAR(255)   COMMENT '客户权限id'")
     private String cuspermissionId;
 
     public String getOperator() {

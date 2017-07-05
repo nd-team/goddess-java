@@ -21,43 +21,43 @@ public class MoneyPerpareTO extends BaseTO {
     /**
      * 年份
      */
-    @NotNull(groups = {ADD.class, EDIT.class} ,message = "年份不能为空")
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "年份不能为空")
     private Integer years;
 
     /**
      * 月份
      */
-    @NotNull(groups = {ADD.class, EDIT.class} ,message = "月份不能为空")
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "月份不能为空")
     private Integer month;
 
     /**
      * 科目
      */
-    @NotBlank(groups = {ADD.class, EDIT.class} ,message = "科目不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "科目不能为空")
     private String subjects;
 
     /**
      * 总准备金
      */
-    @NotNull(groups = {ADD.class, EDIT.class} ,message = "总准备金不能为空")
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "总准备金不能为空")
     private Double totalReserve;
 
     /**
      * 项目组
      */
-    @NotBlank(groups = {ADD.class, EDIT.class} ,message = "项目组不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "项目组不能为空")
     private String projectGroup;
 
     /**
      * 比例分配
      */
-    @NotNull(groups = {ADD.class, EDIT.class} ,message = "比例分配不能为空")
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "比例分配不能为空")
     private Double proportional;
 
     /**
      * 准备金
      */
-    @NotNull(groups = {ADD.class, EDIT.class} ,message = "准备金不能为空")
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "准备金不能为空")
     private Double reserve;
 
 

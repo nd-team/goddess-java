@@ -1,8 +1,7 @@
-package com.bjike.goddess.marketactivitymanage.bo;
+package com.bjike.goddess.bonusmoneyperparepay.bo;
 
+import com.bjike.goddess.bonusmoneyperparepay.type.CusPermissionType;
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.marketactivitymanage.type.CusPermissionType;
-
 
 import java.util.List;
 

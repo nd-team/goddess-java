@@ -1,4 +1,4 @@
-package com.bjike.goddess.marketactivitymanage.vo;
+package com.bjike.goddess.bonusmoneyperparepay.vo;
 
 /**
  * 客户权限配置操作对象表现层对象

@@ -58,7 +58,7 @@ public class WaitingPayVO {
     /**
      * 付款时间
      */
-    private String difference;
+    private String differenceTime;
 
     /**
      * 付款人
@@ -135,12 +135,12 @@ public class WaitingPayVO {
         this.turntable = turntable;
     }
 
-    public String getDifference() {
-        return difference;
+    public String getDifferenceTime() {
+        return differenceTime;
     }
 
-    public void setDifference(String difference) {
-        this.difference = difference;
+    public void setDifferenceTime(String differenceTime) {
+        this.differenceTime = differenceTime;
     }
 
     public String getPayAuthor() {

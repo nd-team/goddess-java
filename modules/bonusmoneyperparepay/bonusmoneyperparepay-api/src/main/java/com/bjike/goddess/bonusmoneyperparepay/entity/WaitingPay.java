@@ -60,7 +60,7 @@ public class WaitingPay extends BaseEntity {
     /**
      * 支付金额
      */
-    @Column(name = "payMoney",  columnDefinition = "DECIMAL(10,2)   COMMENT '支付金额'")
+    @Column(name = "payMoney", columnDefinition = "DECIMAL(10,2)   COMMENT '支付金额'")
     private Double payMoney;
 
     /**
@@ -72,13 +72,13 @@ public class WaitingPay extends BaseEntity {
     /**
      * 付款时间
      */
-    @Column(name = "difference", columnDefinition = "DATETIME   COMMENT '付款时间'")
-    private LocalDateTime difference;
+    @Column(name = "differenceTime", columnDefinition = "DATETIME   COMMENT '付款时间'")
+    private LocalDateTime differenceTime;
 
     /**
      * 付款人
      */
-    @Column(name = "payAuthor",  columnDefinition = "VARCHAR(255)   COMMENT '付款人'")
+    @Column(name = "payAuthor", columnDefinition = "VARCHAR(255)   COMMENT '付款人'")
     private String payAuthor;
 
     /**
@@ -144,12 +144,12 @@ public class WaitingPay extends BaseEntity {
         this.turntable = turntable;
     }
 
-    public LocalDateTime getDifference() {
-        return difference;
+    public LocalDateTime getDifferenceTime() {
+        return differenceTime;
     }
 
-    public void setDifference(LocalDateTime difference) {
-        this.difference = difference;
+    public void setDifferenceTime(LocalDateTime differenceTime) {
+        this.differenceTime = differenceTime;
     }
 
     public String getPayAuthor() {

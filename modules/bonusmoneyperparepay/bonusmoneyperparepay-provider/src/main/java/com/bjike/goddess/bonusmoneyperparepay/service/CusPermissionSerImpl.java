@@ -1,18 +1,18 @@
-package com.bjike.goddess.marketactivitymanage.service;
+package com.bjike.goddess.bonusmoneyperparepay.service;
 
+import com.bjike.goddess.bonusmoneyperparepay.bo.CusOperateBO;
+import com.bjike.goddess.bonusmoneyperparepay.bo.CusPermissionBO;
+import com.bjike.goddess.bonusmoneyperparepay.dto.CusPermissionDTO;
+import com.bjike.goddess.bonusmoneyperparepay.dto.CusPermissionOperateDTO;
+import com.bjike.goddess.bonusmoneyperparepay.entity.CusPermission;
+import com.bjike.goddess.bonusmoneyperparepay.entity.CusPermissionOperate;
+import com.bjike.goddess.bonusmoneyperparepay.to.CusPermissionTO;
+import com.bjike.goddess.bonusmoneyperparepay.type.CusPermissionType;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.marketactivitymanage.bo.CusOperateBO;
-import com.bjike.goddess.marketactivitymanage.bo.CusPermissionBO;
-import com.bjike.goddess.marketactivitymanage.dto.CusPermissionDTO;
-import com.bjike.goddess.marketactivitymanage.dto.CusPermissionOperateDTO;
-import com.bjike.goddess.marketactivitymanage.entity.CusPermission;
-import com.bjike.goddess.marketactivitymanage.entity.CusPermissionOperate;
-import com.bjike.goddess.marketactivitymanage.to.CusPermissionTO;
-import com.bjike.goddess.marketactivitymanage.type.CusPermissionType;
 import com.bjike.goddess.organize.api.*;
 import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.user.api.UserAPI;
@@ -220,8 +220,8 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         if (cusPermissionList != null && cusPermissionList.size() > 0) {
             for (int i = 0; i < cusPermissionList.size(); i++) {
                 CusPermission temp = cusPermissionList.get(i);
-                Optional<CusPermission> cp = list.stream().filter(l->l.getIdFlag().equals(temp.getIdFlag())).findFirst();
-                if(cp.isPresent()){
+                Optional<CusPermission> cp = list.stream().filter(l -> l.getIdFlag().equals(temp.getIdFlag())).findFirst();
+                if (cp.isPresent()) {
                     temp.setDescription(cp.get().getDescription());
                     temp.setType(cp.get().getType());
                     cusPermissionTempList.add(temp);
@@ -294,6 +294,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
         return BeanTransform.copyProperties(temp, CusPermissionBO.class);
     }
+
     //模块
     @Override
     public Boolean getCusPermission(String idFlag) throws SerException {
@@ -338,7 +339,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
 
         //TODO 部门
-        if ( moduleFlag) {
+        if (moduleFlag) {
             flag = true;
         } else {
             flag = false;
@@ -440,7 +441,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
 
         //TODO 部门
-        if ( arrangementFlag) {
+        if (arrangementFlag) {
             flag = true;
         } else {
             flag = false;

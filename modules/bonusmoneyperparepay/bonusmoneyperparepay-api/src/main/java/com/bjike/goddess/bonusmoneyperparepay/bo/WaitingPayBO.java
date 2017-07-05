@@ -56,7 +56,7 @@ public class WaitingPayBO extends BaseBO {
     /**
      * 付款时间
      */
-    private String difference;
+    private String differenceTime;
 
     /**
      * 付款人
@@ -123,12 +123,12 @@ public class WaitingPayBO extends BaseBO {
         this.turntable = turntable;
     }
 
-    public String getDifference() {
-        return difference;
+    public String getDifferenceTime() {
+        return differenceTime;
     }
 
-    public void setDifference(String difference) {
-        this.difference = difference;
+    public void setDifferenceTime(String differenceTime) {
+        this.differenceTime = differenceTime;
     }
 
     public String getPayAuthor() {

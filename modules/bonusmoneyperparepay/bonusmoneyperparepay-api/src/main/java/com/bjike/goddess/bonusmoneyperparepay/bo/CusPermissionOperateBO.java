@@ -1,4 +1,4 @@
-package com.bjike.goddess.marketactivitymanage.bo;
+package com.bjike.goddess.bonusmoneyperparepay.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 

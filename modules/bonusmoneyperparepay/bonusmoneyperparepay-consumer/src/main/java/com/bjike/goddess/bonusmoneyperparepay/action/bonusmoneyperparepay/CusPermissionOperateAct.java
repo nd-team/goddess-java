@@ -1,4 +1,4 @@
-package com.bjike.goddess.marketactivitymanage.action.marketactivitymanage;
+package com.bjike.goddess.bonusmoneyperparepay.action.bonusmoneyperparepay;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

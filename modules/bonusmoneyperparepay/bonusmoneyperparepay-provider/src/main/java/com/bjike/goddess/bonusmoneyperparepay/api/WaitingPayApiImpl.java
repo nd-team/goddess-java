@@ -1,9 +1,12 @@
 package com.bjike.goddess.bonusmoneyperparepay.api;
 
+import com.bjike.goddess.bonusmoneyperparepay.bo.PerpareActualDifferencesBO;
+import com.bjike.goddess.bonusmoneyperparepay.bo.WaitingBO;
 import com.bjike.goddess.bonusmoneyperparepay.bo.WaitingPayBO;
 import com.bjike.goddess.bonusmoneyperparepay.dto.WaitingPayDTO;
+import com.bjike.goddess.bonusmoneyperparepay.excel.SonPermissionObject;
 import com.bjike.goddess.bonusmoneyperparepay.service.WaitingPaySer;
-import com.bjike.goddess.bonusmoneyperparepay.to.WaitingPayTO;
+import com.bjike.goddess.bonusmoneyperparepay.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,9 +28,25 @@ public class WaitingPayApiImpl implements WaitingPayAPI {
     @Autowired
     private WaitingPaySer waitingPaySer;
 
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return waitingPaySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return waitingPaySer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long countWaiting(WaitingPayDTO waitingPayDTO) throws SerException {
         return waitingPaySer.countWaiting(waitingPayDTO);
+    }
+
+    @Override
+    public Long countAlready(WaitingPayDTO waitingPayDTO) throws SerException {
+        return waitingPaySer.countAlready(waitingPayDTO);
     }
 
     @Override
@@ -41,17 +60,52 @@ public class WaitingPayApiImpl implements WaitingPayAPI {
     }
 
     @Override
-    public WaitingPayBO addWaiting(WaitingPayTO moneyPerpareTO) throws SerException {
-        return waitingPaySer.addWaiting(moneyPerpareTO);
-    }
-
-    @Override
-    public WaitingPayBO editWaiting(WaitingPayTO moneyPerpareTO) throws SerException {
-        return waitingPaySer.editWaiting(moneyPerpareTO);
-    }
-
-    @Override
     public void deleteWaiting(String id) throws SerException {
         waitingPaySer.deleteWaiting(id);
+    }
+
+    @Override
+    public List<WaitingPayBO> list(WaitingPayDTO waitingPayDTO) throws SerException {
+        return waitingPaySer.list(waitingPayDTO);
+    }
+
+    @Override
+    public void payMoney(String id, Double payMoney) throws SerException {
+        waitingPaySer.payMoney(id, payMoney);
+    }
+
+    @Override
+    public List<WaitingBO> yearsCompare(Integer years) throws SerException {
+        return waitingPaySer.yearsCompare(years);
+    }
+
+    @Override
+    public byte[] exportExcel(Integer startMonth, Integer endMonth) throws SerException {
+        return waitingPaySer.exportExcel(startMonth, endMonth);
+    }
+
+    @Override
+    public byte[] exportArealdyExcel(Integer startMonth, Integer endMonth) throws SerException {
+        return waitingPaySer.exportArealdyExcel(startMonth, endMonth);
+    }
+
+    @Override
+    public List<WaitingBO> projectCompare(Integer years, Integer month, String[] projectGroup) throws SerException {
+        return waitingPaySer.projectCompare(years, month, projectGroup);
+    }
+
+    @Override
+    public List<WaitingBO> monthCompare(Integer years, Integer month) throws SerException {
+        return waitingPaySer.monthCompare(years, month);
+    }
+
+    @Override
+    public List<PerpareActualDifferencesBO> differencesCompare(Integer years, Integer month) throws SerException {
+        return waitingPaySer.differencesCompare(years, month);
+    }
+
+    @Override
+    public List<String> findAllProject() throws SerException {
+        return waitingPaySer.findAllProject();
     }
 }

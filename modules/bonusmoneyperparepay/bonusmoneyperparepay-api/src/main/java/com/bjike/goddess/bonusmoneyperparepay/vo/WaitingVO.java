@@ -1,9 +1,9 @@
-package com.bjike.goddess.bonusmoneyperparepay.bo;
+package com.bjike.goddess.bonusmoneyperparepay.vo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
- * 等待付款业务传输对象
+ * 已付款表现层对象
  *
  * @Author: [ lijuntao ]
  * @Date: [ 2017-06-30 05:32 ]
@@ -11,7 +11,7 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class WaitingBO extends BaseBO {
+public class WaitingVO extends BaseBO {
 
     private String yearsMonth;
 
@@ -43,7 +43,7 @@ public class WaitingBO extends BaseBO {
     /**
      * 付款时间
      */
-    private String difference;
+    private String differenceTime;
 
     /**
      * 付款人
@@ -82,12 +82,12 @@ public class WaitingBO extends BaseBO {
         this.payMoney = payMoney;
     }
 
-    public String getDifference() {
-        return difference;
+    public String getDifferenceTime() {
+        return differenceTime;
     }
 
-    public void setDifference(String difference) {
-        this.difference = difference;
+    public void setDifferenceTime(String differenceTime) {
+        this.differenceTime = differenceTime;
     }
 
     public String getPayAuthor() {

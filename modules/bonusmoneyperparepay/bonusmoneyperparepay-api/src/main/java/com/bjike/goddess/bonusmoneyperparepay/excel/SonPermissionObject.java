@@ -1,4 +1,4 @@
-package com.bjike.goddess.marketactivitymanage.excel;
+package com.bjike.goddess.bonusmoneyperparepay.excel;
 
 import java.io.Serializable;
 
@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class SonPermissionObject implements Serializable{
+public class SonPermissionObject implements Serializable {
     /**
      * 导航名
      */

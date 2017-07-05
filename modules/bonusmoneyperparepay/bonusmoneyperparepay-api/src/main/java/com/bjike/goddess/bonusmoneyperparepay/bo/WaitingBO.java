@@ -3,7 +3,7 @@ package com.bjike.goddess.bonusmoneyperparepay.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
- * 等待付款业务传输对象
+ * 已付款业务传输对象
  *
  * @Author: [ lijuntao ]
  * @Date: [ 2017-06-30 05:32 ]

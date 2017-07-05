@@ -2,6 +2,8 @@ package com.bjike.goddess.bonusmoneyperparepay.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 等待付款
  *
@@ -12,6 +14,9 @@ import com.bjike.goddess.common.api.to.BaseTO;
  * @Copy: [ com.bjike ]
  */
 public class WaitingPayTO extends BaseTO {
+
+    public interface testPay {
+    }
 
     /**
      * 年份
@@ -41,6 +46,7 @@ public class WaitingPayTO extends BaseTO {
     /**
      * 支付金额
      */
+    @NotNull(groups = {WaitingPayTO.testPay.class}, message = "支付金额不能为空")
     private Double payMoney;
 
     /**
@@ -51,7 +57,7 @@ public class WaitingPayTO extends BaseTO {
     /**
      * 付款时间
      */
-    private String difference;
+    private String differenceTime;
 
     /**
      * 付款人
@@ -123,12 +129,12 @@ public class WaitingPayTO extends BaseTO {
         this.turntable = turntable;
     }
 
-    public String getDifference() {
-        return difference;
+    public String getDifferenceTime() {
+        return differenceTime;
     }
 
-    public void setDifference(String difference) {
-        this.difference = difference;
+    public void setDifferenceTime(String differenceTime) {
+        this.differenceTime = differenceTime;
     }
 
     public String getPayAuthor() {

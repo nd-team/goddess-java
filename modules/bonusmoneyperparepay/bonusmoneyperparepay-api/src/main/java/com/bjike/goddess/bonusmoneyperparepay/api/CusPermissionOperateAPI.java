@@ -1,4 +1,4 @@
-package com.bjike.goddess.marketactivitymanage.api;
+package com.bjike.goddess.bonusmoneyperparepay.api;
 
 /**
  * 客户权限配置操作对象业务接口

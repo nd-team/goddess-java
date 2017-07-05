@@ -2,10 +2,10 @@ package com.bjike.goddess.bonusmoneyperparepay.service;
 
 import com.bjike.goddess.bonusmoneyperparepay.bo.MoneyPerpareBO;
 import com.bjike.goddess.bonusmoneyperparepay.bo.MoneyPerpareContrastBO;
-import com.bjike.goddess.bonusmoneyperparepay.bo.PerpareActualDifferencesBO;
 import com.bjike.goddess.bonusmoneyperparepay.bo.PerpareBO;
 import com.bjike.goddess.bonusmoneyperparepay.dto.MoneyPerpareDTO;
 import com.bjike.goddess.bonusmoneyperparepay.entity.MoneyPerpare;
+import com.bjike.goddess.bonusmoneyperparepay.to.GuidePermissionTO;
 import com.bjike.goddess.bonusmoneyperparepay.to.MoneyPerpareTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -22,6 +22,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface MoneyPerpareSer extends Ser<MoneyPerpare, MoneyPerpareDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 奖金资金准备总条数
@@ -84,7 +98,7 @@ public interface MoneyPerpareSer extends Ser<MoneyPerpare, MoneyPerpareDTO> {
      * @return class MoneyPerpareBO
      * @throws SerException
      */
-    default List<PerpareBO> projectCompare(Integer month,String[] projectGroup) throws SerException {
+    default List<PerpareBO> projectCompare(Integer years, Integer month, String[] projectGroup) throws SerException {
         return null;
     }
 
@@ -94,7 +108,7 @@ public interface MoneyPerpareSer extends Ser<MoneyPerpare, MoneyPerpareDTO> {
      * @return class MoneyPerpareBO
      * @throws SerException
      */
-    default List<PerpareBO> monthCompare(Integer month) throws SerException {
+    default List<PerpareBO> monthCompare(Integer years, Integer month) throws SerException {
         return null;
     }
 
@@ -114,27 +128,20 @@ public interface MoneyPerpareSer extends Ser<MoneyPerpare, MoneyPerpareDTO> {
      * @return class MoneyPerpareContrastBO
      * @throws SerException
      */
-    default List<MoneyPerpareContrastBO> contrastCompare(Integer month) throws SerException {
+    default List<MoneyPerpareContrastBO> contrastCompare(Integer years, Integer month) throws SerException {
         return null;
     }
 
-    /**
-     * 资金准备与实际支付差异
-     *
-     * @return class PerpareActualDifferencesBO
-     * @throws SerException
-     */
-    default List<PerpareActualDifferencesBO> differencesCompare(Integer month) throws SerException {
-        return null;
-    }
 
     /**
      * 获取所有的项目组
+     *
      * @return
      * @throws SerException
      */
-    default List<String> findAllProject() throws SerException{
+    default List<String> findAllProject() throws SerException {
         return null;
     }
+
 
 }

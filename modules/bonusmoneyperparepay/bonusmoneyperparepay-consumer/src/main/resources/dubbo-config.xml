@@ -22,8 +22,8 @@
 
 	<dubbo:reference  validation="true" id="moneyPerpareApiImpl" interface="com.bjike.goddess.bonusmoneyperparepay.api.MoneyPerpareAPI" />
 	<dubbo:reference  validation="true" id="waitingPayApiImpl" interface="com.bjike.goddess.bonusmoneyperparepay.api.WaitingPayAPI" />
-	<!--<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.businessproject.api.CusPermissionAPI" />-->
-	<!--<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.businessproject.api.CusPermissionOperateAPI" />-->
+	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.bonusmoneyperparepay.api.CusPermissionAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.bonusmoneyperparepay.api.CusPermissionOperateAPI" />
 
 
 

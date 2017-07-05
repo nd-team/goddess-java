@@ -1,4 +1,4 @@
-package com.bjike.goddess.marketactivitymanage.dto;
+package com.bjike.goddess.bonusmoneyperparepay.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
 

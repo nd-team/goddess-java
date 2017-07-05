@@ -1,4 +1,4 @@
-package com.bjike.goddess.marketactivitymanage.vo;
+package com.bjike.goddess.bonusmoneyperparepay.vo;
 
 /**
  * 客户权限配置表现层对象
@@ -15,7 +15,6 @@ public class CusOperateVO {
      * id
      */
     private String id;
-
 
 
     /**

@@ -1,9 +1,9 @@
-package com.bjike.goddess.marketactivitymanage.api;
+package com.bjike.goddess.bonusmoneyperparepay.api;
 
+import com.bjike.goddess.bonusmoneyperparepay.bo.CusPermissionBO;
+import com.bjike.goddess.bonusmoneyperparepay.dto.CusPermissionDTO;
+import com.bjike.goddess.bonusmoneyperparepay.to.CusPermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.marketactivitymanage.bo.CusPermissionBO;
-import com.bjike.goddess.marketactivitymanage.dto.CusPermissionDTO;
-import com.bjike.goddess.marketactivitymanage.to.CusPermissionTO;
 import com.bjike.goddess.organize.bo.OpinionBO;
 
 import java.util.List;

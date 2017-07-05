@@ -1,4 +1,4 @@
-package com.bjike.goddess.marketactivitymanage.to;
+package com.bjike.goddess.bonusmoneyperparepay.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
 

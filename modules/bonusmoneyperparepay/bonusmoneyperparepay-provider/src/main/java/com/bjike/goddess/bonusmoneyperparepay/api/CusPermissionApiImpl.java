@@ -1,11 +1,10 @@
-package com.bjike.goddess.marketactivitymanage.api;
+package com.bjike.goddess.bonusmoneyperparepay.api;
 
+import com.bjike.goddess.bonusmoneyperparepay.bo.CusPermissionBO;
+import com.bjike.goddess.bonusmoneyperparepay.dto.CusPermissionDTO;
+import com.bjike.goddess.bonusmoneyperparepay.service.CusPermissionSer;
+import com.bjike.goddess.bonusmoneyperparepay.to.CusPermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
-
-import com.bjike.goddess.marketactivitymanage.bo.CusPermissionBO;
-import com.bjike.goddess.marketactivitymanage.dto.CusPermissionDTO;
-import com.bjike.goddess.marketactivitymanage.service.CusPermissionSer;
-import com.bjike.goddess.marketactivitymanage.to.CusPermissionTO;
 import com.bjike.goddess.organize.bo.OpinionBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +42,7 @@ public class CusPermissionApiImpl implements CusPermissionAPI {
     }
 
     @Override
-    public List<OpinionBO>  listOperateById(String id) throws SerException {
+    public List<OpinionBO> listOperateById(String id) throws SerException {
         return cusPermissionSer.listOperateById(id);
     }
 

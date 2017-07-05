@@ -1,11 +1,7 @@
 package com.bjike.goddess.bonusmoneyperparepay.excel;
 
-import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
 
 
 /**
@@ -67,7 +63,7 @@ public class AlreadyPayExcel extends BaseTO {
      * 付款时间
      */
     @ExcelHeader(name = "付款时间", notNull = true)
-    private String difference;
+    private String differenceTime;
 
     /**
      * 付款人
@@ -132,12 +128,12 @@ public class AlreadyPayExcel extends BaseTO {
         this.payMoney = payMoney;
     }
 
-    public String getDifference() {
-        return difference;
+    public String getDifferenceTime() {
+        return differenceTime;
     }
 
-    public void setDifference(String difference) {
-        this.difference = difference;
+    public void setDifferenceTime(String differenceTime) {
+        this.differenceTime = differenceTime;
     }
 
     public String getPayAuthor() {

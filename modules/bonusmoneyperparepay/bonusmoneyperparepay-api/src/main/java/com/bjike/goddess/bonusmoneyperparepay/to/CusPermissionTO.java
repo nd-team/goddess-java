@@ -1,7 +1,7 @@
-package com.bjike.goddess.marketactivitymanage.to;
+package com.bjike.goddess.bonusmoneyperparepay.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.marketactivitymanage.type.CusPermissionType;
+import com.bjike.goddess.bonusmoneyperparepay.type.CusPermissionType;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**

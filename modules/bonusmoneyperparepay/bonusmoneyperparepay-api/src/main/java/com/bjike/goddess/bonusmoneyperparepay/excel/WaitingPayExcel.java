@@ -1,11 +1,7 @@
 package com.bjike.goddess.bonusmoneyperparepay.excel;
 
-import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
 
 
 /**

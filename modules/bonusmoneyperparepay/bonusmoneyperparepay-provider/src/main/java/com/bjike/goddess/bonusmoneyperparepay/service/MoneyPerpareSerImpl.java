@@ -1,19 +1,22 @@
 package com.bjike.goddess.bonusmoneyperparepay.service;
 
-import com.bjike.goddess.bonusmoneyperparepay.api.WaitingPayAPI;
 import com.bjike.goddess.bonusmoneyperparepay.bo.MoneyPerpareBO;
 import com.bjike.goddess.bonusmoneyperparepay.bo.MoneyPerpareContrastBO;
-import com.bjike.goddess.bonusmoneyperparepay.bo.PerpareActualDifferencesBO;
 import com.bjike.goddess.bonusmoneyperparepay.bo.PerpareBO;
 import com.bjike.goddess.bonusmoneyperparepay.dto.MoneyPerpareDTO;
 import com.bjike.goddess.bonusmoneyperparepay.dto.WaitingPayDTO;
 import com.bjike.goddess.bonusmoneyperparepay.entity.MoneyPerpare;
 import com.bjike.goddess.bonusmoneyperparepay.entity.WaitingPay;
+import com.bjike.goddess.bonusmoneyperparepay.to.GuidePermissionTO;
 import com.bjike.goddess.bonusmoneyperparepay.to.MoneyPerpareTO;
+import com.bjike.goddess.bonusmoneyperparepay.type.GuideAddrStatus;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -22,7 +25,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.print.event.PrintJobEvent;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -42,6 +44,99 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
 
     @Autowired
     private WaitingPaySer waitingPaySer;
+
+    @Autowired
+    private UserAPI userAPI;
+
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 检查权限
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是财务部门人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideIdentity();
+                break;
+            case ADD:
+                flag = guideIdentity();
+                break;
+            case EDIT:
+                flag = guideIdentity();
+                break;
+            case DELETE:
+                flag = guideIdentity();
+                break;
+            case COLLECT:
+                flag = guideIdentity();
+                break;
+            case EXPORT:
+                flag = guideIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
     @Override
     public Long countMoney(MoneyPerpareDTO moneyPerpareDTO) throws SerException {
         searchCondition(moneyPerpareDTO);
@@ -60,6 +155,7 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
 
     @Override
     public List<MoneyPerpareBO> listMoneyPerpare(MoneyPerpareDTO moneyPerpareDTO) throws SerException {
+        checkPermission();
         searchCondition(moneyPerpareDTO);
         List<MoneyPerpare> list = super.findByPage(moneyPerpareDTO);
         List<MoneyPerpareBO> baseInfoManageBOList = BeanTransform.copyProperties(list, MoneyPerpareBO.class);
@@ -69,11 +165,12 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MoneyPerpareBO addMoneyPerpare(MoneyPerpareTO moneyPerpareTO) throws SerException {
-        MoneyPerpare moneyPerpare = BeanTransform.copyProperties(moneyPerpareTO, MoneyPerpare.class,true);
+        checkPermission();
+        MoneyPerpare moneyPerpare = BeanTransform.copyProperties(moneyPerpareTO, MoneyPerpare.class, true);
         moneyPerpare.setCreateTime(LocalDateTime.now());
         moneyPerpare = super.save(moneyPerpare);
-        WaitingPay waitingPay =  new WaitingPay();
-        BeanUtils.copyProperties(moneyPerpare,waitingPay);
+        WaitingPay waitingPay = new WaitingPay();
+        BeanUtils.copyProperties(moneyPerpare, waitingPay);
         waitingPay.setCreateTime(LocalDateTime.now());
         waitingPay.setPayStatus("等待付款");
         waitingPay.setTurntable("否");
@@ -85,16 +182,17 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MoneyPerpareBO editMoneyPerpare(MoneyPerpareTO moneyPerpareTO) throws SerException {
+        checkPermission();
         MoneyPerpare moneyPerpare = super.findById(moneyPerpareTO.getId());
-        BeanTransform.copyProperties(moneyPerpareTO, moneyPerpare,true);
+        BeanTransform.copyProperties(moneyPerpareTO, moneyPerpare, true);
         moneyPerpare.setModifyTime(LocalDateTime.now());
         super.update(moneyPerpare);
         WaitingPayDTO dto = new WaitingPayDTO();
-        dto.getConditions().add(Restrict.eq("perpareId",moneyPerpare.getId()));
+        dto.getConditions().add(Restrict.eq("perpareId", moneyPerpare.getId()));
         List<WaitingPay> waitingPays = waitingPaySer.findByCis(dto);
         WaitingPay waitingPay = waitingPays.get(0);
-        if(waitingPay.getPayStatus().equals("等待付款")){
-            BeanTransform.copyProperties(moneyPerpareTO,waitingPay,true,"id");
+        if (waitingPay.getPayStatus().equals("等待付款")) {
+            BeanTransform.copyProperties(moneyPerpareTO, waitingPay, true, "id");
             waitingPaySer.update(waitingPay);
         }
         return BeanTransform.copyProperties(moneyPerpare, MoneyPerpareBO.class);
@@ -103,6 +201,7 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteMoneyPerpare(String id) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
@@ -124,14 +223,20 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
     }
 
     @Override
-    public List<PerpareBO> projectCompare(Integer month, String[] projectGroup) throws SerException {
+    public List<PerpareBO> projectCompare(Integer years, Integer month, String[] projectGroup) throws SerException {
+        checkPermission();
         List<PerpareBO> list = new ArrayList<>();
         if (projectGroup == null || projectGroup.length == 0) {
             throw new SerException("项目组不能为空");
         } else {
             for (String project : projectGroup) {
                 MoneyPerpareDTO dto = new MoneyPerpareDTO();
+                Integer year = LocalDateTime.now().getYear();
+                if (years != null) {
+                    year = years;
+                }
                 if (month != null) {
+                    dto.getConditions().add(Restrict.eq("years", year));
                     dto.getConditions().add(Restrict.eq("month", month));
                 }
                 dto.getConditions().add(Restrict.eq("projectGroup", projectGroup));
@@ -141,7 +246,7 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
                     Double reserve = 0d;
                     for (MoneyPerpare moneyPerpare : moneyPerpares) {
                         PerpareBO perpareBO = new PerpareBO();
-                        perpareBO.setYearsMoth(moneyPerpare.getYears() + "-" + (moneyPerpare.getMonth() > 9 ? moneyPerpare.getMonth() : "0" + moneyPerpare.getMonth()));//时间
+                        perpareBO.setYearsMoth(moneyPerpare.getYears() + "-" + (moneyPerpare.getMonth() > 10 ? moneyPerpare.getMonth() : "0" + moneyPerpare.getMonth()));//时间
                         perpareBO.setProjectGroup(project);//项目组
                         perpareBO.setSubjects(moneyPerpare.getSubjects());//科目
                         perpareBO.setTotalReserve(moneyPerpare.getTotalReserve());//总准备金
@@ -164,14 +269,20 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
     }
 
     @Override
-    public List<PerpareBO> monthCompare(Integer month) throws SerException {
+    public List<PerpareBO> monthCompare(Integer years, Integer month) throws SerException {
+        checkPermission();
         List<PerpareBO> list = new ArrayList<>();
         MoneyPerpareDTO dto = new MoneyPerpareDTO();
-        Integer months = LocalDateTime.now().getMonthValue();
+        Integer year = LocalDateTime.now().getYear();
+        if (years != null) {
+            year = years;
+        }
+        if (month == null) {
+            month = LocalDateTime.now().getMonthValue();
+        }
         if (month != null) {
+            dto.getConditions().add(Restrict.eq("years", year));
             dto.getConditions().add(Restrict.eq("month", month));
-        }else{
-            dto.getConditions().add(Restrict.eq("month", months));
         }
         List<MoneyPerpare> moneyPerpares = super.findByCis(dto);
         if (moneyPerpares != null && moneyPerpares.size() > 0) {
@@ -179,7 +290,7 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
             Double reserve = 0d;
             for (MoneyPerpare moneyPerpare : moneyPerpares) {
                 PerpareBO perpareBO = new PerpareBO();
-                perpareBO.setYearsMoth(moneyPerpare.getYears() + "-" + (moneyPerpare.getMonth() > 9 ? moneyPerpare.getMonth() : "0" + moneyPerpare.getMonth()));//时间
+                perpareBO.setYearsMoth(moneyPerpare.getYears() + "-" + (moneyPerpare.getMonth() > 10 ? moneyPerpare.getMonth() : "0" + moneyPerpare.getMonth()));//时间
                 perpareBO.setProjectGroup(moneyPerpare.getProjectGroup());//项目组
                 perpareBO.setSubjects(moneyPerpare.getSubjects());//科目
                 perpareBO.setTotalReserve(moneyPerpare.getTotalReserve());//总准备金
@@ -197,15 +308,16 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
             list.add(perpareBO);
         }
         return list;
-}
+    }
 
     @Override
     public List<PerpareBO> yearsCompare(Integer years) throws SerException {
+        checkPermission();
         List<PerpareBO> list = new ArrayList<>();
         MoneyPerpareDTO dto = new MoneyPerpareDTO();
         if (years != null) {
             dto.getConditions().add(Restrict.eq("years", years));
-        }else{
+        } else {
             dto.getConditions().add(Restrict.eq("years", LocalDateTime.now().getYear()));
         }
         List<MoneyPerpare> moneyPerpares = super.findByCis(dto);
@@ -214,7 +326,7 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
             Double reserve = 0d;
             for (MoneyPerpare moneyPerpare : moneyPerpares) {
                 PerpareBO perpareBO = new PerpareBO();
-                perpareBO.setYearsMoth(moneyPerpare.getYears() + "-" + (moneyPerpare.getMonth() > 9 ? moneyPerpare.getMonth() : "0" + moneyPerpare.getMonth()));//时间
+                perpareBO.setYearsMoth(moneyPerpare.getYears() + "-" + (moneyPerpare.getMonth() > 10 ? moneyPerpare.getMonth() : "0" + moneyPerpare.getMonth()));//时间
                 perpareBO.setProjectGroup(moneyPerpare.getProjectGroup());//项目组
                 perpareBO.setSubjects(moneyPerpare.getSubjects());//科目
                 perpareBO.setTotalReserve(moneyPerpare.getTotalReserve());//总准备金
@@ -237,13 +349,13 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
     @Override
     public List<String> findAllProject() throws SerException {
         List<MoneyPerpare> list = super.findAll();
-        if(CollectionUtils.isEmpty(list)){
+        if (CollectionUtils.isEmpty(list)) {
             return Collections.emptyList();
         }
         Set<String> set = new HashSet<>();
-        for(MoneyPerpare model : list){
+        for (MoneyPerpare model : list) {
             String project = model.getProjectGroup();
-            if(StringUtils.isNotBlank(model.getProjectGroup())){
+            if (StringUtils.isNotBlank(model.getProjectGroup())) {
                 set.add(project);
             }
         }
@@ -251,8 +363,11 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
     }
 
     @Override
-    public List<MoneyPerpareContrastBO> contrastCompare(Integer month) throws SerException {
-        Integer yeas = LocalDateTime.now().getYear();
+    public List<MoneyPerpareContrastBO> contrastCompare(Integer years, Integer month) throws SerException {
+        checkPermission();
+        if (years == null) {
+            years = LocalDateTime.now().getYear();
+        }
         List<MoneyPerpareContrastBO> moneyPerpareContrastBOList = new ArrayList<>();
         List<String> projectGroup = findAllProject();
         MoneyPerpareDTO dto = new MoneyPerpareDTO();
@@ -260,18 +375,18 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
         Double reserveSum = 0d;
         Double lastReserveSum = 0d;
 
-        if(month!=1){
-            for(String project : projectGroup){
-                for(MoneyPerpare perpare : moneyPerpareList){
-                    if(perpare.getProjectGroup().equals(project) && perpare.getYears().equals(yeas) && perpare.getMonth().equals(month)){
+        if (month != 1) {
+            for (String project : projectGroup) {
+                for (MoneyPerpare perpare : moneyPerpareList) {
+                    if (perpare.getProjectGroup().equals(project) && perpare.getYears().equals(years) && perpare.getMonth().equals(month)) {
                         reserveSum += perpare.getReserve();
                     }
-                    if(perpare.getProjectGroup().equals(project) && perpare.getYears().equals(yeas) && perpare.getMonth().equals(month-1)){
+                    if (perpare.getProjectGroup().equals(project) && perpare.getYears().equals(years) && perpare.getMonth().equals(month - 1)) {
                         lastReserveSum += perpare.getReserve();
                     }
                 }
 
-                if((reserveSum!=0) || (lastReserveSum!=0)){
+                if ((reserveSum != 0) || (lastReserveSum != 0)) {
                     MoneyPerpareContrastBO moneyPerpareContrastBO = new MoneyPerpareContrastBO();
                     moneyPerpareContrastBO.setYears(LocalDateTime.now().getYear());
                     moneyPerpareContrastBO.setMonth(month);
@@ -279,11 +394,11 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
                     moneyPerpareContrastBO.setSubjects("奖金");
                     moneyPerpareContrastBO.setThisMonthReserve(reserveSum);
                     moneyPerpareContrastBO.setLastMonthReserve(lastReserveSum);
-                    moneyPerpareContrastBO.setDifference(reserveSum-lastReserveSum);
-                    if(lastReserveSum==0){
+                    moneyPerpareContrastBO.setDifference(reserveSum - lastReserveSum);
+                    if (lastReserveSum == 0) {
                         moneyPerpareContrastBO.setGrowthRate(0d);
-                    }else{
-                        moneyPerpareContrastBO.setGrowthRate(((reserveSum-lastReserveSum)/lastReserveSum * 100));
+                    } else {
+                        moneyPerpareContrastBO.setGrowthRate(((reserveSum - lastReserveSum) / lastReserveSum * 100));
                     }
 
                     moneyPerpareContrastBOList.add(moneyPerpareContrastBO);
@@ -293,17 +408,17 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
                 }
 
             }
-        }else {
-            for(String project : projectGroup){
-                for(MoneyPerpare perpare : moneyPerpareList){
-                    if(perpare.getProjectGroup().equals(project) && perpare.getYears().equals(yeas) && perpare.getMonth().equals(month)){
+        } else {
+            for (String project : projectGroup) {
+                for (MoneyPerpare perpare : moneyPerpareList) {
+                    if (perpare.getProjectGroup().equals(project) && perpare.getYears().equals(years) && perpare.getMonth().equals(month)) {
                         reserveSum += perpare.getReserve();
                     }
-                    if(perpare.getProjectGroup().equals(project) && perpare.getYears().equals(yeas-1) && perpare.getMonth().equals(12)){
+                    if (perpare.getProjectGroup().equals(project) && perpare.getYears().equals(years - 1) && perpare.getMonth().equals(12)) {
                         lastReserveSum += perpare.getReserve();
                     }
                 }
-                if((reserveSum!=0) || (lastReserveSum!=0)){
+                if ((reserveSum != 0) || (lastReserveSum != 0)) {
                     MoneyPerpareContrastBO moneyPerpareContrastBO = new MoneyPerpareContrastBO();
                     moneyPerpareContrastBO.setYears(LocalDateTime.now().getYear());
                     moneyPerpareContrastBO.setMonth(month);
@@ -311,11 +426,11 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
                     moneyPerpareContrastBO.setSubjects("奖金");
                     moneyPerpareContrastBO.setThisMonthReserve(reserveSum);
                     moneyPerpareContrastBO.setLastMonthReserve(lastReserveSum);
-                    moneyPerpareContrastBO.setDifference(reserveSum-lastReserveSum);
-                    if(lastReserveSum==0){
+                    moneyPerpareContrastBO.setDifference(reserveSum - lastReserveSum);
+                    if (lastReserveSum == 0) {
                         moneyPerpareContrastBO.setGrowthRate(0d);
-                    }else{
-                        moneyPerpareContrastBO.setGrowthRate(((reserveSum-lastReserveSum)/lastReserveSum * 100));
+                    } else {
+                        moneyPerpareContrastBO.setGrowthRate(((reserveSum - lastReserveSum) / lastReserveSum * 100));
                     }
 
                     moneyPerpareContrastBOList.add(moneyPerpareContrastBO);
@@ -331,8 +446,5 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
         return moneyPerpareContrastBOList;
     }
 
-    @Override
-    public List<PerpareActualDifferencesBO> differencesCompare(Integer month) throws SerException {
-        return null;
-    }
+
 }
