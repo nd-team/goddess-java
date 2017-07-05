@@ -17,7 +17,7 @@ import javax.persistence.Table;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "contractcommunicat_cuspermissionoperate")
+@Table(name = "fundrecords_cuspermissionoperate")
 public class CusPermissionOperate extends BaseEntity {
 
 
