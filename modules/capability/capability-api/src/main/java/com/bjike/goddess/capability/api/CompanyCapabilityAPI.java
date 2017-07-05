@@ -109,5 +109,26 @@ public interface CompanyCapabilityAPI {
      */
     List<SonPermissionObject> sonPermission() throws SerException;
 
+    /**
+     * 功能导航权限
+     * @throws SerException
+     * @version v1
+     */
     Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
+    /**
+     * 导出Excel导入模板
+     * @throws SerException
+     */
+    byte[] templateExport(  ) throws SerException;
+
+    /**
+     * 导入
+     *
+     * @param companyCapabilityTO 公司能力
+     * @return class SiginManageBO
+     */
+    default CompanyCapabilityBO importExcel(List<CompanyCapabilityTO> companyCapabilityTO) throws SerException {
+        return null;
+    }
 }

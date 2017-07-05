@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.managefee.bo.ManageFeeBO;
 import com.bjike.goddess.managefee.dto.ManageFeeDTO;
 import com.bjike.goddess.managefee.service.ManageFeeSer;
+import com.bjike.goddess.managefee.to.GuidePermissionTO;
 import com.bjike.goddess.managefee.to.ManageFeeTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,16 @@ public class ManageFeeApiImpl implements ManageFeeAPI {
 
     @Autowired
     private ManageFeeSer manageFeeSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return manageFeeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return manageFeeSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countManageFee(ManageFeeDTO manageFeeDTO) throws SerException {
@@ -57,7 +68,7 @@ public class ManageFeeApiImpl implements ManageFeeAPI {
 
     @Override
     public List<ManageFeeBO> collectArea(ManageFeeDTO manageFeeDTO) throws SerException {
-        return manageFeeSer.collectArea( manageFeeDTO );
+        return manageFeeSer.collectArea(manageFeeDTO);
     }
 
     @Override
@@ -72,7 +83,7 @@ public class ManageFeeApiImpl implements ManageFeeAPI {
 
     @Override
     public List<ManageFeeBO> collectType(ManageFeeDTO manageFeeDTO) throws SerException {
-        return manageFeeSer.collectType( manageFeeDTO );
+        return manageFeeSer.collectType(manageFeeDTO);
     }
 
     @Override

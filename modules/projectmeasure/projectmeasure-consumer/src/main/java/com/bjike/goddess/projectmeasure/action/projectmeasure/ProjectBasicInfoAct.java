@@ -74,7 +74,7 @@ public class ProjectBasicInfoAct {
     @GetMapping("v1/projectbasicinfo/{id}")
     public Result findById(@PathVariable(value = "id") String id, HttpServletRequest request) throws ActException {
         try {
-            ProjectBasicInfoBO bo = projectBasicInfoAPI.findById(id);
+            ProjectBasicInfoBO bo = projectBasicInfoAPI.getOne(id);
             ProjectBasicInfoVO vo = BeanTransform.copyProperties(bo, ProjectBasicInfoVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
@@ -129,7 +129,7 @@ public class ProjectBasicInfoAct {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated(value = {ADD.class}) ProjectBasicInfoTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) ProjectBasicInfoTO to, HttpServletRequest request, BindingResult result) throws ActException {
         try {
             ProjectBasicInfoBO bo = projectBasicInfoAPI.save(to);
             ProjectBasicInfoVO vo = BeanTransform.copyProperties(bo, ProjectBasicInfoVO.class, request);

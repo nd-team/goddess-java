@@ -4,7 +4,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.coststandard.bo.CostStandardContrastBO;
 import com.bjike.goddess.coststandard.bo.CostStandardOpinionBO;
 import com.bjike.goddess.coststandard.dto.CostStandardContrastDTO;
+import com.bjike.goddess.coststandard.excel.SonPermissionObject;
 import com.bjike.goddess.coststandard.to.CostStandardContrastTO;
+import com.bjike.goddess.coststandard.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -80,6 +82,20 @@ public interface CostStandardContrastAPI {
      * @throws SerException
      */
     default Long getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 }

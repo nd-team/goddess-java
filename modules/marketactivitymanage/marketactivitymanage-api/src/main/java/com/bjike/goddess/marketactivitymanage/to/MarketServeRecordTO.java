@@ -121,7 +121,6 @@ public class MarketServeRecordTO extends BaseTO {
     /**
      * 运营商务部资金模块
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "运营商务部资金模块不能为空")
     private String yyFundModule;
 
     /**

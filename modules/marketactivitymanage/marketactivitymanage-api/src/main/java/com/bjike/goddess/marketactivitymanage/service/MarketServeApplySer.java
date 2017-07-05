@@ -3,9 +3,14 @@ package com.bjike.goddess.marketactivitymanage.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeApplyBO;
+import com.bjike.goddess.marketactivitymanage.bo.MarketServeApplyDetailBO;
 import com.bjike.goddess.marketactivitymanage.dto.MarketServeApplyDTO;
 import com.bjike.goddess.marketactivitymanage.entity.MarketServeApply;
+import com.bjike.goddess.marketactivitymanage.excel.MarketServeApplyExcel;
+import com.bjike.goddess.marketactivitymanage.excel.MarketServeApplyImprotExcel;
 import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
+import com.bjike.goddess.marketactivitymanage.to.GuidePermissionTO;
+import com.bjike.goddess.marketactivitymanage.to.MarketServeApplyImprotTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeApplyTO;
 import com.bjike.goddess.marketactivitymanage.type.AuditType;
 
@@ -24,6 +29,19 @@ import java.util.List;
  */
 public interface MarketServeApplySer extends Ser<MarketServeApply, MarketServeApplyDTO> {
 
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 查询市场招待申请
      *
@@ -83,7 +101,7 @@ public interface MarketServeApplySer extends Ser<MarketServeApply, MarketServeAp
      * @return class MarketServeApplyBO
      * @throws SerException
      */
-    MarketServeApplyBO checkDetails(String id) throws SerException;
+    MarketServeApplyDetailBO checkDetails(String id) throws SerException;
 
     /**
      * 添加客户信息
@@ -100,4 +118,51 @@ public interface MarketServeApplySer extends Ser<MarketServeApply, MarketServeAp
      * @throws SerException
      */
     void editClientInfo(CustomerInfoTO to) throws SerException;
+
+    /**
+     * 根据id查询市场招待申请
+     *
+     * @param id 市场招待申请唯一标识
+     * @return class MarketServeApplyBO
+     * @throws SerException
+     */
+    MarketServeApplyBO getOne(String id) throws SerException;
+
+    /**
+     * 查看所有的项目名
+     *
+     * @throws SerException
+     */
+    List<String> findAllProjectName() throws SerException;
+
+    /**
+     * 查看所有的地区
+     *
+     * @throws SerException
+     */
+    List<String> findAllAreas() throws SerException;
+
+    /**
+     * 导出excel
+     *
+     * @param areas
+     * @param startTime
+     * @param endTime
+     * @return
+     * @throws SerException
+     */
+    byte[] exportExcel(String[] areas, String startTime, String endTime) throws SerException;
+
+
+    /**
+     *  导入
+     * @param marketServeApplyImprotTOS 市场活动申请记录
+     */
+    void importExcel(List<MarketServeApplyImprotTO> marketServeApplyImprotTOS) throws SerException;
+
+    /**
+     * 导出Excel
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
 }

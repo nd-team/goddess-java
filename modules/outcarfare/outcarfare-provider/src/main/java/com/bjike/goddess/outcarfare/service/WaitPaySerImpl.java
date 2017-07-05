@@ -194,6 +194,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Transactional(rollbackFor = {SerException.class})
     public List<WaitPayBO> list(WaitPayDTO dto) throws SerException {
         checkSeeIdentity();
+        String userToken=RpcTransmit.getUserToken();
         List<DispatchCarInfoBO> list = dispatchCarInfoAPI.allWaitPay();
         List<WaitPay> waitPays = super.findAll();
         if (list != null) {
@@ -274,6 +275,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
         }
         dto.getConditions().add(Restrict.eq("isPay", Boolean.TRUE));
         List<WaitPay> l = super.findByCis(dto, true);
+        RpcTransmit.transmitUserToken(userToken);
         return BeanTransform.copyProperties(l, WaitPayBO.class);
     }
 

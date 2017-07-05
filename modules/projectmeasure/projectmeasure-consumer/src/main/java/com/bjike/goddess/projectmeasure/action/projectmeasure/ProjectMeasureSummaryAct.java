@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.projectmeasure.api.ProjectBasicInfoAPI;
 import com.bjike.goddess.projectmeasure.api.ProjectMeasureSummaryAPI;
 import com.bjike.goddess.projectmeasure.bo.ProjectMeasureBO;
 import com.bjike.goddess.projectmeasure.bo.ProjectMeasureSummaryBO;
@@ -40,8 +41,12 @@ public class ProjectMeasureSummaryAct {
     @Autowired
     private ProjectMeasureSummaryAPI projectMeasureSummaryAPI;
 
+    @Autowired
+    private ProjectBasicInfoAPI projectBasicInfoAPI;
+
     /**
      * 功能导航权限
+     *
      * @param guidePermissionTO 导航类型数据
      * @throws ActException
      * @version v1
@@ -51,16 +56,17 @@ public class ProjectMeasureSummaryAct {
         try {
 
             Boolean isHasPermission = projectMeasureSummaryAPI.guidePermission(guidePermissionTO);
-            if(! isHasPermission ){
+            if (!isHasPermission) {
                 //int code, String msg
-                return new ActResult(0,"没有权限",false );
-            }else{
-                return new ActResult(0,"有权限",true );
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
             }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 根据id查询项目测算邮件发送
      *
@@ -73,7 +79,7 @@ public class ProjectMeasureSummaryAct {
     @GetMapping("v1/projectmeasuresummary/{id}")
     public Result findById(@PathVariable(value = "id") String id, HttpServletRequest request) throws ActException {
         try {
-            ProjectMeasureSummaryBO bo = projectMeasureSummaryAPI.findById(id);
+            ProjectMeasureSummaryBO bo = projectMeasureSummaryAPI.getOne(id);
             ProjectMeasureSummaryVO vo = BeanTransform.copyProperties(bo, ProjectMeasureSummaryVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
@@ -213,18 +219,38 @@ public class ProjectMeasureSummaryAct {
     /**
      * 项目测算汇总
      *
-     * @param areas 汇总地区
+     * @param projectMeasureSummaryTO 汇总地区参数
      * @return class ProjectMeasureVO
      * @throws ActException
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/summarize")
-    public Result summarize(String[] areas, HttpServletRequest request) throws ActException {
+    public Result summarize(@Validated({ProjectMeasureSummaryTO.TestCollect.class}) ProjectMeasureSummaryTO projectMeasureSummaryTO , BindingResult bindingResult) throws ActException {
         try {
+            if( projectMeasureSummaryTO.getAreas() == null || projectMeasureSummaryTO.getAreas().length<=0 ){
+                throw new ActException("地区数组不能为空");
+            }
+            String[] areas = projectMeasureSummaryTO.getAreas();
             List<ProjectMeasureBO> boList = projectMeasureSummaryAPI.summarize(areas);
-            List<ProjectMeasureVO> voList = BeanTransform.copyProperties(boList, ProjectMeasureVO.class, request);
+            List<ProjectMeasureVO> voList = BeanTransform.copyProperties(boList, ProjectMeasureVO.class );
             return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有的地址
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findAreas")
+    public Result findAreas() throws ActException {
+        try {
+            List<String> areas = projectBasicInfoAPI.findAllAreas();
+            return ActResult.initialize(areas);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -237,7 +263,7 @@ public class ProjectMeasureSummaryAct {
      * @version v1
      */
     @GetMapping("v1/checkEmail")
-    public Result checkEmail( ) throws ActException {
+    public Result checkEmail() throws ActException {
         try {
             projectMeasureSummaryAPI.checkSendEmail();
             return ActResult.initialize("发送成功");

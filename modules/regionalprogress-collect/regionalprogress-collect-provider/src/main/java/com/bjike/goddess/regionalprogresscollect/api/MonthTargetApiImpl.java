@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.regionalprogresscollect.bo.MonthTargetBO;
 import com.bjike.goddess.regionalprogresscollect.dto.MonthTargetDTO;
 import com.bjike.goddess.regionalprogresscollect.service.MonthTargetSer;
+import com.bjike.goddess.regionalprogresscollect.to.GuidePermissionTO;
 import com.bjike.goddess.regionalprogresscollect.to.MonthTargetTO;
 import com.bjike.goddess.regionalprogresscollect.to.StandardTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,5 +60,10 @@ public class MonthTargetApiImpl implements MonthTargetAPI {
     @Override
     public Long getTotal() throws SerException {
         return monthTargetSer.getTotal();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return monthTargetSer.guidePermission( guidePermissionTO );
     }
 }

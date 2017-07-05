@@ -85,4 +85,9 @@ public class MarketInfoApiImpl implements MarketInfoAPI {
     public List<MarketInfoBO> findByOriganizion(String origanizion) throws SerException {
         return marketInfoSer.findByOriganizion(origanizion);
     }
+    @Override
+    //zhuangkaiqin
+    public List<MarketInfoBO> getCollecting(String area, String projectName) throws SerException {
+        return marketInfoSer.getCollecting(area,projectName);
+    }
 }

@@ -1,13 +1,13 @@
 package com.bjike.goddess.capability.service;
 
 import com.bjike.goddess.capability.bo.CompanyCapabilityBO;
+import com.bjike.goddess.capability.dto.CompanyCapabilityDTO;
+import com.bjike.goddess.capability.entity.CompanyCapability;
 import com.bjike.goddess.capability.excele.SonPermissionObject;
 import com.bjike.goddess.capability.to.CompanyCapabilityTO;
 import com.bjike.goddess.capability.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.capability.entity.CompanyCapability;
-import com.bjike.goddess.capability.dto.CompanyCapabilityDTO;
 
 import java.util.List;
 
@@ -31,46 +31,69 @@ public interface CompanyCapabilitySer extends Ser<CompanyCapability, CompanyCapa
 
     /**
      * 一个个公司能力
+     *
      * @return class CompanyCapabilityBO
      */
-    default CompanyCapabilityBO getOne(String id) throws SerException {return null;}
+    default CompanyCapabilityBO getOne(String id) throws SerException {
+        return null;
+    }
 
 
     /**
      * 公司能力展示列表
+     *
      * @return class CompanyCapabilityBO
      */
-    default List<CompanyCapabilityBO> listCompanyCapability(CompanyCapabilityDTO companyCapabilityDTO) throws SerException {return null;}
-    /**
-     *  添加
-     * @param companyCapabilityTO 公司能力展示信息
-     * @return class CompanyCapabilityBO
-     */
-    default CompanyCapabilityBO addCompanyCapability(CompanyCapabilityTO companyCapabilityTO) throws SerException { return null;}
+    default List<CompanyCapabilityBO> listCompanyCapability(CompanyCapabilityDTO companyCapabilityDTO) throws SerException {
+        return null;
+    }
 
     /**
-     *  编辑
+     * 添加
+     *
      * @param companyCapabilityTO 公司能力展示信息
      * @return class CompanyCapabilityBO
      */
-    default CompanyCapabilityBO editCompanyCapability(CompanyCapabilityTO companyCapabilityTO) throws SerException { return null;}
+    default CompanyCapabilityBO addCompanyCapability(CompanyCapabilityTO companyCapabilityTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 编辑
+     *
+     * @param companyCapabilityTO 公司能力展示信息
+     * @return class CompanyCapabilityBO
+     */
+    default CompanyCapabilityBO editCompanyCapability(CompanyCapabilityTO companyCapabilityTO) throws SerException {
+        return null;
+    }
 
     /**
      * 删除级别
+     *
      * @param id id
      */
-    default void deleteCompanyCapability(String id ) throws SerException {return;};
+    default void deleteCompanyCapability(String id) throws SerException {
+        return;
+    }
+
+    ;
 
     /**
      * 搜索
+     *
      * @return class CompanyCapabilityBO
      */
-    default List<CompanyCapabilityBO> listCompanyCapabilityByName(CompanyCapabilityDTO companyCapabilityDTO ) throws SerException {return null;}
+    default List<CompanyCapabilityBO> listCompanyCapabilityByName(CompanyCapabilityDTO companyCapabilityDTO) throws SerException {
+        return null;
+    }
 
     /**
      * 查找所有公司名
      */
-    default List<String> listAllCompanyName( ) throws SerException {return null;}
+    default List<String> listAllCompanyName() throws SerException {
+        return null;
+    }
 
 
     /**
@@ -90,6 +113,23 @@ public interface CompanyCapabilitySer extends Ser<CompanyCapability, CompanyCapa
      * 工能导航权限
      */
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出Excel模板下载
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
+
+    /**
+     * 导入
+     *
+     * @param companyCapabilityTO 公司能力
+     * @return class CompanyCapabilityBO
+     */
+    default CompanyCapabilityBO importExcel(List<CompanyCapabilityTO> companyCapabilityTO) throws SerException {
         return null;
     }
 }

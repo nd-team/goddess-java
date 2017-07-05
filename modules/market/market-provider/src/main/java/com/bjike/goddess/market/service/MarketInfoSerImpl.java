@@ -360,4 +360,13 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
         dto.getConditions().add(Restrict.eq("origanizion", origanizion));
         return BeanTransform.copyProperties(super.findByCis(dto), MarketInfoBO.class);
     }
+    @Override
+    //zhuangkaiqin
+    public List<MarketInfoBO> getCollecting(String area, String projectName) throws SerException {
+        MarketInfoDTO dto = new MarketInfoDTO();
+        dto.getConditions().add(Restrict.eq("area",area));
+        dto.getConditions().add(Restrict.eq("projectName",projectName));
+
+        return BeanTransform.copyProperties(super.findByCis(dto),MarketInfoBO.class);
+    }
 }

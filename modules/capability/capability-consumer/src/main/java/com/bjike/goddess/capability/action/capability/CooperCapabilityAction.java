@@ -3,8 +3,10 @@ package com.bjike.goddess.capability.action.capability;
 import com.bjike.goddess.capability.api.CooperCapabilityAPI;
 import com.bjike.goddess.capability.bo.CooperCapabilityBO;
 import com.bjike.goddess.capability.dto.CooperCapabilityDTO;
+import com.bjike.goddess.capability.excele.CooperCapabilityImportExcel;
 import com.bjike.goddess.capability.to.CapabilityDeleteFileTO;
 import com.bjike.goddess.capability.to.CooperCapabilityTO;
+import com.bjike.goddess.capability.to.GuidePermissionTO;
 import com.bjike.goddess.capability.vo.CooperCapabilityVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -13,10 +15,13 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,7 +43,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("coopercapability")
-public class CooperCapabilityAction extends BaseFileAction{
+public class CooperCapabilityAction extends BaseFileAction {
     @Autowired
     private CooperCapabilityAPI cooperCapabilityAPI;
 
@@ -47,7 +53,7 @@ public class CooperCapabilityAction extends BaseFileAction{
     /**
      * 合作对象能力总条数
      *
-     * @param cooperCapabilityDTO
+     * @param cooperCapabilityDTO dto
      * @des 获取所有合作对象能力总条数
      * @version v1
      */
@@ -72,10 +78,10 @@ public class CooperCapabilityAction extends BaseFileAction{
      * @version v1
      */
     @GetMapping("v1/getOne/{id}")
-    public Result getOne(@PathVariable String id,HttpServletRequest request) throws ActException {
+    public Result getOne(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             CooperCapabilityBO cooperCapabilityBO = cooperCapabilityAPI.getOne(id);
-            return ActResult.initialize(BeanTransform.copyProperties(cooperCapabilityBO, CooperCapabilityVO.class ,request));
+            return ActResult.initialize(BeanTransform.copyProperties(cooperCapabilityBO, CooperCapabilityVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -85,13 +91,13 @@ public class CooperCapabilityAction extends BaseFileAction{
      * 合作对象能力列表
      *
      * @param cooperCapabilityDTO 合作对象能力信息dto
-     * @param request 前端过滤参数
+     * @param request             前端过滤参数
      * @return class CooperCapabilityVO
      * @des 获取所有合作对象能力信息
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result findLists(CooperCapabilityDTO cooperCapabilityDTO,HttpServletRequest request) throws ActException {
+    public Result findLists(CooperCapabilityDTO cooperCapabilityDTO, HttpServletRequest request) throws ActException {
         try {
             List<CooperCapabilityVO> cooperCapabilityVOList = BeanTransform.copyProperties(
                     cooperCapabilityAPI.listCooperCapability(cooperCapabilityDTO), CooperCapabilityVO.class, request);
@@ -234,16 +240,33 @@ public class CooperCapabilityAction extends BaseFileAction{
     /**
      * 导入
      *
-     * @param cooperCapabilityTO 公司能力基本信息数据to
      * @return class CooperCapabilityVO
      * @des 导入公司能力, 公司名称不能为空
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/importExcel")
-    public Result importExcelCCapability(@Validated CooperCapabilityTO cooperCapabilityTO) throws ActException {
-        return null;
+    public Result importExcelCCapability(HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+
+            List<CooperCapabilityImportExcel> tos = ExcelUtil.excelToClazz(is, CooperCapabilityImportExcel.class, excel);
+
+            List<CooperCapabilityTO> tocs = new ArrayList<>();
+            for (CooperCapabilityImportExcel str : tos) {
+                CooperCapabilityTO cooperCapabilityTO = BeanTransform.copyProperties(str, CooperCapabilityTO.class);
+                tocs.add(cooperCapabilityTO);
+            }
+            //注意序列化
+            cooperCapabilityAPI.importExcel(tocs);
+            return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
     }
+
 
 
     /**
@@ -255,7 +278,7 @@ public class CooperCapabilityAction extends BaseFileAction{
      * @version v1
      */
     @GetMapping("v1/exportExcel")
-    public Result exportExcelCCapability(String companyName,HttpServletResponse response) throws ActException {
+    public Result exportExcelCCapability(String companyName, HttpServletResponse response) throws ActException {
         try {
             String fileName = "合作对象商务展示.xlsx";
             super.writeOutFile(response, cooperCapabilityAPI.exportExcel(companyName), fileName);
@@ -291,6 +314,7 @@ public class CooperCapabilityAction extends BaseFileAction{
 
     /**
      * 文件附件列表
+     *
      * @param id id
      * @return class FileVO
      * @version v1
@@ -352,4 +376,44 @@ public class CooperCapabilityAction extends BaseFileAction{
         return new ActResult("删除成功");
     }
 
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+            Boolean isHasPermission = cooperCapabilityAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板公司能力展示
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "公司能力展示模板.xlsx";
+            super.writeOutFile(response, cooperCapabilityAPI.templateExport( ), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
 }

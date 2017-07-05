@@ -122,16 +122,15 @@ public class ArrivalMonthAct {
     /**
      * 按地区汇总
      *
-     * @param arrivals 地区数组
-     * @param request  请求对象
+     * @param dto 地区收入月dto
      * @return class ArrivalMonthCountVO
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/conditionsCount/{arrivals}")
-    public Result conditionsCount(@PathVariable String[] arrivals, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/conditionsCount")
+    public Result conditionsCount(ArrivalMonthDTO dto, HttpServletRequest request) throws ActException {
         try {
-            List<ArrivalMonthCountBO> list = arrivalMonthAPI.conditionsCount(arrivals);
+            List<ArrivalMonthCountBO> list = arrivalMonthAPI.conditionsCount(dto);
             return ActResult.initialize(BeanTransform.copyProperties(list, ArrivalMonthCountVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

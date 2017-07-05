@@ -146,8 +146,8 @@ public class DemandAnalysisSerImpl extends ServiceImpl<DemandAnalysis, DemandAna
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DemandAnalysisBO save(DemandAnalysisTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(demandManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(demandManage))
+//            throw new SerException("您的帐号没有权限");
         DemandAnalysis entity = BeanTransform.copyProperties(to, DemandAnalysis.class);
         super.save(entity);
         return BeanTransform.copyProperties(entity, DemandAnalysisBO.class);
@@ -156,8 +156,8 @@ public class DemandAnalysisSerImpl extends ServiceImpl<DemandAnalysis, DemandAna
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DemandAnalysisBO update(DemandAnalysisTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(demandManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(demandManage))
+//            throw new SerException("您的帐号没有权限");
         if (StringUtils.isNotBlank(to.getId())) {
             try {
                 DemandAnalysis entity = super.findById(to.getId());
@@ -175,8 +175,8 @@ public class DemandAnalysisSerImpl extends ServiceImpl<DemandAnalysis, DemandAna
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DemandAnalysisBO delete(DemandAnalysisTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(demandManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(demandManage))
+//            throw new SerException("您的帐号没有权限");
         DemandAnalysis entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");
@@ -211,15 +211,15 @@ public class DemandAnalysisSerImpl extends ServiceImpl<DemandAnalysis, DemandAna
 
     @Override
     public List<DemandAnalysis> findByPage(DemandAnalysisDTO dto) throws SerException {
-        if (!marPermissionSer.getMarPermission(demandManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(demandManage))
+//            throw new SerException("您的帐号没有权限");
         return super.findByPage(dto);
     }
 
     @Override
     public byte[] exportExcel(CollectTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(demandManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(demandManage))
+//            throw new SerException("您的帐号没有权限");
         DemandAnalysisDTO dto = new DemandAnalysisDTO();
         if (StringUtils.isNotBlank(to.getType()))
             dto.getConditions().add(Restrict.eq("type", to.getType()));

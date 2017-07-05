@@ -6,6 +6,7 @@ import com.bjike.goddess.projectcost.dto.CarCostDTO;
 import com.bjike.goddess.projectcost.service.CarCostSer;
 import com.bjike.goddess.projectcost.to.CarCostTO;
 import com.bjike.goddess.projectcost.to.FindTO;
+import com.bjike.goddess.projectcost.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,5 +65,10 @@ public class CarCostApiImpl implements CarCostAPI {
     @Override
     public List<CarCostBO> findByTO(FindTO to) throws SerException {
         return carCostSer.findByTO(to);
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return carCostSer.guidePermission( guidePermissionTO );
     }
 }

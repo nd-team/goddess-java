@@ -2,9 +2,11 @@ package com.bjike.goddess.socialfee.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.socialfee.to.GuidePermissionTO;
 import com.bjike.goddess.socialfee.bo.SocialFeeBO;
 import com.bjike.goddess.socialfee.bo.VoucherDataBO;
 import com.bjike.goddess.socialfee.dto.SocialFeeDTO;
+import com.bjike.goddess.socialfee.excle.SonPermissionObject;
 import com.bjike.goddess.socialfee.to.SocialFeeTO;
 import com.bjike.goddess.socialfee.to.VoucherDataTO;
 
@@ -21,6 +23,20 @@ import java.util.List;
  */
 public interface SocialFeeAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 社会缴费列表总条数
      */
@@ -126,13 +142,25 @@ public interface SocialFeeAPI {
     }
 
     /**
-     * 导出
+     * 导出excel
+     *
      * @param socialFeeDTO
      * @return
      * @throws SerException
      */
-    default String export (SocialFeeDTO socialFeeDTO) throws  SerException{return null;}
+    byte[] exportExcel(SocialFeeDTO socialFeeDTO) throws SerException;
 
 
+    /**
+     *  导入
+     * @param socialFeeTOS 社会缴费
+     */
+    SocialFeeBO importExcel(List<SocialFeeTO> socialFeeTOS) throws SerException;
+
+    /**
+     * 导出Excel
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
 
 }

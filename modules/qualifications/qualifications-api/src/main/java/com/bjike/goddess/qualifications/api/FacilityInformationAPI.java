@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.qualifications.bo.FacilityInformationBO;
 import com.bjike.goddess.qualifications.dto.FacilityInformationDTO;
 import com.bjike.goddess.qualifications.to.FacilityInformationTO;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -90,6 +91,12 @@ public interface FacilityInformationAPI {
      * @throws SerException
      */
     default FacilityInformationBO getById(String id) throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 }

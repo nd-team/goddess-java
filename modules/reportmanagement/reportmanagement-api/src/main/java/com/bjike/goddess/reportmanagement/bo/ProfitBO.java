@@ -28,57 +28,57 @@ public class ProfitBO extends BaseBO {
      */
     private Double currentYearAmount;
 
-    /**
-     * 1季度
-     */
-    private Double firstSeason;
+//    /**
+//     * 1季度
+//     */
+//    private Double firstSeason;
+//
+//    /**
+//     * 2季度
+//     */
+//    private Double secondSeason;
+//
+//    /**
+//     * 3季度
+//     */
+//    private Double thirdSeason;
+//
+//    /**
+//     * 4季度
+//     */
+//    private Double fourthSeason;
 
-    /**
-     * 2季度
-     */
-    private Double secondSeason;
-
-    /**
-     * 3季度
-     */
-    private Double thirdSeason;
-
-    /**
-     * 4季度
-     */
-    private Double fourthSeason;
-
-    public Double getFirstSeason() {
-        return firstSeason;
-    }
-
-    public void setFirstSeason(Double firstSeason) {
-        this.firstSeason = firstSeason;
-    }
-
-    public Double getSecondSeason() {
-        return secondSeason;
-    }
-
-    public void setSecondSeason(Double secondSeason) {
-        this.secondSeason = secondSeason;
-    }
-
-    public Double getThirdSeason() {
-        return thirdSeason;
-    }
-
-    public void setThirdSeason(Double thirdSeason) {
-        this.thirdSeason = thirdSeason;
-    }
-
-    public Double getFourthSeason() {
-        return fourthSeason;
-    }
-
-    public void setFourthSeason(Double fourthSeason) {
-        this.fourthSeason = fourthSeason;
-    }
+//    public Double getFirstSeason() {
+//        return firstSeason;
+//    }
+//
+//    public void setFirstSeason(Double firstSeason) {
+//        this.firstSeason = firstSeason;
+//    }
+//
+//    public Double getSecondSeason() {
+//        return secondSeason;
+//    }
+//
+//    public void setSecondSeason(Double secondSeason) {
+//        this.secondSeason = secondSeason;
+//    }
+//
+//    public Double getThirdSeason() {
+//        return thirdSeason;
+//    }
+//
+//    public void setThirdSeason(Double thirdSeason) {
+//        this.thirdSeason = thirdSeason;
+//    }
+//
+//    public Double getFourthSeason() {
+//        return fourthSeason;
+//    }
+//
+//    public void setFourthSeason(Double fourthSeason) {
+//        this.fourthSeason = fourthSeason;
+//    }
 
     public String getProject() {
         return project;

@@ -30,8 +30,8 @@ public class Formula extends BaseEntity {
     /**
      * 类型
      */
-    @Column(name = "type", columnDefinition = "VARCHAR(255)   COMMENT '类型'")
-    private String type;
+    @Column(name = "type1", columnDefinition = "VARCHAR(255)   COMMENT '类型'")
+    private String type1;
 
     /**
      * 公式方向
@@ -69,11 +69,11 @@ public class Formula extends BaseEntity {
         this.project = project;
     }
 
-    public String getType() {
-        return type;
+    public String getType1() {
+        return type1;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setType1(String type1) {
+        this.type1 = type1;
     }
 }

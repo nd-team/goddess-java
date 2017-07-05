@@ -38,7 +38,7 @@ public class ProjectMeasureSummaryBO extends BaseBO {
     /**
      * 发送间隔
      */
-    private double sendInterval;
+    private Double sendInterval;
 
     /**
      * 发送时间格式
@@ -103,7 +103,7 @@ public class ProjectMeasureSummaryBO extends BaseBO {
         this.lastTime = lastTime;
     }
 
-    public double getSendInterval() {
+    public Double getSendInterval() {
         return sendInterval;
     }
 

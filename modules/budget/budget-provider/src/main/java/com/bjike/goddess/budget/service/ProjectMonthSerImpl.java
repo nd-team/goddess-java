@@ -146,31 +146,13 @@ public class ProjectMonthSerImpl extends ServiceImpl<ProjectMonth, ProjectMonthD
             case DELETE:
                 flag = guideAddIdentity();
                 break;
-            case CONGEL:
-                flag = guideAddIdentity();
-                break;
-            case THAW:
-                flag = guideAddIdentity();
-                break;
             case COLLECT:
-                flag = guideAddIdentity();
-                break;
-            case IMPORT:
-                flag = guideAddIdentity();
-                break;
-            case EXPORT:
-                flag = guideAddIdentity();
-                break;
-            case UPLOAD:
-                flag = guideAddIdentity();
-                break;
-            case DOWNLOAD:
                 flag = guideAddIdentity();
                 break;
             case SEE:
                 flag = guideSeeIdentity();
                 break;
-            case SEEFILE:
+            case DETAIL:
                 flag = guideSeeIdentity();
                 break;
             default:
@@ -337,7 +319,7 @@ public class ProjectMonthSerImpl extends ServiceImpl<ProjectMonth, ProjectMonthD
     }
 
     @Override
-    public List<ProjectMonthCountBO> conditionsCount(String[] projects) throws SerException {
+    public List<ProjectMonthCountBO> conditionsCount(ProjectMonthDTO dto1) throws SerException {
         checkSeeIdentity();
         List<String> arrivals = findAllArrivals();
         List<Integer> years = findAllYears();
@@ -348,42 +330,45 @@ public class ProjectMonthSerImpl extends ServiceImpl<ProjectMonth, ProjectMonthD
         Integer targetWorkSum = 0;
         Integer actualWorkSum = 0;
         Integer workDifferencesSum = 0;
-        for (String project : projects) {
-            ProjectMonthDTO dto = new ProjectMonthDTO();
-            dto.getConditions().add(Restrict.eq("project", project));
-            List<ProjectMonth> list = super.findByCis(dto);
-            for (String arrival : arrivals) {
-                for (Integer year : years) {
-                    for (ProjectMonth projectMonth : list) {
-                        if (projectMonth.getArrival().equals(arrival) && projectMonth.getYear().equals(year)) {
-                            targetIncomeSum += projectMonth.getTargetIncome();
-                            planIncomeSum += projectMonth.getPlanIncome();
-                            double incomeDifference = projectMonth.getPlanIncome() - projectMonth.getTargetIncome();
-                            incomeDifferencesSum += incomeDifference;
-                            targetWorkSum += projectMonth.getTargetWork();
-                            actualWorkSum += projectMonth.getActualWork();
-                            int workDifference = projectMonth.getActualWork() - projectMonth.getTargetWork();
-                            workDifferencesSum += workDifference;
+        String[] projects = dto1.getProjects();
+        if (projects != null) {
+            for (String project : projects) {
+                ProjectMonthDTO dto = new ProjectMonthDTO();
+                dto.getConditions().add(Restrict.eq("project", project));
+                List<ProjectMonth> list = super.findByCis(dto);
+                for (String arrival : arrivals) {
+                    for (Integer year : years) {
+                        for (ProjectMonth projectMonth : list) {
+                            if (projectMonth.getArrival().equals(arrival) && projectMonth.getYear().equals(year)) {
+                                targetIncomeSum += projectMonth.getTargetIncome();
+                                planIncomeSum += projectMonth.getPlanIncome();
+                                double incomeDifference = projectMonth.getPlanIncome() - projectMonth.getTargetIncome();
+                                incomeDifferencesSum += incomeDifference;
+                                targetWorkSum += projectMonth.getTargetWork();
+                                actualWorkSum += projectMonth.getActualWork();
+                                int workDifference = projectMonth.getActualWork() - projectMonth.getTargetWork();
+                                workDifferencesSum += workDifference;
+                            }
                         }
-                    }
-                    if (targetWorkSum != 0) {
-                        ProjectMonthCountBO bo = new ProjectMonthCountBO();
-                        bo.setArrival(arrival);
-                        bo.setProject(project);
-                        bo.setYear(year);
-                        bo.setTargetIncomeSum(targetIncomeSum);
-                        bo.setPlanIncomeSum(planIncomeSum);
-                        bo.setIncomeDifferencesSum(incomeDifferencesSum);
-                        bo.setTargetWorkSum(targetWorkSum);
-                        bo.setActualWorkSum(actualWorkSum);
-                        bo.setWorkDifferencesSum(workDifferencesSum);
-                        boList.add(bo);
-                        targetIncomeSum = 0.00;
-                        planIncomeSum = 0.00;
-                        incomeDifferencesSum = 0.00;
-                        targetWorkSum = 0;
-                        actualWorkSum = 0;
-                        workDifferencesSum = 0;
+                        if (targetWorkSum != 0) {
+                            ProjectMonthCountBO bo = new ProjectMonthCountBO();
+                            bo.setArrival(arrival);
+                            bo.setProject(project);
+                            bo.setYear(year);
+                            bo.setTargetIncomeSum(targetIncomeSum);
+                            bo.setPlanIncomeSum(planIncomeSum);
+                            bo.setIncomeDifferencesSum(incomeDifferencesSum);
+                            bo.setTargetWorkSum(targetWorkSum);
+                            bo.setActualWorkSum(actualWorkSum);
+                            bo.setWorkDifferencesSum(workDifferencesSum);
+                            boList.add(bo);
+                            targetIncomeSum = 0.00;
+                            planIncomeSum = 0.00;
+                            incomeDifferencesSum = 0.00;
+                            targetWorkSum = 0;
+                            actualWorkSum = 0;
+                            workDifferencesSum = 0;
+                        }
                     }
                 }
             }

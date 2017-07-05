@@ -1,6 +1,7 @@
 package com.bjike.goddess.reportmanagement.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 利润表数据传输对象
@@ -12,15 +13,33 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [ com.bjike ]
  */
 public class ProfitDTO extends BaseDTO {
+    public interface A {
+    }
+
     /**
      * 起始时间
      */
+    @NotBlank(groups = {ProfitDTO.A.class}, message = "起始时间不能为空")
     private String startTime;
 
     /**
      * 结束时间
      */
+    @NotBlank(groups = {ProfitDTO.A.class}, message = "结束时间不能为空")
     private String endTime;
+
+    /**
+     * 项目名称数组
+     */
+    private String[] projectNames;
+
+    public String[] getProjectNames() {
+        return projectNames;
+    }
+
+    public void setProjectNames(String[] projectNames) {
+        this.projectNames = projectNames;
+    }
 
     public String getStartTime() {
         return startTime;

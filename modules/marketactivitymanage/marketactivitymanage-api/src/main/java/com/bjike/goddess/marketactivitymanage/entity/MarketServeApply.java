@@ -103,25 +103,25 @@ public class MarketServeApply extends BaseEntity {
     /**
      * 运营商务部资金模块
      */
-    @Column(name = "yyFundModule", insertable = false, columnDefinition = "VARCHAR(255) COMMENT '运营商务部资金模块'")
+    @Column(name = "yyFundModule", columnDefinition = "VARCHAR(255) COMMENT '运营商务部资金模块'")
     private String yyFundModule;
 
     /**
      * 资金模块意见
      */
-    @Column(name = "fundModuleOpinion", insertable = false, columnDefinition = "VARCHAR(255) COMMENT '资金模块意见'")
+    @Column(name = "fundModuleOpinion", columnDefinition = "VARCHAR(255) COMMENT '资金模块意见'")
     private String fundModuleOpinion;
 
     /**
      * 决策层
      */
-    @Column(name = "decisionLevel", insertable = false, columnDefinition = "VARCHAR(255) COMMENT '决策层'")
+    @Column(name = "decisionLevel", columnDefinition = "VARCHAR(255) COMMENT '决策层'")
     private String decisionLevel;
 
     /**
      * 决策层审核意见
      */
-    @Column(name = "executiveAuditOpinion", insertable = false, columnDefinition = "TINYINT(2) COMMENT '决策层审核意见'")
+    @Column(name = "executiveAuditOpinion", columnDefinition = "TINYINT(2) COMMENT '决策层审核意见'")
     private AuditType executiveAuditOpinion;
 
 

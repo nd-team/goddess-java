@@ -21,4 +21,14 @@
     <dubbo:reference validation="true" interface="com.bjike.goddess.coststandard.api.CostStandardContrastAPI"
                      id="costStandardContrastApiImpl"/>
 
+
+
+
+    <dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.StorageUserAPI"
+                     id="storageUserApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI"
+                     id="userSetPermissionApiImpl"/>
+    <dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.coststandard.api.CusPermissionAPI" />
+    <dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.coststandard.api.CusPermissionOperateAPI" />
+
 </beans>

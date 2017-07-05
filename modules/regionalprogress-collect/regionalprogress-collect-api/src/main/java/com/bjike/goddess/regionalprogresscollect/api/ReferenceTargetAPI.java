@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.regionalprogresscollect.bo.ReferenceTargetBO;
 import com.bjike.goddess.regionalprogresscollect.dto.ReferenceTargetDTO;
 import com.bjike.goddess.regionalprogresscollect.to.FindTO;
+import com.bjike.goddess.regionalprogresscollect.to.GuidePermissionTO;
 import com.bjike.goddess.regionalprogresscollect.to.ReferenceTargetTO;
 
 import java.util.List;
@@ -106,4 +107,10 @@ public interface ReferenceTargetAPI {
         return null;
     }
 
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

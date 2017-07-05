@@ -18,7 +18,6 @@ import com.bjike.goddess.subjectcollect.to.GuidePermissionTO;
 import com.bjike.goddess.subjectcollect.to.SubjectCollectTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import com.sun.org.apache.xml.internal.dtm.DTMIterator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -27,7 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 科目汇总表业务实现
@@ -45,6 +46,7 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+
     /**
      * 核对查看权限（部门级别）
      */
@@ -195,6 +197,7 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
         }
         return flag;
     }
+
     @Override
     public Long countSubjectCollect(SubjectCollectDTO subjectCollectDTO) throws SerException {
         Long count = super.count(subjectCollectDTO);
@@ -237,18 +240,18 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
     }
 
     @Override
-    public byte[] exportExcel(SubjectCollectDTO dto) throws SerException{
-        if(null != dto.getArea()){
-            dto.getConditions().add(Restrict.in("area",dto.getArea()));
+    public byte[] exportExcel(SubjectCollectDTO dto) throws SerException {
+        if (null != dto.getArea()) {
+            dto.getConditions().add(Restrict.in("area", dto.getArea()));
         }
         List<SubjectCollect> list = super.findByCis(dto);
         List<SubjectCollectExport> exports = new ArrayList<>();
-        list.stream().forEach(str->{
-            SubjectCollectExport export = BeanTransform.copyProperties(str,SubjectCollectExport.class);
+        list.stream().forEach(str -> {
+            SubjectCollectExport export = BeanTransform.copyProperties(str, SubjectCollectExport.class);
             exports.add(export);
         });
-        Excel excel = new Excel(0,2);
-        byte [] bytes = ExcelUtil.clazzToExcel(exports,excel);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(exports, excel);
         return bytes;
     }
 
@@ -295,17 +298,17 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
         double beginCredit = 0;    //贷方
         double endDebit = 0;
         double endCredit = 0;
-        double currentDebit=0;
-        double currentCredit=0;
-        String projectName=null;
+        double currentDebit = 0;
+        double currentCredit = 0;
+        String projectName = null;
         for (SubjectCollect subjectCollect : subjectCollects) {
             beginDebit += subjectCollect.getBeginningDebitAmount();
             beginCredit += subjectCollect.getBeginningCreditAmount();
             endDebit += subjectCollect.getEndDebitAmount();
             endCredit += subjectCollect.getEndCreditAmount();
-            currentDebit+=subjectCollect.getIssueDebitAmount();
-            currentCredit+=subjectCollect.getIssueCreditAmount();
-            projectName=subjectCollect.getProjectName();
+            currentDebit += subjectCollect.getIssueDebitAmount();
+            currentCredit += subjectCollect.getIssueCreditAmount();
+            projectName = subjectCollect.getProjectName();
         }
         SubjectCollectBO bo = new SubjectCollectBO();
         bo.setBeginningDebitAmount(beginDebit);
@@ -316,5 +319,27 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
         bo.setIssueCreditAmount(currentCredit);
         bo.setProjectName(projectName);
         return bo;
+    }
+
+    @Override
+    //chenjunhao
+    public Set<String> allFirstSubjects() throws SerException {
+        List<SubjectCollect> list = super.findAll();
+        Set<String> set = new HashSet<String>();
+        for (SubjectCollect s : list) {
+            set.add(s.getFirstSubject());
+        }
+        return set;
+    }
+
+    @Override
+    //chenjunhao
+    public Set<String> allProjectNames() throws SerException {
+        List<SubjectCollect> list = super.findAll();
+        Set<String> set = new HashSet<String>();
+        for (SubjectCollect s : list) {
+            set.add(s.getProjectName());
+        }
+        return set;
     }
 }

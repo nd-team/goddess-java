@@ -3,6 +3,7 @@ package com.bjike.goddess.capability.service;
 import com.bjike.goddess.capability.bo.SelfCapabilitySocialBO;
 import com.bjike.goddess.capability.dto.SelfCapabilitySocialDTO;
 import com.bjike.goddess.capability.entity.SelfCapabilitySocial;
+import com.bjike.goddess.capability.to.GuidePermissionTO;
 import com.bjike.goddess.capability.to.SelfCapabilitySocialTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -80,7 +81,11 @@ public interface SelfCapabilitySocialSer extends Ser<SelfCapabilitySocial, SelfC
     }
 
     ;
-
-
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
 }

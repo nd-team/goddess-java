@@ -9,6 +9,7 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.qualifications.api.QualificationsInfoAPI;
 import com.bjike.goddess.qualifications.dto.QualificationsInfoDTO;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 import com.bjike.goddess.qualifications.to.QualificationsInfoStatusTO;
 import com.bjike.goddess.qualifications.to.QualificationsInfoTO;
 import com.bjike.goddess.qualifications.vo.QualificationsInfoVO;
@@ -161,4 +162,26 @@ public class QualificationsInfoAct {
         }
     }
 
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = qualificationsInfoAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

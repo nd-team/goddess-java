@@ -169,8 +169,8 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessCourseBO save(BusinessCourseTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(marketManage))
+//            throw new SerException("您的帐号没有权限");
         BusinessCourse entity = BeanTransform.copyProperties(to, BusinessCourse.class);
         entity.setType(typeSer.findById(to.getTypeId()));
         entity.setStatus(Status.THAW);
@@ -181,8 +181,8 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessCourseBO update(BusinessCourseTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(marketManage))
+//            throw new SerException("您的帐号没有权限");
         if (StringUtils.isNotBlank(to.getId())) {
             BusinessCourse entity = super.findById(to.getId());
             if (null == entity)
@@ -214,8 +214,8 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessCourseBO thaw(BusinessCourseTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(marketManage))
+//            throw new SerException("您的帐号没有权限");
         BusinessCourse entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");
@@ -227,8 +227,8 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessCourseBO delete(BusinessCourseTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(marketManage))
+//            throw new SerException("您的帐号没有权限");
         BusinessCourse entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");
@@ -259,8 +259,8 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
 
     @Override
     public BusinessCourseBO getById(String id) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(marketManage))
+//            throw new SerException("您的帐号没有权限");
         try {
             return this.transformBO(super.findById(id));
         } catch (SerException e) {
@@ -270,10 +270,11 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
 
     @Override
     public List<BusinessCourseBO> maps(BusinessCourseDTO dto) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketCheck))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(marketCheck))
+//            throw new SerException("您的帐号没有权限");
         dto.getSorts().add("typeId=desc");
         dto.getSorts().add("course=asc");
+        dto.getSorts().add("modifyTime=desc");
         return this.transformBOList(super.findByPage(dto));
     }
 

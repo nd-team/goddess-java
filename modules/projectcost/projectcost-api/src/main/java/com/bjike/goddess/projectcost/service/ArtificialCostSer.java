@@ -5,8 +5,10 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectcost.bo.ArtificialCostBO;
 import com.bjike.goddess.projectcost.dto.ArtificialCostDTO;
 import com.bjike.goddess.projectcost.entity.ArtificialCost;
+import com.bjike.goddess.projectcost.excel.SonPermissionObject;
 import com.bjike.goddess.projectcost.to.ArtificialCostTO;
 import com.bjike.goddess.projectcost.to.FindTO;
+import com.bjike.goddess.projectcost.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -105,6 +107,20 @@ public interface ArtificialCostSer extends Ser<ArtificialCost, ArtificialCostDTO
      * @throws SerException
      */
     default List<ArtificialCostBO> findByTO(FindTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 

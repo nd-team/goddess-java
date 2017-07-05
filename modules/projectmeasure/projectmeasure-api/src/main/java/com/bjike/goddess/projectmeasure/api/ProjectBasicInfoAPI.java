@@ -38,7 +38,9 @@ public interface ProjectBasicInfoAPI {
      * @return class ProjectBasicInfoBO
      * @throws SerException
      */
-    ProjectBasicInfoBO findById(String id) throws SerException;
+    default ProjectBasicInfoBO getOne(String id) throws SerException{
+        return null;
+    }
 
     /**
      * 计算总条数
@@ -89,4 +91,13 @@ public interface ProjectBasicInfoAPI {
      */
     List<String> findAllProjectNames() throws SerException;
 
+    /**
+     * 查询所有的地址
+     *
+     * @return list
+     */
+
+    default List<String> findAllAreas() throws SerException{
+        return null;
+    }
 }
