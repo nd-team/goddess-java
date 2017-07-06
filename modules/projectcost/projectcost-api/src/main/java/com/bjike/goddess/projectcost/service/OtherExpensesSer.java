@@ -7,6 +7,7 @@ import com.bjike.goddess.projectcost.bo.OtherExpensesBO;
 import com.bjike.goddess.projectcost.dto.OtherExpensesDTO;
 import com.bjike.goddess.projectcost.entity.OtherExpenses;
 import com.bjike.goddess.projectcost.to.FindTO;
+import com.bjike.goddess.projectcost.to.GuidePermissionTO;
 import com.bjike.goddess.projectcost.to.OtherExpensesTO;
 
 import java.util.List;
@@ -98,4 +99,17 @@ public interface OtherExpensesSer extends Ser<OtherExpenses, OtherExpensesDTO> {
         return null;
     }
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

@@ -38,8 +38,7 @@ public enum CycleType {
     /**
      * 季度
      */
-    QUARTER(7),
-    NOT(6);
+    QUARTER(7);
 
     private int value;
 

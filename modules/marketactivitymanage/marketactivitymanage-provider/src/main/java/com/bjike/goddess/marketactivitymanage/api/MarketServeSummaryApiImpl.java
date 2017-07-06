@@ -6,7 +6,9 @@ import com.bjike.goddess.marketactivitymanage.bo.MarketServeSummaryBO;
 import com.bjike.goddess.marketactivitymanage.bo.ServeSummaryBO;
 import com.bjike.goddess.marketactivitymanage.dto.MarketServeSummaryDTO;
 import com.bjike.goddess.marketactivitymanage.entity.MarketServeSummary;
+import com.bjike.goddess.marketactivitymanage.excel.SonPermissionObject;
 import com.bjike.goddess.marketactivitymanage.service.MarketServeSummarySer;
+import com.bjike.goddess.marketactivitymanage.to.GuidePermissionTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeSummaryTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,16 @@ public class MarketServeSummaryApiImpl implements MarketServeSummaryAPI {
 
     @Autowired
     private MarketServeSummarySer marketServeSummarySer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return marketServeSummarySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return marketServeSummarySer.guidePermission(guidePermissionTO);
+    }
 
     /**
      * 根据id查询市场招待汇总邮件发送
@@ -133,5 +145,10 @@ public class MarketServeSummaryApiImpl implements MarketServeSummaryAPI {
     @Override
     public List<ServeSummaryBO> summarize(Boolean type, String[] projectGroups, String startTimeString, String endTimeString) throws SerException {
         return marketServeSummarySer.summarize(type, projectGroups, startTimeString, endTimeString);
+    }
+
+    @Override
+    public void checkSendEmail() throws SerException {
+        marketServeSummarySer.checkSendEmail();
     }
 }

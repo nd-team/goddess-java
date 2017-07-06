@@ -3,7 +3,7 @@ package com.bjike.goddess.projectmeasure.excel;
 import java.io.Serializable;
 
 /**
- * 项目测算下拉导航权限控制
+ * 费用管理下拉导航权限控制
  *
  * @Author: [tanghaixiang]
  * @Date: [2017-06-08 10:30]

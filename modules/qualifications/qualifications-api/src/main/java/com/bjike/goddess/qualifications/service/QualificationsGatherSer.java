@@ -6,6 +6,7 @@ import com.bjike.goddess.qualifications.bo.AuditMaterialBO;
 import com.bjike.goddess.qualifications.bo.QualificationsGatherBO;
 import com.bjike.goddess.qualifications.dto.QualificationsGatherDTO;
 import com.bjike.goddess.qualifications.entity.QualificationsGather;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 import com.bjike.goddess.qualifications.to.QualificationsGatherTO;
 
 import java.util.List;
@@ -97,4 +98,17 @@ public interface QualificationsGatherSer extends Ser<QualificationsGather, Quali
         return null;
     }
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

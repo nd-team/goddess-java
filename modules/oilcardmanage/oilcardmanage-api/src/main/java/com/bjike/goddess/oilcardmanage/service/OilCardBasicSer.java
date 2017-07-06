@@ -63,4 +63,6 @@ public interface OilCardBasicSer extends Ser<OilCardBasic, OilCardBasicDTO> {
      * @throws SerException
      */
     List<OilCardBasicBO> pageList(OilCardBasicDTO dto) throws SerException;
+
+    OilCardBasicBO findByCode(String oilCardCode) throws SerException;
 }

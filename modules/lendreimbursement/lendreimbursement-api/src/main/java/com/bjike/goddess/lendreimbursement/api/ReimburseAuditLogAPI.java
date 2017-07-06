@@ -19,6 +19,20 @@ import java.util.List;
 public interface ReimburseAuditLogAPI {
 
     /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(com.bjike.goddess.lendreimbursement.to.GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 报销审核列表总条数
      */
     default Long countReimburseAuditLog(ReimburseAuditLogDTO reimburseAuditLogDTO) throws SerException {
@@ -64,6 +78,7 @@ public interface ReimburseAuditLogAPI {
     }
 
     ;
+
     /**
      * 根据报销id查报销审核
      *

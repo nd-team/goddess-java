@@ -6,6 +6,7 @@ import com.bjike.goddess.marketactivitymanage.bo.CustomerInfoBO;
 import com.bjike.goddess.marketactivitymanage.dto.CustomerInfoDTO;
 import com.bjike.goddess.marketactivitymanage.entity.CustomerInfo;
 import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
+import com.bjike.goddess.marketactivitymanage.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -20,6 +21,18 @@ import java.util.List;
  */
 public interface CustomerInfoSer extends Ser<CustomerInfo, CustomerInfoDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 分页查询客户信息
      *

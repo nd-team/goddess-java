@@ -5,6 +5,7 @@ import com.bjike.goddess.qualifications.bo.AuditMaterialBO;
 import com.bjike.goddess.qualifications.dto.AuditMaterialDTO;
 import com.bjike.goddess.qualifications.service.AuditMaterialSer;
 import com.bjike.goddess.qualifications.to.AuditMaterialTO;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,5 +59,9 @@ public class AuditMaterialApiImpl implements AuditMaterialAPI {
     @Override
     public AuditMaterialBO getById(String id) throws SerException {
         return auditMaterialSer.getById(id);
+    }
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return auditMaterialSer.guidePermission( guidePermissionTO );
     }
 }

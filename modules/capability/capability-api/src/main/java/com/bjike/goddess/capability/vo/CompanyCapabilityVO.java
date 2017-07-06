@@ -122,6 +122,41 @@ public class CompanyCapabilityVO {
      */
     private String modifyTime;
 
+    /**
+     * 管理资质认证数组
+     */
+    private String[] manageAuthens;
+
+
+    /**
+     * 专业资质认证数组
+     */
+    private String[] professionAuthens;
+
+    /**
+     * 公司荣誉证书数组
+     */
+    private String[] companyCertificates;
+
+    /**
+     * 尚在进行中项目
+     */
+    private String[] inProjcts;
+
+    /**
+     * 已完成项目
+     */
+    private String[] companyProjects;
+
+    /**
+     * 公司合作对象
+     */
+    private String[] cooperates;
+
+    /**
+     * 已完成项目
+     */
+    private String companyProject;
 
     public String getId() {
         return id;
@@ -297,5 +332,61 @@ public class CompanyCapabilityVO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public String[] getManageAuthens() {
+        return manageAuthens;
+    }
+
+    public void setManageAuthens(String[] manageAuthens) {
+        this.manageAuthens = manageAuthens;
+    }
+
+    public String[] getProfessionAuthens() {
+        return professionAuthens;
+    }
+
+    public void setProfessionAuthens(String[] professionAuthens) {
+        this.professionAuthens = professionAuthens;
+    }
+
+    public String[] getCompanyCertificates() {
+        return companyCertificates;
+    }
+
+    public void setCompanyCertificates(String[] companyCertificates) {
+        this.companyCertificates = companyCertificates;
+    }
+
+    public String[] getInProjcts() {
+        return inProjcts;
+    }
+
+    public void setInProjcts(String[] inProjcts) {
+        this.inProjcts = inProjcts;
+    }
+
+    public String[] getCompanyProjects() {
+        return companyProjects;
+    }
+
+    public void setCompanyProjects(String[] companyProjects) {
+        this.companyProjects = companyProjects;
+    }
+
+    public String[] getCooperates() {
+        return cooperates;
+    }
+
+    public void setCooperates(String[] cooperates) {
+        this.cooperates = cooperates;
+    }
+
+    public String getCompanyProject() {
+        return companyProject;
+    }
+
+    public void setCompanyProject(String companyProject) {
+        this.companyProject = companyProject;
     }
 }

@@ -18,6 +18,7 @@ import java.util.Set;
  */
 public class RedisClientImpl implements RedisClient {
 
+    private static final String MSG = "服务不可用";
 
     @Autowired(required = false)
     private JedisPool jedisPool;
@@ -28,9 +29,12 @@ public class RedisClientImpl implements RedisClient {
             jedis = jedisPool.getResource();
             jedis.set(key, value);
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -40,9 +44,12 @@ public class RedisClientImpl implements RedisClient {
             jedis.set(key, value);
             jedis.expire(key, seconds);
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
 
     }
@@ -54,9 +61,12 @@ public class RedisClientImpl implements RedisClient {
             jedis = jedisPool.getResource();
             return jedis.get(key);
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -66,9 +76,12 @@ public class RedisClientImpl implements RedisClient {
             jedis = jedisPool.getResource();
             jedis.del(keys);
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -78,9 +91,12 @@ public class RedisClientImpl implements RedisClient {
             jedis = jedisPool.getResource();
             jedis.append(key, value);
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -90,9 +106,12 @@ public class RedisClientImpl implements RedisClient {
             jedis = jedisPool.getResource();
             jedis.rpush(key, values);
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
 
     }
@@ -104,9 +123,12 @@ public class RedisClientImpl implements RedisClient {
             jedis.rpush(key, values);
             jedis.expire(key, seconds);
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
 
     }
@@ -117,9 +139,12 @@ public class RedisClientImpl implements RedisClient {
             jedis = jedisPool.getResource();
             jedis.lrem(key, 0, value);
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -130,9 +155,12 @@ public class RedisClientImpl implements RedisClient {
             jedis.hset(key, field, value);
             jedis.expire(key, seconds);
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -142,9 +170,12 @@ public class RedisClientImpl implements RedisClient {
             jedis = jedisPool.getResource();
             jedis.hset(key, field, value);
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -154,9 +185,12 @@ public class RedisClientImpl implements RedisClient {
             jedis = jedisPool.getResource();
             jedis.hmset(key, map);
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -167,9 +201,12 @@ public class RedisClientImpl implements RedisClient {
             jedis.hmset(key, map);
             jedis.expire(key, seconds);
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -179,9 +216,12 @@ public class RedisClientImpl implements RedisClient {
             jedis = jedisPool.getResource();
             return jedis.hmget(key, fields);
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -191,9 +231,12 @@ public class RedisClientImpl implements RedisClient {
             jedis = jedisPool.getResource();
             return jedis.hmget(key, field).get(0);
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -203,9 +246,12 @@ public class RedisClientImpl implements RedisClient {
             jedis = jedisPool.getResource();
             return jedis.hgetAll(key);
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -215,9 +261,12 @@ public class RedisClientImpl implements RedisClient {
             jedis = jedisPool.getResource();
             jedis.hdel(key, fields);
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
 
     }
@@ -228,9 +277,12 @@ public class RedisClientImpl implements RedisClient {
             jedis = jedisPool.getResource();
             return jedis.hlen(key);
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -240,9 +292,12 @@ public class RedisClientImpl implements RedisClient {
             jedis = jedisPool.getResource();
             return jedis.exists(key);
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -252,9 +307,12 @@ public class RedisClientImpl implements RedisClient {
             jedis = jedisPool.getResource();
             return jedis.hkeys(key);
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -264,9 +322,12 @@ public class RedisClientImpl implements RedisClient {
             jedis = jedisPool.getResource();
             return jedis.hvals(key);
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -281,9 +342,12 @@ public class RedisClientImpl implements RedisClient {
             });
 
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -298,9 +362,12 @@ public class RedisClientImpl implements RedisClient {
             });
 
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -311,9 +378,12 @@ public class RedisClientImpl implements RedisClient {
             return jedis.lrange(key, start, end);
 
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -324,9 +394,12 @@ public class RedisClientImpl implements RedisClient {
             return jedis.lrange(key, 0, -1);
 
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -340,9 +413,12 @@ public class RedisClientImpl implements RedisClient {
             });
 
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -353,9 +429,12 @@ public class RedisClientImpl implements RedisClient {
             return jedis.smembers(key);
 
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -365,9 +444,12 @@ public class RedisClientImpl implements RedisClient {
             jedis = jedisPool.getResource();
             jedis.srem(key, values);
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -377,9 +459,12 @@ public class RedisClientImpl implements RedisClient {
             jedis = jedisPool.getResource();
             return jedis.srandmember(key);
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -389,9 +474,12 @@ public class RedisClientImpl implements RedisClient {
             jedis = jedisPool.getResource();
             return jedis.scard(key);
         } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            e.printStackTrace();
+            throw new SerException(MSG);
         } finally {
-            jedis.close();
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 

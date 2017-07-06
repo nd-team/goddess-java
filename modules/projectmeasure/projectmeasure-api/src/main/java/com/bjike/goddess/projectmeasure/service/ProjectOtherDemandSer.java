@@ -89,10 +89,14 @@ public interface ProjectOtherDemandSer extends Ser<ProjectOtherDemand, ProjectOt
     }
 
     /**
-     * 测试普通邮件发送
+     * 根据id查询其他需求界面数据
+     *
+     * @param id 其他需求界面数据唯一标识
+     * @return class ProjectOtherDemandBO
+     * @throws SerException
      */
-    default void emailSend(   ) throws SerException {
-        return ;
+    default ProjectOtherDemandBO getOne(String id) throws SerException{
+        return null;
     }
 
 }

@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.qualifications.bo.*;
 import com.bjike.goddess.qualifications.dto.QualificationsHandleDTO;
 import com.bjike.goddess.qualifications.entity.QualificationsHandle;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 import com.bjike.goddess.qualifications.to.QualificationsHandleForeignTO;
 import com.bjike.goddess.qualifications.to.QualificationsHandleTO;
 
@@ -175,4 +176,17 @@ public interface QualificationsHandleSer extends Ser<QualificationsHandle, Quali
     }
 
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

@@ -3,8 +3,10 @@ package com.bjike.goddess.regionalprogresscollect.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.regionalprogresscollect.bo.DayTargetBO;
 import com.bjike.goddess.regionalprogresscollect.dto.DayTargetDTO;
+import com.bjike.goddess.regionalprogresscollect.excel.SonPermissionObject;
 import com.bjike.goddess.regionalprogresscollect.service.DayTargetSer;
 import com.bjike.goddess.regionalprogresscollect.to.DayTargetTO;
+import com.bjike.goddess.regionalprogresscollect.to.GuidePermissionTO;
 import com.bjike.goddess.regionalprogresscollect.to.StandardTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,5 +61,15 @@ public class DayTargetApiImpl implements DayTargetAPI {
     @Override
     public Long getTotal() throws SerException {
         return dayTargetSer.getTotal();
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return dayTargetSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return dayTargetSer.guidePermission( guidePermissionTO );
     }
 }

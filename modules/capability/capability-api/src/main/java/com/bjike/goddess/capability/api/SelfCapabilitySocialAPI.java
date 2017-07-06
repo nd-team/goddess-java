@@ -2,6 +2,7 @@ package com.bjike.goddess.capability.api;
 
 import com.bjike.goddess.capability.bo.SelfCapabilitySocialBO;
 import com.bjike.goddess.capability.dto.SelfCapabilitySocialDTO;
+import com.bjike.goddess.capability.to.GuidePermissionTO;
 import com.bjike.goddess.capability.to.SelfCapabilitySocialTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -80,6 +81,12 @@ public interface SelfCapabilitySocialAPI {
 
     ;
 
+    /**
+     * 功能导航权限
+     * @throws SerException
+     * @version v1
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 
 
 

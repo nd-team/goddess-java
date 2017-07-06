@@ -3,7 +3,6 @@ package com.bjike.goddess.budget.action.budget;
 import com.bjike.goddess.budget.api.ProjectWeekAPI;
 import com.bjike.goddess.budget.bo.ProjectWeekBO;
 import com.bjike.goddess.budget.bo.ProjectWeekCountBO;
-import com.bjike.goddess.budget.dto.ProjectMonthDTO;
 import com.bjike.goddess.budget.dto.ProjectWeekDTO;
 import com.bjike.goddess.budget.to.GuidePermissionTO;
 import com.bjike.goddess.budget.to.ProjectWeekTO;
@@ -178,16 +177,15 @@ public class ProjectWeekAct {
     /**
      * 按项目汇总
      *
-     * @param projects 项目数组
-     * @param request  请求对象
+     * @param dto 项目收入周dto
      * @return class ProjectWeekCountVO
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/conditionsCount/{projects}")
-    public Result conditionsCount(@PathVariable String[] projects, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/conditionsCount")
+    public Result conditionsCount(ProjectWeekDTO dto, HttpServletRequest request) throws ActException {
         try {
-            List<ProjectWeekCountBO> list = projectWeekAPI.conditionsCount(projects);
+            List<ProjectWeekCountBO> list = projectWeekAPI.conditionsCount(dto);
             return ActResult.initialize(BeanTransform.copyProperties(list, ProjectWeekCountVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

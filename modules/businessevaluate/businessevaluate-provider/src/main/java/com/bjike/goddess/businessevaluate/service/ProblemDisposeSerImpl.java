@@ -46,8 +46,6 @@ public class ProblemDisposeSerImpl extends ServiceImpl<ProblemDispose, ProblemDi
     @Transactional(rollbackFor = SerException.class)
     public ProblemDisposeBO insertModel(ProblemDisposeTO to) throws SerException {
 
-        getCusPermission();
-
         ProblemDispose model = BeanTransform.copyProperties(to, ProblemDispose.class, true);
         super.save(model);
         to.setId(model.getId());
@@ -58,8 +56,6 @@ public class ProblemDisposeSerImpl extends ServiceImpl<ProblemDispose, ProblemDi
     @Transactional(rollbackFor = SerException.class)
     public ProblemDisposeBO updateModel(ProblemDisposeTO to) throws SerException {
 
-        getCusPermission();
-
         updateModelInfo(to);
         return BeanTransform.copyProperties(to, ProblemDisposeBO.class);
     }
@@ -67,8 +63,6 @@ public class ProblemDisposeSerImpl extends ServiceImpl<ProblemDispose, ProblemDi
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<ProblemDisposeBO> pageList(ProblemDisposeDTO dto) throws SerException {
-
-        getCusPermission();
 
         dto.getSorts().add("createTime=desc");
         List<ProblemDispose> list = super.findByPage(dto);
@@ -172,12 +166,4 @@ public class ProblemDisposeSerImpl extends ServiceImpl<ProblemDispose, ProblemDi
         }
     }
 
-    public void getCusPermission() throws SerException {
-
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-
-        if (!permission) {
-            throw new SerException("该功能只有商务部可操作，您的帐号尚无权限");
-        }
-    }
 }

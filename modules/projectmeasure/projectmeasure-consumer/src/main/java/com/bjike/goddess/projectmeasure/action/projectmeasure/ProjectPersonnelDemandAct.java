@@ -76,7 +76,7 @@ public class ProjectPersonnelDemandAct {
     @GetMapping("v1/projectpersonneldemand/{id}")
     public Result findById(@PathVariable(value = "id") String id, HttpServletRequest request) throws ActException {
         try {
-            ProjectPersonnelDemandBO bo = projectPersonnelDemandAPI.findById(id);
+            ProjectPersonnelDemandBO bo = projectPersonnelDemandAPI.getOne(id);
             ProjectPersonnelDemandVO vo = BeanTransform.copyProperties(bo, ProjectPersonnelDemandVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {

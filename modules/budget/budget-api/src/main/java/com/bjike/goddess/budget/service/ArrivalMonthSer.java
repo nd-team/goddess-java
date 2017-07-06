@@ -86,13 +86,11 @@ public interface ArrivalMonthSer extends Ser<ArrivalMonth, ArrivalMonthDTO> {
     /**
      * 分地区汇总
      *
-     * @param arrivals 地区数组
-     * @return class ArrivalMonthCountBO
+     * @param dto1
+     * @return
      * @throws SerException
      */
-    default List<ArrivalMonthCountBO> conditionsCount(String[] arrivals) throws SerException {
-        return null;
-    }
+    List<ArrivalMonthCountBO> conditionsCount(ArrivalMonthDTO dto1) throws SerException;
 
     /**
      * 查找该月明细

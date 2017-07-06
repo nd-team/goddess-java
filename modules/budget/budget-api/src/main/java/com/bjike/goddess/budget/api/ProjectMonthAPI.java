@@ -84,13 +84,11 @@ public interface ProjectMonthAPI {
     /**
      * 分项目汇总
      *
-     * @param projects 项目数组
+     * @param dto1 dto
      * @return class ProjectMonthCountBO
      * @throws SerException
      */
-    default List<ProjectMonthCountBO> conditionsCount(String[] projects) throws SerException {
-        return null;
-    }
+    List<ProjectMonthCountBO> conditionsCount(ProjectMonthDTO dto1) throws SerException;
 
     /**
      * 查找该月明细

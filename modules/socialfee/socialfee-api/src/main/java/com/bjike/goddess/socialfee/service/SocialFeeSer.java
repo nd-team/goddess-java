@@ -2,10 +2,12 @@ package com.bjike.goddess.socialfee.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.socialfee.to.GuidePermissionTO;
 import com.bjike.goddess.socialfee.bo.SocialFeeBO;
 import com.bjike.goddess.socialfee.bo.VoucherDataBO;
-import com.bjike.goddess.socialfee.entity.SocialFee;
 import com.bjike.goddess.socialfee.dto.SocialFeeDTO;
+import com.bjike.goddess.socialfee.entity.SocialFee;
+import com.bjike.goddess.socialfee.excle.SonPermissionObject;
 import com.bjike.goddess.socialfee.to.SocialFeeTO;
 import com.bjike.goddess.socialfee.to.VoucherDataTO;
 
@@ -24,48 +26,84 @@ public interface SocialFeeSer extends Ser<SocialFee, SocialFeeDTO> {
 
 
     /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 社会缴费列表总条数
-     *
      */
     default Long countSocialFee(SocialFeeDTO socialFeeDTO) throws SerException {
         return null;
     }
-    /**
-     * 社会缴费列表
-     * @return class SocialFeeBO
-     */
-    default List<SocialFeeBO> listSocialFee(SocialFeeDTO socialFeeDTO) throws SerException {return null;}
-    /**
-     *  添加
-     * @param socialFeeTO 社会缴费信息
-     * @return class SocialFeeBO
-     */
-    default SocialFeeBO addSocialFee(SocialFeeTO socialFeeTO) throws SerException { return null;}
 
     /**
-     *  编辑
+     * 社会缴费列表
+     *
+     * @return class SocialFeeBO
+     */
+    default List<SocialFeeBO> listSocialFee(SocialFeeDTO socialFeeDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 添加
+     *
      * @param socialFeeTO 社会缴费信息
      * @return class SocialFeeBO
      */
-    default SocialFeeBO editSocialFee(SocialFeeTO socialFeeTO) throws SerException { return null;}
+    default SocialFeeBO addSocialFee(SocialFeeTO socialFeeTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 编辑
+     *
+     * @param socialFeeTO 社会缴费信息
+     * @return class SocialFeeBO
+     */
+    default SocialFeeBO editSocialFee(SocialFeeTO socialFeeTO) throws SerException {
+        return null;
+    }
 
     /**
      * 删除
+     *
      * @param id id
      */
-    default void deleteSocialFee(String id ) throws SerException {return;};
+    default void deleteSocialFee(String id) throws SerException {
+        return;
+    }
+
+    ;
 
     /**
      * 根据id查询
+     *
      * @return class SocialFeeBO
      */
-    default SocialFeeBO getOneById(String id ) throws SerException {return null;}
+    default SocialFeeBO getOneById(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 汇总
+     *
      * @return class SocialFeeBO
      */
-    default List<SocialFeeBO> collect(SocialFeeDTO socialFeeDTO) throws SerException {return null;}
+    default List<SocialFeeBO> collect(SocialFeeDTO socialFeeDTO) throws SerException {
+        return null;
+    }
 
     /**
      * 获取所有纳税人名称
@@ -90,11 +128,14 @@ public interface SocialFeeSer extends Ser<SocialFee, SocialFeeDTO> {
 
     /**
      * 生成记账凭证
+     *
      * @param ids
      * @return class VoucherDataBO
      * @throws SerException
      */
-    default VoucherDataBO vGenerate(String[] ids) throws SerException{return null;}
+    default VoucherDataBO vGenerate(String[] ids) throws SerException {
+        return null;
+    }
 
 
     /**
@@ -113,8 +154,31 @@ public interface SocialFeeSer extends Ser<SocialFee, SocialFeeDTO> {
      * @return
      * @throws SerException
      */
-    default String export (SocialFeeDTO socialFeeDTO) throws  SerException{return null;}
+    // default String export (SocialFeeDTO socialFeeDTO) throws  SerException{return null;}
 
 
+    /**
+     * 导出excel
+     *
+     * @param socialFeeDTO
+     * @return
+     * @throws SerException
+     */
+    byte[] exportExcel(SocialFeeDTO socialFeeDTO) throws SerException;
+
+
+    /**
+     * 导入
+     *
+     * @param socialFeeTOS 社会缴费
+     */
+    SocialFeeBO importExcel(List<SocialFeeTO> socialFeeTOS) throws SerException;
+
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
 
 }

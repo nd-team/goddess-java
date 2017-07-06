@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -79,5 +80,15 @@ public class SubjectCollectApiImpl implements SubjectCollectAPI {
     @Override
     public SubjectCollectBO getSum(SubjectCollectDTO dto) throws SerException {
         return subjectCollectSer.getSum(dto);
+    }
+
+    @Override
+    public Set<String> allFirstSubjects() throws SerException {
+        return subjectCollectSer.allFirstSubjects();
+    }
+
+    @Override
+    public Set<String> allProjectNames() throws SerException {
+        return subjectCollectSer.allProjectNames();
     }
 }

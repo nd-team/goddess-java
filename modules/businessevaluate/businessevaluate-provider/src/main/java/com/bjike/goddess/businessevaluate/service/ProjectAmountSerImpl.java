@@ -52,14 +52,12 @@ public class ProjectAmountSerImpl extends ServiceImpl<ProjectAmount, ProjectAmou
     @Transactional(rollbackFor = SerException.class)
     public ProjectAmountInfoBO findInfoById(String id) throws SerException {
 
-        getCusPermission();
-
         ProjectAmountInfoBO bo = new ProjectAmountInfoBO();
         EvaluateProjectInfo info = evaluateProjectInfoSer.findById(id);
         if(info==null){
             throw new SerException("项目不存在");
         }
-        bo.setCost(info.getCost());
+        bo.setCost(evaluateProjectInfoSer.getCost(info.getId()));
         bo.setManageFee(info.getManageCost());
         bo.setTaxes(info.getTaxes());
 
@@ -74,7 +72,7 @@ public class ProjectAmountSerImpl extends ServiceImpl<ProjectAmount, ProjectAmou
 
         bo.setFee(fee);
         //利润 = 项目总金额 - 成本 -管理费 -税金 - 费用
-        Double profit = info.getTotalAmount() - info.getCost() - info.getManageCost() - info.getTaxes() - fee;
+        Double profit = info.getTotalAmount() - evaluateProjectInfoSer.getCost(info.getId()) - info.getManageCost() - info.getTaxes() - fee;
         bo.setProfit(profit);
         return bo;
     }
@@ -82,8 +80,6 @@ public class ProjectAmountSerImpl extends ServiceImpl<ProjectAmount, ProjectAmou
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectAmountBO insertModel(ProjectAmountTO to) throws SerException {
-
-        getCusPermission();
 
         ProjectAmount model = BeanTransform.copyProperties(to, ProjectAmount.class);
         super.save(model);
@@ -94,8 +90,6 @@ public class ProjectAmountSerImpl extends ServiceImpl<ProjectAmount, ProjectAmou
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectAmountBO updateModel(ProjectAmountTO to) throws SerException {
-
-        getCusPermission();
 
         if (!StringUtils.isEmpty(to.getId())) {
             ProjectAmount model = super.findById(to.getId());
@@ -115,8 +109,6 @@ public class ProjectAmountSerImpl extends ServiceImpl<ProjectAmount, ProjectAmou
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<ProjectAmountBO> pageList(ProjectAmountDTO dto) throws SerException {
-
-        getCusPermission();
 
         dto.getSorts().add("createTime=desc");
         List<ProjectAmount> list = super.findByPage(dto);
@@ -197,15 +189,6 @@ public class ProjectAmountSerImpl extends ServiceImpl<ProjectAmount, ProjectAmou
             flag = true;
         }
         return flag;
-    }
-
-    public void getCusPermission() throws SerException {
-
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-
-        if (!permission) {
-            throw new SerException("该功能只有商务部可操作，您的帐号尚无权限");
-        }
     }
 
 }

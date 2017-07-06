@@ -7,12 +7,15 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.enterpriseculturemanage.api.EnterpriseCultureInfoAPI;
 import com.bjike.goddess.enterpriseculturemanage.api.PeriodicalProgramInfoAPI;
 import com.bjike.goddess.enterpriseculturemanage.dto.PeriodicalProgramInfoDTO;
 import com.bjike.goddess.enterpriseculturemanage.enums.AuditResult;
 import com.bjike.goddess.enterpriseculturemanage.to.PeriodicalProgramInfoTO;
 import com.bjike.goddess.enterpriseculturemanage.vo.EnterpriseCultureInfoVO;
 import com.bjike.goddess.enterpriseculturemanage.vo.PeriodicalProgramInfoVO;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.user.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -36,7 +39,43 @@ public class PeriodicalProgramInfoAct {
 
     @Autowired
     private PeriodicalProgramInfoAPI periodicalProgramInfoAPI;
+    @Autowired
+    private EnterpriseCultureInfoAPI enterpriseCultureInfoAPI;
+    @Autowired
+    private PositionDetailUserAPI detailUserAPI;
 
+
+    /**
+     * 查询用户列表
+     *
+     * @return class UserVO
+     * @version v1
+     */
+    @PostMapping("v1/findUserInfo")
+    public Result findUserInfo(HttpServletRequest request) throws ActException {
+        try {
+            List<UserVO> voList = BeanTransform.copyProperties(detailUserAPI.findUserList(), UserVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 企业文化信息列表
+     *
+     * @return class EnterpriseCultureInfoVO
+     * @version v1
+     */
+    @GetMapping("v1/infos")
+    public Result infos(HttpServletRequest request) throws ActException {
+        try {
+            List<EnterpriseCultureInfoVO> vo = BeanTransform.copyProperties(enterpriseCultureInfoAPI.infos(), EnterpriseCultureInfoVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 根据id查询刊物方案信息
@@ -72,21 +111,6 @@ public class PeriodicalProgramInfoAct {
     }
 
     /**
-     * 查询刊物方案信息
-     *
-     * @version v1
-     */
-    @GetMapping("v1/findInfo")
-    public Result findInfo() throws ActException {
-        try {
-            List<EnterpriseCultureInfoVO> voList = BeanTransform.copyProperties(periodicalProgramInfoAPI.findInfo(), EnterpriseCultureInfoVO.class);
-            return ActResult.initialize(voList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
      * 新增刊物方案信息
      *
      * @param to 刊物方案信息
@@ -110,7 +134,7 @@ public class PeriodicalProgramInfoAct {
      * @return class PeriodicalProgramInfoVO
      * @version v1
      */
-    @PostMapping("v1/edit")
+    @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) PeriodicalProgramInfoTO to, BindingResult bindingResult) throws ActException {
         try {
             PeriodicalProgramInfoVO vo = BeanTransform.copyProperties(periodicalProgramInfoAPI.editModel(to), PeriodicalProgramInfoVO.class);
@@ -128,10 +152,10 @@ public class PeriodicalProgramInfoAct {
      * @param auditSuggestion 审核意见
      * @version v1
      */
-    @PostMapping("v1/audit/{id}")
-    public Result audit(@PathVariable String id,@RequestParam AuditResult auditResult, @RequestParam String auditSuggestion) throws ActException {
+    @PutMapping("v1/audit/{id}")
+    public Result audit(@PathVariable String id, @RequestParam AuditResult auditResult, @RequestParam String auditSuggestion) throws ActException {
         try {
-            periodicalProgramInfoAPI.audit(id,auditResult,auditSuggestion);
+            periodicalProgramInfoAPI.audit(id, auditResult, auditSuggestion);
             return new ActResult();
         } catch (SerException e) {
             throw new ActException(e.getMessage());

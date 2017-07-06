@@ -3,7 +3,11 @@ package com.bjike.goddess.lendreimbursement.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
 import com.bjike.goddess.lendreimbursement.bo.ApplyLendBO;
 import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
@@ -14,9 +18,12 @@ import com.bjike.goddess.lendreimbursement.dto.LendAuditDetailDTO;
 import com.bjike.goddess.lendreimbursement.entity.ApplyLend;
 import com.bjike.goddess.lendreimbursement.entity.ApplyLendCopy;
 import com.bjike.goddess.lendreimbursement.entity.LendAuditDetail;
+import com.bjike.goddess.lendreimbursement.enums.GuideAddrStatus;
 import com.bjike.goddess.lendreimbursement.enums.LendStatus;
 import com.bjike.goddess.lendreimbursement.enums.Words;
+import com.bjike.goddess.lendreimbursement.excel.ApplyLendExcel;
 import com.bjike.goddess.lendreimbursement.to.ApplyLendTO;
+import com.bjike.goddess.lendreimbursement.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.PositionAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
@@ -61,9 +68,118 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     private LendAuditDetailSer lendAuditDetailSer;
     @Autowired
     private ApplyLendCopySer applyLendCopySer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+
+    /**
+     * 检查权限
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        //商务模块权限
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是财务模块人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideIdentity();
+                break;
+            case ADD:
+                flag = guideIdentity();
+                break;
+            case EDIT:
+                flag = guideIdentity();
+                break;
+            case DELETE:
+                flag = guideIdentity();
+                break;
+            case CONGEL:
+                flag = guideIdentity();
+                break;
+            case THAW:
+                flag = guideIdentity();
+                break;
+            case COLLECT:
+                flag = guideIdentity();
+                break;
+            case UPLOAD:
+                flag = guideIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideIdentity();
+                break;
+            case IMPORT:
+                flag = guideIdentity();
+                break;
+            case EXPORT:
+                flag = guideIdentity();
+                break;
+            case SEE:
+                flag = guideIdentity();
+                break;
+            case SEEFILE:
+                flag = guideIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
     @Override
     public Long countApplyLend(ApplyLendDTO applyLendDTO) throws SerException {
         applyLendDTO.getConditions().add(Restrict.eq("receivePay", "否"));
@@ -95,7 +211,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public List<ApplyLendBO> listApplyLend(ApplyLendDTO applyLendDTO) throws SerException {
-
+        checkPermission();
         applyLendDTO.getSorts().add("createTime=desc");
         //未收款且不在有误单里面
         applyLendDTO.getConditions().add(Restrict.eq("payCondition", "否"));
@@ -120,6 +236,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ApplyLendBO addApplyLend(ApplyLendTO applyLendTO) throws SerException {
+        checkPermission();
         if ("否".equals(applyLendTO.getInvoice()) && StringUtils.isBlank(applyLendTO.getNoInvoiceRemark())) {
             throw new SerException("添加失败，未填无发票备注");
         }
@@ -143,6 +260,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ApplyLendBO editApplyLend(ApplyLendTO applyLendTO) throws SerException {
+        checkPermission();
         if ("否".equals(applyLendTO.getInvoice()) && StringUtils.isBlank(applyLendTO.getNoInvoiceRemark())) {
             throw new SerException("编辑失败，未填无发票备注");
         }
@@ -180,6 +298,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteApplyLend(String id) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空哦");
         }
@@ -205,6 +324,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public ApplyLendBO getApplyLendDetail(String id) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空哦");
         }
@@ -215,6 +335,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public List<LendAuditDetailBO> getLendAuditDetailByApplyLendId(String applyLendId) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(applyLendId)) {
             throw new SerException("申请借款id不能为空哦");
         }
@@ -254,7 +375,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public List<ApplyLendBO> listWaitAudit(ApplyLendDTO applyLendDTO) throws SerException {
-
+        checkPermission();
 //        applyLendDTO.getConditions().add(Restrict.eq("lendStatus", 0));
 ////        applyLendDTO.getConditions().add(Restrict.or("lendStatus", 1));
 ////        applyLendDTO.getConditions().add(Restrict.or("lendStatus", 2));
@@ -293,6 +414,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ApplyLendBO editWaitAudit(ApplyLendTO applyLendTO) throws SerException {
+        checkPermission();
         if ("否".equals(applyLendTO.getInvoice()) && StringUtils.isBlank(applyLendTO.getNoInvoiceRemark())) {
             throw new SerException("编辑失败，未填无发票备注");
         }
@@ -349,7 +471,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ApplyLendBO editChargerWaitAudit(ApplyLendTO applyLendTO) throws SerException {
-
+        checkPermission();
         if (StringUtils.isBlank(applyLendTO.getId())) {
             throw new SerException("负责人审核失败，未填id");
         }
@@ -397,6 +519,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ApplyLendBO editOperateWaitAudit(ApplyLendTO applyLendTO) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(applyLendTO.getId())) {
             throw new SerException("财务运营部审核失败，未填id");
         }
@@ -446,6 +569,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ApplyLendBO editManageWaitAudit(ApplyLendTO applyLendTO) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(applyLendTO.getId())) {
             throw new SerException("总经办审核失败，未填id");
         }
@@ -502,6 +626,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ApplyLendBO editOperateCongel(ApplyLendTO applyLendTO) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(applyLendTO.getId())) {
             throw new SerException("财务运营部冻结失败，未填id");
         }
@@ -528,6 +653,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ApplyLendBO editChargeSureCongel(ApplyLendTO applyLendTO) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(applyLendTO.getId())) {
             throw new SerException("负责人冻结失败，未填id");
         }
@@ -547,6 +673,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ApplyLendBO editChargeConcelCongel(ApplyLendTO applyLendTO) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(applyLendTO.getId())) {
             throw new SerException("负责人取消冻结失败，未填id");
         }
@@ -597,6 +724,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public List<ApplyLendBO> listApplyError(ApplyLendDTO applyLendDTO) throws SerException {
+        checkPermission();
         applyLendDTO.getConditions().add(Restrict.eq("lendError", 9));
         //LendStatus.CHARGESURECONGEL
         applyLendDTO.getConditions().add(Restrict.or("lendStatus", 6));
@@ -622,6 +750,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ApplyLendBO editApplyError(ApplyLendTO applyLendTO) throws SerException {
+        checkPermission();
         if ("否".equals(applyLendTO.getInvoice()) && StringUtils.isBlank(applyLendTO.getNoInvoiceRemark())) {
             throw new SerException("编辑失败，未填无发票备注");
         }
@@ -695,6 +824,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteApplyError(String id) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(id)) {
             throw new SerException("删除失败，id不能为空");
         }
@@ -720,12 +850,14 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public ApplyLendBO getApplyApplyError(String id) throws SerException {
+        checkPermission();
         ApplyLend applyLend = super.findById(id);
         return BeanTransform.copyProperties(applyLend, ApplyLendBO.class);
     }
 
     @Override
     public ApplyLendBO getApplyApplyErrorCopy(String id) throws SerException {
+        checkPermission();
         ApplyLendCopyDTO dto = new ApplyLendCopyDTO();
         dto.getConditions().add(Restrict.eq("applyLendId", id));
         ApplyLendCopy applyLendCopy = applyLendCopySer.findOne(dto);
@@ -753,6 +885,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public List<ApplyLendBO> listHasAudit(ApplyLendDTO applyLendDTO) throws SerException {
+        checkPermission();
         ApplyLendDTO dto = applyLendDTO;
         //LendStatus.CHARGESURECONGEL
         dto.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{6,5,9}));
@@ -790,6 +923,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public List<ApplyLendBO> listWaitPay(ApplyLendDTO applyLendDTO) throws SerException {
+        checkPermission();
         ApplyLendDTO dto = applyLendDTO;
         dto.getConditions().add(Restrict.eq("payCondition", "否"));
         //LendStatus.FINACEPASS
@@ -804,6 +938,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ApplyLendBO editPayMoney(ApplyLendTO applyLendTO) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(applyLendTO.getPayOrigin())) {
             throw new SerException("编辑失败，支付来源不能为空");
         }
@@ -837,6 +972,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public List<ApplyLendBO> listSureRecieveMoney(ApplyLendDTO applyLendDTO) throws SerException {
+        checkPermission();
         String userName = userAPI.currentUser().getUsername();
         ApplyLendDTO dto = applyLendDTO;
         dto.getConditions().add(Restrict.eq("payCondition", "是"));
@@ -849,7 +985,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ApplyLendBO editSureRecieveMoney(ApplyLendTO applyLendTO) throws SerException {
-
+        checkPermission();
         if (StringUtils.isBlank(applyLendTO.getId())) {
             throw new SerException("编辑失败，id不能为空");
         }
@@ -875,6 +1011,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public List<ApplyLendBO> listBorrowRecord(ApplyLendDTO applyLendDTO) throws SerException {
+        checkPermission();
         ApplyLendDTO dto = applyLendDTO;
         dto.getConditions().add(Restrict.eq("receivePay", "是"));
         List<ApplyLend> applyLend = super.findByCis(dto, true);
@@ -884,6 +1021,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ApplyLendBO editReturnBorrowRecord(ApplyLendTO applyLendTO) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(applyLendTO.getId())) {
             throw new SerException("还款失败，id不能为空");
         }
@@ -909,6 +1047,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ApplyLendBO editBorrowRecordSend(ApplyLendTO applyLendTO) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(applyLendTO.getId())) {
             throw new SerException("寄件失败，id不能为空");
         }
@@ -929,6 +1068,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public List<AccountVoucherBO> listAccountVoucherByRecord(String id) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(id)) {
             throw new SerException("生成记账凭证失败，id不能为空");
         }
@@ -990,6 +1130,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public List<ApplyLendBO> listReturnMoneyRecord(ApplyLendDTO applyLendDTO) throws SerException {
+        checkPermission();
         //还款记录是报销金额和借款金额>0
         applyLendDTO.getConditions().add(Restrict.gt("reimMoney", 0));
         applyLendDTO.getConditions().add(Restrict.gt("lendMoney", 0));
@@ -1109,6 +1250,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public ApplyLendBO checkReturnMoney(ApplyLendTO applyLendTO) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(applyLendTO.getId())) {
             throw new SerException("失败，id不能为空");
         }
@@ -1140,6 +1282,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public List<ApplyLendBO> listBusinessCheck(ApplyLendDTO applyLendDTO) throws SerException {
+        checkPermission();
         //帐务核对是报销金额和借款金额>0
         applyLendDTO.getConditions().add(Restrict.gt("reimMoney", 0));
         applyLendDTO.getConditions().add(Restrict.gt("lendMoney", 0));
@@ -1151,6 +1294,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public ApplyLendBO checkTicket(ApplyLendTO applyLendTO) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(applyLendTO.getId())) {
             throw new SerException("失败，id不能为空");
         }
@@ -1184,6 +1328,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public List<ApplyLendBO> listRecieveTicketRecord(ApplyLendDTO applyLendDTO) throws SerException {
+        checkPermission();
         //收到单据 是
         applyLendDTO.getConditions().add(Restrict.eq("documentCondition", "是"));
 
@@ -1195,6 +1340,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public List<CollectDataBO> collectLender(ApplyLendDTO applyLendDTO) throws SerException {
+        checkPermission();
         //说明选了借款人
         String[] fields = new String[]{"lender", "area", "projectGroup", "projectName", "firstSubject", "secondSubject",
                 "thirdSubject", "payCondition", "money"};
@@ -1218,6 +1364,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public List<CollectDataBO> collectArea(ApplyLendDTO applyLendDTO) throws SerException {
+        checkPermission();
         //说明选了地区
         String[] fields = new String[]{"area", "lender", "projectGroup", "projectName", "firstSubject", "secondSubject",
                 "thirdSubject", "payCondition", "money"};
@@ -1241,6 +1388,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public List<CollectDataBO> collectProjectGroup(ApplyLendDTO applyLendDTO) throws SerException {
+        checkPermission();
         //说明选了项目组
         String[] fields = new String[]{"projectGroup", "lender", "area", "projectName", "firstSubject", "secondSubject",
                 "thirdSubject", "payCondition", "money"};
@@ -1264,6 +1412,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public List<CollectDataBO> collectProjectName(ApplyLendDTO applyLendDTO) throws SerException {
+        checkPermission();
         //说明选了项目名称
         String[] fields = new String[]{"projectName", "lender", "area", "projectGroup", "firstSubject", "secondSubject",
                 "thirdSubject", "payCondition", "money"};
@@ -1342,5 +1491,193 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     public List<String> listAccountCom() throws SerException {
         //TODO 账户来源
         return null;
+    }
+
+    /**
+     * 申请
+     * @param applyLendDTO
+     * @return
+     * @throws SerException
+     */
+    @Override
+    public byte[] exportExcel(ApplyLendDTO applyLendDTO) throws SerException {
+        checkPermission();
+        LocalDate start = LocalDate.now();
+        LocalDate end = LocalDate.now();
+        if(StringUtils.isNotBlank(applyLendDTO.getStartTime())){
+            start = DateUtil.parseDate(applyLendDTO.getStartTime());
+        }
+        if(StringUtils.isNotBlank(applyLendDTO.getEndTime())){
+            end = DateUtil.parseDate(applyLendDTO.getEndTime());
+        }
+        LocalDate lendDate [] = new LocalDate[]{start,end};
+
+        if (StringUtils.isNotBlank(applyLendDTO.getStartTime()) || StringUtils.isNotBlank(applyLendDTO.getEndTime())) {
+            applyLendDTO.getConditions().add(Restrict.between("lendDate", lendDate));//借款时间段查询
+        }
+        //未收款且不在有误单里面
+        applyLendDTO.getConditions().add(Restrict.eq("payCondition", "否"));
+        applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{2,6,8,9}));
+
+        List<ApplyLend> list = super.findByCis(applyLendDTO);
+
+        List<ApplyLendExcel> applyLendExcels = new ArrayList<>();
+        list.stream().forEach(str -> {
+            ApplyLendExcel excel = BeanTransform.copyProperties(str, ApplyLendExcel.class, "lendStatus");
+            excel.setLendStatus(LendStatus.exportStrConvert(str.getLendStatus()));
+
+            applyLendExcels.add(excel);
+        });
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(applyLendExcels, excel);
+        return bytes;
+    }
+
+    /**
+     * 等待付款导出
+     * @param applyLendDTO
+     * @return
+     * @throws SerException
+     */
+    @Override
+    public byte[] waitingPayExcel(ApplyLendDTO applyLendDTO) throws SerException {
+        checkPermission();
+        LocalDate start = LocalDate.now();
+        LocalDate end = LocalDate.now();
+        if(StringUtils.isNotBlank(applyLendDTO.getStartTime())){
+            start = DateUtil.parseDate(applyLendDTO.getStartTime());
+        }
+        if(StringUtils.isNotBlank(applyLendDTO.getEndTime())){
+            end = DateUtil.parseDate(applyLendDTO.getEndTime());
+        }
+        LocalDate lendDate [] = new LocalDate[]{start,end};
+
+        if (StringUtils.isNotBlank(applyLendDTO.getStartTime()) || StringUtils.isNotBlank(applyLendDTO.getEndTime())) {
+            applyLendDTO.getConditions().add(Restrict.between("lendDate", lendDate));//借款时间段查询
+        }
+        applyLendDTO.getConditions().add(Restrict.eq("payCondition", "否"));
+        //LendStatus.FINACEPASS
+        applyLendDTO.getConditions().add(Restrict.in("lendStatus", new Integer[]{3,7}));
+        List<ApplyLend> list = super.findByCis(applyLendDTO);
+
+        List<ApplyLendExcel> applyLendExcels = new ArrayList<>();
+        list.stream().forEach(str -> {
+            ApplyLendExcel excel = BeanTransform.copyProperties(str, ApplyLendExcel.class, "lendStatus");
+            excel.setLendStatus(LendStatus.exportStrConvert(str.getLendStatus()));
+
+            applyLendExcels.add(excel);
+        });
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(applyLendExcels, excel);
+        return bytes;
+    }
+
+    /**
+     * 借款导出
+     * @param applyLendDTO
+     * @return
+     * @throws SerException
+     */
+    @Override
+    public byte[] borrowExcel(ApplyLendDTO applyLendDTO) throws SerException {
+        checkPermission();
+        LocalDate start = LocalDate.now();
+        LocalDate end = LocalDate.now();
+        if(StringUtils.isNotBlank(applyLendDTO.getStartTime())){
+            start = DateUtil.parseDate(applyLendDTO.getStartTime());
+        }
+        if(StringUtils.isNotBlank(applyLendDTO.getEndTime())){
+            end = DateUtil.parseDate(applyLendDTO.getEndTime());
+        }
+        LocalDate lendDate [] = new LocalDate[]{start,end};
+
+        if (StringUtils.isNotBlank(applyLendDTO.getStartTime()) || StringUtils.isNotBlank(applyLendDTO.getEndTime())) {
+            applyLendDTO.getConditions().add(Restrict.between("lendDate", lendDate));//借款时间段查询
+        }
+        applyLendDTO.getConditions().add(Restrict.eq("receivePay", "是"));
+        List<ApplyLend> list = super.findByCis(applyLendDTO);
+
+        List<ApplyLendExcel> applyLendExcels = new ArrayList<>();
+        list.stream().forEach(str -> {
+            ApplyLendExcel excel = BeanTransform.copyProperties(str, ApplyLendExcel.class, "lendStatus");
+            excel.setLendStatus(LendStatus.exportStrConvert(str.getLendStatus()));
+
+            applyLendExcels.add(excel);
+        });
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(applyLendExcels, excel);
+        return bytes;
+    }
+
+    /**
+     * 还款记录
+     * @param applyLendDTO
+     * @return
+     * @throws SerException
+     */
+    @Override
+    public byte[] returnExcel(ApplyLendDTO applyLendDTO) throws SerException {
+        checkPermission();
+
+        LocalDate start = LocalDate.now();
+        LocalDate end = LocalDate.now();
+        if(StringUtils.isNotBlank(applyLendDTO.getStartTime())){
+            start = DateUtil.parseDate(applyLendDTO.getStartTime());
+        }
+        if(StringUtils.isNotBlank(applyLendDTO.getEndTime())){
+            end = DateUtil.parseDate(applyLendDTO.getEndTime());
+        }
+        LocalDate lendDate [] = new LocalDate[]{start,end};
+
+        if (StringUtils.isNotBlank(applyLendDTO.getStartTime()) || StringUtils.isNotBlank(applyLendDTO.getEndTime())) {
+            applyLendDTO.getConditions().add(Restrict.between("lendDate", lendDate));//借款时间段查询
+        }
+        //还款记录是报销金额和借款金额>0
+        applyLendDTO.getConditions().add(Restrict.gt("reimMoney", 0));
+        applyLendDTO.getConditions().add(Restrict.gt("lendMoney", 0));
+        List<ApplyLend> list = super.findByCis(applyLendDTO);
+
+        List<ApplyLendExcel> applyLendExcels = new ArrayList<>();
+        list.stream().forEach(str -> {
+            ApplyLendExcel excel = BeanTransform.copyProperties(str, ApplyLendExcel.class, "lendStatus");
+            excel.setLendStatus(LendStatus.exportStrConvert(str.getLendStatus()));
+
+            applyLendExcels.add(excel);
+        });
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(applyLendExcels, excel);
+        return bytes;
+    }
+
+    @Override
+    public byte[] receiveExcel(ApplyLendDTO applyLendDTO) throws SerException {
+        checkPermission();
+        LocalDate start = LocalDate.now();
+        LocalDate end = LocalDate.now();
+        if(StringUtils.isNotBlank(applyLendDTO.getStartTime())){
+            start = DateUtil.parseDate(applyLendDTO.getStartTime());
+        }
+        if(StringUtils.isNotBlank(applyLendDTO.getEndTime())){
+            end = DateUtil.parseDate(applyLendDTO.getEndTime());
+        }
+        LocalDate lendDate [] = new LocalDate[]{start,end};
+
+        if (StringUtils.isNotBlank(applyLendDTO.getStartTime()) || StringUtils.isNotBlank(applyLendDTO.getEndTime())) {
+            applyLendDTO.getConditions().add(Restrict.between("lendDate", lendDate));//借款时间段查询
+        }
+        //收到单据 是
+        applyLendDTO.getConditions().add(Restrict.eq("documentCondition", "是"));
+        List<ApplyLend> list = super.findByCis(applyLendDTO);
+
+        List<ApplyLendExcel> applyLendExcels = new ArrayList<>();
+        list.stream().forEach(str -> {
+            ApplyLendExcel excel = BeanTransform.copyProperties(str, ApplyLendExcel.class, "lendStatus");
+            excel.setLendStatus(LendStatus.exportStrConvert(str.getLendStatus()));
+
+            applyLendExcels.add(excel);
+        });
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(applyLendExcels, excel);
+        return bytes;
     }
 }

@@ -56,7 +56,7 @@ public class CustomIntercept implements Interceptor {
                 "*/login",
                 "*/register"
         };
-        HIInfo authInfo = new HIInfo(new AuthIntercept(permissionAPI, excludes), "/**");
+//        HIInfo authInfo = new HIInfo(new AuthIntercept(permissionAPI, excludes), "/**");
 
         /**
          * 顺序

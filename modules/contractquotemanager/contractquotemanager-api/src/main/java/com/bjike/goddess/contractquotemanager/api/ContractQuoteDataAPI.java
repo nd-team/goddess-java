@@ -3,7 +3,9 @@ package com.bjike.goddess.contractquotemanager.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contractquotemanager.bo.ContractQuoteDataBO;
 import com.bjike.goddess.contractquotemanager.dto.ContractQuoteDataDTO;
+import com.bjike.goddess.contractquotemanager.excel.SonPermissionObject;
 import com.bjike.goddess.contractquotemanager.to.ContractQuoteDataTO;
+import com.bjike.goddess.contractquotemanager.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -18,6 +20,20 @@ import java.util.List;
  */
 public interface ContractQuoteDataAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 根据id查询合同单价资料信息
      *

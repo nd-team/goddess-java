@@ -27,7 +27,7 @@ public class RewardSituationTO extends BaseTO {
      * 获奖名称
      */
     @NotNull(message = "获奖名称不能为空", groups = {ADD.class, EDIT.class})
-    private String name;
+    private String awardName;
 
     /**
      * 获得时间
@@ -43,12 +43,12 @@ public class RewardSituationTO extends BaseTO {
         this.informationId = informationId;
     }
 
-    public String getName() {
-        return name;
+    public String getAwardName() {
+        return awardName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setAwardName(String awardName) {
+        this.awardName = awardName;
     }
 
     public String getAcquisition() {

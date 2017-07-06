@@ -20,7 +20,6 @@ import com.bjike.goddess.user.session.valid_right.LoginUser;
 import com.bjike.goddess.user.session.valid_right.UserSession;
 import com.bjike.goddess.user.to.UserLoginLogTO;
 import com.bjike.goddess.user.to.UserLoginTO;
-import com.bjike.goddess.user.utils.RSACoder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,7 +102,7 @@ public class UserLoginSerImpl implements UserLoginSer {
             String address = IpUtil.getAddress(loginTO.getIp());
             userLoginLogTO.setLoginAddress(address);
             userLoginLogSer.saveLoginLog(userLoginLogTO);
-        }catch (Exception e){
+        } catch (Exception e) {
             userLoginLogTO.setLoginAddress("not has address");
             userLoginLogSer.saveLoginLog(userLoginLogTO);
         }

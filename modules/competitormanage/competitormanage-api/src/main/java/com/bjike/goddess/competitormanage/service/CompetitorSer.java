@@ -6,6 +6,7 @@ import com.bjike.goddess.competitormanage.bo.CompetitorBO;
 import com.bjike.goddess.competitormanage.dto.CompetitorDTO;
 import com.bjike.goddess.competitormanage.entity.Competitor;
 import com.bjike.goddess.competitormanage.excel.SonPermissionObject;
+import com.bjike.goddess.competitormanage.to.CompetitorOrganizaeTO;
 import com.bjike.goddess.competitormanage.to.CompetitorTO;
 import com.bjike.goddess.competitormanage.to.GuidePermissionTO;
 
@@ -41,7 +42,7 @@ public interface CompetitorSer extends Ser<Competitor, CompetitorDTO> {
      *
      * @param to 竞争对手组织结构信息
      */
-    CompetitorBO editOrganization(CompetitorTO to) throws SerException;
+    CompetitorBO editOrganization(CompetitorOrganizaeTO to) throws SerException;
 
     /**
      * 分页查询

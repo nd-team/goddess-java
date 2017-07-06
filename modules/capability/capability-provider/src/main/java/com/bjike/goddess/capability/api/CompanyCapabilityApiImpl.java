@@ -83,6 +83,14 @@ public class CompanyCapabilityApiImpl implements CompanyCapabilityAPI {
         return companyCapabilitySer.guidePermission( guidePermissionTO );
     }
 
+    @Override
+    public byte[] templateExport( ) throws SerException {
+        return companyCapabilitySer.templateExport(   );
+    }
 
+    @Override
+    public CompanyCapabilityBO importExcel(List<CompanyCapabilityTO> companyCapabilityTO) throws SerException {
+        return companyCapabilitySer.importExcel( companyCapabilityTO );
+    }
 
 }

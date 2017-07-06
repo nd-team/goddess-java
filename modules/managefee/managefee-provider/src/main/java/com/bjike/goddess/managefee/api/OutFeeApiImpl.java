@@ -5,7 +5,9 @@ import com.bjike.goddess.managefee.bo.OutFeeBO;
 import com.bjike.goddess.managefee.bo.OutFeeBO;
 import com.bjike.goddess.managefee.dto.OutFeeDTO;
 import com.bjike.goddess.managefee.dto.OutFeeDTO;
+import com.bjike.goddess.managefee.excel.SonPermissionObject;
 import com.bjike.goddess.managefee.service.OutFeeSer;
+import com.bjike.goddess.managefee.to.GuidePermissionTO;
 import com.bjike.goddess.managefee.to.OutFeeTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,15 @@ import java.util.List;
 @Service("outFeeApiImpl")
 public class OutFeeApiImpl implements OutFeeAPI {
 
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return outFeeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return outFeeSer.guidePermission(guidePermissionTO);
+    }
 
     @Autowired
     private OutFeeSer outFeeSer;

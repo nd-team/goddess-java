@@ -4,6 +4,7 @@ import com.bjike.goddess.bankrecords.bo.*;
 import com.bjike.goddess.bankrecords.dto.BankRecordDTO;
 import com.bjike.goddess.bankrecords.entity.BankRecord;
 import com.bjike.goddess.bankrecords.to.BankRecordTO;
+import com.bjike.goddess.bankrecords.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -84,4 +85,6 @@ public interface BankRecordSer extends Ser<BankRecord, BankRecordDTO> {
     List<BankRecordBO> findByCondition(Integer year, Integer month, String number) throws SerException;
 
     List<BankRecordCollectBO> collectByCondition(Integer year, Integer month, String number) throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO to) throws SerException;
 }

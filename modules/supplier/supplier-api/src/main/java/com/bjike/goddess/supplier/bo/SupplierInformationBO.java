@@ -26,7 +26,7 @@ public class SupplierInformationBO extends BaseBO {
     /**
      * 供应商名称
      */
-    private String name;
+    private String supplierName;
 
     /**
      * 供应商类型
@@ -155,12 +155,12 @@ public class SupplierInformationBO extends BaseBO {
         this.area = area;
     }
 
-    public String getName() {
-        return name;
+    public String getSupplierName() {
+        return supplierName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSupplierName(String supplierName) {
+        this.supplierName = supplierName;
     }
 
     public String getType() {

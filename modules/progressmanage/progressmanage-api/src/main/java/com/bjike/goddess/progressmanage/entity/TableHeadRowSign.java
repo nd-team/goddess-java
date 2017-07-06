@@ -36,8 +36,11 @@ public class TableHeadRowSign extends BaseEntity {
     /**
      * 表头对应值
      */
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "tableHeadRowSign")
+    @OneToMany(cascade ={CascadeType.REMOVE,CascadeType.PERSIST} , fetch = FetchType.EAGER, mappedBy = "tableHeadRowSign")
     private Set<TableHeadValue> tableHeadValueSet = new HashSet<TableHeadValue>();
+
+    @Embedded
+    private List<TableHeadValue> tableHeadValueList = new ArrayList<TableHeadValue>();
 
     public ProgressTable getProgressTable() {
         return progressTable;
@@ -55,4 +58,11 @@ public class TableHeadRowSign extends BaseEntity {
         this.tableHeadValueSet = tableHeadValueSet;
     }
 
+    public List<TableHeadValue> getTableHeadValueList() {
+        return tableHeadValueList;
+    }
+
+    public void setTableHeadValueList(List<TableHeadValue> tableHeadValueList) {
+        this.tableHeadValueList = tableHeadValueList;
+    }
 }

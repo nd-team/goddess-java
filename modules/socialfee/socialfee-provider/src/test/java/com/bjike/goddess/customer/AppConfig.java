@@ -1,4 +1,4 @@
-package com.bjike.goddess.socialfee;
+package com.bjike.goddess.customer;
 
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.*;

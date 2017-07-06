@@ -5,6 +5,7 @@ import com.bjike.goddess.projectcost.bo.CarCostBO;
 import com.bjike.goddess.projectcost.dto.CarCostDTO;
 import com.bjike.goddess.projectcost.to.CarCostTO;
 import com.bjike.goddess.projectcost.to.FindTO;
+import com.bjike.goddess.projectcost.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -106,4 +107,10 @@ public interface CarCostAPI {
         return null;
     }
 
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

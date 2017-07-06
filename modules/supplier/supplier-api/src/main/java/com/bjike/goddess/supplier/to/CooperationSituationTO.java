@@ -26,7 +26,7 @@ public class CooperationSituationTO extends BaseTO {
      * 公司名称
      */
     @NotNull(message = "公司名称不能为空", groups = {ADD.class, EDIT.class})
-    private String name;
+    private String companyName;
 
     /**
      * 产品服务内容
@@ -52,12 +52,12 @@ public class CooperationSituationTO extends BaseTO {
         this.informationId = informationId;
     }
 
-    public String getName() {
-        return name;
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public String getProduct() {

@@ -7,6 +7,7 @@ package com.bjike.goddess.projectmeasure.type;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+
 public enum GuideAddrStatus {
     /**
      * 列表
@@ -31,7 +32,16 @@ public enum GuideAddrStatus {
     /**
      * 解冻
      */
-    THAW(5);
+    THAW(5),
+
+    /**
+     * 汇总
+     */
+    COLLECT(6),
+    /**
+     * 查看
+     */
+    SEE(7);
 
     private int code;
 

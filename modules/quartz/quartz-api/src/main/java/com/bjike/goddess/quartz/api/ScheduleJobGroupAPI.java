@@ -2,8 +2,11 @@ package com.bjike.goddess.quartz.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.quartz.bo.ScheduleJobGroupBO;
+import com.bjike.goddess.quartz.dto.ScheduleJobGroupDTO;
 import com.bjike.goddess.quartz.to.ScheduleJobGroupTO;
 import org.mengyun.tcctransaction.api.TransactionContext;
+
+import java.util.List;
 
 /**
  * 任务调度组业务接口
@@ -16,6 +19,19 @@ import org.mengyun.tcctransaction.api.TransactionContext;
  */
 public interface ScheduleJobGroupAPI {
 
+    default List<ScheduleJobGroupBO> list(ScheduleJobGroupDTO dto) throws SerException {
+        return null;
+    }
+    default Long  count(ScheduleJobGroupDTO dto) throws SerException {
+        return null;
+    }
+
+    default List<ScheduleJobGroupBO>  all(ScheduleJobGroupDTO dto) throws SerException {
+        return null;
+    }
+    default ScheduleJobGroupBO findById(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 添加任务调度组

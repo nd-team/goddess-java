@@ -36,10 +36,14 @@ public class AssetVO {
     private Double beginAsset;
 
     /**
+     * 当前月发生额
+     */
+    private Double current;
+
+    /**
      * 资产期末数
      */
     private Double endAsset;
-
 
     public String getId() {
         return id;
@@ -47,6 +51,14 @@ public class AssetVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Double getCurrent() {
+        return current;
+    }
+
+    public void setCurrent(Double current) {
+        this.current = current;
     }
 
     public String getStartTime() {

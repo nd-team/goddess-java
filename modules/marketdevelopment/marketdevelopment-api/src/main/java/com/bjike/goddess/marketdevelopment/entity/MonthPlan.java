@@ -29,7 +29,7 @@ public class MonthPlan extends BaseEntity {
     /**
      * 月份
      */
-    @Column(name = "month", columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '状态' ", nullable = false, insertable = false)
+    @Column(name = "month", columnDefinition = "TINYINT(2) COMMENT '状态' ", nullable = false)
     private MonthType month;
 
     /**
@@ -61,6 +61,7 @@ public class MonthPlan extends BaseEntity {
      */
     @Column(name = "total", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '总计'")
     private Double total;
+
 
 
     public YearPlan getYear() {

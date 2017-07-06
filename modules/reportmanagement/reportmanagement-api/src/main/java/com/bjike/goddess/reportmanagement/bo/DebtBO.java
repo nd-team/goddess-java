@@ -34,10 +34,22 @@ public class DebtBO extends BaseBO {
     private Double beginDebt;
 
     /**
+     * 当前月发生额
+     */
+    private Double current;
+
+    /**
      * 负债期末数
      */
     private Double endDebt;
 
+    public Double getCurrent() {
+        return current;
+    }
+
+    public void setCurrent(Double current) {
+        this.current = current;
+    }
 
     public String getStartTime() {
         return startTime;

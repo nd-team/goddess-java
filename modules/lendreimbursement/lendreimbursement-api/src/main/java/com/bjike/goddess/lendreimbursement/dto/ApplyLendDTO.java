@@ -63,6 +63,16 @@ public class ApplyLendDTO extends BaseDTO {
      */
     private String estimateLendDate;
 
+    /**
+     * 借款间隔查询开始时间
+     */
+    private String startTime;
+
+    /**
+     * 借款间隔查询结束时间
+     */
+    private String endTime;
+
     public String getLender() {
         return lender;
     }
@@ -141,5 +151,21 @@ public class ApplyLendDTO extends BaseDTO {
 
     public void setEstimateLendDate(String estimateLendDate) {
         this.estimateLendDate = estimateLendDate;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 }

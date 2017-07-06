@@ -2,250 +2,293 @@ package com.bjike.goddess.capability.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
+
 /**
-* 个人社交能力展示
-* @Author:			[ zhuangkaiqin ]
-* @Date:			[  2017-06-16 11:05 ]
-* @Description:	[ 个人社交能力展示 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
-*/
+ * 个人社交能力展示
+ *
+ * @Author: [ zhuangkaiqin ]
+ * @Date: [ 2017-06-16 11:05 ]
+ * @Description: [ 个人社交能力展示 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
 public class SelfCapabilitySocialTO extends BaseTO {
 
     public interface TestAdd {
     }
-/**
-* 个人社交资源姓名
-*/
- private String  contactName; 
 
-/**
-* 性别
-*/
- private String  sex; 
+    /**
+     * 个人社交资源姓名
+     */
+    private String contactName;
 
-/**
-* 联系方式
-*/
- private String  contactWay; 
+    /**
+     * 性别
+     */
+    private String sex;
 
-/**
-* 邮箱
-*/
- private String  emailName; 
+    /**
+     * 联系方式
+     */
+    private String contactWay;
 
-/**
-* QQ/微信
-*/
- private String  qqOrWechat; 
+    /**
+     * 邮箱
+     */
+    private String emailName;
 
-/**
-* 籍贯
-*/
- private String  natives; 
+    /**
+     * QQ/微信
+     */
+    private String qqOrWechat;
 
-/**
-* 爱好
-*/
- private String  hobby; 
+    /**
+     * 籍贯
+     */
+    private String natives;
 
-/**
-* 性格评价
-*/
- private String  charact; 
+    /**
+     * 爱好
+     */
+    private String hobby;
 
-/**
-* 家庭成员
-*/
- private String  family; 
+    /**
+     * 性格评价
+     */
+    private String charact;
 
-/**
-* 家庭成员与本人关系
-*/
- private String  familyRelation; 
+    /**
+     * 家庭成员
+     */
+    private String family;
 
-/**
-* 求学和培训经历
-*/
- private String  studyExperience; 
+    /**
+     * 家庭成员与本人关系
+     */
+    private String familyRelation;
 
-/**
-* 接触经历
-*/
- private String  connectExperience; 
+    /**
+     * 求学和培训经历
+     */
+    private String studyExperience;
 
-/**
-* 以往工作地区
-*/
- private String  oldWorkPlace; 
+    /**
+     * 接触经历
+     */
+    private String connectExperience;
 
-/**
-* 生活地区
-*/
- private String  livePlace; 
+    /**
+     * 以往工作地区
+     */
+    private String oldWorkPlace;
 
-/**
-* 成长地区
-*/
- private String  growthPlace;
+    /**
+     * 生活地区
+     */
+    private String livePlace;
+
+    /**
+     * 成长地区
+     */
+    private String growthPlace;
 
     /**
      * 个人能力id
      */
-    @NotBlank(groups = {SelfCapabilitySocialTO.TestAdd.class} ,message = "个人能力id不能为空")
+    @NotBlank(groups = {SelfCapabilitySocialTO.TestAdd.class}, message = "个人能力id不能为空")
     private String selfCapabilityId;
 
-/**
-* 组织机构
-*/
- private String  organization; 
+    /**
+     * 组织机构
+     */
+    private String organization;
 
-/**
-* 现在工作地区
-*/
- private String  nowWorkPlace; 
+    /**
+     * 现在工作地区
+     */
+    private String nowWorkPlace;
 
-/**
-* 所在公司
-*/
- private String  nowCompany; 
+    /**
+     * 所在公司
+     */
+    private String nowCompany;
 
-/**
-* 岗位
-*/
- private String  station; 
+    /**
+     * 岗位
+     */
+    private String station;
 
-/**
-* 职权
-*/
- private String  duty; 
+    /**
+     * 职权
+     */
+    private String duty;
 
 
+    public String getContactName() {
+        return contactName;
+    }
 
- public String getContactName () { 
- return contactName;
- } 
- public void setContactName (String contactName ) { 
- this.contactName = contactName ; 
- } 
- public String getSex () { 
- return sex;
- } 
- public void setSex (String sex ) { 
- this.sex = sex ; 
- } 
- public String getContactWay () { 
- return contactWay;
- } 
- public void setContactWay (String contactWay ) { 
- this.contactWay = contactWay ; 
- } 
- public String getEmailName () { 
- return emailName;
- } 
- public void setEmailName (String emailName ) { 
- this.emailName = emailName ; 
- } 
- public String getQqOrWechat () { 
- return qqOrWechat;
- } 
- public void setQqOrWechat (String qqOrWechat ) { 
- this.qqOrWechat = qqOrWechat ; 
- } 
- public String getNatives () { 
- return natives;
- } 
- public void setNatives (String natives ) { 
- this.natives = natives ; 
- } 
- public String getHobby () { 
- return hobby;
- } 
- public void setHobby (String hobby ) { 
- this.hobby = hobby ; 
- } 
- public String getCharact () { 
- return charact;
- } 
- public void setCharact (String charact ) { 
- this.charact = charact ; 
- } 
- public String getFamily () { 
- return family;
- } 
- public void setFamily (String family ) { 
- this.family = family ; 
- } 
- public String getFamilyRelation () { 
- return familyRelation;
- } 
- public void setFamilyRelation (String familyRelation ) { 
- this.familyRelation = familyRelation ; 
- } 
- public String getStudyExperience () { 
- return studyExperience;
- } 
- public void setStudyExperience (String studyExperience ) { 
- this.studyExperience = studyExperience ; 
- } 
- public String getConnectExperience () { 
- return connectExperience;
- } 
- public void setConnectExperience (String connectExperience ) { 
- this.connectExperience = connectExperience ; 
- } 
- public String getOldWorkPlace () { 
- return oldWorkPlace;
- } 
- public void setOldWorkPlace (String oldWorkPlace ) { 
- this.oldWorkPlace = oldWorkPlace ; 
- } 
- public String getLivePlace () { 
- return livePlace;
- } 
- public void setLivePlace (String livePlace ) { 
- this.livePlace = livePlace ; 
- } 
- public String getGrowthPlace () { 
- return growthPlace;
- } 
- public void setGrowthPlace (String growthPlace ) { 
- this.growthPlace = growthPlace ; 
- } 
- public String getSelfCapabilityId () { 
- return selfCapabilityId;
- } 
- public void setSelfCapabilityId (String selfCapabilityId ) { 
- this.selfCapabilityId = selfCapabilityId ; 
- } 
- public String getOrganization () { 
- return organization;
- } 
- public void setOrganization (String organization ) { 
- this.organization = organization ; 
- } 
- public String getNowWorkPlace () { 
- return nowWorkPlace;
- } 
- public void setNowWorkPlace (String nowWorkPlace ) { 
- this.nowWorkPlace = nowWorkPlace ; 
- } 
- public String getNowCompany () { 
- return nowCompany;
- } 
- public void setNowCompany (String nowCompany ) { 
- this.nowCompany = nowCompany ; 
- } 
- public String getStation () { 
- return station;
- } 
- public void setStation (String station ) { 
- this.station = station ; 
- } 
- public String getDuty () { 
- return duty;
- } 
- public void setDuty (String duty ) { 
- this.duty = duty ; 
- } 
- }
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getContactWay() {
+        return contactWay;
+    }
+
+    public void setContactWay(String contactWay) {
+        this.contactWay = contactWay;
+    }
+
+    public String getEmailName() {
+        return emailName;
+    }
+
+    public void setEmailName(String emailName) {
+        this.emailName = emailName;
+    }
+
+    public String getQqOrWechat() {
+        return qqOrWechat;
+    }
+
+    public void setQqOrWechat(String qqOrWechat) {
+        this.qqOrWechat = qqOrWechat;
+    }
+
+    public String getNatives() {
+        return natives;
+    }
+
+    public void setNatives(String natives) {
+        this.natives = natives;
+    }
+
+    public String getHobby() {
+        return hobby;
+    }
+
+    public void setHobby(String hobby) {
+        this.hobby = hobby;
+    }
+
+    public String getCharact() {
+        return charact;
+    }
+
+    public void setCharact(String charact) {
+        this.charact = charact;
+    }
+
+    public String getFamily() {
+        return family;
+    }
+
+    public void setFamily(String family) {
+        this.family = family;
+    }
+
+    public String getFamilyRelation() {
+        return familyRelation;
+    }
+
+    public void setFamilyRelation(String familyRelation) {
+        this.familyRelation = familyRelation;
+    }
+
+    public String getStudyExperience() {
+        return studyExperience;
+    }
+
+    public void setStudyExperience(String studyExperience) {
+        this.studyExperience = studyExperience;
+    }
+
+    public String getConnectExperience() {
+        return connectExperience;
+    }
+
+    public void setConnectExperience(String connectExperience) {
+        this.connectExperience = connectExperience;
+    }
+
+    public String getOldWorkPlace() {
+        return oldWorkPlace;
+    }
+
+    public void setOldWorkPlace(String oldWorkPlace) {
+        this.oldWorkPlace = oldWorkPlace;
+    }
+
+    public String getLivePlace() {
+        return livePlace;
+    }
+
+    public void setLivePlace(String livePlace) {
+        this.livePlace = livePlace;
+    }
+
+    public String getGrowthPlace() {
+        return growthPlace;
+    }
+
+    public void setGrowthPlace(String growthPlace) {
+        this.growthPlace = growthPlace;
+    }
+
+    public String getSelfCapabilityId() {
+        return selfCapabilityId;
+    }
+
+    public void setSelfCapabilityId(String selfCapabilityId) {
+        this.selfCapabilityId = selfCapabilityId;
+    }
+
+    public String getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(String organization) {
+        this.organization = organization;
+    }
+
+    public String getNowWorkPlace() {
+        return nowWorkPlace;
+    }
+
+    public void setNowWorkPlace(String nowWorkPlace) {
+        this.nowWorkPlace = nowWorkPlace;
+    }
+
+    public String getNowCompany() {
+        return nowCompany;
+    }
+
+    public void setNowCompany(String nowCompany) {
+        this.nowCompany = nowCompany;
+    }
+
+    public String getStation() {
+        return station;
+    }
+
+    public void setStation(String station) {
+        this.station = station;
+    }
+
+    public String getDuty() {
+        return duty;
+    }
+
+    public void setDuty(String duty) {
+        this.duty = duty;
+    }
+}

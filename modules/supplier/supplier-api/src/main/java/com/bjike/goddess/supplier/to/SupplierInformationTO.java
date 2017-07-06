@@ -27,7 +27,7 @@ public class SupplierInformationTO extends BaseTO {
      * 供应商名称
      */
     @NotNull(message = "供应商名称不能为空", groups = {ADD.class, EDIT.class})
-    private String name;
+    private String supplierName;
 
     /**
      * 供应商类型
@@ -148,12 +148,12 @@ public class SupplierInformationTO extends BaseTO {
         this.area = area;
     }
 
-    public String getName() {
-        return name;
+    public String getSupplierName() {
+        return supplierName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSupplierName(String supplierName) {
+        this.supplierName = supplierName;
     }
 
     public String getType() {

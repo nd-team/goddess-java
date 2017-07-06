@@ -5,6 +5,7 @@ import com.bjike.goddess.qualifications.bo.CompanyInfoBO;
 import com.bjike.goddess.qualifications.dto.CompanyInfoDTO;
 import com.bjike.goddess.qualifications.service.CompanyInfoSer;
 import com.bjike.goddess.qualifications.to.CompanyInfoTO;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,5 +59,9 @@ public class CompanyInfoApiImpl implements CompanyInfoAPI {
     @Override
     public CompanyInfoBO getById(String id) throws SerException {
         return companyInfoSer.getById(id);
+    }
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return companyInfoSer.guidePermission( guidePermissionTO );
     }
 }

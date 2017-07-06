@@ -157,6 +157,30 @@ public class CooperCapabilityVO {
      */
     private String duty;
 
+    /**
+     * 公司参与项目数
+     */
+    private String[] completePros;
+    /**
+     * 专业资质认证数
+     */
+    private String[] professionAuthens;
+
+    /**
+     * 管理资质认证数
+     */
+    private String[] manageAuthens;
+
+    /**
+     * 公司荣誉证书数
+     */
+    private String[] companyCertificates;
+
+    /**
+     * 公司已完成项目数
+     */
+    private String[] companyProjects;
+
 
     public String getId() {
         return id;
@@ -388,5 +412,45 @@ public class CooperCapabilityVO {
 
     public void setDuty(String duty) {
         this.duty = duty;
+    }
+
+    public String[] getCompletePros() {
+        return completePros;
+    }
+
+    public void setCompletePros(String[] completePros) {
+        this.completePros = completePros;
+    }
+
+    public String[] getProfessionAuthens() {
+        return professionAuthens;
+    }
+
+    public void setProfessionAuthens(String[] professionAuthens) {
+        this.professionAuthens = professionAuthens;
+    }
+
+    public String[] getManageAuthens() {
+        return manageAuthens;
+    }
+
+    public void setManageAuthens(String[] manageAuthens) {
+        this.manageAuthens = manageAuthens;
+    }
+
+    public String[] getCompanyCertificates() {
+        return companyCertificates;
+    }
+
+    public void setCompanyCertificates(String[] companyCertificates) {
+        this.companyCertificates = companyCertificates;
+    }
+
+    public String[] getCompanyProjects() {
+        return companyProjects;
+    }
+
+    public void setCompanyProjects(String[] companyProjects) {
+        this.companyProjects = companyProjects;
     }
 }

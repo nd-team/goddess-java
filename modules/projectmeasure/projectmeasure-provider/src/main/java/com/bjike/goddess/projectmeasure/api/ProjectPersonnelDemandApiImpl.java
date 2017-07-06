@@ -36,9 +36,8 @@ public class ProjectPersonnelDemandApiImpl implements ProjectPersonnelDemandAPI 
      * @throws SerException
      */
     @Override
-    public ProjectPersonnelDemandBO findById(String id) throws SerException {
-        ProjectPersonnelDemand model = projectPersonnelDemandSer.findById(id);
-        return BeanTransform.copyProperties(model, ProjectPersonnelDemandBO.class);
+    public ProjectPersonnelDemandBO getOne(String id) throws SerException {
+        return projectPersonnelDemandSer.getOne(id);
     }
 
     /**

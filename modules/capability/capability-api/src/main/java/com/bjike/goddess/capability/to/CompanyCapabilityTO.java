@@ -3,7 +3,6 @@ package com.bjike.goddess.capability.to;
 import com.bjike.goddess.capability.enums.CompletePro;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * 公司能力展示
@@ -148,6 +147,15 @@ public class CompanyCapabilityTO extends BaseTO {
      */
     private String[] companyProjects;
 
+    /**
+     * 公司合作对象
+     */
+    private String[] cooperates;
+
+    /**
+     * 已完成项目
+     */
+    private String companyProject;
 
     public String getCompany() {
         return company;
@@ -355,5 +363,21 @@ public class CompanyCapabilityTO extends BaseTO {
 
     public void setCompanyProjects(String[] companyProjects) {
         this.companyProjects = companyProjects;
+    }
+
+    public String[] getCooperates() {
+        return cooperates;
+    }
+
+    public void setCooperates(String[] cooperates) {
+        this.cooperates = cooperates;
+    }
+
+    public String getCompanyProject() {
+        return companyProject;
+    }
+
+    public void setCompanyProject(String companyProject) {
+        this.companyProject = companyProject;
     }
 }

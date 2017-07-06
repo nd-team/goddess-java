@@ -176,10 +176,11 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
         CompetitorDTO dto = new CompetitorDTO();
 
         //查询地区
-        StringBuilder sb = new StringBuilder("select distinct area  from competitormanage_competitor where 0 = 0");
+        StringBuilder sb = new StringBuilder("select distinct area  from competitormanage_competitor where 0 = 0 and status =0");
         if (start != null && end != null) {
             sb.append(" and createTime > '" + DateUtil.dateToString(start) + "'");
             sb.append(" and createTime < '" + DateUtil.dateToString(end) + "'");
+            dto.getConditions().add(Restrict.eq("status", Status.THAW));
             dto.getConditions().add(Restrict.gt("createTime", start));
             dto.getConditions().add(Restrict.lt("createTime", end));
         }
@@ -432,7 +433,7 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
         MessageTO to = new MessageTO("竞争对手管理汇总每" + field + "数据", table);
         to.setSendType(SendType.EMAIL);
         to.setReceivers(sendUsers);
-//        messageAPI.send(to);
+        messageAPI.send(to);
     }
 
     //渲染邮件内容
