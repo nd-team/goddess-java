@@ -37,6 +37,16 @@ public class ProjectInfoApiImpl implements ProjectInfoAPI {
     }
 
     @Override
+    public void freeze(String id) throws SerException {
+        projectInfoSer.freeze(id);
+    }
+
+    @Override
+    public void unfreeze(String id) throws SerException {
+        projectInfoSer.unfreeze(id);
+    }
+
+    @Override
     public void delete(String id) throws SerException {
         projectInfoSer.delete(id);
     }

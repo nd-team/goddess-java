@@ -28,5 +28,9 @@ public interface ProgressTableSer extends Ser<ProgressTable, ProgressTableDTO> {
 
     void delete(String id) throws SerException;
 
-    List<TableListForHeadBO> tables() throws SerException;
+    List<TableListForHeadBO> tables(String projectId) throws SerException;
+
+    void freeze(String id) throws SerException;
+
+    void unfreeze(String id) throws SerException;
 }

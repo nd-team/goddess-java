@@ -31,7 +31,9 @@ public class ProgressTableBO extends BaseBO {
      */
     private String updateUser;
 
-    //所属项目
+    /**
+     * 所属项目
+     */
     private ProjectInfoBO projectInfoBO;
 
     /**

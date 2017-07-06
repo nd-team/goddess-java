@@ -8,14 +8,14 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.progressmanage.api.NodeHeadAPI;
-import com.bjike.goddess.progressmanage.api.ProgressNodeAPI;
-import com.bjike.goddess.progressmanage.api.ProjectInfoAPI;
-import com.bjike.goddess.progressmanage.dto.NodeHeadDTO;
-import com.bjike.goddess.progressmanage.to.NodeHeadTO;
-import com.bjike.goddess.progressmanage.vo.NodeHeadVO;
-import com.bjike.goddess.progressmanage.vo.NodeListForHeadVO;
-import com.bjike.goddess.progressmanage.vo.ProjectListForNodeVO;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.vo.OpinionVO;
+import com.bjike.goddess.progressmanage.api.TaskReceiveAPI;
+import com.bjike.goddess.progressmanage.dto.TaskReceiveDTO;
+import com.bjike.goddess.progressmanage.to.TaskReceiveTO;
+import com.bjike.goddess.progressmanage.vo.TaskReceiveVO;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -25,36 +25,36 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 进度节点表头
+ * 任务接收
  *
  * @Author: [ Jason ]
- * @Date: [ 2017-06-09 05:43 ]
- * @Description: [ 进度节点表头 ]
+ * @Date: [ 2017-07-03 11:26 ]
+ * @Description: [ 任务接收 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("nodehead")
-public class NodeHeadAct {
+@RequestMapping("taskreceive")
+public class TaskReceiveAct {
 
     @Autowired
-    private NodeHeadAPI nodeHeadAPI;
+    private TaskReceiveAPI taskReceiveAPI;
     @Autowired
-    private ProgressNodeAPI progressNodeAPI;
+    private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
-    private ProjectInfoAPI projectInfoAPI;
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     /**
-     * 项目下拉列表
+     * 项目组或部门下拉列表
      *
-     * @return class ProjectListForNodeVO
+     * @return class OpinionVO
      * @version v1
      */
-    @GetMapping("v1/projects")
-    public Result projects(HttpServletRequest request) throws ActException {
+    @GetMapping("v1/groups")
+    public Result groups(HttpServletRequest request) throws ActException {
 
         try {
-            List<ProjectListForNodeVO> voList = BeanTransform.copyProperties(projectInfoAPI.projects(), ProjectListForNodeVO.class, request);
+            List<OpinionVO> voList = BeanTransform.copyProperties(departmentDetailAPI.findAllOpinion(), OpinionVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -62,34 +62,35 @@ public class NodeHeadAct {
     }
 
     /**
-     * 节点下拉列表
+     * 用户下拉列表
      *
-     * @return class NodeListForHeadVO
+     * @return class UserBO
      * @version v1
      */
-    @GetMapping("v1/nodes/{tableId}")
-    public Result nodes(@PathVariable String tableId, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/users")
+    public Result users(HttpServletRequest request) throws ActException {
 
         try {
-            List<NodeListForHeadVO> voList = BeanTransform.copyProperties(progressNodeAPI.nodes(tableId), NodeListForHeadVO.class, request);
+            List<UserBO> voList = BeanTransform.copyProperties(positionDetailUserAPI.findUserList(), UserBO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
 
     /**
      * 新增
      *
-     * @param to 节点
-     * @return class NodeHeadVO
+     * @param to 任务接收
+     * @return class TaskReceiveVO
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) NodeHeadTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result add(@Validated({ADD.class}) TaskReceiveTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            NodeHeadVO vo = BeanTransform.copyProperties(nodeHeadAPI.add(to), NodeHeadVO.class, request);
+            TaskReceiveVO vo = BeanTransform.copyProperties(taskReceiveAPI.add(to), TaskReceiveVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -99,15 +100,15 @@ public class NodeHeadAct {
     /**
      * 编辑
      *
-     * @param to 节点
-     * @return class NodeHeadVO
+     * @param to 任务接收
+     * @return class TaskReceiveVO
      * @version v1
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) NodeHeadTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result edit(@Validated({EDIT.class}) TaskReceiveTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            NodeHeadVO vo = BeanTransform.copyProperties(nodeHeadAPI.edit(to), NodeHeadVO.class, request);
+            TaskReceiveVO vo = BeanTransform.copyProperties(taskReceiveAPI.edit(to), TaskReceiveVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -117,36 +118,36 @@ public class NodeHeadAct {
     /**
      * 删除
      *
-     * @param id 节点id
+     * @param id id
      * @version v1
      */
     @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
-            nodeHeadAPI.delete(id);
+            taskReceiveAPI.delete(id);
             return new ActResult("删除成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
-
     /**
      * 列表
      *
-     * @return class NodeHeadVO
+     * @param dto 分页条件
+     * @return class TaskReceiveVO
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result pageList(@Validated({NodeHeadDTO.HeadValidate.class}) NodeHeadDTO dto, HttpServletRequest request) throws ActException {
+    public Result pageList(TaskReceiveDTO dto, HttpServletRequest request) throws ActException {
+
         try {
-            List<NodeHeadVO> voList = BeanTransform.copyProperties(nodeHeadAPI.pageList(dto), NodeHeadVO.class, request);
+            List<TaskReceiveVO> voList = BeanTransform.copyProperties(taskReceiveAPI.pageList(dto), TaskReceiveVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
-
 
 }

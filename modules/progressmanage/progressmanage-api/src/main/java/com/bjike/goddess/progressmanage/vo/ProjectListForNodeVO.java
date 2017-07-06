@@ -17,7 +17,7 @@ public class ProjectListForNodeVO {
     private String id;
 
     /**
-     * 表名
+     * 地区
      */
     private String area;
 
@@ -27,7 +27,7 @@ public class ProjectListForNodeVO {
     private String group;
 
     /**
-     * 合同内部岷城
+     * 合同内部名称
      */
     private String inProject;
 

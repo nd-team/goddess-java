@@ -24,6 +24,10 @@ public interface ProjectInfoSer extends Ser<ProjectInfo, ProjectInfoDTO> {
 
     ProjectInfoBO updateModel(ProjectInfoTO to) throws SerException;
 
+    void freeze(String id) throws SerException;
+
+    void unfreeze(String id) throws SerException;
+
     void delete(String id) throws SerException;
 
     List<ProjectInfoBO> pageList(ProjectInfoDTO dto) throws SerException;

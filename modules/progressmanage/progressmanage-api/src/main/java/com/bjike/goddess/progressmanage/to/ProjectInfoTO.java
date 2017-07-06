@@ -69,12 +69,6 @@ public class ProjectInfoTO extends BaseTO {
     private String workScreen;
 
     /**
-     * 表名
-     */
-    @NotBlank(message = "表名",groups = {ADD.class, EDIT.class})
-    private String tableName;
-
-    /**
      * 权限类型
      */
     @NotNull(message = "权限类型不能为空",groups = {ADD.class, EDIT.class})
@@ -148,14 +142,6 @@ public class ProjectInfoTO extends BaseTO {
 
     public void setWorkScreen(String workScreen) {
         this.workScreen = workScreen;
-    }
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
     }
 
     public PermissionType getPermissionType() {
