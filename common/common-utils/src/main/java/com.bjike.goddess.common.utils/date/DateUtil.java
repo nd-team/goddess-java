@@ -1,9 +1,14 @@
 package com.bjike.goddess.common.utils.date;
 
+import com.bjike.goddess.common.api.exception.SerException;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * @Author: [liguiqin]
@@ -173,7 +178,7 @@ public class DateUtil {
     public static LocalDate getStartDayOfMonth(Integer month) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
-        calendar.set(Calendar.MONTH, month-1);
+        calendar.set(Calendar.MONTH, month - 1);
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
 
         Date date = calendar.getTime();
@@ -186,7 +191,7 @@ public class DateUtil {
     public static LocalDate getEndDaYOfMonth(Integer month) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
-        calendar.set(Calendar.MONTH, month-1);
+        calendar.set(Calendar.MONTH, month - 1);
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
 
         Date date = calendar.getTime();
@@ -199,7 +204,7 @@ public class DateUtil {
     public static LocalDate getStartDayOfMonth(Integer year, Integer month) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month-1);
+        calendar.set(Calendar.MONTH, month - 1);
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
 
         Date date = calendar.getTime();
@@ -209,10 +214,10 @@ public class DateUtil {
     }
 
     //获取指定年份、月份的最后一天 月份从0开始算0~11
-    public static LocalDate getEndDaYOfMonth(Integer year ,Integer month) {
+    public static LocalDate getEndDaYOfMonth(Integer year, Integer month) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month-1);
+        calendar.set(Calendar.MONTH, month - 1);
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
 
         Date date = calendar.getTime();
@@ -232,5 +237,26 @@ public class DateUtil {
         ZoneId zoneId = ZoneId.systemDefault();
         return LocalDateTime.ofInstant(instant, zoneId);
     }
+
+    /**
+     * 通过年月获取月份的天数
+     * @param year
+     * @param month
+     * @return
+     * @throws SerException
+     */
+    public static Integer getDayByDate(Integer year, Integer month) throws SerException {
+        try {
+            Calendar calendar = new GregorianCalendar();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+            String str_date = year + "-" + (month < 10 ? "0" + month : month);
+            Date date = sdf.parse(str_date);
+            calendar.setTime(date); //放入你的日期
+            return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        } catch (ParseException e) {
+            throw new SerException(e.getMessage());
+        }
+    }
+
 
 }
