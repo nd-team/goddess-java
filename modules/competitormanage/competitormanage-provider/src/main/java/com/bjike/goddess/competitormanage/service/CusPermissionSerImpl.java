@@ -3,7 +3,6 @@ package com.bjike.goddess.competitormanage.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.competitormanage.bo.CusOperateBO;
 import com.bjike.goddess.competitormanage.bo.CusPermissionBO;
@@ -220,8 +219,8 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         if (cusPermissionList != null && cusPermissionList.size() > 0) {
             for (int i = 0; i < cusPermissionList.size(); i++) {
                 CusPermission temp = cusPermissionList.get(i);
-                Optional<CusPermission> cp = list.stream().filter(l->l.getIdFlag().equals(temp.getIdFlag())).findFirst();
-                if(cp.isPresent()){
+                Optional<CusPermission> cp = list.stream().filter(l -> l.getIdFlag().equals(temp.getIdFlag())).findFirst();
+                if (cp.isPresent()) {
                     temp.setDescription(cp.get().getDescription());
                     temp.setType(cp.get().getType());
                     cusPermissionTempList.add(temp);
@@ -284,13 +283,15 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
             cusPermissionOperateSer.remove(deleteList);
         }
         List<CusPermissionOperate> list = new ArrayList<>();
-        for (String operateId : operators) {
-            CusPermissionOperate cpo = new CusPermissionOperate();
-            cpo.setOperator(operateId);
-            cpo.setCuspermissionId(temp.getId());
-            list.add(cpo);
+        if (operators != null && operators.length > 0) {
+            for (String operateId : operators) {
+                CusPermissionOperate cpo = new CusPermissionOperate();
+                cpo.setOperator(operateId);
+                cpo.setCuspermissionId(temp.getId());
+                list.add(cpo);
+            }
+            cusPermissionOperateSer.save(list);
         }
-        cusPermissionOperateSer.save(list);
 
         return BeanTransform.copyProperties(temp, CusPermissionBO.class);
     }
@@ -333,7 +334,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
         Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
 
-        if (positionFlag ) {
+        if (positionFlag) {
             flag = true;
         } else {
             flag = false;
