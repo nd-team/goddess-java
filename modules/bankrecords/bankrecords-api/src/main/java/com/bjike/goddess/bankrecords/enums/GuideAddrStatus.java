@@ -16,45 +16,53 @@ public enum GuideAddrStatus {
      */
     LIST(0),
     /**
+     * 列表
+     */
+    ADD(1),
+    /**
+     * 列表
+     */
+    EDIT(2),
+    /**
      * 删除
      */
-    DELETE(1),
+    DELETE(3),
     /**
      * 汇总
      */
-    COLLECT(2),
+    COLLECT(4),
     /**
      * 分析
      */
-    ANALYZE(3),
+    ANALYZE(5),
     /**
      * 对比
      */
-    COMPARE(4),
+    COMPARE(6),
     /**
      * 上传附件
      */
-    UPLOAD(5),
+    UPLOAD(7),
     /**
      * 下载附件
      */
-    DOWNLOAD(6),
+    DOWNLOAD(8),
     /**
      * 导入
      */
-    IMPORT(7),
+    IMPORT(9),
     /**
      * 导出
      */
-    EXPORT(8),
+    EXPORT(10),
     /**
      * 查看
      */
-    SEE(9),
+    SEE(11),
     /**
      * 查看附件
      */
-    SEEFILE(10);
+    SEEFILE(12);
 
     private int code;
 

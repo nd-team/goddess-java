@@ -10,6 +10,7 @@ import com.bjike.goddess.storage.api.StorageUserAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.rbac.PermissionAPI;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,7 +22,9 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+@Component
 public class CustomIntercept implements Interceptor {
+
 
     @Autowired
     private UserAPI userAPI;
@@ -32,10 +35,6 @@ public class CustomIntercept implements Interceptor {
 
     @Override
     public List<HIInfo> customerInterceptors() {
-        String account = "bankrecords";
-        String password = "123456";
-        String name = "bankrecords";
-        HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI, account, password, name), "/**");
         /**
          * 添加限流器
          */
@@ -46,6 +45,7 @@ public class CustomIntercept implements Interceptor {
          * 登录拦截器
          */
         HIInfo loginInfo = new HIInfo(new LoginIntercept(userAPI), "/**");
+        HIInfo storage = new HIInfo(new StorageIntercept(storageUserAPI,"lgqhhh","123456","test"), "/**");
 
         /**
          * 权限拦截器
@@ -66,7 +66,7 @@ public class CustomIntercept implements Interceptor {
         /**
          * 顺序
          */
-        return Arrays.asList(smoothInfo, storageInfo, loginInfo);
+        return Arrays.asList(smoothInfo,storage, loginInfo);
     }
 
 }

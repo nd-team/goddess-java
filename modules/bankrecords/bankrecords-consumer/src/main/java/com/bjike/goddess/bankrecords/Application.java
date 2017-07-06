@@ -16,8 +16,7 @@ import java.io.IOException;
  * @Copy: [com.bjike]
  */
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.bjike.goddess.bankrecords.action","com.bjike.goddess.bankrecords.config", "com.bjike.goddess.common.consumer",
-        "com.bjike.goddess.bankrecords.config"},
+@ComponentScan(basePackages = {"com.bjike.goddess.bankrecords.action","com.bjike.goddess.bankrecords.config", "com.bjike.goddess.common.consumer"},
         excludeFilters = {@ComponentScan.Filter(
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})

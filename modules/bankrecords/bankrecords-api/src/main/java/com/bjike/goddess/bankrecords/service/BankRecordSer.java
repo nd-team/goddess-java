@@ -80,11 +80,39 @@ public interface BankRecordSer extends Ser<BankRecord, BankRecordDTO> {
      */
     BankRecordAnalyzeBO analyze(Integer year, Integer month, String accountName) throws SerException;
 
+    /**
+     * 对比分析
+     * @param year 年份
+     * @param month 月份
+     * @return
+     */
     BankRecordCompareBO compare(Integer year, Integer month) throws SerException;
 
+    /**
+     * 根据账号查询
+     * @param year
+     * @param month
+     * @param number
+     * @return
+     * @throws SerException
+     */
     List<BankRecordBO> findByCondition(Integer year, Integer month, String number) throws SerException;
 
     List<BankRecordCollectBO> collectByCondition(Integer year, Integer month, String number) throws SerException;
 
     Boolean guidePermission(GuidePermissionTO to) throws SerException;
+
+    /**
+     * 查询所有银行的余额
+     * @param year 年份
+     * @param month 月份
+     * @return 余额
+     */
+    Double balanceByMonth(Integer year, Integer month) throws SerException;
+
+    Boolean sonPermission() throws SerException;
+
+    byte[] collectExcel(Integer year, Integer month, String accountName) throws SerException;
+
+    byte[] analyzeExcel(Integer year, Integer month, String accountName) throws SerException;
 }
