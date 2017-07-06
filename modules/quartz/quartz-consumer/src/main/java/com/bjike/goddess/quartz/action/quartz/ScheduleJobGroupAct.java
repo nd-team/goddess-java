@@ -29,7 +29,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("schedulejob-group")
+@RequestMapping("schedulejob/group")
 public class ScheduleJobGroupAct {
 
 
@@ -46,6 +46,7 @@ public class ScheduleJobGroupAct {
     @GetMapping("v1/list")
     public Result list(ScheduleJobGroupDTO dto) throws ActException {
         try {
+
             List<ScheduleJobGroupVO> jobGroupVOs = BeanTransform.copyProperties(scheduleJobGroupAPI.list(dto), ScheduleJobGroupVO.class);
             return ActResult.initialize(jobGroupVOs);
         } catch (SerException e) {
