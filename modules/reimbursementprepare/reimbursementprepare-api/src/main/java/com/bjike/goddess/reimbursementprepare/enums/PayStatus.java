@@ -1,5 +1,7 @@
 package com.bjike.goddess.reimbursementprepare.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 付款状态
  *
@@ -13,10 +15,12 @@ public enum PayStatus {
     /**
      * 等待付款
      */
+    @ExcelValue(name = "等待付款")
     WAITPAY(0),
     /**
      * 已付款
      */
+    @ExcelValue(name = "已付款")
     HAVEPAY(1);
 
     private int code;
