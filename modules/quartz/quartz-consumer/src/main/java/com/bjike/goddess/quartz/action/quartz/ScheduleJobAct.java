@@ -9,6 +9,7 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.quartz.api.ScheduleJobAPI;
 import com.bjike.goddess.quartz.dto.ScheduleJobDTO;
+import com.bjike.goddess.quartz.entity.ScheduleJob;
 import com.bjike.goddess.quartz.to.ScheduleJobTO;
 import com.bjike.goddess.quartz.vo.ScheduleJobVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class ScheduleJobAct {
     private ScheduleJobAPI scheduleJobAPI;
 
     /**
-     * 任务调度列表
+     * 分页列表
      *
      * @param dto 分页数据
      * @return class ScheduleJobVO
@@ -53,7 +54,7 @@ public class ScheduleJobAct {
     }
 
     /**
-     * 任务调度列表量
+     * 列表数据条数
      *
      * @param dto 分页数据
      * @version v1
@@ -67,6 +68,23 @@ public class ScheduleJobAct {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 通过id查询数据
+     *
+     * @param id
+     * @version v1
+     */
+    @GetMapping("v1/{id}")
+    public Result count(@PathVariable String id) throws ActException {
+        try {
+            ScheduleJobVO scheduleJobVO = BeanTransform.copyProperties(scheduleJobAPI.findById(id),ScheduleJobVO.class);
+            return ActResult.initialize(scheduleJobVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 
     /**

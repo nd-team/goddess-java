@@ -3,6 +3,7 @@ package com.bjike.goddess.bankrecords.api;
 import com.bjike.goddess.bankrecords.bo.*;
 import com.bjike.goddess.bankrecords.dto.BankRecordDTO;
 import com.bjike.goddess.bankrecords.to.BankRecordTO;
+import com.bjike.goddess.bankrecords.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.io.InputStream;
@@ -122,4 +123,5 @@ public interface BankRecordAPI {
      */
     BankRecordPageListBO findById(String id) throws SerException;
 
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 }

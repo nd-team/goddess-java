@@ -25,6 +25,14 @@ public interface ScheduleJobGroupAPI {
     default Long  count(ScheduleJobGroupDTO dto) throws SerException {
         return null;
     }
+
+    default List<ScheduleJobGroupBO>  all(ScheduleJobGroupDTO dto) throws SerException {
+        return null;
+    }
+    default ScheduleJobGroupBO findById(String id) throws SerException {
+        return null;
+    }
+
     /**
      * 添加任务调度组
      *

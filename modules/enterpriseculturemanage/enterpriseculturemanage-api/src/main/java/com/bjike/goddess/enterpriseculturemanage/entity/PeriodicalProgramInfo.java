@@ -31,7 +31,7 @@ public class PeriodicalProgramInfo extends BaseEntity {
     /**
      * 刊物主题
      */
-    @Column(name = "theme", unique = true, nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '刊物主题'")
+    @Column(name = "theme", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '刊物主题'")
     private String theme;
 
     /**

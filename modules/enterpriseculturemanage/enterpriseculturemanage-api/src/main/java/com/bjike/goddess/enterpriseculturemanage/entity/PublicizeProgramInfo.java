@@ -31,7 +31,7 @@ public class PublicizeProgramInfo extends BaseEntity {
     /**
      * 宣传主题
      */
-    @Column(name = "theme", unique = true, nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '宣传主题'")
+    @Column(name = "theme", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '宣传主题'")
     private String theme;
 
     /**

@@ -4,6 +4,7 @@ import com.bjike.goddess.bankrecords.bo.*;
 import com.bjike.goddess.bankrecords.dto.BankRecordDTO;
 import com.bjike.goddess.bankrecords.service.BankRecordSer;
 import com.bjike.goddess.bankrecords.to.BankRecordTO;
+import com.bjike.goddess.bankrecords.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +86,11 @@ public class BankRecordApiImpl implements BankRecordAPI {
     @Override
     public BankRecordPageListBO findById(String id) throws SerException {
         return BeanTransform.copyProperties(bankRecordSer.find(id),BankRecordPageListBO.class);
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO to) throws SerException {
+        return bankRecordSer.guidePermission(to);
     }
 
 

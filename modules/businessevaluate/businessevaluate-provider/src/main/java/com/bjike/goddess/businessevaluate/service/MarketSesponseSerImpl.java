@@ -46,8 +46,6 @@ public class MarketSesponseSerImpl extends ServiceImpl<MarketSesponse, MarketSes
     @Transactional(rollbackFor = SerException.class)
     public MarketSesponseBO addModel(MarketSesponseTO to) throws SerException {
 
-        getCusPermission();
-
         MarketSesponse model = BeanTransform.copyProperties(to, MarketSesponse.class);
         super.save(model);
         to.setId(model.getId());
@@ -57,8 +55,6 @@ public class MarketSesponseSerImpl extends ServiceImpl<MarketSesponse, MarketSes
     @Override
     @Transactional(rollbackFor = SerException.class)
     public MarketSesponseBO updateModel(MarketSesponseTO to) throws SerException {
-
-        getCusPermission();
 
         if (!StringUtils.isEmpty(to.getId())) {
             MarketSesponse model = super.findById(to.getId());
@@ -78,8 +74,6 @@ public class MarketSesponseSerImpl extends ServiceImpl<MarketSesponse, MarketSes
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<MarketSesponseBO> pageList(MarketSesponseDTO dto) throws SerException {
-
-        getCusPermission();
 
         dto.getSorts().add("createTime=desc");
         List<MarketSesponse> list = super.findByPage(dto);
@@ -156,12 +150,4 @@ public class MarketSesponseSerImpl extends ServiceImpl<MarketSesponse, MarketSes
         return flag;
     }
 
-    public void getCusPermission() throws SerException {
-
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-
-        if (!permission) {
-            throw new SerException("该功能只有商务部可操作，您的帐号尚无权限");
-        }
-    }
 }

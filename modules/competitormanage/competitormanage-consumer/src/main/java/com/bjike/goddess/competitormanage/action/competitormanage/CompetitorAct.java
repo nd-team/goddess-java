@@ -16,12 +16,10 @@ import com.bjike.goddess.competitormanage.dto.CompetitorDTO;
 import com.bjike.goddess.competitormanage.excel.CompetitorExcel;
 import com.bjike.goddess.competitormanage.excel.SonPermissionObject;
 import com.bjike.goddess.competitormanage.to.CompetitorDeleteFileTO;
+import com.bjike.goddess.competitormanage.to.CompetitorOrganizaeTO;
 import com.bjike.goddess.competitormanage.to.CompetitorTO;
 import com.bjike.goddess.competitormanage.to.GuidePermissionTO;
 import com.bjike.goddess.competitormanage.vo.CompetitorVO;
-import com.bjike.goddess.message.api.MessageAPI;
-import com.bjike.goddess.message.enums.SendType;
-import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.organize.bo.AreaBO;
@@ -195,7 +193,7 @@ public class CompetitorAct extends BaseFileAction {
      */
     @LoginAuth
     @PutMapping("v1/organization")
-    public Result editOrganization(@Validated({CompetitorTO.Organization.class}) CompetitorTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result editOrganization(@Validated({CompetitorOrganizaeTO.Organization.class}) CompetitorOrganizaeTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             CompetitorVO vo = BeanTransform.copyProperties(competitorAPI.editOrganization(to), CompetitorVO.class, request);
             return ActResult.initialize(vo);

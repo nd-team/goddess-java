@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 项目基本信息业务接口实现
+ * 劳动成本业务接口实现
  *
  * @Author: [ Jason ]
  * @Date: [ 2017-03-28 09:16 ]

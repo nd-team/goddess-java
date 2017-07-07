@@ -56,4 +56,6 @@ public interface OilCardRechargeSer extends Ser<OilCardRecharge, OilCardRecharge
      * @throws SerException 分页查询业务异常
      */
     List<OilCardRechargeBO> pageList(OilCardRechargeDTO dto) throws SerException;
+
+    List<OilCardRechargeBO> findByBasicId(String id) throws SerException;
 }

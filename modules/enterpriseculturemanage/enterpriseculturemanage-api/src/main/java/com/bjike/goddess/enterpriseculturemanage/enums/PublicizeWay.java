@@ -14,7 +14,7 @@ public enum PublicizeWay {
     /**
      * 挂图、壁画
      */
-    MURAl(0),
+    MURAL(0),
     /**
      * 员工活动
      */

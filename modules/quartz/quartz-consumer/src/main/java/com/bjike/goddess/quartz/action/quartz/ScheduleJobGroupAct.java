@@ -9,6 +9,7 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.quartz.api.ScheduleJobGroupAPI;
 import com.bjike.goddess.quartz.dto.ScheduleJobGroupDTO;
+import com.bjike.goddess.quartz.entity.ScheduleJobGroup;
 import com.bjike.goddess.quartz.to.ScheduleJobGroupTO;
 import com.bjike.goddess.quartz.vo.ScheduleJobGroupVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("schedulejob-group")
+@RequestMapping("schedulejob/group")
 public class ScheduleJobGroupAct {
 
 
@@ -36,7 +37,7 @@ public class ScheduleJobGroupAct {
     private ScheduleJobGroupAPI scheduleJobGroupAPI;
 
     /**
-     * 组列表
+     * 组分页列表
      *
      * @param dto
      * @return class ScheduleJobGroupVO
@@ -45,7 +46,24 @@ public class ScheduleJobGroupAct {
     @GetMapping("v1/list")
     public Result list(ScheduleJobGroupDTO dto) throws ActException {
         try {
+
             List<ScheduleJobGroupVO> jobGroupVOs = BeanTransform.copyProperties(scheduleJobGroupAPI.list(dto), ScheduleJobGroupVO.class);
+            return ActResult.initialize(jobGroupVOs);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 组列表
+     *
+     * @param dto
+     * @return class ScheduleJobGroupVO
+     * @version v1
+     */
+    @GetMapping("v1/all")
+    public Result all(ScheduleJobGroupDTO dto) throws ActException {
+        try {
+            List<ScheduleJobGroupVO> jobGroupVOs = BeanTransform.copyProperties(scheduleJobGroupAPI.all(dto), ScheduleJobGroupVO.class);
             return ActResult.initialize(jobGroupVOs);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -53,7 +71,7 @@ public class ScheduleJobGroupAct {
     }
 
     /**
-     * 组数量
+     * 组数据条数
      *
      * @param dto
      * @version v1
@@ -63,6 +81,22 @@ public class ScheduleJobGroupAct {
         try {
             ScheduleJobGroupVO jobGroupVO = BeanTransform.copyProperties(scheduleJobGroupAPI.count(dto), ScheduleJobGroupVO.class);
             return ActResult.initialize(jobGroupVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 通过id查询数据
+     *
+     * @param id
+     * @version v1
+     */
+    @GetMapping("v1/{id}")
+    public Result count(@PathVariable String id) throws ActException {
+        try {
+            ScheduleJobGroupVO scheduleJobVO = BeanTransform.copyProperties(scheduleJobGroupAPI.findById(id),ScheduleJobGroupVO.class);
+            return ActResult.initialize(scheduleJobVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
