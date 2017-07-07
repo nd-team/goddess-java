@@ -138,6 +138,7 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
         if (null != detailBO) {
             groupId = detailBO.getGroupId();
         }
+        Integer start = (dto.getPage() - 1 < 0 ? 0 : dto.getPage() - 1) * dto.getLimit();
         StringBuilder sb = new StringBuilder();
         sb.append("select id,createTime,modifyTime,title,content ,senderId,senderName from (select * from message where rangeType = 0 ");//公共消息
         sb.append(" union ");
@@ -148,13 +149,11 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
         if (null != dto.getMsgType()) {
             sb.append(" where msgType=" + dto.getMsgType().getCode());
         }
-        sb.append(" order by createTime desc ");
+        sb.append(" order by createTime desc limit "+start+","+dto.getLimit());
         String sql = sb.toString();
         sql = String.format(sql, groupId, dto.getUserId());
         String[] fields = new String[]{"id", "createTime", "modifyTime", "title", "content", "senderId", "senderName"};
         List<Message> messages = super.findBySql(sql, Message.class, fields); //公共的
-        messages = messages.stream().skip((dto.getPage() - 1 < 0 ? 0 : dto.getPage() - 1) * dto.getLimit()).
-                limit(dto.getLimit()).collect(Collectors.toList());
         return BeanTransform.copyProperties(messages, MessageBO.class);
     }
 
