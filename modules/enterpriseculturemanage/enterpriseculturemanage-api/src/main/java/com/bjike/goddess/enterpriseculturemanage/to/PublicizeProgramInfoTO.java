@@ -27,12 +27,6 @@ public class PublicizeProgramInfoTO extends BaseTO {
     private String name;
 
     /**
-     * 宣传主题
-     */
-    @NotBlank(message = "宣传主题不能为空",groups = {ADD.class, EDIT.class})
-    private String theme;
-
-    /**
      * 宣传形式
      */
     @NotNull(message = "宣传形式不能为空",groups = {ADD.class, EDIT.class})
@@ -57,18 +51,6 @@ public class PublicizeProgramInfoTO extends BaseTO {
     private String executeCost;
 
     /**
-     * 审核结果
-     */
-    @NotBlank(message = "审核结果不能为空",groups = {ADD.class, EDIT.class})
-    private AuditResult auditResult;
-
-    /**
-     * 审核意见
-     */
-    @NotBlank(message = "审核意见不能为空",groups = {ADD.class, EDIT.class})
-    private String auditSuggestion;
-
-    /**
      * 企业文化信息Id
      */
     @NotBlank(message = "企业文化信息Id不能为空",groups = {ADD.class, EDIT.class})
@@ -80,14 +62,6 @@ public class PublicizeProgramInfoTO extends BaseTO {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getTheme() {
-        return theme;
-    }
-
-    public void setTheme(String theme) {
-        this.theme = theme;
     }
 
     public PublicizeWay getWay() {
@@ -120,22 +94,6 @@ public class PublicizeProgramInfoTO extends BaseTO {
 
     public void setExecuteCost(String executeCost) {
         this.executeCost = executeCost;
-    }
-
-    public AuditResult getAuditResult() {
-        return auditResult;
-    }
-
-    public void setAuditResult(AuditResult auditResult) {
-        this.auditResult = auditResult;
-    }
-
-    public String getAuditSuggestion() {
-        return auditSuggestion;
-    }
-
-    public void setAuditSuggestion(String auditSuggestion) {
-        this.auditSuggestion = auditSuggestion;
     }
 
     public String getInfoId() {

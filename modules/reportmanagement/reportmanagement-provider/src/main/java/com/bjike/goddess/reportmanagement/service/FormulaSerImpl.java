@@ -37,7 +37,7 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
     private SubjectCollectAPI subjectCollectAPI;
 
     @Override
-    public List<FormulaBO> findByFid(String foreignId, String startTime, String endTime, String projectGroup) throws SerException {
+    public List<FormulaBO> findByFid(String foreignId, FormulaDTO dto) throws SerException {
         String[] strings = new String[]{foreignId};
         List<Formula> list = null;
         for (String s : strings) {
@@ -48,10 +48,11 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
         }
         Integer startMonth = 0;
         Integer endMonth = 0;
-        LocalDate s = Utils.tranTime(startTime);
+        LocalDate s = Utils.tranTime(dto.getStartTime());
         startMonth = s.getMonthValue();
-        LocalDate e = Utils.tranTime(endTime);
+        LocalDate e = Utils.tranTime(dto.getEndTime());
         endMonth = e.getMonthValue();
+        String[] projectNames = dto.getProjectNames();
         List<FormulaBO> boList = new ArrayList<FormulaBO>();
         if ((list != null) && (!list.isEmpty())) {
             double beginSum = 0;
@@ -62,10 +63,14 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
             for (Formula f : list) {
                 SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
                 subjectCollectDTO.getConditions().add(Restrict.eq("firstSubject", f.getProject()));
-                subjectCollectDTO.getConditions().add(Restrict.eq("projectGroup", projectGroup));
+                if (projectNames != null) {
+                    subjectCollectDTO.getConditions().add(Restrict.in("projectName", projectNames));
+                }
                 SubjectCollectDTO beginDTO = new SubjectCollectDTO();
                 beginDTO.getConditions().add(Restrict.eq("firstSubject", f.getProject()));
-                beginDTO.getConditions().add(Restrict.eq("projectGroup", projectGroup));
+                if (projectNames != null) {
+                    beginDTO.getConditions().add(Restrict.in("projectName", projectNames));
+                }
                 if (LocalDate.now().getYear() == e.getYear()) {
                     double year = 0;
                     Integer[] years = new Integer[]{1, endMonth};
@@ -191,7 +196,7 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
     }
 
     @Override
-    public List<FormulaBO> profitAnalyze(String foreignId, String time, String projectGroup) throws SerException {
+    public List<FormulaBO> profitAnalyze(String foreignId, String time, String[] projectNames) throws SerException {
         String[] strings = new String[]{foreignId};
         List<Formula> list = null;
         for (String s : strings) {
@@ -219,7 +224,9 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
                 }
                 SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
                 subjectCollectDTO.getConditions().add(Restrict.eq("firstSubject", f.getProject()));
-                subjectCollectDTO.getConditions().add(Restrict.eq("projectGroup", projectGroup));
+                if (projectNames != null) {
+                    subjectCollectDTO.getConditions().add(Restrict.in("projectName", projectNames));
+                }
                 if (LocalDate.now().getYear() == t.getYear()) {
                     subjectCollectDTO.getConditions().add(Restrict.eq("months", month));
                     SubjectCollectBO subjectCollectBO = subjectCollectAPI.getSum(subjectCollectDTO);

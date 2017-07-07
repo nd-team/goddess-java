@@ -75,9 +75,9 @@ public class WorkCollectPrepareAct {
     }
 
     /**
-     * 冻结工作汇总议题准备
+     * 冻结
      *
-     * @param id 工作汇总议题准备ID
+     * @param id id
      * @version v1
      */
     @PutMapping("v1/freeze/{id}")

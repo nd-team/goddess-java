@@ -46,8 +46,6 @@ public class AnotherCostSerImpl extends ServiceImpl<AnotherCost, AnotherCostDTO>
     @Transactional(rollbackFor = SerException.class)
     public AnotherCostBO insertModel(AnotherCostTO to) throws SerException {
 
-        getCusPermission();
-
         AnotherCost model = BeanTransform.copyProperties(to, AnotherCost.class);
         super.save(model);
         to.setId(model.getId());
@@ -57,8 +55,6 @@ public class AnotherCostSerImpl extends ServiceImpl<AnotherCost, AnotherCostDTO>
     @Override
     @Transactional(rollbackFor = SerException.class)
     public AnotherCostBO updateModel(AnotherCostTO to) throws SerException {
-
-        getCusPermission();
 
         if (!StringUtils.isEmpty(to.getId())) {
             AnotherCost model = super.findById(to.getId());
@@ -78,8 +74,6 @@ public class AnotherCostSerImpl extends ServiceImpl<AnotherCost, AnotherCostDTO>
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<AnotherCostBO> pageList(AnotherCostDTO dto) throws SerException {
-
-        getCusPermission();
 
         dto.getSorts().add("createTime=desc");
         List<AnotherCost> list = super.findByPage(dto);
@@ -158,12 +152,4 @@ public class AnotherCostSerImpl extends ServiceImpl<AnotherCost, AnotherCostDTO>
         return flag;
     }
 
-    public void getCusPermission() throws SerException {
-
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-
-        if (!permission) {
-            throw new SerException("该功能只有商务部可操作，您的帐号尚无权限");
-        }
-    }
 }

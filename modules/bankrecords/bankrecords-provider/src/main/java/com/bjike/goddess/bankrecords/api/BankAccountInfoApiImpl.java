@@ -4,6 +4,8 @@ import com.bjike.goddess.bankrecords.bo.BankAccountInfoBO;
 import com.bjike.goddess.bankrecords.dto.BankAccountInfoDTO;
 import com.bjike.goddess.bankrecords.service.BankAccountInfoSer;
 import com.bjike.goddess.bankrecords.to.BankAccountInfoTO;
+import com.bjike.goddess.bankrecords.to.GuidePermissionTO;
+import com.bjike.goddess.bankrecords.to.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,5 +61,15 @@ public class BankAccountInfoApiImpl implements BankAccountInfoAPI {
     @Override
     public List<BankAccountInfoBO> findAll() throws SerException {
         return BeanTransform.copyProperties(bankAccountInfoSer.findAll(),BankAccountInfoBO.class);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return bankAccountInfoSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO to) throws SerException {
+        return bankAccountInfoSer.guidePermission(to);
     }
 }

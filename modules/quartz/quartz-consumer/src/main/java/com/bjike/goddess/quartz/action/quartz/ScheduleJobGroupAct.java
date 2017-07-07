@@ -8,12 +8,16 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.quartz.api.ScheduleJobGroupAPI;
+import com.bjike.goddess.quartz.dto.ScheduleJobGroupDTO;
+import com.bjike.goddess.quartz.entity.ScheduleJobGroup;
 import com.bjike.goddess.quartz.to.ScheduleJobGroupTO;
 import com.bjike.goddess.quartz.vo.ScheduleJobGroupVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 任务调度组
@@ -25,11 +29,78 @@ import org.springframework.web.bind.annotation.*;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("schedulejob-group")
+@RequestMapping("schedulejob/group")
 public class ScheduleJobGroupAct {
+
 
     @Autowired
     private ScheduleJobGroupAPI scheduleJobGroupAPI;
+
+    /**
+     * 组分页列表
+     *
+     * @param dto
+     * @return class ScheduleJobGroupVO
+     * @version v1
+     */
+    @GetMapping("v1/list")
+    public Result list(ScheduleJobGroupDTO dto) throws ActException {
+        try {
+
+            List<ScheduleJobGroupVO> jobGroupVOs = BeanTransform.copyProperties(scheduleJobGroupAPI.list(dto), ScheduleJobGroupVO.class);
+            return ActResult.initialize(jobGroupVOs);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 组列表
+     *
+     * @param dto
+     * @return class ScheduleJobGroupVO
+     * @version v1
+     */
+    @GetMapping("v1/all")
+    public Result all(ScheduleJobGroupDTO dto) throws ActException {
+        try {
+            List<ScheduleJobGroupVO> jobGroupVOs = BeanTransform.copyProperties(scheduleJobGroupAPI.all(dto), ScheduleJobGroupVO.class);
+            return ActResult.initialize(jobGroupVOs);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 组数据条数
+     *
+     * @param dto
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(ScheduleJobGroupDTO dto) throws ActException {
+        try {
+            ScheduleJobGroupVO jobGroupVO = BeanTransform.copyProperties(scheduleJobGroupAPI.count(dto), ScheduleJobGroupVO.class);
+            return ActResult.initialize(jobGroupVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 通过id查询数据
+     *
+     * @param id
+     * @version v1
+     */
+    @GetMapping("v1/{id}")
+    public Result count(@PathVariable String id) throws ActException {
+        try {
+            ScheduleJobGroupVO scheduleJobVO = BeanTransform.copyProperties(scheduleJobGroupAPI.findById(id),ScheduleJobGroupVO.class);
+            return ActResult.initialize(scheduleJobVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 添加任务调度组
@@ -40,7 +111,7 @@ public class ScheduleJobGroupAct {
     @PostMapping("v1/add")
     public Result add(@Validated(ADD.class) ScheduleJobGroupTO jobGroupTO, BindingResult result) throws ActException {
         try {
-            ScheduleJobGroupVO jobGroupVO = BeanTransform.copyProperties(scheduleJobGroupAPI.add(null,jobGroupTO), ScheduleJobGroupVO.class);
+            ScheduleJobGroupVO jobGroupVO = BeanTransform.copyProperties(scheduleJobGroupAPI.add(null, jobGroupTO), ScheduleJobGroupVO.class);
             return ActResult.initialize(jobGroupVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -83,7 +154,7 @@ public class ScheduleJobGroupAct {
      * 开启关闭任务调度组
      *
      * @param id
-     * @param enable 开启：true，关闭：false
+     * @param enable 开启
      * @version v1
      */
     @PutMapping("v1/enable/{id}/{enable}")

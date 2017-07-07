@@ -40,7 +40,7 @@ public class FormulaTO extends BaseTO {
     private String foreignId;
 
     /**
-     * 类型
+     * 运算方式
      */
     @NotBlank(groups = {ADD.class, EDIT.class}, message = "类型")
     private String type1;

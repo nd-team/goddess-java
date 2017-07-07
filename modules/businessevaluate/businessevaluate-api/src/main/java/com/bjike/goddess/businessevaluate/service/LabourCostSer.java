@@ -11,7 +11,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import java.util.List;
 
 /**
- * 项目基本信息业务接口
+ * 劳动成本业务接口
  *
  * @Author: [ Jason ]
  * @Date: [ 2017-03-28 09:16 ]

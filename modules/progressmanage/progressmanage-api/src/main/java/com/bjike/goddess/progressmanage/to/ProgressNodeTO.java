@@ -25,10 +25,10 @@ public class ProgressNodeTO extends BaseTO {
     private String nodeName;
 
     /**
-     * 所属项目
+     * 所属进度表
      */
-    @NotBlank(message = "所属项目不能为空", groups = {ADD.class, EDIT.class})
-    private String projectId;
+    @NotBlank(message = "所属进度表不能为空", groups = {ADD.class, EDIT.class})
+    private String tableId;
 
     /**
      * 顺序
@@ -45,12 +45,12 @@ public class ProgressNodeTO extends BaseTO {
         this.nodeName = nodeName;
     }
 
-    public String getProjectId() {
-        return projectId;
+    public String getTableId() {
+        return tableId;
     }
 
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
+    public void setTableId(String tableId) {
+        this.tableId = tableId;
     }
 
     public Integer getSortIndex() {

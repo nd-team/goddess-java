@@ -9,6 +9,7 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.quartz.api.ScheduleJobAPI;
 import com.bjike.goddess.quartz.dto.ScheduleJobDTO;
+import com.bjike.goddess.quartz.entity.ScheduleJob;
 import com.bjike.goddess.quartz.to.ScheduleJobTO;
 import com.bjike.goddess.quartz.vo.ScheduleJobVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,15 +37,16 @@ public class ScheduleJobAct {
     private ScheduleJobAPI scheduleJobAPI;
 
     /**
-     * 任务调度列表
+     * 分页列表
      *
-     * @param dto
+     * @param dto 分页数据
+     * @return class ScheduleJobVO
      * @version v1
      */
     @GetMapping("v1/list")
     public Result list(ScheduleJobDTO dto, HttpServletRequest request) throws ActException {
         try {
-            List<ScheduleJobVO> scheduleJobVOs = BeanTransform.copyProperties(scheduleJobAPI.list(dto), ScheduleJobVO.class,request);
+            List<ScheduleJobVO> scheduleJobVOs = BeanTransform.copyProperties(scheduleJobAPI.list(dto), ScheduleJobVO.class, request);
             return ActResult.initialize(scheduleJobVOs);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -52,9 +54,9 @@ public class ScheduleJobAct {
     }
 
     /**
-     * 任务调度列表
+     * 列表数据条数
      *
-     * @param dto
+     * @param dto 分页数据
      * @version v1
      */
     @GetMapping("v1/count")
@@ -67,11 +69,28 @@ public class ScheduleJobAct {
         }
     }
 
+    /**
+     * 通过id查询数据
+     *
+     * @param id
+     * @version v1
+     */
+    @GetMapping("v1/{id}")
+    public Result count(@PathVariable String id) throws ActException {
+        try {
+            ScheduleJobVO scheduleJobVO = BeanTransform.copyProperties(scheduleJobAPI.findById(id),ScheduleJobVO.class);
+            return ActResult.initialize(scheduleJobVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
 
     /**
      * 添加任务调度
      *
-     * @param scheduleJobTO
+     * @param scheduleJobTO 实体数据
      * @version v1
      */
     @PostMapping("v1/add")
@@ -87,7 +106,7 @@ public class ScheduleJobAct {
     /**
      * 编辑任务调度
      *
-     * @param scheduleJobTO
+     * @param scheduleJobTO 实体数据
      * @version v1
      */
     @PutMapping("v1/edit")
@@ -120,7 +139,7 @@ public class ScheduleJobAct {
      * 开启关闭任务调度
      *
      * @param id
-     * @param enable 开启：true，关闭：false
+     * @param enable 开启
      * @version v1
      */
     @PutMapping("v1/enable/{id}/{enable}")

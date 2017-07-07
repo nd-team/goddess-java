@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -238,12 +239,6 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
     }
 
     @Override
-    @Transactional(rollbackFor = SerException.class)
-    public void setCollectSend(QuartzCycleType cycle) throws SerException {
-        // TODO: 17-3-20
-    }
-
-    @Override
     public void leadExcel(List<ProjectOutsourcingTO> toList) throws SerException {
 
         getCusPermission();
@@ -271,14 +266,19 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
             dto.getConditions().add(Restrict.lt("communicateDate", endDate));
         }
         List<ProjectOutsourcing> list = super.findByCis(dto);
-        List<ProjectOutsourcingExcel> toList = new ArrayList<ProjectOutsourcingExcel>();
-        for (ProjectOutsourcing model : list) {
-            ProjectOutsourcingExcel excel = new ProjectOutsourcingExcel();
-            BeanUtils.copyProperties(model, excel);
-            toList.add(excel);
+        List<ProjectOutsourcingExcel> excelList = new ArrayList<ProjectOutsourcingExcel>();
+        if(!CollectionUtils.isEmpty(list)){
+            for (ProjectOutsourcing model : list) {
+                ProjectOutsourcingExcel excel = new ProjectOutsourcingExcel();
+                BeanUtils.copyProperties(model, excel);
+                excelList.add(excel);
+            }
+        }else{
+            excelList.add(new ProjectOutsourcingExcel());
         }
+
         Excel excel = new Excel(0, 2);
-        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        byte[] bytes = ExcelUtil.clazzToExcel(excelList, excel);
         return bytes;
     }
 

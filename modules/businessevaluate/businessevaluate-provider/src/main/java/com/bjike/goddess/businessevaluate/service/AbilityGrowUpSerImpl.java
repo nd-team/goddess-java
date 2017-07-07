@@ -50,8 +50,6 @@ public class AbilityGrowUpSerImpl extends ServiceImpl<AbilityGrowUp, AbilityGrow
     @Transactional(rollbackFor = SerException.class)
     public AbilityGrowUpBO insertModel(AbilityGrowUpTO to) throws SerException {
 
-        getCusPermission();
-
         AbilityGrowUp model = BeanTransform.copyProperties(to, AbilityGrowUp.class);
         super.save(model);
         to.setId(model.getId());
@@ -61,8 +59,6 @@ public class AbilityGrowUpSerImpl extends ServiceImpl<AbilityGrowUp, AbilityGrow
     @Override
     @Transactional(rollbackFor = SerException.class)
     public AbilityGrowUpBO updateModel(AbilityGrowUpTO to) throws SerException {
-
-        getCusPermission();
 
         if (!StringUtils.isEmpty(to.getId())) {
             AbilityGrowUp model = super.findById(to.getId());
@@ -82,8 +78,6 @@ public class AbilityGrowUpSerImpl extends ServiceImpl<AbilityGrowUp, AbilityGrow
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<AbilityGrowUpBO> pageList(AbilityGrowUpDTO dto) throws SerException {
-
-        getCusPermission();
 
         dto.getSorts().add("createTime=desc");
         List<AbilityGrowUp> list = super.findByPage(dto);
@@ -297,12 +291,4 @@ public class AbilityGrowUpSerImpl extends ServiceImpl<AbilityGrowUp, AbilityGrow
     }
 
 
-    public void getCusPermission() throws SerException {
-
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-
-        if (!permission) {
-            throw new SerException("该功能只有商务部可操作，您的帐号尚无权限");
-        }
-    }
 }

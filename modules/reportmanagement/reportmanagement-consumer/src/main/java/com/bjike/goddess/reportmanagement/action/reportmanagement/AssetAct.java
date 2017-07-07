@@ -11,9 +11,11 @@ import com.bjike.goddess.reportmanagement.api.AssetAPI;
 import com.bjike.goddess.reportmanagement.api.FormulaAPI;
 import com.bjike.goddess.reportmanagement.bo.*;
 import com.bjike.goddess.reportmanagement.dto.AssetDTO;
+import com.bjike.goddess.reportmanagement.dto.FormulaDTO;
 import com.bjike.goddess.reportmanagement.to.AssetTO;
 import com.bjike.goddess.reportmanagement.vo.*;
 import com.bjike.goddess.subjectcollect.api.SubjectCollectAPI;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -21,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * 资产表
@@ -144,12 +145,11 @@ public class AssetAct {
      */
     @GetMapping("v1/lookFormula/{id}")
     public Result lookFormula(@PathVariable String id, @Validated(AssetDTO.A.class) AssetDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
-        String startTime = dto.getStartTime();
-        String endTime = dto.getEndTime();
-        String projectGroup = dto.getProjectGroup();
+        FormulaDTO formulaDTO=new FormulaDTO();
+        BeanUtils.copyProperties(dto,formulaDTO);
         request.getSession().setAttribute("id", id);
         try {
-            List<FormulaBO> list = formulaAPI.findByFid(id, startTime, endTime, projectGroup);
+            List<FormulaBO> list = formulaAPI.findByFid(id,formulaDTO);
             return ActResult.initialize(BeanTransform.copyProperties(list, FormulaVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -240,15 +240,15 @@ public class AssetAct {
     }
 
     /**
-     * 获取所有项目组/部门
+     * 获取所有项目名称
      *
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/allProjectGroups")
-    public Result allProjectGroups() throws ActException {
+    @GetMapping("v1/allProjectNames")
+    public Result allProjectNames() throws ActException {
         try {
-            return ActResult.initialize(subjectCollectAPI.allProjectGroups());
+            return ActResult.initialize(subjectCollectAPI.allProjectNames());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

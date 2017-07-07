@@ -49,6 +49,15 @@ public interface ScheduleJobAPI {
     default ScheduleJobBO add(ScheduleJobTO scheduleJobTO) throws SerException {
         return null;
     }
+    /**
+     * 通过id查询数据
+     *
+     * @param id
+     * @return
+     */
+    default ScheduleJobBO findById(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 编辑任务调度

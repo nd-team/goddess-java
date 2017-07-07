@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -65,26 +64,22 @@ public class EnterpriseCultureInfoSerImpl extends ServiceImpl<EnterpriseCultureI
     @Override
     @Transactional(rollbackFor = SerException.class)
     public EnterpriseCultureInfoBO updateModel(EnterpriseCultureInfoEditTO to) throws SerException {
-        if (!StringUtils.isEmpty(to.getId())) {
-            EnterpriseCultureInfo newmodel = super.findById(to.getId());
-            if (newmodel != null) {
-                //覆盖相当于盘普通编辑，保留即copy新增旧记录并且冻结状态
-                if (to.getUpdateType() == UpdateType.RESERVE) {
-                    EnterpriseCultureInfo oldModel = new EnterpriseCultureInfo();
-                    BeanUtils.copyProperties(newmodel, oldModel);
-                    oldModel.setId(null);
-                    oldModel.setStatus(Status.CONGEAL);
-                    super.save(oldModel);
-                }
-                BeanTransform.copyProperties(to, newmodel, true);
-                newmodel.setModifyTime(LocalDateTime.now());
-                super.update(newmodel);
-                return BeanTransform.copyProperties(to, EnterpriseCultureInfoBO.class);
-            } else {
-                throw new SerException("更新对象不能为空");
+        EnterpriseCultureInfo newmodel = super.findById(to.getId());
+        if (newmodel != null) {
+            //覆盖相当于盘普通编辑，保留即copy新增旧记录并且冻结状态
+            if (to.getUpdateType() == UpdateType.RESERVE) {
+                EnterpriseCultureInfo oldModel = new EnterpriseCultureInfo();
+                BeanUtils.copyProperties(newmodel, oldModel);
+                oldModel.setId(null);
+                oldModel.setStatus(Status.CONGEAL);
+                super.save(oldModel);
             }
+            BeanTransform.copyProperties(to, newmodel, true);
+            newmodel.setModifyTime(LocalDateTime.now());
+            super.update(newmodel);
+            return BeanTransform.copyProperties(to, EnterpriseCultureInfoBO.class);
         } else {
-            throw new SerException("更新ID不能为空!");
+            throw new SerException("更新对象不能为空");
         }
     }
 

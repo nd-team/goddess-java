@@ -52,11 +52,15 @@ public class ScheduleJobVO {
     /**
      * 任务所属调度组
      */
-    private String scheduledJobGroupId;
+    private String scheduleJobGroupId;
     /**
      * 远程服务地址
      */
     private String address;
+    /**
+     * 任务所属组名
+     */
+    private String scheduleJobGroupName;
 
     public String getId() {
         return id;
@@ -122,13 +126,6 @@ public class ScheduleJobVO {
         this.enable = enable;
     }
 
-    public String getScheduledJobGroupId() {
-        return scheduledJobGroupId;
-    }
-
-    public void setScheduledJobGroupId(String scheduledJobGroupId) {
-        this.scheduledJobGroupId = scheduledJobGroupId;
-    }
 
     public String getAddress() {
         return address;
@@ -136,5 +133,21 @@ public class ScheduleJobVO {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getScheduleJobGroupId() {
+        return scheduleJobGroupId;
+    }
+
+    public void setScheduleJobGroupId(String scheduleJobGroupId) {
+        this.scheduleJobGroupId = scheduleJobGroupId;
+    }
+
+    public String getScheduleJobGroupName() {
+        return scheduleJobGroupName;
+    }
+
+    public void setScheduleJobGroupName(String scheduleJobGroupName) {
+        this.scheduleJobGroupName = scheduleJobGroupName;
     }
 }

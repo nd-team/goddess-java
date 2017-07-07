@@ -112,7 +112,7 @@ public class ConciseSummaryAct {
     public Result unfreeze(@PathVariable String id) throws ActException {
         try {
             conciseSummaryAPI.unfreeze(id);
-            return new ActResult("冻结成功");
+            return new ActResult("解冻成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

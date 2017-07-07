@@ -4,16 +4,12 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.reportmanagement.bo.*;
-import com.bjike.goddess.reportmanagement.dto.AssetDTO;
-import com.bjike.goddess.reportmanagement.dto.DebtDTO;
-import com.bjike.goddess.reportmanagement.dto.ProfitDTO;
-import com.bjike.goddess.reportmanagement.dto.ProfitIndicatorAdviceDTO;
+import com.bjike.goddess.reportmanagement.dto.*;
 import com.bjike.goddess.reportmanagement.entity.Asset;
 import com.bjike.goddess.reportmanagement.entity.Profit;
 import com.bjike.goddess.reportmanagement.enums.Form;
 import com.bjike.goddess.reportmanagement.enums.ProfitType;
 import com.bjike.goddess.reportmanagement.enums.Type;
-import com.bjike.goddess.reportmanagement.to.AssetTO;
 import com.bjike.goddess.reportmanagement.to.ProfitTO;
 import com.bjike.goddess.reportmanagement.utils.Utils;
 import org.springframework.beans.BeanUtils;
@@ -59,7 +55,8 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
     public List<ProfitBO> list(ProfitDTO dto) throws SerException {
         String startTime = dto.getStartTime();
         String endTime = dto.getEndTime();
-        String projectGroup=dto.getProjectGroup();
+        FormulaDTO formulaDTO = new FormulaDTO();
+        BeanUtils.copyProperties(dto, formulaDTO);
         LocalDate a = Utils.tranTime(endTime);
         String startYear = a.getYear() + "-01" + "-01";
         dto.getSorts().add("profitType=ASC");
@@ -77,12 +74,12 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         double incomeYear = 0;
         if ((list != null) && (!list.isEmpty())) {
             for (Profit profit : list) {
-                List<FormulaBO> formulaBOs = formulaSer.findByFid(profit.getId(), startTime, endTime,projectGroup);
+                List<FormulaBO> formulaBOs = formulaSer.findByFid(profit.getId(), formulaDTO);
                 if ((formulaBOs != null) && (!formulaBOs.isEmpty())) {
                     FormulaBO formulaBO = formulaBOs.get(formulaBOs.size() - 1);
                     ProfitBO bo = BeanTransform.copyProperties(profit, ProfitBO.class);
                     bo.setCurrentMonthAmount(formulaBO.getCurrent());
-                    List<FormulaBO> startYearBOs = formulaSer.findByFid(profit.getId(), startYear, endTime,projectGroup);
+                    List<FormulaBO> startYearBOs = formulaSer.findByFid(profit.getId(), formulaDTO);
                     if ((startYearBOs != null) && (!startYearBOs.isEmpty())) {
                         bo.setCurrentYearAmount(startYearBOs.get(startYearBOs.size() - 1).getCurrent());
                     }
@@ -170,7 +167,9 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
     public List<ProfitLevelBO> levelAnalyze(ProfitDTO dto) throws SerException {
         String startTime = dto.getStartTime();
         String endTime = dto.getEndTime();
-        String projectGroup=dto.getProjectGroup();
+        String[] projectNames = dto.getProjectNames();
+        FormulaDTO formulaDTO = new FormulaDTO();
+        BeanUtils.copyProperties(dto, formulaDTO);
         dto.getSorts().add("profitType=ASC");
         List<Profit> list = super.findByCis(dto);
         List<ProfitLevelBO> boList = new ArrayList<>();
@@ -186,8 +185,8 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         double endSum = 0;
         if ((list != null) && (!list.isEmpty())) {
             for (Profit p : list) {
-                List<FormulaBO> starts = formulaSer.profitAnalyze(p.getId(), startTime,projectGroup);
-                List<FormulaBO> ends = formulaSer.profitAnalyze(p.getId(), endTime,projectGroup);
+                List<FormulaBO> starts = formulaSer.profitAnalyze(p.getId(), startTime, projectNames);
+                List<FormulaBO> ends = formulaSer.profitAnalyze(p.getId(), endTime, projectNames);
                 double start = 0;
                 double end = 0;
                 if ((starts != null) && (!starts.isEmpty())) {
@@ -205,7 +204,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                 bo.setStart(start);
                 bo.setEnd(end);
                 bo.setChange(change);
-                if (end==0){
+                if (end == 0) {
                     throw new SerException("结束时间数据为0，不能计算");
                 }
                 bo.setChangeScale(String.format("%.2f", (change / end) * 100) + "%");
@@ -241,7 +240,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                         if (changeSum < 0) {
                             changeSum = -changeSum;
                         }
-                        if (endSum==0){
+                        if (endSum == 0) {
                             throw new SerException("结束时间数据为0，不能计算");
                         }
                         bo.setChangeScale(String.format("%.2f", (changeSum / endSum) * 100) + "%");
@@ -275,7 +274,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                         if (changeSum < 0) {
                             changeSum = -changeSum;
                         }
-                        if (endSum==0){
+                        if (endSum == 0) {
                             throw new SerException("结束时间数据为0，不能计算");
                         }
                         bo.setChangeScale(String.format("%.2f", (changeSum / endSum) * 100) + "%");
@@ -309,7 +308,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
             if (changeSum < 0) {
                 changeSum = -changeSum;
             }
-            if (endSum==0){
+            if (endSum == 0) {
                 throw new SerException("结束时间数据为0，不能计算");
             }
             lastBO.setChangeScale(String.format("%.2f", (changeSum / endSum) * 100) + "%");
@@ -394,10 +393,10 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
     public List<ProfitAnalyzeIndicatorBO> analyzeIndicator(ProfitDTO dto) throws SerException {
         List<ProfitBO> profits = list(dto);
         List<ProfitAnalyzeIndicatorBO> boList = new ArrayList<>();
-        AssetDTO assetDTO =new AssetDTO();
-        BeanUtils.copyProperties(dto,assetDTO);
+        AssetDTO assetDTO = new AssetDTO();
+        BeanUtils.copyProperties(dto, assetDTO);
         DebtDTO debtDTO = new DebtDTO();
-        BeanUtils.copyProperties(dto,debtDTO);
+        BeanUtils.copyProperties(dto, debtDTO);
         List<AssetBO> assetBOs = assetSer.list(assetDTO);
         List<DebtBO> debtBOs = debtSer.list(debtDTO);
         double income = 0;    //营业收入
@@ -458,8 +457,8 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                 "计算该指标了解自己投入资" +
                 "本的保险程度和获利水平");
         boList.add(reward);
-        String advice=analyzeIndicatorAdvice(mao,jing,asset,rd);
-        ProfitAnalyzeIndicatorBO adviceBO=new ProfitAnalyzeIndicatorBO();
+        String advice = analyzeIndicatorAdvice(mao, jing, asset, rd);
+        ProfitAnalyzeIndicatorBO adviceBO = new ProfitAnalyzeIndicatorBO();
         adviceBO.setIndicator("分析结果及建议");
         adviceBO.setState(advice);
         boList.add(adviceBO);
@@ -468,6 +467,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
 
     /**
      * 获取利润分析指标管理建议
+     *
      * @param mao
      * @param jing
      * @param asset
@@ -496,8 +496,9 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
     public List<DetailBO> findDetails(String id, ProfitDTO dto) throws SerException {
         String startTime = dto.getStartTime();
         String endTime = dto.getEndTime();
-        String projectGroup=dto.getProjectGroup();
-        List<FormulaBO> list = formulaSer.findByFid(id, startTime, endTime,projectGroup);
+        FormulaDTO formulaDTO = new FormulaDTO();
+        BeanUtils.copyProperties(dto, formulaDTO);
+        List<FormulaBO> list = formulaSer.findByFid(id, formulaDTO);
         List<DetailBO> boList = new ArrayList<>();
         if ((list != null) && (!list.isEmpty())) {
             FormulaBO last = list.get(list.size() - 1);

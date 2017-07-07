@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.enterpriseculturemanage.bo.PublicizeProgramInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.dto.PublicizeProgramInfoDTO;
 import com.bjike.goddess.enterpriseculturemanage.entity.PublicizeProgramInfo;
+import com.bjike.goddess.enterpriseculturemanage.enums.AuditResult;
 import com.bjike.goddess.enterpriseculturemanage.to.PublicizeProgramInfoTO;
 
 import java.util.List;
@@ -39,10 +40,12 @@ public interface PublicizeProgramInfoSer extends Ser<PublicizeProgramInfo, Publi
     /**
      * 审核宣传方案信息
      *
-     * @param to 宣传方案信息
+     * @param id              id
+     * @param auditResult     结果
+     * @param auditSuggestion 意见
      * @throws SerException
      */
-    void audit(PublicizeProgramInfoTO to) throws SerException;
+    void audit(String id, AuditResult auditResult, String auditSuggestion) throws SerException;
 
     /**
      * 宣传方案信息分页查询

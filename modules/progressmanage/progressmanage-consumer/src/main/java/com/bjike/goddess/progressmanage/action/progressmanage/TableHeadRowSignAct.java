@@ -9,16 +9,15 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.progressmanage.api.ProgressTableAPI;
+import com.bjike.goddess.progressmanage.api.ProjectInfoAPI;
 import com.bjike.goddess.progressmanage.api.TableHeadRowSignAPI;
 import com.bjike.goddess.progressmanage.bo.TableHeadRowSignBO;
 import com.bjike.goddess.progressmanage.dto.TableHeadRowSignDTO;
 import com.bjike.goddess.progressmanage.dto.TableHeadValueDTO;
 import com.bjike.goddess.progressmanage.to.TableHeadRowSignTO;
-import com.bjike.goddess.progressmanage.vo.TableHeadForValueVO;
-import com.bjike.goddess.progressmanage.vo.TableHeadRowSignVO;
-import com.bjike.goddess.progressmanage.vo.TableHeadValueVO;
-import com.bjike.goddess.progressmanage.vo.TableListForHeadVO;
+import com.bjike.goddess.progressmanage.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,22 +42,43 @@ public class TableHeadRowSignAct {
     private ProgressTableAPI progressTableAPI;
     @Autowired
     private TableHeadRowSignAPI tableHeadRowSignAPI;
+    @Autowired
+    private ProjectInfoAPI projectInfoAPI;
 
     /**
-     * 进度表下拉列表
+     * 项目下拉列表
      *
-     * @return class TableListForHeadVO
+     * @return class ProjectListForNodeVO
      * @version v1
      */
-    @GetMapping("v1/tables")
-    public Result tables(HttpServletRequest request) throws ActException {
+    @GetMapping("v1/projects")
+    public Result projects(HttpServletRequest request) throws ActException {
+
         try {
-            List<TableListForHeadVO> voList = BeanTransform.copyProperties(progressTableAPI.tables(), TableListForHeadVO.class, request);
+            List<ProjectListForNodeVO> voList = BeanTransform.copyProperties(projectInfoAPI.projects(), ProjectListForNodeVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 进度表下拉列表
+     *
+     * @return class ProjectListForNodeVO
+     * @version v1
+     */
+    @GetMapping("v1/tables/{projectId}")
+    public Result projects(@PathVariable String projectId, HttpServletRequest request) throws ActException {
+
+        try {
+            List<TableListForHeadVO> voList = BeanTransform.copyProperties(progressTableAPI.tables(projectId), TableListForHeadVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 
     /**
@@ -87,13 +107,14 @@ public class TableHeadRowSignAct {
         try {
             List<TableHeadRowSignVO> voList = new ArrayList<TableHeadRowSignVO>();
             List<TableHeadRowSignBO> boList = tableHeadRowSignAPI.pageList(dto);
-            for (TableHeadRowSignBO bo : boList) {
-                TableHeadRowSignVO vo = new TableHeadRowSignVO();
-                vo.setId(bo.getId());
-                vo.setTableHeadValueList(BeanTransform.copyProperties(bo.getBoList(),TableHeadValueVO.class));
-                voList.add(vo);
+            if(!CollectionUtils.isEmpty(boList)){
+                for (TableHeadRowSignBO bo : boList) {
+                    TableHeadRowSignVO vo = new TableHeadRowSignVO();
+                    vo.setId(bo.getId());
+                    vo.setTableHeadValueList(BeanTransform.copyProperties(bo.getBoList(),TableHeadValueVO.class));
+                    voList.add(vo);
+                }
             }
-
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

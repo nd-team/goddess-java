@@ -73,7 +73,7 @@ public class EnterpriseCultureInfoAct {
     }
 
     /**
-     * 新增企业文化信息
+     * 新增
      *
      * @param to 企业文化信息
      * @return class EnterpriseCultureInfoVO
@@ -90,7 +90,7 @@ public class EnterpriseCultureInfoAct {
     }
 
     /**
-     * 编辑企业文化信息
+     * 编辑
      *
      * @param to 企业文化信息
      * @return class EnterpriseCultureInfoVO
@@ -107,7 +107,7 @@ public class EnterpriseCultureInfoAct {
     }
 
     /**
-     * 删除企业文化信息
+     * 删除
      *
      * @param id 企业文化信息id
      * @version v1
@@ -141,7 +141,7 @@ public class EnterpriseCultureInfoAct {
 
 
     /**
-     * 根据企业文化信息id查询宣传方案
+     * 宣传方案
      *
      * @param id 企业文化信息id
      * @return class PublicizeProgramInfoVO
@@ -159,7 +159,7 @@ public class EnterpriseCultureInfoAct {
     }
 
     /**
-     * 根据企业文化信息id查询刊物方案
+     * 刊物方案
      *
      * @param id 企业文化信息id
      * @return class EnterpriseCultureInfoVO

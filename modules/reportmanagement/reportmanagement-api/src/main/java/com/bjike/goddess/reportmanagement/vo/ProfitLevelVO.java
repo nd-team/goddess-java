@@ -33,18 +33,18 @@ public class ProfitLevelVO {
      */
     private String changeScale;
 
-    /**
-     * 利润类型
-     */
-    private ProfitType profitType;
+//    /**
+//     * 利润类型
+//     */
+//    private ProfitType profitType;
 
-    public ProfitType getProfitType() {
-        return profitType;
-    }
-
-    public void setProfitType(ProfitType profitType) {
-        this.profitType = profitType;
-    }
+//    public ProfitType getProfitType() {
+//        return profitType;
+//    }
+//
+//    public void setProfitType(ProfitType profitType) {
+//        this.profitType = profitType;
+//    }
 
     public String getProject() {
         return project;

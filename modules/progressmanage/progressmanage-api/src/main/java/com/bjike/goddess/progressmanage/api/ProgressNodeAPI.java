@@ -27,5 +27,5 @@ public interface ProgressNodeAPI {
 
     List<ProgressNodeBO> pageList(ProgressNodeDTO dto) throws SerException;
 
-    List<NodeListForHeadBO> nodes(String projectId) throws SerException;
+    List<NodeListForHeadBO> nodes(String tableId) throws SerException;
 }

@@ -4,20 +4,26 @@ import com.bjike.goddess.bankrecords.api.BankAccountInfoAPI;
 import com.bjike.goddess.bankrecords.api.BankRecordAPI;
 import com.bjike.goddess.bankrecords.dto.BankRecordDTO;
 import com.bjike.goddess.bankrecords.to.BankRecordTO;
+import com.bjike.goddess.bankrecords.to.CommunicateDeleteFileTO;
+import com.bjike.goddess.bankrecords.to.GuidePermissionTO;
 import com.bjike.goddess.bankrecords.vo.*;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.action.BaseFileAction;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.storage.api.FileAPI;
+import com.bjike.goddess.storage.to.FileInfo;
+import com.bjike.goddess.storage.vo.FileVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.util.List;
 
@@ -40,6 +46,117 @@ public class BankRecordAct extends BaseFileAction {
     private BankAccountInfoAPI accountInfoAPI;
     @Autowired
     private FileAPI fileAPI;
+
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = bankRecordAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 上传附件
+     *
+     * @param id      id
+     * @param request 注入HttpServletRequest对象
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/upload/{id}")
+    public Result upload(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            // /id/....
+            String path = "/outsource/" + id;
+            List<InputStream> inputStreams = super.getInputStreams(request, path);
+            fileAPI.upload(inputStreams);
+            return new ActResult("上传成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 文件附件列表
+     *
+     * @param id 签订与立项id
+     * @return class FileVO
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/files/{id}")
+    public Result list(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            String path = "/outsource/" + id;
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
+            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
+            return ActResult.initialize(files);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param path 文件信息路径
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/download")
+    public Result download(@RequestParam String path, HttpServletRequest request, HttpServletResponse response) throws ActException {
+        try {
+            //该文件的路径
+            Object storageToken = request.getAttribute("storageToken");
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            fileInfo.setStorageToken(storageToken.toString());
+            String filename = org.apache.commons.lang3.StringUtils.substringAfterLast(fileInfo.getPath(), "/");
+            byte[] buffer = fileAPI.download(fileInfo);
+            writeOutFile(response, buffer, filename);
+            return new ActResult("下载成功");
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 删除文件或文件夹
+     *
+     * @param siginManageDeleteFileTO 多文件信息路径
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/delfile")
+    public Result delFile(@Validated(CommunicateDeleteFileTO.TestDEL.class) CommunicateDeleteFileTO siginManageDeleteFileTO, HttpServletRequest request) throws SerException {
+        if (null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length >= 0) {
+            Object storageToken = request.getAttribute("storageToken");
+            fileAPI.delFile(storageToken.toString(), siginManageDeleteFileTO.getPaths());
+        }
+        return new ActResult("删除成功");
+    }
 
     /**
      * 账号列表查询
@@ -80,15 +197,13 @@ public class BankRecordAct extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/upload")
-    public Result upload(@Validated({BankRecordTO.Upload.class}) BankRecordTO to,BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result upload(@Validated({BankRecordTO.Upload.class}) BankRecordTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             String path = "/upload";
             List<InputStream> inputStreams = super.getInputStreams(request, path);
             List<InputStream> streams = super.getInputStreams(request, path);
             to.setInputStreams(inputStreams);
-            bankRecordAPI.upload(to);
-            //由于协议，必须在action处理上传到服务器
-//            fileAPI.upload(streams);
+            bankRecordAPI.upload(to);;
             return new ActResult("导入成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -146,44 +261,6 @@ public class BankRecordAct extends BaseFileAction {
     }
 
     /**
-     * 汇总
-     *
-     * @param year        年份
-     * @param month       月份
-     * @param accountName 账户名称
-     * @return class BankRecordCollectVO
-     * @version v1
-     */
-    @GetMapping("v1/collect")
-    public Result collect(@RequestParam Integer year, @RequestParam Integer month, String accountName, HttpServletRequest request) throws ActException {
-        try {
-            List<BankRecordCollectVO> voList = BeanTransform.copyProperties(bankRecordAPI.collect(year, month, accountName), BankRecordCollectVO.class, request);
-            return ActResult.initialize(voList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 分析
-     *
-     * @param year        年份
-     * @param month       月份
-     * @param accountName 账户名称
-     * @return class BankRecordAnalyzeVO
-     * @version v1
-     */
-    @GetMapping("v1/analyze")
-    public Result analyze(@RequestParam Integer year, @RequestParam Integer month, String accountName, HttpServletRequest request) throws ActException {
-        try {
-            BankRecordAnalyzeVO voList = BeanTransform.copyProperties(bankRecordAPI.analyze(year, month, accountName), BankRecordAnalyzeVO.class, request);
-            return ActResult.initialize(voList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
      * 删除银行流水记录
      *
      * @param id 银行流水id
@@ -193,28 +270,12 @@ public class BankRecordAct extends BaseFileAction {
     public Result delete(@PathVariable String id) throws ActException {
         try {
             bankRecordAPI.delete(id);
-            return new ActResult();
+            return new ActResult("删除成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
-    /**
-     * 对比
-     *
-     * @param year  年份
-     * @param month 月份
-     * @return class BankRecordCompareVO
-     * @version v1
-     */
-    @GetMapping("v1/compare")
-    public Result compare(@RequestParam Integer year, @RequestParam Integer month, HttpServletRequest request) throws ActException {
-        try {
-            BankRecordCompareVO vo = BeanTransform.copyProperties(bankRecordAPI.compare(year, month), BankRecordCompareVO.class, request);
-            return ActResult.initialize(vo);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+
 
 }
