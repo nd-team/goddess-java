@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contacts.bo.ExternalContactsBO;
 import com.bjike.goddess.contacts.dto.ExternalContactsDTO;
 import com.bjike.goddess.contacts.to.ExternalContactsTO;
+import com.bjike.goddess.contacts.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -94,4 +95,22 @@ public interface ExternalContactsAPI {
     default Long getTotal() throws SerException {
         return null;
     }
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导入
+     */
+    ExternalContactsBO importExcel(List<ExternalContactsTO> tocs) throws SerException;
 }

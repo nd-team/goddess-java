@@ -3,6 +3,7 @@ package com.bjike.goddess.contacts.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contacts.bo.InternalContactsBO;
 import com.bjike.goddess.contacts.dto.InternalContactsDTO;
+import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.contacts.to.InternalContactsTO;
 
 import java.util.List;
@@ -112,4 +113,26 @@ public interface InternalContactsAPI {
         return null;
     }
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导入
+     */
+    InternalContactsBO importExcel(List<InternalContactsTO> tocs) throws SerException;
+
+    /**
+     * 定时器检测并删除离职员工通讯录
+     */
+    void checkDimissionInfo() throws SerException;
 }

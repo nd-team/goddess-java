@@ -5,6 +5,7 @@ import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.contacts.dto.CommonalityDTO;
 import com.bjike.goddess.contacts.service.CommonalitySer;
 import com.bjike.goddess.contacts.to.CommonalityTO;
+import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,5 +74,20 @@ public class CommonalityApiImpl implements CommonalityAPI {
     @Override
     public Long getTotal() throws SerException {
         return commonalitySer.getTotal();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return commonalitySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return commonalitySer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public void importExcel(List<CommonalityTO> tocs) throws SerException {
+        commonalitySer.importExcel(tocs);
     }
 }
