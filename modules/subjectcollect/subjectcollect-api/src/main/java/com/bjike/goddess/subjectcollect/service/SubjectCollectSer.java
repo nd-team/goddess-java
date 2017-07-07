@@ -97,6 +97,16 @@ public interface SubjectCollectSer extends Ser<SubjectCollect, SubjectCollectDTO
     }
 
     /**
+     * 获取地区
+     * @return String
+     * @throws SerException
+     */
+    default List<String> getArea() throws SerException {
+        return null;
+    }
+
+
+    /**
      * 导出Excel
      *
      * @param dto

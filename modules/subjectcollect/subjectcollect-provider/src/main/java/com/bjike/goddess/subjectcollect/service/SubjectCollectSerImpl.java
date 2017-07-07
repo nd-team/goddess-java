@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 科目汇总表业务实现
@@ -260,6 +261,16 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
     public void removeSubjectCollect(String id) throws SerException {
         checkAddIdentity();
         super.remove(id);
+    }
+    @Override
+    public List<String> getArea() throws SerException {
+        String[] fields = new String[]{"area"};
+        List<SubjectCollectBO> subjectCollectBOS = super.findBySql("select distinct area from subjectcollect_subjectcollect group by area order by area asc ", SubjectCollectBO.class, fields);
+        List<String> areasList = subjectCollectBOS.stream().map(SubjectCollectBO::getArea)
+                .filter(area -> (StringUtils.isNotBlank(area))).distinct().collect(Collectors.toList());
+
+
+        return areasList;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.bjike.goddess.checkhost.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 住宿申请
@@ -12,35 +13,44 @@ import com.bjike.goddess.common.api.to.BaseTO;
  * @Copy: [ com.bjike ]
  */
 public class StayApplyTO extends BaseTO {
+    public interface TestAdd{}
+    public interface TestEdit{}
+    public interface TestAudit{}
 
     /**
      * 新入职员工姓名
      */
+    @NotBlank(message = "新入职员工姓名不能为空",groups = {StayApplyTO.TestAdd.class,StayApplyTO.TestEdit.class})
     private String name;
 
     /**
      * 申请入住日期
      */
+    @NotBlank(message = "申请入住日期不能为空",groups = {StayApplyTO.TestAdd.class,StayApplyTO.TestEdit.class})
     private String stayDate;
 
     /**
      * 申请入住地区
      */
+    @NotBlank(message = "申请入住地区不能为空",groups = {StayApplyTO.TestAdd.class,StayApplyTO.TestEdit.class})
     private String area;
 
     /**
      * 申请入住宿舍
      */
+    @NotBlank(message = "申请入住宿舍不能为空",groups = {StayApplyTO.TestAdd.class,StayApplyTO.TestEdit.class})
     private String stayDormitory;
 
     /**
      * 申请入住原因
      */
+    @NotBlank(message = "申请入住原因不能为空",groups = {StayApplyTO.TestAdd.class,StayApplyTO.TestEdit.class})
     private String stayCause;
 
     /**
      * 住宿负责人
      */
+    @NotBlank(message = "住宿负责人不能为空",groups = {StayApplyTO.TestAdd.class,StayApplyTO.TestEdit.class})
     private String stayHead;
 
     /**
@@ -48,8 +58,9 @@ public class StayApplyTO extends BaseTO {
      */
     private String headAudit;
     /**
-     * 福利模块负责人审核
+     * 福利模块负责人审核(通过/不通过)
      */
+    @NotBlank(message = "福利模块负责人审核(通过/不通过)不能为空",groups = {StayApplyTO.TestAudit.class})
     private String headAuditPass;
 
     /**

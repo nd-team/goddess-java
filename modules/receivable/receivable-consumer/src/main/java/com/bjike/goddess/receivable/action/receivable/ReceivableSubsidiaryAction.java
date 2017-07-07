@@ -499,7 +499,7 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
      * @param request 注入HttpServletRequest对象
      * @version v1
      */
-//    @LoginAuth
+    @LoginAuth
     @PostMapping("v1/importExcel")
     public Result importExcel(HttpServletRequest request) throws ActException {
         try {
@@ -549,7 +549,7 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
      * @des 导出回款管理
      * @version v1
      */
-    //@LoginAuth
+    @LoginAuth
     @GetMapping("v1/export")
     public Result exportReport(ReceivableSubsidiaryDTO dto, HttpServletResponse response) throws ActException {
         try {

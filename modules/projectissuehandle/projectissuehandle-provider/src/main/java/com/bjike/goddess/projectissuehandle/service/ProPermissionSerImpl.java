@@ -283,14 +283,18 @@ public class ProPermissionSerImpl extends ServiceImpl<ProPermission, ProPermissi
         if (deleteList != null && deleteList.size() > 0) {
             proPermissionOperateSer.remove(deleteList);
         }
-        List<ProPermissionOperate> list = new ArrayList<>();
-        for (String operateId : operators) {
-            ProPermissionOperate cpo = new ProPermissionOperate();
-            cpo.setOperator(operateId);
-            cpo.setPropermissionId(temp.getId());
-            list.add(cpo);
+        if (operators != null && operators.length > 0) {
+            List<ProPermissionOperate> list = new ArrayList<>();
+            for (String operateId : operators) {
+                ProPermissionOperate cpo = new ProPermissionOperate();
+                cpo.setOperator(operateId);
+                cpo.setPropermissionId(temp.getId());
+                list.add(cpo);
+            }
+            proPermissionOperateSer.save(list);
+
         }
-        proPermissionOperateSer.save(list);
+
 
         return BeanTransform.copyProperties(temp, ProPermissionBO.class);
     }
@@ -339,7 +343,7 @@ public class ProPermissionSerImpl extends ServiceImpl<ProPermission, ProPermissi
 
 
         //TODO 部门
-        if ( depart) {
+        if (depart) {
             flag = true;
         } else {
             flag = false;
