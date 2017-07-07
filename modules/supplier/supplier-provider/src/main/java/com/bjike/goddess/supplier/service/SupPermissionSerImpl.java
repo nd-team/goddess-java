@@ -281,14 +281,16 @@ public class SupPermissionSerImpl extends ServiceImpl<SupPermission, SupPermissi
         if (deleteList != null && deleteList.size() > 0) {
             cusPermissionOperateSer.remove(deleteList);
         }
-        List<SupPermissionOperate> list = new ArrayList<>();
-        for (String operateId : operators) {
-            SupPermissionOperate cpo = new SupPermissionOperate();
-            cpo.setOperator(operateId);
-            cpo.setSupPermissionId(temp.getId());
-            list.add(cpo);
+        if (  operators!= null && operators.length>0 ) {
+            List<SupPermissionOperate> list = new ArrayList<>();
+            for (String operateId : operators) {
+                SupPermissionOperate cpo = new SupPermissionOperate();
+                cpo.setOperator(operateId);
+                cpo.setSupPermissionId(temp.getId());
+                list.add(cpo);
+            }
+            cusPermissionOperateSer.save(list);
         }
-        cusPermissionOperateSer.save(list);
 
         return BeanTransform.copyProperties(temp, SupPermissionBO.class);
     }

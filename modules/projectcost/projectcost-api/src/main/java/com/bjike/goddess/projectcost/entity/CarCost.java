@@ -60,13 +60,13 @@ public class CarCost extends BaseEntity {
     /**
      * 实际车次
      */
-    @Column(name = "actualDegree", nullable = false, columnDefinition = "INT(11)   COMMENT '实际车次'")
+    @Column(name = "actualDegree", nullable = true, columnDefinition = "INT(11)   COMMENT '实际车次'")
     private Integer actualDegree;
 
     /**
      * 车次差额
      */
-    @Column(name = "balanceDegree", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '车次差额'")
+    @Column(name = "balanceDegree", nullable = true, columnDefinition = "DECIMAL(10,2)   COMMENT '车次差额'")
     private Double balanceDegree;
 
     /**
@@ -78,19 +78,19 @@ public class CarCost extends BaseEntity {
     /**
      * 目标车辆费用
      */
-    @Column(name = "targetCost", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '目标车辆费用'")
+    @Column(name = "targetCost", nullable = true, columnDefinition = "DECIMAL(10,2)   COMMENT '目标车辆费用'")
     private Double targetCost;
 
     /**
      * 实际车辆费用
      */
-    @Column(name = "actualCost", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '实际车辆费用'")
+    @Column(name = "actualCost", nullable = true, columnDefinition = "DECIMAL(10,2)   COMMENT '实际车辆费用'")
     private Double actualCost;
 
     /**
      * 差额
      */
-    @Column(name = "balanceCost", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '差额'")
+    @Column(name = "balanceCost", nullable = true, columnDefinition = "DECIMAL(10,2)   COMMENT '差额'")
     private Double balanceCost;
 
 
