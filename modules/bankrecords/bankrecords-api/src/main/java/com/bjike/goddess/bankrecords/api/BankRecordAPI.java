@@ -98,22 +98,22 @@ public interface BankRecordAPI {
     /**
      * 根据条件查询列表信息
      *
-     * @param year 年份
-     * @param month 月份
+     * @param year   年份
+     * @param month  月份
      * @param number 账号
      * @version v1
      */
-    List<BankRecordBO> findByCondition(Integer year,Integer month ,String number) throws SerException;
+    List<BankRecordBO> findByCondition(Integer year, Integer month, String number) throws SerException;
 
     /**
      * 根据条件汇总
      *
-     * @param year 年份
-     * @param month 月份
+     * @param year   年份
+     * @param month  月份
      * @param number 账号
      * @version v1
      */
-    List<BankRecordCollectBO> collectByCondition(Integer year,Integer month ,String number) throws SerException;
+    List<BankRecordCollectBO> collectByCondition(Integer year, Integer month, String number) throws SerException;
 
     /**
      * 根据id查询银行流水
@@ -124,4 +124,33 @@ public interface BankRecordAPI {
     BankRecordPageListBO findById(String id) throws SerException;
 
     Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
+    /**
+     * 按月份查询所有银行余额
+     *
+     * @param year  年份
+     * @param month 月份
+     * @return 余额
+     */
+    Double balanceByMonth(Integer year, Integer month) throws SerException;
+
+    /**
+     * 汇总导出
+     * @param year 年份
+     * @param month 月份
+     * @param accountName 账户名称
+     * @return
+     * @throws SerException
+     */
+    byte[] collectExcel(Integer year, Integer month, String accountName) throws SerException;
+
+    /**
+     * 分析导出
+     * @param year 年份
+     * @param month 月份
+     * @param accountName 账户名称
+     * @return
+     * @throws SerException
+     */
+    byte[] analyzeExcel(Integer year, Integer month, String accountName) throws SerException;
 }

@@ -47,7 +47,7 @@ public class ProgressNodeApiImpl implements ProgressNodeAPI {
     }
 
     @Override
-    public List<NodeListForHeadBO> nodes(String projectId) throws SerException {
-        return progressNodeSer.nodes(projectId);
+    public List<NodeListForHeadBO> nodes(String tableId) throws SerException {
+        return progressNodeSer.nodes(tableId);
     }
 }

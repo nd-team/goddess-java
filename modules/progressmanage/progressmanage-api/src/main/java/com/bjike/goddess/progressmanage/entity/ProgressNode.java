@@ -18,16 +18,16 @@ import java.util.Set;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "progressmanage_progressnode", uniqueConstraints = {@UniqueConstraint(columnNames = {"nodeName", "project_id"}),
-        @UniqueConstraint(columnNames = {"sortIndex", "project_id"})})
+@Table(name = "progressmanage_progressnode", uniqueConstraints = {@UniqueConstraint(columnNames = {"nodeName", "progressTable_id"}),
+        @UniqueConstraint(columnNames = {"sortIndex", "progressTable_id"})})
 public class ProgressNode extends BaseEntity {
 
     /**
-     * 所属项目
+     * 进度表
      */
     @ManyToOne
-    @JoinColumn(name = "project_id",nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '所属项目'")
-    private ProjectInfo project;
+    @JoinColumn(name = "progressTable_id",nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '进度表'")
+    private ProgressTable progressTable;
 
     /**
      * 表头对应值
@@ -74,12 +74,12 @@ public class ProgressNode extends BaseEntity {
         this.nodeName = nodeName;
     }
 
-    public ProjectInfo getProject() {
-        return project;
+    public ProgressTable getProgressTable() {
+        return progressTable;
     }
 
-    public void setProject(ProjectInfo project) {
-        this.project = project;
+    public void setProgressTable(ProgressTable progressTable) {
+        this.progressTable = progressTable;
     }
 
     public String getCreateUser() {
@@ -121,4 +121,6 @@ public class ProgressNode extends BaseEntity {
     public void setNodeHeadSet(Set<NodeHead> nodeHeadSet) {
         this.nodeHeadSet = nodeHeadSet;
     }
+
+
 }

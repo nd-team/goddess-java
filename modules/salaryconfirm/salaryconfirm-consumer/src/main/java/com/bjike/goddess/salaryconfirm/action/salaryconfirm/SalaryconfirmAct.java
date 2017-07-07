@@ -250,7 +250,6 @@ public class SalaryconfirmAct extends BaseFileAction {
      *
      * @version v1
      */
-    @LoginAuth
     @GetMapping("v1/module")
     public Result exportModule(HttpServletResponse response) throws ActException {
         try {

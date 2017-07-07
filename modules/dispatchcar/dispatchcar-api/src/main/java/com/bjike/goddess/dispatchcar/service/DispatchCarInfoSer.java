@@ -187,4 +187,8 @@ public interface DispatchCarInfoSer extends Ser<DispatchCarInfo, DispatchCarInfo
     List<SonPermissionObject> financeSonPermission() throws SerException;
 
     Boolean financeGuidePermission(GuidePermissionTO to) throws SerException;
+
+    List<DriverDispatchFeeBO> findDispatchFree(Integer month) throws SerException;
+
+    List<DriverDispatchsBO> findDispatchs(Integer month) throws SerException;
 }

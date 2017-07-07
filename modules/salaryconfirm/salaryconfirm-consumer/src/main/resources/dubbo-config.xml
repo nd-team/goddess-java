@@ -23,7 +23,10 @@
 	<!-- userAPI -->
 	<dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl" />
 
+	<!-- storageAPI -->
 	<dubbo:reference interface="com.bjike.goddess.storage.api.StorageUserAPI" id="storageUserApiImpl" />
+
+	<dubbo:reference interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl" />
 
 	<!-- 组织结构API -->
 	<dubbo:reference interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl" />

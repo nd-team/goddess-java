@@ -77,7 +77,7 @@ public class ProblesClassifyPrepareAct {
     }
 
     /**
-     * 冻结问题分类
+     * 冻结
      *
      * @param id 问题分类ID
      * @version v1

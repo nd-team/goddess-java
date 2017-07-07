@@ -2,9 +2,9 @@ package com.bjike.goddess.bankrecords.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -19,6 +19,12 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "bankrecords_bankrecord")
 public class BankRecord extends BaseEntity {
+
+    /**
+     * 流水明细
+     */
+    @OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, fetch = FetchType.EAGER, mappedBy = "bankRecord")
+    private List<BankRecordDetail> detailList = new ArrayList<BankRecordDetail>();
 
     /**
      * 账号信息Id
@@ -62,6 +68,13 @@ public class BankRecord extends BaseEntity {
     @Column(name = "recordMonth", nullable = false, columnDefinition = "INT(11)   COMMENT '月份'")
     private Integer month;
 
+    public List<BankRecordDetail> getDetailList() {
+        return detailList;
+    }
+
+    public void setDetailList(List<BankRecordDetail> detailList) {
+        this.detailList = detailList;
+    }
 
     public String getAccountId() {
         return accountId;

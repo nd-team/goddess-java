@@ -2,6 +2,7 @@ package com.bjike.goddess.progressmanage.vo;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.progressmanage.bo.ProjectInfoBO;
 import com.bjike.goddess.progressmanage.entity.ProjectInfo;
 
 /**
@@ -33,6 +34,11 @@ public class ProgressTableVO {
      * 修改人
      */
     private String updateUser;
+
+    /**
+     * 项目
+     */
+    private ProjectInfoVO projectInfoVO;
 
     /**
      * 状态
@@ -78,5 +84,13 @@ public class ProgressTableVO {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public ProjectInfoVO getProjectInfoVO() {
+        return projectInfoVO;
+    }
+
+    public void setProjectInfoVO(ProjectInfoVO projectInfoVO) {
+        this.projectInfoVO = projectInfoVO;
     }
 }

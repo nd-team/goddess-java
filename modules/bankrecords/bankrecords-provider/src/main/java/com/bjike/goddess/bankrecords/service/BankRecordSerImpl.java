@@ -10,6 +10,8 @@ import com.bjike.goddess.bankrecords.entity.BankAccountInfo;
 import com.bjike.goddess.bankrecords.entity.BankRecord;
 import com.bjike.goddess.bankrecords.entity.BankRecordDetail;
 import com.bjike.goddess.bankrecords.enums.GuideAddrStatus;
+import com.bjike.goddess.bankrecords.excel.BankRecordsAnalyzeExcel;
+import com.bjike.goddess.bankrecords.excel.BankRecordsCollectExcel;
 import com.bjike.goddess.bankrecords.to.BankRecordTO;
 import com.bjike.goddess.bankrecords.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
@@ -18,6 +20,8 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.fundrecords.api.FundRecordAPI;
 import com.bjike.goddess.fundrecords.bo.MonthCollectBO;
 import com.bjike.goddess.storage.to.FileInfo;
@@ -27,10 +31,12 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.ByteArrayInputStream;
@@ -118,8 +124,9 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
         }
     }
 
+
     @Override
-    @Transactional(rollbackFor = SerException.class)
+    @Transactional
     public void upload(BankRecordTO to) throws SerException {
         try {
             List<InputStream> inputStreams = to.getInputStreams();
@@ -128,8 +135,7 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
                 String fileName = getFileInfo(inputStreams.get(0));
                 String suffixName = fileName.substring(fileName.lastIndexOf("."));
                 //判断文件后缀名
-                if (suffixName.equals(".xls") || suffixName.equals(".XLS") ||
-                        suffixName.equals(".xlsx") || suffixName.equals(".XLSX")) {
+                if (suffixName.equalsIgnoreCase(".xls") || suffixName.equalsIgnoreCase(".xlsx")) {
                     //转换字节流
                     Object obj = (Object) inputStreams.get(1);
                     InputStream inputStream = new ByteArrayInputStream((byte[]) obj);
@@ -175,20 +181,24 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
         setBoInfo(bo);
 
         BankRecordDetailDTO detailDTO = new BankRecordDetailDTO();
-        detailDTO.getConditions().add(Restrict.eq("bankRecordId", bo.getId()));
+        detailDTO.getConditions().add(Restrict.eq("bankRecord.id", bo.getId()));
         List<BankRecordDetail> detailList = bankRecordDetailSer.findByCis(detailDTO);
         if (detailList != null && !detailList.isEmpty()) {
-            List<Detail> list = BeanTransform.copyProperties(detailList, Detail.class);
-            //按表头下标排序，还原Excel字段排列格式
-            Collections.sort(list, new Comparator<Detail>() {
-                @Override
-                public int compare(Detail bo1, Detail bo2) {
-                    return bo1.getTitleIndex().compareTo(bo2.getTitleIndex());
-                }
-            });
-            bo.setDetailList(list);
+            bo.setDetailList(format(detailList));
         }
         return bo;
+    }
+
+    public List<Detail> format(List<BankRecordDetail> detailList) throws SerException {
+        List<Detail> list = BeanTransform.copyProperties(detailList, Detail.class);
+        //按表头下标排序，还原Excel字段排列格式
+        Collections.sort(list, new Comparator<Detail>() {
+            @Override
+            public int compare(Detail bo1, Detail bo2) {
+                return bo1.getTitleIndex().compareTo(bo2.getTitleIndex());
+            }
+        });
+        return list;
     }
 
     @Override
@@ -197,14 +207,8 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
         BankRecord model = super.findById(id);
         if (model != null) {
             super.remove(model);
-            BankRecordDetailDTO detailDTO = new BankRecordDetailDTO();
-            detailDTO.getConditions().add(Restrict.eq("bankRecordId", model.getId()));
-            List<BankRecordDetail> detailList = bankRecordDetailSer.findByCis(detailDTO);
-            if (detailList != null && !detailList.isEmpty()) {
-                bankRecordDetailSer.remove(detailList);
-            }
         } else {
-            throw new SerException("删除对象不能为空!");
+            throw new SerException("非法Id,银行流水对象不能为空!");
         }
     }
 
@@ -325,8 +329,31 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
         String creditorRate = null;
         String debtorRate = null;
         if (allDebtorCost != null && allDebtorCost != 0) {
-            creditorRate = format.format(creditorSubtract / allDebtorCost) + "%";
-            debtorRate = format.format(debtorSubtract / allCreditorCost) + "%";
+            Double creditorRateTemp = creditorSubtract / allDebtorCost;
+            Double debtorRateTemp = debtorSubtract / allCreditorCost;
+
+            if (creditorRateTemp == 0) {
+                creditorRate = "0.00%";
+            } else {
+                if(allDebtorCost==0){
+                    creditorRate = format.format(creditorSubtract / allDebtorCost);
+                }else{
+                    creditorRate = format.format(creditorSubtract / allDebtorCost) + "%";
+                }
+
+            }
+            if (debtorRateTemp == 0) {
+                debtorRate = "0.00%";
+            } else {
+                if(allCreditorCost==0){
+                    debtorRate = format.format(debtorSubtract / allCreditorCost);
+                }else{
+                    debtorRate = format.format(debtorSubtract / allCreditorCost) + "%";
+                }
+
+            }
+
+
         }
         BankRecordAnalyzeBO bo = new BankRecordAnalyzeBO(bank, year, month,
                 currentDebtorCost, currentCreditorCost, currentBalance,
@@ -459,8 +486,9 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
         return flag;
     }
 
+
     /**
-     *  导航栏核对查看权限（部门级别）
+     * 导航栏核对查看权限（部门级别）
      */
     private Boolean guideSeeIdentity() throws SerException {
         Boolean flag = false;
@@ -495,7 +523,13 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
 
     public void insertModels(HSSFSheet sheet, BankRecordTO to) throws SerException {
         int rowNum = sheet.getLastRowNum();
+        if (rowNum == 0) {
+            throw new SerException("导入的Excel银行流水记录不能为空!");
+        }
         int cellNum = sheet.getRow(0).getPhysicalNumberOfCells();
+
+        Boolean judegeFormat = false;
+
         for (int i = 1; i <= rowNum; i++) {
             BankRecord model = new BankRecord();
             //校验时间格式
@@ -505,12 +539,45 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
             model.setCreditorCost(sheet.getRow(i).getCell(to.getCreditorCostIndex()).getNumericCellValue());
             model.setDebtorCost(sheet.getRow(i).getCell(to.getDebtorCostIndex()).getNumericCellValue());
             model.setBalance(sheet.getRow(i).getCell(to.getBalanceIndex()).getNumericCellValue());
-            super.save(model);
-            for (int j = 0; j < cellNum; j++) {
-                saveDetail(model, sheet, i, j);
-            }
-        }
 
+
+            List<BankRecordDetail> detailList = new ArrayList<BankRecordDetail>();
+            for (int j = 0; j < cellNum; j++) {
+                detailList.add(saveDetail(model, sheet, i, j));
+            }
+            if (!CollectionUtils.isEmpty(detailList)) {
+
+                if (!judegeFormat) {
+                    //判断该账号是否已经存在银行流水记录，如果存在检查本次导入的Excel数据格式是否对应已存在的Excel数据格式,只需要检查第一行可以确定
+                    BankRecordDTO dto = new BankRecordDTO();
+                    dto.getConditions().add(Restrict.eq("accountId", to.getAccountId()));
+                    dto.setLimit(1);
+                    dto.getSorts().add("createTime=asc");
+                    List<BankRecordBO> boList = BeanTransform.copyProperties(super.findByPage(dto), BankRecordBO.class);
+                    if (!CollectionUtils.isEmpty(boList) && !boList.get(0).getId().equals(model.getId())) {
+                        BankRecordDetailDTO detailDTO = new BankRecordDetailDTO();
+                        detailDTO.getConditions().add(Restrict.eq("bankRecord.id", boList.get(0).getId()));
+                        List<BankRecordDetail> details = bankRecordDetailSer.findByCis(detailDTO);
+
+                        List<Detail> formats = format(details);
+                        if (formats.size() == detailList.size()) {
+                            for (int k = 0; k < formats.size(); k++) {
+                                if (!formats.get(k).getTitle().equals(detailList.get(k).getTitle())) {
+                                    throw new SerException("导入的Excel数据内容格式该账户已导入的数据不一致,请检查导入的Excel!");
+                                }
+                            }
+                        } else {
+                            throw new SerException("导入的Excel数据内容格式该账户已导入的数据不一致,请检查导入的Excel!");
+                        }
+                    }
+                    judegeFormat = true;
+                }
+                model.setDetailList(detailList);
+            } else {
+                throw new SerException("导入的Excel银行流水记录不能为空!");
+            }
+            super.save(model);
+        }
     }
 
     public void insertModels(XSSFSheet sheet, BankRecordTO to) throws SerException {
@@ -527,8 +594,38 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
             model.setDebtorCost(sheet.getRow(i).getCell(to.getDebtorCostIndex()).getNumericCellValue());
             model.setBalance(sheet.getRow(i).getCell(to.getBalanceIndex()).getNumericCellValue());
             super.save(model);
+            List<BankRecordDetail> detailList = new ArrayList<BankRecordDetail>();
             for (int j = 0; j < cellNum; j++) {
-                saveDetail(model, sheet, i, j);
+                detailList.add(saveDetail(model, sheet, i, j));
+            }
+            if (!CollectionUtils.isEmpty(detailList)) {
+                //判断该账号是否已经存在银行流水记录，如果存在检查本次导入的Excel数据格式是否对应已存在的Excel数据格式
+                BankRecordDTO dto = new BankRecordDTO();
+                dto.getConditions().add(Restrict.eq("accountId", to.getAccountId()));
+                dto.setLimit(1);
+                dto.getSorts().add("createTime=asc");
+                List<BankRecordBO> boList = BeanTransform.copyProperties(super.findByPage(dto), BankRecordBO.class);
+                if (!CollectionUtils.isEmpty(boList)) {
+                    BankRecordDetailDTO detailDTO = new BankRecordDetailDTO();
+                    detailDTO.getConditions().add(Restrict.eq("bankRecord.id", boList.get(0).getAccountId()));
+                    List<BankRecordDetail> details = bankRecordDetailSer.findByCis(detailDTO);
+
+                    List<Detail> formats = format(details);
+                    if (formats.size() == detailList.size()) {
+                        for (int k = 0; k < formats.size(); k++) {
+                            if (!formats.get(k).getTitle().equals(detailList.get(k).getTitle())) {
+                                throw new SerException("导入的Excel数据内容格式该账户已导入的数据不一致,请检查导入的Excel!");
+                            }
+                        }
+
+                        bankRecordDetailSer.save(detailList);
+                    } else {
+                        throw new SerException("导入的Excel数据内容格式该账户已导入的数据不一致,请检查导入的Excel!");
+                    }
+                }
+
+            } else {
+                throw new SerException("导入的Excel银行流水记录不能为空!");
             }
         }
     }
@@ -627,10 +724,10 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
         model.setMonth(localDateTime.getMonthValue());
     }
 
-    public void saveDetail(BankRecord model, HSSFSheet sheet, Integer row, Integer cell) throws SerException {
+    public BankRecordDetail saveDetail(BankRecord model, HSSFSheet sheet, Integer row, Integer cell) throws SerException {
 
         BankRecordDetail detail = new BankRecordDetail();
-        detail.setBankRecordId(model.getId());
+        detail.setBankRecord(model);
         detail.setTitleIndex(cell);
         detail.setTitle(sheet.getRow(0).getCell(cell).getStringCellValue());
         //如果为数字格式，需要手动转为String
@@ -650,13 +747,12 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
         } else {
             detail.setVal(cellStr);
         }
-        bankRecordDetailSer.save(detail);
-
+        return detail;
     }
 
-    public void saveDetail(BankRecord model, XSSFSheet sheet, Integer row, Integer cell) throws SerException {
+    public BankRecordDetail saveDetail(BankRecord model, XSSFSheet sheet, Integer row, Integer cell) throws SerException {
         BankRecordDetail detail = new BankRecordDetail();
-        detail.setBankRecordId(model.getId());
+        detail.setBankRecord(model);
         detail.setTitleIndex(cell);
         detail.setTitle(sheet.getRow(0).getCell(cell).getStringCellValue());
         //如果为数字格式，需要手动转为String
@@ -676,7 +772,7 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
         } else {
             detail.setVal(cellStr);
         }
-        bankRecordDetailSer.save(detail);
+        return detail;
     }
 
     public void setBoInfo(BankRecordBO bo) throws SerException {
@@ -707,5 +803,80 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
             return fileInfo.getFileName();
         }
         return null;
+    }
+
+    @Override
+    public Double balanceByMonth(Integer year, Integer month) throws SerException {
+
+        StringBuilder accountSql = new StringBuilder(" select DISTINCT accountId from bankrecords_bankrecord ");
+        String[] accountIdStr = new String[]{"accountId"};
+        List<BankRecordBO> accountIds = super.findBySql(accountSql.toString(), BankRecordBO.class, accountIdStr);
+        Double totalBalance = 0.0;
+        for (BankRecordBO bo : accountIds) {
+            StringBuilder sql = new StringBuilder("select balance from bankrecords_bankrecord bankrecord  where 0 = 0");
+            sql.append(" and bankrecord.recordYear = " + year);
+            sql.append(" and bankrecord.recordMonth = " + year);
+            sql.append(" and bankrecord.accountId = '" + bo.getAccountId() + "'");
+            sql.append(" ORDER BY bankrecord.recordDate desc");
+            sql.append(" limit 1");
+            String[] fields = new String[]{"balance"};
+            List<BankRecord> list = super.findBySql(sql.toString(), BankRecord.class, fields);
+            if (!CollectionUtils.isEmpty(list)) {
+                totalBalance = totalBalance + list.get(0).getBalance();
+            }
+        }
+        return totalBalance;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public byte[] collectExcel(Integer year, Integer month, String accountName) throws SerException {
+
+        List<BankRecordsCollectExcel> excelList = new ArrayList<BankRecordsCollectExcel>();
+        List<BankRecordCollectBO> boList = collect(year, month, accountName);
+        if (!CollectionUtils.isEmpty(boList)) {
+            for (BankRecordCollectBO bo : boList) {
+                BankRecordsCollectExcel excel = new BankRecordsCollectExcel();
+                BeanUtils.copyProperties(bo, excel);
+                excelList.add(excel);
+            }
+        } else {
+            excelList.add(new BankRecordsCollectExcel());
+        }
+
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(excelList, excel);
+        return bytes;
+    }
+
+    @Override
+    public byte[] analyzeExcel(Integer year, Integer month, String accountName) throws SerException {
+        List<BankRecordsAnalyzeExcel> excelList = new ArrayList<BankRecordsAnalyzeExcel>();
+        BankRecordAnalyzeBO bo = analyze(year, month, accountName);
+        if (bo != null) {
+            BankRecordsAnalyzeExcel excel = new BankRecordsAnalyzeExcel();
+            BeanUtils.copyProperties(bo, excel);
+            excelList.add(excel);
+        } else {
+            excelList.add(new BankRecordsAnalyzeExcel());
+        }
+
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(excelList, excel);
+        return bytes;
     }
 }

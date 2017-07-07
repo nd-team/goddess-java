@@ -203,9 +203,7 @@ public class BankRecordAct extends BaseFileAction {
             List<InputStream> inputStreams = super.getInputStreams(request, path);
             List<InputStream> streams = super.getInputStreams(request, path);
             to.setInputStreams(inputStreams);
-            bankRecordAPI.upload(to);
-            //由于协议，必须在action处理上传到服务器
-//            fileAPI.upload(streams);
+            bankRecordAPI.upload(to);;
             return new ActResult("导入成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -272,7 +270,7 @@ public class BankRecordAct extends BaseFileAction {
     public Result delete(@PathVariable String id) throws ActException {
         try {
             bankRecordAPI.delete(id);
-            return new ActResult();
+            return new ActResult("删除成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

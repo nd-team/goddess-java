@@ -76,7 +76,7 @@ public class ProblesAllotPrepareAct {
     }
 
     /**
-     * 冻结工作汇总议题准备
+     * 冻结
      *
      * @param id 工作汇总议题准备ID
      * @version v1

@@ -18,10 +18,6 @@ public class TableListForHeadBO extends BaseBO {
      */
     private String tabName;
 
-    /**
-     * 合同内部岷城
-     */
-    private String inProject;
 
     public String getTabName() {
         return tabName;
@@ -31,11 +27,4 @@ public class TableListForHeadBO extends BaseBO {
         this.tabName = tabName;
     }
 
-    public String getInProject() {
-        return inProject;
-    }
-
-    public void setInProject(String inProject) {
-        this.inProject = inProject;
-    }
 }

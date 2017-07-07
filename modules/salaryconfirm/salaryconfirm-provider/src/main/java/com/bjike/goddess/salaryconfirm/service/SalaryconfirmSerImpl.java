@@ -216,8 +216,10 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
             }
         } else {
             if (model.getRatepaying() == Ratepaying.YES) {
-                throw new SerException("工资超过3500，无需缴纳个人所得税!");
+                throw new SerException("工资未超过3500，无需缴纳个人所得税!");
             }
+            model.setActualSalary(taxableSalary);
+            model.setFirstSalary(taxableSalary);
         }
     }
 
@@ -534,7 +536,7 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
             List<String> sendUserStr = new ArrayList<String>();
 
             for (Salaryconfirm model : list) {
-                //需求为查询员工档案的邮箱地址,可是邮箱发送为用户ID数组
+                //todo 需求为查询通讯录的邮箱地址,可是邮箱发送为用户ID数组
 //                StaffRecordsBO staffRecordsBO = staffRecordsAPI.findByNumber(model.getEmployeeNumber());
                 UserBO userBO = userAPI.findByUsername(model.getName());
                 sendUserStr.add(userBO.getId());
@@ -566,6 +568,24 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
                 flag = guideAddIdentity();
                 break;
             case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case DEPARTCOLLECT:
+                flag = guideAddIdentity();
+                break;
+            case PERSONALCOLLECT:
+                flag = guideAddIdentity();
+                break;
+            case AREACOLLECT:
+                flag = guideAddIdentity();
+                break;
+            case DEPARTANALYZE:
+                flag = guideAddIdentity();
+                break;
+            case PERSONALANALYZE:
+                flag = guideAddIdentity();
+                break;
+            case AREAANALYZE:
                 flag = guideAddIdentity();
                 break;
             case UPLOAD:

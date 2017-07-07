@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 简洁交流讨论纪要
+ * 多轮交流讨论纪要
  *
  * @Author: [ Jason ]
  * @Date: [ 2017-06-01 10:44 ]
@@ -87,7 +87,7 @@ public class MultiwheelSummaryAct {
     }
 
     /**
-     * 冻结多轮交流讨论纪要
+     * 冻结
      *
      * @param id 简洁交流讨论纪要ID
      * @version v1
@@ -103,7 +103,7 @@ public class MultiwheelSummaryAct {
     }
 
     /**
-     * 冻结多轮交流讨论纪要
+     * 解冻
      *
      * @param id 简洁交流讨论纪要ID
      * @version v1
@@ -112,7 +112,7 @@ public class MultiwheelSummaryAct {
     public Result unfreeze(@PathVariable String id) throws ActException {
         try {
             multiwheelSummaryAPI.unfreeze(id);
-            return new ActResult("冻结成功");
+            return new ActResult("解冻成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
