@@ -99,4 +99,52 @@ public interface OtherSpendAPI {
     default List<OtherSpendBO> collect(OtherSpendCollectTO to) throws SerException {
         return null;
     }
+    /**
+     * 查询所有一级科目
+     *
+     * @return String
+     * @throws SerException
+     */
+    default List<String> listFirstSubject() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据一级科目查询二级科目
+     *
+     * @param firstSub 一级科目
+     * @return String
+     * @throws SerException
+     */
+    default List<String> listSubByFirst(String firstSub) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据一级二级查询三级科目
+     *
+     * @param firstSub  一级科目
+     * @param secondSub 二级科目
+     * @return String
+     * @throws SerException
+     */
+    default List<String> listTubByFirst(String firstSub, String secondSub) throws SerException {
+        return null;
+    }
+    /**
+     * 导入
+     *
+     * @param otherSpendTOS 其他支出
+     * @return class OtherSpendTO
+     */
+    default OtherSpendBO importExcel(List<OtherSpendTO> otherSpendTOS) throws SerException {
+        return null;
+    }
+    /**
+     * 导入模板
+     * @throws SerException
+     */
+    byte[] templateExport(  ) throws SerException;
+
+
 }

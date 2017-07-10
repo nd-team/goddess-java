@@ -5,15 +5,35 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 /**
  * Created by ike on 17-5-31.
  */
-public class CollectMonthBO extends BaseBO {
+public class CollectBO extends BaseBO {
+    public CollectBO() {
+    }
+
+    public CollectBO(String date, String area, String department, Integer carNum, Double driverFee, Double oilRecharge, Double rent,
+                     Double socialSecurity, Double staffWage, Double office, Double marketCost, Double tax, Double total,
+                     Integer staffNum, Double perCapitaWage, Double incomeAfterTax) {
+        this.date = date;
+        this.area = area;
+        this.department = department;
+        this.carNum = carNum;
+        this.driverFee = driverFee;
+        this.oilRecharge = oilRecharge;
+        this.rent = rent;
+        this.socialSecurity = socialSecurity;
+        this.staffWage = staffWage;
+        this.office = office;
+        this.marketCost = marketCost;
+        this.tax = tax;
+        this.total = total;
+        this.staffNum = staffNum;
+        this.perCapitaWage = perCapitaWage;
+        this.incomeAfterTax = incomeAfterTax;
+    }
+
     /**
-     * 月份
+     * 时间
      */
-    private Integer month;
-    /**
-     * 年份
-     */
-    private Integer year;
+    private String date;
 
     /**
      * 地区
@@ -89,20 +109,12 @@ public class CollectMonthBO extends BaseBO {
      */
     private Double incomeAfterTax;
 
-    public Integer getYear() {
-        return year;
+    public String getDate() {
+        return date;
     }
 
-    public void setYear(Integer year) {
-        this.year = year;
-    }
-
-    public Integer getMonth() {
-        return month;
-    }
-
-    public void setMonth(Integer month) {
-        this.month = month;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getArea() {

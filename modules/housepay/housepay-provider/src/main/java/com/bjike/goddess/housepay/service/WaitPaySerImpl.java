@@ -237,6 +237,8 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
 
     @Override
     public List<WaitPayBO> findListWaitPay(WaitPayDTO waitPayDTO) throws SerException {
+        checkSeeIdentity();
+        waitPayDTO.getSorts().add("createTime=desc");
         List<WaitPay> waitPays = super.findByPage(waitPayDTO);
         List<WaitPayBO> waitPayBOS = BeanTransform.copyProperties(waitPays, WaitPayBO.class);
         return waitPayBOS;
@@ -245,6 +247,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public WaitPayBO insertWaitPay(WaitPayTO waitPayTO) throws SerException {
+        checkAddIdentity();
         WaitPay waitPay = BeanTransform.copyProperties(waitPayTO, WaitPay.class, true);
         if (PayStatus.IS.equals(waitPay.getPay())) {
             throw new SerException("添加失败，未做付款操作都是否");
@@ -259,6 +262,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public WaitPayBO editWaitPay(WaitPayTO waitPayTO) throws SerException {
+        checkAddIdentity();
         WaitPay waitPay = super.findById(waitPayTO.getId());
         BeanTransform.copyProperties(waitPayTO, waitPay, true);
         waitPay.setModifyTime(LocalDateTime.now());
@@ -269,6 +273,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeWaitPay(String id) throws SerException {
+        checkAddIdentity();
         super.remove(id);
     }
 

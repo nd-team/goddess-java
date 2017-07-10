@@ -19,6 +19,14 @@ public class OtherSpendBO extends BaseBO {
      * 日期
      */
     private String date;
+    /**
+     * 一级
+     */
+    private String firstName;
+    /**
+     * 二级
+     */
+    private String secondName;
 
     /**
      * 类型
@@ -61,6 +69,22 @@ public class OtherSpendBO extends BaseBO {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getSecondName() {
+        return secondName;
+    }
+
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
     }
 
     public String getType() {

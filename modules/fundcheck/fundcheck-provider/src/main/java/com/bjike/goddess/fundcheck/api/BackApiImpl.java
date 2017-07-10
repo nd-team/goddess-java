@@ -1,5 +1,6 @@
 package com.bjike.goddess.fundcheck.api;
 
+import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.fundcheck.bo.BackBO;
@@ -69,5 +70,13 @@ public class BackApiImpl implements BackAPI {
     @Override
     public List<BackBO> backinfo(String startTime, String endTime) throws SerException {
         return backSer.backinfo(startTime, endTime);
+    }
+    @Override
+    public BaseBO importExcel(List<BackTO> backTOS) throws SerException {
+        return backSer.importExcel(backTOS);
+    }
+    @Override
+    public byte[] templateExport() throws SerException {
+        return backSer.templateExport();
     }
 }

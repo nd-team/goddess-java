@@ -5,24 +5,27 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.fundcheck.bo.OtherIncomeBO;
 import com.bjike.goddess.fundcheck.dto.OtherIncomeDTO;
-import com.bjike.goddess.fundcheck.dto.OtherSpendDTO;
-import com.bjike.goddess.fundcheck.dto.StockMoneyDTO;
 import com.bjike.goddess.fundcheck.entity.OtherIncome;
 import com.bjike.goddess.fundcheck.enums.GuideAddrStatus;
+import com.bjike.goddess.fundcheck.excel.OtherIncomeExcel;
+import com.bjike.goddess.fundcheck.excel.OtherIncomeTemplateExcel;
 import com.bjike.goddess.fundcheck.to.GuidePermissionTO;
 import com.bjike.goddess.fundcheck.to.OtherIncomeCollectTO;
 import com.bjike.goddess.fundcheck.to.OtherIncomeTO;
-import com.bjike.goddess.fundcheck.to.OtherSpendTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +46,8 @@ public class OtherIncomeSerImpl extends ServiceImpl<OtherIncome, OtherIncomeDTO>
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private VoucherGenerateAPI voucherGenerateAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -209,7 +214,7 @@ public class OtherIncomeSerImpl extends ServiceImpl<OtherIncome, OtherIncomeDTO>
     @Override
     public OtherIncomeBO insert(OtherIncomeTO otherIncomeTO) throws SerException {
         checkAddIdentity();
-        OtherIncome otherIncome = BeanTransform.copyProperties(otherIncomeTO, OtherIncome.class);
+        OtherIncome otherIncome = BeanTransform.copyProperties(otherIncomeTO, OtherIncome.class,true);
         otherIncome.setCreateTime(LocalDateTime.now());
         super.save(otherIncome);
         return BeanTransform.copyProperties(otherIncome, OtherIncomeBO.class);
@@ -246,16 +251,16 @@ public class OtherIncomeSerImpl extends ServiceImpl<OtherIncome, OtherIncomeDTO>
         //获取所有类型(科目)
         List<String> typeList = new ArrayList<>();
         dto.getSorts().add("type=desc");
-        String sql = "SELECT type FROM fundcheck_otherincome WHERE date BETWEEN '"+startTime+"' AND '"+endTime+"' GROUP BY type ";
+        String sql = "SELECT type FROM fundcheck_otherincome WHERE date BETWEEN '" + startTime + "' AND '" + endTime + "' GROUP BY type ";
         List<Object> objects = super.findBySql(sql);
         if (null != objects && objects.size() > 0) {
             typeList.addAll((List) objects);
         }
         //获取所有类型(科目)对应的金额
         List<Double> moneyList = new ArrayList<>();
-        sql = "SELECT money FROM fundcheck_otherincome WHERE date BETWEEN '"+startTime+"' AND '"+endTime+"' GROUP BY money;";
+        sql = "SELECT money FROM fundcheck_otherincome WHERE date BETWEEN '" + startTime + "' AND '" + endTime + "' GROUP BY money;";
         List<Object> objectList = super.findBySql(sql);
-        if(null != objectList && objectList.size() > 0){
+        if (null != objectList && objectList.size() > 0) {
             moneyList.addAll((List) objectList);
         }
         //获取金额合计
@@ -265,11 +270,52 @@ public class OtherIncomeSerImpl extends ServiceImpl<OtherIncome, OtherIncomeDTO>
         Double money = stockMoneyBOS.stream().filter(str -> null != str.getMoney()).mapToDouble(OtherIncomeBO::getMoney).sum();
 
         OtherIncomeBO otherIncomeBO = new OtherIncomeBO();
-        otherIncomeBO.setDate(startTime+"-"+endTime);
+        otherIncomeBO.setDate(startTime + "-" + endTime);
         otherIncomeBO.setTypeList(typeList);
         otherIncomeBO.setMoneyList(moneyList);
         otherIncomeBO.setMoney(money);
         otherIncomeBOList.add(otherIncomeBO);
         return otherIncomeBOList;
     }
+    @Override
+    public List<String> listFirstSubject() throws SerException {
+        List<String> firstSubject = voucherGenerateAPI.listFirstSubject();
+        return firstSubject;
+    }
+
+    @Override
+    public List<String> listSubByFirst(String firstSub) throws SerException {
+        List<String> secondSubject = voucherGenerateAPI.listSubByFirst(firstSub);
+        return secondSubject;
+    }
+
+    @Override
+    public List<String> listTubByFirst(String firstSub, String secondSub) throws SerException {
+        List<String> thirdSubject = voucherGenerateAPI.listTubByFirst(firstSub, secondSub);
+        return thirdSubject;
+    }
+
+    @Override
+    public OtherIncomeBO importExcel(List<OtherIncomeTO> otherIncomeTOS) throws SerException {
+        List<OtherIncome> otherIncomes = BeanTransform.copyProperties(otherIncomeTOS, OtherIncome.class, true);
+        super.save(otherIncomes);
+
+        OtherIncomeBO bo = BeanTransform.copyProperties(new OtherIncome(), OtherIncomeBO.class);
+        return bo;
+    }
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<OtherIncomeTemplateExcel> otherIncomeExcels = new ArrayList<>();
+
+        OtherIncomeTemplateExcel excel = new OtherIncomeTemplateExcel();
+        excel.setDate(LocalDate.now());
+        excel.setType("test");
+        excel.setMoney(10.0d);
+        otherIncomeExcels.add(excel);
+
+        Excel excels = new Excel(0,2);
+        byte[] bytes = ExcelUtil.clazzToExcel(otherIncomeExcels,excels);
+        return bytes;
+    }
+
 }

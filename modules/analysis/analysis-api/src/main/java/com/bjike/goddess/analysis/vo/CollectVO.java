@@ -1,28 +1,22 @@
-package com.bjike.goddess.analysis.bo;
-
-import com.bjike.goddess.common.api.bo.BaseBO;
+package com.bjike.goddess.analysis.vo;
 
 /**
  * Created by ike on 17-5-31.
  */
-public class CollectDepartmentBO extends BaseBO {
+public class CollectVO {
     /**
-     * 项目组/部门
+     * 时间
      */
-    private String department;
+    private String date;
+
     /**
      * 地区
      */
     private String area;
     /**
-     * 年份
+     * 项目组/部门
      */
-    private Integer year;
-
-    /**
-     * 月份
-     */
-    private Integer month;
+    private String department;
 
     /**
      * 出车司机数
@@ -89,20 +83,13 @@ public class CollectDepartmentBO extends BaseBO {
      */
     private Double incomeAfterTax;
 
-    public Integer getYear() {
-        return year;
+    public String getDate() {
+
+        return date;
     }
 
-    public void setYear(Integer year) {
-        this.year = year;
-    }
-
-    public Integer getMonth() {
-        return month;
-    }
-
-    public void setMonth(Integer month) {
-        this.month = month;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getArea() {

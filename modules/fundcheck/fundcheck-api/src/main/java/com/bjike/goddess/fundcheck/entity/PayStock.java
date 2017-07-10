@@ -26,6 +26,16 @@ public class PayStock extends BaseEntity {
      */
     @Column(name = "date", nullable = false, columnDefinition = "DATE   COMMENT '日期'")
     private LocalDate date;
+    /**
+     * 一级
+     */
+    @Column(name = "firstName", columnDefinition = "VARCHAR(255)   COMMENT '一级'")
+    private String firstName;
+    /**
+     * 二级
+     */
+    @Column(name = "secondName", columnDefinition = "VARCHAR(255)   COMMENT '二级'")
+    private String secondName;
 
     /**
      * 股东名
@@ -46,6 +56,22 @@ public class PayStock extends BaseEntity {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getSecondName() {
+        return secondName;
+    }
+
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
     }
 
     public String getStockName() {

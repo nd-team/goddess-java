@@ -6,6 +6,7 @@ import com.bjike.goddess.fundcheck.dto.OperatExpensesDTO;
 import com.bjike.goddess.fundcheck.service.OperatExpensesSer;
 import com.bjike.goddess.fundcheck.to.GuidePermissionTO;
 import com.bjike.goddess.fundcheck.to.OperatExpensesCollectTO;
+import com.bjike.goddess.fundcheck.to.OperatExpensesTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,12 +50,12 @@ public class OperatExpensesApiImpl implements OperatExpensesAPI {
     }
 
     @Override
-    public OperatExpensesBO insert(OperatExpensesCollectTO operatExpensesTO) throws SerException {
+    public OperatExpensesBO insert(OperatExpensesTO operatExpensesTO) throws SerException {
         return operatExpensesSer.insert(operatExpensesTO);
     }
 
     @Override
-    public OperatExpensesBO edit(OperatExpensesCollectTO operatExpensesTO) throws SerException {
+    public OperatExpensesBO edit(OperatExpensesTO operatExpensesTO) throws SerException {
         return operatExpensesSer.edit(operatExpensesTO);
     }
 
@@ -65,5 +66,17 @@ public class OperatExpensesApiImpl implements OperatExpensesAPI {
     @Override
     public List<OperatExpensesBO> collect(OperatExpensesCollectTO to) throws SerException {
         return operatExpensesSer.collect(to);
+    }
+    @Override
+    public List<String> listType() throws SerException {
+        return operatExpensesSer.listType();
+    }
+    @Override
+    public OperatExpensesBO importExcel(List<OperatExpensesTO> operatExpensesTOS) throws SerException {
+        return operatExpensesSer.importExcel(operatExpensesTOS);
+    }
+    @Override
+    public byte[] templateExport() throws SerException {
+        return operatExpensesSer.templateExport();
     }
 }

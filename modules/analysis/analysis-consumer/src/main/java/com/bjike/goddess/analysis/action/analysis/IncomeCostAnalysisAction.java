@@ -3,10 +3,9 @@ package com.bjike.goddess.analysis.action.analysis;
 import com.bjike.goddess.analysis.api.IncomeCostAnalysisAPI;
 import com.bjike.goddess.analysis.bo.IncomeCostAnalysisBO;
 import com.bjike.goddess.analysis.dto.IncomeCostAnalysisDTO;
-import com.bjike.goddess.analysis.to.IncomeCostAnalysisTO;
-import com.bjike.goddess.analysis.vo.CollectAreaVO;
-import com.bjike.goddess.analysis.vo.CollectDepartmentVO;
-import com.bjike.goddess.analysis.vo.CollectMonthVO;
+import com.bjike.goddess.analysis.excel.SonPermissionObject;
+import com.bjike.goddess.analysis.to.*;
+import com.bjike.goddess.analysis.vo.CollectVO;
 import com.bjike.goddess.analysis.vo.IncomeCostAnalysisVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -16,12 +15,14 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +39,79 @@ import java.util.List;
 public class IncomeCostAnalysisAction {
     @Autowired
     private IncomeCostAnalysisAPI incomeCostAnalysisAPI;
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result i() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = incomeCostAnalysisAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = incomeCostAnalysisAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 收入成本分析列表总条数
@@ -151,19 +225,54 @@ public class IncomeCostAnalysisAction {
 
 
     /**
-     * 汇总地区收入成本分析
+     * 地区汇总
      *
-     * @param areas 地区
-     * @return class CollectAreaVO
-     * @des 汇总收入成本分析
+     * @param to 汇总条件
+     * @return class CollectVO
      * @version v1
      */
-    @GetMapping("v1/collectArea")
-    public Result collectArea(@RequestParam String[] areas) throws ActException {
+    @GetMapping("v1/areaCollect")
+    public Result areaCollect(@Validated({AreaTO.Collect.class}) AreaTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            List<CollectAreaVO> incomeCostAnalysisVOS = BeanTransform.copyProperties(
-                    incomeCostAnalysisAPI.collectArea(areas), CollectAreaVO.class);
-            return ActResult.initialize(incomeCostAnalysisVOS);
+            CollectTO collectTO = BeanTransform.copyProperties(to, CollectTO.class);
+            List<CollectVO> voList = BeanTransform.copyProperties(incomeCostAnalysisAPI.collect(collectTO), CollectVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 项目组汇总
+     *
+     * @param to 汇总条件
+     * @return class CollectVO
+     * @version v1
+     */
+    @GetMapping("v1/departmentCollect")
+    public Result departmentCollect(@Validated({DepartmentTO.Collect.class}) DepartmentTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+            CollectTO collectTO = BeanTransform.copyProperties(to, CollectTO.class);
+            List<CollectVO> voList = BeanTransform.copyProperties(incomeCostAnalysisAPI.collect(collectTO), CollectVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 时间汇总
+     *
+     * @param to 汇总条件
+     * @return class CollectVO
+     * @version v1
+     */
+    @GetMapping("v1/date")
+    public Result date(@Validated({DateTO.Collect.class}) DateTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+            CollectTO collectTO = BeanTransform.copyProperties(to, CollectTO.class);
+            List<CollectVO> voList = BeanTransform.copyProperties(incomeCostAnalysisAPI.collect(collectTO), CollectVO.class, request);
+            return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -184,59 +293,7 @@ public class IncomeCostAnalysisAction {
             throw new ActException(e.getMessage());
         }
     }
-    /**
-     * 汇总月份收入成本分析
-     *
-     * @param months 月份
-     * @return class CollectMonthVO
-     * @des 汇总收入成本分析
-     * @version v1
-     */
-    @GetMapping("v1/collectMonth")
-    public Result collectMonth(@RequestParam String[] months) throws ActException {
-        try {
-            List<CollectMonthVO> incomeCostAnalysisVOS = BeanTransform.copyProperties(
-                    incomeCostAnalysisAPI.collectMonth(months), CollectMonthVO.class);
-            return ActResult.initialize(incomeCostAnalysisVOS);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
 
-    /**
-     * 获取月份
-     *
-     * @des 获取月份集合
-     * @version v1
-     */
-    @GetMapping("v1/month")
-    public Result month() throws ActException {
-        try {
-            List<String> monthsList = incomeCostAnalysisAPI.getMonth();
-            return ActResult.initialize(monthsList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 汇总部门收入成本分析
-     *
-     * @param departments 部门
-     * @return class CollectDepartmentVO
-     * @des 汇总收入成本分析
-     * @version v1
-     */
-    @GetMapping("v1/collectDepartment")
-    public Result collectDepartment(@RequestParam String[] departments) throws ActException {
-        try {
-            List<CollectDepartmentVO> incomeCostAnalysisVOS = BeanTransform.copyProperties(
-                    incomeCostAnalysisAPI.collectDepartment(departments), CollectDepartmentVO.class);
-            return ActResult.initialize(incomeCostAnalysisVOS);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
 
     /**
      * 获取部门
@@ -253,7 +310,6 @@ public class IncomeCostAnalysisAction {
             throw new ActException(e.getMessage());
         }
     }
-
 
 
 }
