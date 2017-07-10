@@ -62,7 +62,7 @@ public class CategoryTO extends BaseTO {
     /**
      * 类别
      */
-    @NotNull(groups = {CategoryTO.TestGetFirst.class} , message = "类别不能呢为空")
+    @NotNull(groups = {CategoryTO.TestGetFirst.class} , message = "类别不能为空")
     private CategoryName categoryName;
 
     /**
