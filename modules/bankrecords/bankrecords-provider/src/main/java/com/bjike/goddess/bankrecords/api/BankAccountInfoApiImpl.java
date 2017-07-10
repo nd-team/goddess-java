@@ -40,7 +40,7 @@ public class BankAccountInfoApiImpl implements BankAccountInfoAPI {
 
     @Override
     public void delete(String id) throws SerException {
-        bankAccountInfoSer.remove(id);
+        bankAccountInfoSer.delete(id);
     }
 
     @Override

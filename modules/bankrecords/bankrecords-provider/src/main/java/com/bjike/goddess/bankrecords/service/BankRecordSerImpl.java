@@ -228,139 +228,176 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
 
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public List<BankRecordCollectBO> collect(Integer year, Integer month, String accountName) throws SerException {
-        BankRecordDTO dto = new BankRecordDTO();
-        String bank = "";
-        if (!StringUtils.isEmpty(accountName)) {
+    public List<BankRecordCollectBO> collect(Integer year, Integer month, String[] accountIds) throws SerException {
+        //查询accountIds各账户的总支出、总收入
+        StringBuilder sql = new StringBuilder("SELECT");
+        sql.append(" bankrecord.accountId, info.bank AS bank, sum(bankrecord.creditorCost) AS creditorCost, sum(bankrecord.debtorCost) AS debtorCost");
+        sql.append(" FROM bankrecords_bankrecord bankrecord LEFT JOIN bankrecords_bankaccountinfo info ON bankrecord.accountId = info.id");
+        sql.append(" WHERE 0 = 0 ");
+        sql.append(" AND bankrecord.recordYear = " + year);
+        sql.append(" AND bankrecord.recordMonth = " + month);
 
-            BankAccountInfoDTO infoDTO = new BankAccountInfoDTO();
-            infoDTO.getConditions().add(Restrict.eq("name", accountName));
-            BankAccountInfo info = bankAccountInfoSer.findOne(infoDTO);
-            if (info != null) {
-                bank = info.getBank();
-                dto.getConditions().add(Restrict.eq("accountId", info.getId()));
-            } else {
-                throw new SerException("账户名称不存在!");
+        if (accountIds != null && accountIds.length > 0) {
+            sql.append(" AND bankrecord.accountId IN ( ");
+            for (int i = 0; i < accountIds.length; i++) {
+                if (i != accountIds.length - 1) {
+                    sql.append("'" + accountIds[i] + "'" + ",");
+                } else {
+                    sql.append("'" + accountIds[i] + "'");
+                }
             }
-
+            sql.append(" ) ");
         }
-        dto.getConditions().add(Restrict.eq("year", year));
-        dto.getConditions().add(Restrict.eq("month", month));
-        return collectCombine(dto, bank, year, month);
+        sql.append(" GROUP BY bankrecord.accountId ");
+        String[] fields = new String[]{"accountId", "bank", "creditorCost", "debtorCost"};
+
+        List<BankRecordCollectBO> boList = super.findBySql(sql.toString(), BankRecordCollectBO.class, fields);
+        if (!CollectionUtils.isEmpty(boList)) {
+            //查询账户year年month月余额
+            for (BankRecordCollectBO bo : boList) {
+                List<BankRecord> list = findBalance(year, month, bo.getAccountId());
+                if (!CollectionUtils.isEmpty(list)) {
+                    bo.setYear(year);
+                    bo.setMonth(month);
+                    bo.setBalance(list.get(0).getBalance());
+                }
+            }
+            double debtorCost = boList.stream().filter(p -> p.getDebtorCost() != null).mapToDouble(BankRecordCollectBO::getDebtorCost).sum();
+            double creditorCost = boList.stream().filter(p -> p.getCreditorCost() != null).mapToDouble(BankRecordCollectBO::getCreditorCost).sum();
+            double balance = boList.stream().filter(p -> p.getBalance() != null).mapToDouble(BankRecordCollectBO::getBalance).sum();
+            BankRecordCollectBO totalBO = new BankRecordCollectBO(debtorCost, creditorCost, balance, year, month, "合计");
+            boList.add(totalBO);
+            return boList;
+        } else {
+            return null;
+        }
     }
 
-    public List<BankRecordCollectBO> collectCombine(BankRecordDTO dto, String bank, Integer year, Integer month) throws SerException {
-        List<BankRecordCollectBO> boList = BeanTransform.copyProperties(super.findByCis(dto), BankRecordCollectBO.class);
-        if (boList != null && !boList.isEmpty()) {
-            Double debtorCost = 0.0;
-            Double creditorCost = 0.0;
-            Double balance = 0.0;
-            for (BankRecordCollectBO bo : boList) {
-                bo.setBank(bank);
-                if (bo.getDebtorCost() != null) {
-                    debtorCost = debtorCost + bo.getDebtorCost();
-                }
-                if (bo.getCreditorCost() != null) {
-                    creditorCost = creditorCost + bo.getCreditorCost();
-                }
-                if (bo.getBalance() != null) {
-                    balance = balance + bo.getBalance();
-                }
-            }
-            BankRecordCollectBO bo = new BankRecordCollectBO(debtorCost, creditorCost, balance, year, month, "合计");
-            boList.add(bo);
-        }
-        return boList;
+    public List<BankRecord> findBalance(Integer year, Integer month, String accountId) throws SerException {
+        StringBuilder sql = new StringBuilder("select balance from bankrecords_bankrecord bankrecord  where 0 = 0");
+        sql.append(" and bankrecord.recordYear = " + year);
+        sql.append(" and bankrecord.recordMonth = " + month);
+        sql.append(" and bankrecord.accountId = '" + accountId + "'");
+        sql.append(" ORDER BY bankrecord.recordDate desc");
+        sql.append(" limit 1");
+        String[] balanceField = new String[]{"balance"};
+        return super.findBySql(sql.toString(), BankRecord.class, balanceField);
+    }
+
+    public List<BankRecordCollectBO> findByMonth(Integer year, Integer month, String accountId) throws SerException {
+        StringBuilder sql = new StringBuilder("SELECT");
+        sql.append(" info.bank AS bank, bankrecord.creditorCost, bankrecord.debtorCost, bankrecord.balance");
+        sql.append(" FROM bankrecords_bankrecord bankrecord LEFT JOIN bankrecords_bankaccountinfo info ON bankrecord.accountId = info.id");
+        sql.append(" WHERE 0 = 0 ");
+        sql.append(" and bankrecord.recordYear = " + year);
+        sql.append(" and bankrecord.recordMonth = " + month);
+        sql.append(" and bankrecord.accountId = '" + accountId + "'");
+        sql.append(" ORDER BY bankrecord.recordDate desc");
+        sql.append(" limit 1");
+        String[] balanceField = new String[]{"bank", "creditorCost", "debtorCost", "balance"};
+        return super.findBySql(sql.toString(), BankRecordCollectBO.class, balanceField);
     }
 
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public BankRecordAnalyzeBO analyze(Integer year, Integer month, String accountName) throws SerException {
-        BankRecordDTO currentDTO = new BankRecordDTO();
-        BankRecordDTO lastDTO = new BankRecordDTO();
-        BankRecordDTO allDTO = new BankRecordDTO();
-        String bank = "";
-        if (!StringUtils.isEmpty(accountName)) {
-
-            BankAccountInfoDTO infoDTO = new BankAccountInfoDTO();
-            infoDTO.getConditions().add(Restrict.eq("name", accountName));
-            BankAccountInfo info = bankAccountInfoSer.findOne(infoDTO);
-            if (info != null) {
-                bank = info.getBank();
-                currentDTO.getConditions().add(Restrict.eq("accountId", info.getId()));
-                lastDTO.getConditions().add(Restrict.eq("accountId", info.getId()));
-            } else {
-                throw new SerException("账户名称不存在!");
-            }
-        }
-        currentDTO.getConditions().add(Restrict.eq("year", year));
-        currentDTO.getConditions().add(Restrict.eq("month", month));
-        lastDTO.getConditions().add(Restrict.eq("year", year));
-        lastDTO.getConditions().add(Restrict.eq("month", month - 1));
-
-        List<BankRecord> currentList = super.findByCis(currentDTO);
-        List<BankRecord> lastList = super.findByCis(lastDTO);
-        List<BankRecord> allList = super.findByCis(allDTO);
-
-        Double allDebtorCost = allList.stream().filter(p -> p.getDebtorCost() != null).mapToDouble(BankRecord::getDebtorCost).sum();
-        Double allCreditorCost = allList.stream().filter(p -> p.getCreditorCost() != null).mapToDouble(BankRecord::getCreditorCost).sum();
-        Double currentDebtorCost = currentList.stream().filter(p -> p.getDebtorCost() != null).mapToDouble(BankRecord::getDebtorCost).sum();
-        Double currentCreditorCost = currentList.stream().filter(p -> p.getCreditorCost() != null).mapToDouble(BankRecord::getCreditorCost).sum();
-        Double currentBalance = currentList.stream().filter(p -> p.getBalance() != null).mapToDouble(BankRecord::getBalance).sum();
-        Double lastDebtorCost = lastList.stream().filter(p -> p.getDebtorCost() != null).mapToDouble(BankRecord::getDebtorCost).sum();
-        Double lastCreditorCost = lastList.stream().filter(p -> p.getCreditorCost() != null).mapToDouble(BankRecord::getCreditorCost).sum();
-        Double lastBalance = lastList.stream().filter(p -> p.getBalance() != null).mapToDouble(BankRecord::getBalance).sum();
-
-        Double creditorSubtract = currentCreditorCost - lastCreditorCost;
-        Double debtorSubtract = currentDebtorCost - lastDebtorCost;
-
-        Double creditorGrow = null;
-        Double debtorGrow = null;
-
-        if (lastCreditorCost != 0) {
-            creditorGrow = creditorSubtract / lastCreditorCost;
-        }
-        if (lastDebtorCost != 0) {
-            debtorGrow = debtorSubtract / lastDebtorCost;
-        }
-
-        DecimalFormat format = new DecimalFormat("#.00");
-
-        String creditorRate = null;
-        String debtorRate = null;
-        if (allDebtorCost != null && allDebtorCost != 0) {
-            Double creditorRateTemp = creditorSubtract / allDebtorCost;
-            Double debtorRateTemp = debtorSubtract / allCreditorCost;
-
-            if (creditorRateTemp == 0) {
-                creditorRate = "0.00%";
-            } else {
-                if(allDebtorCost==0){
-                    creditorRate = format.format(creditorSubtract / allDebtorCost);
-                }else{
-                    creditorRate = format.format(creditorSubtract / allDebtorCost) + "%";
+    public List<BankRecordAnalyzeBO> analyze(Integer year, Integer month, String[] accountIds) throws SerException {
+        List<BankRecordAnalyzeBO> boList = new ArrayList<BankRecordAnalyzeBO>();
+        //未选择时，按所有账户分组查询
+        if (accountIds == null || accountIds.length == 0) {
+            StringBuilder accountSql = new StringBuilder(" select DISTINCT accountId from bankrecords_bankrecord ");
+            String[] accountIdStr = new String[]{"accountId"};
+            List<BankRecordBO> accountIdList = super.findBySql(accountSql.toString(), BankRecordBO.class, accountIdStr);
+            if (!CollectionUtils.isEmpty(accountIdList)) {
+                List<String> strTemps = new ArrayList<String>();
+                for (BankRecordBO bo : accountIdList) {
+                    strTemps.add(bo.getAccountId());
                 }
-
-            }
-            if (debtorRateTemp == 0) {
-                debtorRate = "0.00%";
+                accountIds = (String[]) strTemps.toArray(new String[strTemps.size()]);
             } else {
-                if(allCreditorCost==0){
-                    debtorRate = format.format(debtorSubtract / allCreditorCost);
-                }else{
-                    debtorRate = format.format(debtorSubtract / allCreditorCost) + "%";
-                }
-
+                return null;
             }
-
-
         }
-        BankRecordAnalyzeBO bo = new BankRecordAnalyzeBO(bank, year, month,
-                currentDebtorCost, currentCreditorCost, currentBalance,
-                lastDebtorCost, lastCreditorCost, lastBalance, creditorSubtract, debtorSubtract,
-                creditorRate, debtorRate, creditorGrow, debtorGrow
-        );
-        return bo;
+        for (int i = 0; i < accountIds.length; i++) {
+            BankRecordAnalyzeBO bo = new BankRecordAnalyzeBO();
+            bo.setYear(year);
+            bo.setMonth(month);
+            //查询accountIds账户year年month月最后的银行流水记录
+            List<BankRecordCollectBO> cuuretnBO = findByMonth(year, month, accountIds[i]);
+            if (!CollectionUtils.isEmpty(cuuretnBO)) {
+                bo.setBank(cuuretnBO.get(0).getBank());
+                bo.setCurrentBalance(cuuretnBO.get(0).getBalance());
+                bo.setCurrentCreditorCost(cuuretnBO.get(0).getCreditorCost());
+                bo.setCurrentDebtorCost(cuuretnBO.get(0).getDebtorCost());
+            }
+            //查询accountIds账户year年(month-1)月最后的银行流水记录
+            List<BankRecordCollectBO> lastBO = findByMonth(year, month, accountIds[i]);
+            if (!CollectionUtils.isEmpty(lastBO)) {
+                bo.setLastBalance(lastBO.get(0).getBalance());
+                bo.setLastCreditorCost(lastBO.get(0).getCreditorCost());
+                bo.setLastDebtorCost(lastBO.get(0).getDebtorCost());
+            } else {
+                bo.setLastBalance(0.0);
+                bo.setLastCreditorCost(0.0);
+                bo.setLastDebtorCost(0.0);
+            }
+            if (!CollectionUtils.isEmpty(cuuretnBO)) {
+                double lastCreditorCost = bo.getLastCreditorCost();
+                double lastDebtorCost = bo.getLastDebtorCost();
+                //计算差额
+                double creditorSubtract = bo.getCurrentCreditorCost() - lastCreditorCost;
+                double debtorSubtract = bo.getCurrentDebtorCost() - lastDebtorCost;
+                bo.setCreditorSubtract(creditorSubtract);
+                bo.setDebtorSubtract(debtorSubtract);
+                //计算增长率
+                if (lastCreditorCost == 0) {
+                    bo.setCreditorGrow(1.0);
+                } else {
+                    bo.setCreditorGrow(creditorSubtract / lastCreditorCost);
+                }
+                if (lastDebtorCost == 0) {
+                    bo.setDebtorGrow(1.0);
+                } else {
+                    bo.setDebtorGrow(creditorSubtract / lastDebtorCost);
+                }
+                //计算比率
+                BankRecordDTO allDTO = new BankRecordDTO();//查询总流水
+                allDTO.getConditions().add(Restrict.eq("accountId", accountIds[i]));
+                List<BankRecord> allList = super.findByCis(allDTO);
+
+                double allDebtorCost = allList.stream().filter(p -> p.getDebtorCost() != null).mapToDouble(BankRecord::getDebtorCost).sum();
+                double allCreditorCost = allList.stream().filter(p -> p.getCreditorCost() != null).mapToDouble(BankRecord::getCreditorCost).sum();
+
+                Double debtorRateTemp = bo.getCurrentDebtorCost() / allDebtorCost;
+                Double creditorRateTemp = bo.getCurrentCreditorCost() / allCreditorCost;
+
+                DecimalFormat format = new DecimalFormat("#.00");
+                String creditorRate = null;
+                String debtorRate = null;
+                if (debtorRateTemp.doubleValue() == 0.0) {
+                    debtorRate = "0.00%";
+                } else {
+                    if (allDebtorCost == 0) {
+
+                    } else {
+                        debtorRate = format.format(debtorRateTemp * 100) + "%";
+                    }
+                }
+                bo.setDebtorRate(debtorRate);
+
+                if (creditorRateTemp.doubleValue() == 0.0) {
+                    creditorRate = "0.00%";
+                } else {
+                    if (allCreditorCost == 0.0) {
+
+                    } else {
+                        creditorRate = format.format(creditorRateTemp * 100) + "%";
+                    }
+                }
+                bo.setCreditorRate(creditorRate);
+                boList.add(bo);
+            }
+        }
+        return boList;
     }
 
     @Override
@@ -582,9 +619,14 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
 
     public void insertModels(XSSFSheet sheet, BankRecordTO to) throws SerException {
         int rowNum = sheet.getLastRowNum();
+        if (rowNum == 0) {
+            throw new SerException("导入的Excel银行流水记录不能为空!");
+        }
         int cellNum = sheet.getRow(0).getPhysicalNumberOfCells();
-        for (int i = 1; i <= rowNum; i++) {
 
+        Boolean judegeFormat = false;
+
+        for (int i = 1; i <= rowNum; i++) {
             BankRecord model = new BankRecord();
             //校验时间格式
             judgeDate(model, to, sheet, i);
@@ -593,40 +635,44 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
             model.setCreditorCost(sheet.getRow(i).getCell(to.getCreditorCostIndex()).getNumericCellValue());
             model.setDebtorCost(sheet.getRow(i).getCell(to.getDebtorCostIndex()).getNumericCellValue());
             model.setBalance(sheet.getRow(i).getCell(to.getBalanceIndex()).getNumericCellValue());
-            super.save(model);
+
+
             List<BankRecordDetail> detailList = new ArrayList<BankRecordDetail>();
             for (int j = 0; j < cellNum; j++) {
                 detailList.add(saveDetail(model, sheet, i, j));
             }
             if (!CollectionUtils.isEmpty(detailList)) {
-                //判断该账号是否已经存在银行流水记录，如果存在检查本次导入的Excel数据格式是否对应已存在的Excel数据格式
-                BankRecordDTO dto = new BankRecordDTO();
-                dto.getConditions().add(Restrict.eq("accountId", to.getAccountId()));
-                dto.setLimit(1);
-                dto.getSorts().add("createTime=asc");
-                List<BankRecordBO> boList = BeanTransform.copyProperties(super.findByPage(dto), BankRecordBO.class);
-                if (!CollectionUtils.isEmpty(boList)) {
-                    BankRecordDetailDTO detailDTO = new BankRecordDetailDTO();
-                    detailDTO.getConditions().add(Restrict.eq("bankRecord.id", boList.get(0).getAccountId()));
-                    List<BankRecordDetail> details = bankRecordDetailSer.findByCis(detailDTO);
 
-                    List<Detail> formats = format(details);
-                    if (formats.size() == detailList.size()) {
-                        for (int k = 0; k < formats.size(); k++) {
-                            if (!formats.get(k).getTitle().equals(detailList.get(k).getTitle())) {
-                                throw new SerException("导入的Excel数据内容格式该账户已导入的数据不一致,请检查导入的Excel!");
+                if (!judegeFormat) {
+                    //判断该账号是否已经存在银行流水记录，如果存在检查本次导入的Excel数据格式是否对应已存在的Excel数据格式,只需要检查第一行可以确定
+                    BankRecordDTO dto = new BankRecordDTO();
+                    dto.getConditions().add(Restrict.eq("accountId", to.getAccountId()));
+                    dto.setLimit(1);
+                    dto.getSorts().add("createTime=asc");
+                    List<BankRecordBO> boList = BeanTransform.copyProperties(super.findByPage(dto), BankRecordBO.class);
+                    if (!CollectionUtils.isEmpty(boList) && !boList.get(0).getId().equals(model.getId())) {
+                        BankRecordDetailDTO detailDTO = new BankRecordDetailDTO();
+                        detailDTO.getConditions().add(Restrict.eq("bankRecord.id", boList.get(0).getId()));
+                        List<BankRecordDetail> details = bankRecordDetailSer.findByCis(detailDTO);
+
+                        List<Detail> formats = format(details);
+                        if (formats.size() == detailList.size()) {
+                            for (int k = 0; k < formats.size(); k++) {
+                                if (!formats.get(k).getTitle().equals(detailList.get(k).getTitle())) {
+                                    throw new SerException("导入的Excel数据内容格式该账户已导入的数据不一致,请检查导入的Excel!");
+                                }
                             }
+                        } else {
+                            throw new SerException("导入的Excel数据内容格式该账户已导入的数据不一致,请检查导入的Excel!");
                         }
-
-                        bankRecordDetailSer.save(detailList);
-                    } else {
-                        throw new SerException("导入的Excel数据内容格式该账户已导入的数据不一致,请检查导入的Excel!");
                     }
+                    judegeFormat = true;
                 }
-
+                model.setDetailList(detailList);
             } else {
                 throw new SerException("导入的Excel银行流水记录不能为空!");
             }
+            super.save(model);
         }
     }
 
@@ -813,14 +859,7 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
         List<BankRecordBO> accountIds = super.findBySql(accountSql.toString(), BankRecordBO.class, accountIdStr);
         Double totalBalance = 0.0;
         for (BankRecordBO bo : accountIds) {
-            StringBuilder sql = new StringBuilder("select balance from bankrecords_bankrecord bankrecord  where 0 = 0");
-            sql.append(" and bankrecord.recordYear = " + year);
-            sql.append(" and bankrecord.recordMonth = " + year);
-            sql.append(" and bankrecord.accountId = '" + bo.getAccountId() + "'");
-            sql.append(" ORDER BY bankrecord.recordDate desc");
-            sql.append(" limit 1");
-            String[] fields = new String[]{"balance"};
-            List<BankRecord> list = super.findBySql(sql.toString(), BankRecord.class, fields);
+            List<BankRecord> list = findBalance(year, month, bo.getAccountId());
             if (!CollectionUtils.isEmpty(list)) {
                 totalBalance = totalBalance + list.get(0).getBalance();
             }
@@ -844,7 +883,7 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
     }
 
     @Override
-    public byte[] collectExcel(Integer year, Integer month, String accountName) throws SerException {
+    public byte[] collectExcel(Integer year, Integer month, String[] accountName) throws SerException {
 
         List<BankRecordsCollectExcel> excelList = new ArrayList<BankRecordsCollectExcel>();
         List<BankRecordCollectBO> boList = collect(year, month, accountName);
@@ -863,14 +902,40 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
         return bytes;
     }
 
+    public List<BankRecordCollectBO> collectCombine(BankRecordDTO dto, String bank, Integer year, Integer month) throws SerException {
+        List<BankRecordCollectBO> boList = BeanTransform.copyProperties(super.findByCis(dto), BankRecordCollectBO.class);
+        if (boList != null && !boList.isEmpty()) {
+            Double debtorCost = 0.0;
+            Double creditorCost = 0.0;
+            Double balance = 0.0;
+            for (BankRecordCollectBO bo : boList) {
+                bo.setBank(bank);
+                if (bo.getDebtorCost() != null) {
+                    debtorCost = debtorCost + bo.getDebtorCost();
+                }
+                if (bo.getCreditorCost() != null) {
+                    creditorCost = creditorCost + bo.getCreditorCost();
+                }
+                if (bo.getBalance() != null) {
+                    balance = balance + bo.getBalance();
+                }
+            }
+            BankRecordCollectBO bo = new BankRecordCollectBO(debtorCost, creditorCost, balance, year, month, "合计");
+            boList.add(bo);
+        }
+        return boList;
+    }
+
     @Override
-    public byte[] analyzeExcel(Integer year, Integer month, String accountName) throws SerException {
+    public byte[] analyzeExcel(Integer year, Integer month, String[] accountIds) throws SerException {
         List<BankRecordsAnalyzeExcel> excelList = new ArrayList<BankRecordsAnalyzeExcel>();
-        BankRecordAnalyzeBO bo = analyze(year, month, accountName);
-        if (bo != null) {
-            BankRecordsAnalyzeExcel excel = new BankRecordsAnalyzeExcel();
-            BeanUtils.copyProperties(bo, excel);
-            excelList.add(excel);
+        List<BankRecordAnalyzeBO> boList = analyze(year, month, accountIds);
+        if (!CollectionUtils.isEmpty(boList)) {
+            for (BankRecordAnalyzeBO bo : boList) {
+                BankRecordsAnalyzeExcel excel = new BankRecordsAnalyzeExcel();
+                BeanUtils.copyProperties(bo, excel);
+                excelList.add(excel);
+            }
         } else {
             excelList.add(new BankRecordsAnalyzeExcel());
         }
