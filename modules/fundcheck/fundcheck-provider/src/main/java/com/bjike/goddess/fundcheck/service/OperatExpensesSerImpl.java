@@ -5,20 +5,28 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.fundcheck.bo.OperatExpensesBO;
 import com.bjike.goddess.fundcheck.dto.OperatExpensesDTO;
 import com.bjike.goddess.fundcheck.entity.OperatExpenses;
 import com.bjike.goddess.fundcheck.enums.GuideAddrStatus;
+import com.bjike.goddess.fundcheck.excel.OperatExpensesTemplateExcel;
 import com.bjike.goddess.fundcheck.to.GuidePermissionTO;
 import com.bjike.goddess.fundcheck.to.OperatExpensesCollectTO;
+import com.bjike.goddess.fundcheck.to.OperatExpensesTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.validator.constraints.ModCheck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.event.ListSelectionEvent;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +43,8 @@ import java.util.List;
 @CacheConfig(cacheNames = "fundcheckSerCache")
 @Service
 public class OperatExpensesSerImpl extends ServiceImpl<OperatExpenses, OperatExpensesDTO> implements OperatExpensesSer {
+    @Autowired
+    private VoucherGenerateAPI voucherGenerateAPI;
     @Autowired
     private UserAPI userAPI;
     @Autowired
@@ -189,7 +199,7 @@ public class OperatExpensesSerImpl extends ServiceImpl<OperatExpenses, OperatExp
     @Override
     public OperatExpensesBO getOne(String id) throws SerException {
         OperatExpenses operatExpenses = super.findById(id);
-        return BeanTransform.copyProperties(operatExpenses,OperatExpensesBO.class);
+        return BeanTransform.copyProperties(operatExpenses, OperatExpensesBO.class);
     }
 
     @Override
@@ -197,29 +207,29 @@ public class OperatExpensesSerImpl extends ServiceImpl<OperatExpenses, OperatExp
         checkSeeIdentity();
         operatExpensesDTO.getSorts().add("createTime=desc");
         List<OperatExpenses> operatExpenses = super.findByPage(operatExpensesDTO);
-        List<OperatExpensesBO> operatExpensesBOS = BeanTransform.copyProperties(operatExpenses,OperatExpensesBO.class);
+        List<OperatExpensesBO> operatExpensesBOS = BeanTransform.copyProperties(operatExpenses, OperatExpensesBO.class);
         return operatExpensesBOS;
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public OperatExpensesBO insert(OperatExpensesCollectTO operatExpensesTO) throws SerException {
+    public OperatExpensesBO insert(OperatExpensesTO operatExpensesTO) throws SerException {
         checkAddIdentity();
-        OperatExpenses operatExpenses = BeanTransform.copyProperties(operatExpensesTO,OperatExpenses.class);
+        OperatExpenses operatExpenses = BeanTransform.copyProperties(operatExpensesTO, OperatExpenses.class,true);
         operatExpenses.setCreateTime(LocalDateTime.now());
         super.save(operatExpenses);
-        return BeanTransform.copyProperties(operatExpenses,OperatExpensesBO.class);
+        return BeanTransform.copyProperties(operatExpenses, OperatExpensesBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public OperatExpensesBO edit(OperatExpensesCollectTO operatExpensesTO) throws SerException {
+    public OperatExpensesBO edit(OperatExpensesTO operatExpensesTO) throws SerException {
         checkAddIdentity();
         OperatExpenses operatExpenses = super.findById(operatExpensesTO.getId());
-        BeanTransform.copyProperties(operatExpensesTO,operatExpenses,true);
+        BeanTransform.copyProperties(operatExpensesTO, operatExpenses, true);
         operatExpenses.setModifyTime(LocalDateTime.now());
         super.update(operatExpenses);
-        return BeanTransform.copyProperties(operatExpenses,OperatExpensesBO.class);
+        return BeanTransform.copyProperties(operatExpenses, OperatExpensesBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -228,6 +238,7 @@ public class OperatExpensesSerImpl extends ServiceImpl<OperatExpenses, OperatExp
         checkAddIdentity();
         super.remove(id);
     }
+
     @Override
     public List<OperatExpensesBO> collect(OperatExpensesCollectTO to) throws SerException {
         List<OperatExpensesBO> operatExpensesBOList = new ArrayList<>();
@@ -241,16 +252,16 @@ public class OperatExpensesSerImpl extends ServiceImpl<OperatExpenses, OperatExp
         //获取所有类型(科目)
         List<String> typeList = new ArrayList<>();
         dto.getSorts().add("type=desc");
-        String sql = "SELECT type FROM fundcheck_operatexpenses WHERE date BETWEEN '"+startTime+"' AND '"+endTime+"' GROUP BY type ";
+        String sql = "SELECT type FROM fundcheck_operatexpenses WHERE date BETWEEN '" + startTime + "' AND '" + endTime + "' GROUP BY type ";
         List<Object> objects = super.findBySql(sql);
         if (null != objects && objects.size() > 0) {
             typeList.addAll((List) objects);
         }
         //获取所有类型(科目)对应的金额
         List<Double> moneyList = new ArrayList<>();
-        sql = "SELECT money FROM fundcheck_operatexpenses WHERE date BETWEEN '"+startTime+"' AND '"+endTime+"' GROUP BY money;";
+        sql = "SELECT money FROM fundcheck_operatexpenses WHERE date BETWEEN '" + startTime + "' AND '" + endTime + "' GROUP BY money;";
         List<Object> objectList = super.findBySql(sql);
-        if(null != objectList && objectList.size() > 0){
+        if (null != objectList && objectList.size() > 0) {
             moneyList.addAll((List) objectList);
         }
         //获取金额合计
@@ -260,11 +271,39 @@ public class OperatExpensesSerImpl extends ServiceImpl<OperatExpenses, OperatExp
         Double money = operatExpensesBOS.stream().filter(str -> null != str.getMoney()).mapToDouble(OperatExpensesBO::getMoney).sum();
 
         OperatExpensesBO operatExpensesBO = new OperatExpensesBO();
-        operatExpensesBO.setDate(startTime+"-"+endTime);
+        operatExpensesBO.setDate(startTime + "-" + endTime);
         operatExpensesBO.setTypeList(typeList);
         operatExpensesBO.setMoneyList(moneyList);
         operatExpensesBO.setMoney(money);
         operatExpensesBOList.add(operatExpensesBO);
         return operatExpensesBOList;
+    }
+    @Override
+    public List<String> listType() throws SerException {
+        List<String> type = voucherGenerateAPI.listFirstSubject();
+        return type;
+    }
+    @Override
+    public OperatExpensesBO importExcel(List<OperatExpensesTO> operatExpensesTOS) throws SerException {
+        List<OperatExpenses> operatExpenses = BeanTransform.copyProperties(operatExpensesTOS, OperatExpenses.class, true);
+        super.save(operatExpenses);
+
+        OperatExpensesBO bo = BeanTransform.copyProperties(new OperatExpenses(), OperatExpensesBO.class);
+        return bo;
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<OperatExpensesTemplateExcel> templateExcels = new ArrayList<>();
+
+        OperatExpensesTemplateExcel excel = new OperatExpensesTemplateExcel();
+        excel.setDate(LocalDate.now());
+        excel.setType("test");
+        excel.setMoney(10.0d);
+        templateExcels.add(excel);
+
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(templateExcels, exce);
+        return bytes;
     }
 }

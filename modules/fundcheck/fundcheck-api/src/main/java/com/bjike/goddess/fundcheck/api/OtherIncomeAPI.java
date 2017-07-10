@@ -90,6 +90,38 @@ public interface OtherIncomeAPI {
 
     }
     /**
+     * 查询所有一级科目
+     *
+     * @return String
+     * @throws SerException
+     */
+    default List<String> listFirstSubject() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据一级科目查询二级科目
+     *
+     * @param firstSub 一级科目
+     * @return String
+     * @throws SerException
+     */
+    default List<String> listSubByFirst(String firstSub) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据一级二级查询三级科目
+     *
+     * @param firstSub  一级科目
+     * @param secondSub 二级科目
+     * @return String
+     * @throws SerException
+     */
+    default List<String> listTubByFirst(String firstSub, String secondSub) throws SerException {
+        return null;
+    }
+    /**
      * 汇总
      *
      * @param to
@@ -99,4 +131,18 @@ public interface OtherIncomeAPI {
     default List<OtherIncomeBO> collect(OtherIncomeCollectTO to) throws SerException {
         return null;
     }
+    /**
+     * 导入
+     *
+     * @param otherIncomeTOS 其他收入
+     * @return class OtherIncomeBO
+     */
+    default OtherIncomeBO importExcel(List<OtherIncomeTO> otherIncomeTOS) throws SerException {
+        return null;
+    }
+    /**
+     * 导入模板
+     * @throws SerException
+     */
+    byte[] templateExport(  ) throws SerException;
 }

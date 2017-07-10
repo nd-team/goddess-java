@@ -5,15 +5,20 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.fundcheck.bo.StockMoneyBO;
 import com.bjike.goddess.fundcheck.dto.StockMoneyDTO;
 import com.bjike.goddess.fundcheck.entity.StockMoney;
 import com.bjike.goddess.fundcheck.enums.GuideAddrStatus;
+import com.bjike.goddess.fundcheck.excel.StockMoneyTemplateExcel;
 import com.bjike.goddess.fundcheck.to.GuidePermissionTO;
 import com.bjike.goddess.fundcheck.to.StockMoneyCollectTO;
 import com.bjike.goddess.fundcheck.to.StockMoneyTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
+import net.sf.ehcache.util.SetAsList;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -43,6 +48,8 @@ public class StockMoneySerImpl extends ServiceImpl<StockMoney, StockMoneyDTO> im
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private VoucherGenerateAPI voucherGenerateAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -288,5 +295,44 @@ public class StockMoneySerImpl extends ServiceImpl<StockMoney, StockMoneyDTO> im
 //        return stockMoneyBOS;
 
 
+    }
+    @Override
+    public List<String> listFirstSubject() throws SerException {
+        List<String> firstSubject = voucherGenerateAPI.listFirstSubject();
+        return firstSubject;
+    }
+
+    @Override
+    public List<String> listSubByFirst(String firstSub) throws SerException {
+        List<String> secondSubject = voucherGenerateAPI.listSubByFirst(firstSub);
+        return secondSubject;
+    }
+
+    @Override
+    public List<String> listTubByFirst(String firstSub, String secondSub) throws SerException {
+        List<String> thirdSubject = voucherGenerateAPI.listTubByFirst(firstSub, secondSub);
+        return thirdSubject;
+    }
+    @Override
+    public StockMoneyBO importExcel(List<StockMoneyTO> stockMoneyTOS) throws SerException {
+        List<StockMoney> stockMonies = BeanTransform.copyProperties(stockMoneyTOS, StockMoney.class, true);
+        super.save(stockMonies);
+
+        StockMoneyBO bo = BeanTransform.copyProperties(new StockMoney(), StockMoneyBO.class);
+        return bo;
+    }
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<StockMoneyTemplateExcel> templateExcels = new ArrayList<>();
+
+        StockMoneyTemplateExcel excel = new StockMoneyTemplateExcel();
+        excel.setDate(LocalDate.now());
+        excel.setStockName("test");
+        excel.setMoney(10.0d);
+        templateExcels.add(excel);
+
+        Excel exce = new Excel(0,2);
+        byte[] bytes = ExcelUtil.clazzToExcel(templateExcels,exce);
+        return bytes;
     }
 }

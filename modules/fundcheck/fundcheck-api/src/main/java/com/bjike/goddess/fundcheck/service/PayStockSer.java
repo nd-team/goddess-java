@@ -2,10 +2,12 @@ package com.bjike.goddess.fundcheck.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.fundcheck.bo.OtherIncomeBO;
 import com.bjike.goddess.fundcheck.bo.PayStockBO;
 import com.bjike.goddess.fundcheck.dto.PayStockDTO;
 import com.bjike.goddess.fundcheck.entity.PayStock;
 import com.bjike.goddess.fundcheck.to.GuidePermissionTO;
+import com.bjike.goddess.fundcheck.to.OtherIncomeTO;
 import com.bjike.goddess.fundcheck.to.PayStockCollectTO;
 import com.bjike.goddess.fundcheck.to.PayStockTO;
 
@@ -100,4 +102,50 @@ public interface PayStockSer extends Ser<PayStock, PayStockDTO> {
     default List<PayStockBO> collect(PayStockCollectTO to) throws SerException {
         return null;
     }
+    /**
+     * 查询所有一级科目
+     *
+     * @return String
+     * @throws SerException
+     */
+    default List<String> listFirstSubject() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据一级科目查询二级科目
+     *
+     * @param firstSub 一级科目
+     * @return String
+     * @throws SerException
+     */
+    default List<String> listSubByFirst(String firstSub) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据一级二级查询三级科目
+     *
+     * @param firstSub  一级科目
+     * @param secondSub 二级科目
+     * @return String
+     * @throws SerException
+     */
+    default List<String> listTubByFirst(String firstSub, String secondSub) throws SerException {
+        return null;
+    }
+    /**
+     * 导入
+     *
+     * @param payStockTOS 支付给股东
+     * @return class PayStockBO
+     */
+    default PayStockBO importExcel(List<PayStockTO> payStockTOS) throws SerException {
+        return null;
+    }
+    /**
+     * 导入模板
+     * @throws SerException
+     */
+    byte[] templateExport(  ) throws SerException;
 }
