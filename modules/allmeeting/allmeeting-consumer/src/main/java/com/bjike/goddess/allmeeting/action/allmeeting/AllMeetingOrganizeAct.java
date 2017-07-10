@@ -42,7 +42,7 @@ public class AllMeetingOrganizeAct {
     private MeetingLayAPI meetingLayAPI;
 
     /**
-     * 新增会议组织
+     * 新增
      *
      * @param to 会议组织
      * @return class AllMeetingOrganizeVO
@@ -60,7 +60,7 @@ public class AllMeetingOrganizeAct {
     }
 
     /**
-     * 编辑会议组织
+     * 编辑
      *
      * @param to 会议组织
      * @return class AllMeetingOrganizeVO
@@ -80,7 +80,7 @@ public class AllMeetingOrganizeAct {
     /**
      * 冻结
      *
-     * @param id 会议组织ID
+     * @param id id
      * @version v1
      */
     @LoginAuth
@@ -112,14 +112,14 @@ public class AllMeetingOrganizeAct {
     }
 
     /**
-     * 列表分页查询
+     * 列表
      *
      * @param dto 分页条件
      * @return class AllMeetingOrganizeVO
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result pageList(AllMeetingOrganizeDTO dto, HttpServletRequest request) throws ActException {
+    public Result pageList(@Validated(AllMeetingOrganizeDTO.SelectStatus.class) AllMeetingOrganizeDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<AllMeetingOrganizeVO> voList = BeanTransform.copyProperties(allMeetingOrganizeAPI.pageList(dto), AllMeetingOrganizeVO.class, request);
             return ActResult.initialize(voList);
@@ -151,11 +151,9 @@ public class AllMeetingOrganizeAct {
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(AllMeetingOrganizeDTO dto) throws ActException {
+    public Result count(@Validated(AllMeetingOrganizeDTO.SelectStatus.class) AllMeetingOrganizeDTO dto) throws ActException {
         try {
-            if (dto.getStatus() != null) {
-                dto.getConditions().add(Restrict.eq("status", dto.getStatus()));
-            }
+            dto.getConditions().add(Restrict.eq("status", dto.getStatus()));
             Long count = allMeetingOrganizeAPI.count(dto);
             return ActResult.initialize(count);
         } catch (SerException e) {

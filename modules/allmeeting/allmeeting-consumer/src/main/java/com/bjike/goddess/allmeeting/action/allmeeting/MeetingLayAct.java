@@ -42,7 +42,7 @@ public class MeetingLayAct {
 
 
     /**
-     * 新增会议层面
+     * 添加
      *
      * @param to 会议层面
      * @return class MeetingLayVO
@@ -60,7 +60,7 @@ public class MeetingLayAct {
     }
 
     /**
-     * 编辑会议层面
+     * 编辑
      *
      * @param to 会议层面
      * @return class MeetingLayVO
@@ -78,9 +78,9 @@ public class MeetingLayAct {
     }
 
     /**
-     * 删除会议层面
+     * 删除
      *
-     * @param id 会议层面ID
+     * @param id ID
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
@@ -95,7 +95,7 @@ public class MeetingLayAct {
 
 
     /**
-     * 列表分页查询
+     * 列表
      *
      * @param dto 分页条件
      * @return class MeetingLayVO

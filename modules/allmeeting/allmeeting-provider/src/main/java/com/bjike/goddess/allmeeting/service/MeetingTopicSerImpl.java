@@ -99,8 +99,10 @@ public class MeetingTopicSerImpl extends ServiceImpl<MeetingTopic, MeetingTopicD
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void delete(String id) throws SerException {
         MeetingLayDTO layDTO = new MeetingLayDTO();
+        layDTO.getConditions().add(Restrict.eq("meetingTopic.id",id));
         List<MeetingLay> layList = meetingLaySer.findByCis(layDTO);
         if(CollectionUtils.isEmpty(layList)){
             super.remove(id);

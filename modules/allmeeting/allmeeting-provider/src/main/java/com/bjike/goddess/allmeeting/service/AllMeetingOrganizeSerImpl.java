@@ -197,9 +197,7 @@ public class AllMeetingOrganizeSerImpl extends ServiceImpl<AllMeetingOrganize, A
     @Transactional(rollbackFor = SerException.class)
     public List<AllMeetingOrganizeBO> pageList(AllMeetingOrganizeDTO dto) throws SerException {
         dto.getSorts().add("createTime=desc");
-        if (dto.getStatus() != null) {
-            dto.getConditions().add(Restrict.eq("status", dto.getStatus()));
-        }
+        dto.getConditions().add(Restrict.eq("status", dto.getStatus()));
         List<AllMeetingOrganize> list = super.findByPage(dto);
         List<AllMeetingOrganizeBO> boList = null;
         if (!CollectionUtils.isEmpty(list)) {

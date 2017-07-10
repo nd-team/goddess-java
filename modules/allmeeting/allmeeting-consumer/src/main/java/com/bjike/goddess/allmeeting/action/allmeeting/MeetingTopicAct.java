@@ -37,7 +37,7 @@ public class MeetingTopicAct {
     private MeetingTopicAPI meetingTopicAPI;
 
     /**
-     * 新增议题管理
+     * 添加
      *
      * @param to 议题管理
      * @return class MeetingTopicVO
@@ -56,7 +56,7 @@ public class MeetingTopicAct {
     }
 
     /**
-     * 编辑议题管理
+     * 编辑
      *
      * @param to 议题管理
      * @return class MeetingTopicVO
@@ -74,7 +74,7 @@ public class MeetingTopicAct {
     }
 
     /**
-     * 删除议题管理
+     * 删除
      *
      * @param id 议题管理ID
      * @version v1
@@ -91,7 +91,7 @@ public class MeetingTopicAct {
 
 
     /**
-     * 列表分页查询
+     * 列表
      *
      * @param dto 分页条件
      * @return class MeetingTopicVO
@@ -124,9 +124,9 @@ public class MeetingTopicAct {
     }
 
     /**
-     * 根据id查询议题管理
+     * 根据id查询议题
      *
-     * @param id 议题管理id
+     * @param id id
      * @return class MeetingTopicVO
      * @version v1
      */

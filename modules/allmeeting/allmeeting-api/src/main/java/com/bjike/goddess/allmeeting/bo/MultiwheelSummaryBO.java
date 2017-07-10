@@ -1,5 +1,6 @@
 package com.bjike.goddess.allmeeting.bo;
 
+import com.bjike.goddess.allmeeting.enums.MeetingType;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.type.Status;
 
@@ -20,9 +21,41 @@ public class MultiwheelSummaryBO extends BaseBO {
     private String meetingNum;
 
     /**
+     * 关联功能
+     */
+    private String relation;
+
+    /**
+     * 会议主持人
+     */
+    private String compere;
+
+
+    /**
+     * 会议组织人
+     */
+    private String organizer;
+
+
+    /**
+     * 会议议题
+     */
+    private String topic;
+
+    /**
+     * 会议内容
+     */
+    private String content;
+
+    /**
      * 实际会议时间
      */
     private String actualTime;
+
+    /**
+     * 会议形式
+     */
+    private MeetingType meetingType;
 
     /**
      * 会议地点
@@ -74,6 +107,54 @@ public class MultiwheelSummaryBO extends BaseBO {
      */
     private Status status;
 
+
+    public String getRelation() {
+        return relation;
+    }
+
+    public void setRelation(String relation) {
+        this.relation = relation;
+    }
+
+    public String getCompere() {
+        return compere;
+    }
+
+    public void setCompere(String compere) {
+        this.compere = compere;
+    }
+
+    public String getOrganizer() {
+        return organizer;
+    }
+
+    public void setOrganizer(String organizer) {
+        this.organizer = organizer;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public MeetingType getMeetingType() {
+        return meetingType;
+    }
+
+    public void setMeetingType(MeetingType meetingType) {
+        this.meetingType = meetingType;
+    }
 
     public String getMeetingNum() {
         return meetingNum;
