@@ -2,6 +2,7 @@ package com.bjike.goddess.staffmeeting.vo;
 
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.staffmeeting.enums.MeetingPurpose;
+import com.bjike.goddess.staffmeeting.enums.MeetingType;
 
 /**
  * 员工代表大会纪要表现层对象
@@ -24,6 +25,30 @@ public class MeetingSummaryVO {
     private String meetingNum;
 
     /**
+     * 会议内容
+     */
+    private String content;
+
+    /**
+     * 会议议题
+     */
+    private String topic;
+
+    /**
+     * 会议层面
+     */
+    private String lay;
+
+    /**
+     * 会议形式
+     */
+    private MeetingType meetingType;
+
+    /**
+     * 会议组织人
+     */
+    private String organizer;
+    /**
      * 实际参会人员
      */
     private String actualUsers;
@@ -39,7 +64,7 @@ public class MeetingSummaryVO {
     private String notAttendUsers;
 
     /**
-     * 会议目的
+     * 议题目的
      */
     private MeetingPurpose meetingPurpose;
 
@@ -78,6 +103,11 @@ public class MeetingSummaryVO {
      */
     private String compere;
 
+    /**
+     * 状态
+     */
+    private Status status;
+
     public String getId() {
         return id;
     }
@@ -92,6 +122,14 @@ public class MeetingSummaryVO {
 
     public void setMeetingNum(String meetingNum) {
         this.meetingNum = meetingNum;
+    }
+
+    public String getLay() {
+        return lay;
+    }
+
+    public void setLay(String lay) {
+        this.lay = lay;
     }
 
     public String getActualUsers() {
@@ -182,4 +220,43 @@ public class MeetingSummaryVO {
         this.compere = compere;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    public MeetingType getMeetingType() {
+        return meetingType;
+    }
+
+    public void setMeetingType(MeetingType meetingType) {
+        this.meetingType = meetingType;
+    }
+
+    public String getOrganizer() {
+        return organizer;
+    }
+
+    public void setOrganizer(String organizer) {
+        this.organizer = organizer;
+    }
 }

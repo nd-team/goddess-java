@@ -2,6 +2,7 @@ package com.bjike.goddess.staffmeeting.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.staffmeeting.enums.MeetingPurpose;
 import com.bjike.goddess.staffmeeting.enums.MeetingType;
 
 /**
@@ -27,9 +28,24 @@ public class MeetingOrganizeBO extends BaseBO {
 
 
     /**
-     * 层面Id
+     * 会议议题
      */
-    private String layId;
+    private String topic;
+
+    /**
+     * 议题目的
+     */
+    private MeetingPurpose meetingPurpose;
+
+    /**
+     * 会议议题
+     */
+    private String topicContent;
+
+    /**
+     * 会议层面
+     */
+    private String layName;
 
     /**
      * 会议内容
@@ -45,6 +61,11 @@ public class MeetingOrganizeBO extends BaseBO {
      * 计划参会时间
      */
     private String planTime;
+
+    /**
+     * 计划参会岗位
+     */
+    private String position;
 
     /**
      * 计划会议地点
@@ -80,6 +101,14 @@ public class MeetingOrganizeBO extends BaseBO {
         this.meetingNum = meetingNum;
     }
 
+    public MeetingPurpose getMeetingPurpose() {
+        return meetingPurpose;
+    }
+
+    public void setMeetingPurpose(MeetingPurpose meetingPurpose) {
+        this.meetingPurpose = meetingPurpose;
+    }
+
     public String getTopicReason() {
         return topicReason;
     }
@@ -88,12 +117,28 @@ public class MeetingOrganizeBO extends BaseBO {
         this.topicReason = topicReason;
     }
 
-    public String getLayId() {
-        return layId;
+    public String getTopic() {
+        return topic;
     }
 
-    public void setLayId(String layId) {
-        this.layId = layId;
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    public String getTopicContent() {
+        return topicContent;
+    }
+
+    public void setTopicContent(String topicContent) {
+        this.topicContent = topicContent;
+    }
+
+    public String getLayName() {
+        return layName;
+    }
+
+    public void setLayName(String layName) {
+        this.layName = layName;
     }
 
     public String getContent() {
@@ -158,5 +203,13 @@ public class MeetingOrganizeBO extends BaseBO {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 }

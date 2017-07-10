@@ -58,4 +58,9 @@ public class MeetingOrganizeApiImpl implements MeetingOrganizeAPI {
     public List<MeetingOrganizeBO> pageList(MeetingOrganizeDTO dto) throws SerException {
         return meetingOrganizeSer.pageList(dto);
     }
+
+    @Override
+    public void unfreeze(String id) throws SerException {
+        meetingOrganizeSer.unfreeze(id);
+    }
 }

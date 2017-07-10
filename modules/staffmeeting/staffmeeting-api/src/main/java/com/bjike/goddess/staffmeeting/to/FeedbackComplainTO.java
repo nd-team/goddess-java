@@ -17,22 +17,10 @@ import org.hibernate.validator.constraints.NotBlank;
 public class FeedbackComplainTO extends BaseTO {
 
     /**
-     * 会议编号
+     * 纪要ID
      */
-    @NotBlank(message = "会议编号不能为空",groups = {ADD.class, EDIT.class})
-    private String meetingNum;
-
-    /**
-     * 异议人
-     */
-    @NotBlank(message = "会议编号不能为空",groups = {ADD.class, EDIT.class})
-    private String dissentUser;
-
-    /**
-     * 异议人员工编号
-     */
-    @NotBlank(message = "异议人员工编号不能为空",groups = {ADD.class, EDIT.class})
-    private String dissentUserNum;
+    @NotBlank(message = "纪要ID不能为空",groups = {ADD.class, EDIT.class})
+    private String summaryId;
 
     /**
      * 异议内容
@@ -40,30 +28,14 @@ public class FeedbackComplainTO extends BaseTO {
     @NotBlank(message = "异议内容不能为空",groups = {ADD.class, EDIT.class})
     private String dissentContent;
 
-
-    public String getMeetingNum() {
-        return meetingNum;
+    public String getSummaryId() {
+        return summaryId;
     }
 
-    public void setMeetingNum(String meetingNum) {
-        this.meetingNum = meetingNum;
+    public void setSummaryId(String summaryId) {
+        this.summaryId = summaryId;
     }
 
-    public String getDissentUser() {
-        return dissentUser;
-    }
-
-    public void setDissentUser(String dissentUser) {
-        this.dissentUser = dissentUser;
-    }
-
-    public String getDissentUserNum() {
-        return dissentUserNum;
-    }
-
-    public void setDissentUserNum(String dissentUserNum) {
-        this.dissentUserNum = dissentUserNum;
-    }
 
     public String getDissentContent() {
         return dissentContent;

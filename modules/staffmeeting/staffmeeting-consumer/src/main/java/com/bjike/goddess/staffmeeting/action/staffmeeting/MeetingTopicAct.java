@@ -77,9 +77,10 @@ public class MeetingTopicAct {
     /**
      * 删除议题管理
      *
-     * @param id 议题管理ID
+     * @param id id
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -92,12 +93,13 @@ public class MeetingTopicAct {
 
 
     /**
-     * 列表分页查询
+     * 列表
      *
      * @param dto 分页条件
      * @return class MeetingTopicVO
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/list")
     public Result pageList(MeetingTopicDTO dto) throws ActException {
         try {
