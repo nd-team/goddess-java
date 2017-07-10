@@ -2,14 +2,16 @@ package com.bjike.goddess.lendreimbursement.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.lendreimbursement.to.GuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
 import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
 import com.bjike.goddess.lendreimbursement.bo.ReimburseRecordBO;
-import com.bjike.goddess.lendreimbursement.entity.ReimburseRecord;
 import com.bjike.goddess.lendreimbursement.dto.ReimburseRecordDTO;
+import com.bjike.goddess.lendreimbursement.entity.ReimburseRecord;
 import com.bjike.goddess.lendreimbursement.excel.SonPermissionObject;
+import com.bjike.goddess.lendreimbursement.to.GuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseRecordTO;
+import com.bjike.goddess.reimbursementprepare.excel.ExportExcel;
+import com.bjike.goddess.reimbursementprepare.excel.ExportExcelTO;
 
 import java.util.List;
 
@@ -185,6 +187,7 @@ public interface ReimburseRecordSer extends Ser<ReimburseRecord, ReimburseRecord
     default ReimburseRecordBO analisysRecord(ReimburseRecordTO reimburseRecordTO) throws SerException {
         return null;
     }
+
     /**
      * 分析人申请冻结等待审核
      *
@@ -343,7 +346,6 @@ public interface ReimburseRecordSer extends Ser<ReimburseRecord, ReimburseRecord
 
     /**
      * 所有报销人
-     *
      */
     default List<String> listAllUser() throws SerException {
         return null;
@@ -351,21 +353,20 @@ public interface ReimburseRecordSer extends Ser<ReimburseRecord, ReimburseRecord
 
     /**
      * 所有一级科目
-     *
      */
     default List<String> listFirstSubject() throws SerException {
         return null;
     }
+
     /**
      * 所有地区
-     *
      */
     default List<String> listArea() throws SerException {
         return null;
     }
+
     /**
      * 所有项目
-     *
      */
     default List<String> listProject() throws SerException {
         return null;
@@ -390,5 +391,33 @@ public interface ReimburseRecordSer extends Ser<ReimburseRecord, ReimburseRecord
     byte[] exportAlPayExcel(ReimburseRecordDTO reimburseRecordDTO) throws SerException;
 
 
+    /**
+     * chenjunhao
+     * 等待付款导出cjh
+     *
+     * @param reimburseRecordDTO
+     * @return
+     * @throws SerException
+     */
+    List<ExportExcelTO> exportExcelCjh(ReimburseRecordDTO reimburseRecordDTO) throws SerException ;
 
+    /**
+     * chenjunhao
+     * 等待付款列表
+     *
+     * @param reimburseRecordDTO
+     * @return
+     * @throws SerException
+     */
+    List<ReimburseRecordBO> listWaitPayCJH(ReimburseRecordDTO reimburseRecordDTO) throws SerException;
+
+    /**
+     * chenjunhao
+     * 付款
+     *
+     * @param reimburseRecordTO
+     * @return
+     * @throws SerException
+     */
+    ReimburseRecordBO waitPayCJH(ReimburseRecordTO reimburseRecordTO) throws SerException;
 }

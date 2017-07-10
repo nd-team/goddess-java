@@ -9,6 +9,8 @@ import com.bjike.goddess.lendreimbursement.excel.SonPermissionObject;
 import com.bjike.goddess.lendreimbursement.service.ReimburseRecordSer;
 import com.bjike.goddess.lendreimbursement.to.GuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseRecordTO;
+import com.bjike.goddess.reimbursementprepare.excel.ExportExcel;
+import com.bjike.goddess.reimbursementprepare.excel.ExportExcelTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -234,5 +236,20 @@ public class ReimburseRecordApiImpl implements ReimburseRecordAPI {
     @Override
     public byte[] exportAlPayExcel(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         return reimburseRecordSer.exportExcel(reimburseRecordDTO);
+    }
+
+    @Override
+    public List<ExportExcelTO> exportExcelCjh(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        return reimburseRecordSer.exportExcelCjh(reimburseRecordDTO);
+    }
+
+    @Override
+    public List<ReimburseRecordBO> listWaitPayCJH(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        return reimburseRecordSer.listWaitPayCJH(reimburseRecordDTO);
+    }
+
+    @Override
+    public ReimburseRecordBO waitPayCJH(ReimburseRecordTO reimburseRecordTO) throws SerException {
+        return reimburseRecordSer.waitPayCJH(reimburseRecordTO);
     }
 }

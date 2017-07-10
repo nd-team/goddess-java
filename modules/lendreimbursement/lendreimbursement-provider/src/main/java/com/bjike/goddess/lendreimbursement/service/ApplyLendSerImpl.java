@@ -24,6 +24,9 @@ import com.bjike.goddess.lendreimbursement.enums.Words;
 import com.bjike.goddess.lendreimbursement.excel.ApplyLendExcel;
 import com.bjike.goddess.lendreimbursement.to.ApplyLendTO;
 import com.bjike.goddess.lendreimbursement.to.GuidePermissionTO;
+import com.bjike.goddess.reimbursementprepare.enums.PayStatus;
+import com.bjike.goddess.reimbursementprepare.excel.ExportExcel;
+import com.bjike.goddess.reimbursementprepare.excel.ExportExcelTO;
 import com.bjike.goddess.user.api.PositionAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
@@ -180,10 +183,11 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
+
     @Override
     public Long countApplyLend(ApplyLendDTO applyLendDTO) throws SerException {
         applyLendDTO.getConditions().add(Restrict.eq("receivePay", "否"));
-        applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{2,6,8,9}));
+        applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{2, 6, 8, 9}));
         if (StringUtils.isNotBlank(applyLendDTO.getLender())) {
             applyLendDTO.getConditions().add(Restrict.eq("lender", applyLendDTO.getLender()));
         }
@@ -215,7 +219,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         applyLendDTO.getSorts().add("createTime=desc");
         //未收款且不在有误单里面
         applyLendDTO.getConditions().add(Restrict.eq("payCondition", "否"));
-        applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{2,6,8,9}));
+        applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{2, 6, 8, 9}));
         if (StringUtils.isNotBlank(applyLendDTO.getLender())) {
             applyLendDTO.getConditions().add(Restrict.eq("lender", applyLendDTO.getLender()));
         }
@@ -272,12 +276,12 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         }
 //        BeanUtils.copyProperties(applyLend, lend, "id", "createTime");
         lend.setEstimateLendDate(applyLend.getEstimateLendDate());
-        lend.setLender( applyLend.getLender());
-        lend.setCharger( applyLend.getCharger());
-        lend.setArea( applyLend.getArea());
+        lend.setLender(applyLend.getLender());
+        lend.setCharger(applyLend.getCharger());
+        lend.setArea(applyLend.getArea());
         lend.setProjectGroup(applyLend.getProjectGroup());
         lend.setProjectName(applyLend.getProjectName());
-        lend.setLendWay( applyLend.getLendWay());
+        lend.setLendWay(applyLend.getLendWay());
         lend.setFirstSubject(applyLend.getFirstSubject());
         lend.setSecondSubject(applyLend.getSecondSubject());
         lend.setThirdSubject(applyLend.getThirdSubject());
@@ -382,7 +386,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 //        applyLendDTO.getConditions().add(Restrict.or("lendStatus", 4));
 //        applyLendDTO.getConditions().add(Restrict.or("lendStatus", 5));
 //        applyLendDTO.getConditions().add(Restrict.or("lendStatus", 9));
-        applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{2,3, 6, 7, 8}));
+        applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{2, 3, 6, 7, 8}));
 
 
         if (StringUtils.isNotBlank(applyLendDTO.getLender())) {
@@ -421,18 +425,18 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         ApplyLend applyLend = BeanTransform.copyProperties(applyLendTO, ApplyLend.class, true);
         ApplyLend lend = super.findById(applyLendTO.getId());
 
-        if (lend.getLendStatus().getCode() == 5 ) {
+        if (lend.getLendStatus().getCode() == 5) {
             throw new SerException("该条数据已经申请过冻结，不能再操作");
         }
 
 //        BeanUtils.copyProperties(applyLend, lend, "id", "createTime", "lendStatus");
         lend.setEstimateLendDate(applyLend.getEstimateLendDate());
-        lend.setLender( applyLend.getLender());
-        lend.setCharger( applyLend.getCharger());
-        lend.setArea( applyLend.getArea());
+        lend.setLender(applyLend.getLender());
+        lend.setCharger(applyLend.getCharger());
+        lend.setArea(applyLend.getArea());
         lend.setProjectGroup(applyLend.getProjectGroup());
         lend.setProjectName(applyLend.getProjectName());
-        lend.setLendWay( applyLend.getLendWay());
+        lend.setLendWay(applyLend.getLendWay());
         lend.setFirstSubject(applyLend.getFirstSubject());
         lend.setSecondSubject(applyLend.getSecondSubject());
         lend.setThirdSubject(applyLend.getThirdSubject());
@@ -487,7 +491,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
             lend.setLendStatus(LendStatus.CHARGENOTPASS);
             lend.setLendError(9);
         }
-        if (lend.getLendStatus().getCode() == 5 ) {
+        if (lend.getLendStatus().getCode() == 5) {
             throw new SerException("该条数据已经申请过冻结，不能再操作");
         }
         lend.setModifyTime(LocalDateTime.now());
@@ -530,7 +534,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         } else if (lend.getLendStatus().getCode() == 9) {
             throw new SerException("财务运营部审核失败，此单为申请单有误编辑过来的，先得要负责人先审");
         }
-        if (lend.getLendStatus().getCode() == 5 ) {
+        if (lend.getLendStatus().getCode() == 5) {
             throw new SerException("该条数据已经申请过冻结，不能再操作");
         }
         UserBO userBO = userAPI.currentUser();
@@ -587,7 +591,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         } else {
             throw new SerException("总经办审核失败，财务运营部还未审核");
         }
-        if (lend.getLendStatus().getCode() == 5 ) {
+        if (lend.getLendStatus().getCode() == 5) {
             throw new SerException("该条数据已经申请过冻结，不能再操作");
         }
 
@@ -635,7 +639,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         if (lend.getLendStatus().getCode() == 0 || lend.getLendStatus().getCode() == 9) {
             throw new SerException("财务运营部冻结失败，负责人还未审核");
         }
-        if (lend.getLendStatus().getCode() == 5 ) {
+        if (lend.getLendStatus().getCode() == 5) {
             throw new SerException("该条数据已经申请过冻结，不能再操作");
         }
         UserBO userBO = userAPI.currentUser();
@@ -781,18 +785,18 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
         //申请单有误编辑
         BeanUtils.copyProperties(applyLend, lend, "id", "createTime"
-        ,"attender","writeUpCondition","noInvoiceRemark","goodsLink","fillSingler","lendDate","chargerOpinion","chargerPass","finacer","fincerOpinion"
-        ,"fincerPass","manager","managerOpinion","managerPass","proxyAuditRemark","payCondition","payer"
-        ,"payDate","payOrigin","documentQuantity","documentCondition","reimMoney","lendMoney","returnMoney","returnDate","returnWays","returnAccount"
-        ,"sender","sendDate","sendCondition","receiveAddr","ticketer","ticketDate","ticketCondition","receiveTicket"
-        ,"checker","checkDate","checkcontent","lendStatus","receivePay","lendError");
+                , "attender", "writeUpCondition", "noInvoiceRemark", "goodsLink", "fillSingler", "lendDate", "chargerOpinion", "chargerPass", "finacer", "fincerOpinion"
+                , "fincerPass", "manager", "managerOpinion", "managerPass", "proxyAuditRemark", "payCondition", "payer"
+                , "payDate", "payOrigin", "documentQuantity", "documentCondition", "reimMoney", "lendMoney", "returnMoney", "returnDate", "returnWays", "returnAccount"
+                , "sender", "sendDate", "sendCondition", "receiveAddr", "ticketer", "ticketDate", "ticketCondition", "receiveTicket"
+                , "checker", "checkDate", "checkcontent", "lendStatus", "receivePay", "lendError");
         lend.setEstimateLendDate(applyLend.getEstimateLendDate());
-        lend.setLender( applyLend.getLender());
-        lend.setCharger( applyLend.getCharger());
-        lend.setArea( applyLend.getArea());
+        lend.setLender(applyLend.getLender());
+        lend.setCharger(applyLend.getCharger());
+        lend.setArea(applyLend.getArea());
         lend.setProjectGroup(applyLend.getProjectGroup());
         lend.setProjectName(applyLend.getProjectName());
-        lend.setLendWay( applyLend.getLendWay());
+        lend.setLendWay(applyLend.getLendWay());
         lend.setFirstSubject(applyLend.getFirstSubject());
         lend.setSecondSubject(applyLend.getSecondSubject());
         lend.setThirdSubject(applyLend.getThirdSubject());
@@ -870,7 +874,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     public Long countHasAudit(ApplyLendDTO applyLendDTO) throws SerException {
         ApplyLendDTO dto = applyLendDTO;
         //LendStatus.CHARGESURECONGEL
-        dto.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{6,5,9}));
+        dto.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{6, 5, 9}));
         //LendStatus.FINACECONGEL
 //        dto.getConditions().add(Restrict.ne("lendStatus", 5));
         //LendStatus.LISTERROR
@@ -888,7 +892,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         checkPermission();
         ApplyLendDTO dto = applyLendDTO;
         //LendStatus.CHARGESURECONGEL
-        dto.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{6,5,9}));
+        dto.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{6, 5, 9}));
         //LendStatus.FINACECONGEL
 //        dto.getConditions().add(Restrict.ne("lendStatus", 5));
         //LendStatus.LISTERROR
@@ -913,7 +917,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         ApplyLendDTO dto = applyLendDTO;
         dto.getConditions().add(Restrict.eq("payCondition", "否"));
         //LendStatus.FINACEPASS
-        dto.getConditions().add(Restrict.in("lendStatus", new Integer[]{3,7}));
+        dto.getConditions().add(Restrict.in("lendStatus", new Integer[]{3, 7}));
         //LendStatus.MANAGEPASS
 //        dto.getConditions().add(Restrict.or("lendStatus", 7));
         Long counts = super.count(dto);
@@ -927,7 +931,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         ApplyLendDTO dto = applyLendDTO;
         dto.getConditions().add(Restrict.eq("payCondition", "否"));
         //LendStatus.FINACEPASS
-        dto.getConditions().add(Restrict.in("lendStatus", new Integer[]{3,7}));
+        dto.getConditions().add(Restrict.in("lendStatus", new Integer[]{3, 7}));
         //LendStatus.MANAGEPASS
 //        dto.getConditions().add(Restrict.or("lendStatus", 7));
         List<ApplyLend> applyLend = super.findByCis(dto, true);
@@ -949,8 +953,8 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         ApplyLend lend = super.findById(applyLendTO.getId());
 
 //        BeanUtils.copyProperties(applyLend, lend, "id", "createTime");
-        lend.setPayOrigin( applyLend.getPayOrigin());
-        lend.setPayDate( applyLend.getPayDate());
+        lend.setPayOrigin(applyLend.getPayOrigin());
+        lend.setPayDate(applyLend.getPayDate());
         //支付人
         lend.setPayer(userAPI.currentUser().getUsername());
         lend.setPayCondition("是");
@@ -1057,8 +1061,8 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
 //        BeanUtils.copyProperties(applyLend, lend, "id", "createTime");
         lend.setSendDate(applyLend.getSendDate());
-        lend.setSendCondition( applyLend.getSendCondition());
-        lend.setReceiveAddr( applyLend.getReceiveAddr());
+        lend.setSendCondition(applyLend.getSendCondition());
+        lend.setReceiveAddr(applyLend.getReceiveAddr());
 
         lend.setDocumentQuantity(applyLendTO.getDocumentQuantity());
         lend.setModifyTime(LocalDateTime.now());
@@ -1495,6 +1499,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     /**
      * 申请
+     *
      * @param applyLendDTO
      * @return
      * @throws SerException
@@ -1504,20 +1509,20 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         checkPermission();
         LocalDate start = LocalDate.now();
         LocalDate end = LocalDate.now();
-        if(StringUtils.isNotBlank(applyLendDTO.getStartTime())){
+        if (StringUtils.isNotBlank(applyLendDTO.getStartTime())) {
             start = DateUtil.parseDate(applyLendDTO.getStartTime());
         }
-        if(StringUtils.isNotBlank(applyLendDTO.getEndTime())){
+        if (StringUtils.isNotBlank(applyLendDTO.getEndTime())) {
             end = DateUtil.parseDate(applyLendDTO.getEndTime());
         }
-        LocalDate lendDate [] = new LocalDate[]{start,end};
+        LocalDate lendDate[] = new LocalDate[]{start, end};
 
         if (StringUtils.isNotBlank(applyLendDTO.getStartTime()) || StringUtils.isNotBlank(applyLendDTO.getEndTime())) {
             applyLendDTO.getConditions().add(Restrict.between("lendDate", lendDate));//借款时间段查询
         }
         //未收款且不在有误单里面
         applyLendDTO.getConditions().add(Restrict.eq("payCondition", "否"));
-        applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{2,6,8,9}));
+        applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{2, 6, 8, 9}));
 
         List<ApplyLend> list = super.findByCis(applyLendDTO);
 
@@ -1535,6 +1540,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     /**
      * 等待付款导出
+     *
      * @param applyLendDTO
      * @return
      * @throws SerException
@@ -1544,20 +1550,20 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         checkPermission();
         LocalDate start = LocalDate.now();
         LocalDate end = LocalDate.now();
-        if(StringUtils.isNotBlank(applyLendDTO.getStartTime())){
+        if (StringUtils.isNotBlank(applyLendDTO.getStartTime())) {
             start = DateUtil.parseDate(applyLendDTO.getStartTime());
         }
-        if(StringUtils.isNotBlank(applyLendDTO.getEndTime())){
+        if (StringUtils.isNotBlank(applyLendDTO.getEndTime())) {
             end = DateUtil.parseDate(applyLendDTO.getEndTime());
         }
-        LocalDate lendDate [] = new LocalDate[]{start,end};
+        LocalDate lendDate[] = new LocalDate[]{start, end};
 
         if (StringUtils.isNotBlank(applyLendDTO.getStartTime()) || StringUtils.isNotBlank(applyLendDTO.getEndTime())) {
             applyLendDTO.getConditions().add(Restrict.between("lendDate", lendDate));//借款时间段查询
         }
         applyLendDTO.getConditions().add(Restrict.eq("payCondition", "否"));
         //LendStatus.FINACEPASS
-        applyLendDTO.getConditions().add(Restrict.in("lendStatus", new Integer[]{3,7}));
+        applyLendDTO.getConditions().add(Restrict.in("lendStatus", new Integer[]{3, 7}));
         List<ApplyLend> list = super.findByCis(applyLendDTO);
 
         List<ApplyLendExcel> applyLendExcels = new ArrayList<>();
@@ -1574,6 +1580,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     /**
      * 借款导出
+     *
      * @param applyLendDTO
      * @return
      * @throws SerException
@@ -1583,13 +1590,13 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         checkPermission();
         LocalDate start = LocalDate.now();
         LocalDate end = LocalDate.now();
-        if(StringUtils.isNotBlank(applyLendDTO.getStartTime())){
+        if (StringUtils.isNotBlank(applyLendDTO.getStartTime())) {
             start = DateUtil.parseDate(applyLendDTO.getStartTime());
         }
-        if(StringUtils.isNotBlank(applyLendDTO.getEndTime())){
+        if (StringUtils.isNotBlank(applyLendDTO.getEndTime())) {
             end = DateUtil.parseDate(applyLendDTO.getEndTime());
         }
-        LocalDate lendDate [] = new LocalDate[]{start,end};
+        LocalDate lendDate[] = new LocalDate[]{start, end};
 
         if (StringUtils.isNotBlank(applyLendDTO.getStartTime()) || StringUtils.isNotBlank(applyLendDTO.getEndTime())) {
             applyLendDTO.getConditions().add(Restrict.between("lendDate", lendDate));//借款时间段查询
@@ -1611,6 +1618,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     /**
      * 还款记录
+     *
      * @param applyLendDTO
      * @return
      * @throws SerException
@@ -1621,13 +1629,13 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
         LocalDate start = LocalDate.now();
         LocalDate end = LocalDate.now();
-        if(StringUtils.isNotBlank(applyLendDTO.getStartTime())){
+        if (StringUtils.isNotBlank(applyLendDTO.getStartTime())) {
             start = DateUtil.parseDate(applyLendDTO.getStartTime());
         }
-        if(StringUtils.isNotBlank(applyLendDTO.getEndTime())){
+        if (StringUtils.isNotBlank(applyLendDTO.getEndTime())) {
             end = DateUtil.parseDate(applyLendDTO.getEndTime());
         }
-        LocalDate lendDate [] = new LocalDate[]{start,end};
+        LocalDate lendDate[] = new LocalDate[]{start, end};
 
         if (StringUtils.isNotBlank(applyLendDTO.getStartTime()) || StringUtils.isNotBlank(applyLendDTO.getEndTime())) {
             applyLendDTO.getConditions().add(Restrict.between("lendDate", lendDate));//借款时间段查询
@@ -1654,13 +1662,13 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         checkPermission();
         LocalDate start = LocalDate.now();
         LocalDate end = LocalDate.now();
-        if(StringUtils.isNotBlank(applyLendDTO.getStartTime())){
+        if (StringUtils.isNotBlank(applyLendDTO.getStartTime())) {
             start = DateUtil.parseDate(applyLendDTO.getStartTime());
         }
-        if(StringUtils.isNotBlank(applyLendDTO.getEndTime())){
+        if (StringUtils.isNotBlank(applyLendDTO.getEndTime())) {
             end = DateUtil.parseDate(applyLendDTO.getEndTime());
         }
-        LocalDate lendDate [] = new LocalDate[]{start,end};
+        LocalDate lendDate[] = new LocalDate[]{start, end};
 
         if (StringUtils.isNotBlank(applyLendDTO.getStartTime()) || StringUtils.isNotBlank(applyLendDTO.getEndTime())) {
             applyLendDTO.getConditions().add(Restrict.between("lendDate", lendDate));//借款时间段查询
@@ -1679,5 +1687,79 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(applyLendExcels, excel);
         return bytes;
+    }
+
+    /**
+     * chenjunhao
+     * 等待付款导出cjh
+     *
+     * @param applyLendDTO
+     * @return
+     * @throws SerException
+     */
+    @Override
+    public List<ExportExcelTO> waitPayExport(ApplyLendDTO applyLendDTO) throws SerException {
+        LocalDate start = LocalDate.now();
+        LocalDate end = LocalDate.now();
+        if (StringUtils.isNotBlank(applyLendDTO.getStartTime())) {
+            start = DateUtil.parseDate(applyLendDTO.getStartTime());
+        }
+        if (StringUtils.isNotBlank(applyLendDTO.getEndTime())) {
+            end = DateUtil.parseDate(applyLendDTO.getEndTime());
+        }
+        LocalDate lendDate[] = new LocalDate[]{start, end};
+
+        if (StringUtils.isNotBlank(applyLendDTO.getStartTime()) || StringUtils.isNotBlank(applyLendDTO.getEndTime())) {
+            applyLendDTO.getConditions().add(Restrict.between("lendDate", lendDate));//借款时间段查询
+        }
+        applyLendDTO.getConditions().add(Restrict.eq("payCondition", "否"));
+        //LendStatus.FINACEPASS
+        applyLendDTO.getConditions().add(Restrict.in("lendStatus", new Integer[]{3, 7}));
+        List<ApplyLend> list = super.findByCis(applyLendDTO);
+
+        List<ExportExcelTO> exportExcels = new ArrayList<>();
+        list.stream().forEach(str -> {
+            ExportExcelTO excel = BeanTransform.copyProperties(str, ExportExcelTO.class);
+            excel.setPayStatus(PayStatus.WAITPAY);
+            exportExcels.add(excel);
+        });
+        return exportExcels;
+    }
+
+    @Override
+    //chenjunhao
+    public List<ApplyLendBO> listWaitPayCJH(ApplyLendDTO applyLendDTO) throws SerException {
+        ApplyLendDTO dto = applyLendDTO;
+        dto.getConditions().add(Restrict.eq("payCondition", "否"));
+        //LendStatus.FINACEPASS
+        dto.getConditions().add(Restrict.in("lendStatus", new Integer[]{3, 7}));
+        //LendStatus.MANAGEPASS
+//        dto.getConditions().add(Restrict.or("lendStatus", 7));
+        List<ApplyLend> applyLend = super.findByCis(dto, true);
+        return BeanTransform.copyProperties(applyLend, ApplyLendBO.class);
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    //chenjunhao
+    public ApplyLendBO editPayMoneyCJH(ApplyLendTO applyLendTO) throws SerException {
+        if (StringUtils.isBlank(applyLendTO.getPayOrigin())) {
+            throw new SerException("编辑失败，支付来源不能为空");
+        }
+        if (StringUtils.isBlank(applyLendTO.getPayDate())) {
+            throw new SerException("编辑失败，支付日期不能为空");
+        }
+        ApplyLend applyLend = BeanTransform.copyProperties(applyLendTO, ApplyLend.class, true);
+        ApplyLend lend = super.findById(applyLendTO.getId());
+
+//        BeanUtils.copyProperties(applyLend, lend, "id", "createTime");
+        lend.setPayOrigin(applyLend.getPayOrigin());
+        lend.setPayDate(applyLend.getPayDate());
+        //支付人
+        lend.setPayer(userAPI.currentUser().getUsername());
+        lend.setPayCondition("是");
+        lend.setModifyTime(LocalDateTime.now());
+        super.update(lend);
+        return BeanTransform.copyProperties(lend, ApplyLendBO.class);
     }
 }
