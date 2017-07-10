@@ -88,7 +88,7 @@ public class SubjectCollectApiImpl implements SubjectCollectAPI {
     }
 
     @Override
-    public Set<String> allProjectGroups() throws SerException {
-        return subjectCollectSer.allProjectGroups();
+    public Set<String> allProjectNames() throws SerException {
+        return subjectCollectSer.allProjectNames();
     }
 }

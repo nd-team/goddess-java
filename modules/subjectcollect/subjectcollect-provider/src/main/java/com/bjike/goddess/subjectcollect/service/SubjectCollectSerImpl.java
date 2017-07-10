@@ -334,11 +334,11 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
 
     @Override
     //chenjunhao
-    public Set<String> allProjectGroups() throws SerException {
+    public Set<String> allProjectNames() throws SerException {
         List<SubjectCollect> list = super.findAll();
         Set<String> set = new HashSet<String>();
         for (SubjectCollect s : list) {
-            set.add(s.getProjectGroup());
+            set.add(s.getProjectName());
         }
         return set;
     }

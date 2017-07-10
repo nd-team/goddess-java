@@ -28,7 +28,6 @@ public class TableHeadValueTO extends BaseTO {
     /**
      * 值
      */
-    @NotBlank(message = "值不能为空",groups = {ADD.class, EDIT.class})
     private String value;
 
 

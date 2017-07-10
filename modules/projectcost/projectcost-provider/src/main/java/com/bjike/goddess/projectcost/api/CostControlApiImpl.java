@@ -7,6 +7,7 @@ import com.bjike.goddess.projectcost.dto.CostControlDTO;
 import com.bjike.goddess.projectcost.service.CostControlSer;
 import com.bjike.goddess.projectcost.to.CostControlTO;
 import com.bjike.goddess.projectcost.to.FindTO;
+import com.bjike.goddess.projectcost.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,5 +71,10 @@ public class CostControlApiImpl implements CostControlAPI {
     @Override
     public List<CostControlBO> findByTo(FindTO to) throws SerException {
         return costControlSer.findByTo(to);
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return costControlSer.guidePermission( guidePermissionTO );
     }
 }

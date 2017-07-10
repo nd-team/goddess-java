@@ -23,24 +23,22 @@ public interface FormulaSer extends Ser<Formula, FormulaDTO> {
      * 根据对应科目id查找公式详细
      *
      * @param foreignId
-     * @param startTime
-     * @param endTime
-     * @param projectGroup
+     * @param dto
      * @return
      * @throws SerException
      */
-    List<FormulaBO> findByFid(String foreignId, String startTime, String endTime, String projectGroup) throws SerException;
+    List<FormulaBO> findByFid(String foreignId, FormulaDTO dto) throws SerException;
 
     /**
      * 利润分析
      *
      * @param foreignId
      * @param time
-     * @param projectGroup
+     * @param projectNames
      * @return
      * @throws SerException
      */
-    List<FormulaBO> profitAnalyze(String foreignId, String time, String projectGroup) throws SerException;
+    List<FormulaBO> profitAnalyze(String foreignId, String time, String[] projectNames) throws SerException;
 
     /**
      * 加公式科目

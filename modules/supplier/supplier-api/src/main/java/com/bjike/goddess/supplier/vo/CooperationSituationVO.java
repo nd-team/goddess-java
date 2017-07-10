@@ -23,7 +23,7 @@ public class CooperationSituationVO {
     /**
      * 公司名称
      */
-    private String name;
+    private String companyName;
 
     /**
      * 产品服务内容
@@ -57,12 +57,13 @@ public class CooperationSituationVO {
         this.informationId = informationId;
     }
 
-    public String getName() {
-        return name;
+
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public String getProduct() {

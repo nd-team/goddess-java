@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.qualifications.bo.QualificationsInfoBO;
 import com.bjike.goddess.qualifications.dto.QualificationsInfoDTO;
 import com.bjike.goddess.qualifications.service.QualificationsInfoSer;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 import com.bjike.goddess.qualifications.to.QualificationsInfoStatusTO;
 import com.bjike.goddess.qualifications.to.QualificationsInfoTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,5 +65,9 @@ public class QualificationsInfoApiImpl implements QualificationsInfoAPI {
     @Override
     public QualificationsInfoBO getById(String id) throws SerException {
         return qualificationsInfoSer.getById(id);
+    }
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return qualificationsInfoSer.guidePermission( guidePermissionTO );
     }
 }

@@ -24,30 +24,38 @@
     <!-- 进度表API-->
     <dubbo:reference interface="com.bjike.goddess.progressmanage.api.ProgressTableAPI" id="progressTableApiImpl"/>
 
-    <!-- 进度表头API-->
+    <!-- 进度表头API -->
     <dubbo:reference interface="com.bjike.goddess.progressmanage.api.TableHeadAPI" id="tableHeadApiImpl"/>
 
-    <!-- 节点API-->
+    <!-- 节点API -->
     <dubbo:reference interface="com.bjike.goddess.progressmanage.api.ProgressNodeAPI" id="progressNodeApiImpl"/>
 
-    <!-- 节点表头API-->
+    <!-- 节点表头API -->
     <dubbo:reference interface="com.bjike.goddess.progressmanage.api.NodeHeadAPI" id="nodeHeadApiImpl"/>
 
-    <!-- 进度表表头值API-->
+    <!-- 节点表头行API -->
+    <dubbo:reference interface="com.bjike.goddess.progressmanage.api.NodeHeadRowSignAPI" id="nodeHeadRowSignApiImpl"/>
+
+    <!-- 进度表表头值API -->
     <dubbo:reference interface="com.bjike.goddess.progressmanage.api.TableHeadValueAPI" id="tableHeadValueApiImpl"/>
 
-    <!-- 进度表表头值API-->
+    <!-- 进度表表头行API -->
     <dubbo:reference interface="com.bjike.goddess.progressmanage.api.TableHeadRowSignAPI" id="tableHeadRowSignApiImpl"/>
 
+    <!-- 任务接收API -->
+    <dubbo:reference interface="com.bjike.goddess.progressmanage.api.TaskReceiveAPI" id="taskReceiveApiImpl"/>
 
-    <!-- userAPI-->
+
+    <!-- userAPI -->
     <dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
-    <!-- permissionAPI-->
+    <!-- permissionAPI -->
     <dubbo:reference interface="com.bjike.goddess.user.api.rbac.PermissionAPI" id="permissionApiImpl"/>
 
-    <!-- 组织结构API-->
+    <!-- 组织结构API -->
     <dubbo:reference interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
+
+    <dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
 
 
 </beans>

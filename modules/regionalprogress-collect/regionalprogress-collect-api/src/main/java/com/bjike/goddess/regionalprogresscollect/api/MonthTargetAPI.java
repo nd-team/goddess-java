@@ -3,6 +3,7 @@ package com.bjike.goddess.regionalprogresscollect.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.regionalprogresscollect.bo.MonthTargetBO;
 import com.bjike.goddess.regionalprogresscollect.dto.MonthTargetDTO;
+import com.bjike.goddess.regionalprogresscollect.to.GuidePermissionTO;
 import com.bjike.goddess.regionalprogresscollect.to.MonthTargetTO;
 import com.bjike.goddess.regionalprogresscollect.to.StandardTO;
 
@@ -95,4 +96,10 @@ public interface MonthTargetAPI {
         return null;
     }
 
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

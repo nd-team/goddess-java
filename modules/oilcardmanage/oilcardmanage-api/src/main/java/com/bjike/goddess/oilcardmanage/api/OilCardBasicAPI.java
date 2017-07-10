@@ -62,4 +62,11 @@ public interface OilCardBasicAPI {
      * @throws SerException 分页查询业务异常
      */
     List<OilCardBasicBO> pageList(OilCardBasicDTO dto) throws SerException;
+
+    /**
+     * 通过油卡编号查询油卡信息
+     * @param oilCardCode 油卡编号
+     * @return 油卡信息
+     */
+    OilCardBasicBO findByCode(String oilCardCode) throws SerException;
 }

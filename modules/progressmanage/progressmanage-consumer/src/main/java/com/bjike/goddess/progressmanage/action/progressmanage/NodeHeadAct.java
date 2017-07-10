@@ -67,17 +67,16 @@ public class NodeHeadAct {
      * @return class NodeListForHeadVO
      * @version v1
      */
-    @GetMapping("v1/nodes/{id}")
-    public Result nodes(@RequestParam String id, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/nodes/{tableId}")
+    public Result nodes(@PathVariable String tableId, HttpServletRequest request) throws ActException {
 
         try {
-            List<NodeListForHeadVO> voList = BeanTransform.copyProperties(progressNodeAPI.nodes(id), NodeListForHeadVO.class, request);
+            List<NodeListForHeadVO> voList = BeanTransform.copyProperties(progressNodeAPI.nodes(tableId), NodeListForHeadVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
-
 
     /**
      * 新增

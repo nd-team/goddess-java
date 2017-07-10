@@ -102,8 +102,8 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MonthPlanBO save(MonthPlanTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(planManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(planManage))
+//            throw new SerException("您的帐号没有权限");
         MonthPlan entity = BeanTransform.copyProperties(to, MonthPlan.class);
         entity.setYear(yearPlanSer.findById(to.getYearId()));
         if (entity.getYear() == null)
@@ -117,8 +117,8 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MonthPlanBO update(MonthPlanTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(planManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(planManage))
+//            throw new SerException("您的帐号没有权限");
         if (StringUtils.isNotBlank(to.getId())) {
             try {
                 MonthPlan entity = super.findById(to.getId());
@@ -139,8 +139,8 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MonthPlanBO delete(MonthPlanTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(planManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(planManage))
+//            throw new SerException("您的帐号没有权限");
         MonthPlan entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");
@@ -183,8 +183,8 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
 
     @Override
     public MonthPlanBO getById(String id) throws SerException {
-        if (!marPermissionSer.getMarPermission(planCheck))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(planCheck))
+//            throw new SerException("您的帐号没有权限");
         try {
             return this.transformBO(super.findById(id));
         } catch (SerException e) {
@@ -194,8 +194,8 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
 
     @Override
     public List<MonthPlanBO> maps(MonthPlanDTO dto) throws SerException {
-        if (!marPermissionSer.getMarPermission(planCheck))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(planCheck))
+//            throw new SerException("您的帐号没有权限");
         return this.transformBOList(super.findByPage(dto));
     }
 
@@ -239,8 +239,8 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
 
     @Override
     public byte[] exportExcel(CollectTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(planCheck))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(planCheck))
+//            throw new SerException("您的帐号没有权限");
         List<MonthPlanBO> list;
         if (StringUtils.isBlank(to.getType())) {
             list = this.transformBOList(super.findAll());

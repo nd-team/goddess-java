@@ -37,7 +37,7 @@ public class NodeHeadApiImpl implements NodeHeadAPI {
 
     @Override
     public void delete(String id) throws SerException {
-        nodeHeadSer.remove(id);
+        nodeHeadSer.delete(id);
     }
 
     @Override

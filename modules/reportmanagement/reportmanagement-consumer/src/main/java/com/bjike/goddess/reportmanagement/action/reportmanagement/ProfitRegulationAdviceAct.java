@@ -32,110 +32,110 @@ import java.util.List;
 @RestController
 @RequestMapping("profitregulationadvice")
 public class ProfitRegulationAdviceAct {
-    @Autowired
-    private ProfitRegulationAdviceAPI profitRegulationAdviceAPI;
-
-    /**
-     * 列表
-     *
-     * @param dto 利润增减率分析管理建议设计数据传输
-     * @return class ProfitRegulationAdviceVO
-     * @throws ActException
-     * @version v1
-     */
-    @GetMapping("v1/list")
-    public Result list(ProfitRegulationAdviceDTO dto, HttpServletRequest request) throws ActException {
-        try {
-            List<ProfitRegulationAdviceBO> list = profitRegulationAdviceAPI.list(dto);
-            return ActResult.initialize(BeanTransform.copyProperties(list, ProfitRegulationAdviceVO.class, request));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 添加
-     *
-     * @param to 利润增减率分析管理建议设计传输对象
-     * @return class ProfitRegulationAdviceVO
-     * @throws ActException
-     * @version v1
-     */
-    @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) ProfitRegulationAdviceTO to, BindingResult result, HttpServletRequest request) throws ActException {
-        try {
-            ProfitRegulationAdviceBO bo = profitRegulationAdviceAPI.save(to);
-            return ActResult.initialize(BeanTransform.copyProperties(bo, ProfitRegulationAdviceVO.class, request));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 通过id查找
-     *
-     * @param id 利润增减率分析管理建议设计id
-     * @return class ProfitRegulationAdviceVO
-     * @throws ActException
-     * @version v1
-     */
-    @GetMapping("v1/profitregulationadvice/{id}")
-    public Result profitregulationadvice(@PathVariable String id, HttpServletRequest request) throws ActException {
-        try {
-            ProfitRegulationAdviceBO bo = profitRegulationAdviceAPI.findByID(id);
-            return ActResult.initialize(BeanTransform.copyProperties(bo, ProfitRegulationAdviceVO.class, request));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 编辑
-     *
-     * @param to 利润增减率分析管理建议设计传输对象
-     * @throws ActException
-     * @version v1
-     */
-    @PutMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class) ProfitRegulationAdviceTO to, BindingResult result) throws ActException {
-        try {
-            profitRegulationAdviceAPI.edit(to);
-            return new ActResult("编辑成功");
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 删除
-     *
-     * @param id 利润增减率分析管理建议设计id
-     * @throws ActException
-     * @version v1
-     */
-    @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id) throws ActException {
-        try {
-            profitRegulationAdviceAPI.delete(id);
-            return new ActResult("删除成功");
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 查找总记录数
-     *
-     * @param dto 利润增减率分析管理建议设计数据传输
-     * @throws ActException
-     * @version v1
-     */
-    @GetMapping("v1/count")
-    public Result count(ProfitRegulationAdviceDTO dto) throws ActException {
-        try {
-            return ActResult.initialize(profitRegulationAdviceAPI.count(dto));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    @Autowired
+//    private ProfitRegulationAdviceAPI profitRegulationAdviceAPI;
+//
+//    /**
+//     * 列表
+//     *
+//     * @param dto 利润增减率分析管理建议设计数据传输
+//     * @return class ProfitRegulationAdviceVO
+//     * @throws ActException
+//     * @version v1
+//     */
+//    @GetMapping("v1/list")
+//    public Result list(ProfitRegulationAdviceDTO dto, HttpServletRequest request) throws ActException {
+//        try {
+//            List<ProfitRegulationAdviceBO> list = profitRegulationAdviceAPI.list(dto);
+//            return ActResult.initialize(BeanTransform.copyProperties(list, ProfitRegulationAdviceVO.class, request));
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+//
+//    /**
+//     * 添加
+//     *
+//     * @param to 利润增减率分析管理建议设计传输对象
+//     * @return class ProfitRegulationAdviceVO
+//     * @throws ActException
+//     * @version v1
+//     */
+//    @PostMapping("v1/save")
+//    public Result save(@Validated(ADD.class) ProfitRegulationAdviceTO to, BindingResult result, HttpServletRequest request) throws ActException {
+//        try {
+//            ProfitRegulationAdviceBO bo = profitRegulationAdviceAPI.save(to);
+//            return ActResult.initialize(BeanTransform.copyProperties(bo, ProfitRegulationAdviceVO.class, request));
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+//
+//    /**
+//     * 通过id查找
+//     *
+//     * @param id 利润增减率分析管理建议设计id
+//     * @return class ProfitRegulationAdviceVO
+//     * @throws ActException
+//     * @version v1
+//     */
+//    @GetMapping("v1/profitregulationadvice/{id}")
+//    public Result profitregulationadvice(@PathVariable String id, HttpServletRequest request) throws ActException {
+//        try {
+//            ProfitRegulationAdviceBO bo = profitRegulationAdviceAPI.findByID(id);
+//            return ActResult.initialize(BeanTransform.copyProperties(bo, ProfitRegulationAdviceVO.class, request));
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+//
+//    /**
+//     * 编辑
+//     *
+//     * @param to 利润增减率分析管理建议设计传输对象
+//     * @throws ActException
+//     * @version v1
+//     */
+//    @PutMapping("v1/edit")
+//    public Result edit(@Validated(EDIT.class) ProfitRegulationAdviceTO to, BindingResult result) throws ActException {
+//        try {
+//            profitRegulationAdviceAPI.edit(to);
+//            return new ActResult("编辑成功");
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+//
+//    /**
+//     * 删除
+//     *
+//     * @param id 利润增减率分析管理建议设计id
+//     * @throws ActException
+//     * @version v1
+//     */
+//    @DeleteMapping("v1/delete/{id}")
+//    public Result delete(@PathVariable String id) throws ActException {
+//        try {
+//            profitRegulationAdviceAPI.delete(id);
+//            return new ActResult("删除成功");
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+//
+//    /**
+//     * 查找总记录数
+//     *
+//     * @param dto 利润增减率分析管理建议设计数据传输
+//     * @throws ActException
+//     * @version v1
+//     */
+//    @GetMapping("v1/count")
+//    public Result count(ProfitRegulationAdviceDTO dto) throws ActException {
+//        try {
+//            return ActResult.initialize(profitRegulationAdviceAPI.count(dto));
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 }

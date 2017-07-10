@@ -3,7 +3,9 @@ package com.bjike.goddess.otherexpenses.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.otherexpenses.bo.*;
 import com.bjike.goddess.otherexpenses.dto.OtherExpensesDTO;
+import com.bjike.goddess.otherexpenses.excel.SonPermissionObject;
 import com.bjike.goddess.otherexpenses.to.CollectTO;
+import com.bjike.goddess.otherexpenses.to.GuidePermissionTO;
 import com.bjike.goddess.otherexpenses.to.OtherExpensesTO;
 
 import java.util.List;
@@ -127,5 +129,41 @@ public interface OtherExpensesAPI {
     default Long getTotal() throws SerException {
         return null;
     }
+
+    /**
+     * 导入excel
+     *
+     * @param toList
+     * @throws SerException
+     */
+    void leadExcel(List<OtherExpensesTO> toList) throws SerException;
+
+    /**
+     * 导出Excel
+     * @param dto
+     * @throws SerException
+     */
+    byte[] exportExcel(OtherExpensesDTO dto ) throws SerException;
+
+    /**
+     * 导出Excel导入模板
+     * @throws SerException
+     */
+    byte[] templateExport(  ) throws SerException;
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws SerException
+     * @version v1
+     */
+    List<SonPermissionObject> sonPermission() throws SerException;
 
 }

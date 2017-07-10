@@ -1,5 +1,6 @@
 package com.bjike.goddess.oilcardmanage.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -18,6 +19,7 @@ import java.util.List;
 
 /**
  * 油卡基础信息业务处理类
+ *
  * @Author: [Jason]
  * @Date: [17-3-11 上午10:42]
  * @Package:[ com.bjike.goddess.com.bjike.goddess.com.bjike.goddess.oilcardmanage.service ]
@@ -27,38 +29,38 @@ import java.util.List;
  */
 @CacheConfig(cacheNames = "oilCardBasicSerImplCache")
 @Service
-public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic,OilCardBasicDTO> implements OilCardBasicSer {
+public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicDTO> implements OilCardBasicSer {
 
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public OilCardBasicBO saveOilCarBasic(OilCardBasicTO to) throws SerException {
 
-        if(to.getCycleEarlyMoney() != null ){
+        if (to.getCycleEarlyMoney() != null) {
             to.setBalance(to.getCycleEarlyMoney());
-        }else{
+        } else {
             throw new SerException("期初金额不能为空!");
         }
-        OilCardBasic model = BeanTransform.copyProperties(to, OilCardBasic.class ,true);
+        OilCardBasic model = BeanTransform.copyProperties(to, OilCardBasic.class, true);
         super.save(model);
         to.setId(model.getId());
-        return BeanTransform.copyProperties(to,OilCardBasicBO.class);
+        return BeanTransform.copyProperties(to, OilCardBasicBO.class);
     }
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public OilCardBasicBO updateOilCardBasic(OilCardBasicTO to) throws SerException {
         updateModel(to);
-        return BeanTransform.copyProperties(to,OilCardBasicBO.class);
+        return BeanTransform.copyProperties(to, OilCardBasicBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void freezeOilCardBasic(String id) throws SerException {
         OilCardBasic model = super.findById(id);
-        if(model != null){
+        if (model != null) {
             model.setStatus(Status.CONGEAL);
-        }else{
+        } else {
             throw new SerException("冻结记录对象不能为空!");
         }
     }
@@ -67,9 +69,9 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic,OilCardBasicDT
     @Transactional(rollbackFor = SerException.class)
     public void breakFreeze(String id) throws SerException {
         OilCardBasic model = super.findById(id);
-        if(model != null){
+        if (model != null) {
             model.setStatus(Status.THAW);
-        }else{
+        } else {
             throw new SerException("解冻记录对象不能为空!");
         }
     }
@@ -80,11 +82,20 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic,OilCardBasicDT
 
         List<OilCardBasic> list = super.findByPage(dto);
 
-        return BeanTransform.copyProperties(list,OilCardBasicBO.class);
+        return BeanTransform.copyProperties(list, OilCardBasicBO.class);
+    }
+
+    @Override
+    public OilCardBasicBO findByCode(String oilCardCode) throws SerException {
+        OilCardBasicDTO dto = new OilCardBasicDTO();
+        dto.getConditions().add(Restrict.eq("oilCardCode", oilCardCode));
+        return BeanTransform.copyProperties(super.findOne(dto), OilCardBasicBO.class);
+
     }
 
     /**
      * 更新数据（编辑、审核）
+     *
      * @param to 油卡基本信息
      * @throws SerException 更新油卡异常
      */
@@ -92,11 +103,11 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic,OilCardBasicDT
 
         if (!StringUtils.isEmpty(to.getId())) {
             OilCardBasic model = super.findById(to.getId());
-            if(model != null){
+            if (model != null) {
                 BeanTransform.copyProperties(to, model, true);
                 model.setModifyTime(LocalDateTime.now());
                 super.update(model);
-            }else{
+            } else {
                 throw new SerException("更新对象不能为空");
             }
         } else {

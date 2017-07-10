@@ -54,8 +54,8 @@ public class MarketMeasureSerImpl extends ServiceImpl<MarketMeasure, MarketMeasu
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketMeasureBO save(MarketMeasureTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(marketManage))
+//            throw new SerException("您的帐号没有权限");
         MarketMeasure entity = BeanTransform.copyProperties(to, MarketMeasure.class);
         super.save(entity);
         return BeanTransform.copyProperties(entity, MarketMeasureBO.class);
@@ -64,8 +64,8 @@ public class MarketMeasureSerImpl extends ServiceImpl<MarketMeasure, MarketMeasu
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketMeasureBO update(MarketMeasureTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(marketManage))
+//            throw new SerException("您的帐号没有权限");
         try {
             MarketMeasure entity = super.findById(to.getId());
             BeanTransform.copyProperties(to, entity, true);
@@ -80,8 +80,8 @@ public class MarketMeasureSerImpl extends ServiceImpl<MarketMeasure, MarketMeasu
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketMeasureBO delete(MarketMeasureTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(marketManage))
+//            throw new SerException("您的帐号没有权限");
         MarketMeasure entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");
@@ -116,15 +116,15 @@ public class MarketMeasureSerImpl extends ServiceImpl<MarketMeasure, MarketMeasu
 
     @Override
     public List<MarketMeasure> findByPage(MarketMeasureDTO dto) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketCheck))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(marketCheck))
+//            throw new SerException("您的帐号没有权限");
         return super.findByPage(dto);
     }
 
     @Override
     public byte[] exportExcel(CollectTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketCheck))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(marketCheck))
+//            throw new SerException("您的帐号没有权限");
         MarketMeasureDTO dto = new MarketMeasureDTO();
         if (StringUtils.isNotBlank(to.getType()))
             dto.getConditions().add(Restrict.eq("type", to.getType()));

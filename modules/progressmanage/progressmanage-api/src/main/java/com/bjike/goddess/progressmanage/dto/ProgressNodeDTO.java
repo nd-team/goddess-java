@@ -18,16 +18,16 @@ public class ProgressNodeDTO extends BaseDTO {
     }
 
     /**
-     * 项目Id
+     * 进度表
      */
-    @NotBlank(message = "项目Id不能为空", groups = {ProgressNodeDTO.NodeValidate.class})
-    private String projectId;
+    @NotBlank(message = "进度表不能为空", groups = {ProgressNodeDTO.NodeValidate.class})
+    private String tableId;
 
-    public String getProjectId() {
-        return projectId;
+    public String getTableId() {
+        return tableId;
     }
 
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
+    public void setTableId(String tableId) {
+        this.tableId = tableId;
     }
 }

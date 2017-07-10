@@ -86,7 +86,6 @@ public class EvaluateProjectInfoSerImpl extends ServiceImpl<EvaluateProjectInfo,
     @Transactional(rollbackFor = SerException.class)
     public EvaluateProjectInfoBO addModel(EvaluateProjectInfoTO to) throws SerException {
 
-        getCusPermission();
 
         EvaluateProjectInfo model = BeanTransform.copyProperties(to, EvaluateProjectInfo.class, true);
         if (to.getYears() != null && to.getMonths() != null && to.getDays() != null) {
@@ -109,8 +108,6 @@ public class EvaluateProjectInfoSerImpl extends ServiceImpl<EvaluateProjectInfo,
     @Override
     @Transactional(rollbackFor = SerException.class)
     public EvaluateProjectInfoBO editModel(EvaluateProjectInfoTO to) throws SerException {
-
-        getCusPermission();
 
         if (!StringUtils.isEmpty(to.getId())) {
             EvaluateProjectInfo model = super.findById(to.getId());
@@ -144,19 +141,61 @@ public class EvaluateProjectInfoSerImpl extends ServiceImpl<EvaluateProjectInfo,
     @Transactional(rollbackFor = SerException.class)
     public List<EvaluateProjectInfoBO> pageList(EvaluateProjectInfoDTO dto) throws SerException {
 
-        getCusPermission();
-
         dto.getSorts().add("createTime=desc");
         List<EvaluateProjectInfo> list = super.findByPage(dto);
+        List<EvaluateProjectInfoBO> boList = BeanTransform.copyProperties(list, EvaluateProjectInfoBO.class);
+        if (!CollectionUtils.isEmpty(list)) {
+            for (EvaluateProjectInfoBO bo : boList) {
 
-        return BeanTransform.copyProperties(list, EvaluateProjectInfoBO.class);
+                bo.setCost(getCost(bo.getId()));
+            }
+        }
+        return boList;
+    }
+
+    @Override
+    public Double getCost(String infoId) throws SerException {
+        DemandCostDTO demandCostDTO = new DemandCostDTO();
+        AnotherCostDTO anotherCostDTO = new AnotherCostDTO();
+        LabourCostDTO labourCostDTO = new LabourCostDTO();
+        demandCostDTO.getConditions().add(Restrict.eq("projectInfoId", infoId));
+        anotherCostDTO.getConditions().add(Restrict.eq("projectInfoId", infoId));
+        labourCostDTO.getConditions().add(Restrict.eq("projectInfoId", infoId));
+
+        List<DemandCost> demandCostList = demandCostSer.findByCis(demandCostDTO);
+        List<AnotherCost> anotherCostList = anotherCostSer.findByCis(anotherCostDTO);
+        List<LabourCost> labourCosts = labourCostSer.findByCis(labourCostDTO);
+        Double totalCost = 0.0;
+        if (!CollectionUtils.isEmpty(demandCostList)) {
+            Double totalEq = demandCostList.stream().filter(p -> p.getEquipmentSalary() != null).mapToDouble(p -> p.getEquipmentSalary()).sum();
+            Double totalCf = demandCostList.stream().filter(p -> p.getConfigSalary() != null).mapToDouble(p -> p.getConfigSalary()).sum();
+            Double totalCs = demandCostList.stream().filter(p -> p.getCarSalary() != null).mapToDouble(p -> p.getCarSalary()).sum();
+            Double totalAn = demandCostList.stream().filter(p -> p.getAnother() != null).mapToDouble(p -> p.getAnother()).sum();
+            totalCost = totalCost + totalEq;
+            totalCost = totalCost + totalCf;
+            totalCost = totalCost + totalCs;
+            totalCost = totalCost + totalAn;
+        }
+        if (!CollectionUtils.isEmpty(anotherCostList)) {
+            Double totalAnother = anotherCostList.stream().filter(p -> p.getSalary() != null).mapToDouble(p -> p.getSalary()).sum();
+            totalCost = totalCost + totalAnother;
+        }
+        if (!CollectionUtils.isEmpty(labourCosts)) {
+            Double totalStaff = labourCosts.stream().filter(p -> p.getStaffLease() != null).mapToDouble(p -> p.getStaffLease()).sum();
+            Double totalNs = labourCosts.stream().filter(p -> p.getNormalSalary() != null).mapToDouble(p -> p.getNormalSalary()).sum();
+            Double totalOs = labourCosts.stream().filter(p -> p.getOvertimeSalary() != null).mapToDouble(p -> p.getOvertimeSalary()).sum();
+            Double totalAnother = labourCosts.stream().filter(p -> p.getAnother() != null).mapToDouble(p -> p.getAnother()).sum();
+            totalCost = totalCost + totalStaff;
+            totalCost = totalCost + totalNs;
+            totalCost = totalCost + totalOs;
+            totalCost = totalCost + totalAnother;
+        }
+        return totalCost;
     }
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<ProjectProfitRateBO> profitPageList(EvaluateProjectInfoDTO dto) throws SerException {
-
-        getCusPermission();
 
         dto.getSorts().add("createTime=desc");
         List<EvaluateProjectInfo> list = super.findByPage(dto);
@@ -167,26 +206,44 @@ public class EvaluateProjectInfoSerImpl extends ServiceImpl<EvaluateProjectInfo,
             costDTO.getConditions().add(Restrict.eq("projectInfoId", model.getId()));
             ProjectCost projectCost = projectCostSer.findOne(costDTO);
 
-            if (projectCost == null || projectCost.getServiceCost() == null || projectCost.getEntertainCost() == null || projectCost.getCommission() == null) {
-                continue;
+            Double fee = 0.0;
+            if (projectCost == null) {
+                fee = 0.0;
+            } else {
+                fee = projectCost.getServiceCost() + projectCost.getEntertainCost() + projectCost.getCommission() + projectCost.getAnother();
             }
-            Double fee = projectCost.getServiceCost() + projectCost.getEntertainCost() + projectCost.getCommission() + projectCost.getAnother();
+
+            Double cost = getCost(model.getId());
 
             ProjectProfitRateBO bo = new ProjectProfitRateBO();
-            //利润 = 项目总金额 - 成本 -管理费 -税金 - 费用
-            Double profit = model.getTotalAmount() - model.getCost() - model.getManageCost() - model.getTaxes() - fee;
+            //利润 = 项目总金额 - 总成本(劳动成本 + 需求成本 + 其他成本 ) -管理费 -税金 - 费用
+            Double profit = model.getTotalAmount() - cost - model.getManageCost() - model.getTaxes() - fee;
             //利润率 = 利润 / 项目总金额
 
             DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
             Double profitRate = profit / model.getTotalAmount() * 100;
-            Double costRate = profit / model.getCost() * 100;
-            Double feeRate = profit / fee * 100;
+            Double costRate = null;
+            Double feeRate = null;
+            String costRateStr = null;
+            String feeRateStr = null;
+            if (cost.doubleValue() == 0) {
+
+            } else {
+                costRate = profit / cost * 100;
+                costRateStr = decimalFormat.format(costRate) + "%";
+            }
+            if (fee.doubleValue() == 0) {
+
+            } else {
+                feeRate = profit / fee * 100;
+                feeRateStr = decimalFormat.format(feeRate) + "%";
+            }
+
 
             //转换利率百分比
             String profitRateStr = decimalFormat.format(profitRate) + "%";
-            String costRateStr = decimalFormat.format(costRate) + "%";
-            String feeRateStr = decimalFormat.format(feeRate) + "%";
+
 
             bo.setArea(model.getArea());
             bo.setProject(model.getProject());
@@ -210,8 +267,6 @@ public class EvaluateProjectInfoSerImpl extends ServiceImpl<EvaluateProjectInfo,
     @Transactional(rollbackFor = SerException.class)
     public List<ProjectProfitRateBO> profitScope() throws SerException {
 
-        getCusPermission();
-
         List<EvaluateProjectInfo> list = super.findAll();
         List<ProjectProfitRateBO> boList = new ArrayList<ProjectProfitRateBO>();
         for (EvaluateProjectInfo model : list) {
@@ -220,14 +275,18 @@ public class EvaluateProjectInfoSerImpl extends ServiceImpl<EvaluateProjectInfo,
             costDTO.getConditions().add(Restrict.eq("projectInfoId", model.getId()));
             ProjectCost projectCost = projectCostSer.findOne(costDTO);
 
-            if (projectCost == null || projectCost.getServiceCost() == null || projectCost.getEntertainCost() == null || projectCost.getCommission() == null) {
-                continue;
+            Double fee = 0.0;
+            if (projectCost == null) {
+                fee = 0.0;
+            } else {
+                fee = projectCost.getServiceCost() + projectCost.getEntertainCost() + projectCost.getCommission() + projectCost.getAnother();
             }
-            Double fee = projectCost.getServiceCost() + projectCost.getEntertainCost() + projectCost.getCommission();
+
+            Double cost = getCost(model.getId());
 
             ProjectProfitRateBO bo = new ProjectProfitRateBO();
             //利润 = 项目总金额 - 成本 -管理费 -税金 - 费用
-            Double profit = model.getTotalAmount() - model.getCost() - model.getManageCost() - model.getTaxes() - fee;
+            Double profit = model.getTotalAmount() - cost - model.getManageCost() - model.getTaxes() - fee;
             //利润率 = 利润 / 项目总金额
 
             DecimalFormat decimalFormat = new DecimalFormat("0.00");
@@ -249,8 +308,6 @@ public class EvaluateProjectInfoSerImpl extends ServiceImpl<EvaluateProjectInfo,
     @Override
     public List<EvaluateProjectInfoBO> findAllArea() throws SerException {
 
-        getCusPermission();
-
         String sql = "select distinct area from businessevaluate_evaluateprojectinfo where 0 = 0 ";
         List<EvaluateProjectInfo> list = super.findBySql(sql, EvaluateProjectInfo.class, new String[]{"area"});
         return BeanTransform.copyProperties(list, EvaluateProjectInfoBO.class);
@@ -258,8 +315,6 @@ public class EvaluateProjectInfoSerImpl extends ServiceImpl<EvaluateProjectInfo,
 
     @Override
     public List<EvaluateProjectInfoBO> findAllProject() throws SerException {
-
-        getCusPermission();
 
         String sql = "select distinct project ,1 from businessevaluate_evaluateprojectinfo where 0 = 0 ";
         List<EvaluateProjectInfo> list = super.findBySql(sql, EvaluateProjectInfo.class, new String[]{"project"});
@@ -295,7 +350,6 @@ public class EvaluateProjectInfoSerImpl extends ServiceImpl<EvaluateProjectInfo,
 
         super.remove(id);
     }
-
 
 
     //查询需求成本
@@ -677,7 +731,7 @@ public class EvaluateProjectInfoSerImpl extends ServiceImpl<EvaluateProjectInfo,
 
 
     /**
-     *  导航栏核对查看权限（部门级别）
+     * 导航栏核对查看权限（部门级别）
      */
     private Boolean guideSeeIdentity() throws SerException {
         Boolean flag = false;
@@ -712,12 +766,5 @@ public class EvaluateProjectInfoSerImpl extends ServiceImpl<EvaluateProjectInfo,
         return returnBoList;
     }
 
-    public void getCusPermission() throws SerException {
 
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-
-        if (!permission) {
-            throw new SerException("该功能只有商务部可操作，您的帐号尚无权限");
-        }
-    }
 }

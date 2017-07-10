@@ -10,7 +10,6 @@ import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.progressmanage.bo.ProjectInfoBO;
 import com.bjike.goddess.progressmanage.bo.ProjectListForNodeBO;
 import com.bjike.goddess.progressmanage.dto.ProjectInfoDTO;
-import com.bjike.goddess.progressmanage.entity.ProgressTable;
 import com.bjike.goddess.progressmanage.entity.ProjectInfo;
 import com.bjike.goddess.progressmanage.to.ProjectInfoTO;
 import com.bjike.goddess.user.api.UserAPI;
@@ -40,8 +39,6 @@ public class ProjectInfoSerImpl extends ServiceImpl<ProjectInfo, ProjectInfoDTO>
     @Autowired
     private UserAPI userAPI;
     @Autowired
-    private ProgressTableSer progressTableSer;
-    @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
 
     @Override
@@ -61,17 +58,11 @@ public class ProjectInfoSerImpl extends ServiceImpl<ProjectInfo, ProjectInfoDTO>
         model.setCreateUser(userBO.getEmployeeNumber());
         super.save(model);
 
-        ProgressTable progressTable = new ProgressTable();
-        progressTable.setCreateUser(userBO.getEmployeeNumber());
-        progressTable.setTabName(to.getTableName());
-        progressTable.setProject(model);
-        progressTableSer.save(progressTable);
-
         return BeanTransform.copyProperties(model, ProjectInfoBO.class);
     }
 
     public ProjectInfo isExistOutProject(ProjectInfoTO to) throws SerException {
-        StringBuilder sql = new StringBuilder("select id from progressmanage_projectinfo where 0 = 0");
+        StringBuilder sql = new StringBuilder("select id from progressmanage_projectinfo where 0 = 0 and status = 0");
 
         sql.append(" and outProject ='" + to.getOutProject() + "'");
 
@@ -85,7 +76,7 @@ public class ProjectInfoSerImpl extends ServiceImpl<ProjectInfo, ProjectInfoDTO>
     }
 
     public ProjectInfo isExistInProject(ProjectInfoTO to) throws SerException {
-        StringBuilder sql = new StringBuilder("select id from progressmanage_projectinfo where 0 = 0");
+        StringBuilder sql = new StringBuilder("select id from progressmanage_projectinfo where 0 = 0 and status = 0");
 
         sql.append(" and inProject ='" + to.getInProject() + "'");
 
@@ -122,12 +113,6 @@ public class ProjectInfoSerImpl extends ServiceImpl<ProjectInfo, ProjectInfoDTO>
             model.setModifyTime(LocalDateTime.now());
             super.update(model);
 
-            ProgressTable progressTable = model.getProgressTable();
-            if (!to.getTableName().equals(progressTable.getTabName())) {
-                progressTable.setTabName(to.getTableName());
-                progressTableSer.update(progressTable);
-            }
-
             return BeanTransform.copyProperties(model, ProjectInfoBO.class);
         } else {
             throw new SerException("非法Id,编辑对象不存在!");
@@ -136,27 +121,68 @@ public class ProjectInfoSerImpl extends ServiceImpl<ProjectInfo, ProjectInfoDTO>
 
     @Override
     @Transactional(rollbackFor = SerException.class)
+    public void freeze(String id) throws SerException {
+        ProjectInfo model = super.findById(id);
+        if (model != null) {
+            if (model.getStatus() != Status.CONGEAL) {
+                model.setStatus(Status.CONGEAL);
+                super.update(model);
+            } else {
+                throw new SerException("已经冻结,无需重复操作!");
+            }
+
+        } else {
+            throw new SerException("非法Id,冻结对象不存在!");
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public void unfreeze(String id) throws SerException {
+        ProjectInfo model = super.findById(id);
+        if (model != null) {
+            if (model.getStatus() != Status.THAW) {
+                model.setStatus(Status.THAW);
+                super.update(model);
+            } else {
+                throw new SerException("已经解冻,无需重复操作!");
+            }
+
+        } else {
+            throw new SerException("非法Id,解冻对象不存在!");
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = SerException.class)
     public void delete(String id) throws SerException {
         ProjectInfo model = super.findById(id);
         if (model != null) {
-            model.setStatus(Status.DELETE);
-            super.save(model);
+            if (model.getStatus() != Status.DELETE) {
+                model.setStatus(Status.DELETE);
+                super.update(model);
+            } else {
+                //由于考虑数据完整性,删除状态数据并不删除,如有需要删除可制作定时器一段时间后删除对应状态及关联的数据
+                throw new SerException("非法Id,删除对象不存在!");
+            }
+
         } else {
             throw new SerException("非法Id,删除对象不存在!");
         }
     }
 
     @Override
-    @Transactional(rollbackFor = SerException.class)
     public List<ProjectInfoBO> pageList(ProjectInfoDTO dto) throws SerException {
         dto.getConditions().add(Restrict.ne("status", Status.DELETE));
         dto.getSorts().add("createTime=desc");
         List<ProjectInfoBO> boList = BeanTransform.copyProperties(super.findByPage(dto), ProjectInfoBO.class);
 
-        for (ProjectInfoBO bo : boList) {
-            DepartmentDetailBO detailBO = departmentDetailAPI.getById(bo.getGroupId());
-            if (detailBO != null) {
-                bo.setGroup(detailBO.getDepartment());
+        if (!CollectionUtils.isEmpty(boList)) {
+            for (ProjectInfoBO bo : boList) {
+                DepartmentDetailBO detailBO = departmentDetailAPI.getById(bo.getGroupId());
+                if (detailBO != null) {
+                    bo.setGroup(detailBO.getDepartment());
+                }
             }
         }
         return boList;

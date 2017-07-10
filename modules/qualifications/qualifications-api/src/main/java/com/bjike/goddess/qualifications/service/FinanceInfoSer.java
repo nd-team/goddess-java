@@ -7,6 +7,7 @@ import com.bjike.goddess.qualifications.bo.FinanceInfoBO;
 import com.bjike.goddess.qualifications.dto.FinanceInfoDTO;
 import com.bjike.goddess.qualifications.entity.FinanceInfo;
 import com.bjike.goddess.qualifications.to.FinanceInfoTO;
+import com.bjike.goddess.qualifications.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -96,4 +97,17 @@ public interface FinanceInfoSer extends Ser<FinanceInfo, FinanceInfoDTO> {
         return null;
     }
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

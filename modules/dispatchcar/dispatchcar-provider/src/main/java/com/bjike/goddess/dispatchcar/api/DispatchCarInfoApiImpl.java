@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -184,5 +183,15 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
     @Override
     public Boolean financeGuidePermission(GuidePermissionTO to) throws SerException {
         return dispatchCarInfoSer.financeGuidePermission(to);
+    }
+
+    @Override
+    public List<DriverDispatchFeeBO> findDispatchFree(Integer month) throws SerException {
+        return dispatchCarInfoSer.findDispatchFree(month);
+    }
+
+    @Override
+    public List<DriverDispatchsBO> findDispatchs(Integer month) throws SerException {
+        return dispatchCarInfoSer.findDispatchs(month);
     }
 }

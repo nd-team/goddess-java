@@ -41,6 +41,11 @@
     <!--进度表行标记API -->
     <dubbo:service interface="com.bjike.goddess.progressmanage.api.TableHeadRowSignAPI" ref="tableHeadRowSignApiImpl"/>
 
+    <!-- 节点表头行标记 -->
+    <dubbo:service interface="com.bjike.goddess.progressmanage.api.NodeHeadRowSignAPI" ref="nodeHeadRowSignApiImpl"/>
+
+    <!-- 节点表头行标记 -->
+    <dubbo:service interface="com.bjike.goddess.progressmanage.api.TaskReceiveAPI" ref="taskReceiveApiImpl"/>
 
     <!-- 注册接口 -->
 

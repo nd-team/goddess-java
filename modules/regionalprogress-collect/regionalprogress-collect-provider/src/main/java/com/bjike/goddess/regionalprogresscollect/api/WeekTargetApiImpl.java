@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.regionalprogresscollect.bo.WeekTargetBO;
 import com.bjike.goddess.regionalprogresscollect.dto.WeekTargetDTO;
 import com.bjike.goddess.regionalprogresscollect.service.WeekTargetSer;
+import com.bjike.goddess.regionalprogresscollect.to.GuidePermissionTO;
 import com.bjike.goddess.regionalprogresscollect.to.StandardTO;
 import com.bjike.goddess.regionalprogresscollect.to.WeekTargetTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,5 +60,10 @@ public class WeekTargetApiImpl implements WeekTargetAPI {
     @Override
     public Long getTotal() throws SerException {
         return weekTargetSer.getTotal();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return weekTargetSer.guidePermission( guidePermissionTO );
     }
 }

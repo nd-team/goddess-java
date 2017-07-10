@@ -3,6 +3,7 @@ package com.bjike.goddess.supplier.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.*;
 import com.bjike.goddess.organize.bo.OpinionBO;
@@ -280,21 +281,23 @@ public class SupPermissionSerImpl extends ServiceImpl<SupPermission, SupPermissi
         if (deleteList != null && deleteList.size() > 0) {
             cusPermissionOperateSer.remove(deleteList);
         }
-        List<SupPermissionOperate> list = new ArrayList<>();
-        for (String operateId : operators) {
-            SupPermissionOperate cpo = new SupPermissionOperate();
-            cpo.setOperator(operateId);
-            cpo.setSupPermissionId(temp.getId());
-            list.add(cpo);
+        if (  operators!= null && operators.length>0 ) {
+            List<SupPermissionOperate> list = new ArrayList<>();
+            for (String operateId : operators) {
+                SupPermissionOperate cpo = new SupPermissionOperate();
+                cpo.setOperator(operateId);
+                cpo.setSupPermissionId(temp.getId());
+                list.add(cpo);
+            }
+            cusPermissionOperateSer.save(list);
         }
-        cusPermissionOperateSer.save(list);
 
         return BeanTransform.copyProperties(temp, SupPermissionBO.class);
     }
 
     @Override
     public Boolean getSupPermission(String idFlag) throws SerException {
-
+        String userToken = RpcTransmit.getUserToken();
         //当前用户
         UserBO userBO = userAPI.currentUser();
         String userId = userBO.getId();

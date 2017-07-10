@@ -2,23 +2,45 @@ package com.bjike.goddess.otherexpenses.service;
 
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.message.enums.MsgType;
+import com.bjike.goddess.message.enums.RangeType;
+import com.bjike.goddess.message.enums.SendType;
+import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.otherexpenses.bo.*;
 import com.bjike.goddess.otherexpenses.dto.OtherExpensesDTO;
 import com.bjike.goddess.otherexpenses.entity.OtherExpenses;
+import com.bjike.goddess.otherexpenses.enums.CollectSendUnit;
+import com.bjike.goddess.otherexpenses.enums.GuideAddrStatus;
+import com.bjike.goddess.otherexpenses.excel.OtherExpensesExcel;
+import com.bjike.goddess.otherexpenses.excel.OtherExpensesTemplateExport;
+import com.bjike.goddess.otherexpenses.excel.SonPermissionObject;
 import com.bjike.goddess.otherexpenses.to.CollectTO;
+import com.bjike.goddess.otherexpenses.to.GuidePermissionTO;
 import com.bjike.goddess.otherexpenses.to.OtherExpensesTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -33,6 +55,11 @@ import java.util.stream.Collectors;
 @CacheConfig(cacheNames = "otherexpensesSerCache")
 @Service
 public class OtherExpensesSerImpl extends ServiceImpl<OtherExpenses, OtherExpensesDTO> implements OtherExpensesSer {
+
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
 
     @Override
     public OtherExpensesBO save(OtherExpensesTO to) throws SerException {
@@ -244,5 +271,185 @@ public class OtherExpensesSerImpl extends ServiceImpl<OtherExpenses, OtherExpens
                 collectBOs.add(bo);
             }
         return collectBOs;
+    }
+
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public void leadExcel(List<OtherExpensesTO> toList) throws SerException {
+        checkAddIdentity();
+        for (OtherExpensesTO to : toList) {
+            OtherExpenses otherExpenses = new OtherExpenses();
+            BeanUtils.copyProperties(to, otherExpenses);
+            super.save(otherExpenses);
+        }
+    }
+
+    @Override
+    public byte[] exportExcel(OtherExpensesDTO dto) throws SerException {
+//       // getCusPermission();
+        List<OtherExpenses> list = super.findByCis(dto);
+
+        List<OtherExpensesExcel> toList = new ArrayList<>();
+        for (OtherExpenses module : list) {
+            OtherExpensesExcel excel = new OtherExpensesExcel();
+            BeanTransform.copyProperties(module, excel);
+            toList.add(excel);
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        return bytes;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+//        getCusPermission();
+
+        List<OtherExpensesTemplateExport> otherExpensesExport = new ArrayList<>();
+
+        OtherExpensesTemplateExport excel = new OtherExpensesTemplateExport();
+
+        excel.setArea("广州");
+        excel.setProject("qq");
+        excel.setType("移动通信类");
+        excel.setName("test");
+        excel.setYear(2016);
+        excel.setMonth(5);
+        excel.setTarget(100.0);
+        excel.setActual(200.0);
+        excel.setRatio(0.2);
+        excel.setBalance(100.0);
+        otherExpensesExport.add(excel);
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(otherExpensesExport, exce);
+        return bytes;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("otherExpenses");
+        obj.setDescribesion("其他费用邮件发送");
+        if (flagSeeSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
+    }
+
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
     }
 }

@@ -3,6 +3,7 @@ package com.bjike.goddess.capability.api;
 import com.bjike.goddess.capability.bo.CooperCapabilityBO;
 import com.bjike.goddess.capability.dto.CooperCapabilityDTO;
 import com.bjike.goddess.capability.to.CooperCapabilityTO;
+import com.bjike.goddess.capability.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -97,4 +98,27 @@ public interface CooperCapabilityAPI {
      * 导出
      */
     byte[] exportExcel(String companyName) throws SerException;
+
+    /**
+     * 功能导航权限
+     * @throws SerException
+     * @version v1
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
+    /**
+     * 导入
+     *
+     * @param cooperCapabilityTO 公司能力
+     * @return class SiginManageBO
+     */
+    default CooperCapabilityBO importExcel(List<CooperCapabilityTO> cooperCapabilityTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出Excel导入模板
+     * @throws SerException
+     */
+    byte[] templateExport(  ) throws SerException;
 }

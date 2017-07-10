@@ -1,15 +1,17 @@
 package com.bjike.goddess.capability.service;
 
 import com.bjike.goddess.capability.bo.CooperCapabilityBO;
-import com.bjike.goddess.capability.enums.GuideAddrStatus;
+import com.bjike.goddess.capability.dto.*;
+import com.bjike.goddess.capability.entity.*;
+import com.bjike.goddess.capability.enums.*;
+import com.bjike.goddess.capability.enums.CompletePro;
 import com.bjike.goddess.capability.excele.CooperCapabilityExcel;
+import com.bjike.goddess.capability.excele.CooperCapabilityTemplateExcel;
 import com.bjike.goddess.capability.to.CooperCapabilityTO;
 import com.bjike.goddess.capability.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.capability.dto.CooperCapabilityDTO;
-import com.bjike.goddess.capability.entity.CooperCapability;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
@@ -89,7 +91,53 @@ public class CooperCapabilitySerImpl extends ServiceImpl<CooperCapability, Coope
         }
         List<CooperCapability> list = super.findByCis(cooperCapabilityDTO, true);
 
-        return BeanTransform.copyProperties(list, CooperCapabilityBO.class );
+        String[] manageAuthens = null;
+        String[] professionAuthens = null;
+        String[] companyProjects = null;
+
+
+        List<CooperCapabilityBO> allList = new ArrayList<>();
+
+        for (CooperCapability module : list) {
+
+            List<String> manageAuthenList1 = new ArrayList<String>();
+            List<String> professionAuthenList1 = new ArrayList<>();
+            List<String> companyProjectList1 = new ArrayList<>();
+            ManageAuthenDTO manageAuthenDTO = new ManageAuthenDTO();
+            ProfessionAuthenDTO professionAuthenDTO = new ProfessionAuthenDTO();
+            CompanyProjectDTO companyProjectDTO = new CompanyProjectDTO();
+
+            manageAuthenDTO.getConditions().add(Restrict.eq("baseId", module.getId()));
+            professionAuthenDTO.getConditions().add(Restrict.eq("baseId", module.getId()));
+            companyProjectDTO.getConditions().add(Restrict.eq("baseId", module.getId()));
+
+            List<ManageAuthen> manageAuthenList = manageAuthenSer.findByCis(manageAuthenDTO);
+            List<ProfessionAuthen> professionAuthenList = professionAuthenSer.findByCis(professionAuthenDTO);
+            List<CompanyProject> companyProjectList = companyProjectSer.findByCis(companyProjectDTO);
+
+            for (ManageAuthen manageAuthen : manageAuthenList) {
+                manageAuthenList1.add(manageAuthen.getName());
+            }
+            for (ProfessionAuthen professionAuthen : professionAuthenList) {
+                professionAuthenList1.add(professionAuthen.getName());
+            }
+            for (CompanyProject companyProject : companyProjectList) {
+                companyProjectList1.add(companyProject.getName());
+            }
+
+            manageAuthens = (String[]) manageAuthenList1.toArray(new String[manageAuthenList1.size()]);
+            professionAuthens = (String[]) professionAuthenList1.toArray(new String[professionAuthenList1.size()]);
+            companyProjects = (String[]) companyProjectList1.toArray(new String[companyProjectList1.size()]);
+
+            CooperCapabilityBO cooperCapabilityBO = BeanTransform.copyProperties(module, CooperCapabilityBO.class);
+
+            cooperCapabilityBO.setManageAuthen(String.join(",", manageAuthens));
+            cooperCapabilityBO.setProfessionAuthen(String.join(",", professionAuthens));
+            cooperCapabilityBO.setCompanyProject(String.join(",", companyProjects));
+
+            allList.add(cooperCapabilityBO);
+        }
+        return allList;
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -119,22 +167,20 @@ public class CooperCapabilitySerImpl extends ServiceImpl<CooperCapability, Coope
                 throw  new SerException("公司名不能相同");
             }else{
                 super.save( cooperCapability );
-
-                //添加管理资质
-                String[] managerAuths = cooperCapabilityTO.getManageAuthens();
-                manageAuthenSer.addManageAuthen(managerAuths, cooperCapability.getId());
-
-                //添加专业资质认证
-                String[] professionAuths = cooperCapabilityTO.getProfessionAuthens();
-                professionAuthenSer.addProfessionAuthen(professionAuths, cooperCapability.getId());
-
-                //添加公司参与项目
-                String[] companyProjects = cooperCapabilityTO.getCompanyProjects();
-                companyProjectSer.addCompanyProject(companyProjects, cooperCapability.getId());
-
             }
         }else{
             super.save( cooperCapability );
+            //添加管理资质
+            String[] managerAuths = cooperCapabilityTO.getManageAuthen().split(",");
+            manageAuthenSer.addManageAuthen(managerAuths, cooperCapability.getId());
+
+            //添加专业资质认证
+            String[] professionAuths = cooperCapabilityTO.getProfessionAuthen().split(",");
+            professionAuthenSer.addProfessionAuthen(professionAuths, cooperCapability.getId());
+
+            //添加公司参与项目
+            String[] companyProjects = cooperCapabilityTO.getCompanyProject().split(",");
+            companyProjectSer.addCompanyProject(companyProjects, cooperCapability.getId());
         }
 
         return BeanTransform.copyProperties(cooperCapability, CooperCapabilityBO.class);
@@ -167,15 +213,15 @@ public class CooperCapabilitySerImpl extends ServiceImpl<CooperCapability, Coope
         super.update( cooperCapabilityList );
 
         //编辑管理资质
-        String[] managerAuths = cooperCapabilityTO.getManageAuthens();
+        String[] managerAuths = cooperCapabilityTO.getManageAuthen().split(",");
         manageAuthenSer.editManageAuthen(managerAuths, cooperCapability.getId());
 
         //编辑专业资质认证
-        String[] professionAuths = cooperCapabilityTO.getProfessionAuthens();
+        String[] professionAuths = cooperCapabilityTO.getProfessionAuthen().split(",");
         professionAuthenSer.editProfessionAuthen(professionAuths, cooperCapability.getId());
 
         //编辑公司参与项目
-        String[] companyProjects = cooperCapabilityTO.getCompanyProjects();
+        String[] companyProjects = cooperCapabilityTO.getCompanyProject().split(",");
         companyProjectSer.editCompanyProject(companyProjects, cooperCapability.getId());
 
         return BeanTransform.copyProperties(cooperCapability, CooperCapabilityBO.class);
@@ -289,8 +335,57 @@ public class CooperCapabilitySerImpl extends ServiceImpl<CooperCapability, Coope
             dto.getConditions().add(Restrict.eq("companyName", companyName));
         }
         List<CooperCapability> list = super.findByCis(dto);
+
+        String[] manageAuthens = null;
+        String[] professionAuthens = null;
+        String[] companyProjects = null;
+
+
+        List<CooperCapabilityBO> allList = new ArrayList<>();
+
+        for (CooperCapability module : list) {
+
+            List<String> manageAuthenList1 = new ArrayList<String>();
+            List<String> professionAuthenList1 = new ArrayList<>();
+            List<String> companyProjectList1 = new ArrayList<>();
+            ManageAuthenDTO manageAuthenDTO = new ManageAuthenDTO();
+            ProfessionAuthenDTO professionAuthenDTO = new ProfessionAuthenDTO();
+            CompanyProjectDTO companyProjectDTO = new CompanyProjectDTO();
+
+            manageAuthenDTO.getConditions().add(Restrict.eq("baseId", module.getId()));
+            professionAuthenDTO.getConditions().add(Restrict.eq("baseId", module.getId()));
+            companyProjectDTO.getConditions().add(Restrict.eq("baseId", module.getId()));
+
+            List<ManageAuthen> manageAuthenList = manageAuthenSer.findByCis(manageAuthenDTO);
+            List<ProfessionAuthen> professionAuthenList = professionAuthenSer.findByCis(professionAuthenDTO);
+            List<CompanyProject> companyProjectList = companyProjectSer.findByCis(companyProjectDTO);
+
+            for (ManageAuthen manageAuthen : manageAuthenList) {
+                manageAuthenList1.add(manageAuthen.getName());
+            }
+            for (ProfessionAuthen professionAuthen : professionAuthenList) {
+                professionAuthenList1.add(professionAuthen.getName());
+            }
+            for (CompanyProject companyProject : companyProjectList) {
+                companyProjectList1.add(companyProject.getName());
+            }
+
+            manageAuthens = (String[]) manageAuthenList1.toArray(new String[manageAuthenList1.size()]);
+            professionAuthens = (String[]) professionAuthenList1.toArray(new String[professionAuthenList1.size()]);
+            companyProjects = (String[]) companyProjectList1.toArray(new String[companyProjectList1.size()]);
+
+            CooperCapabilityBO cooperCapabilityBO = BeanTransform.copyProperties(module, CooperCapabilityBO.class);
+
+            cooperCapabilityBO.setManageAuthen(String.join(",", manageAuthens));
+            cooperCapabilityBO.setProfessionAuthen(String.join(",", professionAuthens));
+            cooperCapabilityBO.setCompanyProject(String.join(",", companyProjects));
+
+            allList.add(cooperCapabilityBO);
+        }
+
+
         List<CooperCapabilityExcel> toList = new ArrayList<CooperCapabilityExcel>();
-        for (CooperCapability model : list) {
+        for (CooperCapabilityBO model : allList) {
             CooperCapabilityExcel excel = new CooperCapabilityExcel();
             BeanUtils.copyProperties(model, excel);
             toList.add(excel);
@@ -364,6 +459,72 @@ public class CooperCapabilitySerImpl extends ServiceImpl<CooperCapability, Coope
                 break;
         }
         return flag;
+    }
+
+    @Override
+    public CooperCapabilityBO importExcel(List<CooperCapabilityTO> cooperCapabilityTOList) throws SerException {
+        List<CooperCapability> cooperCapabilityList = BeanTransform.copyProperties(cooperCapabilityTOList, CooperCapability.class, true);
+        cooperCapabilityList.stream().forEach(str -> {
+            str.setCreateTime(LocalDateTime.now());
+            str.setModifyTime(LocalDateTime.now());
+        });
+        super.save(cooperCapabilityList);
+        for (CooperCapability cooperCapability : cooperCapabilityList) {
+            for (CooperCapabilityTO cooperCapabilityTO : cooperCapabilityTOList) {
+                //添加管理资质
+                String[] managerAuths = cooperCapabilityTO.getManageAuthen().split(",");
+                manageAuthenSer.addManageAuthen(managerAuths, cooperCapability.getId());
+
+                //添加专业资质认证
+                String[] professionAuths = cooperCapabilityTO.getProfessionAuthen().split(",");
+                professionAuthenSer.addProfessionAuthen(professionAuths, cooperCapability.getId());
+
+
+                //添加公司参与项目
+                String[] companyProjects = cooperCapabilityTO.getCompanyProject().split(",");
+                companyProjectSer.addCompanyProject(companyProjects, cooperCapability.getId());
+            }
+        }
+        CooperCapabilityBO cooperCapabilityBO = BeanTransform.copyProperties(new CooperCapability(), CooperCapabilityBO.class);
+        return cooperCapabilityBO;
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<CooperCapabilityTemplateExcel> companyCapabilityExports = new ArrayList<>();
+
+        CooperCapabilityTemplateExcel excel = new CooperCapabilityTemplateExcel();
+        excel.setCompanyName("beijing");
+        excel.setProfessionAuthen("企鹅,房顶上");
+        excel.setManageAuthen("专业");
+        excel.setCompanyCertificate("qq");
+        excel.setCompanyProject("ds");
+        excel.setCompanyProject("ds");
+        excel.setCompletePro(CompletePro.INDEPENDENT);
+        excel.setContactName("kjk");
+        excel.setSex("kjk");
+        excel.setContactWay("kjk");
+        excel.setEmailName("kjk");
+        excel.setQqOrWechat("kjkll");
+        excel.setNatives("kjk");
+        excel.setHobby("kjk");
+        excel.setCharact("kjk");
+        excel.setFamily("kjk");
+        excel.setFamilyRelation("kjk");
+        excel.setStudyExperience("kjk");
+        excel.setConnectExperience("kjk");
+        excel.setOldWorkPlace("kjk");
+        excel.setLivePlace("kjk");
+        excel.setGrowthPlace("kjk");
+        excel.setOrganization("kjkfd");
+        excel.setNowWorkPlace("kjk");
+        excel.setNowCompany("fdkjk");
+        excel.setStation("kfdgjk");
+        excel.setDuty("kjbcvk");
+        companyCapabilityExports.add(excel);
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(companyCapabilityExports, exce);
+        return bytes;
     }
 
     /**

@@ -18,10 +18,10 @@ public class JapiTest {
         JapiClient.setPrefixPath("/home/ike/github/goddess-java/");//路径前缀
         JapiClient.setpostfixPath("/src/main/java");
 
-        JapiClient.setProjectJavaPath("modules/bankrecords/bankrecords-consumer");//主项目位置
-        JapiClient.setActionReletivePath("com/bjike/goddess/bankrecords/action");//主项目action位置
+        JapiClient.setProjectJavaPath("modules/allmeeting/allmeeting-consumer");//主项目位置
+        JapiClient.setActionReletivePath("com/bjike/goddess/allmeeting/action");//主项目action位置
         JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
-                "modules/bankrecords/bankrecords-api",
+                "modules/allmeeting/allmeeting-api",
                 "common/common-api"
         });
 //                JapiClient.saveHistory(false);

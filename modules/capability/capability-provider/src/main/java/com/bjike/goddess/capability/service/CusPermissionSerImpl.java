@@ -285,7 +285,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         if (deleteList != null && deleteList.size() > 0) {
             cusPermissionOperateSer.remove(deleteList);
         }
-        if( operators != null && operators.length>0 ){
+        if (  operators!= null && operators.length>0 ) {
             List<CusPermissionOperate> list = new ArrayList<>();
             for (String operateId : operators) {
                 CusPermissionOperate cpo = new CusPermissionOperate();
@@ -295,7 +295,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
             }
             cusPermissionOperateSer.save(list);
         }
-
         return BeanTransform.copyProperties(temp, CusPermissionBO.class);
     }
 

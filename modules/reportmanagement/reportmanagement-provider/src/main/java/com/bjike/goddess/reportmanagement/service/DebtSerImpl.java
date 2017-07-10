@@ -4,16 +4,16 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.reportmanagement.bo.*;
-import com.bjike.goddess.reportmanagement.dto.AssetDTO;
 import com.bjike.goddess.reportmanagement.dto.DebtDTO;
 import com.bjike.goddess.reportmanagement.dto.DebtStructureAdviceDTO;
+import com.bjike.goddess.reportmanagement.dto.FormulaDTO;
 import com.bjike.goddess.reportmanagement.entity.Asset;
 import com.bjike.goddess.reportmanagement.entity.Debt;
 import com.bjike.goddess.reportmanagement.enums.DebtType;
 import com.bjike.goddess.reportmanagement.enums.Form;
 import com.bjike.goddess.reportmanagement.enums.Type;
-import com.bjike.goddess.reportmanagement.to.AssetTO;
 import com.bjike.goddess.reportmanagement.to.DebtTO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -61,9 +61,8 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
 
     @Override
     public List<DebtBO> list(DebtDTO dto) throws SerException {
-        String startTime = dto.getStartTime();
-        String endTime = dto.getEndTime();
-        String projectGroup=dto.getProjectGroup();
+        FormulaDTO formulaDTO = new FormulaDTO();
+        BeanUtils.copyProperties(dto, formulaDTO);
         dto.getSorts().add("debtType=ASC");
         List<Debt> list = super.findAll();
         List<DebtBO> boList = new ArrayList<DebtBO>();
@@ -78,7 +77,7 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
         double countBegin = 0;
         double countEnd = 0;       //负债和所有权益合计
         for (Debt debt : list) {
-            List<FormulaBO> formulaBOs = formulaSer.findByFid(debt.getId(), startTime, endTime,projectGroup);
+            List<FormulaBO> formulaBOs = formulaSer.findByFid(debt.getId(), formulaDTO);
             if (formulaBOs != null) {
                 if (DebtType.AFLOW.equals(debt.getDebtType()) && b1) {
                     DebtBO debtBO = new DebtBO();
@@ -161,9 +160,8 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
 
     @Override
     public List<StructureBO> debtStructure(DebtDTO dto) throws SerException {
-        String startTime = dto.getStartTime();
-        String endTime = dto.getEndTime();
-        String projectGroup=dto.getProjectGroup();
+        FormulaDTO formulaDTO = new FormulaDTO();
+        BeanUtils.copyProperties(dto, formulaDTO);
         dto.getSorts().add("debtType=ASC");
         List<Debt> list = super.findAll();
         List<StructureBO> boList = new ArrayList<StructureBO>();
@@ -176,7 +174,7 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
         double currentSum = 0;
         double countCurrent = 0;       //负债和所有权益合计
         for (Debt debt : list) {
-            List<FormulaBO> formulaBOs = formulaSer.findByFid(debt.getId(), startTime, endTime,projectGroup);
+            List<FormulaBO> formulaBOs = formulaSer.findByFid(debt.getId(), formulaDTO);
             if (formulaBOs != null) {
                 if (DebtType.BLONG.equals(debt.getDebtType()) && b1) {
                     flowSum = currentSum;
@@ -268,8 +266,9 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
     public List<DetailBO> findDetails(String id, DebtDTO dto) throws SerException {
         String startTime = dto.getStartTime();
         String endTime = dto.getEndTime();
-        String projectGroup=dto.getProjectGroup();
-        List<FormulaBO> list = formulaSer.findByFid(id, startTime, endTime,projectGroup);
+        FormulaDTO formulaDTO = new FormulaDTO();
+        BeanUtils.copyProperties(dto, formulaDTO);
+        List<FormulaBO> list = formulaSer.findByFid(id, formulaDTO);
         List<DetailBO> boList = new ArrayList<>();
         if ((list != null) && (!list.isEmpty())) {
             FormulaBO last = list.get(list.size() - 1);

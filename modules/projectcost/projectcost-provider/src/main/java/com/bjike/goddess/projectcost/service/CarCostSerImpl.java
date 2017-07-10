@@ -3,15 +3,21 @@ package com.bjike.goddess.projectcost.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
 import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
 import com.bjike.goddess.dispatchcar.to.ConditionTO;
 import com.bjike.goddess.projectcost.bo.CarCostBO;
 import com.bjike.goddess.projectcost.dto.CarCostDTO;
 import com.bjike.goddess.projectcost.entity.CarCost;
+import com.bjike.goddess.projectcost.enums.GuideAddrStatus;
 import com.bjike.goddess.projectcost.to.CarCostTO;
 import com.bjike.goddess.projectcost.to.FindTO;
+import com.bjike.goddess.projectcost.to.GuidePermissionTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -36,6 +42,10 @@ public class CarCostSerImpl extends ServiceImpl<CarCost, CarCostDTO> implements 
 
     @Autowired
     private DispatchCarInfoAPI dispatchCarInfoAPI;
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
 
     @Override
     public CarCostBO save(CarCostTO to) throws SerException {
@@ -48,13 +58,17 @@ public class CarCostSerImpl extends ServiceImpl<CarCost, CarCostDTO> implements 
     private void countCost(CarCost entity) throws SerException {
         ConditionTO to = BeanTransform.copyProperties(entity, ConditionTO.class);
         String format;
-        if (entity.getMonth() >= 10)
-            format = "%d-%d-01";
-        else
-            format = "$d-0%d-01";
-        LocalDate start = LocalDate.parse(String.format(format, entity.getYear(), entity.getMonth()));
+//        if (entity.getMonth() >= 10)
+//            format = "%d-%d-01";
+//        else
+//            format = "$d-0%d-01";
+
+//        LocalDate start = LocalDate.parse(String.format(format, entity.getYear(), entity.getMonth()));
+        LocalDate start = DateUtil.getStartDayOfMonth(entity.getYear(),entity.getMonth());
         LocalDate end = start.withDayOfMonth(start.getMonth().maxLength());
-        to.setDispatchDate(new LocalDate[]{start, end});
+        to.setDispatchStartDate(start.toString());
+        to.setDispatchEndDate(end.toString());
+
         List<DispatchCarInfoBO> list = dispatchCarInfoAPI.getByConfition(to);
         if (null != list)
             entity.setActualDegree(list.size());
@@ -141,4 +155,109 @@ public class CarCostSerImpl extends ServiceImpl<CarCost, CarCostDTO> implements 
             dto.getConditions().add(Restrict.eq("year", to.getYear()));
         return BeanTransform.copyProperties(super.findByCis(dto), CarCostBO.class);
     }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if( flagSee || flagAdd ){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
+
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
 }

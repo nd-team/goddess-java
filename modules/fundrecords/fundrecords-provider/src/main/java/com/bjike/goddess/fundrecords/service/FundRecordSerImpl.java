@@ -60,7 +60,6 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
     @Override
     @Transactional(rollbackFor = SerException.class)
     public FundRecordBO insertModel(FundRecordTO to) throws SerException {
-        getCusPermission();
         FundRecord model = BeanTransform.copyProperties(to, FundRecord.class, true);
         model.setDataSource("资金流水");
         super.save(model);
@@ -71,7 +70,6 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
     @Override
     @Transactional(rollbackFor = SerException.class)
     public FundRecordBO updateModel(FundRecordTO to) throws SerException {
-        getCusPermission();
         if (!StringUtils.isEmpty(to.getId())) {
             FundRecord model = super.findById(to.getId());
             if (model != null) {
@@ -90,7 +88,6 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void delete(String id) throws SerException {
-        getCusPermission();
         FundRecord model = super.findById(id);
         if (model != null) {
             super.remove(id);
@@ -101,8 +98,6 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
 
     @Override
     public List<FundRecordBO> pageList(FundRecordDTO dto) throws SerException {
-
-        getCusPermission();
 
         List<FundRecordBO> returnList = findAllBO(dto, new VoucherGenerateDTO());
         return sortPageList(returnList, dto);
@@ -148,8 +143,6 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
     @Transactional(rollbackFor = SerException.class)
     public MonthCollectBO month(Integer year, Integer month) throws SerException {
 
-        getCusPermission();
-
         //查询month月的收入支出情况
         VoucherGenerateDTO generateDTO = new VoucherGenerateDTO();
         String start = DateUtil.dateToString(DateUtil.getStartDayOfMonth(year, month));
@@ -193,7 +186,6 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<ConditionCollectBO> condition(CollectTO to) throws SerException {
-        getCusPermission();
 
         List<FundRecordBO> boList = getByMonth(to);
         return BeanTransform.copyProperties(boList, ConditionCollectBO.class);
@@ -231,8 +223,6 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<AreaAnalyzeBO> areaAnalyze(Integer year, Integer month, String area) throws SerException {
-
-        getCusPermission();
 
         //查询month月数据
         StringBuilder sql = new StringBuilder();
@@ -293,8 +283,6 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
     @Transactional(rollbackFor = SerException.class)
     public List<GroupAnalyzeBO> groupAnalyze(Integer year, Integer month, String projectGroup) throws SerException {
 
-        getCusPermission();
-
         //查询month月数据
         StringBuilder sql = new StringBuilder();
         //查询本表数据sql
@@ -353,8 +341,6 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<ProjectAnalyzeBO> projectAnalyze(Integer year, Integer month, String project) throws SerException {
-
-        getCusPermission();
 
         //查询month月数据
         StringBuilder sql = new StringBuilder();
@@ -550,16 +536,12 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
     @Override
     public void leadExcel(List<FundRecordTO> toList) throws SerException {
 
-        getCusPermission();
-
         List<FundRecord> list = BeanTransform.copyProperties(toList, FundRecord.class, true);
         super.save(list);
     }
 
     @Override
     public byte[] exportExcel(String startDate, String endDate) throws SerException {
-
-        getCusPermission();
 
         FundRecordDTO dto = new FundRecordDTO();
         VoucherGenerateDTO generateDTO = new VoucherGenerateDTO();
@@ -730,13 +712,4 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
         return boList.subList(pageHead, pageTrail);
     }
 
-
-    public void getCusPermission() throws SerException {
-
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-
-        if (!permission) {
-            throw new SerException("该模块只有财务部可操作，您的帐号尚无权限");
-        }
-    }
 }
