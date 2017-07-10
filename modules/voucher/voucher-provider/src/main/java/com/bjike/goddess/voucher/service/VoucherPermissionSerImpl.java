@@ -285,14 +285,16 @@ public class VoucherPermissionSerImpl extends ServiceImpl<VoucherPermission, Vou
         if (deleteList != null && deleteList.size() > 0) {
             voucherPermissionOperateSer.remove(deleteList);
         }
-        List<VoucherPermissionOperate> list = new ArrayList<>();
-        for (String operateId : operators) {
-            VoucherPermissionOperate cpo = new VoucherPermissionOperate();
-            cpo.setOperator(operateId);
-            cpo.setCuspermissionId(temp.getId());
-            list.add(cpo);
+        if (operators != null && operators.length > 0) {
+            List<VoucherPermissionOperate> list = new ArrayList<>();
+            for (String operateId : operators) {
+                VoucherPermissionOperate cpo = new VoucherPermissionOperate();
+                cpo.setOperator(operateId);
+                cpo.setCuspermissionId(temp.getId());
+                list.add(cpo);
+            }
+            voucherPermissionOperateSer.save(list);
         }
-        voucherPermissionOperateSer.save(list);
 
         return BeanTransform.copyProperties(temp, VoucherPermissionBO.class);
     }
