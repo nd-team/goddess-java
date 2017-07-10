@@ -24,6 +24,8 @@ import com.bjike.goddess.lendreimbursement.enums.Words;
 import com.bjike.goddess.lendreimbursement.excel.ApplyLendExcel;
 import com.bjike.goddess.lendreimbursement.to.ApplyLendTO;
 import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
+import com.bjike.goddess.reimbursementprepare.enums.PayStatus;
+import com.bjike.goddess.reimbursementprepare.excel.ExportExcelTO;
 import com.bjike.goddess.user.api.PositionAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
@@ -253,7 +255,6 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     public Long countApplyLend(ApplyLendDTO applyLendDTO) throws SerException {
         applyLendDTO.getConditions().add(Restrict.eq("receivePay", "否"));
         applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{2, 6, 8, 9}));
-
         if (StringUtils.isNotBlank(applyLendDTO.getLendDate())) {
             applyLendDTO.getConditions().add(Restrict.eq("lendDate", LocalDate.parse(applyLendDTO.getLendDate(), formatter)));
         }
@@ -1750,5 +1751,78 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         return bytes;
     }
 
+    /**
+     * chenjunhao
+     * 等待付款导出cjh
+     *
+     * @param applyLendDTO
+     * @return
+     * @throws SerException
+     */
+    @Override
+    public List<ExportExcelTO> waitPayExport(ApplyLendDTO applyLendDTO) throws SerException {
+        LocalDate start = LocalDate.now();
+        LocalDate end = LocalDate.now();
+        if (StringUtils.isNotBlank(applyLendDTO.getStartTime())) {
+            start = DateUtil.parseDate(applyLendDTO.getStartTime());
+        }
+        if (StringUtils.isNotBlank(applyLendDTO.getEndTime())) {
+            end = DateUtil.parseDate(applyLendDTO.getEndTime());
+        }
+        LocalDate lendDate[] = new LocalDate[]{start, end};
+
+        if (StringUtils.isNotBlank(applyLendDTO.getStartTime()) || StringUtils.isNotBlank(applyLendDTO.getEndTime())) {
+            applyLendDTO.getConditions().add(Restrict.between("lendDate", lendDate));//借款时间段查询
+        }
+        applyLendDTO.getConditions().add(Restrict.eq("payCondition", "否"));
+        //LendStatus.FINACEPASS
+        applyLendDTO.getConditions().add(Restrict.in("lendStatus", new Integer[]{3, 7}));
+        List<ApplyLend> list = super.findByCis(applyLendDTO);
+
+        List<ExportExcelTO> exportExcels = new ArrayList<>();
+        list.stream().forEach(str -> {
+            ExportExcelTO excel = BeanTransform.copyProperties(str, ExportExcelTO.class);
+            excel.setPayStatus(PayStatus.WAITPAY);
+            exportExcels.add(excel);
+        });
+        return exportExcels;
+    }
+
+    @Override
+    //chenjunhao
+    public List<ApplyLendBO> listWaitPayCJH(ApplyLendDTO applyLendDTO) throws SerException {
+        ApplyLendDTO dto = applyLendDTO;
+        dto.getConditions().add(Restrict.eq("payCondition", "否"));
+        //LendStatus.FINACEPASS
+        dto.getConditions().add(Restrict.in("lendStatus", new Integer[]{3, 7}));
+        //LendStatus.MANAGEPASS
+//        dto.getConditions().add(Restrict.or("lendStatus", 7));
+        List<ApplyLend> applyLend = super.findByCis(dto, true);
+        return BeanTransform.copyProperties(applyLend, ApplyLendBO.class);
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    //chenjunhao
+    public ApplyLendBO editPayMoneyCJH(ApplyLendTO applyLendTO) throws SerException {
+        if (StringUtils.isBlank(applyLendTO.getPayOrigin())) {
+            throw new SerException("编辑失败，支付来源不能为空");
+        }
+        if (StringUtils.isBlank(applyLendTO.getPayDate())) {
+            throw new SerException("编辑失败，支付日期不能为空");
+        }
+        ApplyLend applyLend = BeanTransform.copyProperties(applyLendTO, ApplyLend.class, true);
+        ApplyLend lend = super.findById(applyLendTO.getId());
+
+//        BeanUtils.copyProperties(applyLend, lend, "id", "createTime");
+        lend.setPayOrigin(applyLend.getPayOrigin());
+        lend.setPayDate(applyLend.getPayDate());
+        //支付人
+        lend.setPayer(userAPI.currentUser().getUsername());
+        lend.setPayCondition("是");
+        lend.setModifyTime(LocalDateTime.now());
+        super.update(lend);
+        return BeanTransform.copyProperties(lend, ApplyLendBO.class);
+    }
 
 }

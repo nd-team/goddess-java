@@ -1,13 +1,18 @@
 package com.bjike.goddess.fundcheck.service;
 
+import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.fundcheck.bo.BackBO;
 import com.bjike.goddess.fundcheck.dto.BackDTO;
 import com.bjike.goddess.fundcheck.entity.*;
 import com.bjike.goddess.fundcheck.enums.GuideAddrStatus;
+import com.bjike.goddess.fundcheck.excel.BackTemplateExcel;
 import com.bjike.goddess.fundcheck.excel.SonPermissionObject;
 import com.bjike.goddess.fundcheck.to.BackTO;
 import com.bjike.goddess.fundcheck.to.GuidePermissionTO;
@@ -20,6 +25,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -387,4 +393,30 @@ public class BackSerImpl extends ServiceImpl<Back, BackDTO> implements BackSer {
         }
         return backBOS;
     }
+    @Override
+    public BaseBO importExcel(List<BackTO> backTOS) throws SerException {
+        List<Back> backs = BeanTransform.copyProperties(backTOS, Back.class, true);
+        super.save(backs);
+
+        BackBO bo = BeanTransform.copyProperties(new Back(), BackBO.class);
+        return bo;
+    }
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<BackTemplateExcel> backTemplateExcels = new ArrayList<>();
+
+        BackTemplateExcel excel = new BackTemplateExcel();
+        excel.setDate(LocalDate.now());
+        excel.setArea("test");
+        excel.setInnerName("test");
+        excel.setAccountMoney(10.0d);
+        excel.setTaxes(10.0d);
+        backTemplateExcels.add(excel);
+
+
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(backTemplateExcels, exce);
+        return bytes;
+    }
+
 }

@@ -20,6 +20,9 @@ import com.bjike.goddess.lendreimbursement.excel.ReimburseRecordExcel;
 import com.bjike.goddess.lendreimbursement.excel.SonPermissionObject;
 import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseRecordTO;
+import com.bjike.goddess.reimbursementprepare.enums.PayStatus;
+import com.bjike.goddess.reimbursementprepare.excel.ExportExcel;
+import com.bjike.goddess.reimbursementprepare.excel.ExportExcelTO;
 import com.bjike.goddess.user.api.PositionAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
@@ -1595,5 +1598,88 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(reimburseRecordExcels, excel);
         return bytes;
+    }
+
+    /**
+     * chenjunhao
+     * 等待付款导出cjh
+     *
+     * @param reimburseRecordDTO
+     * @return
+     * @throws SerException
+     */
+    @Override
+    public List<ExportExcelTO> exportExcelCjh(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        LocalDate start = LocalDate.now();
+        LocalDate end = LocalDate.now();
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())) {
+            start = DateUtil.parseDate(reimburseRecordDTO.getStartTime());
+        }
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime())) {
+            end = DateUtil.parseDate(reimburseRecordDTO.getEndTime());
+        }
+        LocalDate[] occureDate = new LocalDate[]{start, end};
+
+//        if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime()) || StringUtils.isNotBlank(reimburseRecordDTO.getEndTime())) {
+            reimburseRecordDTO.getConditions().add(Restrict.between("occureDate", occureDate));
+//        }
+        reimburseRecordDTO.getConditions().add(Restrict.ne("payCondition", "是"));
+        reimburseRecordDTO.getConditions().add(Restrict.eq("receiveTicketCheck", "是"));
+        reimburseRecordDTO.getConditions().add(Restrict.in("reimStatus", new Integer[]{3, 4}));
+
+        List<ReimburseRecord> list = super.findByCis(reimburseRecordDTO);
+
+        List<ExportExcelTO> exportExcels = new ArrayList<>();
+        list.stream().forEach(str -> {
+            ExportExcelTO excel = BeanTransform.copyProperties(str, ExportExcelTO.class, true);
+            excel.setLendDate(DateUtil.dateToString(str.getOccureDate()));
+            excel.setLendMoney(str.getReimMoney());
+            excel.setPayDate(DateUtil.dateToString(str.getBudgetPayTime()));
+            excel.setPayStatus(PayStatus.WAITPAY);
+            exportExcels.add(excel);
+        });
+        return exportExcels;
+    }
+
+    @Override
+    //chenjunhao
+    public List<ReimburseRecordBO> listWaitPayCJH(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        ReimburseRecordDTO dto = reimburseRecordDTO;
+        dto.getConditions().add(Restrict.ne("payCondition", "是"));
+        dto.getConditions().add(Restrict.eq("receiveTicketCheck", "是"));
+        dto.getConditions().add(Restrict.in("reimStatus", new Integer[]{3, 4}));
+        dto.getSorts().add("modifyTime=desc");
+
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
+            dto.getConditions().add(Restrict.eq("reimer", reimburseRecordDTO.getReimer()));
+        }
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
+            dto.getConditions().add(Restrict.eq("reimNumber", reimburseRecordDTO.getReimNumber()));
+        }
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())) {
+            dto.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getStartTime()));
+        }
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime())) {
+            dto.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getEndTime()));
+        }
+
+        List<ReimburseRecord> recordList = super.findByCis(dto, true);
+        return BeanTransform.copyProperties(recordList, ReimburseRecordBO.class);
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    //chenjunhao
+    public ReimburseRecordBO waitPayCJH(ReimburseRecordTO reimburseRecordTO) throws SerException {
+        if (StringUtils.isBlank(reimburseRecordTO.getId())) {
+            throw new SerException("id不能为空");
+        }
+        ReimburseRecord temp = super.findById(reimburseRecordTO.getId());
+        temp.setPayOrigin(reimburseRecordTO.getPayOrigin());
+        temp.setPayCondition("是");
+        temp.setPayTime(LocalDate.now());
+        temp.setModifyTime(LocalDateTime.now());
+        super.update(temp);
+        return BeanTransform.copyProperties(temp, ReimburseRecordBO.class);
     }
 }

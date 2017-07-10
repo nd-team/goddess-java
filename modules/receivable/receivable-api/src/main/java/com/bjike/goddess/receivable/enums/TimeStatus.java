@@ -8,15 +8,15 @@ public enum TimeStatus {
     /**
      * 月份
      */
-    MONTH(1),
+    MONTH(0),
     /**
      * 季度
      */
-    QUARTER(2),
+    QUARTER(1),
     /**
      * 年份
      */
-    YEAR(3),
+    YEAR(2),
     ;
     private int code;
 

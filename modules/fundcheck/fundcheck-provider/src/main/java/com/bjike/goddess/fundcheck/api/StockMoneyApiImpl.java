@@ -68,5 +68,27 @@ public class StockMoneyApiImpl implements StockMoneyAPI {
     public List<StockMoneyBO> collect(StockMoneyCollectTO to) throws SerException {
         return stockMoneySer.collect(to);
     }
+    @Override
+    public List<String> listFirstSubject() throws SerException {
+        return stockMoneySer.listFirstSubject();
+    }
+
+    @Override
+    public List<String> listSubByFirst(String firstSub) throws SerException {
+        return stockMoneySer.listSubByFirst(firstSub);
+    }
+
+    @Override
+    public List<String> listTubByFirst(String firstSub, String secondSub) throws SerException {
+        return stockMoneySer.listTubByFirst(firstSub, secondSub);
+    }
+    @Override
+    public StockMoneyBO importExcel(List<StockMoneyTO> stockMoneyTOS) throws SerException {
+        return stockMoneySer.importExcel(stockMoneyTOS);
+    }
+    @Override
+    public byte[] templateExport() throws SerException {
+        return stockMoneySer.templateExport();
+    }
 
 }

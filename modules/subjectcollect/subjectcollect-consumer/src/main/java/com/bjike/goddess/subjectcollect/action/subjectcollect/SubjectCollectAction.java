@@ -214,13 +214,28 @@ public class SubjectCollectAction extends BaseFileAction{
         }
     }
     /**
+     * 获取地区
+     *
+     * @des 获取地区集合
+     * @version v1
+     */
+    @GetMapping("v1/area")
+    public Result area() throws ActException {
+        try {
+            List<String> areaList = subjectCollectAPI.getArea();
+            return ActResult.initialize(areaList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
      * 导出excel
      *
      * @param dto 市场信息
      * @des 导出市场信息
      * @version v1
      */
-    //@LoginAuth
+    @LoginAuth
     @GetMapping("v1/export")
     public Result exportReport(SubjectCollectDTO dto, HttpServletResponse response) throws ActException {
         try {

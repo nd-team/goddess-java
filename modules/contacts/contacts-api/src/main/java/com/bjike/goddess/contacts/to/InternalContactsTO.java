@@ -75,6 +75,11 @@ public class InternalContactsTO extends BaseTO {
      */
     private Status status;
 
+    /**
+     * 是否发送邮件
+     */
+    private boolean isSend;
+
 
     public String getUserId() {
         return userId;
@@ -162,5 +167,13 @@ public class InternalContactsTO extends BaseTO {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public boolean isSend() {
+        return isSend;
+    }
+
+    public void setSend(boolean send) {
+        isSend = send;
     }
 }

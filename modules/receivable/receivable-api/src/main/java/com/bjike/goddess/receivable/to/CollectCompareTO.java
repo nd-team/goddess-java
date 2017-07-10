@@ -19,13 +19,50 @@ public class CollectCompareTO implements Serializable{
     private TimeStatus timeStatus;
 
     /**
-     * 到账开始时间
+     * 开始时间
      */
     private String startTime;
     /**
-     * 到账结束时间
+     * 结束时间
      */
     private String endTime;
+
+    /**
+     * 月份
+     */
+    private Integer month;
+    /**
+     * 年份
+     */
+    private Integer year;
+    /**
+     * 季度
+     */
+    private Integer quarter;
+
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public Integer getQuarter() {
+        return quarter;
+    }
+
+    public void setQuarter(Integer quarter) {
+        this.quarter = quarter;
+    }
 
     public CompareStatus getCompareStatus() {
         return compareStatus;

@@ -9,6 +9,7 @@ import com.bjike.goddess.lendreimbursement.dto.ApplyLendDTO;
 import com.bjike.goddess.lendreimbursement.service.ApplyLendSer;
 import com.bjike.goddess.lendreimbursement.to.ApplyLendTO;
 import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
+import com.bjike.goddess.reimbursementprepare.excel.ExportExcelTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -333,4 +334,20 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
     public byte[] receiveExcel(ApplyLendDTO applyLendDTO) throws SerException {
         return applyLendSer.receiveExcel(applyLendDTO);
     }
+
+    @Override
+    public List<ExportExcelTO> waitPayExport(ApplyLendDTO applyLendDTO) throws SerException {
+        return applyLendSer.waitPayExport(applyLendDTO);
+    }
+
+    @Override
+    public List<ApplyLendBO> listWaitPayCJH(ApplyLendDTO applyLendDTO) throws SerException {
+        return applyLendSer.listWaitPayCJH(applyLendDTO);
+    }
+
+    @Override
+    public ApplyLendBO editPayMoneyCJH(ApplyLendTO applyLendTO) throws SerException {
+        return applyLendSer.editPayMoneyCJH(applyLendTO);
+    }
+
 }

@@ -44,4 +44,5 @@
 	<dubbo:reference  validation="true" id="lendPermissionApiImpl" interface="com.bjike.goddess.lendreimbursement.api.LendPermissionAPI" />
 	<dubbo:reference  validation="true" id="lendPermissionOperateApiImpl" interface="com.bjike.goddess.lendreimbursement.api.LendPermissionOperateAPI" />
 
+
 </beans>

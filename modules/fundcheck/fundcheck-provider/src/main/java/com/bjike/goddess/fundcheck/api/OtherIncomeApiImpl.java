@@ -67,4 +67,26 @@ public class OtherIncomeApiImpl implements OtherIncomeAPI {
     public List<OtherIncomeBO> collect(OtherIncomeCollectTO to) throws SerException {
         return otherIncomeSer.collect(to);
     }
+    @Override
+    public OtherIncomeBO importExcel(List<OtherIncomeTO> otherIncomeTOS) throws SerException {
+        return otherIncomeSer.importExcel(otherIncomeTOS);
+    }
+    @Override
+    public byte[] templateExport() throws SerException {
+        return otherIncomeSer.templateExport();
+    }
+    @Override
+    public List<String> listFirstSubject() throws SerException {
+        return otherIncomeSer.listFirstSubject();
+    }
+
+    @Override
+    public List<String> listSubByFirst(String firstSub) throws SerException {
+        return otherIncomeSer.listSubByFirst(firstSub);
+    }
+
+    @Override
+    public List<String> listTubByFirst(String firstSub, String secondSub) throws SerException {
+        return otherIncomeSer.listTubByFirst(firstSub, secondSub);
+    }
 }

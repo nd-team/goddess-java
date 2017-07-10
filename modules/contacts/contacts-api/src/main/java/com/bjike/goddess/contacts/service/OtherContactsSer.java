@@ -6,6 +6,7 @@ import com.bjike.goddess.contacts.bo.CommerceContactsBO;
 import com.bjike.goddess.contacts.bo.OtherContactsBO;
 import com.bjike.goddess.contacts.dto.OtherContactsDTO;
 import com.bjike.goddess.contacts.entity.OtherContacts;
+import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.contacts.to.OtherContactsTO;
 
 import java.util.List;
@@ -82,4 +83,22 @@ public interface OtherContactsSer extends Ser<OtherContacts, OtherContactsDTO> {
         return null;
     }
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导入
+     */
+    OtherContactsBO importExcel(List<OtherContactsTO> tocs) throws SerException;
 }

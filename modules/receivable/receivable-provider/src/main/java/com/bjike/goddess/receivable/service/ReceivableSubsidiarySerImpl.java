@@ -36,7 +36,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -60,6 +63,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+
     /**
      * 核对查看权限（部门级别）
      */
@@ -214,6 +218,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
 
     @Override
     public List<ReceivableSubsidiaryBO> findListReceivableSubsidiary(ReceivableSubsidiaryDTO receivableSubsidiaryDTO) throws SerException {
+        checkSeeIdentity();
         receivableSubsidiaryDTO.getSorts().add("createTime=desc");
         List<ReceivableSubsidiary> receivableSubsidiaries = super.findByCis(receivableSubsidiaryDTO, true);
         List<ReceivableSubsidiaryBO> bo = BeanTransform.copyProperties(receivableSubsidiaries, ReceivableSubsidiaryBO.class);
@@ -228,6 +233,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ReceivableSubsidiaryBO insertReceivableSubsidiary(ReceivableSubsidiaryTO receivableSubsidiaryTO) throws SerException {
+        checkAddIdentity();
         Contractor contractor = contractorSer.findById(receivableSubsidiaryTO.getContractorId());
         ReceivableSubsidiary receivableSubsidiary = BeanTransform.copyProperties(receivableSubsidiaryTO, ReceivableSubsidiary.class, true);
         receivableSubsidiary.setContractor(contractor);
@@ -270,6 +276,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ReceivableSubsidiaryBO editReceivableSubsidiary(ReceivableSubsidiaryTO receivableSubsidiaryTO) throws SerException {
+        checkAddIdentity();
         Contractor contractor = contractorSer.findById(receivableSubsidiaryTO.getContractorId());
         ReceivableSubsidiary receivableSubsidiary = super.findById(receivableSubsidiaryTO.getId());
         BeanUtils.copyProperties(receivableSubsidiaryTO, receivableSubsidiary);
@@ -313,6 +320,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeReceivableSubsidiary(String id) throws SerException {
+        checkAddIdentity();
         try {
             super.remove(id);
         } catch (SerException e) {
@@ -481,7 +489,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         subsidiary.setPlanTime(LocalDate.parse(receivableSubsidiaryTO.getPlanTime()));
         subsidiary.setAccountTime(LocalDate.parse(receivableSubsidiaryTO.getAccountTime()));
         super.update(subsidiary);
-        ReceivableSubsidiaryBO bo = BeanTransform.copyProperties(subsidiary,ReceivableSubsidiaryBO.class);
+        ReceivableSubsidiaryBO bo = BeanTransform.copyProperties(subsidiary, ReceivableSubsidiaryBO.class);
         return bo;
     }
 
@@ -762,85 +770,179 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
 
     @Override
     public List<CollectCompareBO> collectCompare(CollectCompareTO to) throws SerException {
-        ReceivableSubsidiaryDTO dto = new ReceivableSubsidiaryDTO();
-
         String startTime = to.getStartTime();
         String endTime = to.getEndTime();
-        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
-            dto.getConditions().add(Restrict.between("accountTime", new String[]{startTime, endTime}));
-        }
-        List<ReceivableSubsidiary> list = super.findByCis(dto);
-
-
-//        List<ReceivableSubsidiary> receivableSubsidiaries = new ArrayList<>();
-//        for (ReceivableSubsidiary receivableSubsidiary : receivableSubsidiaries) {
-//            if (receivableSubsidiary.getAccountTime().equals(TimeStatus.MONTH)) {
-//                startTime = DateUtil.getStartMonth().toString();
-//                endTime = DateUtil.getEndMonth().toString();
-//            } else if (receivableSubsidiary.getAccountTime().equals(TimeStatus.QUARTER)) {
-//                startTime = DateUtil.getStartMonth().toString();
-//                endTime = DateUtil.getEndMonth().toString();
-//            } else if (receivableSubsidiary.getAccountTime().equals(TimeStatus.YEAR)) {
-//                startTime = DateUtil.getStartYear().toString();
-//                endTime = DateUtil.getEndYear().toString();
-//            }
-//        }
-
-        return collectCount(list, to.getCompareStatus());
-
-    }
-//    private List<CollectCompareBO> collectDate(List<ReceivableSubsidiary> list,TimeStatus status){
-//        List<CollectCompareBO> collectCompareBOS = new ArrayList<>();
-//
-//        String month = null;
-//        if(status.equals(TimeStatus.MONTH)){
-//            month = DateUtil.getStartMonth().toString();
-//        }
-//        return null;
-//    }
-
-    private List<CollectCompareBO> collectCount(List<ReceivableSubsidiary> list, CompareStatus status) throws SerException {
-        List<CollectCompareBO> collectCompareBOS = new ArrayList<>();
-
-        List<String> conis = null;
-        if (status.equals(CompareStatus.AREA)) {
-            conis = this.getArea();
-        } else if (status.equals(CompareStatus.PROJECT)) {
-            conis = this.getInnerName();
-        } else if (status.equals(CompareStatus.UNIT)) {
-            conis = this.getContractor();
-        }
-        if (null != conis) {
-            for (String con : conis) {
-                List<ReceivableSubsidiary> receivableSubsidiaries = new ArrayList<>();
-                for (ReceivableSubsidiary receivableSubsidiary : list) {
-                    if (receivableSubsidiary.getArea().equals(con) || receivableSubsidiary.getInnerName().equals(con)
-                            || receivableSubsidiary.getContractor().getName().equals(con)) {
-                        receivableSubsidiaries.add(receivableSubsidiary);
-                    }
-
-                }
-                //派工单价
-                Double taskPrice = receivableSubsidiaries.stream().mapToDouble(ReceivableSubsidiary::getTaskPrice).sum();
-                //派工数量
-                Double pactSize = receivableSubsidiaries.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum();
-                //到账金额
-                Double accountMoney = receivableSubsidiaries.stream().mapToDouble(ReceivableSubsidiary::getAccountMoney).sum();
-                //管理费
-                Double managementFee = receivableSubsidiaries.stream().mapToDouble(ReceivableSubsidiary::getManagementFee).sum();
-                //税金
-                Double taxes = receivableSubsidiaries.stream().mapToDouble(ReceivableSubsidiary::getTaxes).sum();
-                //税后金额
-                Double afterTax = receivableSubsidiaries.stream().mapToDouble(ReceivableSubsidiary::getAfterTax).sum();
-
-                CollectCompareBO bo = new CollectCompareBO(con, status, taskPrice, pactSize, accountMoney, managementFee, taxes, afterTax);
-                collectCompareBOS.add(bo);
+        //上月或者上季度或者上一年
+        String prev_startTime = to.getStartTime();
+        String prev_endTime = to.getEndTime();
+        //处理月份,季度,年份
+        if (TimeStatus.MONTH.equals(to.getTimeStatus())) {
+            int year = LocalDate.now().getYear();
+            int month = LocalDate.now().getMonthValue();
+            int prev_year = year;
+            int prev_month = month - 1;
+            if (to.getMonth() == 1) {
+                prev_year = year - 1;
+                prev_month = 12;
             }
+            startTime = year + "-" + to.getMonth() + "-01";
+            prev_startTime = prev_year + "-" + prev_month + "-01";
+            endTime = year + "-" + to.getMonth() + "-" + DateUtil.getDayByDate(year, to.getMonth());
+            prev_endTime = prev_year + "-" + prev_month + "-" + DateUtil.getDayByDate(prev_year, prev_month);
+        } else if (TimeStatus.QUARTER.equals(to.getTimeStatus())) {
+            int year = LocalDate.now().getYear();
+            int endMonth = to.getQuarter() * 3;
+            int startMonth = endMonth - 2;
+            int prev_endMonths = (to.getQuarter() * 3) - 3;
+            int prev_startMonths = prev_endMonths - 2;
+            startTime = year + "-" + startMonth + "-01";
+            //上个月开始时间
+            prev_startTime = year + "-" + prev_startMonths + "-01";
+            endTime = year + "-" + endMonth + "-" + DateUtil.getDayByDate(year, endMonth);
+            //上个月结束时间
+            prev_endTime = year + "-" + prev_endMonths + "-" + DateUtil.getDayByDate(year, endMonth);
+            if (to.getQuarter() == 1) {
+                year -= 1;
+                prev_startTime = year + "-10-01";
+                prev_endTime = year + "-12-31";
 
+            }
+        } else if (TimeStatus.YEAR.equals(to.getTimeStatus())) {
+            startTime = to.getYear() + "-01-01";
+            prev_startTime = to.getYear() - 1 + "-01-01";
+            endTime = to.getYear() + "-12-31";
+            prev_endTime = to.getYear() - 1 + "-12-31";
+        }
+
+        String groupField = null;
+        if (CompareStatus.PROJECT.equals(to.getCompareStatus())) {
+            groupField = "innerName";
+        } else if (CompareStatus.AREA.equals(to.getCompareStatus())) {
+            groupField = "area";
+        } else if (CompareStatus.UNIT.equals(to.getCompareStatus())) {
+            groupField = "contractor_id";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        if(groupField.equals("contractor_id")){
+            sb.append("select c.name,b.taskPrice,b.pactSize" +
+                    ",b.accountMoney,b.managementFee,b.taxes,b.afterTax" +
+                    ",b.phaseAccount,b.phaseFee,b.phaseTaxes,b.phaseAfterTax," +
+                    "b.rateAccount ,b.rateFee,b.rateTaxes,b.rateAfterTax from receivable_contractor c,( ");
+        }
+        sb.append("SELECT a." + groupField + " as groupField,a.taskPrice as taskPrice,a.pactSize as pactSize,a.accountMoney as accountMoney, ");
+        sb.append(" a.managementFee as managementFee,a.taxes as taxes,a.afterTax as afterTax,a.accountMoney-b.accountMoney as phaseAccount,a.managementFee-b.managementFee AS phaseFee, ");
+        sb.append(" a.taxes-b.taxes as phaseTaxes,a.afterTax-b.afterTax as phaseAfterTax,");
+        sb.append("(a.accountMoney-b.accountMoney)/a.accountMoney AS rateAccount,(a.managementFee-b.managementFee)/a.managementFee as rateFee,");
+        sb.append("(a.taxes-b.taxes)/a.taxes as rateTaxes,(a.afterTax-b.afterTax)/a.afterTax as rateAfterTax ");
+        sb.append(" from(");
+        sb.append(" SELECT " + groupField + ",sum(taskPrice)as taskPrice ,sum(pactSize)as pactSize,sum(accountMoney)as accountMoney,");
+        sb.append(" sum(managementFee)as managementFee,sum(taxes)as taxes,sum(afterTax)as afterTax");
+        sb.append(" FROM receivable_receivablesubsidiary ");
+        sb.append(" where accountTime BETWEEN '" + startTime + "' AND '" + endTime + "' GROUP BY " + groupField + " ORDER BY " + groupField + ")a,( ");
+        sb.append(" SELECT " + groupField + ",sum(taskPrice)as taskPrice ,sum(pactSize)as pactSize,sum(accountMoney)as accountMoney, ");
+        sb.append(" sum(managementFee)as managementFee,sum(taxes)as taxes,sum(afterTax)as afterTax ");
+        sb.append(" FROM receivable_receivablesubsidiary");
+        sb.append(" where accountTime BETWEEN '" + prev_startTime + "' AND '" + prev_endTime + "' GROUP BY " + groupField + " ORDER BY " + groupField + ")b");
+        if(groupField.equals("contractor_id")){
+            sb.append(")b where b.groupField=c.id");
+        }
+        String sql = sb.toString();
+        String[] fields = new String[]{"groupField", "taskPrice", "pactSize", "accountMoney", "phaseAccount", "rateAccount",
+                "managementFee", "phaseFee", "rateFee", "taxes", "phaseTaxes", "rateTaxes",
+                "afterTax", "phaseAfterTax", "rateAfterTax"};
+
+        List<CollectCompareBO> collectCompareBOS = super.findBySql(sql, CollectCompareBO.class, fields);
+        double allAccountMoney = collectCompareBOS.stream().mapToDouble(CollectCompareBO::getAccountMoney).sum();
+        double allManagementFee = collectCompareBOS.stream().mapToDouble(CollectCompareBO::getManagementFee).sum();
+        double allTaxes = collectCompareBOS.stream().mapToDouble(CollectCompareBO::getTaxes).sum();
+        double allAfterTax = collectCompareBOS.stream().mapToDouble(CollectCompareBO::getAfterTax).sum();
+        for (CollectCompareBO compareBO : collectCompareBOS) {
+            compareBO.setPercentAccount(compareBO.getAccountMoney() / allAccountMoney);
+            compareBO.setPercentFee(compareBO.getManagementFee() / allManagementFee);
+            compareBO.setPercentTaxes(compareBO.getTaxes() / allTaxes);
+            compareBO.setPercentAfterTax(compareBO.getAfterTax() / allAfterTax);
         }
         return collectCompareBOS;
-
     }
+
+//    @Override
+//    public List<CollectCompareBO> collectCompare(CollectCompareTO to) throws SerException {
+//        ReceivableSubsidiaryDTO dto = new ReceivableSubsidiaryDTO();
+//
+//        String startTime = to.getStartTime();
+//        String endTime = to.getEndTime();
+//
+//        //处理月份,季度,年份
+//        if (TimeStatus.MONTH.equals(to.getTimeStatus())) {
+//            LocalDate now = LocalDate.now();
+//            startTime = now.getYear() + "-" + to.getMonth() + "-01";
+//            endTime = now.getYear() + "-" + to.getMonth() + "-" + DateUtil.getDayByDate(now.getYear(), to.getMonth());
+//        } else if (TimeStatus.QUARTER.equals(to.getTimeStatus())) {
+//            int year = LocalDate.now().getYear();
+//            int endMonth = to.getQuarter() * 3;
+//            int startMonth = endMonth - 2;
+//            startTime = year + "-" + startMonth + "-01";
+//            endTime = year + "-" + endMonth + "-" + DateUtil.getDayByDate(to.getYear(), endMonth);
+//        } else if (TimeStatus.YEAR.equals(to.getTimeStatus())) {
+//            startTime = to.getYear() + "-01-01";
+//            endTime = to.getYear() + "-12-31";
+//        }
+//
+//        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+//            dto.getConditions().add(Restrict.between("accountTime", new String[]{startTime, endTime}));
+//        }
+//        List<ReceivableSubsidiary> list = super.findByCis(dto);
+//
+//
+//        return collectCount(list, to.getCompareStatus());
+//
+//    }
+//
+//    private List<CollectCompareBO> collectCount(List<ReceivableSubsidiary> list, CompareStatus status) throws SerException {
+//        List<CollectCompareBO> collectCompareBOS = new ArrayList<>();
+//
+//        List<String> conis = null;
+//        if (status.equals(CompareStatus.AREA)) {
+//            conis = this.getArea();
+//        } else if (status.equals(CompareStatus.PROJECT)) {
+//            conis = this.getInnerName();
+//        } else if (status.equals(CompareStatus.UNIT)) {
+//            conis = this.getContractor();
+//        }
+//        if (null != conis) {
+//            for (String con : conis) {
+//                List<ReceivableSubsidiary> receivableSubsidiaries = new ArrayList<>();
+//                for (ReceivableSubsidiary receivableSubsidiary : list) {
+//                    if (receivableSubsidiary.getArea().equals(con) || receivableSubsidiary.getInnerName().equals(con)
+//                            || receivableSubsidiary.getContractor().getName().equals(con)) {
+//                        receivableSubsidiaries.add(receivableSubsidiary);
+//                    }
+//
+//                }
+//                //派工单价
+//                Double taskPrice = receivableSubsidiaries.stream().mapToDouble(ReceivableSubsidiary::getTaskPrice).sum();
+//                //派工数量
+//                Double pactSize = receivableSubsidiaries.stream().mapToDouble(ReceivableSubsidiary::getPactSize).sum();
+//                //到账金额
+//                Double accountMoney = receivableSubsidiaries.stream().mapToDouble(ReceivableSubsidiary::getAccountMoney).sum();
+//                //到账金额差额
+//                Double accountMoneyMinusMoney = ;
+//                //管理费
+//                Double managementFee = receivableSubsidiaries.stream().mapToDouble(ReceivableSubsidiary::getManagementFee).sum();
+//                //税金
+//                Double taxes = receivableSubsidiaries.stream().mapToDouble(ReceivableSubsidiary::getTaxes).sum();
+//                //税后金额
+//                Double afterTax = receivableSubsidiaries.stream().mapToDouble(ReceivableSubsidiary::getAfterTax).sum();
+//
+//                CollectCompareBO bo = new CollectCompareBO(con, status, taskPrice, pactSize, accountMoney, managementFee, taxes, afterTax);
+//                collectCompareBOS.add(bo);
+//            }
+//
+//        }
+//        return collectCompareBOS;
+//
+//    }
 
 
     @Override
@@ -933,95 +1035,15 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
     }
 
     @Override
-    public ReceivableSubsidiaryBO updateSend(ReceivableSubsidiaryTO to) throws SerException {
-//        Contractor contractor = contractorSer.findById(to.getContractorId());
-//        ReceivableSubsidiary receivableSubsidiary = super.findById(to.getId());
-//        BeanUtils.copyProperties(to, receivableSubsidiary);
-//        //receivableSubsidiary.setContractor(contractor);
-//        if(receivableSubsidiary.getArea().equals(to.getArea())){
-//            messageAPI.send();
-//        }
-        return null;
-    }
-    @Override
-    public List<ReceivableSubsidiaryBO> receivable(String startTime,String endTime) throws SerException {
+    public List<ReceivableSubsidiaryBO> receivable(String startTime, String endTime) throws SerException {
         ReceivableSubsidiaryDTO dto = new ReceivableSubsidiaryDTO();
-        String[] condi = new String[]{startTime,endTime};
-        if(StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)){
-            dto.getConditions().add(Restrict.between("accountTime",condi));
+        String[] condi = new String[]{startTime, endTime};
+        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+            dto.getConditions().add(Restrict.between("accountTime", condi));
         }
         List<ReceivableSubsidiary> receivableSubsidiaries = super.findByCis(dto);
-        List<ReceivableSubsidiaryBO> receivableSubsidiaryBOS = BeanTransform.copyProperties(receivableSubsidiaries,ReceivableSubsidiaryBO.class);
+        List<ReceivableSubsidiaryBO> receivableSubsidiaryBOS = BeanTransform.copyProperties(receivableSubsidiaries, ReceivableSubsidiaryBO.class);
         return receivableSubsidiaryBOS;
     }
-
-
-    public Map<String,String> getLastMonth(String dateStr) throws Exception{
-                SimpleDateFormat simpleDateFormat= new SimpleDateFormat("yyyy-MM-dd");
-                Date date = simpleDateFormat.parse(dateStr);
-                Map<String,String> map=new HashMap<String,String>();
-                int year = Integer.parseInt(new SimpleDateFormat("yyyy").format(date));
-                int month=date.getMonth();
-                Calendar a = Calendar.getInstance();
-                a.set(Calendar.YEAR, year);
-                a.set(Calendar.MONTH, month - 1);
-                a.set(Calendar.DATE, 1);//???????????
-                a.roll(Calendar.DATE, -1);//??????????????
-                int maxDate = a.get(Calendar.DATE);//?????????
-                String monthFormatFr=""+year+"-"+month+"-"+"01";
-                String monthFormatLs=""+year+"-"+month+"-"+maxDate;
-                map.put("monthFormatFr",monthFormatFr);
-                map.put("monthFormatLs",monthFormatLs);
-                return map;
-            }
-    public Map<String,String> getLastQuarter(String dateStr) throws Exception{
-                SimpleDateFormat simpleDateFormat= new SimpleDateFormat("yyyy-MM-dd");
-                Date date = simpleDateFormat.parse(dateStr);
-                Map<String,String> map=new HashMap<String,String>();
-                int year = Integer.parseInt(new SimpleDateFormat("yyyy").format(date));
-                int month=date.getMonth();
-                int sessionFrist=0;
-                if(month==1||month==2||month==3){
-                    month=3;
-                    sessionFrist=1;
-                }
-                if(month==4||month==5||month==6){
-                    month=6;
-                    sessionFrist=4;
-                }
-                if(month==7||month==8||month==9){
-                    month=9;
-                    sessionFrist=7;
-                }
-                if(month==10||month==11||month==12){
-                    month=12;
-                    sessionFrist=10;
-                }
-                Calendar a = Calendar.getInstance();
-                a.set(Calendar.YEAR, year);
-                a.set(Calendar.MONTH, month - 1);
-                a.set(Calendar.DATE, 1);
-                a.roll(Calendar.DATE, -1);
-                int maxDate = a.get(Calendar.DATE);
-                String monthFormatFr=""+year+"-"+sessionFrist+"-"+"01";
-                String monthFormatLs=""+year+"-"+month+"-"+maxDate;
-                map.put("monthFormatFr",monthFormatFr);
-                map.put("monthFormatLs",monthFormatLs);
-                return map;
-            }
-    public Map<String,String> getLastYear(String dateStr) throws Exception{
-                SimpleDateFormat simpleDateFormat= new SimpleDateFormat("yyyy-MM-dd");
-                Date date=simpleDateFormat.parse(dateStr);
-                Map<String,String> map=new HashMap<String,String>();
-                int year = Integer.parseInt(new SimpleDateFormat("yyyy").format(date))-1;
-                String monthFormatFr=""+year+"-"+"01"+"-"+"01";
-                String monthFormatLs=""+year+"-"+"12"+"-"+"31";
-                map.put("monthFormatFr",monthFormatFr);
-                map.put("monthFormatLs",monthFormatLs);
-                return map;
-            }
-
-
-        }
-
+}
 

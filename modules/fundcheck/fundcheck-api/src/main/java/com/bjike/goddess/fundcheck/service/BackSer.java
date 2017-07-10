@@ -1,5 +1,6 @@
 package com.bjike.goddess.fundcheck.service;
 
+import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.fundcheck.bo.BackBO;
@@ -104,5 +105,20 @@ public interface BackSer extends Ser<Back, BackDTO> {
     default List<BackBO> backinfo(String startTime, String endTime) throws SerException {
         return null;
     }
+    /**
+     * 导入
+     *
+     * @param backTOS 回款
+     * @return class BaseBO
+     */
+    default BaseBO importExcel(List<BackTO> backTOS) throws SerException {
+        return null;
+    }
+    /**
+     * 导入模板
+     * @throws SerException
+     */
+    byte[] templateExport(  ) throws SerException;
+
 
 }

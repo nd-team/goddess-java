@@ -12,5 +12,29 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [ com.bjike ]
  */
 public class IncomeCostAnalysisDTO extends BaseDTO {
+    /**
+     * 月份
+     */
+    private Integer month;
 
+    /**
+     * 根据名字查询金额
+     */
+    private String[] condi;
+
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
+    }
+
+    public String[] getCondi() {
+        return condi;
+    }
+
+    public void setCondi(String[] condi) {
+        this.condi = condi;
+    }
 }

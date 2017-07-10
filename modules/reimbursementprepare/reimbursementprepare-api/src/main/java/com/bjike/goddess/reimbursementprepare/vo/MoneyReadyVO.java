@@ -45,7 +45,6 @@ public class MoneyReadyVO {
      */
     private Double reserve;
 
-
     public String getId() {
         return id;
     }

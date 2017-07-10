@@ -281,16 +281,6 @@ public interface ReceivableSubsidiaryAPI {
      */
     byte[] templateExport(  ) throws SerException;
     /**
-     * 更新发送邮件
-     *
-     * @param to 回款明细数据to
-     * @return class receivableSubsidiaryBO
-     * @throws SerException
-     */
-    default ReceivableSubsidiaryBO updateSend(ReceivableSubsidiaryTO to) throws SerException {
-        return null;
-    }
-    /**
      * 根据到账时间拿数据(资金核对)
      *
      * @param startTime 开始时间

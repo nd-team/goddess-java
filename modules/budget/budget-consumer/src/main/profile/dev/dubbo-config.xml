@@ -23,6 +23,7 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.budget.api.CusPermissionAPI" id="cusPermissionApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.budget.api.CusPermissionOperateAPI" id="cusPermissionOperateApiImpl"/>
 
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.rbac.PermissionAPI" id="permissionApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl"/>
 </beans>
