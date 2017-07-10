@@ -16,14 +16,9 @@ public class IncomeCostAnalysisVO {
      */
     private String id;
     /**
-     * 年份
+     * 时间
      */
-    private Integer year;
-
-    /**
-     * 月份
-     */
-    private String month;
+    private String date;
 
     /**
      * 地区
@@ -114,20 +109,12 @@ public class IncomeCostAnalysisVO {
         this.id = id;
     }
 
-    public Integer getYear() {
-        return year;
+    public String getDate() {
+        return date;
     }
 
-    public void setYear(Integer year) {
-        this.year = year;
-    }
-
-    public String getMonth() {
-        return month;
-    }
-
-    public void setMonth(String month) {
-        this.month = month;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getArea() {

@@ -179,7 +179,7 @@ public class WaitPayAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class) WaitPayTO waitPayTO, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(WaitPayTO.TestAdd.class) WaitPayTO waitPayTO, BindingResult bindingResult) throws ActException {
         try {
             WaitPayBO waitPayBO = waitPayAPI.insertWaitPay(waitPayTO);
             return ActResult.initialize(waitPayBO);
@@ -198,7 +198,7 @@ public class WaitPayAction {
      */
     @LoginAuth
     @PostMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class) WaitPayTO waitPayTO, BindingResult bindingResult) throws ActException {
+    public Result edit(@Validated(WaitPayTO.TestEdit.class) WaitPayTO waitPayTO, BindingResult bindingResult) throws ActException {
         try {
             WaitPayBO waitPayBO = waitPayAPI.editWaitPay(waitPayTO);
             return ActResult.initialize(waitPayBO);
