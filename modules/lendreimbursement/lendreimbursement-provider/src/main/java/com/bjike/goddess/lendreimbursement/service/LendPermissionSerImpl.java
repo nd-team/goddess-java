@@ -5,13 +5,13 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.lendreimbursement.bo.CusOperateBO;
-import com.bjike.goddess.lendreimbursement.bo.CusPermissionBO;
-import com.bjike.goddess.lendreimbursement.dto.CusPermissionDTO;
-import com.bjike.goddess.lendreimbursement.dto.CusPermissionOperateDTO;
-import com.bjike.goddess.lendreimbursement.entity.CusPermission;
-import com.bjike.goddess.lendreimbursement.entity.CusPermissionOperate;
-import com.bjike.goddess.lendreimbursement.to.CusPermissionTO;
+import com.bjike.goddess.lendreimbursement.bo.LendOperateBO;
+import com.bjike.goddess.lendreimbursement.bo.LendPermissionBO;
+import com.bjike.goddess.lendreimbursement.dto.LendPermissionDTO;
+import com.bjike.goddess.lendreimbursement.dto.LendPermissionOperateDTO;
+import com.bjike.goddess.lendreimbursement.entity.LendPermission;
+import com.bjike.goddess.lendreimbursement.entity.LendPermissionOperate;
+import com.bjike.goddess.lendreimbursement.to.LendPermissionTO;
 import com.bjike.goddess.lendreimbursement.enums.CusPermissionType;
 import com.bjike.goddess.organize.api.*;
 import com.bjike.goddess.organize.bo.OpinionBO;
@@ -37,9 +37,9 @@ import java.util.stream.Collectors;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@CacheConfig(cacheNames = "customerSerCache")
+@CacheConfig(cacheNames = "lendreimbursementSerCache")
 @Service
-public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissionDTO> implements CusPermissionSer {
+public class LendPermissionSerImpl extends ServiceImpl<LendPermission, LendPermissionDTO> implements LendPermissionSer {
 
     @Autowired
     private UserAPI userAPI;
@@ -54,10 +54,10 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
-    private CusPermissionOperateSer cusPermissionOperateSer;
+    private LendPermissionOperateSer lendPermissionOperateSer;
 
     @Override
-    public Long countPermission(CusPermissionDTO cusPermissionDTO) throws SerException {
+    public Long countPermission(LendPermissionDTO cusPermissionDTO) throws SerException {
         if (StringUtils.isNotBlank(cusPermissionDTO.getDescription())) {
             cusPermissionDTO.getConditions().add(Restrict.like("description", cusPermissionDTO.getDescription()));
         }
@@ -67,21 +67,21 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     }
 
     @Override
-    public List<CusPermissionBO> list(CusPermissionDTO cusPermissionDTO) throws SerException {
+    public List<LendPermissionBO> list(LendPermissionDTO cusPermissionDTO) throws SerException {
         if (StringUtils.isNotBlank(cusPermissionDTO.getDescription())) {
             cusPermissionDTO.getConditions().add(Restrict.like("description", cusPermissionDTO.getDescription()));
         }
 
-        List<CusPermission> list = super.findByCis(cusPermissionDTO, true);
-        List<CusPermissionBO> bo = new ArrayList<>();
-        for (CusPermission str : list) {
-            CusPermissionBO temp = BeanTransform.copyProperties(str, CusPermissionBO.class);
+        List<LendPermission> list = super.findByCis(cusPermissionDTO, true);
+        List<LendPermissionBO> bo = new ArrayList<>();
+        for (LendPermission str : list) {
+            LendPermissionBO temp = BeanTransform.copyProperties(str, LendPermissionBO.class);
 
             //先查询操作对象
             List<String> idList = new ArrayList<>();
-            CusPermissionOperateDTO cpoDTO = new CusPermissionOperateDTO();
+            LendPermissionOperateDTO cpoDTO = new LendPermissionOperateDTO();
             cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", temp.getId()));
-            List<CusPermissionOperate> operateList = cusPermissionOperateSer.findByCis(cpoDTO);
+            List<LendPermissionOperate> operateList = lendPermissionOperateSer.findByCis(cpoDTO);
             if (operateList != null && operateList.size() > 0) {
                 operateList.stream().forEach(op -> {
                     idList.add(op.getOperator());
@@ -98,7 +98,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
             }
             CusPermissionType type = str.getType();
             List<OpinionBO> opinionBOS = new ArrayList<>();
-            List<CusOperateBO> coboList = null;
+            List<LendOperateBO> coboList = null;
             if (null != ids && ids.length != 0) {
 
                 if (CusPermissionType.LEVEL.equals(type)) {
@@ -113,7 +113,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
                 coboList = new ArrayList<>();
                 for (OpinionBO op : opinionBOS) {
-                    CusOperateBO cobo = new CusOperateBO();
+                    LendOperateBO cobo = new LendOperateBO();
                     cobo.setId(op.getId());
                     cobo.setOperator(op.getValue());
                     coboList.add(cobo);
@@ -127,18 +127,18 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     }
 
     @Override
-    public CusPermissionBO getOneById(String id) throws SerException {
+    public LendPermissionBO getOneById(String id) throws SerException {
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
-        CusPermission cusPermission = super.findById(id);
+        LendPermission cusPermission = super.findById(id);
 
 
         //先查询操作对象
         List<String> idList = new ArrayList<>();
-        CusPermissionOperateDTO cpoDTO = new CusPermissionOperateDTO();
+        LendPermissionOperateDTO cpoDTO = new LendPermissionOperateDTO();
         cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", cusPermission.getId()));
-        List<CusPermissionOperate> operateList = cusPermissionOperateSer.findByCis(cpoDTO);
+        List<LendPermissionOperate> operateList = lendPermissionOperateSer.findByCis(cpoDTO);
         if (operateList != null && operateList.size() > 0) {
             operateList.stream().forEach(op -> {
                 idList.add(op.getOperator());
@@ -155,7 +155,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         }
         CusPermissionType type = cusPermission.getType();
         List<OpinionBO> opinionBOS = new ArrayList<>();
-        List<CusOperateBO> coboList = new ArrayList<>();
+        List<LendOperateBO> coboList = new ArrayList<>();
         if (null != ids && ids.length != 0) {
 
             if (CusPermissionType.LEVEL.equals(type)) {
@@ -171,13 +171,13 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
 
             for (OpinionBO op : opinionBOS) {
-                CusOperateBO cobo = new CusOperateBO();
+                LendOperateBO cobo = new LendOperateBO();
                 cobo.setId(op.getId());
                 cobo.setOperator(op.getValue());
                 coboList.add(cobo);
             }
         }
-        CusPermissionBO bo = BeanTransform.copyProperties(cusPermission, CusPermissionBO.class);
+        LendPermissionBO bo = BeanTransform.copyProperties(cusPermission, LendPermissionBO.class);
 
         bo.setCusOperateBO(coboList);
 
@@ -190,7 +190,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
-        CusPermission cusPermission = super.findById(id);
+        LendPermission cusPermission = super.findById(id);
         CusPermissionType type = cusPermission.getType();
         if (CusPermissionType.LEVEL.equals(type)) {
             list = arrangementAPI.findThawOpinion();
@@ -207,21 +207,21 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     }
 
     @Override
-    public CusPermissionBO add(List<CusPermissionTO> cusPermissionTO) throws SerException {
-        List<CusPermission> list = BeanTransform.copyProperties(cusPermissionTO, CusPermission.class, true);
+    public LendPermissionBO add(List<LendPermissionTO> cusPermissionTO) throws SerException {
+        List<LendPermission> list = BeanTransform.copyProperties(cusPermissionTO, LendPermission.class, true);
         list = list.stream().filter(str -> StringUtils.isNotBlank(str.getIdFlag())).collect(Collectors.toList());
-        List<String> idList = list.stream().map(CusPermission::getIdFlag).collect(Collectors.toList());
+        List<String> idList = list.stream().map(LendPermission::getIdFlag).collect(Collectors.toList());
         String[] ids = idList.toArray(new String[idList.size()]);
 
-        CusPermissionDTO dto = new CusPermissionDTO();
+        LendPermissionDTO dto = new LendPermissionDTO();
         dto.getConditions().add(Restrict.in("idFlag", ids));
-        List<CusPermission> cusPermissionList = super.findByCis(dto);
-        List<CusPermission> cusPermissionTempList = new ArrayList<>();
+        List<LendPermission> cusPermissionList = super.findByCis(dto);
+        List<LendPermission> cusPermissionTempList = new ArrayList<>();
         if (cusPermissionList != null && cusPermissionList.size() > 0) {
             for (int i = 0; i < cusPermissionList.size(); i++) {
-                CusPermission temp = cusPermissionList.get(i);
-                Optional<CusPermission> cp = list.stream().filter(l->l.getIdFlag().equals(temp.getIdFlag())).findFirst();
-                if(cp.isPresent()){
+                LendPermission temp = cusPermissionList.get(i);
+                Optional<LendPermission> cp = list.stream().filter(l -> l.getIdFlag().equals(temp.getIdFlag())).findFirst();
+                if (cp.isPresent()) {
                     temp.setDescription(cp.get().getDescription());
                     temp.setType(cp.get().getType());
                     cusPermissionTempList.add(temp);
@@ -235,15 +235,15 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
         //传进来的list>cusPermissionList数据库的，则添加
         //list ids cus ids
-        List<String> listIdFlag = list.stream().map(CusPermission::getIdFlag).collect(Collectors.toList());
-        List<String> databaseIdFlag = cusPermissionList.stream().map(CusPermission::getIdFlag).collect(Collectors.toList());
+        List<String> listIdFlag = list.stream().map(LendPermission::getIdFlag).collect(Collectors.toList());
+        List<String> databaseIdFlag = cusPermissionList.stream().map(LendPermission::getIdFlag).collect(Collectors.toList());
 
         List<String> addIdFlag = listIdFlag.stream().filter(str -> !databaseIdFlag.contains(str)).collect(Collectors.toList());
 
         //传进来的新增的添加
-        List<CusPermission> addList = new ArrayList<>();
+        List<LendPermission> addList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
-            CusPermission cPermission = list.get(i);
+            LendPermission cPermission = list.get(i);
             cPermission.setCreateTime(LocalDateTime.now());
             cPermission.setModifyTime(LocalDateTime.now());
             if (addIdFlag.contains(cPermission.getIdFlag())) {
@@ -252,16 +252,16 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         }
         super.save(addList);
         //没有的删除
-        dto = new CusPermissionDTO();
+        dto = new LendPermissionDTO();
         dto.getConditions().add(Restrict.notIn("idFlag", ids));
-        List<CusPermission> deleteList = super.findByCis(dto);
+        List<LendPermission> deleteList = super.findByCis(dto);
         super.remove(deleteList);
 
-        return new CusPermissionBO();
+        return new LendPermissionBO();
     }
 
     @Override
-    public CusPermissionBO edit(CusPermissionTO cusPermissionTO) throws SerException {
+    public LendPermissionBO edit(LendPermissionTO cusPermissionTO) throws SerException {
         if (StringUtils.isBlank(cusPermissionTO.getId())) {
             throw new SerException("id不能为空");
         }
@@ -271,28 +271,30 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         }
         String[] operators = cusPermissionTO.getOperators();
 
-        CusPermission temp = super.findById(cusPermissionTO.getId());
+        LendPermission temp = super.findById(cusPermissionTO.getId());
         temp.setDescription(cusPermissionTO.getDescription());
         temp.setModifyTime(LocalDateTime.now());
         super.update(temp);
 
         //先删除
-        CusPermissionOperateDTO cpoDTO = new CusPermissionOperateDTO();
+        LendPermissionOperateDTO cpoDTO = new LendPermissionOperateDTO();
         cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", temp.getId()));
-        List<CusPermissionOperate> deleteList = cusPermissionOperateSer.findByCis(cpoDTO);
+        List<LendPermissionOperate> deleteList = lendPermissionOperateSer.findByCis(cpoDTO);
         if (deleteList != null && deleteList.size() > 0) {
-            cusPermissionOperateSer.remove(deleteList);
+            lendPermissionOperateSer.remove(deleteList);
         }
-        List<CusPermissionOperate> list = new ArrayList<>();
-        for (String operateId : operators) {
-            CusPermissionOperate cpo = new CusPermissionOperate();
-            cpo.setOperator(operateId);
-            cpo.setCuspermissionId(temp.getId());
-            list.add(cpo);
+        if (operators != null && operators.length > 0) {
+            List<LendPermissionOperate> list = new ArrayList<>();
+            for (String operateId : operators) {
+                LendPermissionOperate cpo = new LendPermissionOperate();
+                cpo.setOperator(operateId);
+                cpo.setCuspermissionId(temp.getId());
+                list.add(cpo);
+            }
+            lendPermissionOperateSer.save(list);
         }
-        cusPermissionOperateSer.save(list);
 
-        return BeanTransform.copyProperties(temp, CusPermissionBO.class);
+        return BeanTransform.copyProperties(temp, LendPermissionBO.class);
     }
 
     @Override
@@ -304,15 +306,15 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         if (StringUtils.isBlank(idFlag)) {
             throw new SerException("idFlag不能为空");
         }
-        CusPermissionDTO dto = new CusPermissionDTO();
+        LendPermissionDTO dto = new LendPermissionDTO();
         dto.getConditions().add(Restrict.eq("idFlag", idFlag));
-        CusPermission cusPermission = super.findOne(dto);
+        LendPermission cusPermission = super.findOne(dto);
 
         //先查询获操作对象
         List<String> idList = new ArrayList<>();
-        CusPermissionOperateDTO cpoDTO = new CusPermissionOperateDTO();
+        LendPermissionOperateDTO cpoDTO = new LendPermissionOperateDTO();
         cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", cusPermission.getId()));
-        List<CusPermissionOperate> operateList = cusPermissionOperateSer.findByCis(cpoDTO);
+        List<LendPermissionOperate> operateList = lendPermissionOperateSer.findByCis(cpoDTO);
         if (operateList != null && operateList.size() > 0) {
             operateList.stream().forEach(op -> {
                 idList.add(op.getOperator());
@@ -333,13 +335,12 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         //checkAsUserArrangement
         //checkAsUserModule
         Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
-        Boolean arrangementFlag = positionDetailUserAPI.checkAsUserArrangement(userId, operateIds);
-        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId, operateIds);
-        Boolean depart = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
+//        Boolean arrangementFlag = positionDetailUserAPI.checkAsUserArrangement(userId, operateIds);
+//        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId, operateIds);
+//        Boolean depart = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
 
 
-        //TODO 部门
-        if ( depart) {
+        if (positionFlag) {
             flag = true;
         } else {
             flag = false;
@@ -359,16 +360,16 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         if (StringUtils.isBlank(idFlag)) {
             throw new SerException("idFlag不能为空");
         }
-        CusPermissionDTO dto = new CusPermissionDTO();
+        LendPermissionDTO dto = new LendPermissionDTO();
         dto.getConditions().add(Restrict.eq("idFlag", idFlag));
-        CusPermission cusPermission = super.findOne(dto);
+        LendPermission cusPermission = super.findOne(dto);
 
 
         //先查询操作对象
         List<String> idList = new ArrayList<>();
-        CusPermissionOperateDTO cpoDTO = new CusPermissionOperateDTO();
+        LendPermissionOperateDTO cpoDTO = new LendPermissionOperateDTO();
         cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", cusPermission.getId()));
-        List<CusPermissionOperate> operateList = cusPermissionOperateSer.findByCis(cpoDTO);
+        List<LendPermissionOperate> operateList = lendPermissionOperateSer.findByCis(cpoDTO);
         if (operateList != null && operateList.size() > 0) {
             operateList.stream().forEach(op -> {
                 idList.add(op.getOperator());

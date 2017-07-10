@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.lendreimbursement.bo.FinoddinforBO;
 import com.bjike.goddess.lendreimbursement.dto.FinoddinforDTO;
 import com.bjike.goddess.lendreimbursement.to.FinoddinforTO;
+import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public interface FinoddinforAPI {
     /**
      * 导航权限
      */
-    default Boolean guidePermission(com.bjike.goddess.lendreimbursement.to.GuidePermissionTO guidePermissionTO) throws SerException {
+    default Boolean guidePermission(LendGuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 

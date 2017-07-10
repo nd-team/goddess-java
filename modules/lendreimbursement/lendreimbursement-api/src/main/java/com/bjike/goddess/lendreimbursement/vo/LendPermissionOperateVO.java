@@ -1,18 +1,20 @@
-package com.bjike.goddess.lendreimbursement.bo;
-
-import com.bjike.goddess.common.api.bo.BaseBO;
+package com.bjike.goddess.lendreimbursement.vo;
 
 /**
- * 客户权限配置操作对象业务传输对象
+ * 客户权限配置操作对象表现层对象
  *
  * @Author: [ tanghaixiang ]
  * @Date: [ 2017-05-25 02:12 ]
- * @Description: [ 客户权限配置操作对象业务传输对象 ]
+ * @Description: [ 客户权限配置操作对象表现层对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class CusPermissionOperateBO extends BaseBO {
+public class LendPermissionOperateVO {
 
+    /**
+     * id
+     */
+    private String id;
     /**
      * 操作对象
      */
@@ -33,6 +35,14 @@ public class CusPermissionOperateBO extends BaseBO {
      */
     private String modifyTime;
 
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getOperator() {
         return operator;

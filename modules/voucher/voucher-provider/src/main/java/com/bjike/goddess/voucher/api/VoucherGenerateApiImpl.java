@@ -2,6 +2,7 @@ package com.bjike.goddess.voucher.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.voucher.bo.PartBO;
+import com.bjike.goddess.voucher.bo.PartOptionBO;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
@@ -298,6 +299,11 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     @Override
     public List<PartBO> findByCondition(String condition) throws SerException {
         return voucherGenerateSer.findByCondition(condition);
+    }
+
+    @Override
+    public PartOptionBO findMoneyByCondition(String first, String second, String third) throws SerException {
+        return null;
     }
 
     @Override

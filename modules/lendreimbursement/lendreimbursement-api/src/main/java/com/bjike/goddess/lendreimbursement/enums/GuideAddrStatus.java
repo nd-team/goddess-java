@@ -54,13 +54,69 @@ public enum GuideAddrStatus {
      */
     EXPORT(10),
     /**
-     * 查看
+     * 查看/审核详情
      */
     SEE(11),
     /**
      * 查看附件
      */
-    SEEFILE(12);
+    SEEFILE(12),
+    /**
+     * 负责人审核、确认冻结、取消冻结
+     */
+    CHARGEAUDIT(13),
+    /**
+     * 总经办审批
+     */
+    MANAGEAUDIT(14),
+    /**
+     * 财务运营部审核
+     */
+    FINACEAUDIT(15),
+    /**
+     * 运营部申请冻结
+     */
+    FINACECONGEL(16),
+    /**
+     * 负责人确认冻结
+     */
+    CHARGECONGEL(17),
+
+    /**
+     * 负责人取消冻结
+     */
+    CHARGETHAW(18),
+
+    /**
+     * 付款
+     */
+    PAY(19),
+
+    /**
+     * 收款确认
+     */
+    RECIVEMONEYSURE(20),
+
+    /**
+     * 还款、寄件
+     */
+    RETURN(21),
+
+    /**
+     * 生成记账凭证
+     */
+    VOUCHER(22),
+
+    /**
+     * 还款核对
+     */
+    RETURNCHECK(23),
+
+    /**
+     * 收到单据
+     */
+    RECIVETICKET(24)
+    ;
 
     private int code;
 

@@ -9,7 +9,7 @@ package com.bjike.goddess.lendreimbursement.api;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public interface CusPermissionOperateAPI {
+public interface LendPermissionOperateAPI {
 
 
 }

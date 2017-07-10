@@ -18,7 +18,7 @@ import com.bjike.goddess.lendreimbursement.enums.ReimStatus;
 import com.bjike.goddess.lendreimbursement.enums.Words;
 import com.bjike.goddess.lendreimbursement.excel.ReimburseRecordExcel;
 import com.bjike.goddess.lendreimbursement.excel.SonPermissionObject;
-import com.bjike.goddess.lendreimbursement.to.GuidePermissionTO;
+import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseRecordTO;
 import com.bjike.goddess.reimbursementprepare.enums.PayStatus;
 import com.bjike.goddess.reimbursementprepare.excel.ExportExcel;
@@ -69,7 +69,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Autowired
     private FinoddinforSer finoddinforSer;
     @Autowired
-    private CusPermissionSer cusPermissionSer;
+    private LendPermissionSer cusPermissionSer;
     @Autowired
     private ApplyLendSer applyLendSer;
 
@@ -117,263 +117,138 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         List<SonPermissionObject> list = new ArrayList<>();
-        String userToken = RpcTransmit.getUserToken();
-        Boolean flagAppAccount = guideIdentity();
-        RpcTransmit.transmitUserToken(userToken);
-
         SonPermissionObject obj = new SonPermissionObject();
-
-        obj = new SonPermissionObject();
-        obj.setName("applyAccount");
-        obj.setDescribesion("申请报销记录");
-        if (flagAppAccount) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("applyReimRecord");
+        obj.setDescribesion("申请报销记录-报销");
+        obj.setFlag(true);
         list.add(obj);
 
-
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAppAccWrong = guideIdentity();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("applyAccountWrong");
-        obj.setDescribesion("申请报销有误记录");
-        if (flagAppAccWrong) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("applyReimWrong");
+        obj.setDescribesion("报销单有误记录-报销");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagWaiAuditAcc = guideIdentity();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("waitingauditaccount");
-        obj.setDescribesion("报销等待审核记录");
-        if (flagWaiAuditAcc) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("reimWaitingAuditRecord");
+        obj.setDescribesion("等待审核记录-报销");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAuditAcc = guideIdentity();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("auditaccount");
-        obj.setDescribesion("报销审核记录");
-        if (flagAuditAcc) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("reimHasAuditRecord");
+        obj.setDescribesion("已审核记录-报销");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAnalysisAcc = guideIdentity();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("analysisaccount");
-        obj.setDescribesion("已分析记录");
-        if (flagAnalysisAcc) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("reimHasAnalysisRecord");
+        obj.setDescribesion("已分析记录-报销");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAccCheck = guideIdentity();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("AccountCheck");
-        obj.setDescribesion("账户核对记录");
-        if (flagAccCheck) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("reimAccountCheckRecord");
+        obj.setDescribesion("账户核对记录-报销");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagWaitingPayAcc = guideIdentity();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("flagWaitingPay");
-        obj.setDescribesion("等待付款记录");
-        if (flagWaitingPayAcc) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("reimWaitingPay");
+        obj.setDescribesion("等待付款记录-报销");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagPayAcc = guideIdentity();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("payaccount");
-        obj.setDescribesion("已付款报销记录");
-        if (flagPayAcc) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("reimHasPayRecord");
+        obj.setDescribesion("已付款记录-报销");
+        obj.setFlag(true);
         list.add(obj);
 
-
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAppErrBorr = applyLendSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("applyerrorborrow");
-        obj.setDescribesion("申请借款有误记录");
-        if (flagAppErrBorr) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("reimAnalisisSet");
+        obj.setDescribesion("报销分析权限设置-报销");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagWaitAudBorr = applyLendSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("WaitingAuditBorrow");
-        obj.setDescribesion("等待审核借款记录");
-        if (flagWaitAudBorr) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("reimFinoddInfor");
+        obj.setDescribesion("报销单号管理-报销");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAuditBorr = applyLendSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
+        //借款
         obj = new SonPermissionObject();
-        obj.setName("AuditBorrow");
-        obj.setDescribesion("已审核借款记录");
-        if (flagAuditBorr) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("applyLend");
+        obj.setDescribesion("申请借款-借款");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagWaitPayBorr = applyLendSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("applyborrow");
-        obj.setDescribesion("等待付款借款记录");
-        if (flagWaitPayBorr) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("applyErrorBorrow");
+        obj.setDescribesion("申请单有误记录-借款");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagPayBorr = applyLendSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("payborrow");
-        obj.setDescribesion("已付款借款记录");
-        if (flagPayBorr) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("lendWaitingAudit");
+        obj.setDescribesion("等待审核-借款");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAppBorr = applyLendSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("applyborrow");
-        obj.setDescribesion("申请借款记录");
-        if (flagAppBorr) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("lendHasAudit");
+        obj.setDescribesion("已审核/已分析-借款");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagBorr = applyLendSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("borrow");
-        obj.setDescribesion("借款记录");
-        if (flagBorr) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("lendWaitPay");
+        obj.setDescribesion("等待付款-借款");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagReturn = applyLendSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("returnmo");
-        obj.setDescribesion("还款记录");
-        if (flagReturn) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("lendSurePay");
+        obj.setDescribesion("确认付款-借款");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAccCheckBor = applyLendSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("accountcheckborrow");
-        obj.setDescribesion("账户核对借款记录");
-        if (flagAccCheckBor) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("lendApplyRecord");
+        obj.setDescribesion("借款记录-借款");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagClosed = applyLendSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("closed");
+        obj.setName("lendReturnRecord");
+        obj.setDescribesion("还款记录-借款");
+        obj.setFlag(true);
+        list.add(obj);
+
+        obj = new SonPermissionObject();
+        obj.setName("lendAccountcheck");
+        obj.setDescribesion("账务核对-借款");
+        obj.setFlag(true);
+        list.add(obj);
+
+        obj = new SonPermissionObject();
+        obj.setName("lendReceiveTicket");
         obj.setDescribesion("已收票记录");
-        if (flagClosed) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAnalSitu = applyLendSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("analysissitusion");
-        obj.setDescribesion("分析情况记录");
-        if (flagAnalSitu) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("lendAnalysisRecord");
+        obj.setDescribesion("已分析情况记录");
+        obj.setFlag(true);
         list.add(obj);
 
         return list;
     }
 
     @Override
-    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+    public Boolean guidePermission(LendGuidePermissionTO guidePermissionTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
         Boolean flag = true;
@@ -424,6 +299,15 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
         RpcTransmit.transmitUserToken(userToken);
         return flag;
+    }
+
+    @Override
+    public ReimburseRecordBO getOneById(String id) throws SerException {
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能呢为空");
+        }
+        ReimburseRecord reimburseRecord = super.findById(id);
+        return BeanTransform.copyProperties(reimburseRecord, ReimburseRecordBO.class);
     }
 
     @Override
@@ -670,15 +554,6 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
     }
 
-    @Override
-    public ReimburseRecordBO getReimburseRecordById(String id) throws SerException {
-        checkPermission();
-        if (StringUtils.isBlank(id)) {
-            throw new SerException("id不能为空");
-        }
-        ReimburseRecord reimburseRecord = super.findById(id);
-        return BeanTransform.copyProperties(reimburseRecord, ReimburseRecordBO.class);
-    }
 
     @Override
     public Long countErrorRecord(ReimburseRecordDTO reimburseRecordDTO) throws SerException {

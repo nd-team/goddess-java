@@ -9,7 +9,7 @@ package com.bjike.goddess.lendreimbursement.vo;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class CusOperateVO {
+public class LendOperateVO {
 
     /**
      * id

@@ -2,15 +2,14 @@ package com.bjike.goddess.lendreimbursement.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
 import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
 import com.bjike.goddess.lendreimbursement.bo.ReimburseRecordBO;
 import com.bjike.goddess.lendreimbursement.dto.ReimburseRecordDTO;
 import com.bjike.goddess.lendreimbursement.entity.ReimburseRecord;
 import com.bjike.goddess.lendreimbursement.excel.SonPermissionObject;
-import com.bjike.goddess.lendreimbursement.to.GuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseRecordTO;
-import com.bjike.goddess.reimbursementprepare.excel.ExportExcel;
 import com.bjike.goddess.reimbursementprepare.excel.ExportExcelTO;
 
 import java.util.List;
@@ -37,9 +36,17 @@ public interface ReimburseRecordSer extends Ser<ReimburseRecord, ReimburseRecord
     /**
      * 工能导航权限
      */
-    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+    default Boolean guidePermission(LendGuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
+
+    /**
+     * 根据id获取申请报销
+     * @return class ReimburseRecordBO
+     */
+    default ReimburseRecordBO getOneById(String id) throws SerException {return null;}
+
 
     /**
      * 申请报销列表总条数
@@ -88,15 +95,6 @@ public interface ReimburseRecordSer extends Ser<ReimburseRecord, ReimburseRecord
 
     ;
 
-
-    /**
-     * 获取详细
-     *
-     * @param id id
-     */
-    default ReimburseRecordBO getReimburseRecordById(String id) throws SerException {
-        return null;
-    }
 
 
     /**

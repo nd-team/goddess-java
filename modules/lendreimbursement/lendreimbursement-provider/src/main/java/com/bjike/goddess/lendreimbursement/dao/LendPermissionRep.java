@@ -1,8 +1,8 @@
 package com.bjike.goddess.lendreimbursement.dao;
 
 import com.bjike.goddess.common.jpa.dao.JpaRep;
-import com.bjike.goddess.lendreimbursement.dto.CusPermissionDTO;
-import com.bjike.goddess.lendreimbursement.entity.CusPermission;
+import com.bjike.goddess.lendreimbursement.dto.LendPermissionDTO;
+import com.bjike.goddess.lendreimbursement.entity.LendPermission;
 
 /**
 * 客户权限配置持久化接口, 继承基类可使用ｊｐａ命名查询
@@ -12,6 +12,6 @@ import com.bjike.goddess.lendreimbursement.entity.CusPermission;
 * @Version:		[ v1.0.0 ]
 * @Copy:   		[ com.bjike ]
 */
-public interface CusPermissionRep extends JpaRep<CusPermission,CusPermissionDTO> {
+public interface LendPermissionRep extends JpaRep<LendPermission,LendPermissionDTO> {
 
  }
