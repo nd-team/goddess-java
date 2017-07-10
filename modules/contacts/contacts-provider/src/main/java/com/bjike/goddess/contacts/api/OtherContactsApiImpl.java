@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contacts.bo.OtherContactsBO;
 import com.bjike.goddess.contacts.dto.OtherContactsDTO;
 import com.bjike.goddess.contacts.service.OtherContactsSer;
+import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.contacts.to.OtherContactsTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,5 +54,20 @@ public class OtherContactsApiImpl implements OtherContactsAPI {
     @Override
     public Long getTotal() throws SerException {
         return otherContactsSer.getTotal();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return otherContactsSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return otherContactsSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public OtherContactsBO importExcel(List<OtherContactsTO> tocs) throws SerException {
+        return otherContactsSer.importExcel(tocs);
     }
 }

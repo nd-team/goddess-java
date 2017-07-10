@@ -31,4 +31,22 @@
     <dubbo:reference validation="true" interface="com.bjike.goddess.contacts.api.QQGroupAPI" id="qQGroupApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
+
+    <dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+    <dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+    <dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+    <dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+    <dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
+    <dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+
+
+    <dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
+    <dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
+    <dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
+
+
+    <dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.contacts.api.ContactPermissionAPI" />
+    <dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.contacts.api.ContactPermissionOperateAPI" />
+
+    <dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
 </beans>

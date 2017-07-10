@@ -110,6 +110,10 @@ public class CommerceContactsTO extends BaseTO {
      */
     private String workRight;
 
+    /**
+     * 是否发送邮件
+     */
+    private boolean isSend;
 
     public String getCustomerNum() {
         return customerNum;
@@ -253,5 +257,13 @@ public class CommerceContactsTO extends BaseTO {
 
     public void setWorkRight(String workRight) {
         this.workRight = workRight;
+    }
+
+    public boolean isSend() {
+        return isSend;
+    }
+
+    public void setSend(boolean send) {
+        isSend = send;
     }
 }

@@ -3,8 +3,10 @@ package com.bjike.goddess.contacts.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contacts.bo.CommerceContactsBO;
 import com.bjike.goddess.contacts.dto.CommerceContactsDTO;
+import com.bjike.goddess.contacts.excel.SonPermissionObject;
 import com.bjike.goddess.contacts.service.CommerceContactsSer;
 import com.bjike.goddess.contacts.to.CommerceContactsTO;
+import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,5 +55,15 @@ public class CommerceContactsApiImpl implements CommerceContactsAPI {
     @Override
     public Long getTotal() throws SerException {
         return commerceContactsSer.getTotal();
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return commerceContactsSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return commerceContactsSer.guidePermission(guidePermissionTO);
     }
 }
