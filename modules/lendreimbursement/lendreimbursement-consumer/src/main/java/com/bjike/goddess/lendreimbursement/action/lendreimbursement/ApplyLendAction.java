@@ -12,8 +12,8 @@ import com.bjike.goddess.lendreimbursement.bo.ApplyLendBO;
 import com.bjike.goddess.lendreimbursement.bo.LendAuditDetailBO;
 import com.bjike.goddess.lendreimbursement.dto.ApplyLendDTO;
 import com.bjike.goddess.lendreimbursement.to.ApplyLendTO;
-import com.bjike.goddess.lendreimbursement.to.GuidePermissionTO;
-import com.bjike.goddess.lendreimbursement.to.SiginManageDeleteFileTO;
+import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
+import com.bjike.goddess.lendreimbursement.to.LendDeleteFileTO;
 import com.bjike.goddess.lendreimbursement.vo.AccountVoucherVO;
 import com.bjike.goddess.lendreimbursement.vo.ApplyLendVO;
 import com.bjike.goddess.lendreimbursement.vo.CollectDataVO;
@@ -59,7 +59,7 @@ public class ApplyLendAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/guidePermission")
-    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result guidePermission(@Validated(LendGuidePermissionTO.TestAdd.class) LendGuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
 
             Boolean isHasPermission = applyLendAPI.guidePermission(guidePermissionTO);
@@ -93,7 +93,7 @@ public class ApplyLendAction extends BaseFileAction {
     /**
      * 一个申请借款
      *
-     * @param id 项目签订与立项id
+     * @param id 申请借款id
      * @return class ApplyLendVO
      * @des 根据id获取申请借款
      * @version v1
@@ -638,7 +638,6 @@ public class ApplyLendAction extends BaseFileAction {
      * @des 根据id删除申请借款信息记录
      * @version v1
      */
-    @LoginAuth
     @GetMapping("v1/exportPayExcel")
     public Result exportPayExcel(ApplyLendDTO applyLendDTO,HttpServletResponse response) throws ActException {
         try {
@@ -807,7 +806,6 @@ public class ApplyLendAction extends BaseFileAction {
      * @des
      * @version v1
      */
-    @LoginAuth
     @GetMapping("v1/exportBorrowExcel")
     public Result exportBorrowExcel(ApplyLendDTO applyLendDTO,HttpServletResponse response) throws ActException {
         try {
@@ -1017,7 +1015,6 @@ public class ApplyLendAction extends BaseFileAction {
      * @des
      * @version v1
      */
-    @LoginAuth
     @GetMapping("v1/exportReceiveExcel")
     public Result exportReceiveExcel(ApplyLendDTO applyLendDTO,HttpServletResponse response) throws ActException {
         try {
@@ -1186,7 +1183,7 @@ public class ApplyLendAction extends BaseFileAction {
         try {
             //跟前端约定好 ，文件路径是列表id
             // /id/....
-            String path = "/" + id;
+            String path = "/applyLend/" + id;
             List<InputStream> inputStreams = getInputStreams(request, path);
             fileAPI.upload(inputStreams);
             return new ActResult("upload success");
@@ -1206,7 +1203,7 @@ public class ApplyLendAction extends BaseFileAction {
     public Result list(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             //跟前端约定好 ，文件路径是列表id
-            String path = "/" + id;
+            String path = "/applyLend/" + id;
             FileInfo fileInfo = new FileInfo();
             fileInfo.setPath(path);
             Object storageToken = request.getAttribute("storageToken");
@@ -1250,7 +1247,7 @@ public class ApplyLendAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/deleteFile")
-    public Result delFile(@Validated(SiginManageDeleteFileTO.TestDEL.class) SiginManageDeleteFileTO siginManageDeleteFileTO, HttpServletRequest request) throws SerException {
+    public Result delFile(@Validated(LendDeleteFileTO.TestDEL.class) LendDeleteFileTO siginManageDeleteFileTO, HttpServletRequest request) throws SerException {
         if (null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length >= 0) {
             Object storageToken = request.getAttribute("storageToken");
             fileAPI.delFile(storageToken.toString(), siginManageDeleteFileTO.getPaths());

@@ -2,7 +2,7 @@ package com.bjike.goddess.lendreimbursement.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.lendreimbursement.to.GuidePermissionTO;
+import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
 import com.bjike.goddess.lendreimbursement.bo.ApplyLendBO;
 import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
@@ -34,7 +34,7 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
     /**
      * 导航权限
      */
-    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+    default Boolean guidePermission(LendGuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
     /**

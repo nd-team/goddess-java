@@ -18,7 +18,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "lendreimbursement_cuspermissionoperate")
-public class CusPermissionOperate extends BaseEntity {
+public class LendPermissionOperate extends BaseEntity {
 
 
     /**

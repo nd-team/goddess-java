@@ -1,8 +1,8 @@
 package com.bjike.goddess.lendreimbursement.service;
 
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.lendreimbursement.dto.CusPermissionOperateDTO;
-import com.bjike.goddess.lendreimbursement.entity.CusPermissionOperate;
+import com.bjike.goddess.lendreimbursement.dto.LendPermissionOperateDTO;
+import com.bjike.goddess.lendreimbursement.entity.LendPermissionOperate;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@CacheConfig(cacheNames = "customerSerCache")
+@CacheConfig(cacheNames = "lendreimbursementSerCache")
 @Service
-public class CusPermissionOperateSerImpl extends ServiceImpl<CusPermissionOperate, CusPermissionOperateDTO> implements CusPermissionOperateSer {
+public class LendPermissionOperateSerImpl extends ServiceImpl<LendPermissionOperate, LendPermissionOperateDTO> implements LendPermissionOperateSer {
 
 }

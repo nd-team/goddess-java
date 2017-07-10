@@ -1,17 +1,17 @@
-package com.bjike.goddess.lendreimbursement.to;
+package com.bjike.goddess.lendreimbursement.bo;
 
-import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
- * 客户权限配置操作对象
+ * 客户权限配置操作对象业务传输对象
  *
  * @Author: [ tanghaixiang ]
  * @Date: [ 2017-05-25 02:12 ]
- * @Description: [ 客户权限配置操作对象 ]
+ * @Description: [ 客户权限配置操作对象业务传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class CusPermissionOperateTO extends BaseTO {
+public class LendPermissionOperateBO extends BaseBO {
 
     /**
      * 操作对象

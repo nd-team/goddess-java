@@ -2,7 +2,6 @@ package com.bjike.goddess.lendreimbursement.service;
 
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -19,7 +18,7 @@ import com.bjike.goddess.lendreimbursement.enums.ReimStatus;
 import com.bjike.goddess.lendreimbursement.enums.Words;
 import com.bjike.goddess.lendreimbursement.excel.ReimburseRecordExcel;
 import com.bjike.goddess.lendreimbursement.excel.SonPermissionObject;
-import com.bjike.goddess.lendreimbursement.to.GuidePermissionTO;
+import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseRecordTO;
 import com.bjike.goddess.user.api.PositionAPI;
 import com.bjike.goddess.user.api.UserAPI;
@@ -28,7 +27,6 @@ import com.bjike.goddess.user.bo.PositionBO;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.bo.UserDetailBO;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -68,9 +66,10 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Autowired
     private FinoddinforSer finoddinforSer;
     @Autowired
-    private CusPermissionSer cusPermissionSer;
+    private LendPermissionSer cusPermissionSer;
     @Autowired
     private ApplyLendSer applyLendSer;
+
     /**
      * 检查权限
      *
@@ -115,263 +114,138 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         List<SonPermissionObject> list = new ArrayList<>();
-        String userToken = RpcTransmit.getUserToken();
-        Boolean flagAppAccount = guideIdentity();
-        RpcTransmit.transmitUserToken(userToken);
-
         SonPermissionObject obj = new SonPermissionObject();
-
-        obj = new SonPermissionObject();
-        obj.setName("applyAccount");
-        obj.setDescribesion("申请报销记录");
-        if (flagAppAccount) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("applyReimRecord");
+        obj.setDescribesion("申请报销记录-报销");
+        obj.setFlag(true);
         list.add(obj);
 
-
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAppAccWrong = guideIdentity();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("applyAccountWrong");
-        obj.setDescribesion("申请报销有误记录");
-        if (flagAppAccWrong) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("applyReimWrong");
+        obj.setDescribesion("报销单有误记录-报销");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagWaiAuditAcc = guideIdentity();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("waitingauditaccount");
-        obj.setDescribesion("报销等待审核记录");
-        if (flagWaiAuditAcc) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("reimWaitingAuditRecord");
+        obj.setDescribesion("等待审核记录-报销");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAuditAcc = guideIdentity();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("auditaccount");
-        obj.setDescribesion("报销审核记录");
-        if (flagAuditAcc) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("reimHasAuditRecord");
+        obj.setDescribesion("已审核记录-报销");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAnalysisAcc = guideIdentity();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("analysisaccount");
-        obj.setDescribesion("已分析记录");
-        if (flagAnalysisAcc) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("reimHasAnalysisRecord");
+        obj.setDescribesion("已分析记录-报销");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAccCheck = guideIdentity();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("AccountCheck");
-        obj.setDescribesion("账户核对记录");
-        if (flagAccCheck) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("reimAccountCheckRecord");
+        obj.setDescribesion("账户核对记录-报销");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagWaitingPayAcc = guideIdentity();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("flagWaitingPay");
-        obj.setDescribesion("等待付款记录");
-        if (flagWaitingPayAcc) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("reimWaitingPay");
+        obj.setDescribesion("等待付款记录-报销");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagPayAcc = guideIdentity();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("payaccount");
-        obj.setDescribesion("已付款报销记录");
-        if (flagPayAcc) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("reimHasPayRecord");
+        obj.setDescribesion("已付款记录-报销");
+        obj.setFlag(true);
         list.add(obj);
 
-
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAppErrBorr = applyLendSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("applyerrorborrow");
-        obj.setDescribesion("申请借款有误记录");
-        if (flagAppErrBorr) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("reimAnalisisSet");
+        obj.setDescribesion("报销分析权限设置-报销");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagWaitAudBorr = applyLendSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("WaitingAuditBorrow");
-        obj.setDescribesion("等待审核借款记录");
-        if (flagWaitAudBorr) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("reimFinoddInfor");
+        obj.setDescribesion("报销单号管理-报销");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAuditBorr = applyLendSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
+        //借款
         obj = new SonPermissionObject();
-        obj.setName("AuditBorrow");
-        obj.setDescribesion("已审核借款记录");
-        if (flagAuditBorr) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("applyLend");
+        obj.setDescribesion("申请借款-借款");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagWaitPayBorr = applyLendSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("applyborrow");
-        obj.setDescribesion("等待付款借款记录");
-        if (flagWaitPayBorr) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("applyErrorBorrow");
+        obj.setDescribesion("申请单有误记录-借款");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagPayBorr = applyLendSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("payborrow");
-        obj.setDescribesion("已付款借款记录");
-        if (flagPayBorr) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("lendWaitingAudit");
+        obj.setDescribesion("等待审核-借款");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAppBorr = applyLendSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("applyborrow");
-        obj.setDescribesion("申请借款记录");
-        if (flagAppBorr) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("lendHasAudit");
+        obj.setDescribesion("已审核/已分析-借款");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagBorr = applyLendSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("borrow");
-        obj.setDescribesion("借款记录");
-        if (flagBorr) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("lendWaitPay");
+        obj.setDescribesion("等待付款-借款");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagReturn = applyLendSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("returnmo");
-        obj.setDescribesion("还款记录");
-        if (flagReturn) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("lendSurePay");
+        obj.setDescribesion("确认付款-借款");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAccCheckBor = applyLendSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("accountcheckborrow");
-        obj.setDescribesion("账户核对借款记录");
-        if (flagAccCheckBor) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("lendApplyRecord");
+        obj.setDescribesion("借款记录-借款");
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagClosed = applyLendSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("closed");
+        obj.setName("lendReturnRecord");
+        obj.setDescribesion("还款记录-借款");
+        obj.setFlag(true);
+        list.add(obj);
+
+        obj = new SonPermissionObject();
+        obj.setName("lendAccountcheck");
+        obj.setDescribesion("账务核对-借款");
+        obj.setFlag(true);
+        list.add(obj);
+
+        obj = new SonPermissionObject();
+        obj.setName("lendReceiveTicket");
         obj.setDescribesion("已收票记录");
-        if (flagClosed) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setFlag(true);
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAnalSitu = applyLendSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("analysissitusion");
-        obj.setDescribesion("分析情况记录");
-        if (flagAnalSitu) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
+        obj.setName("lendAnalysisRecord");
+        obj.setDescribesion("已分析情况记录");
+        obj.setFlag(true);
         list.add(obj);
 
         return list;
     }
 
     @Override
-    public Boolean guidePermission(GuidePermissionTO guidePermissionTO)  throws SerException {
+    public Boolean guidePermission(LendGuidePermissionTO guidePermissionTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
         Boolean flag = true;
@@ -423,6 +297,16 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
+
+    @Override
+    public ReimburseRecordBO getOneById(String id) throws SerException {
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能呢为空");
+        }
+        ReimburseRecord reimburseRecord = super.findById(id);
+        return BeanTransform.copyProperties(reimburseRecord, ReimburseRecordBO.class);
+    }
+
     @Override
     public Long countReimburseRecord(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         reimburseRecordDTO.getSorts().add("createTime=desc");
@@ -667,15 +551,6 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
     }
 
-    @Override
-    public ReimburseRecordBO getReimburseRecordById(String id) throws SerException {
-        checkPermission();
-        if(StringUtils.isBlank(id)){
-            throw new SerException("id不能为空");
-        }
-        ReimburseRecord reimburseRecord = super.findById(id);
-        return BeanTransform.copyProperties(reimburseRecord, ReimburseRecordBO.class);
-    }
 
     @Override
     public Long countErrorRecord(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
@@ -721,7 +596,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             reimburseRecordDTO.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getEndTime()));
         }
 
-        List<ReimburseRecord> list = super.findByCis(reimburseRecordDTO,true);
+        List<ReimburseRecord> list = super.findByCis(reimburseRecordDTO, true);
         List<ReimburseRecordBO> boList = BeanTransform.copyProperties(list, ReimburseRecordBO.class);
         return boList;
     }
@@ -886,18 +761,18 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         if (StringUtils.isBlank(reimburseRecordTO.getId())) {
             throw new SerException("id不能为空");
         }
-        if(StringUtils.isBlank(reimburseRecordTO.getSureCongel())){
+        if (StringUtils.isBlank(reimburseRecordTO.getSureCongel())) {
             throw new SerException("是否确认冻结不能为空");
         }
-        if( !"是".equals(reimburseRecordTO.getSureCongel()) && !"否".equals(reimburseRecordTO.getSureCongel()) ){
+        if (!"是".equals(reimburseRecordTO.getSureCongel()) && !"否".equals(reimburseRecordTO.getSureCongel())) {
             throw new SerException("是否确认冻结只能填写是或否");
         }
         ReimburseRecord temp = super.findById(reimburseRecordTO.getId());
-        if( "是".equals(reimburseRecordTO.getSureCongel())  ){
+        if ("是".equals(reimburseRecordTO.getSureCongel())) {
             temp.setChargerAuditStatus("不通过");
             temp.setChargerAuditTime(LocalDate.now());
             temp.setReimStatus(ReimStatus.CHARGECONGEL);
-        }else if("否".equals(reimburseRecordTO.getSureCongel())){
+        } else if ("否".equals(reimburseRecordTO.getSureCongel())) {
             temp.setChargerAuditStatus("通过");
             temp.setChargerAuditTime(LocalDate.now());
             temp.setReimStatus(ReimStatus.CHARGEPASS);
@@ -1016,9 +891,9 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
         ReimburseAuditLog reimburseAuditLog = new ReimburseAuditLog();
 
-        if (null != reimburseRecordTO.getReimStatus()&&reimburseRecordTO.getReimStatus().equals(ReimStatus.PASS)) {
+        if (null != reimburseRecordTO.getReimStatus() && reimburseRecordTO.getReimStatus().equals(ReimStatus.PASS)) {
             reimburseAuditLog.setAuditStatus("分析通过");
-        } else if (null != reimburseRecordTO.getReimStatus()&&reimburseRecordTO.getReimStatus().equals(ReimStatus.NOTPASS)) {
+        } else if (null != reimburseRecordTO.getReimStatus() && reimburseRecordTO.getReimStatus().equals(ReimStatus.NOTPASS)) {
             reimburseAuditLog.setAuditStatus("分析不通过");
         } else {
             throw new SerException("分析人员只能选择通过或不通过二个状态,reimStatus");
@@ -1157,16 +1032,17 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         checkPermission();
         if (StringUtils.isBlank(reimburseRecordTO.getId())) {
             throw new SerException("id不能为空");
-        } if (StringUtils.isBlank(reimburseRecordTO.getReceiveTicketCheck())) {
+        }
+        if (StringUtils.isBlank(reimburseRecordTO.getReceiveTicketCheck())) {
             throw new SerException("是否收到单据不能为空");
         }
         ReimburseRecord temp = super.findById(reimburseRecordTO.getId());
         temp.setReceiveTicketer(reimburseRecordTO.getReceiveTicketer());
         temp.setReceiveTicketCon(reimburseRecordTO.getReceiveTicketCon());
         temp.setReceiveTicketTime(LocalDate.parse(reimburseRecordTO.getReceiveTicketTime()));
-        if( "是".equals(reimburseRecordTO.getReceiveTicketCheck())){
+        if ("是".equals(reimburseRecordTO.getReceiveTicketCheck())) {
             temp.setReceiveTicketCheck("是");
-        }else if("否".equals(reimburseRecordTO.getReceiveTicketCheck()) ){
+        } else if ("否".equals(reimburseRecordTO.getReceiveTicketCheck())) {
             temp.setReceiveTicketCheck("否");
         }
         temp.setModifyTime(LocalDateTime.now());
@@ -1182,7 +1058,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         ReimburseRecordDTO dto = reimburseRecordDTO;
         dto.getConditions().add(Restrict.ne("payCondition", "是"));
         dto.getConditions().add(Restrict.eq("receiveTicketCheck", "是"));
-        dto.getConditions().add(Restrict.in("reimStatus", new Integer[]{3,4}));
+        dto.getConditions().add(Restrict.in("reimStatus", new Integer[]{3, 4}));
         dto.getSorts().add("modifyTime=desc");
 
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
@@ -1209,7 +1085,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         ReimburseRecordDTO dto = reimburseRecordDTO;
         dto.getConditions().add(Restrict.ne("payCondition", "是"));
         dto.getConditions().add(Restrict.eq("receiveTicketCheck", "是"));
-        dto.getConditions().add(Restrict.in("reimStatus", new Integer[]{3,4}));
+        dto.getConditions().add(Restrict.in("reimStatus", new Integer[]{3, 4}));
         dto.getSorts().add("modifyTime=desc");
 
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
@@ -1225,7 +1101,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             dto.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getEndTime()));
         }
 
-        List<ReimburseRecord> recordList = super.findByCis(dto,true);
+        List<ReimburseRecord> recordList = super.findByCis(dto, true);
         return BeanTransform.copyProperties(recordList, ReimburseRecordBO.class);
     }
 
@@ -1275,7 +1151,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Override
     public Long countHasPay(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
 
-        ReimburseRecordDTO dto =reimburseRecordDTO;
+        ReimburseRecordDTO dto = reimburseRecordDTO;
         dto.getConditions().add(Restrict.eq("payCondition", "是"));
 
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
@@ -1315,7 +1191,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         }
 
 
-        List<ReimburseRecord> recordList = super.findByCis(dto,true);
+        List<ReimburseRecord> recordList = super.findByCis(dto, true);
         List<ReimburseRecordBO> boList = BeanTransform.copyProperties(recordList, ReimburseRecordBO.class);
         return boList;
     }
@@ -1643,6 +1519,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
     /**
      * 等待付款导出
+     *
      * @param reimburseRecordDTO
      * @return
      * @throws SerException
@@ -1652,20 +1529,20 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         checkPermission();
         LocalDate start = LocalDate.now();
         LocalDate end = LocalDate.now();
-        if(StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())){
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())) {
             start = DateUtil.parseDate(reimburseRecordDTO.getStartTime());
         }
-        if(StringUtils.isNotBlank(reimburseRecordDTO.getEndTime())){
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime())) {
             end = DateUtil.parseDate(reimburseRecordDTO.getEndTime());
         }
-        LocalDate budgetPayTime [] = new LocalDate[]{start,end};
+        LocalDate budgetPayTime[] = new LocalDate[]{start, end};
 
         if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime()) || StringUtils.isNotBlank(reimburseRecordDTO.getEndTime())) {
             reimburseRecordDTO.getConditions().add(Restrict.between("budgetPayTime", budgetPayTime));//借款时间段查询
         }
         reimburseRecordDTO.getConditions().add(Restrict.ne("payCondition", "是"));
         reimburseRecordDTO.getConditions().add(Restrict.eq("receiveTicketCheck", "是"));
-        reimburseRecordDTO.getConditions().add(Restrict.in("reimStatus", new Integer[]{3,4}));
+        reimburseRecordDTO.getConditions().add(Restrict.in("reimStatus", new Integer[]{3, 4}));
 
         List<ReimburseRecord> list = super.findByCis(reimburseRecordDTO);
 
@@ -1683,6 +1560,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
     /**
      * 已付款记录导出
+     *
      * @param reimburseRecordDTO
      * @return
      * @throws SerException
@@ -1692,13 +1570,13 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         checkPermission();
         LocalDate start = LocalDate.now();
         LocalDate end = LocalDate.now();
-        if(StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())){
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())) {
             start = DateUtil.parseDate(reimburseRecordDTO.getStartTime());
         }
-        if(StringUtils.isNotBlank(reimburseRecordDTO.getEndTime())){
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime())) {
             end = DateUtil.parseDate(reimburseRecordDTO.getEndTime());
         }
-        LocalDate budgetPayTime [] = new LocalDate[]{start,end};
+        LocalDate budgetPayTime[] = new LocalDate[]{start, end};
 
         if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime()) || StringUtils.isNotBlank(reimburseRecordDTO.getEndTime())) {
             reimburseRecordDTO.getConditions().add(Restrict.between("budgetPayTime", budgetPayTime));//借款时间段查询

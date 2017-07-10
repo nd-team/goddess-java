@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@Service("cusPermissionOperateApiImpl")
-public class CusPermissionOperateApiImpl implements CusPermissionOperateAPI {
+@Service("lendPermissionOperateApiImpl")
+public class LendPermissionOperateApiImpl implements LendPermissionOperateAPI {
 
 
 }

@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class SiginManageDeleteFileTO extends BaseTO {
+public class LendDeleteFileTO extends BaseTO {
 
     public interface TestDEL {
     }
@@ -21,7 +21,7 @@ public class SiginManageDeleteFileTO extends BaseTO {
     /**
      * 删除路径
      */
-    @NotNull(groups = {TestDEL.class}, message = "删除路径不能为空")
+    @NotNull(groups = {LendDeleteFileTO.TestDEL.class}, message = "删除路径不能为空")
     private String[] paths;
 
     public String[] getPaths() {

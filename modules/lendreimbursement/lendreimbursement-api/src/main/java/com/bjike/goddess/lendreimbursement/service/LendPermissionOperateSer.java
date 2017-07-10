@@ -1,8 +1,8 @@
 package com.bjike.goddess.lendreimbursement.service;
 
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.lendreimbursement.dto.CusPermissionOperateDTO;
-import com.bjike.goddess.lendreimbursement.entity.CusPermissionOperate;
+import com.bjike.goddess.lendreimbursement.dto.LendPermissionOperateDTO;
+import com.bjike.goddess.lendreimbursement.entity.LendPermissionOperate;
 
 /**
  * 客户权限配置操作对象业务接口
@@ -13,6 +13,6 @@ import com.bjike.goddess.lendreimbursement.entity.CusPermissionOperate;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public interface CusPermissionOperateSer extends Ser<CusPermissionOperate, CusPermissionOperateDTO> {
+public interface LendPermissionOperateSer extends Ser<LendPermissionOperate, LendPermissionOperateDTO> {
 
 }

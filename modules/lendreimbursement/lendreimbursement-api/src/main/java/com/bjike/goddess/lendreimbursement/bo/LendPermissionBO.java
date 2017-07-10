@@ -14,7 +14,7 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class CusPermissionBO extends BaseBO {
+public class LendPermissionBO extends BaseBO {
 
     /**
      * 辅助id
@@ -46,7 +46,7 @@ public class CusPermissionBO extends BaseBO {
     /**
      * list返回的操作对象
      */
-    private List<CusOperateBO> cusOperateBO;
+    private List<LendOperateBO> cusOperateBO;
 
     public String getIdFlag() {
         return idFlag;
@@ -96,11 +96,11 @@ public class CusPermissionBO extends BaseBO {
         this.modifyTime = modifyTime;
     }
 
-    public List<CusOperateBO> getCusOperateBO() {
+    public List<LendOperateBO> getCusOperateBO() {
         return cusOperateBO;
     }
 
-    public void setCusOperateBO(List<CusOperateBO> cusOperateBO) {
+    public void setCusOperateBO(List<LendOperateBO> cusOperateBO) {
         this.cusOperateBO = cusOperateBO;
     }
 }

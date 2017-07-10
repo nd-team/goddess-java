@@ -1,20 +1,18 @@
-package com.bjike.goddess.lendreimbursement.vo;
+package com.bjike.goddess.lendreimbursement.to;
+
+import com.bjike.goddess.common.api.to.BaseTO;
 
 /**
- * 客户权限配置操作对象表现层对象
+ * 客户权限配置操作对象
  *
  * @Author: [ tanghaixiang ]
  * @Date: [ 2017-05-25 02:12 ]
- * @Description: [ 客户权限配置操作对象表现层对象 ]
+ * @Description: [ 客户权限配置操作对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class CusPermissionOperateVO {
+public class LendPermissionOperateTO extends BaseTO {
 
-    /**
-     * id
-     */
-    private String id;
     /**
      * 操作对象
      */
@@ -35,14 +33,6 @@ public class CusPermissionOperateVO {
      */
     private String modifyTime;
 
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getOperator() {
         return operator;

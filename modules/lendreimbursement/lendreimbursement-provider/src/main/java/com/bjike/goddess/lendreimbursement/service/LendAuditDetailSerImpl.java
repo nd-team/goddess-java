@@ -3,15 +3,11 @@ package com.bjike.goddess.lendreimbursement.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.lendreimbursement.bo.LendAuditDetailBO;
 import com.bjike.goddess.lendreimbursement.dto.LendAuditDetailDTO;
 import com.bjike.goddess.lendreimbursement.entity.LendAuditDetail;
-import com.bjike.goddess.lendreimbursement.enums.GuideAddrStatus;
-import com.bjike.goddess.lendreimbursement.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
-import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -35,7 +31,7 @@ public class LendAuditDetailSerImpl extends ServiceImpl<LendAuditDetail, LendAud
     @Autowired
     private UserAPI userAPI;
     @Autowired
-    private CusPermissionSer cusPermissionSer;
+    private LendPermissionSer cusPermissionSer;
 
     @Override
     public Long countDetail(LendAuditDetailDTO lendAuditDetailDTO) throws SerException {

@@ -14,7 +14,7 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class CusPermissionVO {
+public class LendPermissionVO {
 
     /**
      * id
@@ -51,7 +51,7 @@ public class CusPermissionVO {
     /**
      * list返回的操作对象
      */
-    private List<CusOperateVO> cusOperateVO;
+    private List<LendOperateVO> cusOperateVO;
 
 
     public String getId() {
@@ -110,11 +110,11 @@ public class CusPermissionVO {
         this.modifyTime = modifyTime;
     }
 
-    public List<CusOperateVO> getCusOperateVO() {
+    public List<LendOperateVO> getCusOperateVO() {
         return cusOperateVO;
     }
 
-    public void setCusOperateVO(List<CusOperateVO> cusOperateVO) {
+    public void setCusOperateVO(List<LendOperateVO> cusOperateVO) {
         this.cusOperateVO = cusOperateVO;
     }
 }
