@@ -97,4 +97,11 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     public List<UserBO> findUserList() throws SerException {
         return positionDetailUserSer.findUserList();
     }
+
+    @Override
+    public List<UserBO> findUserListInOrgan() throws SerException {
+        return positionDetailUserSer.findUserListInOrgan();
+    }
+
+
 }

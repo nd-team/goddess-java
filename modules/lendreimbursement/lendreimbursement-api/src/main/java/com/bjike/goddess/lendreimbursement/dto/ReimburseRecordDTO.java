@@ -47,6 +47,11 @@ public class ReimburseRecordDTO extends BaseDTO {
      */
     private String endTime;
 
+    /**
+     * 报销人
+     */
+    private String charger;
+
     public String getReimNumber() {
         return reimNumber;
     }
@@ -101,5 +106,13 @@ public class ReimburseRecordDTO extends BaseDTO {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public String getCharger() {
+        return charger;
+    }
+
+    public void setCharger(String charger) {
+        this.charger = charger;
     }
 }

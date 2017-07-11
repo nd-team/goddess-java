@@ -287,10 +287,13 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
         List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
         List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        for (VoucherGenerateBO str : listBO) {
-            VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
-            str.setMoneyTotal(vt.getMoney());
+        if( listBO != null && listBO.size()>0 ){
+            for (VoucherGenerateBO str : listBO) {
+                VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
+                str.setMoneyTotal(vt.getMoney());
+            }
         }
+
 
 
         return listBO;

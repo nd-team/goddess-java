@@ -14,6 +14,7 @@ import com.bjike.goddess.organize.to.PositionDetailUserTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dto.UserDTO;
+import com.bjike.goddess.user.entity.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -235,4 +236,25 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
         return userAPI.findByCis(dto);
     }
+
+    @Override
+    public List<UserBO> findUserListInOrgan() throws SerException {
+        PositionDetailUserDTO dto = new PositionDetailUserDTO();
+        List<PositionDetailUser> list = super.findByCis( dto );
+        if( list != null && list.size()>0 ){
+            List<String> userIds = new ArrayList<>();
+            list.stream().forEach(str -> {
+                userIds.add( str.getUserId() );
+            });
+            String [] idStrs =  userIds.toArray( new String[userIds.size()]);
+            UserDTO userDTO = new UserDTO();
+            userDTO.getConditions().add(Restrict.in("id", idStrs ));
+            List<UserBO> userList = userAPI.findByCis( userDTO );
+
+            return userList;
+        }
+        return null;
+    }
+
+
 }

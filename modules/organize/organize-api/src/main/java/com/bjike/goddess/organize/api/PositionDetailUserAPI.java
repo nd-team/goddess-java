@@ -176,4 +176,15 @@ public interface PositionDetailUserAPI {
         return null;
     }
 
+    /**
+     * 获取组织结构中的用户列表
+     * tanghaixiang
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<UserBO> findUserListInOrgan() throws SerException {
+        return null;
+    }
+
 }
