@@ -8,6 +8,7 @@ import com.bjike.goddess.contacts.dto.CommerceContactsDTO;
 import com.bjike.goddess.contacts.dto.ExternalContactsDTO;
 import com.bjike.goddess.contacts.entity.ExternalContacts;
 import com.bjike.goddess.contacts.to.ExternalContactsTO;
+import com.bjike.goddess.contacts.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -92,6 +93,23 @@ public interface ExternalContactsSer extends Ser<ExternalContacts, ExternalConta
     default Long getTotal() throws SerException {
         return null;
     }
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
 
+    /**
+     * 导入
+     */
+    ExternalContactsBO importExcel(List<ExternalContactsTO> tocs) throws SerException;
 }

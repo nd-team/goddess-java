@@ -3,6 +3,7 @@ package com.bjike.goddess.contacts.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contacts.bo.QQGroupBO;
 import com.bjike.goddess.contacts.dto.QQGroupDTO;
+import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.contacts.to.QQGroupTO;
 
 import java.util.List;
@@ -95,4 +96,26 @@ public interface QQGroupAPI {
         return null;
     }
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导入
+     *
+     * @param qqGroupTO QQ群管理
+     * @return class QQGroupBO
+     */
+    default QQGroupBO importExcel(List<QQGroupTO> qqGroupTO) throws SerException {
+        return null;
+    }
 }

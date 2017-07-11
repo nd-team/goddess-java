@@ -1,7 +1,9 @@
 package com.bjike.goddess.reimbursementprepare.to;
 
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.reimbursementprepare.enums.PayStatus;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 等待付款
@@ -57,12 +59,27 @@ public class WaitPayTO extends BaseTO {
     /**
      * 付款来源
      */
+    @NotBlank(groups = EDIT.class, message = "付款来源不能为空")
     private String payOrigin;
+
+    /**
+     * 地区
+     */
+    private String area;
 
     /**
      * 识别类型
      */
+    @NotBlank(groups = EDIT.class, message = "识别类型不能为空")
     private String type;
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
 
     public String getPayOrigin() {
         return payOrigin;

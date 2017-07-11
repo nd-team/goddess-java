@@ -5,6 +5,7 @@ import com.bjike.goddess.contacts.bo.ExternalContactsBO;
 import com.bjike.goddess.contacts.dto.ExternalContactsDTO;
 import com.bjike.goddess.contacts.service.ExternalContactsSer;
 import com.bjike.goddess.contacts.to.ExternalContactsTO;
+import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,5 +59,20 @@ public class ExternalContactsApiImpl implements ExternalContactsAPI {
     @Override
     public Long getTotal() throws SerException {
         return externalContactsSer.getTotal();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return externalContactsSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return externalContactsSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public ExternalContactsBO importExcel(List<ExternalContactsTO> tocs) throws SerException {
+        return externalContactsSer.importExcel(tocs);
     }
 }

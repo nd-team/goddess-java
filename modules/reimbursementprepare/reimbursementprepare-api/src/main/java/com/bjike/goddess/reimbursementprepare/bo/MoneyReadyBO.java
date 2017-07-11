@@ -2,8 +2,6 @@ package com.bjike.goddess.reimbursementprepare.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import javax.persistence.Column;
-
 /**
  * 资金准备业务传输对象
  *

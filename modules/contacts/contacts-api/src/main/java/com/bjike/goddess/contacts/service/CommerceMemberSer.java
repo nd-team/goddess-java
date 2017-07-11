@@ -6,6 +6,7 @@ import com.bjike.goddess.contacts.bo.CommerceMemberBO;
 import com.bjike.goddess.contacts.dto.CommerceMemberDTO;
 import com.bjike.goddess.contacts.entity.CommerceMember;
 import com.bjike.goddess.contacts.to.CommerceMemberTO;
+import com.bjike.goddess.contacts.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -82,6 +83,20 @@ public interface CommerceMemberSer extends Ser<CommerceMember, CommerceMemberDTO
      * @throws SerException
      */
     default Long getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 

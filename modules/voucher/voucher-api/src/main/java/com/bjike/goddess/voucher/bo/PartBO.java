@@ -3,11 +3,11 @@ package com.bjike.goddess.voucher.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
- * 记账凭证不分数据
+ * 记账凭证部分数据
  *
  * @Author: [ tanghaixiang ]
  * @Date: [ 2017-04-17 05:35 ]
- * @Description: [ 记账凭证不分数据 ]
+ * @Description: [ 记账凭证部分数据 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */

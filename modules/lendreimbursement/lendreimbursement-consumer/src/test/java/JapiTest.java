@@ -22,6 +22,7 @@ public class JapiTest {
 		JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
 				"modules/lendreimbursement/lendreimbursement-api",
 				"modules/user/user-api",
+				"modules/storage/storage-api",
 				"common/common-api"
 		});
 		JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索

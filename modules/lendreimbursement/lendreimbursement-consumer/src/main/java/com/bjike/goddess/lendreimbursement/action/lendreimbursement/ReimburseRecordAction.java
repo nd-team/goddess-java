@@ -11,19 +11,21 @@ import com.bjike.goddess.financeinit.api.AccountAPI;
 import com.bjike.goddess.financeinit.api.CategoryAPI;
 import com.bjike.goddess.financeinit.bo.CategoryBO;
 import com.bjike.goddess.financeinit.dto.CategoryDTO;
+import com.bjike.goddess.lendreimbursement.api.ReimburseAuditLogAPI;
 import com.bjike.goddess.lendreimbursement.api.ReimburseRecordAPI;
 import com.bjike.goddess.lendreimbursement.bo.ReimburseRecordBO;
 import com.bjike.goddess.lendreimbursement.dto.ReimburseRecordDTO;
+import com.bjike.goddess.lendreimbursement.entity.ReimburseAuditLog;
 import com.bjike.goddess.lendreimbursement.excel.SonPermissionObject;
 import com.bjike.goddess.lendreimbursement.to.AccountVoucherTO;
-import com.bjike.goddess.lendreimbursement.to.GuidePermissionTO;
+import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseRecordTO;
-import com.bjike.goddess.lendreimbursement.to.SiginManageDeleteFileTO;
+import com.bjike.goddess.lendreimbursement.to.LendDeleteFileTO;
 import com.bjike.goddess.lendreimbursement.vo.AccountVoucherVO;
 import com.bjike.goddess.lendreimbursement.vo.CollectDataVO;
+import com.bjike.goddess.lendreimbursement.vo.ReimburseAuditLogVO;
 import com.bjike.goddess.lendreimbursement.vo.ReimburseRecordVO;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
-import com.bjike.goddess.organize.entity.UserSetPermission;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
@@ -55,6 +57,8 @@ public class ReimburseRecordAction extends BaseFileAction {
 
     @Autowired
     private ReimburseRecordAPI reimburseRecordAPI;
+    @Autowired
+    private ReimburseAuditLogAPI reimburseAuditLogAPI;
     @Autowired
     private CategoryAPI categoryAPI;
     @Autowired
@@ -119,7 +123,7 @@ public class ReimburseRecordAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/guidePermission")
-    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result guidePermission(@Validated(LendGuidePermissionTO.TestAdd.class) LendGuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
 
             Boolean isHasPermission = reimburseRecordAPI.guidePermission(guidePermissionTO);
@@ -133,6 +137,27 @@ public class ReimburseRecordAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+
+    /**
+     * 一个申请报销
+     *
+     * @param id 申请报销id
+     * @return class ReimburseRecordVO
+     * @des 根据id获取申请报销
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id) throws ActException {
+        try {
+            ReimburseRecordVO applyLendVO = BeanTransform.copyProperties(
+                    reimburseRecordAPI.getOneById(id), ReimburseRecordVO.class);
+            return ActResult.initialize(applyLendVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 申请报销列表总条数
@@ -229,19 +254,19 @@ public class ReimburseRecordAction extends BaseFileAction {
 
 
     /**
-     * 查看详情
+     * 审核详情
      *
      * @param id id
-     * @return class ReimburseRecordVO
-     * @des 报销记录查看详情
+     * @return class ReimburseAuditLogVO
+     * @des 报销记录查看审核详情
      * @version v1
      */
     @GetMapping("v1/getReimburseRecord/{id}")
     public Result getReimburseRecord(@PathVariable String id) throws ActException {
         try {
-            ReimburseRecordVO reimburseRecordVO = BeanTransform.copyProperties(
-                    reimburseRecordAPI.getReimburseRecordById(id), ReimburseRecordVO.class, true);
-            return ActResult.initialize(reimburseRecordVO);
+            List<ReimburseAuditLogVO> reimburseAuditLogVO = BeanTransform.copyProperties(
+                    reimburseAuditLogAPI.listReimburseAuditLogByRid(id), ReimburseAuditLogVO.class, true);
+            return ActResult.initialize(reimburseAuditLogVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -977,7 +1002,7 @@ public class ReimburseRecordAction extends BaseFileAction {
         try {
             //跟前端约定好 ，文件路径是列表id
             // /id/....
-            String path = "/" + id;
+            String path = "/reimburseRecord/" + id;
             List<InputStream> inputStreams = getInputStreams(request, path);
             fileAPI.upload(inputStreams);
             return new ActResult("upload success");
@@ -997,7 +1022,7 @@ public class ReimburseRecordAction extends BaseFileAction {
     public Result list(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             //跟前端约定好 ，文件路径是列表id
-            String path = "/" + id;
+            String path = "/reimburseRecord/" + id;
             FileInfo fileInfo = new FileInfo();
             fileInfo.setPath(path);
             Object storageToken = request.getAttribute("storageToken");
@@ -1041,7 +1066,7 @@ public class ReimburseRecordAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/deleteFile")
-    public Result delFile(@Validated(SiginManageDeleteFileTO.TestDEL.class) SiginManageDeleteFileTO siginManageDeleteFileTO, HttpServletRequest request) throws SerException {
+    public Result delFile(@Validated(LendDeleteFileTO.TestDEL.class) LendDeleteFileTO siginManageDeleteFileTO, HttpServletRequest request) throws SerException {
         if (null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length >= 0) {
             Object storageToken = request.getAttribute("storageToken");
             fileAPI.delFile(storageToken.toString(), siginManageDeleteFileTO.getPaths());

@@ -60,6 +60,16 @@ public class OtherContactsTO extends BaseTO {
      */
     private String remark;
 
+    /**
+     * 是否发送邮件
+     */
+    public boolean isSend;
+
+    /**
+     * 发送的对象
+     */
+    public String sendObject;
+
 
     public String getType() {
         return type;
@@ -123,5 +133,21 @@ public class OtherContactsTO extends BaseTO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public boolean isSend() {
+        return isSend;
+    }
+
+    public void setSend(boolean send) {
+        isSend = send;
+    }
+
+    public String getSendObject() {
+        return sendObject;
+    }
+
+    public void setSendObject(String sendObject) {
+        this.sendObject = sendObject;
     }
 }
