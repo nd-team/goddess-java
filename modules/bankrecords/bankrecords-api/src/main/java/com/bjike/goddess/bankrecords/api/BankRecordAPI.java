@@ -71,20 +71,20 @@ public interface BankRecordAPI {
      *
      * @param year        年份
      * @param month       月份
-     * @param accountName 账户名称
+     * @param accountIds 账户名称Id
      * @return 汇总结果集
      */
-    List<BankRecordCollectBO> collect(Integer year, Integer month, String accountName) throws SerException;
+    List<BankRecordCollectBO> collect(Integer year, Integer month, String[] accountIds) throws SerException;
 
     /**
      * 分析
      *
      * @param year        年份
      * @param month       月份
-     * @param accountName 账户名称
+     * @param accountIds 账户名称Id
      * @return 汇总结果集
      */
-    BankRecordAnalyzeBO analyze(Integer year, Integer month, String accountName) throws SerException;
+    List<BankRecordAnalyzeBO> analyze(Integer year, Integer month, String[] accountIds) throws SerException;
 
     /**
      * 对比
@@ -138,19 +138,19 @@ public interface BankRecordAPI {
      * 汇总导出
      * @param year 年份
      * @param month 月份
-     * @param accountName 账户名称
+     * @param accountIds 账户名称Id
      * @return
      * @throws SerException
      */
-    byte[] collectExcel(Integer year, Integer month, String accountName) throws SerException;
+    byte[] collectExcel(Integer year, Integer month, String[] accountIds) throws SerException;
 
     /**
      * 分析导出
      * @param year 年份
      * @param month 月份
-     * @param accountName 账户名称
+     * @param accountIds 账户名称Id
      * @return
      * @throws SerException
      */
-    byte[] analyzeExcel(Integer year, Integer month, String accountName) throws SerException;
+    byte[] analyzeExcel(Integer year, Integer month, String[] accountIds) throws SerException;
 }

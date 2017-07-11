@@ -1,6 +1,5 @@
 package com.bjike.goddess.salaryconfirm.service;
 
-import com.bjike.goddess.archive.api.StaffRecordsAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -9,6 +8,9 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.contacts.api.InternalContactsAPI;
+import com.bjike.goddess.contacts.bo.InternalContactsBO;
+import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.salaryconfirm.bo.AnalyzeBO;
@@ -55,11 +57,13 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
     @Autowired
     private InvoiceSubmitSer invoiceSubmitSer;
     @Autowired
-    private StaffRecordsAPI staffRecordsAPI;
-    @Autowired
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private InternalContactsAPI internalContactsAPI;
+    @Autowired
+    private MessageAPI messageAPI;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
@@ -347,7 +351,7 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
         }
         List<SalaryconfirmBO> bolist = BeanTransform.copyProperties(super.findByCis(dto), SalaryconfirmBO.class);
 
-        if (bolist == null || bolist.isEmpty()) {
+        if (CollectionUtils.isEmpty(bolist)) {
             return null;
         }
 
@@ -391,7 +395,6 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
                     dormitoryConsume, punishConsume, taxConsume,
                     vacationConsume, absenteeismConsume, actualSalaries);
         }
-
         bolist.add(totalBO);
 
         return bolist;
@@ -536,16 +539,20 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
             List<String> sendUserStr = new ArrayList<String>();
 
             for (Salaryconfirm model : list) {
-                //todo 需求为查询通讯录的邮箱地址,可是邮箱发送为用户ID数组
-//                StaffRecordsBO staffRecordsBO = staffRecordsAPI.findByNumber(model.getEmployeeNumber());
                 UserBO userBO = userAPI.findByUsername(model.getName());
-                sendUserStr.add(userBO.getId());
+                if (userBO != null) {
+                    InternalContactsBO contactsBO = internalContactsAPI.findByUser(userBO.getId());
+                    if (contactsBO != null) {
+                        sendUserStr.add(contactsBO.getEmail());
+                    }
+                }
             }
             String[] sendUsers = (String[]) sendUserStr.toArray(new String[sendUserStr.size()]);
 
             MessageTO to = new MessageTO("薪资核算确认提醒", "请于今天下班前到\"薪资核算确认模块\"确认薪资!");
             to.setSendType(SendType.EMAIL);
             to.setReceivers(sendUsers);
+            messageAPI.send(to);
         }
     }
 

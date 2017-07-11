@@ -9,6 +9,7 @@ import com.bjike.goddess.staffmeeting.api.MeetingLayAPI;
 import com.bjike.goddess.staffmeeting.bo.MeetingLayBO;
 import com.bjike.goddess.staffmeeting.bo.MeetingOrganizeBO;
 import com.bjike.goddess.staffmeeting.dto.MeetingOrganizeDTO;
+import com.bjike.goddess.staffmeeting.entity.MeetingLay;
 import com.bjike.goddess.staffmeeting.entity.MeetingOrganize;
 import com.bjike.goddess.staffmeeting.entity.MeetingSummary;
 import com.bjike.goddess.staffmeeting.to.MeetingOrganizeTO;
@@ -17,9 +18,12 @@ import com.bjike.goddess.user.api.UserAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,11 +44,11 @@ public class MeetingOrganizeSerImpl extends ServiceImpl<MeetingOrganize, Meeting
     @Autowired
     private MeetingLayAPI meetingLayAPI;
     @Autowired
-    private MeetingSummarySer meetingSummarySer;
+    private MeetingLaySer meetingLaySer;
 
     public String getNumber(MeetingOrganize model) throws SerException {
         StringBuilder number = new StringBuilder("YGDB-");
-        MeetingLayBO meetingLayBO = meetingLayAPI.findById(model.getLayId());
+        MeetingLayBO meetingLayBO = meetingLayAPI.findById(model.getMeetingLay().getId());
         //获取层面名称首字母大写
         String layName = ChineseCharToEn.getAllFirstLetter(meetingLayBO.getName());
         number.append(layName);
@@ -80,27 +84,35 @@ public class MeetingOrganizeSerImpl extends ServiceImpl<MeetingOrganize, Meeting
 
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public MeetingOrganizeBO insertModel(MeetingOrganizeTO to) throws SerException {
-        MeetingOrganize model = BeanTransform.copyProperties(to, MeetingOrganize.class, true);
-        model.setStatus(Status.THAW);
-        model.setOrganizer(userAPI.currentUser().getUsername());
-        model.setMeetingNum(getNumber(model));
-        super.save(model);
-        //生成纪要
-        insertSummary(model);
+        MeetingLay meetingLay = meetingLaySer.findById(to.getLayId());
+        if (meetingLay != null) {
+            MeetingOrganize model = BeanTransform.copyProperties(to, MeetingOrganize.class, true);
+            model.setStatus(Status.THAW);
+            model.setOrganizer(userAPI.currentUser().getUsername());
+            model.setMeetingLay(meetingLay);
+            model.setMeetingNum(getNumber(model));
+            //生成纪要
+            insertSummary(model);
 
-        return BeanTransform.copyProperties(model, MeetingOrganizeBO.class);
+            return BeanTransform.copyProperties(model, MeetingOrganizeBO.class);
+        } else {
+            throw new SerException("非法层面ID,层面对象不能为空!");
+        }
     }
 
     public void insertSummary(MeetingOrganize model) throws SerException {
         MeetingSummary summary = new MeetingSummary();
-        summary.setMeetingNum(model.getMeetingNum());
+        summary.setMeetingOrganize(model);
         summary.setActualTime(model.getPlanTime());
         summary.setActualPlace(model.getPlanPlace());
-        meetingSummarySer.save(summary);
+        model.setMeetingSummary(summary);
+        super.save(model);
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public MeetingOrganizeBO updateModel(MeetingOrganizeTO to) throws SerException {
         //编辑修改层面不考虑编号变化，编号只于新增是初始化，如果编号不正确，请先考虑是否修改过层面
         MeetingOrganize model = super.findById(to.getId());
@@ -115,12 +127,17 @@ public class MeetingOrganizeSerImpl extends ServiceImpl<MeetingOrganize, Meeting
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void freeze(String id) throws SerException {
         MeetingOrganize model = super.findById(id);
         if (model != null) {
-            model.setStatus(Status.CONGEAL);
-            model.setModifyTime(LocalDateTime.now());
-            super.update(model);
+            if (model.getStatus() != Status.CONGEAL) {
+                model.setStatus(Status.CONGEAL);
+                model.setModifyTime(LocalDateTime.now());
+                super.update(model);
+            } else {
+                throw new SerException("该记录无需冻结!");
+            }
         } else {
             throw new SerException("非法Id，更新对象不能为空");
         }
@@ -129,7 +146,37 @@ public class MeetingOrganizeSerImpl extends ServiceImpl<MeetingOrganize, Meeting
     @Override
     public List<MeetingOrganizeBO> pageList(MeetingOrganizeDTO dto) throws SerException {
         dto.getSorts().add("createTime=desc");
-        dto.getConditions().add(Restrict.eq("status", Status.THAW));
-        return BeanTransform.copyProperties(super.findByPage(dto), MeetingOrganizeBO.class);
+        dto.getConditions().add(Restrict.eq("status", dto.getStatus()));
+        List<MeetingOrganize> list = super.findByPage(dto);
+        List<MeetingOrganizeBO> boList = null;
+        if (!CollectionUtils.isEmpty(list)) {
+            boList = new ArrayList<MeetingOrganizeBO>();
+            for (MeetingOrganize model : list) {
+                MeetingOrganizeBO bo = BeanTransform.copyProperties(model, MeetingOrganizeBO.class);
+                bo.setTopic(model.getMeetingLay().getMeetingTopic().getTopic());
+                bo.setTopicContent(model.getMeetingLay().getMeetingTopic().getTopicContent());
+                bo.setLayName(model.getMeetingLay().getName());
+                bo.setPosition(model.getMeetingLay().getPosition());
+                boList.add(bo);
+            }
+        }
+        return boList;
+    }
+
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public void unfreeze(String id) throws SerException {
+        MeetingOrganize model = super.findById(id);
+        if (model != null) {
+            if (model.getStatus() != Status.THAW) {
+                model.setStatus(Status.THAW);
+                model.setModifyTime(LocalDateTime.now());
+                super.update(model);
+            } else {
+                throw new SerException("该记录无需解冻!");
+            }
+        } else {
+            throw new SerException("非法Id，更新对象不能为空");
+        }
     }
 }

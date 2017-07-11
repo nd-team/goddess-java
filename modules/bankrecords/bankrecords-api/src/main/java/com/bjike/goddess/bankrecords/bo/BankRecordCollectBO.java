@@ -17,12 +17,12 @@ import java.util.List;
 public class BankRecordCollectBO extends BaseBO {
 
     /**
-     * 借方金额
+     * 总借方金额
      */
     private Double debtorCost;
 
     /**
-     * 贷方金额
+     * 总贷方金额
      */
     private Double creditorCost;
 
@@ -45,6 +45,11 @@ public class BankRecordCollectBO extends BaseBO {
      * 银行
      */
     private String bank;
+
+    /**
+     * 账户id
+     */
+    private String accountId;
 
     public Double getDebtorCost() {
         return debtorCost;
@@ -92,6 +97,14 @@ public class BankRecordCollectBO extends BaseBO {
 
     public void setBank(String bank) {
         this.bank = bank;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
     public BankRecordCollectBO() {

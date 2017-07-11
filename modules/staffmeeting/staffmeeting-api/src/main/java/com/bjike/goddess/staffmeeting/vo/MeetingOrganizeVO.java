@@ -1,6 +1,7 @@
 package com.bjike.goddess.staffmeeting.vo;
 
 import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.staffmeeting.enums.MeetingPurpose;
 import com.bjike.goddess.staffmeeting.enums.MeetingType;
 
 /**
@@ -23,6 +24,10 @@ public class MeetingOrganizeVO {
      */
     private String meetingNum;
 
+    /**
+     * 议题目的
+     */
+    private MeetingPurpose meetingPurpose;
 
     /**
      * 议题产生原因
@@ -69,12 +74,25 @@ public class MeetingOrganizeVO {
      */
     private String organizer;
 
+    /**
+     * 状态
+     */
+    private Status status;
+
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public MeetingPurpose getMeetingPurpose() {
+        return meetingPurpose;
+    }
+
+    public void setMeetingPurpose(MeetingPurpose meetingPurpose) {
+        this.meetingPurpose = meetingPurpose;
     }
 
     public String getMeetingNum() {
@@ -157,4 +175,11 @@ public class MeetingOrganizeVO {
         this.organizer = organizer;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 }

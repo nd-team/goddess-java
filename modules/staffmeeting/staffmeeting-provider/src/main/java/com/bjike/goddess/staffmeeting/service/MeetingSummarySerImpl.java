@@ -6,17 +6,21 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffmeeting.bo.MeetingSummaryBO;
-import com.bjike.goddess.staffmeeting.bo.MeetingTopicBO;
-import com.bjike.goddess.staffmeeting.dto.MeetingOrganizeDTO;
 import com.bjike.goddess.staffmeeting.dto.MeetingSummaryDTO;
 import com.bjike.goddess.staffmeeting.entity.MeetingOrganize;
 import com.bjike.goddess.staffmeeting.entity.MeetingSummary;
 import com.bjike.goddess.staffmeeting.to.MeetingSummaryTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -33,16 +37,16 @@ import java.util.List;
 public class MeetingSummarySerImpl extends ServiceImpl<MeetingSummary, MeetingSummaryDTO> implements MeetingSummarySer {
 
     @Autowired
-    private MeetingOrganizeSer meetingOrganizeSer;
+    private UserAPI userAPI;
     @Autowired
-    private MeetingTopicSer meetingTopicSer;
+    private ReferPermissionSer referPermissionSer;
 
     @Override
     public MeetingSummaryBO findAndSet(String id) throws SerException {
         MeetingSummary model = super.findById(id);
         if (model != null) {
-            MeetingSummaryBO bo = BeanTransform.copyProperties(model, MeetingSummary.class);
-            setProperties(bo);
+            MeetingSummaryBO bo = setProperties(model);
+
             return bo;
         } else {
             throw new SerException("非法id,纪要对象不存在!");
@@ -50,6 +54,7 @@ public class MeetingSummarySerImpl extends ServiceImpl<MeetingSummary, MeetingSu
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public MeetingSummaryBO updateModel(MeetingSummaryTO to) throws SerException {
         MeetingSummary model = super.findById(to.getId());
         if (model != null) {
@@ -57,51 +62,98 @@ public class MeetingSummarySerImpl extends ServiceImpl<MeetingSummary, MeetingSu
             model.setModifyTime(LocalDateTime.now());
             super.update(model);
         } else {
-            throw new SerException("非法Id，更新对象不能为空");
+            throw new SerException("非法Id，纪要对象不能为空!");
         }
         return BeanTransform.copyProperties(model, MeetingSummaryBO.class);
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void freeze(String id) throws SerException {
         MeetingSummary model = super.findById(id);
         if (model != null) {
-            model.setModifyTime(LocalDateTime.now());
-            model.setStatus(Status.CONGEAL);
-            super.update(model);
+            if (model.getStatus() != Status.CONGEAL) {
+                model.setModifyTime(LocalDateTime.now());
+                model.setStatus(Status.CONGEAL);
+                super.update(model);
+            } else {
+                throw new SerException("该记录无需冻结!");
+            }
+
         } else {
             throw new SerException("非法Id，更新对象不能为空");
         }
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public List<MeetingSummaryBO> pageList(MeetingSummaryDTO dto) throws SerException {
-        dto.getConditions().add(Restrict.eq("status",Status.THAW));
-        List<MeetingSummaryBO> boList = BeanTransform.copyProperties(super.findByPage(dto), MeetingSummaryBO.class);
+        dto.getSorts().add("createTime=desc");
+        dto.getConditions().add(Restrict.eq("status", dto.getStatus()));
 
-        if (boList != null && !boList.isEmpty()) {
-            for (MeetingSummaryBO bo : boList) {
-                setProperties(bo);
+        UserBO user = userAPI.currentUser();
+
+
+        List<MeetingSummary> list = null;
+        List<MeetingSummary> summaries = null;
+        //没有申请权限的只能查看自己参与的会议数据
+        if (!referPermissionSer.getPermission(user.getEmployeeNumber())) {
+            dto.getConditions().add(Restrict.like("actualUsers", user.getUsername()));
+            list = super.findByPage(dto);
+            summaries = new ArrayList<MeetingSummary>();
+            if (!CollectionUtils.isEmpty(list)) {
+                for (MeetingSummary model : list) {
+                    String actualUsers = model.getActualUsers();
+                    List<String> users = Arrays.asList(actualUsers.split(","));
+                    if (users.contains(user.getUsername())) {
+                        summaries.add(model);
+                    }
+                }
             }
+        } else {
+            summaries = super.findByPage(dto);
         }
-        return boList;
+
+        if (!CollectionUtils.isEmpty(summaries)) {
+            List<MeetingSummaryBO> boList = new ArrayList<MeetingSummaryBO>();
+            for (MeetingSummary model : summaries) {
+                MeetingSummaryBO bo = setProperties(model);
+                boList.add(bo);
+            }
+            return boList;
+        } else {
+            return null;
+        }
     }
 
-    public void setProperties(MeetingSummaryBO bo) throws SerException {
-        MeetingOrganizeDTO organizeDTO = new MeetingOrganizeDTO();
-        organizeDTO.getConditions().add(Restrict.eq("meetingNum", bo.getMeetingNum()));
-        MeetingOrganize organizeBO = meetingOrganizeSer.findOne(organizeDTO);
-        //设置会议组织信息
-        if (organizeBO != null) {
-            bo.setMeetingType(organizeBO.getMeetingType());
-            bo.setContent(organizeBO.getContent());
-            bo.setOrganizer(organizeBO.getOrganizer());
-            bo.setMeetingNum(organizeBO.getMeetingNum());
-            //查询
-            MeetingTopicBO topic = meetingTopicSer.findByLay(organizeBO.getLayId());
-            if (topic != null) {
-                bo.setTopic(topic.getTopic());
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public void unFreeze(String id) throws SerException {
+        MeetingSummary model = super.findById(id);
+        if (model != null) {
+            if (model.getStatus() != Status.THAW) {
+                model.setModifyTime(LocalDateTime.now());
+                model.setStatus(Status.THAW);
+                super.update(model);
+            } else {
+                throw new SerException("该记录无需解冻!");
             }
+
+        } else {
+            throw new SerException("非法Id，更新对象不能为空");
         }
     }
+
+    public MeetingSummaryBO setProperties(MeetingSummary model) {
+        MeetingSummaryBO bo = BeanTransform.copyProperties(model, MeetingSummaryBO.class);
+        MeetingOrganize organize = model.getMeetingOrganize();
+        bo.setMeetingType(organize.getMeetingType());
+        bo.setContent(organize.getContent());
+        bo.setOrganizer(organize.getOrganizer());
+        bo.setLay(organize.getMeetingLay().getName());
+        bo.setMeetingPurpose(organize.getMeetingPurpose());
+        bo.setTopic(organize.getMeetingLay().getMeetingTopic().getTopic());
+        return bo;
+    }
+
 }
