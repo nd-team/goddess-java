@@ -100,12 +100,10 @@ public interface WaitPaySer extends Ser<WaitPay, WaitPayDTO> {
     /**
      * 付款
      *
-     * @param waitPayTO
-     * @return class WaitPayBO
+     * @param id
      * @throws SerException
      */
-    default PayRecordBO payment(WaitPayTO waitPayTO) throws SerException {
-        return null;
+    default void payment(String id) throws SerException {
     }
 
 }

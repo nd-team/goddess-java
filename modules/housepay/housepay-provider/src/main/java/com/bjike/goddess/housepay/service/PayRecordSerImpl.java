@@ -7,8 +7,11 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.housepay.bo.AreaCollectBO;
 import com.bjike.goddess.housepay.bo.PayRecordBO;
 import com.bjike.goddess.housepay.bo.ProjectCollectBO;
+import com.bjike.goddess.housepay.bo.WaitPayBO;
 import com.bjike.goddess.housepay.dto.PayRecordDTO;
+import com.bjike.goddess.housepay.dto.WaitPayDTO;
 import com.bjike.goddess.housepay.entity.PayRecord;
+import com.bjike.goddess.housepay.entity.WaitPay;
 import com.bjike.goddess.housepay.enums.GuideAddrStatus;
 import com.bjike.goddess.housepay.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
@@ -179,38 +182,7 @@ public class PayRecordSerImpl extends ServiceImpl<PayRecord, PayRecordDTO> imple
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
-    @Override
-    public Long countPayRecord(PayRecordDTO payRecordDTO) throws SerException {
-        Long count = super.count(payRecordDTO);
-        return count;
-    }
 
-    @Override
-    public PayRecordBO getOne(String id) throws SerException {
-        if(StringUtils.isBlank(id)){
-            throw new SerException("id不能为空");
-        }
-        PayRecord payRecord = super.findById(id);
-        return BeanTransform.copyProperties(payRecord,PayRecordBO.class);
-    }
-
-    @Override
-    public List<PayRecordBO> findListPayRecord(PayRecordDTO payRecordDTO) throws SerException {
-        checkSeeIdentity();
-        payRecordDTO.getSorts().add("createTime=desc");
-        List<PayRecord> payRecords = super.findByPage(payRecordDTO);
-        List<PayRecordBO> payRecordBOS = BeanTransform.copyProperties(payRecords,PayRecordBO.class);
-        return payRecordBOS;
-    }
-    @Transactional(rollbackFor = SerException.class)
-    @Override
-    public void removePayRecord(String id) throws SerException {
-        checkAddIdentity();
-        if(StringUtils.isBlank(id)){
-            throw new SerException("id不能为空");
-        }
-        super.remove(id);
-    }
     @Override
     public List<AreaCollectBO> collectArea(String[] areas) throws SerException {
         if(areas == null || areas.length <= 0){
@@ -224,7 +196,7 @@ public class PayRecordSerImpl extends ServiceImpl<PayRecord, PayRecordDTO> imple
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT  area,CONCAT(DATE_FORMAT(payTime,'%Y-%m-%d %H:%i:%s'),'') AS payTime,sum(rent) AS rent,sum(water) AS water, ");
         sb.append(" sum(energy) AS energy,sum(fee) AS fee,sum(otherFee) AS otherFee, ");
-        sb.append(" sum(rent+water+energy+fee+otherFee) AS total FROM housepay_payrecord a ");
+        sb.append(" sum(rent+water+energy+fee+otherFee) AS total FROM housepay_waitpay a ");
         sb.append(" WHERE area IN (");
         sb.append(areasStr);
         sb.append(")GROUP BY payTime,area ORDER BY area ");
@@ -237,9 +209,9 @@ public class PayRecordSerImpl extends ServiceImpl<PayRecord, PayRecordDTO> imple
     @Override
     public List<String> getAreas() throws SerException {
         String [] fields = new String[]{"area"};
-        List<PayRecordBO> payRecordBOS = super.findBySql("select distinct area from housepay_payrecord group by area order by area asc ",PayRecordBO.class,fields);
+        List<WaitPayBO> waitPayBOS = super.findBySql("select distinct area from housepay_waitpay group by area order by area asc ",WaitPayBO.class,fields);
 
-        List<String> areasList = payRecordBOS.stream().map(PayRecordBO::getArea)
+        List<String> areasList = waitPayBOS.stream().map(WaitPayBO::getArea)
                 .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
 
 
@@ -258,7 +230,7 @@ public class PayRecordSerImpl extends ServiceImpl<PayRecord, PayRecordDTO> imple
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT project,CONCAT(DATE_FORMAT(payTime,'%Y-%m-%d %H:%i:%s'),'') AS payTime,sum(rent) AS rent,sum(water) AS water, ");
         sb.append(" sum(energy) AS energy,sum(fee) AS fee,sum(otherFee) AS otherFee, ");
-        sb.append(" sum(rent+water+energy+fee+otherFee) AS total FROM housepay_payrecord a ");
+        sb.append(" sum(rent+water+energy+fee+otherFee) AS total FROM housepay_waitpay a ");
         sb.append(" WHERE project IN ( ");
         sb.append(projectsStr);
         sb.append(" )GROUP BY payTime,project ORDER BY project ");
@@ -272,9 +244,9 @@ public class PayRecordSerImpl extends ServiceImpl<PayRecord, PayRecordDTO> imple
     @Override
     public List<String> getProject() throws SerException {
         String[] fields = new String[]{"project"};
-        List<PayRecordBO> payRecordBOS = super.findBySql("select distinct project from housepay_payrecord group by project order by project asc ", PayRecordBO.class, fields);
+        List<WaitPayBO> waitPayBOS = super.findBySql("select distinct project from housepay_waitpay group by project order by project asc ", WaitPayBO.class, fields);
 
-        List<String> projectsList = payRecordBOS.stream().map(PayRecordBO::getProject)
+        List<String> projectsList = waitPayBOS.stream().map(WaitPayBO::getProject)
                 .filter(project -> (project != null || !"".equals(project.trim()))).distinct().collect(Collectors.toList());
 
 

@@ -4,7 +4,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.housepay.bo.AreaCollectBO;
 import com.bjike.goddess.housepay.bo.PayRecordBO;
 import com.bjike.goddess.housepay.bo.ProjectCollectBO;
+import com.bjike.goddess.housepay.bo.WaitPayBO;
 import com.bjike.goddess.housepay.dto.PayRecordDTO;
+import com.bjike.goddess.housepay.dto.WaitPayDTO;
 import com.bjike.goddess.housepay.to.GuidePermissionTO;
 
 import java.util.List;
@@ -33,41 +35,6 @@ public interface PayRecordAPI {
     }
 
     /**
-     * 已付款记录列表总条数
-     */
-    default Long countPayRecord(PayRecordDTO payRecordDTO) throws SerException {
-        return null;
-    }
-
-    /**
-     * 一个已付款记录
-     *
-     * @return class PayRecordBO
-     */
-    default PayRecordBO getOne(String id) throws SerException {
-        return null;
-    }
-
-    /**
-     * 已付款记录
-     *
-     * @param payRecordDTO 已付款记录dto
-     * @return class PayRecordBO
-     * @throws SerException
-     */
-    default List<PayRecordBO> findListPayRecord(PayRecordDTO payRecordDTO) throws SerException {
-        return null;
-    }
-    /**
-     * 根据id删除已付款记录
-     *
-     * @param id
-     * @throws SerException
-     */
-    default void removePayRecord(String id) throws SerException {
-
-    }
-    /**
      * 汇总
      *
      * @param areas areas
@@ -86,6 +53,7 @@ public interface PayRecordAPI {
     default List<String> getAreas() throws SerException {
         return null;
     }
+
     /**
      * 汇总
      *
