@@ -73,8 +73,8 @@ public class WaitPayApiImpl implements WaitPayAPI {
         waitPaySer.removeWaitPay(id);
     }
     @Override
-    public PayRecordBO payment(WaitPayTO waitPayTO) throws SerException {
-        return waitPaySer.payment(waitPayTO);
+    public void payment(String id) throws SerException {
+         waitPaySer.payment(id);
     }
 
 }
