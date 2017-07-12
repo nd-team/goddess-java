@@ -3,9 +3,7 @@ package com.bjike.goddess.staffmeeting.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 
 /**
@@ -22,10 +20,11 @@ import javax.persistence.Table;
 public class FeedbackComplain extends BaseEntity {
 
     /**
-     * 会议编号
+     * 会议纪要
      */
-    @Column(name = "meetingNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '公司'")
-    private String meetingNum;
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "meetingSummary_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '会议纪要'")
+    private MeetingSummary meetingSummary;
 
     /**
      * 异议人
@@ -52,12 +51,12 @@ public class FeedbackComplain extends BaseEntity {
     private Status status;
 
 
-    public String getMeetingNum() {
-        return meetingNum;
+    public MeetingSummary getMeetingSummary() {
+        return meetingSummary;
     }
 
-    public void setMeetingNum(String meetingNum) {
-        this.meetingNum = meetingNum;
+    public void setMeetingSummary(MeetingSummary meetingSummary) {
+        this.meetingSummary = meetingSummary;
     }
 
     public String getDissentUser() {

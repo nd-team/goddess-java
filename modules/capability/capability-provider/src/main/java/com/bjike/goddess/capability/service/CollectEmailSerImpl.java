@@ -431,39 +431,46 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                     temp_sendNum = sendNum * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
+                        str.setLastSendTime(lastTime.plusMinutes( sendNum.longValue() ));
                     }
                     break;
                 case HOURS:
                     temp_sendNum = sendNum * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
+                        str.setLastSendTime(lastTime.plusHours( sendNum.longValue() ));
                     }
                     break;
                 case DAY:
                     temp_sendNum = sendNum * 24 * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
+                        str.setLastSendTime(lastTime.plusDays( sendNum.longValue() ));
                     }
                     break;
                 case WEEK:
                     temp_sendNum = sendNum * 7 * 24 * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
+                        str.setLastSendTime(lastTime.plusWeeks( sendNum.longValue() ));
                     }
                     break;
                 case MONTH:
                     if (nowTime.minusMonths(sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
+                        str.setLastSendTime(lastTime.plusMonths( sendNum.longValue() ));
                     }
                     break;
                 case QUARTER:
                     if (nowTime.minusMonths(3*sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(3*sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
+                        str.setLastSendTime(lastTime.plusMonths( 3* sendNum.longValue() ));
                     }
                     break;
                 case YEAR:
                     if (nowTime.minusYears(sendNum.longValue()).isEqual(lastTime) || nowTime.minusYears(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
+                        str.setLastSendTime(lastTime.plusYears( sendNum.longValue() ));
                     }
                     break;
             }
@@ -681,7 +688,6 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                 messageTO.setReceivers(collectEmail.getSendObject().split(";") );
                 messageAPI.send(  messageTO );
 
-                collectEmail.setLastSendTime(LocalDateTime.now());
                 collectEmail.setModifyTime(LocalDateTime.now());
                 allEmails.add(collectEmail);
             }
@@ -707,7 +713,6 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                 messageTO.setReceivers(baseinfo.getSendObject().split(";") );
                 messageAPI.send(  messageTO );
 
-                baseinfo.setLastSendTime(LocalDateTime.now());
                 baseinfo.setModifyTime(LocalDateTime.now());
                 allEmails.add(baseinfo);
             }
@@ -732,7 +737,6 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                 messageTO.setReceivers(dispa.getSendObject().split(";") );
                 messageAPI.send(  messageTO );
 
-                dispa.setLastSendTime(LocalDateTime.now());
                 dispa.setModifyTime(LocalDateTime.now());
                 allEmails.add(dispa);
             }

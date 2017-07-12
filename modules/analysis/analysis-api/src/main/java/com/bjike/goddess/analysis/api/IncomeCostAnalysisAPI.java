@@ -1,10 +1,11 @@
 package com.bjike.goddess.analysis.api;
 
-import com.bjike.goddess.analysis.bo.CollectAreaBO;
-import com.bjike.goddess.analysis.bo.CollectDepartmentBO;
-import com.bjike.goddess.analysis.bo.CollectMonthBO;
+import com.bjike.goddess.analysis.bo.CollectBO;
 import com.bjike.goddess.analysis.bo.IncomeCostAnalysisBO;
 import com.bjike.goddess.analysis.dto.IncomeCostAnalysisDTO;
+import com.bjike.goddess.analysis.excel.SonPermissionObject;
+import com.bjike.goddess.analysis.to.CollectTO;
+import com.bjike.goddess.analysis.to.GuidePermissionTO;
 import com.bjike.goddess.analysis.to.IncomeCostAnalysisTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -20,6 +21,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface IncomeCostAnalysisAPI {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 收入成本分析列表总条数
@@ -27,6 +41,7 @@ public interface IncomeCostAnalysisAPI {
     default Long countIncomeCostAnalysis(IncomeCostAnalysisDTO incomeCostAnalysisDTO) throws SerException {
         return null;
     }
+
     /**
      * 一个收入成本分析
      *
@@ -79,13 +94,13 @@ public interface IncomeCostAnalysisAPI {
 
     }
     /**
-     * 汇总地区
+     * 汇总
      *
-     * @param areas areas
-     * @return class CollectAreaBO
+     * @param to 汇总条件to
+     * @return class CollectBO
      * @throws SerException
      */
-    default List<CollectAreaBO> collectArea(String[] areas) throws SerException {
+    default List<CollectBO> collect(CollectTO to) throws SerException {
         return null;
     }
 
@@ -97,36 +112,7 @@ public interface IncomeCostAnalysisAPI {
     default List<String> getArea() throws SerException {
         return null;
     }
-    /**
-     * 汇总月份
-     *
-     * @param months months
-     * @return class CollectMonthBO
-     * @throws SerException
-     */
-    default List<CollectMonthBO> collectMonth(String[] months) throws SerException {
-        return null;
-    }
 
-    /**
-     * 获取月份
-     *
-     * @return class String
-     */
-    default List<String> getMonth() throws SerException {
-        return null;
-    }
-
-    /**
-     * 汇总部门
-     *
-     * @param departments departments
-     * @return class CollectDepartmentBO
-     * @throws SerException
-     */
-    default List<CollectDepartmentBO> collectDepartment(String[] departments) throws SerException {
-        return null;
-    }
 
     /**
      * 获取部门

@@ -1,7 +1,5 @@
 package com.bjike.goddess.moneyside.to;
 
-import com.bjike.goddess.common.api.entity.ADD;
-import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.moneyside.enums.PassStatus;
 import org.hibernate.validator.constraints.NotBlank;
@@ -18,41 +16,46 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class FundEntryTO extends BaseTO {
+    public interface TestAdd {
+    }
+
+    public interface TestEdit {
+    }
 
     /**
      * 投资人
      */
-    @NotBlank(message = "投资人不能为空",groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "投资人不能为空", groups = {FundEntryTO.TestAdd.class, FundEntryTO.TestEdit.class})
     private String investor;
 
     /**
      * 资金进入方式
      */
-    @NotBlank(message = "资金进入方式不能为空",groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "资金进入方式不能为空", groups = {FundEntryTO.TestAdd.class, FundEntryTO.TestEdit.class})
     private String accessToFund;
 
     /**
      * 资金进入时间
      */
-    @NotBlank(message = "资金进入时间不能为空",groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "资金进入时间不能为空", groups = {FundEntryTO.TestAdd.class, FundEntryTO.TestEdit.class})
     private String fundEntryTime;
 
     /**
      * 金额
      */
-    @NotNull(message = "金额不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "金额不能为空", groups = {FundEntryTO.TestAdd.class, FundEntryTO.TestEdit.class})
     private Double money;
 
     /**
      * 打款账户名
      */
-    @NotBlank(message = "打款账户名不能为空",groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "打款账户名不能为空", groups = {FundEntryTO.TestAdd.class, FundEntryTO.TestEdit.class})
     private String moneyAccountName;
 
     /**
      * 打款账号
      */
-    @NotBlank(message = "打款账号不能为空",groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "打款账号不能为空", groups = {FundEntryTO.TestAdd.class, FundEntryTO.TestEdit.class})
     private String moneyAccount;
 
     /**

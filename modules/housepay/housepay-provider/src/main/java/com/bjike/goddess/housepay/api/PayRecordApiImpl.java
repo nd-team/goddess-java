@@ -38,24 +38,6 @@ public class PayRecordApiImpl implements PayRecordAPI {
         return payRecordSer.guidePermission(guidePermissionTO);
     }
     @Override
-    public Long countPayRecord(PayRecordDTO payRecordDTO) throws SerException {
-        return payRecordSer.countPayRecord(payRecordDTO);
-    }
-
-    @Override
-    public PayRecordBO getOne(String id) throws SerException {
-        return payRecordSer.getOne(id);
-    }
-
-    @Override
-    public List<PayRecordBO> findListPayRecord(PayRecordDTO payRecordDTO) throws SerException {
-        return payRecordSer.findListPayRecord(payRecordDTO);
-    }
-    @Override
-    public void removePayRecord(String id) throws SerException {
-        payRecordSer.removePayRecord(id);
-    }
-    @Override
     public List<AreaCollectBO> collectArea(String[] areas) throws SerException {
         return payRecordSer.collectArea(areas);
     }

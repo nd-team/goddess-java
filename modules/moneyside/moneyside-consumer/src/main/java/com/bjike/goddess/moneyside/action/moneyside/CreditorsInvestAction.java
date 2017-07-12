@@ -159,23 +159,22 @@ public class CreditorsInvestAction extends BaseFileAction {
     /**
      * 上传附件
      *
-     * @des 招标信息
+     * @des 债权投资
      * @version v1
      */
-    @LoginAuth
     @PostMapping("v1/uploadFile/{id}")
     public Result uploadFile(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            //跟前端约定好 ，文件路径是列表id
-            // /id/....
-            String paths = "/moneyside/creditorsinvest/" + id;
-            List<InputStream> inputStreams = getInputStreams(request, paths);
+            String paths = "/" + id;
+            List<InputStream> inputStreams = super.getInputStreams(request, paths);
             fileAPI.upload(inputStreams);
-            return new ActResult("upload success");
+            return new ActResult("upload success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
+
     }
+
 
     /**
      * 文件附件列表
@@ -189,7 +188,7 @@ public class CreditorsInvestAction extends BaseFileAction {
         try {
             //跟前端约定好 ，文件路径是列表id
             // /moneyside/id/....
-            String path = "/moneyside/creditorsinvest/" + id;
+            String path = "/" + id;
             FileInfo fileInfo = new FileInfo();
             fileInfo.setPath(path);
             Object storageToken = request.getAttribute("storageToken");

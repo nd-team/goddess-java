@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contacts.bo.InternalContactsBO;
 import com.bjike.goddess.contacts.dto.InternalContactsDTO;
 import com.bjike.goddess.contacts.service.InternalContactsSer;
+import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.contacts.to.InternalContactsTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,5 +69,26 @@ public class InternalContactsApiImpl implements InternalContactsAPI {
     @Override
     public Long getTotal() throws SerException {
         return internalContactsSer.getTotal();
+    }
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return internalContactsSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return internalContactsSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public InternalContactsBO importExcel(List<InternalContactsTO> tocs) throws SerException {
+        return internalContactsSer.importExcel(tocs);
+    }
+
+    @Override
+    public void checkDimissionInfo() throws SerException {
+        internalContactsSer.checkDimissionInfo();
     }
 }

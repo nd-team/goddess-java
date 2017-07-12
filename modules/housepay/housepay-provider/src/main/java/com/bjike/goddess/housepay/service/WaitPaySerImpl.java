@@ -237,6 +237,8 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
 
     @Override
     public List<WaitPayBO> findListWaitPay(WaitPayDTO waitPayDTO) throws SerException {
+        checkSeeIdentity();
+        waitPayDTO.getSorts().add("createTime=desc");
         List<WaitPay> waitPays = super.findByPage(waitPayDTO);
         List<WaitPayBO> waitPayBOS = BeanTransform.copyProperties(waitPays, WaitPayBO.class);
         return waitPayBOS;
@@ -245,10 +247,12 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public WaitPayBO insertWaitPay(WaitPayTO waitPayTO) throws SerException {
+        checkAddIdentity();
         WaitPay waitPay = BeanTransform.copyProperties(waitPayTO, WaitPay.class, true);
-        if (PayStatus.IS.equals(waitPay.getPay())) {
-            throw new SerException("添加失败，未做付款操作都是否");
-        }
+//        if (PayStatus.IS.equals(waitPay.getPay())) {
+//            throw new SerException("添加失败，未做付款操作都是否");
+//        }
+        waitPay.setPay(PayStatus.NO);
         waitPay.setCreateTime(LocalDateTime.now());
         Double total = waitPay.getRent() + waitPay.getWater() + waitPay.getEnergy() + waitPay.getOtherFee();
         waitPay.setTotal(total);
@@ -259,9 +263,11 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public WaitPayBO editWaitPay(WaitPayTO waitPayTO) throws SerException {
+        checkAddIdentity();
         WaitPay waitPay = super.findById(waitPayTO.getId());
         BeanTransform.copyProperties(waitPayTO, waitPay, true);
         waitPay.setModifyTime(LocalDateTime.now());
+        waitPay.setPay(PayStatus.NO);
         super.update(waitPay);
         return BeanTransform.copyProperties(waitPay, WaitPayBO.class);
     }
@@ -269,21 +275,38 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeWaitPay(String id) throws SerException {
+        checkAddIdentity();
         super.remove(id);
     }
 
+//    @Override
+//    public PayRecordBO payment(WaitPayTO waitPayTO) throws SerException {
+//        WaitPay waitPay = super.findById(waitPayTO.getId());
+//        BeanTransform.copyProperties(waitPayTO, waitPay, true);
+//        if (PayStatus.NO.equals(waitPay.getPay())) {
+//            waitPay.setPay(PayStatus.IS);
+//            super.update(waitPay);
+//        }
+//
+//        PayRecord payRecord = new PayRecord();
+//        BeanUtils.copyProperties(waitPay,payRecord);
+//        payRecordSer.save(payRecord);
+//        return BeanTransform.copyProperties(payRecord, PayRecordBO.class);
+//    }
     @Override
-    public PayRecordBO payment(WaitPayTO waitPayTO) throws SerException {
-        WaitPay waitPay = super.findById(waitPayTO.getId());
-        BeanTransform.copyProperties(waitPayTO, waitPay, true);
-        if (PayStatus.NO.equals(waitPay.getPay())) {
-            waitPay.setPay(PayStatus.IS);
-            super.update(waitPay);
-        }
-
-        PayRecord payRecord = new PayRecord();
-        BeanUtils.copyProperties(waitPay,payRecord);
-        payRecordSer.save(payRecord);
-        return BeanTransform.copyProperties(payRecord, PayRecordBO.class);
+    public void payment(String id) throws SerException {
+        WaitPay model = auditId(id);
+        model.setPay(PayStatus.IS);
+        super.update(model);
     }
+    //检查id是否非法数据
+    public WaitPay auditId(String id) throws SerException {
+        WaitPay model = super.findById(id);
+        if (model != null) {
+            return model;
+        } else {
+            throw new SerException("对象不存在!");
+        }
+    }
+
 }

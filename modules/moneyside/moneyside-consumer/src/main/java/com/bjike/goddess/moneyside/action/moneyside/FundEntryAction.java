@@ -1,7 +1,5 @@
 package com.bjike.goddess.moneyside.action.moneyside;
 
-import com.bjike.goddess.common.api.entity.ADD;
-import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -101,10 +99,10 @@ public class FundEntryAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class) FundEntryTO fundEntryTO, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(FundEntryTO.TestAdd.class) FundEntryTO fundEntryTO, BindingResult bindingResult) throws ActException {
         try {
             FundEntryBO fundEntryBO = fundEntryAPI.insertFundEntry(fundEntryTO);
-            return ActResult.initialize(fundEntryBO);
+            return ActResult.initialize(BeanTransform.copyProperties(fundEntryBO, FundEntryVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -120,10 +118,10 @@ public class FundEntryAction {
      */
     @LoginAuth
     @PostMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class) FundEntryTO fundEntryTO, BindingResult bindingResult) throws ActException {
+    public Result edit(@Validated(FundEntryTO.TestEdit.class) FundEntryTO fundEntryTO, BindingResult bindingResult) throws ActException {
         try {
             FundEntryBO fundEntryBO = fundEntryAPI.editFundEntry(fundEntryTO);
-            return ActResult.initialize(fundEntryBO);
+            return ActResult.initialize(BeanTransform.copyProperties(fundEntryBO, FundEntryVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -146,6 +144,7 @@ public class FundEntryAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取投资人
      *
@@ -174,11 +173,12 @@ public class FundEntryAction {
     public Result audit(@Validated FundEntryTO fundEntryTO, BindingResult bindingResult) throws ActException {
         try {
             FundEntryBO fundEntryBO = fundEntryAPI.audit(fundEntryTO);
-            return ActResult.initialize(fundEntryBO);
+            return ActResult.initialize(BeanTransform.copyProperties(fundEntryBO,FundEntryVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 申请人汇总
      *
@@ -196,6 +196,7 @@ public class FundEntryAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 资金进入方式汇总
      *
@@ -213,6 +214,7 @@ public class FundEntryAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 资金进入时间汇总
      *

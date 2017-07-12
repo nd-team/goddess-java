@@ -17,6 +17,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -44,6 +45,7 @@ public class MeetingDiscussionSerImpl extends ServiceImpl<MeetingDiscussion, Mee
 
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public MeetingDiscussionBO addFrist(FirstDiscussionTO to) throws SerException {
         //校验用户是否未参会人员
         UserBO userBO = userAPI.currentUser();
@@ -71,6 +73,7 @@ public class MeetingDiscussionSerImpl extends ServiceImpl<MeetingDiscussion, Mee
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public MeetingDiscussionBO addSecond(SecondDiscussionTO to) throws SerException {
 
         MeetingDiscussion model = super.findById(to.getId());
@@ -90,6 +93,7 @@ public class MeetingDiscussionSerImpl extends ServiceImpl<MeetingDiscussion, Mee
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public MeetingDiscussionBO addFirstByCon(MeetingDiscussionTO to) throws SerException {
         //校验用户是否未参会人员
         UserBO userBO = userAPI.currentUser();

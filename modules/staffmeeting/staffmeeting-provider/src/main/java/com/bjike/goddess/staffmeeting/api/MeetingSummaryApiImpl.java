@@ -49,4 +49,9 @@ public class MeetingSummaryApiImpl implements MeetingSummaryAPI {
     public List<MeetingSummaryBO> pageList(MeetingSummaryDTO dto) throws SerException {
         return meetingSummarySer.pageList(dto);
     }
+
+    @Override
+    public void unfreeze(String id) throws SerException {
+        meetingSummarySer.unFreeze(id);
+    }
 }

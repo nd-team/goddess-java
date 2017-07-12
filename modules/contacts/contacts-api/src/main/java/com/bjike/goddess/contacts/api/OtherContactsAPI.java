@@ -3,6 +3,7 @@ package com.bjike.goddess.contacts.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contacts.bo.OtherContactsBO;
 import com.bjike.goddess.contacts.dto.OtherContactsDTO;
+import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.contacts.to.OtherContactsTO;
 
 import java.util.List;
@@ -83,4 +84,19 @@ public interface OtherContactsAPI {
     default Long getTotal() throws SerException {
         return null;
     }
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    OtherContactsBO importExcel(List<OtherContactsTO> tocs) throws SerException;
 }

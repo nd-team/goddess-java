@@ -1,11 +1,12 @@
 package com.bjike.goddess.analysis.api;
 
-import com.bjike.goddess.analysis.bo.CollectAreaBO;
-import com.bjike.goddess.analysis.bo.CollectDepartmentBO;
-import com.bjike.goddess.analysis.bo.CollectMonthBO;
+import com.bjike.goddess.analysis.bo.CollectBO;
 import com.bjike.goddess.analysis.bo.IncomeCostAnalysisBO;
 import com.bjike.goddess.analysis.dto.IncomeCostAnalysisDTO;
+import com.bjike.goddess.analysis.excel.SonPermissionObject;
 import com.bjike.goddess.analysis.service.IncomeCostAnalysisSer;
+import com.bjike.goddess.analysis.to.CollectTO;
+import com.bjike.goddess.analysis.to.GuidePermissionTO;
 import com.bjike.goddess.analysis.to.IncomeCostAnalysisTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,15 @@ import java.util.List;
 public class IncomeCostAnalysisApiImpl implements IncomeCostAnalysisAPI {
     @Autowired
     private IncomeCostAnalysisSer incomeCostAnalysisSer;
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return incomeCostAnalysisSer.sonPermission();
+    }
 
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return incomeCostAnalysisSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countIncomeCostAnalysis(IncomeCostAnalysisDTO incomeCostAnalysisDTO) throws SerException {
         return incomeCostAnalysisSer.countIncomeCostAnalysis(incomeCostAnalysisDTO);
@@ -58,28 +67,13 @@ public class IncomeCostAnalysisApiImpl implements IncomeCostAnalysisAPI {
     }
 
     @Override
-    public List<CollectAreaBO> collectArea(String[] areas) throws SerException {
-        return incomeCostAnalysisSer.collectArea(areas);
-    }
-
-    @Override
-    public List<CollectMonthBO> collectMonth(String[] months) throws SerException {
-        return incomeCostAnalysisSer.collectMonth(months);
-    }
-
-    @Override
-    public List<CollectDepartmentBO> collectDepartment(String[] departments) throws SerException {
-        return incomeCostAnalysisSer.collectDepartment(departments);
+    public List<CollectBO> collect(CollectTO to) throws SerException {
+        return incomeCostAnalysisSer.collect(to);
     }
 
     @Override
     public List<String> getArea() throws SerException {
         return incomeCostAnalysisSer.getArea();
-    }
-
-    @Override
-    public List<String> getMonth() throws SerException {
-        return incomeCostAnalysisSer.getMonth();
     }
 
     @Override

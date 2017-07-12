@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 
 /**
@@ -21,17 +22,10 @@ import javax.persistence.Table;
 public class IncomeCostAnalysis extends BaseEntity{
 
     /**
-     * 年份
+     * 时间
      */
-    @Column(nullable = false, columnDefinition = "INT(5)   COMMENT '年份'")
-    private Integer year;
-
-    /**
-     * 月份
-     */
-    @Column(name = "month", columnDefinition = "VARCHAR(255)   COMMENT '月份'")
-    //@Column( nullable = false, columnDefinition = "INT(5)   COMMENT '月份'")
-    private String month;
+    @Column(name = "date", columnDefinition = "DATE   COMMENT '验收交维时间'")
+    private LocalDate date;
 
     /**
      * 地区
@@ -130,20 +124,12 @@ public class IncomeCostAnalysis extends BaseEntity{
     private Double balance;
 
 
-    public Integer getYear() {
-        return year;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setYear(Integer year) {
-        this.year = year;
-    }
-
-    public String getMonth() {
-        return month;
-    }
-
-    public void setMonth(String month) {
-        this.month = month;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public String getArea() {

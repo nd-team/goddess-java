@@ -37,8 +37,8 @@ public class FundEntryWrongRecord extends BaseEntity {
     /**
      * 资金进入时间
      */
-    @Column(name = "fundEntryAime", nullable = false, columnDefinition = "DATE   COMMENT '资金进入时间'")
-    private LocalDate fundEntryAime;
+    @Column(name = "fundEntryTime", nullable = false, columnDefinition = "DATE   COMMENT '资金进入时间'")
+    private LocalDate fundEntryTime;
 
     /**
      * 金额
@@ -92,12 +92,12 @@ public class FundEntryWrongRecord extends BaseEntity {
         this.accessToFund = accessToFund;
     }
 
-    public LocalDate getFundEntryAime() {
-        return fundEntryAime;
+    public LocalDate getFundEntryTime() {
+        return fundEntryTime;
     }
 
-    public void setFundEntryAime(LocalDate fundEntryAime) {
-        this.fundEntryAime = fundEntryAime;
+    public void setFundEntryTime(LocalDate fundEntryTime) {
+        this.fundEntryTime = fundEntryTime;
     }
 
     public Double getMoney() {

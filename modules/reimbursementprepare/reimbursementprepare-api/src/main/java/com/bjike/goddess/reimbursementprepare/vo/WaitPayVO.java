@@ -20,12 +20,12 @@ public class WaitPayVO {
     /**
      * 时间
      */
-    private String time;
+    private String lendDate;
 
     /**
      * 科目
      */
-    private String subject;
+    private String firstSubject;
 
     /**
      * 项目组
@@ -35,12 +35,12 @@ public class WaitPayVO {
     /**
      * 支付金额
      */
-    private Double money;
+    private Double lendMoney;
 
     /**
      * 是否付款
      */
-    private Boolean pay;
+    private String payCondition;
 
     /**
      * 付款时间
@@ -57,12 +57,22 @@ public class WaitPayVO {
      */
     private PayStatus payStatus;
 
-    public PayStatus getPayStatus() {
-        return payStatus;
+    /**
+     * 地区
+     */
+    private String area;
+
+    /**
+     * 识别类型
+     */
+    private String type;
+
+    public String getType() {
+        return type;
     }
 
-    public void setPayStatus(PayStatus payStatus) {
-        this.payStatus = payStatus;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getId() {
@@ -73,20 +83,20 @@ public class WaitPayVO {
         this.id = id;
     }
 
-    public String getTime() {
-        return time;
+    public String getLendDate() {
+        return lendDate;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setLendDate(String lendDate) {
+        this.lendDate = lendDate;
     }
 
-    public String getSubject() {
-        return subject;
+    public String getFirstSubject() {
+        return firstSubject;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
+    public void setFirstSubject(String firstSubject) {
+        this.firstSubject = firstSubject;
     }
 
     public String getProjectGroup() {
@@ -97,20 +107,20 @@ public class WaitPayVO {
         this.projectGroup = projectGroup;
     }
 
-    public Double getMoney() {
-        return money;
+    public Double getLendMoney() {
+        return lendMoney;
     }
 
-    public void setMoney(Double money) {
-        this.money = money;
+    public void setLendMoney(Double lendMoney) {
+        this.lendMoney = lendMoney;
     }
 
-    public Boolean getPay() {
-        return pay;
+    public String getPayCondition() {
+        return payCondition;
     }
 
-    public void setPay(Boolean pay) {
-        this.pay = pay;
+    public void setPayCondition(String payCondition) {
+        this.payCondition = payCondition;
     }
 
     public String getPayDate() {
@@ -127,5 +137,21 @@ public class WaitPayVO {
 
     public void setPayer(String payer) {
         this.payer = payer;
+    }
+
+    public PayStatus getPayStatus() {
+        return payStatus;
+    }
+
+    public void setPayStatus(PayStatus payStatus) {
+        this.payStatus = payStatus;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
     }
 }

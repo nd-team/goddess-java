@@ -211,6 +211,9 @@ public class PayTaxSerImpl extends ServiceImpl<PayTax, PayTaxDTO> implements Pay
 
     @Override
     public Long countPayTax(PayTaxDTO payTaxDTO) throws SerException {
+        if( StringUtils.isNotBlank(payTaxDTO.getCompany())){
+            payTaxDTO.getConditions().add(Restrict.eq("company",payTaxDTO.getCompany()));
+        }
         Long count = super.count(payTaxDTO);
         return count;
     }
@@ -218,6 +221,9 @@ public class PayTaxSerImpl extends ServiceImpl<PayTax, PayTaxDTO> implements Pay
     @Override
     public List<PayTaxBO> listPayTax(PayTaxDTO payTaxDTO) throws SerException {
         checkSeeIdentity();
+        if( StringUtils.isNotBlank(payTaxDTO.getCompany())){
+            payTaxDTO.getConditions().add(Restrict.eq("company",payTaxDTO.getCompany()));
+        }
         payTaxDTO.getSorts().add("createTime=desc");
         List<PayTax> list = super.findByCis(payTaxDTO,true);
 

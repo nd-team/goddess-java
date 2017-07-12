@@ -35,42 +35,6 @@ public interface PayRecordSer extends Ser<PayRecord, PayRecordDTO> {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
-
-    /**
-     * 已付款记录列表总条数
-     */
-    default Long countPayRecord(PayRecordDTO payRecordDTO) throws SerException {
-        return null;
-    }
-
-    /**
-     * 一个已付款记录
-     *
-     * @return class PayRecordBO
-     */
-    default PayRecordBO getOne(String id) throws SerException {
-        return null;
-    }
-
-    /**
-     * 已付款记录
-     *
-     * @param payRecordDTO 已付款记录dto
-     * @return class PayRecordBO
-     * @throws SerException
-     */
-    default List<PayRecordBO> findListPayRecord(PayRecordDTO payRecordDTO) throws SerException {
-        return null;
-    }
-    /**
-     * 根据id删除已付款记录
-     *
-     * @param id
-     * @throws SerException
-     */
-    default void removePayRecord(String id) throws SerException {
-
-    }
     /**
      * 汇总
      *

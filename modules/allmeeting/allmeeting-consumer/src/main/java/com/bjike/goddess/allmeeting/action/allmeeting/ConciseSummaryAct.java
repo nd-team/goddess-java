@@ -173,7 +173,7 @@ public class ConciseSummaryAct {
 
 
     /**
-     * 交流讨论发言
+     * 交流讨论编辑
      *
      * @param to 会议讨论意见
      * @return class MeetingDiscussionVO
@@ -210,7 +210,7 @@ public class ConciseSummaryAct {
 
 
     /**
-     * 意见详情列表
+     * 交流讨论列表
      *
      * @param summaryId 会议讨论意见id
      * @return class MeetingDiscussionVO

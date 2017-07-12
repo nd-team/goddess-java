@@ -2,7 +2,9 @@ package com.bjike.goddess.bankrecords.service;
 
 import com.bjike.goddess.bankrecords.bo.BankAccountInfoBO;
 import com.bjike.goddess.bankrecords.dto.BankAccountInfoDTO;
+import com.bjike.goddess.bankrecords.dto.BankRecordDTO;
 import com.bjike.goddess.bankrecords.entity.BankAccountInfo;
+import com.bjike.goddess.bankrecords.entity.BankRecord;
 import com.bjike.goddess.bankrecords.enums.GuideAddrStatus;
 import com.bjike.goddess.bankrecords.to.BankAccountInfoTO;
 import com.bjike.goddess.bankrecords.to.GuidePermissionTO;
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -191,6 +194,23 @@ public class BankAccountInfoSerImpl extends ServiceImpl<BankAccountInfo, BankAcc
                 break;
         }
         return flag;
+    }
+
+    @Override
+    public void delete(String id) throws SerException {
+        BankAccountInfo model = super.findById(id);
+        if (model != null) {
+            BankRecordDTO bankRecordDTO = new BankRecordDTO();
+            bankRecordDTO.getConditions().add(Restrict.eq("accountId",id));
+            List<BankRecord> bankRecordList = bankRecordSer.findByCis(bankRecordDTO);
+            if(CollectionUtils.isEmpty(bankRecordList)){
+                super.remove(id);
+            }else{
+                throw new SerException("该账户信息存在银行流水关联，请检查数据!");
+            }
+        } else {
+            throw new SerException("非法Id,账户信息对象不能为空!");
+        }
     }
 
     /**

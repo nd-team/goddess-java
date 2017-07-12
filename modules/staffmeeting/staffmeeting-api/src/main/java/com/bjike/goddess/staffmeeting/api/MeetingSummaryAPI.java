@@ -57,4 +57,6 @@ public interface MeetingSummaryAPI {
      * @return 分页结果集
      */
     List<MeetingSummaryBO> pageList(MeetingSummaryDTO dto) throws SerException;
+
+    void unfreeze(String id) throws SerException;
 }

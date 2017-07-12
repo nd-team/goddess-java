@@ -97,6 +97,11 @@ public class ExternalContactsTO extends BaseTO {
      */
     private String remark;
 
+    /**
+     * 是否发送邮件
+     */
+    private boolean isSend;
+
 
     public String getArea() {
         return area;
@@ -216,5 +221,13 @@ public class ExternalContactsTO extends BaseTO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public boolean isSend() {
+        return isSend;
+    }
+
+    public void setSend(boolean send) {
+        isSend = send;
     }
 }

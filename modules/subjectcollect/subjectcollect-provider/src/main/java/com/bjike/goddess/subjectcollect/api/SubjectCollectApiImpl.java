@@ -56,6 +56,10 @@ public class SubjectCollectApiImpl implements SubjectCollectAPI {
     public SubjectCollectBO getOne(String id) throws SerException {
         return subjectCollectSer.getOne(id);
     }
+    @Override
+    public List<String> getArea() throws SerException {
+        return subjectCollectSer.getArea();
+    }
 
     @Override
     public List<SubjectCollectBO> findListSubjectCollect(SubjectCollectDTO subjectCollectDTO) throws SerException {

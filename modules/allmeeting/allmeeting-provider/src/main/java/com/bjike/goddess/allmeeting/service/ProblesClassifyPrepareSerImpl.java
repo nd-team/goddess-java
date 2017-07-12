@@ -65,11 +65,15 @@ public class ProblesClassifyPrepareSerImpl extends ServiceImpl<ProblesClassifyPr
     public void freeze(String id) throws SerException {
         ProblesClassifyPrepare model = super.findById(id);
         if (model != null) {
-            model.setModifyTime(LocalDateTime.now());
-            model.setStatus(Status.CONGEAL);
-            super.update(model);
+            if (model.getStatus() != Status.CONGEAL) {
+                model.setModifyTime(LocalDateTime.now());
+                model.setStatus(Status.CONGEAL);
+                super.update(model);
+            } else {
+                throw new SerException("该记录无需重复冻结");
+            }
         } else {
-            throw new SerException("非法Id，更新对象不能为空");
+            throw new SerException("非法Id，冻结对象不能为空");
         }
     }
 
@@ -77,7 +81,23 @@ public class ProblesClassifyPrepareSerImpl extends ServiceImpl<ProblesClassifyPr
     @Transactional(rollbackFor = SerException.class)
     public List<ProblesClassifyPrepareBO> pageList(ProblesClassifyPrepareDTO dto) throws SerException {
         dto.getSorts().add("createTime=desc");
-        dto.getConditions().add(Restrict.eq("status", Status.THAW));
+        dto.getConditions().add(Restrict.eq("status", dto.getStatus()));
         return BeanTransform.copyProperties(super.findByPage(dto), ProblesClassifyPrepareBO.class);
+    }
+
+    @Override
+    public void unfreeze(String id) throws SerException {
+        ProblesClassifyPrepare model = super.findById(id);
+        if (model != null) {
+            if (model.getStatus() != Status.THAW) {
+                model.setModifyTime(LocalDateTime.now());
+                model.setStatus(Status.THAW);
+                super.update(model);
+            } else {
+                throw new SerException("该记录无需重复解冻");
+            }
+        } else {
+            throw new SerException("非法Id，解冻对象不能为空");
+        }
     }
 }

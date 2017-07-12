@@ -37,9 +37,9 @@ public class WorkCollectPrepareAct {
 
     @Autowired
     private WorkCollectPrepareAPI collectPrepareAPI;
-    
+
     /**
-     * 新增工作汇总议题准备
+     * 新增
      *
      * @param to 工作汇总议题准备
      * @return class WorkCollectPrepareVO
@@ -57,7 +57,7 @@ public class WorkCollectPrepareAct {
     }
 
     /**
-     * 编辑工作汇总议题准备
+     * 编辑
      *
      * @param to 工作汇总议题准备
      * @return class WorkCollectPrepareVO
@@ -91,14 +91,30 @@ public class WorkCollectPrepareAct {
     }
 
     /**
-     * 列表分页查询
+     * 冻结
+     *
+     * @param id id
+     * @version v1
+     */
+    @PutMapping("v1/unfreeze/{id}")
+    public Result unfreeze(@PathVariable String id) throws ActException {
+        try {
+            collectPrepareAPI.unfreeze(id);
+            return new ActResult("冻结成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 列表
      *
      * @param dto 分页条件
      * @return class WorkCollectPrepareVO
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result pageList(WorkCollectPrepareDTO dto) throws ActException {
+    public Result pageList(@Validated(WorkCollectPrepareDTO.SelectStatus.class) WorkCollectPrepareDTO dto) throws ActException {
         try {
             List<WorkCollectPrepareVO> voList = BeanTransform.copyProperties(collectPrepareAPI.pageList(dto), WorkCollectPrepareVO.class);
             return ActResult.initialize(voList);
@@ -114,7 +130,7 @@ public class WorkCollectPrepareAct {
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(WorkCollectPrepareDTO dto) throws ActException {
+    public Result count(@Validated(WorkCollectPrepareDTO.SelectStatus.class) WorkCollectPrepareDTO dto) throws ActException {
         try {
             dto.getConditions().add(Restrict.eq("status", Status.THAW));
             Long count = collectPrepareAPI.count(dto);
@@ -140,5 +156,5 @@ public class WorkCollectPrepareAct {
             throw new ActException(e.getMessage());
         }
     }
-    
+
 }

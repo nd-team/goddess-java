@@ -56,4 +56,9 @@ public class FeedbackComplainApiImpl implements FeedbackComplainAPI {
     public FeedbackComplainBO findById(String id) throws SerException {
         return BeanTransform.copyProperties(feedbackComplainSer.findById(id), FeedbackComplainBO.class);
     }
+
+    @Override
+    public void unfreeze(String id) throws SerException {
+        feedbackComplainSer.unfreeze(id);
+    }
 }

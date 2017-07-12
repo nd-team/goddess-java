@@ -1,9 +1,11 @@
 package com.bjike.goddess.fundcheck.service;
 
+import com.bjike.goddess.bankrecords.api.BankRecordAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.fundcheck.bo.AccountBalanceBO;
 import com.bjike.goddess.fundcheck.bo.AccountIncomeBO;
 import com.bjike.goddess.fundcheck.bo.AccountSpendBO;
@@ -24,6 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +49,8 @@ public class AccountBalanceSerImpl extends ServiceImpl<AccountBalance, AccountBa
     private AccountIncomeSer accountIncomeSer;
     @Autowired
     private AccountSpendSer accountSpendSer;
+    @Autowired
+    private BankRecordAPI bankRecordAPI;
     @Autowired
     private UserAPI userAPI;
     @Autowired
@@ -213,8 +219,9 @@ public class AccountBalanceSerImpl extends ServiceImpl<AccountBalance, AccountBa
         Double accountSpendMoney = accountSpendBOS.stream().filter(str->null!=str.getTotal()).mapToDouble(AccountSpendBO::getTotal).sum();
 
         //获取银行流水的账上余额
-        //todo:获取银行流水的账上余额
-
+        int year = LocalDate.now().getYear();
+        int month = LocalDate.now().getMonthValue();
+        Double bank = bankRecordAPI.balanceByMonth(year,month);
         //资金差异(期初余额+账务收入-财务支出)
         Double fundsDifference = beginBalanceMoney+accountIncomeMoney-accountSpendMoney;
 

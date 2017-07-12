@@ -2,6 +2,7 @@ package com.bjike.goddess.voucher.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.voucher.bo.PartBO;
+import com.bjike.goddess.voucher.bo.PartOptionBO;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
@@ -513,7 +514,17 @@ public interface VoucherGenerateAPI {
      * @return class PartBO
      * @throws SerException
      */
-    default List<PartBO> findByCondition( String condition ) throws SerException{
+    default List<PartBO> findByCondition(String[] conditions ) throws SerException{
+        return null;
+    }
+
+    /**
+     * xiazhili
+     * 在资金和对里面根据一级和二级和三级统计借方金额和贷方金额
+     * @return class PartOptionBO
+     * @throws SerException
+     */
+    default PartOptionBO findMoneyByCondition(String first, String second,String third ) throws SerException{
         return null;
     }
 
