@@ -11,15 +11,11 @@ import com.bjike.goddess.common.api.type.Status;
  * @Copy: [com.bjike]
  */
 public class OilCardRechargeVO {
-    /**
-     * 数据状态
-     */
-    private Status status;
 
     /**
-     * 油卡信息Id
+     * id
      */
-    private String oilCardBasicId;
+    private String id;
 
     /**
      * 油卡编号
@@ -56,20 +52,12 @@ public class OilCardRechargeVO {
      */
     private Double cycleEarlyMoney;
 
-    public Status getStatus() {
-        return status;
+    public String getId() {
+        return id;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public String getOilCardBasicId() {
-        return oilCardBasicId;
-    }
-
-    public void setOilCardBasicId(String oilCardBasicId) {
-        this.oilCardBasicId = oilCardBasicId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getRechargeDate() {
