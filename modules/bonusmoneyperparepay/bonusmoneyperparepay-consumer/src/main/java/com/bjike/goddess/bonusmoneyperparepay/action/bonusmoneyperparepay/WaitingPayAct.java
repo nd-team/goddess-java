@@ -312,7 +312,7 @@ public class WaitingPayAct extends BaseFileAction {
      * @param endMonth 月份
      * @version v1
      */
-    //@LoginAuth
+    @LoginAuth
     @GetMapping("v1/exportAlreadyExcel")
     public Result exportAlreadyExcel(Integer years,Integer startMonth, Integer endMonth, HttpServletResponse response) throws ActException {
         try {
@@ -361,4 +361,21 @@ public class WaitingPayAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 查询所有项目组
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findProjectGroup")
+    public Result findProjectGroup() throws ActException {
+        try {
+            List<String> projectGroup = new ArrayList<>();
+            projectGroup = waitingPayAPI.findAllProject();
+            return ActResult.initialize(projectGroup);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

@@ -166,6 +166,9 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
     @Override
     public MoneyPerpareBO addMoneyPerpare(MoneyPerpareTO moneyPerpareTO) throws SerException {
         checkPermission();
+
+        //TODO lijuntao 由于资金准备未完善，需要从此模块读取数据进行添加未做
+
         MoneyPerpare moneyPerpare = BeanTransform.copyProperties(moneyPerpareTO, MoneyPerpare.class, true);
         moneyPerpare.setCreateTime(LocalDateTime.now());
         moneyPerpare = super.save(moneyPerpare);
@@ -190,10 +193,12 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
         WaitingPayDTO dto = new WaitingPayDTO();
         dto.getConditions().add(Restrict.eq("perpareId", moneyPerpare.getId()));
         List<WaitingPay> waitingPays = waitingPaySer.findByCis(dto);
-        WaitingPay waitingPay = waitingPays.get(0);
-        if (waitingPay.getPayStatus().equals("等待付款")) {
-            BeanTransform.copyProperties(moneyPerpareTO, waitingPay, true, "id");
-            waitingPaySer.update(waitingPay);
+        if (waitingPays != null && waitingPays.size() > 0) {
+            WaitingPay waitingPay = waitingPays.get(0);
+            if (waitingPay.getPayStatus().equals("等待付款")) {
+                BeanTransform.copyProperties(moneyPerpareTO, waitingPay, true, "id");
+                waitingPaySer.update(waitingPay);
+            }
         }
         return BeanTransform.copyProperties(moneyPerpare, MoneyPerpareBO.class);
     }
@@ -204,6 +209,13 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
         checkPermission();
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
+        }
+        WaitingPayDTO waitingPayDTO = new WaitingPayDTO();
+        waitingPayDTO.getConditions().add(Restrict.eq("turntable","否"));
+        waitingPayDTO.getConditions().add(Restrict.eq("perpareId",id));
+        List<WaitingPay> waitingPays = waitingPaySer.findByCis(waitingPayDTO);
+        if(waitingPays != null && waitingPays.size()>0){
+            waitingPaySer.remove(waitingPays);
         }
         super.remove(id);
     }
@@ -239,7 +251,7 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
                     dto.getConditions().add(Restrict.eq("years", year));
                     dto.getConditions().add(Restrict.eq("month", month));
                 }
-                dto.getConditions().add(Restrict.eq("projectGroup", projectGroup));
+                dto.getConditions().add(Restrict.eq("projectGroup", project));
                 List<MoneyPerpare> moneyPerpares = super.findByCis(dto);
                 if (moneyPerpares != null && moneyPerpares.size() > 0) {
                     Double totalReserve = 0d;
@@ -371,6 +383,7 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
         List<MoneyPerpareContrastBO> moneyPerpareContrastBOList = new ArrayList<>();
         List<String> projectGroup = findAllProject();
         MoneyPerpareDTO dto = new MoneyPerpareDTO();
+
         List<MoneyPerpare> moneyPerpareList = super.findByCis(dto);
         Double reserveSum = 0d;
         Double lastReserveSum = 0d;
@@ -388,7 +401,7 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
 
                 if ((reserveSum != 0) || (lastReserveSum != 0)) {
                     MoneyPerpareContrastBO moneyPerpareContrastBO = new MoneyPerpareContrastBO();
-                    moneyPerpareContrastBO.setYears(LocalDateTime.now().getYear());
+                    moneyPerpareContrastBO.setYears(years);
                     moneyPerpareContrastBO.setMonth(month);
                     moneyPerpareContrastBO.setProjectGroup(project);
                     moneyPerpareContrastBO.setSubjects("奖金");
@@ -420,7 +433,7 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
                 }
                 if ((reserveSum != 0) || (lastReserveSum != 0)) {
                     MoneyPerpareContrastBO moneyPerpareContrastBO = new MoneyPerpareContrastBO();
-                    moneyPerpareContrastBO.setYears(LocalDateTime.now().getYear());
+                    moneyPerpareContrastBO.setYears(years);
                     moneyPerpareContrastBO.setMonth(month);
                     moneyPerpareContrastBO.setProjectGroup(project);
                     moneyPerpareContrastBO.setSubjects("奖金");

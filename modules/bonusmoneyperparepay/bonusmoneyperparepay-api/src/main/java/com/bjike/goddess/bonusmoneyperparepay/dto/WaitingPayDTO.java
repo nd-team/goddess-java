@@ -23,6 +23,9 @@ public class WaitingPayDTO extends BaseDTO {
      */
     private String endDifference;
 
+    /**
+     * 项目组
+     */
     private String projectGroup;
 
 

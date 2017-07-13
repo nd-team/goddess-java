@@ -247,9 +247,9 @@ public class MoneyPerpareAct {
     @GetMapping("v1/findProjectGroup")
     public Result findProjectGroup() throws ActException {
         try {
-            List<String> areas = new ArrayList<>();
-            areas = moneyPerpareAPI.findAllProject();
-            return ActResult.initialize(areas);
+            List<String> projectGroup = new ArrayList<>();
+            projectGroup = moneyPerpareAPI.findAllProject();
+            return ActResult.initialize(projectGroup);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

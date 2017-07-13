@@ -179,7 +179,6 @@ public class WaitingPaySerImpl extends ServiceImpl<WaitingPay, WaitingPayDTO> im
 
     @Override
     public Long countWaiting(WaitingPayDTO waitingPayDTO) throws SerException {
-        searchCondition(waitingPayDTO);
         waitingPayDTO.getConditions().add(Restrict.eq("turntable", "否"));
         List<WaitingPay> waitingPays = super.findByCis(waitingPayDTO);
         Long count = (long) waitingPays.size();
@@ -207,8 +206,8 @@ public class WaitingPaySerImpl extends ServiceImpl<WaitingPay, WaitingPayDTO> im
     @Override
     public List<WaitingPayBO> listWaiting(WaitingPayDTO waitingPayDTO) throws SerException {
         checkPermission();
-        searchCondition(waitingPayDTO);
         waitingPayDTO.getConditions().add(Restrict.eq("payStatus", "等待付款"));
+        searchCondition(waitingPayDTO);
         List<WaitingPay> list = super.findByPage(waitingPayDTO);
         List<WaitingPayBO> waitingPayBOList = BeanTransform.copyProperties(list, WaitingPayBO.class);
         return waitingPayBOList;
@@ -235,17 +234,17 @@ public class WaitingPaySerImpl extends ServiceImpl<WaitingPay, WaitingPayDTO> im
     }
 
     public void searchCondition(WaitingPayDTO waitingPayDTO) throws SerException {
-        LocalDate start = LocalDate.now();
-        LocalDate end = LocalDate.now();
+        LocalDateTime start = LocalDateTime.now();
+        LocalDateTime end = LocalDateTime.now();
         if (StringUtils.isNotBlank(waitingPayDTO.getStartDifference())) {
-            start = DateUtil.parseDate(waitingPayDTO.getStartDifference());
+            start = DateUtil.parseDateTime(waitingPayDTO.getStartDifference());
         }
         if (StringUtils.isNotBlank(waitingPayDTO.getEndDifference())) {
-            end = DateUtil.parseDate(waitingPayDTO.getEndDifference());
+            end = DateUtil.parseDateTime(waitingPayDTO.getEndDifference());
         }
-        LocalDate[] diffe = new LocalDate[]{start, end};
+        LocalDateTime[] diffe = new LocalDateTime[]{start, end};
         if (StringUtils.isNotBlank(waitingPayDTO.getStartDifference()) || StringUtils.isNotBlank(waitingPayDTO.getEndDifference())) {
-            waitingPayDTO.getConditions().add(Restrict.between("difference", diffe));
+            waitingPayDTO.getConditions().add(Restrict.between("differenceTime", diffe));
         }
         if (StringUtils.isNotBlank(waitingPayDTO.getProjectGroup())) {
             waitingPayDTO.getConditions().add(Restrict.eq("projectGroup", waitingPayDTO.getProjectGroup()));
@@ -284,7 +283,7 @@ public class WaitingPaySerImpl extends ServiceImpl<WaitingPay, WaitingPayDTO> im
                     dto.getConditions().add(Restrict.eq("years", year));
                     dto.getConditions().add(Restrict.eq("month", month));
                 }
-                dto.getConditions().add(Restrict.eq("projectGroup", projectGroup));
+                dto.getConditions().add(Restrict.eq("projectGroup", project));
                 dto.getConditions().add(Restrict.eq("turntable", "是"));
                 List<WaitingPay> waitingPays = super.findByCis(dto);
                 if (waitingPays != null && waitingPays.size() > 0) {
@@ -431,7 +430,7 @@ public class WaitingPaySerImpl extends ServiceImpl<WaitingPay, WaitingPayDTO> im
         List<WaitingPayExcel> waitingPayExcels = new ArrayList<>();
         list.stream().forEach(str -> {
             WaitingPayExcel excel = BeanTransform.copyProperties(str, WaitingPayExcel.class);
-            excel.setYearsMonth(LocalDate.now().getYear() + "-" + (str.getMonth() > 10 ? str.getMonth() : "0" + str.getMonth()));
+            excel.setYearsMonth(str.getYears() + "-" + (str.getMonth() > 10 ? str.getMonth() : "0" + str.getMonth()));
             waitingPayExcels.add(excel);
         });
         Excel excel = new Excel(0, 2);
@@ -456,7 +455,7 @@ public class WaitingPaySerImpl extends ServiceImpl<WaitingPay, WaitingPayDTO> im
 
         WaitingPayDTO waitingPayDTO = new WaitingPayDTO();
         if (startMonth != null || endMonth != null) {
-            waitingPayDTO.getConditions().add(Restrict.between("years", years));
+            waitingPayDTO.getConditions().add(Restrict.eq("years", years));
             waitingPayDTO.getConditions().add(Restrict.between("month", new Integer[]{start, end}));
         }
         waitingPayDTO.getConditions().add(Restrict.eq("turntable", "是"));
@@ -465,7 +464,7 @@ public class WaitingPaySerImpl extends ServiceImpl<WaitingPay, WaitingPayDTO> im
         List<AlreadyPayExcel> alreadyPayExcels = new ArrayList<>();
         list.stream().forEach(str -> {
             AlreadyPayExcel excel = BeanTransform.copyProperties(str, AlreadyPayExcel.class);
-            excel.setYearsMonth(LocalDate.now().getYear() + "-" + (str.getMonth() > 10 ? str.getMonth() : "0" + str.getMonth()));
+            excel.setYearsMonth(str.getYears() + "-" + (str.getMonth() > 10 ? str.getMonth() : "0" + str.getMonth()));
             alreadyPayExcels.add(excel);
         });
         Excel excel = new Excel(0, 2);
