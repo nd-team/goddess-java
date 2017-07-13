@@ -4,6 +4,7 @@ import com.bjike.goddess.bankrecords.bo.*;
 import com.bjike.goddess.bankrecords.dto.BankRecordDTO;
 import com.bjike.goddess.bankrecords.entity.BankRecord;
 import com.bjike.goddess.bankrecords.to.BankRecordTO;
+import com.bjike.goddess.bankrecords.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -64,24 +65,54 @@ public interface BankRecordSer extends Ser<BankRecord, BankRecordDTO> {
      *
      * @param year        年份
      * @param month       月份
-     * @param accountName 账户名称
+     * @param accountIds 账户名称ID
      * @return 汇总结果集
      */
-    List<BankRecordCollectBO> collect(Integer year, Integer month, String accountName) throws SerException;
+    List<BankRecordCollectBO> collect(Integer year, Integer month, String[] accountIds) throws SerException;
 
     /**
      * 分析
      *
      * @param year        年份
      * @param month       月份
-     * @param accountName 账户名称
+     * @param accountIds 账户名称ID
      * @return 分析结果
      */
-    BankRecordAnalyzeBO analyze(Integer year, Integer month, String accountName) throws SerException;
+    List<BankRecordAnalyzeBO> analyze(Integer year, Integer month, String[] accountIds) throws SerException;
 
+    /**
+     * 对比分析
+     * @param year 年份
+     * @param month 月份
+     * @return
+     */
     BankRecordCompareBO compare(Integer year, Integer month) throws SerException;
 
+    /**
+     * 根据账号查询
+     * @param year
+     * @param month
+     * @param number
+     * @return
+     * @throws SerException
+     */
     List<BankRecordBO> findByCondition(Integer year, Integer month, String number) throws SerException;
 
     List<BankRecordCollectBO> collectByCondition(Integer year, Integer month, String number) throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO to) throws SerException;
+
+    /**
+     * 查询所有银行的余额
+     * @param year 年份
+     * @param month 月份
+     * @return 余额
+     */
+    Double balanceByMonth(Integer year, Integer month) throws SerException;
+
+    Boolean sonPermission() throws SerException;
+
+    byte[] collectExcel(Integer year, Integer month, String[] accountIds) throws SerException;
+
+    byte[] analyzeExcel(Integer year, Integer month, String[] accountIds) throws SerException;
 }

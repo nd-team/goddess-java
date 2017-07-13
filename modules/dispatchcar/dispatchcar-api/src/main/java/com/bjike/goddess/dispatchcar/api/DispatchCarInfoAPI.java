@@ -224,4 +224,18 @@ public interface DispatchCarInfoAPI {
     List<SonPermissionObject> financeSonPermission() throws SerException;
 
     Boolean financeGuidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
+    /**
+     * 按月份查询司机出车费
+     *
+     * @return
+     */
+    List<DriverDispatchFeeBO> findDispatchFree(Integer month) throws SerException;
+
+    /**
+     * 按月份查询司机出车数
+     *
+     * @return
+     */
+    List<DriverDispatchsBO> findDispatchs(Integer month) throws SerException;
 }

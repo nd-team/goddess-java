@@ -1,5 +1,6 @@
 package com.bjike.goddess.enterpriseculturemanage.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -31,14 +33,45 @@ import java.util.List;
 @Service
 public class PublicizeProgramInfoSerImpl extends ServiceImpl<PublicizeProgramInfo, PublicizeProgramInfoDTO> implements PublicizeProgramInfoSer {
 
+    @Autowired
+    private EnterpriseCultureInfoSer enterpriseCultureInfoSer;
+
     @Override
     @Transactional(rollbackFor = SerException.class)
     public PublicizeProgramInfoBO insertModel(PublicizeProgramInfoTO to) throws SerException {
-        PublicizeProgramInfo model = BeanTransform.copyProperties(to, PublicizeProgramInfo.class);
-        model.setAuditResult(AuditResult.NOTDEAL);
-        super.save(model);
-        to.setId(model.getId());
-        return BeanTransform.copyProperties(to, PublicizeProgramInfoBO.class);
+        EnterpriseCultureInfo info = enterpriseCultureInfoSer.findById(to.getInfoId());
+        if (info != null) {
+            PublicizeProgramInfo model = BeanTransform.copyProperties(to, PublicizeProgramInfo.class);
+            if (isExist(model)) {
+                throw new SerException("该主题的宣传方案信息已存在!");
+            }
+            model.setTheme(info.getTheme());
+            model.setAuditResult(AuditResult.NOTDEAL);
+            super.save(model);
+            to.setId(model.getId());
+            return BeanTransform.copyProperties(to, PublicizeProgramInfoBO.class);
+        } else {
+            throw new SerException("非法企业文化信息Id,企业文化信息对象不能为空!");
+        }
+    }
+
+    public Boolean isExist(PublicizeProgramInfo model) throws SerException {
+        PublicizeProgramInfoDTO dto = new PublicizeProgramInfoDTO();
+        dto.getConditions().add(Restrict.eq("infoId", model.getInfoId()));
+        dto.setLimit(1);
+        List<PublicizeProgramInfo> list = super.findByPage(dto);
+        if (!CollectionUtils.isEmpty(list)) {
+            if (StringUtils.isEmpty(model.getId())) {
+                return true;
+            } else {
+                if (!model.getId().equals(list.get(0).getId())) {
+                    return true;
+                }
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -50,8 +83,15 @@ public class PublicizeProgramInfoSerImpl extends ServiceImpl<PublicizeProgramInf
 
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public void audit(PublicizeProgramInfoTO to) throws SerException {
-        updateModule(to);
+    public void audit(String id, AuditResult auditResult, String auditSuggestion) throws SerException {
+        PublicizeProgramInfo model = super.findById(id);
+        if (model != null) {
+            model.setAuditResult(auditResult);
+            model.setAuditSuggestion(auditSuggestion);
+            super.update(model);
+        } else {
+            throw new SerException("非法Id,宣传方案信息对象不能为空!");
+        }
     }
 
     @Override
@@ -68,19 +108,22 @@ public class PublicizeProgramInfoSerImpl extends ServiceImpl<PublicizeProgramInf
      * @param to 刊物方案信息
      */
     public void updateModule(PublicizeProgramInfoTO to) throws SerException {
-
-        if (!StringUtils.isEmpty(to.getId())) {
+        EnterpriseCultureInfo info = enterpriseCultureInfoSer.findById(to.getInfoId());
+        if (info != null) {
             PublicizeProgramInfo model = super.findById(to.getId());
             if (model != null) {
-
                 BeanTransform.copyProperties(to, model, true);
+                if (isExist(model)) {
+                    throw new SerException("该主题的宣传方案信息已存在!");
+                }
+                model.setTheme(info.getTheme());
                 model.setModifyTime(LocalDateTime.now());
                 super.update(model);
             } else {
-                throw new SerException("更新对象不能为空");
+                throw new SerException("非法Id,宣传方案信息对象不能为空!");
             }
         } else {
-            throw new SerException("更新ID不能为空!");
+            throw new SerException("非法企业文化信息Id,企业文化信息对象不能为空!");
         }
     }
 }

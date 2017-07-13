@@ -41,6 +41,21 @@ public class QQGroupTO extends BaseTO {
     @NotNull(message = "Q群管理人不能为空", groups = {ADD.class, EDIT.class})
     private String manager;
 
+    /**
+     * Q群状态
+     */
+    private Boolean status;
+
+    /**
+     * 是否发送邮件
+     */
+    public boolean isSend;
+
+    /**
+     * 发送的对象
+     */
+    public String sendObject;
+
 
     public String getNumber() {
         return number;
@@ -72,5 +87,29 @@ public class QQGroupTO extends BaseTO {
 
     public void setManager(String manager) {
         this.manager = manager;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public boolean isSend() {
+        return isSend;
+    }
+
+    public void setSend(boolean send) {
+        isSend = send;
+    }
+
+    public String getSendObject() {
+        return sendObject;
+    }
+
+    public void setSendObject(String sendObject) {
+        this.sendObject = sendObject;
     }
 }

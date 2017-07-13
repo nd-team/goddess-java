@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.user.api.UserAPI;
@@ -15,6 +16,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
@@ -53,6 +55,7 @@ public class ConcisePermissionSerImpl extends ServiceImpl<ConcisePermission, Con
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public ConcisePermissionBO insertModel() throws SerException {
         UserBO userBO = userAPI.currentUser();
 
@@ -76,6 +79,7 @@ public class ConcisePermissionSerImpl extends ServiceImpl<ConcisePermission, Con
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void agree(String id) throws SerException {
         UserBO userBO = userAPI.currentUser();
         PositionDetailUserBO position = positionDetailUserAPI.findOneByUser(userBO.getId());
@@ -89,13 +93,12 @@ public class ConcisePermissionSerImpl extends ServiceImpl<ConcisePermission, Con
                 } else {
                     throw new SerException("非法ID,申请调阅对象不存在!");
                 }
+            }else{
+                throw new SerException("只有总经办或者总经理才可审核!");
             }
-
         } else {
-            throw new SerException("只有总经办才可审核!");
+            throw new SerException("只有总经办或者总经理才可审核!");
         }
-
-
     }
 
     public Boolean isExist(String userNum) throws SerException {

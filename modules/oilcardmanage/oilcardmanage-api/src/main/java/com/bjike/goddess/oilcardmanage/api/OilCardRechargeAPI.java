@@ -49,4 +49,9 @@ public interface OilCardRechargeAPI {
      * @throws SerException 分页查询业务异常
      */
     List<OilCardRechargeBO> pageList(OilCardRechargeDTO dto) throws SerException;
+
+    /**
+     * 通过油卡信息Id查询油卡充值记录
+     */
+    List<OilCardRechargeBO> findByBasicId(String id) throws SerException;
 }

@@ -3,6 +3,8 @@ package com.bjike.goddess.allmeeting.dto;
 import com.bjike.goddess.common.api.dto.BaseDTO;
 import com.bjike.goddess.common.api.type.Status;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 简洁交流讨论纪要数据传输对象
  *
@@ -14,9 +16,13 @@ import com.bjike.goddess.common.api.type.Status;
  */
 public class MultiwheelSummaryDTO extends BaseDTO {
 
+    public interface SelectStatus {
+    }
+
     /**
      * 状态
      */
+    @NotNull(message = "状态不能为空", groups = {MultiwheelSummaryDTO.SelectStatus.class})
     private Status status;
 
     public Status getStatus() {

@@ -147,14 +147,14 @@ public class StayApplyAction {
      *
      * @param stayApplyTO 住宿申请数据bo
      * @return class StayApplyVO
-     * @des 审核住宿申请
+     * @des 福利模块负责人审核
      * @version v1
      */
     @PostMapping("v1/audit")
-    public Result audit(@Validated StayApplyTO stayApplyTO) throws ActException {
+    public Result audit(@Validated(StayApplyTO.TestAudit.class) StayApplyTO stayApplyTO) throws ActException {
         try {
-            StayApplyBO stayApplyBO = stayApplyAPI.auditStayApply(stayApplyTO);
-            return ActResult.initialize(BeanTransform.copyProperties(stayApplyBO, StayApplyVO.class, true));
+            StayApplyBO stayApplyBO = stayApplyAPI.manageAudit(stayApplyTO);
+            return ActResult.initialize(BeanTransform.copyProperties(stayApplyBO, StayApplyVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

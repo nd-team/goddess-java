@@ -53,7 +53,14 @@ public class ScheduleJobBO extends BaseBO {
      */
     private String address;
 
-
+    /**
+     * 任务所属组名
+     */
+    private String scheduleJobGroupName;
+    /**
+     * 任务所属组名
+     */
+    private String scheduleJobGroupId;
 
     public String getUserId() {
         return userId;
@@ -117,5 +124,21 @@ public class ScheduleJobBO extends BaseBO {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getScheduleJobGroupName() {
+        return scheduleJobGroupName;
+    }
+
+    public void setScheduleJobGroupName(String scheduleJobGroupName) {
+        this.scheduleJobGroupName = scheduleJobGroupName;
+    }
+
+    public String getScheduleJobGroupId() {
+        return scheduleJobGroupId;
+    }
+
+    public void setScheduleJobGroupId(String scheduleJobGroupId) {
+        this.scheduleJobGroupId = scheduleJobGroupId;
     }
 }

@@ -50,6 +50,23 @@ public class ConfirmedAct {
     }
 
     /**
+     * 查询总记录数
+     *
+     * @param dto 分页条件
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(SalaryconfirmDTO dto) throws ActException {
+        try {
+            dto.getConditions().add(Restrict.eq("findType", FindType.CONFIRM));
+            Long count = salaryconfirmAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 第一次付款
      *
      * @param id 薪资审核确认Id

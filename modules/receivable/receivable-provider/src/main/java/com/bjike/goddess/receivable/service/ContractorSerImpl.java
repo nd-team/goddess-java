@@ -222,6 +222,8 @@ public class ContractorSerImpl extends ServiceImpl<Contractor, ContractorDTO> im
     }
     @Override
     public List<ContractorBO> findListContractor(ContractorDTO contractorDTO) throws SerException {
+        checkSeeIdentity();
+        contractorDTO.getSorts().add("createTime=desc");
         List<Contractor> contractors = super.findByPage(contractorDTO);
         List<ContractorBO> contractorBOS = BeanTransform.copyProperties(contractors, ContractorBO.class);
         return contractorBOS;
@@ -229,6 +231,7 @@ public class ContractorSerImpl extends ServiceImpl<Contractor, ContractorDTO> im
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ContractorBO insertContractor(ContractorTO contractorTO) throws SerException {
+        checkAddIdentity();
         Contractor contractor = BeanTransform.copyProperties(contractorTO,Contractor.class,true);
         contractor.setCreateTime(LocalDateTime.now());
         super.save(contractor);
@@ -237,6 +240,7 @@ public class ContractorSerImpl extends ServiceImpl<Contractor, ContractorDTO> im
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ContractorBO editContractor(ContractorTO contractorTO) throws SerException {
+        checkAddIdentity();
         if (!StringUtils.isEmpty(contractorTO.getId())) {
             Contractor contractor = super.findById(contractorTO.getId());
             BeanTransform.copyProperties(contractorTO, contractor, true);
@@ -251,6 +255,7 @@ public class ContractorSerImpl extends ServiceImpl<Contractor, ContractorDTO> im
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeContractor(String id) throws SerException {
+        checkAddIdentity();
         super.remove(id);
     }
 }

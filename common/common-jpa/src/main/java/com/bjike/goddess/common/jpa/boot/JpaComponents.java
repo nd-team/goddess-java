@@ -67,8 +67,8 @@ public class JpaComponents {
     @Bean("jpaVendorAdapter")
     public JpaVendorAdapter hibernateJpaVendorAdapter(){
         HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
-        hibernateJpaVendorAdapter.setShowSql(true);
-        hibernateJpaVendorAdapter.setGenerateDdl(true);
+//        hibernateJpaVendorAdapter.setShowSql(false);
+//        hibernateJpaVendorAdapter.setGenerateDdl(false);
         return hibernateJpaVendorAdapter;
     }
 

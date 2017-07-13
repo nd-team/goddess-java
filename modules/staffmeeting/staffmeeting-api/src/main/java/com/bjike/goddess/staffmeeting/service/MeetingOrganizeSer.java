@@ -50,4 +50,6 @@ public interface MeetingOrganizeSer extends Ser<MeetingOrganize, MeetingOrganize
      * @return 分页结果集
      */
     List<MeetingOrganizeBO> pageList(MeetingOrganizeDTO dto) throws SerException;
+
+    void unfreeze(String id) throws SerException;
 }

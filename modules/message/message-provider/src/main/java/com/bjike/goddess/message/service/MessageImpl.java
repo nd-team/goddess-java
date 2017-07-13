@@ -17,7 +17,7 @@ import com.bjike.goddess.message.entity.UserMessage;
 import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
-import com.bjike.goddess.message.kafka.KafkaProducer;
+import com.bjike.goddess.message.kafka.IKafkaProducer;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.redis.client.RedisClient;
 import com.bjike.goddess.user.api.UserAPI;
@@ -34,7 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 消息推送业务实现
@@ -55,7 +54,7 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
     @Autowired
     private RedisClient redisClient;
     @Autowired
-    private KafkaProducer kafkaProducer;
+    private IKafkaProducer kafkaProducer;
     @Autowired
     private GroupMessageSer groupMessageSer;
     @Autowired
@@ -138,6 +137,7 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
         if (null != detailBO) {
             groupId = detailBO.getGroupId();
         }
+        Integer start = (dto.getPage() - 1 < 0 ? 0 : dto.getPage() - 1) * dto.getLimit();
         StringBuilder sb = new StringBuilder();
         sb.append("select id,createTime,modifyTime,title,content ,senderId,senderName from (select * from message where rangeType = 0 ");//公共消息
         sb.append(" union ");
@@ -148,13 +148,11 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
         if (null != dto.getMsgType()) {
             sb.append(" where msgType=" + dto.getMsgType().getCode());
         }
-        sb.append(" order by createTime desc ");
+        sb.append(" order by createTime desc limit "+start+","+dto.getLimit());
         String sql = sb.toString();
         sql = String.format(sql, groupId, dto.getUserId());
         String[] fields = new String[]{"id", "createTime", "modifyTime", "title", "content", "senderId", "senderName"};
         List<Message> messages = super.findBySql(sql, Message.class, fields); //公共的
-        messages = messages.stream().skip((dto.getPage() - 1 < 0 ? 0 : dto.getPage() - 1) * dto.getLimit()).
-                limit(dto.getLimit()).collect(Collectors.toList());
         return BeanTransform.copyProperties(messages, MessageBO.class);
     }
 

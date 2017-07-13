@@ -5,7 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.lendreimbursement.bo.ReimburseAnalisisorBO;
 import com.bjike.goddess.lendreimbursement.entity.ReimburseAnalisisor;
 import com.bjike.goddess.lendreimbursement.dto.ReimburseAnalisisorDTO;
-import com.bjike.goddess.lendreimbursement.to.GuidePermissionTO;
+import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseAnalisisorTO;
 
 import java.util.List;
@@ -31,7 +31,7 @@ public interface ReimburseAnalisisorSer extends Ser<ReimburseAnalisisor, Reimbur
     /**
      * 导航权限
      */
-    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+    default Boolean guidePermission(LendGuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 

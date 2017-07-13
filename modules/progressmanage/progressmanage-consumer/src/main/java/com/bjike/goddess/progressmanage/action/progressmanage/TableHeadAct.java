@@ -9,9 +9,11 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.progressmanage.api.ProgressTableAPI;
+import com.bjike.goddess.progressmanage.api.ProjectInfoAPI;
 import com.bjike.goddess.progressmanage.api.TableHeadAPI;
 import com.bjike.goddess.progressmanage.dto.TableHeadDTO;
 import com.bjike.goddess.progressmanage.to.TableHeadTO;
+import com.bjike.goddess.progressmanage.vo.ProjectListForNodeVO;
 import com.bjike.goddess.progressmanage.vo.TableHeadVO;
 import com.bjike.goddess.progressmanage.vo.TableListForHeadVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,19 +41,38 @@ public class TableHeadAct {
     private ProgressTableAPI progressTableAPI;
     @Autowired
     private TableHeadAPI tableHeadAPI;
+    @Autowired
+    private ProjectInfoAPI projectInfoAPI;
 
+
+    /**
+     * 项目下拉列表
+     *
+     * @return class ProjectListForNodeVO
+     * @version v1
+     */
+    @GetMapping("v1/projects")
+    public Result projects(HttpServletRequest request) throws ActException {
+
+        try {
+            List<ProjectListForNodeVO> voList = BeanTransform.copyProperties(projectInfoAPI.projects(), ProjectListForNodeVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 进度表下拉列表
      *
-     * @return class TableListForHeadVO
+     * @return class ProjectListForNodeVO
      * @version v1
      */
-    @GetMapping("v1/tables")
-    public Result tables(HttpServletRequest request) throws ActException {
+    @GetMapping("v1/tables/{projectId}")
+    public Result projects(@PathVariable String projectId, HttpServletRequest request) throws ActException {
 
         try {
-            List<TableListForHeadVO> voList = BeanTransform.copyProperties(progressTableAPI.tables(), TableListForHeadVO.class, request);
+            List<TableListForHeadVO> voList = BeanTransform.copyProperties(progressTableAPI.tables(projectId), TableListForHeadVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -9,11 +9,13 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.progressmanage.api.ProgressNodeAPI;
+import com.bjike.goddess.progressmanage.api.ProgressTableAPI;
 import com.bjike.goddess.progressmanage.api.ProjectInfoAPI;
 import com.bjike.goddess.progressmanage.dto.ProgressNodeDTO;
 import com.bjike.goddess.progressmanage.to.ProgressNodeTO;
 import com.bjike.goddess.progressmanage.vo.ProgressNodeVO;
 import com.bjike.goddess.progressmanage.vo.ProjectListForNodeVO;
+import com.bjike.goddess.progressmanage.vo.TableListForHeadVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -39,6 +41,8 @@ public class ProgressNodeAct {
     private ProgressNodeAPI progressNodeAPI;
     @Autowired
     private ProjectInfoAPI projectInfoAPI;
+    @Autowired
+    private ProgressTableAPI progressTableAPI;
 
     /**
      * 项目下拉列表
@@ -51,6 +55,23 @@ public class ProgressNodeAct {
 
         try {
             List<ProjectListForNodeVO> voList = BeanTransform.copyProperties(projectInfoAPI.projects(), ProjectListForNodeVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 进度表下拉列表
+     *
+     * @return class ProjectListForNodeVO
+     * @version v1
+     */
+    @GetMapping("v1/tables/{projectId}")
+    public Result projects(@PathVariable String projectId, HttpServletRequest request) throws ActException {
+
+        try {
+            List<TableListForHeadVO> voList = BeanTransform.copyProperties(progressTableAPI.tables(projectId), TableListForHeadVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

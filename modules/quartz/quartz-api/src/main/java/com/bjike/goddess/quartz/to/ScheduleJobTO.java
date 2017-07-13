@@ -22,31 +22,31 @@ public class ScheduleJobTO extends BaseTO {
     /**
      * 执行类
      */
-    @NotBlank(message = "执行类不能为空", groups = {ADD.class,EDIT.class})
+    @NotBlank(message = "执行类不能为空", groups = {ADD.class, EDIT.class})
     private String clazz;
 
     /**
      * 任务名
      */
-    @NotBlank(message = "任务名不能为空", groups = {ADD.class,EDIT.class})
+    @NotBlank(message = "任务名不能为空", groups = {ADD.class, EDIT.class})
     private String name;
 
     /**
      * 执行方法
      */
-    @NotBlank(message = "执行方法不能为空", groups = {ADD.class,EDIT.class})
+    @NotBlank(message = "执行方法不能为空", groups = {ADD.class, EDIT.class})
     private String method;
 
     /**
      * 表达式
      */
-    @NotBlank(message = "表达式不能为空", groups = {ADD.class,EDIT.class})
+    @NotBlank(message = "表达式不能为空", groups = {ADD.class, EDIT.class})
     private String expression;
 
     /**
      * 描述
      */
-    @NotBlank(message = "描述不能为空", groups = {ADD.class,EDIT.class})
+    @NotBlank(message = "描述不能为空", groups = {ADD.class, EDIT.class})
     private String description;
 
     /**

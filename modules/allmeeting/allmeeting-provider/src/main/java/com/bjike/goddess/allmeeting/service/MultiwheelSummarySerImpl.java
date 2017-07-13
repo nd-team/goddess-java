@@ -17,6 +17,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
@@ -45,6 +46,7 @@ public class MultiwheelSummarySerImpl extends ServiceImpl<MultiwheelSummary, Mul
     private MultiPermissionSer multiPermissionSer;
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public MultiwheelSummaryBO updateModel(MultiwheelSummaryTO to) throws SerException {
         MultiwheelSummary model = super.findById(to.getId());
         if (model != null) {
@@ -58,6 +60,7 @@ public class MultiwheelSummarySerImpl extends ServiceImpl<MultiwheelSummary, Mul
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void freeze(String id) throws SerException {
         MultiwheelSummary model = super.findById(id);
         if (model != null) {
@@ -72,11 +75,8 @@ public class MultiwheelSummarySerImpl extends ServiceImpl<MultiwheelSummary, Mul
     @Override
     public List<MultiwheelSummaryBO> pageList(MultiwheelSummaryDTO dto) throws SerException {
         dto.getSorts().add("createTime=desc");
+        dto.getConditions().add(Restrict.eq("status", dto.getStatus()));
         UserBO user = userAPI.currentUser();
-
-        if (dto.getStatus() != null) {
-            dto.getConditions().add(Restrict.eq("status", dto.getStatus()));
-        }
         //没有申请权限的只能查看自己参与的会议数据
         List<MultiwheelSummary> list = null;
         List<MultiwheelSummary> summaries = null;
@@ -121,6 +121,7 @@ public class MultiwheelSummarySerImpl extends ServiceImpl<MultiwheelSummary, Mul
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void unfreeze(String id) throws SerException {
         MultiwheelSummary model = super.findById(id);
         if (model != null) {
@@ -137,7 +138,7 @@ public class MultiwheelSummarySerImpl extends ServiceImpl<MultiwheelSummary, Mul
         organizeDTO.getConditions().add(Restrict.eq("meetingNum", bo.getMeetingNum()));
         AllMeetingOrganize organize = allMeetingOrganizeSer.findOne(organizeDTO);
         //设置会议组织信息
-        /*if (organize != null) {
+        if (organize != null) {
             bo.setMeetingType(organize.getMeetingType());
             bo.setContent(organize.getContent());
             bo.setRelation(organize.getRelation());
@@ -145,6 +146,6 @@ public class MultiwheelSummarySerImpl extends ServiceImpl<MultiwheelSummary, Mul
             bo.setCompere(organize.getCompere());
             bo.setMeetingNum(organize.getMeetingNum());
             bo.setTopic(organize.getMeetingLay().getMeetingTopic().getTopic());
-        }*/
+        }
     }
 }

@@ -6,6 +6,7 @@ import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.contacts.dto.CommonalityDTO;
 import com.bjike.goddess.contacts.entity.Commonality;
 import com.bjike.goddess.contacts.to.CommonalityTO;
+import com.bjike.goddess.contacts.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -129,4 +130,23 @@ public interface CommonalitySer extends Ser<Commonality, CommonalityDTO> {
     }
 
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导入
+     */
+    default void importExcel(List<CommonalityTO> tocs) throws SerException {
+    }
 }

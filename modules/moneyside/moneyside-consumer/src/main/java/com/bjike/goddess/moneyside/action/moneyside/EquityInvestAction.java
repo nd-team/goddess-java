@@ -158,7 +158,7 @@ public class EquityInvestAction extends BaseFileAction{
     /**
      * 上传附件
      *
-     * @des 招标信息
+     * @des 股权投资
      * @version v1
      */
     @LoginAuth
@@ -167,7 +167,7 @@ public class EquityInvestAction extends BaseFileAction{
         try {
             //跟前端约定好 ，文件路径是列表id
             // /id/....
-            String paths = "/moneyside/equityinvest/" + id;
+            String paths = "/" + id;
             List<InputStream> inputStreams = getInputStreams(request, paths);
             fileAPI.upload(inputStreams);
             return new ActResult("upload success");
@@ -179,7 +179,7 @@ public class EquityInvestAction extends BaseFileAction{
     /**
      * 文件附件列表
      *
-     * @param id 招标信息id
+     * @param id 股权投资id
      * @return class FileVO
      * @version v1
      */
@@ -188,7 +188,7 @@ public class EquityInvestAction extends BaseFileAction{
         try {
             //跟前端约定好 ，文件路径是列表id
             // /moneyside/id/....
-            String path = "/moneyside/equityinvest/" + id;
+            String path = "/" + id;
             FileInfo fileInfo = new FileInfo();
             fileInfo.setPath(path);
             Object storageToken = request.getAttribute("storageToken");

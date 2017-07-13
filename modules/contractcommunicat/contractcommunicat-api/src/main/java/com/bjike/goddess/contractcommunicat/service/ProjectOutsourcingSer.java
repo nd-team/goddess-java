@@ -59,14 +59,6 @@ public interface ProjectOutsourcingSer extends Ser<ProjectOutsourcing, ProjectOu
     List<ProjectOutsourcingCollectBO> collect(CollectConditionTO dto) throws SerException;
 
     /**
-     * 设置汇总周期
-     *
-     * @param cycle
-     * @throws SerException
-     */
-    void setCollectSend(QuartzCycleType cycle) throws SerException;
-
-    /**
      * 导入Excel
      *
      * @param toList

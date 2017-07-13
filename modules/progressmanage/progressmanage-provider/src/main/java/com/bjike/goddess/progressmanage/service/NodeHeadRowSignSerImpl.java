@@ -84,7 +84,7 @@ public class NodeHeadRowSignSerImpl extends ServiceImpl<NodeHeadRowSign, NodeHea
                     boList.add(bo);
                 }
                 return boList;
-            }else{
+            } else {
                 return null;
             }
         } else {
@@ -168,10 +168,11 @@ public class NodeHeadRowSignSerImpl extends ServiceImpl<NodeHeadRowSign, NodeHea
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void updateModel(NodeHeadRowSignTO to) throws SerException {
-        if (!CollectionUtils.isEmpty(to.getToList())) {
+        NodeHeadRowSign model = super.findById(to.getId());
+        if (model != null) {
+            if (!CollectionUtils.isEmpty(to.getToList())) {
 
-            List<NodeHeadValue> valueList = new ArrayList<NodeHeadValue>();
-            if (!CollectionUtils.isEmpty(valueList)) {
+                List<NodeHeadValue> valueList = new ArrayList<NodeHeadValue>();
                 for (NodeHeadValueTO valueTO : to.getToList()) {
 
                     NodeHead nodeHead = nodeHeadSer.findById(valueTO.getNodeHeadId());
@@ -182,8 +183,8 @@ public class NodeHeadRowSignSerImpl extends ServiceImpl<NodeHeadRowSign, NodeHea
                         }
 
                         NodeHeadValueDTO valueDTO = new NodeHeadValueDTO();
-                        valueDTO.getConditions().add(Restrict.eq("tableHead.id", valueTO.getNodeHeadId()));
-                        valueDTO.getConditions().add(Restrict.eq("tableHeadRowSign.id", to.getId()));
+                        valueDTO.getConditions().add(Restrict.eq("nodeHead.id", valueTO.getNodeHeadId()));
+                        valueDTO.getConditions().add(Restrict.eq("nodeHeadRowSign.id", to.getId()));
                         NodeHeadValue value = nodeHeadValueSer.findOne(valueDTO);
                         BeanTransform.copyProperties(valueTO, value);
                         valueList.add(value);
@@ -191,14 +192,17 @@ public class NodeHeadRowSignSerImpl extends ServiceImpl<NodeHeadRowSign, NodeHea
                         throw new SerException("非法表头Id, " + valueTO.getValue() + " 值对应的表头对象不存在!");
                     }
                 }
-            }
 
-            if (!valueList.isEmpty()) {
-                nodeHeadValueSer.update(valueList);
+                if (!valueList.isEmpty()) {
+                    nodeHeadValueSer.update(valueList);
+                }
+            } else {
+                throw new SerException("非法表头Id, 进度表对象不能为空!");
             }
         } else {
-            throw new SerException("非法表头Id, 进度表对象不能为空!");
+            throw new SerException("非法Id,行对象不能为空!");
         }
+
     }
 
     @Override

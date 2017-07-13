@@ -14,6 +14,7 @@ import com.bjike.goddess.competitormanage.entity.Competitor;
 import com.bjike.goddess.competitormanage.enums.GuideAddrStatus;
 import com.bjike.goddess.competitormanage.excel.CompetitorExcel;
 import com.bjike.goddess.competitormanage.excel.SonPermissionObject;
+import com.bjike.goddess.competitormanage.to.CompetitorOrganizaeTO;
 import com.bjike.goddess.competitormanage.to.CompetitorTO;
 import com.bjike.goddess.competitormanage.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
@@ -104,8 +105,9 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
 
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public CompetitorBO editOrganization(CompetitorTO to) throws SerException {
-        updateModel(to);
+    public CompetitorBO editOrganization(CompetitorOrganizaeTO to) throws SerException {
+        CompetitorTO competitorTO = BeanTransform.copyProperties(to,CompetitorTO.class);
+        updateModel(competitorTO);
         return BeanTransform.copyProperties(to, CompetitorBO.class);
     }
 
@@ -266,7 +268,8 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
     public List<CompetitorBO> areas() throws SerException {
 
         StringBuilder sql = new StringBuilder();
-        sql.append("select distinct area from competitormanage_competitor ");
+        //查询解冻状态的地区
+        sql.append("select distinct area from competitormanage_competitor where status = 0 ");
 
         return super.findBySql(sql.toString(),CompetitorBO.class,new String[]{"area"});
     }

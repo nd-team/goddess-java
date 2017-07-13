@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contacts.bo.QQGroupBO;
 import com.bjike.goddess.contacts.dto.QQGroupDTO;
 import com.bjike.goddess.contacts.service.QQGroupSer;
+import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.contacts.to.QQGroupTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,5 +59,20 @@ public class QQGroupApiImpl implements QQGroupAPI {
     @Override
     public Long getTotal() throws SerException {
         return qqGroupSer.getTotal();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return qqGroupSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return qqGroupSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public QQGroupBO importExcel(List<QQGroupTO> qqGroupTO) throws SerException {
+        return qqGroupSer.importExcel(qqGroupTO);
     }
 }

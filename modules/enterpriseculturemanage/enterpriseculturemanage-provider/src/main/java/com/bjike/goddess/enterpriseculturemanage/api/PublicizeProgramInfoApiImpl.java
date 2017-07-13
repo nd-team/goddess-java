@@ -5,6 +5,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.enterpriseculturemanage.bo.EnterpriseCultureInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.bo.PublicizeProgramInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.dto.PublicizeProgramInfoDTO;
+import com.bjike.goddess.enterpriseculturemanage.enums.AuditResult;
 import com.bjike.goddess.enterpriseculturemanage.service.EnterpriseCultureInfoSer;
 import com.bjike.goddess.enterpriseculturemanage.service.PublicizeProgramInfoSer;
 import com.bjike.goddess.enterpriseculturemanage.to.PublicizeProgramInfoTO;
@@ -51,8 +52,8 @@ public class PublicizeProgramInfoApiImpl implements PublicizeProgramInfoAPI {
     }
 
     @Override
-    public void audit(PublicizeProgramInfoTO to) throws SerException {
-        publicizeProgramInfoSer.audit(to);
+    public void audit(String id, AuditResult auditResult, String auditSuggestion) throws SerException {
+        publicizeProgramInfoSer.audit(id,auditResult,auditSuggestion);
     }
 
     @Override

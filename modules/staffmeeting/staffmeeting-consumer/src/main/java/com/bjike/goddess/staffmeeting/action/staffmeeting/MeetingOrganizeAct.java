@@ -6,7 +6,6 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -39,7 +38,7 @@ public class MeetingOrganizeAct {
     private MeetingOrganizeAPI meetingOrganizeAPI;
 
     /**
-     * 新增员工代表大会组织内容
+     * 新增
      *
      * @param to 员工代表大会组织内容
      * @return class MeetingOrganizeVO
@@ -58,7 +57,7 @@ public class MeetingOrganizeAct {
     }
 
     /**
-     * 编辑员工代表大会组织内容
+     * 编辑
      *
      * @param to 员工代表大会组织内容
      * @return class MeetingOrganizeVO
@@ -76,9 +75,9 @@ public class MeetingOrganizeAct {
     }
 
     /**
-     * 冻结员工代表大会组织内容
+     * 冻结
      *
-     * @param id 员工代表大会组织内容ID
+     * @param id id
      * @version v1
      */
     @LoginAuth
@@ -92,16 +91,34 @@ public class MeetingOrganizeAct {
         }
     }
 
+    /**
+     * 解冻
+     *
+     * @param id id
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/unfreeze/{id}")
+    public Result unfreeze(@PathVariable String id) throws ActException {
+        try {
+            meetingOrganizeAPI.unfreeze(id);
+            return new ActResult("解冻成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
-     * 列表分页查询
+     * 列表
      *
      * @param dto 分页条件
      * @return class MeetingOrganizeVO
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/list")
-    public Result pageList(MeetingOrganizeDTO dto) throws ActException {
+    public Result pageList(@Validated(MeetingOrganizeDTO.Select.class) MeetingOrganizeDTO dto) throws ActException {
         try {
             List<MeetingOrganizeVO> voList = BeanTransform.copyProperties(meetingOrganizeAPI.pageList(dto), MeetingOrganizeVO.class);
             return ActResult.initialize(voList);
@@ -117,9 +134,9 @@ public class MeetingOrganizeAct {
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(MeetingOrganizeDTO dto) throws ActException {
+    public Result count(@Validated(MeetingOrganizeDTO.Select.class) MeetingOrganizeDTO dto) throws ActException {
         try {
-            dto.getConditions().add(Restrict.eq("status", Status.THAW));
+            dto.getConditions().add(Restrict.eq("status", dto.getStatus()));
             Long count = meetingOrganizeAPI.count(dto);
             return ActResult.initialize(count);
         } catch (SerException e) {

@@ -212,9 +212,7 @@ public class InvoiceSubmitSerImpl extends ServiceImpl<InvoiceSubmit, InvoiceSubm
         GuideAddrStatus guideAddrStatus = to.getGuideAddrStatus();
         Boolean flag = true;
         switch (guideAddrStatus) {
-            case LIST:
-                flag = guideSeeIdentity();
-                break;
+
             case ADD:
                 flag = guideAddIdentity();
                 break;

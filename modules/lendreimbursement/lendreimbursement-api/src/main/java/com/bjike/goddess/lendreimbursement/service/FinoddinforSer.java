@@ -6,7 +6,7 @@ import com.bjike.goddess.lendreimbursement.bo.FinoddinforBO;
 import com.bjike.goddess.lendreimbursement.entity.Finoddinfor;
 import com.bjike.goddess.lendreimbursement.dto.FinoddinforDTO;
 import com.bjike.goddess.lendreimbursement.to.FinoddinforTO;
-import com.bjike.goddess.lendreimbursement.to.GuidePermissionTO;
+import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public interface FinoddinforSer extends Ser<Finoddinfor, FinoddinforDTO> {
     /**
      * 导航权限
      */
-    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+    default Boolean guidePermission(LendGuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 

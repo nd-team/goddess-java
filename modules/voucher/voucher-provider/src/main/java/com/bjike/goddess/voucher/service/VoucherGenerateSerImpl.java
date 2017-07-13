@@ -15,6 +15,7 @@ import com.bjike.goddess.financeinit.dto.CategoryDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.bo.PartBO;
+import com.bjike.goddess.voucher.bo.PartOptionBO;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
@@ -254,7 +255,6 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     }
 
 
-
     @Override
     public VoucherGenerateBO getById(String id) throws SerException {
         VoucherGenerate vg = super.findById(id);
@@ -264,6 +264,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         bo.setThirdSubjects(Arrays.asList(bo.getThirdSubject()));
         bo.setLoanMoneys(Arrays.asList(bo.getLoanMoney()));
         bo.setBorrowMoneys(Arrays.asList(bo.getBorrowMoney()));
+
+        VoucherTotal vt = voucherTotalSer.findById(vg.getTotalId());
+        bo.setMoneyTotal(vt.getMoney());
+
         return bo;
 
     }
@@ -1646,21 +1650,55 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     }
 
     @Override
-    public List<PartBO> findByCondition(String condition) throws SerException {
+    public List<PartBO> findByCondition(String[] conditions) throws SerException {
         String[] fields = new String[]{"money"};
-        String sql = " select sum(borrowMoney+loanMoney) as money from voucher_vouchergenerate where " +
-                " secondSubject = '" + condition + "' or thirdSubject = '" + condition + "' ";
+        String sql = " ";
+        for (int i = 0; i < conditions.length; i++) {
+            sql += " select sum(borrowMoney+loanMoney) as money from voucher_vouchergenerate where " +
+                    " secondSubject ='" + conditions[i] + "' or thirdSubject ='" + conditions[i] + "'";
+            if ( i < conditions.length - 1) {
+                sql += " UNION ";
+            }
+        }
+        System.out.println(sql);
         List<PartBO> list = super.findBySql(sql, PartBO.class, fields);
         if (list != null && list.size() > 0) {
-            list.get(0).setName(condition);
-        } else {
-            list = new ArrayList<>();
-            PartBO partBO = new PartBO();
-            partBO.setName(condition);
-            partBO.setMoney(0d);
-            list.add(partBO);
+            for(int i=0;i<list.size();i++){
+                list.get(i).setName(conditions[i]);
+            }
         }
         return list;
+    }
+
+    @Override
+    public PartOptionBO findMoneyByCondition(String first, String second, String third) throws SerException {
+        String[] fields = new String[]{"loanMoney", "borrowMoney"};
+        String sql = " select sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney from voucher_vouchergenerate where 1=1 ";
+        if (StringUtils.isNotBlank(first)) {
+            sql = sql + " and firstSubject = '" + first + "' ";
+        }
+        if (StringUtils.isNotBlank(second)) {
+            sql = sql + " and secondSubject = '" + second + "' ";
+        }
+        if (StringUtils.isNotBlank(third)) {
+            sql = sql + " and thirdSubject = '" + third + "' ";
+        }
+        List<PartOptionBO> list = super.findBySql(sql, PartOptionBO.class, fields);
+        if (list != null && list.size() > 0) {
+            list.get(0).setFirstName(first);
+            list.get(0).setSecondName(second);
+            list.get(0).setThirdName(third);
+        } else {
+            list = new ArrayList<>();
+            PartOptionBO partBO = new PartOptionBO();
+            partBO.setFirstName(first);
+            partBO.setSecondName(second);
+            partBO.setThirdName(third);
+            partBO.setLoanMoney(0d);
+            partBO.setBorrowMoney(0d);
+            list.add(partBO);
+        }
+        return list.get(0);
     }
 
     //Jason
@@ -1764,14 +1802,17 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         System.out.println(JSON.toJSON(list));
 
         List<VoucherExportExcel> firstSubjectExports = BeanTransform.copyProperties(list, VoucherExportExcel.class);
-        for (VoucherExportExcel str : firstSubjectExports) {
-            VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
-            str.setMoneyTotal(vt.getMoney());
+        XSSFWorkbook wb = null;//创建一个Excel文件
+        if (firstSubjectExports != null && firstSubjectExports.size() > 0) {
+            for (VoucherExportExcel str : firstSubjectExports) {
+                VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
+                str.setMoneyTotal(vt.getMoney());
 
+            }
         }
         Excel excel = new Excel(0, 2);
         String tempString = excel.getSheetName();
-        XSSFWorkbook wb = new XSSFWorkbook();//创建一个Excel文件
+        wb = new XSSFWorkbook();
         XSSFSheet sheet = wb.createSheet(tempString);//创建报销明细工作薄
         sheet.setDefaultRowHeight((short) 300);//设置默认行高
         // 设置execl工作簿中的列名
@@ -1793,17 +1834,22 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             cell.setCellStyle(contentStyle);   //设置样式
         }
 
-        if( firstSubjectExports != null && firstSubjectExports.size()>0 ) {
+        if (firstSubjectExports != null && firstSubjectExports.size() > 0) {
             createRowDetail(firstSubjectExports, row, sheet);//填充数据
         }
+
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
             wb.write(os);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
-
         return os.toByteArray();
+
+//        else{
+//            return null;
+//        }
+
     }
 
     /**
@@ -1994,9 +2040,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         return str;
     }
 
-    public static final String[] EXCELHEAD2 = {"序号","凭证字",  "凭证日期", "一级科目",
+    public static final String[] EXCELHEAD2 = {"序号", "凭证字", "凭证日期", "一级科目",
             "二级科目", "三级科目", "借方金额", "贷方金额", "摘要", "地区", "项目名称", "项目组",
-            "制单人", "票据数量", "附件" };
+            "制单人", "票据数量", "附件"};
 
 
     @Override
@@ -2011,14 +2057,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         excel.setFirstSubject("银行存款");
         excel.setSecondSubject("test");
         excel.setThirdSubject("test");
-        excel.setBorrowMoney( 11d );
-        excel.setLoanMoney( 0d );
-        excel.setSumary( "test");
-        excel.setArea( "广州");
-        excel.setProjectName( "测试");
+        excel.setBorrowMoney(11d);
+        excel.setLoanMoney(0d);
+        excel.setSumary("test");
+        excel.setArea("广州");
+        excel.setProjectName("测试");
         excel.setProjectGroup("测试");
         excel.setTicketer("测试人员");
-        excel.setTicketNum( 1d );
+        excel.setTicketNum(1d);
         excel.setExtraFile(" ");
         excel.setTotalId("1");
         voucherExportVOS.add(excel);
@@ -2030,14 +2076,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         excel2.setFirstSubject("应付职工薪酬");
         excel2.setSecondSubject("test");
         excel2.setThirdSubject("test");
-        excel2.setBorrowMoney( 0d );
-        excel2.setLoanMoney( 11d );
-        excel2.setSumary( "test");
-        excel2.setArea( "广州");
-        excel2.setProjectName( "测试");
+        excel2.setBorrowMoney(0d);
+        excel2.setLoanMoney(11d);
+        excel2.setSumary("test");
+        excel2.setArea("广州");
+        excel2.setProjectName("测试");
         excel2.setProjectGroup("测试");
         excel2.setTicketer("测试人员");
-        excel2.setTicketNum( 1d );
+        excel2.setTicketNum(1d);
         excel2.setExtraFile(" ");
         excel2.setTotalId("1");
         voucherExportVOS.add(excel2);
@@ -2049,14 +2095,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         excel.setFirstSubject("其他应收款");
         excel.setSecondSubject("test");
         excel.setThirdSubject("test");
-        excel.setBorrowMoney( 55d );
-        excel.setLoanMoney( 0d );
-        excel.setSumary( "test");
-        excel.setArea( "湖南");
-        excel.setProjectName( "测试");
+        excel.setBorrowMoney(55d);
+        excel.setLoanMoney(0d);
+        excel.setSumary("test");
+        excel.setArea("湖南");
+        excel.setProjectName("测试");
         excel.setProjectGroup("测试");
         excel.setTicketer("测试人员");
-        excel.setTicketNum( 0d );
+        excel.setTicketNum(0d);
         excel.setExtraFile(" ");
         excel.setTotalId("2");
         voucherExportVOS.add(excel);
@@ -2068,14 +2114,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         excel2.setFirstSubject("应收利息");
         excel2.setSecondSubject("test");
         excel2.setThirdSubject("test");
-        excel2.setBorrowMoney( 0d );
-        excel2.setLoanMoney( 55d );
-        excel2.setSumary( "test");
-        excel2.setArea( "湖南");
-        excel2.setProjectName( "测试");
+        excel2.setBorrowMoney(0d);
+        excel2.setLoanMoney(55d);
+        excel2.setSumary("test");
+        excel2.setArea("湖南");
+        excel2.setProjectName("测试");
         excel2.setProjectGroup("测试");
         excel2.setTicketer("测试人员");
-        excel2.setTicketNum( 0d );
+        excel2.setTicketNum(0d);
         excel2.setExtraFile(" ");
         excel2.setTotalId("2");
         voucherExportVOS.add(excel2);
@@ -2103,7 +2149,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             cell.setCellValue(excelHeader[i]);//设置单元格的值
             cell.setCellStyle(contentStyle);   //设置样式
         }
-        if( voucherExportVOS != null && voucherExportVOS.size()>0 ) {
+        if (voucherExportVOS != null && voucherExportVOS.size() > 0) {
             createRowDetail_temp(voucherExportVOS, row, sheet);//填充数据
         }
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -2192,7 +2238,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 //            "二级科目", "三级科目", "借方金额", "贷方金额", "摘要", "地区", "项目名称", "项目组",
 //                    "制单人", "票据数量", "附件" };
 
-private XSSFSheet assiableMergeData_temp(XSSFSheet sheet, int firstRow, int lastRow) {
+    private XSSFSheet assiableMergeData_temp(XSSFSheet sheet, int firstRow, int lastRow) {
         CellRangeAddress cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 0, 0);
         sheet.addMergedRegion(cellRangeAddress);
         cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 1, 1);
@@ -2217,7 +2263,7 @@ private XSSFSheet assiableMergeData_temp(XSSFSheet sheet, int firstRow, int last
         return sheet;
     }
 
-    @Transactional(rollbackFor = SerException.class )
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public VoucherGenerateBO importExcel(List<VoucherGenerateTO> voucherGenerateTOs) throws SerException {
 //        List<VoucherGenerate> voucherGenerate = BeanTransform.copyProperties(voucherGenerateTOs, VoucherGenerate.class, true);
@@ -2226,7 +2272,7 @@ private XSSFSheet assiableMergeData_temp(XSSFSheet sheet, int firstRow, int last
 //            str.setModifyTime(LocalDateTime.now());
 //        });
 
-        for( VoucherGenerateTO str : voucherGenerateTOs){
+        for (VoucherGenerateTO str : voucherGenerateTOs) {
             addVoucherGenerate(str);
         }
 
@@ -2235,5 +2281,4 @@ private XSSFSheet assiableMergeData_temp(XSSFSheet sheet, int firstRow, int last
     }
 
 
-    
 }

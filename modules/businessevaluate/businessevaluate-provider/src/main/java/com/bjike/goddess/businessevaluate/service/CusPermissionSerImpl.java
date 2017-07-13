@@ -284,13 +284,15 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
             cusPermissionOperateSer.remove(deleteList);
         }
         List<CusPermissionOperate> list = new ArrayList<>();
-        for (String operateId : operators) {
-            CusPermissionOperate cpo = new CusPermissionOperate();
-            cpo.setOperator(operateId);
-            cpo.setCuspermissionId(temp.getId());
-            list.add(cpo);
+        if(operators!=null && operators.length>0){
+            for (String operateId : operators) {
+                CusPermissionOperate cpo = new CusPermissionOperate();
+                cpo.setOperator(operateId);
+                cpo.setCuspermissionId(temp.getId());
+                list.add(cpo);
+            }
+            cusPermissionOperateSer.save(list);
         }
-        cusPermissionOperateSer.save(list);
 
         return BeanTransform.copyProperties(temp, CusPermissionBO.class);
     }

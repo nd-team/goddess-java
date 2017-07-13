@@ -1,6 +1,7 @@
 package com.bjike.goddess.housepay.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.housepay.entity.WaitPay;
 import com.bjike.goddess.housepay.enums.PayStatus;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -16,89 +17,89 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class WaitPayTO extends BaseTO {
+    public interface TestAdd{}
+    public interface TestEdit{}
 
     /**
      * 缴费时间
      */
-    @NotBlank(message = "缴费时间不能为空")
+    @NotBlank(message = "缴费时间不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
     private String payTime;
 
     /**
      * 地区
      */
-    @NotBlank(message = "地区不能为空")
+    @NotBlank(message = "地区不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
     private String area;
 
     /**
      * 项目
      */
-    @NotBlank(message = "项目不能为空")
+    @NotBlank(message = "项目不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
     private String project;
 
     /**
      * 房租地址
      */
-    @NotBlank(message = "房租地址不能为空")
+    @NotBlank(message = "房租地址不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
     private String rentAddress;
 
     /**
      * 租金
      */
-    @NotNull(message = "租金不能为空")
+    @NotNull(message = "租金不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
     private Double rent;
 
     /**
      * 水费
      */
-    @NotNull(message = "水费不能为空")
+    @NotNull(message = "水费不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
     private Double water;
 
     /**
      * 电费
      */
-    @NotNull(message = "电费不能为空")
+    @NotNull(message = "电费不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
     private Double energy;
 
     /**
      * 管理费
      */
-    @NotNull(message = "管理费不能为空")
+    @NotNull(message = "管理费不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
     private Double fee;
 
     /**
      * 其他费用
      */
-    @NotNull(message = "其他费用不能为空")
+    @NotNull(message = "其他费用不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
     private Double otherFee;
 
     /**
      * 合计（租金+水费+电费+管理费+其他费用）
      */
-    @NotNull(message = "合计（租金+水费+电费+管理费+其他费用）不能为空")
     private Double total;
 
     /**
      * 房东姓名
      */
-    @NotBlank(message = "房东姓名不能为空")
+    @NotBlank(message = "房东姓名不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
     private String landlord;
 
     /**
      * 联系电话
      */
-    @NotBlank(message = "联系电话不能为空")
+    @NotBlank(message = "联系电话不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
     private String contact;
 
     /**
      * 交租确认
      */
-    @NotBlank(message = "交租确认不能为空")
+    @NotBlank(message = "交租确认不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
     private String taxesConfirm;
 
     /**
      * 是否付款
      */
-    @NotNull(message = "是否付款不能为空")
     private PayStatus pay;
 
     /**
