@@ -9,7 +9,7 @@ import com.bjike.goddess.message.to.MessageTO;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface KafkaProducer {
+public interface IKafkaProducer {
 
     default void produce(MessageTO messageTO) {
 

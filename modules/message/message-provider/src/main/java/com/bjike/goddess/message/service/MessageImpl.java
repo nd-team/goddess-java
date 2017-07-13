@@ -17,7 +17,7 @@ import com.bjike.goddess.message.entity.UserMessage;
 import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
-import com.bjike.goddess.message.kafka.KafkaProducer;
+import com.bjike.goddess.message.kafka.IKafkaProducer;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.redis.client.RedisClient;
 import com.bjike.goddess.user.api.UserAPI;
@@ -34,7 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 消息推送业务实现
@@ -55,7 +54,7 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
     @Autowired
     private RedisClient redisClient;
     @Autowired
-    private KafkaProducer kafkaProducer;
+    private IKafkaProducer kafkaProducer;
     @Autowired
     private GroupMessageSer groupMessageSer;
     @Autowired
