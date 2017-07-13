@@ -63,14 +63,6 @@ public interface ProjectContractAPI {
     List<ProjectContractCollectBO> collect(CollectConditionTO to) throws SerException;
 
     /**
-     * 定时发送邮件提示商务承包洽谈
-     *
-     * @param cycle
-     * @throws SerException
-     */
-    void setCollectSend(QuartzCycleType cycle) throws SerException;
-
-    /**
      * 根据id查询记录
      *
      * @param id 项目承包id
