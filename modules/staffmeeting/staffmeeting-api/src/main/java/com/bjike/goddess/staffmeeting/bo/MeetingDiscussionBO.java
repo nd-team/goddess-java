@@ -3,11 +3,11 @@ package com.bjike.goddess.staffmeeting.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
- * 通告反馈投诉业务传输对象
+ * 会议讨论业务传输对象
  *
  * @Author: [ Jason ]
  * @Date: [ 2017-06-06 05:18 ]
- * @Description: [ 通告反馈投诉业务传输对象 ]
+ * @Description: [ 会议讨论业务传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */

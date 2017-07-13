@@ -1,11 +1,11 @@
 package com.bjike.goddess.staffmeeting.vo;
 
 /**
- * 通告反馈投诉表现层对象
+ * 会议讨论表现层对象
  *
  * @Author: [ Jason ]
  * @Date: [ 2017-06-06 05:18 ]
- * @Description: [ 通告反馈投诉表现层对象 ]
+ * @Description: [会议讨论投诉表现层对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
