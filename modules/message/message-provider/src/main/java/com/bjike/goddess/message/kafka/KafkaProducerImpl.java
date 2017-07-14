@@ -33,10 +33,10 @@ public class KafkaProducerImpl implements IKafkaProducer {
         props.put(ProducerConfig.LINGER_MS_CONFIG, 1);
         props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 33554432);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);  props.put(ProducerConfig.ACKS_CONFIG, "-1");
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ProducerConfig.ACKS_CONFIG, "-1");
         Producer<String, String> producer = new KafkaProducer<>(props);
         producer.send(new ProducerRecord("messages", messageTO.getId(), JSON.toJSONString(messageTO)));
     }
-
 
 }
