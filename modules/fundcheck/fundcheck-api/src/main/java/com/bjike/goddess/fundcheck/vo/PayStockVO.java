@@ -1,5 +1,7 @@
 package com.bjike.goddess.fundcheck.vo;
 
+import java.util.List;
+
 /**
  * 支付给股东表现层对象
  *
@@ -19,6 +21,14 @@ public class PayStockVO {
      * 日期
      */
     private String date;
+    /**
+     * 一级
+     */
+    private String firstName;
+    /**
+     * 二级
+     */
+    private String secondName;
 
     /**
      * 股东名
@@ -29,6 +39,15 @@ public class PayStockVO {
      * 金额
      */
     private Double money;
+    /**
+     * 股东名
+     */
+    private List<String> stockNameList;
+
+    /**
+     * 金额
+     */
+    private List<Double> moneyList;
 
 
     public String getId() {
@@ -37,6 +56,22 @@ public class PayStockVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getSecondName() {
+        return secondName;
+    }
+
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
     }
 
     public String getDate() {
@@ -61,5 +96,21 @@ public class PayStockVO {
 
     public void setMoney(Double money) {
         this.money = money;
+    }
+
+    public List<String> getStockNameList() {
+        return stockNameList;
+    }
+
+    public void setStockNameList(List<String> stockNameList) {
+        this.stockNameList = stockNameList;
+    }
+
+    public List<Double> getMoneyList() {
+        return moneyList;
+    }
+
+    public void setMoneyList(List<Double> moneyList) {
+        this.moneyList = moneyList;
     }
 }

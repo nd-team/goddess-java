@@ -19,16 +19,10 @@ import javax.validation.constraints.NotNull;
 public class IncomeCostAnalysisTO extends BaseTO {
 
     /**
-     * 年份
+     * 时间
      */
-    @NotNull(message = "年份不能为空",groups = {ADD.class, EDIT.class})
-    private Integer year;
-
-    /**
-     * 月份
-     */
-    @NotBlank(message = "月份不能为空",groups = {ADD.class, EDIT.class})
-    private String month;
+    @NotBlank(message = "时间不能为空",groups = {ADD.class, EDIT.class})
+    private String date;
 
     /**
      * 地区
@@ -114,20 +108,12 @@ public class IncomeCostAnalysisTO extends BaseTO {
     private Double balance;
 
 
-    public Integer getYear() {
-        return year;
+    public String getDate() {
+        return date;
     }
 
-    public void setYear(Integer year) {
-        this.year = year;
-    }
-
-    public String getMonth() {
-        return month;
-    }
-
-    public void setMonth(String month) {
-        this.month = month;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getArea() {

@@ -65,4 +65,6 @@ public interface FeedbackComplainAPI {
      * @return 通告反馈投诉
      */
     FeedbackComplainBO findById(String id) throws SerException;
+
+    void unfreeze(String id) throws SerException;
 }

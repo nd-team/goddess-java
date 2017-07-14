@@ -1,6 +1,10 @@
 package com.bjike.goddess.interiorrecommend.vo;
 
+import com.bjike.goddess.interiorrecommend.bo.RecommendAssessDetailBO;
 import com.bjike.goddess.interiorrecommend.enums.AssessWay;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 推荐要求表现层对象
@@ -17,21 +21,16 @@ public class RecommendRequireVO {
      * id
      */
     private String id;
+
     /**
-     * 推荐方案id
+     * 推荐考核内容
      */
-    private String recommendSchemeId;
+    private List<RecommendAssessDetailVO> detailList = new ArrayList<RecommendAssessDetailVO>();
 
     /**
      * 推荐时长
      */
     private Integer recommendTime;
-
-    /**
-     * 推荐类型id
-     */
-    private String recommendTypeId;
-
 
     /**
      * 指标来源
@@ -76,14 +75,6 @@ public class RecommendRequireVO {
         this.id = id;
     }
 
-    public String getRecommendSchemeId() {
-        return recommendSchemeId;
-    }
-
-    public void setRecommendSchemeId(String recommendSchemeId) {
-        this.recommendSchemeId = recommendSchemeId;
-    }
-
     public Integer getRecommendTime() {
         return recommendTime;
     }
@@ -92,16 +83,16 @@ public class RecommendRequireVO {
         this.recommendTime = recommendTime;
     }
 
-    public String getRecommendTypeId() {
-        return recommendTypeId;
-    }
-
-    public void setRecommendTypeId(String recommendTypeId) {
-        this.recommendTypeId = recommendTypeId;
-    }
-
     public String getIndicatorResource() {
         return indicatorResource;
+    }
+
+    public List<RecommendAssessDetailVO> getDetailList() {
+        return detailList;
+    }
+
+    public void setDetailList(List<RecommendAssessDetailVO> detailList) {
+        this.detailList = detailList;
     }
 
     public void setIndicatorResource(String indicatorResource) {

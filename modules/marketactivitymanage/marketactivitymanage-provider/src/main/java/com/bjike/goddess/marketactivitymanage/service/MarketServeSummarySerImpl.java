@@ -1095,45 +1095,52 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
                     - lastTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
             Double temp_sendNum = 0d;
             Boolean flag = false;
-            switch (cycle) {
+            switch (collectSendUnit) {
                 case MINUTE:
                     //毫秒数
                     temp_sendNum = sendNum * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
+                        str.setLastSendTime(lastTime.plusMinutes( sendNum.longValue() ));
                     }
                     break;
-                case HOUR:
+                case HOURS:
                     temp_sendNum = sendNum * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
+                        str.setLastSendTime(lastTime.plusHours( sendNum.longValue() ));
                     }
                     break;
                 case DAY:
                     temp_sendNum = sendNum * 24 * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
+                        str.setLastSendTime(lastTime.plusDays( sendNum.longValue() ));
                     }
                     break;
                 case WEEK:
                     temp_sendNum = sendNum * 7 * 24 * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
+                        str.setLastSendTime(lastTime.plusWeeks( sendNum.longValue() ));
                     }
                     break;
                 case MONTH:
                     if (nowTime.minusMonths(sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
+                        str.setLastSendTime(lastTime.plusMonths( sendNum.longValue() ));
                     }
                     break;
                 case QUARTER:
-                    if (nowTime.minusMonths(3 * sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(3 * sendNum.longValue()).isAfter(lastTime)) {
+                    if (nowTime.minusMonths(3*sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(3*sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
+                        str.setLastSendTime(lastTime.plusMonths( 3* sendNum.longValue() ));
                     }
                     break;
                 case YEAR:
                     if (nowTime.minusYears(sendNum.longValue()).isEqual(lastTime) || nowTime.minusYears(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
+                        str.setLastSendTime(lastTime.plusYears( sendNum.longValue() ));
                     }
                     break;
             }
@@ -1239,7 +1246,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
                 messageTO.setReceivers(sign.getEmails().split(","));
                 messageAPI.send(messageTO);
 
-                sign.setLastTime(LocalDateTime.now());
+
                 sign.setModifyTime(LocalDateTime.now());
                 allEmails.add(sign);
             }

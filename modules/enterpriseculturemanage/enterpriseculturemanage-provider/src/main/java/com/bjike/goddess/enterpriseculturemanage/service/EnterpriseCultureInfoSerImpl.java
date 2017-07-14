@@ -10,19 +10,24 @@ import com.bjike.goddess.enterpriseculturemanage.bo.PeriodicalProgramInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.bo.PublicizeProgramInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.dto.EnterpriseCultureInfoDTO;
 import com.bjike.goddess.enterpriseculturemanage.dto.PeriodicalProgramInfoDTO;
+import com.bjike.goddess.enterpriseculturemanage.entity.ConstructTeam;
 import com.bjike.goddess.enterpriseculturemanage.entity.EnterpriseCultureInfo;
 import com.bjike.goddess.enterpriseculturemanage.entity.PeriodicalProgramInfo;
 import com.bjike.goddess.enterpriseculturemanage.entity.PublicizeProgramInfo;
 import com.bjike.goddess.enterpriseculturemanage.enums.UpdateType;
 import com.bjike.goddess.enterpriseculturemanage.to.EnterpriseCultureInfoEditTO;
 import com.bjike.goddess.enterpriseculturemanage.to.EnterpriseCultureInfoTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,10 +47,16 @@ public class EnterpriseCultureInfoSerImpl extends ServiceImpl<EnterpriseCultureI
     private PublicizeProgramInfoSer publicizeProgramInfoSer;
     @Autowired
     private PeriodicalProgramInfoSer periodicalProgramInfoSer;
+    @Autowired
+    private ConstructTeamSer constructTeamSer;
+    @Autowired
+    private UserAPI userAPI;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public EnterpriseCultureInfoBO insertModel(EnterpriseCultureInfoTO to) throws SerException {
+
+        onOfTeam();
         //需要检查theme是否与解冻状态记录存在相同
         EnterpriseCultureInfoDTO dto = new EnterpriseCultureInfoDTO();
         dto.getConditions().add(Restrict.eq("theme", to.getTheme()));
@@ -61,9 +72,29 @@ public class EnterpriseCultureInfoSerImpl extends ServiceImpl<EnterpriseCultureI
         return BeanTransform.copyProperties(to, EnterpriseCultureInfoBO.class);
     }
 
+    //检查当前用户是否为建设小组人员
+    public void onOfTeam() throws SerException {
+
+        UserBO userBO = userAPI.currentUser();
+
+        List<ConstructTeam> teamList = constructTeamSer.findAll();
+        if (!CollectionUtils.isEmpty(teamList)) {
+            List<String> users = new ArrayList<String>();
+            for (ConstructTeam team : teamList) {
+                users.add(team.getUserNumber());
+            }
+            if (!users.contains(userBO.getEmployeeNumber())) {
+                throw new SerException("只有建设小组可以管理公司文化!");
+            }
+        } else {
+            throw new SerException("请先添加建设小组人员!");
+        }
+    }
+
     @Override
     @Transactional(rollbackFor = SerException.class)
     public EnterpriseCultureInfoBO updateModel(EnterpriseCultureInfoEditTO to) throws SerException {
+        onOfTeam();
         EnterpriseCultureInfo newmodel = super.findById(to.getId());
         if (newmodel != null) {
             //覆盖相当于盘普通编辑，保留即copy新增旧记录并且冻结状态

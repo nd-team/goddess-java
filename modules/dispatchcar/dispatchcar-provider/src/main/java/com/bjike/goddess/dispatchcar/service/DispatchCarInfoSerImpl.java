@@ -1,5 +1,7 @@
 package com.bjike.goddess.dispatchcar.service;
 
+import com.bjike.goddess.carinfo.api.DriverInfoAPI;
+import com.bjike.goddess.carinfo.bo.DriverInfoBO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
@@ -22,8 +24,6 @@ import com.bjike.goddess.dispatchcar.excel.SonPermissionObject;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
 import com.bjike.goddess.dispatchcar.to.FinanceCollectTO;
 import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
-import com.bjike.goddess.driverinfo.api.DriverInfoAPI;
-import com.bjike.goddess.driverinfo.bo.DriverInfoBO;
 import com.bjike.goddess.oilcardmanage.api.OilCardBasicAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.text.DecimalFormat;
@@ -64,8 +65,6 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     private UserDetailAPI userDetailAPI;
     @Autowired
     private LeaseCarCostSer leaseCarCostSer;
-    @Autowired
-    private OilCardBasicAPI oilCardBasicAPI;
     @Autowired
     private DriverInfoAPI driverInfoAPI;
     @Autowired
@@ -222,11 +221,15 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     public void breakFreeze(String id) throws SerException {
         DispatchCarInfo model = super.findById(id);
         if (model != null) {
-            model.setModifyTime(LocalDateTime.now());
-            model.setStatus(Status.THAW);
-            super.update(model);
+            if (model.getStatus() != Status.THAW) {
+                model.setModifyTime(LocalDateTime.now());
+                model.setStatus(Status.THAW);
+                super.update(model);
+            } else {
+                throw new SerException("该记录无需重复解冻");
+            }
         } else {
-            throw new SerException("解冻对象不能为空!");
+            throw new SerException("非法Id,出车记录对象不能为空!");
         }
     }
 
@@ -1107,6 +1110,24 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             return super.findBySql(sql.toString(), DriverDispatchsBO.class, fields);
         } else {
             throw new SerException("查询月份不能为空!");
+        }
+    }
+
+    @Override
+    public Double findOilAmount(String oilCardCode, Integer year, Integer month) throws SerException {
+
+        String sql = "select addOilAmount , oilPrice from dispatchcar_basicinfo where oilCardNumber = '" + oilCardCode + "'"
+                + "and month(addOilTime) = " + month
+                + "and year(addOilTime) = " + year;
+        String[] fields = new String[]{"addOilAmount", "oilPrice"};
+        List<DispatchCarInfo> list = super.findBySql(sql, DispatchCarInfo.class, fields);
+
+        if (!CollectionUtils.isEmpty(list)) {
+            Double addOilAmount = list.stream().filter(p -> p.getAddOilAmount() != null).mapToDouble(DispatchCarInfo::getAddOilAmount).sum();
+            Double oilPrice = list.stream().filter(p -> p.getOilPrice() != null).mapToDouble(DispatchCarInfo::getOilPrice).sum();
+            return addOilAmount * oilPrice;
+        } else {
+            return 0.0;
         }
     }
 }

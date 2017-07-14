@@ -1,6 +1,8 @@
 package com.bjike.goddess.oilcardmanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.oilcardmanage.bo.AnalyzeBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardRechargeBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardRechargeDTO;
 import com.bjike.goddess.oilcardmanage.service.OilCardRechargeSer;
@@ -12,6 +14,7 @@ import java.util.List;
 
 /**
  * 油卡充值对外发布接口实现类
+ *
  * @Author: [Jason]
  * @Date: [17-3-15 上午11:06]
  * @Package:[ com.bjike.goddess.oilcardmanage.api ]
@@ -21,9 +24,10 @@ import java.util.List;
  */
 @Service("oilCardRechargeApiImpl")
 public class OilCardRechargeApiImpl implements OilCardRechargeAPI {
-    
-    @Autowired private OilCardRechargeSer oilCardRechargeSer;
-    
+
+    @Autowired
+    private OilCardRechargeSer oilCardRechargeSer;
+
     @Override
     public OilCardRechargeBO saveOilCardRecharge(OilCardRechargeTO to) throws SerException {
         return oilCardRechargeSer.saveOilCardRecharge(to);
@@ -35,8 +39,8 @@ public class OilCardRechargeApiImpl implements OilCardRechargeAPI {
     }
 
     @Override
-    public List<OilCardRechargeBO> collect(String id,String startTime,String endTime) throws SerException {
-        return oilCardRechargeSer.collect(id,startTime,endTime);
+    public List<OilCardRechargeBO> collect(String oilCardBasicId, String startTime, String endTime) throws SerException {
+        return oilCardRechargeSer.collect(oilCardBasicId, startTime, endTime);
     }
 
     @Override
@@ -47,5 +51,20 @@ public class OilCardRechargeApiImpl implements OilCardRechargeAPI {
     @Override
     public List<OilCardRechargeBO> findByBasicId(String id) throws SerException {
         return oilCardRechargeSer.findByBasicId(id);
+    }
+
+    @Override
+    public OilCardRechargeBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(oilCardRechargeSer.findById(id), OilCardRechargeBO.class);
+    }
+
+    @Override
+    public Long count(OilCardRechargeDTO dto) throws SerException {
+        return oilCardRechargeSer.count(dto);
+    }
+
+    @Override
+    public AnalyzeBO analyze(String oilCardCode, Integer year, Integer month) throws SerException {
+        return oilCardRechargeSer.analyze(oilCardCode, year, month);
     }
 }

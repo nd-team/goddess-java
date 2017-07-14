@@ -112,7 +112,7 @@ public class IncomeQuotaSerImpl extends ServiceImpl<IncomeQuota, IncomeQuotaDTO>
         if(StringUtils.isBlank(incomeQuotaTO.getId())){
             throw new SerException("id不能为空");
         }
-        BeanTransform.copyProperties(incomeQuota,incomeQuota,true);
+        BeanTransform.copyProperties(incomeQuotaTO,incomeQuota,true);
         incomeQuota.setModifyTime(LocalDateTime.now());
         incomeQuota = count(incomeQuota);
         super.update(incomeQuota);

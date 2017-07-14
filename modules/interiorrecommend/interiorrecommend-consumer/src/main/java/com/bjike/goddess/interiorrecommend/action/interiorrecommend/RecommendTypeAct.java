@@ -1,8 +1,11 @@
 package com.bjike.goddess.interiorrecommend.action.interiorrecommend;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.interiorrecommend.api.RecommendTypeAPI;
@@ -11,8 +14,10 @@ import com.bjike.goddess.interiorrecommend.to.RecommendTypeTO;
 import com.bjike.goddess.interiorrecommend.vo.RecommendTypeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -32,13 +37,14 @@ public class RecommendTypeAct {
     private RecommendTypeAPI recommendTypeAPI;
 
     /**
-     * 新增推荐类型设定
+     * 新增
      *
      * @param to 推荐类型设定
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
-    public Result add(RecommendTypeTO to, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(ADD.class) RecommendTypeTO to, BindingResult bindingResult) throws ActException {
         try {
             RecommendTypeVO vo = BeanTransform.copyProperties(recommendTypeAPI.addModel(to), RecommendTypeVO.class);
             return ActResult.initialize(vo);
@@ -48,13 +54,14 @@ public class RecommendTypeAct {
     }
 
     /**
-     * 编辑推荐类型设定
+     * 编辑
      *
      * @param to 推荐类型设定
      * @version v1
      */
-    @PostMapping("v1/edit")
-    public Result edit(RecommendTypeTO to, BindingResult bindingResult) throws ActException {
+    @LoginAuth
+    @PutMapping("v1/edit")
+    public Result edit(@Validated(EDIT.class) RecommendTypeTO to, BindingResult bindingResult) throws ActException {
         try {
             RecommendTypeVO vo = BeanTransform.copyProperties(recommendTypeAPI.editModel(to), RecommendTypeVO.class);
             return ActResult.initialize(vo);
@@ -65,12 +72,13 @@ public class RecommendTypeAct {
 
 
     /**
-     * 删除推荐类型设定
+     * 删除
      *
      * @param id 推荐类型设定id
      * @version v1
      */
-    @GetMapping("v1/delete/{id}")
+    @LoginAuth
+    @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
             recommendTypeAPI.delete(id);
@@ -81,12 +89,13 @@ public class RecommendTypeAct {
     }
 
     /**
-     * 推荐类型设定分页查询
+     * 列表
      *
      * @param dto 分页条件
      * @version v1
      */
-    @GetMapping("v1/pageList")
+    @LoginAuth
+    @GetMapping("v1/list")
     public Result pageList(RecommendTypeDTO dto) throws ActException {
         try {
             List<RecommendTypeVO> voList = BeanTransform.copyProperties(recommendTypeAPI.pageList(dto), RecommendTypeVO.class);
@@ -96,4 +105,36 @@ public class RecommendTypeAct {
         }
     }
 
+    /**
+     * 查询列表总条数
+     *
+     * @param dto 查询条件或分页条件
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(RecommendTypeDTO dto) throws ActException {
+        try {
+            Long count = recommendTypeAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id查询竞争对手记录
+     *
+     * @param id 竞争对手Id
+     * @return class RecommendTypeVO
+     * @version v1
+     */
+    @GetMapping("v1/find/{id}")
+    public Result findByid(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            RecommendTypeVO vo = BeanTransform.copyProperties(recommendTypeAPI.findById(id), RecommendTypeVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

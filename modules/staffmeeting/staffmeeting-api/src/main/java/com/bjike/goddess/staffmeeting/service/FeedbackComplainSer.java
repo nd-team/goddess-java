@@ -50,4 +50,12 @@ public interface FeedbackComplainSer extends Ser<FeedbackComplain, FeedbackCompl
      * @return 分页结果集
      */
     List<FeedbackComplainBO> pageList(FeedbackComplainDTO dto) throws SerException;
+
+    /**
+     * 解冻
+     *
+     * @param id
+     * @throws SerException
+     */
+    void unfreeze(String id) throws SerException;
 }

@@ -2,11 +2,10 @@ package com.bjike.goddess.staffmeeting.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.staffmeeting.enums.MeetingPurpose;
 import com.bjike.goddess.staffmeeting.enums.MeetingType;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 
@@ -24,6 +23,12 @@ import java.time.LocalDateTime;
 public class MeetingOrganize extends BaseEntity {
 
     /**
+     * 会议组织
+     */
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, mappedBy = "meetingOrganize")
+    private MeetingSummary meetingSummary;
+
+    /**
      * 会议编号
      */
     @Column(name = "meetingNum", nullable = false, unique = true, columnDefinition = "VARCHAR(255)   COMMENT '会议编号'")
@@ -36,10 +41,18 @@ public class MeetingOrganize extends BaseEntity {
     private String topicReason;
 
     /**
-     * 层面Id
+     * 议题目的
      */
-    @Column(name = "layId", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '层面Id'")
-    private String layId;
+    @Column(name = "meetingPurpose", columnDefinition = "TINYINT(2)   COMMENT '议题目的'")
+    private MeetingPurpose meetingPurpose;
+
+    /**
+     * 层面
+     */
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "meetingLay_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '层面'")
+    private MeetingLay meetingLay;
+
 
     /**
      * 会议内容
@@ -90,12 +103,28 @@ public class MeetingOrganize extends BaseEntity {
     private Status status;
 
 
+    public MeetingSummary getMeetingSummary() {
+        return meetingSummary;
+    }
+
+    public void setMeetingSummary(MeetingSummary meetingSummary) {
+        this.meetingSummary = meetingSummary;
+    }
+
     public String getMeetingNum() {
         return meetingNum;
     }
 
     public void setMeetingNum(String meetingNum) {
         this.meetingNum = meetingNum;
+    }
+
+    public MeetingPurpose getMeetingPurpose() {
+        return meetingPurpose;
+    }
+
+    public void setMeetingPurpose(MeetingPurpose meetingPurpose) {
+        this.meetingPurpose = meetingPurpose;
     }
 
     public String getTopicReason() {
@@ -106,12 +135,12 @@ public class MeetingOrganize extends BaseEntity {
         this.topicReason = topicReason;
     }
 
-    public String getLayId() {
-        return layId;
+    public MeetingLay getMeetingLay() {
+        return meetingLay;
     }
 
-    public void setLayId(String layId) {
-        this.layId = layId;
+    public void setMeetingLay(MeetingLay meetingLay) {
+        this.meetingLay = meetingLay;
     }
 
     public String getContent() {

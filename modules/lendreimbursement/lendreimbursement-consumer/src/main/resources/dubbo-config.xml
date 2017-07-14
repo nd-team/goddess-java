@@ -41,5 +41,8 @@
 	<dubbo:reference  validation="true" id="reimburseAuditLogApiImpl" interface="com.bjike.goddess.lendreimbursement.api.ReimburseAuditLogAPI" />
 	<dubbo:reference  validation="true" id="reimburseRecordApiImpl" interface="com.bjike.goddess.lendreimbursement.api.ReimburseRecordAPI" />
 	<dubbo:reference  validation="true" id="reimburseRecordLogApiImpl" interface="com.bjike.goddess.lendreimbursement.api.ReimburseRecordLogAPI" />
+	<dubbo:reference  validation="true" id="lendPermissionApiImpl" interface="com.bjike.goddess.lendreimbursement.api.LendPermissionAPI" />
+	<dubbo:reference  validation="true" id="lendPermissionOperateApiImpl" interface="com.bjike.goddess.lendreimbursement.api.LendPermissionOperateAPI" />
+
 
 </beans>

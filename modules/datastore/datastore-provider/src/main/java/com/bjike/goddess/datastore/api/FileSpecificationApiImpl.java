@@ -5,8 +5,10 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.datastore.bo.FileSpecificationBO;
 import com.bjike.goddess.datastore.dto.FileSpecificationDTO;
 import com.bjike.goddess.datastore.entity.FileSpecification;
+import com.bjike.goddess.datastore.excel.SonPermissionObject;
 import com.bjike.goddess.datastore.service.FileSpecificationSer;
 import com.bjike.goddess.datastore.to.FileSpecificationTO;
+import com.bjike.goddess.datastore.to.GuidePermissionTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,15 @@ import java.util.List;
 public class FileSpecificationApiImpl implements FileSpecificationAPI {
     @Autowired
     private FileSpecificationSer fileSpecificationSer;
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return fileSpecificationSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return fileSpecificationSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countFileSpecification(FileSpecificationDTO fileSpecificationDTO) throws SerException {
         return fileSpecificationSer.countFileSpecification(fileSpecificationDTO);

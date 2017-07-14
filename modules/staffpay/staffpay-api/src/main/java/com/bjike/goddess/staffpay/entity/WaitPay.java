@@ -2,6 +2,7 @@ package com.bjike.goddess.staffpay.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.staffpay.enums.ConfirmStatus;
+import com.bjike.goddess.staffpay.enums.FindType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,7 +26,7 @@ public class WaitPay extends BaseEntity {
     /**
      * 月份
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '月份'")
+    @Column( nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '月份'")
     private Integer months;
 
     /**
@@ -226,7 +227,19 @@ public class WaitPay extends BaseEntity {
      */
     @Column(name = "secondPayTime", columnDefinition = "DATE   COMMENT '第二次付款时间'")
     private LocalDate secondPayTime;
+    /**
+     * 数据状态
+     */
+    @Column(name = "findType", columnDefinition = "TINYINT(2)   COMMENT '数据状态'")
+    private FindType findType;
 
+    public FindType getFindType() {
+        return findType;
+    }
+
+    public void setFindType(FindType findType) {
+        this.findType = findType;
+    }
 
     public Integer getMonths() {
         return months;

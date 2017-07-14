@@ -14,15 +14,29 @@ import com.bjike.goddess.oilcardmanage.enums.OilCardReceiveResult;
 public class OilCardReceiveVO {
 
     /**
-     * 数据状态
+     * id
      */
-    private Status status;
+    private String id;
 
     /**
-     * 油卡信息Id
+     * 油卡编号
      */
-    private String oilCardBasicId;
+    private String oilCardCode;
 
+    /**
+     * 卡号
+     */
+    private String oilCardNumber;
+
+    /**
+     * 主卡/副卡
+     */
+    private String mainOrDeputy;
+
+    /**
+     * 所属主卡
+     */
+    private String belongMainCard;
     /**
      * 领用日期
      */
@@ -68,20 +82,44 @@ public class OilCardReceiveVO {
      */
     private String remark;
 
-    public Status getStatus() {
-        return status;
+    public String getId() {
+        return id;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getOilCardBasicId() {
-        return oilCardBasicId;
+    public String getOilCardCode() {
+        return oilCardCode;
     }
 
-    public void setOilCardBasicId(String oilCardBasicId) {
-        this.oilCardBasicId = oilCardBasicId;
+    public void setOilCardCode(String oilCardCode) {
+        this.oilCardCode = oilCardCode;
+    }
+
+    public String getOilCardNumber() {
+        return oilCardNumber;
+    }
+
+    public void setOilCardNumber(String oilCardNumber) {
+        this.oilCardNumber = oilCardNumber;
+    }
+
+    public String getMainOrDeputy() {
+        return mainOrDeputy;
+    }
+
+    public void setMainOrDeputy(String mainOrDeputy) {
+        this.mainOrDeputy = mainOrDeputy;
+    }
+
+    public String getBelongMainCard() {
+        return belongMainCard;
+    }
+
+    public void setBelongMainCard(String belongMainCard) {
+        this.belongMainCard = belongMainCard;
     }
 
     public String getReceiveDate() {
@@ -155,4 +193,5 @@ public class OilCardReceiveVO {
     public void setRemark(String remark) {
         this.remark = remark;
     }
+
 }

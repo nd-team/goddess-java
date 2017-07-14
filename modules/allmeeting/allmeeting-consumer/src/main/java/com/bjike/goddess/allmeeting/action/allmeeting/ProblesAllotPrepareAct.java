@@ -40,7 +40,7 @@ public class ProblesAllotPrepareAct {
 
 
     /**
-     * 新增工作汇总议题准备
+     * 新增
      *
      * @param to 工作汇总议题准备
      * @return class ProblesAllotPrepareVO
@@ -58,7 +58,7 @@ public class ProblesAllotPrepareAct {
     }
 
     /**
-     * 编辑工作汇总议题准备
+     * 编辑
      *
      * @param to 工作汇总议题准备
      * @return class ProblesAllotPrepareVO
@@ -92,14 +92,14 @@ public class ProblesAllotPrepareAct {
     }
 
     /**
-     * 列表分页查询
+     * 列表
      *
      * @param dto 分页条件
      * @return class ProblesAllotPrepareVO
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result pageList(ProblesAllotPrepareDTO dto) throws ActException {
+    public Result pageList(@Validated(ProblesAllotPrepareDTO.SelectStatus.class) ProblesAllotPrepareDTO dto) throws ActException {
         try {
             List<ProblesAllotPrepareVO> voList = BeanTransform.copyProperties(problesAllotPrepareAPI.pageList(dto), ProblesAllotPrepareVO.class);
             return ActResult.initialize(voList);
@@ -115,7 +115,7 @@ public class ProblesAllotPrepareAct {
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(ProblesAllotPrepareDTO dto) throws ActException {
+    public Result count(@Validated(ProblesAllotPrepareDTO.SelectStatus.class) ProblesAllotPrepareDTO dto) throws ActException {
         try {
             dto.getConditions().add(Restrict.eq("status", Status.THAW));
             Long count = problesAllotPrepareAPI.count(dto);

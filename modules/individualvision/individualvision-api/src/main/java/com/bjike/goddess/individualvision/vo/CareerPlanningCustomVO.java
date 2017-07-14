@@ -36,7 +36,10 @@ public class CareerPlanningCustomVO {
      * 入职时间
      */
     private String entryTime;
-
+    /**
+     * 可提供的福利待遇
+     */
+    private String availableBenefitPackage;
     /**
      * 薪资上升幅度
      */
@@ -113,6 +116,13 @@ public class CareerPlanningCustomVO {
      */
     private String actualYearsEarnings;
 
+    public String getAvailableBenefitPackage() {
+        return availableBenefitPackage;
+    }
+
+    public void setAvailableBenefitPackage(String availableBenefitPackage) {
+        this.availableBenefitPackage = availableBenefitPackage;
+    }
 
     public String getId() {
         return id;

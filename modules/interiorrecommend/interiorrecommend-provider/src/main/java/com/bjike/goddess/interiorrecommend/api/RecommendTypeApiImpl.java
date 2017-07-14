@@ -1,6 +1,7 @@
 package com.bjike.goddess.interiorrecommend.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.interiorrecommend.bo.RecommendTypeBO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendTypeDTO;
 import com.bjike.goddess.interiorrecommend.service.RecommendTypeSer;
@@ -43,5 +44,15 @@ public class RecommendTypeApiImpl implements RecommendTypeAPI {
     @Override
     public List<RecommendTypeBO> pageList(RecommendTypeDTO dto) throws SerException {
         return recommendTypeSer.pageList(dto);
+    }
+
+    @Override
+    public RecommendTypeBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(recommendTypeSer.findById(id),RecommendTypeBO.class);
+    }
+
+    @Override
+    public Long count(RecommendTypeDTO dto) throws SerException {
+        return recommendTypeSer.count(dto);
     }
 }

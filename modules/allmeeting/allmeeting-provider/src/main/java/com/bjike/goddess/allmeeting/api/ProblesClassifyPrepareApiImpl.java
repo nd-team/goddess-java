@@ -55,4 +55,9 @@ public class ProblesClassifyPrepareApiImpl implements ProblesClassifyPrepareAPI 
     public List<ProblesClassifyPrepareBO> pageList(ProblesClassifyPrepareDTO dto) throws SerException {
         return problesClassifyPrepareSer.pageList(dto);
     }
+
+    @Override
+    public void unfreeze(String id) throws SerException {
+        problesClassifyPrepareSer.unfreeze(id);
+    }
 }

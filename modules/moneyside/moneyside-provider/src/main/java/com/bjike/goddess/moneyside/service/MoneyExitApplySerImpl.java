@@ -47,7 +47,6 @@ public class MoneyExitApplySerImpl extends ServiceImpl<MoneyExitApply, MoneyExit
             DateUtil.parseDate(moneyExitApplyTO.getEndProjectTime());
             DateUtil.parseDate(moneyExitApplyTO.getForecastArriveTime());
             DateUtil.parseDate(moneyExitApplyTO.getExitTime());
-            DateUtil.parseDate(moneyExitApplyTO.getApproverTime());
         }catch (Exception e){
             throw new SerException("输入的时间格式有误");
         }
@@ -69,7 +68,7 @@ public class MoneyExitApplySerImpl extends ServiceImpl<MoneyExitApply, MoneyExit
 
     @Override
     public List<MoneyExitApplyBO> findListMoneyExitApply(MoneyExitApplyDTO moneyExitApplyDTO) throws SerException {
-        List<MoneyExitApply> moneyExitApplies = super.findByPage(moneyExitApplyDTO);
+        List<MoneyExitApply> moneyExitApplies = super.findByCis(moneyExitApplyDTO);
         List<MoneyExitApplyBO> moneyExitApplyBOS = BeanTransform.copyProperties(moneyExitApplies, MoneyExitApplyBO.class);
         return moneyExitApplyBOS;
     }
@@ -113,7 +112,6 @@ public class MoneyExitApplySerImpl extends ServiceImpl<MoneyExitApply, MoneyExit
     @Override
     public MoneyExitApplyBO audit(MoneyExitApplyTO moneyExitApplyTO) throws SerException {
         MoneyExitApply moneyExitApply = super.findById(moneyExitApplyTO.getId());
-        checkDate(moneyExitApplyTO);
         BeanUtils.copyProperties(moneyExitApplyTO,moneyExitApply);
         moneyExitApply.setApprover(moneyExitApplyTO.getApprover());
         moneyExitApply.setApproverOpinion(moneyExitApplyTO.getApproverOpinion());

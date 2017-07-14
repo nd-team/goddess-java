@@ -30,7 +30,7 @@ public class FundEntryWrongRecordVO {
     /**
      * 资金进入时间
      */
-    private String fundEntryAime;
+    private String fundEntryTime;
 
     /**
      * 金额
@@ -87,12 +87,12 @@ public class FundEntryWrongRecordVO {
         this.accessToFund = accessToFund;
     }
 
-    public String getFundEntryAime() {
-        return fundEntryAime;
+    public String getFundEntryTime() {
+        return fundEntryTime;
     }
 
-    public void setFundEntryAime(String fundEntryAime) {
-        this.fundEntryAime = fundEntryAime;
+    public void setFundEntryTime(String fundEntryTime) {
+        this.fundEntryTime = fundEntryTime;
     }
 
     public Double getMoney() {

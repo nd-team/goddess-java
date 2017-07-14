@@ -1,5 +1,7 @@
 package com.bjike.goddess.fundcheck.vo;
 
+import java.util.List;
+
 /**
  * 营业费用表现层对象
  *
@@ -29,6 +31,15 @@ public class OperatExpensesVO {
      * 金额
      */
     private Double money;
+    /**
+     * 类型
+     */
+    private List<String> typeList;
+
+    /**
+     * 金额
+     */
+    private List<Double> moneyList;
 
 
     public String getId() {
@@ -61,5 +72,21 @@ public class OperatExpensesVO {
 
     public void setMoney(Double money) {
         this.money = money;
+    }
+
+    public List<String> getTypeList() {
+        return typeList;
+    }
+
+    public void setTypeList(List<String> typeList) {
+        this.typeList = typeList;
+    }
+
+    public List<Double> getMoneyList() {
+        return moneyList;
+    }
+
+    public void setMoneyList(List<Double> moneyList) {
+        this.moneyList = moneyList;
     }
 }

@@ -1,6 +1,5 @@
 package com.bjike.goddess.lendreimbursement.service;
 
-import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -9,7 +8,7 @@ import com.bjike.goddess.lendreimbursement.bo.ReimburseAnalisisorBO;
 import com.bjike.goddess.lendreimbursement.dto.ReimburseAnalisisorDTO;
 import com.bjike.goddess.lendreimbursement.entity.ReimburseAnalisisor;
 import com.bjike.goddess.lendreimbursement.enums.GuideAddrStatus;
-import com.bjike.goddess.lendreimbursement.to.GuidePermissionTO;
+import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseAnalisisorTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -20,7 +19,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.RollbackException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -40,7 +38,7 @@ public class ReimburseAnalisisorSerImpl extends ServiceImpl<ReimburseAnalisisor,
     @Autowired
     private UserAPI userAPI;
     @Autowired
-    private CusPermissionSer cusPermissionSer;
+    private LendPermissionSer cusPermissionSer;
     /**
      * 检查权限
      *
@@ -95,7 +93,7 @@ public class ReimburseAnalisisorSerImpl extends ServiceImpl<ReimburseAnalisisor,
     }
 
     @Override
-    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+    public Boolean guidePermission(LendGuidePermissionTO guidePermissionTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
         Boolean flag = true;

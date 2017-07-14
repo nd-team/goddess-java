@@ -16,15 +16,6 @@ import com.bjike.goddess.oilcardmanage.vo.OilCardBasicVO;
  */
 public class OilCardRechargeBO extends BaseBO {
 
-    /**
-     * 数据状态
-     */
-    private Status status;
-
-    /**
-     * 油卡信息Id
-     */
-    private String oilCardBasicId;
 
     /**
      * 油卡编号
@@ -60,22 +51,6 @@ public class OilCardRechargeBO extends BaseBO {
      * 期初金额
      */
     private Double cycleEarlyMoney;
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public String getOilCardBasicId() {
-        return oilCardBasicId;
-    }
-
-    public void setOilCardBasicId(String oilCardBasicId) {
-        this.oilCardBasicId = oilCardBasicId;
-    }
 
     public String getRechargeDate() {
         return rechargeDate;

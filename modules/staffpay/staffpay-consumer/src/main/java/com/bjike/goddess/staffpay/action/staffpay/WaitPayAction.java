@@ -1,5 +1,6 @@
 package com.bjike.goddess.staffpay.action.staffpay;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -13,6 +14,8 @@ import com.bjike.goddess.staffpay.api.WaitPayAPI;
 import com.bjike.goddess.staffpay.bo.FirstPayRecordBO;
 import com.bjike.goddess.staffpay.bo.WaitPayBO;
 import com.bjike.goddess.staffpay.dto.WaitPayDTO;
+import com.bjike.goddess.staffpay.enums.ConfirmStatus;
+import com.bjike.goddess.staffpay.enums.FindType;
 import com.bjike.goddess.staffpay.excel.SonPermissionObject;
 import com.bjike.goddess.staffpay.to.GuidePermissionTO;
 import com.bjike.goddess.staffpay.to.WaitPayTO;
@@ -124,6 +127,7 @@ public class WaitPayAction {
     @GetMapping("v1/count")
     public Result count(WaitPayDTO waitPayDTO) throws ActException {
         try {
+            waitPayDTO.getConditions().add(Restrict.eq("findType", FindType.WAIT));
             Long count = waitPayAPI.countWaitPay(waitPayDTO);
             return ActResult.initialize(count);
         } catch (SerException e) {
@@ -161,6 +165,7 @@ public class WaitPayAction {
     @GetMapping("v1/list")
     public Result list(WaitPayDTO waitPayDTO, HttpServletRequest request) throws ActException {
         try {
+            waitPayDTO.getConditions().add(Restrict.eq("findType", FindType.WAIT));
             List<WaitPayVO> waitPayVOS = BeanTransform.copyProperties(
                     waitPayAPI.findListWaitPay(waitPayDTO), WaitPayVO.class, request);
             return ActResult.initialize(waitPayVOS);
@@ -225,21 +230,36 @@ public class WaitPayAction {
         }
     }
     /**
-     * 付款
+     * 第一次付款
      *
-     * @param waitPayTO 付款数据to
-     * @return class WaitPayVO
-     * @des 付款
+     * @param id 付款id
+     * @des 第一次付款
      * @version v1
      */
-    @PostMapping("v1/payment")
-    public Result payment(@Validated WaitPayTO waitPayTO, BindingResult bindingResult) throws ActException {
+    @PatchMapping("v1/firstPay/{id}")
+    public Result firstPay(@PathVariable String id) throws ActException {
         try {
-            FirstPayRecordBO firstPayRecordBO = waitPayAPI.payment(waitPayTO);
-            return ActResult.initialize(firstPayRecordBO);
+            waitPayAPI.firstPay(id);
+            return ActResult.initialize("付款成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
+    /**
+     * 已付款
+     *
+     * @param id 付款id
+     * @des 已付款
+     * @version v1
+     */
+    @PatchMapping("v1/secondPay/{id}")
+    public Result secondPay(@PathVariable String id) throws ActException {
+        try {
+            waitPayAPI.secondPay(id);
+            return ActResult.initialize("付款成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
-
 }

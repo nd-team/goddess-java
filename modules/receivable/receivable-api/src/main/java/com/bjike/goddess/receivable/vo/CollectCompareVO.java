@@ -7,18 +7,9 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  */
 public class CollectCompareVO{
     /**
-     * 地区
+     * 条件
      */
-    private String area;
-
-    /**
-     * 项目名称
-     */
-    private String innerName;
-    /**
-     * 总包单位
-     */
-    private String contractor;
+    private String groupField;
     /**
      * 派工单价
      */
@@ -34,15 +25,15 @@ public class CollectCompareVO{
     /**
      * 到账金额差额
      */
-    private Double accountMoneyMinusMoney;
+    private Double phaseAccount;
     /**
      * 到账金额增长率
      */
-    private Double accountMoneyIncrease;
+    private Double rateAccount;
     /**
      * 到账金额百分比
      */
-    private Double accountMoneyPercentage;
+    private Double percentAccount;
     /**
      * 管理费
      */
@@ -50,15 +41,15 @@ public class CollectCompareVO{
     /**
      * 管理费差额
      */
-    private Double managementFeeMinusMoney;
+    private Double phaseFee;
     /**
      * 管理费增长率
      */
-    private Double managementFeeIncrease;
+    private Double rateFee;
     /**
      * 管理费百分比
      */
-    private Double managementFeePercentage;
+    private Double percentFee;
     /**
      * 税金
      */
@@ -66,15 +57,15 @@ public class CollectCompareVO{
     /**
      * 税金差额
      */
-    private Double taxesMinusMoney;
+    private Double phaseTaxes;
     /**
      * 税金增长率
      */
-    private Double taxesIncrease;
+    private Double rateTaxes;
     /**
      * 税金百分比
      */
-    private Double taxesPercentage;
+    private Double percentTaxes;
     /**
      * 税后金额
      */
@@ -82,38 +73,23 @@ public class CollectCompareVO{
     /**
      * 税后金额差额
      */
-    private Double afterTaxMinusMoney;
+    private Double phaseAfterTax;
     /**
      * 税后金额增长率
      */
-    private Double afterTaxIncrease;
+    private Double rateAfterTax;
     /**
      * 税后金额百分比
      */
-    private Double afterTaxPercentage;
+    private Double percentAfterTax;
 
-    public String getArea() {
-        return area;
+
+    public String getGroupField() {
+        return groupField;
     }
 
-    public void setArea(String area) {
-        this.area = area;
-    }
-
-    public String getInnerName() {
-        return innerName;
-    }
-
-    public void setInnerName(String innerName) {
-        this.innerName = innerName;
-    }
-
-    public String getContractor() {
-        return contractor;
-    }
-
-    public void setContractor(String contractor) {
-        this.contractor = contractor;
+    public void setGroupField(String groupField) {
+        this.groupField = groupField;
     }
 
     public Double getTaskPrice() {
@@ -140,28 +116,28 @@ public class CollectCompareVO{
         this.accountMoney = accountMoney;
     }
 
-    public Double getAccountMoneyMinusMoney() {
-        return accountMoneyMinusMoney;
+    public Double getPhaseAccount() {
+        return phaseAccount;
     }
 
-    public void setAccountMoneyMinusMoney(Double accountMoneyMinusMoney) {
-        this.accountMoneyMinusMoney = accountMoneyMinusMoney;
+    public void setPhaseAccount(Double phaseAccount) {
+        this.phaseAccount = phaseAccount;
     }
 
-    public Double getAccountMoneyIncrease() {
-        return accountMoneyIncrease;
+    public Double getRateAccount() {
+        return rateAccount;
     }
 
-    public void setAccountMoneyIncrease(Double accountMoneyIncrease) {
-        this.accountMoneyIncrease = accountMoneyIncrease;
+    public void setRateAccount(Double rateAccount) {
+        this.rateAccount = rateAccount;
     }
 
-    public Double getAccountMoneyPercentage() {
-        return accountMoneyPercentage;
+    public Double getPercentAccount() {
+        return percentAccount;
     }
 
-    public void setAccountMoneyPercentage(Double accountMoneyPercentage) {
-        this.accountMoneyPercentage = accountMoneyPercentage;
+    public void setPercentAccount(Double percentAccount) {
+        this.percentAccount = percentAccount;
     }
 
     public Double getManagementFee() {
@@ -172,28 +148,28 @@ public class CollectCompareVO{
         this.managementFee = managementFee;
     }
 
-    public Double getManagementFeeMinusMoney() {
-        return managementFeeMinusMoney;
+    public Double getPhaseFee() {
+        return phaseFee;
     }
 
-    public void setManagementFeeMinusMoney(Double managementFeeMinusMoney) {
-        this.managementFeeMinusMoney = managementFeeMinusMoney;
+    public void setPhaseFee(Double phaseFee) {
+        this.phaseFee = phaseFee;
     }
 
-    public Double getManagementFeeIncrease() {
-        return managementFeeIncrease;
+    public Double getRateFee() {
+        return rateFee;
     }
 
-    public void setManagementFeeIncrease(Double managementFeeIncrease) {
-        this.managementFeeIncrease = managementFeeIncrease;
+    public void setRateFee(Double rateFee) {
+        this.rateFee = rateFee;
     }
 
-    public Double getManagementFeePercentage() {
-        return managementFeePercentage;
+    public Double getPercentFee() {
+        return percentFee;
     }
 
-    public void setManagementFeePercentage(Double managementFeePercentage) {
-        this.managementFeePercentage = managementFeePercentage;
+    public void setPercentFee(Double percentFee) {
+        this.percentFee = percentFee;
     }
 
     public Double getTaxes() {
@@ -204,28 +180,28 @@ public class CollectCompareVO{
         this.taxes = taxes;
     }
 
-    public Double getTaxesMinusMoney() {
-        return taxesMinusMoney;
+    public Double getPhaseTaxes() {
+        return phaseTaxes;
     }
 
-    public void setTaxesMinusMoney(Double taxesMinusMoney) {
-        this.taxesMinusMoney = taxesMinusMoney;
+    public void setPhaseTaxes(Double phaseTaxes) {
+        this.phaseTaxes = phaseTaxes;
     }
 
-    public Double getTaxesIncrease() {
-        return taxesIncrease;
+    public Double getRateTaxes() {
+        return rateTaxes;
     }
 
-    public void setTaxesIncrease(Double taxesIncrease) {
-        this.taxesIncrease = taxesIncrease;
+    public void setRateTaxes(Double rateTaxes) {
+        this.rateTaxes = rateTaxes;
     }
 
-    public Double getTaxesPercentage() {
-        return taxesPercentage;
+    public Double getPercentTaxes() {
+        return percentTaxes;
     }
 
-    public void setTaxesPercentage(Double taxesPercentage) {
-        this.taxesPercentage = taxesPercentage;
+    public void setPercentTaxes(Double percentTaxes) {
+        this.percentTaxes = percentTaxes;
     }
 
     public Double getAfterTax() {
@@ -236,27 +212,27 @@ public class CollectCompareVO{
         this.afterTax = afterTax;
     }
 
-    public Double getAfterTaxMinusMoney() {
-        return afterTaxMinusMoney;
+    public Double getPhaseAfterTax() {
+        return phaseAfterTax;
     }
 
-    public void setAfterTaxMinusMoney(Double afterTaxMinusMoney) {
-        this.afterTaxMinusMoney = afterTaxMinusMoney;
+    public void setPhaseAfterTax(Double phaseAfterTax) {
+        this.phaseAfterTax = phaseAfterTax;
     }
 
-    public Double getAfterTaxIncrease() {
-        return afterTaxIncrease;
+    public Double getRateAfterTax() {
+        return rateAfterTax;
     }
 
-    public void setAfterTaxIncrease(Double afterTaxIncrease) {
-        this.afterTaxIncrease = afterTaxIncrease;
+    public void setRateAfterTax(Double rateAfterTax) {
+        this.rateAfterTax = rateAfterTax;
     }
 
-    public Double getAfterTaxPercentage() {
-        return afterTaxPercentage;
+    public Double getPercentAfterTax() {
+        return percentAfterTax;
     }
 
-    public void setAfterTaxPercentage(Double afterTaxPercentage) {
-        this.afterTaxPercentage = afterTaxPercentage;
+    public void setPercentAfterTax(Double percentAfterTax) {
+        this.percentAfterTax = percentAfterTax;
     }
 }

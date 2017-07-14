@@ -65,20 +65,20 @@ public interface BankRecordSer extends Ser<BankRecord, BankRecordDTO> {
      *
      * @param year        年份
      * @param month       月份
-     * @param accountName 账户名称
+     * @param accountIds 账户名称ID
      * @return 汇总结果集
      */
-    List<BankRecordCollectBO> collect(Integer year, Integer month, String accountName) throws SerException;
+    List<BankRecordCollectBO> collect(Integer year, Integer month, String[] accountIds) throws SerException;
 
     /**
      * 分析
      *
      * @param year        年份
      * @param month       月份
-     * @param accountName 账户名称
+     * @param accountIds 账户名称ID
      * @return 分析结果
      */
-    BankRecordAnalyzeBO analyze(Integer year, Integer month, String accountName) throws SerException;
+    List<BankRecordAnalyzeBO> analyze(Integer year, Integer month, String[] accountIds) throws SerException;
 
     /**
      * 对比分析
@@ -112,7 +112,7 @@ public interface BankRecordSer extends Ser<BankRecord, BankRecordDTO> {
 
     Boolean sonPermission() throws SerException;
 
-    byte[] collectExcel(Integer year, Integer month, String accountName) throws SerException;
+    byte[] collectExcel(Integer year, Integer month, String[] accountIds) throws SerException;
 
-    byte[] analyzeExcel(Integer year, Integer month, String accountName) throws SerException;
+    byte[] analyzeExcel(Integer year, Integer month, String[] accountIds) throws SerException;
 }

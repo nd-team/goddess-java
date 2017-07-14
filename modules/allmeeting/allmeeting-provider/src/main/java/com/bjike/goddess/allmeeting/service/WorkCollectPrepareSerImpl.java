@@ -47,9 +47,13 @@ public class WorkCollectPrepareSerImpl extends ServiceImpl<WorkCollectPrepare, W
     public void unfreeze(String id) throws SerException {
         WorkCollectPrepare model = super.findById(id);
         if (model != null) {
-            model.setModifyTime(LocalDateTime.now());
-            model.setStatus(Status.THAW);
-            super.update(model);
+            if(model.getStatus()!=Status.THAW){
+                model.setModifyTime(LocalDateTime.now());
+                model.setStatus(Status.THAW);
+                super.update(model);
+            }else{
+                throw new SerException("该记录无需重复解冻!");
+            }
         } else {
             throw new SerException("非法Id，更新对象不能为空");
         }
@@ -60,9 +64,13 @@ public class WorkCollectPrepareSerImpl extends ServiceImpl<WorkCollectPrepare, W
     public void freeze(String id) throws SerException {
         WorkCollectPrepare model = super.findById(id);
         if (model != null) {
-            model.setModifyTime(LocalDateTime.now());
-            model.setStatus(Status.CONGEAL);
-            super.update(model);
+            if(model.getStatus()!=Status.CONGEAL){
+                model.setModifyTime(LocalDateTime.now());
+                model.setStatus(Status.CONGEAL);
+                super.update(model);
+            }else{
+                throw new SerException("该记录无需重复冻结!");
+            }
         } else {
             throw new SerException("非法Id，更新对象不能为空");
         }

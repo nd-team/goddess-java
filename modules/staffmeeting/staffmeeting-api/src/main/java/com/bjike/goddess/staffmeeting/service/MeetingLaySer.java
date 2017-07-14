@@ -42,4 +42,8 @@ public interface MeetingLaySer extends Ser<MeetingLay, MeetingLayDTO> {
      * @return 分页结果集
      */
     List<MeetingLayBO> pageList(MeetingLayDTO dto) throws SerException;
+
+    List<MeetingLayBO> lays() throws SerException;
+
+    void delete(String id) throws SerException;
 }

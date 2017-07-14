@@ -5,6 +5,7 @@ import com.bjike.goddess.fundcheck.bo.OperatExpensesBO;
 import com.bjike.goddess.fundcheck.dto.OperatExpensesDTO;
 import com.bjike.goddess.fundcheck.to.GuidePermissionTO;
 import com.bjike.goddess.fundcheck.to.OperatExpensesCollectTO;
+import com.bjike.goddess.fundcheck.to.OperatExpensesTO;
 
 import java.util.List;
 
@@ -64,7 +65,7 @@ public interface OperatExpensesAPI {
      * @return class OperatExpensesBO
      * @throws SerException
      */
-    default OperatExpensesBO insert(OperatExpensesCollectTO operatExpensesTO) throws SerException {
+    default OperatExpensesBO insert(OperatExpensesTO operatExpensesTO) throws SerException {
         return null;
     }
 
@@ -75,7 +76,7 @@ public interface OperatExpensesAPI {
      * @return class OperatExpensesBO
      * @throws SerException
      */
-    default OperatExpensesBO edit(OperatExpensesCollectTO operatExpensesTO) throws SerException {
+    default OperatExpensesBO edit(OperatExpensesTO operatExpensesTO) throws SerException {
         return null;
     }
 
@@ -98,4 +99,26 @@ public interface OperatExpensesAPI {
     default List<OperatExpensesBO> collect(OperatExpensesCollectTO to) throws SerException {
         return null;
     }
+    /**
+     * 获取所有类型
+     * @return String
+     * @throws SerException
+     */
+    default List<String> listType() throws SerException {
+        return null;
+    }
+    /**
+     * 导入
+     *
+     * @param operatExpensesTOS 营业费用
+     * @return class OperatExpensesBO
+     */
+    default OperatExpensesBO importExcel(List<OperatExpensesTO> operatExpensesTOS) throws SerException {
+        return null;
+    }
+    /**
+     * 导入模板
+     * @throws SerException
+     */
+    byte[] templateExport(  ) throws SerException;
 }

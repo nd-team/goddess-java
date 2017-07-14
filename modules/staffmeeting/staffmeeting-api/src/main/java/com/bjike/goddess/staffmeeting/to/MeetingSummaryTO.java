@@ -36,12 +36,6 @@ public class MeetingSummaryTO extends BaseTO {
     private String notAttendUsers;
 
     /**
-     * 会议目的
-     */
-    @NotNull(message = "会议目的不能为空", groups = {ADD.class, EDIT.class})
-    private MeetingPurpose meetingPurpose;
-
-    /**
      * 参会人数
      */
     @NotNull(message = "参会人数不能为空", groups = {ADD.class, EDIT.class})
@@ -103,14 +97,6 @@ public class MeetingSummaryTO extends BaseTO {
 
     public void setNotAttendUsers(String notAttendUsers) {
         this.notAttendUsers = notAttendUsers;
-    }
-
-    public MeetingPurpose getMeetingPurpose() {
-        return meetingPurpose;
-    }
-
-    public void setMeetingPurpose(MeetingPurpose meetingPurpose) {
-        this.meetingPurpose = meetingPurpose;
     }
 
     public Integer getAttendAccount() {

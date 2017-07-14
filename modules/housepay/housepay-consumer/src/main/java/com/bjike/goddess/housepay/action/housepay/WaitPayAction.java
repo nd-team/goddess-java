@@ -1,5 +1,6 @@
 package com.bjike.goddess.housepay.action.housepay;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -12,6 +13,7 @@ import com.bjike.goddess.housepay.api.WaitPayAPI;
 import com.bjike.goddess.housepay.bo.PayRecordBO;
 import com.bjike.goddess.housepay.bo.WaitPayBO;
 import com.bjike.goddess.housepay.dto.WaitPayDTO;
+import com.bjike.goddess.housepay.enums.PayStatus;
 import com.bjike.goddess.housepay.excel.SonPermissionObject;
 import com.bjike.goddess.housepay.to.GuidePermissionTO;
 import com.bjike.goddess.housepay.to.WaitPayTO;
@@ -124,6 +126,7 @@ public class WaitPayAction {
     @GetMapping("v1/count")
     public Result count(WaitPayDTO waitPayDTO) throws ActException {
         try {
+            waitPayDTO.getConditions().add(Restrict.eq("pay", PayStatus.NO));
             Long count = waitPayAPI.countWaitPay(waitPayDTO);
             return ActResult.initialize(count);
         } catch (SerException e) {
@@ -161,6 +164,7 @@ public class WaitPayAction {
     @GetMapping("v1/list")
     public Result list(WaitPayDTO waitPayDTO, HttpServletRequest request) throws ActException {
         try {
+            waitPayDTO.getConditions().add(Restrict.eq("pay", PayStatus.NO));
             List<WaitPayVO> waitPayVOS = BeanTransform.copyProperties(
                     waitPayAPI.findListWaitPay(waitPayDTO), WaitPayVO.class, request);
             return ActResult.initialize(waitPayVOS);
@@ -179,7 +183,7 @@ public class WaitPayAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class) WaitPayTO waitPayTO, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(WaitPayTO.TestAdd.class) WaitPayTO waitPayTO, BindingResult bindingResult) throws ActException {
         try {
             WaitPayBO waitPayBO = waitPayAPI.insertWaitPay(waitPayTO);
             return ActResult.initialize(waitPayBO);
@@ -198,7 +202,7 @@ public class WaitPayAction {
      */
     @LoginAuth
     @PostMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class) WaitPayTO waitPayTO, BindingResult bindingResult) throws ActException {
+    public Result edit(@Validated(WaitPayTO.TestEdit.class) WaitPayTO waitPayTO, BindingResult bindingResult) throws ActException {
         try {
             WaitPayBO waitPayBO = waitPayAPI.editWaitPay(waitPayTO);
             return ActResult.initialize(waitPayBO);
@@ -227,16 +231,15 @@ public class WaitPayAction {
     /**
      * 付款
      *
-     * @param waitPayTO 付款数据to
-     * @return class WaitPayVO
+     * @param id 付款id
      * @des 付款
      * @version v1
      */
-    @PostMapping("v1/payment")
-    public Result payment(@Validated WaitPayTO waitPayTO, BindingResult bindingResult) throws ActException {
+    @PutMapping("v1/payment/{id}")
+    public Result payment(@PathVariable String id) throws ActException {
         try {
-            PayRecordBO payRecordBO = waitPayAPI.payment(waitPayTO);
-            return ActResult.initialize(payRecordBO);
+            waitPayAPI.payment(id);
+            return ActResult.initialize("付款成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

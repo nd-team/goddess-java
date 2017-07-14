@@ -1,21 +1,21 @@
 package com.bjike.goddess.housepay.action.housepay;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.housepay.api.PayRecordAPI;
-import com.bjike.goddess.housepay.bo.PayRecordBO;
+import com.bjike.goddess.housepay.api.WaitPayAPI;
 import com.bjike.goddess.housepay.bo.WaitPayBO;
-import com.bjike.goddess.housepay.dto.PayRecordDTO;
 import com.bjike.goddess.housepay.dto.WaitPayDTO;
+import com.bjike.goddess.housepay.entity.WaitPay;
+import com.bjike.goddess.housepay.enums.PayStatus;
 import com.bjike.goddess.housepay.to.GuidePermissionTO;
 import com.bjike.goddess.housepay.vo.AreaCollectVO;
-import com.bjike.goddess.housepay.vo.PayRecordVO;
 import com.bjike.goddess.housepay.vo.ProjectCollectVO;
 import com.bjike.goddess.housepay.vo.WaitPayVO;
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -37,9 +37,13 @@ import java.util.List;
 @RequestMapping("payrecord")
 public class PayRecordAction {
     @Autowired
+    private WaitPayAPI waitPayAPI;
+    @Autowired
     private PayRecordAPI payRecordAPI;
+
     /**
      * 功能导航权限
+     *
      * @param guidePermissionTO 导航类型数据
      * @throws ActException
      * @version v1
@@ -48,12 +52,12 @@ public class PayRecordAction {
     public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
 
-            Boolean isHasPermission = payRecordAPI.guidePermission(guidePermissionTO);
-            if(! isHasPermission ){
+            Boolean isHasPermission = waitPayAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
                 //int code, String msg
-                return new ActResult(0,"没有权限",false );
-            }else{
-                return new ActResult(0,"有权限",true );
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
             }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -63,14 +67,15 @@ public class PayRecordAction {
     /**
      * 已付款记录列表总条数
      *
-     * @param payRecordDTO 已付款记录dto
+     * @param waitPayDTO 已付款记录dto
      * @des 获取所有已付款记录
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(PayRecordDTO payRecordDTO) throws ActException {
+    public Result count(WaitPayDTO waitPayDTO) throws ActException {
         try {
-            Long count = payRecordAPI.countPayRecord(payRecordDTO);
+            waitPayDTO.getConditions().add(Restrict.eq("pay",PayStatus.IS));
+            Long count = waitPayAPI.countWaitPay(waitPayDTO);
             return ActResult.initialize(count);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -81,39 +86,40 @@ public class PayRecordAction {
      * 一个已付款记录
      *
      * @param id
-     * @return class PayRecordVO
+     * @return class WaitPayVO
      * @des 获取一个已付款记录
      * @version v1
      */
     @GetMapping("v1/record/{id}")
     public Result record(@PathVariable String id) throws ActException {
         try {
-            PayRecordBO payRecordBO = payRecordAPI.getOne(id);
-            return ActResult.initialize(BeanTransform.copyProperties(payRecordBO, PayRecordVO.class));
+            WaitPayBO waitPayBO = waitPayAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(waitPayBO, WaitPayVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
-
     /**
      * 已付款记录列表
      *
-     * @param payRecordDTO 已付款记录dto
-     * @return class PayRecordVO
+     * @param dto 已付款记录dto
+     * @return class WaitPayVO
      * @des 获取所有已付款记录
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(PayRecordDTO payRecordDTO, HttpServletRequest request) throws ActException {
+    public Result list(WaitPayDTO dto, HttpServletRequest request) throws ActException {
         try {
-            List<PayRecordVO> payRecordVOS = BeanTransform.copyProperties(
-                    payRecordAPI.findListPayRecord(payRecordDTO), PayRecordVO.class, request);
+            dto.getConditions().add(Restrict.eq("pay", PayStatus.IS));
+            List<WaitPayVO> payRecordVOS = BeanTransform.copyProperties(
+                    waitPayAPI.findListWaitPay(dto), WaitPayVO.class, request);
             return ActResult.initialize(payRecordVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 删除已付款记录
      *
@@ -124,12 +130,13 @@ public class PayRecordAction {
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
-            payRecordAPI.removePayRecord(id);
+            waitPayAPI.removeWaitPay(id);
             return new ActResult("delete success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 地区汇总
      *
@@ -142,7 +149,7 @@ public class PayRecordAction {
     public Result collectArea(@RequestParam String[] areas) throws ActException {
         try {
             List<AreaCollectVO> areaCollectVOS = BeanTransform.copyProperties(
-                    payRecordAPI.collectArea(areas),AreaCollectVO.class);
+                    payRecordAPI.collectArea(areas), AreaCollectVO.class);
             return ActResult.initialize(areaCollectVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -164,6 +171,7 @@ public class PayRecordAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 项目汇总
      *
@@ -176,7 +184,7 @@ public class PayRecordAction {
     public Result collectProject(@RequestParam String[] projects) throws ActException {
         try {
             List<ProjectCollectVO> projectCollectVOS = BeanTransform.copyProperties(
-                    payRecordAPI.collectProject(projects),ProjectCollectVO.class);
+                    payRecordAPI.collectProject(projects), ProjectCollectVO.class);
             return ActResult.initialize(projectCollectVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -198,7 +206,6 @@ public class PayRecordAction {
             throw new ActException(e.getMessage());
         }
     }
-
 
 
 }

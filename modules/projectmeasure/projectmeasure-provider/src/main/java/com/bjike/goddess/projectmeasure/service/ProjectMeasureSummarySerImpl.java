@@ -804,39 +804,46 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
                     temp_sendNum = sendNum * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
+                        str.setLastTime(lastTime.plusMinutes( sendNum.longValue() ));
                     }
                     break;
                 case HOUR:
                     temp_sendNum = sendNum * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
+                        str.setLastTime(lastTime.plusHours( sendNum.longValue() ));
                     }
                     break;
                 case DAY:
                     temp_sendNum = sendNum * 24 * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
+                        str.setLastTime(lastTime.plusDays( sendNum.longValue() ));
                     }
                     break;
                 case WEEK:
                     temp_sendNum = sendNum * 7 * 24 * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
+                        str.setLastTime(lastTime.plusWeeks( sendNum.longValue() ));
                     }
                     break;
                 case MONTH:
                     if (nowTime.minusMonths(sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
+                        str.setLastTime(lastTime.plusMonths( sendNum.longValue() ));
                     }
                     break;
                 case QUARTER:
-                    if (nowTime.minusMonths(3 * sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(3 * sendNum.longValue()).isAfter(lastTime)) {
+                    if (nowTime.minusMonths(3*sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(3*sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
+                        str.setLastTime(lastTime.plusMonths( 3* sendNum.longValue() ));
                     }
                     break;
                 case YEAR:
                     if (nowTime.minusYears(sendNum.longValue()).isEqual(lastTime) || nowTime.minusYears(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
+                        str.setLastTime(lastTime.plusYears( sendNum.longValue() ));
                     }
                     break;
             }
@@ -929,7 +936,6 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
                 messageTO.setReceivers(sign.getEmails().split(",") );
                 messageAPI.send(  messageTO );
 
-                sign.setLastTime(LocalDateTime.now());
                 sign.setModifyTime(LocalDateTime.now());
                 allEmails.add(sign);
             }

@@ -1,6 +1,7 @@
 package com.bjike.goddess.checkhost.service;
 
 import com.bjike.goddess.checkhost.bo.StayApplyBO;
+import com.bjike.goddess.checkhost.enums.PassStatus;
 import com.bjike.goddess.checkhost.to.StayApplyTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -8,6 +9,7 @@ import com.bjike.goddess.checkhost.dto.StayApplyDTO;
 import com.bjike.goddess.checkhost.entity.StayApply;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -83,14 +85,20 @@ public class StayApplySerImpl extends ServiceImpl<StayApply, StayApplyDTO> imple
         }
         super.remove(id);
     }
-
     @Override
-    public StayApplyBO auditStayApply(StayApplyTO stayApplyTO) throws SerException {
-        stayApplyTO.setHeadAudit(userAPI.currentUser().getUsername());
-        StayApply stayApply = BeanTransform.copyProperties(stayApplyTO,StayApply.class,true);
-        super.update(stayApply);
-
-        StayApplyBO stayApplyBO = BeanTransform.copyProperties(stayApply,StayApplyBO.class);
-        return stayApplyBO;
+    public StayApplyBO manageAudit(StayApplyTO applyTO) throws SerException {
+        UserBO userBO = userAPI.currentUser();
+        StayApply apply = super.findById(applyTO.getId());
+        apply.setHeadAudit(userBO.getUsername());
+        apply.setHeadAuditPass(applyTO.getHeadAuditPass());
+        if("通过".equals(applyTO.getHeadAuditPass())){
+            apply.setHeadAuditPass(String.valueOf(PassStatus.MANAGEPASS));
+        }else if("不通过".equals(applyTO.getHeadAuditPass())) {
+            apply.setHeadAuditPass(String.valueOf(PassStatus.MANAGENOPASS));
+        }
+        super.update(apply);
+        StayApplyBO bo = BeanTransform.copyProperties(apply,StayApplyBO.class);
+        return bo;
     }
+
 }

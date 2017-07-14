@@ -2,13 +2,11 @@ package com.bjike.goddess.interiorrecommend.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 
 /**
- * 推荐内容
+ * 推荐考核内容
  *
  * @Author: [ Jason ]
  * @Date: [ 2017-04-09 03:28 ]
@@ -32,11 +30,13 @@ public class RecommendAssessDetail extends BaseEntity {
     @Column(name = "content_require", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '内容要求'")
     private String require;
 
+
     /**
-     * 推荐要求id
+     * 推荐要求
      */
-    @Column(name = "requireId", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '推荐要求id'")
-    private String requireId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "recommendRequire_id", referencedColumnName = "id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '推荐要求'")
+    private RecommendRequire recommendRequire;
 
 
     public String getContent() {
@@ -55,11 +55,11 @@ public class RecommendAssessDetail extends BaseEntity {
         this.require = require;
     }
 
-    public String getRequireId() {
-        return requireId;
+    public RecommendRequire getRecommendRequire() {
+        return recommendRequire;
     }
 
-    public void setRequireId(String requireId) {
-        this.requireId = requireId;
+    public void setRecommendRequire(RecommendRequire recommendRequire) {
+        this.recommendRequire = recommendRequire;
     }
 }

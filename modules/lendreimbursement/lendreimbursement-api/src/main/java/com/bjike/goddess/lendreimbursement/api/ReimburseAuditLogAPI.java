@@ -3,6 +3,7 @@ package com.bjike.goddess.lendreimbursement.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.lendreimbursement.bo.ReimburseAuditLogBO;
 import com.bjike.goddess.lendreimbursement.dto.ReimburseAuditLogDTO;
+import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseAuditLogTO;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public interface ReimburseAuditLogAPI {
     /**
      * 导航权限
      */
-    default Boolean guidePermission(com.bjike.goddess.lendreimbursement.to.GuidePermissionTO guidePermissionTO) throws SerException {
+    default Boolean guidePermission(LendGuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 

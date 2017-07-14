@@ -15,10 +15,6 @@ public class AwardStandardVO {
      * id
      */
     private String id;
-    /**
-     * 推荐要求设定id
-     */
-    private String requireId;
 
     /**
      * 奖励周期
@@ -71,14 +67,6 @@ public class AwardStandardVO {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getRequireId() {
-        return requireId;
-    }
-
-    public void setRequireId(String requireId) {
-        this.requireId = requireId;
     }
 
     public Integer getAwardCycle() {

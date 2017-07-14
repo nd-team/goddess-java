@@ -31,7 +31,7 @@ public class AwardInfoAct {
     private AwardInfoAPI awardInfoAPI;
 
     /**
-     * 编辑推荐奖励信息
+     * 编辑
      *
      * @param to 推荐奖励信息
      * @version v1

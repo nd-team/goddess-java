@@ -7,8 +7,10 @@ import com.bjike.goddess.lendreimbursement.bo.ReimburseRecordBO;
 import com.bjike.goddess.lendreimbursement.dto.ReimburseRecordDTO;
 import com.bjike.goddess.lendreimbursement.excel.SonPermissionObject;
 import com.bjike.goddess.lendreimbursement.service.ReimburseRecordSer;
-import com.bjike.goddess.lendreimbursement.to.GuidePermissionTO;
+import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseRecordTO;
+import com.bjike.goddess.reimbursementprepare.excel.ExportExcel;
+import com.bjike.goddess.reimbursementprepare.excel.ExportExcelTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,8 +37,13 @@ public class ReimburseRecordApiImpl implements ReimburseRecordAPI {
     }
 
     @Override
-    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+    public Boolean guidePermission(LendGuidePermissionTO guidePermissionTO) throws SerException {
         return reimburseRecordSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public ReimburseRecordBO getOneById(String id) throws SerException {
+        return reimburseRecordSer.getOneById(id);
     }
 
     @Override
@@ -62,12 +69,6 @@ public class ReimburseRecordApiImpl implements ReimburseRecordAPI {
     @Override
     public void deleteReimburseRecord(String id) throws SerException {
         reimburseRecordSer.deleteReimburseRecord(id);
-    }
-
-
-    @Override
-    public ReimburseRecordBO getReimburseRecordById(String id) throws SerException {
-        return reimburseRecordSer.getReimburseRecordById(id);
     }
 
     @Override
@@ -234,5 +235,20 @@ public class ReimburseRecordApiImpl implements ReimburseRecordAPI {
     @Override
     public byte[] exportAlPayExcel(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         return reimburseRecordSer.exportExcel(reimburseRecordDTO);
+    }
+
+    @Override
+    public List<ExportExcelTO> exportExcelCjh(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        return reimburseRecordSer.exportExcelCjh(reimburseRecordDTO);
+    }
+
+    @Override
+    public List<ReimburseRecordBO> listWaitPayCJH(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        return reimburseRecordSer.listWaitPayCJH(reimburseRecordDTO);
+    }
+
+    @Override
+    public ReimburseRecordBO waitPayCJH(ReimburseRecordTO reimburseRecordTO) throws SerException {
+        return reimburseRecordSer.waitPayCJH(reimburseRecordTO);
     }
 }

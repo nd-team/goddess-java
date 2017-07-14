@@ -65,10 +65,25 @@ public class WaitPay extends BaseEntity {
     private String payer;
 
     /**
+     * 地区
+     */
+    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    private String area;
+
+    /**
      * 付款状态
      */
     @Column(name = "payStatus", nullable = false, columnDefinition = "TINYINT(2)    COMMENT '付款状态'")
     private PayStatus payStatus;
+
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
 
     public LocalDate getLendDate() {
         return lendDate;

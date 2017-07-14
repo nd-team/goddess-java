@@ -15,10 +15,6 @@ public class MeetingLayVO {
      * id
      */
     private String id;
-    /**
-     * 议题Id
-     */
-    private String topicId;
 
     /**
      * 议题名称
@@ -69,14 +65,6 @@ public class MeetingLayVO {
 
     public void setTopicContent(String topicContent) {
         this.topicContent = topicContent;
-    }
-
-    public String getTopicId() {
-        return topicId;
-    }
-
-    public void setTopicId(String topicId) {
-        this.topicId = topicId;
     }
 
     public String getName() {

@@ -104,7 +104,7 @@ public class OilCardBasic extends BaseEntity{
     /**
      * 余额
      */
-    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '余额'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '余额'",nullable = false)
     private Double balance;
 
     public Status getStatus() {
