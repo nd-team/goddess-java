@@ -4,6 +4,7 @@ import com.bjike.goddess.checkhost.bo.CollectNameBO;
 import com.bjike.goddess.checkhost.bo.StayDaysBO;
 import com.bjike.goddess.checkhost.dto.StayDaysDTO;
 import com.bjike.goddess.checkhost.service.StayDaysSer;
+import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.to.StayDaysTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,4 +66,13 @@ public class StayDaysApiImpl implements StayDaysAPI {
         return stayDaysSer.getNames();
     }
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return stayDaysSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return stayDaysSer.guidePermission(guidePermissionTO);
+    }
 }

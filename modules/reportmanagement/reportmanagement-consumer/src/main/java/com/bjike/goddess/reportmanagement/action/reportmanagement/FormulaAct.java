@@ -53,19 +53,14 @@ public class FormulaAct {
     /**
      * 加公式科目
      *
-     * @param to 对应的公式传输对象
+     * @param to        对应的公式传输对象
      * @return class FormulaVO
      * @throws ActException
      * @version v1
      */
     @PostMapping("v1/addProject")
     public Result addProject(@Validated(FormulaTO.A.class) FormulaTO to, BindingResult result, HttpServletRequest request) throws ActException {
-        String id = (String) request.getSession().getAttribute("id");
-        if (id == null) {
-            throw new ActException("添加公式的科目不明确，请重新选择添加公式的科目");
-        }
         try {
-            to.setForeignId(id);
             FormulaBO bo = formulaAPI.add(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, FormulaVO.class, request));
         } catch (SerException e) {
@@ -76,19 +71,14 @@ public class FormulaAct {
     /**
      * 减公式科目
      *
-     * @param to 对应的公式传输对象
+     * @param to        对应的公式传输对象
      * @return class FormulaVO
      * @throws ActException
      * @version v1
      */
     @PostMapping("v1/removeProject")
     public Result removeProject(@Validated(FormulaTO.A.class) FormulaTO to, BindingResult result, HttpServletRequest request) throws ActException {
-        String id = (String) request.getSession().getAttribute("id");
-        if (id == null) {
-            throw new ActException("添加公式的科目不明确，请重新选择添加公式的科目");
-        }
         try {
-            to.setForeignId(id);
             FormulaBO bo = formulaAPI.remove(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, FormulaVO.class, request));
         } catch (SerException e) {

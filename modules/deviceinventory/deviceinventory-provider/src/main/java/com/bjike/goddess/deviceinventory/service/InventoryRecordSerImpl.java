@@ -186,7 +186,7 @@ public class InventoryRecordSerImpl extends ServiceImpl<InventoryRecord, Invento
 
     @Override
     public byte[] export(String startTime, String endTime) throws SerException {
-        checkSeeIdentity();
+//        checkSeeIdentity();
         LocalDate s = null;
         LocalDate e = null;
         try {

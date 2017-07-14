@@ -265,7 +265,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         }
     }
 
-        @Override
+    @Override
     public List<UserBO> findByGroup(String... groups) throws SerException {
         UserDetailDTO detailDTO = new UserDetailDTO();
         detailDTO.getConditions().add(Restrict.in("group.id", groups));
@@ -331,5 +331,16 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         String max = super.findByMaxField("employeeNumber", User.class);
         String empNumber = SeqUtil.generateEmp(max);
         return empNumber;
+    }
+
+
+    @Override
+    //chenjunhao
+    public String findNameById(String id) throws SerException {
+        User user = super.findById(id);
+        if (user == null) {
+            throw new SerException("该对象不存在");
+        }
+        return user.getUsername();
     }
 }
