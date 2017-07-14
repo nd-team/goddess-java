@@ -1,7 +1,6 @@
 package com.bjike.goddess.interiorrecommend.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.interiorrecommend.bo.RecommendAssessDetailBO;
 import com.bjike.goddess.interiorrecommend.bo.RecommendRequireBO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendRequireDTO;
 import com.bjike.goddess.interiorrecommend.to.RecommendRequireTO;
@@ -51,10 +50,16 @@ public interface RecommendRequireAPI {
     List<RecommendRequireBO> pageList(RecommendRequireDTO dto) throws SerException;
 
     /**
-     * 根据推荐要求id查询推荐考核内容
+     * 查询总记录数
      *
-     * @param id 推荐要求id
-     * @return 推荐考核内容结果集
+     * @param dto 查询条件
      */
-    List<RecommendAssessDetailBO> findAssessDetail(String id) throws SerException;
+    Long count(RecommendRequireDTO dto) throws SerException;
+
+    /**
+     * 根据id查询
+     *
+     * @param id id
+     */
+    RecommendRequireBO findById(String id) throws SerException;
 }

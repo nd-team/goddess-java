@@ -1,6 +1,7 @@
 package com.bjike.goddess.interiorrecommend.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.interiorrecommend.bo.RecommendSchemeBO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendSchemeDTO;
 import com.bjike.goddess.interiorrecommend.service.RecommendSchemeSer;
@@ -46,17 +47,27 @@ public class RecommendSchemeApiImpl implements RecommendSchemeAPI {
     }
 
     @Override
-    public void resourcesAudit(RecommendSchemeTO to) throws SerException {
-        recommendSchemeSer.resourcesAudit(to);
+    public void resourcesAudit(String id, String resourcesSuggest, Boolean resourcesAudit) throws SerException {
+        recommendSchemeSer.resourcesAudit(id, resourcesSuggest, resourcesAudit);
     }
 
     @Override
-    public void operateAudit(RecommendSchemeTO to) throws SerException {
-        recommendSchemeSer.operateAudit(to);
+    public void operateAudit(String id, String operateSuggest, Boolean operateAudit) throws SerException {
+        recommendSchemeSer.operateAudit(id, operateSuggest, operateAudit);
     }
 
     @Override
-    public void generalAudit(RecommendSchemeTO to) throws SerException {
-        recommendSchemeSer.generalAudit(to);
+    public void generalAudit(String id, String generalSuggest, Boolean generalAudit) throws SerException {
+        recommendSchemeSer.generalAudit(id, generalSuggest, generalAudit);
+    }
+
+    @Override
+    public RecommendSchemeBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(recommendSchemeSer.findById(id), RecommendSchemeBO.class);
+    }
+
+    @Override
+    public Long count(RecommendSchemeDTO dto) throws SerException {
+        return recommendSchemeSer.count(dto);
     }
 }

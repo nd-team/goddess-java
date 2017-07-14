@@ -51,14 +51,6 @@ public interface RecommendInfoAPI {
     List<RecommendInfoBO> pageList(RecommendInfoDTO dto) throws SerException;
 
     /**
-     * 根据推荐信息查询推荐内容
-     *
-     * @param id 推荐信息id
-     * @return 推荐内容个结果集
-     */
-    List<RecommendContentBO> findContent(String id) throws SerException;
-
-    /**
      * 采纳审核
      *
      * @param id     推荐信息id

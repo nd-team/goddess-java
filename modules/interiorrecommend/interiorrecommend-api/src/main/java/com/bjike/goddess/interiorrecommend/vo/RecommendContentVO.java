@@ -31,15 +31,6 @@ public class RecommendContentVO {
      */
     private String detail;
 
-    /**
-     * 创建人
-     */
-    private String createUser;
-
-    /**
-     * 修改人
-     */
-    private String updateUser;
 
     public String getInfoId() {
         return infoId;
@@ -73,19 +64,4 @@ public class RecommendContentVO {
         this.detail = detail;
     }
 
-    public String getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(String createUser) {
-        this.createUser = createUser;
-    }
-
-    public String getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser;
-    }
 }

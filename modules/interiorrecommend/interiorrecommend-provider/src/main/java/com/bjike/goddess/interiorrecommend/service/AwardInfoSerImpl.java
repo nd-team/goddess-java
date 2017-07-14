@@ -42,7 +42,7 @@ public class AwardInfoSerImpl extends ServiceImpl<AwardInfo, AwardInfoDTO> imple
 
                 //判断领取奖励人是否为推荐人
                 if(to.getGetAward()){
-                    RecommendInfo recommendInfo = recommendInfoSer.findById(model.getInfoId());
+                    RecommendInfo recommendInfo = model.getRecommendInfo();
                     if(recommendInfo!=null){
                         if(!userAPI.currentUser().getUsername().equals(recommendInfo.getRecommendUser())){
                             throw new SerException("无法代领他人的推荐奖励!");
@@ -51,8 +51,6 @@ public class AwardInfoSerImpl extends ServiceImpl<AwardInfo, AwardInfoDTO> imple
                         throw new SerException("推荐信息不存在!");
                     }
                 }
-
-
                 BeanTransform.copyProperties(to, model, true);
                 model.setModifyTime(LocalDateTime.now());
                 super.update(model);

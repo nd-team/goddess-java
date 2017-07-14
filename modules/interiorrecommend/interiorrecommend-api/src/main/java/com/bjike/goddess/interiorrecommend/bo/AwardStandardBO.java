@@ -14,11 +14,6 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 public class AwardStandardBO extends BaseBO {
 
     /**
-     * 推荐要求设定id
-     */
-    private String requireId;
-
-    /**
      * 奖励周期
      */
     private Integer awardCycle;
@@ -62,15 +57,6 @@ public class AwardStandardBO extends BaseBO {
      * 推荐关闭时间
      */
     private String closeTime;
-
-
-    public String getRequireId() {
-        return requireId;
-    }
-
-    public void setRequireId(String requireId) {
-        this.requireId = requireId;
-    }
 
     public Integer getAwardCycle() {
         return awardCycle;
