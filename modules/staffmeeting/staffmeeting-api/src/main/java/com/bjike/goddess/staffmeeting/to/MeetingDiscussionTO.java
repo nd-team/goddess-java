@@ -8,11 +8,11 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
- * 通告反馈投诉
+ * 会议讨论
  *
  * @Author: [ Jason ]
  * @Date: [ 2017-06-06 05:18 ]
- * @Description: [ 通告反馈投诉 ]
+ * @Description: [ 会议讨论 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */

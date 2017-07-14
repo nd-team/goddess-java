@@ -22,5 +22,21 @@
 	<!-- 组织结构API -->
 	<dubbo:reference interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl" />
 
+	<!-- fileAPI -->
+	<dubbo:reference id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
+	<!-- storageAPI -->
+	<dubbo:reference id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
+
+	<!-- 用户API -->
+	<dubbo:reference id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+
+	<!-- 权限API -->
+	<dubbo:reference interface="com.bjike.goddess.user.api.rbac.PermissionAPI" id="permissionApiImpl"/>
+
+	<dubbo:reference id="cusPermissionApiImpl" interface="com.bjike.goddess.fundrecords.api.CusPermissionAPI" />
+
+	<dubbo:reference id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.fundrecords.api.CusPermissionOperateAPI" />
+
+	<dubbo:reference id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
 
 </beans>

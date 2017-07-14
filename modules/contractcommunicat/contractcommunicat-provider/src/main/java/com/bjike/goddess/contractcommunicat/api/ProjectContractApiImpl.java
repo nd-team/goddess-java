@@ -56,10 +56,7 @@ public class ProjectContractApiImpl implements ProjectContractAPI {
         return projectContractSer.collect(to);
     }
 
-    @Override
-    public void setCollectSend(QuartzCycleType cycle) throws SerException {
-        projectContractSer.setCollectSend(cycle);
-    }
+
 
     @Override
     public ProjectContractBO findById(String id) throws SerException {

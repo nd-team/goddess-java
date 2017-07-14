@@ -24,6 +24,7 @@ public class MeetingLay extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "meetingTopic_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '议题'")
     private MeetingTopic meetingTopic;
+
     /**
      * 层面名称
      */

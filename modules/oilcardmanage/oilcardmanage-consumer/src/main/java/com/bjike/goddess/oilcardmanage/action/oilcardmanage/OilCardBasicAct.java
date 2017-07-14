@@ -1,5 +1,8 @@
 package com.bjike.goddess.oilcardmanage.action.oilcardmanage;
 
+import com.bjike.goddess.common.api.dto.Restrict;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -17,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * 油卡信息操作action
+ * 油卡信息
  *
  * @Author: [Jason]
  * @Date: [17-3-11 上午10:51]
@@ -26,21 +29,21 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("oilcardbasic")
+@RequestMapping("basic")
 public class OilCardBasicAct {
 
     @Autowired
     private OilCardBasicAPI oilCardBasicAPI;
 
     /**
-     * 新增油卡基础信息
+     * 新增
      *
      * @param to 油卡基础信息
      * @return class OilCardBasicVO
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated OilCardBasicTO to, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(ADD.class) OilCardBasicTO to, BindingResult bindingResult) throws ActException {
 
         try {
             OilCardBasicVO vo = BeanTransform.copyProperties(oilCardBasicAPI.saveOilCarBasic(to), OilCardBasicVO.class);
@@ -51,15 +54,14 @@ public class OilCardBasicAct {
     }
 
     /**
-     * 编辑油卡基础信息
+     * 编辑
      *
      * @param to 油卡基础信息
      * @return class OilCardBasicVO
      * @version v1
      */
-    @PostMapping("v1/edit")
-    public Result edit(@Validated OilCardBasicTO to, BindingResult bindingResult) throws ActException {
-
+    @PutMapping("v1/edit")
+    public Result edit(@Validated(EDIT.class) OilCardBasicTO to, BindingResult bindingResult) throws ActException {
         try {
             OilCardBasicVO vo = BeanTransform.copyProperties(oilCardBasicAPI.updateOilCardBasic(to), OilCardBasicVO.class);
             return ActResult.initialize(vo);
@@ -69,12 +71,12 @@ public class OilCardBasicAct {
     }
 
     /**
-     * 冻结油卡信息记录
+     * 冻结
      *
      * @param id 油卡信息记录ID
      * @version v1
      */
-    @PostMapping("v1/freeze/{id}")
+    @PutMapping("v1/freeze/{id}")
     public Result freeze(@PathVariable String id) throws ActException {
 
         try {
@@ -86,12 +88,12 @@ public class OilCardBasicAct {
     }
 
     /**
-     * 解冻油卡信息
+     * 解冻
      *
-     * @param id 油卡信息记录ID
+     * @param id id
      * @version v1
      */
-    @PostMapping("v1/unfreeze/{id}")
+    @PutMapping("v1/unfreeze/{id}")
     public Result breakFreeze(@PathVariable String id) throws ActException {
 
         try {
@@ -103,12 +105,12 @@ public class OilCardBasicAct {
     }
 
     /**
-     * 删除油卡基本信息
+     * 删除
      *
      * @param id 油卡信息记录ID
      * @version v1
      */
-    @PostMapping("v1/delete/{id}")
+    @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
 
         try {
@@ -120,7 +122,7 @@ public class OilCardBasicAct {
     }
 
     /**
-     * 油卡基本信息分页查询
+     * 列表
      *
      * @param dto 分页查询信息
      * @return class OilCardBasicVO
@@ -128,10 +130,46 @@ public class OilCardBasicAct {
      */
     @GetMapping("v1/list")
     public Result pageList(OilCardBasicDTO dto) throws ActException {
-
         try {
-            List<OilCardBasicVO> vo = BeanTransform.copyProperties(oilCardBasicAPI.pageList(dto), OilCardBasicVO.class);
+            List<OilCardBasicVO> voList = BeanTransform.copyProperties(oilCardBasicAPI.pageList(dto), OilCardBasicVO.class);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 根据Id查询油卡基础信息
+     *
+     * @param id id
+     * @return class OilCardBasicVO
+     * @version v1
+     */
+    @GetMapping("v1/find/{id}")
+    public Result pageList(String id) throws ActException {
+        try {
+            OilCardBasicVO vo = BeanTransform.copyProperties(oilCardBasicAPI.findById(id), OilCardBasicVO.class);
             return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(OilCardBasicDTO dto) throws ActException {
+        try {
+            if (dto.getStatus() != null) {
+                dto.getConditions().add(Restrict.eq("status", dto.getStatus()));
+            }
+            Long count = oilCardBasicAPI.count(dto);
+            return ActResult.initialize(count);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
