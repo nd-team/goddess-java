@@ -1,6 +1,9 @@
 package com.bjike.goddess.interiorrecommend.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 推荐类型设定
@@ -16,22 +19,13 @@ public class RecommendTypeTO extends BaseTO {
     /**
      * 推荐类型名称
      */
+    @NotBlank(message = "推荐类型名称不能为空",groups = {ADD.class, EDIT.class})
     private String typeName;
 
     /**
      * 备注
      */
     private String remark;
-
-    /**
-     * 创建人
-     */
-    private String createUser;
-
-    /**
-     * 修改人
-     */
-    private String updateUser;
 
 
     public String getTypeName() {
@@ -50,19 +44,4 @@ public class RecommendTypeTO extends BaseTO {
         this.remark = remark;
     }
 
-    public String getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(String createUser) {
-        this.createUser = createUser;
-    }
-
-    public String getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser;
-    }
 }

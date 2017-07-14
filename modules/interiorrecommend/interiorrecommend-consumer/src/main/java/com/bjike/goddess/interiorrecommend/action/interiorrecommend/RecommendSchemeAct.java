@@ -1,8 +1,11 @@
 package com.bjike.goddess.interiorrecommend.action.interiorrecommend;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.interiorrecommend.api.RecommendSchemeAPI;
@@ -11,8 +14,10 @@ import com.bjike.goddess.interiorrecommend.to.RecommendSchemeTO;
 import com.bjike.goddess.interiorrecommend.vo.RecommendSchemeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -32,13 +37,14 @@ public class RecommendSchemeAct {
     private RecommendSchemeAPI recommendSchemeAPI;
 
     /**
-     * 新增推荐方案
+     * 新增
      *
      * @param to 推荐方案
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
-    public Result add(RecommendSchemeTO to, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(ADD.class) RecommendSchemeTO to, BindingResult bindingResult) throws ActException {
         try {
             RecommendSchemeVO vo = BeanTransform.copyProperties(recommendSchemeAPI.addModel(to), RecommendSchemeVO.class);
             return ActResult.initialize(vo);
@@ -48,13 +54,14 @@ public class RecommendSchemeAct {
     }
 
     /**
-     * 编辑推荐方案
+     * 编辑
      *
      * @param to 推荐方案
      * @version v1
      */
-    @PostMapping("v1/edit")
-    public Result edit(RecommendSchemeTO to, BindingResult bindingResult) throws ActException {
+    @LoginAuth
+    @PutMapping("v1/edit")
+    public Result edit(@Validated(EDIT.class) RecommendSchemeTO to, BindingResult bindingResult) throws ActException {
         try {
             RecommendSchemeVO vo = BeanTransform.copyProperties(recommendSchemeAPI.editModel(to), RecommendSchemeVO.class);
             return ActResult.initialize(vo);
@@ -66,13 +73,16 @@ public class RecommendSchemeAct {
     /**
      * 综合资源部意见
      *
-     * @param to 推荐方案
+     * @param id               id
+     * @param resourcesSuggest 意见
+     * @param resourcesAudit   结果
      * @version v1
      */
-    @PostMapping("v1/resourcesAudit")
-    public Result resourcesAudit(RecommendSchemeTO to, BindingResult bindingResult) throws ActException {
+    @LoginAuth
+    @PutMapping("v1/resourcesAudit/{id}")
+    public Result resourcesAudit(@PathVariable String id, @RequestParam String resourcesSuggest, @RequestParam Boolean resourcesAudit) throws ActException {
         try {
-            recommendSchemeAPI.resourcesAudit(to);
+            recommendSchemeAPI.resourcesAudit(id, resourcesSuggest, resourcesAudit);
             return new ActResult();
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -82,13 +92,16 @@ public class RecommendSchemeAct {
     /**
      * 运营商务部意见
      *
-     * @param to 推荐方案
+     * @param id             推荐方案
+     * @param operateSuggest 意见
+     * @param operateAudit   结果
      * @version v1
      */
-    @PostMapping("v1/operateAudit")
-    public Result operateAudit(RecommendSchemeTO to, BindingResult bindingResult) throws ActException {
+    @LoginAuth
+    @PutMapping("v1/operateAudit/{id}")
+    public Result operateAudit(@PathVariable String id, @RequestParam String operateSuggest, @RequestParam Boolean operateAudit) throws ActException {
         try {
-            recommendSchemeAPI.operateAudit(to);
+            recommendSchemeAPI.operateAudit(id, operateSuggest, operateAudit);
             return new ActResult();
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -98,13 +111,16 @@ public class RecommendSchemeAct {
     /**
      * 总经办意见
      *
-     * @param to 推荐方案
+     * @param id             推荐方案
+     * @param generalSuggest 意见
+     * @param generalAudit   结果
      * @version v1
      */
-    @PostMapping("v1/generalAudit")
-    public Result generalAudit(RecommendSchemeTO to, BindingResult bindingResult) throws ActException {
+    @LoginAuth
+    @PutMapping("v1/generalAudit/{id}")
+    public Result generalAudit(@PathVariable String id, @RequestParam String generalSuggest, @RequestParam Boolean generalAudit) throws ActException {
         try {
-            recommendSchemeAPI.generalAudit(to);
+            recommendSchemeAPI.generalAudit(id, generalSuggest, generalAudit);
             return new ActResult();
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -112,12 +128,13 @@ public class RecommendSchemeAct {
     }
 
     /**
-     * 删除推荐方案
+     * 删除
      *
      * @param id 推荐方案id
      * @version v1
      */
-    @GetMapping("v1/delete/{id}")
+    @LoginAuth
+    @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
             recommendSchemeAPI.delete(id);
@@ -128,16 +145,49 @@ public class RecommendSchemeAct {
     }
 
     /**
-     * 推荐方案分页查询
+     * 列表
      *
      * @param dto 分页条件
      * @version v1
      */
-    @GetMapping("v1/pageList")
+    @GetMapping("v1/list")
     public Result pageList(RecommendSchemeDTO dto) throws ActException {
         try {
             List<RecommendSchemeVO> voList = BeanTransform.copyProperties(recommendSchemeAPI.pageList(dto), RecommendSchemeVO.class);
             return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询列表总条数
+     *
+     * @param dto 查询条件或分页条件
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(RecommendSchemeDTO dto) throws ActException {
+        try {
+            Long count = recommendSchemeAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id查询推荐方案
+     *
+     * @param id Id
+     * @return class RecommendSchemeVO
+     * @version v1
+     */
+    @GetMapping("v1/find/{id}")
+    public Result findByid(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            RecommendSchemeVO vo = BeanTransform.copyProperties(recommendSchemeAPI.findById(id), RecommendSchemeVO.class, request);
+            return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

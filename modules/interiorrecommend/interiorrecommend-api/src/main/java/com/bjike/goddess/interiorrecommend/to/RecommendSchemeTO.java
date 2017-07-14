@@ -1,6 +1,9 @@
 package com.bjike.goddess.interiorrecommend.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 推荐方案
@@ -16,77 +19,56 @@ public class RecommendSchemeTO extends BaseTO {
     /**
      * 方案制作时间
      */
+    @NotBlank(message = "方案制作时间不能为空", groups = {ADD.class, EDIT.class})
     private String makeTime;
 
     /**
      * 方案类型
      */
+    @NotBlank(message = "方案类型不能为空", groups = {ADD.class, EDIT.class})
     private String type;
 
     /**
      * 推荐目的
      */
+    @NotBlank(message = "推荐目的不能为空", groups = {ADD.class, EDIT.class})
     private String purpose;
 
     /**
      * 推荐开通时间
      */
+    @NotBlank(message = "推荐开通时间不能为空", groups = {ADD.class, EDIT.class})
     private String openTime;
 
     /**
      * 推荐关闭时间
      */
+    @NotBlank(message = "推荐关闭时间不能为空", groups = {ADD.class, EDIT.class})
     private String closeTime;
 
     /**
      * 适用对象
      */
+    @NotBlank(message = "适用对象不能为空", groups = {ADD.class, EDIT.class})
     private String suitableObj;
 
     /**
      * 推荐要求明细
      */
+    @NotBlank(message = "推荐要求明细不能为空", groups = {ADD.class, EDIT.class})
     private String requireDetail;
 
     /**
      * 推荐采纳指标
      */
+    @NotBlank(message = "推荐采纳指标不能为空", groups = {ADD.class, EDIT.class})
     private String acceptTarget;
 
     /**
      * 奖励标准明细
      */
+    @NotBlank(message = "奖励标准明细不能为空", groups = {ADD.class, EDIT.class})
     private String awardDetail;
-
-    /**
-     * 综合资源部意见
-     */
-    private String resourcesSuggest;
-
-    /**
-     * 综合资源部审核
-     */
-    private Boolean resourcesAudit;
-
-    /**
-     * 运营商务部意见
-     */
-    private String operateSuggest;
-
-    /**
-     * 运营商务部审核
-     */
-    private Boolean operateAudit;
-
-    /**
-     * 总经办意见
-     */
-    private String generalSuggest;
-
-    /**
-     * 总经办审核
-     */
-    private Boolean generalAudit;
 
     /**
      * 备注
@@ -164,54 +146,6 @@ public class RecommendSchemeTO extends BaseTO {
 
     public void setAwardDetail(String awardDetail) {
         this.awardDetail = awardDetail;
-    }
-
-    public String getResourcesSuggest() {
-        return resourcesSuggest;
-    }
-
-    public void setResourcesSuggest(String resourcesSuggest) {
-        this.resourcesSuggest = resourcesSuggest;
-    }
-
-    public Boolean getResourcesAudit() {
-        return resourcesAudit;
-    }
-
-    public void setResourcesAudit(Boolean resourcesAudit) {
-        this.resourcesAudit = resourcesAudit;
-    }
-
-    public String getOperateSuggest() {
-        return operateSuggest;
-    }
-
-    public void setOperateSuggest(String operateSuggest) {
-        this.operateSuggest = operateSuggest;
-    }
-
-    public Boolean getOperateAudit() {
-        return operateAudit;
-    }
-
-    public void setOperateAudit(Boolean operateAudit) {
-        this.operateAudit = operateAudit;
-    }
-
-    public String getGeneralSuggest() {
-        return generalSuggest;
-    }
-
-    public void setGeneralSuggest(String generalSuggest) {
-        this.generalSuggest = generalSuggest;
-    }
-
-    public Boolean getGeneralAudit() {
-        return generalAudit;
-    }
-
-    public void setGeneralAudit(Boolean generalAudit) {
-        this.generalAudit = generalAudit;
     }
 
     public String getRemark() {

@@ -1,7 +1,6 @@
 package com.bjike.goddess.interiorrecommend.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.interiorrecommend.to.RecommendContentTO;
 
 import java.util.List;
 
@@ -17,9 +16,19 @@ import java.util.List;
 public class RecommendInfoBO extends BaseBO {
 
     /**
-     * 推荐要求设定id
+     * 推荐时间
      */
-    private String requireId;
+    private String createTime;
+
+    /**
+     * 推荐目的
+     */
+    private String purpose;
+
+    /**
+     * 推荐类型
+     */
+    private String typeName;
 
     /**
      * 推荐人
@@ -34,7 +43,7 @@ public class RecommendInfoBO extends BaseBO {
     /**
      * 推荐内容
      */
-    private List<RecommendContentTO> contentList;
+    private List<RecommendContentBO> contentList;
 
     /**
      * 是否采纳
@@ -61,12 +70,29 @@ public class RecommendInfoBO extends BaseBO {
      */
     private String closeTime;
 
-    public String getRequireId() {
-        return requireId;
+
+    public String getTypeName() {
+        return typeName;
     }
 
-    public void setRequireId(String requireId) {
-        this.requireId = requireId;
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getPurpose() {
+        return purpose;
+    }
+
+    public void setPurpose(String purpose) {
+        this.purpose = purpose;
     }
 
     public String getRecommendUser() {
@@ -85,11 +111,11 @@ public class RecommendInfoBO extends BaseBO {
         this.remark = remark;
     }
 
-    public List<RecommendContentTO> getContentList() {
+    public List<RecommendContentBO> getContentList() {
         return contentList;
     }
 
-    public void setContentList(List<RecommendContentTO> contentList) {
+    public void setContentList(List<RecommendContentBO> contentList) {
         this.contentList = contentList;
     }
 

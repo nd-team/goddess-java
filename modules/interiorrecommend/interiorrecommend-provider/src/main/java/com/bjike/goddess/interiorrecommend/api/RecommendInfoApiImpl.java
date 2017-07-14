@@ -47,11 +47,6 @@ public class RecommendInfoApiImpl implements RecommendInfoAPI {
     }
 
     @Override
-    public List<RecommendContentBO> findContent(String id) throws SerException {
-        return recommendInfoSer.findContent(id);
-    }
-
-    @Override
     public void acceptAudit(String id, String reason, Boolean accept) throws SerException {
         recommendInfoSer.acceptAudit(id,reason,accept);
     }

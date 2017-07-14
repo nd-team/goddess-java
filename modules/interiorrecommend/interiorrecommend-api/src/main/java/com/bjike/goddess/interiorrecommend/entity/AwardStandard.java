@@ -2,17 +2,15 @@ package com.bjike.goddess.interiorrecommend.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 
 /**
- * 推荐奖励要求标准
+ * 推荐奖励标准
  *
  * @Author: [ Jason ]
  * @Date: [ 2017-04-10 11:39 ]
- * @Description: [ 推荐奖励要求标准 ]
+ * @Description: [ 推荐奖励标准 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -21,10 +19,11 @@ import javax.persistence.Table;
 public class AwardStandard extends BaseEntity {
 
     /**
-     * 推荐要求设定id
+     * 推荐要求
      */
-    @Column(name = "requireId", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '推荐要求设定id'")
-    private String requireId;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
+    @JoinColumn(name = "recommendRequire_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '推荐要求'")
+    private RecommendRequire recommendRequire;
 
     /**
      * 奖励周期
@@ -69,12 +68,12 @@ public class AwardStandard extends BaseEntity {
     private String awardGrantor;
 
 
-    public String getRequireId() {
-        return requireId;
+    public RecommendRequire getRecommendRequire() {
+        return recommendRequire;
     }
 
-    public void setRequireId(String requireId) {
-        this.requireId = requireId;
+    public void setRecommendRequire(RecommendRequire recommendRequire) {
+        this.recommendRequire = recommendRequire;
     }
 
     public Integer getAwardCycle() {
