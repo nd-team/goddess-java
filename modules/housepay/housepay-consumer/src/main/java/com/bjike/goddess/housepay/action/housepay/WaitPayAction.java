@@ -235,7 +235,7 @@ public class WaitPayAction {
      * @des 付款
      * @version v1
      */
-    @PatchMapping("v1/payment/{id}")
+    @PutMapping("v1/payment/{id}")
     public Result payment(@PathVariable String id) throws ActException {
         try {
             waitPayAPI.payment(id);

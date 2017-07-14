@@ -52,7 +52,7 @@ public class IndividualVisionPlanSerImpl extends ServiceImpl<IndividualVisionPla
     @Transactional(rollbackFor = SerException.class)
     @Override
     public IndividualVisionPlanBO insertIndividualVisionPlan(IndividualVisionPlanTO individualVisionPlanTO) throws SerException {
-        IndividualVisionPlan individualVisionPlan = BeanTransform.copyProperties(individualVisionPlanTO, IndividualVisionPlan.class);
+        IndividualVisionPlan individualVisionPlan = BeanTransform.copyProperties(individualVisionPlanTO, IndividualVisionPlan.class,true);
         individualVisionPlan.setCreateTime(LocalDateTime.now());
         super.save(individualVisionPlan);
         return BeanTransform.copyProperties(individualVisionPlan, IndividualVisionPlanBO.class);
@@ -83,7 +83,8 @@ public class IndividualVisionPlanSerImpl extends ServiceImpl<IndividualVisionPla
     @Override
     public IndividualVisionPlanBO auditIndividualVisionPlan(IndividualVisionPlanTO individualVisionPlanTO) throws SerException {
         IndividualVisionPlan individualVisionPlan = BeanTransform.copyProperties(individualVisionPlanTO, IndividualVisionPlan.class, true);
-        individualVisionPlan.setPositionsStatus(individualVisionPlanTO.getPositionsStatus());
+        individualVisionPlan.setAudit(individualVisionPlanTO.getAudit());
+        individualVisionPlan.setAuditStatus(individualVisionPlanTO.getAuditStatus());
         super.update(individualVisionPlan);
 
         IndividualVisionPlanBO individualVisionPlanBO = BeanTransform.copyProperties(individualVisionPlan, IndividualVisionPlanBO.class);

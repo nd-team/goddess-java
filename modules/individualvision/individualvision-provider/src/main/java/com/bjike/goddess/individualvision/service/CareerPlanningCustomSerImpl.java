@@ -51,7 +51,7 @@ public class CareerPlanningCustomSerImpl extends ServiceImpl<CareerPlanningCusto
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CareerPlanningCustomBO insertCareerPlanningCustom(CareerPlanningCustomTO careerPlanningCustomTO) throws SerException {
-        CareerPlanningCustom careerPlanningCustom = BeanTransform.copyProperties(careerPlanningCustomTO, CareerPlanningCustom.class);
+        CareerPlanningCustom careerPlanningCustom = BeanTransform.copyProperties(careerPlanningCustomTO, CareerPlanningCustom.class,true);
         careerPlanningCustom.setCreateTime(LocalDateTime.now());
         super.save(careerPlanningCustom);
         return BeanTransform.copyProperties(careerPlanningCustom, CareerPlanningCustomBO.class);

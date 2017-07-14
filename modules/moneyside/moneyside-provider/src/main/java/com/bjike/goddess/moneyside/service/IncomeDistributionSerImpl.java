@@ -66,7 +66,7 @@ public class IncomeDistributionSerImpl extends ServiceImpl<IncomeDistribution, I
             throw new SerException("id不能为空");
         }
         IncomeDistribution incomeDistribution = super.findById(incomeDistributionTO.getId());
-        BeanTransform.copyProperties(incomeDistribution,incomeDistribution,true);
+        BeanTransform.copyProperties(incomeDistributionTO,incomeDistribution,true);
         incomeDistribution.setModifyTime(LocalDateTime.now());
         return BeanTransform.copyProperties(incomeDistribution,IncomeDistributionBO.class);
     }

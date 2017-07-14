@@ -182,44 +182,4 @@ public class FirstPayRecordSerImpl extends ServiceImpl<FirstPayRecord, FirstPayR
         return flag;
     }
 
-    @Override
-    public Long countFirstPayRecord(FirstPayRecordDTO firstPayRecordDTO) throws SerException {
-        Long count = super.count(firstPayRecordDTO);
-        return count;
-    }
-
-    @Override
-    public FirstPayRecordBO getOne(String id) throws SerException {
-        FirstPayRecord firstPayRecord = super.findById(id);
-        return BeanTransform.copyProperties(firstPayRecord,FirstPayRecordBO.class);
-    }
-
-    @Override
-    public List<FirstPayRecordBO> findListFirstPayRecord(FirstPayRecordDTO firstPayRecordDTO) throws SerException {
-        checkSeeIdentity();
-        firstPayRecordDTO.getSorts().add("createTime=desc");
-        List<FirstPayRecord> firstPayRecords = super.findByPage(firstPayRecordDTO);
-        List<FirstPayRecordBO> firstPayRecordBOS = BeanTransform.copyProperties(firstPayRecords,FirstPayRecordBO.class);
-        return firstPayRecordBOS;
-    }
-    @Override
-    @Transactional(rollbackFor = SerException.class)
-    public void removeFirstPayRecord(String id) throws SerException {
-        checkAddIdentity();
-        super.remove(id);
-    }
-    @Override
-    public PayRecordBO payment(FirstPayRecordTO firstPayRecordTO) throws SerException {
-        FirstPayRecord firstPayRecord = super.findById(firstPayRecordTO.getId());
-        BeanTransform.copyProperties(firstPayRecordTO,firstPayRecord,true);
-        if (ConfirmStatus.NO.equals(firstPayRecord.getConfirmFirstSalary())) {
-            firstPayRecord.setConfirmFirstSalary(ConfirmStatus.YES);
-            super.update(firstPayRecord);
-        }
-
-        PayRecord payRecord = new PayRecord();
-        BeanUtils.copyProperties(firstPayRecord,payRecord);
-        payRecordSer.save(payRecord);
-        return BeanTransform.copyProperties(payRecord, PayRecordBO.class);
-    }
 }
