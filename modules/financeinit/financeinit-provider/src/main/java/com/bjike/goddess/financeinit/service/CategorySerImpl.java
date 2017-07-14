@@ -564,5 +564,16 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
         return cb;
     }
 
-
+    @Override
+    public List<String> listAllThirdName() throws SerException {
+        List<String> list = new ArrayList<>();
+        CategoryDTO dto = new CategoryDTO();
+        String [] field = new String[]{"thirdSubject"};
+        String sql = "select thirdSubject from financeinit_category ";
+        List<Category> categoryList = super.findBySql( sql,Category.class,field );
+        if ( categoryList != null && categoryList.size()>0 ){
+            list = categoryList.stream().map(Category::getThirdSubject).collect(Collectors.toList());
+        }
+        return list;
+    }
 }
