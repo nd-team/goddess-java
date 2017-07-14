@@ -2,6 +2,7 @@ package com.bjike.goddess.staffpay.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.staffpay.enums.ConfirmStatus;
+import com.bjike.goddess.staffpay.enums.FindType;
 
 /**
  * 等待付款业务传输对象
@@ -183,7 +184,18 @@ public class WaitPayBO extends BaseBO {
      * 第二次付款时间
      */
     private String secondPayTime;
+    /**
+     * 数据状态
+     */
+    private FindType findType;
 
+    public FindType getFindType() {
+        return findType;
+    }
+
+    public void setFindType(FindType findType) {
+        this.findType = findType;
+    }
 
     public Integer getMonths() {
         return months;

@@ -10,6 +10,7 @@ import com.bjike.goddess.staffpay.dto.WaitPayDTO;
 import com.bjike.goddess.staffpay.entity.FirstPayRecord;
 import com.bjike.goddess.staffpay.entity.WaitPay;
 import com.bjike.goddess.staffpay.enums.ConfirmStatus;
+import com.bjike.goddess.staffpay.enums.FindType;
 import com.bjike.goddess.staffpay.enums.GuideAddrStatus;
 import com.bjike.goddess.staffpay.excel.SonPermissionObject;
 import com.bjike.goddess.staffpay.to.GuidePermissionTO;
@@ -265,10 +266,11 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     public WaitPayBO insertWaitPay(WaitPayTO waitPayTO) throws SerException {
         checkAddIdentity();
         WaitPay waitPay = BeanTransform.copyProperties(waitPayTO, WaitPay.class, true);
-        if (ConfirmStatus.YES.equals(waitPay.getConfirmFirstSalary())) {
-            throw new SerException("添加失败，未做付款操作都是否");
-        }
+//        if (ConfirmStatus.YES.equals(waitPay.getConfirmFirstSalary())) {
+//            throw new SerException("添加失败，未做付款操作都是否");
+//        }
         waitPay.setCreateTime(LocalDateTime.now());
+        waitPay.setConfirmFirstSalary(ConfirmStatus.NO);
         super.save(waitPay);
         return BeanTransform.copyProperties(waitPay, WaitPayBO.class);
     }
@@ -280,6 +282,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
         WaitPay waitPay = super.findById(waitPayTO.getId());
         BeanTransform.copyProperties(waitPayTO, waitPay, true);
         waitPay.setModifyTime(LocalDateTime.now());
+        waitPay.setConfirmFirstSalary(ConfirmStatus.NO);
         super.update(waitPay);
         return BeanTransform.copyProperties(waitPay, WaitPayBO.class);
     }
@@ -292,17 +295,31 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     }
 
     @Override
-    public FirstPayRecordBO payment(WaitPayTO waitPayTO) throws SerException {
-        WaitPay waitPay = super.findById(waitPayTO.getId());
-        BeanTransform.copyProperties(waitPayTO, waitPay, true);
-        if (ConfirmStatus.NO.equals(waitPay.getConfirmFirstSalary())) {
-            waitPay.setConfirmFirstSalary(ConfirmStatus.YES);
-            super.update(waitPay);
+    public void firstPay(String id) throws SerException {
+        WaitPay model = auditId(id);
+        model.setConfirmFirstSalary(ConfirmStatus.YES);
+        model.setFindType(FindType.FIRST);
+        super.update(model);
+    }
+    @Override
+    public void secondPay(String id) throws SerException {
+        WaitPay model = auditId(id);
+        if(model.getConfirmFirstSalary() != null){
+            model.setConfirmSalary(ConfirmStatus.YES);
+            model.setFindType(FindType.CONFIRM);
+            super.update(model);
+        }else {
+            throw new SerException("还未进行第一次付款");
         }
 
-        FirstPayRecord firstPayRecord = new FirstPayRecord();
-        BeanUtils.copyProperties(waitPay, firstPayRecord);
-        firstPayRecordSer.save(firstPayRecord);
-        return BeanTransform.copyProperties(firstPayRecord, FirstPayRecordBO.class);
+    }
+    //检查id是否非法数据
+    public WaitPay auditId(String id) throws SerException {
+        WaitPay model = super.findById(id);
+        if (model != null) {
+            return model;
+        } else {
+            throw new SerException("对象不存在!");
+        }
     }
 }

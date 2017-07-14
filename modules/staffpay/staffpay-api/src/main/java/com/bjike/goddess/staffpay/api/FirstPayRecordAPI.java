@@ -31,50 +31,5 @@ public interface FirstPayRecordAPI {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
-    /**
-     * 第一次已付款记录列表总条数
-     */
-    default Long countFirstPayRecord(FirstPayRecordDTO firstPayRecordDTO) throws SerException {
-        return null;
-    }
-
-    /**
-     * 一个第一次已付款记录
-     *
-     * @return class FirstPayRecordBO
-     */
-    default FirstPayRecordBO getOne(String id) throws SerException {
-        return null;
-    }
-
-    /**
-     * 第一次已付款记录
-     *
-     * @param firstPayRecordDTO 第一次已付款记录dto
-     * @return class FirstPayRecordBO
-     * @throws SerException
-     */
-    default List<FirstPayRecordBO> findListFirstPayRecord(FirstPayRecordDTO firstPayRecordDTO) throws SerException {
-        return null;
-    }
-    /**
-     * 根据id删除第一次已付款记录
-     *
-     * @param id
-     * @throws SerException
-     */
-    default void removeFirstPayRecord(String id) throws SerException {
-
-    }
-    /**
-     * 付款
-     *
-     * @param firstPayRecordTO
-     * @return class PayRecordBO
-     * @throws SerException
-     */
-    default PayRecordBO payment(FirstPayRecordTO firstPayRecordTO) throws SerException {
-        return null;
-    }
 
 }

@@ -3,7 +3,9 @@ package com.bjike.goddess.datastore.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.datastore.bo.FileSpecificationBO;
 import com.bjike.goddess.datastore.dto.FileSpecificationDTO;
+import com.bjike.goddess.datastore.excel.SonPermissionObject;
 import com.bjike.goddess.datastore.to.FileSpecificationTO;
+import com.bjike.goddess.datastore.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -17,6 +19,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface FileSpecificationAPI {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 数据存储文件规范列表总条数
      */

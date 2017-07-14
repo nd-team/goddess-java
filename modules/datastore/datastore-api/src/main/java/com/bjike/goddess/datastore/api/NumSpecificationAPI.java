@@ -3,6 +3,7 @@ package com.bjike.goddess.datastore.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.datastore.bo.NumSpecificationBO;
 import com.bjike.goddess.datastore.dto.NumSpecificationDTO;
+import com.bjike.goddess.datastore.to.GuidePermissionTO;
 import com.bjike.goddess.datastore.to.NumSpecificationTO;
 
 import java.util.List;
@@ -17,6 +18,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface NumSpecificationAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 数据存储编号规范列表总条数
      */
