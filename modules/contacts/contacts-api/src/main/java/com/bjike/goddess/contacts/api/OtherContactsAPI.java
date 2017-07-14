@@ -91,6 +91,7 @@ public interface OtherContactsAPI {
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
@@ -99,4 +100,8 @@ public interface OtherContactsAPI {
     }
 
     OtherContactsBO importExcel(List<OtherContactsTO> tocs) throws SerException;
+
+    default byte[] templateExport() throws SerException {
+        return null;
+    }
 }

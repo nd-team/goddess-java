@@ -1,137 +1,129 @@
-package com.bjike.goddess.contacts.entity;
+package com.bjike.goddess.contacts.excel;
 
-import com.bjike.goddess.common.api.entity.BaseEntity;
-
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.customer.enums.CustomerSex;
 import com.bjike.goddess.customer.enums.CustomerStatus;
 import com.bjike.goddess.customer.enums.CustomerType;
 import org.hibernate.validator.constraints.Email;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
-
 /**
  * 商务通讯录
  *
- * @Author: [ dengjunren ]
- * @Date: [ 2017-03-29 06:04 ]
- * @Description: [ 商务通讯录 ]
- * @Version: [ v1.0.0 ]
- * @Copy: [ com.bjike ]
+ * @Author: [zhuangkaiqin]
+ * @Date: [2017-07-10 18:22]
+ * @Description: [ ]
+ * @Version: [1.0.0]
+ * @Copy: [com.bjike]
  */
-@Entity
-@Table(name = "contacts_commerce_contacts")
-public class CommerceContacts extends BaseEntity {
+public class CommerceContactsTemplateExport {
 
     /**
      * 客户信息编号
      */
-    @Column(name = "customerNum", nullable = false, unique = true, columnDefinition = "VARCHAR(255)   COMMENT '客户信息编号'")
+    @ExcelHeader(name = "客户信息编号" , notNull = true )
     private String customerNum;
 
     /**
      * 客户姓名
      */
-    @Column(name = "customerName", nullable = false, unique = true, columnDefinition = "VARCHAR(255)   COMMENT '客户姓名'")
+    @ExcelHeader(name = "客户姓名" , notNull = true )
     private String customerName;
 
     /**
      * 地区
      */
-    @Column(name = "area", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @ExcelHeader(name = "地区" , notNull = true )
     private String area;
 
     /**
      * 性别
      */
-    @Column(name = "customerSex", nullable = false, columnDefinition = "INT(2)   COMMENT '性别'")
+    @ExcelHeader(name = "性别" , notNull = true )
     private CustomerSex customerSex;
 
     /**
      * 客户类别
      */
-    @Column(name = "customerType", columnDefinition = "INT(2)   COMMENT '客户类别'")
+    @ExcelHeader(name = "客户类别" , notNull = true )
     private CustomerType customerType;
 
     /**
      * 客户状态
      */
-    @Column(name = "customerStatus", columnDefinition = "INT(2)   COMMENT '客户状态'")
+    @ExcelHeader(name = "客户状态" , notNull = true )
     private CustomerStatus customerStatus;
 
     /**
      * 关系程度
      */
-    @Column(name = "relation", columnDefinition = "DECIMAL(10,2)   COMMENT '关系程度'")
+    @ExcelHeader(name = "关系程度" , notNull = true )
     private Double relation;
 
     /**
      * 客户级别
      */
-    @Column(name = "customerLevel_id", columnDefinition = "VARCHAR(36)   COMMENT '客户级别'")
+    @ExcelHeader(name = "客户级别" , notNull = true )
     private String customerLevelName;
 
     /**
      * 客户来源
      */
-    @Column(name = "origin", columnDefinition = "VARCHAR(255)   COMMENT '客户来源'")
+    @ExcelHeader(name = "客户来源" , notNull = true )
     private String origin;
 
     /**
      * 介绍人
      */
-    @Column(name = "introducer", columnDefinition = "VARCHAR(255)   COMMENT '介绍人'")
+    @ExcelHeader(name = "介绍人" , notNull = true )
     private String introducer;
 
     /**
      * 邮箱
      */
     @Email
-    @Column(name = "cusEmail", columnDefinition = "VARCHAR(255)   COMMENT '邮箱'")
+    @ExcelHeader(name = "邮箱" , notNull = true )
     private String cusEmail;
 
     /**
      * 手机号
      */
-    @Column(name = "tel", columnDefinition = "VARCHAR(255)   COMMENT '手机号'")
+    @ExcelHeader(name = "手机号" , notNull = true )
     private String tel;
 
     /**
      * 座机
      */
-    @Column(name = "phone", columnDefinition = "VARCHAR(255)   COMMENT '座机'")
+    @ExcelHeader(name = "座机" , notNull = true )
     private String phone;
 
     /**
      * 微信
      */
-    @Column(name = "weChart", columnDefinition = "VARCHAR(255)   COMMENT '微信'")
+    @ExcelHeader(name = "微信" , notNull = true )
     private String weChart;
 
     /**
      * QQ号
      */
-    @Column(name = "qq", columnDefinition = "VARCHAR(255)   COMMENT 'QQ号'")
+    @ExcelHeader(name = "QQ号" , notNull = true )
     private String qq;
 
     /**
      * 岗位
      */
-    @Column(name = "workPosition", columnDefinition = "VARCHAR(255)   COMMENT '岗位'")
+    @ExcelHeader(name = "岗位" , notNull = true )
     private String workPosition;
 
     /**
      * 职级
      */
-    @Column(name = "workLevel", columnDefinition = "VARCHAR(255)   COMMENT '职级'")
+    @ExcelHeader(name = "职级" , notNull = true )
     private String workLevel;
 
     /**
      * 职权
      */
-    @Column(name = "workRight", columnDefinition = "VARCHAR(255)   COMMENT '职权'")
+    @ExcelHeader(name = "职权" , notNull = true )
     private String workRight;
 
     public String getCustomerNum() {

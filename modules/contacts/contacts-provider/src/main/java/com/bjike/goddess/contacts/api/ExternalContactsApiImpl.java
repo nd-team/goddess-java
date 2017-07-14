@@ -75,4 +75,9 @@ public class ExternalContactsApiImpl implements ExternalContactsAPI {
     public ExternalContactsBO importExcel(List<ExternalContactsTO> tocs) throws SerException {
         return externalContactsSer.importExcel(tocs);
     }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return externalContactsSer.templateExport();
+    }
 }

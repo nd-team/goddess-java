@@ -2,6 +2,7 @@ package com.bjike.goddess.contacts.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contacts.bo.InternalContactsBO;
+import com.bjike.goddess.contacts.bo.NameAndIdBO;
 import com.bjike.goddess.contacts.dto.InternalContactsDTO;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.contacts.to.InternalContactsTO;
@@ -119,6 +120,7 @@ public interface InternalContactsAPI {
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
@@ -135,4 +137,13 @@ public interface InternalContactsAPI {
      * 定时器检测并删除离职员工通讯录
      */
     void checkDimissionInfo() throws SerException;
+
+    /**
+     * 获得入职人员的姓名
+     */
+    List<NameAndIdBO> getUserName() throws SerException;
+
+    default byte[] templateExport() throws SerException {
+        return null;
+    }
 }

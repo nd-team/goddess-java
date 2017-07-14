@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contacts.api.CommonalityAPI;
 import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.contacts.bo.QQGroupBO;
@@ -12,6 +14,7 @@ import com.bjike.goddess.contacts.dto.CommonalityDTO;
 import com.bjike.goddess.contacts.dto.QQGroupDTO;
 import com.bjike.goddess.contacts.entity.QQGroup;
 import com.bjike.goddess.contacts.enums.GuideAddrStatus;
+import com.bjike.goddess.contacts.excel.QQGroupTemplateExport;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.contacts.to.QQGroupTO;
 import com.bjike.goddess.message.api.MessageAPI;
@@ -31,7 +34,9 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -71,7 +76,7 @@ public class QQGroupSerImpl extends ServiceImpl<QQGroup, QQGroupDTO> implements 
         String email = null;
         //是否发送邮件
         if (to.isSend()) {
-            String sendObject = to.getSendObject();
+            String sendObject = "综合资源部";
             if (StringUtils.isNotBlank(sendObject)) {
                 List<OpinionBO> opinionBOList = departmentDetailAPI.findThawOpinion();
                 for (OpinionBO opinionBO : opinionBOList) {
@@ -276,6 +281,22 @@ public class QQGroupSerImpl extends ServiceImpl<QQGroup, QQGroupDTO> implements 
 
         QQGroupBO qqGroupBO = BeanTransform.copyProperties(new QQGroup(), QQGroupBO.class);
         return qqGroupBO;
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<QQGroupTemplateExport> commerceContactsExports = new ArrayList<>();
+
+        QQGroupTemplateExport excel = new QQGroupTemplateExport();
+        excel.setNumber("移动通信类");
+        excel.setName( "test" );
+        excel.setObject("jkj");
+        excel.setManager("jkj");
+        excel.isStatus(true);
+        commerceContactsExports.add( excel );
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(commerceContactsExports, exce);
+        return bytes;
     }
 
     /**

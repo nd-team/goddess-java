@@ -1,56 +1,71 @@
-package com.bjike.goddess.contacts.bo;
+package com.bjike.goddess.contacts.excel;
 
-import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.time.LocalDate;
+
 
 /**
- * 其他通讯录业务传输对象
+ * 其他通讯录
  *
  * @Author: [ dengjunren ]
  * @Date: [ 2017-03-29 05:44 ]
- * @Description: [ 其他通讯录业务传输对象 ]
+ * @Description: [ 其他通讯录 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class OtherContactsBO extends BaseBO {
+public class OtherContactsTemplateExport extends BaseEntity {
 
     /**
      * 服务类别
      */
+    @ExcelHeader(name = "服务类别", notNull = true)
     private String type;
 
     /**
      * 公司名称
      */
+    @ExcelHeader(name = "公司名称", notNull = true)
     private String name;
 
     /**
      * 联系电话
      */
+    @ExcelHeader(name = "联系电话", notNull = true)
     private String phone;
 
     /**
      * 公司地址
      */
+    @ExcelHeader(name = "公司地址", notNull = false)
     private String address;
 
     /**
      * 使用人
      */
+    @ExcelHeader(name = "使用人", notNull = false)
     private String user;
 
     /**
      * 使用日期
      */
-    private String useDate;
+    @ExcelHeader(name = "使用日期", notNull = false)
+    private LocalDate useDate;
 
     /**
      * 评价
      */
+    @ExcelHeader(name = "评价", notNull = false)
     private String evaluate;
 
     /**
      * 备注
      */
+    @ExcelHeader(name = "备注", notNull = false)
     private String remark;
 
 
@@ -94,11 +109,11 @@ public class OtherContactsBO extends BaseBO {
         this.user = user;
     }
 
-    public String getUseDate() {
+    public LocalDate getUseDate() {
         return useDate;
     }
 
-    public void setUseDate(String useDate) {
+    public void setUseDate(LocalDate useDate) {
         this.useDate = useDate;
     }
 

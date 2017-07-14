@@ -1,6 +1,5 @@
 package com.bjike.goddess.rotation.action.rotation;
 
-import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -9,13 +8,14 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.ArrangementAPI;
+import com.bjike.goddess.organize.vo.OpinionVO;
 import com.bjike.goddess.rotation.api.CoverRotationAPI;
 import com.bjike.goddess.rotation.dto.CoverRotationDTO;
 import com.bjike.goddess.rotation.to.CoverRotationOpinionTO;
 import com.bjike.goddess.rotation.to.CoverRotationTO;
 import com.bjike.goddess.rotation.vo.CoverRotationOpinionVO;
 import com.bjike.goddess.rotation.vo.CoverRotationVO;
-import com.bjike.goddess.user.api.UserAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -38,6 +38,8 @@ public class CoverRotationAct {
 
     @Autowired
     private CoverRotationAPI coverRotationAPI;
+    @Autowired
+    private ArrangementAPI arrangementAPI;
 
     /**
      * 保存
@@ -142,7 +144,7 @@ public class CoverRotationAct {
         }
     }
 
-    /**
+    /**ArrangementAPI
      * 列表
      *
      * @param dto 岗位轮换自荐数据传输对象
@@ -167,6 +169,20 @@ public class CoverRotationAct {
     public Result getTotal() throws ActException {
         try {
             return ActResult.initialize(coverRotationAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 得到岗位轮换等级
+     *
+     * @version v1
+     */
+    @GetMapping("v/findThawOpinion")
+    public Result findThawOpinion() throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(arrangementAPI.findThawOpinion(), OpinionVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

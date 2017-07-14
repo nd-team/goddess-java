@@ -1,10 +1,8 @@
-package com.bjike.goddess.contacts.entity;
+package com.bjike.goddess.contacts.excel;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.contacts.enums.Status;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 
 
 /**
@@ -16,26 +14,24 @@ import javax.persistence.Table;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@Entity
-@Table(name = "contacts_commonality")
-public class Commonality extends BaseEntity {
+public class CommonalityTemplateExport extends BaseEntity {
 
     /**
      * 项目组/部门ID
      */
-    @Column(name = "department_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '项目组/部门ID'", unique = true)
+    @ExcelHeader(name = "项目组/部门ID" ,notNull = true)
     private String departmentId;
 
     /**
      * 邮箱地址
      */
-    @Column(name = "email", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '邮箱地址'")
+    @ExcelHeader(name = "邮箱地址" ,notNull = true)
     private String email;
 
     /**
      * 状态
      */
-    @Column(name = "status", nullable = false, columnDefinition = "TINYINT(2) DEFAULT 0   COMMENT '状态'")
+    @ExcelHeader(name = "状态" ,notNull = true)
     private Status status;
 
 

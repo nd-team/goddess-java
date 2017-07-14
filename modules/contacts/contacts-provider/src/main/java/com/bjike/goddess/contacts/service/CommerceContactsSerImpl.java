@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contacts.api.CommonalityAPI;
 import com.bjike.goddess.contacts.bo.CommerceContactsBO;
 import com.bjike.goddess.contacts.bo.CommonalityBO;
@@ -12,10 +14,14 @@ import com.bjike.goddess.contacts.dto.CommerceContactsDTO;
 import com.bjike.goddess.contacts.dto.CommonalityDTO;
 import com.bjike.goddess.contacts.entity.CommerceContacts;
 import com.bjike.goddess.contacts.enums.GuideAddrStatus;
+import com.bjike.goddess.contacts.excel.CommerceContactsTemplateExport;
 import com.bjike.goddess.contacts.excel.SonPermissionObject;
 import com.bjike.goddess.contacts.to.CommerceContactsTO;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.customer.api.CustomerBaseInfoAPI;
+import com.bjike.goddess.customer.enums.CustomerSex;
+import com.bjike.goddess.customer.enums.CustomerStatus;
+import com.bjike.goddess.customer.enums.CustomerType;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
@@ -26,11 +32,14 @@ import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.management.relation.Relation;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,6 +131,7 @@ public class CommerceContactsSerImpl extends ServiceImpl<CommerceContacts, Comme
 
     @Override
     public List<CommerceContactsBO> maps(CommerceContactsDTO dto) throws SerException {
+        List<CommerceContacts> list = super.findByPage(dto);
         return BeanTransform.copyProperties(super.findByPage(dto), CommerceContactsBO.class);
     }
 
@@ -289,6 +299,35 @@ public class CommerceContactsSerImpl extends ServiceImpl<CommerceContacts, Comme
                 break;
         }
         return flag;
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<CommerceContactsTemplateExport> commerceContactsExports = new ArrayList<>();
+
+        CommerceContactsTemplateExport excel = new CommerceContactsTemplateExport();
+        excel.setCustomerNum("移动通信类");
+        excel.setCustomerName( "test" );
+        excel.setArea("dsa");
+        excel.setCustomerSex(CustomerSex.MAN);
+        excel.setCustomerType(CustomerType.COOPERATOR);
+        excel.setCustomerStatus(CustomerStatus.COMPLETEPROJECT);
+        excel.setRelation(1.2);
+        excel.setCustomerLevelName( "dsa" );
+        excel.setOrigin("ds");
+        excel.setIntroducer( "dsa" );
+        excel.setCusEmail("已dsa签订" );
+        excel.setTel( "框架d合同");
+        excel.setPhone( "已立项");
+        excel.setWeChart("test");
+        excel.setQq( "test");
+        excel.setWorkPosition("test");
+        excel.setWorkLevel("ds");
+        excel.setWorkRight("fgh");
+        commerceContactsExports.add( excel );
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(commerceContactsExports, exce);
+        return bytes;
     }
 
     /**

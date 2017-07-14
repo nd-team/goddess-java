@@ -1,6 +1,7 @@
-package com.bjike.goddess.contacts.entity;
+package com.bjike.goddess.contacts.excel;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,98 +18,96 @@ import java.time.LocalDateTime;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@Entity
-@Table(name = "contacts_external_contacts")
-public class ExternalContacts extends BaseEntity {
+public class ExternalContactsTemplateExport extends BaseEntity {
 
     /**
      * 地区
      */
-    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @ExcelHeader(name = "地区" , notNull = true)
     private String area;
 
     /**
      * 项目组
      */
-    @Column(name = "project", columnDefinition = "VARCHAR(255)   COMMENT '项目组'")
+    @ExcelHeader(name = "项目组" , notNull = false)
     private String project;
 
     /**
      * 姓名
      */
-    @Column(name = "username", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '姓名'")
+    @ExcelHeader(name = "姓名" , notNull = true)
     private String username;
 
     /**
      * 单位名称
      */
-    @Column(name = "unit", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '单位名称'")
+    @ExcelHeader(name = "单位名称" , notNull = true)
     private String unit;
 
     /**
      * 岗位
      */
-    @Column(name = "position", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '岗位'")
+    @ExcelHeader(name = "岗位" , notNull = true)
     private String position;
 
     /**
      * 联系电话
      */
-    @Column(name = "phone", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '联系电话'")
+    @ExcelHeader(name = "联系电话" , notNull = true)
     private String phone;
 
     /**
      * 邮箱
      */
-    @Column(name = "email", columnDefinition = "VARCHAR(255)   COMMENT '邮箱'")
+    @ExcelHeader(name = "邮箱" , notNull = true)
     private String email;
 
     /**
      * 主要负责内容
      */
-    @Column(name = "responsible", columnDefinition = "VARCHAR(255)   COMMENT '主要负责内容'")
+    @ExcelHeader(name = "主要负责内容" , notNull = false)
     private String responsible;
 
     /**
      * 其他关联项目
      */
-    @Column(name = "other", columnDefinition = "VARCHAR(255)   COMMENT '其他关联项目'")
+    @ExcelHeader(name = "其他关联项目" , notNull = false)
     private String other;
 
     /**
      * 对外联系信息
      */
-    @Column(name = "external", columnDefinition = "VARCHAR(255)   COMMENT '对外联系信息'")
+    @ExcelHeader(name = "对外联系信息" , notNull = false)
     private String external;
 
     /**
      * 联系时间频率
      */
-    @Column(name = "frequency", columnDefinition = "VARCHAR(255)   COMMENT '联系时间频率'")
+    @ExcelHeader(name = "联系时间频率" , notNull = false)
     private String frequency;
 
     /**
      * 填写人
      */
-    @Column(name = "writer", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '填写人'")
+    @ExcelHeader(name = "填写人" , notNull = true)
     private String writer;
 
     /**
      * 填写人编号
      */
-    @Column(name = "writeNumber", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '填写人'")
+    @ExcelHeader(name = "填写人编号" , notNull = true)
     private String writeNumber;
 
     /**
      * 录入时间
      */
-    @Column(name = "writeTime", nullable = false, columnDefinition = "DATETIME   COMMENT '录入时间'")
+    @ExcelHeader(name = "录入时间" , notNull = true)
     private LocalDateTime writeTime;
 
     /**
      * 备注
      */
-    @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @ExcelHeader(name = "备注" , notNull = false)
     private String remark;
 
 

@@ -1,12 +1,13 @@
-package com.bjike.goddess.contacts.to;
+package com.bjike.goddess.contacts.excel;
 
-import com.bjike.goddess.common.api.entity.ADD;
-import com.bjike.goddess.common.api.entity.EDIT;
-import com.bjike.goddess.common.api.to.BaseTO;
-import org.hibernate.validator.constraints.NotBlank;
+import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.contacts.enums.Status;
 
-import javax.validation.constraints.NotNull;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 
 /**
  * 内部通讯录
@@ -17,70 +18,73 @@ import javax.validation.constraints.NotNull;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class InternalContactsTO extends BaseTO {
+public class InternalContactsTemplateExport extends BaseEntity {
 
     /**
      * 用户ID
      */
-    @NotBlank(message = "用户ID不能为空", groups = {ADD.class, EDIT.class})
+    @ExcelHeader(name = "用户ID" , notNull = true)
     private String userId;
 
     /**
      * 联系电话
      */
-    @NotBlank(message = "联系电话不能为空", groups = {ADD.class, EDIT.class})
+    @ExcelHeader(name = "联系电话" , notNull = true)
     private String phone;
-
 
     /**
      * 邮箱
      */
+    @ExcelHeader(name = "邮箱" , notNull = false)
     private String email;
 
     /**
      * 集团号
      */
+    @ExcelHeader(name = "集团号" , notNull = false)
     private String bloc;
 
     /**
      * 联系电话2
      */
+    @ExcelHeader(name = "联系电话2" , notNull = false)
     private String phoneNumber;
 
     /**
      * QQ号
      */
+    @ExcelHeader(name = "QQ号" , notNull = false)
     private String qq;
 
     /**
      * 微信号
      */
+    @ExcelHeader(name = "微信号" , notNull = false)
     private String weChat;
 
     /**
      * 紧急联系人
      */
+    @ExcelHeader(name = "紧急联系人" , notNull = false)
     private String emergency;
 
     /**
      * 紧急联系人电话
      */
+    @ExcelHeader(name = "紧急联系人电话" , notNull = false)
     private String emergencyPhone;
 
     /**
      * 备注
      */
+    @ExcelHeader(name = "备注" , notNull = false)
     private String remark;
 
     /**
      * 状态
      */
+    @ExcelHeader(name = "状态" , notNull = true)
     private Status status;
-
-    /**
-     * 是否发送邮件
-     */
-    private boolean isSend;
 
 
     public String getUserId() {
@@ -169,13 +173,5 @@ public class InternalContactsTO extends BaseTO {
 
     public void setStatus(Status status) {
         this.status = status;
-    }
-
-    public boolean isSend() {
-        return isSend;
-    }
-
-    public void setSend(boolean send) {
-        isSend = send;
     }
 }

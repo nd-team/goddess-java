@@ -75,4 +75,9 @@ public class QQGroupApiImpl implements QQGroupAPI {
     public QQGroupBO importExcel(List<QQGroupTO> qqGroupTO) throws SerException {
         return qqGroupSer.importExcel(qqGroupTO);
     }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return qqGroupSer.templateExport();
+    }
 }

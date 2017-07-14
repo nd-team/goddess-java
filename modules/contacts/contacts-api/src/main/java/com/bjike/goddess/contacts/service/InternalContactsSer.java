@@ -2,8 +2,8 @@ package com.bjike.goddess.contacts.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.contacts.bo.CommerceContactsBO;
 import com.bjike.goddess.contacts.bo.InternalContactsBO;
+import com.bjike.goddess.contacts.bo.NameAndIdBO;
 import com.bjike.goddess.contacts.dto.InternalContactsDTO;
 import com.bjike.goddess.contacts.entity.InternalContacts;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
@@ -138,4 +138,13 @@ public interface InternalContactsSer extends Ser<InternalContacts, InternalConta
      * 定时器检测并删除离职员工通讯录
      */
     void checkDimissionInfo() throws SerException;
+
+    /**
+     * 获得入职人员的姓名
+     */
+    List<NameAndIdBO> getUserName() throws SerException;
+
+    default byte[] templateExport() throws SerException {
+        return null;
+    }
 }

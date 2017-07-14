@@ -294,12 +294,11 @@ public class ApplyAndExaminationSerImpl extends ServiceImpl<ApplyAndExamination,
 
         ApplyAndExamination temp = super.findById(applyAndExaminationTO.getId());
 
-//        try {
-//            DateUtil.parseDate(applyAndExaminationTO.getStartProjectTime());
-//            DateUtil.parseDate(applyAndExaminationTO.getEndProjectTime());
-//        } catch (Exception e) {
-//            throw new SerException("输入的日期格式不对");
-//        }
+        try {
+            DateUtil.parseDate(applyAndExaminationTO.getTableName());
+        } catch (Exception e) {
+            throw new SerException("输入的日期格式不对,格式为yyyy-MM-dd");
+        }
 
         ApplyAndExamination applyAndExamination = BeanTransform.copyProperties(applyAndExaminationTO, ApplyAndExamination.class, true);
         BeanUtils.copyProperties(applyAndExamination, temp, "id", "createTime");
