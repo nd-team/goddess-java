@@ -20,17 +20,13 @@ import java.time.LocalDateTime;
 @Table(name = "oilcardmanage_receive")
 public class OilCardReceive extends BaseEntity {
 
-    /**
-     * 数据状态
-     */
-    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '数据状态'", nullable = false, insertable = false)
-    private Status status;
 
     /**
-     * 油卡信息Id
+     * 油卡信息
      */
-    @Column(columnDefinition = "VARCHAR(36) COMMENT '油卡信息Id'",nullable = false)
-    private String oilCardBasicId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "oilCardBasic_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '油卡信息'")
+    private OilCardBasic oilCardBasic;
 
     /**
      * 领用日期
@@ -86,20 +82,12 @@ public class OilCardReceive extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(255) COMMENT '备注'")
     private String remark;
 
-    public Status getStatus() {
-        return status;
+    public OilCardBasic getOilCardBasic() {
+        return oilCardBasic;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public String getOilCardBasicId() {
-        return oilCardBasicId;
-    }
-
-    public void setOilCardBasicId(String oilCardBasicId) {
-        this.oilCardBasicId = oilCardBasicId;
+    public void setOilCardBasic(OilCardBasic oilCardBasic) {
+        this.oilCardBasic = oilCardBasic;
     }
 
     public LocalDateTime getReceiveDate() {

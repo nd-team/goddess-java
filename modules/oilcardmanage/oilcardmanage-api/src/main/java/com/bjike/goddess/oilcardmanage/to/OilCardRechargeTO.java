@@ -1,7 +1,10 @@
 package com.bjike.goddess.oilcardmanage.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
@@ -14,53 +17,42 @@ import javax.validation.constraints.NotNull;
  * @Copy: [com.bjike]
  */
 public class OilCardRechargeTO extends BaseTO {
-    /**
-     * 数据状态
-     */
-    private Status status;
 
     /**
      * 油卡信息Id
      */
-    @NotNull(message = "油卡id不能为空!")
+    @NotBlank(message = "油卡id不能为空!",groups = {ADD.class, EDIT.class})
     private String oilCardBasicId;
 
     /**
      * 充值日期
      */
-    @NotNull(message = "充值日期不能为空!")
+    @NotBlank(message = "充值日期不能为空!",groups ={ADD.class,EDIT.class} )
     private String rechargeDate;
 
     /**
      * 充值金额
      */
-    @NotNull(message = "充值金额不能为空!")
+    @NotNull(message = "充值金额不能为空!",groups = {ADD.class,EDIT.class})
     private Double rechargeMoney;
 
     /**
      * 充值人
      */
-    @NotNull(message = "充值人不能为空!")
+    @NotBlank(message = "充值人不能为空!",groups = {ADD.class,EDIT.class})
     private String rechargeUser;
 
     /**
      * 充值方式
      */
-    @NotNull(message = "充值方式不能为空!")
+    @NotBlank(message = "充值方式不能为空!",groups = {ADD.class,EDIT.class})
     private String rechargeWay;
 
     /**
      * 期初金额
      */
+    @NotNull(message = "期初金额不能为空!",groups = {ADD.class,EDIT.class})
     private Double cycleEarlyMoney;
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
 
     public String getOilCardBasicId() {
         return oilCardBasicId;

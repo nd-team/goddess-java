@@ -202,11 +202,6 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
 
     }
 
-    @Override
-    @Transactional(rollbackFor = SerException.class)
-    public void setCollectSend(QuartzCycleType cycle) throws SerException {
-        // TODO: 17-3-20
-    }
 
     @Override
     @Transactional(rollbackFor = SerException.class)

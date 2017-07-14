@@ -8,11 +8,11 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardBasicDTO;
 import com.bjike.goddess.oilcardmanage.entity.OilCardBasic;
+import com.bjike.goddess.oilcardmanage.enums.OilCardStatus;
 import com.bjike.goddess.oilcardmanage.to.OilCardBasicTO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
  *
  * @Author: [Jason]
  * @Date: [17-3-11 上午10:42]
- * @Package:[ com.bjike.goddess.com.bjike.goddess.com.bjike.goddess.oilcardmanage.service ]
+ * @Package:[ com.bjike.goddess.oilcardmanage.service ]
  * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
@@ -35,23 +35,23 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicD
     @Override
     @Transactional(rollbackFor = SerException.class)
     public OilCardBasicBO saveOilCarBasic(OilCardBasicTO to) throws SerException {
-
-        if (to.getCycleEarlyMoney() != null) {
-            to.setBalance(to.getCycleEarlyMoney());
-        } else {
-            throw new SerException("期初金额不能为空!");
-        }
         OilCardBasic model = BeanTransform.copyProperties(to, OilCardBasic.class, true);
+        model.setCardStatus(OilCardStatus.IDLE);
+        model.setBalance(model.getCycleEarlyMoney());
         super.save(model);
-        to.setId(model.getId());
-        return BeanTransform.copyProperties(to, OilCardBasicBO.class);
+        return BeanTransform.copyProperties(model, OilCardBasicBO.class);
     }
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public OilCardBasicBO updateOilCardBasic(OilCardBasicTO to) throws SerException {
-        updateModel(to);
-        return BeanTransform.copyProperties(to, OilCardBasicBO.class);
+        OilCardBasic model = super.findById(to.getId());
+        if (model != null) {
+            updateModel(to);
+            return BeanTransform.copyProperties(to, OilCardBasicBO.class);
+        } else {
+            throw new SerException("非法Id,油卡信息对象不能为空!");
+        }
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -59,9 +59,13 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicD
     public void freezeOilCardBasic(String id) throws SerException {
         OilCardBasic model = super.findById(id);
         if (model != null) {
-            model.setStatus(Status.CONGEAL);
+            if (model.getStatus() != Status.CONGEAL) {
+                model.setStatus(Status.CONGEAL);
+            } else {
+                throw new SerException("该记录无需重复冻结!");
+            }
         } else {
-            throw new SerException("冻结记录对象不能为空!");
+            throw new SerException("非法ID,油卡信息对象不能为空!");
         }
     }
 
@@ -70,16 +74,23 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicD
     public void breakFreeze(String id) throws SerException {
         OilCardBasic model = super.findById(id);
         if (model != null) {
-            model.setStatus(Status.THAW);
+            if (model.getStatus() != Status.THAW) {
+                model.setStatus(Status.THAW);
+                super.update(model);
+            } else {
+                throw new SerException("该记录无需重复解冻!");
+            }
         } else {
-            throw new SerException("解冻记录对象不能为空!");
+            throw new SerException("非法ID,油卡信息对象不能为空!");
         }
     }
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<OilCardBasicBO> pageList(OilCardBasicDTO dto) throws SerException {
-
+        if (dto.getStatus() != null) {
+            dto.getConditions().add(Restrict.eq("status", dto.getStatus()));
+        }
         List<OilCardBasic> list = super.findByPage(dto);
 
         return BeanTransform.copyProperties(list, OilCardBasicBO.class);
@@ -90,7 +101,6 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicD
         OilCardBasicDTO dto = new OilCardBasicDTO();
         dto.getConditions().add(Restrict.eq("oilCardCode", oilCardCode));
         return BeanTransform.copyProperties(super.findOne(dto), OilCardBasicBO.class);
-
     }
 
     /**
@@ -100,18 +110,13 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicD
      * @throws SerException 更新油卡异常
      */
     public void updateModel(OilCardBasicTO to) throws SerException {
-
-        if (!StringUtils.isEmpty(to.getId())) {
-            OilCardBasic model = super.findById(to.getId());
-            if (model != null) {
-                BeanTransform.copyProperties(to, model, true);
-                model.setModifyTime(LocalDateTime.now());
-                super.update(model);
-            } else {
-                throw new SerException("更新对象不能为空");
-            }
+        OilCardBasic model = super.findById(to.getId());
+        if (model != null) {
+            BeanTransform.copyProperties(to, model, true);
+            model.setModifyTime(LocalDateTime.now());
+            super.update(model);
         } else {
-            throw new SerException("更新ID不能为空!");
+            throw new SerException("更新对象不能为空");
         }
     }
 }

@@ -58,13 +58,6 @@ public interface ProjectContractSer extends Ser<ProjectContract, ProjectContract
      */
     List<ProjectContractCollectBO> collect(CollectConditionTO to) throws SerException;
 
-    /**
-     * 设置汇总周期
-     *
-     * @param cycle
-     * @throws SerException
-     */
-    void setCollectSend(QuartzCycleType cycle) throws SerException;
 
     /**
      * 导入Excel
