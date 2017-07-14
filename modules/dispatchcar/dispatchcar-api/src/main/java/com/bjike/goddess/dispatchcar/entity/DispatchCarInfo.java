@@ -382,7 +382,7 @@ public class DispatchCarInfo extends BaseEntity {
     /**
      * 查询类型
      */
-    @Column(name = "findType", columnDefinition = "TINYINT(2)   COMMENT '查询类型'")
+    @Column(name = "findType", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '查询类型'")
     private FindType findType;
 
     /**

@@ -194,28 +194,4 @@ public class BankRecordAnalyzeBO extends BaseBO {
         this.debtorGrow = debtorGrow;
     }
 
-    public BankRecordAnalyzeBO() {
-    }
-
-    public BankRecordAnalyzeBO(String bank, Integer year, Integer month,
-                               Double currentDebtorCost, Double currentCreditorCost,
-                               Double currentBalance, Double lastDebtorCost, Double lastCreditorCost,
-                               Double lastBalance, Double creditorSubtract, Double debtorSubtract, String creditorRate,
-                               String debtorRate, Double creditorGrow, Double debtorGrow) {
-        this.bank = bank;
-        this.year = year;
-        this.month = month;
-        this.currentDebtorCost = currentDebtorCost;
-        this.currentCreditorCost = currentCreditorCost;
-        this.currentBalance = currentBalance;
-        this.lastDebtorCost = lastDebtorCost;
-        this.lastCreditorCost = lastCreditorCost;
-        this.lastBalance = lastBalance;
-        this.creditorSubtract = creditorSubtract;
-        this.debtorSubtract = debtorSubtract;
-        this.creditorRate = creditorRate;
-        this.debtorRate = debtorRate;
-        this.creditorGrow = creditorGrow;
-        this.debtorGrow = debtorGrow;
-    }
 }

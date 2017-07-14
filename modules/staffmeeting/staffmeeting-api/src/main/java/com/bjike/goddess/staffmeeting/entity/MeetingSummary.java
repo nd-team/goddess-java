@@ -4,9 +4,7 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.staffmeeting.enums.MeetingPurpose;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 
@@ -24,10 +22,11 @@ import java.time.LocalDateTime;
 public class MeetingSummary extends BaseEntity {
 
     /**
-     * 会议编号
+     * 会议组织
      */
-    @Column(name = "meetingNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '会议编号'")
-    private String meetingNum;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "meetingOrganize_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '会议组织'")
+    private MeetingOrganize meetingOrganize;
 
     /**
      * 实际参会人员
@@ -46,12 +45,6 @@ public class MeetingSummary extends BaseEntity {
      */
     @Column(name = "notAttendUsers", columnDefinition = "VARCHAR(255)   COMMENT '未参会人员'")
     private String notAttendUsers;
-
-    /**
-     * 会议目的
-     */
-    @Column(name = "meetingPurpose", columnDefinition = "TINYINT(2)   COMMENT '会议目的'")
-    private MeetingPurpose meetingPurpose;
 
     /**
      * 参会人数
@@ -102,12 +95,12 @@ public class MeetingSummary extends BaseEntity {
     private Status status;
 
 
-    public String getMeetingNum() {
-        return meetingNum;
+    public MeetingOrganize getMeetingOrganize() {
+        return meetingOrganize;
     }
 
-    public void setMeetingNum(String meetingNum) {
-        this.meetingNum = meetingNum;
+    public void setMeetingOrganize(MeetingOrganize meetingOrganize) {
+        this.meetingOrganize = meetingOrganize;
     }
 
     public String getActualUsers() {
@@ -132,14 +125,6 @@ public class MeetingSummary extends BaseEntity {
 
     public void setNotAttendUsers(String notAttendUsers) {
         this.notAttendUsers = notAttendUsers;
-    }
-
-    public MeetingPurpose getMeetingPurpose() {
-        return meetingPurpose;
-    }
-
-    public void setMeetingPurpose(MeetingPurpose meetingPurpose) {
-        this.meetingPurpose = meetingPurpose;
     }
 
     public Integer getAttendAccount() {

@@ -161,16 +161,16 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
     public List<DispatchCarInfoBO> getByConfition(ConditionTO to) throws SerException {
         DispatchCarInfoDTO dto = new DispatchCarInfoDTO();
         if (!StringUtils.isEmpty(to.getArea())) {
-            dto.getConditions().add(Restrict.eq("area",to.getArea()));
+            dto.getConditions().add(Restrict.eq("area", to.getArea()));
         }
         if (!StringUtils.isEmpty(to.getGroup())) {
-            dto.getConditions().add(Restrict.eq("group",to.getGroup()));
+            dto.getConditions().add(Restrict.eq("group", to.getGroup()));
         }
         if (!StringUtils.isEmpty(to.getProject())) {
-            dto.getConditions().add(Restrict.eq("project",to.getProject()));
+            dto.getConditions().add(Restrict.eq("project", to.getProject()));
         }
         if (!StringUtils.isEmpty(to.getDispatchDate())) {
-            dto.getConditions().add(Restrict.between("dispatchDate",to.getDispatchDate()));
+            dto.getConditions().add(Restrict.between("dispatchDate", to.getDispatchDate()));
         }
         return BeanTransform.copyProperties(dispatchCarInfoSer.findByCis(dto), DispatchCarInfoBO.class);
     }
@@ -193,5 +193,10 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
     @Override
     public List<DriverDispatchsBO> findDispatchs(Integer month) throws SerException {
         return dispatchCarInfoSer.findDispatchs(month);
+    }
+
+    @Override
+    public Double findOilAmount(String oilCardCode, Integer year, Integer month) throws SerException {
+        return dispatchCarInfoSer.findOilAmount(oilCardCode, year, month);
     }
 }

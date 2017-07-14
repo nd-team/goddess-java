@@ -297,13 +297,13 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
-    public List<PartBO> findByCondition(String condition) throws SerException {
-        return voucherGenerateSer.findByCondition(condition);
+    public List<PartBO> findByCondition(String[] conditions) throws SerException {
+        return voucherGenerateSer.findByCondition(conditions);
     }
 
     @Override
     public PartOptionBO findMoneyByCondition(String first, String second, String third) throws SerException {
-        return null;
+        return voucherGenerateSer.findMoneyByCondition(first, second, third);
     }
 
     @Override

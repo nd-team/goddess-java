@@ -2,9 +2,7 @@ package com.bjike.goddess.interiorrecommend.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 
 /**
@@ -21,10 +19,11 @@ import javax.persistence.Table;
 public class RecommendContent extends BaseEntity {
 
     /**
-     * 推荐信息id
+     * 推荐信息
      */
-    @Column(name = "infoId", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '推荐信息id'")
-    private String infoId;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
+    @JoinColumn(name = "recommendInfo_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '推荐信息'")
+    private RecommendInfo recommendInfo;
 
     /**
      * 推荐内容
@@ -38,25 +37,13 @@ public class RecommendContent extends BaseEntity {
     @Column(name = "detail", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '内容明细'")
     private String detail;
 
-    /**
-     * 创建人
-     */
-    @Column(name = "createUser", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '创建人'")
-    private String createUser;
 
-    /**
-     * 修改人
-     */
-    @Column(name = "updateUser", columnDefinition = "VARCHAR(255)   COMMENT '修改人'")
-    private String updateUser;
-
-
-    public String getInfoId() {
-        return infoId;
+    public RecommendInfo getRecommendInfo() {
+        return recommendInfo;
     }
 
-    public void setInfoId(String infoId) {
-        this.infoId = infoId;
+    public void setRecommendInfo(RecommendInfo recommendInfo) {
+        this.recommendInfo = recommendInfo;
     }
 
     public String getContent() {
@@ -75,19 +62,4 @@ public class RecommendContent extends BaseEntity {
         this.detail = detail;
     }
 
-    public String getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(String createUser) {
-        this.createUser = createUser;
-    }
-
-    public String getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser;
-    }
 }

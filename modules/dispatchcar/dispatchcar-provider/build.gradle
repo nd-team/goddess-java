@@ -30,7 +30,7 @@ dependencies {
     compile project(":common:common-provider")
     compile project(":modules:dispatchcar:dispatchcar-api")
     compile project(":modules:oilcardmanage:oilcardmanage-api")
-    compile project(":modules:driverinfo:driverinfo-api")
+    compile project(":modules:carinfo:carinfo-api")
     compile project(":modules:user:user-api")
     compile project(":common:common-utils")
 }

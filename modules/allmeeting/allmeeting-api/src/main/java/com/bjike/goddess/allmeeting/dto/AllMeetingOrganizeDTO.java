@@ -16,13 +16,13 @@ import javax.validation.constraints.NotNull;
  */
 public class AllMeetingOrganizeDTO extends BaseDTO {
 
-    public interface Select {
+    public interface SelectStatus {
     }
 
     /**
      * 状态
      */
-    @NotNull(message = "状态不能为空", groups = {AllMeetingOrganizeDTO.Select.class})
+    @NotNull(message = "状态不能为空", groups = {AllMeetingOrganizeDTO.SelectStatus.class})
     private Status status;
 
     public Status getStatus() {

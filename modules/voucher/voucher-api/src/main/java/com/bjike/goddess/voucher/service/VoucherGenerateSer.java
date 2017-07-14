@@ -491,9 +491,10 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
      * @return class PartBO
      * @throws SerException
      */
-    default List<PartBO> findByCondition(String condition ) throws SerException{
+    default List<PartBO> findByCondition(String[] conditions ) throws SerException{
         return null;
     }
+
 
 
     /**

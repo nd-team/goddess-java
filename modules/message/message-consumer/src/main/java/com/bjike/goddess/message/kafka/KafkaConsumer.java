@@ -65,13 +65,19 @@ public class KafkaConsumer {
         ConsumerIterator<String, String> it = stream.iterator();
         while (it.hasNext()) {
             String msg = new String(it.next().message());
-            MessageTO to = JSON.parseObject(msg, MessageTO.class);
+            MessageTO to = null;
+            try {
+                to = JSON.parseObject(msg, MessageTO.class);
+
+            } catch (Exception e) {
+                LOGGER.error("消息json转换错误!");
+            }
             if (null != to.getReceivers()) {
                 try {
                     Email email = new Email(to.getTitle(), to.getContent());
                     email.setReceiver(to.getReceivers());
-                        emailAPI.send(email);
-                    LOGGER.info("收到消息:"+msg);
+                    emailAPI.send(email);
+                    LOGGER.info("收到消息:" + msg);
                 } catch (SerException e) {
                     LOGGER.error(e.getMessage());
                 }

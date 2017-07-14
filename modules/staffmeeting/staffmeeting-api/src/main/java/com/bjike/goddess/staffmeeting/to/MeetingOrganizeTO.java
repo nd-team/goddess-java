@@ -4,9 +4,11 @@ import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.staffmeeting.enums.MeetingPurpose;
 import com.bjike.goddess.staffmeeting.enums.MeetingType;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -25,6 +27,12 @@ public class MeetingOrganizeTO extends BaseTO {
      */
     @NotBlank(message = "层面Id不能为空",groups = {ADD.class, EDIT.class})
     private String layId;
+
+    /**
+     * 议题目的
+     */
+    @NotNull(message = "议题目的不能为空",groups = {ADD.class, EDIT.class})
+    private MeetingPurpose meetingPurpose;
 
     /**
      * 议题产生原因
@@ -80,6 +88,14 @@ public class MeetingOrganizeTO extends BaseTO {
 
     public void setLayId(String layId) {
         this.layId = layId;
+    }
+
+    public MeetingPurpose getMeetingPurpose() {
+        return meetingPurpose;
+    }
+
+    public void setMeetingPurpose(MeetingPurpose meetingPurpose) {
+        this.meetingPurpose = meetingPurpose;
     }
 
     public String getTopicReason() {

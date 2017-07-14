@@ -33,4 +33,9 @@ public class MeetingDiscussionApiImpl implements MeetingDiscussionAPI {
     public List<MeetingDiscussionBO> listBySummaryId(String summaryId) throws SerException {
         return meetingDiscussionSer.listBySummaryId(summaryId);
     }
+
+    @Override
+    public MeetingDiscussionBO discussFind(String summaryId) throws SerException {
+        return meetingDiscussionSer.discussFind(summaryId);
+    }
 }

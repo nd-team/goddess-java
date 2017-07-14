@@ -49,4 +49,6 @@ public interface BankAccountInfoSer extends Ser<BankAccountInfo, BankAccountInfo
     List<SonPermissionObject> sonPermission() throws SerException;
 
     Boolean guidePermission(GuidePermissionTO to) throws SerException;
+
+    void delete(String id) throws SerException;
 }

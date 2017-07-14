@@ -1653,23 +1653,25 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     }
 
     @Override
-    public List<PartBO> findByCondition(String condition) throws SerException {
+    public List<PartBO> findByCondition(String[] conditions) throws SerException {
         String[] fields = new String[]{"money"};
-        String sql = " select sum(borrowMoney+loanMoney) as money from voucher_vouchergenerate where " +
-                " secondSubject = '" + condition + "' or thirdSubject = '" + condition + "' ";
+        String sql = " ";
+        for (int i = 0; i < conditions.length; i++) {
+            sql += " select sum(borrowMoney+loanMoney) as money from voucher_vouchergenerate where " +
+                    " secondSubject ='" + conditions[i] + "' or thirdSubject ='" + conditions[i] + "'";
+            if ( i < conditions.length - 1) {
+                sql += " UNION ";
+            }
+        }
+        System.out.println(sql);
         List<PartBO> list = super.findBySql(sql, PartBO.class, fields);
         if (list != null && list.size() > 0) {
-            list.get(0).setName(condition);
-        } else {
-            list = new ArrayList<>();
-            PartBO partBO = new PartBO();
-            partBO.setName(condition);
-            partBO.setMoney(0d);
-            list.add(partBO);
+            for(int i=0;i<list.size();i++){
+                list.get(i).setName(conditions[i]);
+            }
         }
         return list;
     }
-
 
     @Override
     public PartOptionBO findMoneyByCondition(String first, String second, String third) throws SerException {

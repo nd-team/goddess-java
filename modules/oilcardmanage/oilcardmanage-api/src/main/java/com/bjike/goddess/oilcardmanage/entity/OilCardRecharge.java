@@ -3,9 +3,7 @@ package com.bjike.goddess.oilcardmanage.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -22,17 +20,13 @@ import java.time.LocalDateTime;
 @Table(name = "oilcardmanage_recharge")
 public class OilCardRecharge extends BaseEntity{
 
-    /**
-     * 数据状态
-     */
-    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '数据状态'", nullable = false, insertable = false)
-    private Status status;
 
     /**
-     * 油卡信息Id
+     * 油卡信息
      */
-    @Column(columnDefinition = "VARCHAR(36) COMMENT '油卡信息Id'",nullable = false)
-    private String oilCardBasicId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "oilCardBasic_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '油卡信息'")
+    private OilCardBasic oilCardBasic;
 
     /**
      * 充值日期
@@ -64,20 +58,12 @@ public class OilCardRecharge extends BaseEntity{
     @Column(columnDefinition = "DECIMAL(10,2) COMMENT '期初金额'",nullable = false)
     private Double cycleEarlyMoney;
 
-    public Status getStatus() {
-        return status;
+    public OilCardBasic getOilCardBasic() {
+        return oilCardBasic;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public String getOilCardBasicId() {
-        return oilCardBasicId;
-    }
-
-    public void setOilCardBasicId(String oilCardBasicId) {
-        this.oilCardBasicId = oilCardBasicId;
+    public void setOilCardBasic(OilCardBasic oilCardBasic) {
+        this.oilCardBasic = oilCardBasic;
     }
 
     public LocalDateTime getRechargeDate() {

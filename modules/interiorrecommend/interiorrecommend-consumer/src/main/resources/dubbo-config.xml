@@ -40,6 +40,14 @@
 	<!-- 奖励信息API -->
 	<dubbo:reference interface="com.bjike.goddess.interiorrecommend.api.AwardInfoAPI" id="awardInfoApiImpl" />
 
+	<!-- userAPI -->
+	<dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl" />
+
+	<dubbo:reference interface="com.bjike.goddess.user.api.rbac.PermissionAPI" id="permissionApiImpl" />
+
+	<!-- 文件上传APi -->
+	<dubbo:reference interface="com.bjike.goddess.storage.api.StorageUserAPI" id="storageUserApiImpl" />
+
 
 
 

@@ -1,8 +1,10 @@
 package com.bjike.goddess.oilcardmanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.oilcardmanage.bo.OilCardReceiveBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardReceiveDTO;
+import com.bjike.goddess.oilcardmanage.enums.OilCardReceiveResult;
 import com.bjike.goddess.oilcardmanage.service.OilCardReceiveSer;
 import com.bjike.goddess.oilcardmanage.to.OilCardReceiveTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import java.util.List;
 
 /**
  * 油卡领用对外发布实现类
+ *
  * @Author: [Jason]
  * @Date: [17-3-14 下午4:34]
  * @Package:[ com.bjike.goddess.oilcardmanage.api ]
@@ -27,17 +30,17 @@ public class OilCardReceiveApiImpl implements OilCardReceiveAPI {
 
     @Override
     public OilCardReceiveBO saveOilCardReceive(OilCardReceiveTO to) throws SerException {
-        return oilCardReceiveSer.saveOilCardReceive(to);
+        return oilCardReceiveSer.insertModel(to);
     }
 
     @Override
     public OilCardReceiveBO updateOilCardReceive(OilCardReceiveTO to) throws SerException {
-        return oilCardReceiveSer.updateOilCardReceive(to);
+        return oilCardReceiveSer.updateModel(to);
     }
 
     @Override
-    public OilCardReceiveBO auditOilCardReceive(OilCardReceiveTO to) throws SerException {
-        return oilCardReceiveSer.auditOilCardReceive(to);
+    public void auditOilCardReceive(String id, String auditSuggestion, OilCardReceiveResult oilCardReceiveResult) throws SerException {
+        oilCardReceiveSer.audit(id, auditSuggestion, oilCardReceiveResult);
     }
 
     @Override
@@ -53,5 +56,15 @@ public class OilCardReceiveApiImpl implements OilCardReceiveAPI {
     @Override
     public List<OilCardReceiveBO> pageList(OilCardReceiveDTO dto) throws SerException {
         return oilCardReceiveSer.pageList(dto);
+    }
+
+    @Override
+    public OilCardReceiveBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(oilCardReceiveSer.findById(id), OilCardReceiveBO.class);
+    }
+
+    @Override
+    public Long count(OilCardReceiveDTO dto) throws SerException {
+        return oilCardReceiveSer.count(dto);
     }
 }

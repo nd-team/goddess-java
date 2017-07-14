@@ -2,9 +2,8 @@ package com.bjike.goddess.interiorrecommend.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Set;
 
 
 /**
@@ -20,11 +19,16 @@ import javax.persistence.Table;
 @Table(name = "interiorrecommend_recommendinfo")
 public class RecommendInfo extends BaseEntity {
 
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
+    @JoinColumn(name = "recommendRequire_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '推荐要求'")
+    private RecommendRequire recommendRequire;
+
     /**
-     * 推荐要求设定id
+     * 推荐考核内容
      */
-    @Column(name = "requireId", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '推荐要求设定id'")
-    private String requireId;
+    @OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, fetch = FetchType.EAGER, mappedBy = "recommendInfo")
+    private Set<RecommendContent> contentSet;
 
     /**
      * 推荐人
@@ -56,12 +60,20 @@ public class RecommendInfo extends BaseEntity {
     @Column(name = "is_conform", columnDefinition = "TINYINT(1)   COMMENT '是否符合奖励要求'")
     private Boolean conform;
 
-    public String getRequireId() {
-        return requireId;
+    public Set<RecommendContent> getContentSet() {
+        return contentSet;
     }
 
-    public void setRequireId(String requireId) {
-        this.requireId = requireId;
+    public void setContentSet(Set<RecommendContent> contentSet) {
+        this.contentSet = contentSet;
+    }
+
+    public RecommendRequire getRecommendRequire() {
+        return recommendRequire;
+    }
+
+    public void setRecommendRequire(RecommendRequire recommendRequire) {
+        this.recommendRequire = recommendRequire;
     }
 
     public String getRecommendUser() {

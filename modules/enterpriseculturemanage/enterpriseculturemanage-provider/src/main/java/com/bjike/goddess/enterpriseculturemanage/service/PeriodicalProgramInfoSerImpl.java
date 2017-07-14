@@ -6,10 +6,13 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.enterpriseculturemanage.bo.PeriodicalProgramInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.dto.PeriodicalProgramInfoDTO;
+import com.bjike.goddess.enterpriseculturemanage.entity.ConstructTeam;
 import com.bjike.goddess.enterpriseculturemanage.entity.EnterpriseCultureInfo;
 import com.bjike.goddess.enterpriseculturemanage.entity.PeriodicalProgramInfo;
 import com.bjike.goddess.enterpriseculturemanage.enums.AuditResult;
 import com.bjike.goddess.enterpriseculturemanage.to.PeriodicalProgramInfoTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,10 +39,16 @@ public class PeriodicalProgramInfoSerImpl extends ServiceImpl<PeriodicalProgramI
 
     @Autowired
     private EnterpriseCultureInfoSer enterpriseCultureInfoSer;
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private ConstructTeamSer constructTeamSer;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public PeriodicalProgramInfoBO insertModel(PeriodicalProgramInfoTO to) throws SerException {
+        onOfTeam();
+
         EnterpriseCultureInfo info = enterpriseCultureInfoSer.findById(to.getInfoId());
         if (info != null) {
             PeriodicalProgramInfo model = BeanTransform.copyProperties(to, PeriodicalProgramInfo.class, true);
@@ -55,7 +65,27 @@ public class PeriodicalProgramInfoSerImpl extends ServiceImpl<PeriodicalProgramI
         }
     }
 
+    //检查当前用户是否为建设小组人员
+    public void onOfTeam() throws SerException {
+
+        UserBO userBO = userAPI.currentUser();
+
+        List<ConstructTeam> teamList = constructTeamSer.findAll();
+        if (!CollectionUtils.isEmpty(teamList)) {
+            List<String> users = new ArrayList<String>();
+            for (ConstructTeam team : teamList) {
+                users.add(team.getUserNumber());
+            }
+            if (!users.contains(userBO.getEmployeeNumber())) {
+                throw new SerException("只有建设小组可以管理公司文化!");
+            }
+        } else {
+            throw new SerException("请先添加建设小组人员!");
+        }
+    }
+
     public Boolean isExist(PeriodicalProgramInfo model) throws SerException {
+
         PeriodicalProgramInfoDTO dto = new PeriodicalProgramInfoDTO();
         dto.getConditions().add(Restrict.eq("infoId", model.getInfoId()));
         dto.setLimit(1);
@@ -77,6 +107,7 @@ public class PeriodicalProgramInfoSerImpl extends ServiceImpl<PeriodicalProgramI
     @Override
     @Transactional(rollbackFor = SerException.class)
     public PeriodicalProgramInfoBO updateModel(PeriodicalProgramInfoTO to) throws SerException {
+        onOfTeam();
         updateModule(to);
         return BeanTransform.copyProperties(to, PeriodicalProgramInfoBO.class);
     }

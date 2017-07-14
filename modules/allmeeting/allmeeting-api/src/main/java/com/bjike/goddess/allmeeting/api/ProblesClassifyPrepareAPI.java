@@ -29,4 +29,6 @@ public interface ProblesClassifyPrepareAPI {
     void freeze(String id) throws SerException;
 
     List<ProblesClassifyPrepareBO> pageList(ProblesClassifyPrepareDTO dto) throws SerException;
+
+    void unfreeze(String id) throws SerException;
 }

@@ -30,7 +30,7 @@
     <dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
     <!-- userAPI -->
-    <dubbo:reference interface="com.bjike.goddess.archive.api.StaffRecordsAPI" id="staffRecordsApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.contacts.api.InternalContactsAPI" id="internalContactsApiImpl"/>
 
     <!-- 组织结构APi -->
     <dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>

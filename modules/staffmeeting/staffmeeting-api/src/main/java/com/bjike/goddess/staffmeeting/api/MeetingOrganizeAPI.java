@@ -65,4 +65,11 @@ public interface MeetingOrganizeAPI {
      * @throws SerException
      */
     List<MeetingOrganizeBO> pageList(MeetingOrganizeDTO dto) throws SerException;
+
+    /**
+     * 解冻
+     *
+     * @param id
+     */
+    void unfreeze(String id) throws SerException;
 }

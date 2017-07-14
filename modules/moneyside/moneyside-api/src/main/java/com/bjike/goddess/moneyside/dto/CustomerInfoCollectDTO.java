@@ -15,7 +15,7 @@ public class CustomerInfoCollectDTO extends BaseDTO {
     /**
      * 投资人
      */
-    private String []investor;
+    private String[] investor;
 
     public String[] getInvestor() {
         return investor;

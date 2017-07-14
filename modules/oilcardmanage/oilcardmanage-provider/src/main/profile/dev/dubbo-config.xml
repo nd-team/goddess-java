@@ -17,11 +17,26 @@
 	<dubbo:registry address="${dubbo.registry.address}" />
 
 	<!-- 发布接口 -->
+	<!-- 油卡基础信息API -->
 	<dubbo:service interface="com.bjike.goddess.oilcardmanage.api.OilCardBasicAPI" ref="oilCardBasicApiImpl"/>
 
+	<!-- 油卡领用API -->
 	<dubbo:service interface="com.bjike.goddess.oilcardmanage.api.OilCardReceiveAPI" ref="oilCardReceiveApiImpl"/>
 
+	<!-- 油卡充值API -->
 	<dubbo:service interface="com.bjike.goddess.oilcardmanage.api.OilCardRechargeAPI" ref="oilCardRechargeApiImpl"/>
+
+	<!-- userAPI -->
+	<dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+
+	<!-- messageAPI -->
+	<dubbo:reference interface="com.bjike.goddess.message.api.MessageAPI" id="messageApiImpl"/>
+
+	<!-- 内部通讯类API -->
+	<dubbo:reference interface="com.bjike.goddess.contacts.api.InternalContactsAPI" id="internalContactsApiImpl"/>
+
+	<!--出车API -->
+	<dubbo:reference interface="com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI" id="dispatchCarInfoApiImpl"/>
 
 
 

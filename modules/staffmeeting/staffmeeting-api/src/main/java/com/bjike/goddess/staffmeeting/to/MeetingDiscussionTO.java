@@ -8,27 +8,15 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
- * 通告反馈投诉
+ * 会议讨论
  *
  * @Author: [ Jason ]
  * @Date: [ 2017-06-06 05:18 ]
- * @Description: [ 通告反馈投诉 ]
+ * @Description: [ 会议讨论 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
 public class MeetingDiscussionTO extends BaseTO {
-
-    /**
-     * 发言人
-     */
-    @NotBlank(message = "发言人不能为空",groups = {ADD.class, EDIT.class})
-    private String user;
-
-    /**
-     * 发言人员工编号
-     */
-    @NotBlank(message = "发言人员工编号不能为空",groups = {ADD.class, EDIT.class})
-    private String userNum;
 
     /**
      * 发言内容
@@ -53,29 +41,12 @@ public class MeetingDiscussionTO extends BaseTO {
     @NotBlank(message = "纪要Id不能为空",groups = {ADD.class, EDIT.class})
     private String summaryId;
 
-
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
     public String getDiscussion() {
         return discussion;
     }
 
     public void setDiscussion(String discussion) {
         this.discussion = discussion;
-    }
-
-    public String getUserNum() {
-        return userNum;
-    }
-
-    public void setUserNum(String userNum) {
-        this.userNum = userNum;
     }
 
     public Boolean getDissentContent() {
