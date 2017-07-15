@@ -11,6 +11,7 @@ import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.enums.FindType;
 import com.bjike.goddess.dispatchcar.vo.InfoForOilCardVO;
 import com.bjike.goddess.oilcardmanage.api.OilCardRechargeAPI;
+import com.bjike.goddess.oilcardmanage.vo.AnalyzeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +42,7 @@ public class OilCardUseAct {
      *
      * @param startTime 开始时间
      * @param endTime   结束时间
-     * @return class OilCardRechargeVO
+     * @return class InfoForOilCardVO
      * @version v1
      */
     @GetMapping("v1/list/{oilCardCode}")
@@ -70,15 +71,15 @@ public class OilCardUseAct {
      *
      * @param year  年份
      * @param month 月份
-     * @return class OilCardRechargeVO
+     * @return class InfoForOilCardVO
      * @version v1
      */
     @GetMapping("v1/analyze/{oilCardCode}")
     public Result analyze(@PathVariable String oilCardCode, @RequestParam Integer year, @RequestParam Integer month) throws ActException {
 
         try {
-            InfoForOilCardVO voList = BeanTransform.copyProperties(oilCardRechargeAPI.analyze(oilCardCode, year, month), InfoForOilCardVO.class);
-            return ActResult.initialize(voList);
+            AnalyzeVO vo = BeanTransform.copyProperties(oilCardRechargeAPI.analyze(oilCardCode, year, month), InfoForOilCardVO.class);
+            return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
