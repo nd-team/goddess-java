@@ -287,7 +287,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
     @Override
     @Transactional(rollbackFor = SerException.class)
     public MarketServeApplyBO save(MarketServeApplyTO to) throws SerException {
-        checkPermission();
+        checkPermission();//商务模块权限
         MarketServeApply marketServeApply = BeanTransform.copyProperties(to, MarketServeApply.class, true);
         marketServeApply = super.save(marketServeApply);
         MarketServeApplyBO bo = BeanTransform.copyProperties(marketServeApply, MarketServeApplyBO.class);
@@ -412,7 +412,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
 
     @Override
     public MarketServeApplyBO getOne(String id) throws SerException {
-        checkPermission();
+        checkPermission();//商务模块权限
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空哦");
         }
