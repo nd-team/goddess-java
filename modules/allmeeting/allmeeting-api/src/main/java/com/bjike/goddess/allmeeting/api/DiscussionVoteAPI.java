@@ -18,9 +18,27 @@ import java.util.List;
  */
 public interface DiscussionVoteAPI {
 
+    /**
+     * 投票
+     * @param to
+     * @return
+     * @throws SerException
+     */
     DiscussionVoteBO add(DiscussionVoteTO to) throws SerException;
 
+    /**
+     * 查询投票列表
+     * @param summaryId
+     * @return
+     * @throws SerException
+     */
     List<SummaryVoteBO> listBySummary(String summaryId) throws SerException;
 
+    /**
+     *
+     * @param summaryId
+     * @return
+     * @throws SerException
+     */
     List<SummaryVoteBO> listByConSummary(String summaryId) throws SerException;
 }

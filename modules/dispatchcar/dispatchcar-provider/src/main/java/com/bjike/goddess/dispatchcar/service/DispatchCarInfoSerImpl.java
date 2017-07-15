@@ -24,7 +24,12 @@ import com.bjike.goddess.dispatchcar.excel.SonPermissionObject;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
 import com.bjike.goddess.dispatchcar.to.FinanceCollectTO;
 import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
-import com.bjike.goddess.oilcardmanage.api.OilCardBasicAPI;
+import com.bjike.goddess.message.api.MessageAPI;
+import com.bjike.goddess.message.enums.SendType;
+import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
+import com.bjike.goddess.oilcardmanage.entity.OilCardBasic;
+import com.bjike.goddess.oilcardmanage.service.OilCardBasicSer;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -69,6 +74,10 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     private DriverInfoAPI driverInfoAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private OilCardBasicSer oilCardBasicSer;
+    @Autowired
+    private MessageAPI messageAPI;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
@@ -87,17 +96,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         if (to.getDowntown()) {
             oilWear = oilWear + 0.01;
         }
-        to.setOilWear(oilWear);
-        to.setMileageSubtract(to.getEndMileage() - to.getStartMileage());
-        to.setAddOilAmount(to.getMileageSubtract() * oilWear);
-        if (to.getOilPrice() != null) {
-            to.setOilCost(to.getAddOilAmount() * to.getOilPrice());
-        } else {
-            to.setOilCost(0.0);
-        }
 
-        //查找租车费用
-        findCost(to);
 
         DispatchCarInfo model = BeanTransform.copyProperties(to, DispatchCarInfo.class, true);
         model.setMileageSubtract(model.getEndMileage() - model.getStartMileage());
@@ -122,6 +121,19 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             model.setMealCost(0.0);
             model.setOverWorkTime(0);
         }
+        //查找租车费用
+        model.setCarRentalCost(findCost(to));
+        model.setOilWear(oilWear);
+        model.setMileageSubtract(to.getEndMileage() - to.getStartMileage());
+        model.setAddOilAmount(model.getMileageSubtract() * oilWear);
+        if (to.getOilPrice() != null) {
+            model.setOilCost(model.getAddOilAmount() * to.getOilPrice());
+        } else {
+            model.setOilCost(0.0);
+        }
+
+        //查询油卡余额
+        model.setOilCardBalance(oilCardBasicSer.findByCode(to.getOilCardNumber()).getBalance());
         model.setOverWorkCost(model.getCarRentalCost() / 8 * model.getOverWorkTime());
         model.setCost(model.getMealCost() + model.getCarRentalCost() + model.getOverWorkCost() + model.getParkCost() + model.getRoadCost());
         model.setTotalCost(model.getMealCost() + model.getCarRentalCost() + model.getOverWorkCost() + model.getParkCost() + model.getRoadCost() + model.getOilCost());
@@ -152,17 +164,14 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
                 if (to.getDowntown()) {
                     oilWear = oilWear + 0.01;
                 }
-                to.setOilWear(oilWear);
-                to.setMileageSubtract(to.getEndMileage() - to.getStartMileage());
-                to.setAddOilAmount(to.getMileageSubtract() * oilWear);
+                model.setOilWear(oilWear);
+                model.setMileageSubtract(to.getEndMileage() - to.getStartMileage());
+                model.setAddOilAmount(model.getMileageSubtract() * oilWear);
                 if (to.getOilPrice() != null) {
-                    to.setOilCost(to.getAddOilAmount() * to.getOilPrice());
+                    model.setOilCost(model.getAddOilAmount() * to.getOilPrice());
                 } else {
-                    to.setOilCost(0.0);
+                    model.setOilCost(0.0);
                 }
-
-                //查找租车费用
-                findCost(to);
 
                 BeanTransform.copyProperties(to, model, true);
 
@@ -188,6 +197,10 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
                     model.setMealCost(0.0);
                     model.setOverWorkTime(0);
                 }
+                //查找租车费用
+                model.setCarRentalCost(findCost(to));
+                //查询油卡余额
+                model.setOilCardBalance(oilCardBasicSer.findByCode(to.getOilCardNumber()).getBalance());
                 model.setOverWorkCost(model.getCarRentalCost() / 8 * model.getOverWorkTime());
                 model.setCost(model.getMealCost() + model.getCarRentalCost() + model.getOverWorkCost() + model.getParkCost() + model.getRoadCost());
                 model.setTotalCost(model.getMealCost() + model.getCarRentalCost() + model.getOverWorkCost() + model.getParkCost() + model.getRoadCost() + model.getOilCost());
@@ -435,7 +448,25 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     public void pay(String id) throws SerException {
         DispatchCarInfo model = super.findById(id);
         if (model != null) {
+            if(FindType.PAYED==model.getFindType()){
+                throw new SerException("无需重复审核!");
+            }
             model.setFindType(FindType.PAYED);
+            //付款后代表所有审核均通过，修改油余额
+            //TODO 这里应该考虑分布式事务，联系焕来或贵钦解决该问题。 TCC
+            OilCardBasicBO basicBO = oilCardBasicSer.findByCode(model.getOilCardNumber());
+            OilCardBasic oilCardBasic = oilCardBasicSer.findById(basicBO.getId());
+            oilCardBasic.setBalance(oilCardBasic.getBalance() - model.getOilPrice());
+            oilCardBasicSer.update(oilCardBasic);
+            if (oilCardBasic.getBalance() < 300) {
+                String content = "运营商务部的同事，你们好，" + oilCardBasic.getOilCardCode() + "号油卡余额" + oilCardBasic.getBalance() + "元，低于300元，请在一天内充值，请综合资源部同事跟进充值情况";
+                MessageTO to = new MessageTO("油卡余额不足300元", content);
+                to.setSendType(SendType.EMAIL);
+                //TODO 未明确发送对象
+//                to.setReceivers(sendUsers);
+                messageAPI.send(to);
+            }
+
             super.update(model);
         } else {
             throw new SerException("付款对象不能为空!");
@@ -1033,13 +1064,13 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     /**
      * 根据地区、项目组查询租车费
      */
-    public void findCost(DispatchCarInfoTO to) throws SerException {
+    public Double findCost(DispatchCarInfoTO to) throws SerException {
         LeaseCarCostDTO dto = new LeaseCarCostDTO();
         dto.getConditions().add(Restrict.eq("area", to.getArea()));
         dto.getConditions().add(Restrict.eq("group", to.getGroup()));
         LeaseCarCost leaseCarCost = leaseCarCostSer.findOne(dto);
         if (leaseCarCost != null) {
-            to.setCarRentalCost(leaseCarCost.getCost());
+            return leaseCarCost.getCost();
         } else {
             throw new SerException("该地区和项目组对应的租车费未添加,请先添加租车费用信息!");
         }
