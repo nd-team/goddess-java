@@ -62,7 +62,7 @@ public class RecommendRequireBO extends BaseBO {
     /**
      * 推荐类型
      */
-    private String recommendType;
+    private String recommendTypeName;
 
     public String getOpenTime() {
         return openTime;
@@ -80,12 +80,12 @@ public class RecommendRequireBO extends BaseBO {
         this.closeTime = closeTime;
     }
 
-    public String getRecommendType() {
-        return recommendType;
+    public String getRecommendTypeName() {
+        return recommendTypeName;
     }
 
-    public void setRecommendType(String recommendType) {
-        this.recommendType = recommendType;
+    public void setRecommendTypeName(String recommendTypeName) {
+        this.recommendTypeName = recommendTypeName;
     }
 
     public Integer getRecommendTime() {

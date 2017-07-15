@@ -82,7 +82,7 @@ public class RecommendTypeAct {
     public Result delete(@PathVariable String id) throws ActException {
         try {
             recommendTypeAPI.delete(id);
-            return new ActResult();
+            return new ActResult("删除成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

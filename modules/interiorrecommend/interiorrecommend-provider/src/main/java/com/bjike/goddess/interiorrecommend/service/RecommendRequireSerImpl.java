@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -40,6 +41,8 @@ public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, Recom
     private RecommendSchemeSer recommendSchemeSer;
     @Autowired
     private RecommendTypeSer recommendTypeSer;
+    @Autowired
+    private RecommendAssessDetailSer recommendAssessDetailSer;
 
     @Override
     public RecommendRequireBO insertModel(RecommendRequireTO to) throws SerException {
@@ -54,6 +57,9 @@ public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, Recom
                     Set<RecommendAssessDetail> detailSet = new HashSet<RecommendAssessDetail>();
                     List<RecommendAssessDetail> detailList = BeanTransform.copyProperties(to.getAssessDetailList(), RecommendAssessDetail.class);
                     detailSet.addAll(detailList);
+                    for (RecommendAssessDetail detail : detailSet) {
+                        detail.setRecommendRequire(model);
+                    }
                     model.setDetailSet(detailSet);
                     model.setRecommendType(recommendType);
                     model.setRecommendScheme(recommendScheme);
@@ -82,16 +88,25 @@ public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, Recom
                 if (model != null) {
                     BeanTransform.copyProperties(to, model, true);
                     model.setModifyTime(LocalDateTime.now());
+
                     //保存推荐考核内容
                     if (!CollectionUtils.isEmpty(to.getAssessDetailList())) {
                         Set<RecommendAssessDetail> detailSet = new HashSet<RecommendAssessDetail>();
                         List<RecommendAssessDetail> detailList = BeanTransform.copyProperties(to.getAssessDetailList(), RecommendAssessDetail.class);
                         detailSet.addAll(detailList);
+                        for (RecommendAssessDetail detail : detailSet) {
+                            if (!StringUtils.isEmpty(detail.getId())) {
+                                RecommendAssessDetail assessDetail = recommendAssessDetailSer.findById(detail.getId());
+                                detail.setCreateTime(assessDetail.getCreateTime());
+                                detail.setModifyTime(assessDetail.getModifyTime());
+                                detail.setRecommendRequire(model);
+                            }
+                        }
+
                         model.setDetailSet(detailSet);
                         model.setRecommendType(recommendType);
                         model.setRecommendScheme(recommendScheme);
                         super.update(model);
-                        to.setId(model.getId());
                         return BeanTransform.copyProperties(to, RecommendRequireBO.class);
                     } else {
                         throw new SerException("推荐考核内容不能为空!");
@@ -117,7 +132,7 @@ public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, Recom
                 RecommendRequireBO bo = BeanTransform.copyProperties(model, RecommendRequireBO.class);
                 bo.setOpenTime(DateUtil.dateToString(model.getRecommendScheme().getOpenTime()));
                 bo.setCloseTime(DateUtil.dateToString(model.getRecommendScheme().getCloseTime()));
-                bo.setRecommendType(model.getRecommendType().getTypeName());
+                bo.setRecommendTypeName(model.getRecommendType().getTypeName());
                 bo.setDetailList(BeanTransform.copyProperties(model.getDetailSet(), RecommendAssessDetailBO.class));
                 boList.add(bo);
             }

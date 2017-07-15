@@ -80,7 +80,7 @@ public class AwardStandardAct {
     public Result delete(@PathVariable String id) throws ActException {
         try {
             awardStandardAPI.delete(id);
-            return new ActResult();
+            return new ActResult("删除成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

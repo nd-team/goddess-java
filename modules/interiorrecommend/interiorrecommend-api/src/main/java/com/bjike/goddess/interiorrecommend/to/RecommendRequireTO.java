@@ -43,7 +43,7 @@ public class RecommendRequireTO extends BaseTO {
      * 推荐考核内容
      */
     @NotNull(message = "推荐考核内容不能为空", groups = {ADD.class, EDIT.class})
-    private List<RecommendAssessDetailTO> assessDetailList = new ArrayList<>();
+    private List<RecommendAssessDetailTO> assessDetailList;
 
     /**
      * 指标来源
@@ -58,6 +58,7 @@ public class RecommendRequireTO extends BaseTO {
     /**
      * 考核方式
      */
+    @NotNull(message = "考核方式不能为空", groups = {ADD.class, EDIT.class})
     private AssessWay assessWay;
 
     /**
