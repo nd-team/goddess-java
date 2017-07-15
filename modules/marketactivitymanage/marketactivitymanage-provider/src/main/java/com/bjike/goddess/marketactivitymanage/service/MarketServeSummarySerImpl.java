@@ -128,7 +128,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("3");
+            flag = cusPermissionSer.arrCusPermission("3");
         } else {
             flag = true;
         }
@@ -158,15 +158,16 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     public List<SonPermissionObject> sonPermission() throws SerException {
         List<SonPermissionObject> list = new ArrayList<>();
         String userToken = RpcTransmit.getUserToken();
-        Boolean flagSummSign = guildPermission();
+        Boolean flagSummSeeSign = guildPermission();
         RpcTransmit.transmitUserToken(userToken);
-
+        Boolean flagSummMISign = guideAuditMIdentity();
+        Boolean flagSummAISign = guideAuditAIdentity();
         SonPermissionObject obj = new SonPermissionObject();
 
         obj = new SonPermissionObject();
         obj.setName("marketservesummary");
         obj.setDescribesion("市场活动招待记录汇总及发送邮件");
-        if (flagSummSign) {
+        if (flagSummSeeSign || flagSummMISign || flagSummAISign) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);

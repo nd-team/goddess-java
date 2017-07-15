@@ -82,7 +82,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
             flag = true;
         }
         if (!flag) {
-            throw new SerException("您不是商务模块人员,没有该操作权限");
+            throw new SerException("您不是本部门人员,没有该操作权限");
         }
         RpcTransmit.transmitUserToken(userToken);
 
@@ -125,7 +125,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
         String userName = userBO.getUsername();
         //商务模块权限
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("3");
+            flag = cusPermissionSer.arrCusPermission("3");
         } else {
             flag = true;
         }
@@ -180,7 +180,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("3");
+            flag = cusPermissionSer.arrCusPermission("3");
         } else {
             flag = true;
         }

@@ -118,7 +118,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
         String userName = userBO.getUsername();
         //商务模块权限
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("3");
+            flag = cusPermissionSer.arrCusPermission("3");
         } else {
             flag = true;
         }
