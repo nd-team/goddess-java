@@ -5,7 +5,9 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialcheck.bo.MaterialInventoryBO;
 import com.bjike.goddess.materialcheck.dto.MaterialInventoryDTO;
 import com.bjike.goddess.materialcheck.entity.MaterialInventory;
+import com.bjike.goddess.materialcheck.excel.SonPermissionObject;
 import com.bjike.goddess.materialcheck.service.MaterialInventorySer;
+import com.bjike.goddess.materialcheck.to.GuidePermissionTO;
 import com.bjike.goddess.materialcheck.to.MaterialInventoryTO;
 import com.bjike.goddess.materialcheck.type.InventoryType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,16 @@ public class MaterialInventoryApiImpl implements MaterialInventoryAPI {
 
     @Autowired
     private MaterialInventorySer materialInventorySer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return materialInventorySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return materialInventorySer.guidePermission(guidePermissionTO);
+    }
 
     /**
      * 根据id查询物资盘点

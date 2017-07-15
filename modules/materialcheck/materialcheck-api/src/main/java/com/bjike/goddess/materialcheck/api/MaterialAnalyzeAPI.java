@@ -3,6 +3,7 @@ package com.bjike.goddess.materialcheck.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.materialcheck.bo.MaterialAnalyzeBO;
 import com.bjike.goddess.materialcheck.dto.MaterialAnalyzeDTO;
+import com.bjike.goddess.materialcheck.to.GuidePermissionTO;
 import com.bjike.goddess.materialcheck.to.MaterialAnalyzeTO;
 import com.bjike.goddess.materialcheck.type.InventoryType;
 
@@ -19,6 +20,19 @@ import java.util.List;
  */
 public interface MaterialAnalyzeAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 根据id查询物资分析
      *
