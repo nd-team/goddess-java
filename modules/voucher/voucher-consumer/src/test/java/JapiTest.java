@@ -21,6 +21,7 @@ public class JapiTest {
 		JapiClient.setActionReletivePath("com/bjike/goddess/voucher/action");//主项目action位置
 		JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
 				"modules/voucher/voucher-api",
+				"modules/organize/organize-api",
 				"modules/user/user-api",
 				"modules/financeinit/financeinit-api",
 				"modules/storage/storage-api",

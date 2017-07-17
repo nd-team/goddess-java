@@ -41,13 +41,12 @@ include ':modules:assemble:assemble-provider'
 include ':modules:customer:customer-api'
 include ':modules:customer:customer-consumer'
 include ':modules:customer:customer-provider'
-
-//#竞争对手管理
+//
+////#竞争对手管理
 include ':modules:competitormanage:competitormanage-api'
 include ':modules:competitormanage:competitormanage-consumer'
 include ':modules:competitormanage:competitormanage-provider'
-
-//#商务项目合同管理tanghaixiang
+////#商务项目合同管理tanghaixiang
 include ':modules:businessproject:businessproject-api'
 include ':modules:businessproject:businessproject-consumer'
 include ':modules:businessproject:businessproject-provider'
@@ -56,11 +55,16 @@ include ':modules:businessproject:businessproject-provider'
 include ':modules:capability:capability-api'
 include ':modules:capability:capability-consumer'
 include ':modules:capability:capability-provider'
-
-//#商业能力互动tanghaixiang
+//
+//////#商业能力互动tanghaixiang
 include ':modules:businessinteraction:businessinteraction-api'
 include ':modules:businessinteraction:businessinteraction-consumer'
 include ':modules:businessinteraction:businessinteraction-provider'
+
+////#简介管理
+//include ':modules:intromanage:intromanage-api'
+//include ':modules:intromanage:intromanage-consumer'
+//include ':modules:intromanage:intromanage-provider'
 
 //#简介管理
 include ':modules:intromanage:intromanage-api'
@@ -112,40 +116,51 @@ include ':modules:festival:festival-api'
 include ':modules:festival:festival-consumer'
 include ':modules:festival:festival-provider'
 
-//#businessevaluate 商务评估
-include ':modules:businessevaluate:businessevaluate-api'
-include ':modules:businessevaluate:businessevaluate-consumer'
-include ':modules:businessevaluate:businessevaluate-provider'
-
-//#enterpriseculturemanage 企业文化管理
-include ':modules:enterpriseculturemanage:enterpriseculturemanage-api'
-include ':modules:enterpriseculturemanage:enterpriseculturemanage-consumer'
-include ':modules:enterpriseculturemanage:enterpriseculturemanage-provider'
-
-//#annual 年假管理
-include ':modules:annual:annual-api'
-include ':modules:annual:annual-consumer'
-include ':modules:annual:annual-provider'
-
-//#contacts 通讯录管理
+////#businessevaluate 商务评估
+//include ':modules:businessevaluate:businessevaluate-api'
+//include ':modules:businessevaluate:businessevaluate-consumer'
+//include ':modules:businessevaluate:businessevaluate-provider'
+////#enterpriseculturemanage 企业文化管理
+//include ':modules:enterpriseculturemanage:enterpriseculturemanage-api'
+//include ':modules:enterpriseculturemanage:enterpriseculturemanage-consumer'
+//include ':modules:enterpriseculturemanage:enterpriseculturemanage-provider'
+////#annual 年假管理
+//include ':modules:annual:annual-api'
+//include ':modules:annual:annual-consumer'
+//include ':modules:annual:annual-provider'
+////#contacts 通讯录管理
 include ':modules:contacts:contacts-api'
 include ':modules:contacts:contacts-consumer'
 include ':modules:contacts:contacts-provider'
+//
+////market 市场信息管理
+//include ':modules:market:market-api'
+//include ':modules:market:market-consumer'
+//include ':modules:market:market-provider'
+////projectissuehandle 项目问题处理和受理
+//include ':modules:projectissuehandle:projectissuehandle-api'
+//include ':modules:projectissuehandle:projectissuehandle-consumer'
+//include ':modules:projectissuehandle:projectissuehandle-provider'
+////#market 市场信息管理
+//include ':modules:market:market-api'
+//include ':modules:market:market-consumer'
+//include ':modules:market:market-provider'
+//
+////#receivable 回款管理
+//include ':modules:receivable:receivable-api'
+//include ':modules:receivable:receivable-consumer'
+//include ':modules:receivable:receivable-provider'
+////#individualvision 个人愿景管理
+//include ':modules:individualvision:individualvision-api'
+//include ':modules:individualvision:individualvision-consumer'
+//include ':modules:individualvision:individualvision-provider'
+////#eggert 评估管理
+//include ':modules:eggert:eggert-api'
+//include ':modules:eggert:eggert-consumer'
+//include ':modules:eggert:eggert-provider'
+//
+////#voucher 记账凭证tanghaixiang
 
-//market 市场信息管理
-include ':modules:market:market-api'
-include ':modules:market:market-consumer'
-include ':modules:market:market-provider'
-
-//projectissuehandle 项目问题处理和受理
-include ':modules:projectissuehandle:projectissuehandle-api'
-include ':modules:projectissuehandle:projectissuehandle-consumer'
-include ':modules:projectissuehandle:projectissuehandle-provider'
-
-//#market 市场信息管理
-include ':modules:market:market-api'
-include ':modules:market:market-consumer'
-include ':modules:market:market-provider'
 
 //#individualvision 个人愿景管理
 include ':modules:individualvision:individualvision-api'
@@ -265,9 +280,9 @@ include ':modules:subjectcollect:subjectcollect-consumer'
 include ':modules:subjectcollect:subjectcollect-provider'
 
 //#checkhost 入住，离宿登记
-include ':modules:checkhost:checkhost-api'
-include ':modules:checkhost:checkhost-consumer'
-include ':modules:checkhost:checkhost-provider'
+//include ':modules:checkhost:checkhost-api'
+//include ':modules:checkhost:checkhost-consumer'
+//include ':modules:checkhost:checkhost-provider'
 
 //#rentutilitiespay 房租，水电费缴付
 include ':modules:rentutilitiespay:rentutilitiespay-api'
@@ -349,69 +364,89 @@ include ':modules:contractcommunicat:contractcommunicat-api'
 include ':modules:contractcommunicat:contractcommunicat-consumer'
 include ':modules:contractcommunicat:contractcommunicat-provider'
 
-//#materialinstock 物资入库
-include ':modules:materialinstock:materialinstock-api'
-include ':modules:materialinstock:materialinstock-consumer'
-include ':modules:materialinstock:materialinstock-provider'
+////#materialinstock 物资入库
+//include ':modules:materialinstock:materialinstock-api'
+//include ':modules:materialinstock:materialinstock-consumer'
+//include ':modules:materialinstock:materialinstock-provider'
+////#materialreceive 物资领用
+//include ':modules:materialreceive:materialreceive-api'
+//include ':modules:materialreceive:materialreceive-consumer'
+//include ':modules:materialreceive:materialreceive-provider'
+////#materialtransfer 物资调用
+//include ':modules:materialtransfer:materialtransfer-api'
+//include ':modules:materialtransfer:materialtransfer-consumer'
+//include ':modules:materialtransfer:materialtransfer-provider'
+////#materialcheck 物资盘点
+//include ':modules:materialcheck:materialcheck-api'
+//include ':modules:materialcheck:materialcheck-consumer'
+//include ':modules:materialcheck:materialcheck-provider'
+//
 
+////#archive 员工档案 dengjunren
+//include ':modules:archive:archive-api'
+//include ':modules:archive:archive-consumer'
+//include ':modules:archive:archive-provider'
+//
+////#attainment 人员综合素养调研 dengjunren
+//include ':modules:attainment:attainment-api'
+//include ':modules:attainment:attainment-consumer'
+//include ':modules:attainment:attainment-provider'
+//
+////#bonus 项目奖金包 dengjunren
+//include ':modules:bonus:bonus-api'
+//include ':modules:bonus:bonus-consumer'
+//include ':modules:bonus:bonus-provider'
+//
+////#employee-contract 员工合同管理 dengjunren
+//include ':modules:employee-contract:employee-contract-api'
+//include ':modules:employee-contract:employee-contract-consumer'
+//include ':modules:employee-contract:employee-contract-provider'
 
+//
+////#projectcost 项目上费用 dengjunren
+////include ':modules:projectcost:projectcost-api'
+////include ':modules:projectcost:projectcost-consumer'
+////include ':modules:projectcost:projectcost-provider'
+//
 
-//#materialcheck 物资盘点
-include ':modules:materialcheck:materialcheck-api'
-include ':modules:materialcheck:materialcheck-consumer'
-include ':modules:materialcheck:materialcheck-provider'
-
-//#archive 员工档案 dengjunren
-include ':modules:archive:archive-api'
-include ':modules:archive:archive-consumer'
-include ':modules:archive:archive-provider'
-
-//#attainment 人员综合素养调研 dengjunren
-include ':modules:attainment:attainment-api'
-include ':modules:attainment:attainment-consumer'
-include ':modules:attainment:attainment-provider'
-
-//#bonus 项目奖金包 dengjunren
-include ':modules:bonus:bonus-api'
-include ':modules:bonus:bonus-consumer'
-include ':modules:bonus:bonus-provider'
-
-//#employee-contract 员工合同管理 dengjunren
-include ':modules:employee-contract:employee-contract-api'
-include ':modules:employee-contract:employee-contract-consumer'
-include ':modules:employee-contract:employee-contract-provider'
-
-//#projectcost 项目上费用 dengjunren
-include ':modules:projectcost:projectcost-api'
-include ':modules:projectcost:projectcost-consumer'
-include ':modules:projectcost:projectcost-provider'
-
-//#qualifications 公司资质管理 dengjunren
-include ':modules:qualifications:qualifications-api'
-include ':modules:qualifications:qualifications-consumer'
-include ':modules:qualifications:qualifications-provider'
-
-//#supplier 供应商管理 dengjunren
+////#qualifications 公司资质管理 dengjunren
+//include ':modules:qualifications:qualifications-api'
+//include ':modules:qualifications:qualifications-consumer'
+//include ':modules:qualifications:qualifications-provider'
+//
+////#supplier 供应商管理 dengjunren
 include ':modules:supplier:supplier-api'
 include ':modules:supplier:supplier-consumer'
 include ':modules:supplier:supplier-provider'
+//
+////#rotation 岗位轮换 dengjunren
+//include ':modules:rotation:rotation-api'
+//include ':modules:rotation:rotation-consumer'
+//include ':modules:rotation:rotation-provider'
+//
+////#rotation 岗位轮换 dengjunren
+//include ':modules:rotation:rotation-api'
+//include ':modules:rotation:rotation-consumer'
+//include ':modules:rotation:rotation-provider'
 
-//#rotation 岗位轮换 dengjunren
-include ':modules:rotation:rotation-api'
-include ':modules:rotation:rotation-consumer'
-include ':modules:rotation:rotation-provider'
+//
+////#marketactivitymanage 市场活动管理 sunfengtao
+//include ':modules:marketactivitymanage:marketactivitymanage-api'
+//include ':modules:marketactivitymanage:marketactivitymanage-consumer'
+//include ':modules:marketactivitymanage:marketactivitymanage-provider'
+//
+////#projectmeasure 项目测算 sunfengtao
+//include ':modules:projectmeasure:projectmeasure-api'
+//include ':modules:projectmeasure:projectmeasure-consumer'
+//include ':modules:projectmeasure:projectmeasure-provider'
+//
+////#projectmeasure 项目测算 sunfengtao
+//include ':modules:projectmeasure:projectmeasure-api'
+//include ':modules:projectmeasure:projectmeasure-consumer'
+//include ':modules:projectmeasure:projectmeasure-provider'
+//
 
-//#rotation 岗位轮换 dengjunren
-include ':modules:rotation:rotation-api'
-include ':modules:rotation:rotation-consumer'
-include ':modules:rotation:rotation-provider'
-
-//#marketactivitymanage 市场活动管理 sunfengtao
-include ':modules:marketactivitymanage:marketactivitymanage-api'
-include ':modules:marketactivitymanage:marketactivitymanage-consumer'
-include ':modules:marketactivitymanage:marketactivitymanage-provider'
-
-//#fundrecords 资金流水 Jason
+////#fundrecords 资金流水 Jason
 include ':modules:fundrecords:fundrecords-api'
 include ':modules:fundrecords:fundrecords-consumer'
 include ':modules:fundrecords:fundrecords-provider'
@@ -471,7 +506,8 @@ include ':modules:projectmeasure:projectmeasure-api'
 include ':modules:projectmeasure:projectmeasure-consumer'
 include ':modules:projectmeasure:projectmeasure-provider'
 
+
 //#receivable 回款管理
-//include ':modules:receivable:receivable-api'
-//include ':modules:receivable:receivable-consumer'
-//include ':modules:receivable:receivable-provider'
+include ':modules:reimbursementprepare:reimbursementprepare-api'
+include ':modules:reimbursementprepare:reimbursementprepare-consumer'
+include ':modules:reimbursementprepare:reimbursementprepare-provider'

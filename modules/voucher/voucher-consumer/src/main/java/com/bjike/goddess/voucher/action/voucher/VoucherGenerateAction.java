@@ -9,10 +9,15 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
+import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
@@ -54,6 +59,10 @@ public class VoucherGenerateAction extends BaseFileAction{
 
     @Autowired
     private VoucherGenerateAPI voucherGenerateAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
     @Autowired
     private FileAPI fileAPI;
     @Autowired
@@ -1233,6 +1242,58 @@ public class VoucherGenerateAction extends BaseFileAction{
         return word;
     }
 
+
+    /**
+     * 获取组织结构所有地区
+     *
+     * @des 获取组织结构所有地区
+     * @return class AreaBO
+     * @version v1
+     */
+    @GetMapping("v1/listOrganArea")
+    public Result listOrganArea() throws ActException {
+        try {
+            List<AreaBO> userList = departmentDetailAPI.findArea();
+            return ActResult.initialize(userList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 获取组织结构所有项目组和部门
+     *
+     * @return class OpinionBO
+     * @des 获取组织结构所有项目组和部门
+     * @version v1
+     */
+    @GetMapping("v1/listOrganDepart")
+    public Result listOrganDepart() throws ActException {
+        try {
+            List<OpinionBO> userList = departmentDetailAPI.findThawOpinion();
+            return ActResult.initialize(userList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取组织结构所有用户
+     *
+     * @des 获取组织结构所有用户
+     * @return class UserBO
+     * @version v1
+     */
+    @GetMapping("v1/listOrganUser")
+    public Result listOrganUser() throws ActException {
+        try {
+            List<UserBO> userList = positionDetailUserAPI.findUserListInOrgan();
+            return ActResult.initialize(userList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
 
