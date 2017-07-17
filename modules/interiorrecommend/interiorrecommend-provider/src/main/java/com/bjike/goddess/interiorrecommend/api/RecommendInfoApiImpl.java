@@ -55,4 +55,9 @@ public class RecommendInfoApiImpl implements RecommendInfoAPI {
     public void conformAudit(String id, Boolean conform) throws SerException {
         recommendInfoSer.conformAudit(id,conform);
     }
+
+    @Override
+    public List<RecommendInfoBO> awardlist() throws SerException {
+        return recommendInfoSer.awardlist();
+    }
 }

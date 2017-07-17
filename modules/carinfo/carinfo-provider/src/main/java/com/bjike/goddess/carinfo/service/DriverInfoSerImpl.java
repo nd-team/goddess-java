@@ -87,4 +87,12 @@ public class DriverInfoSerImpl extends ServiceImpl<DriverInfo, DriverInfoDTO> im
             throw new SerException("非法Id,司机信息对象不能为空!");
         }
     }
+
+    @Override
+    public DriverInfoBO findByDriver(String driver) throws SerException {
+        DriverInfoDTO dto = new DriverInfoDTO();
+        dto.getConditions().add(Restrict.eq("driver", driver));
+        List<DriverInfo> list = super.findByCis(dto);
+        return BeanTransform.copyProperties(list.get(0), DriverInfoBO.class);
+    }
 }

@@ -1,4 +1,4 @@
-package com.bjike.goddess.oilcardmanage.bo;
+package com.bjike.goddess.oilcardmanage.vo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
@@ -11,7 +11,7 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class AnalyzeBO extends BaseBO {
+public class AnalyzeVO {
 
     /**
      * 油卡编号

@@ -26,106 +26,127 @@ public class DispatchCarInfoTO extends BaseTO {
     /**
      * 司机名称
      */
+    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private String driver;
 
     /**
      * 是否公司人员出车
      */
+    @NotNull(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private Boolean companyDispatch;
 
     /**
      * 用车人
      */
+    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private String carUser;
 
     /**
      * 员工编号
      */
+    @NotBlank(message = "员工编号不能为空", groups = {ADD.class, EDIT.class})
     private String userNumber;
 
     /**
      * 所属地区
      */
+    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private String area;
 
     /**
      * 所属项目组
      */
+    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private String group;
 
     /**
      * 是否立项
      */
+    @NotNull(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private Boolean projectApproval;
 
     /**
      * 项目名称
      */
+    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private String project;
 
     /**
      * 科目类型
      */
+    @NotNull(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private Acctype acctype;
 
     /**
      * 出车日期
      */
+    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private String dispatchDate;
 
     /**
      * 出车开始时间
      */
+    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private String startTime;
 
     /**
      * 出车结束时间
      */
+    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private String endTime;
 
     /**
      * 是否午休
      */
+    @NotNull(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private Boolean siesta;
 
     /**
      * 加班时长
      */
+    @NotNull(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private Integer overWorkTime;
 
     /**
      * 用车事由
      */
+    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private String dispatchReason;
 
     /**
      * 随同人员
      */
+    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private String accompanyUser;
 
     /**
      * 车牌号码
      */
+    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private String carNumber;
 
     /**
      * 所用油卡编号
      */
+    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private String oilCardNumber;
 
     /**
      * 是否开空调
      */
+    @NotNull(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private Boolean aircondition;
 
     /**
      * 是否市内
      */
+    @NotNull(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private Boolean downtown;
 
     /**
      * 当天是否加油
      */
+    @NotNull(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private Boolean addOil;
 
     /**
@@ -143,15 +164,6 @@ public class DispatchCarInfoTO extends BaseTO {
      */
     private String addOilTime;
 
-    /**
-     * 加油量
-     */
-    private Double addOilAmount;
-
-    /**
-     * 油卡余额
-     */
-    private Double oilCardBalance;
 
     /**
      * 当天油价
@@ -161,243 +173,68 @@ public class DispatchCarInfoTO extends BaseTO {
     /**
      * 任务下达人
      */
+    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private String principal;
 
     /**
      * 计划任务数量
      */
+    @NotNull(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private Integer planTaskAmount;
 
     /**
      * 完成任务数量
      */
+    @NotNull(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private Integer finishTaskAmount;
 
     /**
      * 出车开始里程数
      */
+    @NotNull(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private Double startMileage;
 
     /**
      * 出车结束里程数
      */
+    @NotNull(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private Double endMileage;
-
-    /**
-     * 总里程数
-     */
-    private Double mileageSubtract;
 
     /**
      * GPS轨迹总里程数
      */
+    @NotNull(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private Double mileageOfGPS;
 
     /**
      * 停车费
      */
+    @NotNull(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private Double parkCost;
 
     /**
      * 过路费
      */
+    @NotNull(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private Double roadCost;
 
     /**
      * 评价司机
      */
+    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private Evaluate evaluatedriver;
-
-    /**
-     * 小票附件
-     */
-    private Boolean receipt;
 
     /**
      * 处罚汇总
      */
+    @NotNull(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private Double punishCost;
 
     /**
      * 异常分析
      */
+    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private String exceptionAnalyze;
-
-    /**
-     * 餐补费
-     */
-    private Double mealCost;
-
-    /**
-     * 资金模块意见
-     */
-    private String fundModuleSugg;
-
-    /**
-     * 预算模块意见
-     */
-    private String budgetModuleSugg;
-
-    /**
-     * 任务下达人意见
-     */
-    private String principalSugg;
-
-    /**
-     * 是否通过
-     */
-    private Boolean auditResult;
-
-    /**
-     * 是否付款
-     */
-    private Boolean pay;
-
-    /**
-     * 租车费用
-     */
-    private Double carRentalCost;
-
-    /**
-     * 预计付款时间
-     */
-    private String budgetPayDate;
-
-    /**
-     * 签收小票日期
-     */
-    private String receiveReceiptDate;
-
-    /**
-     * 小票审核情况
-     */
-    private String auditReceiptSugg;
-
-    /**
-     * 小票审核结果
-     */
-    private Boolean auditReceiptResult;
-
-    /**
-     * 数据状态
-     */
-    private Status status;
-
-    /**
-     * 资金审核时间
-     */
-    private String fundAudtiTime;
-
-    /**
-     * 预算审核时间
-     */
-    private String budgetAuditTime;
-
-    /**
-     * 任务下达人审核时间
-     */
-    private String principalAuditTime;
-
-    /**
-     * 资金审核人
-     */
-    private String fundAuditUser;
-
-    /**
-     * 预算审核人
-     */
-    private String budgetAuditUser;
-
-    /**
-     * 付款计划
-     */
-    private String payPlan;
-
-    /**
-     * 查询类型
-     */
-    private FindType findType;
-
-    /**
-     * 油耗
-     */
-    private Double oilWear;
-
-    /**
-     * 油费
-     */
-    private Double oilCost;
-
-    /**
-     * 加班费
-     */
-    private Double overWorkCost;
-
-    /**
-     * 金额
-     */
-    private Double cost;
-
-    /**
-     * 合计金额
-     */
-    private Double totalCost;
-
-    public Double getCost() {
-        return cost;
-    }
-
-    public void setCost(Double cost) {
-        this.cost = cost;
-    }
-
-    public Double getTotalCost() {
-        return totalCost;
-    }
-
-    public void setTotalCost(Double totalCost) {
-        this.totalCost = totalCost;
-    }
-
-    public Double getOverWorkCost() {
-        return overWorkCost;
-    }
-
-    public void setOverWorkCost(Double overWorkCost) {
-        this.overWorkCost = overWorkCost;
-    }
-
-    public Double getOilCost() {
-        return oilCost;
-    }
-
-    public void setOilCost(Double oilCost) {
-        this.oilCost = oilCost;
-    }
-
-    public Double getOilWear() {
-        return oilWear;
-    }
-
-    public void setOilWear(Double oilWear) {
-        this.oilWear = oilWear;
-    }
-
-    public FindType getFindType() {
-        return findType;
-    }
-
-    public void setFindType(FindType findType) {
-        this.findType = findType;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
 
     public String getDriver() {
         return driver;
@@ -591,22 +428,6 @@ public class DispatchCarInfoTO extends BaseTO {
         this.addOilTime = addOilTime;
     }
 
-    public Double getAddOilAmount() {
-        return addOilAmount;
-    }
-
-    public void setAddOilAmount(Double addOilAmount) {
-        this.addOilAmount = addOilAmount;
-    }
-
-    public Double getOilCardBalance() {
-        return oilCardBalance;
-    }
-
-    public void setOilCardBalance(Double oilCardBalance) {
-        this.oilCardBalance = oilCardBalance;
-    }
-
     public Double getOilPrice() {
         return oilPrice;
     }
@@ -655,14 +476,6 @@ public class DispatchCarInfoTO extends BaseTO {
         this.endMileage = endMileage;
     }
 
-    public Double getMileageSubtract() {
-        return mileageSubtract;
-    }
-
-    public void setMileageSubtract(Double mileageSubtract) {
-        this.mileageSubtract = mileageSubtract;
-    }
-
     public Double getMileageOfGPS() {
         return mileageOfGPS;
     }
@@ -695,14 +508,6 @@ public class DispatchCarInfoTO extends BaseTO {
         this.evaluatedriver = evaluatedriver;
     }
 
-    public Boolean getReceipt() {
-        return receipt;
-    }
-
-    public void setReceipt(Boolean receipt) {
-        this.receipt = receipt;
-    }
-
     public Double getPunishCost() {
         return punishCost;
     }
@@ -717,141 +522,5 @@ public class DispatchCarInfoTO extends BaseTO {
 
     public void setExceptionAnalyze(String exceptionAnalyze) {
         this.exceptionAnalyze = exceptionAnalyze;
-    }
-
-    public Double getMealCost() {
-        return mealCost;
-    }
-
-    public void setMealCost(Double mealCost) {
-        this.mealCost = mealCost;
-    }
-
-    public String getFundModuleSugg() {
-        return fundModuleSugg;
-    }
-
-    public void setFundModuleSugg(String fundModuleSugg) {
-        this.fundModuleSugg = fundModuleSugg;
-    }
-
-    public String getBudgetModuleSugg() {
-        return budgetModuleSugg;
-    }
-
-    public void setBudgetModuleSugg(String budgetModuleSugg) {
-        this.budgetModuleSugg = budgetModuleSugg;
-    }
-
-    public String getPrincipalSugg() {
-        return principalSugg;
-    }
-
-    public void setPrincipalSugg(String principalSugg) {
-        this.principalSugg = principalSugg;
-    }
-
-    public Boolean getAuditResult() {
-        return auditResult;
-    }
-
-    public void setAuditResult(Boolean auditResult) {
-        this.auditResult = auditResult;
-    }
-
-    public Boolean getPay() {
-        return pay;
-    }
-
-    public void setPay(Boolean pay) {
-        this.pay = pay;
-    }
-
-    public Double getCarRentalCost() {
-        return carRentalCost;
-    }
-
-    public void setCarRentalCost(Double carRentalCost) {
-        this.carRentalCost = carRentalCost;
-    }
-
-    public String getBudgetPayDate() {
-        return budgetPayDate;
-    }
-
-    public void setBudgetPayDate(String budgetPayDate) {
-        this.budgetPayDate = budgetPayDate;
-    }
-
-    public String getReceiveReceiptDate() {
-        return receiveReceiptDate;
-    }
-
-    public void setReceiveReceiptDate(String receiveReceiptDate) {
-        this.receiveReceiptDate = receiveReceiptDate;
-    }
-
-    public String getAuditReceiptSugg() {
-        return auditReceiptSugg;
-    }
-
-    public void setAuditReceiptSugg(String auditReceiptSugg) {
-        this.auditReceiptSugg = auditReceiptSugg;
-    }
-
-    public String getFundAudtiTime() {
-        return fundAudtiTime;
-    }
-
-    public void setFundAudtiTime(String fundAudtiTime) {
-        this.fundAudtiTime = fundAudtiTime;
-    }
-
-    public String getBudgetAuditTime() {
-        return budgetAuditTime;
-    }
-
-    public void setBudgetAuditTime(String budgetAuditTime) {
-        this.budgetAuditTime = budgetAuditTime;
-    }
-
-    public String getPrincipalAuditTime() {
-        return principalAuditTime;
-    }
-
-    public void setPrincipalAuditTime(String principalAuditTime) {
-        this.principalAuditTime = principalAuditTime;
-    }
-
-    public String getFundAuditUser() {
-        return fundAuditUser;
-    }
-
-    public void setFundAuditUser(String fundAuditUser) {
-        this.fundAuditUser = fundAuditUser;
-    }
-
-    public String getBudgetAuditUser() {
-        return budgetAuditUser;
-    }
-
-    public void setBudgetAuditUser(String budgetAuditUser) {
-        this.budgetAuditUser = budgetAuditUser;
-    }
-
-    public Boolean getAuditReceiptResult() {
-        return auditReceiptResult;
-    }
-
-    public void setAuditReceiptResult(Boolean auditReceiptResult) {
-        this.auditReceiptResult = auditReceiptResult;
-    }
-
-    public String getPayPlan() {
-        return payPlan;
-    }
-
-    public void setPayPlan(String payPlan) {
-        this.payPlan = payPlan;
     }
 }

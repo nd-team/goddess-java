@@ -1,5 +1,7 @@
 package com.bjike.goddess.interiorrecommend.action.interiorrecommend;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -13,6 +15,7 @@ import com.bjike.goddess.interiorrecommend.vo.RecommendContentVO;
 import com.bjike.goddess.interiorrecommend.vo.RecommendInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,7 +44,7 @@ public class RecommendInfoAct {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(RecommendInfoTO to, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(ADD.class) RecommendInfoTO to, BindingResult bindingResult) throws ActException {
         try {
             RecommendInfoVO vo = BeanTransform.copyProperties(recommendInfoAPI.addModel(to), RecommendInfoVO.class);
             return ActResult.initialize(vo);
@@ -58,7 +61,7 @@ public class RecommendInfoAct {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(RecommendInfoTO to, BindingResult bindingResult) throws ActException {
+    public Result edit(@Validated(EDIT.class) RecommendInfoTO to, BindingResult bindingResult) throws ActException {
         try {
             RecommendInfoVO vo = BeanTransform.copyProperties(recommendInfoAPI.editModel(to), RecommendInfoVO.class);
             return ActResult.initialize(vo);
@@ -94,7 +97,7 @@ public class RecommendInfoAct {
      * @version v1
      */
     @LoginAuth
-    @GetMapping("v1/conformAudit")
+    @GetMapping("v1/audit")
     public Result conformAudit(String id, Boolean conform) throws ActException {
         try {
             recommendInfoAPI.conformAudit(id, conform);
@@ -128,7 +131,7 @@ public class RecommendInfoAct {
      * @version v1
      */
     @LoginAuth
-    @GetMapping("v1/pageList")
+    @GetMapping("v1/list")
     public Result pageList(RecommendInfoDTO dto) throws ActException {
         try {
             List<RecommendInfoVO> voList = BeanTransform.copyProperties(recommendInfoAPI.pageList(dto), RecommendInfoVO.class);

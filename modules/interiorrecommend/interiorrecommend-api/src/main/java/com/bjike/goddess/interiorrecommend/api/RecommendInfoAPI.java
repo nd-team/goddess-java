@@ -68,4 +68,11 @@ public interface RecommendInfoAPI {
      * @version v1
      */
     void conformAudit(String id, Boolean conform) throws SerException;
+
+    /**
+     * 审核通过的推荐信息列表
+     * @return
+     * @throws SerException
+     */
+    List<RecommendInfoBO> awardlist() throws SerException;
 }
