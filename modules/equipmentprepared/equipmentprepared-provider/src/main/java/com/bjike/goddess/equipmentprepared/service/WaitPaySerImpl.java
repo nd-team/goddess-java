@@ -200,6 +200,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
             }
             if ((quantitySum != 0) || (sum != 0)) {
                 PayCountBO bo = new PayCountBO();
+                bo.setComment("合计");
                 bo.setQuantitySum(quantitySum);
                 bo.setSum(sum);
                 boList.add(bo);
@@ -232,6 +233,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
             }
             if ((quantitySum != 0) || (sum != 0)) {
                 PayCountBO bo = new PayCountBO();
+                bo.setComment("合计");
                 bo.setQuantitySum(quantitySum);
                 bo.setSum(sum);
                 boList.add(bo);
@@ -264,6 +266,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
             }
             if ((quantitySum != 0) || (sum != 0)) {
                 PayCountBO bo = new PayCountBO();
+                bo.setComment("合计");
                 bo.setQuantitySum(quantitySum);
                 bo.setSum(sum);
                 boList.add(bo);

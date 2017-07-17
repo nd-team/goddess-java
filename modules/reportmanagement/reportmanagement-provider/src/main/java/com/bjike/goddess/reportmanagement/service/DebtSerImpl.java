@@ -332,7 +332,7 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
             throw new SerException("该对象不存在");
         }
         LocalDateTime a = entity.getCreateTime();
-        entity = BeanTransform.copyProperties(to, Asset.class, true);
+        entity = BeanTransform.copyProperties(to, Debt.class, true);
         entity.setCreateTime(a);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);

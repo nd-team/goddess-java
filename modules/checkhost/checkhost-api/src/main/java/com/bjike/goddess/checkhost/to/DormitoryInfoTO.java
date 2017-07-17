@@ -1,6 +1,12 @@
 package com.bjike.goddess.checkhost.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 /**
  * 宿舍信息管理
@@ -16,26 +22,32 @@ public class DormitoryInfoTO extends BaseTO {
     /**
      * 地区
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "地区不能为空")
     private String area;
 
     /**
      * 项目组
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "项目组不能为空")
     private String projectGroup;
 
     /**
      * 宿舍地址
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "宿舍地址不能为空")
     private String address;
 
     /**
      * 宿舍钥匙数量（把）
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "宿舍钥匙数量（把）不能为空")
+    @Min(value = 0, groups = {ADD.class, EDIT.class}, message = "宿舍钥匙数量（把）不能小于0")
     private Integer keysNumber;
 
     /**
      * 宿舍钥匙分配情况
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "宿舍钥匙分配情况不能为空")
     private String keysDistribution;
 
     /**
@@ -51,46 +63,64 @@ public class DormitoryInfoTO extends BaseTO {
     /**
      * 宿舍床位数量（个）
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "宿舍床位数量（个）不能为空")
+    @Min(value = 0, groups = {ADD.class, EDIT.class}, message = "宿舍床位数量（个）不能小于0")
     private Integer berth;
 
     /**
      * 已入住床位（个）
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "已入住床位（个）不能为空")
+    @Min(value = 0, groups = {ADD.class, EDIT.class}, message = "已入住床位（个）不能小于0")
     private Integer beeBerth;
 
     /**
      * 闲置床位（个）
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "闲置床位（个）不能为空")
+    @Min(value = 0, groups = {ADD.class, EDIT.class}, message = "闲置床位（个）不能小于0")
     private Integer idleBerth;
 
     /**
      * 宿舍床上3件套数量(件)
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "宿舍床上3件套数量(件)不能为空")
+    @Min(value = 0, groups = {ADD.class, EDIT.class}, message = "宿舍床上3件套数量(件)不能小于0")
     private Integer suit;
 
     /**
      * 已领用数量（件）
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "已领用数量（件）不能为空")
+    @Min(value = 0, groups = {ADD.class, EDIT.class}, message = "已领用数量（件）不能小于0")
     private Integer recipientsSuit;
 
     /**
      * 闲置数量（件）
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "闲置数量（件）不能为空")
+    @Min(value = 0, groups = {ADD.class, EDIT.class}, message = "闲置数量（件）不能小于0")
     private Integer idleSuit;
 
     /**
      * 宿舍被褥数量（件）
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "宿舍被褥数量（件）不能为空")
+    @Min(value = 0, groups = {ADD.class, EDIT.class}, message = "宿舍被褥数量（件）不能小于0")
     private Integer bedding;
 
     /**
      * 已领用数量（件）
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "已领用数量（件）不能为空")
+    @Min(value = 0, groups = {ADD.class, EDIT.class}, message = "已领用数量（件）不能小于0")
     private Integer recipientsBedding;
 
     /**
      * 闲置数量（件）
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "闲置数量（件）不能为空")
+    @Min(value = 0, groups = {ADD.class, EDIT.class}, message = "闲置数量（件）不能小于0")
     private Integer idleBedding;
 
     /**
