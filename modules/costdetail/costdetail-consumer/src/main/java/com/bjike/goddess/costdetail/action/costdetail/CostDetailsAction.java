@@ -148,10 +148,10 @@ public class CostDetailsAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result addCost(@Validated({ADD.class}) CostDetailsAddEditTO costDetailsAddEditTO, BindingResult result) throws ActException {
+    public Result addCost(@Validated({ADD.class}) CostDetailsAddEditTO costDetailsAddEditTO, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             CostDetailsBO costDetailsBO = costDetailsAPI.add(costDetailsAddEditTO);
-            return ActResult.initialize(BeanTransform.copyProperties(costDetailsBO, CostDetailsVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(costDetailsBO, CostDetailsVO.class,request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -167,10 +167,10 @@ public class CostDetailsAction {
      */
     @LoginAuth
     @PostMapping("v1/edit")
-    public Result editCost(@Validated({EDIT.class}) CostDetailsAddEditTO costDetailsAddEditTO, BindingResult result) throws ActException {
+    public Result editCost(@Validated({EDIT.class}) CostDetailsAddEditTO costDetailsAddEditTO, BindingResult result,HttpServletRequest request) throws ActException {
         try {
             CostDetailsBO costDetailsBO = costDetailsAPI.edit(costDetailsAddEditTO);
-            return ActResult.initialize(BeanTransform.copyProperties(costDetailsBO, CostDetailsVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(costDetailsBO, CostDetailsVO.class,request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
