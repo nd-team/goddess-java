@@ -50,7 +50,7 @@ public class StayApplyVO {
      */
     private String headAudit;
     /**
-     * 福利模块负责人审核
+     * 福利模块负责人审核(通过/不通过)
      */
     private String headAuditPass;
 

@@ -2,10 +2,12 @@ package com.bjike.goddess.fundcheck.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.fundcheck.bo.BackBO;
+import com.bjike.goddess.fundcheck.bo.OtherIncomeBO;
 import com.bjike.goddess.fundcheck.bo.PayStockBO;
 import com.bjike.goddess.fundcheck.dto.PayStockDTO;
 import com.bjike.goddess.fundcheck.service.PayStockSer;
 import com.bjike.goddess.fundcheck.to.GuidePermissionTO;
+import com.bjike.goddess.fundcheck.to.OtherIncomeTO;
 import com.bjike.goddess.fundcheck.to.PayStockCollectTO;
 import com.bjike.goddess.fundcheck.to.PayStockTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,5 +69,27 @@ public class PayStockApiImpl implements PayStockAPI {
     @Override
     public List<PayStockBO> collect(PayStockCollectTO to) throws SerException {
         return payStockSer.collect(to);
+    }
+    @Override
+    public PayStockBO importExcel(List<PayStockTO> payStockTOS) throws SerException {
+        return payStockSer.importExcel(payStockTOS);
+    }
+    @Override
+    public byte[] templateExport() throws SerException {
+        return payStockSer.templateExport();
+    }
+    @Override
+    public List<String> listFirstSubject() throws SerException {
+        return payStockSer.listFirstSubject();
+    }
+
+    @Override
+    public List<String> listSubByFirst(String firstSub) throws SerException {
+        return payStockSer.listSubByFirst(firstSub);
+    }
+
+    @Override
+    public List<String> listTubByFirst(String firstSub, String secondSub) throws SerException {
+        return payStockSer.listTubByFirst(firstSub, secondSub);
     }
 }

@@ -15,6 +15,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
@@ -53,6 +54,7 @@ public class MultiPermissionSerImpl extends ServiceImpl<MultiPermission, MultiPe
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public MultiPermissionBO insertModel() throws SerException {
         UserBO userBO = userAPI.currentUser();
 
@@ -76,6 +78,7 @@ public class MultiPermissionSerImpl extends ServiceImpl<MultiPermission, MultiPe
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void agree(String id) throws SerException {
         UserBO userBO = userAPI.currentUser();
         PositionDetailUserBO position = positionDetailUserAPI.findOneByUser(userBO.getId());
@@ -89,10 +92,11 @@ public class MultiPermissionSerImpl extends ServiceImpl<MultiPermission, MultiPe
                 } else {
                     throw new SerException("非法ID,申请调阅对象不存在!");
                 }
+            }else{
+                throw new SerException("只有总经办或者总经理才可审核!");
             }
-
         } else {
-            throw new SerException("只有总经办才可审核!");
+            throw new SerException("只有总经办或者总经理才可审核!");
         }
     }
 

@@ -18,28 +18,21 @@
 
 	<!--发布接口,供其他模块调用-->
 	<!--<dubbo:service interface="com.bjike.goddess.user.api.rbac.RoleAPI" ref="roleApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.user.api.rbac.GroupAPI" ref="groupApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.user.api.rbac.PermissionAPI" ref="permissionApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.user.api.UserDetailAPI" ref="userDetailApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.user.api.DepartmentAPI" ref="departmentApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.user.api.UserAPI" ref="userApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.user.api.UserLoginAPI" ref="userLoginApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.user.api.UserRegisterAPI" ref="userRegisterApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.user.api.UserAuthCodeAPI" ref="userAuthCodeApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.user.api.UserLoginLogAPI" ref="userLoginLogApiImpl"/>
 -->
 	<dubbo:service interface="com.bjike.goddess.analysis.api.IncomeCostAnalysisAPI" ref="incomeCostAnalysisApiImpl"/>
-	<!--<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.managepromotion.api.CusPermissionAPI" />-->
-	<!--<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.managepromotion.api.CusPermissionOperateAPI" />-->
+	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.analysis.api.CusPermissionAPI" />
+	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.analysis.api.CusPermissionOperateAPI" />
+
 	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
 	<dubbo:reference  validation="true" id="voucherGenerateApiImpl" interface="com.bjike.goddess.voucher.api.VoucherGenerateAPI" />
 	<dubbo:reference  validation="true" id="firstSubjectApiImpl" interface="com.bjike.goddess.financeinit.api.FirstSubjectAPI" />
-
-
-	<!--<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />-->
-	<!--<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />-->
-	<!--<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />-->
-	<!--<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />-->
-	<!--<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />-->
-	<!--<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />-->
+	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
+	<dubbo:reference  validation="true" id="uerSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+	<dubbo:reference  validation="true" id="dispatchCarInfoApiImpl" interface="com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI" />
+	<dubbo:reference  validation="true" id="leaseCarCostApiImpl" interface="com.bjike.goddess.dispatchcar.api.LeaseCarCostAPI" />
 </beans>

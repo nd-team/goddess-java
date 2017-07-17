@@ -15,6 +15,11 @@ import com.bjike.goddess.oilcardmanage.enums.OilCardStatus;
 public class OilCardBasicVO {
 
     /**
+     * id
+     */
+    private String id;
+
+    /**
      * 数据状态
      */
     private Status status;
@@ -83,6 +88,14 @@ public class OilCardBasicVO {
      * 余额
      */
     private Double balance;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public Status getStatus() {
         return status;

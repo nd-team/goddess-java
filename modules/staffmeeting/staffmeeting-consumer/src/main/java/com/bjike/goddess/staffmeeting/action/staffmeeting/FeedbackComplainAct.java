@@ -6,7 +6,6 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -39,7 +38,7 @@ public class FeedbackComplainAct {
     private FeedbackComplainAPI feedbackComplainAPI;
 
     /**
-     * 新增通告反馈投诉
+     * 新增
      *
      * @param to 通告反馈投诉
      * @return class FeedbackComplainVO
@@ -58,7 +57,7 @@ public class FeedbackComplainAct {
     }
 
     /**
-     * 编辑通告反馈投诉
+     * 编辑
      *
      * @param to 通告反馈投诉
      * @return class FeedbackComplainVO
@@ -76,9 +75,9 @@ public class FeedbackComplainAct {
     }
 
     /**
-     * 冻结通告反馈投诉
+     * 冻结
      *
-     * @param id 通告反馈投诉ID
+     * @param id id
      * @version v1
      */
     @PutMapping("v1/freeze/{id}")
@@ -91,16 +90,32 @@ public class FeedbackComplainAct {
         }
     }
 
+    /**
+     * 解冻
+     *
+     * @param id id
+     * @version v1
+     */
+    @PutMapping("v1/unfreeze/{id}")
+    public Result unfreeze(@PathVariable String id) throws ActException {
+        try {
+            feedbackComplainAPI.unfreeze(id);
+            return new ActResult("解冻成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
-     * 列表分页查询
+     * 列表
      *
      * @param dto 分页条件
      * @return class FeedbackComplainVO
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result pageList(FeedbackComplainDTO dto) throws ActException {
+    public Result pageList(@Validated(FeedbackComplainDTO.SelectStatus.class) FeedbackComplainDTO dto) throws ActException {
         try {
             List<FeedbackComplainVO> voList = BeanTransform.copyProperties(feedbackComplainAPI.pageList(dto), FeedbackComplainVO.class);
             return ActResult.initialize(voList);
@@ -116,9 +131,9 @@ public class FeedbackComplainAct {
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(FeedbackComplainDTO dto) throws ActException {
+    public Result count(@Validated(FeedbackComplainDTO.SelectStatus.class) FeedbackComplainDTO dto) throws ActException {
         try {
-            dto.getConditions().add(Restrict.eq("status", Status.THAW));
+            dto.getConditions().add(Restrict.eq("status", dto.getStatus()));
             Long count = feedbackComplainAPI.count(dto);
             return ActResult.initialize(count);
         } catch (SerException e) {

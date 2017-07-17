@@ -49,8 +49,18 @@ public class ProgressTableApiImpl implements ProgressTableAPI {
     }
 
     @Override
-    public List<TableListForHeadBO> tables() throws SerException {
-        return progressTableSer.tables();
+    public List<TableListForHeadBO> tables(String projectId) throws SerException {
+        return progressTableSer.tables(projectId);
+    }
+
+    @Override
+    public void freeze(String id) throws SerException {
+        progressTableSer.freeze(id);
+    }
+
+    @Override
+    public void unfreeze(String id) throws SerException {
+        progressTableSer.unfreeze(id);
     }
 
 }

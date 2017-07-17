@@ -99,6 +99,15 @@ public interface SubjectCollectAPI {
     default void removeSubjectCollect(String id) throws SerException {
 
     }
+    /**
+     * 获取地区
+     * @return String
+     * @throws SerException
+     */
+    default List<String> getArea() throws SerException {
+        return null;
+    }
+
 
     /**
      * 汇总对比

@@ -9,12 +9,14 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.progressmanage.api.NodeHeadRowSignAPI;
 import com.bjike.goddess.progressmanage.api.ProgressNodeAPI;
+import com.bjike.goddess.progressmanage.api.ProgressTableAPI;
 import com.bjike.goddess.progressmanage.api.ProjectInfoAPI;
 import com.bjike.goddess.progressmanage.bo.NodeHeadRowSignBO;
 import com.bjike.goddess.progressmanage.dto.NodeHeadRowSignDTO;
 import com.bjike.goddess.progressmanage.to.NodeHeadRowSignTO;
 import com.bjike.goddess.progressmanage.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +43,8 @@ public class NodeHeadRowSignAct {
     private ProgressNodeAPI progressNodeAPI;
     @Autowired
     private NodeHeadRowSignAPI nodeHeadRowSignAPI;
+    @Autowired
+    private ProgressTableAPI progressTableAPI;
 
     /**
      * 项目下拉列表
@@ -59,15 +63,32 @@ public class NodeHeadRowSignAct {
     }
 
     /**
+     * 进度表下拉列表
+     *
+     * @return class ProjectListForNodeVO
+     * @version v1
+     */
+    @GetMapping("v1/tables/{projectId}")
+    public Result projects(@PathVariable String projectId, HttpServletRequest request) throws ActException {
+
+        try {
+            List<TableListForHeadVO> voList = BeanTransform.copyProperties(progressTableAPI.tables(projectId), TableListForHeadVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 节点下拉列表
      *
      * @return class NodeListForHeadVO
      * @version v1
      */
-    @GetMapping("v1/nodes/{projectId}")
-    public Result nodes(@PathVariable String projectId, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/nodes/{tableId}")
+    public Result nodes(@PathVariable String tableId, HttpServletRequest request) throws ActException {
         try {
-            List<NodeListForHeadVO> voList = BeanTransform.copyProperties(progressNodeAPI.nodes(projectId), NodeListForHeadVO.class, request);
+            List<NodeListForHeadVO> voList = BeanTransform.copyProperties(progressNodeAPI.nodes(tableId), NodeListForHeadVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -119,13 +140,15 @@ public class NodeHeadRowSignAct {
 
             List<NodeHeadRowSignVO> voList = new ArrayList<NodeHeadRowSignVO>();
             List<NodeHeadRowSignBO> boList = nodeHeadRowSignAPI.pageList(dto);
-            for (NodeHeadRowSignBO bo : boList) {
-                NodeHeadRowSignVO vo = new NodeHeadRowSignVO();
-                vo.setId(bo.getId());
-                vo.setVoList(BeanTransform.copyProperties(bo.getBoList(),NodeHeadValueVO.class));
-                voList.add(vo);
+            if (!CollectionUtils.isEmpty(boList)) {
+                for (NodeHeadRowSignBO bo : boList) {
+                    NodeHeadRowSignVO vo = new NodeHeadRowSignVO();
+                    vo.setId(bo.getId());
+                    vo.setVoList(BeanTransform.copyProperties(bo.getBoList(), NodeHeadValueVO.class));
+                    voList.add(vo);
+                }
             }
-//            List<NodeHeadRowSignVO> voList = BeanTransform.copyProperties(nodeHeadRowSignAPI.pageList(dto), NodeHeadRowSignVO.class, request);
+
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -155,7 +178,7 @@ public class NodeHeadRowSignAct {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class})NodeHeadRowSignTO to) throws ActException {
+    public Result edit(@Validated({EDIT.class}) NodeHeadRowSignTO to) throws ActException {
         try {
             nodeHeadRowSignAPI.edit(to);
             return new ActResult("编辑成功!");

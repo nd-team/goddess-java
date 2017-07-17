@@ -3,6 +3,7 @@ package com.bjike.goddess.contacts.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.common.api.type.Status;
 
 import javax.validation.constraints.NotNull;
 
@@ -29,6 +30,21 @@ public class CommonalityTO extends BaseTO {
     @NotNull(message = "邮箱地址不能为空", groups = {ADD.class, EDIT.class})
     private String email;
 
+    /**
+     * 状态
+     */
+    private Status status;
+
+    /**
+     * 是否发送邮件
+     */
+    public boolean isSend;
+
+    /**
+     * 发送的对象
+     */
+    public String sendObject;
+
 
     public String getDepartmentId() {
         return departmentId;
@@ -44,5 +60,29 @@ public class CommonalityTO extends BaseTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public boolean isSend() {
+        return isSend;
+    }
+
+    public void setSend(boolean send) {
+        isSend = send;
+    }
+
+    public String getSendObject() {
+        return sendObject;
+    }
+
+    public void setSendObject(String sendObject) {
+        this.sendObject = sendObject;
     }
 }

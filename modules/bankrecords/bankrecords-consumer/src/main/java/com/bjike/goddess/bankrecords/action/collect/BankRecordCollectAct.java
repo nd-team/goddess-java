@@ -2,21 +2,15 @@ package com.bjike.goddess.bankrecords.action.collect;
 
 import com.bjike.goddess.bankrecords.api.BankAccountInfoAPI;
 import com.bjike.goddess.bankrecords.api.BankRecordAPI;
-import com.bjike.goddess.bankrecords.dto.BankRecordDTO;
-import com.bjike.goddess.bankrecords.to.BankRecordTO;
-import com.bjike.goddess.bankrecords.to.CommunicateDeleteFileTO;
 import com.bjike.goddess.bankrecords.to.GuidePermissionTO;
 import com.bjike.goddess.bankrecords.vo.*;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.action.BaseFileAction;
-import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.storage.api.FileAPI;
-import com.bjike.goddess.storage.to.FileInfo;
-import com.bjike.goddess.storage.vo.FileVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -24,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.InputStream;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -108,16 +102,16 @@ public class BankRecordCollectAct extends BaseFileAction {
     /**
      * 汇总
      *
-     * @param year        年份
-     * @param month       月份
-     * @param accountName 账户名称
+     * @param year       年份
+     * @param month      月份
+     * @param accountIds 账户名称Id
      * @return class BankRecordCollectVO
      * @version v1
      */
-    @GetMapping("v1/collect")
-    public Result collect(@RequestParam Integer year, @RequestParam Integer month, String accountName, HttpServletRequest request) throws ActException {
+    @PostMapping("v1/collect")
+    public Result collect(@RequestParam Integer year, @RequestParam Integer month, String[] accountIds, HttpServletRequest request) throws ActException {
         try {
-            List<BankRecordCollectVO> voList = BeanTransform.copyProperties(bankRecordAPI.collect(year, month, accountName), BankRecordCollectVO.class, request);
+            List<BankRecordCollectVO> voList = BeanTransform.copyProperties(bankRecordAPI.collect(year, month, accountIds), BankRecordCollectVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -125,23 +119,68 @@ public class BankRecordCollectAct extends BaseFileAction {
     }
 
     /**
+     * 汇总导出
+     *
+     * @param year       年份
+     * @param month      月份
+     * @param accountIds 账户名称Id
+     * @return class BankRecordCollectVO
+     * @version v1
+     */
+    @PostMapping("v1/collect/export")
+    public Result collectExport(@RequestParam Integer year, @RequestParam Integer month, String[] accountIds, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = year + "年" + month + "月" + "银行流水汇总.xlsx";
+            super.writeOutFile(response, bankRecordAPI.collectExcel(year, month, accountIds), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
      * 分析
      *
-     * @param year        年份
-     * @param month       月份
-     * @param accountName 账户名称
+     * @param year       年份
+     * @param month      月份
+     * @param accountIds 账户名称Id
      * @return class BankRecordAnalyzeVO
      * @version v1
      */
-    @GetMapping("v1/analyze")
-    public Result analyze(@RequestParam Integer year, @RequestParam Integer month, String accountName, HttpServletRequest request) throws ActException {
+    @PostMapping("v1/analyze")
+    public Result analyze(@RequestParam Integer year, @RequestParam Integer month, String[] accountIds, HttpServletRequest request) throws ActException {
         try {
-            BankRecordAnalyzeVO voList = BeanTransform.copyProperties(bankRecordAPI.analyze(year, month, accountName), BankRecordAnalyzeVO.class, request);
+            List<BankRecordAnalyzeVO> voList = BeanTransform.copyProperties(bankRecordAPI.analyze(year, month, accountIds), BankRecordAnalyzeVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 分析导出
+     *
+     * @param year       年份
+     * @param month      月份
+     * @param accountIds 账户名称Id
+     * @return class BankRecordAnalyzeVO
+     * @version v1
+     */
+    @PostMapping("v1/analyze/export")
+    public Result analyzeExport(@RequestParam Integer year, @RequestParam Integer month, String[] accountIds, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = fileName = year + "年" + month + "月" + "银行流水分析.xlsx";
+            super.writeOutFile(response, bankRecordAPI.analyzeExcel(year, month, accountIds), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
 
     /**
      * 对比

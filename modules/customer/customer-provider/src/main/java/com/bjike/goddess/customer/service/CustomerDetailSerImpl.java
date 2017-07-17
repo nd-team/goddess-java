@@ -38,11 +38,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -218,6 +222,25 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
             customerDetailBOArrayList.add(customerDetailBO);
         }
         List<CustomerDetailBO> boList = BeanTransform.copyProperties(customerDetailBOArrayList, CustomerDetailBO.class);
+
+        if( boList != null && boList.size()>0 ){
+            Collections.sort(boList,new Comparator<CustomerDetailBO>(){
+                @Override
+                public int compare(CustomerDetailBO o1, CustomerDetailBO o2) {
+                    int o1Num = Integer.parseInt(o1.getCustomerNum().substring(4,o1.getCustomerNum().length()));
+                    int o2Num = Integer.parseInt(o2.getCustomerNum().substring(4,o2.getCustomerNum().length()));
+                    if( o1Num < o2Num ){
+                        return -1;
+                    }else if( o1Num == o2Num ){
+                        return 0;
+                    }else {
+                        return 1;
+                    }
+                }
+
+            });
+        }
+
         return boList;
     }
 

@@ -1,6 +1,5 @@
 package com.bjike.goddess.otherexpenses.service;
 
-import com.bjike.goddess.businessproject.service.CusPermissionSer;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;

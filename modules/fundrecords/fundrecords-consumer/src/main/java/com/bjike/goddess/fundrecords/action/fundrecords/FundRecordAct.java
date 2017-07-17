@@ -175,7 +175,7 @@ public class FundRecordAct extends BaseFileAction {
      */
     @GetMapping("v1/projects")
     public Result allProjects(HttpServletRequest request){
-        //todo 尚未确定项目数据来源
+        //todo 需求尚未确定项目数据来源，因此项目下拉列表可编辑
         return null;
     }
 

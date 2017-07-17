@@ -5,21 +5,27 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.fundcheck.bo.OtherSpendBO;
 import com.bjike.goddess.fundcheck.dto.OtherSpendDTO;
 import com.bjike.goddess.fundcheck.entity.OtherSpend;
 import com.bjike.goddess.fundcheck.enums.GuideAddrStatus;
+import com.bjike.goddess.fundcheck.excel.OtherIncomeTemplateExcel;
+import com.bjike.goddess.fundcheck.excel.OtherSpendTemplateExcel;
 import com.bjike.goddess.fundcheck.to.GuidePermissionTO;
 import com.bjike.goddess.fundcheck.to.OtherSpendCollectTO;
 import com.bjike.goddess.fundcheck.to.OtherSpendTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +46,8 @@ public class OtherSpendSerImpl extends ServiceImpl<OtherSpend, OtherSpendDTO> im
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private VoucherGenerateAPI voucherGenerateAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -206,7 +214,7 @@ public class OtherSpendSerImpl extends ServiceImpl<OtherSpend, OtherSpendDTO> im
     @Override
     public OtherSpendBO insert(OtherSpendTO otherSpendTO) throws SerException {
         checkAddIdentity();
-        OtherSpend otherSpend = BeanTransform.copyProperties(otherSpendTO,OtherSpend.class);
+        OtherSpend otherSpend = BeanTransform.copyProperties(otherSpendTO,OtherSpend.class,true);
         otherSpend.setCreateTime(LocalDateTime.now());
         super.save(otherSpend);
         return BeanTransform.copyProperties(otherSpend,OtherSpendBO.class);
@@ -228,6 +236,23 @@ public class OtherSpendSerImpl extends ServiceImpl<OtherSpend, OtherSpendDTO> im
     public void remove(String id) throws SerException {
         checkAddIdentity();
         super.remove(id);
+    }
+    @Override
+    public List<String> listFirstSubject() throws SerException {
+        List<String> firstSubject = voucherGenerateAPI.listFirstSubject();
+        return firstSubject;
+    }
+
+    @Override
+    public List<String> listSubByFirst(String firstSub) throws SerException {
+        List<String> secondSubject = voucherGenerateAPI.listSubByFirst(firstSub);
+        return secondSubject;
+    }
+
+    @Override
+    public List<String> listTubByFirst(String firstSub, String secondSub) throws SerException {
+        List<String> thirdSubject = voucherGenerateAPI.listTubByFirst(firstSub, secondSub);
+        return thirdSubject;
     }
     @Override
     public List<OtherSpendBO> collect(OtherSpendCollectTO to) throws SerException {
@@ -267,5 +292,27 @@ public class OtherSpendSerImpl extends ServiceImpl<OtherSpend, OtherSpendDTO> im
         otherSpendBO.setMoney(money);
         otherSpendBOList.add(otherSpendBO);
         return otherSpendBOList;
+    }
+    @Override
+    public OtherSpendBO importExcel(List<OtherSpendTO> otherSpendTOS) throws SerException {
+        List<OtherSpend> otherSpends = BeanTransform.copyProperties(otherSpendTOS, OtherSpend.class, true);
+        super.save(otherSpends);
+
+        OtherSpendBO bo = BeanTransform.copyProperties(new OtherSpend(), OtherSpendBO.class);
+        return bo;
+    }
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<OtherSpendTemplateExcel> templateExcels = new ArrayList<>();
+
+        OtherSpendTemplateExcel excel = new OtherSpendTemplateExcel();
+        excel.setDate(LocalDate.now());
+        excel.setType("test");
+        excel.setMoney(10.0d);
+        templateExcels.add(excel);
+
+        Excel exce = new Excel(0,2);
+        byte[] bytes = ExcelUtil.clazzToExcel(templateExcels,exce);
+        return bytes;
     }
 }

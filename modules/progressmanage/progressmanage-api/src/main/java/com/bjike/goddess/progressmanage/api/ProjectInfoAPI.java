@@ -23,6 +23,10 @@ public interface ProjectInfoAPI {
 
     ProjectInfoBO edit(ProjectInfoTO to) throws SerException;
 
+    void freeze(String id) throws SerException;
+
+    void unfreeze(String id) throws SerException;
+
     void delete(String id) throws SerException;
 
     List<ProjectInfoBO> pageList(ProjectInfoDTO dto) throws SerException;

@@ -151,7 +151,7 @@ public class PayTaxAction {
     }
 
     /**
-     * 应交税金列表
+     * 一个应交税金
      *
      * @param id 应交税金信息id
      * @des 获取所有应交税金信息

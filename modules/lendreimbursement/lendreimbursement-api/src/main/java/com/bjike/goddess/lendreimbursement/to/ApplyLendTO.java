@@ -28,37 +28,37 @@ public class ApplyLendTO extends BaseTO {
     /**
      * 预计借款日期
      */
-    @NotBlank(groups = {TESTAddAndEdit.class},message ="预计借款日期不能为空，日期格式未年-月-日" )
+    @NotBlank(groups = {ApplyLendTO.TESTAddAndEdit.class},message ="预计借款日期不能为空，日期格式未年-月-日" )
     private String estimateLendDate;
 
     /**
      * 借款人
      */
-    @NotBlank(groups = {TESTAddAndEdit.class},message ="借款人不能为空" )
+    @NotBlank(groups = {ApplyLendTO.TESTAddAndEdit.class},message ="借款人不能为空" )
     private String lender;
 
     /**
      * 负责人
      */
-    @NotBlank(groups = {TESTAddAndEdit.class},message ="负责人不能为空" )
+    @NotBlank(groups = {ApplyLendTO.TESTAddAndEdit.class},message ="负责人不能为空" )
     private String charger;
 
     /**
      * 地区
      */
-    @NotBlank(groups = {TESTAddAndEdit.class},message ="地区不能为空" )
+    @NotBlank(groups = {ApplyLendTO.TESTAddAndEdit.class},message ="地区不能为空" )
     private String area;
 
     /**
      * 项目组
      */
-    @NotBlank(groups = {TESTAddAndEdit.class},message ="项目组不能为空" )
+    @NotBlank(groups = {ApplyLendTO.TESTAddAndEdit.class},message ="项目组不能为空" )
     private String projectGroup;
 
     /**
      * 项目名称
      */
-    @NotBlank(groups = {TESTAddAndEdit.class},message ="项目名称不能为空" )
+    @NotBlank(groups = {ApplyLendTO.TESTAddAndEdit.class},message ="项目名称不能为空" )
     private String projectName;
 
     /**
@@ -69,37 +69,37 @@ public class ApplyLendTO extends BaseTO {
     /**
      * 借款方式
      */
-    @NotBlank(groups = {TESTAddAndEdit.class},message ="借款方式不能为空" )
+    @NotBlank(groups = {ApplyLendTO.TESTAddAndEdit.class},message ="借款方式不能为空" )
     private String lendWay;
 
     /**
      * 一级科目
      */
-    @NotBlank(groups = {TESTAddAndEdit.class},message ="一级科目不能为空" )
+    @NotBlank(groups = {ApplyLendTO.TESTAddAndEdit.class},message ="一级科目不能为空" )
     private String firstSubject;
 
     /**
      * 二级科目
      */
-    @NotBlank(groups = {TESTAddAndEdit.class},message ="二级科目不能为空" )
+    @NotBlank(groups = {ApplyLendTO.TESTAddAndEdit.class},message ="二级科目不能为空" )
     private String secondSubject;
 
     /**
      * 三级科目
      */
-    @NotBlank(groups = {TESTAddAndEdit.class},message ="三级科目不能为空" )
+    @NotBlank(groups = {ApplyLendTO.TESTAddAndEdit.class},message ="三级科目不能为空" )
     private String thirdSubject;
 
     /**
      * 说明
      */
-    @NotBlank(groups = {TESTAddAndEdit.class},message ="说明不能为空" )
+    @NotBlank(groups = {ApplyLendTO.TESTAddAndEdit.class},message ="说明不能为空" )
     private String explains;
 
     /**
      * 是否补写(是或否)
      */
-    @NotBlank(groups = {TESTAddAndEdit.class},message ="是否补写不能为空,填是或否" )
+    @NotBlank(groups = {ApplyLendTO.TESTAddAndEdit.class},message ="是否补写不能为空,填是或否" )
     private String writeUp;
 
     /**
@@ -110,19 +110,19 @@ public class ApplyLendTO extends BaseTO {
     /**
      * 借款事由
      */
-    @NotBlank(groups = {TESTAddAndEdit.class},message ="借款事由不能为空" )
+    @NotBlank(groups = {ApplyLendTO.TESTAddAndEdit.class},message ="借款事由不能为空" )
     private String lendReson;
 
     /**
      * 金额
      */
-    @NotNull(groups = {TESTAddAndEdit.class},message ="金额不能为空" )
+    @NotNull(groups = {ApplyLendTO.TESTAddAndEdit.class},message ="金额不能为空" )
     private Double money;
 
     /**
      * 是否有发票(是或否)
      */
-    @NotBlank(groups = {TESTAddAndEdit.class},message ="是否有发票不能为空,填是或否" )
+    @NotBlank(groups = {ApplyLendTO.TESTAddAndEdit.class},message ="是否有发票不能为空,填是或否" )
     private String invoice;
 
     /**
@@ -158,7 +158,7 @@ public class ApplyLendTO extends BaseTO {
     /**
      * 负责人是否通过(是或否)
      */
-    @NotBlank(groups = {TESTChargeAudit.class},message ="负责人是否通过不能为空" )
+    @NotBlank(groups = {ApplyLendTO.TESTChargeAudit.class},message ="负责人是否通过不能为空" )
     private String chargerPass;
 
     /**
@@ -174,7 +174,7 @@ public class ApplyLendTO extends BaseTO {
     /**
      * 财务运营部是否通过(是或否)
      */
-    @NotBlank(groups = {TESTFinaceAudit.class},message ="财务运营部是否通过不能为空" )
+    @NotBlank(groups = {ApplyLendTO.TESTFinaceAudit.class},message ="财务运营部是否通过不能为空" )
     private String fincerPass;
 
     /**
@@ -190,7 +190,7 @@ public class ApplyLendTO extends BaseTO {
     /**
      * 总经办是否通过(是或否)
      */
-    @NotBlank(groups = {TESTManageAudit.class},message ="总经办是否通过不能为空" )
+    @NotBlank(groups = {ApplyLendTO.TESTManageAudit.class},message ="总经办是否通过不能为空" )
     private String managerPass;
 
     /**
@@ -221,7 +221,7 @@ public class ApplyLendTO extends BaseTO {
     /**
      * 单据数量
      */
-    @NotNull(groups = {TESTReturnSend.class},message ="单据数量不能为空,且为数字" )
+    @NotNull(groups = {ApplyLendTO.TESTReturnSend.class},message ="单据数量不能为空,且为数字" )
     private Double documentQuantity;
 
     /**
@@ -232,31 +232,31 @@ public class ApplyLendTO extends BaseTO {
     /**
      * 报销金额
      */
-    @NotNull(groups = {TESTReturnMoney.class},message ="预计借款日期不能为空，且为数字double" )
+    @NotNull(groups = {ApplyLendTO.TESTReturnMoney.class},message ="预计借款日期不能为空，且为数字double" )
     private Double reimMoney;
 
     /**
      * 借款金额
      */
-    @NotNull(groups = {TESTReturnMoney.class},message ="借款金额不能为空，且为数字double" )
+    @NotNull(groups = {ApplyLendTO.TESTReturnMoney.class},message ="借款金额不能为空，且为数字double" )
     private Double lendMoney;
 
     /**
      * 退回金额
      */
-    @NotNull(groups = {TESTReturnMoney.class},message ="退回金额不能为空，且为数字double" )
+    @NotNull(groups = {ApplyLendTO.TESTReturnMoney.class},message ="退回金额不能为空，且为数字double" )
     private Double returnMoney;
 
     /**
      * 退回日期
      */
-    @NotBlank(groups = {TESTReturnMoney.class},message ="退回日期不能为空，日期格式未年-月-日" )
+    @NotBlank(groups = {ApplyLendTO.TESTReturnMoney.class},message ="退回日期不能为空，日期格式未年-月-日" )
     private String returnDate;
 
     /**
      * 归还方式
      */
-    @NotBlank(groups = {TESTReturnMoney.class},message ="归还方式不能为空" )
+    @NotBlank(groups = {ApplyLendTO.TESTReturnMoney.class},message ="归还方式不能为空" )
     private String returnWays;
 
     /**
@@ -272,7 +272,7 @@ public class ApplyLendTO extends BaseTO {
     /**
      * 寄件日期
      */
-    @NotBlank(groups = {TESTReturnSend.class},message ="寄件日期不能为空" )
+    @NotBlank(groups = {ApplyLendTO.TESTReturnSend.class},message ="寄件日期不能为空" )
     private String sendDate;
 
     /**
@@ -283,7 +283,7 @@ public class ApplyLendTO extends BaseTO {
     /**
      * 收件地址
      */
-    @NotBlank(groups = {TESTReturnSend.class},message ="收件地址不能为空" )
+    @NotBlank(groups = {ApplyLendTO.TESTReturnSend.class},message ="收件地址不能为空" )
     private String receiveAddr;
 
     /**
@@ -319,7 +319,7 @@ public class ApplyLendTO extends BaseTO {
     /**
      * 核对内容
      */
-    @NotBlank(groups = {TESTCheckReturnMoney.class} , message = "核对内容不能为空")
+    @NotBlank(groups = {ApplyLendTO.TESTCheckReturnMoney.class} , message = "核对内容不能为空")
     private String checkcontent;
 
     /**

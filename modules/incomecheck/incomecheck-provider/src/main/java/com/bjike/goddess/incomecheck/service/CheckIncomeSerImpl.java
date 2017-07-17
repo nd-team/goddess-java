@@ -236,10 +236,18 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
         CheckIncome checkIncome = BeanTransform.copyProperties(checkIncomeTO, CheckIncome.class, true);
 
         checkIncome.setActualIncome(checkIncomeTO.getActualIncome() == null ? 0d : checkIncomeTO.getActualIncome());
-        checkIncome.setRate(checkIncome.getActualIncome() / checkIncome.getPlanIncome());
+        if (checkIncome.getPlanIncome().doubleValue() != 0) {
+            checkIncome.setRate(checkIncome.getActualIncome() / checkIncome.getPlanIncome());
+        }else {
+            throw new SerException("计划收入为0，不能计算");
+        }
         checkIncome.setBalance(checkIncome.getActualIncome() - checkIncome.getPlanIncome());
         checkIncome.setActualTask(checkIncomeTO.getActualTask() == null ? 0d : checkIncomeTO.getActualTask());
-        checkIncome.setCompleteRate(checkIncome.getActualTask() / checkIncome.getTargetTask());
+        if (checkIncome.getTargetTask().doubleValue() != 0) {
+            checkIncome.setCompleteRate(checkIncome.getActualTask() / checkIncome.getTargetTask());
+        }else {
+            throw new SerException("目标任务量为0，不能计算");
+        }
         checkIncome.setCreateTime(LocalDateTime.now());
         super.save(checkIncome);
         return BeanTransform.copyProperties(checkIncome, CheckIncomeBO.class);
@@ -258,10 +266,18 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
 
         BeanUtils.copyProperties(checkIncome, temp, "id", "createTime");
         temp.setActualIncome(checkIncome.getActualIncome() == null ? 0d : checkIncome.getActualIncome());
-        temp.setRate(checkIncome.getActualIncome() / checkIncome.getPlanIncome());
+        if (temp.getPlanIncome().doubleValue() != 0) {
+            temp.setRate(checkIncome.getActualIncome() / checkIncome.getPlanIncome());
+        }else {
+            throw new SerException("计划收入为0，不能计算");
+        }
         temp.setBalance(checkIncome.getActualIncome() - checkIncome.getPlanIncome());
         temp.setActualTask(checkIncome.getActualTask() == null ? 0d : checkIncome.getActualTask());
-        temp.setCompleteRate(checkIncome.getActualTask() / checkIncome.getTargetTask());
+        if (checkIncome.getTargetTask().doubleValue() != 0) {
+            temp.setCompleteRate(checkIncome.getActualTask() / checkIncome.getTargetTask());
+        }else {
+            throw new SerException("目标任务量为0，不能计算");
+        }
 
         temp.setModifyTime(LocalDateTime.now());
         super.update(temp);

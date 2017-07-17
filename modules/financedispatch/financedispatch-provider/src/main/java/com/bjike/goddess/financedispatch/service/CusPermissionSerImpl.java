@@ -4,7 +4,6 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-
 import com.bjike.goddess.financedispatch.bo.CusOperateBO;
 import com.bjike.goddess.financedispatch.bo.CusPermissionBO;
 import com.bjike.goddess.financedispatch.dto.CusPermissionDTO;
@@ -284,13 +283,15 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
             cusPermissionOperateSer.remove(deleteList);
         }
         List<CusPermissionOperate> list = new ArrayList<>();
-        for (String operateId : operators) {
-            CusPermissionOperate cpo = new CusPermissionOperate();
-            cpo.setOperator(operateId);
-            cpo.setCuspermissionId(temp.getId());
-            list.add(cpo);
+        if (operators != null && operators.length > 0) {
+            for (String operateId : operators) {
+                CusPermissionOperate cpo = new CusPermissionOperate();
+                cpo.setOperator(operateId);
+                cpo.setCuspermissionId(temp.getId());
+                list.add(cpo);
+            }
+            cusPermissionOperateSer.save(list);
         }
-        cusPermissionOperateSer.save(list);
 
         return BeanTransform.copyProperties(temp, CusPermissionBO.class);
     }

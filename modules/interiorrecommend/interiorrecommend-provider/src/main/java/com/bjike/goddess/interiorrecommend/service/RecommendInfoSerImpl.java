@@ -7,20 +7,23 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.interiorrecommend.bo.RecommendContentBO;
 import com.bjike.goddess.interiorrecommend.bo.RecommendInfoBO;
+import com.bjike.goddess.interiorrecommend.bo.RecommendRequireBO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendContentDTO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendInfoDTO;
 import com.bjike.goddess.interiorrecommend.entity.*;
-import com.bjike.goddess.interiorrecommend.to.RecommendContentTO;
 import com.bjike.goddess.interiorrecommend.to.RecommendInfoTO;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 推荐信息业务实现
@@ -36,73 +39,65 @@ import java.util.List;
 public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendInfoDTO> implements RecommendInfoSer {
 
     @Autowired
-    private RecommendContentSer recommendContentSer;
-    @Autowired
     private UserAPI userAPI;
     @Autowired
     private AwardInfoSer awardInfoSer;
     @Autowired
     private RecommendRequireSer recommendRequireSer;
-    @Autowired
-    private RecommendSchemeSer recommendSchemeSer;
+
 
     @Override
     public RecommendInfoBO insertModel(RecommendInfoTO to) throws SerException {
-        RecommendInfo model = BeanTransform.copyProperties(to, RecommendInfo.class, true);
-        super.save(model);
-        String modelId = model.getId();
-        to.setId(modelId);
-        //保存推荐内容
-        if (to.getContentList() != null && !to.getContentList().isEmpty()) {
-            for (RecommendContentTO contentTO : to.getContentList()) {
-                RecommendContent detail = new RecommendContent();
-                detail = BeanTransform.copyProperties(contentTO, RecommendContent.class);
-                detail.setCreateUser(userAPI.currentUser().getUsername());
-                detail.setInfoId(modelId);
-                recommendContentSer.save(detail);
+        UserBO userBO = userAPI.currentUser();
+        RecommendRequire recommendRequire = recommendRequireSer.findById(to.getRequireId());
+        if (recommendRequire != null) {
+            RecommendInfo model = BeanTransform.copyProperties(to, RecommendInfo.class, true);
+            //保存推荐考核内容
+            if (!CollectionUtils.isEmpty(to.getContentList())) {
+                Set<RecommendContent> contentSet = new HashSet<RecommendContent>();
+                List<RecommendContent> contentList = BeanTransform.copyProperties(to.getContentList(), RecommendAssessDetail.class);
+                contentSet.addAll(contentList);
+                model.setContentSet(contentSet);
+                model.setRecommendUser(userBO.getUsername());
+                model.setRecommendRequire(recommendRequire);
+                super.save(model);
+                to.setId(model.getId());
+                return BeanTransform.copyProperties(to, RecommendRequireBO.class);
+            } else {
+                throw new SerException("推荐考核内容不能为空!");
             }
+        } else {
+            throw new SerException("非法推荐要求Id,推荐要求对象不能为空!");
         }
-        return BeanTransform.copyProperties(to, RecommendInfoBO.class);
     }
 
     @Override
     public RecommendInfoBO updateModel(RecommendInfoTO to) throws SerException {
-        if (!StringUtils.isEmpty(to.getId())) {
+        RecommendRequire recommendRequire = recommendRequireSer.findById(to.getRequireId());
+        if (recommendRequire != null) {
             RecommendInfo model = super.findById(to.getId());
             if (model != null) {
                 BeanTransform.copyProperties(to, model, true);
                 model.setModifyTime(LocalDateTime.now());
-                super.update(model);
-
-                if (to.getContentList() != null && !to.getContentList().isEmpty()) {
-
-                    for (RecommendContentTO contentTO : to.getContentList()) {
-                        RecommendContent detail = new RecommendContent();
-                        detail = recommendContentSer.findById(contentTO.getId());
-                        BeanTransform.copyProperties(contentTO, detail);
-                        detail.setUpdateUser(userAPI.currentUser().getUsername());
-                        recommendContentSer.update(detail);
-                    }
+                if (!CollectionUtils.isEmpty(to.getContentList())) {
+                    Set<RecommendContent> contentSet = new HashSet<RecommendContent>();
+                    List<RecommendContent> contentList = BeanTransform.copyProperties(to.getContentList(), RecommendAssessDetail.class);
+                    contentSet.addAll(contentList);
+                    model.setRecommendRequire(recommendRequire);
+                    model.setContentSet(contentSet);
                 }
-
+                super.update(model);
+                return BeanTransform.copyProperties(to, RecommendInfoBO.class);
             } else {
-                throw new SerException("更新对象不能为空");
+                throw new SerException("非法Id,推荐信息对象不能为空");
             }
         } else {
-            throw new SerException("更新ID不能为空!");
+            throw new SerException("非法推荐要求Id,推荐要求对象不能为空!");
         }
-        return BeanTransform.copyProperties(to, RecommendInfoBO.class);
     }
 
     @Override
     public void delete(String id) throws SerException {
-        //先除其子表关联数据，再删除推荐要求数据
-        RecommendContentDTO dto = new RecommendContentDTO();
-        dto.getConditions().add(Restrict.eq("infoId", id));
-        List<RecommendContent> detailList = recommendContentSer.findByCis(dto);
-        if (detailList != null && !detailList.isEmpty()) {
-            recommendContentSer.remove(detailList);
-        }
         super.remove(id);
     }
 
@@ -110,71 +105,53 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
     public List<RecommendInfoBO> pageList(RecommendInfoDTO dto) throws SerException {
         dto.getSorts().add("createTime=desc");
         List<RecommendInfo> list = super.findByPage(dto);
-        List<RecommendInfoBO> boList = new ArrayList<RecommendInfoBO>();
-        boList = BeanTransform.copyProperties(list, RecommendInfoBO.class);
-        DateUtil dateUtil = new DateUtil();
-        if (boList != null && !boList.isEmpty()) {
-            for (RecommendInfoBO bo : boList) {
-                RecommendRequire require = recommendRequireSer.findById(bo.getRequireId());
-                if (require != null) {
-                    RecommendScheme recommendScheme = recommendSchemeSer.findById(require.getRecommendSchemeId());
-                    if (recommendScheme != null) {
-                        bo.setOpenTime(dateUtil.dateToString(recommendScheme.getOpenTime()));
-                        bo.setCloseTime(dateUtil.dateToString(recommendScheme.getCloseTime()));
-                    }
-                }
+        if (!CollectionUtils.isEmpty(list)) {
+            List<RecommendInfoBO> boList = new ArrayList<RecommendInfoBO>();
+            for (RecommendInfo model : list) {
+                RecommendRequire recommendRequire = model.getRecommendRequire();
+                RecommendInfoBO bo = BeanTransform.copyProperties(model, RecommendInfoBO.class);
+                bo.setOpenTime(DateUtil.dateToString(recommendRequire.getRecommendScheme().getOpenTime()));
+                bo.setCloseTime(DateUtil.dateToString(recommendRequire.getRecommendScheme().getCloseTime()));
+                bo.setPurpose(recommendRequire.getRecommendScheme().getPurpose());
+                bo.setTypeName(recommendRequire.getRecommendType().getTypeName());
+                boList.add(bo);
             }
+            return boList;
+        } else {
+            return null;
         }
-        return boList;
-    }
-
-    @Override
-    public List<RecommendContentBO> findContent(String infoId) throws SerException {
-        RecommendContentDTO dto = new RecommendContentDTO();
-        dto.getSorts().add("createTime=desc");
-        dto.getConditions().add(Restrict.eq("infoId", infoId));
-        return BeanTransform.copyProperties(recommendContentSer.findByCis(dto), RecommendContentBO.class);
     }
 
     @Override
     public void acceptAudit(String id, String reason, Boolean accept) throws SerException {
-        if (!StringUtils.isEmpty(id)) {
-            RecommendInfo model = super.findById(id);
-            if (model != null) {
-                model.setReason(reason);
-                model.setAccept(accept);
-                super.update(model);
-            } else {
-                throw new SerException("更新对象不能为空");
-            }
+        RecommendInfo model = super.findById(id);
+        if (model != null) {
+            model.setReason(reason);
+            model.setAccept(accept);
+            super.update(model);
         } else {
-            throw new SerException("更新ID不能为空!");
+            throw new SerException("非法Id,推荐信息对象不能为空");
         }
     }
 
     @Override
     public void conformAudit(String id, Boolean conform) throws SerException {
-        if (!StringUtils.isEmpty(id)) {
-            RecommendInfo model = super.findById(id);
-            if (model != null) {
-                if (model.getAccept() != Boolean.TRUE) {
-                    throw new SerException("推荐信息审核未通过,无法进行奖励审核!");
-                }
-                if (model.getConform() == Boolean.FALSE) {
-                    throw new SerException("已经审核不符合!");
-                }
-                model.setConform(conform);
-                if (conform) {
-                    AwardInfo awardInfo = new AwardInfo();
-                    awardInfo.setInfoId(id);
-                    awardInfoSer.save(awardInfo);
-                }
-
-            } else {
-                throw new SerException("更新对象不能为空");
+        RecommendInfo model = super.findById(id);
+        if (model != null) {
+            if (model.getAccept() != Boolean.TRUE) {
+                throw new SerException("推荐信息审核未通过,无法进行奖励审核!");
+            }
+            if (model.getConform() == Boolean.FALSE) {
+                throw new SerException("已经审核不符合!");
+            }
+            model.setConform(conform);
+            if (conform) {
+                AwardInfo awardInfo = new AwardInfo();
+                awardInfo.setRecommendInfo(model);
+                awardInfoSer.save(awardInfo);
             }
         } else {
-            throw new SerException("更新ID不能为空!");
+            throw new SerException("非法Id,推荐信息对象不能为空");
         }
     }
 }

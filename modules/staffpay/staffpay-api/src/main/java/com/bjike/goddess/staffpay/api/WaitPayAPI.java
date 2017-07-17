@@ -94,13 +94,19 @@ public interface WaitPayAPI {
 
     }
     /**
-     * 付款
+     * 第一次付款
      *
-     * @param waitPayTO
-     * @return class FirstPayRecordBO
+     * @param id
      * @throws SerException
      */
-    default FirstPayRecordBO payment(WaitPayTO waitPayTO) throws SerException {
-        return null;
+    default void firstPay(String id) throws SerException {
+    }
+    /**
+     * 已付款记录
+     *
+     * @param id
+     * @throws SerException
+     */
+    default void secondPay(String id) throws SerException {
     }
 }

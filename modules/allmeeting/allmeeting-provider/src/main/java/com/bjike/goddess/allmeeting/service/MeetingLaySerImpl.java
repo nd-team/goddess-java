@@ -87,6 +87,7 @@ public class MeetingLaySerImpl extends ServiceImpl<MeetingLay, MeetingLayDTO> im
             checkData(to);
             BeanTransform.copyProperties(to, model);
             model.setModifyTime(LocalDateTime.now());
+            model.setMeetingTopic(topic);
             super.update(model);
         } else {
             throw new SerException("非法Id，更新对象不能为空");
@@ -110,6 +111,7 @@ public class MeetingLaySerImpl extends ServiceImpl<MeetingLay, MeetingLayDTO> im
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void delete(String id) throws SerException {
         AllMeetingOrganizeDTO organizeDTO = new AllMeetingOrganizeDTO();
         organizeDTO.getConditions().add(Restrict.eq("meetingLay.id", id));

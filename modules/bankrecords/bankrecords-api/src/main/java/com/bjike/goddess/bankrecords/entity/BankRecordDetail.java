@@ -2,9 +2,7 @@ package com.bjike.goddess.bankrecords.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 
 /**
@@ -21,6 +19,13 @@ import javax.persistence.Table;
 public class BankRecordDetail extends BaseEntity {
 
     /**
+     * 银行流水
+     */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "bankRecord_id", referencedColumnName = "id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '银行流水'")
+    private BankRecord bankRecord;
+
+    /**
      * 标题
      */
     @Column(name = "title", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '标题'")
@@ -33,17 +38,18 @@ public class BankRecordDetail extends BaseEntity {
     private String val;
 
     /**
-     * 银行流水Id
-     */
-    @Column(name = "bankRecordId", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '银行流水Id'")
-    private String bankRecordId;
-
-    /**
      * 标题下标
      */
     @Column(name = "titleIndex", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '标题下标'")
     private Integer titleIndex;
 
+    public BankRecord getBankRecord() {
+        return bankRecord;
+    }
+
+    public void setBankRecord(BankRecord bankRecord) {
+        this.bankRecord = bankRecord;
+    }
 
     public String getTitle() {
         return title;
@@ -59,14 +65,6 @@ public class BankRecordDetail extends BaseEntity {
 
     public void setVal(String val) {
         this.val = val;
-    }
-
-    public String getBankRecordId() {
-        return bankRecordId;
-    }
-
-    public void setBankRecordId(String bankRecordId) {
-        this.bankRecordId = bankRecordId;
     }
 
     public Integer getTitleIndex() {

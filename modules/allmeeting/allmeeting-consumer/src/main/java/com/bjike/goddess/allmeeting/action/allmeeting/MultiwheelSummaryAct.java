@@ -1,14 +1,16 @@
 package com.bjike.goddess.allmeeting.action.allmeeting;
 
-import com.bjike.goddess.allmeeting.api.*;
-import com.bjike.goddess.allmeeting.dto.ConcisePermissionDTO;
+import com.bjike.goddess.allmeeting.api.DiscussionVoteAPI;
+import com.bjike.goddess.allmeeting.api.MeetingDiscussionAPI;
+import com.bjike.goddess.allmeeting.api.MultiPermissionAPI;
+import com.bjike.goddess.allmeeting.api.MultiwheelSummaryAPI;
 import com.bjike.goddess.allmeeting.dto.MeetingDiscussionDTO;
 import com.bjike.goddess.allmeeting.dto.MultiPermissionDTO;
 import com.bjike.goddess.allmeeting.dto.MultiwheelSummaryDTO;
-import com.bjike.goddess.allmeeting.to.FirstDiscussionTO;
-import com.bjike.goddess.allmeeting.to.SecondDiscussionTO;
 import com.bjike.goddess.allmeeting.to.DiscussionVoteTO;
+import com.bjike.goddess.allmeeting.to.FirstDiscussionTO;
 import com.bjike.goddess.allmeeting.to.MultiwheelSummaryTO;
+import com.bjike.goddess.allmeeting.to.SecondDiscussionTO;
 import com.bjike.goddess.allmeeting.vo.*;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.entity.ADD;
@@ -29,11 +31,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 简洁交流讨论纪要
+ * 多轮交流讨论纪要
  *
  * @Author: [ Jason ]
  * @Date: [ 2017-06-01 10:44 ]
- * @Description: [ 简洁交流讨论纪要 ]
+ * @Description: [ 多轮交流讨论纪要 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -69,9 +71,9 @@ public class MultiwheelSummaryAct {
     }
 
     /**
-     * 编辑多轮交流讨论纪要
+     * 纪要内容
      *
-     * @param to 简洁交流讨论纪要
+     * @param to 多轮交流讨论纪要
      * @return class MultiwheelSummaryVO
      * @version v1
      */
@@ -87,9 +89,9 @@ public class MultiwheelSummaryAct {
     }
 
     /**
-     * 冻结多轮交流讨论纪要
+     * 冻结
      *
-     * @param id 简洁交流讨论纪要ID
+     * @param id Id
      * @version v1
      */
     @PutMapping("v1/freeze/{id}")
@@ -103,30 +105,30 @@ public class MultiwheelSummaryAct {
     }
 
     /**
-     * 冻结多轮交流讨论纪要
+     * 解冻
      *
-     * @param id 简洁交流讨论纪要ID
+     * @param id Id
      * @version v1
      */
     @PutMapping("v1/unfreeze/{id}")
     public Result unfreeze(@PathVariable String id) throws ActException {
         try {
             multiwheelSummaryAPI.unfreeze(id);
-            return new ActResult("冻结成功");
+            return new ActResult("解冻成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
     /**
-     * 列表分页查询
+     * 列表
      *
      * @param dto 分页条件
      * @return class MultiwheelSummaryVO
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result pageList(MultiwheelSummaryDTO dto) throws ActException {
+    public Result pageList(@Validated(MultiwheelSummaryDTO.SelectStatus.class) MultiwheelSummaryDTO dto) throws ActException {
         try {
             List<MultiwheelSummaryVO> voList = BeanTransform.copyProperties(multiwheelSummaryAPI.pageList(dto), MultiwheelSummaryVO.class);
             return ActResult.initialize(voList);
@@ -142,7 +144,7 @@ public class MultiwheelSummaryAct {
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(MultiwheelSummaryDTO dto) throws ActException {
+    public Result count(@Validated(MultiwheelSummaryDTO.SelectStatus.class) MultiwheelSummaryDTO dto) throws ActException {
         try {
             dto.getConditions().add(Restrict.eq("status", Status.THAW));
             Long count = multiwheelSummaryAPI.count(dto);
@@ -153,9 +155,9 @@ public class MultiwheelSummaryAct {
     }
 
     /**
-     * 根据id查询简洁交流讨论纪要
+     * 根据id查询纪要信息
      *
-     * @param id 简洁交流讨论纪要id
+     * @param id id
      * @return class MultiwheelSummaryVO
      * @version v1
      */
@@ -224,7 +226,7 @@ public class MultiwheelSummaryAct {
     }
 
     /**
-     * 根据id交流讨论
+     * 根据交流讨论Id查询交流讨论信息
      *
      * @param id 交流讨论Id
      * @return class ConciseSummaryVO
@@ -241,7 +243,7 @@ public class MultiwheelSummaryAct {
     }
 
     /**
-     * 意见详情列表
+     * 交流讨论列表
      *
      * @param summaryId 会议讨论意见id
      * @return class MeetingDiscussionVO
@@ -338,7 +340,7 @@ public class MultiwheelSummaryAct {
      */
     @LoginAuth
     @GetMapping("v1/permission/list")
-    public Result permission(MultiPermissionDTO dto , HttpServletRequest request) throws ActException {
+    public Result permission(MultiPermissionDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<MultiPermissionVO> voList = BeanTransform.copyProperties(multiPermissionAPI.pageList(dto), MultiPermissionVO.class, request);
             return ActResult.initialize(voList);

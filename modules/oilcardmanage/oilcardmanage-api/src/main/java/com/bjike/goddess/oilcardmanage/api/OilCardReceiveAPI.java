@@ -3,12 +3,14 @@ package com.bjike.goddess.oilcardmanage.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.oilcardmanage.bo.OilCardReceiveBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardReceiveDTO;
+import com.bjike.goddess.oilcardmanage.enums.OilCardReceiveResult;
 import com.bjike.goddess.oilcardmanage.to.OilCardReceiveTO;
 
 import java.util.List;
 
 /**
  * 油卡领用信息对外发布接口
+ *
  * @Author: [Jason]
  * @Date: [17-3-14 下午4:33]
  * @Package:[ com.bjike.goddess.oilcardmanage.api ]
@@ -20,6 +22,7 @@ public interface OilCardReceiveAPI {
 
     /**
      * 新增领用油卡信息
+     *
      * @param to 领用油卡信息
      * @return 领用油卡信息
      * @throws SerException 领用油卡异常
@@ -28,6 +31,7 @@ public interface OilCardReceiveAPI {
 
     /**
      * 编辑领用油卡信息
+     *
      * @param to 编辑油卡信息
      * @return 编辑油卡信息
      * @throws SerException 编辑领用油卡异常
@@ -36,14 +40,12 @@ public interface OilCardReceiveAPI {
 
     /**
      * 审核领用油卡信息
-     * @param to 审核油卡信息
-     * @return 审核油卡信息
-     * @throws SerException 审核领用油卡异常
      */
-    OilCardReceiveBO auditOilCardReceive(OilCardReceiveTO to) throws SerException;
+    void auditOilCardReceive(String id, String auditSuggestion, OilCardReceiveResult oilCardReceiveResult) throws SerException;
 
     /**
      * 删除领用油卡信息
+     *
      * @param id 油卡领用ID
      * @throws SerException 删除领用油卡异常
      */
@@ -51,6 +53,7 @@ public interface OilCardReceiveAPI {
 
     /**
      * 归还领用油卡
+     *
      * @param id 油卡领用id
      * @throws SerException 归还领用油卡异常
      */
@@ -58,9 +61,26 @@ public interface OilCardReceiveAPI {
 
     /**
      * 分页查询
+     *
      * @param dto 查询条件
      * @throws SerException 分页查询业务异常
      */
     List<OilCardReceiveBO> pageList(OilCardReceiveDTO dto) throws SerException;
+
+    /**
+     * 根据iD查询油卡领用信息
+     *
+     * @param id id
+     */
+    OilCardReceiveBO findById(String id) throws SerException;
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     * @return 总记录数
+     */
+    Long count(OilCardReceiveDTO dto) throws SerException;
+
 
 }

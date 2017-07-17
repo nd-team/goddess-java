@@ -16,6 +16,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
@@ -44,6 +45,7 @@ public class DiscussionVoteSerImpl extends ServiceImpl<DiscussionVote, Discussio
     private UserAPI userAPI;
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public DiscussionVoteBO insertModel(DiscussionVoteTO to) throws SerException {
 
         UserBO userBO = userAPI.currentUser();

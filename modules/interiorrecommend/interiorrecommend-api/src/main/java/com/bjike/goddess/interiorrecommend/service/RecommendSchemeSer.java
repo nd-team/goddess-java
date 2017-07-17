@@ -46,23 +46,29 @@ public interface RecommendSchemeSer extends Ser<RecommendScheme, RecommendScheme
     List<RecommendSchemeBO> pageList(RecommendSchemeDTO dto) throws SerException;
 
     /**
-     * 综合资源部意见
+     * 综合资源部审核
      *
-     * @param to 推荐方案
+     * @param id               id
+     * @param resourcesSuggest 意见
+     * @param resourcesAudit   结果
      */
-    void resourcesAudit(RecommendSchemeTO to) throws SerException;
+    void resourcesAudit(String id, String resourcesSuggest, Boolean resourcesAudit) throws SerException;
 
     /**
-     * 运营商务部意见
+     * 运营商务部审核
      *
-     * @param to 推荐方案
+     * @param id             id
+     * @param operateSuggest 意见
+     * @param operateAudit   结果
      */
-    void operateAudit(RecommendSchemeTO to) throws SerException;
+    void operateAudit(String id, String operateSuggest, Boolean operateAudit) throws SerException;
 
     /**
-     * 总经办意见
+     * 总经办审核
      *
-     * @param to 推荐方案
+     * @param id             id
+     * @param generalSuggest 意见
+     * @param generalAudit   结果
      */
-    void generalAudit(RecommendSchemeTO to) throws SerException;
+    void generalAudit(String id, String generalSuggest, Boolean generalAudit) throws SerException;
 }

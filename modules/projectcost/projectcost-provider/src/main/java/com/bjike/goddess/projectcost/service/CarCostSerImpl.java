@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
 import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
 import com.bjike.goddess.dispatchcar.to.ConditionTO;
@@ -57,13 +58,17 @@ public class CarCostSerImpl extends ServiceImpl<CarCost, CarCostDTO> implements 
     private void countCost(CarCost entity) throws SerException {
         ConditionTO to = BeanTransform.copyProperties(entity, ConditionTO.class);
         String format;
-        if (entity.getMonth() >= 10)
-            format = "%d-%d-01";
-        else
-            format = "$d-0%d-01";
-        LocalDate start = LocalDate.parse(String.format(format, entity.getYear(), entity.getMonth()));
+//        if (entity.getMonth() >= 10)
+//            format = "%d-%d-01";
+//        else
+//            format = "$d-0%d-01";
+
+//        LocalDate start = LocalDate.parse(String.format(format, entity.getYear(), entity.getMonth()));
+        LocalDate start = DateUtil.getStartDayOfMonth(entity.getYear(),entity.getMonth());
         LocalDate end = start.withDayOfMonth(start.getMonth().maxLength());
-        to.setDispatchDate(new LocalDate[]{start, end});
+        to.setDispatchStartDate(start.toString());
+        to.setDispatchEndDate(end.toString());
+
         List<DispatchCarInfoBO> list = dispatchCarInfoAPI.getByConfition(to);
         if (null != list)
             entity.setActualDegree(list.size());

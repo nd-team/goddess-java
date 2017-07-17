@@ -14,6 +14,8 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -36,6 +38,7 @@ public class MeetingDiscussionSerImpl extends ServiceImpl<MeetingDiscussion, Mee
     private UserAPI userAPI;
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public MeetingDiscussionBO insertModel(MeetingDiscussionTO to) throws SerException {
         //校验用户是否未参会人员
         UserBO userBO = userAPI.currentUser();
@@ -43,11 +46,12 @@ public class MeetingDiscussionSerImpl extends ServiceImpl<MeetingDiscussion, Mee
         String currentNum = userBO.getEmployeeNumber();
         MeetingSummary summary = meetingSummarySer.findById(to.getSummaryId());
         String actualUsers = summary.getActualUsers();
-        if (actualUsers.contains(currentNum)) {
+        if (actualUsers.contains(currentUser)) {
             checkUnique(currentNum, to.getSummaryId());
 
-            to.setUser(currentUser);
             MeetingDiscussion model = BeanTransform.copyProperties(to, MeetingDiscussion.class);
+            model.setUser(currentUser);
+            model.setUserNum(currentNum);
             super.save(model);
             return BeanTransform.copyProperties(model, MeetingDiscussionBO.class);
         } else {
@@ -73,5 +77,21 @@ public class MeetingDiscussionSerImpl extends ServiceImpl<MeetingDiscussion, Mee
         MeetingDiscussionDTO dto = new MeetingDiscussionDTO();
         dto.getConditions().add(Restrict.eq("summaryId", summaryId));
         return BeanTransform.copyProperties(super.findByCis(dto), MeetingDiscussionBO.class);
+    }
+
+    @Override
+    public MeetingDiscussionBO discussFind(String summaryId) throws SerException {
+        UserBO userBO = userAPI.currentUser();
+        String currentNum = userBO.getEmployeeNumber();
+
+        MeetingDiscussionDTO dto = new MeetingDiscussionDTO();
+        dto.getConditions().add(Restrict.eq("summaryId", summaryId));
+        dto.getConditions().add(Restrict.eq("userNum", currentNum));
+        List<MeetingDiscussion> list = super.findByCis(dto);
+        if (!CollectionUtils.isEmpty(list)) {
+            return BeanTransform.copyProperties(list.get(0),MeetingDiscussionBO.class);
+        }else{
+            return null;
+        }
     }
 }

@@ -34,4 +34,12 @@ public interface MeetingDiscussionAPI {
      * @throws SerException
      */
     List<MeetingDiscussionBO> listBySummaryId(String summaryId) throws SerException;
+
+    /**
+     * 查询会议交流讨论
+     * @param summaryId
+     * @return
+     * @throws SerException
+     */
+    MeetingDiscussionBO discussFind(String summaryId) throws SerException;
 }

@@ -36,26 +36,4 @@ public class FirstPayRecordApiImpl implements FirstPayRecordAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return firstPayRecordSer.guidePermission(guidePermissionTO);
     }
-    @Override
-    public Long countFirstPayRecord(FirstPayRecordDTO firstPayRecordDTO) throws SerException {
-        return firstPayRecordSer.countFirstPayRecord(firstPayRecordDTO);
-    }
-
-    @Override
-    public FirstPayRecordBO getOne(String id) throws SerException {
-        return firstPayRecordSer.getOne(id);
-    }
-
-    @Override
-    public List<FirstPayRecordBO> findListFirstPayRecord(FirstPayRecordDTO firstPayRecordDTO) throws SerException {
-        return firstPayRecordSer.findListFirstPayRecord(firstPayRecordDTO);
-    }
-    @Override
-    public void removeFirstPayRecord(String id) throws SerException {
-        firstPayRecordSer.removeFirstPayRecord(id);
-    }
-    @Override
-    public PayRecordBO payment(FirstPayRecordTO firstPayRecordTO) throws SerException {
-        return firstPayRecordSer.payment(firstPayRecordTO);
-    }
 }

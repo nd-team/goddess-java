@@ -40,7 +40,7 @@ public class ProblesClassifyPrepareAct {
 
 
     /**
-     * 新增问题分类
+     * 新增
      *
      * @param to 问题分类
      * @return class ProblesClassifyPrepareVO
@@ -59,7 +59,7 @@ public class ProblesClassifyPrepareAct {
     }
 
     /**
-     * 编辑问题分类
+     * 编辑
      *
      * @param to 问题分类
      * @return class ProblesClassifyPrepareVO
@@ -77,9 +77,9 @@ public class ProblesClassifyPrepareAct {
     }
 
     /**
-     * 冻结问题分类
+     * 冻结
      *
-     * @param id 问题分类ID
+     * @param id id
      * @version v1
      */
     @PatchMapping("v1/freeze/{id}")
@@ -93,14 +93,30 @@ public class ProblesClassifyPrepareAct {
     }
 
     /**
-     * 列表分页查询
+     * 解冻
+     *
+     * @param id id
+     * @version v1
+     */
+    @PatchMapping("v1/unfreeze/{id}")
+    public Result unfreeze(@PathVariable String id) throws ActException {
+        try {
+            problesClassifyPrepareAPI.unfreeze(id);
+            return new ActResult("解冻成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 列表
      *
      * @param dto 分页条件
      * @return class ProblesClassifyPrepareVO
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result pageList(ProblesClassifyPrepareDTO dto) throws ActException {
+    public Result pageList(@Validated(ProblesClassifyPrepareDTO.SelectStatus.class) ProblesClassifyPrepareDTO dto) throws ActException {
         try {
             List<ProblesClassifyPrepareVO> voList = BeanTransform.copyProperties(problesClassifyPrepareAPI.pageList(dto), ProblesClassifyPrepareVO.class);
             return ActResult.initialize(voList);
@@ -116,9 +132,9 @@ public class ProblesClassifyPrepareAct {
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(ProblesClassifyPrepareDTO dto) throws ActException {
+    public Result count(@Validated(ProblesClassifyPrepareDTO.SelectStatus.class) ProblesClassifyPrepareDTO dto) throws ActException {
         try {
-            dto.getConditions().add(Restrict.eq("status", Status.THAW));
+            dto.getConditions().add(Restrict.eq("status", dto.getStatus()));
             Long count = problesClassifyPrepareAPI.count(dto);
             return ActResult.initialize(count);
         } catch (SerException e) {

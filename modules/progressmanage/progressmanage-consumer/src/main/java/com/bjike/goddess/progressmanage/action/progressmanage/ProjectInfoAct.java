@@ -49,7 +49,7 @@ public class ProjectInfoAct {
      * @version v1
      */
     @GetMapping("v1/groups")
-    public Result tables(HttpServletRequest request) throws ActException {
+    public Result groups(HttpServletRequest request) throws ActException {
 
         try {
             List<OpinionVO> voList = BeanTransform.copyProperties(departmentDetailAPI.findAllOpinion(), OpinionVO.class, request);
@@ -60,7 +60,7 @@ public class ProjectInfoAct {
     }
 
     /**
-     * 新增项目信息
+     * 新增
      *
      * @param to 项目信息
      * @return class ProjectInfoVO
@@ -78,7 +78,7 @@ public class ProjectInfoAct {
     }
 
     /**
-     * 编辑项目信息
+     * 编辑
      *
      * @param to 项目信息
      * @return class ProjectInfoVO
@@ -96,9 +96,43 @@ public class ProjectInfoAct {
     }
 
     /**
-     * 删除项目信息
+     * 冻结
      *
-     * @param id 项目承包洽谈ID
+     * @param id
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/freeze/{id}")
+    public Result freeze(@PathVariable String id) throws ActException {
+        try {
+            projectInfoAPI.freeze(id);
+            return new ActResult("冻结成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 解冻
+     *
+     * @param id id
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/unfreeze/{id}")
+    public Result unfreeze(@PathVariable String id) throws ActException {
+        try {
+            projectInfoAPI.unfreeze(id);
+            return new ActResult("解冻成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 删除
+     *
+     * @param id id
      * @version v1
      */
     @LoginAuth

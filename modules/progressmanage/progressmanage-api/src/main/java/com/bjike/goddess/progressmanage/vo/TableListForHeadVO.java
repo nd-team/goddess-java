@@ -21,11 +21,6 @@ public class TableListForHeadVO {
      */
     private String tabName;
 
-    /**
-     * 合同内部名称
-     */
-    private String inProject;
-
     public String getId() {
         return id;
     }
@@ -42,11 +37,4 @@ public class TableListForHeadVO {
         this.tabName = tabName;
     }
 
-    public String getInProject() {
-        return inProject;
-    }
-
-    public void setInProject(String inProject) {
-        this.inProject = inProject;
-    }
 }

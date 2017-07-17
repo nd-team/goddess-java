@@ -59,13 +59,13 @@ public class BankRecordApiImpl implements BankRecordAPI {
     }
 
     @Override
-    public List<BankRecordCollectBO> collect(Integer year, Integer month, String accountName) throws SerException {
+    public List<BankRecordCollectBO> collect(Integer year, Integer month, String[] accountName) throws SerException {
         return bankRecordSer.collect(year, month, accountName);
     }
 
     @Override
-    public BankRecordAnalyzeBO analyze(Integer year, Integer month, String accountName) throws SerException {
-        return bankRecordSer.analyze(year, month, accountName);
+    public List<BankRecordAnalyzeBO> analyze(Integer year, Integer month, String[] accountIds) throws SerException {
+        return bankRecordSer.analyze(year, month, accountIds);
     }
 
     @Override
@@ -85,12 +85,27 @@ public class BankRecordApiImpl implements BankRecordAPI {
 
     @Override
     public BankRecordPageListBO findById(String id) throws SerException {
-        return BeanTransform.copyProperties(bankRecordSer.find(id),BankRecordPageListBO.class);
+        return BeanTransform.copyProperties(bankRecordSer.find(id), BankRecordPageListBO.class);
     }
 
     @Override
     public Boolean guidePermission(GuidePermissionTO to) throws SerException {
         return bankRecordSer.guidePermission(to);
+    }
+
+    @Override
+    public Double balanceByMonth(Integer year, Integer month) throws SerException {
+        return bankRecordSer.balanceByMonth(year, month);
+    }
+
+    @Override
+    public byte[] collectExcel(Integer year, Integer month, String[] accountIds) throws SerException {
+        return bankRecordSer.collectExcel(year, month, accountIds);
+    }
+
+    @Override
+    public byte[] analyzeExcel(Integer year, Integer month, String[] accountIds) throws SerException {
+        return bankRecordSer.analyzeExcel(year, month, accountIds);
     }
 
 

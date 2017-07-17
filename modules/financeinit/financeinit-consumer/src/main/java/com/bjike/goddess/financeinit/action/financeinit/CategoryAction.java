@@ -93,8 +93,15 @@ public class CategoryAction {
     @GetMapping("v1/getOneById/{id}")
     public Result getOneById(@PathVariable String id) throws ActException {
         try {
+            CategoryBO categoryBO = BeanTransform.copyProperties(categoryAPI.getOneById(id), CategoryBO.class );
             CategoryVO projectCarryVO = BeanTransform.copyProperties(
-                    categoryAPI.getOneById(id), CategoryVO.class);
+                    categoryBO, CategoryVO.class);
+            if( categoryBO != null && null != categoryBO.getFirstSubjectBO()){
+                FirstSubjectVO firstSubjectVO = BeanTransform.copyProperties(categoryBO.getFirstSubjectBO(), FirstSubjectVO.class);
+                projectCarryVO.setFirstSubjectVO(firstSubjectVO);
+            }
+
+
             return ActResult.initialize(projectCarryVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

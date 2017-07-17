@@ -17,6 +17,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
@@ -46,6 +47,7 @@ public class ConciseSummarySerImpl extends ServiceImpl<ConciseSummary, ConciseSu
 
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public ConciseSummaryBO updateModel(ConciseSummaryTO to) throws SerException {
         ConciseSummary model = super.findById(to.getId());
         if (model != null) {
@@ -59,6 +61,7 @@ public class ConciseSummarySerImpl extends ServiceImpl<ConciseSummary, ConciseSu
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void freeze(String id) throws SerException {
         ConciseSummary model = super.findById(id);
         if (model != null) {
@@ -135,6 +138,7 @@ public class ConciseSummarySerImpl extends ServiceImpl<ConciseSummary, ConciseSu
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void unfreeze(String id) throws SerException {
         ConciseSummary model = super.findById(id);
         if (model != null) {

@@ -1,8 +1,9 @@
 package com.bjike.goddess.oilcardmanage.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.common.api.type.Status;
-import com.bjike.goddess.oilcardmanage.enums.OilCardStatus;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
@@ -18,20 +19,15 @@ import javax.validation.constraints.NotNull;
 public class OilCardBasicTO extends BaseTO {
 
     /**
-     * 数据状态
-     */
-    private Status status;
-
-    /**
      * 油卡编号
      */
-    @NotNull(message = "油卡编号不能为空!")
+    @NotBlank(message = "油卡编号不能为空!", groups = {ADD.class, EDIT.class})
     private String oilCardCode;
 
     /**
      * 卡号
      */
-    @NotNull(message = "卡号不能为空!")
+    @NotBlank(message = "卡号不能为空!", groups = {ADD.class, EDIT.class})
     private String oilCardNumber;
 
     /**
@@ -60,42 +56,10 @@ public class OilCardBasicTO extends BaseTO {
     private String cardPassWord;
 
     /**
-     * 使用地区
-     */
-    private String area;
-
-    /**
-     * 项目名称
-     */
-    private String project;
-
-    /**
-     * 油卡状态
-     */
-    private OilCardStatus cardStatus;
-
-    /**
-     * 使用状态更新时间
-     */
-    private String updateStatusTime;
-
-    /**
      * 期初金额
      */
+    @NotNull(message = "期初金额不能为空!", groups = {ADD.class, EDIT.class})
     private Double cycleEarlyMoney;
-
-    /**
-     * 余额
-     */
-    private Double balance;
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
 
     public String getOilCardCode() {
         return oilCardCode;
@@ -145,30 +109,6 @@ public class OilCardBasicTO extends BaseTO {
         this.cardPassWord = cardPassWord;
     }
 
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
-
-    public String getProject() {
-        return project;
-    }
-
-    public void setProject(String project) {
-        this.project = project;
-    }
-
-    public OilCardStatus getCardStatus() {
-        return cardStatus;
-    }
-
-    public void setCardStatus(OilCardStatus cardStatus) {
-        this.cardStatus = cardStatus;
-    }
-
     public Double getCycleEarlyMoney() {
         return cycleEarlyMoney;
     }
@@ -177,28 +117,12 @@ public class OilCardBasicTO extends BaseTO {
         this.cycleEarlyMoney = cycleEarlyMoney;
     }
 
-    public Double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(Double balance) {
-        this.balance = balance;
-    }
-
     public String getHandlingDate() {
         return handlingDate;
     }
 
     public void setHandlingDate(String handlingDate) {
         this.handlingDate = handlingDate;
-    }
-
-    public String getUpdateStatusTime() {
-        return updateStatusTime;
-    }
-
-    public void setUpdateStatusTime(String updateStatusTime) {
-        this.updateStatusTime = updateStatusTime;
     }
 
 }

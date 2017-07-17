@@ -4,9 +4,9 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.progressmanage.enums.PermissionType;
 
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 
 /**
@@ -21,19 +21,6 @@ import java.util.Set;
 @Entity
 @Table(name = "progressmanage_projectinfo")
 public class ProjectInfo extends BaseEntity {
-
-
-    /**
-     * 进度表
-     */
-    @OneToOne(cascade=CascadeType.REFRESH,mappedBy = "project",fetch = FetchType.LAZY)
-    private ProgressTable progressTable;
-
-    /**
-     * 进度节点
-     */
-    @OneToMany(cascade=CascadeType.REFRESH,mappedBy = "project",fetch = FetchType.EAGER)
-    private Set<ProgressNode> progressNodeSet = new HashSet<ProgressNode>();
 
     /**
      * 地区
@@ -50,13 +37,13 @@ public class ProjectInfo extends BaseEntity {
     /**
      * 合同外部项目名称
      */
-    @Column(name = "outProject", nullable = false, unique = true, columnDefinition = "VARCHAR(255)   COMMENT '合同外部项目名称'")
+    @Column(name = "outProject", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '合同外部项目名称'")
     private String outProject;
 
     /**
      * 内部项目名称
      */
-    @Column(name = "inProject", nullable = false, unique = true, columnDefinition = "VARCHAR(255)   COMMENT '内部项目名称'")
+    @Column(name = "inProject", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '内部项目名称'")
     private String inProject;
 
     /**
@@ -172,14 +159,6 @@ public class ProjectInfo extends BaseEntity {
         this.workScreen = workScreen;
     }
 
-    public ProgressTable getProgressTable() {
-        return progressTable;
-    }
-
-    public void setProgressTable(ProgressTable progressTable) {
-        this.progressTable = progressTable;
-    }
-
     public PermissionType getPermissionType() {
         return permissionType;
     }
@@ -212,11 +191,4 @@ public class ProjectInfo extends BaseEntity {
         this.status = status;
     }
 
-    public Set<ProgressNode> getProgressNodeSet() {
-        return progressNodeSet;
-    }
-
-    public void setProgressNodeSet(Set<ProgressNode> progressNodeSet) {
-        this.progressNodeSet = progressNodeSet;
-    }
 }

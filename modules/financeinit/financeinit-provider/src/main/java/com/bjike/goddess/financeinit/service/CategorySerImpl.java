@@ -129,7 +129,7 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
         Boolean flagSee = guideSeeIdentity();
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagAdd = guideAddIdentity();
-        if( flagSee || flagAdd ){
+        if (flagSee || flagAdd) {
             return true;
         } else {
             return false;
@@ -169,28 +169,28 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
         FirstSubjectDTO firstSubjectDTO = new FirstSubjectDTO();
         switch (categoryTO.getCategoryName().name()) {
             case "ASSETS":
-                firstSubjectDTO.getConditions().add(Restrict.eq("category","资产类"));
+                firstSubjectDTO.getConditions().add(Restrict.eq("category", "资产类"));
                 break;
             case "LIABILITIES":
-                firstSubjectDTO.getConditions().add(Restrict.eq("category","负债类"));
+                firstSubjectDTO.getConditions().add(Restrict.eq("category", "负债类"));
                 break;
             case "COMMON":
-                firstSubjectDTO.getConditions().add(Restrict.eq("category","共同类"));
+                firstSubjectDTO.getConditions().add(Restrict.eq("category", "共同类"));
                 break;
             case "RIGHTSINTERESTS":
-                firstSubjectDTO.getConditions().add(Restrict.eq("category","权益类"));
+                firstSubjectDTO.getConditions().add(Restrict.eq("category", "权益类"));
                 break;
             case "COST":
-                firstSubjectDTO.getConditions().add(Restrict.eq("category","成本类"));
+                firstSubjectDTO.getConditions().add(Restrict.eq("category", "成本类"));
                 break;
             case "PROFITLOSS":
-                firstSubjectDTO.getConditions().add(Restrict.eq("category","损益类"));
+                firstSubjectDTO.getConditions().add(Restrict.eq("category", "损益类"));
                 break;
             default:
-                firstSubjectDTO.getConditions().add(Restrict.eq("category","资产类"));
+                firstSubjectDTO.getConditions().add(Restrict.eq("category", "资产类"));
                 break;
         }
-        List<FirstSubject> list = firstSubjectSer.findByCis( firstSubjectDTO );
+        List<FirstSubject> list = firstSubjectSer.findByCis(firstSubjectDTO);
         List<String> firstName = list.stream().map(FirstSubject::getName).collect(Collectors.toList());
         return firstName;
     }
@@ -199,38 +199,42 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
     public Long countCategory(CategoryDTO categoryDTO) throws SerException {
         switch (categoryDTO.getCategoryName().name()) {
             case "ASSETS":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",0));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName", 0));
                 break;
             case "LIABILITIES":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",1));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName", 1));
                 break;
             case "COMMON":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",2));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName", 2));
                 break;
             case "RIGHTSINTERESTS":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",3));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName", 3));
                 break;
             case "COST":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",4));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName", 4));
                 break;
             case "PROFITLOSS":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",5));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName", 5));
                 break;
             default:
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",0));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName", 0));
                 break;
         }
-        Long count = super.count( categoryDTO );
+        Long count = super.count(categoryDTO);
         return count;
     }
 
     @Override
     public CategoryBO getOneById(String id) throws SerException {
-        if(StringUtils.isBlank(id)){
+        if (StringUtils.isBlank(id)) {
             throw new SerException("id不能呢为空");
         }
+
         Category category = super.findById(id);
-        return BeanTransform.copyProperties(category, CategoryBO.class );
+        FirstSubjectBO firstSubjectBO = BeanTransform.copyProperties(category.getFirstSubject(), FirstSubjectBO.class);
+        CategoryBO categoryBO = BeanTransform.copyProperties(category, CategoryBO.class);
+        categoryBO.setFirstSubjectBO(firstSubjectBO);
+        return categoryBO;
     }
 
     @Override
@@ -239,25 +243,25 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
 
         switch (categoryDTO.getCategoryName().name()) {
             case "ASSETS":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",0));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName", 0));
                 break;
             case "LIABILITIES":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",1));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName", 1));
                 break;
             case "COMMON":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",2));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName", 2));
                 break;
             case "RIGHTSINTERESTS":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",3));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName", 3));
                 break;
             case "COST":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",4));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName", 4));
                 break;
             case "PROFITLOSS":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",5));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName", 5));
                 break;
             default:
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",0));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName", 0));
                 break;
         }
         List<Category> list = super.findByCis(categoryDTO, true);
@@ -338,6 +342,8 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
         checkAddIdentity();
 
         String firstSubjectName = categoryTO.getFirstSubjectName();
+        String secondSubjectName = categoryTO.getSecondSubject();
+        String thirdSubjectName = categoryTO.getThirdSubject();
         FirstSubjectBO firstSubjectBO = firstSubjectSer.getFirstSubject(firstSubjectName);
         if (firstSubjectBO == null || StringUtils.isBlank(firstSubjectBO.getCode())) {
             throw new SerException("不存在该一级科目，请重新选择一级科目");
@@ -345,8 +351,27 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
 
         Category tranCategory = BeanTransform.copyProperties(categoryTO, Category.class, true);
         Category category = super.findById(categoryTO.getId());
-        BeanUtils.copyProperties(tranCategory, category, "id", "firstSubject_id", "createTime","firstCode","secondCode");
+
+        CategoryDTO dto = new CategoryDTO();
+        if (!firstSubjectBO.getId().equals(categoryTO.getId())) {
+            dto.getConditions().add(Restrict.eq("firstSubject.id", firstSubjectBO.getId()));
+            dto.getConditions().add(Restrict.eq("secondSubject", secondSubjectName));
+            dto.getConditions().add(Restrict.eq("thirdSubject", thirdSubjectName));
+            List<Category> otherList = super.findByCis(dto);
+            if (otherList != null && otherList.size() > 0) {
+                throw new SerException("该一级科目,二级科目，三级科目已经存在，不可以修改，请重新选择一级科目，二级科目，三级科目");
+            }
+        }
+
+        dto = new CategoryDTO();
+        String code = generateCode(categoryTO, firstSubjectBO, dto);
+
+
+        BeanUtils.copyProperties(tranCategory, category, "id", "firstSubject_id", "createTime", "firstCode", "secondCode");
         category.setFirstSubject(BeanTransform.copyProperties(firstSubjectBO, FirstSubject.class, true));
+        category.setCode( code );
+        category.setSecondCode( categoryTO.getSecondCode() );
+        category.setThirdCode( categoryTO.getThirdCode() );
 
         category.setModifyTime(LocalDateTime.now());
         super.update(category);
@@ -387,31 +412,31 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
 
     public String generateCode(CategoryTO categoryTO, FirstSubjectBO firstSubjectBO, CategoryDTO dto) throws SerException {
         String code = "";
-        CategoryDTO cdto = new CategoryDTO();
+//        CategoryDTO cdto = new CategoryDTO();
         String firstSubjectCode = firstSubjectBO.getCode();
         categoryTO.setFirstCode(firstSubjectCode);
 
         switch (firstSubjectBO.getCategory()) {
             case "资产类":
-                cdto.getConditions().add(Restrict.eq("categoryName", 0));
+                dto.getConditions().add(Restrict.eq("categoryName", 0));
                 break;
             case "负债类":
-                cdto.getConditions().add(Restrict.eq("categoryName", 1));
+                dto.getConditions().add(Restrict.eq("categoryName", 1));
                 break;
             case "共同类":
-                cdto.getConditions().add(Restrict.eq("categoryName", 2));
+                dto.getConditions().add(Restrict.eq("categoryName", 2));
                 break;
             case "权益类":
-                cdto.getConditions().add(Restrict.eq("categoryName", 3));
+                dto.getConditions().add(Restrict.eq("categoryName", 3));
                 break;
             case "成本类":
-                cdto.getConditions().add(Restrict.eq("categoryName", 4));
+                dto.getConditions().add(Restrict.eq("categoryName", 4));
                 break;
             case "损益类":
-                cdto.getConditions().add(Restrict.eq("categoryName", 5));
+                dto.getConditions().add(Restrict.eq("categoryName", 5));
                 break;
             default:
-                cdto.getConditions().add(Restrict.eq("categoryName", 0));
+                dto.getConditions().add(Restrict.eq("categoryName", 0));
                 break;
         }
 
@@ -423,7 +448,7 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
         if (StringUtils.isNotBlank(categoryTO.getSecondSubject())
                 && StringUtils.isBlank(categoryTO.getThirdSubject())) {
             dto.getConditions().add(Restrict.eq("secondSubject", categoryTO.getSecondSubject()));
-            List<Category> categories = super.findByCis(cdto);
+            List<Category> categories = super.findByCis(dto);
             if (categories != null && categories.size() > 0) {
                 throw new SerException("已存在该一级科目下的二级科目");
 
@@ -435,7 +460,7 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
                 List<Category> tempCategory = super.findByCis(temp_cdto);
                 if (tempCategory != null && tempCategory.size() > 0) {
                     Category maxCodeCategory = tempCategory.get(0);
-                    int secondCode = Integer.parseInt(maxCodeCategory.getSecondCode()) + 1;
+                    Long secondCode = Long.parseLong(maxCodeCategory.getSecondCode()) + 1;
                     if (secondCode < 99) {
                         code = firstSubjectCode + String.valueOf(secondCode < 10 ? "0" + secondCode : secondCode);
                         categoryTO.setSecondCode(String.valueOf(secondCode));
@@ -465,14 +490,20 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
                 dto = new CategoryDTO();
                 dto.getConditions().add(Restrict.eq("firstSubject.id", firstSubjectBO.getId()));
                 dto.getConditions().add(Restrict.eq("secondSubject", categoryTO.getSecondSubject()));
+                dto.getSorts().add("secondSubject=desc");
                 dto.getSorts().add("thirdCode=desc");
                 List<Category> tempCategory = super.findByCis(dto);
+
+                //1,2,3都添加了，
+                //1,有，2没有，（不为空）
+
                 if (tempCategory != null && tempCategory.size() > 0) {
                     Category maxCodeCategory = tempCategory.get(0);
-                    int thirdCode = Integer.parseInt(maxCodeCategory.getThirdCode()) + 1;
+                    Long thirdCode = Long.parseLong(maxCodeCategory.getThirdCode()) + 1;
                     if (thirdCode < 99) {
-                        code = maxCodeCategory.getCode() + String.valueOf(thirdCode < 10 ? "0" + thirdCode : thirdCode);
+                        code = maxCodeCategory.getFirstCode() + maxCodeCategory.getSecondCode() + String.valueOf(thirdCode < 10 ? "0" + thirdCode : thirdCode);
                         categoryTO.setThirdCode(String.valueOf(thirdCode));
+                        categoryTO.setSecondCode(String.valueOf(maxCodeCategory.getSecondCode()));
                     } else {
                         throw new SerException("不能再继续添加，二级编号超过了99");
                     }
@@ -482,10 +513,10 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
                     dto = new CategoryDTO();
                     dto.getConditions().add(Restrict.eq("firstSubject.id", firstSubjectBO.getId()));
                     dto.getSorts().add("secondCode=desc");
-                    categories = super.findByCis(cdto);
+                    categories = super.findByCis(dto);
                     if (categories != null && categories.size() > 0) {
-                        int secondCode = Integer.parseInt(categories.get(0).getSecondCode() == null ? "00" : categories.get(0).getSecondCode()) + 1;
-                        categoryTO.setSecondCode(firstSubjectCode + (secondCode < 10 ? "0" + secondCode : secondCode));
+                        Long secondCode = Long.parseLong(categories.get(0).getSecondCode() == null ? "00" : categories.get(0).getSecondCode()) + 1;
+                        categoryTO.setSecondCode((secondCode < 10 ? "0" + secondCode : secondCode + ""));
                         categoryTO.setThirdCode("01");
                         code = firstSubjectCode + categoryTO.getSecondCode() + "01";
                         categoryTO.setCode(code);
@@ -493,8 +524,8 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
                         //不存在就要01
                         categoryTO.setSecondCode("01");
                         categoryTO.setThirdCode("01");
-                        code = firstSubjectCode + "01"+"01";
-                        categoryTO.setCode( code );
+                        code = firstSubjectCode + "01" + "01";
+                        categoryTO.setCode(code);
                     }
 
                 }
@@ -507,10 +538,11 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
 
     @Override
     public List<CategoryBO> listAllCategory(CategoryDTO categoryDTO) throws SerException {
-        if(StringUtils.isNotBlank(categoryDTO.getThirdSubject())){
-            categoryDTO.getConditions().add(Restrict.eq("thirdSubject",categoryDTO.getThirdSubject()));
-        }if(StringUtils.isNotBlank(categoryDTO.getRemark())){
-            categoryDTO.getConditions().add(Restrict.eq("remark",categoryDTO.getRemark()));
+        if (StringUtils.isNotBlank(categoryDTO.getThirdSubject())) {
+            categoryDTO.getConditions().add(Restrict.eq("thirdSubject", categoryDTO.getThirdSubject()));
+        }
+        if (StringUtils.isNotBlank(categoryDTO.getRemark())) {
+            categoryDTO.getConditions().add(Restrict.eq("remark", categoryDTO.getRemark()));
         }
         List<Category> list = super.findByCis(categoryDTO);
         List<CategoryBO> categoryBOList = new ArrayList<>();
@@ -531,7 +563,6 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
         cb.setFirstSubjectBO(firstSubjectBO);
         return cb;
     }
-
 
 
 }

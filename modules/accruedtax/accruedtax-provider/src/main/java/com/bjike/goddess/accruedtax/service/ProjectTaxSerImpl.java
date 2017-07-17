@@ -6,6 +6,7 @@ import com.bjike.goddess.accruedtax.entity.ProjectTax;
 import com.bjike.goddess.accruedtax.enums.GuideAddrStatus;
 import com.bjike.goddess.accruedtax.to.GuidePermissionTO;
 import com.bjike.goddess.accruedtax.to.ProjectTaxTO;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -171,6 +172,9 @@ public class ProjectTaxSerImpl extends ServiceImpl<ProjectTax, ProjectTaxDTO> im
 
     @Override
     public Long countProjectTax(ProjectTaxDTO projectTaxDTO) throws SerException {
+        if( StringUtils.isNotBlank(projectTaxDTO.getProject())){
+            projectTaxDTO.getConditions().add(Restrict.eq("project",projectTaxDTO.getProject()));
+        }
         Long count = super.count(projectTaxDTO);
         return count;
     }
@@ -187,6 +191,9 @@ public class ProjectTaxSerImpl extends ServiceImpl<ProjectTax, ProjectTaxDTO> im
     @Override
     public List<ProjectTaxBO> listProjectTax(ProjectTaxDTO projectTaxDTO) throws SerException {
         checkSeeIdentity();
+        if( StringUtils.isNotBlank(projectTaxDTO.getProject())){
+            projectTaxDTO.getConditions().add(Restrict.eq("project",projectTaxDTO.getProject()));
+        }
         projectTaxDTO.getSorts().add("createTime=desc");
         List<ProjectTax> list = super.findByCis(projectTaxDTO, true);
 

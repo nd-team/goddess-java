@@ -55,9 +55,22 @@ public class WaitPayBO extends BaseBO {
     private PayStatus payStatus;
 
     /**
+     * 地区
+     */
+    private String area;
+
+    /**
      * 识别类型
      */
     private String type;
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
 
     public String getType() {
         return type;

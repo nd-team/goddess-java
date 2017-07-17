@@ -32,6 +32,11 @@ public class MeetingSummaryBO extends BaseBO {
     private String topic;
 
     /**
+     * 会议层面
+     */
+    private String lay;
+
+    /**
      * 会议形式
      */
     private MeetingType meetingType;
@@ -56,7 +61,7 @@ public class MeetingSummaryBO extends BaseBO {
     private String notAttendUsers;
 
     /**
-     * 会议目的
+     * 议题目的
      */
     private MeetingPurpose meetingPurpose;
 
@@ -107,6 +112,14 @@ public class MeetingSummaryBO extends BaseBO {
 
     public void setMeetingNum(String meetingNum) {
         this.meetingNum = meetingNum;
+    }
+
+    public String getLay() {
+        return lay;
+    }
+
+    public void setLay(String lay) {
+        this.lay = lay;
     }
 
     public String getActualUsers() {

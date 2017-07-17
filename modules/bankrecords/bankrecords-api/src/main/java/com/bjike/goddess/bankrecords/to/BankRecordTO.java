@@ -27,25 +27,6 @@ public class BankRecordTO extends BaseTO {
     @NotBlank(message = "账户信息不能为空!", groups = {BankRecordTO.Upload.class})
     private String accountId;
 
-    /**
-     * 借方金额
-     */
-    private Double debtorCost;
-
-    /**
-     * 贷方金额
-     */
-    private Double creditorCost;
-
-    /**
-     * 余额
-     */
-    private Double balance;
-
-    /**
-     * 流水日期
-     */
-    private String recordDate;
 
     /**
      * 借方金额下标
@@ -71,16 +52,6 @@ public class BankRecordTO extends BaseTO {
     @NotNull(message = "流水日期下标不能为空!", groups = {BankRecordTO.Upload.class})
     private Integer recordDateIndex;
 
-    /**
-     * 年份
-     */
-    private Integer year;
-
-    /**
-     * 月份
-     */
-    private Integer month;
-
     //request文件信息
     private List<InputStream> inputStreams;
 
@@ -90,38 +61,6 @@ public class BankRecordTO extends BaseTO {
 
     public void setAccountId(String accountId) {
         this.accountId = accountId;
-    }
-
-    public Double getDebtorCost() {
-        return debtorCost;
-    }
-
-    public void setDebtorCost(Double debtorCost) {
-        this.debtorCost = debtorCost;
-    }
-
-    public Double getCreditorCost() {
-        return creditorCost;
-    }
-
-    public void setCreditorCost(Double creditorCost) {
-        this.creditorCost = creditorCost;
-    }
-
-    public Double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(Double balance) {
-        this.balance = balance;
-    }
-
-    public String getRecordDate() {
-        return recordDate;
-    }
-
-    public void setRecordDate(String recordDate) {
-        this.recordDate = recordDate;
     }
 
     public Integer getDebtorCostIndex() {
@@ -156,22 +95,6 @@ public class BankRecordTO extends BaseTO {
         this.recordDateIndex = recordDateIndex;
     }
 
-    public Integer getYear() {
-        return year;
-    }
-
-    public void setYear(Integer year) {
-        this.year = year;
-    }
-
-    public Integer getMonth() {
-        return month;
-    }
-
-    public void setMonth(Integer month) {
-        this.month = month;
-    }
-
     public List<InputStream> getInputStreams() {
         return inputStreams;
     }
@@ -179,5 +102,4 @@ public class BankRecordTO extends BaseTO {
     public void setInputStreams(List<InputStream> inputStreams) {
         this.inputStreams = inputStreams;
     }
-
 }

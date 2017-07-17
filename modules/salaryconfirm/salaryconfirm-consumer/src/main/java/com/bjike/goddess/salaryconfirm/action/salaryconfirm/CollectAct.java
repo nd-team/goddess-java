@@ -11,9 +11,12 @@ import com.bjike.goddess.organize.vo.AreaVO;
 import com.bjike.goddess.organize.vo.OpinionVO;
 import com.bjike.goddess.salaryconfirm.api.SalaryconfirmAPI;
 import com.bjike.goddess.salaryconfirm.to.ConditionTO;
+import com.bjike.goddess.salaryconfirm.to.GuidePermissionTO;
 import com.bjike.goddess.salaryconfirm.vo.*;
 import com.bjike.goddess.user.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +42,30 @@ public class CollectAct {
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private PositionDetailUserAPI detailUserAPI;
+
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = salaryconfirmAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 地区列表查询
@@ -121,7 +148,7 @@ public class CollectAct {
             to.setYear(year);
             to.setMonth(month);
             to.setArea(area);
-            List<AreaAnalyzeVO> voList = BeanTransform.copyProperties(salaryconfirmAPI.analyzeByArea(to,"area"), AreaAnalyzeVO.class);
+            List<AreaAnalyzeVO> voList = BeanTransform.copyProperties(salaryconfirmAPI.analyzeByArea(to, "area"), AreaAnalyzeVO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -161,7 +188,7 @@ public class CollectAct {
             to.setYear(year);
             to.setMonth(month);
             to.setDepartment(department);
-            List<DepartmentAnalyzeVO> voList = BeanTransform.copyProperties(salaryconfirmAPI.analyzeByDepart(to,"department"), DepartmentAnalyzeVO.class);
+            List<DepartmentAnalyzeVO> voList = BeanTransform.copyProperties(salaryconfirmAPI.analyzeByDepart(to, "department"), DepartmentAnalyzeVO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -191,8 +218,8 @@ public class CollectAct {
     /**
      * 个人分析
      *
-     * @param year 年份
-     * @param month 月份
+     * @param year     年份
+     * @param month    月份
      * @param userName 姓名
      * @return class UserAnalyzeVO
      * @version v1
@@ -204,7 +231,7 @@ public class CollectAct {
             to.setYear(year);
             to.setMonth(month);
             to.setUserName(userName);
-            List<UserAnalyzeVO> voList = BeanTransform.copyProperties(salaryconfirmAPI.analyzeByName(to,"name"), UserAnalyzeVO.class);
+            List<UserAnalyzeVO> voList = BeanTransform.copyProperties(salaryconfirmAPI.analyzeByName(to, "name"), UserAnalyzeVO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

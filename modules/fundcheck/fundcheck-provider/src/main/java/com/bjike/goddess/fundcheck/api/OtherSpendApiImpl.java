@@ -67,4 +67,26 @@ public class OtherSpendApiImpl implements OtherSpendAPI {
     public List<OtherSpendBO> collect(OtherSpendCollectTO to) throws SerException {
         return otherSpendSer.collect(to);
     }
+    @Override
+    public OtherSpendBO importExcel(List<OtherSpendTO> otherSpendTOS) throws SerException {
+        return otherSpendSer.importExcel(otherSpendTOS);
+    }
+    @Override
+    public byte[] templateExport() throws SerException {
+        return otherSpendSer.templateExport();
+    }
+    @Override
+    public List<String> listFirstSubject() throws SerException {
+        return otherSpendSer.listFirstSubject();
+    }
+
+    @Override
+    public List<String> listSubByFirst(String firstSub) throws SerException {
+        return otherSpendSer.listSubByFirst(firstSub);
+    }
+
+    @Override
+    public List<String> listTubByFirst(String firstSub, String secondSub) throws SerException {
+        return otherSpendSer.listTubByFirst(firstSub, secondSub);
+    }
 }
