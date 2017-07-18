@@ -5,7 +5,9 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialinstock.bo.StockWarningBO;
 import com.bjike.goddess.materialinstock.dto.StockWarningDTO;
 import com.bjike.goddess.materialinstock.entity.StockWarning;
+import com.bjike.goddess.materialinstock.excel.SonPermissionObject;
 import com.bjike.goddess.materialinstock.service.StockWarningSer;
+import com.bjike.goddess.materialinstock.to.GuidePermissionTO;
 import com.bjike.goddess.materialinstock.to.StockWarningTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,16 @@ public class StockWarningApiImpl implements StockWarningAPI {
 
     @Autowired
     private StockWarningSer stockWarningSer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return stockWarningSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return stockWarningSer.guidePermission(guidePermissionTO);
+    }
 
     /**
      * 根据id查询库存预警

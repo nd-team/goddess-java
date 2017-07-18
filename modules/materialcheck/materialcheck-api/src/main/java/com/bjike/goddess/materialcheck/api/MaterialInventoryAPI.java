@@ -3,6 +3,8 @@ package com.bjike.goddess.materialcheck.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.materialcheck.bo.MaterialInventoryBO;
 import com.bjike.goddess.materialcheck.dto.MaterialInventoryDTO;
+import com.bjike.goddess.materialcheck.excel.SonPermissionObject;
+import com.bjike.goddess.materialcheck.to.GuidePermissionTO;
 import com.bjike.goddess.materialcheck.to.MaterialInventoryTO;
 import com.bjike.goddess.materialcheck.type.InventoryType;
 
@@ -19,6 +21,20 @@ import java.util.List;
  */
 public interface MaterialInventoryAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 根据id查询物资盘点
      *
