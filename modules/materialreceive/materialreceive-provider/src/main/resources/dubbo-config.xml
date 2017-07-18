@@ -16,11 +16,27 @@
 	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
 	<dubbo:registry address="${dubbo.registry.address}" />
 
-	<dubbo:reference validation="true" interface="com.bjike.goddess.materialinstock.api.MaterialInStockAPI" id="materialInStockApiImpl"/>
-	<dubbo:reference validation="true" interface="com.bjike.goddess.materialinstock.api.StockWarningAPI" id="stockWarningApiImpl"/>
-	<dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
 	<dubbo:service validation="true" interface="com.bjike.goddess.materialreceive.api.MaterialReceiveAPI" ref="materialReceiveApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.materialreceive.api.ProjectGroupReceiveAPI" ref="projectGroupReceiveApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.materialreceive.api.CusPermissionAPI" ref="cusPermissionApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.materialreceive.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"></dubbo:service>
+
+	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
+	否则不需要配置-->
+
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialinstock.api.MaterialInStockAPI" id="materialInStockApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialinstock.api.StockWarningAPI" id="stockWarningApiImpl"/>
+
+	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
+
+
+	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
+	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
 
 </beans>

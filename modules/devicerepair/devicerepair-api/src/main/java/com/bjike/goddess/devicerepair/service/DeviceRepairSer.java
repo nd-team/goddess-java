@@ -5,8 +5,10 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.devicerepair.bo.DeviceRepairBO;
 import com.bjike.goddess.devicerepair.dto.DeviceRepairDTO;
 import com.bjike.goddess.devicerepair.entity.DeviceRepair;
+import com.bjike.goddess.devicerepair.excel.SonPermissionObject;
 import com.bjike.goddess.devicerepair.to.DeviceRepairTO;
 import com.bjike.goddess.devicerepair.to.FetchDeviceTO;
+import com.bjike.goddess.devicerepair.to.GuidePermissionTO;
 import com.bjike.goddess.devicerepair.to.WelfareAuditTO;
 import com.bjike.goddess.devicerepair.type.AuditState;
 
@@ -24,6 +26,20 @@ import java.util.Map;
  */
 public interface DeviceRepairSer extends Ser<DeviceRepair, DeviceRepairDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 分页查询设备维修
      *
