@@ -213,6 +213,11 @@ public class ReimburseRecordBO extends BaseBO {
      */
     private String modifyTime;
 
+    /**
+     * 数量count
+     */
+    private Integer count;
+
 
     public String getOccureDate() {
         return occureDate;
@@ -532,5 +537,13 @@ public class ReimburseRecordBO extends BaseBO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 }

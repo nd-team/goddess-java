@@ -1,25 +1,30 @@
-package com.bjike.goddess.lendreimbursement.bo;
+package com.bjike.goddess.lendreimbursement.vo;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 
-/** 汇总数据
+/**
+ * 汇总数据
+ *
  * @Author: [tanghaixiang]
  * @Date: [2017-04-10 11:57]
  * @Description: [汇总数据]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class CollectDataBO implements Serializable {
+public class CollectReimerDataVO implements Serializable {
 
     /**
-     * 借款人
+     * 借款/报销人
      */
     private String lender;
+
     /**
      * 报销日期
      */
-    private LocalDate reimDate;
+    private String reimDate;
+
+
     /**
      * 报销日期汇总时间段
      */
@@ -72,11 +77,11 @@ public class CollectDataBO implements Serializable {
         this.lender = lender;
     }
 
-    public LocalDate getReimDate() {
+    public String getReimDate() {
         return reimDate;
     }
 
-    public void setReimDate(LocalDate reimDate) {
+    public void setReimDate(String reimDate) {
         this.reimDate = reimDate;
     }
 

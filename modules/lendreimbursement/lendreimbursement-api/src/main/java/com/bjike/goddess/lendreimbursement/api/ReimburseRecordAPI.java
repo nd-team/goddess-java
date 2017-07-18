@@ -1,6 +1,7 @@
 package com.bjike.goddess.lendreimbursement.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.lendreimbursement.bo.CollectReimerDataBO;
 import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
 import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
@@ -300,9 +301,9 @@ public interface ReimburseRecordAPI {
      * 汇总借款人
      *
      * @param reimburseRecordDTO reimburseRecordDTO
-     * @return class CollectDataBO
+     * @return class CollectReimerDataBO
      */
-    default List<CollectDataBO> collectLender(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+    default List<CollectReimerDataBO> collectLender(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         return null;
     }
 
@@ -310,9 +311,9 @@ public interface ReimburseRecordAPI {
      * 汇总地区
      *
      * @param reimburseRecordDTO reimburseRecordDTO
-     * @return class CollectDataBO
+     * @return class CollectReimerDataBO
      */
-    default List<CollectDataBO> collectArea(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+    default List<CollectReimerDataBO> collectArea(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         return null;
     }
 
@@ -320,9 +321,9 @@ public interface ReimburseRecordAPI {
      * 汇总一级科目
      *
      * @param reimburseRecordDTO reimburseRecordDTO
-     * @return class CollectDataBO
+     * @return class CollectReimerDataBO
      */
-    default List<CollectDataBO> collectFirstSubject(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+    default List<CollectReimerDataBO> collectFirstSubject(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         return null;
     }
 
@@ -330,9 +331,9 @@ public interface ReimburseRecordAPI {
      * 汇总项目名称
      *
      * @param reimburseRecordDTO reimburseRecordDTO
-     * @return class CollectDataBO
+     * @return class CollectReimerDataBO
      */
-    default List<CollectDataBO> collectProjectName(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+    default List<CollectReimerDataBO> collectProjectName(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         return null;
     }
 
@@ -343,6 +344,11 @@ public interface ReimburseRecordAPI {
     default List<String> listAllUser() throws SerException {
         return null;
     }
+
+    /**
+     * 预计付款的报销单号
+     */
+    default List<String> reimNumByPrepay( ) throws SerException {return null;}
 
     /**
      * 所有一级科目
@@ -362,6 +368,12 @@ public interface ReimburseRecordAPI {
      * 所有项目
      */
     default List<String> listProject() throws SerException {
+        return null;
+    }
+    /**
+     * 报销人汇总的报销人条件
+     */
+    default List<String> listReimUser() throws SerException {
         return null;
     }
 

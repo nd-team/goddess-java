@@ -33,7 +33,7 @@ public class FinoddinforSerImpl extends ServiceImpl<Finoddinfor, FinoddinforDTO>
 
     @Override
     public Long countFinoddinfor(FinoddinforDTO finoddinforDTO) throws SerException {
-        finoddinforDTO.getConditions().add(Restrict.eq(STATUS,Status.THAW));
+        finoddinforDTO.getConditions().add(Restrict.eq(STATUS,0));
         Long count = super.count(finoddinforDTO);
         return count;
     }
@@ -51,7 +51,7 @@ public class FinoddinforSerImpl extends ServiceImpl<Finoddinfor, FinoddinforDTO>
     @Override
     public List<FinoddinforBO> listFinoddinfor(FinoddinforDTO finoddinforDTO) throws SerException {
         finoddinforDTO.getSorts().add("runNum=desc");
-        finoddinforDTO.getConditions().add(Restrict.eq(STATUS,Status.THAW));
+        finoddinforDTO.getConditions().add(Restrict.eq(STATUS,0));
 
         List<Finoddinfor> list = super.findByCis(finoddinforDTO,true);
 

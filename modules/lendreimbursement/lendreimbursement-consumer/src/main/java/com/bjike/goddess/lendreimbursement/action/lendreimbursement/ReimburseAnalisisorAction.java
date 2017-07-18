@@ -9,13 +9,19 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.lendreimbursement.api.ReimburseAnalisisorAPI;
 import com.bjike.goddess.lendreimbursement.bo.ReimburseAnalisisorBO;
 import com.bjike.goddess.lendreimbursement.dto.ReimburseAnalisisorDTO;
+import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
+import com.bjike.goddess.lendreimbursement.to.LendPermissionTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseAnalisisorTO;
 import com.bjike.goddess.lendreimbursement.vo.ReimburseAnalisisorVO;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -34,6 +40,35 @@ public class ReimburseAnalisisorAction {
 
     @Autowired
     private ReimburseAnalisisorAPI reimburseAnalisisorAPI;
+
+//    @Autowired
+//    private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private UserAPI userAPI;
+
+
+    /**
+     * 功能导航权限
+     * @param lendGuidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(LendGuidePermissionTO.TestAdd.class) LendGuidePermissionTO lendGuidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = reimburseAnalisisorAPI.guidePermission(lendGuidePermissionTO);
+            if(! isHasPermission ){
+                //int code, String msg
+                return new ActResult(0,"没有权限",false );
+            }else{
+                return new ActResult(0,"有权限",true );
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 报销分析人员列表总条数
@@ -65,6 +100,24 @@ public class ReimburseAnalisisorAction {
         try {
             List<ReimburseAnalisisorVO> reimburseAnalisisorVOList = BeanTransform.copyProperties(
                     reimburseAnalisisorAPI.listReimburseAnalisisor(reimburseAnalisisorDTO), ReimburseAnalisisorVO.class, true);
+            return ActResult.initialize(reimburseAnalisisorVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 一个报销分析人员
+     *
+     * @param id 报销分析人员列表id
+     * @return class ReimburseAnalisisorVO
+     * @des 一个报销分析人员
+     * @version v1
+     */
+    @GetMapping("v1/getOne/{id}")
+    public Result getOne(@PathVariable String id ) throws ActException {
+        try {
+            ReimburseAnalisisorVO reimburseAnalisisorVOList = BeanTransform.copyProperties(
+                    reimburseAnalisisorAPI.getOne(id), ReimburseAnalisisorVO.class);
             return ActResult.initialize(reimburseAnalisisorVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -127,4 +180,25 @@ public class ReimburseAnalisisorAction {
             throw new ActException("删除失败：" + e.getMessage());
         }
     }
+
+    /**
+     * 所有报销分析人员
+     *
+     * @return class UserBO
+     * @des 所有报销分析人员/获取组织结构所有用户
+     * @version v1
+     */
+    @GetMapping("v1/listUser")
+    public Result listUser() throws ActException {
+        try {
+//            List<UserBO> userList = positionDetailUserAPI.findUserListInOrgan();
+            List<UserBO> userList = userAPI.findAllUser();
+            return ActResult.initialize(userList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+
 }

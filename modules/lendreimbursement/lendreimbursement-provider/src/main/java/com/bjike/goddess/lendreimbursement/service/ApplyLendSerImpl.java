@@ -253,8 +253,9 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public Long countApplyLend(ApplyLendDTO applyLendDTO) throws SerException {
-        applyLendDTO.getConditions().add(Restrict.eq("receivePay", "否"));
+        applyLendDTO.getConditions().add(Restrict.eq("payCondition", "否"));
         applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{2, 6, 8, 9}));
+
         if (StringUtils.isNotBlank(applyLendDTO.getLendDate())) {
             applyLendDTO.getConditions().add(Restrict.eq("lendDate", LocalDate.parse(applyLendDTO.getLendDate(), formatter)));
         }
@@ -375,6 +376,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         }
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken( userToken );
         ApplyLend lend = super.findById(id);
 
         if (lend == null) {
@@ -1558,11 +1560,6 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     }
 
-    @Override
-    public List<String> listAccountCom() throws SerException {
-        //TODO 账户来源
-        return null;
-    }
 
     /**
      * 申请
