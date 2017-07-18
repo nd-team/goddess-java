@@ -153,6 +153,9 @@ public class DetailTypeSerImpl extends ServiceImpl<DetailType, DetailTypeDTO> im
             case SEE:
                 flag = guideIdentity();
                 break;
+            case COLLECT:
+                flag = guideIdentity();
+                break;
             default:
                 flag = true;
                 break;

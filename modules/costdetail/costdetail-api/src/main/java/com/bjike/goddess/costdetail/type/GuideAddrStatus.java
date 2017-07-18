@@ -29,7 +29,11 @@ public enum GuideAddrStatus {
     /**
      * 查看
      */
-    SEE(4);
+    SEE(4),
+    /**
+     * 汇总
+     */
+    COLLECT(5);
 
     private int code;
 

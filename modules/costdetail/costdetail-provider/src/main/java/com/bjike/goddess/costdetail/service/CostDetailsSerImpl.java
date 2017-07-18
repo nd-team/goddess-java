@@ -13,10 +13,8 @@ import com.bjike.goddess.costdetail.to.*;
 import com.bjike.goddess.costdetail.type.GuideAddrStatus;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
-import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import com.sun.nio.sctp.PeerAddressChangeNotification;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,6 +131,9 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
                 flag = guideIdentity();
                 break;
             case SEE:
+                flag = guideIdentity();
+                break;
+            case COLLECT:
                 flag = guideIdentity();
                 break;
             default:
@@ -282,7 +283,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         Double laborFift = 0d;
         Double laborTw = 0d;
         Double laborTh = 0d;
-        if(laborCostDetailTOList!=null && laborCostDetailTOList.size()>0){
+        if (laborCostDetailTOList != null && laborCostDetailTOList.size() > 0) {
             for (LaborCostDetailTO laborCostDetailTO : laborCostDetailTOList) {
                 laborCostDetailTO.setLaborCostSum(laborCostDetailTO.getLaborCostTen() + laborCostDetailTO.getLaborCostFift() + laborCostDetailTO.getLaborCostTwtenty() + laborCostDetailTO.getLaborCostThirty());
                 laborSum += laborCostDetailTO.getLaborCostSum();
@@ -306,7 +307,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         Double borroFift = 0d;
         Double borroTw = 0d;
         Double borroTh = 0d;
-        if(companyBorrowedDetailTOList!=null && companyBorrowedDetailTOList.size()>0){
+        if (companyBorrowedDetailTOList != null && companyBorrowedDetailTOList.size() > 0) {
 
             for (CompanyBorrowedDetailTO companyBorrowedDetailTO : companyBorrowedDetailTOList) {
                 companyBorrowedDetailTO.setCompanyBorrowedSum(companyBorrowedDetailTO.getCompanyBorrowedTen() + companyBorrowedDetailTO.getCompanyBorrowedFift() + companyBorrowedDetailTO.getCompanyBorrowedTwtenty() + companyBorrowedDetailTO.getCompanyBorrowedThirty());
@@ -331,7 +332,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         Double paidFift = 0d;
         Double paidTw = 0d;
         Double paidTh = 0d;
-        if(paidCapitalDetailTOList!=null && paidCapitalDetailTOList.size()>0){
+        if (paidCapitalDetailTOList != null && paidCapitalDetailTOList.size() > 0) {
 
             for (PaidCapitalDetailTO paidCapitalDetailTO : paidCapitalDetailTOList) {
                 paidCapitalDetailTO.setPaidCapitalSum(paidCapitalDetailTO.getPaidCapitalTen() + paidCapitalDetailTO.getPaidCapitalFift() + paidCapitalDetailTO.getPaidCapitalTwtenty() + paidCapitalDetailTO.getPaidCapitalThirty());
@@ -356,7 +357,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         Double lendFift = 0d;
         Double lendTw = 0d;
         Double lendTh = 0d;
-        if(companyLendDetailTOList!=null && companyLendDetailTOList.size()>0){
+        if (companyLendDetailTOList != null && companyLendDetailTOList.size() > 0) {
 
             for (CompanyLendDetailTO companyLendDetailTO : companyLendDetailTOList) {
                 companyLendDetailTO.setCompanyLendSum(companyLendDetailTO.getCompanyLendTen() + companyLendDetailTO.getCompanyLendFift() + companyLendDetailTO.getCompanyLendTwtenty() + companyLendDetailTO.getCompanyLendThirty());
@@ -381,7 +382,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         Double businFift = 0d;
         Double businTw = 0d;
         Double businTh = 0d;
-        if(businessIncomeDetailTOList!=null && businessIncomeDetailTOList.size()>0){
+        if (businessIncomeDetailTOList != null && businessIncomeDetailTOList.size() > 0) {
 
             for (BusinessIncomeDetailTO businessIncomeDetailTO : businessIncomeDetailTOList) {
                 businessIncomeDetailTO.setBusinessIncomeSum(businessIncomeDetailTO.getBusinessIncomeTen() + businessIncomeDetailTO.getBusinessIncomeFift() + businessIncomeDetailTO.getBusinessIncomeTwtenty() + businessIncomeDetailTO.getBusinessIncomeThirty());
@@ -434,7 +435,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
                 + costBorrowMoneyTO.getCompanyBorrowedTen() + paidMoneyTO.getPaidCapitalTen() - costLendMoneyTO.getCompanyLendTen()
                 + costIncomeMoneyTO.getBusinessIncomeTen());
 
-        costBeginMoneyTO.setBeginBalanceFift( costActualMoneyTO.getActualGapTen() );
+        costBeginMoneyTO.setBeginBalanceFift(costActualMoneyTO.getActualGapTen());
         costActualMoneyTO.setActualGapFift(costBeginMoneyTO.getBeginBalanceFift() - costBusinessMoneyTO.getOperatingFift()
                 + costBorrowMoneyTO.getCompanyBorrowedFift() + paidMoneyTO.getPaidCapitalFift() - costLendMoneyTO.getCompanyLendFift()
                 + costIncomeMoneyTO.getBusinessIncomeFift());
@@ -454,34 +455,34 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         //期初余额-营业成本+公司借入合计+实收资本-公司借出合计+主营业务收入+实际资金缺口
         costBalanceMoneyTO.setForecastBalanceMoSum(costBeginMoneyTO.getBeginBalanceSum() - costBusinessMoneyTO.getOperatingSum()
                 + costBorrowMoneyTO.getCompanyBorrowedSum() + paidMoneyTO.getPaidCapitalSum() - costLendMoneyTO.getCompanyLendSum()
-                + costIncomeMoneyTO.getBusinessIncomeSum()+costActualMoneyTO.getActualGapSum());
+                + costIncomeMoneyTO.getBusinessIncomeSum() + costActualMoneyTO.getActualGapSum());
 
         costBalanceMoneyTO.setForecastBalanceMoGapTen(costBeginMoneyTO.getBeginBalanceTen() - costBusinessMoneyTO.getOperatingTen()
                 + costBorrowMoneyTO.getCompanyBorrowedTen() + paidMoneyTO.getPaidCapitalTen() - costLendMoneyTO.getCompanyLendTen()
-                + costIncomeMoneyTO.getBusinessIncomeTen()+costActualMoneyTO.getActualGapTen());
+                + costIncomeMoneyTO.getBusinessIncomeTen() + costActualMoneyTO.getActualGapTen());
 
         costBalanceMoneyTO.setForecastBalanceMoGapFift(costBeginMoneyTO.getBeginBalanceFift() - costBusinessMoneyTO.getOperatingFift()
                 + costBorrowMoneyTO.getCompanyBorrowedFift() + paidMoneyTO.getPaidCapitalFift() - costLendMoneyTO.getCompanyLendFift()
-                + costIncomeMoneyTO.getBusinessIncomeFift()+costActualMoneyTO.getActualGapFift());
+                + costIncomeMoneyTO.getBusinessIncomeFift() + costActualMoneyTO.getActualGapFift());
 
         costBalanceMoneyTO.setForecastBalanceMoTwtenty(costBeginMoneyTO.getBeginBalanceTwtenty() - costBusinessMoneyTO.getOperatingTwtenty()
                 + costBorrowMoneyTO.getCompanyBorrowedTwtenty() + paidMoneyTO.getPaidCapitalTwtenty() - costLendMoneyTO.getCompanyLendTwtenty()
-                + costIncomeMoneyTO.getBusinessIncomeTwtenty()+costActualMoneyTO.getActualGapTwtenty());
+                + costIncomeMoneyTO.getBusinessIncomeTwtenty() + costActualMoneyTO.getActualGapTwtenty());
 
         costBalanceMoneyTO.setForecastBalanceMoThirty(costBeginMoneyTO.getBeginBalanceThirty() - costBusinessMoneyTO.getOperatingThirty()
                 + costBorrowMoneyTO.getCompanyBorrowedThirty() + paidMoneyTO.getPaidCapitalThirty() - costLendMoneyTO.getCompanyLendThirty()
-                + costIncomeMoneyTO.getBusinessIncomeThirty()+costActualMoneyTO.getActualGapThirty());
+                + costIncomeMoneyTO.getBusinessIncomeThirty() + costActualMoneyTO.getActualGapThirty());
 
         CostDetails costDetails = new CostDetails();
-        BeanTransform.copyProperties(costActualMoneyTO,costDetails);
-        BeanTransform.copyProperties(costBalanceMoneyTO,costDetails);
-        BeanTransform.copyProperties(costBeginMoneyTO,costDetails);
+        BeanTransform.copyProperties(costActualMoneyTO, costDetails);
+        BeanTransform.copyProperties(costBalanceMoneyTO, costDetails);
+        BeanTransform.copyProperties(costBeginMoneyTO, costDetails);
         BeanTransform.copyProperties(costBorrowMoneyTO, costDetails);
-        BeanTransform.copyProperties(costBusinessMoneyTO,costDetails);
+        BeanTransform.copyProperties(costBusinessMoneyTO, costDetails);
         BeanTransform.copyProperties(costForeMoneyTO, costDetails);
         BeanTransform.copyProperties(costIncomeMoneyTO, costDetails);
         BeanTransform.copyProperties(costLaborMoneyTO, costDetails);
-        BeanTransform.copyProperties(costLendMoneyTO,costDetails);
+        BeanTransform.copyProperties(costLendMoneyTO, costDetails);
         BeanTransform.copyProperties(paidMoneyTO, costDetails);
         BeanTransform.copyProperties(costPayeMoneyTO, costDetails);
 
@@ -494,7 +495,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         if (costDetailsAddEditTO.getLaborCostDetailTOList() != null && costDetailsAddEditTO.getLaborCostDetailTOList().size() > 0) {
             for (LaborCostDetailTO laborCostDetailTO : costDetailsAddEditTO.getLaborCostDetailTOList()) {
                 LaborCostDetail laborCostDetail = BeanTransform.copyProperties(laborCostDetailTO, LaborCostDetail.class, true);
-                laborCostDetail.setLaborCostSum(laborCostDetail.getLaborCostTen()+laborCostDetail.getLaborCostFift()+laborCostDetail.getLaborCostTwtenty()+laborCostDetail.getLaborCostThirty());
+                laborCostDetail.setLaborCostSum(laborCostDetail.getLaborCostTen() + laborCostDetail.getLaborCostFift() + laborCostDetail.getLaborCostTwtenty() + laborCostDetail.getLaborCostThirty());
                 laborCostDetail.setCreateTime(LocalDateTime.now());
                 laborCostDetail.setCostTime(costDetails.getCostTime());
                 laborCostDetail.setDepartment(costDetails.getDepartment());
@@ -506,7 +507,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         if (costDetailsAddEditTO.getCompanyBorrowedDetailTOList() != null && costDetailsAddEditTO.getCompanyBorrowedDetailTOList().size() > 0) {
             for (CompanyBorrowedDetailTO companyBorrowedDetailTO : costDetailsAddEditTO.getCompanyBorrowedDetailTOList()) {
                 CompanyBorrowedDetail companyBorrowedDetail = BeanTransform.copyProperties(companyBorrowedDetailTO, CompanyBorrowedDetail.class, "true");
-                companyBorrowedDetail.setCompanyBorrowedSum(companyBorrowedDetail.getCompanyBorrowedTen()+companyBorrowedDetail.getCompanyBorrowedFift()+companyBorrowedDetail.getCompanyBorrowedTwtenty()+companyBorrowedDetail.getCompanyBorrowedThirty());
+                companyBorrowedDetail.setCompanyBorrowedSum(companyBorrowedDetail.getCompanyBorrowedTen() + companyBorrowedDetail.getCompanyBorrowedFift() + companyBorrowedDetail.getCompanyBorrowedTwtenty() + companyBorrowedDetail.getCompanyBorrowedThirty());
                 companyBorrowedDetail.setCreateTime(LocalDateTime.now());
                 companyBorrowedDetail.setCostTime(costDetails.getCostTime());
                 companyBorrowedDetail.setDepartment(costDetails.getDepartment());
@@ -518,7 +519,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         if (costDetailsAddEditTO.getPaidCapitalDetailTOList() != null && costDetailsAddEditTO.getPaidCapitalDetailTOList().size() > 0) {
             for (PaidCapitalDetailTO paidCapitalDetailTO : costDetailsAddEditTO.getPaidCapitalDetailTOList()) {
                 PaidCapitalDetail paidCapitalDetail = BeanTransform.copyProperties(paidCapitalDetailTO, PaidCapitalDetail.class, "true");
-                paidCapitalDetail.setPaidCapitalSum(paidCapitalDetail.getPaidCapitalTen()+paidCapitalDetail.getPaidCapitalFift()+paidCapitalDetail.getPaidCapitalTwtenty()+paidCapitalDetail.getPaidCapitalThirty());
+                paidCapitalDetail.setPaidCapitalSum(paidCapitalDetail.getPaidCapitalTen() + paidCapitalDetail.getPaidCapitalFift() + paidCapitalDetail.getPaidCapitalTwtenty() + paidCapitalDetail.getPaidCapitalThirty());
                 paidCapitalDetail.setCreateTime(LocalDateTime.now());
                 paidCapitalDetail.setCostTime(costDetails.getCostTime());
                 paidCapitalDetail.setDepartment(costDetails.getDepartment());
@@ -530,7 +531,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         if (costDetailsAddEditTO.getCompanyLendDetailTOList() != null && costDetailsAddEditTO.getCompanyLendDetailTOList().size() > 0) {
             for (CompanyLendDetailTO companyLendDetailTO : costDetailsAddEditTO.getCompanyLendDetailTOList()) {
                 CompanyLendDetail companyLendDetail = BeanTransform.copyProperties(companyLendDetailTO, CompanyLendDetail.class, "true");
-                companyLendDetail.setCompanyLendSum(companyLendDetail.getCompanyLendTen()+companyLendDetail.getCompanyLendFift()+companyLendDetail.getCompanyLendTwtenty()+companyLendDetail.getCompanyLendThirty());
+                companyLendDetail.setCompanyLendSum(companyLendDetail.getCompanyLendTen() + companyLendDetail.getCompanyLendFift() + companyLendDetail.getCompanyLendTwtenty() + companyLendDetail.getCompanyLendThirty());
                 companyLendDetail.setCreateTime(LocalDateTime.now());
                 companyLendDetail.setCostTime(costDetails.getCostTime());
                 companyLendDetail.setDepartment(costDetails.getDepartment());
@@ -542,7 +543,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         if (costDetailsAddEditTO.getBusinessIncomeDetailTOList() != null && costDetailsAddEditTO.getBusinessIncomeDetailTOList().size() > 0) {
             for (BusinessIncomeDetailTO businessIncomeDetailTO : costDetailsAddEditTO.getBusinessIncomeDetailTOList()) {
                 BusinessIncomeDetail businessIncomeDetail = BeanTransform.copyProperties(businessIncomeDetailTO, BusinessIncomeDetail.class, "true");
-                businessIncomeDetail.setBusinessIncomeSum(businessIncomeDetail.getBusinessIncomeTen()+businessIncomeDetail.getBusinessIncomeFift()+businessIncomeDetail.getBusinessIncomeTwtenty()+businessIncomeDetail.getBusinessIncomeThirty());
+                businessIncomeDetail.setBusinessIncomeSum(businessIncomeDetail.getBusinessIncomeTen() + businessIncomeDetail.getBusinessIncomeFift() + businessIncomeDetail.getBusinessIncomeTwtenty() + businessIncomeDetail.getBusinessIncomeThirty());
                 businessIncomeDetail.setCreateTime(LocalDateTime.now());
                 businessIncomeDetail.setCostTime(costDetails.getCostTime());
                 businessIncomeDetail.setDepartment(costDetails.getDepartment());
@@ -565,7 +566,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         Double laborFift = 0d;
         Double laborTw = 0d;
         Double laborTh = 0d;
-        if(laborCostDetailTOList!=null && laborCostDetailTOList.size()>0){
+        if (laborCostDetailTOList != null && laborCostDetailTOList.size() > 0) {
             for (LaborCostDetailTO laborCostDetailTO : laborCostDetailTOList) {
                 laborCostDetailTO.setLaborCostSum(laborCostDetailTO.getLaborCostTen() + laborCostDetailTO.getLaborCostFift() + laborCostDetailTO.getLaborCostTwtenty() + laborCostDetailTO.getLaborCostThirty());
                 laborSum += laborCostDetailTO.getLaborCostSum();
@@ -589,7 +590,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         Double borroFift = 0d;
         Double borroTw = 0d;
         Double borroTh = 0d;
-        if(companyBorrowedDetailTOList!=null && companyBorrowedDetailTOList.size()>0){
+        if (companyBorrowedDetailTOList != null && companyBorrowedDetailTOList.size() > 0) {
 
             for (CompanyBorrowedDetailTO companyBorrowedDetailTO : companyBorrowedDetailTOList) {
                 companyBorrowedDetailTO.setCompanyBorrowedSum(companyBorrowedDetailTO.getCompanyBorrowedTen() + companyBorrowedDetailTO.getCompanyBorrowedFift() + companyBorrowedDetailTO.getCompanyBorrowedTwtenty() + companyBorrowedDetailTO.getCompanyBorrowedThirty());
@@ -614,7 +615,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         Double paidFift = 0d;
         Double paidTw = 0d;
         Double paidTh = 0d;
-        if(paidCapitalDetailTOList!=null && paidCapitalDetailTOList.size()>0){
+        if (paidCapitalDetailTOList != null && paidCapitalDetailTOList.size() > 0) {
 
             for (PaidCapitalDetailTO paidCapitalDetailTO : paidCapitalDetailTOList) {
                 paidCapitalDetailTO.setPaidCapitalSum(paidCapitalDetailTO.getPaidCapitalTen() + paidCapitalDetailTO.getPaidCapitalFift() + paidCapitalDetailTO.getPaidCapitalTwtenty() + paidCapitalDetailTO.getPaidCapitalThirty());
@@ -639,7 +640,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         Double lendFift = 0d;
         Double lendTw = 0d;
         Double lendTh = 0d;
-        if(companyLendDetailTOList!=null && companyLendDetailTOList.size()>0){
+        if (companyLendDetailTOList != null && companyLendDetailTOList.size() > 0) {
 
             for (CompanyLendDetailTO companyLendDetailTO : companyLendDetailTOList) {
                 companyLendDetailTO.setCompanyLendSum(companyLendDetailTO.getCompanyLendTen() + companyLendDetailTO.getCompanyLendFift() + companyLendDetailTO.getCompanyLendTwtenty() + companyLendDetailTO.getCompanyLendThirty());
@@ -664,7 +665,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         Double businFift = 0d;
         Double businTw = 0d;
         Double businTh = 0d;
-        if(businessIncomeDetailTOList!=null && businessIncomeDetailTOList.size()>0){
+        if (businessIncomeDetailTOList != null && businessIncomeDetailTOList.size() > 0) {
 
             for (BusinessIncomeDetailTO businessIncomeDetailTO : businessIncomeDetailTOList) {
                 businessIncomeDetailTO.setBusinessIncomeSum(businessIncomeDetailTO.getBusinessIncomeTen() + businessIncomeDetailTO.getBusinessIncomeFift() + businessIncomeDetailTO.getBusinessIncomeTwtenty() + businessIncomeDetailTO.getBusinessIncomeThirty());
@@ -717,7 +718,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
                 + costBorrowMoneyTO.getCompanyBorrowedTen() + paidMoneyTO.getPaidCapitalTen() - costLendMoneyTO.getCompanyLendTen()
                 + costIncomeMoneyTO.getBusinessIncomeTen());
 
-        costBeginMoneyTO.setBeginBalanceFift( costActualMoneyTO.getActualGapTen() );
+        costBeginMoneyTO.setBeginBalanceFift(costActualMoneyTO.getActualGapTen());
         costActualMoneyTO.setActualGapFift(costBeginMoneyTO.getBeginBalanceFift() - costBusinessMoneyTO.getOperatingFift()
                 + costBorrowMoneyTO.getCompanyBorrowedFift() + paidMoneyTO.getPaidCapitalFift() - costLendMoneyTO.getCompanyLendFift()
                 + costIncomeMoneyTO.getBusinessIncomeFift());
@@ -737,35 +738,35 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         //期初余额-营业成本+公司借入合计+实收资本-公司借出合计+主营业务收入+实际资金缺口
         costBalanceMoneyTO.setForecastBalanceMoSum(costBeginMoneyTO.getBeginBalanceSum() - costBusinessMoneyTO.getOperatingSum()
                 + costBorrowMoneyTO.getCompanyBorrowedSum() + paidMoneyTO.getPaidCapitalSum() - costLendMoneyTO.getCompanyLendSum()
-                + costIncomeMoneyTO.getBusinessIncomeSum()+costActualMoneyTO.getActualGapSum());
+                + costIncomeMoneyTO.getBusinessIncomeSum() + costActualMoneyTO.getActualGapSum());
 
         costBalanceMoneyTO.setForecastBalanceMoGapTen(costBeginMoneyTO.getBeginBalanceTen() - costBusinessMoneyTO.getOperatingTen()
                 + costBorrowMoneyTO.getCompanyBorrowedTen() + paidMoneyTO.getPaidCapitalTen() - costLendMoneyTO.getCompanyLendTen()
-                + costIncomeMoneyTO.getBusinessIncomeTen()+costActualMoneyTO.getActualGapTen());
+                + costIncomeMoneyTO.getBusinessIncomeTen() + costActualMoneyTO.getActualGapTen());
 
         costBalanceMoneyTO.setForecastBalanceMoGapFift(costBeginMoneyTO.getBeginBalanceFift() - costBusinessMoneyTO.getOperatingFift()
                 + costBorrowMoneyTO.getCompanyBorrowedFift() + paidMoneyTO.getPaidCapitalFift() - costLendMoneyTO.getCompanyLendFift()
-                + costIncomeMoneyTO.getBusinessIncomeFift()+costActualMoneyTO.getActualGapFift());
+                + costIncomeMoneyTO.getBusinessIncomeFift() + costActualMoneyTO.getActualGapFift());
 
         costBalanceMoneyTO.setForecastBalanceMoTwtenty(costBeginMoneyTO.getBeginBalanceTwtenty() - costBusinessMoneyTO.getOperatingTwtenty()
                 + costBorrowMoneyTO.getCompanyBorrowedTwtenty() + paidMoneyTO.getPaidCapitalTwtenty() - costLendMoneyTO.getCompanyLendTwtenty()
-                + costIncomeMoneyTO.getBusinessIncomeTwtenty()+costActualMoneyTO.getActualGapTwtenty());
+                + costIncomeMoneyTO.getBusinessIncomeTwtenty() + costActualMoneyTO.getActualGapTwtenty());
 
         costBalanceMoneyTO.setForecastBalanceMoThirty(costBeginMoneyTO.getBeginBalanceThirty() - costBusinessMoneyTO.getOperatingThirty()
                 + costBorrowMoneyTO.getCompanyBorrowedThirty() + paidMoneyTO.getPaidCapitalThirty() - costLendMoneyTO.getCompanyLendThirty()
-                + costIncomeMoneyTO.getBusinessIncomeThirty()+costActualMoneyTO.getActualGapThirty());
+                + costIncomeMoneyTO.getBusinessIncomeThirty() + costActualMoneyTO.getActualGapThirty());
 
 
         CostDetails costDetails = super.findById(costDetailsAddEditTO.getId());
-        BeanTransform.copyProperties(costActualMoneyTO,costDetails);
-        BeanTransform.copyProperties(costBalanceMoneyTO,costDetails);
-        BeanTransform.copyProperties(costBeginMoneyTO,costDetails);
+        BeanTransform.copyProperties(costActualMoneyTO, costDetails);
+        BeanTransform.copyProperties(costBalanceMoneyTO, costDetails);
+        BeanTransform.copyProperties(costBeginMoneyTO, costDetails);
         BeanTransform.copyProperties(costBorrowMoneyTO, costDetails);
-        BeanTransform.copyProperties(costBusinessMoneyTO,costDetails);
+        BeanTransform.copyProperties(costBusinessMoneyTO, costDetails);
         BeanTransform.copyProperties(costForeMoneyTO, costDetails);
         BeanTransform.copyProperties(costIncomeMoneyTO, costDetails);
         BeanTransform.copyProperties(costLaborMoneyTO, costDetails);
-        BeanTransform.copyProperties(costLendMoneyTO,costDetails);
+        BeanTransform.copyProperties(costLendMoneyTO, costDetails);
         BeanTransform.copyProperties(paidMoneyTO, costDetails);
         BeanTransform.copyProperties(costPayeMoneyTO, costDetails);
         costDetails.setModifyTime(LocalDateTime.now());
@@ -779,14 +780,14 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
                 for (LaborCostDetail laborCostDetail : laborCostDetails) {
                     if (laborCostDetailTO.getTypeName().equals(laborCostDetail.getTypeName())) {
                         BeanTransform.copyProperties(laborCostDetailTO, laborCostDetail, true);
-                        laborCostDetail.setLaborCostSum(laborCostDetail.getLaborCostTen()+laborCostDetail.getLaborCostFift()+laborCostDetail.getLaborCostTwtenty()+laborCostDetail.getLaborCostThirty());
+                        laborCostDetail.setLaborCostSum(laborCostDetail.getLaborCostTen() + laborCostDetail.getLaborCostFift() + laborCostDetail.getLaborCostTwtenty() + laborCostDetail.getLaborCostThirty());
                         laborCostDetail.setModifyTime(LocalDateTime.now());
                         exist = true;
                     }
                 }
                 if (!exist) {
                     LaborCostDetail detail = BeanTransform.copyProperties(laborCostDetailTO, LaborCostDetail.class, true);
-                    detail.setLaborCostSum(detail.getLaborCostTen()+detail.getLaborCostFift()+detail.getLaborCostTwtenty()+detail.getLaborCostThirty());
+                    detail.setLaborCostSum(detail.getLaborCostTen() + detail.getLaborCostFift() + detail.getLaborCostTwtenty() + detail.getLaborCostThirty());
                     detail.setCostId(costDetails.getId());
                     detail.setCostTime(costDetails.getCostTime());
                     detail.setDepartment(costDetails.getDepartment());
@@ -806,7 +807,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
                 for (CompanyBorrowedDetail companyBorrowedDetail : companyBorrowedDetails) {
                     if (companyBorrowedDetailTO.getTypeName().equals(companyBorrowedDetail.getTypeName())) {
                         BeanTransform.copyProperties(companyBorrowedDetailTO, companyBorrowedDetail, true);
-                        companyBorrowedDetail.setCompanyBorrowedSum(companyBorrowedDetail.getCompanyBorrowedTen()+companyBorrowedDetail.getCompanyBorrowedFift()+companyBorrowedDetail.getCompanyBorrowedTwtenty()+companyBorrowedDetail.getCompanyBorrowedThirty());
+                        companyBorrowedDetail.setCompanyBorrowedSum(companyBorrowedDetail.getCompanyBorrowedTen() + companyBorrowedDetail.getCompanyBorrowedFift() + companyBorrowedDetail.getCompanyBorrowedTwtenty() + companyBorrowedDetail.getCompanyBorrowedThirty());
                         companyBorrowedDetail.setModifyTime(LocalDateTime.now());
                         exist = true;
                     }
@@ -817,7 +818,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
                     detail.setCreateTime(LocalDateTime.now());
                     detail.setCostTime(costDetails.getCostTime());
                     detail.setDepartment(costDetails.getDepartment());
-                    detail.setCompanyBorrowedSum(detail.getCompanyBorrowedTen()+detail.getCompanyBorrowedFift()+detail.getCompanyBorrowedTwtenty()+detail.getCompanyBorrowedThirty());
+                    detail.setCompanyBorrowedSum(detail.getCompanyBorrowedTen() + detail.getCompanyBorrowedFift() + detail.getCompanyBorrowedTwtenty() + detail.getCompanyBorrowedThirty());
                     companyBorrowedDetailSer.save(detail);
                 }
             }
@@ -831,7 +832,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
                 for (PaidCapitalDetail paidCapitalDetail : paidCapitalDetails) {
                     if (paidCapitalDetailTO.getTypeName().equals(paidCapitalDetail.getTypeName())) {
                         BeanTransform.copyProperties(paidCapitalDetailTO, paidCapitalDetail, true);
-                        paidCapitalDetail.setPaidCapitalSum(paidCapitalDetail.getPaidCapitalTen()+paidCapitalDetail.getPaidCapitalFift()+paidCapitalDetail.getPaidCapitalTwtenty()+paidCapitalDetail.getPaidCapitalThirty());
+                        paidCapitalDetail.setPaidCapitalSum(paidCapitalDetail.getPaidCapitalTen() + paidCapitalDetail.getPaidCapitalFift() + paidCapitalDetail.getPaidCapitalTwtenty() + paidCapitalDetail.getPaidCapitalThirty());
                         paidCapitalDetail.setModifyTime(LocalDateTime.now());
                         exist = true;
                     }
@@ -842,7 +843,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
                     detail.setCreateTime(LocalDateTime.now());
                     detail.setCostTime(costDetails.getCostTime());
                     detail.setDepartment(costDetails.getDepartment());
-                    detail.setPaidCapitalSum(detail.getPaidCapitalTen()+detail.getPaidCapitalFift()+detail.getPaidCapitalTwtenty()+detail.getPaidCapitalThirty());
+                    detail.setPaidCapitalSum(detail.getPaidCapitalTen() + detail.getPaidCapitalFift() + detail.getPaidCapitalTwtenty() + detail.getPaidCapitalThirty());
                     paidCapitalDetailSer.save(detail);
                 }
 
@@ -858,7 +859,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
                 for (CompanyLendDetail companyLendDetail : companyLendDetails) {
                     if (companyLendDetailTO.getTypeName().equals(companyLendDetail.getTypeName())) {
                         BeanTransform.copyProperties(companyLendDetailTO, companyLendDetail, true);
-                        companyLendDetail.setCompanyLendSum(companyLendDetail.getCompanyLendTen()+companyLendDetail.getCompanyLendFift()+companyLendDetail.getCompanyLendTwtenty()+companyLendDetail.getCompanyLendThirty());
+                        companyLendDetail.setCompanyLendSum(companyLendDetail.getCompanyLendTen() + companyLendDetail.getCompanyLendFift() + companyLendDetail.getCompanyLendTwtenty() + companyLendDetail.getCompanyLendThirty());
                         companyLendDetail.setModifyTime(LocalDateTime.now());
                         exist = true;
                     }
@@ -869,7 +870,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
                     detail.setCreateTime(LocalDateTime.now());
                     detail.setCostTime(costDetails.getCostTime());
                     detail.setDepartment(costDetails.getDepartment());
-                    detail.setCompanyLendSum(detail.getCompanyLendTen()+detail.getCompanyLendFift()+detail.getCompanyLendTwtenty()+detail.getCompanyLendThirty());
+                    detail.setCompanyLendSum(detail.getCompanyLendTen() + detail.getCompanyLendFift() + detail.getCompanyLendTwtenty() + detail.getCompanyLendThirty());
                     companyLendDetailSer.save(detail);
                 }
 
@@ -886,14 +887,14 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
                 for (BusinessIncomeDetail businessIncomeDetail : businessIncomeDetails) {
                     if (businessIncomeDetailTO.getTypeName().equals(businessIncomeDetail.getTypeName())) {
                         BeanTransform.copyProperties(businessIncomeDetailTO, businessIncomeDetail, true);
-                        businessIncomeDetail.setBusinessIncomeSum(businessIncomeDetail.getBusinessIncomeTen()+businessIncomeDetail.getBusinessIncomeFift()+businessIncomeDetail.getBusinessIncomeTwtenty()+businessIncomeDetail.getBusinessIncomeThirty());
+                        businessIncomeDetail.setBusinessIncomeSum(businessIncomeDetail.getBusinessIncomeTen() + businessIncomeDetail.getBusinessIncomeFift() + businessIncomeDetail.getBusinessIncomeTwtenty() + businessIncomeDetail.getBusinessIncomeThirty());
                         businessIncomeDetail.setModifyTime(LocalDateTime.now());
                         exist = true;
                     }
                 }
                 if (!exist) {
                     BusinessIncomeDetail detail = BeanTransform.copyProperties(businessIncomeDetailTO, BusinessIncomeDetail.class, true);
-                    detail.setBusinessIncomeSum(detail.getBusinessIncomeTen()+detail.getBusinessIncomeFift()+detail.getBusinessIncomeTwtenty()+detail.getBusinessIncomeThirty());
+                    detail.setBusinessIncomeSum(detail.getBusinessIncomeTen() + detail.getBusinessIncomeFift() + detail.getBusinessIncomeTwtenty() + detail.getBusinessIncomeThirty());
                     detail.setCostId(costDetails.getId());
                     detail.setCreateTime(LocalDateTime.now());
                     detail.setCostTime(costDetails.getCostTime());
@@ -1030,7 +1031,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         }
         String date = StringUtils.substring(costTime, 0, -2) + "01";
         StringBuffer sql = new StringBuffer();
-        String[] field = {"beginBalanceSum", "beginBalanceTen", "beginBalanceFift", "beginBalanceTwtenty", "beginBalanceThirty", "laborCostSum", "laborCostTen",
+        String[] field = {"beginBalanceSum", "beginBalanceTen", "beginBalanceFift", "beginBalanceTwtenty", "beginBalanceThirty","operatingSum","operatingTen","operatingFift","operatingTwtenty","operatingThirty","laborCostSum", "laborCostTen",
                 "laborCostFift", "laborCostTwtenty", "laborCostThirty", "payableTaxSum", "payableTaxTen", "payableTaxFift", "payableTaxTwtenty", "payableTaxThirty",
                 "companyBorrowedSum", "companyBorrowedTen", "companyBorrowedFift", "companyBorrowedTwtenty", "companyBorrowedThirty", "paidCapitalSum", "paidCapitalTen",
                 "paidCapitalFift", "paidCapitalTwtenty", "paidCapitalThirty", "companyLendSum", "companyLendTen", "companyLendFift", "companyLendTwtenty", "companyLendThirty",
@@ -1043,6 +1044,11 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
                 "  sum(beginBalanceFift)         AS beginBalanceFift," +
                 "  sum(beginBalanceTwtenty)      AS beginBalanceTwtenty," +
                 "  sum(beginBalanceThirty)       AS beginBalanceThirty," +
+                "  sum(operatingSum)             AS operatingSum," +
+                "  sum(operatingTen)             AS operatingTen," +
+                "  sum(operatingFift)            AS operatingFift," +
+                "  sum(operatingTwtenty)         AS operatingTwtenty," +
+                "  sum(operatingThirty)          AS operatingThirty," +
                 "  sum(laborCostSum)             AS laborCostSum," +
                 "  sum(laborCostTen)             AS laborCostTen," +
                 "  sum(laborCostFift)            AS laborCostFift," +
@@ -1099,7 +1105,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
             costDetailsAddEditBO = costDetailsAddEditBOS.get(0);
 
             StringBuffer laborSql = new StringBuffer();
-            String[] laborField = {"laborCostSum", "laborCostTen", "laborCostFift", "laborCostTwtenty", "laborCostThirty"};
+            String[] laborField = {"laborCostSum", "laborCostTen", "laborCostFift", "laborCostTwtenty", "laborCostThirty", "typeName"};
             laborSql.append("SELECT" +
                     "  sum(ifnull(laborCostSum, 0))     AS laborCostSum," +
                     "  sum(ifnull(laborCostTen, 0))     AS laborCostTen," +
@@ -1113,7 +1119,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
             List<LaborCostDetailBO> laborCostDetailBOList = laborCostDetailSer.findBySql(laborSql.toString(), LaborCostDetailBO.class, laborField);
 
             StringBuffer compBorrSql = new StringBuffer();
-            String[] compBorrField = {"companyBorrowedSum", "companyBorrowedTen", "companyBorrowedFift", "companyBorrowedTwtenty", "companyBorrowedThirty"};
+            String[] compBorrField = {"companyBorrowedSum", "companyBorrowedTen", "companyBorrowedFift", "companyBorrowedTwtenty", "companyBorrowedThirty", "typeName"};
             compBorrSql.append("SELECT" +
                     "  sum(ifnull(companyBorrowedSum, 0))     AS companyBorrowedSum," +
                     "  sum(ifnull(companyBorrowedTen, 0))     AS companyBorrowedTen," +
@@ -1127,7 +1133,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
             List<CompanyBorrowedDetailBO> companyBorrowedDetailBOList = companyBorrowedDetailSer.findBySql(compBorrSql.toString(), CompanyBorrowedDetailBO.class, compBorrField);
 
             StringBuffer paidSql = new StringBuffer();
-            String[] paidField = {"paidCapitalSum", "paidCapitalTen", "paidCapitalFift", "paidCapitalTwtenty", "paidCapitalThirty"};
+            String[] paidField = {"paidCapitalSum", "paidCapitalTen", "paidCapitalFift", "paidCapitalTwtenty", "paidCapitalThirty", "typeName"};
             paidSql.append("SELECT" +
                     "  sum(ifnull(paidCapitalSum, 0))     AS paidCapitalSum," +
                     "  sum(ifnull(paidCapitalTen, 0))     AS paidCapitalTen," +
@@ -1141,7 +1147,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
             List<PaidCapitalDetailBO> paidCapitalDetailBOList = paidCapitalDetailSer.findBySql(paidSql.toString(), PaidCapitalDetailBO.class, paidField);
 
             StringBuffer compLendSql = new StringBuffer();
-            String[] compLendField = {"companyLendSum", "companyLendTen", "companyLendFift", "companyLendTwtenty", "companyLendThirty"};
+            String[] compLendField = {"companyLendSum", "companyLendTen", "companyLendFift", "companyLendTwtenty", "companyLendThirty", "typeName"};
             compLendSql.append("SELECT" +
                     "  sum(ifnull(companyLendSum, 0))     AS companyLendSum," +
                     "  sum(ifnull(companyLendTen, 0))     AS companyLendTen," +
@@ -1155,7 +1161,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
             List<CompanyLendDetailBO> companyLendDetailBOList = companyLendDetailSer.findBySql(compLendSql.toString(), CompanyLendDetailBO.class, compLendField);
 
             StringBuffer bussSql = new StringBuffer();
-            String[] bussField = {"businessIncomeSum", "businessIncomeTen", "businessIncomeFift", "businessIncomeTwtenty", "businessIncomeThirty"};
+            String[] bussField = {"businessIncomeSum", "businessIncomeTen", "businessIncomeFift", "businessIncomeTwtenty", "businessIncomeThirty", "typeName"};
             bussSql.append("SELECT" +
                     "  sum(ifnull(businessIncomeSum, 0))     AS businessIncomeSum," +
                     "  sum(ifnull(businessIncomeTen, 0))     AS businessIncomeTen," +
@@ -2233,7 +2239,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         costDetailsAddReturnBO3.setThityMoney(0d);
         costDetailsAddReturnBO3.setTwethMoney(0d);
         List<String> typeNameList = detailTypeSer.findTypeName("劳务成本");
-        for (String typeName : typeNameList){
+        for (String typeName : typeNameList) {
             CostDetailsAddReturnBO labAddReturnBO = new CostDetailsAddReturnBO();
             labAddReturnBO.setCategoryName(typeName);
             labAddReturnBO.setSum(0d);
@@ -2263,7 +2269,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         costDetailsAddReturnBO5.setThityMoney(0d);
         costDetailsAddReturnBO5.setTwethMoney(0d);
         List<String> borrTypeNameList = detailTypeSer.findTypeName("公司借入");
-        for (String typeName : borrTypeNameList){
+        for (String typeName : borrTypeNameList) {
             CostDetailsAddReturnBO borrAddReturnBO = new CostDetailsAddReturnBO();
             borrAddReturnBO.setCategoryName(typeName);
             borrAddReturnBO.setSum(0d);
@@ -2284,7 +2290,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         costDetailsAddReturnBO6.setThityMoney(0d);
         costDetailsAddReturnBO6.setTwethMoney(0d);
         List<String> paiTypeNameList = detailTypeSer.findTypeName("实收资本");
-        for (String typeName : paiTypeNameList){
+        for (String typeName : paiTypeNameList) {
             CostDetailsAddReturnBO paiAddReturnBO = new CostDetailsAddReturnBO();
             paiAddReturnBO.setCategoryName(typeName);
             paiAddReturnBO.setSum(0d);
@@ -2305,7 +2311,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         costDetailsAddReturnBO7.setThityMoney(0d);
         costDetailsAddReturnBO7.setTwethMoney(0d);
         List<String> lenTypeNameList = detailTypeSer.findTypeName("实收资本");
-        for (String typeName : lenTypeNameList){
+        for (String typeName : lenTypeNameList) {
             CostDetailsAddReturnBO lenAddReturnBO = new CostDetailsAddReturnBO();
             lenAddReturnBO.setCategoryName(typeName);
             lenAddReturnBO.setSum(0d);
@@ -2326,7 +2332,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         costDetailsAddReturnBO8.setThityMoney(0d);
         costDetailsAddReturnBO8.setTwethMoney(0d);
         List<String> bussTypeNameList = detailTypeSer.findTypeName("主营业务收入");
-        for (String typeName : bussTypeNameList){
+        for (String typeName : bussTypeNameList) {
             CostDetailsAddReturnBO bussAddReturnBO = new CostDetailsAddReturnBO();
             bussAddReturnBO.setCategoryName(typeName);
             bussAddReturnBO.setSum(0d);
@@ -2376,7 +2382,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
             return Collections.emptyList();
         }
         Set<String> set = new HashSet<>();
-        for (DepartmentDetailBO departmentDetailBO : departmentDetailBOS){
+        for (DepartmentDetailBO departmentDetailBO : departmentDetailBOS) {
             String details = departmentDetailBO.getDepartment();
             if (StringUtils.isNotBlank(departmentDetailBO.getDepartment())) {
                 set.add(details);
