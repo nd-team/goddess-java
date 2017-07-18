@@ -60,4 +60,9 @@ public class DriverInfoApiImpl implements DriverInfoAPI {
     public void audit(String id, String suggest, Boolean audit) throws SerException {
         driverInfoSer.audit(id,suggest,audit);
     }
+
+    @Override
+    public DriverInfoBO findByDriver(String driver) throws SerException {
+        return driverInfoSer.findByDriver(driver);
+    }
 }

@@ -40,7 +40,11 @@ public class CareerPlanningCustomTO extends BaseTO {
      */
     @NotBlank(message = "入职时间不能为空",groups = {ADD.class, EDIT.class})
     private String entryTime;
-
+    /**
+     * 可提供的福利待遇
+     */
+    @NotBlank(message = "可提供的福利待遇不能为空",groups = {ADD.class, EDIT.class})
+    private String availableBenefitPackage;
     /**
      * 薪资上升幅度
      */
@@ -125,6 +129,13 @@ public class CareerPlanningCustomTO extends BaseTO {
     private String standard;//此定制项标准
     private String surplusTime;//剩余时间
 
+    public String getAvailableBenefitPackage() {
+        return availableBenefitPackage;
+    }
+
+    public void setAvailableBenefitPackage(String availableBenefitPackage) {
+        this.availableBenefitPackage = availableBenefitPackage;
+    }
 
     public String getName() {
         return name;

@@ -6,6 +6,7 @@ import com.bjike.goddess.materialcheck.bo.MaterialAnalyzeBO;
 import com.bjike.goddess.materialcheck.dto.MaterialAnalyzeDTO;
 import com.bjike.goddess.materialcheck.entity.MaterialAnalyze;
 import com.bjike.goddess.materialcheck.service.MaterialAnalyzeSer;
+import com.bjike.goddess.materialcheck.to.GuidePermissionTO;
 import com.bjike.goddess.materialcheck.to.MaterialAnalyzeTO;
 import com.bjike.goddess.materialcheck.type.InventoryType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,16 @@ public class MaterialAnalyzeApiImpl implements MaterialAnalyzeAPI {
 
     @Autowired
     private MaterialAnalyzeSer materialAnalyzeSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return materialAnalyzeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return materialAnalyzeSer.guidePermission(guidePermissionTO);
+    }
 
     /**
      * 根据id查询物资分析

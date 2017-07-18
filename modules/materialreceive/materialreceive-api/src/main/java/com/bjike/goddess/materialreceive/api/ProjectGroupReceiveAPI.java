@@ -3,6 +3,8 @@ package com.bjike.goddess.materialreceive.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.materialreceive.bo.ProjectGroupReceiveBO;
 import com.bjike.goddess.materialreceive.dto.ProjectGroupReceiveDTO;
+import com.bjike.goddess.materialreceive.excel.SonPermissionObject;
+import com.bjike.goddess.materialreceive.to.GuidePermissionTO;
 import com.bjike.goddess.materialreceive.to.ProjectGroupReceiveTO;
 
 import java.util.List;
@@ -18,6 +20,20 @@ import java.util.List;
  */
 public interface ProjectGroupReceiveAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 根据id查询项目组领用归还登记
      *

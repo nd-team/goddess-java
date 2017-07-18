@@ -4,7 +4,7 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.interiorrecommend.enums.AssessWay;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -24,14 +24,14 @@ public class RecommendRequire extends BaseEntity {
     /**
      * 推荐方案
      */
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "recommendScheme_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '推荐方案'")
     private RecommendScheme recommendScheme;
 
     /**
      * 推荐类型
      */
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "recommendType_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '推荐类型'")
     private RecommendType recommendType;
 
@@ -39,7 +39,7 @@ public class RecommendRequire extends BaseEntity {
      * 推荐考核内容
      */
     @OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, fetch = FetchType.EAGER, mappedBy = "recommendRequire")
-    private Set<RecommendAssessDetail> detailSet;
+    private Set<RecommendAssessDetail> detailSet = new HashSet<RecommendAssessDetail>();
 
     /**
      * 推荐时长
@@ -50,13 +50,13 @@ public class RecommendRequire extends BaseEntity {
     /**
      * 指标来源
      */
-    @Column(name = "indicatorResource", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '指标来源'")
+    @Column(name = "indicatorResource", columnDefinition = "VARCHAR(255)   COMMENT '指标来源'")
     private String indicatorResource;
 
     /**
      * 推荐途径
      */
-    @Column(name = "recommendWay", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '推荐途径'")
+    @Column(name = "recommendWay", columnDefinition = "VARCHAR(255)   COMMENT '推荐途径'")
     private String recommendWay;
 
     /**
@@ -68,7 +68,7 @@ public class RecommendRequire extends BaseEntity {
     /**
      * 推荐发起人
      */
-    @Column(name = "recommendSponsor", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '推荐发起人'")
+    @Column(name = "recommendSponsor", columnDefinition = "VARCHAR(255)   COMMENT '推荐发起人'")
     private String recommendSponsor;
 
     public Set<RecommendAssessDetail> getDetailSet() {

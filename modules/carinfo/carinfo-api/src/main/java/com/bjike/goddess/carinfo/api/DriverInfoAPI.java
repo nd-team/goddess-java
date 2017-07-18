@@ -62,9 +62,16 @@ public interface DriverInfoAPI {
 
     /**
      * 审核
-     * @param id id
+     *
+     * @param id      id
      * @param suggest 意见
-     * @param audit 结果
+     * @param audit   结果
      */
     void audit(String id, String suggest, Boolean audit) throws SerException;
+
+    /**
+     * 根据名称查询
+     * @param driver 司机
+     */
+    DriverInfoBO findByDriver(String driver) throws SerException;
 }

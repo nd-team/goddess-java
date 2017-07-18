@@ -36,7 +36,7 @@ public class FormulaTO extends BaseTO {
     /**
      * 对应科目的id
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "对应科目的id不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class, FormulaTO.A.class}, message = "对应科目的id不能为空")
     private String foreignId;
 
     /**

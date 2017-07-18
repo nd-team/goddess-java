@@ -180,33 +180,6 @@ public class PayRecordSerImpl extends ServiceImpl<PayRecord, PayRecordDTO> imple
         return flag;
     }
 
-    @Override
-    public Long countPayRecord(PayRecordDTO payRecordDTO) throws SerException {
-        Long count = super.count(payRecordDTO);
-        return count;
-    }
-
-    @Override
-    public PayRecordBO getOne(String id) throws SerException {
-        PayRecord payRecord = super.findById(id);
-        return BeanTransform.copyProperties(payRecord, PayRecordBO.class);
-    }
-
-    @Override
-    public List<PayRecordBO> findListPayRecord(PayRecordDTO payRecordDTO) throws SerException {
-        checkSeeIdentity();
-        payRecordDTO.getSorts().add("createTime=desc");
-        List<PayRecord> payRecords = super.findByPage(payRecordDTO);
-        List<PayRecordBO> payRecordBOS = BeanTransform.copyProperties(payRecords, PayRecordBO.class);
-        return payRecordBOS;
-    }
-
-    @Transactional(rollbackFor = SerException.class)
-    @Override
-    public void removePayRecord(String id) throws SerException {
-        checkAddIdentity();
-        super.remove(id);
-    }
 
     @Override
     public List<AreaCollectBO> collectArea(String[] areas) throws SerException {
@@ -224,7 +197,7 @@ public class PayRecordSerImpl extends ServiceImpl<PayRecord, PayRecordDTO> imple
         sb.append(" sum(utilitiesDeduction) AS utilitiesDeduction,sum(deductionTotal) AS deductionTotal, ");
         sb.append(" sum(bonusPenaltyDeduction) AS bonusPenaltyDeduction,sum(incomeTaxDeduction) AS incomeTaxDeduction, ");
         sb.append(" sum(whatSickLeaveDeduction) AS whatSickLeaveDeduction,sum(absenteeismDeduction) AS absenteeismDeduction, ");
-        sb.append(" sum(realWages) AS realWages FROM staffpay_payrecord a ");
+        sb.append(" sum(realWages) AS realWages FROM staffpay_waitpay a ");
         sb.append(" WHERE area IN (%s) GROUP BY months,area ORDER BY area ");
         String sql = sb.toString();
         sql = String.format(sql, areasStr);
@@ -238,7 +211,7 @@ public class PayRecordSerImpl extends ServiceImpl<PayRecord, PayRecordDTO> imple
     @Override
     public List<String> getAreas() throws SerException {
         String[] fields = new String[]{"area"};
-        List<PayRecordBO> payRecordBOS = super.findBySql("select distinct area from staffpay_payrecord group by area order by area asc ", PayRecordBO.class, fields);
+        List<PayRecordBO> payRecordBOS = super.findBySql("select distinct area from staffpay_waitpay group by area order by area asc ", PayRecordBO.class, fields);
 
         List<String> areasList = payRecordBOS.stream().map(PayRecordBO::getArea)
                 .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
@@ -263,7 +236,7 @@ public class PayRecordSerImpl extends ServiceImpl<PayRecord, PayRecordDTO> imple
         sb.append(" sum(utilitiesDeduction) AS utilitiesDeduction,sum(deductionTotal) AS deductionTotal, ");
         sb.append(" sum(bonusPenaltyDeduction) AS bonusPenaltyDeduction,sum(incomeTaxDeduction) AS incomeTaxDeduction, ");
         sb.append(" sum(whatSickLeaveDeduction) AS whatSickLeaveDeduction,sum(absenteeismDeduction) AS absenteeismDeduction, ");
-        sb.append(" sum(realWages) AS realWages FROM staffpay_payrecord a ");
+        sb.append(" sum(realWages) AS realWages FROM staffpay_waitpay a ");
         sb.append(" WHERE department IN (%s) GROUP BY months,department ORDER BY department ");
         String sql = sb.toString();
         sql = String.format(sql, departmentsStr);
@@ -277,7 +250,7 @@ public class PayRecordSerImpl extends ServiceImpl<PayRecord, PayRecordDTO> imple
     @Override
     public List<String> getDepartments() throws SerException {
         String[] fields = new String[]{"department"};
-        List<PayRecordBO> payRecordBOS = super.findBySql("select distinct department from staffpay_payrecord group by department order by department asc ", PayRecordBO.class, fields);
+        List<PayRecordBO> payRecordBOS = super.findBySql("select distinct department from staffpay_waitpay group by department order by department asc ", PayRecordBO.class, fields);
 
         List<String> departmentsList = payRecordBOS.stream().map(PayRecordBO::getDepartment)
                 .filter(department -> (department != null || !"".equals(department.trim()))).distinct().collect(Collectors.toList());
@@ -302,7 +275,7 @@ public class PayRecordSerImpl extends ServiceImpl<PayRecord, PayRecordDTO> imple
         sb.append(" sum(utilitiesDeduction) AS utilitiesDeduction,sum(deductionTotal) AS deductionTotal, ");
         sb.append(" sum(bonusPenaltyDeduction) AS bonusPenaltyDeduction,sum(incomeTaxDeduction) AS incomeTaxDeduction, ");
         sb.append(" sum(whatSickLeaveDeduction) AS whatSickLeaveDeduction,sum(absenteeismDeduction) AS absenteeismDeduction, ");
-        sb.append(" sum(realWages) AS realWages FROM staffpay_payrecord a ");
+        sb.append(" sum(realWages) AS realWages FROM staffpay_waitpay a ");
         sb.append(" WHERE name IN (%s) GROUP BY months,area,department,jobs,name ORDER BY name ");
         String sql = sb.toString();
         sql = String.format(sql, namesStr);
@@ -317,7 +290,7 @@ public class PayRecordSerImpl extends ServiceImpl<PayRecord, PayRecordDTO> imple
     @Override
     public List<String> getNames() throws SerException {
         String[] fields = new String[]{"name"};
-        List<PayRecordBO> payRecordBOS = super.findBySql("select distinct name from staffpay_payrecord group by name order by name asc ", PayRecordBO.class, fields);
+        List<PayRecordBO> payRecordBOS = super.findBySql("select distinct name from staffpay_waitpay group by name order by name asc ", PayRecordBO.class, fields);
 
         List<String> namesList = payRecordBOS.stream().map(PayRecordBO::getName)
                 .filter(name -> (name != null || !"".equals(name.trim()))).distinct().collect(Collectors.toList());

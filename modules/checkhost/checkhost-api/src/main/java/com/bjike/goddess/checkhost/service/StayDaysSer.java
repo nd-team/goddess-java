@@ -2,6 +2,7 @@ package com.bjike.goddess.checkhost.service;
 
 import com.bjike.goddess.checkhost.bo.CollectNameBO;
 import com.bjike.goddess.checkhost.bo.StayDaysBO;
+import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.to.StayDaysTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -20,6 +21,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface StayDaysSer extends Ser<StayDays, StayDaysDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 员工住宿天数汇总列表总条数
      */

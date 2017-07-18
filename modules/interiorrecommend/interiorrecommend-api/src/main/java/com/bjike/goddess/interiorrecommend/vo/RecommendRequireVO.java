@@ -25,7 +25,7 @@ public class RecommendRequireVO {
     /**
      * 推荐考核内容
      */
-    private List<RecommendAssessDetailVO> detailList = new ArrayList<RecommendAssessDetailVO>();
+    private List<RecommendAssessDetailVO> detailList;
 
     /**
      * 推荐时长
@@ -65,7 +65,7 @@ public class RecommendRequireVO {
     /**
      * 推荐类型
      */
-    private String recommendType;
+    private String recommendTypeName;
 
     public String getId() {
         return id;
@@ -139,11 +139,11 @@ public class RecommendRequireVO {
         this.closeTime = closeTime;
     }
 
-    public String getRecommendType() {
-        return recommendType;
+    public String getRecommendTypeName() {
+        return recommendTypeName;
     }
 
-    public void setRecommendType(String recommendType) {
-        this.recommendType = recommendType;
+    public void setRecommendTypeName(String recommendTypeName) {
+        this.recommendTypeName = recommendTypeName;
     }
 }

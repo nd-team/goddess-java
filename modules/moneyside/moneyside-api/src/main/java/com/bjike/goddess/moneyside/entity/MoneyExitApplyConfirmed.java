@@ -133,7 +133,7 @@ public class MoneyExitApplyConfirmed extends BaseEntity {
     /**
      * 是否通过
      */
-    @Column(columnDefinition = "VARCHAR(255)   COMMENT '是否通过'")
+    @Column(columnDefinition = "TINYINT(2)   COMMENT '是否通过'")
     private PassStatus pass;
 
 

@@ -35,6 +35,10 @@ public class CareerPlanningCustomBO extends BaseBO {
      * 入职时间
      */
     private String entryTime;
+    /**
+     * 可提供的福利待遇
+     */
+    private String availableBenefitPackage;
 
     /**
      * 薪资上升幅度
@@ -116,6 +120,13 @@ public class CareerPlanningCustomBO extends BaseBO {
     private String standard;//此定制项标准
     private String surplusTime;//剩余时间
 
+    public String getAvailableBenefitPackage() {
+        return availableBenefitPackage;
+    }
+
+    public void setAvailableBenefitPackage(String availableBenefitPackage) {
+        this.availableBenefitPackage = availableBenefitPackage;
+    }
 
     public String getName() {
         return name;

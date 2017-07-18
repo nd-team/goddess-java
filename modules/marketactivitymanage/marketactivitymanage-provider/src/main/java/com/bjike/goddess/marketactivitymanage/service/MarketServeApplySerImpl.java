@@ -82,7 +82,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
             flag = true;
         }
         if (!flag) {
-            throw new SerException("您不是商务模块人员,没有该操作权限");
+            throw new SerException("您不是本部门人员,没有该操作权限");
         }
         RpcTransmit.transmitUserToken(userToken);
 
@@ -125,7 +125,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
         String userName = userBO.getUsername();
         //商务模块权限
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("3");
+            flag = cusPermissionSer.arrCusPermission("3");
         } else {
             flag = true;
         }
@@ -180,7 +180,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("3");
+            flag = cusPermissionSer.arrCusPermission("3");
         } else {
             flag = true;
         }
@@ -287,7 +287,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
     @Override
     @Transactional(rollbackFor = SerException.class)
     public MarketServeApplyBO save(MarketServeApplyTO to) throws SerException {
-        checkPermission();
+        checkPermission();//商务模块权限
         MarketServeApply marketServeApply = BeanTransform.copyProperties(to, MarketServeApply.class, true);
         marketServeApply = super.save(marketServeApply);
         MarketServeApplyBO bo = BeanTransform.copyProperties(marketServeApply, MarketServeApplyBO.class);
@@ -412,7 +412,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
 
     @Override
     public MarketServeApplyBO getOne(String id) throws SerException {
-        checkPermission();
+        checkPermission();//商务模块权限
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空哦");
         }

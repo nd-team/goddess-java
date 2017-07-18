@@ -40,6 +40,12 @@ public class IndividualVisionPlanTO extends BaseTO {
      */
     @NotBlank(message = "入职时间不能为空",groups = {ADD.class, EDIT.class})
     private String entryTime;
+    /**
+     * 期望的福利待遇
+     */
+    @NotBlank(message = "期望的福利待遇不能为空",groups = {ADD.class, EDIT.class})
+    private String expectedBenefit;
+
 
     /**
      * 期望薪资上升幅度
@@ -104,7 +110,38 @@ public class IndividualVisionPlanTO extends BaseTO {
      * 期望年收益（元）
      */
     private String expectYearsEarnings;
+    /**
+     * 审核人
+     */
+    private String audit;
+    /**
+     * 审核状态
+     */
+    private String auditStatus;
 
+    public String getAudit() {
+        return audit;
+    }
+
+    public void setAudit(String audit) {
+        this.audit = audit;
+    }
+
+    public String getAuditStatus() {
+        return auditStatus;
+    }
+
+    public void setAuditStatus(String auditStatus) {
+        this.auditStatus = auditStatus;
+    }
+
+    public String getExpectedBenefit() {
+        return expectedBenefit;
+    }
+
+    public void setExpectedBenefit(String expectedBenefit) {
+        this.expectedBenefit = expectedBenefit;
+    }
 
     public String getName() {
         return name;

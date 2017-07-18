@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.materialinstock.bo.StockWarningBO;
 import com.bjike.goddess.materialinstock.dto.StockWarningDTO;
 import com.bjike.goddess.materialinstock.entity.StockWarning;
+import com.bjike.goddess.materialinstock.excel.SonPermissionObject;
+import com.bjike.goddess.materialinstock.to.GuidePermissionTO;
 import com.bjike.goddess.materialinstock.to.StockWarningTO;
 
 import java.util.List;
@@ -20,6 +22,20 @@ import java.util.List;
  */
 public interface StockWarningSer extends Ser<StockWarning, StockWarningDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 分页查询库存预警
      *

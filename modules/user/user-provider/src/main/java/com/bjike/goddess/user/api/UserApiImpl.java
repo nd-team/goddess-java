@@ -128,4 +128,9 @@ public class UserApiImpl implements UserAPI {
     public String maxUserEmpNumber() throws SerException {
         return userSer.maxUserEmpNumber();
     }
+
+    @Override
+    public String findNameById(String id) throws SerException {
+        return userSer.findNameById(id);
+    }
 }

@@ -1,14 +1,11 @@
 package com.bjike.goddess.interiorrecommend.service;
 
-import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
-import com.bjike.goddess.interiorrecommend.bo.RecommendContentBO;
 import com.bjike.goddess.interiorrecommend.bo.RecommendInfoBO;
 import com.bjike.goddess.interiorrecommend.bo.RecommendRequireBO;
-import com.bjike.goddess.interiorrecommend.dto.RecommendContentDTO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendInfoDTO;
 import com.bjike.goddess.interiorrecommend.entity.*;
 import com.bjike.goddess.interiorrecommend.to.RecommendInfoTO;
@@ -18,8 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -44,6 +41,8 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
     private AwardInfoSer awardInfoSer;
     @Autowired
     private RecommendRequireSer recommendRequireSer;
+    @Autowired
+    private RecommendAssessDetailSer recommendAssessDetailSer;
 
 
     @Override
@@ -76,18 +75,23 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
         RecommendRequire recommendRequire = recommendRequireSer.findById(to.getRequireId());
         if (recommendRequire != null) {
             RecommendInfo model = super.findById(to.getId());
-            if (model != null) {
-                BeanTransform.copyProperties(to, model, true);
-                model.setModifyTime(LocalDateTime.now());
-                if (!CollectionUtils.isEmpty(to.getContentList())) {
-                    Set<RecommendContent> contentSet = new HashSet<RecommendContent>();
-                    List<RecommendContent> contentList = BeanTransform.copyProperties(to.getContentList(), RecommendAssessDetail.class);
-                    contentSet.addAll(contentList);
-                    model.setRecommendRequire(recommendRequire);
-                    model.setContentSet(contentSet);
+            //保存推荐考核内容
+            if (!CollectionUtils.isEmpty(to.getContentList())) {
+                Set<RecommendContent> detailSet = new HashSet<RecommendContent>();
+                List<RecommendContent> detailList = BeanTransform.copyProperties(to.getContentList(), RecommendContent.class);
+                detailSet.addAll(detailList);
+                for (RecommendContent detail : detailSet) {
+                    if (!StringUtils.isEmpty(detail.getId())) {
+                        RecommendAssessDetail assessDetail = recommendAssessDetailSer.findById(detail.getId());
+                        detail.setCreateTime(assessDetail.getCreateTime());
+                        detail.setModifyTime(assessDetail.getModifyTime());
+                        detail.setRecommendInfo(model);
+                    }
                 }
+                model.setContentSet(detailSet);
+                model.setRecommendRequire(recommendRequire);
                 super.update(model);
-                return BeanTransform.copyProperties(to, RecommendInfoBO.class);
+                return BeanTransform.copyProperties(to, RecommendRequireBO.class);
             } else {
                 throw new SerException("非法Id,推荐信息对象不能为空");
             }
@@ -153,5 +157,10 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
         } else {
             throw new SerException("非法Id,推荐信息对象不能为空");
         }
+    }
+
+    @Override
+    public List<RecommendInfoBO> awardlist() throws SerException {
+        return null;
     }
 }

@@ -128,7 +128,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("3");
+            flag = cusPermissionSer.arrCusPermission("3");
         } else {
             flag = true;
         }
@@ -158,15 +158,16 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     public List<SonPermissionObject> sonPermission() throws SerException {
         List<SonPermissionObject> list = new ArrayList<>();
         String userToken = RpcTransmit.getUserToken();
-        Boolean flagSummSign = guildPermission();
+        Boolean flagSummSeeSign = guildPermission();
         RpcTransmit.transmitUserToken(userToken);
-
+        Boolean flagSummMISign = guideAuditMIdentity();
+        Boolean flagSummAISign = guideAuditAIdentity();
         SonPermissionObject obj = new SonPermissionObject();
 
         obj = new SonPermissionObject();
         obj.setName("marketservesummary");
         obj.setDescribesion("市场活动招待记录汇总及发送邮件");
-        if (flagSummSign) {
+        if (flagSummSeeSign || flagSummMISign || flagSummAISign) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -1095,52 +1096,52 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
                     - lastTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
             Double temp_sendNum = 0d;
             Boolean flag = false;
-            switch (collectSendUnit) {
+            switch (cycle) {
                 case MINUTE:
                     //毫秒数
                     temp_sendNum = sendNum * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusMinutes( sendNum.longValue() ));
+                        str.setLastTime(lastTime.plusMinutes( sendNum.longValue() ));
                     }
                     break;
-                case HOURS:
+                case HOUR:
                     temp_sendNum = sendNum * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusHours( sendNum.longValue() ));
+                        str.setLastTime(lastTime.plusHours( sendNum.longValue() ));
                     }
                     break;
                 case DAY:
                     temp_sendNum = sendNum * 24 * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusDays( sendNum.longValue() ));
+                        str.setLastTime(lastTime.plusDays( sendNum.longValue() ));
                     }
                     break;
                 case WEEK:
                     temp_sendNum = sendNum * 7 * 24 * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusWeeks( sendNum.longValue() ));
+                        str.setLastTime(lastTime.plusWeeks( sendNum.longValue() ));
                     }
                     break;
                 case MONTH:
                     if (nowTime.minusMonths(sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusMonths( sendNum.longValue() ));
+                        str.setLastTime(lastTime.plusMonths( sendNum.longValue() ));
                     }
                     break;
                 case QUARTER:
                     if (nowTime.minusMonths(3*sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(3*sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusMonths( 3* sendNum.longValue() ));
+                        str.setLastTime(lastTime.plusMonths( 3* sendNum.longValue() ));
                     }
                     break;
                 case YEAR:
                     if (nowTime.minusYears(sendNum.longValue()).isEqual(lastTime) || nowTime.minusYears(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusYears( sendNum.longValue() ));
+                        str.setLastTime(lastTime.plusYears( sendNum.longValue() ));
                     }
                     break;
             }

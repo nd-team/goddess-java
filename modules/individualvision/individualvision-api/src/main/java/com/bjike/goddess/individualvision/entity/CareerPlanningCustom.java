@@ -43,6 +43,11 @@ public class CareerPlanningCustom extends BaseEntity {
      */
     @Column(name = "entryTime", columnDefinition = "DATE   COMMENT '入职时间'")
     private LocalDate entryTime;
+    /**
+     * 可提供的福利待遇
+     */
+    @Column(name = "availableBenefitPackage",  columnDefinition = "VARCHAR(255)   COMMENT '可提供的福利待遇'")
+    private String availableBenefitPackage;
 
     /**
      * 薪资上升幅度
@@ -139,6 +144,14 @@ public class CareerPlanningCustom extends BaseEntity {
     private String completeDegree;//此定制项完成程度
     private String standard;//此定制项标准
     private String surplusTime;//剩余时间
+
+    public String getAvailableBenefitPackage() {
+        return availableBenefitPackage;
+    }
+
+    public void setAvailableBenefitPackage(String availableBenefitPackage) {
+        this.availableBenefitPackage = availableBenefitPackage;
+    }
 
     public String getName() {
         return name;

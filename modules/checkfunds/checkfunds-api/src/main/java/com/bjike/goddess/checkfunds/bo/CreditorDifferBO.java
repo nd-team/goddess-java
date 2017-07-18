@@ -35,6 +35,19 @@ public class CreditorDifferBO extends BaseBO {
      */
     List<Detail> detailList;
 
+    /**
+     * 银行流水贷方
+     */
+    private Double bankExpend;
+
+    public Double getBankExpend() {
+        return bankExpend;
+    }
+
+    public void setBankExpend(Double bankExpend) {
+        this.bankExpend = bankExpend;
+    }
+
     public String getRecordDate() {
         return recordDate;
     }
