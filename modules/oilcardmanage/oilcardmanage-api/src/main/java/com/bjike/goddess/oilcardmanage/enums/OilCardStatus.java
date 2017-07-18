@@ -10,11 +10,11 @@ public enum OilCardStatus {
      */
     IDLE(0),
     /**
-     * 正常适用
+     * 正常使用
      */
     USE(1),
     /**
-     * 冻结适用
+     * 冻结使用
      */
     FREEZE(2);
 

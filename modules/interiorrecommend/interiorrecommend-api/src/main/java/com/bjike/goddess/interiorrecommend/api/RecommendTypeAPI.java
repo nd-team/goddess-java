@@ -48,4 +48,18 @@ public interface RecommendTypeAPI {
      * @return 推荐类型设定结果集
      */
     List<RecommendTypeBO> pageList(RecommendTypeDTO dto) throws SerException;
+
+    /**
+     * 根据Id查询
+     *
+     * @param id
+     */
+    RecommendTypeBO findById(String id) throws SerException;
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     */
+    Long count(RecommendTypeDTO dto) throws SerException;
 }

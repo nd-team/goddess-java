@@ -3,6 +3,11 @@ package com.bjike.goddess.interiorrecommend.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.interiorrecommend.enums.AssessWay;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 /**
  * 推荐要求业务传输对象
  *
@@ -15,19 +20,14 @@ import com.bjike.goddess.interiorrecommend.enums.AssessWay;
 public class RecommendRequireBO extends BaseBO {
 
     /**
-     * 推荐方案id
-     */
-    private String recommendSchemeId;
-
-    /**
      * 推荐时长
      */
     private Integer recommendTime;
 
     /**
-     * 推荐类型id
+     * 推荐考核内容
      */
-    private String recommendTypeId;
+    private List<RecommendAssessDetailBO> detailList = new ArrayList<RecommendAssessDetailBO>();
 
     /**
      * 指标来源
@@ -62,7 +62,7 @@ public class RecommendRequireBO extends BaseBO {
     /**
      * 推荐类型
      */
-    private String recommendType;
+    private String recommendTypeName;
 
     public String getOpenTime() {
         return openTime;
@@ -80,20 +80,12 @@ public class RecommendRequireBO extends BaseBO {
         this.closeTime = closeTime;
     }
 
-    public String getRecommendType() {
-        return recommendType;
+    public String getRecommendTypeName() {
+        return recommendTypeName;
     }
 
-    public void setRecommendType(String recommendType) {
-        this.recommendType = recommendType;
-    }
-
-    public String getRecommendSchemeId() {
-        return recommendSchemeId;
-    }
-
-    public void setRecommendSchemeId(String recommendSchemeId) {
-        this.recommendSchemeId = recommendSchemeId;
+    public void setRecommendTypeName(String recommendTypeName) {
+        this.recommendTypeName = recommendTypeName;
     }
 
     public Integer getRecommendTime() {
@@ -104,12 +96,12 @@ public class RecommendRequireBO extends BaseBO {
         this.recommendTime = recommendTime;
     }
 
-    public String getRecommendTypeId() {
-        return recommendTypeId;
+    public List<RecommendAssessDetailBO> getDetailList() {
+        return detailList;
     }
 
-    public void setRecommendTypeId(String recommendTypeId) {
-        this.recommendTypeId = recommendTypeId;
+    public void setDetailList(List<RecommendAssessDetailBO> detailList) {
+        this.detailList = detailList;
     }
 
     public String getIndicatorResource() {

@@ -191,4 +191,6 @@ public interface DispatchCarInfoSer extends Ser<DispatchCarInfo, DispatchCarInfo
     List<DriverDispatchFeeBO> findDispatchFree(Integer month) throws SerException;
 
     List<DriverDispatchsBO> findDispatchs(Integer month) throws SerException;
+
+    Double findOilAmount(String oilCardCode, Integer year, Integer month) throws SerException;
 }

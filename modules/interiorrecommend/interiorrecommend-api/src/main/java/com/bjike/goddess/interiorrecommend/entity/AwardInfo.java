@@ -2,9 +2,7 @@ package com.bjike.goddess.interiorrecommend.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 
@@ -22,10 +20,11 @@ import java.time.LocalDateTime;
 public class AwardInfo extends BaseEntity {
 
     /**
-     * 推荐信息id
+     * 推荐信息
      */
-    @Column(name = "infoId", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '推荐信息id'")
-    private String infoId;
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
+    @JoinColumn(name = "recommendInfo_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '推荐信息'")
+    private RecommendInfo recommendInfo;
 
     /**
      * 奖励时间
@@ -40,12 +39,12 @@ public class AwardInfo extends BaseEntity {
     private Boolean getAward;
 
 
-    public String getInfoId() {
-        return infoId;
+    public RecommendInfo getRecommendInfo() {
+        return recommendInfo;
     }
 
-    public void setInfoId(String infoId) {
-        this.infoId = infoId;
+    public void setRecommendInfo(RecommendInfo recommendInfo) {
+        this.recommendInfo = recommendInfo;
     }
 
     public LocalDateTime getAwardTime() {

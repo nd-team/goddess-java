@@ -36,16 +36,6 @@ public class LeaseCarCostTO extends BaseTO {
     @NotNull(message = "租车费不能为空", groups = {ADD.class, EDIT.class})
     private Double cost;
 
-    /**
-     * 创建人
-     */
-    private String createUser;
-
-    /**
-     * 修改人
-     */
-    private String updateUser;
-
 
     public String getArea() {
         return area;
@@ -71,19 +61,4 @@ public class LeaseCarCostTO extends BaseTO {
         this.cost = cost;
     }
 
-    public String getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(String createUser) {
-        this.createUser = createUser;
-    }
-
-    public String getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser;
-    }
 }

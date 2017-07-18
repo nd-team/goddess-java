@@ -23,56 +23,13 @@ include ':modules:storage:storage-api'
 include ':modules:storage:storage-consumer'
 include ':modules:storage:storage-provider'
 
+//#quartz 任务调度模块-liguiqin
+include ':modules:quartz:quartz-api'
+include ':modules:quartz:quartz-consumer'
+include ':modules:quartz:quartz-provider'
 
-
-//#organize 组织结构模块-liguiqin
-include ':modules:organize:organize-api'
-include ':modules:organize:organize-consumer'
-include ':modules:organize:organize-provider'
-
-//#materialinstock 物资入库-sunfengtao
-include ':modules:materialinstock:materialinstock-api'
-include ':modules:materialinstock:materialinstock-consumer'
-include ':modules:materialinstock:materialinstock-provider'
-//#organize 项目测算模块-sunfengtao
-//include ':modules:projectmeasure:projectmeasure-api'
-//include ':modules:projectmeasure:projectmeasure-consumer'
-//include ':modules:projectmeasure:projectmeasure-provider'
-
-//#marketactivitymanage 市场活动管理-sunfengtao
-include ':modules:marketactivitymanage:marketactivitymanage-api'
-include ':modules:marketactivitymanage:marketactivitymanage-consumer'
-include ':modules:marketactivitymanage:marketactivitymanage-provider'
-
-//#lendreimbursement 借款报销管理-tanghaixiang
-//include ':modules:lendreimbursement:lendreimbursement-api'
-//include ':modules:lendreimbursement:lendreimbursement-consumer'
-//include ':modules:lendreimbursement:lendreimbursement-provider'
-
-//#financeinit 账户凭证-tanghaixiang
-//include ':modules:financeinit:financeinit-api'
-//include ':modules:financeinit:financeinit-consumer'
-//include ':modules:financeinit:financeinit-provider'
-
-//#businessproject 商务合同-sunfengtao
-//include ':modules:businessproject:businessproject-api'
-//include ':modules:businessproject:businessproject-consumer'
-//include ':modules:businessproject:businessproject-provider'
-
-//#contractquotemanager 合同单价-yewenbo
-//include ':modules:contractquotemanager:contractquotemanager-api'
-//include ':modules:contractquotemanager:contractquotemanager-consumer'
-//include ':modules:contractquotemanager:contractquotemanager-provider'
-
-//#socialfee 社会缴费-tanghaixiang
-//include ':modules:socialfee:socialfee-api'
-//include ':modules:socialfee:socialfee-consumer'
-//include ':modules:socialfee:socialfee-provider'
-
-//#voucher 记账凭证-tanghaixiang
-//include ':modules:voucher:voucher-api'
-//include ':modules:voucher:voucher-consumer'
-//include ':modules:voucher:voucher-provider'
-
-
+//#quartz 组装模块-liguiqin
+include ':modules:assemble:assemble-api'
+include ':modules:assemble:assemble-consumer'
+include ':modules:assemble:assemble-provider'
 

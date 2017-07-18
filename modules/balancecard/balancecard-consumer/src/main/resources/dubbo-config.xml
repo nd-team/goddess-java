@@ -20,6 +20,7 @@
 	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
 	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
 	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
 
 	<dubbo:reference  validation="true" id="departMonIndexSetApiImpl" interface="com.bjike.goddess.balancecard.api.DepartMonIndexSetAPI" />
 	<dubbo:reference  validation="true" id="departYearIndexSetApiImpl" interface="com.bjike.goddess.balancecard.api.DepartYearIndexSetAPI" />

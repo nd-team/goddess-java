@@ -197,6 +197,7 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
     public MoneyReadyBO save(MoneyReadyTO to) throws SerException {
         checkAddIdentity();
         MoneyReady m = BeanTransform.copyProperties(to, MoneyReady.class, true);
+        m.setReserve(m.getTotalReserve() * m.getProrate());
         super.save(m);
         return BeanTransform.copyProperties(m, MoneyReadyBO.class);
     }
@@ -211,6 +212,7 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
         }
         LocalDateTime a = moneyReady.getCreateTime();
         moneyReady = BeanTransform.copyProperties(to, MoneyReady.class, true);
+        moneyReady.setReserve(moneyReady.getTotalReserve() * moneyReady.getProrate());
         moneyReady.setCreateTime(a);
         moneyReady.setModifyTime(LocalDateTime.now());
         super.update(moneyReady);

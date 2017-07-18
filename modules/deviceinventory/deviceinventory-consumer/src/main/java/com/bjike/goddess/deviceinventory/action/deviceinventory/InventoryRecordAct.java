@@ -157,7 +157,7 @@ public class InventoryRecordAct extends BaseFileAction {
      * @throws ActException
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @GetMapping("v1/export/{startTime}/{endTime}")
     public Result export(@PathVariable String startTime, @PathVariable String endTime, HttpServletResponse response) throws ActException {
         try {

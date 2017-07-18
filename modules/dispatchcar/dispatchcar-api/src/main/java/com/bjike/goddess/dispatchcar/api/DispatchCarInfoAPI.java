@@ -238,4 +238,6 @@ public interface DispatchCarInfoAPI {
      * @return
      */
     List<DriverDispatchsBO> findDispatchs(Integer month) throws SerException;
+
+    Double findOilAmount(String oilCardCode, Integer year, Integer month) throws SerException;
 }

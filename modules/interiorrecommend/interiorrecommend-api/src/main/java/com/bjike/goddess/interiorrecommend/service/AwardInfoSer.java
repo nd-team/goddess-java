@@ -3,9 +3,12 @@ package com.bjike.goddess.interiorrecommend.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.interiorrecommend.bo.AwardInfoBO;
+import com.bjike.goddess.interiorrecommend.bo.AwardStandardBO;
 import com.bjike.goddess.interiorrecommend.dto.AwardInfoDTO;
 import com.bjike.goddess.interiorrecommend.entity.AwardInfo;
 import com.bjike.goddess.interiorrecommend.to.AwardInfoTO;
+
+import java.util.List;
 
 /**
  * 推荐奖励信息业务接口
@@ -25,4 +28,12 @@ public interface AwardInfoSer extends Ser<AwardInfo, AwardInfoDTO> {
      * @return 奖励信息
      */
     AwardInfoBO updateModel(AwardInfoTO to) throws SerException;
+
+    /**
+     * 分页查询
+     * @param dto 分页条件
+     */
+    List<AwardInfoBO> pageList(AwardInfoDTO dto) throws SerException;
+
+
 }

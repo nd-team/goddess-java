@@ -557,7 +557,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
             throw new SerException("该对象不存在");
         }
         LocalDateTime a = entity.getCreateTime();
-        entity = BeanTransform.copyProperties(to, Asset.class, true);
+        entity = BeanTransform.copyProperties(to, Profit.class, true);
         entity.setCreateTime(a);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);

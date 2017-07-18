@@ -1,6 +1,7 @@
 package com.bjike.goddess.staffpay.vo;
 
 import com.bjike.goddess.staffpay.enums.ConfirmStatus;
+import com.bjike.goddess.staffpay.enums.FindType;
 
 /**
  * 等待付款表现层对象
@@ -186,7 +187,18 @@ public class WaitPayVO {
      * 第二次付款时间
      */
     private String secondPayTime;
+    /**
+     * 数据状态
+     */
+    private FindType findType;
 
+    public FindType getFindType() {
+        return findType;
+    }
+
+    public void setFindType(FindType findType) {
+        this.findType = findType;
+    }
 
     public String getId() {
         return id;

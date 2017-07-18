@@ -215,9 +215,17 @@ public interface UserSer extends Ser<User, UserDTO> {
      * @return UserBO
      * @throws SerException
      */
-    default String maxUserEmpNumber( ) throws SerException {
+    default String maxUserEmpNumber() throws SerException {
         return null;
     }
 
-
+    /**
+     * chenjunhao
+     * 通过用户id查找用户名
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    String findNameById(String id) throws SerException;
 }

@@ -301,6 +301,65 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         return flag;
     }
 
+
+    /**
+     * 判断是否可以查看列表的所有数据
+     *
+     * @param reimburseRecordDTO
+     * @return
+     * @throws SerException
+     */
+    private ReimburseRecordDTO addCondition(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean listpermission = cusPermissionSer.getCusPermission("reim-ListAll");
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userAPI.currentUser().getUsername();
+        if (!listpermission && !"admin".equals(userName.toLowerCase())) {
+            //没有查看所有数据的权限，则只能查看自己的数据
+            if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
+                reimburseRecordDTO.getConditions().add(Restrict.eq("reimer", reimburseRecordDTO.getReimer()));
+            } else {
+                reimburseRecordDTO.getConditions().add(Restrict.eq("reimer", userName));
+            }
+            if (StringUtils.isNotBlank(reimburseRecordDTO.getCharger())) {
+                reimburseRecordDTO.getConditions().add(Restrict.eq("charger", reimburseRecordDTO.getCharger()));
+            } else {
+                reimburseRecordDTO.getConditions().add(Restrict.or("charger", userName));
+            }
+            reimburseRecordDTO.getConditions().add(Restrict.or("filler", userName));
+            RpcTransmit.transmitUserToken(userToken);
+        } else {
+            if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
+                reimburseRecordDTO.getConditions().add(Restrict.eq("reimer", reimburseRecordDTO.getReimer()));
+            }
+            if (StringUtils.isNotBlank(reimburseRecordDTO.getCharger())) {
+                reimburseRecordDTO.getConditions().add(Restrict.eq("charger", reimburseRecordDTO.getCharger()));
+            }
+        }
+        return reimburseRecordDTO;
+    }
+
+    /**
+     * 报销特殊岗位对申请报销的编辑、删除权限
+     *
+     * @param userToken
+     * @param userBO
+     * @param reimburseRecord
+     * @throws SerException
+     */
+    private void checkAddAndEditPermission(String idFlag, String userToken, UserBO userBO, ReimburseRecord reimburseRecord) throws SerException {
+        Boolean listpermission = cusPermissionSer.getCusPermission(idFlag);
+        if (!listpermission && !"admin".equals(userBO.getUsername().toLowerCase())) {
+            //没有特殊权限的话,就只能自己或填单人修改自己的
+            if (!userBO.getUsername().equals(reimburseRecord.getReimer()) && !userBO.getUsername().equals(reimburseRecord.getFiller())) {
+                throw new SerException("您没有权限");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+
     @Override
     public ReimburseRecordBO getOneById(String id) throws SerException {
         if (StringUtils.isBlank(id)) {
@@ -328,19 +387,18 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             reimburseRecordDTO.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getEndTime()));
         }
 
+        reimburseRecordDTO = addCondition(reimburseRecordDTO);
+
         Long count = super.count(reimburseRecordDTO);
         return count;
     }
 
     @Override
     public List<ReimburseRecordBO> listReimburseRecord(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
-        checkPermission();
+
         reimburseRecordDTO.getSorts().add("createTime=desc");
         reimburseRecordDTO.getConditions().add(Restrict.eq("payCondition", "否"));
 
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
-            reimburseRecordDTO.getConditions().add(Restrict.eq("reimer", reimburseRecordDTO.getReimer()));
-        }
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
             reimburseRecordDTO.getConditions().add(Restrict.eq("reimNumber", reimburseRecordDTO.getReimNumber()));
         }
@@ -351,6 +409,8 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             reimburseRecordDTO.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getEndTime()));
         }
 
+        reimburseRecordDTO = addCondition(reimburseRecordDTO);
+
         List<ReimburseRecord> list = super.findByCis(reimburseRecordDTO, true);
         List<ReimburseRecordBO> recordBOList = BeanTransform.copyProperties(list, ReimburseRecordBO.class);
         return recordBOList;
@@ -360,7 +420,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ReimburseRecordBO addReimburseRecord(ReimburseRecordTO reimburseRecordTO) throws SerException {
-        checkPermission();
+
         if (StringUtils.isBlank(reimburseRecordTO.getReimer())) {
             throw new SerException("报销人不能为空");
         }
@@ -371,7 +431,6 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         applyLendDTO.getConditions().add(Restrict.eq("lender", reimer));
         applyLendDTO.getConditions().add(Restrict.lt("lendDate", todayDate.minusDays(15)));
         applyLendDTO.getConditions().add(Restrict.eq("lendMoney", 0d));
-        applyLendDTO.getConditions().add(Restrict.eq("reimMoney", 0d));
         List<ApplyLend> applyLendList = applyLendSer.findByCis(applyLendDTO);
         if (applyLendList != null && applyLendList.size() > 0) {
             throw new SerException("报销人有超过15天的借款未还，请先还款，再来报销");
@@ -426,11 +485,15 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ReimburseRecordBO editReimburseRecord(ReimburseRecordTO reimburseRecordTO) throws SerException {
-        checkPermission();
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         if (StringUtils.isBlank(reimburseRecordTO.getReimer())) {
             throw new SerException("报销人不能为空");
         }
         ReimburseRecord temp = super.findById(reimburseRecordTO.getId());
+        checkAddAndEditPermission("reimApply-EditAndDelete", userToken, userBO, temp);
+
         //修改报销记录
         addRecordLog(reimburseRecordTO, temp);
 
@@ -529,10 +592,16 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteReimburseRecord(String id) throws SerException {
-        checkPermission();
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+
+        ReimburseRecord temp = super.findById(id);
+        checkAddAndEditPermission("reimApply-EditAndDelete", userToken, userBO, temp);
+
 
         //删除报销级路日志
         ReimburseRecordLogDTO rrLogDTO = new ReimburseRecordLogDTO();
@@ -561,9 +630,6 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         //ReimStatus.CHARGECONGEL
         reimburseRecordDTO.getConditions().add(Restrict.or("reimStatus", 6));
 
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
-            reimburseRecordDTO.getConditions().add(Restrict.eq("reimer", reimburseRecordDTO.getReimer()));
-        }
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
             reimburseRecordDTO.getConditions().add(Restrict.eq("reimNumber", reimburseRecordDTO.getReimNumber()));
         }
@@ -574,6 +640,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             reimburseRecordDTO.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getEndTime()));
         }
 
+        reimburseRecordDTO = addCondition(reimburseRecordDTO);
 
         Long count = super.count(reimburseRecordDTO);
         return count;
@@ -581,14 +648,10 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
     @Override
     public List<ReimburseRecordBO> listErrorRecord(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
-        checkPermission();
         reimburseRecordDTO.getConditions().add(Restrict.eq("chargerAuditStatus", "不通过"));
         //ReimStatus.CHARGECONGEL
         reimburseRecordDTO.getConditions().add(Restrict.or("reimStatus", 6));
 
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
-            reimburseRecordDTO.getConditions().add(Restrict.eq("reimer", reimburseRecordDTO.getReimer()));
-        }
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
             reimburseRecordDTO.getConditions().add(Restrict.eq("reimNumber", reimburseRecordDTO.getReimNumber()));
         }
@@ -598,6 +661,8 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime())) {
             reimburseRecordDTO.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getEndTime()));
         }
+
+        reimburseRecordDTO = addCondition(reimburseRecordDTO);
 
         List<ReimburseRecord> list = super.findByCis(reimburseRecordDTO, true);
         List<ReimburseRecordBO> boList = BeanTransform.copyProperties(list, ReimburseRecordBO.class);
@@ -607,14 +672,21 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ReimburseRecordBO editErrorRecord(ReimburseRecordTO reimburseRecordTO) throws SerException {
-        checkPermission();
+
         if (StringUtils.isBlank(reimburseRecordTO.getId())) {
             throw new SerException("id不能为空");
         }
         if (StringUtils.isBlank(reimburseRecordTO.getReimer())) {
             throw new SerException("报销人不能为空");
         }
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+
         ReimburseRecord temp = super.findById(reimburseRecordTO.getId());
+        checkAddAndEditPermission("reimApplyError-Edit", userToken, userBO, temp);
+
+
         //修改报销记录
         addRecordLog(reimburseRecordTO, temp);
 
@@ -645,14 +717,12 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
     @Override
     public Long countAuditRecord(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
-        checkPermission();
+
         reimburseRecordDTO.getConditions().add(Restrict.isNull("chargerAuditStatus"));
 //        reimburseRecordDTO.getConditions().add(Restrict.or("chargerAuditStatus", null));
         reimburseRecordDTO.getConditions().add(Restrict.in("reimStatus", new Integer[]{5, 0}));
 
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
-            reimburseRecordDTO.getConditions().add(Restrict.eq("reimer", reimburseRecordDTO.getReimer()));
-        }
+
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
             reimburseRecordDTO.getConditions().add(Restrict.eq("reimNumber", reimburseRecordDTO.getReimNumber()));
         }
@@ -663,6 +733,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             reimburseRecordDTO.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getStartTime()));
         }
 
+        reimburseRecordDTO = addCondition(reimburseRecordDTO);
 
         Long count = super.count(reimburseRecordDTO);
         return count;
@@ -672,12 +743,9 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     public List<ReimburseRecordBO> listAuditRecord(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
 //        reimburseRecordDTO.getConditions().add(Restrict.isNull("chargerAuditStatus"));
 //        reimburseRecordDTO.getConditions().add(Restrict.or("chargerAuditStatus", null));
-        checkPermission();
+
         reimburseRecordDTO.getConditions().add(Restrict.in("reimStatus", new Integer[]{5, 0}));
 
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
-            reimburseRecordDTO.getConditions().add(Restrict.eq("reimer", reimburseRecordDTO.getReimer()));
-        }
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
             reimburseRecordDTO.getConditions().add(Restrict.eq("reimNumber", reimburseRecordDTO.getReimNumber()));
         }
@@ -688,6 +756,8 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             reimburseRecordDTO.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getEndTime()));
         }
 
+        reimburseRecordDTO = addCondition(reimburseRecordDTO);
+
         List<ReimburseRecord> list = super.findByCis(reimburseRecordDTO, true);
         List<ReimburseRecordBO> boList = BeanTransform.copyProperties(list, ReimburseRecordBO.class);
         return boList;
@@ -697,29 +767,38 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ReimburseRecordBO auditRecord(ReimburseRecordTO reimburseRecordTO) throws SerException {
-        checkPermission();
+        String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         UserDetailBO udetailBO = userDetailAPI.findByUserId(userBO.getId());
+        RpcTransmit.transmitUserToken(userToken);
         PositionBO positionBO = null;
         if (udetailBO != null) {
             positionBO = positionAPI.findById(udetailBO.getPositionId());
+            RpcTransmit.transmitUserToken(userToken);
         }
 
         if (StringUtils.isBlank(reimburseRecordTO.getId())) {
             throw new SerException("id不能为空");
         }
+        ReimburseRecord temp = super.findById(reimburseRecordTO.getId());
+        if (!userName.equals(temp.getCharger())) {
+            throw new SerException("您不是负责人，不能审核");
+        }
+
         if (StringUtils.isBlank(reimburseRecordTO.getChargerAuditStatus()) &&
                 StringUtils.isBlank(reimburseRecordTO.getTicketCondition())) {
             throw new SerException("负责人审核是否通过、是否有发票不能为空");
         }
+
         if (!"通过".equals(reimburseRecordTO.getChargerAuditStatus()) && !"不通过".equals(reimburseRecordTO.getChargerAuditStatus())) {
             throw new SerException("请标准填写负责人审核是否通过(通过/不通过)");
         }
         if (!"是".equals(reimburseRecordTO.getTicketCondition()) && !"否".equals(reimburseRecordTO.getTicketCondition())) {
             throw new SerException("请标准填写是否有发票");
         }
-        ReimburseRecord temp = super.findById(reimburseRecordTO.getId());
+
         temp.setChargerAuditStatus(reimburseRecordTO.getChargerAuditStatus());
         temp.setChargerAuditTime(LocalDate.now());
         temp.setTicketCondition(reimburseRecordTO.getTicketCondition());
@@ -752,25 +831,34 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ReimburseRecordBO congelAuditRecord(ReimburseRecordTO reimburseRecordTO) throws SerException {
-        checkPermission();
+        String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         UserDetailBO udetailBO = userDetailAPI.findByUserId(userBO.getId());
+        RpcTransmit.transmitUserToken(userToken);
         PositionBO positionBO = null;
         if (udetailBO != null) {
             positionBO = positionAPI.findById(udetailBO.getPositionId());
+            RpcTransmit.transmitUserToken(userToken);
         }
 
         if (StringUtils.isBlank(reimburseRecordTO.getId())) {
             throw new SerException("id不能为空");
         }
+        ReimburseRecord temp = super.findById(reimburseRecordTO.getId());
+        if (!userName.equals(temp.getCharger())) {
+            throw new SerException("您不是负责人，不能确认冻结");
+        }
+
+
         if (StringUtils.isBlank(reimburseRecordTO.getSureCongel())) {
             throw new SerException("是否确认冻结不能为空");
         }
         if (!"是".equals(reimburseRecordTO.getSureCongel()) && !"否".equals(reimburseRecordTO.getSureCongel())) {
             throw new SerException("是否确认冻结只能填写是或否");
         }
-        ReimburseRecord temp = super.findById(reimburseRecordTO.getId());
+
         if ("是".equals(reimburseRecordTO.getSureCongel())) {
             temp.setChargerAuditStatus("不通过");
             temp.setChargerAuditTime(LocalDate.now());
@@ -815,25 +903,53 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 //        reimIds.stream().forEach(str -> {
 //            sb.append("'" + str + "',");
 //        });
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+
+        //查询分析人员表
+        ReimburseAnalisisorDTO reimAnalisisDTO = new ReimburseAnalisisorDTO();
+        reimAnalisisDTO.getConditions().add(Restrict.eq("empNum", userBO.getEmployeeNumber()));
+        List<ReimburseAnalisisor> analisisorList = reimburseAnalisisorSer.findByCis(reimAnalisisDTO);
+        if (analisisorList == null || analisisorList.size() <= 0) {
+            return 0L;
+        }
+        //查询审核分析表,如果已分析了的，就不会有
+//        ReimburseAuditLogDTO reimburseAuditLogDTO = new ReimburseAuditLogDTO();
+//        reimburseAuditLogDTO.getConditions().add(Restrict.eq("reimrecordId" , ))
+//        List<ReimburseAuditLog> auditLogList = reimburseAuditLogSer.findByCis( reimburseAuditLogDTO );
+
+        String[] fields = new String[]{"count"};
+        StringBuffer sql = new StringBuffer("");
+        sql.append("SELECT count(*) as count ")
+                .append("FROM lendreimbursement_reimburserecord record  ")
+                .append("  JOIN lendreimbursement_reimburseauditlog aulog ON ansor.id = aulog.reimrecordId  ")
+                .append("  where aulog.empNum <> '" + userBO.getEmployeeNumber() + "' and record.reimStatus = 1 and record.ticketCondition = '是'  ");
+
+
         ReimburseRecordDTO dto = reimburseRecordDTO;
-//        dto.getConditions().add(Restrict.in("id", StringUtils.substringBeforeLast(sb.toString(), ",")));
-        dto.getConditions().add(Restrict.eq("reimStatus", 1));
-        dto.getConditions().add(Restrict.eq("ticketCondition", "是"));
-        dto.getSorts().add("createTime=desc");
+//        dto.getConditions().add(Restrict.eq("reimStatus", 1));
+//        dto.getConditions().add(Restrict.eq("ticketCondition", "是"));
+//        dto.getSorts().add("createTime=desc");
 
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
-            dto.getConditions().add(Restrict.eq("reimer", reimburseRecordDTO.getReimer()));
-        }
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
-            dto.getConditions().add(Restrict.eq("reimNumber", reimburseRecordDTO.getReimNumber()));
+            sql.append(" and record.reimNumber = '" + reimburseRecordDTO.getReimNumber() + "' ");
         }
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())) {
-            dto.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getStartTime()));
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime()) && StringUtils.isBlank(reimburseRecordDTO.getEndTime())) {
+            sql.append(" and record.occureDate = '" + reimburseRecordDTO.getStartTime() + "' ");
         }
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime())) {
-            dto.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getEndTime()));
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()) && StringUtils.isBlank(reimburseRecordDTO.getStartTime())) {
+            sql.append("  and record.occureDate = '" + reimburseRecordDTO.getEndTime() + "' ");
+        }
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()) && StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())) {
+            sql.append(" and record.occureDate BETWEEN '" + reimburseRecordDTO.getStartTime() + "' AND '" + reimburseRecordDTO.getEndTime() + "' ");
+        }
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
+            sql.append(" and  record.reimer = '" + reimburseRecordDTO.getReimer() + "' ");
         }
 
+//        dto = addCondition( dto );
 
         Long count = super.count(dto);
         return count;
@@ -848,18 +964,23 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         dto.getConditions().add(Restrict.eq("ticketCondition", "是"));
         dto.getSorts().add("createTime=desc");
 
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
-            dto.getConditions().add(Restrict.eq("reimer", reimburseRecordDTO.getReimer()));
-        }
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
             dto.getConditions().add(Restrict.eq("reimNumber", reimburseRecordDTO.getReimNumber()));
         }
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())) {
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime()) && StringUtils.isBlank(reimburseRecordDTO.getEndTime())) {
             dto.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getStartTime()));
         }
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime())) {
-            dto.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getStartTime()));
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()) && StringUtils.isBlank(reimburseRecordDTO.getStartTime())) {
+            dto.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getEndTime()));
         }
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()) && StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())) {
+            dto.getConditions().add(Restrict.between("occureDate", new String[]{reimburseRecordDTO.getStartTime(), reimburseRecordDTO.getEndTime()}));
+        }
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
+            reimburseRecordDTO.getConditions().add(Restrict.eq("reimer", reimburseRecordDTO.getReimer()));
+        }
+
+        dto = addCondition(dto);
 
         List<ReimburseRecord> recordBOList = super.findByCis(dto, true);
         List<ReimburseRecordBO> recordBOList1 = BeanTransform.copyProperties(recordBOList, ReimburseRecordBO.class);
@@ -965,9 +1086,6 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         dto.getConditions().add(Restrict.in("reimStatus", new Integer[]{3, 4}));
         dto.getSorts().add("modifyTime=desc");
 
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
-            dto.getConditions().add(Restrict.eq("reimer", reimburseRecordDTO.getReimer()));
-        }
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
             dto.getConditions().add(Restrict.eq("reimNumber", reimburseRecordDTO.getReimNumber()));
         }
@@ -978,13 +1096,14 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             dto.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getStartTime()));
         }
 
+        dto = addCondition(dto);
+
         Long count = super.count(dto);
         return count;
     }
 
     @Override
     public List<ReimburseRecordBO> listHasAnalisys(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
-        checkPermission();
         ReimburseRecordDTO dto = reimburseRecordDTO;
         dto.getConditions().add(Restrict.in("reimStatus", new Integer[]{3, 4}));
         dto.getSorts().add("modifyTime=desc");
@@ -1002,6 +1121,8 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             dto.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getEndTime()));
         }
 
+        dto = addCondition(dto);
+
         List<ReimburseRecord> recordBOList = super.findByCis(dto, true);
         List<ReimburseRecordBO> recordBOList1 = BeanTransform.copyProperties(recordBOList, ReimburseRecordBO.class);
         return recordBOList1;
@@ -1013,6 +1134,9 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         reimburseRecordDTO.getConditions().add(Restrict.in("reimStatus", new Integer[]{1, 3, 4}));
         reimburseRecordDTO.getConditions().add(Restrict.eq("ticketCondition", "是"));
         reimburseRecordDTO.getConditions().equals(Restrict.eq("receiveTicketCheck", "否"));
+
+        reimburseRecordDTO = addCondition(reimburseRecordDTO);
+
         Long count = super.count(reimburseRecordDTO);
         return count;
     }
@@ -1024,6 +1148,9 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         reimburseRecordDTO.getConditions().add(Restrict.in("reimStatus", new Integer[]{1, 3, 4}));
         reimburseRecordDTO.getConditions().add(Restrict.eq("ticketCondition", "是"));
         reimburseRecordDTO.getConditions().equals(Restrict.eq("receiveTicketCheck", "否"));
+
+        reimburseRecordDTO = addCondition(reimburseRecordDTO);
+
         List<ReimburseRecord> list = super.findByCis(reimburseRecordDTO, true);
         List<ReimburseRecordBO> boList = BeanTransform.copyProperties(list, ReimburseRecordBO.class);
         return boList;
@@ -1077,6 +1204,9 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             dto.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getEndTime()));
         }
 
+
+        dto = addCondition(dto);
+
         Long count = super.count(dto);
         return count;
 
@@ -1084,7 +1214,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
     @Override
     public List<ReimburseRecordBO> listWaitPay(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
-        checkPermission();
+
         ReimburseRecordDTO dto = reimburseRecordDTO;
         dto.getConditions().add(Restrict.ne("payCondition", "是"));
         dto.getConditions().add(Restrict.eq("receiveTicketCheck", "是"));
@@ -1103,6 +1233,8 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime())) {
             dto.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getEndTime()));
         }
+
+        dto = addCondition(dto);
 
         List<ReimburseRecord> recordList = super.findByCis(dto, true);
         return BeanTransform.copyProperties(recordList, ReimburseRecordBO.class);
@@ -1157,9 +1289,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         ReimburseRecordDTO dto = reimburseRecordDTO;
         dto.getConditions().add(Restrict.eq("payCondition", "是"));
 
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
-            dto.getConditions().add(Restrict.eq("reimer", reimburseRecordDTO.getReimer()));
-        }
+
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
             dto.getConditions().add(Restrict.eq("reimNumber", reimburseRecordDTO.getReimNumber()));
         }
@@ -1170,13 +1300,15 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             dto.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getEndTime()));
         }
 
+        dto = addCondition(dto);
+
         Long count = super.count(dto);
         return count;
     }
 
     @Override
     public List<ReimburseRecordBO> listHasPay(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
-        checkPermission();
+
         ReimburseRecordDTO dto = reimburseRecordDTO;
         dto.getConditions().add(Restrict.eq("payCondition", "是"));
 
@@ -1193,6 +1325,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             dto.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getEndTime()));
         }
 
+        dto = addCondition(dto);
 
         List<ReimburseRecord> recordList = super.findByCis(dto, true);
         List<ReimburseRecordBO> boList = BeanTransform.copyProperties(recordList, ReimburseRecordBO.class);
@@ -1201,7 +1334,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
     @Override
     public List<AccountVoucherBO> listAccountVoucherByRecord(String id) throws SerException {
-        checkPermission();
+
         if (StringUtils.isBlank(id)) {
             throw new SerException("生成记账凭证失败，id不能为空");
         }
@@ -1256,7 +1389,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     //汇总已付款记录
     @Override
     public List<CollectDataBO> collectLender(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
-        checkPermission();
+
         if ((StringUtils.isBlank(reimburseRecordDTO.getStartTime()) && StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()))) {
             throw new SerException("两个时间必须同时选");
         }
@@ -1314,7 +1447,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
     @Override
     public List<CollectDataBO> collectArea(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
-        checkPermission();
+
         if ((StringUtils.isBlank(reimburseRecordDTO.getStartTime()) && StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()))) {
             throw new SerException("两个时间必须同时选");
         }
@@ -1372,7 +1505,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
     @Override
     public List<CollectDataBO> collectFirstSubject(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
-        checkPermission();
+
         if ((StringUtils.isBlank(reimburseRecordDTO.getStartTime()) && StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()))) {
             throw new SerException("两个时间必须同时选");
         }
@@ -1430,7 +1563,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
     @Override
     public List<CollectDataBO> collectProjectName(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
-        checkPermission();
+
         if ((StringUtils.isBlank(reimburseRecordDTO.getStartTime()) && StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()))) {
             throw new SerException("两个时间必须同时选");
         }
@@ -1621,7 +1754,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         LocalDate[] occureDate = new LocalDate[]{start, end};
 
 //        if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime()) || StringUtils.isNotBlank(reimburseRecordDTO.getEndTime())) {
-            reimburseRecordDTO.getConditions().add(Restrict.between("occureDate", occureDate));
+        reimburseRecordDTO.getConditions().add(Restrict.between("occureDate", occureDate));
 //        }
         reimburseRecordDTO.getConditions().add(Restrict.ne("payCondition", "是"));
         reimburseRecordDTO.getConditions().add(Restrict.eq("receiveTicketCheck", "是"));

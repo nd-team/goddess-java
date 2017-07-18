@@ -42,7 +42,7 @@ public class StaffBirthdaySchemeAct {
      */
     @GetMapping("v1/findAreas")
     public Result findAreas() {
-        // TODO: 17-4-7 查询所有地区
+        // TODO: 17-4-7 查询所有地区,可以于组织结构查询地区列表
         return ActResult.initialize("success!");
     }
 
@@ -50,10 +50,12 @@ public class StaffBirthdaySchemeAct {
      * 查询所有部门
      *
      * @version v1
+     * @return class
      */
     @GetMapping("v1/findDepartments")
     public Result findDepartments() {
-        // TODO: 17-4-7 查询所有部门
+        // TODO: 17-4-7 查询所有部门，可以于组织结构查询部门列表 DepartmentDetailAPI -> findAllOpinion
+
         return ActResult.initialize("success!");
     }
 
@@ -109,6 +111,7 @@ public class StaffBirthdaySchemeAct {
      *
      * @param to 员工生日福利方案
      * @version v1
+     * @return class StaffBirthdaySchemeVO
      */
     @PostMapping("v1/edit")
     public Result edit(StaffBirthdaySchemeTO to, BindingResult bindingResult) throws ActException {
@@ -130,7 +133,7 @@ public class StaffBirthdaySchemeAct {
     public Result pass(@PathVariable String id) throws ActException {
         try {
             staffBirthdaySchemeAPI.pass(id);
-            return new ActResult();
+            return new ActResult("审核成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

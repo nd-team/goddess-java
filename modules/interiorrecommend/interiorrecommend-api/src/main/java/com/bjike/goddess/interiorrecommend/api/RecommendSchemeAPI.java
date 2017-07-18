@@ -49,24 +49,45 @@ public interface RecommendSchemeAPI {
      */
     List<RecommendSchemeBO> pageList(RecommendSchemeDTO dto) throws SerException;
 
-    /**
-     * 综合资源部意见
-     *
-     * @param to 推荐方案id
-     */
-    void resourcesAudit(RecommendSchemeTO to) throws SerException;
 
     /**
-     * 运营商务部意见
+     * 综合资源部审核
      *
-     * @param to 推荐方案id
+     * @param id               id
+     * @param resourcesSuggest 意见
+     * @param resourcesAudit   结果
      */
-    void operateAudit(RecommendSchemeTO to) throws SerException;
+    void resourcesAudit(String id, String resourcesSuggest, Boolean resourcesAudit) throws SerException;
 
     /**
-     * 总经办意见
+     * 运营商务部审核
      *
-     * @param to 推荐方案id
+     * @param id             id
+     * @param operateSuggest 意见
+     * @param operateAudit   结果
      */
-    void generalAudit(RecommendSchemeTO to) throws SerException;
+    void operateAudit(String id, String operateSuggest, Boolean operateAudit) throws SerException;
+
+    /**
+     * 总经办审核
+     *
+     * @param id             id
+     * @param generalSuggest 意见
+     * @param generalAudit   结果
+     */
+    void generalAudit(String id, String generalSuggest, Boolean generalAudit) throws SerException;
+
+    /**
+     * 根据Id查询
+     *
+     * @param id id
+     */
+    RecommendSchemeBO findById(String id) throws SerException;
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     */
+    Long count(RecommendSchemeDTO dto) throws SerException;
 }

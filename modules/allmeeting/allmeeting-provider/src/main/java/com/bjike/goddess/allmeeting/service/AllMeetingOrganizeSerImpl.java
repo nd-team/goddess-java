@@ -60,7 +60,7 @@ public class AllMeetingOrganizeSerImpl extends ServiceImpl<AllMeetingOrganize, A
             model.setMeetingLay(meetingLay);
             model.setMeetingNum(getNumber(model));
             super.save(model);
-
+            //根据议题生成对应的纪要模板--(简洁讨论纪要或多轮讨论纪要)
             insertSummary(model, meetingLay.getMeetingTopic());
 
             return BeanTransform.copyProperties(model, AllMeetingOrganizeBO.class);
@@ -116,6 +116,7 @@ public class AllMeetingOrganizeSerImpl extends ServiceImpl<AllMeetingOrganize, A
         }
     }
 
+    //ALL-GS-20170105-0001
     public String getNumber(AllMeetingOrganize model) throws SerException {
         StringBuilder number = new StringBuilder("ALL-");
         MeetingLayBO meetingLayBO = meetingLayAPI.findById(model.getMeetingLay().getId());

@@ -2,6 +2,8 @@ package com.bjike.goddess.checkhost.service;
 
 import com.bjike.goddess.checkhost.bo.DormitoryInfoBO;
 import com.bjike.goddess.checkhost.to.DormitoryInfoTO;
+import com.bjike.goddess.checkhost.to.GuidePermissionTO;
+import com.bjike.goddess.checkhost.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.checkhost.entity.DormitoryInfo;
@@ -19,6 +21,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface DormitoryInfoSer extends Ser<DormitoryInfo, DormitoryInfoDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 宿舍信息管理列表总条数
      */
