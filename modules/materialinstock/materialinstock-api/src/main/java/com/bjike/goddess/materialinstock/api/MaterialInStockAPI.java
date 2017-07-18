@@ -5,6 +5,7 @@ import com.bjike.goddess.materialinstock.bo.AttributeBO;
 import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
 import com.bjike.goddess.materialinstock.dto.MaterialInStockDTO;
 import com.bjike.goddess.materialinstock.entity.MaterialInStock;
+import com.bjike.goddess.materialinstock.to.GuidePermissionTO;
 import com.bjike.goddess.materialinstock.to.MaterialInStockTO;
 import com.bjike.goddess.materialinstock.type.UseState;
 
@@ -22,6 +23,19 @@ import java.util.Set;
  */
 public interface MaterialInStockAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 根据id查询物资入库
      *

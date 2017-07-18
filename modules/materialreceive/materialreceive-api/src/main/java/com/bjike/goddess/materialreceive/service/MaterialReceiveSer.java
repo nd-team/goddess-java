@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.materialreceive.bo.MaterialReceiveBO;
 import com.bjike.goddess.materialreceive.dto.MaterialReceiveDTO;
 import com.bjike.goddess.materialreceive.entity.MaterialReceive;
+import com.bjike.goddess.materialreceive.to.GuidePermissionTO;
 import com.bjike.goddess.materialreceive.to.MaterialReceiveTO;
 import com.bjike.goddess.materialreceive.to.MaterialReturnTO;
 import com.bjike.goddess.materialreceive.type.AuditState;
@@ -22,6 +23,20 @@ import java.util.List;
  */
 public interface MaterialReceiveSer extends Ser<MaterialReceive, MaterialReceiveDTO> {
 
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 分页查询物资领用归还登记
      *
@@ -81,4 +96,23 @@ public interface MaterialReceiveSer extends Ser<MaterialReceive, MaterialReceive
      */
     void materialReturn(MaterialReturnTO to) throws SerException;
 
+    /**
+     * 获取所有组织结构中的部门
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAddAllDetails() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有用户
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findallMonUser() throws SerException {
+        return null;
+    }
 }
