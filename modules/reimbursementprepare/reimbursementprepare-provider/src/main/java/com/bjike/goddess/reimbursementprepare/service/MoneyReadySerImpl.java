@@ -203,6 +203,7 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
     public MoneyReadyBO save(MoneyReadyTO to) throws SerException {
         checkAddIdentity();
         MoneyReady m = BeanTransform.copyProperties(to, MoneyReady.class, true);
+        m.setReserve(m.getProrate() * m.getTotalReserve());
         super.save(m);
         return BeanTransform.copyProperties(m, MoneyReadyBO.class);
     }
@@ -214,6 +215,7 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
         MoneyReady moneyReady = super.findById(to.getId());
         LocalDateTime a = moneyReady.getCreateTime();
         moneyReady = BeanTransform.copyProperties(to, MoneyReady.class, true);
+        moneyReady.setReserve(moneyReady.getProrate() * moneyReady.getTotalReserve());
         moneyReady.setCreateTime(a);
         moneyReady.setModifyTime(LocalDateTime.now());
         super.update(moneyReady);
@@ -230,9 +232,6 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
     public List<MoneyReadyBO> list(MoneyReadyDTO dto) throws SerException {
         checkSeeIdentity();
         List<MoneyReady> list = super.findByCis(dto, true);
-        for (MoneyReady m : list) {
-            m.setReserve(m.getProrate() * m.getTotalReserve());
-        }
         return BeanTransform.copyProperties(list, MoneyReadyBO.class);
     }
 
@@ -242,7 +241,6 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
         if (m == null) {
             throw new SerException("该对象不存在");
         }
-        m.setReserve(m.getProrate() * m.getTotalReserve());
         return BeanTransform.copyProperties(m, MoneyReadyBO.class);
     }
 

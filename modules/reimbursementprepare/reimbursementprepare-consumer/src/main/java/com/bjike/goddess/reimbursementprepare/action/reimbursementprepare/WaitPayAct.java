@@ -221,7 +221,7 @@ public class WaitPayAct extends BaseFileAction {
      * @param dto dto
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @GetMapping("v1/waitPayExport")
     public Result waitPayExport(WaitPayDTO dto, HttpServletResponse response) throws ActException {
         try {
@@ -241,7 +241,7 @@ public class WaitPayAct extends BaseFileAction {
      * @param dto dto
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @GetMapping("v1/payExport")
     public Result payExport(WaitPayDTO dto, HttpServletResponse response) throws ActException {
         try {

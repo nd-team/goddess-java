@@ -362,7 +362,7 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
 
     @Transactional(rollbackFor = SerException.class)
     private void aduit(String id) throws SerException {
-        checkAuditIdentity();
+        checkAddIdentity();
         String userToken = RpcTransmit.getUserToken();
         String name = userAPI.currentUser().getUsername();
         BankReconciliation entity = super.findById(id);
@@ -645,6 +645,11 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
                 debtorDifferBO.setId(bankRecorId);
                 List<com.bjike.goddess.checkfunds.beanlist.Detail> details = debtorDifferBO.getDetailList();
                 details = BeanTransform.copyProperties(detailList, com.bjike.goddess.checkfunds.beanlist.Detail.class);
+                for (com.bjike.goddess.checkfunds.beanlist.Detail detail : details) {
+                    if (detail.getTitle().contains("借方")) {
+                        debtorDifferBO.setBankIncome(Double.parseDouble(detail.getVal()));
+                    }
+                }
                 debtorDifferBO.setDetailList(details);
             }
         }
@@ -680,6 +685,11 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
                 creditorDifferBO.setId(bankRecorId);
                 List<com.bjike.goddess.checkfunds.beanlist.Detail> details = creditorDifferBO.getDetailList();
                 details = BeanTransform.copyProperties(detailList, com.bjike.goddess.checkfunds.beanlist.Detail.class);
+                for (com.bjike.goddess.checkfunds.beanlist.Detail detail : details) {
+                    if (detail.getTitle().contains("贷方")) {
+                        creditorDifferBO.setBankExpend(Double.parseDouble(detail.getVal()));
+                    }
+                }
                 creditorDifferBO.setDetailList(details);
             }
         }

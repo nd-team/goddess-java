@@ -41,7 +41,7 @@
     <dubbo:reference interface="com.bjike.goddess.oilcardmanage.api.OilCardBasicAPI" id="oilCardBasicApiImpl"/>
 
     <!-- 司机API -->
-    <dubbo:reference interface="com.bjike.goddess.driverinfo.api.DriverInfoAPI" id="driverInfoApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.carinfo.api.DriverInfoAPI" id="driverInfoApiImpl"/>
 
     <!-- 组织结构API -->
     <dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />

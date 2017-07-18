@@ -1,5 +1,6 @@
 package com.bjike.goddess.staffpay.action.staffpay;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -7,13 +8,14 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffpay.api.PayRecordAPI;
+import com.bjike.goddess.staffpay.api.WaitPayAPI;
 import com.bjike.goddess.staffpay.bo.PayRecordBO;
+import com.bjike.goddess.staffpay.bo.WaitPayBO;
 import com.bjike.goddess.staffpay.dto.PayRecordDTO;
+import com.bjike.goddess.staffpay.dto.WaitPayDTO;
+import com.bjike.goddess.staffpay.enums.FindType;
 import com.bjike.goddess.staffpay.to.GuidePermissionTO;
-import com.bjike.goddess.staffpay.vo.AreaCollectVO;
-import com.bjike.goddess.staffpay.vo.DepartmentCollectVO;
-import com.bjike.goddess.staffpay.vo.NameCollectVO;
-import com.bjike.goddess.staffpay.vo.PayRecordVO;
+import com.bjike.goddess.staffpay.vo.*;
 import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -37,6 +39,8 @@ import java.util.List;
 public class PayRecordAction {
     @Autowired
     private PayRecordAPI payRecordAPI;
+    @Autowired
+    private WaitPayAPI waitPayAPI;
     /**
      * 功能导航权限
      * @param guidePermissionTO 导航类型数据
@@ -61,14 +65,15 @@ public class PayRecordAction {
     /**
      * 已付款记录列表总条数
      *
-     * @param payRecordDTO 已付款记录dto
+     * @param dto 已付款记录dto
      * @des 获取所有已付款记录
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(PayRecordDTO payRecordDTO) throws ActException {
+    public Result count(WaitPayDTO dto) throws ActException {
         try {
-            Long count = payRecordAPI.countPayRecord(payRecordDTO);
+            dto.getConditions().add(Restrict.eq("findType", FindType.CONFIRM));
+            Long count = waitPayAPI.countWaitPay(dto);
             return ActResult.initialize(count);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -79,15 +84,15 @@ public class PayRecordAction {
      * 一个已付款记录
      *
      * @param id
-     * @return class PayRecordVO
+     * @return class WaitPayVO
      * @des 获取一个已付款记录
      * @version v1
      */
     @GetMapping("v1/record/{id}")
     public Result record(@PathVariable String id) throws ActException {
         try {
-            PayRecordBO payRecordBO = payRecordAPI.getOne(id);
-            return ActResult.initialize(BeanTransform.copyProperties(payRecordBO, PayRecordVO.class));
+            WaitPayBO waitPayBO = waitPayAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(waitPayBO, WaitPayVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -97,17 +102,18 @@ public class PayRecordAction {
     /**
      * 已付款记录列表
      *
-     * @param payRecordDTO 已付款记录dto
-     * @return class PayRecordVO
+     * @param dto 已付款记录dto
+     * @return class WaitPayVO
      * @des 获取所有已付款记录
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(PayRecordDTO payRecordDTO, HttpServletRequest request) throws ActException {
+    public Result list(WaitPayDTO dto, HttpServletRequest request) throws ActException {
         try {
-            List<PayRecordVO> payRecordVOS = BeanTransform.copyProperties(
-                    payRecordAPI.findListPayRecord(payRecordDTO), PayRecordVO.class, request);
-            return ActResult.initialize(payRecordVOS);
+            dto.getConditions().add(Restrict.eq("findType", FindType.CONFIRM));
+            List<WaitPayVO> waitPayVOS = BeanTransform.copyProperties(
+                    waitPayAPI.findListWaitPay(dto), WaitPayVO.class, request);
+            return ActResult.initialize(waitPayVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -123,7 +129,7 @@ public class PayRecordAction {
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
-            payRecordAPI.removePayRecord(id);
+            waitPayAPI.removeWaitPay(id);
             return new ActResult("delete success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -1,6 +1,11 @@
 package com.bjike.goddess.interiorrecommend.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 推荐奖励信息
@@ -16,18 +21,20 @@ public class AwardInfoTO extends BaseTO {
     /**
      * 推荐信息id
      */
+    @NotBlank(message = "推荐信息id不能为空", groups = {ADD.class, EDIT.class})
     private String infoId;
 
     /**
      * 奖励时间
      */
+    @NotBlank(message = "奖励时间不能为空", groups = {ADD.class, EDIT.class})
     private String awardTime;
 
     /**
      * 是否获得奖励
      */
+    @NotNull(message = "是否获得奖励不能为空", groups = {ADD.class, EDIT.class})
     private Boolean getAward;
-
 
     public String getInfoId() {
         return infoId;

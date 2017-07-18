@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.staffmove.enums.AuditorType;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -95,14 +96,14 @@ public class StaffMovementApply extends BaseEntity {
     /**
      * 计划到岗时间
      */
-    @Column(name = "planArriveTime",  columnDefinition = "DATETIME   COMMENT '计划到岗时间'")
-    private LocalDateTime planArriveTime;
+    @Column(name = "planArriveTime",  columnDefinition = "DATE   COMMENT '计划到岗时间'")
+    private LocalDate planArriveTime;
 
     /**
      * 实际到岗时间
      */
-    @Column(name = "actualArriveTime",columnDefinition = "DATETIME   COMMENT '实际到岗时间'")
-    private LocalDateTime actualArriveTime;
+    @Column(name = "actualArriveTime",columnDefinition = "DATE   COMMENT '实际到岗时间'")
+    private LocalDate actualArriveTime;
 
     /**
      * 备注
@@ -239,19 +240,19 @@ public class StaffMovementApply extends BaseEntity {
         this.specialRequirement = specialRequirement;
     }
 
-    public LocalDateTime getPlanArriveTime() {
+    public LocalDate getPlanArriveTime() {
         return planArriveTime;
     }
 
-    public void setPlanArriveTime(LocalDateTime planArriveTime) {
+    public void setPlanArriveTime(LocalDate planArriveTime) {
         this.planArriveTime = planArriveTime;
     }
 
-    public LocalDateTime getActualArriveTime() {
+    public LocalDate getActualArriveTime() {
         return actualArriveTime;
     }
 
-    public void setActualArriveTime(LocalDateTime actualArriveTime) {
+    public void setActualArriveTime(LocalDate actualArriveTime) {
         this.actualArriveTime = actualArriveTime;
     }
 

@@ -46,14 +46,6 @@ public interface RecommendRequireSer extends Ser<RecommendRequire, RecommendRequ
     List<RecommendRequireBO> pageList(RecommendRequireDTO dto) throws SerException;
 
     /**
-     * 根据推荐要求id查询推荐考核内容
-     *
-     * @param id 推荐要求id
-     * @return 推荐考核内容结果集
-     */
-    List<RecommendAssessDetailBO> findAssessDetail(String id) throws SerException;
-
-    /**
      * 删除推荐要求
      *
      * @param id 推荐要求id

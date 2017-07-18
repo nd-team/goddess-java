@@ -19,12 +19,32 @@
 
     <!--发布接口,供其他模块调用-->
 
-    <!-- 出车记录API -->
+    <!-- 资金流水API -->
     <dubbo:service interface="com.bjike.goddess.fundrecords.api.FundRecordAPI" ref="fundRecordApiImpl"/>
 
+    <!-- 权限API -->
+    <dubbo:service interface="com.bjike.goddess.fundrecords.api.CusPermissionAPI" ref="cusPermissionApiImpl"/>
 
+    <dubbo:service interface="com.bjike.goddess.fundrecords.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"/>
 
+    <!-- 注册接口服务 -->
+
+    <!-- 组织结构API -->
+    <dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+
+    <dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+
+    <dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+
+    <dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+
+    <dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
+
+    <!-- 记账凭证API -->
     <dubbo:reference interface="com.bjike.goddess.voucher.api.VoucherGenerateAPI" id="voucherGenerateApiImpl"/>
+
+    <!-- userAPI -->
+    <dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
 
 </beans>

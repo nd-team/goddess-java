@@ -234,6 +234,14 @@ public interface UserAPI {
         return null;
     }
 
-
+    /**
+     * chenjunhao
+     * 通过用户id查找用户名
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    String findNameById(String id) throws SerException;
 
 }

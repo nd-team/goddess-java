@@ -24,15 +24,28 @@ public class CreditorDifferVO {
      */
     private Double expenditure;
 
-    /**
-     * 银行流水id
-     */
-    private String id;
+//    /**
+//     * 银行流水id
+//     */
+//    private String id;
+//
+//    /**
+//     * 银行流水行记录字段
+//     */
+//    List<Detail> detailList;
 
     /**
-     * 银行流水行记录字段
+     * 银行流水贷方
      */
-    List<Detail> detailList;
+    private Double bankExpend;
+
+    public Double getBankExpend() {
+        return bankExpend;
+    }
+
+    public void setBankExpend(Double bankExpend) {
+        this.bankExpend = bankExpend;
+    }
 
     public String getRecordDate() {
         return recordDate;
@@ -48,21 +61,5 @@ public class CreditorDifferVO {
 
     public void setExpenditure(Double expenditure) {
         this.expenditure = expenditure;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public List<Detail> getDetailList() {
-        return detailList;
-    }
-
-    public void setDetailList(List<Detail> detailList) {
-        this.detailList = detailList;
     }
 }

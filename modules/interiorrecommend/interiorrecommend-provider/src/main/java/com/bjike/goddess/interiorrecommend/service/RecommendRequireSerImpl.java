@@ -1,28 +1,28 @@
 package com.bjike.goddess.interiorrecommend.service;
 
-import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.interiorrecommend.bo.RecommendAssessDetailBO;
 import com.bjike.goddess.interiorrecommend.bo.RecommendRequireBO;
-import com.bjike.goddess.interiorrecommend.dto.RecommendAssessDetailDTO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendRequireDTO;
 import com.bjike.goddess.interiorrecommend.entity.RecommendAssessDetail;
 import com.bjike.goddess.interiorrecommend.entity.RecommendRequire;
 import com.bjike.goddess.interiorrecommend.entity.RecommendScheme;
 import com.bjike.goddess.interiorrecommend.entity.RecommendType;
-import com.bjike.goddess.interiorrecommend.to.RecommendAssessDetailTO;
 import com.bjike.goddess.interiorrecommend.to.RecommendRequireTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 推荐要求业务实现
@@ -38,101 +38,117 @@ import java.util.List;
 public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, RecommendRequireDTO> implements RecommendRequireSer {
 
     @Autowired
-    private RecommendAssessDetailSer recommendAssessDetailSer;
-    @Autowired
     private RecommendSchemeSer recommendSchemeSer;
     @Autowired
     private RecommendTypeSer recommendTypeSer;
+    @Autowired
+    private RecommendAssessDetailSer recommendAssessDetailSer;
 
     @Override
     public RecommendRequireBO insertModel(RecommendRequireTO to) throws SerException {
 
-        RecommendRequire model = BeanTransform.copyProperties(to, RecommendRequire.class, true);
-        super.save(model);
-        String modelId = model.getId();
-        to.setId(modelId);
-        //保存推荐内容
-        if (to.getAssessDetailList() != null && !to.getAssessDetailList().isEmpty()) {
-            for (RecommendAssessDetailTO detailTO : to.getAssessDetailList()) {
-                RecommendAssessDetail detail = new RecommendAssessDetail();
-                detail = BeanTransform.copyProperties(detailTO, RecommendAssessDetail.class);
-                detail.setRequireId(modelId);
-                recommendAssessDetailSer.save(detail);
+        RecommendScheme recommendScheme = recommendSchemeSer.findById(to.getRecommendSchemeId());
+        RecommendType recommendType = recommendTypeSer.findById(to.getRecommendTypeId());
+        if (recommendScheme != null) {
+            if (recommendType != null) {
+                RecommendRequire model = BeanTransform.copyProperties(to, RecommendRequire.class, true);
+                //保存推荐考核内容
+                if (!CollectionUtils.isEmpty(to.getAssessDetailList())) {
+                    Set<RecommendAssessDetail> detailSet = new HashSet<RecommendAssessDetail>();
+                    List<RecommendAssessDetail> detailList = BeanTransform.copyProperties(to.getAssessDetailList(), RecommendAssessDetail.class);
+                    detailSet.addAll(detailList);
+                    for (RecommendAssessDetail detail : detailSet) {
+                        detail.setRecommendRequire(model);
+                    }
+                    model.setDetailSet(detailSet);
+                    model.setRecommendType(recommendType);
+                    model.setRecommendScheme(recommendScheme);
+                    super.save(model);
+                    to.setId(model.getId());
+                    return BeanTransform.copyProperties(to, RecommendRequireBO.class);
+                } else {
+                    throw new SerException("推荐考核内容不能为空!");
+                }
+            } else {
+                throw new SerException("非法推荐类型Id,推荐方案对象不能为空!");
             }
+        } else {
+            throw new SerException("非法推荐方案Id,推荐方案对象不能为空!");
         }
-        return BeanTransform.copyProperties(to, RecommendRequireBO.class);
     }
+
 
     @Override
     public RecommendRequireBO updateModel(RecommendRequireTO to) throws SerException {
-        if (!StringUtils.isEmpty(to.getId())) {
-            RecommendRequire model = super.findById(to.getId());
-            if (model != null) {
-                BeanTransform.copyProperties(to, model, true);
-                model.setModifyTime(LocalDateTime.now());
-                super.update(model);
+        RecommendScheme recommendScheme = recommendSchemeSer.findById(to.getRecommendSchemeId());
+        RecommendType recommendType = recommendTypeSer.findById(to.getRecommendTypeId());
+        if (recommendScheme != null) {
+            if (recommendType != null) {
+                RecommendRequire model = super.findById(to.getId());
+                if (model != null) {
+                    BeanTransform.copyProperties(to, model, true);
+                    model.setModifyTime(LocalDateTime.now());
 
-                if (to.getAssessDetailList() != null && !to.getAssessDetailList().isEmpty()) {
+                    //保存推荐考核内容
+                    if (!CollectionUtils.isEmpty(to.getAssessDetailList())) {
+                        Set<RecommendAssessDetail> detailSet = new HashSet<RecommendAssessDetail>();
+                        List<RecommendAssessDetail> detailList = BeanTransform.copyProperties(to.getAssessDetailList(), RecommendAssessDetail.class);
+                        detailSet.addAll(detailList);
+                        for (RecommendAssessDetail detail : detailSet) {
+                            if (!StringUtils.isEmpty(detail.getId())) {
+                                RecommendAssessDetail assessDetail = recommendAssessDetailSer.findById(detail.getId());
+                                detail.setCreateTime(assessDetail.getCreateTime());
+                                detail.setModifyTime(assessDetail.getModifyTime());
+                                detail.setRecommendRequire(model);
+                            }
+                        }
 
-                    for (RecommendAssessDetailTO detailTO : to.getAssessDetailList()) {
-                        RecommendAssessDetail detail = new RecommendAssessDetail();
-                        detail = recommendAssessDetailSer.findById(detailTO.getId());
-                        BeanTransform.copyProperties(detailTO, detail);
-                        recommendAssessDetailSer.update(detail);
+                        model.setDetailSet(detailSet);
+                        model.setRecommendType(recommendType);
+                        model.setRecommendScheme(recommendScheme);
+                        super.update(model);
+                        return BeanTransform.copyProperties(to, RecommendRequireBO.class);
+                    } else {
+                        throw new SerException("推荐考核内容不能为空!");
                     }
+                } else {
+                    throw new SerException("非法Id,推荐要求对象不能为空!");
                 }
-
             } else {
-                throw new SerException("更新对象不能为空");
+                throw new SerException("非法推荐类型Id,推荐方案对象不能为空!");
             }
         } else {
-            throw new SerException("更新ID不能为空!");
+            throw new SerException("非法推荐方案Id,推荐方案对象不能为空!");
         }
-        return BeanTransform.copyProperties(to, RecommendRequireBO.class);
     }
 
     @Override
     public List<RecommendRequireBO> pageList(RecommendRequireDTO dto) throws SerException {
         dto.getSorts().add("createTime=desc");
         List<RecommendRequire> list = super.findByPage(dto);
-        List<RecommendRequireBO> boList = new ArrayList<RecommendRequireBO>();
-        boList = BeanTransform.copyProperties(list, RecommendRequireBO.class);
-        DateUtil dateUtil = new DateUtil();
-        if (boList != null && !boList.isEmpty()) {
-            for (RecommendRequireBO bo : boList) {
-                RecommendScheme recommendScheme = recommendSchemeSer.findById(bo.getRecommendSchemeId());
-                if (recommendScheme != null) {
-                    bo.setOpenTime(dateUtil.dateToString(recommendScheme.getOpenTime()));
-                    bo.setCloseTime(dateUtil.dateToString(recommendScheme.getCloseTime()));
-                }
-                RecommendType recommendType = recommendTypeSer.findById(bo.getRecommendTypeId());
-                if (recommendType != null) {
-                    bo.setRecommendType(recommendType.getTypeName());
-                }
+        if (!CollectionUtils.isEmpty(list)) {
+            List<RecommendRequireBO> boList = new ArrayList<RecommendRequireBO>();
+            for (RecommendRequire model : list) {
+                RecommendRequireBO bo = BeanTransform.copyProperties(model, RecommendRequireBO.class);
+                bo.setOpenTime(DateUtil.dateToString(model.getRecommendScheme().getOpenTime()));
+                bo.setCloseTime(DateUtil.dateToString(model.getRecommendScheme().getCloseTime()));
+                bo.setRecommendTypeName(model.getRecommendType().getTypeName());
+                bo.setDetailList(BeanTransform.copyProperties(model.getDetailSet(), RecommendAssessDetailBO.class));
+                boList.add(bo);
             }
+            return boList;
+        } else {
+            return null;
         }
-
-        return boList;
-    }
-
-    @Override
-    public List<RecommendAssessDetailBO> findAssessDetail(String requireId) throws SerException {
-        RecommendAssessDetailDTO dto = new RecommendAssessDetailDTO();
-        dto.getSorts().add("createTime=desc");
-        dto.getConditions().add(Restrict.eq("requireId", requireId));
-        return BeanTransform.copyProperties(recommendAssessDetailSer.findByCis(dto), RecommendAssessDetailBO.class);
     }
 
     @Override
     public void delete(String id) throws SerException {
-
-        //先除其子表关联数据，再删除推荐要求数据
-        RecommendAssessDetailDTO dto = new RecommendAssessDetailDTO();
-        dto.getConditions().add(Restrict.eq("requireId", id));
-        List<RecommendAssessDetail> detailList = recommendAssessDetailSer.findByCis(dto);
-        if (detailList != null && !detailList.isEmpty()) {
-            recommendAssessDetailSer.remove(detailList);
+        RecommendRequire model = super.findById(id);
+        if (model != null) {
+            super.remove(id);
+        } else {
+            throw new SerException("非法Id,推荐要求对象不能为空!");
         }
-        super.remove(id);
     }
 }

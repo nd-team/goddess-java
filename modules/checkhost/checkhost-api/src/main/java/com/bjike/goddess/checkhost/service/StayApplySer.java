@@ -3,6 +3,7 @@ package com.bjike.goddess.checkhost.service;
 import com.bjike.goddess.checkhost.bo.HostApplyBO;
 import com.bjike.goddess.checkhost.bo.StayApplyBO;
 import com.bjike.goddess.checkhost.dto.HostApplyDTO;
+import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.to.StayApplyTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -21,6 +22,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface StayApplySer extends Ser<StayApply, StayApplyDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 住宿申请列表总条数
      */

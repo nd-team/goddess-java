@@ -3,10 +3,12 @@ package com.bjike.goddess.staffpay.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.staffpay.bo.FirstPayRecordBO;
+import com.bjike.goddess.staffpay.bo.PayRecordBO;
 import com.bjike.goddess.staffpay.bo.WaitPayBO;
 import com.bjike.goddess.staffpay.dto.WaitPayDTO;
 import com.bjike.goddess.staffpay.entity.WaitPay;
 import com.bjike.goddess.staffpay.excel.SonPermissionObject;
+import com.bjike.goddess.staffpay.to.FirstPayRecordTO;
 import com.bjike.goddess.staffpay.to.GuidePermissionTO;
 import com.bjike.goddess.staffpay.to.WaitPayTO;
 
@@ -96,13 +98,19 @@ public interface WaitPaySer extends Ser<WaitPay, WaitPayDTO> {
 
     }
     /**
-     * 付款
+     * 第一次付款
      *
-     * @param waitPayTO
-     * @return class FirstPayRecordBO
+     * @param id
      * @throws SerException
      */
-    default FirstPayRecordBO payment(WaitPayTO waitPayTO) throws SerException {
-        return null;
+    default void firstPay(String id) throws SerException {
+    }
+    /**
+     * 已付款记录
+     *
+     * @param id
+     * @throws SerException
+     */
+    default void secondPay(String id) throws SerException {
     }
 }

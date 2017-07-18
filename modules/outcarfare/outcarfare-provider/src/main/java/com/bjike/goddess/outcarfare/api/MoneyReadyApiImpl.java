@@ -66,4 +66,9 @@ public class MoneyReadyApiImpl implements MoneyReadyAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return moneyReadySer.guidePermission(guidePermissionTO);
     }
+
+    @Override
+    public Long countSum(MoneyReadyDTO dto) throws SerException {
+        return moneyReadySer.countSum(dto);
+    }
 }

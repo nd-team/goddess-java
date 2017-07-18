@@ -69,7 +69,11 @@ public class WaitPayApiImpl implements WaitPayAPI {
 
     }
     @Override
-    public FirstPayRecordBO payment(WaitPayTO waitPayTO) throws SerException {
-        return waitPaySer.payment(waitPayTO);
+    public void firstPay(String id) throws SerException {
+        waitPaySer.firstPay(id);
+    }
+    @Override
+    public void secondPay(String id) throws SerException {
+        waitPaySer.secondPay(id);
     }
 }

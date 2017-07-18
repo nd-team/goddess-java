@@ -34,13 +34,14 @@ public class StaffBirthdayAct {
     /**
      * 查询员工生日信息
      *
-     * @param dto 分页信息
+     * @param dto   分页信息
      * @param month 生日月份
      * @version v1
      */
     @GetMapping("v1/findStaffBirthInfo")
     public Result findStaffBirthInfo(UserDetailDTO dto, Integer month) throws ActException {
         try {
+            //TODO 未明确查询来源，因为用户模块并没有离职信息。
             List<UserDetailVO> voList = BeanTransform.copyProperties(userDetailAPI.findByMonth(dto, month), UserDetailVO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {

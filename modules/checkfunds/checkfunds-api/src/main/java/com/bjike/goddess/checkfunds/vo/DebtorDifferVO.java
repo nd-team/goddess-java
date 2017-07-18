@@ -1,9 +1,5 @@
 package com.bjike.goddess.checkfunds.vo;
 
-import com.bjike.goddess.checkfunds.beanlist.Detail;
-
-import java.util.List;
-
 /**
  * 借方差异
  *
@@ -24,15 +20,20 @@ public class DebtorDifferVO {
      */
     private Double income;
 
-    /**
-     * 银行流水id
-     */
-    private String id;
+//    /**
+//     * 银行流水id
+//     */
+//    private String id;
+//
+//    /**
+//     * 银行流水行记录字段
+//     */
+//    List<Detail> detailList;
 
     /**
-     * 银行流水行记录字段
+     * 银行流水借方
      */
-    List<Detail> detailList;
+    private Double bankIncome;
 
     public String getRecordDate() {
         return recordDate;
@@ -50,19 +51,11 @@ public class DebtorDifferVO {
         this.income = income;
     }
 
-    public String getId() {
-        return id;
+    public Double getBankIncome() {
+        return bankIncome;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public List<Detail> getDetailList() {
-        return detailList;
-    }
-
-    public void setDetailList(List<Detail> detailList) {
-        this.detailList = detailList;
+    public void setBankIncome(Double bankIncome) {
+        this.bankIncome = bankIncome;
     }
 }

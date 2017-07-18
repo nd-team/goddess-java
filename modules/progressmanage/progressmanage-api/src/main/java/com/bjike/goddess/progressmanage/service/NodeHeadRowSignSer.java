@@ -20,13 +20,36 @@ import java.util.List;
 */
 public interface NodeHeadRowSignSer extends Ser<NodeHeadRowSign, NodeHeadRowSignDTO> {
 
+    /**
+     * 根据节点Id查询所有表头
+     * @param nodeId
+     * @return
+     * @throws SerException
+     */
     List<NodeHeadForValueBO> heads(String nodeId) throws SerException;
 
+    /**
+     * 分页查询
+     * @param dto 分页条件
+     */
     List<NodeHeadRowSignBO> pageList(NodeHeadRowSignDTO dto) throws SerException;
 
+    /**
+     * 保存行记录
+     * @param to 行信息
+     */
     void insertModel(NodeHeadRowSignTO to) throws SerException;
 
+    /**
+     * 更新
+     * @param to 行信息
+     */
     void updateModel(NodeHeadRowSignTO to) throws SerException;
 
+    /**
+     * 删除
+     * @param id
+     * @throws SerException
+     */
     void delete(String id) throws SerException;
 }

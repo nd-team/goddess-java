@@ -92,4 +92,9 @@ public class CategoryApiImpl implements CategoryAPI {
     public List<String> listFirstName(CategoryTO categoryTO) throws SerException {
         return categorySer.listFirstName(categoryTO);
     }
+
+    @Override
+    public List<String> listAllThirdName() throws SerException {
+        return categorySer.listAllThirdName();
+    }
 }

@@ -1,8 +1,12 @@
 package com.bjike.goddess.interiorrecommend.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.interiorrecommend.enums.AssessWay;
+import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,22 +24,26 @@ public class RecommendRequireTO extends BaseTO {
     /**
      * 推荐方案id
      */
+    @NotBlank(message = "推荐方案id不能为空", groups = {ADD.class, EDIT.class})
     private String recommendSchemeId;
 
     /**
      * 推荐时长
      */
+    @NotNull(message = "推荐时长不能为空", groups = {ADD.class, EDIT.class})
     private Integer recommendTime;
 
     /**
      * 推荐类型id
      */
+    @NotBlank(message = "推荐类型id不能为空", groups = {ADD.class, EDIT.class})
     private String recommendTypeId;
 
     /**
      * 推荐考核内容
      */
-    private List<RecommendAssessDetailTO> assessDetailList = new ArrayList<>();
+    @NotNull(message = "推荐考核内容不能为空", groups = {ADD.class, EDIT.class})
+    private List<RecommendAssessDetailTO> assessDetailList;
 
     /**
      * 指标来源
@@ -50,6 +58,7 @@ public class RecommendRequireTO extends BaseTO {
     /**
      * 考核方式
      */
+    @NotNull(message = "考核方式不能为空", groups = {ADD.class, EDIT.class})
     private AssessWay assessWay;
 
     /**
