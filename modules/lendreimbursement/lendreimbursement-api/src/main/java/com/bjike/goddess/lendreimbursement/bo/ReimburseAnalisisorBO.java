@@ -36,6 +36,10 @@ public class ReimburseAnalisisorBO extends BaseBO {
     private String department;
 
     /**
+     * 备注
+     */
+    private String remark;
+    /**
      * 创建时间
      */
     private String createTime;
@@ -44,6 +48,11 @@ public class ReimburseAnalisisorBO extends BaseBO {
      * 修改时间
      */
     private String modifyTime;
+
+    /**
+     * sql查询总条数
+     */
+    private Integer count;
 
 
     public String getUserName() {
@@ -78,6 +87,14 @@ public class ReimburseAnalisisorBO extends BaseBO {
         this.department = department;
     }
 
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     public String getCreateTime() {
         return createTime;
     }
@@ -92,5 +109,13 @@ public class ReimburseAnalisisorBO extends BaseBO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 }

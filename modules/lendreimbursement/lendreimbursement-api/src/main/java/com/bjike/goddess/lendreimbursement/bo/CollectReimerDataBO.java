@@ -10,7 +10,7 @@ import java.time.LocalDate;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class CollectDataBO implements Serializable {
+public class CollectReimerDataBO implements Serializable {
 
     /**
      * 借款人
@@ -19,7 +19,7 @@ public class CollectDataBO implements Serializable {
     /**
      * 报销日期
      */
-    private LocalDate reimDate;
+    private String reimDate;
     /**
      * 报销日期汇总时间段
      */
@@ -72,11 +72,11 @@ public class CollectDataBO implements Serializable {
         this.lender = lender;
     }
 
-    public LocalDate getReimDate() {
+    public String getReimDate() {
         return reimDate;
     }
 
-    public void setReimDate(LocalDate reimDate) {
+    public void setReimDate(String reimDate) {
         this.reimDate = reimDate;
     }
 

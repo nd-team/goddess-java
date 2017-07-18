@@ -28,7 +28,7 @@ public class FinoddinforApiImpl implements FinoddinforAPI {
 
     @Override
     public Long countFinoddinfor(FinoddinforDTO finoddinforDTO) throws SerException {
-        return finoddinforSer.count(finoddinforDTO);
+        return finoddinforSer.countFinoddinfor(finoddinforDTO);
     }
 
     @Override

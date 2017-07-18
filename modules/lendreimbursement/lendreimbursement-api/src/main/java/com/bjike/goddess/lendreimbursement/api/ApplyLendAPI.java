@@ -530,14 +530,6 @@ public interface ApplyLendAPI {
     }
 
     /**
-     * 获取所有账户来源
-     *
-     * @return
-     */
-    default List<String> listAccountCom() throws SerException {
-        return null;
-    }
-    /**
      * 申请借款导出excel
      *
      * @param applyLendDTO

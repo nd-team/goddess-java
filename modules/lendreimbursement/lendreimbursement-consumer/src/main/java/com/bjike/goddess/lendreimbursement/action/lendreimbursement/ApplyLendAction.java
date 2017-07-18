@@ -7,6 +7,7 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.financeinit.api.AccountAPI;
 import com.bjike.goddess.lendreimbursement.api.ApplyLendAPI;
 import com.bjike.goddess.lendreimbursement.bo.ApplyLendBO;
 import com.bjike.goddess.lendreimbursement.bo.LendAuditDetailBO;
@@ -48,12 +49,14 @@ public class ApplyLendAction extends BaseFileAction {
 
     @Autowired
     private ApplyLendAPI applyLendAPI;
-
+    @Autowired
+    private AccountAPI accountAPI;
     @Autowired
     private FileAPI fileAPI;
 
     /**
      * 功能导航权限
+     *
      * @param guidePermissionTO 导航类型数据
      * @throws ActException
      * @version v1
@@ -63,16 +66,17 @@ public class ApplyLendAction extends BaseFileAction {
         try {
 
             Boolean isHasPermission = applyLendAPI.guidePermission(guidePermissionTO);
-            if(! isHasPermission ){
+            if (!isHasPermission) {
                 //int code, String msg
-                return new ActResult(0,"没有权限",false );
-            }else{
-                return new ActResult(0,"有权限",true );
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
             }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 申请借款列表总条数
      *
@@ -212,7 +216,7 @@ public class ApplyLendAction extends BaseFileAction {
      */
     @LoginAuth
     @GetMapping("v1/exportExcel")
-    public Result exportExcel(ApplyLendDTO applyLendDTO,HttpServletResponse response) throws ActException {
+    public Result exportExcel(ApplyLendDTO applyLendDTO, HttpServletResponse response) throws ActException {
         try {
             String fileName = "申请借款.xlsx";
             super.writeOutFile(response, applyLendAPI.exportExcel(applyLendDTO), fileName);
@@ -596,21 +600,6 @@ public class ApplyLendAction extends BaseFileAction {
         }
     }
 
-    /**
-     * 获取付款来源
-     *
-     * @des 获取付款来源
-     * @version v1
-     */
-    @GetMapping("v1/listAccountCom")
-    public Result listAccountCom() throws ActException {
-        try {
-            List<String> list = applyLendAPI.listAccountCom();
-            return ActResult.initialize(list);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
 
     /**
      * 付款
@@ -639,7 +628,7 @@ public class ApplyLendAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/exportPayExcel")
-    public Result exportPayExcel(ApplyLendDTO applyLendDTO,HttpServletResponse response) throws ActException {
+    public Result exportPayExcel(ApplyLendDTO applyLendDTO, HttpServletResponse response) throws ActException {
         try {
             String fileName = "等待付款.xlsx";
             super.writeOutFile(response, applyLendAPI.waitingPayExcel(applyLendDTO), fileName);
@@ -802,12 +791,12 @@ public class ApplyLendAction extends BaseFileAction {
     /**
      * 借款记录导出
      *
-     * @param  applyLendDTO
+     * @param applyLendDTO
      * @des
      * @version v1
      */
     @GetMapping("v1/exportBorrowExcel")
-    public Result exportBorrowExcel(ApplyLendDTO applyLendDTO,HttpServletResponse response) throws ActException {
+    public Result exportBorrowExcel(ApplyLendDTO applyLendDTO, HttpServletResponse response) throws ActException {
         try {
             String fileName = "借款记录.xlsx";
             super.writeOutFile(response, applyLendAPI.borrowExcel(applyLendDTO), fileName);
@@ -865,7 +854,7 @@ public class ApplyLendAction extends BaseFileAction {
      */
     @LoginAuth
     @GetMapping("v1/exportReturnExcel")
-    public Result exportReturnExcel(ApplyLendDTO applyLendDTO,HttpServletResponse response) throws ActException {
+    public Result exportReturnExcel(ApplyLendDTO applyLendDTO, HttpServletResponse response) throws ActException {
         try {
             String fileName = "还款记录.xlsx";
             super.writeOutFile(response, applyLendAPI.returnExcel(applyLendDTO), fileName);
@@ -1016,7 +1005,7 @@ public class ApplyLendAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/exportReceiveExcel")
-    public Result exportReceiveExcel(ApplyLendDTO applyLendDTO,HttpServletResponse response) throws ActException {
+    public Result exportReceiveExcel(ApplyLendDTO applyLendDTO, HttpServletResponse response) throws ActException {
         try {
             String fileName = "已收票记录.xlsx";
             super.writeOutFile(response, applyLendAPI.receiveExcel(applyLendDTO), fileName);
@@ -1166,6 +1155,23 @@ public class ApplyLendAction extends BaseFileAction {
     public Result getPNameList() throws ActException {
         try {
             List<String> areaList = applyLendAPI.listProjectName();
+            return ActResult.initialize(areaList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取账户(付款)来源
+     *
+     * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
+     * @des 获取账户来源
+     * @version v1
+     */
+    @GetMapping("v1/listAccountOrigin")
+    public Result listAccountOrigin() throws ActException {
+        try {
+            List<String> areaList = accountAPI.listAccountOrigin();
             return ActResult.initialize(areaList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -1,5 +1,6 @@
 package com.bjike.goddess.lendreimbursement.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -12,6 +13,8 @@ import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseAnalisisorTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.dto.UserDTO;
+import com.bjike.goddess.user.entity.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +55,7 @@ public class ReimburseAnalisisorSerImpl extends ServiceImpl<ReimburseAnalisisor,
         String userName = userBO.getUsername();
         //商务模块权限
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("1");
+            flag = cusPermissionSer.busCusPermission("reim-Analisisor");
         } else {
             flag = true;
         }
@@ -73,7 +76,7 @@ public class ReimburseAnalisisorSerImpl extends ServiceImpl<ReimburseAnalisisor,
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("1");
+            flag = cusPermissionSer.busCusPermission("reim-Analisisor");
         } else {
             flag = true;
         }
@@ -110,33 +113,6 @@ public class ReimburseAnalisisorSerImpl extends ServiceImpl<ReimburseAnalisisor,
             case DELETE:
                 flag = guideIdentity();
                 break;
-            case CONGEL:
-                flag = guideIdentity();
-                break;
-            case THAW:
-                flag = guideIdentity();
-                break;
-            case COLLECT:
-                flag = guideIdentity();
-                break;
-            case UPLOAD:
-                flag = guideIdentity();
-                break;
-            case DOWNLOAD:
-                flag = guideIdentity();
-                break;
-            case IMPORT:
-                flag = guideIdentity();
-                break;
-            case EXPORT:
-                flag = guideIdentity();
-                break;
-            case SEE:
-                flag = guideIdentity();
-                break;
-            case SEEFILE:
-                flag = guideIdentity();
-                break;
             default:
                 flag = true;
                 break;
@@ -161,10 +137,32 @@ public class ReimburseAnalisisorSerImpl extends ServiceImpl<ReimburseAnalisisor,
         return analisisorBOList;
     }
 
+    @Override
+    public ReimburseAnalisisorBO getOne(String id) throws SerException {
+        if(StringUtils.isBlank( id )){
+            throw new SerException("id不能为空");
+        }
+        ReimburseAnalisisor reimburseAnalisisor = super.findById(id);
+
+        return BeanTransform.copyProperties(reimburseAnalisisor,ReimburseAnalisisorBO.class);
+    }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ReimburseAnalisisorBO addReimburseAnalisisor(ReimburseAnalisisorTO reimburseAnalisisorTO) throws SerException {
+        if( StringUtils.isBlank(reimburseAnalisisorTO.getEmpNum()) ){
+            throw new SerException("该用户在系统中不存在，请重新选择");
+        }
         ReimburseAnalisisor reimburseAnalisisor = BeanTransform.copyProperties(reimburseAnalisisorTO,ReimburseAnalisisor.class,true);
+        UserDTO userDTO = new UserDTO();
+        userDTO.getConditions().add(Restrict.eq("employeeNumber", reimburseAnalisisorTO.getEmpNum()));
+        List<UserBO> userBO= userAPI.findByCis( userDTO );
+        if( userBO != null && userBO.size()>0 ){
+            UserBO temp = userBO.get(0);
+            reimburseAnalisisor.setUserName( temp.getUsername());
+//            reimburseAnalisisor.setDepartment( );
+//            reimburseAnalisisor.setPosition( );
+        }
         reimburseAnalisisor.setCreateTime(LocalDateTime.now());
 
         super.save( reimburseAnalisisor );
@@ -175,6 +173,9 @@ public class ReimburseAnalisisorSerImpl extends ServiceImpl<ReimburseAnalisisor,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ReimburseAnalisisorBO editReimburseAnalisisor(ReimburseAnalisisorTO reimburseAnalisisorTO) throws SerException {
+        if( StringUtils.isBlank(reimburseAnalisisorTO.getEmpNum()) ){
+            throw new SerException("该用户在系统中不存在，请重新选择");
+        }
         if(StringUtils.isBlank(reimburseAnalisisorTO.getId())){
             throw new SerException("id不能为空");
         }
@@ -182,9 +183,22 @@ public class ReimburseAnalisisorSerImpl extends ServiceImpl<ReimburseAnalisisor,
         ReimburseAnalisisor reimburseAnalisisor = BeanTransform.copyProperties(reimburseAnalisisorTO,ReimburseAnalisisor.class,true);
 
         BeanUtils.copyProperties(reimburseAnalisisor,temp,"id","createTime");
-        temp.setModifyTime(LocalDateTime.now());
-        super.update(temp);
-        return BeanTransform.copyProperties(reimburseAnalisisor,ReimburseAnalisisorBO.class);
+        UserDTO userDTO = new UserDTO();
+        userDTO.getConditions().add(Restrict.eq("employeeNumber", reimburseAnalisisorTO.getEmpNum()));
+        List<UserBO> userBO= userAPI.findByCis( userDTO );
+        if( userBO != null && userBO.size()>0 ){
+            UserBO user_temp = userBO.get(0);
+            temp.setUserName( user_temp.getUsername());
+//            reimburseAnalisisor.setDepartment( );
+//            reimburseAnalisisor.setPosition( );
+            temp.setModifyTime(LocalDateTime.now());
+            super.update(temp);
+            return BeanTransform.copyProperties(reimburseAnalisisor,ReimburseAnalisisorBO.class);
+        }else{
+            throw new SerException("请下拉选择用户" );
+        }
+
+
     }
 
     @Transactional(rollbackFor = SerException.class)
