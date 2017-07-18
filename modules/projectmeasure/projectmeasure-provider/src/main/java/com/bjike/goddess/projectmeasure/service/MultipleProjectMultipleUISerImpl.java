@@ -105,7 +105,7 @@ public class MultipleProjectMultipleUISerImpl extends ServiceImpl<MultipleProjec
     @Override
     @Transactional(rollbackFor = SerException.class)
     public MultipleProjectMultipleUIBO save(MultipleProjectMultipleUITO to) throws SerException {
-        checkPermission();
+        checkPermission();//权限检测
         MultipleProjectMultipleUI entity = BeanTransform.copyProperties(to, MultipleProjectMultipleUI.class, true);
         entity.setProjectCategory(ProjectCategory.MULTIPLE_MULTIPLE);
         entity = super.save(entity);
@@ -122,7 +122,7 @@ public class MultipleProjectMultipleUISerImpl extends ServiceImpl<MultipleProjec
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(MultipleProjectMultipleUITO to) throws SerException {
-        checkPermission();
+        checkPermission();//权限检测
         if (StringUtils.isNotEmpty(to.getId())) {
             MultipleProjectMultipleUI model = super.findById(to.getId());
             if (model != null) {
@@ -215,7 +215,7 @@ public class MultipleProjectMultipleUISerImpl extends ServiceImpl<MultipleProjec
 
     @Override
     public MultipleProjectMultipleUIBO getOne(String id) throws SerException{
-        checkPermission();
+        checkPermission();//权限检测
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空哦");
         }

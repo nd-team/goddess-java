@@ -3,6 +3,8 @@ package com.bjike.goddess.materialtransfer.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.materialtransfer.bo.MaterialTransferBO;
 import com.bjike.goddess.materialtransfer.dto.MaterialTransferDTO;
+import com.bjike.goddess.materialtransfer.excel.SonPermissionObject;
+import com.bjike.goddess.materialtransfer.to.GuidePermissionTO;
 import com.bjike.goddess.materialtransfer.to.MaterialTransferTO;
 import com.bjike.goddess.materialtransfer.type.AuditState;
 
@@ -19,6 +21,20 @@ import java.util.List;
  */
 public interface MaterialTransferAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 根据id查询物资调动
      *

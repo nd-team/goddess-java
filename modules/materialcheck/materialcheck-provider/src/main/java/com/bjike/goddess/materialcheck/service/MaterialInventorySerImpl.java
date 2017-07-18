@@ -181,26 +181,26 @@ public class MaterialInventorySerImpl extends ServiceImpl<MaterialInventory, Mat
             String userToken = RpcTransmit.getUserToken();
             Boolean flagInvenDai = guideIdentity();
             RpcTransmit.transmitUserToken(userToken);
+            Boolean flagInvenMondDai = guideMondIdentity();
+            Boolean flagInvenPosinDai = guidePosinIdentity();
 
             SonPermissionObject obj = new SonPermissionObject();
 
             obj = new SonPermissionObject();
             obj.setName("materialanalyzedaily");
             obj.setDescribesion("物质盘点日盘");
-            if (flagInvenDai) {
+            if (flagInvenDai || flagInvenMondDai || flagInvenPosinDai) {
                 obj.setFlag(true);
             } else {
                 obj.setFlag(false);
             }
             list.add(obj);
 
-            RpcTransmit.transmitUserToken(userToken);
-            Boolean flagInvenWeek = guideIdentity();
             RpcTransmit.transmitUserToken(userToken);
             obj = new SonPermissionObject();
             obj.setName("materialanalyzeweek");
             obj.setDescribesion("物质盘点周盘");
-            if (flagInvenWeek) {
+            if (flagInvenDai || flagInvenMondDai || flagInvenPosinDai) {
                 obj.setFlag(true);
             } else {
                 obj.setFlag(false);
@@ -208,12 +208,10 @@ public class MaterialInventorySerImpl extends ServiceImpl<MaterialInventory, Mat
             list.add(obj);
 
             RpcTransmit.transmitUserToken(userToken);
-            Boolean flagInvenAnnu = guideIdentity();
-            RpcTransmit.transmitUserToken(userToken);
             obj = new SonPermissionObject();
             obj.setName("materialanalyzeannual");
             obj.setDescribesion("物质盘点年盘");
-            if (flagInvenAnnu) {
+            if (flagInvenDai || flagInvenMondDai || flagInvenPosinDai) {
                 obj.setFlag(true);
             } else {
                 obj.setFlag(false);

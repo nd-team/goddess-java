@@ -203,7 +203,6 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void updateUseState(String[] materialNum, UseState useState) throws SerException {
-        checkPermission();
         List<MaterialInStock> list = getMaterialInStocks(materialNum);
         if (CollectionUtils.isEmpty(list)) {
             return;
