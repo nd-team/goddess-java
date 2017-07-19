@@ -3,6 +3,7 @@ package com.bjike.goddess.staffentry.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.bo.EntryOptionBO;
 import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
 import com.bjike.goddess.staffentry.to.EntryBasicInfoTO;
@@ -128,6 +129,19 @@ public interface EntryBasicInfoSer extends Ser<EntryBasicInfo, EntryBasicInfoDTO
      * @throws SerException
      */
     default List<EntryBasicInfoVO> getByEmpNumber(String empNumber) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 根据名字和员工编号查找入职时间、专业、学历信息
+     * lijuntao
+     * @param  name name 姓名
+     * @param  empNumer 员工编号
+     * @return class EntryOptionBO
+     * @throws SerException
+     */
+    default List<EntryOptionBO> getEntryOptionByNameAndEmpNum(String name , String empNumer) throws SerException {
         return null;
     }
 
