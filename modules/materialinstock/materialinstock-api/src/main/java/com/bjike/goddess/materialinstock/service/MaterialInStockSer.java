@@ -143,4 +143,24 @@ public interface MaterialInStockSer extends Ser<MaterialInStock, MaterialInStock
      * @throws SerException
      */
     void updateLijuntao(MaterialInStockTO to) throws SerException;
+
+    /**
+     * 获取所有组织结构中的部门
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAddAllDetails() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有用户
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findallUser() throws SerException {
+        return null;
+    }
 }

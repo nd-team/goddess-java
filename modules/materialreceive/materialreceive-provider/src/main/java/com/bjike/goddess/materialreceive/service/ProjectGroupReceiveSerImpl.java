@@ -170,13 +170,15 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
 
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
-        {
+
             List<SonPermissionObject> list = new ArrayList<>();
             String userToken = RpcTransmit.getUserToken();
             Boolean flagGroupRece = guideIdentity();
             RpcTransmit.transmitUserToken(userToken);
             Boolean flagGroupMon = guideMondIdentity();
+            RpcTransmit.transmitUserToken(userToken);
             Boolean flagGroupPosin = guidePosinIdentity();
+            RpcTransmit.transmitUserToken(userToken);
 
             SonPermissionObject obj = new SonPermissionObject();
 
@@ -207,7 +209,7 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
 
 
             return list;
-        }
+
     }
 
     @Override
@@ -235,7 +237,7 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
                 flag = guidePosinIdentity();
                 break;
             case BREA:
-                flag = guideIdentity();
+                flag = guidePosinIdentity();
                 break;
             default:
                 flag = true;

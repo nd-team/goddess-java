@@ -16,12 +16,15 @@ import com.bjike.goddess.materialcheck.to.GuidePermissionTO;
 import com.bjike.goddess.materialcheck.to.MaterialAnalyzeTO;
 import com.bjike.goddess.materialcheck.type.InventoryType;
 import com.bjike.goddess.materialcheck.vo.MaterialAnalyzeVO;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,7 +43,8 @@ public class MaterialAnalyzeAnnualAct {
 
     @Autowired
     private MaterialAnalyzeAPI materialAnalyzeAPI;
-
+@Autowired
+private DepartmentDetailAPI departmentDetailAPI;
 
     /**
      * 功能导航权限
@@ -170,5 +174,48 @@ public class MaterialAnalyzeAnnualAct {
             throw new ActException(e.getMessage());
         }
     }
-
+    /**
+     * 添加所有部门下拉值
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allOrageDepartment")
+    public Result allOrageDepartment() throws ActException {
+        try {
+            List<String> detail = new ArrayList<>();
+            detail = materialAnalyzeAPI.findAddAllDetails();
+            return ActResult.initialize(detail);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 添加中所有的地区
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allArea")
+    public Result allArea() throws ActException {
+        try {
+            List<AreaBO> area = departmentDetailAPI.findArea();
+            return ActResult.initialize(area);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取所有用户
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allGetPerson")
+    public Result allGetPerson() throws ActException {
+        try {
+            List<String> getPerson = new ArrayList<>();
+            getPerson = materialAnalyzeAPI.findallMonUser();
+            return ActResult.initialize(getPerson);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

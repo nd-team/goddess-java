@@ -3,28 +3,40 @@ package com.bjike.goddess.regularization.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.organize.api.ArrangementAPI;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.entity.DepartmentDetail;
+import com.bjike.goddess.organize.service.PositionDetailUserSer;
 import com.bjike.goddess.regularization.bo.ManagementScoreBO;
 import com.bjike.goddess.regularization.bo.RegularizationBO;
 import com.bjike.goddess.regularization.dto.ManagementScoreDTO;
 import com.bjike.goddess.regularization.dto.RegularizationDTO;
 import com.bjike.goddess.regularization.entity.ManagementScore;
 import com.bjike.goddess.regularization.entity.Regularization;
-import com.bjike.goddess.regularization.to.ManagementScoreTO;
-import com.bjike.goddess.regularization.to.PlanModuleSupplyTO;
-import com.bjike.goddess.regularization.to.RegularizationTO;
-import com.bjike.goddess.regularization.to.ZjbApprovalTO;
+import com.bjike.goddess.regularization.excel.SonPermissionObject;
+import com.bjike.goddess.regularization.to.*;
+import com.bjike.goddess.regularization.type.GuideAddrStatus;
+import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.bo.EntryOptionBO;
+import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.StyledEditorKit;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 
 /**
  * 员工转正业务实现
@@ -41,10 +53,344 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
 
     @Autowired
     private ManagementScoreSer managementScoreSer;
+    @Autowired
+    private PerformanceScoreSer performanceScoreSer;
+    @Autowired
+    private ScoreFormulaSetSer scoreFormulaSetSer;
+    @Autowired
+    private TimeCriteriaSetSer timeCriteriaSetSer;
 
     @Autowired
     private UserAPI userAPI;
 
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+
+    @Autowired
+    private EntryBasicInfoAPI entryBasicInfoAPI;
+
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+
+
+    /**
+     * 检查权限(部门)
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是本部门人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 检查权限(层次)
+     *
+     * @throws SerException
+     */
+    private void checkArrPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.arrCusPermission("2");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是相关人员，没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 检查权限(模块)
+     *
+     * @throws SerException
+     */
+    private void checkModPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("3");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是相关人员，没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 检查员工转正查看权限(模块)
+     *
+     * @throws SerException
+     */
+    private Boolean checkzzSeePermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("3");
+        } else {
+            flag = true;
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+        return flag;
+    }
+
+    /**
+     * 检查权限(岗位)
+     *
+     * @throws SerException
+     */
+    private void checkPonsPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.jobsCusPermission("4");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是项目经理,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对层次审核权限（层次）
+     */
+    private Boolean guideArrIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.arrCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对模块审核权限（模块级别）
+     */
+    private Boolean guideMondIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("3");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对总经办审核权限（岗位级别）
+     */
+    private Boolean guidePosinIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.jobsCusPermission("4");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagGuide = guideIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagGuideMod = guideMondIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagGuidePosi = guidePosinIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagGuideArr = guideArrIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("regularization");
+        obj.setDescribesion("员工转正");
+        if (flagGuide || flagGuideMod || flagGuidePosi || flagGuideArr) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagGuidMana = managementScoreSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("managementscore");
+        obj.setDescribesion("管理层评分");
+        if (flagGuidMana) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagGuidPer = performanceScoreSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("performancescore");
+        obj.setDescribesion("工作表现评分");
+        if (flagGuidPer) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagGuidScore = scoreFormulaSetSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("scoreformulaset");
+        obj.setDescribesion("工作表现计分方式设置");
+        if (flagGuidScore) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagGuidTime = timeCriteriaSetSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("timecriteriaset");
+        obj.setDescribesion("时间条件设置");
+        if (flagGuidTime) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
+
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case ZZLIST:
+                flag = true;
+                break;
+            case ZZADD:
+                flag = true;
+                break;
+            case ZZEDIT:
+                flag = true;
+                break;
+            case LIST:
+                flag = guideIdentity();
+                break;
+            case ADD:
+                flag = guideIdentity();
+                break;
+            case EDIT:
+                flag = guideIdentity();
+                break;
+            case DELETE:
+                flag = guideIdentity();
+                break;
+            case MANAGSCORE:
+                flag = guideArrIdentity();
+                break;
+            case DECISIONSCORE:
+                flag = guideArrIdentity();
+                break;
+            case PLANMODUL:
+                flag = guideMondIdentity();
+                break;
+            case BUDGETMODUL:
+                flag = guideMondIdentity();
+                break;
+            case AUDIT:
+                flag = guidePosinIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
     /**
      * 分页查询员工转正
      *
@@ -53,8 +399,17 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
      */
     @Override
     public List<RegularizationBO> list(RegularizationDTO dto) throws SerException {
-        List<Regularization> list = super.findByPage(dto);
-        List<RegularizationBO> listBO = BeanTransform.copyProperties(list, RegularizationBO.class);
+        List<RegularizationBO> listBO = new ArrayList<>();
+        if(checkzzSeePermission()){
+            List<Regularization> list = super.findByPage(dto);
+            listBO = BeanTransform.copyProperties(list, RegularizationBO.class);
+        }else{
+            RegularizationDTO regularizationDTO = new RegularizationDTO();
+            String userName =  getCurUsername();
+            regularizationDTO.getConditions().add(Restrict.eq("name",userName));
+            List<Regularization> regularizations = super.findByCis(regularizationDTO);
+            listBO = BeanTransform.copyProperties(regularizations,RegularizationBO.class);
+        }
         return listBO;
     }
 
@@ -117,6 +472,7 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void remove(String id) throws SerException {
+        checkPermission();
         removeManageScore(id);
         super.remove(id);
     }
@@ -143,6 +499,7 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void manageScore(String id, ManagementScoreTO to) throws SerException {
+        checkArrPermission();
         String username = getCurUsername();
         ManagementScore model = setManagementScore(id, to, username);
         managementScoreSer.save(model);
@@ -189,6 +546,7 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
      */
     @Override
     public List<ManagementScoreBO> checkManageScore(String id) throws SerException {
+        checkArrPermission();
         if (StringUtils.isNotBlank(id)) {
             ManagementScoreDTO dto = new ManagementScoreDTO();
             dto.getConditions().add(Restrict.eq("regularizationId", id));
@@ -213,6 +571,7 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void decisionLevelEvaluate(String id, String decisionLevelEvaluate, String decisionLevelRank, Integer decisionLevelScore) throws SerException {
+        checkArrPermission();
         String curUsername = getCurUsername();
         Regularization model = super.findById(id);
         if (model == null) {
@@ -238,6 +597,7 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void planModuleSupply(PlanModuleSupplyTO to) throws SerException {
+       checkModPermission();
         String curUsername = getCurUsername();
         Regularization model = super.findById(to.getId());
         if (model == null) {
@@ -264,6 +624,7 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void budgetModuleSupply(String id, String budgetPositiveComment) throws SerException {
+       checkModPermission();
         String curUsername = getCurUsername();
         Regularization model = super.findById(id);
         if (model == null) {
@@ -287,6 +648,7 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void zjbApproval(ZjbApprovalTO to) throws SerException {
+       checkPonsPermission();
         String curUsername = getCurUsername();
         Regularization model = super.findById(to.getId());
         if (model == null) {
@@ -303,4 +665,50 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         super.update(model);
     }
 
+    @Override
+    public List<String> findAddAllDetails() throws SerException {
+        List<DepartmentDetailBO> departmentDetailBOS = departmentDetailAPI.findStatus();
+        if (CollectionUtils.isEmpty(departmentDetailBOS)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (DepartmentDetailBO departmentDetailBO : departmentDetailBOS){
+            String details = departmentDetailBO.getDepartment();
+            if (StringUtils.isNotBlank(departmentDetailBO.getDepartment())) {
+                set.add(details);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> findallMonUser() throws SerException {
+        List<UserBO> userBOS = positionDetailUserAPI.findUserList();
+        if (CollectionUtils.isEmpty(userBOS)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (UserBO userBO : userBOS){
+            String userName = userBO.getUsername();
+            if (StringUtils.isNotBlank(userBO.getUsername())) {
+                set.add(userName);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<RegularizationBO> findAddRusult(String name,String empNumer) throws SerException {
+        List<EntryOptionBO> entryOptionBOS = entryBasicInfoAPI.getEntryOptionByNameAndEmpNum(name,empNumer);
+        return BeanTransform.copyProperties(entryOptionBOS,RegularizationBO.class);
+    }
+
+    @Override
+    public List<RegularizationBO> findByName() throws SerException {
+        RegularizationDTO regularizationDTO = new RegularizationDTO();
+        String userName =  getCurUsername();
+        regularizationDTO.getConditions().add(Restrict.eq("name",userName));
+        List<Regularization> regularizations = super.findByCis(regularizationDTO);
+        return BeanTransform.copyProperties(regularizations,RegularizationBO.class);
+    }
 }

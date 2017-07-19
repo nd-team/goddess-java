@@ -56,8 +56,6 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
-    private PositionDetailAPI positionDetailAPI;
-    @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
     /**
      * 检查权限(部门)
@@ -186,7 +184,9 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
         Boolean flagSee = guideIdentity();
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagMond = guideMondIdentity();
+        RpcTransmit.transmitUserToken(userToken);
         Boolean flagPosin = guidePosinIdentity();
+        RpcTransmit.transmitUserToken(userToken);
         if (flagSee || flagMond || flagPosin) {
             return true;
         } else {
@@ -219,7 +219,7 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
                 flag = guidePosinIdentity();
                 break;
             case BREA:
-                flag = guideIdentity();
+                flag = guidePosinIdentity();
                 break;
             default:
                 flag = true;

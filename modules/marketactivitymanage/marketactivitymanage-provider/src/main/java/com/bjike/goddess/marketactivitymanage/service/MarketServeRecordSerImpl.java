@@ -184,7 +184,9 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
         Boolean flagSee = guideIdentity();
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagAuditM = guideAuditMIdentity();
+        RpcTransmit.transmitUserToken(userToken);
         Boolean flagAuditA = guideAuditAIdentity();
+        RpcTransmit.transmitUserToken(userToken);
         if (flagSee || flagAuditM || flagAuditA) {
             return true;
         } else {

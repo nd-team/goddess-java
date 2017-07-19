@@ -181,7 +181,9 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
         Boolean flagMaterialTrans = guideIdentity();
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagMaterialTransPo = guidePosinIdentity();
+        RpcTransmit.transmitUserToken(userToken);
         Boolean flagMaterialTransMo = guideModulIdentity();
+        RpcTransmit.transmitUserToken(userToken);
         SonPermissionObject obj = new SonPermissionObject();
 
         obj = new SonPermissionObject();

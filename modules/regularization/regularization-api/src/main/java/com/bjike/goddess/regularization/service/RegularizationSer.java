@@ -6,10 +6,8 @@ import com.bjike.goddess.regularization.bo.ManagementScoreBO;
 import com.bjike.goddess.regularization.bo.RegularizationBO;
 import com.bjike.goddess.regularization.dto.RegularizationDTO;
 import com.bjike.goddess.regularization.entity.Regularization;
-import com.bjike.goddess.regularization.to.ManagementScoreTO;
-import com.bjike.goddess.regularization.to.PlanModuleSupplyTO;
-import com.bjike.goddess.regularization.to.RegularizationTO;
-import com.bjike.goddess.regularization.to.ZjbApprovalTO;
+import com.bjike.goddess.regularization.excel.SonPermissionObject;
+import com.bjike.goddess.regularization.to.*;
 
 import java.util.List;
 
@@ -24,6 +22,20 @@ import java.util.List;
  */
 public interface RegularizationSer extends Ser<Regularization, RegularizationDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 分页查询员工转正
      *
@@ -110,5 +122,45 @@ public interface RegularizationSer extends Ser<Regularization, RegularizationDTO
      * @throws SerException
      */
     void zjbApproval(ZjbApprovalTO to) throws SerException;
+    /**
+     * 获取所有组织结构中的部门
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAddAllDetails() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有用户
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findallMonUser() throws SerException {
+        return null;
+    }
+
+    /**
+     * 链接入职信息
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<RegularizationBO> findAddRusult(String name,String empNumer) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据用户名查看信息
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<RegularizationBO> findByName() throws SerException {
+        return null;
+    }
+
 
 }
