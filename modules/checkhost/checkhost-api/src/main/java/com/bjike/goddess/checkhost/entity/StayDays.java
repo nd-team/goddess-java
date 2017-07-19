@@ -1,10 +1,12 @@
 package com.bjike.goddess.checkhost.entity;
 
+import com.bjike.goddess.checkhost.enums.CheckStatus;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 
 /**
@@ -59,25 +61,25 @@ public class StayDays extends BaseEntity {
     /**
      * 入住床位
      */
-    @Column( columnDefinition = "INT(5)   COMMENT '入住床位'")
+    @Column(columnDefinition = "INT(5)   COMMENT '入住床位'")
     private Integer stayBed;
 
     /**
      * 床上3件套（件）
      */
-    @Column( columnDefinition = "INT(5)   COMMENT '床上3件套（件）'")
+    @Column(columnDefinition = "INT(5)   COMMENT '床上3件套（件）'")
     private Integer suit;
 
     /**
      * 被褥（件）
      */
-    @Column( columnDefinition = "INT(5)   COMMENT '被褥（件）'")
+    @Column(columnDefinition = "INT(5)   COMMENT '被褥（件）'")
     private Integer bedding;
 
     /**
      * 床垫
      */
-    @Column( columnDefinition = "INT(5)   COMMENT '床垫'")
+    @Column(columnDefinition = "INT(5)   COMMENT '床垫'")
     private Integer mattress;
 
     /**
@@ -106,7 +108,7 @@ public class StayDays extends BaseEntity {
     /**
      * 当月住宿天数
      */
-    @Column( columnDefinition = "INT(5)   COMMENT '当月住宿天数'")
+    @Column(columnDefinition = "INT(5)   COMMENT '当月住宿天数'")
     private Integer stayNum;
 
     /**
@@ -121,11 +123,11 @@ public class StayDays extends BaseEntity {
     @Column(name = "is_employeeVerify", columnDefinition = "TINYINT(2)  COMMENT '员工核实是否有误'")
     private Boolean employeeVerify;
 
-    /**
-     * 综合资源部核实
-     */
-    @Column(name = "comprehensiveVerify", columnDefinition = "VARCHAR(255)   COMMENT '综合资源部核实'")
-    private String comprehensiveVerify;
+//    /**
+//     * 综合资源部核实
+//     */
+//    @Column(name = "comprehensiveVerify", columnDefinition = "VARCHAR(255)   COMMENT '综合资源部核实'")
+//    private String comprehensiveVerify;
 
     /**
      * 备注
@@ -133,6 +135,19 @@ public class StayDays extends BaseEntity {
     @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
+    /**
+     * 审核状态
+     */
+    @Column(name = "checkStatus", columnDefinition = "TINYINT(2)  COMMENT '审核状态'")
+    private CheckStatus checkStatus;
+
+    public CheckStatus getCheckStatus() {
+        return checkStatus;
+    }
+
+    public void setCheckStatus(CheckStatus checkStatus) {
+        this.checkStatus = checkStatus;
+    }
 
     public String getArea() {
         return area;
@@ -270,13 +285,13 @@ public class StayDays extends BaseEntity {
         this.employeeVerify = employeeVerify;
     }
 
-    public String getComprehensiveVerify() {
-        return comprehensiveVerify;
-    }
-
-    public void setComprehensiveVerify(String comprehensiveVerify) {
-        this.comprehensiveVerify = comprehensiveVerify;
-    }
+//    public String getComprehensiveVerify() {
+//        return comprehensiveVerify;
+//    }
+//
+//    public void setComprehensiveVerify(String comprehensiveVerify) {
+//        this.comprehensiveVerify = comprehensiveVerify;
+//    }
 
     public String getRemark() {
         return remark;

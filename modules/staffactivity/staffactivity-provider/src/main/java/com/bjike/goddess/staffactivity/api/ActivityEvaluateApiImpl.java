@@ -9,6 +9,7 @@ import com.bjike.goddess.staffactivity.dto.ActivityEvaluateDTO;
 import com.bjike.goddess.staffactivity.entity.ActivityEvaluate;
 import com.bjike.goddess.staffactivity.service.ActivityEvaluateSer;
 import com.bjike.goddess.staffactivity.to.ActivityEvaluateTO;
+import com.bjike.goddess.staffactivity.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -122,5 +123,15 @@ public class ActivityEvaluateApiImpl implements ActivityEvaluateAPI {
     @Override
     public List<ActivityEvaluateSummaryBO> evaluateSummary(String startDate, String endDate) throws SerException {
         return activityEvaluateSer.evaluateSummary(startDate, endDate);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return activityEvaluateSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return activityEvaluateSer.guidePermission(guidePermissionTO);
     }
 }

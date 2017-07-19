@@ -1,7 +1,7 @@
 package com.bjike.goddess.materialbuy.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.materialbuy.type.AuditState;
+import com.bjike.goddess.materialbuy.enums.AuditState;
 
 /**
  * 物资购买业务传输对象

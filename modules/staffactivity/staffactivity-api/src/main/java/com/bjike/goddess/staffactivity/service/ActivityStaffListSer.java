@@ -6,6 +6,7 @@ import com.bjike.goddess.staffactivity.bo.ActivityStaffListBO;
 import com.bjike.goddess.staffactivity.dto.ActivityStaffListDTO;
 import com.bjike.goddess.staffactivity.entity.ActivityStaffList;
 import com.bjike.goddess.staffactivity.to.ActivityStaffListTO;
+import com.bjike.goddess.staffactivity.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +20,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ActivityStaffListSer extends Ser<ActivityStaffList, ActivityStaffListDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 分页查询活动人员名单

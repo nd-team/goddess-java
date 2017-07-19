@@ -3,8 +3,8 @@ package com.bjike.goddess.courier.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.courier.type.AttributeType;
-import com.bjike.goddess.courier.type.Range;
+import com.bjike.goddess.courier.enums.AttributeType;
+import com.bjike.goddess.courier.enums.Range;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.DecimalMin;
@@ -114,12 +114,6 @@ public class CourierTO extends BaseTO {
     private String courierCompany;
 
     /**
-     * 快递公司联系方式
-     */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "快递公司联系方式不能为空")
-    private String courierTel;
-
-    /**
      * 快递重量
      */
     @NotNull(groups = {ADD.class, EDIT.class}, message = "快递重量不能为空")
@@ -153,31 +147,31 @@ public class CourierTO extends BaseTO {
     @DecimalMin(value = "0.00", groups = {ADD.class, EDIT.class}, message = "保险费(元)必须大于等于0")
     private Double secure;
 
-    /**
-     * 总费用
-     */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "总费用不能为空")
-    @DecimalMin(value = "0.00", inclusive = false, groups = {ADD.class, EDIT.class}, message = "总费用必须大于0")
-    private Double feeSum;
+//    /**
+//     * 总费用
+//     */
+//    @NotNull(groups = {ADD.class, EDIT.class}, message = "总费用不能为空")
+//    @DecimalMin(value = "0.00", inclusive = false, groups = {ADD.class, EDIT.class}, message = "总费用必须大于0")
+//    private Double feeSum;
 
-    /**
-     * 余额
-     */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "余额不能为空")
-    @DecimalMin(value = "0.00", groups = {ADD.class, EDIT.class}, message = "余额必须大于等于0")
-    private Double remainingSum;
+//    /**
+//     * 余额
+//     */
+//    @NotNull(groups = {ADD.class, EDIT.class}, message = "余额不能为空")
+//    @DecimalMin(value = "0.00", groups = {ADD.class, EDIT.class}, message = "余额必须大于等于0")
+//    private Double remainingSum;
 
     /**
      * 是否有发票/收据
      */
     @NotNull(groups = {ADD.class, EDIT.class}, message = "是否有发票/收据不能为空")
-    private boolean isInvoice;
+    private Boolean isInvoice;
 
     /**
      * 是否公司支付
      */
     @NotNull(groups = {ADD.class, EDIT.class}, message = "是否公司支付不能为空")
-    private boolean isCompanyPay;
+    private Boolean isCompanyPay;
 
     /**
      * 支付人
@@ -189,7 +183,7 @@ public class CourierTO extends BaseTO {
      * 是否收件
      */
     @NotNull(groups = {ADD.class, EDIT.class}, message = "是否收件不能为空")
-    private boolean isReceipt;
+    private Boolean isReceipt;
 
     /**
      * 签收人
@@ -199,38 +193,12 @@ public class CourierTO extends BaseTO {
     /**
      * 收件清单确认
      */
-    private boolean isConfirm;
+    private Boolean isConfirm;
 
     /**
      * 备注
      */
     private String description;
-
-    /**
-     * 年
-     */
-    private Integer year;
-
-    /**
-     * 月
-     */
-    private Integer month;
-
-    public Integer getYear() {
-        return year;
-    }
-
-    public void setYear(Integer year) {
-        this.year = year;
-    }
-
-    public Integer getMonth() {
-        return month;
-    }
-
-    public void setMonth(Integer month) {
-        this.month = month;
-    }
 
     public String getArrival() {
         return arrival;
@@ -352,14 +320,6 @@ public class CourierTO extends BaseTO {
         this.courierCompany = courierCompany;
     }
 
-    public String getCourierTel() {
-        return courierTel;
-    }
-
-    public void setCourierTel(String courierTel) {
-        this.courierTel = courierTel;
-    }
-
     public Double getCourierQuality() {
         return courierQuality;
     }
@@ -400,35 +360,19 @@ public class CourierTO extends BaseTO {
         this.secure = secure;
     }
 
-    public Double getFeeSum() {
-        return feeSum;
-    }
-
-    public void setFeeSum(Double feeSum) {
-        this.feeSum = feeSum;
-    }
-
-    public Double getRemainingSum() {
-        return remainingSum;
-    }
-
-    public void setRemainingSum(Double remainingSum) {
-        this.remainingSum = remainingSum;
-    }
-
-    public boolean getIsInvoice() {
+    public Boolean getIsInvoice() {
         return isInvoice;
     }
 
-    public void setIsInvoice(boolean isInvoice) {
+    public void setIsInvoice(Boolean isInvoice) {
         this.isInvoice = isInvoice;
     }
 
-    public boolean getIsCompanyPay() {
+    public Boolean getIsCompanyPay() {
         return isCompanyPay;
     }
 
-    public void setIsCompanyPay(boolean isCompanyPay) {
+    public void setIsCompanyPay(Boolean isCompanyPay) {
         this.isCompanyPay = isCompanyPay;
     }
 
@@ -440,11 +384,11 @@ public class CourierTO extends BaseTO {
         this.payPerson = payPerson;
     }
 
-    public boolean getIsReceipt() {
+    public Boolean getIsReceipt() {
         return isReceipt;
     }
 
-    public void setIsReceipt(boolean isReceipt) {
+    public void setIsReceipt(Boolean isReceipt) {
         this.isReceipt = isReceipt;
     }
 
@@ -456,11 +400,11 @@ public class CourierTO extends BaseTO {
         this.signPerson = signPerson;
     }
 
-    public boolean getIsConfirm() {
+    public Boolean getIsConfirm() {
         return isConfirm;
     }
 
-    public void setIsConfirm(boolean isConfirm) {
+    public void setIsConfirm(Boolean isConfirm) {
         this.isConfirm = isConfirm;
     }
 

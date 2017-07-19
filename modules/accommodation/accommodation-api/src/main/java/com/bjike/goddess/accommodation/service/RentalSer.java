@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Author: [xiazhili]
@@ -95,4 +96,12 @@ public interface RentalSer extends Ser<Rental, RentalDTO> {
         return null;
     }
 
+    /**
+     * chenjunhao
+     * 获取所有租房地址
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allAddress() throws SerException;
 }
