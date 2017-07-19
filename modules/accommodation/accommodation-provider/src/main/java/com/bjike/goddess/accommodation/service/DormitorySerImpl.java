@@ -4,6 +4,7 @@ import com.bjike.goddess.accommodation.bo.DormitoryBO;
 import com.bjike.goddess.accommodation.dto.DormitoryDTO;
 import com.bjike.goddess.accommodation.entity.Dormitory;
 import com.bjike.goddess.accommodation.to.DormitoryTO;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -14,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 宿舍信息 业务实现
@@ -27,12 +30,12 @@ import java.util.List;
  */
 @CacheConfig(cacheNames = "accommodationSerCache")
 @Service
-public class DormitorySerImpl extends ServiceImpl<Dormitory,DormitoryDTO> implements DormitorySer{
+public class DormitorySerImpl extends ServiceImpl<Dormitory, DormitoryDTO> implements DormitorySer {
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DormitoryBO insertDormitory(DormitoryTO dormitoryTO) throws SerException {
-        Dormitory dormitory = BeanTransform.copyProperties(dormitoryTO,Dormitory.class,true);
+        Dormitory dormitory = BeanTransform.copyProperties(dormitoryTO, Dormitory.class, true);
         dormitory.setCreateTime(LocalDateTime.now());
         super.save(dormitory);
         return BeanTransform.copyProperties(dormitory, DormitoryBO.class);
@@ -43,15 +46,15 @@ public class DormitorySerImpl extends ServiceImpl<Dormitory,DormitoryDTO> implem
     @Override
     public DormitoryBO editDormitory(DormitoryTO dormitoryTO) throws SerException {
 
-        if(!StringUtils.isEmpty(dormitoryTO.getId())){
+        if (!StringUtils.isEmpty(dormitoryTO.getId())) {
             Dormitory dormitory = super.findById(dormitoryTO.getId());
-            BeanTransform.copyProperties(dormitoryTO,dormitory,true);
+            BeanTransform.copyProperties(dormitoryTO, dormitory, true);
             dormitory.setModifyTime(LocalDateTime.now());
             super.update(dormitory);
-        }else{
+        } else {
             throw new SerException("更新ID不能为空!");
         }
-        return BeanTransform.copyProperties(dormitoryTO,DormitoryBO.class);
+        return BeanTransform.copyProperties(dormitoryTO, DormitoryBO.class);
 
     }
 
@@ -64,12 +67,13 @@ public class DormitorySerImpl extends ServiceImpl<Dormitory,DormitoryDTO> implem
             throw new SerException(e.getMessage());
         }
     }
+
     @Cacheable
     @Override
     public List<DormitoryBO> findListDormitory(DormitoryDTO dormitoryDTO) throws SerException {
 
-        List<Dormitory> dormitories = super.findByCis(dormitoryDTO,true);
-        return BeanTransform.copyProperties(dormitories,DormitoryBO.class);
+        List<Dormitory> dormitories = super.findByCis(dormitoryDTO, true);
+        return BeanTransform.copyProperties(dormitories, DormitoryBO.class);
     }
 
     /**
@@ -78,11 +82,41 @@ public class DormitorySerImpl extends ServiceImpl<Dormitory,DormitoryDTO> implem
     public void importFile() throws SerException {
         //TODO: xiazhili 2017-03-10 未做导入数据
     }
+
     /**
      * 导出宿舍信息明细
      */
-    public String exportExcel(String area)throws SerException {
+    public String exportExcel(String area) throws SerException {
         //TODO: xiazhili 2017-03-10 未做导出宿舍信息明细
         return null;
+    }
+
+    @Override
+    /**
+     * chenjunhao
+     *  获取所有宿舍地址
+     */
+    public Set<String> allDormitoryAddress() throws SerException {
+        List<Dormitory> list = super.findAll();
+        Set<String> set = new HashSet<>();
+        for (Dormitory dormitory : list) {
+            set.add(dormitory.getDormitoryAddress());
+        }
+        return set;
+    }
+
+    @Override
+    /**
+     * chenjunhao
+     * 根据住宿地址获取负责人联系方式
+     */
+    public String findContact(String dormitoryAddress) throws SerException {
+        DormitoryDTO dto = new DormitoryDTO();
+        dto.getConditions().add(Restrict.eq("dormitoryAddress", dormitoryAddress));
+        List<Dormitory> list = super.findByCis(dto);
+        if (list != null && !list.isEmpty()) {
+            return list.get(0).getHeadContact();
+        }
+        return "";
     }
 }

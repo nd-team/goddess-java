@@ -17,6 +17,8 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class AnnouncementTO extends BaseTO {
+    public interface ADDPERSON {
+    }
 
     /**
      * 分类
@@ -27,24 +29,25 @@ public class AnnouncementTO extends BaseTO {
     /**
      * 标题
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "标题不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class, AnnouncementTO.ADDPERSON.class}, message = "标题不能为空")
     private String title;
 
     /**
      * 作者
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "作者不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class, AnnouncementTO.ADDPERSON.class}, message = "作者不能为空")
     private String author;
 
     /**
      * 发布内容
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "发布内容不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class, AnnouncementTO.ADDPERSON.class}, message = "发布内容不能为空")
     private String publishContent;
 
     /**
      * 发布对象数组(传用户id)
      */
+    @NotNull(groups = {AnnouncementTO.ADDPERSON.class}, message = "发布对象数组(传用户id)不能为空")
     private String[] recipients;
 
     /**
@@ -55,13 +58,13 @@ public class AnnouncementTO extends BaseTO {
     /**
      * 是否必读
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否必读不能为空")
+    @NotNull(groups = {ADD.class, EDIT.class, AnnouncementTO.ADDPERSON.class}, message = "是否必读不能为空")
     private Boolean required;
 
     /**
      * 是否发送邮件
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否发送邮件不能为空")
+    @NotNull(groups = {ADD.class, EDIT.class, AnnouncementTO.ADDPERSON.class}, message = "是否发送邮件不能为空")
     private Boolean send;
 
     /**

@@ -8,6 +8,8 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
 import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
+import com.bjike.goddess.oilcardmanage.api.OilCardBasicAPI;
+import com.bjike.goddess.oilcardmanage.api.OilCardRechargeAPI;
 import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardRechargeBO;
 import com.bjike.goddess.oilcardprepared.bo.ContrastBO;
@@ -48,6 +50,10 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private OilCardBasicAPI oilCardBasicAPI;
+    @Autowired
+    private OilCardRechargeAPI oilCardRechargeAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -196,7 +202,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Transactional(rollbackFor = {SerException.class})
     public List<WaitPayBO> list(WaitPayDTO dto) throws SerException {
         checkSeeIdentity();
-        String userToken=RpcTransmit.getUserToken();
+        String userToken = RpcTransmit.getUserToken();
         List<DispatchCarInfoBO> list = dispatchCarInfoAPI.allWaitPay();
         List<WaitPay> waitPays = super.findAll();
         if (list != null) {
@@ -206,17 +212,20 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
                     waitPay.setWaitId(v.getId());
                     waitPay.setOilCardCode(v.getOilCardNumber());
                     waitPay.setOilCardBalance(v.getOilCardBalance());
-                    OilCardBasicBO oilCardBasicBO = findOilCardBasic(v.getOilCardNumber());
+                    OilCardBasicBO oilCardBasicBO = oilCardBasicAPI.findByCode(v.getOilCardNumber());
                     waitPay.setOilCardNumber(oilCardBasicBO.getOilCardNumber());
-                    OilCardRechargeBO oilCardRechargeBO = findOilCardRecharge(oilCardBasicBO.getId());
-                    waitPay.setRechargeDate(DateUtil.parseDateTime(oilCardRechargeBO.getRechargeDate()));
-                    waitPay.setMonth(DateUtil.parseDateTime(oilCardRechargeBO.getRechargeDate()).getMonthValue());
-                    waitPay.setYear(DateUtil.parseDateTime(oilCardRechargeBO.getRechargeDate()).getYear());
-                    waitPay.setRechargeMoney(oilCardRechargeBO.getRechargeMoney());
-                    waitPay.setRechargeUser(oilCardRechargeBO.getRechargeUser());
-                    waitPay.setRechargeWay(oilCardRechargeBO.getRechargeWay());
-                    waitPay.setPay(v.getPay());
-                    super.save(waitPay);
+                    List<OilCardRechargeBO> oilCardRechargeBOs = oilCardRechargeAPI.findByBasicId(oilCardBasicBO.getId());
+                    if (oilCardRechargeBOs != null && !oilCardRechargeBOs.isEmpty()) {
+                        OilCardRechargeBO oilCardRechargeBO = oilCardRechargeBOs.get(0);
+                        waitPay.setRechargeDate(DateUtil.parseDateTime(oilCardRechargeBO.getRechargeDate()));
+                        waitPay.setMonth(DateUtil.parseDateTime(oilCardRechargeBO.getRechargeDate()).getMonthValue());
+                        waitPay.setYear(DateUtil.parseDateTime(oilCardRechargeBO.getRechargeDate()).getYear());
+                        waitPay.setRechargeMoney(oilCardRechargeBO.getRechargeMoney());
+                        waitPay.setRechargeUser(oilCardRechargeBO.getRechargeUser());
+                        waitPay.setRechargeWay(oilCardRechargeBO.getRechargeWay());
+                        waitPay.setPay(v.getPay());
+                        super.save(waitPay);
+                    }
                 } else {
                     boolean b1 = true;
                     for (WaitPay p : waitPays) {
@@ -229,17 +238,20 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
                         waitPay.setWaitId(v.getId());
                         waitPay.setOilCardCode(v.getOilCardNumber());
                         waitPay.setOilCardBalance(v.getOilCardBalance());
-                        OilCardBasicBO oilCardBasicBO = findOilCardBasic(v.getOilCardNumber());
+                        OilCardBasicBO oilCardBasicBO = oilCardBasicAPI.findByCode(v.getOilCardNumber());
                         waitPay.setOilCardNumber(oilCardBasicBO.getOilCardNumber());
-                        OilCardRechargeBO oilCardRechargeBO = findOilCardRecharge(oilCardBasicBO.getId());
-                        waitPay.setRechargeDate(DateUtil.parseDateTime(oilCardRechargeBO.getRechargeDate()));
-                        waitPay.setMonth(DateUtil.parseDateTime(oilCardRechargeBO.getRechargeDate()).getMonthValue());
-                        waitPay.setYear(DateUtil.parseDateTime(oilCardRechargeBO.getRechargeDate()).getYear());
-                        waitPay.setRechargeMoney(oilCardRechargeBO.getRechargeMoney());
-                        waitPay.setRechargeUser(oilCardRechargeBO.getRechargeUser());
-                        waitPay.setRechargeWay(oilCardRechargeBO.getRechargeWay());
-                        waitPay.setPay(v.getPay());
-                        super.save(waitPay);
+                        List<OilCardRechargeBO> oilCardRechargeBOs = oilCardRechargeAPI.findByBasicId(oilCardBasicBO.getId());
+                        if (oilCardRechargeBOs != null && !oilCardRechargeBOs.isEmpty()) {
+                            OilCardRechargeBO oilCardRechargeBO = oilCardRechargeBOs.get(0);
+                            waitPay.setRechargeDate(DateUtil.parseDateTime(oilCardRechargeBO.getRechargeDate()));
+                            waitPay.setMonth(DateUtil.parseDateTime(oilCardRechargeBO.getRechargeDate()).getMonthValue());
+                            waitPay.setYear(DateUtil.parseDateTime(oilCardRechargeBO.getRechargeDate()).getYear());
+                            waitPay.setRechargeMoney(oilCardRechargeBO.getRechargeMoney());
+                            waitPay.setRechargeUser(oilCardRechargeBO.getRechargeUser());
+                            waitPay.setRechargeWay(oilCardRechargeBO.getRechargeWay());
+                            waitPay.setPay(v.getPay());
+                            super.save(waitPay);
+                        }
                     }
                 }
             }
@@ -259,7 +271,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Override
     public List<WaitPayBO> count(String startTime, String endTime) throws SerException {
         list(new WaitPayDTO());
-        String userToken=RpcTransmit.getUserToken();
+        String userToken = RpcTransmit.getUserToken();
         List<WaitPay> all = new ArrayList<WaitPay>();
         WaitPayDTO dto = new WaitPayDTO();
         List<WaitPayBO> boList = new ArrayList<WaitPayBO>();

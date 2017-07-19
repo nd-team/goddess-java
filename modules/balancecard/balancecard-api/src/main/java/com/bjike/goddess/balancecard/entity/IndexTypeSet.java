@@ -33,7 +33,7 @@ public class IndexTypeSet extends BaseEntity {
     /**
      * 指标添加人
      */
-    @Column(name = "person", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '指标添加人'")
+    @Column(name = "person",  columnDefinition = "VARCHAR(255)   COMMENT '指标添加人'")
     private String person;
 
 

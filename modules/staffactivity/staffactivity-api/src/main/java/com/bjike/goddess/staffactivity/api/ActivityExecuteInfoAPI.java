@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffactivity.bo.ActivityExecuteInfoBO;
 import com.bjike.goddess.staffactivity.dto.ActivityExecuteInfoDTO;
 import com.bjike.goddess.staffactivity.to.ActivityExecuteInfoTO;
+import com.bjike.goddess.staffactivity.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -17,6 +18,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ActivityExecuteInfoAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 根据id查询活动执行信息
@@ -69,4 +83,10 @@ public interface ActivityExecuteInfoAPI {
      */
     void update(ActivityExecuteInfoTO to) throws SerException;
 
+    /**
+     * 定时查看
+     *
+     * @throws SerException
+     */
+    void send() throws SerException;
 }

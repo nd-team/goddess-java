@@ -3,6 +3,7 @@ package com.bjike.goddess.staffentry.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.bo.EntryOptionBO;
 import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
 import com.bjike.goddess.staffentry.service.EntryBasicInfoSer;
@@ -84,4 +85,11 @@ public class EntryBasicInfoApiImpl implements EntryBasicInfoAPI{
     public List<EntryBasicInfoVO> getByEmpNumber(String empNumber) throws SerException {
         return entryBasicInfoSer.getByEmpNumber(empNumber);
     }
+
+    @Override
+    public List<EntryOptionBO> getEntryOptionByNameAndEmpNum(String name, String empNumer) throws SerException {
+        return entryBasicInfoSer.getEntryOptionByNameAndEmpNum(name,empNumer);
+    }
+
+
 }

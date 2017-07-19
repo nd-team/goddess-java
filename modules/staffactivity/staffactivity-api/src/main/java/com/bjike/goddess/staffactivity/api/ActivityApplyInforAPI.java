@@ -5,6 +5,8 @@ import com.bjike.goddess.staffactivity.bo.ActivityApplyInforBO;
 import com.bjike.goddess.staffactivity.bo.ActivityStaffListBO;
 import com.bjike.goddess.staffactivity.dto.ActivityApplyInforDTO;
 import com.bjike.goddess.staffactivity.to.ActivityApplyInforTO;
+import com.bjike.goddess.staffactivity.to.GuidePermissionTO;
+import com.bjike.goddess.staffactivity.vo.SonPermissionObject;
 
 import java.util.List;
 
@@ -18,6 +20,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ActivityApplyInforAPI {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 根据id查询活动申请信息

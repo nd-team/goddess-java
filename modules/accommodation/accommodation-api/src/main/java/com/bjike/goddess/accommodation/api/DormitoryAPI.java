@@ -7,6 +7,7 @@ import com.bjike.goddess.accommodation.to.DormitoryTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Author: [xiazhili]
@@ -66,4 +67,23 @@ public interface DormitoryAPI {
     default String exportExcel(String area)throws SerException {
         return null;
     }
+
+    /**
+     * chenjunhao
+     * 获取所有宿舍地址
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allDormitoryAddress() throws SerException;
+
+    /**
+     * chenjunhao
+     * 根据住宿地址获取负责人联系方式
+     *
+     * @param dormitoryAddress
+     * @return
+     * @throws SerException
+     */
+    String findContact(String dormitoryAddress) throws SerException;
 }

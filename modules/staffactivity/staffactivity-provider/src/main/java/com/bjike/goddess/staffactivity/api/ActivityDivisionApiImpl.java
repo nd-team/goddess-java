@@ -7,6 +7,7 @@ import com.bjike.goddess.staffactivity.dto.ActivityDivisionDTO;
 import com.bjike.goddess.staffactivity.entity.ActivityDivision;
 import com.bjike.goddess.staffactivity.service.ActivityDivisionSer;
 import com.bjike.goddess.staffactivity.to.ActivityDivisionTO;
+import com.bjike.goddess.staffactivity.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -95,5 +96,15 @@ public class ActivityDivisionApiImpl implements ActivityDivisionAPI {
     @Override
     public void update(ActivityDivisionTO to) throws SerException {
         activityDivisionSer.update(to);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return activityDivisionSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return activityDivisionSer.guidePermission(guidePermissionTO);
     }
 }

@@ -3,6 +3,7 @@ package com.bjike.goddess.checkhost.api;
 import com.bjike.goddess.checkhost.bo.HostApplyBO;
 import com.bjike.goddess.checkhost.dto.HostApplyDTO;
 import com.bjike.goddess.checkhost.entity.HostApply;
+import com.bjike.goddess.checkhost.enums.CheckStatus;
 import com.bjike.goddess.checkhost.service.HostApplySer;
 import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.to.HostApplyTO;
@@ -59,8 +60,8 @@ public class HostApplyApiImpl implements HostApplyAPI {
     }
 
     @Override
-    public HostApplyBO auditHostApply(HostApplyTO hostApplyTO) throws SerException {
-        return hostApplySer.auditHostApply(hostApplyTO);
+    public HostApplyBO auditHostApply(String id, CheckStatus checkStatus) throws SerException {
+        return hostApplySer.auditHostApply(id,checkStatus);
     }
 
     @Override

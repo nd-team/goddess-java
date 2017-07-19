@@ -6,7 +6,9 @@ import com.bjike.goddess.materialbuy.bo.AreaBuyStatusDayCollectBO;
 import com.bjike.goddess.materialbuy.bo.MaterialBuyBO;
 import com.bjike.goddess.materialbuy.dto.MaterialBuyDTO;
 import com.bjike.goddess.materialbuy.entity.MaterialBuy;
+import com.bjike.goddess.materialbuy.to.GuidePermissionTO;
 import com.bjike.goddess.materialbuy.to.MaterialBuyTO;
+import com.bjike.goddess.materialbuy.vo.SonPermissionObject;
 
 import java.util.List;
 import java.util.Map;
@@ -21,6 +23,19 @@ import java.util.Map;
  * @Copy: [ com.bjike ]
  */
 public interface MaterialBuySer extends Ser<MaterialBuy, MaterialBuyDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 分页查询物资购买

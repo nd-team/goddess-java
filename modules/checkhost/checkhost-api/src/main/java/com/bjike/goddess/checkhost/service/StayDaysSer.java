@@ -2,12 +2,13 @@ package com.bjike.goddess.checkhost.service;
 
 import com.bjike.goddess.checkhost.bo.CollectNameBO;
 import com.bjike.goddess.checkhost.bo.StayDaysBO;
+import com.bjike.goddess.checkhost.dto.StayDaysDTO;
+import com.bjike.goddess.checkhost.entity.StayDays;
+import com.bjike.goddess.checkhost.enums.CheckStatus;
 import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.to.StayDaysTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.checkhost.entity.StayDays;
-import com.bjike.goddess.checkhost.dto.StayDaysDTO;
 
 import java.util.List;
 
@@ -41,6 +42,7 @@ public interface StayDaysSer extends Ser<StayDays, StayDaysDTO> {
     default Long countStayDays(StayDaysDTO stayDaysDTO) throws SerException {
         return null;
     }
+
     /**
      * 一个员工住宿天数汇总
      *
@@ -49,6 +51,7 @@ public interface StayDaysSer extends Ser<StayDays, StayDaysDTO> {
     default StayDaysBO getOne(String id) throws SerException {
         return null;
     }
+
     /**
      * 获取员工住宿天数汇总
      *
@@ -91,15 +94,16 @@ public interface StayDaysSer extends Ser<StayDays, StayDaysDTO> {
     default void removeStayDays(String id) throws SerException {
 
     }
+
     /**
      * 审核
      *
-     * @param stayDaysTO 员工住宿天数汇总
+     * @param id          id
+     * @param checkStatus 审核状态
      * @return class StayDaysBO
      */
-    default StayDaysBO auditStayDays(StayDaysTO stayDaysTO) throws SerException {
-        return null;
-    }
+    StayDaysBO auditStayDays(String id, CheckStatus checkStatus) throws SerException;
+
     /**
      * 汇总
      *

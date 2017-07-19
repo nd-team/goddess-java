@@ -13,7 +13,7 @@ import java.io.IOException;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.bjike.goddess.reportmanagement.action","com.bjike.goddess.reportmanagement.config", "com.bjike.goddess.common.consumer"})
-//@PropertySource(value = {"classpath:permission.properties"},encoding="utf-8")
+@PropertySource(value = {"classpath:permission.properties"},encoding="utf-8")
 @ImportResource("classpath:app.xml")
 @EnableAutoConfiguration(exclude = {ValidationAutoConfiguration.class})
 public class Application {

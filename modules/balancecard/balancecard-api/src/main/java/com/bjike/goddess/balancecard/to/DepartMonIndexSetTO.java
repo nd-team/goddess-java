@@ -19,25 +19,48 @@ import java.util.List;
  */
 public class DepartMonIndexSetTO extends BaseTO {
 
-    public interface TestAdd{}
-    public interface TestSer{}
+    public interface TestAdd {
+    }
+
+    public interface TestSer {
+    }
 
     /**
      * 指标名称
      */
-    @NotBlank(groups = {DepartMonIndexSetTO.TestAdd.class} , message = "指标名称不能为空")
+    @NotBlank(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "指标名称不能为空")
     private String indexName;
+
+    /**
+     * 年度指标编号
+     */
+    @NotBlank(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "年度指标编号不能为空")
+    private Integer indexNumber;
+
+    /**
+     * 部门年度指标编号
+     */
+    @NotBlank(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "部门年度指标编号不能为空")
+    private Integer yearIndexNumber;
+
+    /**
+     * 部门月度指标编号
+     */
+    @NotBlank(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "部门月度指标编号不能为空")
+    private Integer monthIndexNumber;
+
+
 
     /**
      * 年份
      */
-    @NotBlank(groups = {DepartMonIndexSetTO.TestAdd.class} , message = "年份不能为空")
+    @NotBlank(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "年份不能为空")
     private String year;
 
     /**
      * 月份
      */
-    @NotBlank(groups = {DepartMonIndexSetTO.TestAdd.class} , message = "月份不能为空")
+    @NotBlank(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "月份不能为空")
     private String month;
 
     /**
@@ -53,25 +76,25 @@ public class DepartMonIndexSetTO extends BaseTO {
     /**
      * 总指标权重
      */
-    @NotNull(groups = {DepartMonIndexSetTO.TestAdd.class} , message = "总指标权重不能为空")
+    @NotNull(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "总指标权重不能为空")
     private Double describtion;
 
     /**
      * 责任部门
      */
-    @NotBlank(groups = {DepartMonIndexSetTO.TestAdd.class} , message = "责任部门不能为空")
+    @NotBlank(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "责任部门不能为空")
     private String department;
 
     /**
      * 部门年度指标权重
      */
-    @NotNull(groups = {DepartMonIndexSetTO.TestAdd.class} , message = "部门年度指标权重不能为空")
+    @NotNull(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "部门年度指标权重不能为空")
     private Double departYearWeight;
 
     /**
      * 部门年度对赌值
      */
-    @NotNull(groups = {DepartMonIndexSetTO.TestAdd.class} , message = "部门年度对赌值不能为空")
+    @NotNull(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "部门年度对赌值不能为空")
     private Double departYearWager;
 
     /**
@@ -82,18 +105,19 @@ public class DepartMonIndexSetTO extends BaseTO {
     /**
      * 本月目标值
      */
-    @NotNull(groups = {DepartMonIndexSetTO.TestAdd.class} , message = "本月目标值不能为空")
+    @NotNull(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "本月目标值不能为空")
     private Double target;
 
     /**
      * 对赌值
      */
-    @NotNull(groups = {DepartMonIndexSetTO.TestAdd.class} , message = "对赌值不能为空")
+    @NotNull(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "对赌值不能为空")
     private Double wager;
 
     /**
      * 完成值
      */
+    @NotNull(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "完成值不能为空")
     private Double complete;
 
     /**
@@ -174,7 +198,7 @@ public class DepartMonIndexSetTO extends BaseTO {
     /**
      * 岗位分解数据
      */
-    @NotNull(groups = {DepartMonIndexSetTO.TestSer.class} , message = "岗位分解数据不能为空")
+    @NotNull(groups = {DepartMonIndexSetTO.TestSer.class}, message = "岗位分解数据不能为空")
     private List<PostSerperateTO> postSerperateTOList;
 
 
@@ -408,5 +432,28 @@ public class DepartMonIndexSetTO extends BaseTO {
 
     public void setPostSerperateTOList(List<PostSerperateTO> postSerperateTOList) {
         this.postSerperateTOList = postSerperateTOList;
+    }
+    public Integer getIndexNumber()
+    {
+        return indexNumber;
+    }
+    public void setIndexNumber(Integer indexNumber) {
+        this.indexNumber = indexNumber;
+    }
+
+    public Integer getYearIndexNumber() {
+        return yearIndexNumber;
+    }
+
+    public void setYearIndexNumber(Integer yearIndexNumber) {
+        this.yearIndexNumber = yearIndexNumber;
+    }
+
+    public Integer getMonthIndexNumber() {
+        return monthIndexNumber;
+    }
+
+    public void setMonthIndexNumber(Integer monthIndexNumber) {
+        this.monthIndexNumber = monthIndexNumber;
     }
 }

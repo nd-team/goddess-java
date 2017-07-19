@@ -16,6 +16,9 @@ public class JapiTest {
 		JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
 				"modules/courier/courier-api",
 				"common/common-api",
+				"modules/user/user-api",
+				"modules/announcement/announcement-api",
+				"modules/organize/organize-api",
 				"modules/storage/storage-api"
 		});
 		JapiClient.setFlushServer(true);

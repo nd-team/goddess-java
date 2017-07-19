@@ -5,6 +5,7 @@ import com.bjike.goddess.staffactivity.bo.ActivityFundSummaryBO;
 import com.bjike.goddess.staffactivity.bo.ActivitySchemeBO;
 import com.bjike.goddess.staffactivity.dto.ActivitySchemeDTO;
 import com.bjike.goddess.staffactivity.to.ActivitySchemeTO;
+import com.bjike.goddess.staffactivity.to.GuidePermissionTO;
 
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,19 @@ import java.util.Map;
  * @Copy: [ com.bjike ]
  */
 public interface ActivitySchemeAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 根据id查询活动方案

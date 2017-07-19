@@ -1,19 +1,19 @@
 package com.bjike.goddess.balancecard.service;
 
 import com.bjike.goddess.balancecard.bo.PositionIndexSetBO;
-import com.bjike.goddess.balancecard.dto.DepartMonIndexSetDTO;
-import com.bjike.goddess.balancecard.entity.DepartMonIndexSet;
-import com.bjike.goddess.balancecard.entity.DepartYearIndexSet;
-import com.bjike.goddess.balancecard.entity.YearIndexSet;
+import com.bjike.goddess.balancecard.entity.*;
+import com.bjike.goddess.balancecard.enums.GuideAddrStatus;
+import com.bjike.goddess.balancecard.enums.SeparateStatus;
 import com.bjike.goddess.balancecard.enums.SeperateComeStatus;
 import com.bjike.goddess.balancecard.excel.PositionIndexSetExcel;
 import com.bjike.goddess.balancecard.to.ExportExcelPositTO;
+import com.bjike.goddess.balancecard.to.GuidePermissionTO;
 import com.bjike.goddess.balancecard.to.PositionIndexSetTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.balancecard.dto.PositionIndexSetDTO;
-import com.bjike.goddess.balancecard.entity.PositionIndexSet;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
@@ -52,6 +52,49 @@ public class PositionIndexSetSerImpl extends ServiceImpl<PositionIndexSet, Posit
     @Autowired
     private YearIndexSetSer yearIndexSetSer;
 
+    @Autowired
+    private BalancecardPermissionSer cusPermissionSer;
+
+
+    /**
+     * 核对是否为管理层权限（部门级别）
+     */
+    private Boolean checkManageIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                RpcTransmit.transmitUserToken(userToken);
+                return false;
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+        return true;
+    }
+
+    /**
+     * 核对是否为执行层权限（部门级别）
+     */
+    private Boolean checkExecutiveIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("2");
+            if (!flag) {
+                RpcTransmit.transmitUserToken(userToken);
+                return false;
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+        return true;
+    }
     @Override
     public Long countPositionIndexSet(PositionIndexSetDTO positionIndexSetDTO) throws SerException {
         if (StringUtils.isNotBlank(positionIndexSetDTO.getIndexName())) {
@@ -81,39 +124,69 @@ public class PositionIndexSetSerImpl extends ServiceImpl<PositionIndexSet, Posit
         return bo;
     }
 
+    /**
+     * 根据他的职位来查询他可以看到的信息
+     * @param positionIndexSetDTO
+     * @return
+     * @throws SerException
+     */
     @Override
     public List<PositionIndexSetBO> listPositionIndexSet(PositionIndexSetDTO positionIndexSetDTO) throws SerException {
-        if (StringUtils.isNotBlank(positionIndexSetDTO.getIndexName())) {
-            positionIndexSetDTO.getConditions().add(Restrict.like("indexName", positionIndexSetDTO.getIndexName()));
-        }
-        if (StringUtils.isNotBlank(positionIndexSetDTO.getYear())) {
-            positionIndexSetDTO.getConditions().add(Restrict.like("year", positionIndexSetDTO.getYear()));
-        }
-        if (StringUtils.isNotBlank(positionIndexSetDTO.getMonth())) {
-            positionIndexSetDTO.getConditions().add(Restrict.like("month", positionIndexSetDTO.getMonth()));
-        }
-        if (StringUtils.isNotBlank(positionIndexSetDTO.getPositioner())) {
-            positionIndexSetDTO.getConditions().add(Restrict.like("positioner", positionIndexSetDTO.getPositioner()));
-        }
+        if(checkManageIdentity()) {
+            if (StringUtils.isNotBlank(positionIndexSetDTO.getIndexName())) {
+                positionIndexSetDTO.getConditions().add(Restrict.like("indexName", positionIndexSetDTO.getIndexName()));
+            }
+            if (StringUtils.isNotBlank(positionIndexSetDTO.getYear())) {
+                positionIndexSetDTO.getConditions().add(Restrict.like("year", positionIndexSetDTO.getYear()));
+            }
+            if (StringUtils.isNotBlank(positionIndexSetDTO.getMonth())) {
+                positionIndexSetDTO.getConditions().add(Restrict.like("month", positionIndexSetDTO.getMonth()));
+            }
+            if (StringUtils.isNotBlank(positionIndexSetDTO.getPositioner())) {
+                positionIndexSetDTO.getConditions().add(Restrict.like("positioner", positionIndexSetDTO.getPositioner()));
+            }
 
-        List<PositionIndexSet> list = super.findByCis(positionIndexSetDTO, true);
-        List<PositionIndexSetBO> listBO = BeanTransform.copyProperties(list, PositionIndexSetBO.class);
-        return listBO;
+            List<PositionIndexSet> list = super.findByCis(positionIndexSetDTO, true);
+            List<PositionIndexSetBO> listBO = BeanTransform.copyProperties(list, PositionIndexSetBO.class);
+            return listBO;
+        }else{
+            //如果他为执行层,获取他当前的工号来查询
+            UserBO user = userAPI.currentUser();
+            String positionerNumber = user.getEmployeeNumber();
+            if(positionerNumber != "" && positionerNumber != null)
+            {
+                positionIndexSetDTO.getConditions().add(Restrict.eq("positionerNumber",positionerNumber));
+            }
+            List<PositionIndexSet> positionIndexSetList = super.findByCis(positionIndexSetDTO,true);
+            List<PositionIndexSetBO> listBo = BeanTransform.copyProperties(positionIndexSetList,PositionIndexSetBO.class);
+            return  listBo;
+        }
     }
-
+    //添加岗位指标
     @Override
     public PositionIndexSetBO addPositionIndexSet(PositionIndexSetTO positionIndexSetTO) throws SerException {
         UserBO userBO = userAPI.currentUser();
         PositionIndexSet temp = BeanTransform.copyProperties(positionIndexSetTO, PositionIndexSet.class);
         //添加
         temp.setWeightSum(0d);
+        temp.setIndexNumber(0);
+        temp.setYearIndexNumber(0);
+        temp.setMonthIndexNumber(0);
+        String postIndexNumber = super.findByMaxField("postIndexNumber",PositionIndexSet.class);
+        if(postIndexNumber != null)
+        {
+            temp.setPostIndexNumber(Integer.parseInt(postIndexNumber)+1);
+        }else{
+            temp.setPostIndexNumber(1);
+        }
+        temp.setSeperateComeStatus(SeperateComeStatus.FILL);
         temp.setWritePerson(userBO.getUsername());
         temp.setWhetherStandar(positionIndexSetTO.getComplete() > positionIndexSetTO.getTarget() ? "是" : "否");
         temp.setStandardRate(positionIndexSetTO.getComplete() / positionIndexSetTO.getWager());
         temp.setExamScore(positionIndexSetTO.getComplete() * positionIndexSetTO.getWeight());
         temp.setPosionIndexPersion(userBO.getUsername());
         temp.setPosionIndexTime(LocalDate.now());
-        temp.setSeperateComeStatus(null);
+//        temp.setSeperateComeStatus(null);
         temp.setDepartMonIndexSetId(null);
         super.save(temp);
         return BeanTransform.copyProperties(temp, PositionIndexSetBO.class);
@@ -376,17 +449,59 @@ public class PositionIndexSetSerImpl extends ServiceImpl<PositionIndexSet, Posit
         return BeanTransform.copyProperties(temp, PositionIndexSetBO.class);
     }
 
+    /**
+     * 导入 excel
+     * @param toList
+     * @throws SerException
+     */
+    @Override
+    public void leadExcel(List<PositionIndexSetTO> toList) throws SerException {
+        UserBO userBO = userAPI.currentUser();
+        for (int i = 1; i <= toList.size(); i++) {
+            isExist(toList.get(i - 1), i);
+        }
+        String postIndexNumber = super.findByMaxField("postIndexNumber",PositionIndexSet.class);
+        List<PositionIndexSet> list = BeanTransform.copyProperties(toList, PositionIndexSet.class, true);
+        list.stream().forEach(str->{
+            str.setIndexNumber(0);
+            str.setPosionIndexPersion(userBO.getUsername());
+            str.setYearIndexNumber(0);
+            str.setMonthIndexNumber(0);
+            str.setPosionIndexTime(LocalDate.now());
+            str.setSeperateComeStatus(SeperateComeStatus.FILL);
+            if(postIndexNumber != null)
+            {
+                str.setPostIndexNumber(Integer.parseInt(postIndexNumber)+1);
+            }else if(list.size() >1){
+                str.setPostIndexNumber(list.size()+1);
+            }else {
+                str.setPostIndexNumber(1);
+            }
+            str.setComplete(null == str.getComplete() ? 0d : str.getComplete());
+            str.setCreateTime(LocalDateTime.now());
+            str.setModifyTime(LocalDateTime.now());
+        });
+
+        super.save(list);
+    }
+
+    /**
+     * 所有岗位导出  excel
+     * @param to
+     * @return
+     * @throws SerException
+     */
     @Override
     public byte[] positionReport(ExportExcelPositTO to) throws SerException {
         PositionIndexSetDTO dto = new PositionIndexSetDTO();
         if(StringUtils.isNotBlank(to.getPost())){
-            dto.getConditions().add(Restrict.between("position", to.getPost() ));
+            dto.getConditions().add(Restrict.eq("position", to.getPost() ));
         }
         if(StringUtils.isNotBlank(to.getIndexType())){
-            dto.getConditions().add(Restrict.between("indexType", to.getIndexType() ));
+            dto.getConditions().add(Restrict.eq("indexType", to.getIndexType() ));
         }
         if(StringUtils.isNotBlank(to.getDimension())){
-            dto.getConditions().add(Restrict.between("dimension", to.getDimension() ));
+            dto.getConditions().add(Restrict.eq("dimension", to.getDimension() ));
         }
         if ( StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime()) ) {
             LocalDate start  = LocalDate.parse(to.getStartTime());
@@ -400,6 +515,51 @@ public class PositionIndexSetSerImpl extends ServiceImpl<PositionIndexSet, Posit
             dto.getConditions().add(Restrict.between("year", years ));
             dto.getConditions().add(Restrict.between("month", months ));
         }
+
+        List<PositionIndexSet> list = super.findByCis(dto);
+        List<PositionIndexSetExcel> toList = new ArrayList<PositionIndexSetExcel>();
+        for (PositionIndexSet model : list) {
+            PositionIndexSetExcel excel = new PositionIndexSetExcel();
+            BeanUtils.copyProperties(model, excel);
+            toList.add(excel);
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        return bytes;
+    }
+
+    /**
+     * 个人岗位导出 excel
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    @Override
+    public byte[] personReport(ExportExcelPositTO to) throws SerException {
+
+        PositionIndexSetDTO dto = new PositionIndexSetDTO();
+        if(StringUtils.isNotBlank(to.getPositioner())){
+            dto.getConditions().add(Restrict.eq("positioner", to.getPositioner() ));
+        }
+        if(StringUtils.isNotBlank(to.getIndexType())){
+            dto.getConditions().add(Restrict.eq("indexType", to.getIndexType() ));
+        }
+        if(StringUtils.isNotBlank(to.getDimension())){
+            dto.getConditions().add(Restrict.eq("dimension", to.getDimension() ));
+        }
+        if ( StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime()) ) {
+            LocalDate start  = LocalDate.parse(to.getStartTime());
+            LocalDate end = LocalDate.parse(to.getEndTime());
+            String startYear = String.valueOf(start.getYear());
+            String endYear = String.valueOf(end.getYear());
+            String startMon = String.valueOf(start.getMonthValue());
+            String endMon = String.valueOf(end.getMonthValue());
+            String [] years = new String[]{startYear,endYear};
+            String [] months = new String[]{startMon,endMon};
+            dto.getConditions().add(Restrict.between("year", years ));
+            dto.getConditions().add(Restrict.between("month", months ));
+        }
+
 
         List<PositionIndexSet> list = super.findByCis(dto);
         List<PositionIndexSetExcel> toList = new ArrayList<PositionIndexSetExcel>();
@@ -414,40 +574,141 @@ public class PositionIndexSetSerImpl extends ServiceImpl<PositionIndexSet, Posit
     }
 
     @Override
-    public byte[] personReport(ExportExcelPositTO to) throws SerException {
-        PositionIndexSetDTO dto = new PositionIndexSetDTO();
-        if(StringUtils.isNotBlank(to.getPositioner())){
-            dto.getConditions().add(Restrict.between("positioner", to.getPositioner() ));
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = gudieSeeIdentity2();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
         }
-        if(StringUtils.isNotBlank(to.getIndexType())){
-            dto.getConditions().add(Restrict.between("indexType", to.getIndexType() ));
-        }
-        if(StringUtils.isNotBlank(to.getDimension())){
-            dto.getConditions().add(Restrict.between("dimension", to.getDimension() ));
-        }
-        if ( StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime()) ) {
-            LocalDate start  = LocalDate.parse(to.getStartTime());
-            LocalDate end = LocalDate.parse(to.getEndTime());
-            String startYear = String.valueOf(start.getYear());
-            String endYear = String.valueOf(end.getYear());
-            String startMon = String.valueOf(start.getMonthValue());
-            String endMon = String.valueOf(end.getMonthValue());
-            String [] years = new String[]{startYear,endYear};
-            String [] months = new String[]{startMon,endMon};
-            dto.getConditions().add(Restrict.between("year", years ));
-            dto.getConditions().add(Restrict.between("month", months ));
-        }
-
-
-        List<PositionIndexSet> list = super.findByCis(dto);
-        List<PositionIndexSetExcel> toList = new ArrayList<PositionIndexSetExcel>();
-        for (PositionIndexSet model : list) {
-            PositionIndexSetExcel excel = new PositionIndexSetExcel();
-            BeanUtils.copyProperties(model, excel);
-            toList.add(excel);
-        }
-        Excel excel = new Excel(0, 2);
-        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
-        return bytes;
     }
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            return true;
+        }
+        return flag;
+    }
+
+    //功能导航权限
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = gudieSeeIdentity2();
+                break;
+            case EDIT:
+                flag = gudieSeeIdentity2();
+                break;
+            case AUDIT:
+                flag = gudieSeeIdentity2();
+                break;
+            case DELETE:
+                flag = gudieSeeIdentity2();
+                break;
+            case CONGEL:
+                flag = gudieSeeIdentity2();
+                break;
+            case THAW:
+                flag = gudieSeeIdentity2();
+                break;
+            case COLLECT:
+                flag = gudieSeeIdentity2();
+                break;
+            case IMPORT:
+                flag = gudieSeeIdentity2();
+                break;
+            case EXPORT:
+                flag = gudieSeeIdentity2();
+                break;
+            case UPLOAD:
+                flag = gudieSeeIdentity2();
+                break;
+            case DOWNLOAD:
+                flag = gudieSeeIdentity2();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
+    /**
+     * 查看是否为执行层（岗位级别）
+     */
+    private Boolean gudieSeeIdentity2() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    //校验字段是否存在
+    private void isExist(PositionIndexSetTO to, Integer row) throws SerException {
+        if(StringUtils.isBlank( to.getIndexName() )){
+            throw new SerException("第" + row + "行的指标名称不能为空" );
+        }
+        if(StringUtils.isBlank( to.getYear() )){
+            throw new SerException("第" + row + "行的年份不能为空" );
+        }
+        if(null== to.getDescribtion()){
+            throw new SerException("第" + row + "行的指标权重不能为空" );
+        }
+        if ( null== to.getTarget()) {
+            throw new SerException("第" + row + "行的本月目标值不能为空");
+        }
+    }
+
+    @Override
+    public List<PositionIndexSetBO> dendrogram(String id) throws SerException {
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空");
+        }
+        DepartMonIndexSet temp = departMonIndexSetSer.findById(id);
+        PositionIndexSetDTO dto = new PositionIndexSetDTO();
+        if(temp.getSeparateStatus() == SeparateStatus.SEPERATE)
+        {
+            dto.getConditions().add(Restrict.eq("indexNumber",temp.getIndexNumber()));
+        }
+
+        List<PositionIndexSet> positionIndexSetList = super.findByCis(dto,true);
+        List<PositionIndexSetBO> boList = BeanTransform.copyProperties(temp, PositionIndexSetBO.class);
+        return boList;
+    }
+
 }

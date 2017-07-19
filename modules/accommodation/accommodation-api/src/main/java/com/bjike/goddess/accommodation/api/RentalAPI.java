@@ -6,6 +6,7 @@ import com.bjike.goddess.accommodation.to.RentalTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Author: [xiazhili]
@@ -92,5 +93,12 @@ public interface RentalAPI {
         return null;
     }
 
-
+    /**
+     * chenjunhao
+     * 获取所有租房地址
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allAddress() throws SerException;
 }

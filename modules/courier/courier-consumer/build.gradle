@@ -39,6 +39,9 @@ dependencies {
 
     compile project(":modules:courier:courier-api")
     compile project(":modules:storage:storage-api")
+    compile project(":modules:user:user-api")
+    compile project(":modules:organize:organize-api")
+    compile project(":modules:accommodation:accommodation-api")
     compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
 
     compile("org.springframework.boot:spring-boot-starter-web")

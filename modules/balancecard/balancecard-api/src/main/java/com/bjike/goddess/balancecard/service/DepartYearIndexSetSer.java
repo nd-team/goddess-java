@@ -1,8 +1,10 @@
 package com.bjike.goddess.balancecard.service;
 
 import com.bjike.goddess.balancecard.bo.DepartYearIndexSetBO;
+import com.bjike.goddess.balancecard.excel.SonPermissionObject;
 import com.bjike.goddess.balancecard.to.DepartYearIndexSetTO;
 import com.bjike.goddess.balancecard.to.ExportExcelDepartTO;
+import com.bjike.goddess.balancecard.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.balancecard.entity.DepartYearIndexSet;
@@ -21,22 +23,40 @@ import java.util.List;
  */
 public interface DepartYearIndexSetSer extends Ser<DepartYearIndexSet, DepartYearIndexSetDTO> {
 
+
     /**
-     * 年度指标列表总条数
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 部门年度指标列表总条数
      */
     default Long countDepartYearIndexSet(DepartYearIndexSetDTO departYearIndexSetDTO) throws SerException {
         return null;
     }
 
     /**
-     * 年度指标列表id
+     * 部门年度指标列表id
+     *
      * @return class DepartYearIndexSetBO
      */
-    default DepartYearIndexSetBO getOneById (String id) throws SerException {return null;}
+    default DepartYearIndexSetBO getOneById(String id) throws SerException {
+        return null;
+    }
 
 
     /**
-     * 年度指标列表
+     * 部门年度指标列表
      *
      * @return class DepartYearIndexSetBO
      */
@@ -47,7 +67,7 @@ public interface DepartYearIndexSetSer extends Ser<DepartYearIndexSet, DepartYea
     /**
      * 添加
      *
-     * @param departYearIndexSetTO 年度指标信息
+     * @param departYearIndexSetTO 部门年度指标信息
      * @return class DepartYearIndexSetBO
      */
     default DepartYearIndexSetBO addDepartYearIndexSet(DepartYearIndexSetTO departYearIndexSetTO) throws SerException {
@@ -58,7 +78,7 @@ public interface DepartYearIndexSetSer extends Ser<DepartYearIndexSet, DepartYea
     /**
      * 编辑
      *
-     * @param departYearIndexSetTO 年度指标信息
+     * @param departYearIndexSetTO 部门年度指标信息
      * @return class DepartYearIndexSetBO
      */
     default DepartYearIndexSetBO editDepartYearIndexSet(DepartYearIndexSetTO departYearIndexSetTO) throws SerException {
@@ -79,7 +99,7 @@ public interface DepartYearIndexSetSer extends Ser<DepartYearIndexSet, DepartYea
     /**
      * 分解部门月度指标
      *
-     * @param departYearIndexSetTO 年度指标信息
+     * @param departYearIndexSetTO 部门年度指标信息
      * @return class DepartYearIndexSetBO
      */
     default DepartYearIndexSetBO seperateDepartYear(DepartYearIndexSetTO departYearIndexSetTO) throws SerException {
@@ -92,17 +112,22 @@ public interface DepartYearIndexSetSer extends Ser<DepartYearIndexSet, DepartYea
      * @param to
      * @throws SerException
      */
-   default byte[] departYearReport(ExportExcelDepartTO to) throws SerException{return null;};
+    default byte[] departYearReport(ExportExcelDepartTO to) throws SerException {
+        return null;
+    }
+
+    ;
 
     /**
      * 获取所有地区
      *
      * @throws SerException
      */
-    default List<String> listArea(   ) throws SerException{
+    default List<String> listArea() throws SerException {
         return null;
-    };
+    }
 
+    ;
 
 
     /**
@@ -110,17 +135,47 @@ public interface DepartYearIndexSetSer extends Ser<DepartYearIndexSet, DepartYea
      *
      * @throws SerException
      */
-    default List<String> listDepart(   ) throws SerException{
+    default List<String> listDepart() throws SerException {
         return null;
-    };
+    }
+
+    ;
 
     /**
      * 获取所有员工
      *
      * @throws SerException
      */
-    default List<String> listEmp(   ) throws SerException{
+    default List<String> listEmp() throws SerException {
         return null;
-    };
+    }
+
+    ;
+
+
+    /**
+     * 导入Excel
+     *
+     * @param toList
+     * @throws SerException
+     */
+    void leadExcel(List<DepartYearIndexSetTO> toList) throws SerException;
+
+    /**
+     * 导出Excel
+     *
+     * @param to
+     * @throws SerException
+     */
+    byte[] exportExcel(ExportExcelDepartTO to) throws SerException;
+
+    /**
+     * 根据传入的年度指标id 来查询部门年度指标id 来获取树状图信息
+     * @param id
+     * @throws SerException
+     */
+    default List<DepartYearIndexSetBO> dendrogram(String id) throws SerException{
+        return null;
+    }
 
 }

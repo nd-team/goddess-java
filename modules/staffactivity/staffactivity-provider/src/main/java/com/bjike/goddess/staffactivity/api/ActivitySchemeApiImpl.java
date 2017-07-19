@@ -8,6 +8,7 @@ import com.bjike.goddess.staffactivity.dto.ActivitySchemeDTO;
 import com.bjike.goddess.staffactivity.entity.ActivityScheme;
 import com.bjike.goddess.staffactivity.service.ActivitySchemeSer;
 import com.bjike.goddess.staffactivity.to.ActivitySchemeTO;
+import com.bjike.goddess.staffactivity.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -193,5 +194,15 @@ public class ActivitySchemeApiImpl implements ActivitySchemeAPI {
     @Override
     public List<ActivityFundSummaryBO> activityFundSummary(String startDate, String endDate) throws SerException {
         return activitySchemeSer.activityFundSummary(startDate, endDate);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return activitySchemeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return activitySchemeSer.guidePermission(guidePermissionTO);
     }
 }
