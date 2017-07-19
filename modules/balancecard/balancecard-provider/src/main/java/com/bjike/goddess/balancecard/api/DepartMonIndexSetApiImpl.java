@@ -5,6 +5,7 @@ import com.bjike.goddess.balancecard.dto.DepartMonIndexSetDTO;
 import com.bjike.goddess.balancecard.service.DepartMonIndexSetSer;
 import com.bjike.goddess.balancecard.to.DepartMonIndexSetTO;
 import com.bjike.goddess.balancecard.to.ExportExcelDepartTO;
+import com.bjike.goddess.balancecard.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,7 +74,27 @@ public class DepartMonIndexSetApiImpl implements DepartMonIndexSetAPI {
     }
 
     @Override
-    public byte[] departMonReport(ExportExcelDepartTO to) throws SerException {
-        return departMonIndexSetSer.departMonReport(to);
+    public byte[] exportExcel(ExportExcelDepartTO to) throws SerException {
+        return departMonIndexSetSer.exportExcel(to);
+    }
+
+    @Override
+    public void leadExcel(List<DepartMonIndexSetTO> toList) throws SerException {
+        departMonIndexSetSer.leadExcel(toList);
+    }
+
+    @Override
+    public List<DepartMonIndexSetBO> dendrogram(String id) throws SerException {
+        return departMonIndexSetSer.dendrogram(id);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return departMonIndexSetSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return departMonIndexSetSer.guidePermission(guidePermissionTO);
     }
 }

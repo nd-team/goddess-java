@@ -81,14 +81,14 @@ public class YearIndexSetExcel extends BaseTO {
     /**
      * 年度指标添加时间
      */
-    @ExcelHeader(name = "年度指标添加时间")
-    private String yearIndexTime;
+//    @ExcelHeader(name = "年度指标添加时间")
+//    private String yearIndexTime;
 
     /**
      * 被分解状态
      */
-    @ExcelHeader(name = "被分解状态")
-    private SeparateStatus separateStatus;
+//    @ExcelHeader(name = "被分解状态")
+//    private SeparateStatus separateStatus;
 
 
     public String getIndexName() {
@@ -171,19 +171,19 @@ public class YearIndexSetExcel extends BaseTO {
         this.yearPersion = yearPersion;
     }
 
-    public String getYearIndexTime() {
-        return yearIndexTime;
-    }
-
-    public void setYearIndexTime(String yearIndexTime) {
-        this.yearIndexTime = yearIndexTime;
-    }
-
-    public SeparateStatus getSeparateStatus() {
-        return separateStatus;
-    }
-
-    public void setSeparateStatus(SeparateStatus separateStatus) {
-        this.separateStatus = separateStatus;
-    }
+//    public String getYearIndexTime() {
+//        return yearIndexTime;
+//    }
+//
+//    public void setYearIndexTime(String yearIndexTime) {
+//        this.yearIndexTime = yearIndexTime;
+//    }
+//
+//    public SeparateStatus getSeparateStatus() {
+//        return separateStatus;
+//    }
+//
+//    public void setSeparateStatus(SeparateStatus separateStatus) {
+//        this.separateStatus = separateStatus;
+//    }
 }

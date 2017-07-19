@@ -1,7 +1,9 @@
 package com.bjike.goddess.balancecard.service;
 
 import com.bjike.goddess.balancecard.bo.PositionIndexSetBO;
+import com.bjike.goddess.balancecard.excel.SonPermissionObject;
 import com.bjike.goddess.balancecard.to.ExportExcelPositTO;
+import com.bjike.goddess.balancecard.to.GuidePermissionTO;
 import com.bjike.goddess.balancecard.to.PositionIndexSetTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -22,6 +24,19 @@ import java.util.List;
 public interface PositionIndexSetSer extends Ser<PositionIndexSet, PositionIndexSetDTO> {
 
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 岗位指标列表总条数
@@ -32,13 +47,16 @@ public interface PositionIndexSetSer extends Ser<PositionIndexSet, PositionIndex
 
     /**
      * 岗位指标列表id
+     *
      * @return class PositionIndexSetBO
      */
-    default PositionIndexSetBO getOneById (String id) throws SerException {return null;}
+    default PositionIndexSetBO getOneById(String id) throws SerException {
+        return null;
+    }
 
 
     /**
-     * 岗位指标列表
+     * 岗位指标列表(包括岗位个人查询)
      *
      * @return class PositionIndexSetBO
      */
@@ -103,7 +121,6 @@ public interface PositionIndexSetSer extends Ser<PositionIndexSet, PositionIndex
     }
 
 
-
     /**
      * 我的指标列表
      *
@@ -146,14 +163,24 @@ public interface PositionIndexSetSer extends Ser<PositionIndexSet, PositionIndex
     ;
 
     /**
+     * 岗位报告导入 Excel
+     *
+     * @param toList
+     * @throws SerException
+     */
+    void leadExcel(List<PositionIndexSetTO> toList) throws SerException;
+
+    /**
      * 岗位报告导出Excel
      *
      * @param to
      * @throws SerException
      */
-    default byte[] positionReport(ExportExcelPositTO to) throws SerException{
+    default byte[] positionReport(ExportExcelPositTO to) throws SerException {
         return null;
-    };
+    }
+
+    ;
 
     /**
      * 个人报告导出Excel
@@ -161,9 +188,20 @@ public interface PositionIndexSetSer extends Ser<PositionIndexSet, PositionIndex
      * @param to
      * @throws SerException
      */
-    default byte[] personReport(ExportExcelPositTO to) throws SerException{
+    default byte[] personReport(ExportExcelPositTO to) throws SerException {
         return null;
-    };
+    }
+
+    ;
+
+    /**
+     * 根据部门月度传来的id来查询它所分解的岗位指标
+     * @param id
+     * @throws SerException
+     */
+    default List<PositionIndexSetBO> dendrogram(String id ) throws SerException{
+        return null;
+    }
 
 
 }

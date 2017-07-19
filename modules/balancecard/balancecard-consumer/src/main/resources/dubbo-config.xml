@@ -20,7 +20,9 @@
 	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
 	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
 	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
-	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
+	<dubbo:reference validation="true" interface="com.bjike.goddess.balancecard.api.BalancecardPermissionAPI" id="balancecardPermissionApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.balancecard.api.BalancecardPermissionOperateAPI" id="balancecardPermissionOperateApiImpl"  />
+
 
 	<dubbo:reference  validation="true" id="departMonIndexSetApiImpl" interface="com.bjike.goddess.balancecard.api.DepartMonIndexSetAPI" />
 	<dubbo:reference  validation="true" id="departYearIndexSetApiImpl" interface="com.bjike.goddess.balancecard.api.DepartYearIndexSetAPI" />
@@ -29,7 +31,8 @@
 	<dubbo:reference  validation="true" id="indexNameSetApiImpl" interface="com.bjike.goddess.balancecard.api.IndexNameSetAPI" />
 	<dubbo:reference  validation="true" id="indexTypeSetApiImpl" interface="com.bjike.goddess.balancecard.api.IndexTypeSetAPI" />
 	<dubbo:reference  validation="true" id="positionIndexSetApiImpl" interface="com.bjike.goddess.balancecard.api.PositionIndexSetAPI" />
-	<dubbo:reference  validation="true" id="yearIndexSetApiImpl" interface="com.bjike.goddess.balancecard.api.YearIndexSetAPI" />
-
-
+	<dubbo:reference  validation="true" id="yearvIndexSetApiImpl" interface="com.bjike.goddess.balancecard.api.YearIndexSetAPI" />
+	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
+	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
+	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
 </beans>

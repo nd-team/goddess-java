@@ -5,6 +5,8 @@ import com.bjike.goddess.balancecard.enums.SeperateComeStatus;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
+import java.time.LocalDate;
+
 /**
  * 部门年度指标设置
  *
@@ -40,6 +42,15 @@ public class DepartYearIndexSetExcel extends BaseTO {
     @ExcelHeader(name = "维度",notNull = true)
     private String dimension;
 
+
+
+
+    /**
+     * 责任部门
+     */
+    @ExcelHeader(name = "责任部门",notNull = true)
+    private String department;
+
     /**
      * 总指标权重
      */
@@ -52,11 +63,6 @@ public class DepartYearIndexSetExcel extends BaseTO {
     @ExcelHeader(name = "年度目标值",notNull = true)
     private Double yearTarget;
 
-    /**
-     * 责任部门
-     */
-    @ExcelHeader(name = "责任部门",notNull = true)
-    private String department;
 
     /**
      * 部门年度指标权重
@@ -142,29 +148,8 @@ public class DepartYearIndexSetExcel extends BaseTO {
     @ExcelHeader(name = "部门年度指标添加人",notNull = true)
     private String yearPersion;
 
-    /**
-     * 部门年度指标添加时间
-     */
-    @ExcelHeader(name = "部门年度指标添加时间",notNull = true)
-    private String yearIndexTime;
 
-    /**
-     * 月份分解状态
-     */
-    @ExcelHeader(name = "月份分解状态",notNull = true)
-    private SeparateStatus separateStatus;
 
-    /**
-     * 是否由分解得来状态
-     */
-    @ExcelHeader(name = "是否由分解得来状态" )
-    private SeperateComeStatus seperateComeStatus;
-
-    /**
-     * 年度指标设置id
-     */
-    @ExcelHeader(name = "年度指标设置id",notNull = true)
-    private String yearIndexSetId;
 
     public String getIndexName() {
         return indexName;
@@ -334,35 +319,4 @@ public class DepartYearIndexSetExcel extends BaseTO {
         this.yearPersion = yearPersion;
     }
 
-    public String getYearIndexTime() {
-        return yearIndexTime;
-    }
-
-    public void setYearIndexTime(String yearIndexTime) {
-        this.yearIndexTime = yearIndexTime;
-    }
-
-    public SeparateStatus getSeparateStatus() {
-        return separateStatus;
-    }
-
-    public void setSeparateStatus(SeparateStatus separateStatus) {
-        this.separateStatus = separateStatus;
-    }
-
-    public SeperateComeStatus getSeperateComeStatus() {
-        return seperateComeStatus;
-    }
-
-    public void setSeperateComeStatus(SeperateComeStatus seperateComeStatus) {
-        this.seperateComeStatus = seperateComeStatus;
-    }
-
-    public String getYearIndexSetId() {
-        return yearIndexSetId;
-    }
-
-    public void setYearIndexSetId(String yearIndexSetId) {
-        this.yearIndexSetId = yearIndexSetId;
-    }
 }
