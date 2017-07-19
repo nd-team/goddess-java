@@ -4,6 +4,7 @@ import com.bjike.goddess.archive.bo.ForeignStaffingSetBO;
 import com.bjike.goddess.archive.dto.ForeignStaffingSetDTO;
 import com.bjike.goddess.archive.entity.ForeignStaffingSet;
 import com.bjike.goddess.archive.to.ForeignStaffingSetTO;
+import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.api.type.Status;
@@ -20,6 +21,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ForeignStaffingSetSer extends Ser<ForeignStaffingSet, ForeignStaffingSetDTO> {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存

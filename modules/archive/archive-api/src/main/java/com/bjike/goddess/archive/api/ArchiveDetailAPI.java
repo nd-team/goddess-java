@@ -3,6 +3,7 @@ package com.bjike.goddess.archive.api;
 import com.bjike.goddess.archive.bo.ArchiveDetailBO;
 import com.bjike.goddess.archive.dto.ArchiveDetailDTO;
 import com.bjike.goddess.archive.to.ArchiveDetailTO;
+import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -17,6 +18,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ArchiveDetailAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存
