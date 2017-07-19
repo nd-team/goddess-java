@@ -21,6 +21,10 @@ public class CollectDataBO implements Serializable {
      */
     private LocalDate reimDate;
     /**
+     * 报销日期汇总时间段
+     */
+    private String reimDatePeriod;
+    /**
      * 地区
      */
     private String area;
@@ -138,5 +142,13 @@ public class CollectDataBO implements Serializable {
 
     public void setMoney(Double money) {
         this.money = money;
+    }
+
+    public String getReimDatePeriod() {
+        return reimDatePeriod;
+    }
+
+    public void setReimDatePeriod(String reimDatePeriod) {
+        this.reimDatePeriod = reimDatePeriod;
     }
 }
