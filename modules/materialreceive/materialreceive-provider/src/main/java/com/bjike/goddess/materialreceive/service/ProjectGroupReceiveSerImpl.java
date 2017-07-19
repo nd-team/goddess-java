@@ -57,7 +57,6 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
-        RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.busCusPermission("1");
@@ -271,6 +270,7 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectGroupReceiveBO save(ProjectGroupReceiveTO to) throws SerException {
+        checkPermission();
         String[] materialNum = checkMaterialNum(to);//检查待领用的物资编号不能为空
         materialInStockAPI.updateUseState(materialNum, UseState.RECEIVE);//设置物资领用情况为已领用
         Integer quantity = materialNum.length;
@@ -350,13 +350,15 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void returnMaterial(ProjectGroupReceiveTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        RpcTransmit.transmitUserToken(userToken);
         String[] materialNum = to.getMaterialNum();
         Boolean materialNumEmpty = (materialNum == null) || (materialNum.length == 0);
         if (materialNumEmpty)
             throw new SerException("要归还的物资编号为空,无法归还物资.");
         materialInStockAPI.updateUseState(materialNum, UseState.INSTOCK);
 
-        update(to);//更新项目组领用归还登记
+        update(to,userToken);//更新项目组领用归还登记
     }
 
     /**
@@ -379,7 +381,9 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
      */
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public ProjectGroupReceive update(ProjectGroupReceiveTO to) throws SerException {
+    public ProjectGroupReceive update(ProjectGroupReceiveTO to,String token) throws SerException {
+        RpcTransmit.transmitUserToken(token);
+        checkPermission();
         if (StringUtils.isNotEmpty(to.getId())) {
             ProjectGroupReceive model = super.findById(to.getId());
             if (model != null) {

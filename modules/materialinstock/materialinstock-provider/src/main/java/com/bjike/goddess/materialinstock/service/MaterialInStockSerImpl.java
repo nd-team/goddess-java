@@ -168,7 +168,6 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
      */
     @Override
     public List<MaterialInStockBO> findByState(MaterialState materialState, UseState useState, MaterialInStockDTO dto) throws SerException {
-        checkPermission();
         dto.getConditions().add(Restrict.eq("materialState", materialState));
         dto.getConditions().add(Restrict.eq("useState", useState));
         List<MaterialInStock> list = super.findByPage(dto);
@@ -186,7 +185,6 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
     @Override
     @Transactional(rollbackFor = SerException.class)
     public MaterialInStockBO findByMaterialCoding(String materialCoding) throws SerException {
-        checkPermission();
         MaterialInStockDTO dto = new MaterialInStockDTO();
         dto.getConditions().add(Restrict.eq("stockEncoding", materialCoding));
         MaterialInStock model = super.findOne(dto);
@@ -369,6 +367,21 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
             set.add(m.getStockEncoding());
         }
         return set;
+    }
+
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public void updateLijuntao(MaterialInStockTO to) throws SerException {
+        if (StringUtils.isNotEmpty(to.getId())) {
+            MaterialInStock model = super.findById(to.getId());
+            if (model != null) {
+                updateMaterialInStock(to, model);
+            } else {
+                throw new SerException("更新对象不能为空");
+            }
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
     }
 
 }

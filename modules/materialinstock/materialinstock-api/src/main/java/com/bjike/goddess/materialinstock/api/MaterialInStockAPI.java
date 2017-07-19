@@ -171,4 +171,13 @@ public interface MaterialInStockAPI {
      * @throws SerException
      */
     Set<String> allstockEncoding() throws SerException;
+
+    /**
+     *
+     * 设备维修中需要修改入库信息
+     *
+     * @return
+     * @throws SerException
+     */
+    void updateLijuntao(MaterialInStockTO to) throws SerException;
 }

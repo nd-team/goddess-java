@@ -76,6 +76,6 @@ public interface ProjectGroupReceiveSer extends Ser<ProjectGroupReceive, Project
      * @param to 项目组领用归还登记to
      * @throws SerException
      */
-    ProjectGroupReceive update(ProjectGroupReceiveTO to) throws SerException;
+    ProjectGroupReceive update(ProjectGroupReceiveTO to,String token) throws SerException;
 
 }

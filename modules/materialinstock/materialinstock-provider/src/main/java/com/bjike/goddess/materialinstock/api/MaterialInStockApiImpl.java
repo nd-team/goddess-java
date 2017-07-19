@@ -222,4 +222,9 @@ public class MaterialInStockApiImpl implements MaterialInStockAPI {
     public Set<String> allstockEncoding() throws SerException {
         return materialInStockSer.allstockEncoding();
     }
+
+    @Override
+    public void updateLijuntao(MaterialInStockTO to) throws SerException {
+        materialInStockSer.updateLijuntao(to);
+    }
 }

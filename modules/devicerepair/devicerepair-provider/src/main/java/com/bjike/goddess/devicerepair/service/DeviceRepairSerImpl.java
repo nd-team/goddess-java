@@ -149,7 +149,7 @@ public class DeviceRepairSerImpl extends ServiceImpl<DeviceRepair, DeviceRepairD
         obj = new SonPermissionObject();
         obj.setName("devicerepair");
         obj.setDescribesion("设备维修");
-        if (flagDeviceRep ||flagDeviceAuditRep) {
+        if (flagDeviceRep || flagDeviceAuditRep) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -232,6 +232,7 @@ public class DeviceRepairSerImpl extends ServiceImpl<DeviceRepair, DeviceRepairD
     @Transactional(rollbackFor = SerException.class)
     public DeviceRepairBO save(DeviceRepairTO to) throws SerException {
         checkPermission();
+        String materialCoding = to.getMaterialCoding();//获取物资编号
         MaterialInStockBO inStockBO = updateMaterialInStockBO(to);
         String materialName = inStockBO.getMaterialName();   //获取设备名称
         DeviceRepair entity = BeanTransform.copyProperties(to, DeviceRepair.class, true);
@@ -253,7 +254,6 @@ public class DeviceRepairSerImpl extends ServiceImpl<DeviceRepair, DeviceRepairD
      * @throws SerException
      */
     private MaterialInStockBO updateMaterialInStockBO(DeviceRepairTO to) throws SerException {
-        checkPermission();
         String materialCoding = to.getMaterialCoding();//获取物资编号
         MaterialInStockBO inStockBO = materialInStockAPI.findByMaterialCoding(materialCoding);
         if (inStockBO == null) {
@@ -261,7 +261,7 @@ public class DeviceRepairSerImpl extends ServiceImpl<DeviceRepair, DeviceRepairD
         }
         MaterialInStockTO inStockTO = BeanTransform.copyProperties(inStockBO, MaterialInStockTO.class);
         inStockTO.setMaterialState(REPAIRING);//设置物资状态
-        materialInStockAPI.update(inStockTO);
+        materialInStockAPI.updateLijuntao(inStockTO);
         return inStockBO;
     }
 

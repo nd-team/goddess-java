@@ -122,4 +122,5 @@ public interface DeviceRepairAPI {
      */
     void fetchDevice(FetchDeviceTO to) throws SerException;
 
+
 }
