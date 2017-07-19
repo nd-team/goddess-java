@@ -3,8 +3,11 @@ package com.bjike.goddess.balancecard.action.balancecard;
 import com.bjike.goddess.balancecard.api.YearIndexSetAPI;
 import com.bjike.goddess.balancecard.bo.YearIndexSetBO;
 import com.bjike.goddess.balancecard.dto.YearIndexSetDTO;
+import com.bjike.goddess.balancecard.excel.SonPermissionObject;
 import com.bjike.goddess.balancecard.excel.YearIndexSetExcel;
+import com.bjike.goddess.balancecard.to.DendrogramYearSetTO;
 import com.bjike.goddess.balancecard.to.ExportExcelYearTO;
+import com.bjike.goddess.balancecard.to.GuidePermissionTO;
 import com.bjike.goddess.balancecard.to.YearIndexSetTO;
 import com.bjike.goddess.balancecard.vo.YearIndexSetVO;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -17,6 +20,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.storage.api.FileAPI;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -26,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,9 +50,82 @@ public class YearIndexSetAction extends BaseFileAction  {
     private YearIndexSetAPI yearIndexSetAPI;
     @Autowired
     private FileAPI fileAPI;
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+
 
     /**
-     *  列表总条数
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result setButtonPermission() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = yearIndexSetAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = yearIndexSetAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 列表总条数
      *
      * @param yearIndexSetDTO  年度指标信息dto
      * @des 获取所有年度指标信息总条数
@@ -73,7 +151,7 @@ public class YearIndexSetAction extends BaseFileAction  {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result findListYearIndexSet(YearIndexSetDTO yearIndexSetDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result findListYearIndexSet(@Validated(YearIndexSetTO.TestAdd.class) YearIndexSetDTO yearIndexSetDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<YearIndexSetVO> yearIndexSetVOList = BeanTransform.copyProperties(
                     yearIndexSetAPI.listYearIndexSet(yearIndexSetDTO), YearIndexSetVO.class, request);
@@ -223,8 +301,7 @@ public class YearIndexSetAction extends BaseFileAction  {
      * @param to 导出条件
      * @version v1
      */
-    @LoginAuth
-    @PostMapping("v1/exportExcel")
+    @GetMapping("v1/exportExcel")
     public Result exportExcel(ExportExcelYearTO to, HttpServletResponse response) throws ActException {
         try {
             String fileName = "年度指标.xlsx";
@@ -237,6 +314,22 @@ public class YearIndexSetAction extends BaseFileAction  {
         }
     }
 
-
+    /**
+     * 指标库树状图
+     *
+     * @param yearIndexSetDTO 年度指标信息dto
+     * @version v1
+     * @return class YearIndexSetVO
+     */
+    @PostMapping("v1/dendrogram")
+    public Result dendrogram( YearIndexSetDTO yearIndexSetDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException{
+        try {
+            List<YearIndexSetVO> yearIndexSetVOList = BeanTransform.copyProperties(
+                    yearIndexSetAPI.dendrogram(yearIndexSetDTO), YearIndexSetVO.class, request);
+            return ActResult.initialize(yearIndexSetVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

@@ -38,7 +38,7 @@ public class IndexNameSetAction {
     private IndexNameSetAPI indexNameSetAPI;
 
     /**
-     *  列表总条数
+     * 列表总条数
      *
      * @param indexNameSetDTO  指标名称信息dto
      * @des 获取所有指标名称信息总条数

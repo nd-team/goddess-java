@@ -9,6 +9,8 @@ import com.bjike.goddess.balancecard.dto.DepartYearIndexSetDTO;
 import com.bjike.goddess.balancecard.entity.PositionIndexSet;
 import com.bjike.goddess.balancecard.to.*;
 import com.bjike.goddess.balancecard.vo.DepartYearIndexSetVO;
+import com.bjike.goddess.balancecard.vo.DepartMonIndexSetVO;
+import com.bjike.goddess.balancecard.vo.PositionIndexSetVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import com.bjike.goddess.balancecard.vo.YearIndexSetVO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -108,7 +111,7 @@ public class IndexHouseAction extends BaseFileAction {
     public Result departMonReport(ExportExcelDepartTO to, HttpServletResponse response) throws ActException {
         try {
             String fileName = "部门月度报告.xlsx";
-            super.writeOutFile(response, departMonIndexSetAPI.departMonReport(to), fileName);
+            super.writeOutFile(response, departMonIndexSetAPI.exportExcel(to), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -198,7 +201,7 @@ public class IndexHouseAction extends BaseFileAction {
                     dMonto.setDimension( to.getDimension());
                     dMonto.setStartTime( to.getStartTime() );
                     dMonto.setEndTime( to.getEndTime());
-                    super.writeOutFile(response, departMonIndexSetAPI.departMonReport(dMonto), fileName);
+                    super.writeOutFile(response, departMonIndexSetAPI.exportExcel(dMonto), fileName);
                     break;
                 case "岗位报告":
                     fileName = "岗位维度报告.xlsx";
@@ -271,7 +274,7 @@ public class IndexHouseAction extends BaseFileAction {
                     dMonto.setIndexType( to.getIndexType());
                     dMonto.setStartTime( to.getStartTime() );
                     dMonto.setEndTime( to.getEndTime());
-                    super.writeOutFile(response, departMonIndexSetAPI.departMonReport(dMonto), fileName);
+                    super.writeOutFile(response, departMonIndexSetAPI.exportExcel(dMonto), fileName);
                     break;
                 case "岗位报告":
                     fileName = "岗位标类型报告.xlsx";

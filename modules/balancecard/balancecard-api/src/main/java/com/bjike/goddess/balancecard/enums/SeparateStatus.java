@@ -1,5 +1,7 @@
 package com.bjike.goddess.balancecard.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 被分解状态
  * @Author: [tanghaixiang]
@@ -13,10 +15,12 @@ public enum SeparateStatus {
     /**
      * 未分解
      */
+    @ExcelValue(name = "未分解")
     NONE(0),
     /**
      * 已分解
      */
+    @ExcelValue(name = "已分解")
     SEPERATE(1)
     ;
 
