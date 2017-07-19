@@ -3,6 +3,7 @@ package com.bjike.goddess.checkhost.api;
 import com.bjike.goddess.checkhost.bo.CollectNameBO;
 import com.bjike.goddess.checkhost.bo.StayDaysBO;
 import com.bjike.goddess.checkhost.dto.StayDaysDTO;
+import com.bjike.goddess.checkhost.enums.CheckStatus;
 import com.bjike.goddess.checkhost.service.StayDaysSer;
 import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.to.StayDaysTO;
@@ -25,14 +26,17 @@ import java.util.List;
 public class StayDaysApiImpl implements StayDaysAPI {
     @Autowired
     private StayDaysSer stayDaysSer;
+
     @Override
     public Long countStayDays(StayDaysDTO stayDaysDTO) throws SerException {
         return stayDaysSer.countStayDays(stayDaysDTO);
     }
+
     @Override
     public StayDaysBO getOne(String id) throws SerException {
         return stayDaysSer.getOne(id);
     }
+
     @Override
     public List<StayDaysBO> findListStayDays(StayDaysDTO stayDaysDTO) throws SerException {
         return stayDaysSer.findListStayDays(stayDaysDTO);
@@ -52,10 +56,12 @@ public class StayDaysApiImpl implements StayDaysAPI {
     public void removeStayDays(String id) throws SerException {
         stayDaysSer.remove(id);
     }
+
     @Override
-    public StayDaysBO auditStayDays(StayDaysTO stayDaysTO) throws SerException {
-        return stayDaysSer.auditStayDays(stayDaysTO);
+    public StayDaysBO auditStayDays(String id, CheckStatus checkStatus) throws SerException {
+        return stayDaysSer.auditStayDays(id, checkStatus);
     }
+
     @Override
     public List<CollectNameBO> collectName(String[] names) throws SerException {
         return stayDaysSer.collectName(names);

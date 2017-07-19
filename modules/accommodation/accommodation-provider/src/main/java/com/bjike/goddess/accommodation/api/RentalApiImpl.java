@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Author: [xiazhili]
@@ -59,5 +60,8 @@ public class RentalApiImpl implements RentalAPI{
         return rentalSer.getArea();
     }
 
-
+    @Override
+    public Set<String> allAddress() throws SerException {
+        return rentalSer.allAddress();
+    }
 }

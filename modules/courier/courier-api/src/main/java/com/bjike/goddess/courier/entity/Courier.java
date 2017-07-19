@@ -1,10 +1,13 @@
 package com.bjike.goddess.courier.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
-import com.bjike.goddess.courier.type.AttributeType;
-import com.bjike.goddess.courier.type.Range;
+import com.bjike.goddess.courier.enums.AttributeType;
+import com.bjike.goddess.courier.enums.Range;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.time.LocalDate;
 
 
 /**
@@ -35,14 +38,14 @@ public class Courier extends BaseEntity {
     /**
      * 寄件时间
      */
-    @Column(name = "sendTime", nullable = false, columnDefinition = "DATETIME   COMMENT '寄件时间'")
-    private String sendTime;
+    @Column(name = "sendTime", nullable = false, columnDefinition = "DATE   COMMENT '寄件时间'")
+    private LocalDate sendTime;
 
     /**
      * 预计收件时间
      */
-    @Column(name = "receiptTime", nullable = false, columnDefinition = "DATETIME   COMMENT '预计收件时间'")
-    private String receiptTime;
+    @Column(name = "receiptTime", nullable = false, columnDefinition = "DATE   COMMENT '预计收件时间'")
+    private LocalDate receiptTime;
 
     /**
      * 寄件人
@@ -161,14 +164,14 @@ public class Courier extends BaseEntity {
     /**
      * 是否有发票/收据
      */
-    @Column(name = "isInvoice", nullable = false, columnDefinition = "TINYINT(1)   COMMENT '是否有发票/收据'")
-    private boolean isInvoice;
+    @Column(name = "is_invoice", nullable = false, columnDefinition = "TINYINT(1)   COMMENT '是否有发票/收据'")
+    private Boolean isInvoice;
 
     /**
      * 是否公司支付
      */
-    @Column(name = "isCompanyPay", nullable = false, columnDefinition = "TINYINT(1)   COMMENT '是否公司支付'")
-    private boolean isCompanyPay;
+    @Column(name = "is_companyPay", nullable = false, columnDefinition = "TINYINT(1)   COMMENT '是否公司支付'")
+    private Boolean isCompanyPay;
 
     /**
      * 支付人
@@ -179,8 +182,8 @@ public class Courier extends BaseEntity {
     /**
      * 是否收件
      */
-    @Column(name = "isReceipt", nullable = false, columnDefinition = "TINYINT(1)   COMMENT '是否收件'")
-    private boolean isReceipt;
+    @Column(name = "is_receipt", nullable = false, columnDefinition = "TINYINT(1)   COMMENT '是否收件'")
+    private Boolean isReceipt;
 
     /**
      * 签收人
@@ -191,8 +194,8 @@ public class Courier extends BaseEntity {
     /**
      * 收件清单确认
      */
-    @Column(name = "isConfirm", columnDefinition = "TINYINT(1)   COMMENT '收件清单确认'")
-    private boolean isConfirm;
+    @Column(name = "is_confirm", columnDefinition = "TINYINT(1)   COMMENT '收件清单确认'")
+    private Boolean isConfirm;
 
     /**
      * 备注
@@ -212,6 +215,21 @@ public class Courier extends BaseEntity {
     @Column(name = "month", nullable = false, columnDefinition = "INT(11)  COMMENT '月'")
     private Integer month;
 
+    public LocalDate getSendTime() {
+        return sendTime;
+    }
+
+    public void setSendTime(LocalDate sendTime) {
+        this.sendTime = sendTime;
+    }
+
+    public LocalDate getReceiptTime() {
+        return receiptTime;
+    }
+
+    public void setReceiptTime(LocalDate receiptTime) {
+        this.receiptTime = receiptTime;
+    }
 
     public Integer getYear() {
         return year;
@@ -243,22 +261,6 @@ public class Courier extends BaseEntity {
 
     public void setDepartment(String department) {
         this.department = department;
-    }
-
-    public String getSendTime() {
-        return sendTime;
-    }
-
-    public void setSendTime(String sendTime) {
-        this.sendTime = sendTime;
-    }
-
-    public String getReceiptTime() {
-        return receiptTime;
-    }
-
-    public void setReceiptTime(String receiptTime) {
-        this.receiptTime = receiptTime;
     }
 
     public String getSendPerson() {
@@ -413,19 +415,19 @@ public class Courier extends BaseEntity {
         this.remainingSum = remainingSum;
     }
 
-    public boolean getIsInvoice() {
+    public Boolean getIsInvoice() {
         return isInvoice;
     }
 
-    public void setIsInvoice(boolean isInvoice) {
+    public void setIsInvoice(Boolean isInvoice) {
         this.isInvoice = isInvoice;
     }
 
-    public boolean getIsCompanyPay() {
+    public Boolean getIsCompanyPay() {
         return isCompanyPay;
     }
 
-    public void setIsCompanyPay(boolean isCompanyPay) {
+    public void setIsCompanyPay(Boolean isCompanyPay) {
         this.isCompanyPay = isCompanyPay;
     }
 
@@ -437,11 +439,11 @@ public class Courier extends BaseEntity {
         this.payPerson = payPerson;
     }
 
-    public boolean getIsReceipt() {
+    public Boolean getIsReceipt() {
         return isReceipt;
     }
 
-    public void setIsReceipt(boolean isReceipt) {
+    public void setIsReceipt(Boolean isReceipt) {
         this.isReceipt = isReceipt;
     }
 
@@ -453,11 +455,11 @@ public class Courier extends BaseEntity {
         this.signPerson = signPerson;
     }
 
-    public boolean getIsConfirm() {
+    public Boolean getIsConfirm() {
         return isConfirm;
     }
 
-    public void setIsConfirm(boolean isConfirm) {
+    public void setIsConfirm(Boolean isConfirm) {
         this.isConfirm = isConfirm;
     }
 

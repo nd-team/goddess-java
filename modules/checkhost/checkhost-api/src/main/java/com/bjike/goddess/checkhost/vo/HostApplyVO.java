@@ -1,5 +1,7 @@
 package com.bjike.goddess.checkhost.vo;
 
+import com.bjike.goddess.checkhost.enums.CheckStatus;
+
 /**
  * 离宿申请表现层对象
  *
@@ -80,6 +82,19 @@ public class HostApplyVO {
      * 备注
      */
     private String remark;
+
+    /**
+     * 审核状态
+     */
+    private CheckStatus checkStatus;
+
+    public CheckStatus getCheckStatus() {
+        return checkStatus;
+    }
+
+    public void setCheckStatus(CheckStatus checkStatus) {
+        this.checkStatus = checkStatus;
+    }
 
     public String getId() {
         return id;

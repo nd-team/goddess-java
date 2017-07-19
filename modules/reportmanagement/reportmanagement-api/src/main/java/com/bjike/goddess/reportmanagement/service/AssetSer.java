@@ -9,6 +9,8 @@ import com.bjike.goddess.reportmanagement.bo.StructureBO;
 import com.bjike.goddess.reportmanagement.dto.AssetDTO;
 import com.bjike.goddess.reportmanagement.entity.Asset;
 import com.bjike.goddess.reportmanagement.to.AssetTO;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
+import com.bjike.goddess.reportmanagement.vo.SonPermissionObject;
 
 import java.util.List;
 
@@ -32,6 +34,20 @@ public interface AssetSer extends Ser<Asset, AssetDTO> {
 //     * @throws SerException
 //     */
 //    AssetBO find(String id, String startTime, String endTime) throws SerException;
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 列表

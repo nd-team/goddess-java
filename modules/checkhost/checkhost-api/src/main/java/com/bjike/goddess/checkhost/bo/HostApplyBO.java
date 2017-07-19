@@ -1,8 +1,7 @@
 package com.bjike.goddess.checkhost.bo;
 
+import com.bjike.goddess.checkhost.enums.CheckStatus;
 import com.bjike.goddess.common.api.bo.BaseBO;
-
-import javax.persistence.Column;
 
 /**
  * 离宿申请
@@ -81,6 +80,18 @@ public class HostApplyBO extends BaseBO {
      */
     private String remark;
 
+    /**
+     * 审核状态
+     */
+    private CheckStatus checkStatus;
+
+    public CheckStatus getCheckStatus() {
+        return checkStatus;
+    }
+
+    public void setCheckStatus(CheckStatus checkStatus) {
+        this.checkStatus = checkStatus;
+    }
 
     public String getArea() {
         return area;

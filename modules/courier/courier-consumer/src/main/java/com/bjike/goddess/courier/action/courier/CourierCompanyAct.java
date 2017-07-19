@@ -5,12 +5,14 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.courier.api.CourierCompanyAPI;
 import com.bjike.goddess.courier.bo.CourierCompanyBO;
 import com.bjike.goddess.courier.dto.CourierCompanyDTO;
 import com.bjike.goddess.courier.to.CourierCompanyTO;
+import com.bjike.goddess.courier.to.GuidePermissionTO;
 import com.bjike.goddess.courier.vo.CourierCompanyVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -36,6 +38,29 @@ public class CourierCompanyAct {
     private CourierCompanyAPI courierCompanyAPI;
 
     /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = courierCompanyAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 添加
      *
      * @param request 请求对象
@@ -44,6 +69,7 @@ public class CourierCompanyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/save")
     public Result save(HttpServletRequest request, @Validated({ADD.class}) CourierCompanyTO to, BindingResult result) throws ActException {
         try {
@@ -63,6 +89,7 @@ public class CourierCompanyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(HttpServletRequest request, @Validated({EDIT.class}) CourierCompanyTO to, BindingResult result) throws ActException {
         try {
@@ -118,11 +145,27 @@ public class CourierCompanyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
             courierCompanyAPI.delete(id);
             return new ActResult("删除成功！");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总记录数
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(CourierCompanyDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(courierCompanyAPI.count(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

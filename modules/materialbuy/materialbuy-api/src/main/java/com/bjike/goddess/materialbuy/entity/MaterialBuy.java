@@ -1,7 +1,7 @@
 package com.bjike.goddess.materialbuy.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
-import com.bjike.goddess.materialbuy.type.AuditState;
+import com.bjike.goddess.materialbuy.enums.AuditState;
 
 import javax.persistence.*;
 import java.time.LocalDate;

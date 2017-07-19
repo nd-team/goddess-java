@@ -1,8 +1,7 @@
 package com.bjike.goddess.checkhost.bo;
 
+import com.bjike.goddess.checkhost.enums.CheckStatus;
 import com.bjike.goddess.common.api.bo.BaseBO;
-
-import javax.persistence.Column;
 
 /**
  * 员工住宿天数汇总业务传输对象
@@ -108,6 +107,18 @@ public class StayDaysBO extends BaseBO {
      */
     private String remark;
 
+    /**
+     * 审核状态
+     */
+    private CheckStatus checkStatus;
+
+    public CheckStatus getCheckStatus() {
+        return checkStatus;
+    }
+
+    public void setCheckStatus(CheckStatus checkStatus) {
+        this.checkStatus = checkStatus;
+    }
 
     public String getArea() {
         return area;

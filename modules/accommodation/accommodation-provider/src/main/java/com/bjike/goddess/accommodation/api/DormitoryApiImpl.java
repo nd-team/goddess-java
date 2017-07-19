@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Author: [xiazhili]
@@ -53,5 +54,17 @@ public class DormitoryApiImpl implements DormitoryAPI{
      */
     public String exportExcel(String area)throws SerException {
         return dormitorySer.exportExcel(area);
+    }
+
+    @Override
+    //chenjunhao
+    public Set<String> allDormitoryAddress() throws SerException {
+        return dormitorySer.allDormitoryAddress();
+    }
+
+    @Override
+    //chenjunhao
+    public String findContact(String dormitoryAddress) throws SerException {
+        return dormitorySer.findContact(dormitoryAddress);
     }
 }

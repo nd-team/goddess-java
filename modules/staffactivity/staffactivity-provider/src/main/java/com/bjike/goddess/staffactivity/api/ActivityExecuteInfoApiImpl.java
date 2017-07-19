@@ -7,6 +7,7 @@ import com.bjike.goddess.staffactivity.dto.ActivityExecuteInfoDTO;
 import com.bjike.goddess.staffactivity.entity.ActivityExecuteInfo;
 import com.bjike.goddess.staffactivity.service.ActivityExecuteInfoSer;
 import com.bjike.goddess.staffactivity.to.ActivityExecuteInfoTO;
+import com.bjike.goddess.staffactivity.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -95,5 +96,20 @@ public class ActivityExecuteInfoApiImpl implements ActivityExecuteInfoAPI {
     @Override
     public void update(ActivityExecuteInfoTO to) throws SerException {
         activityExecuteInfoSer.update(to);
+    }
+
+    @Override
+    public void send() throws SerException {
+        activityExecuteInfoSer.send();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return activityExecuteInfoSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return activityExecuteInfoSer.guidePermission(guidePermissionTO);
     }
 }

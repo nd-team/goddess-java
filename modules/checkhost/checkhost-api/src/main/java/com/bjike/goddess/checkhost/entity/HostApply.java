@@ -1,10 +1,12 @@
 package com.bjike.goddess.checkhost.entity;
 
+import com.bjike.goddess.checkhost.enums.CheckStatus;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 
 /**
@@ -29,13 +31,13 @@ public class HostApply extends BaseEntity {
     /**
      * 项目组
      */
-    @Column(name = "projectGroup",  columnDefinition = "VARCHAR(255)   COMMENT '项目组'")
+    @Column(name = "projectGroup", columnDefinition = "VARCHAR(255)   COMMENT '项目组'")
     private String projectGroup;
 
     /**
      * 宿舍地址
      */
-    @Column(name = "address",  columnDefinition = "VARCHAR(255)   COMMENT '宿舍地址'")
+    @Column(name = "address", columnDefinition = "VARCHAR(255)   COMMENT '宿舍地址'")
     private String address;
 
     /**
@@ -52,7 +54,7 @@ public class HostApply extends BaseEntity {
     /**
      * 离宿原因
      */
-    @Column(name = "hostCause",  columnDefinition = "VARCHAR(255)   COMMENT '离宿原因'")
+    @Column(name = "hostCause", columnDefinition = "VARCHAR(255)   COMMENT '离宿原因'")
     private String hostCause;
     /**
      * 离宿时间
@@ -87,11 +89,11 @@ public class HostApply extends BaseEntity {
     @Column(name = "totalAmount", columnDefinition = "DECIMAL(10,2)   COMMENT '合计总额（收费金额+水电费，燃气费总额）'")
     private Double totalAmount;
 
-    /**
-     * 模块责任人审核
-     */
-    @Column(name = "headAudit", columnDefinition = "VARCHAR(255)   COMMENT '模块责任人审核'")
-    private String headAudit;
+//    /**
+//     * 模块责任人审核
+//     */
+//    @Column(name = "headAudit", columnDefinition = "VARCHAR(255)   COMMENT '模块责任人审核'")
+//    private String headAudit;
 
     /**
      * 备注
@@ -99,6 +101,19 @@ public class HostApply extends BaseEntity {
     @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
+    /**
+     * 审核状态
+     */
+    @Column(name = "checkStatus", columnDefinition = "TINYINT(2)  COMMENT '审核状态'")
+    private CheckStatus checkStatus;
+
+    public CheckStatus getCheckStatus() {
+        return checkStatus;
+    }
+
+    public void setCheckStatus(CheckStatus checkStatus) {
+        this.checkStatus = checkStatus;
+    }
 
     public String getArea() {
         return area;
@@ -196,13 +211,13 @@ public class HostApply extends BaseEntity {
         this.totalAmount = totalAmount;
     }
 
-    public String getHeadAudit() {
-        return headAudit;
-    }
-
-    public void setHeadAudit(String headAudit) {
-        this.headAudit = headAudit;
-    }
+//    public String getHeadAudit() {
+//        return headAudit;
+//    }
+//
+//    public void setHeadAudit(String headAudit) {
+//        this.headAudit = headAudit;
+//    }
 
     public String getRemark() {
         return remark;

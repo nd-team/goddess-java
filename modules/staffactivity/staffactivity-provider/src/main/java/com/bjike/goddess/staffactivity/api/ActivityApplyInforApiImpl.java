@@ -8,6 +8,8 @@ import com.bjike.goddess.staffactivity.dto.ActivityApplyInforDTO;
 import com.bjike.goddess.staffactivity.entity.ActivityApplyInfor;
 import com.bjike.goddess.staffactivity.service.ActivityApplyInforSer;
 import com.bjike.goddess.staffactivity.to.ActivityApplyInforTO;
+import com.bjike.goddess.staffactivity.to.GuidePermissionTO;
+import com.bjike.goddess.staffactivity.vo.SonPermissionObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -146,4 +148,13 @@ public class ActivityApplyInforApiImpl implements ActivityApplyInforAPI {
         return activityApplyInforSer.checkAttendList(id);
     }
 
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return activityApplyInforSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return activityApplyInforSer.guidePermission(guidePermissionTO);
+    }
 }

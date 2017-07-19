@@ -1,5 +1,6 @@
 package com.bjike.goddess.checkhost.to;
 
+import com.bjike.goddess.checkhost.enums.CheckStatus;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -57,11 +58,11 @@ public class StayApplyTO extends BaseTO {
      * 福利模块负责人
      */
     private String headAudit;
-    /**
-     * 福利模块负责人审核(通过/不通过)
-     */
-    @NotBlank(message = "福利模块负责人审核(通过/不通过)不能为空",groups = {StayApplyTO.TestAudit.class})
-    private String headAuditPass;
+//    /**
+//     * 福利模块负责人审核(通过/不通过)
+//     */
+//    @NotBlank(message = "福利模块负责人审核(通过/不通过)不能为空",groups = {StayApplyTO.TestAudit.class})
+//    private String headAuditPass;
 
     /**
      * 新员工确认入住
@@ -73,6 +74,18 @@ public class StayApplyTO extends BaseTO {
      */
     private String remark;
 
+    /**
+     * 审核状态
+     */
+    private CheckStatus checkStatus;
+
+    public CheckStatus getCheckStatus() {
+        return checkStatus;
+    }
+
+    public void setCheckStatus(CheckStatus checkStatus) {
+        this.checkStatus = checkStatus;
+    }
 
     public String getName() {
         return name;
@@ -130,13 +143,13 @@ public class StayApplyTO extends BaseTO {
         this.headAudit = headAudit;
     }
 
-    public String getHeadAuditPass() {
-        return headAuditPass;
-    }
-
-    public void setHeadAuditPass(String headAuditPass) {
-        this.headAuditPass = headAuditPass;
-    }
+//    public String getHeadAuditPass() {
+//        return headAuditPass;
+//    }
+//
+//    public void setHeadAuditPass(String headAuditPass) {
+//        this.headAuditPass = headAuditPass;
+//    }
 
     public Boolean getStay() {
         return stay;

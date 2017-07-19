@@ -3,6 +3,7 @@ package com.bjike.goddess.checkhost.service;
 import com.bjike.goddess.checkhost.bo.HostApplyBO;
 import com.bjike.goddess.checkhost.dto.HostApplyDTO;
 import com.bjike.goddess.checkhost.entity.HostApply;
+import com.bjike.goddess.checkhost.enums.CheckStatus;
 import com.bjike.goddess.checkhost.enums.GuideAddrStatus;
 import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.to.HostApplyTO;
@@ -252,10 +253,13 @@ public class HostApplySerImpl extends ServiceImpl<HostApply, HostApplyDTO> imple
     }
 
     @Override
-    public HostApplyBO auditHostApply(HostApplyTO hostApplyTO) throws SerException {
+    public HostApplyBO auditHostApply(String id, CheckStatus checkStatus) throws SerException {
         checkAduitIdentity();
-        hostApplyTO.setHeadAudit(userAPI.currentUser().getUsername());
-        HostApply hostApply = BeanTransform.copyProperties(hostApplyTO, HostApply.class, true);
+//        hostApplyTO.setHeadAudit(userAPI.currentUser().getUsername());
+//        HostApply hostApply = BeanTransform.copyProperties(hostApplyTO, HostApply.class, true);
+        HostApply hostApply=super.findById(id);
+        hostApply.setCheckStatus(checkStatus);
+        hostApply.setModifyTime(LocalDateTime.now());
         super.update(hostApply);
 
         HostApplyBO hostApplyBO = BeanTransform.copyProperties(hostApply, HostApplyBO.class);

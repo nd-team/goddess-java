@@ -12,6 +12,7 @@ import com.bjike.goddess.staffactivity.api.ActivityDivisionAPI;
 import com.bjike.goddess.staffactivity.bo.ActivityDivisionBO;
 import com.bjike.goddess.staffactivity.dto.ActivityDivisionDTO;
 import com.bjike.goddess.staffactivity.to.ActivityDivisionTO;
+import com.bjike.goddess.staffactivity.to.GuidePermissionTO;
 import com.bjike.goddess.staffactivity.vo.ActivityDivisionVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -36,6 +37,29 @@ public class ActivityDivisionAct {
 
     @Autowired
     private ActivityDivisionAPI activityDivisionAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = activityDivisionAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 根据id查询活动分工
