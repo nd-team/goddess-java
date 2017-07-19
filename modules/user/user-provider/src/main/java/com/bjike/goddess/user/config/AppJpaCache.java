@@ -32,6 +32,10 @@ public class AppJpaCache implements JpaCache {
         daoCache.put("timeToLiveSeconds", 60 * 60);//1小时过期
         daoCache.put("timeToIdleSeconds", 60 * 60 * 12);//闲置时间
 
-        return Arrays.asList(serCache, daoCache);
+        ConcurrentMapCache cc = new ConcurrentMapCache("cc");
+        cc.put("timeToLiveSeconds", 60 * 60);//1小时过期
+        cc.put("timeToIdleSeconds", 60 * 60 * 12);//闲置时间
+
+        return Arrays.asList(serCache, daoCache,cc);
     }
 }
