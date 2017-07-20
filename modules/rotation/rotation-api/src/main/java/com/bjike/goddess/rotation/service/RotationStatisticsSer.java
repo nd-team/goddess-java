@@ -2,9 +2,11 @@ package com.bjike.goddess.rotation.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.rotation.bo.DetailBO;
 import com.bjike.goddess.rotation.bo.RotationStatisticsBO;
 import com.bjike.goddess.rotation.dto.RotationStatisticsDTO;
 import com.bjike.goddess.rotation.entity.RotationStatistics;
+import com.bjike.goddess.rotation.to.GuidePermissionTO;
 import com.bjike.goddess.rotation.to.RotationStatisticsTO;
 
 import java.util.List;
@@ -85,4 +87,21 @@ public interface RotationStatisticsSer extends Ser<RotationStatistics, RotationS
         return null;
     }
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    default List<DetailBO> getDetail() throws SerException {
+        return null;
+    }
 }

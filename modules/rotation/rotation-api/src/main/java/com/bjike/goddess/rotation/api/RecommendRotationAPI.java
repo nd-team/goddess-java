@@ -3,6 +3,7 @@ package com.bjike.goddess.rotation.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.rotation.bo.RecommendRotationBO;
 import com.bjike.goddess.rotation.dto.RecommendRotationDTO;
+import com.bjike.goddess.rotation.to.GuidePermissionTO;
 import com.bjike.goddess.rotation.to.RecommendRotationTO;
 
 import java.util.List;
@@ -91,6 +92,20 @@ public interface RecommendRotationAPI {
      * @throws SerException
      */
     default Long getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 

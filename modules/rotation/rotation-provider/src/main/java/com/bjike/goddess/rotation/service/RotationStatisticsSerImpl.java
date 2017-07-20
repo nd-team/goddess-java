@@ -2,14 +2,26 @@ package com.bjike.goddess.rotation.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.organize.bo.PositionDetailUserBO;
+import com.bjike.goddess.organize.dto.PositionDetailDTO;
+import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
 import com.bjike.goddess.rotation.bo.CoverRotationBO;
+import com.bjike.goddess.rotation.bo.DetailBO;
 import com.bjike.goddess.rotation.bo.RecommendRotationBO;
 import com.bjike.goddess.rotation.bo.RotationStatisticsBO;
 import com.bjike.goddess.rotation.dto.RotationStatisticsDTO;
 import com.bjike.goddess.rotation.entity.RotationStatistics;
 import com.bjike.goddess.rotation.enums.AuditType;
+import com.bjike.goddess.rotation.enums.GuideAddrStatus;
+import com.bjike.goddess.rotation.to.GuidePermissionTO;
 import com.bjike.goddess.rotation.to.RotationStatisticsTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -40,6 +52,14 @@ public class RotationStatisticsSerImpl extends ServiceImpl<RotationStatistics, R
     private CoverRotationSer coverRotationSer;
     @Autowired
     private RecommendRotationSer recommendRotationSer;
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private PositionDetailAPI positionDetailAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     private RotationStatisticsBO transformBO(RotationStatistics entity) throws SerException {
         RotationStatisticsBO bo = BeanTransform.copyProperties(entity, RotationStatisticsBO.class);
@@ -145,5 +165,177 @@ public class RotationStatisticsSerImpl extends ServiceImpl<RotationStatistics, R
     public Long getTotal() throws SerException {
         RotationStatisticsDTO dto = new RotationStatisticsDTO();
         return super.count(dto);
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
+    @Override
+    public List<DetailBO> getDetail() throws SerException {
+        //从组织结构获取
+        PositionDetailDTO dto = new PositionDetailDTO();
+        List<PositionDetailBO> list = positionDetailAPI.maps(dto);
+        List<DetailBO> detailBOs = new ArrayList<>();
+
+        PositionDetailUserDTO positionDetailUserDTO = new PositionDetailUserDTO();
+        List<PositionDetailUserBO> maps = positionDetailUserAPI.maps(positionDetailUserDTO);
+
+        if (null != list && list.size() > 0) {
+            for (PositionDetailBO bo : list) {
+                DetailBO detailBO = new DetailBO();
+                String id = bo.getSerialNumber();
+
+                if (null != maps && maps.size() > 0) {
+                    for (PositionDetailUserBO positionDetailUserBO : maps) {
+                        if (id.equals(positionDetailUserBO.getEmployeesNumber())) {
+                            detailBO.setName(positionDetailUserBO.getUsername());
+                            detailBO.setDepartment(bo.getDepartmentName());
+
+                            detailBO.setPosition(bo.getArrangementName());
+                            detailBOs.add(detailBO);
+                        }
+                    }
+                }
+            }
+        }
+        return detailBOs;
     }
 }

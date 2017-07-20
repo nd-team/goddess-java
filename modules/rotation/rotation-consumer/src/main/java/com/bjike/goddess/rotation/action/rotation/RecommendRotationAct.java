@@ -10,6 +10,7 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.rotation.api.RecommendRotationAPI;
 import com.bjike.goddess.rotation.dto.RecommendRotationDTO;
+import com.bjike.goddess.rotation.to.GuidePermissionTO;
 import com.bjike.goddess.rotation.to.RecommendRotationTO;
 import com.bjike.goddess.rotation.vo.RecommendRotationVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -144,6 +145,29 @@ public class RecommendRotationAct {
     public Result getTotal() throws ActException {
         try {
             return ActResult.initialize(recommendRotationAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = recommendRotationAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
