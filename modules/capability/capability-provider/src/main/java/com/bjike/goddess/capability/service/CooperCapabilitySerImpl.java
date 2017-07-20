@@ -278,6 +278,16 @@ public class CooperCapabilitySerImpl extends ServiceImpl<CooperCapability, Coope
         cooperCapability.setOldWorkPlace( cooperCapabilityTO.getOldWorkPlace());
         cooperCapability.setLivePlace( cooperCapabilityTO.getLivePlace());
         cooperCapability.setGrowthPlace( cooperCapabilityTO.getGrowthPlace());
+
+        cooperCapability.setOldWorkPlace( cooperCapabilityTO.getOldWorkPlace());
+        cooperCapability.setLivePlace( cooperCapabilityTO.getLivePlace());
+        cooperCapability.setGrowthPlace( cooperCapabilityTO.getGrowthPlace());
+        cooperCapability.setGrowthPlace( cooperCapabilityTO.getGrowthPlace());
+        cooperCapability.setOrganization( cooperCapabilityTO.getOrganization());
+        cooperCapability.setNowWorkPlace( cooperCapabilityTO.getNowWorkPlace());
+        cooperCapability.setNowCompany( cooperCapabilityTO.getNowCompany());
+        cooperCapability.setStation( cooperCapabilityTO.getStation());
+        cooperCapability.setDuty( cooperCapabilityTO.getDuty());
         super.update( cooperCapability );
         return BeanTransform.copyProperties(cooperCapability, CooperCapabilityBO.class);
     }
