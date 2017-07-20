@@ -55,18 +55,18 @@ public class ReimburseAnalisisorAction {
      */
     @GetMapping("v1/guidePermission")
     public Result guidePermission(@Validated(LendGuidePermissionTO.TestAdd.class) LendGuidePermissionTO lendGuidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
-        try {
+//        try {
 
-            Boolean isHasPermission = reimburseAnalisisorAPI.guidePermission(lendGuidePermissionTO);
-            if(! isHasPermission ){
+//            Boolean isHasPermission = reimburseAnalisisorAPI.guidePermission(lendGuidePermissionTO);
+//            if(! isHasPermission ){
                 //int code, String msg
-                return new ActResult(0,"没有权限",false );
-            }else{
+//                return new ActResult(0,"没有权限",false );
+//            }else{
                 return new ActResult(0,"有权限",true );
-            }
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
+//            }
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
     }
 
 

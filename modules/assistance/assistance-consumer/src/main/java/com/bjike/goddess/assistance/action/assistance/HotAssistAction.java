@@ -53,6 +53,24 @@ public class HotAssistAction {
     }
 
     /**
+     *  一个高温补助
+     *
+     * @param id  高温补助id
+     * @des 一个高温补助
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id ) throws ActException {
+        try {
+            HotAssistVO hotAssistVO = BeanTransform.copyProperties(
+                    hotAssistAPI.getOneById(id), HotAssistVO.class);
+            return ActResult.initialize(hotAssistVO );
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 高温补助列表
      *
      * @param hotAssistDTO 高温补助信息dto

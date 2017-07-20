@@ -27,6 +27,12 @@ public interface ComputerAssistAPI {
         return null;
     }
     /**
+     * 一个电脑补助
+     * @return class ComputerAssistBO
+     */
+    default ComputerAssistBO getOneById(String id) throws SerException {return null;}
+
+    /**
      * 电脑补助列表
      * @return class ComputerAssistBO
      */

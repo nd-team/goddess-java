@@ -27,7 +27,12 @@ public class AssistanceStandardApiImpl implements AssistanceStandardAPI {
 
     @Override
     public Long countAssistanceStandard(AssistanceStandardDTO assistanceStandardDTO) throws SerException {
-        return assistanceStandardSer.count( assistanceStandardDTO);
+        return assistanceStandardSer.countAssistanceStandard( assistanceStandardDTO);
+    }
+
+    @Override
+    public AssistanceStandardBO getOneById(String id) throws SerException {
+        return assistanceStandardSer.getOneById(id);
     }
 
     @Override

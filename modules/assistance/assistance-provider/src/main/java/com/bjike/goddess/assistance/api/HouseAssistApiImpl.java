@@ -29,7 +29,12 @@ public class HouseAssistApiImpl implements HouseAssistAPI {
 
     @Override
     public Long countHouseAssist(HouseAssistDTO houseAssistDTO) throws SerException {
-        return houseAssistSer.count( houseAssistDTO);
+        return houseAssistSer.countHouseAssist( houseAssistDTO);
+    }
+
+    @Override
+    public HouseAssistBO getOneById(String id) throws SerException {
+        return houseAssistSer.getOneById(id);
     }
 
     @Override

@@ -29,7 +29,12 @@ public class AgeAssistApiImpl implements AgeAssistAPI {
 
     @Override
     public Long countAgeAssist(AgeAssistDTO ageAssistDTO) throws SerException {
-        return ageAssistSer.count( ageAssistDTO);
+        return ageAssistSer.countAgeAssist( ageAssistDTO);
+    }
+
+    @Override
+    public AgeAssistBO getOneById(String id) throws SerException {
+        return ageAssistSer.getOneById(id);
     }
 
     @Override

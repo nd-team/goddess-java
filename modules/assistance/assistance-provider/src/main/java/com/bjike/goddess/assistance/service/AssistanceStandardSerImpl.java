@@ -41,6 +41,16 @@ public class AssistanceStandardSerImpl extends ServiceImpl<AssistanceStandard, A
     }
 
     @Override
+    public AssistanceStandardBO getOneById(String id) throws SerException {
+        if (StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
+        AssistanceStandard  list = super.findById(id);
+
+        return BeanTransform.copyProperties(list, AssistanceStandardBO.class );
+    }
+
+    @Override
     public List<AssistanceStandardBO> listAssistanceStandard(AssistanceStandardDTO assistanceStandardDTO) throws SerException {
         if( StringUtils.isNotBlank(assistanceStandardDTO.getName() )){
             assistanceStandardDTO.getConditions().add(Restrict.like("name",assistanceStandardDTO.getName() ));
@@ -80,7 +90,12 @@ public class AssistanceStandardSerImpl extends ServiceImpl<AssistanceStandard, A
         if (StringUtils.isBlank(id)){
             throw new SerException("id不能为空");
         }
-        super.remove( id );
+        AssistanceStandard assistanceStandard = super.findById( id );
+        if(assistanceStandard != null ){
+            super.remove( id );
+        }else{
+            throw new SerException("删除的对象不存在");
+        }
     }
 
     @Override

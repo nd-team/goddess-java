@@ -26,6 +26,12 @@ public interface HouseAssistAPI {
         return null;
     }
     /**
+     * 一个住宿补助
+     * @return class HouseAssistBO
+     */
+    default HouseAssistBO getOneById(String id) throws SerException {return null;}
+
+    /**
      * 住宿补助列表
      * @return class HouseAssistBO
      */

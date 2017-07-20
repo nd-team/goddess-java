@@ -27,6 +27,17 @@ public interface AssistancePlanSer extends Ser<AssistancePlan, AssistancePlanDTO
     default Long countAssistancePlan(AssistancePlanDTO assistancePlanDTO) throws SerException {
         return null;
     }
+
+
+    /**
+     * 一个补助方案
+     *
+     * @return class AssistancePlanBO
+     */
+    default AssistancePlanBO getOneById(String id) throws SerException {
+        return null;
+    }
+
     /**
      * 补助方案列表
      * @return class AssistancePlanBO
