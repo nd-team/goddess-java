@@ -6,6 +6,7 @@ import com.bjike.goddess.materialbuy.bo.TempMatterDemandBO;
 import com.bjike.goddess.materialbuy.dto.TempMatterDemandDTO;
 import com.bjike.goddess.materialbuy.entity.TempMatterDemand;
 import com.bjike.goddess.materialbuy.service.TempMatterDemandSer;
+import com.bjike.goddess.materialbuy.to.GuidePermissionTO;
 import com.bjike.goddess.materialbuy.to.TempMatterDemandTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,16 @@ public class TempMatterDemandApiImpl implements TempMatterDemandAPI {
 
     @Autowired
     private TempMatterDemandSer tempMatterDemandSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return tempMatterDemandSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return tempMatterDemandSer.guidePermission(guidePermissionTO);
+    }
 
     /**
      * 根据id查询临时物资需求

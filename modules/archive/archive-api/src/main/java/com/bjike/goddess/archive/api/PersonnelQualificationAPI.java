@@ -2,6 +2,7 @@ package com.bjike.goddess.archive.api;
 
 import com.bjike.goddess.archive.bo.PersonnelQualificationBO;
 import com.bjike.goddess.archive.dto.PersonnelQualificationDTO;
+import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.archive.to.PersonnelQualificationTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -17,6 +18,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface PersonnelQualificationAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存
@@ -80,6 +94,13 @@ public interface PersonnelQualificationAPI {
      * @throws SerException
      */
     default Long getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取姓名
+     */
+    default List<String> getName() throws SerException {
         return null;
     }
 }

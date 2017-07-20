@@ -4,6 +4,7 @@ import com.bjike.goddess.archive.bo.ArchiveGatherBO;
 import com.bjike.goddess.archive.dto.ArchiveGatherDTO;
 import com.bjike.goddess.archive.service.ArchiveGatherSer;
 import com.bjike.goddess.archive.to.ArchiveGatherTO;
+import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,17 @@ public class ArchiveGatherApiImpl implements ArchiveGatherAPI {
 
     @Autowired
     private ArchiveGatherSer archiveGatherSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return archiveGatherSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return archiveGatherSer.guidePermission(guidePermissionTO);
+    }
+
 
     @Override
     public ArchiveGatherBO save(ArchiveGatherTO to) throws SerException {

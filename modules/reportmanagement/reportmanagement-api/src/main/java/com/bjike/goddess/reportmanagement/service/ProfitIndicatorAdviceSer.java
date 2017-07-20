@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.reportmanagement.bo.ProfitIndicatorAdviceBO;
 import com.bjike.goddess.reportmanagement.dto.ProfitIndicatorAdviceDTO;
 import com.bjike.goddess.reportmanagement.entity.ProfitIndicatorAdvice;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import com.bjike.goddess.reportmanagement.to.ProfitIndicatorAdviceTO;
 
 import java.util.List;
@@ -19,6 +20,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ProfitIndicatorAdviceSer extends Ser<ProfitIndicatorAdvice, ProfitIndicatorAdviceDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 列表
      *

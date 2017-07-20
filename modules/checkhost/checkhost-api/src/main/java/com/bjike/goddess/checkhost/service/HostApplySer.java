@@ -1,14 +1,13 @@
 package com.bjike.goddess.checkhost.service;
 
-import com.bjike.goddess.checkhost.bo.DormitoryInfoBO;
 import com.bjike.goddess.checkhost.bo.HostApplyBO;
-import com.bjike.goddess.checkhost.dto.DormitoryInfoDTO;
+import com.bjike.goddess.checkhost.dto.HostApplyDTO;
+import com.bjike.goddess.checkhost.entity.HostApply;
+import com.bjike.goddess.checkhost.enums.CheckStatus;
 import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.to.HostApplyTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.checkhost.entity.HostApply;
-import com.bjike.goddess.checkhost.dto.HostApplyDTO;
 
 import java.util.List;
 
@@ -42,6 +41,7 @@ public interface HostApplySer extends Ser<HostApply, HostApplyDTO> {
     default Long countHostApply(HostApplyDTO hostApplyDTO) throws SerException {
         return null;
     }
+
     /**
      * 一个离宿申请
      *
@@ -50,6 +50,7 @@ public interface HostApplySer extends Ser<HostApply, HostApplyDTO> {
     default HostApplyBO getOne(String id) throws SerException {
         return null;
     }
+
     /**
      * 获取离宿申请
      *
@@ -96,12 +97,12 @@ public interface HostApplySer extends Ser<HostApply, HostApplyDTO> {
     /**
      * 审核
      *
-     * @param hostApplyTO 离宿申请
+     * @param id          id
+     * @param checkStatus
      * @return class HostApplyBO
+     * @paramcheckStatus
      */
-    default HostApplyBO auditHostApply(HostApplyTO hostApplyTO) throws SerException {
-        return null;
-    }
+    HostApplyBO auditHostApply(String id, CheckStatus checkStatus) throws SerException;
 
 
 }

@@ -22,6 +22,15 @@
 	<dubbo:service validation="true" interface="com.bjike.goddess.staffactivity.api.ActivityExecuteInfoAPI" ref="activityExecuteInfoApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.staffactivity.api.ActivitySchemeAPI" ref="activitySchemeApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.staffactivity.api.ActivityStaffListAPI" ref="activityStaffListApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.staffactivity.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.staffactivity.api.CusPermissionAPI" ref="cusPermissionApiImpl"></dubbo:service>
 
 	<dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.ArrangementAPI" id="arrangementApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.message.api.MessageAPI" id="messageApiImpl"/>
+
 </beans>

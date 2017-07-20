@@ -7,6 +7,7 @@ import com.bjike.goddess.materialbuy.dto.DeviceTypeDTO;
 import com.bjike.goddess.materialbuy.entity.DeviceType;
 import com.bjike.goddess.materialbuy.service.DeviceTypeSer;
 import com.bjike.goddess.materialbuy.to.DeviceTypeTO;
+import com.bjike.goddess.materialbuy.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,16 @@ public class DeviceTypeApiImpl implements DeviceTypeAPI {
 
     @Autowired
     private DeviceTypeSer deviceTypeSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return deviceTypeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return deviceTypeSer.guidePermission(guidePermissionTO);
+    }
 
     /**
      * 根据id查询设备类型

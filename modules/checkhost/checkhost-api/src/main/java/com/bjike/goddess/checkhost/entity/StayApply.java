@@ -1,8 +1,11 @@
 package com.bjike.goddess.checkhost.entity;
 
+import com.bjike.goddess.checkhost.enums.CheckStatus;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDate;
 
 
@@ -46,7 +49,7 @@ public class StayApply extends BaseEntity {
     /**
      * 申请入住原因
      */
-    @Column(name = "stayCause",  columnDefinition = "VARCHAR(255)   COMMENT '申请入住原因'")
+    @Column(name = "stayCause", columnDefinition = "VARCHAR(255)   COMMENT '申请入住原因'")
     private String stayCause;
 
     /**
@@ -60,15 +63,15 @@ public class StayApply extends BaseEntity {
      */
     @Column(columnDefinition = "VARCHAR(255) COMMENT '福利模块负责人'")
     private String headAudit;
-    /**
-     * 福利模块负责人审核
-     */
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '福利模块负责人审核'")
-    private String headAuditPass;
+//    /**
+//     * 福利模块负责人审核
+//     */
+//    @Column(columnDefinition = "VARCHAR(255) COMMENT '福利模块负责人审核'")
+//    private String headAuditPass;
     /**
      * 新员工确认入住
      */
-    @Column(name = "is_stay",  columnDefinition = "TINYINT(2)  COMMENT '新员工确认入住'")
+    @Column(name = "is_stay", columnDefinition = "TINYINT(2)  COMMENT '新员工确认入住'")
     private Boolean stay;
 
     /**
@@ -77,6 +80,19 @@ public class StayApply extends BaseEntity {
     @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
+    /**
+     * 审核状态
+     */
+    @Column(name = "checkStatus", columnDefinition = "TINYINT(2)   COMMENT '审核状态'")
+    private CheckStatus checkStatus;
+
+    public CheckStatus getCheckStatus() {
+        return checkStatus;
+    }
+
+    public void setCheckStatus(CheckStatus checkStatus) {
+        this.checkStatus = checkStatus;
+    }
 
     public String getName() {
         return name;
@@ -134,13 +150,13 @@ public class StayApply extends BaseEntity {
         this.headAudit = headAudit;
     }
 
-    public String getHeadAuditPass() {
-        return headAuditPass;
-    }
-
-    public void setHeadAuditPass(String headAuditPass) {
-        this.headAuditPass = headAuditPass;
-    }
+//    public String getHeadAuditPass() {
+//        return headAuditPass;
+//    }
+//
+//    public void setHeadAuditPass(String headAuditPass) {
+//        this.headAuditPass = headAuditPass;
+//    }
 
     public Boolean getStay() {
         return stay;

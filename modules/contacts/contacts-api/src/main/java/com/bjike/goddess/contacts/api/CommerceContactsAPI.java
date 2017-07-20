@@ -96,4 +96,10 @@ public interface CommerceContactsAPI {
         return null;
     }
 
+    /**
+     * 模板导出
+     */
+    default byte[] templateExport() throws SerException{
+        return null;
+    }
 }

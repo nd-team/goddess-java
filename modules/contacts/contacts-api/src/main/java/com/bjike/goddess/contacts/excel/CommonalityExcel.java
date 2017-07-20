@@ -1,8 +1,8 @@
 package com.bjike.goddess.contacts.excel;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
-import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
+import com.bjike.goddess.contacts.enums.Status;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

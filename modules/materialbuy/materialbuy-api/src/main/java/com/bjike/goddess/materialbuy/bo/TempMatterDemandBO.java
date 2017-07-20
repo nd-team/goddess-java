@@ -1,9 +1,7 @@
 package com.bjike.goddess.materialbuy.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.materialbuy.type.AuditState;
-
-import javax.persistence.Column;
+import com.bjike.goddess.materialbuy.enums.AuditState;
 
 /**
  * 临时物资需求业务传输对象

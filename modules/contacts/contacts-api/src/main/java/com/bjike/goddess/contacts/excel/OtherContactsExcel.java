@@ -26,43 +26,43 @@ public class OtherContactsExcel extends BaseEntity {
     /**
      * 公司名称
      */
-    @ExcelHeader(name = "服务类别",notNull = true)
+    @ExcelHeader(name = "公司名称",notNull = true)
     private String name;
 
     /**
      * 联系电话
      */
-    @ExcelHeader(name = "服务类别",notNull = true)
+    @ExcelHeader(name = "联系电话",notNull = true)
     private String phone;
 
     /**
      * 公司地址
      */
-    @ExcelHeader(name = "服务类别",notNull = false)
+    @ExcelHeader(name = "公司地址",notNull = false)
     private String address;
 
     /**
      * 使用人
      */
-    @ExcelHeader(name = "服务类别",notNull = false)
+    @ExcelHeader(name = "使用人",notNull = false)
     private String user;
 
     /**
      * 使用日期
      */
-    @ExcelHeader(name = "服务类别",notNull = false)
+    @ExcelHeader(name = "使用日期",notNull = false)
     private LocalDate useDate;
 
     /**
      * 评价
      */
-    @ExcelHeader(name = "服务类别",notNull = false)
+    @ExcelHeader(name = "评价",notNull = false)
     private String evaluate;
 
     /**
      * 备注
      */
-    @ExcelHeader(name = "服务类别",notNull = false)
+    @ExcelHeader(name = "备注",notNull = false)
     private String remark;
 
 

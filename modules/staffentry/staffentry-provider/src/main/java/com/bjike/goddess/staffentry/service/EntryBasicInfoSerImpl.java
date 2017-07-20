@@ -69,7 +69,7 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
 
     @Override
     public List<EntryBasicInfoBO> listEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
-        checkDepartIdentity("3");
+        //checkDepartIdentity("3");
 
         List<EntryBasicInfo> entryBasicInfos = super.findByPage(entryBasicInfoDTO);
         List<EntryBasicInfoBO> boList = BeanTransform.copyProperties(entryBasicInfos, EntryBasicInfoBO.class);

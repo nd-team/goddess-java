@@ -38,6 +38,9 @@ public class ConditionTO extends BaseTO {
      */
     private String endDate;
 
+    private String DispatchStartDate;
+    private String DispatchEndDate;
+
     public String getArea() {
         return area;
     }
@@ -76,5 +79,21 @@ public class ConditionTO extends BaseTO {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public String getDispatchStartDate() {
+        return DispatchStartDate;
+    }
+
+    public void setDispatchStartDate(String dispatchStartDate) {
+        DispatchStartDate = dispatchStartDate;
+    }
+
+    public String getDispatchEndDate() {
+        return DispatchEndDate;
+    }
+
+    public void setDispatchEndDate(String dispatchEndDate) {
+        DispatchEndDate = dispatchEndDate;
     }
 }

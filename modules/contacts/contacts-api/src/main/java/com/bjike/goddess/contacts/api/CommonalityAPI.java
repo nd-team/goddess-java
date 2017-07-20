@@ -134,6 +134,7 @@ public interface CommonalityAPI {
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
@@ -149,5 +150,9 @@ public interface CommonalityAPI {
      */
     default void importExcel(List<CommonalityTO> tocs) throws SerException {
 
+    }
+
+    default byte[] templateExport() throws SerException {
+        return null;
     }
 }

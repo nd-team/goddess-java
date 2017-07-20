@@ -1,5 +1,6 @@
 package com.bjike.goddess.checkhost.to;
 
+import com.bjike.goddess.checkhost.enums.CheckStatus;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
@@ -88,17 +89,29 @@ public class HostApplyTO extends BaseTO {
     @DecimalMin(value = "0.00", groups = {ADD.class, EDIT.class}, message = "合计总额（收费金额+水电费，燃气费总额）不能小于0")
     private Double totalAmount;
 
-    /**
-     * 模块责任人审核
-     */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "模块责任人审核不能为空")
-    private String headAudit;
+//    /**
+//     * 模块责任人审核
+//     */
+//    @NotBlank(groups = {ADD.class, EDIT.class}, message = "模块责任人审核不能为空")
+//    private String headAudit;
 
     /**
      * 备注
      */
     private String remark;
 
+    /**
+     * 审核状态
+     */
+    private CheckStatus checkStatus;
+
+    public CheckStatus getCheckStatus() {
+        return checkStatus;
+    }
+
+    public void setCheckStatus(CheckStatus checkStatus) {
+        this.checkStatus = checkStatus;
+    }
 
     public String getArea() {
         return area;
@@ -196,13 +209,13 @@ public class HostApplyTO extends BaseTO {
         this.totalAmount = totalAmount;
     }
 
-    public String getHeadAudit() {
-        return headAudit;
-    }
-
-    public void setHeadAudit(String headAudit) {
-        this.headAudit = headAudit;
-    }
+//    public String getHeadAudit() {
+//        return headAudit;
+//    }
+//
+//    public void setHeadAudit(String headAudit) {
+//        this.headAudit = headAudit;
+//    }
 
     public String getRemark() {
         return remark;

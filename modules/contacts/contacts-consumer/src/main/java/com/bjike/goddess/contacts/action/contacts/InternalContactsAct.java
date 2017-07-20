@@ -12,6 +12,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
+import com.bjike.goddess.contacts.bo.NameAndIdBO;
 import com.bjike.goddess.contacts.dto.InternalContactsDTO;
 import com.bjike.goddess.contacts.excel.InternalContactsExcel;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
@@ -23,6 +24,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -235,5 +238,55 @@ public class InternalContactsAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 获得入职员工的id和姓名
+     * @des 获得入职员工的姓名
+     * @return class NameAndIdBO
+     * @version v1
+     */
+    @GetMapping("v1/getUserName")
+    public Result getUserName() throws ActException{
+        try{
+            List<NameAndIdBO> list = internalContactsAPI.getUserName();
+            return ActResult.initialize(list);
+        }catch(SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板商务通讯录
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "内部通讯录导入模板.xlsx";
+            super.writeOutFile(response, internalContactsAPI.templateExport( ), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * 根据姓名获取邮箱
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getEmail")
+    public Result getEmail(String[] names, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(internalContactsAPI.getEmails(names));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }

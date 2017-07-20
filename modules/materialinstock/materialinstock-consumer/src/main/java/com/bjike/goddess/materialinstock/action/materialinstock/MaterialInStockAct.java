@@ -16,6 +16,8 @@ import com.bjike.goddess.materialinstock.to.GuidePermissionTO;
 import com.bjike.goddess.materialinstock.to.MaterialInStockTO;
 import com.bjike.goddess.materialinstock.to.StockDeleteFileTO;
 import com.bjike.goddess.materialinstock.vo.MaterialInStockVO;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,6 +52,8 @@ public class MaterialInStockAct extends BaseFileAction {
     @Autowired
     private FileAPI fileAPI;
 
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
     /**
      * 功能导航权限
      *
@@ -261,5 +266,48 @@ public class MaterialInStockAct extends BaseFileAction {
         }
         return new ActResult("delFile success");
     }
-
+    /**
+     * 所有部门下拉值
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allOrageDepartment")
+    public Result allOrageDepartment() throws ActException {
+        try {
+            List<String> detail = new ArrayList<>();
+            detail = materialInStockAPI.findAddAllDetails();
+            return ActResult.initialize(detail);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 添加中所有的地区
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allArea")
+    public Result allArea() throws ActException {
+        try {
+            List<AreaBO> area = departmentDetailAPI.findArea();
+            return ActResult.initialize(area);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取所有用户
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allGetPerson")
+    public Result allGetPerson() throws ActException {
+        try {
+            List<String> getPerson = new ArrayList<>();
+            getPerson = materialInStockAPI.findallUser();
+            return ActResult.initialize(getPerson);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

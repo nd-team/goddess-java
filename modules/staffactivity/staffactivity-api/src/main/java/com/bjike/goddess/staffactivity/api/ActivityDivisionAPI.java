@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffactivity.bo.ActivityDivisionBO;
 import com.bjike.goddess.staffactivity.dto.ActivityDivisionDTO;
 import com.bjike.goddess.staffactivity.to.ActivityDivisionTO;
+import com.bjike.goddess.staffactivity.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -17,6 +18,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ActivityDivisionAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 根据id查询活动分工

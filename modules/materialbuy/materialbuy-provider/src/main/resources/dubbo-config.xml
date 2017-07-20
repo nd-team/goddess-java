@@ -20,8 +20,17 @@
 	<dubbo:service validation="true" interface="com.bjike.goddess.materialbuy.api.DeviceTypeAPI" ref="deviceTypeApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.materialbuy.api.MaterialBuyAPI" ref="materialBuyApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.materialbuy.api.TempMatterDemandAPI" ref="tempMatterDemandApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.materialbuy.api.CusPermissionAPI" ref="cusPermissionApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.materialbuy.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"></dubbo:service>
 
 	<!--引用其他模块的API-->
-	<dubbo:reference validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+	<dubbo:reference validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
+	<dubbo:reference validation="true" id="commonalityApiImpl" interface="com.bjike.goddess.contacts.api.CommonalityAPI" />
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.ArrangementAPI" id="arrangementApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
 
 </beans>

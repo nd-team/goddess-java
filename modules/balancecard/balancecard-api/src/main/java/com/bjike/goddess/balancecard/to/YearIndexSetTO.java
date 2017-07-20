@@ -17,19 +17,29 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public class YearIndexSetTO extends BaseTO {
-    public interface TestAdd{}
-    public interface TestSer{}
+    public interface TestAdd {
+    }
+
+    public interface TestSer {
+    }
 
     /**
      * 指标名称
      */
-    @NotBlank(groups = {YearIndexSetTO.TestAdd.class} , message = "指标名称不能为空")
+    @NotBlank(groups = {YearIndexSetTO.TestAdd.class}, message = "指标名称不能为空")
     private String indexName;
+
+    /**
+     * 年度指标编号
+     */
+    @NotBlank(groups = {YearIndexSetTO.TestAdd.class}, message = "年度指标编号不能为空")
+    private String indexNumber;
+
 
     /**
      * 年份
      */
-    @NotBlank(groups = {YearIndexSetTO.TestAdd.class} , message = "指标名称不能为空")
+    @NotBlank(groups = {YearIndexSetTO.TestAdd.class}, message = "年份名称不能为空")
     private String year;
 
     /**
@@ -45,13 +55,13 @@ public class YearIndexSetTO extends BaseTO {
     /**
      * 指标权重
      */
-    @NotNull(groups = {YearIndexSetTO.TestAdd.class} , message = "指标权重不能为空")
+    @NotNull(groups = {YearIndexSetTO.TestAdd.class}, message = "指标权重不能为空")
     private Double describtion;
 
     /**
      * 年度目标值
      */
-    @NotNull(groups = {YearIndexSetTO.TestAdd.class} , message = "年度目标值不能为空")
+    @NotNull(groups = {YearIndexSetTO.TestAdd.class}, message = "年度目标值不能为空")
     private Double yearTarget;
 
     /**
@@ -98,7 +108,7 @@ public class YearIndexSetTO extends BaseTO {
     /**
      * 部门项目组分解数据
      */
-    @NotNull(groups = {YearIndexSetTO.TestSer.class} , message = "部门项目组分解数据不能为空")
+    @NotNull(groups = {YearIndexSetTO.TestSer.class}, message = "部门项目组分解数据不能为空")
     private List<DepartSerperateTO> departSerperateTOS;
 
 
@@ -221,5 +231,13 @@ public class YearIndexSetTO extends BaseTO {
 
     public void setDepartSerperateTOS(List<DepartSerperateTO> departSerperateTOS) {
         this.departSerperateTOS = departSerperateTOS;
+    }
+
+    public String getIndexNumber() {
+        return indexNumber;
+    }
+
+    public void setIndexNumber(String indexNumber) {
+        this.indexNumber = indexNumber;
     }
 }

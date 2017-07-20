@@ -2,6 +2,7 @@ package com.bjike.goddess.contacts.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contacts.bo.InternalContactsBO;
+import com.bjike.goddess.contacts.bo.NameAndIdBO;
 import com.bjike.goddess.contacts.dto.InternalContactsDTO;
 import com.bjike.goddess.contacts.service.InternalContactsSer;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
@@ -90,5 +91,20 @@ public class InternalContactsApiImpl implements InternalContactsAPI {
     @Override
     public void checkDimissionInfo() throws SerException {
         internalContactsSer.checkDimissionInfo();
+    }
+
+    @Override
+    public List<NameAndIdBO> getUserName() throws SerException {
+        return internalContactsSer.getUserName();
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return internalContactsSer.templateExport();
+    }
+
+    @Override
+    public List<String> getEmails(String[] names) throws SerException {
+        return internalContactsSer.getEmails(names);
     }
 }

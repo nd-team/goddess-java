@@ -46,6 +46,14 @@ public class DepartMonIndexSetExcel extends BaseTO {
     @ExcelHeader(name = "维度",notNull = true)
     private String dimension;
 
+
+
+    /**
+     * 责任部门
+     */
+    @ExcelHeader(name = "责任部门",notNull = true)
+    private String department;
+
     /**
      * 总指标权重
      */
@@ -53,10 +61,10 @@ public class DepartMonIndexSetExcel extends BaseTO {
     private Double describtion;
 
     /**
-     * 责任部门
+     * 本月目标值
      */
-    @ExcelHeader(name = "责任部门",notNull = true)
-    private String department;
+    @ExcelHeader(name = "本月目标值",notNull = true)
+    private Double target;
 
     /**
      * 部门年度指标权重
@@ -76,11 +84,7 @@ public class DepartMonIndexSetExcel extends BaseTO {
     @ExcelHeader(name = "权重",notNull = true)
     private Double weight;
 
-    /**
-     * 本月目标值
-     */
-    @ExcelHeader(name = "本月目标值",notNull = true)
-    private Double target;
+
 
     /**
      * 对赌值
@@ -151,8 +155,8 @@ public class DepartMonIndexSetExcel extends BaseTO {
     /**
      * 部门月度指标添加时间
      */
-    @ExcelHeader(name = "部门月度指标添加时间",notNull = true)
-    private String yearIndexTime;
+//    @ExcelHeader(name = "部门月度指标添加时间",notNull = true)
+//    private String yearIndexTime;
 
     /**
      * 岗位分解状态
@@ -163,14 +167,14 @@ public class DepartMonIndexSetExcel extends BaseTO {
     /**
      * 是否由分解得来状态
      */
-    @ExcelHeader(name = "是否由分解得来状态",notNull = true)
-    private SeperateComeStatus seperateComeStatus;
+//    @ExcelHeader(name = "是否由分解得来状态",notNull = true)
+//    private SeperateComeStatus seperateComeStatus;
 
     /**
      * 部门年度指标设置id
      */
-    @ExcelHeader(name = "部门年度指标设置id")
-    private String departYearIndexSetId;
+//    @ExcelHeader(name = "部门年度指标设置id")
+//    private String departYearIndexSetId;
 
     public String getIndexName() {
         return indexName;
@@ -348,13 +352,13 @@ public class DepartMonIndexSetExcel extends BaseTO {
         this.yearPersion = yearPersion;
     }
 
-    public String getYearIndexTime() {
-        return yearIndexTime;
-    }
-
-    public void setYearIndexTime(String yearIndexTime) {
-        this.yearIndexTime = yearIndexTime;
-    }
+//    public String getYearIndexTime() {
+//        return yearIndexTime;
+//    }
+//
+//    public void setYearIndexTime(String yearIndexTime) {
+//        this.yearIndexTime = yearIndexTime;
+//    }
 
     public SeparateStatus getSeparateStatus() {
         return separateStatus;
@@ -364,19 +368,19 @@ public class DepartMonIndexSetExcel extends BaseTO {
         this.separateStatus = separateStatus;
     }
 
-    public SeperateComeStatus getSeperateComeStatus() {
-        return seperateComeStatus;
-    }
-
-    public void setSeperateComeStatus(SeperateComeStatus seperateComeStatus) {
-        this.seperateComeStatus = seperateComeStatus;
-    }
-
-    public String getDepartYearIndexSetId() {
-        return departYearIndexSetId;
-    }
-
-    public void setDepartYearIndexSetId(String departYearIndexSetId) {
-        this.departYearIndexSetId = departYearIndexSetId;
-    }
+//    public SeperateComeStatus getSeperateComeStatus() {
+//        return seperateComeStatus;
+//    }
+//
+//    public void setSeperateComeStatus(SeperateComeStatus seperateComeStatus) {
+//        this.seperateComeStatus = seperateComeStatus;
+//    }
+//
+//    public String getDepartYearIndexSetId() {
+//        return departYearIndexSetId;
+//    }
+//
+//    public void setDepartYearIndexSetId(String departYearIndexSetId) {
+//        this.departYearIndexSetId = departYearIndexSetId;
+//    }
 }

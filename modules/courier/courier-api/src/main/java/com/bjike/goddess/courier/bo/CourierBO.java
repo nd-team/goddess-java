@@ -1,10 +1,8 @@
 package com.bjike.goddess.courier.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.courier.type.AttributeType;
-import com.bjike.goddess.courier.type.Range;
-
-import javax.persistence.Column;
+import com.bjike.goddess.courier.enums.AttributeType;
+import com.bjike.goddess.courier.enums.Range;
 
 /**
  * 快递收发业务传输对象
@@ -135,12 +133,12 @@ public class CourierBO extends BaseBO {
     /**
      * 是否有发票/收据
      */
-    private boolean isInvoice;
+    private Boolean isInvoice;
 
     /**
      * 是否公司支付
      */
-    private boolean isCompanyPay;
+    private Boolean isCompanyPay;
 
     /**
      * 支付人
@@ -150,7 +148,7 @@ public class CourierBO extends BaseBO {
     /**
      * 是否收件
      */
-    private boolean isReceipt;
+    private Boolean isReceipt;
 
     /**
      * 签收人
@@ -160,7 +158,7 @@ public class CourierBO extends BaseBO {
     /**
      * 收件清单确认
      */
-    private boolean isConfirm;
+    private Boolean isConfirm;
 
     /**
      * 备注
@@ -377,19 +375,19 @@ public class CourierBO extends BaseBO {
         this.remainingSum = remainingSum;
     }
 
-    public boolean getIsInvoice() {
+    public Boolean getIsInvoice() {
         return isInvoice;
     }
 
-    public void setIsInvoice(boolean isInvoice) {
+    public void setIsInvoice(Boolean isInvoice) {
         this.isInvoice = isInvoice;
     }
 
-    public boolean getIsCompanyPay() {
+    public Boolean getIsCompanyPay() {
         return isCompanyPay;
     }
 
-    public void setIsCompanyPay(boolean isCompanyPay) {
+    public void setIsCompanyPay(Boolean isCompanyPay) {
         this.isCompanyPay = isCompanyPay;
     }
 
@@ -401,11 +399,11 @@ public class CourierBO extends BaseBO {
         this.payPerson = payPerson;
     }
 
-    public boolean getIsReceipt() {
+    public Boolean getIsReceipt() {
         return isReceipt;
     }
 
-    public void setIsReceipt(boolean isReceipt) {
+    public void setIsReceipt(Boolean isReceipt) {
         this.isReceipt = isReceipt;
     }
 
@@ -417,11 +415,11 @@ public class CourierBO extends BaseBO {
         this.signPerson = signPerson;
     }
 
-    public boolean getIsConfirm() {
+    public Boolean getIsConfirm() {
         return isConfirm;
     }
 
-    public void setIsConfirm(boolean isConfirm) {
+    public void setIsConfirm(Boolean isConfirm) {
         this.isConfirm = isConfirm;
     }
 

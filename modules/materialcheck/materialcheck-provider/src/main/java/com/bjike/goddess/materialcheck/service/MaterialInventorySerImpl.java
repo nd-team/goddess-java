@@ -182,7 +182,9 @@ public class MaterialInventorySerImpl extends ServiceImpl<MaterialInventory, Mat
             Boolean flagInvenDai = guideIdentity();
             RpcTransmit.transmitUserToken(userToken);
             Boolean flagInvenMondDai = guideMondIdentity();
+            RpcTransmit.transmitUserToken(userToken);
             Boolean flagInvenPosinDai = guidePosinIdentity();
+            RpcTransmit.transmitUserToken(userToken);
 
             SonPermissionObject obj = new SonPermissionObject();
 

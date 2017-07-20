@@ -1,5 +1,6 @@
 package com.bjike.goddess.checkhost.to;
 
+import com.bjike.goddess.checkhost.enums.CheckStatus;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
@@ -127,17 +128,29 @@ public class StayDaysTO extends BaseTO {
     @NotNull(groups = {ADD.class, EDIT.class}, message = "员工核实是否有误不能为空")
     private Boolean employeeVerify;
 
-    /**
-     * 综合资源部核实
-     */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "综合资源部核实不能为空")
-    private String comprehensiveVerify;
+//    /**
+//     * 综合资源部核实
+//     */
+//    @NotBlank(groups = {ADD.class, EDIT.class}, message = "综合资源部核实不能为空")
+//    private String comprehensiveVerify;
 
     /**
      * 备注
      */
     private String remark;
 
+    /**
+     * 审核状态
+     */
+    private CheckStatus checkStatus;
+
+    public CheckStatus getCheckStatus() {
+        return checkStatus;
+    }
+
+    public void setCheckStatus(CheckStatus checkStatus) {
+        this.checkStatus = checkStatus;
+    }
 
     public String getArea() {
         return area;
@@ -275,13 +288,13 @@ public class StayDaysTO extends BaseTO {
         this.employeeVerify = employeeVerify;
     }
 
-    public String getComprehensiveVerify() {
-        return comprehensiveVerify;
-    }
-
-    public void setComprehensiveVerify(String comprehensiveVerify) {
-        this.comprehensiveVerify = comprehensiveVerify;
-    }
+//    public String getComprehensiveVerify() {
+//        return comprehensiveVerify;
+//    }
+//
+//    public void setComprehensiveVerify(String comprehensiveVerify) {
+//        this.comprehensiveVerify = comprehensiveVerify;
+//    }
 
     public String getRemark() {
         return remark;

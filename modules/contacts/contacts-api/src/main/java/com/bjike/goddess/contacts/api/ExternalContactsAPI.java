@@ -102,6 +102,7 @@ public interface ExternalContactsAPI {
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
@@ -113,4 +114,8 @@ public interface ExternalContactsAPI {
      * 导入
      */
     ExternalContactsBO importExcel(List<ExternalContactsTO> tocs) throws SerException;
+
+    default byte[] templateExport() throws SerException {
+        return null;
+    }
 }

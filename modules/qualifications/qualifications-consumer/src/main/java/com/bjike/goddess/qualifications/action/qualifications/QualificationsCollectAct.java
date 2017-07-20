@@ -1,5 +1,6 @@
 package com.bjike.goddess.qualifications.action.qualifications;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -171,7 +172,7 @@ public class QualificationsCollectAct extends BaseFileAction {
      * @param id 通信系统集成资质进度汇总数据id
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @PostMapping("v1/uploadEnclosure/{id}")
     public Result uploadEnclosure(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
@@ -281,11 +282,10 @@ public class QualificationsCollectAct extends BaseFileAction {
      * @throws ActException
      * @version v1
      */
-    @LoginAuth
     @GetMapping("v1/sonPermission")
     public Result sonPermission() throws ActException {
         try {
-
+            String token = RpcContext.getContext().getAttachment("userToken");
             List<SonPermissionObject> hasPermissionList = qualificationsCollectAPI.sonPermission();
             return new ActResult(0, "有权限", hasPermissionList);
 

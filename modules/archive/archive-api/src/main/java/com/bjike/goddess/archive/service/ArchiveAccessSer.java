@@ -3,8 +3,10 @@ package com.bjike.goddess.archive.service;
 import com.bjike.goddess.archive.bo.ArchiveAccessBO;
 import com.bjike.goddess.archive.dto.ArchiveAccessDTO;
 import com.bjike.goddess.archive.entity.ArchiveAccess;
+import com.bjike.goddess.archive.excel.SonPermissionObject;
 import com.bjike.goddess.archive.to.AccessAuditTO;
 import com.bjike.goddess.archive.to.ArchiveAccessTO;
+import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -20,6 +22,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ArchiveAccessSer extends Ser<ArchiveAccess, ArchiveAccessDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存

@@ -3,6 +3,7 @@ package com.bjike.goddess.archive.api;
 import com.bjike.goddess.archive.bo.PersonnelQualificationBO;
 import com.bjike.goddess.archive.dto.PersonnelQualificationDTO;
 import com.bjike.goddess.archive.service.PersonnelQualificationSer;
+import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.archive.to.PersonnelQualificationTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,16 @@ public class PersonnelQualificationApiImpl implements PersonnelQualificationAPI 
 
     @Autowired
     private PersonnelQualificationSer personnelQualificationSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return personnelQualificationSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return personnelQualificationSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public PersonnelQualificationBO save(PersonnelQualificationTO to) throws SerException {
@@ -53,5 +64,10 @@ public class PersonnelQualificationApiImpl implements PersonnelQualificationAPI 
     @Override
     public Long getTotal() throws SerException {
         return personnelQualificationSer.getTotal();
+    }
+
+    @Override
+    public List<String> getName() throws SerException {
+        return personnelQualificationSer.getName();
     }
 }

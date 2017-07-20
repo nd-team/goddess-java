@@ -8,20 +8,33 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.vo.AreaVO;
+import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.staffactivity.api.ActivityApplyInforAPI;
 import com.bjike.goddess.staffactivity.bo.ActivityApplyInforBO;
 import com.bjike.goddess.staffactivity.bo.ActivityStaffListBO;
 import com.bjike.goddess.staffactivity.dto.ActivityApplyInforDTO;
 import com.bjike.goddess.staffactivity.to.ActivityApplyInforTO;
+import com.bjike.goddess.staffactivity.to.GuidePermissionTO;
 import com.bjike.goddess.staffactivity.vo.ActivityApplyInforVO;
 import com.bjike.goddess.staffactivity.vo.ActivityStaffListVO;
+import com.bjike.goddess.staffactivity.vo.SonPermissionObject;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 活动申请信息
@@ -38,6 +51,83 @@ public class ActivityApplyInforAct {
 
     @Autowired
     private ActivityApplyInforAPI activityApplyInforAPI;
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result setButtonPermission() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = activityApplyInforAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = activityApplyInforAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 根据id查询活动申请信息
@@ -74,7 +164,7 @@ public class ActivityApplyInforAct {
             throw new ActException(e.getMessage());
         }
     }
-    
+
     /**
      * 分页查询活动申请信息
      *
@@ -153,7 +243,7 @@ public class ActivityApplyInforAct {
     /**
      * 参与该活动
      *
-     * @param id 活动申请信息唯一标识
+     * @param id   活动申请信息唯一标识
      * @param area 地区
      * @throws ActException
      * @version v1
@@ -172,7 +262,7 @@ public class ActivityApplyInforAct {
     /**
      * 退出该活动
      *
-     * @param id 活动申请信息唯一标识
+     * @param id            活动申请信息唯一标识
      * @param abandonReason 放弃原因
      * @throws ActException
      * @version v1
@@ -207,4 +297,58 @@ public class ActivityApplyInforAct {
         }
     }
 
+
+    /**
+     * 获取所有员工姓名
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findUserNames")
+    public Result findUserNames() throws ActException {
+        try {
+            Set<String> set = new HashSet<>();
+            List<UserBO> boList = userAPI.findAllUser();
+            for (UserBO userBO : boList) {
+                set.add(userBO.getUsername());
+            }
+            return ActResult.initialize(set);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有地区
+     *
+     * @return class AreaVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findArea")
+    public Result findArea(HttpServletRequest request) throws ActException {
+        try {
+            List<AreaBO> list = departmentDetailAPI.findArea();
+            return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有项目组
+     *
+     * @return class DepartmentDetailVO
+     * @throws ActException、
+     * @version v1
+     */
+    @GetMapping("v1/findStatus")
+    public Result findStatus(HttpServletRequest request) throws ActException {
+        try {
+            List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
+            return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

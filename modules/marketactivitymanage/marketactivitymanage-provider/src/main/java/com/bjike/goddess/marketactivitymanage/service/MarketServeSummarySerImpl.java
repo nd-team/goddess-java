@@ -161,7 +161,9 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
         Boolean flagSummSeeSign = guildPermission();
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagSummMISign = guideAuditMIdentity();
+        RpcTransmit.transmitUserToken(userToken);
         Boolean flagSummAISign = guideAuditAIdentity();
+        RpcTransmit.transmitUserToken(userToken);
         SonPermissionObject obj = new SonPermissionObject();
 
         obj = new SonPermissionObject();

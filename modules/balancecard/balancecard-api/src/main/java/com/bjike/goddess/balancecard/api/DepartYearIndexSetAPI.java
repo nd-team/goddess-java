@@ -2,9 +2,12 @@ package com.bjike.goddess.balancecard.api;
 
 import com.bjike.goddess.balancecard.bo.DepartYearIndexSetBO;
 import com.bjike.goddess.balancecard.dto.DepartYearIndexSetDTO;
+import com.bjike.goddess.balancecard.entity.DepartYearIndexSet;
 import com.bjike.goddess.balancecard.to.DepartYearIndexSetTO;
 import com.bjike.goddess.balancecard.to.ExportExcelDepartTO;
+import com.bjike.goddess.balancecard.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.service.Ser;
 
 import java.util.List;
 
@@ -18,6 +21,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface DepartYearIndexSetAPI {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 年度指标列表总条数
@@ -120,6 +138,32 @@ public interface DepartYearIndexSetAPI {
     };
 
 
+    /**
+     * 导入Excel
+     *
+     * @param toList
+     * @throws SerException
+     */
+    void leadExcel(List<DepartYearIndexSetTO> toList) throws SerException;
+
+    /**
+     * 部门年度报告导出Excel
+     *
+     * @param to
+     * @throws SerException
+     */
+    byte[] exportExcel(ExportExcelDepartTO to) throws SerException;
+
+
+    /**
+     * 根据年度指标id 来查询部门年度信息
+     * @param
+     *
+     */
+
+    default List<DepartYearIndexSetBO> dendrogram(String id) throws SerException{
+        return null;
+    }
 
 
 }

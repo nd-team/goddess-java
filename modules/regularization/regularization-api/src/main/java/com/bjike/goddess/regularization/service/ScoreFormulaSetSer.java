@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.regularization.bo.ScoreFormulaSetBO;
 import com.bjike.goddess.regularization.dto.ScoreFormulaSetDTO;
 import com.bjike.goddess.regularization.entity.ScoreFormulaSet;
+import com.bjike.goddess.regularization.to.GuidePermissionTO;
 import com.bjike.goddess.regularization.to.ScoreFormulaSetTO;
 
 import java.util.List;
@@ -20,6 +21,19 @@ import java.util.List;
  */
 public interface ScoreFormulaSetSer extends Ser<ScoreFormulaSet, ScoreFormulaSetDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 分页查询工作表现计分方式
      *

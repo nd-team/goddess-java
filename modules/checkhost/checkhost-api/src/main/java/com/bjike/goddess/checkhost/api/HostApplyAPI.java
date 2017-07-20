@@ -2,6 +2,7 @@ package com.bjike.goddess.checkhost.api;
 
 import com.bjike.goddess.checkhost.bo.HostApplyBO;
 import com.bjike.goddess.checkhost.dto.HostApplyDTO;
+import com.bjike.goddess.checkhost.enums.CheckStatus;
 import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.to.HostApplyTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -92,11 +93,11 @@ public interface HostApplyAPI {
     /**
      * 审核
      *
-     * @param hostApplyTO 离宿申请
+     * @param id          id
+     * @param checkStatus
      * @return class HostApplyBO
+     * @paramcheckStatus
      */
-    default HostApplyBO auditHostApply(HostApplyTO hostApplyTO) throws SerException {
-        return null;
-    }
+    HostApplyBO auditHostApply(String id, CheckStatus checkStatus) throws SerException;
 
 }

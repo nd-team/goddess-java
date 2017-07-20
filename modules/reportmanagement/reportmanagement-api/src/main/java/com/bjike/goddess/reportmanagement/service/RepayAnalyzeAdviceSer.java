@@ -7,6 +7,7 @@ import com.bjike.goddess.reportmanagement.bo.RepayAnalyzeAdviceBO;
 import com.bjike.goddess.reportmanagement.dto.RepayAnalyzeAdviceDTO;
 import com.bjike.goddess.reportmanagement.dto.RepayAnalyzeAdviceDTO;
 import com.bjike.goddess.reportmanagement.entity.RepayAnalyzeAdvice;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import com.bjike.goddess.reportmanagement.to.RepayAnalyzeAdviceTO;
 
 import java.util.List;
@@ -21,6 +22,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface RepayAnalyzeAdviceSer extends Ser<RepayAnalyzeAdvice, RepayAnalyzeAdviceDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 列表
      *

@@ -1,5 +1,7 @@
 package com.bjike.goddess.checkhost.vo;
 
+import com.bjike.goddess.checkhost.enums.CheckStatus;
+
 /**
  * 住宿申请表现层对象
  *
@@ -64,6 +66,18 @@ public class StayApplyVO {
      */
     private String remark;
 
+    /**
+     * 审核状态
+     */
+    private CheckStatus checkStatus;
+
+    public CheckStatus getCheckStatus() {
+        return checkStatus;
+    }
+
+    public void setCheckStatus(CheckStatus checkStatus) {
+        this.checkStatus = checkStatus;
+    }
 
     public String getId() {
         return id;
