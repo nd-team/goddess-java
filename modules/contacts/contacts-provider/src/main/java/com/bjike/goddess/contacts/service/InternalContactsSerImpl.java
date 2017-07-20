@@ -27,7 +27,6 @@ import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
-import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
@@ -505,6 +504,26 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         Excel exce = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(commerceContactsExports, exce);
         return bytes;
+    }
+
+    @Override
+    public List<String> getEmails(String[] names) throws SerException {
+        List<String> strings = new ArrayList<>();
+        if (0 < names.length) {
+            for (String name : names) {
+                List<EntryBasicInfoBO> entryBasicInfoBOs = entryBasicInfoAPI.getEntryBasicInfoByName(name);
+                if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
+                    for (EntryBasicInfoBO bo : entryBasicInfoBOs) {
+                        InternalContactsDTO internalContactsDTO = new InternalContactsDTO();
+                        internalContactsDTO.getConditions().add(Restrict.in("userId",bo.getId()));
+                        InternalContactsBO internalContactsBO =  maps(internalContactsDTO).get(0);
+                        String str = bo.getEmail();
+                        strings.add(str);
+                    }
+                }
+            }
+        }
+        return strings;
     }
 
     /**

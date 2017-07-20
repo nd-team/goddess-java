@@ -102,4 +102,9 @@ public class InternalContactsApiImpl implements InternalContactsAPI {
     public byte[] templateExport() throws SerException {
         return internalContactsSer.templateExport();
     }
+
+    @Override
+    public List<String> getEmails(String[] names) throws SerException {
+        return internalContactsSer.getEmails(names);
+    }
 }

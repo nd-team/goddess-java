@@ -274,5 +274,19 @@ public class InternalContactsAct extends BaseFileAction {
         }
     }
 
+    /**
+     * 根据姓名获取邮箱
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getEmail")
+    public Result getEmail(String[] names, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(internalContactsAPI.getEmails(names));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }

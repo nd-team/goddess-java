@@ -146,4 +146,11 @@ public interface InternalContactsAPI {
     default byte[] templateExport() throws SerException {
         return null;
     }
+
+    /**
+     * 根据用户名字获取邮箱
+     */
+    default List<String> getEmails(String[] names) throws SerException {
+        return null;
+    }
 }
