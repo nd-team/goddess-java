@@ -6,6 +6,7 @@ import com.bjike.goddess.regularization.bo.TimeCriteriaSetBO;
 import com.bjike.goddess.regularization.dto.TimeCriteriaSetDTO;
 import com.bjike.goddess.regularization.entity.TimeCriteriaSet;
 import com.bjike.goddess.regularization.service.TimeCriteriaSetSer;
+import com.bjike.goddess.regularization.to.GuidePermissionTO;
 import com.bjike.goddess.regularization.to.TimeCriteriaSetTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,16 @@ public class TimeCriteriaSetApiImpl implements TimeCriteriaSetAPI {
 
     @Autowired
     private TimeCriteriaSetSer timeCriteriaSetSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return timeCriteriaSetSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return timeCriteriaSetSer.guidePermission(guidePermissionTO);
+    }
 
     /**
      * 根据id查询时间条件设置

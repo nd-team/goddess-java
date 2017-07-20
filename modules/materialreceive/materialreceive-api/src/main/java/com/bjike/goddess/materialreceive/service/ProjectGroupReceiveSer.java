@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.materialreceive.bo.ProjectGroupReceiveBO;
 import com.bjike.goddess.materialreceive.dto.ProjectGroupReceiveDTO;
 import com.bjike.goddess.materialreceive.entity.ProjectGroupReceive;
+import com.bjike.goddess.materialreceive.excel.SonPermissionObject;
+import com.bjike.goddess.materialreceive.to.GuidePermissionTO;
 import com.bjike.goddess.materialreceive.to.ProjectGroupReceiveTO;
 
 import java.util.List;
@@ -20,6 +22,21 @@ import java.util.List;
  */
 public interface ProjectGroupReceiveSer extends Ser<ProjectGroupReceive, ProjectGroupReceiveDTO> {
 
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 分页查询项目组领用归还登记
      *
@@ -59,6 +76,6 @@ public interface ProjectGroupReceiveSer extends Ser<ProjectGroupReceive, Project
      * @param to 项目组领用归还登记to
      * @throws SerException
      */
-    ProjectGroupReceive update(ProjectGroupReceiveTO to) throws SerException;
+    ProjectGroupReceive update(ProjectGroupReceiveTO to,String token) throws SerException;
 
 }

@@ -12,7 +12,6 @@ import com.bjike.goddess.oilcardprepared.enums.GuideAddrStatus;
 import com.bjike.goddess.oilcardprepared.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardprepared.to.MoneyReadyTO;
 import com.bjike.goddess.oilcardprepared.vo.SonPermissionObject;
-import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -198,6 +197,7 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
     public MoneyReadyBO save(MoneyReadyTO to) throws SerException {
         checkAddIdentity();
         MoneyReady m = BeanTransform.copyProperties(to, MoneyReady.class, true);
+        m.setReserve(m.getTotalReserve() * m.getProrate());
         super.save(m);
         return BeanTransform.copyProperties(m, MoneyReadyBO.class);
     }
@@ -208,10 +208,10 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
         checkAddIdentity();
         MoneyReady moneyReady = super.findById(to.getId());
         LocalDateTime a = moneyReady.getCreateTime();
-        LocalDateTime b = moneyReady.getModifyTime();
         moneyReady = BeanTransform.copyProperties(to, MoneyReady.class, true);
         moneyReady.setCreateTime(a);
-        moneyReady.setModifyTime(b);
+        moneyReady.setReserve(moneyReady.getTotalReserve() * moneyReady.getProrate());
+        moneyReady.setModifyTime(LocalDateTime.now());
         super.update(moneyReady);
     }
 

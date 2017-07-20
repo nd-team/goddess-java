@@ -1,6 +1,6 @@
 package com.bjike.goddess.materialbuy.vo;
 
-import com.bjike.goddess.materialbuy.type.AuditState;
+import com.bjike.goddess.materialbuy.enums.AuditState;
 
 /**
  * 临时物资需求表现层对象

@@ -1,7 +1,7 @@
 package com.bjike.goddess.materialbuy.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.materialbuy.type.AuditState;
+import com.bjike.goddess.materialbuy.enums.AuditState;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Min;

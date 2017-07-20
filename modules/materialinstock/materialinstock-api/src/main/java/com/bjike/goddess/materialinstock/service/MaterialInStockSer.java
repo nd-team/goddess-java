@@ -6,6 +6,7 @@ import com.bjike.goddess.materialinstock.bo.AttributeBO;
 import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
 import com.bjike.goddess.materialinstock.dto.MaterialInStockDTO;
 import com.bjike.goddess.materialinstock.entity.MaterialInStock;
+import com.bjike.goddess.materialinstock.to.GuidePermissionTO;
 import com.bjike.goddess.materialinstock.to.MaterialInStockTO;
 import com.bjike.goddess.materialinstock.type.MaterialState;
 import com.bjike.goddess.materialinstock.type.UseState;
@@ -24,6 +25,19 @@ import java.util.Set;
  */
 public interface MaterialInStockSer extends Ser<MaterialInStock, MaterialInStockDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 分页查询物资入库
      *
@@ -120,4 +134,33 @@ public interface MaterialInStockSer extends Ser<MaterialInStock, MaterialInStock
      * @throws SerException
      */
     Set<String> allstockEncoding() throws SerException;
+
+    /**
+     *
+     * 设备维修中需要修改入库信息
+     *
+     * @return
+     * @throws SerException
+     */
+    void updateLijuntao(MaterialInStockTO to) throws SerException;
+
+    /**
+     * 获取所有组织结构中的部门
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAddAllDetails() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有用户
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findallUser() throws SerException {
+        return null;
+    }
 }

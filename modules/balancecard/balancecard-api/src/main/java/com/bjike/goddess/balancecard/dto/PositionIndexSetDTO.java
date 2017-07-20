@@ -38,6 +38,12 @@ public class PositionIndexSetDTO extends BaseDTO {
      */
     private String positioner;
 
+    /**
+     * 责任人工号
+     * @return
+     */
+    private String positionerNumber;
+
     public String getIndexName() {
         return indexName;
     }
@@ -76,5 +82,13 @@ public class PositionIndexSetDTO extends BaseDTO {
 
     public void setPositioner(String positioner) {
         this.positioner = positioner;
+    }
+
+    public String getPositionerNumber() {
+        return positionerNumber;
+    }
+
+    public void setPositionerNumber(String positionerNumber) {
+        this.positionerNumber = positionerNumber;
     }
 }

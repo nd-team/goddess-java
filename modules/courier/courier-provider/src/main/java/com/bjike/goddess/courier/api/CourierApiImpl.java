@@ -6,6 +6,8 @@ import com.bjike.goddess.courier.bo.CourierCountBO;
 import com.bjike.goddess.courier.dto.CourierDTO;
 import com.bjike.goddess.courier.service.CourierSer;
 import com.bjike.goddess.courier.to.CourierTO;
+import com.bjike.goddess.courier.to.GuidePermissionTO;
+import com.bjike.goddess.courier.vo.SonPermissionObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,25 +68,6 @@ public class CourierApiImpl implements CourierAPI {
         return courierSer.findRemainSum();
     }
 
-    @Override
-    public List<CourierCountBO> dayCount(boolean arrival, String sendTime, boolean courierCompany, boolean department) throws SerException {
-        return courierSer.dayCount(arrival, sendTime, courierCompany, department);
-    }
-
-    @Override
-    public List<CourierCountBO> weekCount(boolean arrival, boolean courierCompany, boolean department,boolean lastWeek) throws SerException {
-        return courierSer.weekCount(arrival, courierCompany, department,lastWeek);
-    }
-
-    @Override
-    public List<CourierCountBO> monthCount(boolean arrival, boolean courierCompany, boolean department, Integer month) throws SerException {
-        return courierSer.monthCount(arrival, courierCompany, department, month);
-    }
-
-    @Override
-    public List<CourierCountBO> yearCount(boolean arrival, boolean courierCompany, boolean department, Integer year) throws SerException {
-        return courierSer.yearCount(arrival, courierCompany, department, year);
-    }
 
     @Override
     public Set<String> findAllAreas() throws SerException {
@@ -97,7 +80,57 @@ public class CourierApiImpl implements CourierAPI {
     }
 
     @Override
-    public List<String> findAllCompanys() throws SerException {
-        return courierSer.findAllCompanys();
+    public Double lastCourierSum() throws SerException {
+        return courierSer.lastCourierSum();
+    }
+
+    @Override
+    public List<CourierCountBO> dayCount(CourierDTO dto1) throws SerException {
+        return courierSer.dayCount(dto1);
+    }
+
+    @Override
+    public List<CourierCountBO> weekCount(CourierDTO dto1) throws SerException {
+        return courierSer.weekCount(dto1);
+    }
+
+    @Override
+    public List<CourierCountBO> monthCount(CourierDTO dto1) throws SerException {
+        return courierSer.monthCount(dto1);
+    }
+
+    @Override
+    public List<CourierCountBO> yearCount(CourierDTO dto1) throws SerException {
+        return courierSer.yearCount(dto1);
+    }
+
+    @Override
+    public Set<Integer> allYear() throws SerException {
+        return courierSer.allYear();
+    }
+
+    @Override
+    public Set<Integer> allMonth() throws SerException {
+        return courierSer.allMonth();
+    }
+
+    @Override
+    public Long count(CourierDTO dto) throws SerException {
+        return courierSer.count(dto);
+    }
+
+    @Override
+    public void send() throws SerException {
+        courierSer.send();
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return courierSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return courierSer.guidePermission(guidePermissionTO);
     }
 }

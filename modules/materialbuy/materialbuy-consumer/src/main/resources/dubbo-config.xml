@@ -17,4 +17,13 @@
 	<dubbo:reference validation="true" interface="com.bjike.goddess.materialbuy.api.DeviceTypeAPI" id="deviceTypeApiImpl"></dubbo:reference>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.materialbuy.api.MaterialBuyAPI" id="materialBuyApiImpl"></dubbo:reference>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.materialbuy.api.TempMatterDemandAPI" id="tempMatterDemandApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialbuy.api.CusPermissionAPI" id="cusPermissionApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialbuy.api.CusPermissionOperateAPI" id="cusPermissionOperateApiImpl"></dubbo:reference>
+
+	<dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.StorageUserAPI" id="storageUserApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"></dubbo:reference>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
+
 </beans>

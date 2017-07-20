@@ -19,6 +19,12 @@ import javax.validation.constraints.NotNull;
 public class AwardInfoTO extends BaseTO {
 
     /**
+     * 推荐信息id
+     */
+    @NotBlank(message = "推荐信息id不能为空", groups = {ADD.class, EDIT.class})
+    private String infoId;
+
+    /**
      * 奖励时间
      */
     @NotBlank(message = "奖励时间不能为空", groups = {ADD.class, EDIT.class})
@@ -29,6 +35,14 @@ public class AwardInfoTO extends BaseTO {
      */
     @NotNull(message = "是否获得奖励不能为空", groups = {ADD.class, EDIT.class})
     private Boolean getAward;
+
+    public String getInfoId() {
+        return infoId;
+    }
+
+    public void setInfoId(String infoId) {
+        this.infoId = infoId;
+    }
 
     public String getAwardTime() {
         return awardTime;

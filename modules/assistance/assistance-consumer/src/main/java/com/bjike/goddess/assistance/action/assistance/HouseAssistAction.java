@@ -52,6 +52,26 @@ public class HouseAssistAction {
         }
     }
 
+
+    /**
+     *  一个住宿补助
+     *
+     * @param id  住宿补助id
+     * @des 一个住宿补助
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id ) throws ActException {
+        try {
+            HouseAssistVO ageAssistVO = BeanTransform.copyProperties(
+                    houseAssistAPI.getOneById(id), HouseAssistVO.class);
+            return ActResult.initialize(ageAssistVO );
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
     /**
      * 住宿补助列表
      *

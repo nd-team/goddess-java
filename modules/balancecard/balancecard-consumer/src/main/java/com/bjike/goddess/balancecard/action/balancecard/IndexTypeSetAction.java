@@ -39,7 +39,7 @@ public class IndexTypeSetAction {
     private IndexTypeSetAPI indexTypeSetAPI;
 
     /**
-     *  列表总条数
+     * 列表总条数
      *
      * @param indexTypeSetDTO  指标类型信息dto
      * @des 获取所有指标类型信息总条数

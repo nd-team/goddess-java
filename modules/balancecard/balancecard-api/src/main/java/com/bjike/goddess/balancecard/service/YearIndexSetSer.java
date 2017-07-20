@@ -1,9 +1,8 @@
 package com.bjike.goddess.balancecard.service;
 
 import com.bjike.goddess.balancecard.bo.YearIndexSetBO;
-import com.bjike.goddess.balancecard.to.DepartSerperateTO;
-import com.bjike.goddess.balancecard.to.ExportExcelYearTO;
-import com.bjike.goddess.balancecard.to.YearIndexSetTO;
+import com.bjike.goddess.balancecard.excel.SonPermissionObject;
+import com.bjike.goddess.balancecard.to.*;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.balancecard.entity.YearIndexSet;
@@ -21,6 +20,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface YearIndexSetSer extends Ser<YearIndexSet, YearIndexSetDTO> {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 年度指标列表总条数
@@ -128,6 +142,16 @@ public interface YearIndexSetSer extends Ser<YearIndexSet, YearIndexSetDTO> {
      * @throws SerException
      */
     byte[] exportYearDeExcel(ExportExcelYearTO to) throws SerException;
+
+    /**
+     * 树状图
+     *
+     * @param yearIndexSetDTO
+     * @throws SerException
+     */
+    default List<YearIndexSetBO> dendrogram(YearIndexSetDTO yearIndexSetDTO) throws SerException{
+        return null;
+    }
 
 
 }

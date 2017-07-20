@@ -30,6 +30,8 @@ dependencies {
     compile project(":common:common-provider")
     compile project(":modules:reportmanagement:reportmanagement-api")
     compile project(":modules:subjectcollect:subjectcollect-api")
+    compile project(":modules:user:user-api")
+    compile project(":modules:organize:organize-api")
     compile project(":common:common-utils")
 }
 

@@ -21,6 +21,8 @@
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.oilcardprepared.api.CusPermissionAPI" ref="cusPermissionApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.oilcardprepared.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"/>
 
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.oilcardmanage.api.OilCardRechargeAPI" id="oilCardRechargeApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.oilcardmanage.api.OilCardBasicAPI" id="oilCardBasicApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI" id="dispatchCarInfoApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>

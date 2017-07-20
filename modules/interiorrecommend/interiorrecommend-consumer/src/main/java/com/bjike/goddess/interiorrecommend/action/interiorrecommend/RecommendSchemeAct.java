@@ -83,7 +83,7 @@ public class RecommendSchemeAct {
     public Result resourcesAudit(@PathVariable String id, @RequestParam String resourcesSuggest, @RequestParam Boolean resourcesAudit) throws ActException {
         try {
             recommendSchemeAPI.resourcesAudit(id, resourcesSuggest, resourcesAudit);
-            return new ActResult();
+            return new ActResult("审核成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -102,7 +102,7 @@ public class RecommendSchemeAct {
     public Result operateAudit(@PathVariable String id, @RequestParam String operateSuggest, @RequestParam Boolean operateAudit) throws ActException {
         try {
             recommendSchemeAPI.operateAudit(id, operateSuggest, operateAudit);
-            return new ActResult();
+            return new ActResult("审核成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -121,7 +121,7 @@ public class RecommendSchemeAct {
     public Result generalAudit(@PathVariable String id, @RequestParam String generalSuggest, @RequestParam Boolean generalAudit) throws ActException {
         try {
             recommendSchemeAPI.generalAudit(id, generalSuggest, generalAudit);
-            return new ActResult();
+            return new ActResult("审核成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -138,7 +138,7 @@ public class RecommendSchemeAct {
     public Result delete(@PathVariable String id) throws ActException {
         try {
             recommendSchemeAPI.delete(id);
-            return new ActResult();
+            return new ActResult("删除成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

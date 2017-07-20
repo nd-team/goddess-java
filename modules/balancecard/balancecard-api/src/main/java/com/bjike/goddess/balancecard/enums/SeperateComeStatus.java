@@ -1,5 +1,7 @@
 package com.bjike.goddess.balancecard.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 分解得来状态
  * @Author: [tanghaixiang]
@@ -21,10 +23,12 @@ public enum SeperateComeStatus {
     /**
      * 部门月度分解
      */
+
     DEPARTMONTH(2),
     /**
      * 手填
      */
+
     FILL(2)
     ;
 

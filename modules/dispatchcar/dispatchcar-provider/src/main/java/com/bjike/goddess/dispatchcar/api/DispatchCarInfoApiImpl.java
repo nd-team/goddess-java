@@ -3,6 +3,7 @@ package com.bjike.goddess.dispatchcar.api;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.dispatchcar.bo.*;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.enums.CollectIntervalType;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -169,8 +171,11 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
         if (!StringUtils.isEmpty(to.getProject())) {
             dto.getConditions().add(Restrict.eq("project", to.getProject()));
         }
-        if (!StringUtils.isEmpty(to.getDispatchDate())) {
-            dto.getConditions().add(Restrict.between("dispatchDate", to.getDispatchDate()));
+        if (!StringUtils.isEmpty(to.getStartDate()) && !StringUtils.isEmpty(to.getEndDate())) {
+            LocalDate startDate = DateUtil.parseDate(to.getStartDate());
+            LocalDate endDate = DateUtil.parseDate(to.getEndDate());
+            LocalDate[] dates = new LocalDate[]{startDate, endDate};
+            dto.getConditions().add(Restrict.between("dispatchDate", dates));
         }
         return BeanTransform.copyProperties(dispatchCarInfoSer.findByCis(dto), DispatchCarInfoBO.class);
     }

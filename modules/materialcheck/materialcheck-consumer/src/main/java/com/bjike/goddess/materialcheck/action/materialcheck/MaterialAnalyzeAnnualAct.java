@@ -12,15 +12,19 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialcheck.api.MaterialAnalyzeAPI;
 import com.bjike.goddess.materialcheck.bo.MaterialAnalyzeBO;
 import com.bjike.goddess.materialcheck.dto.MaterialAnalyzeDTO;
+import com.bjike.goddess.materialcheck.to.GuidePermissionTO;
 import com.bjike.goddess.materialcheck.to.MaterialAnalyzeTO;
 import com.bjike.goddess.materialcheck.type.InventoryType;
 import com.bjike.goddess.materialcheck.vo.MaterialAnalyzeVO;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,9 +40,34 @@ import java.util.List;
 @RequestMapping("materialanalyzeAnnual")
 public class MaterialAnalyzeAnnualAct {
 
+
     @Autowired
     private MaterialAnalyzeAPI materialAnalyzeAPI;
+@Autowired
+private DepartmentDetailAPI departmentDetailAPI;
 
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = materialAnalyzeAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 根据id查询物资分析年盘
      *
@@ -145,5 +174,48 @@ public class MaterialAnalyzeAnnualAct {
             throw new ActException(e.getMessage());
         }
     }
-
+    /**
+     * 添加所有部门下拉值
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allOrageDepartment")
+    public Result allOrageDepartment() throws ActException {
+        try {
+            List<String> detail = new ArrayList<>();
+            detail = materialAnalyzeAPI.findAddAllDetails();
+            return ActResult.initialize(detail);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 添加中所有的地区
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allArea")
+    public Result allArea() throws ActException {
+        try {
+            List<AreaBO> area = departmentDetailAPI.findArea();
+            return ActResult.initialize(area);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取所有用户
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allGetPerson")
+    public Result allGetPerson() throws ActException {
+        try {
+            List<String> getPerson = new ArrayList<>();
+            getPerson = materialAnalyzeAPI.findallMonUser();
+            return ActResult.initialize(getPerson);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

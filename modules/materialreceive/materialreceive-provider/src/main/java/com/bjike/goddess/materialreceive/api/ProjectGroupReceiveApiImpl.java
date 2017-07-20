@@ -1,11 +1,14 @@
 package com.bjike.goddess.materialreceive.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialreceive.bo.ProjectGroupReceiveBO;
 import com.bjike.goddess.materialreceive.dto.ProjectGroupReceiveDTO;
 import com.bjike.goddess.materialreceive.entity.ProjectGroupReceive;
+import com.bjike.goddess.materialreceive.excel.SonPermissionObject;
 import com.bjike.goddess.materialreceive.service.ProjectGroupReceiveSer;
+import com.bjike.goddess.materialreceive.to.GuidePermissionTO;
 import com.bjike.goddess.materialreceive.to.ProjectGroupReceiveTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,16 @@ public class ProjectGroupReceiveApiImpl implements ProjectGroupReceiveAPI {
 
     @Autowired
     private ProjectGroupReceiveSer projectGroupReceiveSer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return projectGroupReceiveSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return projectGroupReceiveSer.guidePermission(guidePermissionTO);
+    }
 
     /**
      * 根据id查询项目组领用归还登记
@@ -104,7 +117,7 @@ public class ProjectGroupReceiveApiImpl implements ProjectGroupReceiveAPI {
      */
     @Override
     public void update(ProjectGroupReceiveTO to) throws SerException {
-        projectGroupReceiveSer.update(to);
+        projectGroupReceiveSer.update(to, RpcTransmit.getUserToken());
     }
 
 }

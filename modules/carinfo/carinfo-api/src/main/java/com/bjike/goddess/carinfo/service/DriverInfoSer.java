@@ -22,27 +22,38 @@ public interface DriverInfoSer extends Ser<DriverInfo, DriverInfoDTO> {
 
     /**
      * 保存
+     *
      * @param to 司机信息
      */
     DriverInfoBO insertModel(DriverInfoTO to) throws SerException;
 
     /**
      * 更新
+     *
      * @param to 司机信息
      */
     DriverInfoBO updateModel(DriverInfoTO to) throws SerException;
 
     /**
      * 分页查询
+     *
      * @param dto 分页条件
      */
     List<DriverInfoBO> pageList(DriverInfoDTO dto) throws SerException;
 
     /**
      * 审核
-     * @param id id
+     *
+     * @param id      id
      * @param suggest 意见
-     * @param audit 审核
+     * @param audit   审核
      */
     void audit(String id, String suggest, Boolean audit) throws SerException;
+
+    /**
+     * 根据名字查询
+     *
+     * @param driver 司机名称
+     */
+    DriverInfoBO findByDriver(String driver) throws SerException;
 }

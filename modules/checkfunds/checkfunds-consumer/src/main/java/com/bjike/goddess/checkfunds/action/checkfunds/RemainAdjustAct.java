@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -78,20 +79,17 @@ public class RemainAdjustAct {
     /**
      * 加资金流水项目
      *
-     * @param to 余额调节to
+     * @param bankId 银企对账id
+     * @param to     余额调节to
      * @return class RemainAdjustVO
      * @throws ActException
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/addFund")
-    public Result addFund(@Validated({RemainAdjustTO.AddFund.class}) RemainAdjustTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
-        String id = (String) request.getSession().getAttribute("id");    //获取银企对账id
-        if (id == null) {
-            throw new ActException("您还没进行余额调节，不能进行加资金流水项目");
-        }
+    @PostMapping("v1/addFund/{bankId}")
+    public Result addFund(@PathVariable String bankId, @Validated({RemainAdjustTO.AddFund.class}) RemainAdjustTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            List<RemainAdjustBO> boList = remainAdjustAPI.addFund(to, id);
+            List<RemainAdjustBO> boList = remainAdjustAPI.addFund(to, bankId);
             return ActResult.initialize(BeanTransform.copyProperties(boList, RemainAdjustVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -101,20 +99,17 @@ public class RemainAdjustAct {
     /**
      * 减资金流水项目
      *
-     * @param to 余额调节to
+     * @param bankId 银企对账id
+     * @param to     余额调节to
      * @return class RemainAdjustVO
      * @throws ActException
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/removeFund")
-    public Result removeFund(@Validated({RemainAdjustTO.RemoveFund.class}) RemainAdjustTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
-        String id = (String) request.getSession().getAttribute("id");  //获取银企对账id
-        if (id == null) {
-            throw new ActException("您还没进行余额调节，不能进行减资金流水项目");
-        }
+    @PostMapping("v1/removeFund/{bankId}")
+    public Result removeFund(@PathVariable String bankId, @Validated({RemainAdjustTO.RemoveFund.class}) RemainAdjustTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            List<RemainAdjustBO> boList = remainAdjustAPI.removeFund(to, id);
+            List<RemainAdjustBO> boList = remainAdjustAPI.removeFund(to, bankId);
             return ActResult.initialize(BeanTransform.copyProperties(boList, RemainAdjustVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -124,20 +119,17 @@ public class RemainAdjustAct {
     /**
      * 加银行流水项目
      *
-     * @param to 余额调节to
+     * @param bankId 银企对账id
+     * @param to     余额调节to
      * @return class RemainAdjustVO
      * @throws ActException
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/addBank")
-    public Result addBank(@Validated({RemainAdjustTO.AddBank.class}) RemainAdjustTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
-        String id = (String) request.getSession().getAttribute("id");   //获取银企对账id
-        if (id == null) {
-            throw new ActException("您还没进行余额调节，不能进行加银行流水项目");
-        }
+    @PostMapping("v1/addBank/{bankId}")
+    public Result addBank(@PathVariable String bankId, @Validated({RemainAdjustTO.AddBank.class}) RemainAdjustTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            List<RemainAdjustBO> boList = remainAdjustAPI.addBank(to, id);
+            List<RemainAdjustBO> boList = remainAdjustAPI.addBank(to, bankId);
             return ActResult.initialize(BeanTransform.copyProperties(boList, RemainAdjustVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -147,20 +139,17 @@ public class RemainAdjustAct {
     /**
      * 减银行流水项目
      *
-     * @param to 余额调节to
+     * @param bankId 银企对账id
+     * @param to     余额调节to
      * @return class RemainAdjustVO
      * @throws ActException
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/removeBank")
-    public Result removeBank(@Validated({RemainAdjustTO.RemoveBank.class}) RemainAdjustTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
-        String id = (String) request.getSession().getAttribute("id");   //获取银企对账id
-        if (id == null) {
-            throw new ActException("您还没进行余额调节，不能进行减银行流水项目");
-        }
+    @PostMapping("v1/removeBank/{bankId}")
+    public Result removeBank(@PathVariable String bankId, @Validated({RemainAdjustTO.RemoveBank.class}) RemainAdjustTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            List<RemainAdjustBO> boList = remainAdjustAPI.removeBank(to, id);
+            List<RemainAdjustBO> boList = remainAdjustAPI.removeBank(to, bankId);
             return ActResult.initialize(BeanTransform.copyProperties(boList, RemainAdjustVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -170,20 +159,17 @@ public class RemainAdjustAct {
     /**
      * 确认余额调节
      *
+     * @param bankId      银企对账id
      * @param fundBalance 资金流水余额（从余额调节列表中的最后一条记录获取）
      * @param bankBalance 银行流水余额（从余额调节列表中的最后一条记录获取）
      * @throws ActException
      * @version v1
      */
     @LoginAuth
-    @PutMapping("v1/confirmAdjust")
-    public Result confirmAdjust(@RequestParam Double fundBalance, @RequestParam Double bankBalance, HttpServletRequest request) throws ActException {
-        String id = (String) request.getSession().getAttribute("id");   //获取银企对账id
-        if (id == null) {
-            throw new ActException("您还没进行余额调节，不能进行确认余额调节");
-        }
+    @PutMapping("v1/confirmAdjust/{bankId}")
+    public Result confirmAdjust(@PathVariable String bankId, @RequestParam Double fundBalance, @RequestParam Double bankBalance, HttpServletRequest request) throws ActException {
         try {
-            remainAdjustAPI.confirmAdjust(id, fundBalance, bankBalance);
+            remainAdjustAPI.confirmAdjust(bankId, fundBalance, bankBalance);
             request.getSession().removeAttribute("id");
             return new ActResult("确认余额调节成功");
         } catch (SerException e) {

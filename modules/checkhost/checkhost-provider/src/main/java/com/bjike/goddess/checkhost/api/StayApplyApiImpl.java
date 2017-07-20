@@ -3,7 +3,9 @@ package com.bjike.goddess.checkhost.api;
 import com.bjike.goddess.checkhost.bo.StayApplyBO;
 import com.bjike.goddess.checkhost.dto.StayApplyDTO;
 import com.bjike.goddess.checkhost.entity.StayApply;
+import com.bjike.goddess.checkhost.enums.CheckStatus;
 import com.bjike.goddess.checkhost.service.StayApplySer;
+import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.to.StayApplyTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -58,7 +60,17 @@ public class StayApplyApiImpl implements StayApplyAPI {
     }
 
     @Override
-    public StayApplyBO manageAudit(StayApplyTO applyTO) throws SerException {
-        return stayApplySer.manageAudit(applyTO);
+    public StayApplyBO manageAudit(String id, CheckStatus checkStatus) throws SerException {
+        return stayApplySer.manageAudit(id,checkStatus);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return stayApplySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return stayApplySer.guidePermission(guidePermissionTO);
     }
 }

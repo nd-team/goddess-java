@@ -201,7 +201,7 @@ public class PayRecordSerImpl extends ServiceImpl<PayRecord, PayRecordDTO> imple
         sb.append(" WHERE area IN (%s) GROUP BY months,area ORDER BY area ");
         String sql = sb.toString();
         sql = String.format(sql, areasStr);
-        String[] fields = new String[]{"area", "months", "staffWage", "computerHelp", "stikeayHelp", "lengthHelp", "hyperthermiaHelp",
+        String[] fields = new String[]{"area", "months", "staffWage", "computerHelp", "stayHelp", "lengthHelp", "hyperthermiaHelp",
                 "socialHelp", "otherFee", "totalWages", "holidayOvertimePay", "socialDeduction", "utilitiesDeduction", "deductionTotal",
                 "bonusPenaltyDeduction", "incomeTaxDeduction", "whatSickLeaveDeduction", "absenteeismDeduction", "realWages"};
         List<AreaCollectBO> areaCollectBOS = super.findBySql(sql, AreaCollectBO.class, fields);
@@ -240,7 +240,7 @@ public class PayRecordSerImpl extends ServiceImpl<PayRecord, PayRecordDTO> imple
         sb.append(" WHERE department IN (%s) GROUP BY months,department ORDER BY department ");
         String sql = sb.toString();
         sql = String.format(sql, departmentsStr);
-        String[] fields = new String[]{"department", "months", "staffWage", "computerHelp", "stikeayHelp", "lengthHelp", "hyperthermiaHelp",
+        String[] fields = new String[]{"department", "months", "staffWage", "computerHelp", "stayHelp", "lengthHelp", "hyperthermiaHelp",
                 "socialHelp", "otherFee", "totalWages", "holidayOvertimePay", "socialDeduction", "utilitiesDeduction", "deductionTotal",
                 "bonusPenaltyDeduction", "incomeTaxDeduction", "whatSickLeaveDeduction", "absenteeismDeduction", "realWages"};
         List<DepartmentCollectBO> departmentCollectBOS = super.findBySql(sql, DepartmentCollectBO.class, fields);
@@ -280,7 +280,7 @@ public class PayRecordSerImpl extends ServiceImpl<PayRecord, PayRecordDTO> imple
         String sql = sb.toString();
         sql = String.format(sql, namesStr);
         String[] fields = new String[]{"name", "months", "area", "department", "jobs", "staffWage", "computerHelp",
-                "stikeayHelp", "lengthHelp", "hyperthermiaHelp",
+                "stayHelp", "lengthHelp", "hyperthermiaHelp",
                 "socialHelp", "otherFee", "totalWages", "holidayOvertimePay", "socialDeduction", "utilitiesDeduction", "deductionTotal",
                 "bonusPenaltyDeduction", "incomeTaxDeduction", "whatSickLeaveDeduction", "absenteeismDeduction", "realWages"};
         List<NameCollectBO> nameCollectBOS = super.findBySql(sql, NameCollectBO.class, fields);

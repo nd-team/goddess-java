@@ -6,6 +6,7 @@ import com.bjike.goddess.materialreceive.bo.MaterialReceiveBO;
 import com.bjike.goddess.materialreceive.dto.MaterialReceiveDTO;
 import com.bjike.goddess.materialreceive.entity.MaterialReceive;
 import com.bjike.goddess.materialreceive.service.MaterialReceiveSer;
+import com.bjike.goddess.materialreceive.to.GuidePermissionTO;
 import com.bjike.goddess.materialreceive.to.MaterialReceiveTO;
 import com.bjike.goddess.materialreceive.to.MaterialReturnTO;
 import com.bjike.goddess.materialreceive.type.AuditState;
@@ -28,6 +29,16 @@ public class MaterialReceiveApiImpl implements MaterialReceiveAPI {
 
     @Autowired
     private MaterialReceiveSer materialReceiveSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return materialReceiveSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return materialReceiveSer.guidePermission(guidePermissionTO);
+    }
 
     /**
      * 根据id查询物资领用归还登记
@@ -131,5 +142,15 @@ public class MaterialReceiveApiImpl implements MaterialReceiveAPI {
     @Override
     public void materialReturn(MaterialReturnTO to) throws SerException {
         materialReceiveSer.materialReturn(to);
+    }
+
+    @Override
+    public List<String> findAddAllDetails() throws SerException {
+        return materialReceiveSer.findAddAllDetails();
+    }
+
+    @Override
+    public List<String> findallMonUser() throws SerException {
+        return materialReceiveSer.findallMonUser();
     }
 }

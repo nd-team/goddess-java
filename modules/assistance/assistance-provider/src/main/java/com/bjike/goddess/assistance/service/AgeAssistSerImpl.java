@@ -46,6 +46,16 @@ public class AgeAssistSerImpl extends ServiceImpl<AgeAssist, AgeAssistDTO> imple
     }
 
     @Override
+    public AgeAssistBO getOneById(String id) throws SerException {
+        if (StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
+        AgeAssist list = super.findById(id);
+
+        return BeanTransform.copyProperties(list, AgeAssistBO.class);
+    }
+
+    @Override
     public List<AgeAssistBO> listAgeAssist(AgeAssistDTO ageAssistDTO) throws SerException {
         if (StringUtils.isNotBlank(ageAssistDTO.getArea())) {
             ageAssistDTO.getConditions().add(Restrict.eq("area", ageAssistDTO.getArea()));

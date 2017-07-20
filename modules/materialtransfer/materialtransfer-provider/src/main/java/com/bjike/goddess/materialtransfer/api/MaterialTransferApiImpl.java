@@ -5,7 +5,9 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialtransfer.bo.MaterialTransferBO;
 import com.bjike.goddess.materialtransfer.dto.MaterialTransferDTO;
 import com.bjike.goddess.materialtransfer.entity.MaterialTransfer;
+import com.bjike.goddess.materialtransfer.excel.SonPermissionObject;
 import com.bjike.goddess.materialtransfer.service.MaterialTransferSer;
+import com.bjike.goddess.materialtransfer.to.GuidePermissionTO;
 import com.bjike.goddess.materialtransfer.to.MaterialTransferTO;
 import com.bjike.goddess.materialtransfer.type.AuditState;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,18 @@ public class MaterialTransferApiImpl implements MaterialTransferAPI {
 
     @Autowired
     private MaterialTransferSer materialTransferSer;
+
+
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return materialTransferSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return materialTransferSer.guidePermission(guidePermissionTO);
+    }
 
     /**
      * 根据id查询物资调动

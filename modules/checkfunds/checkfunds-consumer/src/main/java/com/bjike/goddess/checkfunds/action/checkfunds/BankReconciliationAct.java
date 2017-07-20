@@ -178,6 +178,7 @@ public class BankReconciliationAct {
     @LoginAuth
     @PostMapping("v1/handle")
     public Result handle(@Validated({ADD.class}) BankReconciliationTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        String id = (String) request.getSession().getAttribute("id");
         try {
             BankReconciliationBO bo = bankReconciliationAPI.save(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, BankReconciliationVO.class, request));
@@ -197,7 +198,6 @@ public class BankReconciliationAct {
     @LoginAuth
     @GetMapping("v1/adjust/{id}")
     public Result adjust(@PathVariable String id, HttpServletRequest request) throws ActException {
-        request.getSession().setAttribute("id", id);   //将银企对账id存进session的属性中
         try {
             List<RemainAdjustVO> VOS = BeanTransform.copyProperties
                     (bankReconciliationAPI.adjust(id), RemainAdjustVO.class, request);

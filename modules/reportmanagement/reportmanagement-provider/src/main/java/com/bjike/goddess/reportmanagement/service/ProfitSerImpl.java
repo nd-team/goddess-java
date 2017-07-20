@@ -2,16 +2,21 @@ package com.bjike.goddess.reportmanagement.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.reportmanagement.bo.*;
 import com.bjike.goddess.reportmanagement.dto.*;
 import com.bjike.goddess.reportmanagement.entity.Asset;
 import com.bjike.goddess.reportmanagement.entity.Profit;
 import com.bjike.goddess.reportmanagement.enums.Form;
+import com.bjike.goddess.reportmanagement.enums.GuideAddrStatus;
 import com.bjike.goddess.reportmanagement.enums.ProfitType;
 import com.bjike.goddess.reportmanagement.enums.Type;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import com.bjike.goddess.reportmanagement.to.ProfitTO;
 import com.bjike.goddess.reportmanagement.utils.Utils;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -43,9 +48,142 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
     private DebtSer debtSer;
     @Autowired
     private ProfitIndicatorAdviceSer profitIndicatorAdviceSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private UserAPI userAPI;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
 
     @Override
     public ProfitBO save(ProfitTO to) throws SerException {
+        checkAddIdentity();
         Profit entity = BeanTransform.copyProperties(to, Profit.class, true);
         super.save(entity);
         return BeanTransform.copyProperties(entity, ProfitBO.class);
@@ -53,6 +191,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
 
     @Override
     public List<ProfitBO> list(ProfitDTO dto) throws SerException {
+        checkSeeIdentity();
         String startTime = dto.getStartTime();
         String endTime = dto.getEndTime();
         FormulaDTO formulaDTO = new FormulaDTO();
@@ -165,6 +304,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
 
     @Override
     public List<ProfitLevelBO> levelAnalyze(ProfitDTO dto) throws SerException {
+        checkSeeIdentity();
         String startTime = dto.getStartTime();
         String endTime = dto.getEndTime();
         String[] projectNames = dto.getProjectNames();
@@ -391,13 +531,16 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
 
     @Override
     public List<ProfitAnalyzeIndicatorBO> analyzeIndicator(ProfitDTO dto) throws SerException {
+        String userToken=RpcTransmit.getUserToken();
         List<ProfitBO> profits = list(dto);
         List<ProfitAnalyzeIndicatorBO> boList = new ArrayList<>();
         AssetDTO assetDTO = new AssetDTO();
         BeanUtils.copyProperties(dto, assetDTO);
         DebtDTO debtDTO = new DebtDTO();
         BeanUtils.copyProperties(dto, debtDTO);
+        RpcTransmit.transmitUserToken(userToken);
         List<AssetBO> assetBOs = assetSer.list(assetDTO);
+        RpcTransmit.transmitUserToken(userToken);
         List<DebtBO> debtBOs = debtSer.list(debtDTO);
         double income = 0;    //营业收入
         double expend = 0;   //营业成本
@@ -494,6 +637,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
 
     @Override
     public List<DetailBO> findDetails(String id, ProfitDTO dto) throws SerException {
+        checkSeeIdentity();
         String startTime = dto.getStartTime();
         String endTime = dto.getEndTime();
         FormulaDTO formulaDTO = new FormulaDTO();
@@ -552,12 +696,13 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void edit(ProfitTO to) throws SerException {
+        checkAddIdentity();
         Profit entity = super.findById(to.getId());
         if (entity == null) {
             throw new SerException("该对象不存在");
         }
         LocalDateTime a = entity.getCreateTime();
-        entity = BeanTransform.copyProperties(to, Asset.class, true);
+        entity = BeanTransform.copyProperties(to, Profit.class, true);
         entity.setCreateTime(a);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
@@ -566,6 +711,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void delete(String id) throws SerException {
+        checkAddIdentity();
         Profit entity = super.findById(id);
         if (entity == null) {
             throw new SerException("该对象不存在");

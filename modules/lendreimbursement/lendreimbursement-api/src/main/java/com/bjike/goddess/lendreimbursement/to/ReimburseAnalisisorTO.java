@@ -20,7 +20,6 @@ public class ReimburseAnalisisorTO extends BaseTO {
     /**
      * 分析人
      */
-    @NotNull(message = "分析人不能为空")
     private String userName;
 
     /**
@@ -37,6 +36,13 @@ public class ReimburseAnalisisorTO extends BaseTO {
      * 审核人员部门
      */
     private String department;
+
+
+    /**
+     * 备注
+     */
+    private String remark;
+
 
     /**
      * 创建时间
@@ -79,6 +85,14 @@ public class ReimburseAnalisisorTO extends BaseTO {
 
     public void setDepartment(String department) {
         this.department = department;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public String getCreateTime() {

@@ -3,6 +3,7 @@ package com.bjike.goddess.regularization.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.regularization.bo.PerformanceScoreBO;
 import com.bjike.goddess.regularization.dto.PerformanceScoreDTO;
+import com.bjike.goddess.regularization.to.GuidePermissionTO;
 import com.bjike.goddess.regularization.to.PerformanceScoreTO;
 
 import java.util.List;
@@ -18,6 +19,19 @@ import java.util.List;
  */
 public interface PerformanceScoreAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 根据id查询工作表现评分
      *

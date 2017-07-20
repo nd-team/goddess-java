@@ -28,6 +28,24 @@ public class DepartMonIndexSet extends BaseEntity {
     private String indexName;
 
     /**
+     * 年度指标编号
+     */
+    @Column(name = "indexNumber", nullable = false, columnDefinition = "INT   COMMENT '年度指标编号'")
+    private Integer indexNumber;
+
+    /**
+     * 部门年度指标编号
+     */
+    @Column(name = "yearIndexNumber", nullable = false, columnDefinition = "INT   COMMENT '部门年度指标编号'")
+    private Integer yearIndexNumber;
+
+
+    /**
+     * 部门月度指标编号
+     */
+    @Column(name = "monthIndexNumber", nullable = false, columnDefinition = "INT   COMMENT '部门月度指标编号'")
+    private Integer monthIndexNumber;
+    /**
      * 年份
      */
     @Column(name = "year", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '年份'")
@@ -42,13 +60,13 @@ public class DepartMonIndexSet extends BaseEntity {
     /**
      * 指标类型
      */
-    @Column(name = "indexType",  columnDefinition = "VARCHAR(255)   COMMENT '指标类型'")
+    @Column(name = "indexType", columnDefinition = "VARCHAR(255)   COMMENT '指标类型'")
     private String indexType;
 
     /**
      * 维度
      */
-    @Column(name = "dimension",  columnDefinition = "VARCHAR(255)   COMMENT '维度'")
+    @Column(name = "dimension", columnDefinition = "VARCHAR(255)   COMMENT '维度'")
     private String dimension;
 
     /**
@@ -102,7 +120,7 @@ public class DepartMonIndexSet extends BaseEntity {
     /**
      * 考核方式
      */
-    @Column(name = "examWay",  columnDefinition = "VARCHAR(255)   COMMENT '考核方式'")
+    @Column(name = "examWay", columnDefinition = "VARCHAR(255)   COMMENT '考核方式'")
     private String examWay;
 
     /**
@@ -132,31 +150,31 @@ public class DepartMonIndexSet extends BaseEntity {
     /**
      * 考核部门
      */
-    @Column(name = "examDepart",   columnDefinition = "VARCHAR(255)   COMMENT '考核部门'")
+    @Column(name = "examDepart", columnDefinition = "VARCHAR(255)   COMMENT '考核部门'")
     private String examDepart;
 
     /**
      * 数据来源
      */
-    @Column(name = "dataOrigin",   columnDefinition = "VARCHAR(255)   COMMENT '数据来源'")
+    @Column(name = "dataOrigin", columnDefinition = "VARCHAR(255)   COMMENT '数据来源'")
     private String dataOrigin;
 
     /**
      * 考核周期
      */
-    @Column(name = "examDuring",  columnDefinition = "VARCHAR(255)   COMMENT '考核周期'")
+    @Column(name = "examDuring", columnDefinition = "VARCHAR(255)   COMMENT '考核周期'")
     private String examDuring;
 
     /**
      * 部门月度指标添加人
      */
-    @Column(name = "yearPersion",   columnDefinition = "VARCHAR(255)   COMMENT '部门月度指标添加人'")
+    @Column(name = "yearPersion", columnDefinition = "VARCHAR(255)   COMMENT '部门月度指标添加人'")
     private String yearPersion;
 
     /**
      * 部门月度指标添加时间
      */
-    @Column(name = "yearIndexTime",   columnDefinition = "DATE   COMMENT '部门月度指标添加时间'")
+    @Column(name = "yearIndexTime", columnDefinition = "DATE   COMMENT '部门月度指标添加时间'")
     private LocalDate yearIndexTime;
 
     /**
@@ -174,10 +192,8 @@ public class DepartMonIndexSet extends BaseEntity {
     /**
      * 部门年度指标设置id
      */
-    @Column(name = "departYearIndexSetId",   columnDefinition = "VARCHAR(255)   COMMENT '部门年度指标设置id'")
+    @Column(name = "departYearIndexSetId", columnDefinition = "VARCHAR(255)   COMMENT '部门年度指标设置id'")
     private String departYearIndexSetId;
-
-
 
 
     public String getIndexName() {
@@ -388,6 +404,28 @@ public class DepartMonIndexSet extends BaseEntity {
         this.departYearIndexSetId = departYearIndexSetId;
     }
 
+    public Integer getIndexNumber() {
+        return indexNumber;
+    }
+
+    public void setIndexNumber(Integer indexNumber) {
+        this.indexNumber = indexNumber;
+    }
+    public Integer getYearIndexNumber() {
+        return yearIndexNumber;
+    }
+
+    public void setYearIndexNumber(Integer yearIndexNumber) {
+        this.yearIndexNumber = yearIndexNumber;
+    }
+
+    public Integer getMonthIndexNumber() {
+        return monthIndexNumber;
+    }
+
+    public void setMonthIndexNumber(Integer monthIndexNumber) {
+        this.monthIndexNumber = monthIndexNumber;
+    }
 
 
 }

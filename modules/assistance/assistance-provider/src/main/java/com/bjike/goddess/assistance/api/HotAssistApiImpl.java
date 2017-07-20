@@ -28,7 +28,7 @@ public class HotAssistApiImpl implements HotAssistAPI {
 
     @Override
     public Long countHotAssist(HotAssistDTO hotAssistDTO) throws SerException {
-        return hotAssistSer.count( hotAssistDTO);
+        return hotAssistSer.countHotAssist( hotAssistDTO);
     }
 
     @Override

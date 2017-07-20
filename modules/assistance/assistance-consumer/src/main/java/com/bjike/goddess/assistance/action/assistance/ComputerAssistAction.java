@@ -53,6 +53,26 @@ public class ComputerAssistAction {
         }
     }
 
+
+    /**
+     *  一个电脑补助
+     *
+     * @param id  电脑补助id
+     * @des 一个电脑补助
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id ) throws ActException {
+        try {
+            ComputerAssistVO computerAssistVO = BeanTransform.copyProperties(
+                    computerAssistAPI.getOneById(id), ComputerAssistVO.class);
+            return ActResult.initialize(computerAssistVO );
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
     /**
      * 电脑补助列表
      *

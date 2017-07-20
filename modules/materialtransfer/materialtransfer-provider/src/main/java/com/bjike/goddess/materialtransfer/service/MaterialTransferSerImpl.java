@@ -2,6 +2,7 @@ package com.bjike.goddess.materialtransfer.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.materialinstock.api.MaterialInStockAPI;
@@ -10,10 +11,14 @@ import com.bjike.goddess.materialinstock.type.UseState;
 import com.bjike.goddess.materialtransfer.bo.MaterialTransferBO;
 import com.bjike.goddess.materialtransfer.dto.MaterialTransferDTO;
 import com.bjike.goddess.materialtransfer.entity.MaterialTransfer;
+import com.bjike.goddess.materialtransfer.excel.SonPermissionObject;
+import com.bjike.goddess.materialtransfer.to.GuidePermissionTO;
 import com.bjike.goddess.materialtransfer.to.MaterialTransferTO;
 import com.bjike.goddess.materialtransfer.type.AuditState;
+import com.bjike.goddess.materialtransfer.type.GuideAddrStatus;
 import com.bjike.goddess.materialtransfer.type.MaterialState;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -22,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,6 +49,192 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     @Autowired
     private MaterialInStockAPI materialInStockAPI;
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 检查权限(部门)
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是本部门人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 检查权限(岗位)
+     *
+     * @throws SerException
+     */
+    private void checkPosinPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.arrCusPermission("2");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是项目经理,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 检查权限(模块)
+     *
+     * @throws SerException
+     */
+    private void checkModulPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("3");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是福利模块人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对查看权限（岗位级别）
+     */
+    private Boolean guidePosinIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.arrCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对查看权限（模块级别）
+     */
+    private Boolean guideModulIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("3");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagMaterialTrans = guideIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagMaterialTransPo = guidePosinIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagMaterialTransMo = guideModulIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("materialtransfer");
+        obj.setDescribesion("物质调用");
+        if (flagMaterialTrans || flagMaterialTransPo || flagMaterialTransMo) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideIdentity();
+                break;
+            case ADD:
+                flag = guideIdentity();
+                break;
+            case EDIT:
+                flag = guideIdentity();
+                break;
+            case DELETE:
+                flag = guideIdentity();
+                break;
+            case MANAGEAUDIT:
+                flag = guideIdentity();
+                break;
+            case MODULAUDIT:
+                flag = guideIdentity();
+                break;
+            case MODULCONFIM:
+                flag = guideIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
     /**
      * 分页查询物资调动
      *
@@ -52,6 +244,7 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<MaterialTransferBO> list(MaterialTransferDTO dto) throws SerException {
+        checkPermission();
         List<MaterialTransfer> list = super.findByPage(dto);
         List<MaterialTransferBO> listBO = BeanTransform.copyProperties(list, MaterialTransferBO.class);
         return listBO;
@@ -67,7 +260,10 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     @Override
     @Transactional(rollbackFor = SerException.class)
     public MaterialTransferBO save(MaterialTransferTO to) throws SerException {
+        checkPermission();
+        String userToekn=RpcTransmit.getUserToken();
         MaterialTransferBO bo = BeanTransform.copyProperties(to, MaterialTransferBO.class);
+        RpcTransmit.transmitUserToken(userToekn);
         bo = setAttributes(bo);//设置物资属性
         MaterialTransfer entity = BeanTransform.copyProperties(bo, MaterialTransfer.class, true);
         entity = super.save(entity);
@@ -82,8 +278,10 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
      * @return
      */
     private MaterialTransferBO setAttributes(MaterialTransferBO bo) throws SerException {
-        MaterialInStockBO inStockBO = checkMaterialInStock(bo);//检验是否为空
+        String userToken=RpcTransmit.getUserToken();
         String curUsername = userAPI.currentUser().getUsername();
+        MaterialInStockBO inStockBO = checkMaterialInStock(bo);//检验是否为空
+        RpcTransmit.transmitUserToken(userToken);
         updateInStock(bo, inStockBO, curUsername);  //更新物资入库信息
         return setTransferProperties(bo, inStockBO, curUsername);
     }
@@ -176,6 +374,7 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(MaterialTransferTO to) throws SerException {
+        checkPermission();
         if (StringUtils.isNotEmpty(to.getId())) {
             MaterialTransfer model = super.findById(to.getId());
             if (model != null) {
@@ -211,15 +410,12 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void pmAudit(String id, AuditState pmAuditState) throws SerException {
-        String curUsername = userAPI.currentUser().getUsername();
+        checkPosinPermission();
         MaterialTransfer model = super.findById(id);
         String pm = model.getOriginalPM();
-        if (curUsername.equals(pm)) {
-            model.setPmAuditState(pmAuditState);
-            super.update(model);
-        } else {
-            throw new SerException("您好,您不是项目经理,无权审核!");
-        }
+        model.setPmAuditState(pmAuditState);
+        super.update(model);
+
 
     }
 
@@ -233,17 +429,15 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void wealModAudit(String id, AuditState welfareState) throws SerException {
-        String curUsername = userAPI.currentUser().getUsername();
+        checkModulPermission();
         MaterialTransfer model = super.findById(id);
         if (model == null) {
             throw new SerException("更新对象为空,无法更新");
         }
-        if (curUsername.equals(model.getWelfareModule())) {
-            model.setWelfareState(welfareState);
-            super.update(model);
-        } else {
-            throw new SerException("您好,您不是福利模块负责人,无权审核.");
-        }
+
+        model.setWelfareState(welfareState);
+        super.update(model);
+
 
     }
 
@@ -259,16 +453,12 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void wealModConfirm(String id, String recipient, Boolean confirmDeploy, String finishDeployTime) throws SerException {
-        String curUsername = userAPI.currentUser().getUsername();
+        checkModulPermission();
         MaterialTransfer model = super.findById(id);
-        if (curUsername.equals(model.getWelfareModule())) {
-            model.setRecipient(recipient);
-            model.setConfirmDeploy(confirmDeploy);
-            model.setFinishDeployTime(DateUtil.parseDateTime(finishDeployTime));
-            super.update(model);
-        } else {
-            throw new SerException("您好,您不是福利模块负责人,无权审核.");
-        }
+        model.setRecipient(recipient);
+        model.setConfirmDeploy(confirmDeploy);
+        model.setFinishDeployTime(DateUtil.parseDateTime(finishDeployTime));
+        super.update(model);
     }
 
 }

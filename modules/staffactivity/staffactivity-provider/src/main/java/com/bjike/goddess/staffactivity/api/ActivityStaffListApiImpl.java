@@ -7,6 +7,7 @@ import com.bjike.goddess.staffactivity.dto.ActivityStaffListDTO;
 import com.bjike.goddess.staffactivity.entity.ActivityStaffList;
 import com.bjike.goddess.staffactivity.service.ActivityStaffListSer;
 import com.bjike.goddess.staffactivity.to.ActivityStaffListTO;
+import com.bjike.goddess.staffactivity.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -95,5 +96,15 @@ public class ActivityStaffListApiImpl implements ActivityStaffListAPI {
     @Override
     public void update(ActivityStaffListTO to) throws SerException {
         activityStaffListSer.update(to);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return activityStaffListSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return activityStaffListSer.guidePermission(guidePermissionTO);
     }
 }

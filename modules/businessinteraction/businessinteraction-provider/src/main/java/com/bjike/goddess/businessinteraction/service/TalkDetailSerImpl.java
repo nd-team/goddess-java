@@ -319,7 +319,7 @@ public class TalkDetailSerImpl extends ServiceImpl<TalkDetail, TalkDetailDTO> im
         if ((supplierInformationBOs != null) && (!supplierInformationBOs.isEmpty())) {
             for (SupplierInformationBO supplierInformationBO : supplierInformationBOs) {
                 ContactObjectBO contactObjectBO = new ContactObjectBO();
-                contactObjectBO.setCompanyName(supplierInformationBO.getName());
+                contactObjectBO.setCompanyName(supplierInformationBO.getSupplierName());
                 contactObjectBO.setContactName(supplierInformationBO.getContacts());
                 contactObjectBO.setContactTel(supplierInformationBO.getTelephone());
                 contactObjectBO.setMobilePhone(supplierInformationBO.getTelephone());

@@ -7,7 +7,9 @@ import com.bjike.goddess.materialbuy.bo.MaterialBuyBO;
 import com.bjike.goddess.materialbuy.dto.MaterialBuyDTO;
 import com.bjike.goddess.materialbuy.entity.MaterialBuy;
 import com.bjike.goddess.materialbuy.service.MaterialBuySer;
+import com.bjike.goddess.materialbuy.to.GuidePermissionTO;
 import com.bjike.goddess.materialbuy.to.MaterialBuyTO;
+import com.bjike.goddess.materialbuy.vo.SonPermissionObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,16 @@ public class MaterialBuyApiImpl implements MaterialBuyAPI {
 
     @Autowired
     private MaterialBuySer materialBuySer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return materialBuySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return materialBuySer.guidePermission(guidePermissionTO);
+    }
 
     /**
      * 根据id查询物资购买

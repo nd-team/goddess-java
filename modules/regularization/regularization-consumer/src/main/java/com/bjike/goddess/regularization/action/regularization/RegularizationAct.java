@@ -8,22 +8,34 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.ArrangementAPI;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
+import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.regularization.api.RegularizationAPI;
 import com.bjike.goddess.regularization.bo.ManagementScoreBO;
 import com.bjike.goddess.regularization.bo.RegularizationBO;
 import com.bjike.goddess.regularization.dto.RegularizationDTO;
-import com.bjike.goddess.regularization.to.ManagementScoreTO;
-import com.bjike.goddess.regularization.to.PlanModuleSupplyTO;
-import com.bjike.goddess.regularization.to.RegularizationTO;
-import com.bjike.goddess.regularization.to.ZjbApprovalTO;
+import com.bjike.goddess.regularization.excel.SonPermissionObject;
+import com.bjike.goddess.regularization.to.*;
 import com.bjike.goddess.regularization.vo.ManagementScoreVO;
 import com.bjike.goddess.regularization.vo.RegularizationVO;
+import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
+import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -41,7 +53,85 @@ public class RegularizationAct {
 
     @Autowired
     private RegularizationAPI regularizationAPI;
+    @Autowired
+    private ArrangementAPI arrangementAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private EntryBasicInfoAPI entryBasicInfoAPI;
 
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result setButtonPermission() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = regularizationAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = regularizationAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 根据id查询员工转正
      *
@@ -253,6 +343,106 @@ public class RegularizationAct {
         try {
             regularizationAPI.zjbApproval(to);
             return new ActResult("zjbApproval success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 所有部门下拉值
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allOrageDepartment")
+    public Result allOrageDepartment() throws ActException {
+        try {
+            List<String> detail = new ArrayList<>();
+            detail = regularizationAPI.findAddAllDetails();
+            return ActResult.initialize(detail);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 添加中所有的地区
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allArea")
+    public Result allArea() throws ActException {
+        try {
+            List<AreaBO> area = departmentDetailAPI.findArea();
+            return ActResult.initialize(area);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取所有用户
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allGetPerson")
+    public Result allGetPerson() throws ActException {
+        try {
+            List<String> getPerson = new ArrayList<>();
+            getPerson = regularizationAPI.findallMonUser();
+            return ActResult.initialize(getPerson);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有岗位层级
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allHierarchy")
+    public Result allHierarchy() throws ActException {
+        try {
+            List<OpinionBO> thawOpinion = new ArrayList<>();
+            thawOpinion = arrangementAPI.findThawOpinion();
+            return ActResult.initialize(thawOpinion);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据姓名获取员工编号
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allEntryNum")
+    public Result allEntryNum(@RequestParam String name) throws ActException {
+        try {
+            List<String> enNum = new ArrayList<>();
+            List<EntryBasicInfoVO> entryBasicInfoVOS = entryBasicInfoAPI.getEntryBasicInfoByName(name);
+            if (entryBasicInfoVOS!=null && entryBasicInfoVOS.size()>0) {
+                for(EntryBasicInfoVO entryBasicInfoVO : entryBasicInfoVOS){
+                    String num = entryBasicInfoVO.getEmployeeID();
+                    if(StringUtils.isNotBlank(num)){
+                        enNum.add(num);
+                    }
+                }
+            }
+            return ActResult.initialize(enNum);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 添加时链接数据
+     *
+     * @version v1
+     */
+    @GetMapping("v1/addReturn")
+    public Result addReturn(@RequestParam String name, @RequestParam String empNumer, HttpServletRequest request) throws ActException {
+        try {
+            List<RegularizationBO> regularizationBOS = regularizationAPI.findAddRusult(name,empNumer);
+            List<RegularizationVO> regularizationVOS = BeanTransform.copyProperties(regularizationBOS,RegularizationVO.class,request);
+            return ActResult.initialize(regularizationVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -52,6 +52,25 @@ public class AgeAssistAction {
         }
     }
 
+
+    /**
+     *  一个工龄补助
+     *
+     * @param id  工龄补助id
+     * @des 一个工龄补助
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id ) throws ActException {
+        try {
+            AgeAssistVO ageAssistVO = BeanTransform.copyProperties(
+                    ageAssistAPI.getOneById(id), AgeAssistVO.class);
+            return ActResult.initialize(ageAssistVO );
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
     /**
      * 工龄补助列表
      *

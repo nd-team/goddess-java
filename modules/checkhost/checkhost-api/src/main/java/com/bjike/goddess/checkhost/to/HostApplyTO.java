@@ -1,6 +1,13 @@
 package com.bjike.goddess.checkhost.to;
 
+import com.bjike.goddess.checkhost.enums.CheckStatus;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 
 /**
  * 离宿申请
@@ -16,48 +23,59 @@ public class HostApplyTO extends BaseTO {
     /**
      * 地区
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "地区不能为空")
     private String area;
 
     /**
      * 项目组
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "项目组不能为空")
     private String projectGroup;
 
     /**
      * 宿舍地址
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "宿舍地址不能为空")
     private String address;
 
     /**
      * 员工姓名
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "员工姓名不能为空")
     private String name;
 
     /**
      * 员工编号
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "员工编号不能为空")
     private String num;
 
     /**
      * 离宿原因
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "离宿原因不能为空")
     private String hostCause;
     /**
      * 离宿时间
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "离宿时间不能为空")
     private String hostTime;
 
     /**
      * 是否归还钥匙
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否归还钥匙不能为空")
     private Boolean returnKey;
     /**
      * 三件套是否收费
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "三件套是否收费不能为空")
     private Boolean suitToll;
     /**
      * 收费金额
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "收费金额不能为空")
+    @DecimalMin(value = "0.00", groups = {ADD.class, EDIT.class}, message = "收费金额不能小于0")
     private Double tollMoney;
     /**
      * 水电费，燃气费总额
@@ -67,18 +85,33 @@ public class HostApplyTO extends BaseTO {
     /**
      * 合计总额（收费金额+水电费，燃气费总额）
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "合计总额（收费金额+水电费，燃气费总额）不能为空")
+    @DecimalMin(value = "0.00", groups = {ADD.class, EDIT.class}, message = "合计总额（收费金额+水电费，燃气费总额）不能小于0")
     private Double totalAmount;
 
-    /**
-     * 模块责任人审核
-     */
-    private String headAudit;
+//    /**
+//     * 模块责任人审核
+//     */
+//    @NotBlank(groups = {ADD.class, EDIT.class}, message = "模块责任人审核不能为空")
+//    private String headAudit;
 
     /**
      * 备注
      */
     private String remark;
 
+    /**
+     * 审核状态
+     */
+    private CheckStatus checkStatus;
+
+    public CheckStatus getCheckStatus() {
+        return checkStatus;
+    }
+
+    public void setCheckStatus(CheckStatus checkStatus) {
+        this.checkStatus = checkStatus;
+    }
 
     public String getArea() {
         return area;
@@ -176,13 +209,13 @@ public class HostApplyTO extends BaseTO {
         this.totalAmount = totalAmount;
     }
 
-    public String getHeadAudit() {
-        return headAudit;
-    }
-
-    public void setHeadAudit(String headAudit) {
-        this.headAudit = headAudit;
-    }
+//    public String getHeadAudit() {
+//        return headAudit;
+//    }
+//
+//    public void setHeadAudit(String headAudit) {
+//        this.headAudit = headAudit;
+//    }
 
     public String getRemark() {
         return remark;

@@ -23,6 +23,16 @@ public class YearIndexSetVO {
     private String indexName;
 
     /**
+     * 年度指标编号
+     */
+    private Integer indexNumber;
+
+
+
+
+
+
+    /**
      * 年份
      */
     private String year;
@@ -207,5 +217,13 @@ public class YearIndexSetVO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public Integer getIndexNumber() {
+        return indexNumber;
+    }
+
+    public void setIndexNumber(Integer indexNumber) {
+        this.indexNumber = indexNumber;
     }
 }

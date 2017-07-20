@@ -4,11 +4,12 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.courier.bo.CourierBO;
 import com.bjike.goddess.courier.bo.CourierCountBO;
-import com.bjike.goddess.courier.entity.Courier;
 import com.bjike.goddess.courier.dto.CourierDTO;
+import com.bjike.goddess.courier.entity.Courier;
 import com.bjike.goddess.courier.to.CourierTO;
+import com.bjike.goddess.courier.to.GuidePermissionTO;
+import com.bjike.goddess.courier.vo.SonPermissionObject;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -22,6 +23,20 @@ import java.util.Set;
  * @Copy: [ com.bjike ]
  */
 public interface CourierSer extends Ser<Courier, CourierDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 添加
      *
@@ -110,59 +125,38 @@ public interface CourierSer extends Ser<Courier, CourierDTO> {
     /**
      * 日汇总
      *
-     * @param arrival        是否汇地区
-     * @param sendTime       汇总的日期
-     * @param courierCompany 是否汇快递公司
-     * @param department     是否汇部门
-     * @return class CourierCountVO
+     * @param dto1
+     * @return
      * @throws SerException
      */
-    default List<CourierCountBO> dayCount(boolean arrival, String sendTime, boolean courierCompany, boolean department) throws SerException {
-        return null;
-    }
+    List<CourierCountBO> dayCount(CourierDTO dto1) throws SerException;
 
     /**
      * 周汇总
      *
-     * @param arrival        是否回地区
-     * @param courierCompany 是否汇快递公司
-     * @param department     是否汇部门
-     * @param lastWeek       是否为上周汇总
-     * @return class CourierCountVO
+     * @param dto1
+     * @return
      * @throws SerException
      */
-    default List<CourierCountBO> weekCount(boolean arrival, boolean courierCompany, boolean department, boolean lastWeek) throws SerException {
-        return null;
-    }
+    List<CourierCountBO> weekCount(CourierDTO dto1) throws SerException;
 
     /**
      * 月汇总
      *
-     * @param arrival        是否汇总地区
-     * @param courierCompany 是否汇总快递公司
-     * @param department     是否汇总部门
-     * @param month          汇总的月份
-     * @return class CourierCountVO
+     * @param dto1
+     * @return
      * @throws SerException
      */
-    default List<CourierCountBO> monthCount(boolean arrival, boolean courierCompany, boolean department, Integer
-            month) throws SerException {
-        return null;
-    }
+    List<CourierCountBO> monthCount(CourierDTO dto1) throws SerException;
 
     /**
      * 年汇总
      *
-     * @param arrival        是否汇地区
-     * @param courierCompany 是否汇快递公司
-     * @param department     是否汇部门
-     * @param year           汇总的年份
-     * @return class CourierCountVO
+     * @param dto1
+     * @return
      * @throws SerException
      */
-    default List<CourierCountBO> yearCount(boolean arrival, boolean courierCompany, boolean department, Integer year) throws SerException {
-        return null;
-    }
+    List<CourierCountBO> yearCount(CourierDTO dto1) throws SerException;
 
     /**
      * 查找所有寄件地和收件地
@@ -185,12 +179,42 @@ public interface CourierSer extends Ser<Courier, CourierDTO> {
     }
 
     /**
-     * 查找所有快递公司
+     * 获取上条记录的快递费总额
      *
-     * @return class String
+     * @return
      * @throws SerException
      */
-    default List<String> findAllCompanys() throws SerException {
-        return null;
-    }
+    Double lastCourierSum() throws SerException;
+
+    /**
+     * 获取所有年份
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<Integer> allYear() throws SerException;
+
+    /**
+     * 获取所有月份
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<Integer> allMonth() throws SerException;
+
+    /**
+     * 获取总记录数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(CourierDTO dto) throws SerException;
+
+    /**
+     * 发送公告
+     *
+     * @throws SerException
+     */
+    void send() throws SerException;
 }

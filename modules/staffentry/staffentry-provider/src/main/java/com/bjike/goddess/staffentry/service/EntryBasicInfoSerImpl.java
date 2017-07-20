@@ -5,9 +5,12 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.bo.EntryOptionBO;
 import com.bjike.goddess.staffentry.bo.FindNameBO;
 import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
+import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
 import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
+import com.bjike.goddess.staffentry.entity.EntryRegister;
 import com.bjike.goddess.staffentry.to.EntryBasicInfoTO;
 import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 import org.apache.commons.lang3.StringUtils;
@@ -39,18 +42,21 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private EntryRegisterSer entryRegisterSer;
 //    @Autowired
 //    private MessageAPI messageAPI;
 
 
     /**
      * 检测部门
+     *
      * @param idFlag
      * @throws SerException
      */
-    private void checkDepartIdentity(String idFlag) throws SerException{
-        Boolean flag = cusPermissionSer.busCusPermission( idFlag );
-        if( !flag){
+    private void checkDepartIdentity(String idFlag) throws SerException {
+        Boolean flag = cusPermissionSer.busCusPermission(idFlag);
+        if (!flag) {
             throw new SerException("你不是相应部门的人员，不能进行操作");
         }
     }
@@ -200,8 +206,8 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String[] positions = entryBasicInfoDTO.getPostNames();              //职位列表
         StringBuffer sb = new StringBuffer("");
-        for( String str : positions){
-            sb.append("'"+str+"',");
+        for (String str : positions) {
+            sb.append("'" + str + "',");
         }
         String startDateString = entryBasicInfoDTO.getStartDate();          //开始日期字符串
         String endDateString = entryBasicInfoDTO.getEndDate();              //结束日期字符串
@@ -217,7 +223,7 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
         String[] field = new String[]{"position", "entryCount"};
         String sql = "select position ,  count(employeeID) as entryCount from staffentry_entrybasicinfo where 1=1 ";
         if (positions != null && positions.length > 0) {
-            sql = sql + " and position in (" + StringUtils.substringBeforeLast(sb.toString(),",") + ")";
+            sql = sql + " and position in (" + StringUtils.substringBeforeLast(sb.toString(), ",") + ")";
         }
         sql = sql + " group by position order by position desc ";
         List<EntryBasicInfoBO> list = super.findBySql(sql, EntryBasicInfoBO.class, field);
@@ -234,7 +240,7 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
         List<String> post = new ArrayList<>();
         String[] fiels = new String[]{"position"};
         String sql = "select position from staffentry_entrybasicinfo group by  position ";
-        List<EntryBasicInfoBO> list  = super.findBySql( sql , EntryBasicInfoBO.class , fiels);
+        List<EntryBasicInfoBO> list = super.findBySql(sql, EntryBasicInfoBO.class, fiels);
         post = list.stream().filter(str -> StringUtils.isNotBlank(str.getPosition())).map(EntryBasicInfoBO::getPosition).collect(Collectors.toList());
         return post;
     }
@@ -260,8 +266,8 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
         EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
         List<EntryBasicInfoBO> entryBasicInfoBOs = listEntryBasicInfo(dto);
         List<FindNameBO> findNameBOs = new ArrayList<>();
-        if(null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0){
-            for(EntryBasicInfoBO bo : entryBasicInfoBOs){
+        if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
+            for (EntryBasicInfoBO bo : entryBasicInfoBOs) {
                 FindNameBO findNameBO = new FindNameBO();
                 findNameBO.setUserId(bo.getId());
                 findNameBO.setName(bo.getName());
@@ -269,5 +275,38 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
             }
         }
         return findNameBOs;
+    }
+
+    public List<EntryOptionBO> getEntryOptionByNameAndEmpNum(String name, String empNumer) throws SerException {
+        EntryOptionBO entryOptionBO = new EntryOptionBO();
+
+        EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
+        dto.getConditions().add(Restrict.eq("name", name));
+        dto.getConditions().add(Restrict.eq("employeeID", empNumer));
+        List<EntryBasicInfo> list = super.findByCis(dto);
+        if (list != null && list.size() > 0) {
+            entryOptionBO.setEntryTime(list.get(0).getEntryTime().toString());
+        } else {
+            entryOptionBO.setEntryTime("");
+        }
+        EntryRegisterDTO registerDTO = new EntryRegisterDTO();
+        registerDTO.getConditions().add(Restrict.eq("username", name));
+        registerDTO.getConditions().add(Restrict.eq("empNumber", empNumer));
+        List<EntryRegister> registerList = entryRegisterSer.findByCis(registerDTO);
+        if (registerList != null && registerList.size() > 0) {
+            entryOptionBO.setProfession(registerList.get(0).getProfession());
+
+            entryOptionBO.setEducation(registerList.get(0).getEducation());
+        } else {
+            entryOptionBO.setProfession("");
+            entryOptionBO.setEducation("");
+        }
+
+
+        entryOptionBO.setName(name);
+        entryOptionBO.setEmployeeID(empNumer);
+        List<EntryOptionBO> entryOptionBOList = new ArrayList<>();
+        entryOptionBOList.add(entryOptionBO);
+        return entryOptionBOList;
     }
 }

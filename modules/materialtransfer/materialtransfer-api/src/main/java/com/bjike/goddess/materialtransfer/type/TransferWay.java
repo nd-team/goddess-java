@@ -16,7 +16,7 @@ public enum TransferWay {
      */
     EXPRESS(0),
     /**
-     * 损坏
+     * 人员带动
      */
     MANPOWER(1);
 

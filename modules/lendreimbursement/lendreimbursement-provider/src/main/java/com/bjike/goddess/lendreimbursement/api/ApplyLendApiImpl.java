@@ -306,14 +306,16 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
     }
 
     @Override
+    public byte[] exportExcel(ApplyLendDTO applyLendDTO) throws SerException {
+        return applyLendSer.exportExcel(applyLendDTO);
+    }
+
+
+    @Override
     public List<String> listAccountCom() throws SerException {
         return applyLendSer.listAccountCom();
     }
 
-    @Override
-    public byte[] exportExcel(ApplyLendDTO applyLendDTO) throws SerException {
-        return applyLendSer.exportExcel(applyLendDTO);
-    }
 
     @Override
     public byte[] waitingPayExcel(ApplyLendDTO applyLendDTO) throws SerException {

@@ -5,8 +5,10 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.devicerepair.bo.DeviceRepairBO;
 import com.bjike.goddess.devicerepair.dto.DeviceRepairDTO;
 import com.bjike.goddess.devicerepair.entity.DeviceRepair;
+import com.bjike.goddess.devicerepair.excel.SonPermissionObject;
 import com.bjike.goddess.devicerepair.to.DeviceRepairTO;
 import com.bjike.goddess.devicerepair.to.FetchDeviceTO;
+import com.bjike.goddess.devicerepair.to.GuidePermissionTO;
 import com.bjike.goddess.devicerepair.to.WelfareAuditTO;
 import com.bjike.goddess.devicerepair.type.AuditState;
 
@@ -24,6 +26,20 @@ import java.util.Map;
  */
 public interface DeviceRepairSer extends Ser<DeviceRepair, DeviceRepairDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 分页查询设备维修
      *
@@ -92,4 +108,23 @@ public interface DeviceRepairSer extends Ser<DeviceRepair, DeviceRepairDTO> {
      */
     void fetchDevice(FetchDeviceTO to) throws SerException;
 
+    /**
+     * 获取所有组织结构中的部门
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAddAllDetails() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有用户
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findallMonUser() throws SerException {
+        return null;
+    }
 }

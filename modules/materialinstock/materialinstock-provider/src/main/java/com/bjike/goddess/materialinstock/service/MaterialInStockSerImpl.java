@@ -3,15 +3,24 @@ package com.bjike.goddess.materialinstock.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialinstock.bo.AttributeBO;
 import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
 import com.bjike.goddess.materialinstock.dto.MaterialInStockDTO;
 import com.bjike.goddess.materialinstock.entity.MaterialInStock;
+import com.bjike.goddess.materialinstock.to.GuidePermissionTO;
 import com.bjike.goddess.materialinstock.to.MaterialInStockTO;
+import com.bjike.goddess.materialinstock.type.GuideAddrStatus;
 import com.bjike.goddess.materialinstock.type.MaterialState;
 import com.bjike.goddess.materialinstock.type.UseState;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +42,109 @@ import java.util.*;
 @Service
 public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, MaterialInStockDTO> implements MaterialInStockSer {
 
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+
+    /**
+     * 检查权限(部门)
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是本部门人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideIdentity();
+                break;
+            case ADD:
+                flag = guideIdentity();
+                break;
+            case EDIT:
+                flag = guideIdentity();
+                break;
+            case DELETE:
+                flag = guideIdentity();
+                break;
+            case UPLOAD:
+                flag = guideIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideIdentity();
+                break;
+            case SEEFILE:
+                flag = guideIdentity();
+                break;
+            case SEE:
+                flag = guideIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
+
     /**
      * 分页查询物资入库
      *
@@ -41,6 +153,7 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
      */
     @Override
     public List<MaterialInStockBO> list(MaterialInStockDTO dto) throws SerException {
+        checkPermission();
         List<MaterialInStock> list = super.findByPage(dto);
         List<MaterialInStockBO> listBO = BeanTransform.copyProperties(list, MaterialInStockBO.class);
         return listBO;
@@ -130,6 +243,7 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
     @Override
     @Transactional(rollbackFor = SerException.class)
     public MaterialInStockBO save(MaterialInStockTO to) throws SerException {
+        checkPermission();
         MaterialInStock entity = BeanTransform.copyProperties(to, MaterialInStock.class, true);
         String stockEncoding = appendStockEncoding(entity);
         entity.setStockEncoding(stockEncoding);
@@ -178,6 +292,7 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(MaterialInStockTO to) throws SerException {
+        checkPermission();
         if (StringUtils.isNotEmpty(to.getId())) {
             MaterialInStock model = super.findById(to.getId());
             if (model != null) {
@@ -259,6 +374,53 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
             set.add(m.getStockEncoding());
         }
         return set;
+    }
+
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public void updateLijuntao(MaterialInStockTO to) throws SerException {
+        if (StringUtils.isNotEmpty(to.getId())) {
+            MaterialInStock model = super.findById(to.getId());
+            if (model != null) {
+                updateMaterialInStock(to, model);
+            } else {
+                throw new SerException("更新对象不能为空");
+            }
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
+    }
+
+    @Override
+    public List<String> findAddAllDetails() throws SerException {
+        List<DepartmentDetailBO> departmentDetailBOS = departmentDetailAPI.findStatus();
+        if (org.apache.commons.collections4.CollectionUtils.isEmpty(departmentDetailBOS)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (DepartmentDetailBO departmentDetailBO : departmentDetailBOS){
+            String details = departmentDetailBO.getDepartment();
+            if (StringUtils.isNotBlank(departmentDetailBO.getDepartment())) {
+                set.add(details);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> findallUser() throws SerException {
+        List<UserBO> userBOS = positionDetailUserAPI.findUserList();
+        if (org.apache.commons.collections4.CollectionUtils.isEmpty(userBOS)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (UserBO userBO : userBOS){
+            String userName = userBO.getUsername();
+            if (StringUtils.isNotBlank(userBO.getUsername())) {
+                set.add(userName);
+            }
+        }
+        return new ArrayList<>(set);
     }
 
 }

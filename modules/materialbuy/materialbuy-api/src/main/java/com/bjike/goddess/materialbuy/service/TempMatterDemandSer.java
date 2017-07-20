@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.materialbuy.bo.TempMatterDemandBO;
 import com.bjike.goddess.materialbuy.dto.TempMatterDemandDTO;
 import com.bjike.goddess.materialbuy.entity.TempMatterDemand;
+import com.bjike.goddess.materialbuy.to.GuidePermissionTO;
 import com.bjike.goddess.materialbuy.to.TempMatterDemandTO;
 
 import java.util.List;
@@ -19,6 +20,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface TempMatterDemandSer extends Ser<TempMatterDemand, TempMatterDemandDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 分页查询临时物资需求

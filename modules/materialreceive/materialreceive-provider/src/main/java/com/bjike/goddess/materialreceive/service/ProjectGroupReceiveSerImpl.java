@@ -2,13 +2,19 @@ package com.bjike.goddess.materialreceive.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialinstock.api.MaterialInStockAPI;
 import com.bjike.goddess.materialinstock.type.UseState;
 import com.bjike.goddess.materialreceive.bo.ProjectGroupReceiveBO;
 import com.bjike.goddess.materialreceive.dto.ProjectGroupReceiveDTO;
 import com.bjike.goddess.materialreceive.entity.ProjectGroupReceive;
+import com.bjike.goddess.materialreceive.excel.SonPermissionObject;
+import com.bjike.goddess.materialreceive.to.GuidePermissionTO;
 import com.bjike.goddess.materialreceive.to.ProjectGroupReceiveTO;
+import com.bjike.goddess.materialreceive.type.GuideAddrStatus;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -16,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +40,213 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
 
     @Autowired
     private MaterialInStockAPI materialInStockAPI;
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private MaterialReceiveSer materialReceiveSer;
+
+
+    /**
+     * 检查权限(部门)
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是本部门人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 检查权限(模块)
+     *
+     * @throws SerException
+     */
+    private void checkModPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("2");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是福利模块人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 检查权限(岗位)
+     *
+     * @throws SerException
+     */
+    private void checkPonsPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.arrCusPermission("3");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是项目经理,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对财务模块审核权限（模块级别）
+     */
+    private Boolean guideMondIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对总经办审核权限（岗位级别）
+     */
+    private Boolean guidePosinIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.arrCusPermission("3");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+
+            List<SonPermissionObject> list = new ArrayList<>();
+            String userToken = RpcTransmit.getUserToken();
+            Boolean flagGroupRece = guideIdentity();
+            RpcTransmit.transmitUserToken(userToken);
+            Boolean flagGroupMon = guideMondIdentity();
+            RpcTransmit.transmitUserToken(userToken);
+            Boolean flagGroupPosin = guidePosinIdentity();
+            RpcTransmit.transmitUserToken(userToken);
+
+            SonPermissionObject obj = new SonPermissionObject();
+
+            obj = new SonPermissionObject();
+            obj.setName("projectgroupreceive");
+            obj.setDescribesion("项目组领用归还");
+            if (flagGroupRece || flagGroupMon || flagGroupPosin) {
+                obj.setFlag(true);
+            } else {
+                obj.setFlag(false);
+            }
+            list.add(obj);
+
+
+            RpcTransmit.transmitUserToken(userToken);
+            Boolean flagMaterRece = materialReceiveSer.sonPermission();
+            RpcTransmit.transmitUserToken(userToken);
+            obj = new SonPermissionObject();
+            obj.setName("materialreceive");
+            obj.setDescribesion("物资领用");
+            if (flagMaterRece) {
+                obj.setFlag(true);
+            } else {
+                obj.setFlag(false);
+            }
+            list.add(obj);
+
+
+
+            return list;
+
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideIdentity();
+                break;
+            case ADD:
+                flag = guideIdentity();
+                break;
+            case EDIT:
+                flag = guideIdentity();
+                break;
+            case DELETE:
+                flag = guideIdentity();
+                break;
+            case AUDIT:
+                flag = guideMondIdentity();
+                break;
+            case RECEIVE:
+                flag = guidePosinIdentity();
+                break;
+            case BREA:
+                flag = guidePosinIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
 
     /**
      * 分页查询项目组领用归还登记
@@ -42,6 +256,7 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
      */
     @Override
     public List<ProjectGroupReceiveBO> list(ProjectGroupReceiveDTO dto) throws SerException {
+        checkPermission();
         List<ProjectGroupReceive> list = super.findByPage(dto);
         List<ProjectGroupReceiveBO> listBO = BeanTransform.copyProperties(list, ProjectGroupReceiveBO.class);
         return listBO;
@@ -57,6 +272,7 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectGroupReceiveBO save(ProjectGroupReceiveTO to) throws SerException {
+        checkPermission();
         String[] materialNum = checkMaterialNum(to);//检查待领用的物资编号不能为空
         materialInStockAPI.updateUseState(materialNum, UseState.RECEIVE);//设置物资领用情况为已领用
         Integer quantity = materialNum.length;
@@ -136,13 +352,15 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void returnMaterial(ProjectGroupReceiveTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        RpcTransmit.transmitUserToken(userToken);
         String[] materialNum = to.getMaterialNum();
         Boolean materialNumEmpty = (materialNum == null) || (materialNum.length == 0);
         if (materialNumEmpty)
             throw new SerException("要归还的物资编号为空,无法归还物资.");
         materialInStockAPI.updateUseState(materialNum, UseState.INSTOCK);
 
-        update(to);//更新项目组领用归还登记
+        update(to,userToken);//更新项目组领用归还登记
     }
 
     /**
@@ -165,7 +383,9 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
      */
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public ProjectGroupReceive update(ProjectGroupReceiveTO to) throws SerException {
+    public ProjectGroupReceive update(ProjectGroupReceiveTO to,String token) throws SerException {
+        RpcTransmit.transmitUserToken(token);
+        checkPermission();
         if (StringUtils.isNotEmpty(to.getId())) {
             ProjectGroupReceive model = super.findById(to.getId());
             if (model != null) {

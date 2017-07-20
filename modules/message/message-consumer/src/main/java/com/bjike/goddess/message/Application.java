@@ -24,5 +24,4 @@ public class Application {
         new KafkaConsumer().consumer();
         System.in.read();
     }
-
 }

@@ -2,6 +2,8 @@ package com.bjike.goddess.checkhost.api;
 
 import com.bjike.goddess.checkhost.bo.HostApplyBO;
 import com.bjike.goddess.checkhost.dto.HostApplyDTO;
+import com.bjike.goddess.checkhost.enums.CheckStatus;
+import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.to.HostApplyTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -17,6 +19,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface HostApplyAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 离宿申请列表总条数
      */
@@ -77,11 +93,11 @@ public interface HostApplyAPI {
     /**
      * 审核
      *
-     * @param hostApplyTO 离宿申请
+     * @param id          id
+     * @param checkStatus
      * @return class HostApplyBO
+     * @paramcheckStatus
      */
-    default HostApplyBO auditHostApply(HostApplyTO hostApplyTO) throws SerException {
-        return null;
-    }
+    HostApplyBO auditHostApply(String id, CheckStatus checkStatus) throws SerException;
 
 }

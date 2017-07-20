@@ -7,6 +7,7 @@ import com.bjike.goddess.regularization.bo.PerformanceScoreBO;
 import com.bjike.goddess.regularization.dto.PerformanceScoreDTO;
 import com.bjike.goddess.regularization.entity.PerformanceScore;
 import com.bjike.goddess.regularization.service.PerformanceScoreSer;
+import com.bjike.goddess.regularization.to.GuidePermissionTO;
 import com.bjike.goddess.regularization.to.PerformanceScoreTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,17 @@ public class PerformanceScoreApiImpl implements PerformanceScoreAPI {
 
     @Autowired
     private PerformanceScoreSer performanceScoreSer;
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return performanceScoreSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return performanceScoreSer.guidePermission(guidePermissionTO);
+    }
 
     /**
      * 根据id查询工作表现评分

@@ -2,8 +2,6 @@ package com.bjike.goddess.dispatchcar.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
 
-import java.time.LocalDate;
-
 /**
  * 根据地区及项目组及项目名称及年份及月份查询出车记录
  *
@@ -31,9 +29,14 @@ public class ConditionTO extends BaseTO {
     private String project;
 
     /**
-     * 出车日期查询范围
+     * 开始时间
      */
-    private LocalDate[] dispatchDate;
+    private String startDate;
+
+    /**
+     * 结束时间
+     */
+    private String endDate;
 
     private String DispatchStartDate;
     private String DispatchEndDate;
@@ -62,12 +65,20 @@ public class ConditionTO extends BaseTO {
         this.project = project;
     }
 
-    public LocalDate[] getDispatchDate() {
-        return dispatchDate;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public void setDispatchDate(LocalDate[] dispatchDate) {
-        this.dispatchDate = dispatchDate;
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 
     public String getDispatchStartDate() {

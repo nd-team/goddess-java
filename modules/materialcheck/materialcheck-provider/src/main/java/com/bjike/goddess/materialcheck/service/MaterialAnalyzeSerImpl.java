@@ -2,17 +2,25 @@ package com.bjike.goddess.materialcheck.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialcheck.bo.MaterialAnalyzeBO;
 import com.bjike.goddess.materialcheck.dto.MaterialAnalyzeDTO;
 import com.bjike.goddess.materialcheck.entity.MaterialAnalyze;
+import com.bjike.goddess.materialcheck.to.GuidePermissionTO;
 import com.bjike.goddess.materialcheck.to.MaterialAnalyzeTO;
+import com.bjike.goddess.materialcheck.type.GuideAddrStatus;
 import com.bjike.goddess.materialcheck.type.InventoryType;
 import com.bjike.goddess.materialinstock.api.MaterialInStockAPI;
 import com.bjike.goddess.materialinstock.bo.AttributeBO;
 import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
 import com.bjike.goddess.materialinstock.type.MaterialState;
 import com.bjike.goddess.materialinstock.type.UseState;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -22,9 +30,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * 物资分析业务实现
@@ -41,6 +47,188 @@ public class MaterialAnalyzeSerImpl extends ServiceImpl<MaterialAnalyze, Materia
 
     @Autowired
     private MaterialInStockAPI materialInStockAPI;
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+
+    /**
+     * 检查权限(部门)
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是本部门人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 检查权限(财务模块)
+     *
+     * @throws SerException
+     */
+    private void checkModPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("2");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是财务模块人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 检查权限(总经办)
+     *
+     * @throws SerException
+     */
+    private void checkPonsPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.arrCusPermission("3");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是总经办岗位人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对财务模块审核权限（模块级别）
+     */
+    private Boolean guideMondIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对总经办审核权限（岗位级别）
+     */
+    private Boolean guidePosinIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.arrCusPermission("3");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagMond = guideMondIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagPosin = guidePosinIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee || flagMond || flagPosin) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideIdentity();
+                break;
+            case ADD:
+                flag = guideIdentity();
+                break;
+            case EDIT:
+                flag = guideIdentity();
+                break;
+            case DELETE:
+                flag = guideIdentity();
+                break;
+            case CMODUL:
+                flag = guideMondIdentity();
+                break;
+            case MANAGES:
+                flag = guidePosinIdentity();
+                break;
+            case ADUIT:
+                flag = guideIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
 
     /**
      * 分页查询物资分析
@@ -52,6 +240,7 @@ public class MaterialAnalyzeSerImpl extends ServiceImpl<MaterialAnalyze, Materia
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<MaterialAnalyzeBO> list(MaterialAnalyzeDTO dto) throws SerException {
+        checkPermission();
         List<MaterialAnalyze> list = super.findByPage(dto);
         List<MaterialAnalyzeBO> boList = BeanTransform.copyProperties(list, MaterialAnalyzeBO.class);
         return boList;
@@ -67,6 +256,7 @@ public class MaterialAnalyzeSerImpl extends ServiceImpl<MaterialAnalyze, Materia
     @Override
     @Transactional(rollbackFor = SerException.class)
     public MaterialAnalyzeBO save(MaterialAnalyzeTO to) throws SerException {
+        checkPermission();
         MaterialAnalyze entity = BeanTransform.copyProperties(to, MaterialAnalyze.class, true);
         entity = super.save(entity);
         MaterialAnalyzeBO bo = BeanTransform.copyProperties(entity, MaterialAnalyzeBO.class);
@@ -82,6 +272,7 @@ public class MaterialAnalyzeSerImpl extends ServiceImpl<MaterialAnalyze, Materia
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
+        checkPermission();
         super.remove(id);
     }
 
@@ -94,6 +285,7 @@ public class MaterialAnalyzeSerImpl extends ServiceImpl<MaterialAnalyze, Materia
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(MaterialAnalyzeTO to) throws SerException {
+        checkPermission();
         if (StringUtils.isNotEmpty(to.getId())) {
             MaterialAnalyze model = super.findById(to.getId());
             if (model != null) {
@@ -128,6 +320,8 @@ public class MaterialAnalyzeSerImpl extends ServiceImpl<MaterialAnalyze, Materia
      */
     @Override
     public List<MaterialAnalyzeBO> materialAnalyze(InventoryType inventoryType) throws SerException {
+
+        checkPermission();
         //查询所有类型的存储地区,项目组,物品类型,物资名称
         List<AttributeBO> boList = materialInStockAPI.findAllKindsType();
         if (CollectionUtils.isEmpty(boList)) {
@@ -175,5 +369,35 @@ public class MaterialAnalyzeSerImpl extends ServiceImpl<MaterialAnalyze, Materia
         DecimalFormat df = new DecimalFormat("#.00");
         return df.format(d * 100) + "%";
     }
+    @Override
+    public List<String> findAddAllDetails() throws SerException {
+        List<DepartmentDetailBO> departmentDetailBOS = departmentDetailAPI.findStatus();
+        if (org.apache.commons.collections4.CollectionUtils.isEmpty(departmentDetailBOS)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (DepartmentDetailBO departmentDetailBO : departmentDetailBOS){
+            String details = departmentDetailBO.getDepartment();
+            if (StringUtils.isNotBlank(departmentDetailBO.getDepartment())) {
+                set.add(details);
+            }
+        }
+        return new ArrayList<>(set);
+    }
 
+    @Override
+    public List<String> findallMonUser() throws SerException {
+        List<UserBO> userBOS = positionDetailUserAPI.findUserList();
+        if (org.apache.commons.collections4.CollectionUtils.isEmpty(userBOS)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (UserBO userBO : userBOS){
+            String userName = userBO.getUsername();
+            if (StringUtils.isNotBlank(userBO.getUsername())) {
+                set.add(userName);
+            }
+        }
+        return new ArrayList<>(set);
+    }
 }

@@ -2,14 +2,20 @@ package com.bjike.goddess.reportmanagement.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.reportmanagement.bo.*;
 import com.bjike.goddess.reportmanagement.dto.*;
 import com.bjike.goddess.reportmanagement.entity.Asset;
 import com.bjike.goddess.reportmanagement.enums.AssetType;
 import com.bjike.goddess.reportmanagement.enums.Form;
+import com.bjike.goddess.reportmanagement.enums.GuideAddrStatus;
 import com.bjike.goddess.reportmanagement.enums.Type;
 import com.bjike.goddess.reportmanagement.to.AssetTO;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
+import com.bjike.goddess.reportmanagement.vo.SonPermissionObject;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -35,15 +41,269 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
     @Autowired
     private FormulaSer formulaSer;
     @Autowired
+    private AssetStructureAdviceSer assetStructureAdviceSer;
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
     private DebtSer debtSer;
     @Autowired
-    private RepayAnalyzeAdviceSer repayAnalyzeAdviceSer;
+    private DebtStructureAdviceSer debtStructureAdviceSer;
     @Autowired
-    private AssetStructureAdviceSer assetStructureAdviceSer;
+    private ProfitIndicatorAdviceSer profitIndicatorAdviceSer;
+    @Autowired
+    private ProfitRegulationAdviceSer profitRegulationAdviceSer;
+    @Autowired
+    private ProfitSer profitSer;
+    @Autowired
+    private RepayAnalyzeAdviceSer repayAnalyzeAdviceSer;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAddSign = guideAddIdentity();
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("asset");
+        obj.setDescribesion("资产表");
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeDis = debtSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("debt");
+        obj.setDescribesion("负债表");
+        if (flagSeeDis) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeDis1 = assetStructureAdviceSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("assetstructureadvice");
+        obj.setDescribesion("资产结构管理建议设计");
+        if (flagSeeDis1) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeDis2 = debtStructureAdviceSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("debtstructureadvice");
+        obj.setDescribesion("负债与权益结构管理建议设计");
+        if (flagSeeDis2) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeDis3 = formulaSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("formula");
+        obj.setDescribesion("对应的公式");
+        if (flagSeeDis3) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeDis4 = profitSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("profit");
+        obj.setDescribesion("利润表");
+        if (flagSeeDis4) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeDis5 = profitIndicatorAdviceSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("profitindicatoradvice");
+        obj.setDescribesion("利润分析指标管理建议设计");
+        if (flagSeeDis5) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeDis6 = profitRegulationAdviceSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("profitregulationadvice");
+        obj.setDescribesion("利润增减率分析管理建议设计");
+        if (flagSeeDis6) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeDis7 = profitRegulationAdviceSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("repayanalyzeadvice");
+        obj.setDescribesion("偿还能力分析管理建议设计");
+        if (flagSeeDis7) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public AssetBO save(AssetTO to) throws SerException {
+        checkAddIdentity();
         Asset entity = BeanTransform.copyProperties(to, Asset.class, true);
         super.save(entity);
         return BeanTransform.copyProperties(entity, AssetBO.class);
@@ -52,6 +312,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void edit(AssetTO to) throws SerException {
+        checkAddIdentity();
         Asset entity = super.findById(to.getId());
         if (entity == null) {
             throw new SerException("该对象不存在");
@@ -66,6 +327,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void delete(String id) throws SerException {
+        checkAddIdentity();
         Asset entity = super.findById(id);
         if (entity == null) {
             throw new SerException("该对象不存在");
@@ -87,6 +349,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
 
     @Override
     public List<AssetBO> list(AssetDTO dto) throws SerException {
+        checkSeeIdentity();
         FormulaDTO formulaDTO = new FormulaDTO();
         BeanUtils.copyProperties(dto, formulaDTO);
         dto.getSorts().add("assetType=ASC");
@@ -205,6 +468,8 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
 
     @Override
     public List<StructureBO> assetStructure(AssetDTO dto) throws SerException {
+        checkSeeIdentity();
+        String userToken=RpcTransmit.getUserToken();
         FormulaDTO formulaDTO = new FormulaDTO();
         BeanUtils.copyProperties(dto, formulaDTO);
         dto.getSorts().add("assetType=ASC");
@@ -256,6 +521,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         rate.setBestScale("流动资产比重较高会占用大量资金，降低流动资产周转率，从而影响企业的资金利用效率。" +
                 "非流动资产比例过低会影响企业的获利能力，从而影响企业未来的发展。");
         boList.add(rate);
+        RpcTransmit.transmitUserToken(userToken);
         String advice = assetStructureAdvice(flow, other);
         StructureBO adviceBO = new StructureBO();
         adviceBO.setProject("管理建议");
@@ -289,12 +555,20 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
 
     @Override
     public List<RepayAnalyzeBO> repayAnalyze(AssetDTO dto) throws SerException {
+//        checkSeeIdentity();
+        String userToken=RpcTransmit.getUserToken();
         double flowAsset = assetStructure(dto).get(0).getFee();
+        RpcTransmit.transmitUserToken(userToken);
         double flowDebt = finds(dto).get(0);
+        RpcTransmit.transmitUserToken(userToken);
         double asset = assetStructure(dto).get(2).getFee();
+        RpcTransmit.transmitUserToken(userToken);
         double debt = finds(dto).get(1);
+        RpcTransmit.transmitUserToken(userToken);
         double all = finds(dto).get(2);
+        RpcTransmit.transmitUserToken(userToken);
         double fund = list(dto).get(1).getCurrent();   //货币资金
+        RpcTransmit.transmitUserToken(userToken);
         double stock = list(dto).get(10).getCurrent();  //存货净额
         List<RepayAnalyzeBO> list = new ArrayList<>();
         RepayAnalyzeBO firstBO = new RepayAnalyzeBO();
@@ -343,6 +617,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         equityBO.setExplain("较低的产权比率表明企业采用了低风险、低报酬的资本结构，债权人的利益受保护程度较高，企业财务风险较小。" +
                 "但是过低的产权比率也意味着企业不能充分发挥负债带来的财务杠杆作用。产权比率高，是高风险、高报酬的财务结构");
         list.add(equityBO);
+        RpcTransmit.transmitUserToken(userToken);
         String advice = repayAdvice(flow, rate, cash, assetdebt, equity);
         RepayAnalyzeBO adviceBO = new RepayAnalyzeBO();
         adviceBO.setProject("三、管理建议");
@@ -382,6 +657,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
 
     @Override
     public List<DetailBO> findDetails(String id, AssetDTO dto) throws SerException {
+        checkSeeIdentity();
         String startTime = dto.getStartTime();
         String endTime = dto.getEndTime();
         FormulaDTO formulaDTO = new FormulaDTO();

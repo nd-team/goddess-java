@@ -25,6 +25,12 @@ public interface AssistanceStandardAPI  {
         return null;
     }
     /**
+     * 一个补助标准
+     * @return class AssistanceStandardBO
+     */
+    default AssistanceStandardBO getOneById(String id ) throws SerException {return null;}
+
+    /**
      * 补助标准列表
      * @return class AssistanceStandardBO
      */

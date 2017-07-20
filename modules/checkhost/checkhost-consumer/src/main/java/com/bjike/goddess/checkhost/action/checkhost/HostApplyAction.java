@@ -1,12 +1,11 @@
 package com.bjike.goddess.checkhost.action.checkhost;
 
 import com.bjike.goddess.checkhost.api.HostApplyAPI;
-import com.bjike.goddess.checkhost.bo.DormitoryInfoBO;
 import com.bjike.goddess.checkhost.bo.HostApplyBO;
-import com.bjike.goddess.checkhost.dto.DormitoryInfoDTO;
 import com.bjike.goddess.checkhost.dto.HostApplyDTO;
+import com.bjike.goddess.checkhost.enums.CheckStatus;
+import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.to.HostApplyTO;
-import com.bjike.goddess.checkhost.vo.DormitoryInfoVO;
 import com.bjike.goddess.checkhost.vo.HostApplyVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -37,6 +36,30 @@ import java.util.List;
 public class HostApplyAction {
     @Autowired
     private HostApplyAPI hostApplyAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = hostApplyAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
     /**
      * 离宿申请列表总条数
      *
@@ -53,6 +76,7 @@ public class HostApplyAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 一个离宿申请
      *
@@ -83,7 +107,7 @@ public class HostApplyAction {
     public Result list(HostApplyDTO hostApplyDTO, HttpServletRequest request) throws ActException {
         try {
             List<HostApplyVO> hostApplyVOS = BeanTransform.copyProperties
-                    (hostApplyAPI.findListHostApply(hostApplyDTO),HostApplyVO.class,request);
+                    (hostApplyAPI.findListHostApply(hostApplyDTO), HostApplyVO.class, request);
             return ActResult.initialize(hostApplyVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -117,7 +141,7 @@ public class HostApplyAction {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result editHostApply(@Validated(EDIT.class) HostApplyTO hostApplyTO,BindingResult bindingResult) throws ActException {
+    public Result editHostApply(@Validated(EDIT.class) HostApplyTO hostApplyTO, BindingResult bindingResult) throws ActException {
         try {
             HostApplyBO hostApplyBO = hostApplyAPI.editHostApply(hostApplyTO);
             return ActResult.initialize(hostApplyBO);
@@ -142,18 +166,20 @@ public class HostApplyAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 审核
      *
-     * @param hostApplyTO 离宿申请数据bo
+     * @param id          id
+     * @param checkStatus 审核状态
      * @return class HostApplyVO
      * @des 审核离宿申请
      * @version v1
      */
-    @PostMapping("v1/audit")
-    public Result auditHostApply(@Validated HostApplyTO hostApplyTO) throws ActException {
+    @PostMapping("v1/audit/{id}/{checkStatus}")
+    public Result auditHostApply(@PathVariable String id, @PathVariable CheckStatus checkStatus) throws ActException {
         try {
-            HostApplyBO hostApplyBO = hostApplyAPI.auditHostApply(hostApplyTO);
+            HostApplyBO hostApplyBO = hostApplyAPI.auditHostApply(id, checkStatus);
             return ActResult.initialize(BeanTransform.copyProperties(hostApplyBO, HostApplyVO.class, true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -5,9 +5,11 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.devicerepair.bo.DeviceRepairBO;
 import com.bjike.goddess.devicerepair.dto.DeviceRepairDTO;
 import com.bjike.goddess.devicerepair.entity.DeviceRepair;
+import com.bjike.goddess.devicerepair.excel.SonPermissionObject;
 import com.bjike.goddess.devicerepair.service.DeviceRepairSer;
 import com.bjike.goddess.devicerepair.to.DeviceRepairTO;
 import com.bjike.goddess.devicerepair.to.FetchDeviceTO;
+import com.bjike.goddess.devicerepair.to.GuidePermissionTO;
 import com.bjike.goddess.devicerepair.to.WelfareAuditTO;
 import com.bjike.goddess.devicerepair.type.AuditState;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,16 @@ public class DeviceRepairApiImpl implements DeviceRepairAPI {
 
     @Autowired
     private DeviceRepairSer deviceRepairSer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return deviceRepairSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return deviceRepairSer.guidePermission(guidePermissionTO);
+    }
 
     /**
      * 根据id查询设备维修
@@ -147,4 +159,13 @@ public class DeviceRepairApiImpl implements DeviceRepairAPI {
         deviceRepairSer.fetchDevice(to);
     }
 
+    @Override
+    public List<String> findAddAllDetails() throws SerException {
+        return deviceRepairSer.findAddAllDetails();
+    }
+
+    @Override
+    public List<String> findallMonUser() throws SerException {
+        return deviceRepairSer.findallMonUser();
+    }
 }

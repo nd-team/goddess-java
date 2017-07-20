@@ -3,7 +3,6 @@ package com.bjike.goddess.accommodation.service;
 import com.bjike.goddess.accommodation.bo.RentalBO;
 import com.bjike.goddess.accommodation.dto.RentalDTO;
 import com.bjike.goddess.accommodation.entity.Rental;
-import com.bjike.goddess.accommodation.excel.RentalApplyExport;
 import com.bjike.goddess.accommodation.excel.RentalExport;
 import com.bjike.goddess.accommodation.to.RentalTO;
 import com.bjike.goddess.common.api.dto.Restrict;
@@ -18,7 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -95,8 +96,8 @@ public class RentalSerImpl extends ServiceImpl<Rental, RentalDTO> implements Ren
             RentalExport export = BeanTransform.copyProperties(str, RentalExport.class);
             exports.add(export);
         });
-        Excel excel = new Excel(0,2);
-        byte [] bytes = ExcelUtil.clazzToExcel(exports,excel);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(exports, excel);
         return bytes;
     }
 
@@ -112,5 +113,18 @@ public class RentalSerImpl extends ServiceImpl<Rental, RentalDTO> implements Ren
         return areasList;
     }
 
+    @Override
+    /**
+     * chenjunhao
+     * 获取所有租房地址
+     */
+    public Set<String> allAddress() throws SerException {
+        List<Rental> list = super.findAll();
+        Set<String> set = new HashSet<>();
+        for (Rental rental : list) {
+            set.add(rental.getAddress());
+        }
+        return set;
+    }
 
 }

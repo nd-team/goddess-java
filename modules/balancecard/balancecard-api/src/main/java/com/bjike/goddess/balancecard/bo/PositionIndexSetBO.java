@@ -22,6 +22,27 @@ public class PositionIndexSetBO extends BaseBO {
     private String indexName;
 
     /**
+     * 年度指标编号
+     */
+    private Integer indexNumber;
+
+    /**
+     * 部门年度指标编号
+     */
+    private Integer yearIndexNumber;
+
+    /**
+     * 部门月度指标编号
+     */
+    private Integer monthIndexNumber;
+
+    /**
+     * 岗位指标编号
+     */
+    private Integer postIndexNumber;
+
+
+    /**
      * 年份
      */
     private String year;
@@ -70,6 +91,11 @@ public class PositionIndexSetBO extends BaseBO {
      * 责任人
      */
     private String positioner;
+
+    /**
+     * 责任人工号
+     */
+    private String positionerNumber;
 
     /**
      * 岗位指标权重
@@ -405,5 +431,46 @@ public class PositionIndexSetBO extends BaseBO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public Integer getIndexNumber() {
+        return indexNumber;
+    }
+
+    public void setIndexNumber(Integer indexNumber) {
+        this.indexNumber = indexNumber;
+    }
+
+    public Integer getYearIndexNumber() {
+        return yearIndexNumber;
+    }
+
+    public void setYearIndexNumber(Integer yearIndexNumber) {
+        this.yearIndexNumber = yearIndexNumber;
+    }
+
+    public Integer getMonthIndexNumber() {
+        return monthIndexNumber;
+    }
+
+    public void setMonthIndexNumber(Integer monthIndexNumber) {
+        this.monthIndexNumber = monthIndexNumber;
+    }
+
+    public Integer getPostIndexNumber() {
+        return postIndexNumber;
+    }
+
+    public void setPostIndexNumber(Integer postIndexNumber) {
+
+        this.postIndexNumber = postIndexNumber;
+    }
+
+    public String getPositionerNumber() {
+        return positionerNumber;
+    }
+
+    public void setPositionerNumber(String positionerNumber) {
+        this.positionerNumber = positionerNumber;
     }
 }

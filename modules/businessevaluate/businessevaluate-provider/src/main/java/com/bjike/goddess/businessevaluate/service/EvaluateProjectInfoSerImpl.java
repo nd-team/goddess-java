@@ -240,10 +240,8 @@ public class EvaluateProjectInfoSerImpl extends ServiceImpl<EvaluateProjectInfo,
                 feeRateStr = decimalFormat.format(feeRate) + "%";
             }
 
-
             //转换利率百分比
             String profitRateStr = decimalFormat.format(profitRate) + "%";
-
 
             bo.setArea(model.getArea());
             bo.setProject(model.getProject());

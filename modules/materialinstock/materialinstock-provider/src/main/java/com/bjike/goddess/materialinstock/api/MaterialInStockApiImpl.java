@@ -7,6 +7,7 @@ import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
 import com.bjike.goddess.materialinstock.dto.MaterialInStockDTO;
 import com.bjike.goddess.materialinstock.entity.MaterialInStock;
 import com.bjike.goddess.materialinstock.service.MaterialInStockSer;
+import com.bjike.goddess.materialinstock.to.GuidePermissionTO;
 import com.bjike.goddess.materialinstock.to.MaterialInStockTO;
 import com.bjike.goddess.materialinstock.type.UseState;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,16 @@ public class MaterialInStockApiImpl implements MaterialInStockAPI {
 
     @Autowired
     private MaterialInStockSer materialInStockSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return materialInStockSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return materialInStockSer.guidePermission(guidePermissionTO);
+    }
 
     /**
      * 根据id查询物资入库
@@ -210,5 +221,20 @@ public class MaterialInStockApiImpl implements MaterialInStockAPI {
     //cjh
     public Set<String> allstockEncoding() throws SerException {
         return materialInStockSer.allstockEncoding();
+    }
+
+    @Override
+    public void updateLijuntao(MaterialInStockTO to) throws SerException {
+        materialInStockSer.updateLijuntao(to);
+    }
+
+    @Override
+    public List<String> findAddAllDetails() throws SerException {
+        return materialInStockSer.findAddAllDetails();
+    }
+
+    @Override
+    public List<String> findallUser() throws SerException {
+        return materialInStockSer.findallUser();
     }
 }

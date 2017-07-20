@@ -36,7 +36,7 @@ public class CustomIntercept implements Interceptor {
         HIInfo loginInfo = new HIInfo(new LoginIntercept(userAPI), "/**");
         HIInfo storage = new HIInfo(new StorageIntercept(storageUserAPI,account,password,name), "/**");
 
-        return Arrays.asList(loginInfo, storage);
+        return Arrays.asList(storage,loginInfo);
     }
 
 }

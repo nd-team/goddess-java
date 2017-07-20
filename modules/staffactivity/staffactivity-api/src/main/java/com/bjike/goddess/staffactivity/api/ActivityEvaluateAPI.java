@@ -6,6 +6,7 @@ import com.bjike.goddess.staffactivity.bo.ActivityEvaluateSummaryBO;
 import com.bjike.goddess.staffactivity.bo.EvaluateScoreSummaryBO;
 import com.bjike.goddess.staffactivity.dto.ActivityEvaluateDTO;
 import com.bjike.goddess.staffactivity.to.ActivityEvaluateTO;
+import com.bjike.goddess.staffactivity.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +20,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ActivityEvaluateAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 根据id查询活动评价
