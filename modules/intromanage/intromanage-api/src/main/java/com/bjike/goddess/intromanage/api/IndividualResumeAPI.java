@@ -3,6 +3,8 @@ package com.bjike.goddess.intromanage.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.intromanage.bo.IndividualResumeBO;
 import com.bjike.goddess.intromanage.dto.IndividualResumeDTO;
+import com.bjike.goddess.intromanage.excel.SonPermissionObject;
+import com.bjike.goddess.intromanage.to.GuidePermissionTO;
 import com.bjike.goddess.intromanage.to.IndividualDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.IndividualResumeTO;
 
@@ -19,6 +21,20 @@ import java.util.List;
  */
 public interface IndividualResumeAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 根据id查询个人简介
      *

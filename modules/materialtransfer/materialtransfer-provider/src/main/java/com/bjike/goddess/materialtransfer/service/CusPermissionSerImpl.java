@@ -5,16 +5,14 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.materialinstock.bo.CusOperateBO;
-import com.bjike.goddess.materialinstock.bo.CusPermissionBO;
-import com.bjike.goddess.materialinstock.dto.CusPermissionDTO;
-import com.bjike.goddess.materialinstock.dto.CusPermissionOperateDTO;
-import com.bjike.goddess.materialinstock.entity.CusPermission;
-import com.bjike.goddess.materialinstock.entity.CusPermissionOperate;
-import com.bjike.goddess.materialinstock.service.CusPermissionOperateSer;
-import com.bjike.goddess.materialinstock.service.CusPermissionSer;
-import com.bjike.goddess.materialinstock.to.CusPermissionTO;
-import com.bjike.goddess.materialinstock.type.CusPermissionType;
+import com.bjike.goddess.materialtransfer.bo.CusOperateBO;
+import com.bjike.goddess.materialtransfer.bo.CusPermissionBO;
+import com.bjike.goddess.materialtransfer.dto.CusPermissionDTO;
+import com.bjike.goddess.materialtransfer.dto.CusPermissionOperateDTO;
+import com.bjike.goddess.materialtransfer.entity.CusPermission;
+import com.bjike.goddess.materialtransfer.entity.CusPermissionOperate;
+import com.bjike.goddess.materialtransfer.to.CusPermissionTO;
+import com.bjike.goddess.materialtransfer.type.CusPermissionType;
 import com.bjike.goddess.organize.api.*;
 import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.user.api.UserAPI;
@@ -285,7 +283,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         if (deleteList != null && deleteList.size() > 0) {
             cusPermissionOperateSer.remove(deleteList);
         }
-        if( operators != null && operators.length>0 ){
+        if (operators != null && operators.length > 0) {
             List<CusPermissionOperate> list = new ArrayList<>();
             for (String operateId : operators) {
                 CusPermissionOperate cpo = new CusPermissionOperate();

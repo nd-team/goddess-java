@@ -159,4 +159,13 @@ public class DeviceRepairApiImpl implements DeviceRepairAPI {
         deviceRepairSer.fetchDevice(to);
     }
 
+    @Override
+    public List<String> findAddAllDetails() throws SerException {
+        return deviceRepairSer.findAddAllDetails();
+    }
+
+    @Override
+    public List<String> findallMonUser() throws SerException {
+        return deviceRepairSer.findallMonUser();
+    }
 }

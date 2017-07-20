@@ -5,7 +5,9 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.intromanage.bo.IndividualResumeBO;
 import com.bjike.goddess.intromanage.dto.IndividualResumeDTO;
 import com.bjike.goddess.intromanage.entity.IndividualResume;
+import com.bjike.goddess.intromanage.excel.SonPermissionObject;
 import com.bjike.goddess.intromanage.service.IndividualResumeSer;
+import com.bjike.goddess.intromanage.to.GuidePermissionTO;
 import com.bjike.goddess.intromanage.to.IndividualDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.IndividualResumeTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,16 @@ public class IndividualResumeApiImpl implements IndividualResumeAPI {
 
     @Autowired
     private IndividualResumeSer individualResumeSer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return individualResumeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return individualResumeSer.guidePermission(guidePermissionTO);
+    }
 
     /**
      * 根据id查询个人简介

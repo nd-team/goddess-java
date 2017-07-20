@@ -1,11 +1,11 @@
 package com.bjike.goddess.materialtransfer.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.materialinstock.api.CusPermissionAPI;
-import com.bjike.goddess.materialinstock.bo.CusPermissionBO;
-import com.bjike.goddess.materialinstock.dto.CusPermissionDTO;
-import com.bjike.goddess.materialinstock.service.CusPermissionSer;
-import com.bjike.goddess.materialinstock.to.CusPermissionTO;
+import com.bjike.goddess.materialtransfer.api.CusPermissionAPI;
+import com.bjike.goddess.materialtransfer.bo.CusPermissionBO;
+import com.bjike.goddess.materialtransfer.dto.CusPermissionDTO;
+import com.bjike.goddess.materialtransfer.service.CusPermissionSer;
+import com.bjike.goddess.materialtransfer.to.CusPermissionTO;
 import com.bjike.goddess.organize.bo.OpinionBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

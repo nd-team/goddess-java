@@ -1,8 +1,8 @@
 package com.bjike.goddess.materialtransfer.dao;
 
 import com.bjike.goddess.common.jpa.dao.JpaRep;
-import com.bjike.goddess.materialinstock.dto.CusPermissionDTO;
-import com.bjike.goddess.materialinstock.entity.CusPermission;
+import com.bjike.goddess.materialtransfer.dto.CusPermissionDTO;
+import com.bjike.goddess.materialtransfer.entity.CusPermission;
 
 /**
  * 客户权限配置持久化接口, 继承基类可使用ｊｐａ命名查询

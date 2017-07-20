@@ -181,7 +181,9 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
         Boolean flagMaterialTrans = guideIdentity();
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagMaterialTransPo = guidePosinIdentity();
+        RpcTransmit.transmitUserToken(userToken);
         Boolean flagMaterialTransMo = guideModulIdentity();
+        RpcTransmit.transmitUserToken(userToken);
         SonPermissionObject obj = new SonPermissionObject();
 
         obj = new SonPermissionObject();
@@ -259,7 +261,9 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     @Transactional(rollbackFor = SerException.class)
     public MaterialTransferBO save(MaterialTransferTO to) throws SerException {
         checkPermission();
+        String userToekn=RpcTransmit.getUserToken();
         MaterialTransferBO bo = BeanTransform.copyProperties(to, MaterialTransferBO.class);
+        RpcTransmit.transmitUserToken(userToekn);
         bo = setAttributes(bo);//设置物资属性
         MaterialTransfer entity = BeanTransform.copyProperties(bo, MaterialTransfer.class, true);
         entity = super.save(entity);
@@ -274,8 +278,10 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
      * @return
      */
     private MaterialTransferBO setAttributes(MaterialTransferBO bo) throws SerException {
-        MaterialInStockBO inStockBO = checkMaterialInStock(bo);//检验是否为空
+        String userToken=RpcTransmit.getUserToken();
         String curUsername = userAPI.currentUser().getUsername();
+        MaterialInStockBO inStockBO = checkMaterialInStock(bo);//检验是否为空
+        RpcTransmit.transmitUserToken(userToken);
         updateInStock(bo, inStockBO, curUsername);  //更新物资入库信息
         return setTransferProperties(bo, inStockBO, curUsername);
     }

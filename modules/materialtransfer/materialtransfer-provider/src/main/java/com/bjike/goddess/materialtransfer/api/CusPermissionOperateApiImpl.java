@@ -1,6 +1,6 @@
 package com.bjike.goddess.materialtransfer.api;
 
-import com.bjike.goddess.materialinstock.api.CusPermissionOperateAPI;
+import com.bjike.goddess.materialtransfer.api.CusPermissionOperateAPI;
 import org.springframework.stereotype.Service;
 
 /**

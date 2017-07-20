@@ -3,6 +3,7 @@ package com.bjike.goddess.regularization.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.regularization.bo.TimeCriteriaSetBO;
 import com.bjike.goddess.regularization.dto.TimeCriteriaSetDTO;
+import com.bjike.goddess.regularization.to.GuidePermissionTO;
 import com.bjike.goddess.regularization.to.TimeCriteriaSetTO;
 
 import java.util.List;
@@ -18,6 +19,19 @@ import java.util.List;
  */
 public interface TimeCriteriaSetAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 根据id查询时间条件设置
      *
