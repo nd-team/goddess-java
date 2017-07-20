@@ -4,6 +4,7 @@ import com.bjike.goddess.attainment.bo.SurveyDemandBO;
 import com.bjike.goddess.attainment.dto.SurveyDemandDTO;
 import com.bjike.goddess.attainment.enums.SurveyStatus;
 import com.bjike.goddess.attainment.to.CloseDemandTO;
+import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.attainment.to.SurveyDemandTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -19,6 +20,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SurveyDemandAPI {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存
@@ -104,6 +120,13 @@ public interface SurveyDemandAPI {
      * @throws SerException
      */
     default Long getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取调研需求id
+     */
+    default List<String> getDemandId() throws SerException {
         return null;
     }
 }

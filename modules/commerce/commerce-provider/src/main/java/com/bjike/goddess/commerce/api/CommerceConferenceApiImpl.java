@@ -6,6 +6,7 @@ import com.bjike.goddess.commerce.service.CommerceConferenceSer;
 import com.bjike.goddess.commerce.to.CollectTO;
 import com.bjike.goddess.commerce.to.CommerceConferenceExcelTO;
 import com.bjike.goddess.commerce.to.CommerceConferenceTO;
+import com.bjike.goddess.commerce.to.GuidePermissionTO;
 import com.bjike.goddess.commerce.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,5 +82,20 @@ public class CommerceConferenceApiImpl implements CommerceConferenceAPI {
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         return commerceConferenceSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return commerceConferenceSer.guidePermission( guidePermissionTO );
+    }
+
+    @Override
+    public CommerceConferenceBO importExcel(List<CommerceConferenceTO> tocs) throws SerException {
+        return commerceConferenceSer.importExcel( tocs );
+    }
+
+    @Override
+    public byte[] templateExport( ) throws SerException {
+        return commerceConferenceSer.templateExport(   );
     }
 }

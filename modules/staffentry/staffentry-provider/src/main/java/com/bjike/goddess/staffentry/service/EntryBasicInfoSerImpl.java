@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.bo.FindNameBO;
 import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
 import com.bjike.goddess.staffentry.to.EntryBasicInfoTO;
@@ -239,7 +240,7 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
     }
 
     @Override
-    public List<EntryBasicInfoVO> getEntryBasicInfoByName(String name) throws SerException {
+    public List<EntryBasicInfoBO> getEntryBasicInfoByName(String name) throws SerException {
         EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
         dto.getConditions().add(Restrict.eq("name", name));
         List<EntryBasicInfo> list = super.findByCis(dto);
@@ -252,5 +253,21 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
         dto.getConditions().add(Restrict.eq("employeeID", empNumber));
         List<EntryBasicInfo> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, EntryBasicInfoBO.class);
+    }
+
+    @Override
+    public List<FindNameBO> findName() throws SerException {
+        EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
+        List<EntryBasicInfoBO> entryBasicInfoBOs = listEntryBasicInfo(dto);
+        List<FindNameBO> findNameBOs = new ArrayList<>();
+        if(null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0){
+            for(EntryBasicInfoBO bo : entryBasicInfoBOs){
+                FindNameBO findNameBO = new FindNameBO();
+                findNameBO.setUserId(bo.getId());
+                findNameBO.setName(bo.getName());
+                findNameBOs.add(findNameBO);
+            }
+        }
+        return findNameBOs;
     }
 }

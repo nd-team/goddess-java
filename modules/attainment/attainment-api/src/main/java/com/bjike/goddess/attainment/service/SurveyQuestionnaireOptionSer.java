@@ -3,6 +3,7 @@ package com.bjike.goddess.attainment.service;
 import com.bjike.goddess.attainment.bo.SurveyQuestionnaireOptionBO;
 import com.bjike.goddess.attainment.dto.SurveyQuestionnaireOptionDTO;
 import com.bjike.goddess.attainment.entity.SurveyQuestionnaireOption;
+import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.attainment.to.SurveyQuestionnaireOptionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -20,6 +21,20 @@ import java.util.List;
  */
 public interface SurveyQuestionnaireOptionSer extends Ser<SurveyQuestionnaireOption, SurveyQuestionnaireOptionDTO> {
 
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 添加
      *

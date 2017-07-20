@@ -2,6 +2,7 @@ package com.bjike.goddess.attainment.action.attainment;
 
 import com.bjike.goddess.attainment.api.SurveyActualizeAPI;
 import com.bjike.goddess.attainment.dto.SurveyActualizeDTO;
+import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.attainment.to.SurveyActualizeTO;
 import com.bjike.goddess.attainment.vo.SurveyActualizeVO;
 import com.bjike.goddess.common.api.entity.ADD;
@@ -34,6 +35,29 @@ public class SurveyActualizeAct {
     @Autowired
     private SurveyActualizeAPI surveyActualizeAPI;
 
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = surveyActualizeAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 保存
      *

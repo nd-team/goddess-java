@@ -3,6 +3,7 @@ package com.bjike.goddess.attainment.api;
 import com.bjike.goddess.attainment.bo.SurveyAnalyseBO;
 import com.bjike.goddess.attainment.dto.SurveyAnalyseDTO;
 import com.bjike.goddess.attainment.service.SurveyAnalyseSer;
+import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.attainment.to.SurveyAnalyseTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,19 @@ import java.util.List;
  */
 @Service("surveyAnalyseApiImpl")
 public class SurveyAnalyseApiImpl implements SurveyAnalyseAPI {
-
     @Autowired
     private SurveyAnalyseSer surveyAnalyseSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return surveyAnalyseSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return surveyAnalyseSer.guidePermission(guidePermissionTO);
+    }
+
 
     @Override
     public SurveyAnalyseBO save(SurveyAnalyseTO to) throws SerException {

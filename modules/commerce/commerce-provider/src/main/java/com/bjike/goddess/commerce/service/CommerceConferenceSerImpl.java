@@ -3,9 +3,12 @@ package com.bjike.goddess.commerce.service;
 import com.bjike.goddess.commerce.bo.CommerceConferenceBO;
 import com.bjike.goddess.commerce.dto.CommerceConferenceDTO;
 import com.bjike.goddess.commerce.entity.CommerceConference;
+import com.bjike.goddess.commerce.enums.GuideAddrStatus;
+import com.bjike.goddess.commerce.excel.CommerceConferenceExcel;
 import com.bjike.goddess.commerce.to.CollectTO;
 import com.bjike.goddess.commerce.to.CommerceConferenceExcelTO;
 import com.bjike.goddess.commerce.to.CommerceConferenceTO;
+import com.bjike.goddess.commerce.to.GuidePermissionTO;
 import com.bjike.goddess.commerce.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -15,11 +18,14 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -41,6 +47,8 @@ public class CommerceConferenceSerImpl extends ServiceImpl<CommerceConference, C
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private UserAPI userAPI;
 
     private static final String manage = "conference-manage";
 
@@ -202,5 +210,141 @@ public class CommerceConferenceSerImpl extends ServiceImpl<CommerceConference, C
         list.add(obj);
 
         return list;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public CommerceConferenceBO importExcel(List<CommerceConferenceTO> tocs) throws SerException {
+
+        List<CommerceConference> commerceConference = BeanTransform.copyProperties(tocs, CommerceConference.class, true);
+        commerceConference.stream().forEach(str -> {
+            str.setCreateTime(LocalDateTime.now());
+            str.setModifyTime(LocalDateTime.now());
+        });
+        super.save(commerceConference);
+
+        CommerceConferenceBO commerceConferenceBO = BeanTransform.copyProperties(new CommerceConference(), CommerceConferenceBO.class);
+        return commerceConferenceBO;
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+//        getCusPermission();
+
+            List<CommerceConferenceExcel> siginManageExports = new ArrayList<>();
+
+            CommerceConferenceExcel excel = new CommerceConferenceExcel();
+            excel.setType("移动通信类");
+            excel.setSerialNumber( "test" );
+            excel.setConferenceTime(LocalDateTime.now());
+            excel.setWay("test");
+            excel.setArea("test");
+            excel.setPersonnel( "test");
+            excel.setQuantity(10);
+            excel.setOrganization("fdsf");
+            excel.setEmcee("fds");
+            excel.setRecorder( "fdsf" );
+            excel.setContent("已签fds订" );
+            excel.setBulletin( "框架fds合同");
+            excel.setConsult( "已aa立项");
+            excel.setNegotiation("test");
+            excel.setCooperation( "tesdft");
+            excel.setRemark("tfest");
+            siginManageExports.add( excel );
+
+            Excel exce = new Excel(0, 2);
+            byte[] bytes = ExcelUtil.clazzToExcel(siginManageExports, exce);
+            return bytes;
+        }
+
+
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+//            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
     }
 }

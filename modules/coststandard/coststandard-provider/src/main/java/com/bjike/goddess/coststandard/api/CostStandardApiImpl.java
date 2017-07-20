@@ -75,7 +75,7 @@ public class CostStandardApiImpl implements CostStandardAPI {
 
     @Override
     public List<CostStandardOpinionBO> findOpinion() throws SerException {
-        return costStandardSer.findOpinion();
+        return costStandardSer.findOpinion1();
     }
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {

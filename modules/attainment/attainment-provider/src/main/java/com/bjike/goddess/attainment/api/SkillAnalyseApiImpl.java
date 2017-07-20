@@ -3,6 +3,7 @@ package com.bjike.goddess.attainment.api;
 import com.bjike.goddess.attainment.bo.SkillAnalyseBO;
 import com.bjike.goddess.attainment.dto.SkillAnalyseDTO;
 import com.bjike.goddess.attainment.service.SkillAnalyseSer;
+import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.attainment.to.SkillAnalyseTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,18 @@ import java.util.List;
  */
 @Service("skillAnalyseApiImpl")
 public class SkillAnalyseApiImpl implements SkillAnalyseAPI {
-
     @Autowired
     private SkillAnalyseSer skillAnalyseSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return skillAnalyseSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return skillAnalyseSer.guidePermission(guidePermissionTO);
+    }
+
 
     @Override
     public SkillAnalyseBO save(SkillAnalyseTO to) throws SerException {

@@ -2,7 +2,7 @@ package com.bjike.goddess.staffentry.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
-import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
+import com.bjike.goddess.staffentry.bo.FindNameBO;
 import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.staffentry.to.EntryBasicInfoTO;
 import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * 入职基本信息业务接口
+ *
  * @Author: [tanghaixiang]
  * @Date: [2017-03-10 11:55]
  * @Description: [入职基本信息业务接口]
@@ -25,8 +26,10 @@ public interface EntryBasicInfoAPI {
     default Long countEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
         return null;
     }
+
     /**
      * 获取所有入职基本信息
+     *
      * @param entryBasicInfoDTO 入职登记dto
      * @return class entryBasicInfoBO
      * @throws SerException
@@ -37,7 +40,8 @@ public interface EntryBasicInfoAPI {
 
     /**
      * 添加员工入职基本信息
-     * @param entryBasicInfoTO   员工入职基本信息数据to
+     *
+     * @param entryBasicInfoTO 员工入职基本信息数据to
      * @return class entryBasicInfoBO
      * @throws SerException
      */
@@ -51,7 +55,7 @@ public interface EntryBasicInfoAPI {
     /**
      * 编辑员工入职基本信息
      *
-     * @param entryBasicInfoTO   员工入职基本信息数据to
+     * @param entryBasicInfoTO 员工入职基本信息数据to
      * @return class entryBasicInfoBO
      * @throws SerException
      */
@@ -85,6 +89,7 @@ public interface EntryBasicInfoAPI {
 
     /**
      * 根据id发送入职通告邮件
+     *
      * @param entryBasicInfoTO to
      * @return class entryBasicInfoBO
      * @throws SerException
@@ -95,7 +100,8 @@ public interface EntryBasicInfoAPI {
 
     /**
      * 根据岗位(position)、时间段(entryTime) 汇总入职情况统计
-     * @param  entryBasicInfoDTO 员工入职基本信息bo 主要position 和 entryTime
+     *
+     * @param entryBasicInfoDTO 员工入职基本信息bo 主要position 和 entryTime
      * @return class entryBasicInfoBO
      * @throws SerException
      */
@@ -105,28 +111,44 @@ public interface EntryBasicInfoAPI {
 
     /**
      * 汇总获取所有岗位
+     *
      * @throws SerException
      */
-    default List<String> listPost( ) throws SerException {
+    default List<String> listPost() throws SerException {
         return null;
     }
 
     /**
      * 根据名字查找信息
-     * @param  name name
+     *
+     * @param name name
      * @return class entryBasicInfoBO
      * @throws SerException
      */
-    default List<EntryBasicInfoVO> getEntryBasicInfoByName(String name) throws SerException {
+    default List<EntryBasicInfoBO> getEntryBasicInfoByName(String name) throws SerException {
         return null;
     }
+
     /**
      * 根据员工编号获取入职时间
-     * @param  empNumber empNumber
+     *
+     * @param empNumber empNumber
      * @return class entryBasicInfoBO
      * @throws SerException
      */
     default List<EntryBasicInfoVO> getByEmpNumber(String empNumber) throws SerException {
         return null;
     }
+
+    /**
+     * 获得员工的id和姓名
+     *
+     * @return class FindNameBO
+     * @throws SerException
+     */
+    default List<FindNameBO> findName() throws SerException {
+        return null;
+    }
+
+
 }
