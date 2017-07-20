@@ -27,7 +27,12 @@ public class AssistancePlanApiImpl implements AssistancePlanAPI {
 
     @Override
     public Long countAssistancePlan(AssistancePlanDTO assistancePlanDTO) throws SerException {
-        return assistancePlanSer.count( assistancePlanDTO);
+        return assistancePlanSer.countAssistancePlan( assistancePlanDTO);
+    }
+
+    @Override
+    public AssistancePlanBO getOneById(String id) throws SerException {
+        return assistancePlanSer.getOneById(id);
     }
 
     @Override

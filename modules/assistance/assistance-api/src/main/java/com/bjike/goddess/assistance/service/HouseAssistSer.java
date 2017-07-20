@@ -27,6 +27,14 @@ public interface HouseAssistSer extends Ser<HouseAssist, HouseAssistDTO> {
     default Long countHouseAssist(HouseAssistDTO houseAssistDTO) throws SerException {
         return null;
     }
+
+
+    /**
+     * 一个住宿补助
+     * @return class HouseAssistBO
+     */
+    default HouseAssistBO getOneById(String id) throws SerException {return null;}
+
     /**
      * 住宿补助列表
      * @return class HouseAssistBO

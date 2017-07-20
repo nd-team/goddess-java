@@ -1,6 +1,7 @@
 package com.bjike.goddess.assistance.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 补助标准
@@ -13,9 +14,12 @@ import com.bjike.goddess.common.api.to.BaseTO;
  */
 public class AssistanceStandardTO extends BaseTO {
 
+    public interface TestAdd{}
+
     /**
      * 补助类型名称
      */
+    @NotBlank(groups = {AssistanceStandardTO.TestAdd.class} , message = "补助类型名称不能为空,有：电脑补助/高温补助/工龄补助/住宿补助")
     private String name;
 
     /**

@@ -53,6 +53,25 @@ public class AssistanceStandardAction {
         }
     }
 
+
+    /**
+     *  一个补助标准
+     *
+     * @param id  补助标准id
+     * @des 一个补助标准
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id ) throws ActException {
+        try {
+            AssistanceStandardVO assistanceStandardVO = BeanTransform.copyProperties(
+                    assistanceStandardAPI.getOneById(id), AssistanceStandardVO.class);
+            return ActResult.initialize(assistanceStandardVO );
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
     /**
      * 补助标准列表
      *
@@ -61,7 +80,7 @@ public class AssistanceStandardAction {
      * @return  class AssistanceStandardVO
      * @version v1
      */
-    @GetMapping("v1/listAssistanceStandard")
+    @GetMapping("v1/list")
     public Result findListAssistanceStandard(AssistanceStandardDTO assistanceStandardDTO, BindingResult bindingResult) throws ActException {
         try {
             List<AssistanceStandardVO> assistanceStandardVOList = BeanTransform.copyProperties(
@@ -82,7 +101,7 @@ public class AssistanceStandardAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result addAssistanceStandard(@Validated AssistanceStandardTO assistanceStandardTO, BindingResult bindingResult) throws ActException {
+    public Result addAssistanceStandard(@Validated(AssistanceStandardTO.TestAdd.class) AssistanceStandardTO assistanceStandardTO, BindingResult bindingResult) throws ActException {
         try {
             AssistanceStandardBO assistanceStandardBO1 = assistanceStandardAPI.addAssistanceStandard(assistanceStandardTO);
             return ActResult.initialize(BeanTransform.copyProperties(assistanceStandardBO1,AssistanceStandardVO.class,true));
@@ -102,7 +121,7 @@ public class AssistanceStandardAction {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result editAssistanceStandard(@Validated AssistanceStandardTO assistanceStandardTO) throws ActException {
+    public Result editAssistanceStandard(@Validated(AssistanceStandardTO.TestAdd.class) AssistanceStandardTO assistanceStandardTO) throws ActException {
         try {
             AssistanceStandardBO assistanceStandardBO1 = assistanceStandardAPI.editAssistanceStandard(assistanceStandardTO);
             return ActResult.initialize(BeanTransform.copyProperties(assistanceStandardBO1,AssistanceStandardVO.class,true));

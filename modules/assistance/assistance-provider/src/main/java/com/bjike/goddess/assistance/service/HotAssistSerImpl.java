@@ -44,6 +44,16 @@ public class HotAssistSerImpl extends ServiceImpl<HotAssist, HotAssistDTO> imple
     }
 
     @Override
+    public HotAssistBO getOneById(String id) throws SerException {
+        if (StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
+        HotAssist hotAssist = super.findById(id);
+
+        return BeanTransform.copyProperties(hotAssist, HotAssistBO.class);
+    }
+
+    @Override
     public List<HotAssistBO> listHotAssist(HotAssistDTO hotAssistDTO) throws SerException {
         if( StringUtils.isNotBlank(hotAssistDTO.getArea() )){
             hotAssistDTO.getConditions().add(Restrict.eq("area",hotAssistDTO.getArea() ));

@@ -8,6 +8,8 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.financeinit.api.AccountAPI;
+import com.bjike.goddess.financeinit.entity.Account;
 import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
 import com.bjike.goddess.lendreimbursement.bo.ApplyLendBO;
 import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
@@ -73,6 +75,8 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     private ApplyLendCopySer applyLendCopySer;
     @Autowired
     private LendPermissionSer cusPermissionSer;
+    @Autowired
+    private AccountAPI accountAPI;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -1560,6 +1564,12 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     }
 
+    @Override
+    public List<String> listAccountCom() throws SerException {
+        // 账户来源
+        List<String> list= accountAPI.listAccountOrigin();
+        return list;
+    }
 
     /**
      * 申请

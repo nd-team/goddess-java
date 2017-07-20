@@ -27,6 +27,12 @@ public interface HotAssistSer extends Ser<HotAssist, HotAssistDTO> {
     default Long countHotAssist(HotAssistDTO hotAssistDTO) throws SerException {
         return null;
     }
+
+    /**
+     * 一个高温补助
+     * @return class HotAssistBO
+     */
+    default HotAssistBO getOneById(String id) throws SerException {return null;}
     /**
      * 高温补助列表
      * @return class HotAssistBO

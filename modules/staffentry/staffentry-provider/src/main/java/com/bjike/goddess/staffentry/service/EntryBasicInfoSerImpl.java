@@ -279,11 +279,13 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
         List<EntryRegister> registerList = entryRegisterSer.findByCis(registerDTO);
         if (registerList != null && registerList.size()>0 ) {
             entryOptionBO.setProfession( registerList.get(0).getProfession());
+
             entryOptionBO.setEducation( registerList.get(0).getEducation());
         }else{
             entryOptionBO.setProfession( "" );
             entryOptionBO.setEducation( "");
         }
+
 
         entryOptionBO.setName( name );
         entryOptionBO.setEmployeeID( empNumer );
