@@ -2,9 +2,13 @@ package com.bjike.goddess.contacts.service;
 
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contacts.api.CommonalityAPI;
 import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.contacts.bo.OtherContactsBO;
@@ -12,6 +16,7 @@ import com.bjike.goddess.contacts.dto.CommonalityDTO;
 import com.bjike.goddess.contacts.dto.OtherContactsDTO;
 import com.bjike.goddess.contacts.entity.OtherContacts;
 import com.bjike.goddess.contacts.enums.GuideAddrStatus;
+import com.bjike.goddess.contacts.excel.OtherContactsTemplateExport;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.contacts.to.OtherContactsTO;
 import com.bjike.goddess.message.api.MessageAPI;
@@ -31,7 +36,9 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -62,14 +69,14 @@ public class OtherContactsSerImpl extends ServiceImpl<OtherContacts, OtherContac
     @Transactional(rollbackFor = SerException.class)
     @Override
     public OtherContactsBO save(OtherContactsTO to) throws SerException {
-        OtherContacts entity = BeanTransform.copyProperties(to, OtherContacts.class, true);
+        OtherContacts entity = BeanTransform.copyProperties(to, OtherContacts.class,true);
         super.save(entity);
 
         //发送对象的邮箱地址
         String email = null;
         //是否发送邮件
         if (to.isSend()) {
-            String sendObject = to.getSendObject();
+            String sendObject = "综合资源部";
             if (StringUtils.isNotBlank(sendObject)) {
                 List<OpinionBO> opinionBOList = departmentDetailAPI.findThawOpinion();
                 for (OpinionBO opinionBO : opinionBOList) {
@@ -105,7 +112,7 @@ public class OtherContactsSerImpl extends ServiceImpl<OtherContacts, OtherContac
             }
         }
 
-        return BeanTransform.copyProperties(entity, OtherContactsBO.class, true);
+        return BeanTransform.copyProperties(entity, OtherContactsBO.class);
     }
 
 
@@ -168,7 +175,7 @@ public class OtherContactsSerImpl extends ServiceImpl<OtherContacts, OtherContac
     @Override
     public List<OtherContactsBO> maps(OtherContactsDTO dto) throws SerException {
         List<OtherContacts> list = super.findByPage(dto);
-        return BeanTransform.copyProperties(list, OtherContactsBO.class, true);
+        return BeanTransform.copyProperties(list, OtherContactsBO.class);
     }
 
     @Override
@@ -176,7 +183,8 @@ public class OtherContactsSerImpl extends ServiceImpl<OtherContacts, OtherContac
         OtherContacts entity = super.findById(id);
         if (null == entity)
             throw new SerException("该数据不存在");
-        return BeanTransform.copyProperties(entity, OtherContactsBO.class);
+        OtherContactsBO bo = BeanTransform.copyProperties(entity, OtherContactsBO.class);
+        return bo;
     }
 
     @Override
@@ -268,6 +276,25 @@ public class OtherContactsSerImpl extends ServiceImpl<OtherContacts, OtherContac
 
         OtherContactsBO otherContactsBO = BeanTransform.copyProperties(new OtherContacts(), OtherContactsBO.class);
         return otherContactsBO;
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<OtherContactsTemplateExport> commerceContactsExports = new ArrayList<>();
+
+        OtherContactsTemplateExport excel = new OtherContactsTemplateExport();
+        excel.setType("移动通信类");
+        excel.setName( "test" );
+        excel.setPhone("jkj");
+        excel.setAddress("jkj");
+        excel.setUser("jkj");
+        excel.setUseDate(LocalDate.now());
+        excel.setEvaluate("jkj");
+        excel.setRemark("jkj");
+        commerceContactsExports.add( excel );
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(commerceContactsExports, exce);
+        return bytes;
     }
 
     /**

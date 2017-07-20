@@ -2,8 +2,10 @@ package com.bjike.goddess.archive.api;
 
 import com.bjike.goddess.archive.bo.ArchiveAccessBO;
 import com.bjike.goddess.archive.dto.ArchiveAccessDTO;
+import com.bjike.goddess.archive.excel.SonPermissionObject;
 import com.bjike.goddess.archive.to.AccessAuditTO;
 import com.bjike.goddess.archive.to.ArchiveAccessTO;
+import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -92,6 +94,20 @@ public interface ArchiveAccessAPI {
      * @throws SerException
      */
     default Long getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 }

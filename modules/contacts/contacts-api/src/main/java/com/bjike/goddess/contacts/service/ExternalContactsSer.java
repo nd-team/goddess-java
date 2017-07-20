@@ -2,9 +2,7 @@ package com.bjike.goddess.contacts.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.contacts.bo.CommerceContactsBO;
 import com.bjike.goddess.contacts.bo.ExternalContactsBO;
-import com.bjike.goddess.contacts.dto.CommerceContactsDTO;
 import com.bjike.goddess.contacts.dto.ExternalContactsDTO;
 import com.bjike.goddess.contacts.entity.ExternalContacts;
 import com.bjike.goddess.contacts.to.ExternalContactsTO;
@@ -25,6 +23,7 @@ public interface ExternalContactsSer extends Ser<ExternalContacts, ExternalConta
 
     /**
      * 保存
+     *
      * @param to 外部通讯录传输对象
      * @return
      * @throws SerException
@@ -35,6 +34,7 @@ public interface ExternalContactsSer extends Ser<ExternalContacts, ExternalConta
 
     /**
      * 修改
+     *
      * @param to 外部通讯录传输对象
      * @return
      * @throws SerException
@@ -45,6 +45,7 @@ public interface ExternalContactsSer extends Ser<ExternalContacts, ExternalConta
 
     /**
      * 删除
+     *
      * @param to 外部通讯录传输对象
      * @return
      * @throws SerException
@@ -55,6 +56,7 @@ public interface ExternalContactsSer extends Ser<ExternalContacts, ExternalConta
 
     /**
      * 根据地区查询
+     *
      * @param area 地区
      * @return
      * @throws SerException
@@ -65,6 +67,7 @@ public interface ExternalContactsSer extends Ser<ExternalContacts, ExternalConta
 
     /**
      * 列表查询
+     *
      * @param dto 外部通讯录数据传输对象
      * @return
      * @throws SerException
@@ -93,6 +96,7 @@ public interface ExternalContactsSer extends Ser<ExternalContacts, ExternalConta
     default Long getTotal() throws SerException {
         return null;
     }
+
     /**
      * 下拉导航权限
      */
@@ -112,4 +116,8 @@ public interface ExternalContactsSer extends Ser<ExternalContacts, ExternalConta
      * 导入
      */
     ExternalContactsBO importExcel(List<ExternalContactsTO> tocs) throws SerException;
+
+    default byte[] templateExport() throws SerException {
+        return null;
+    }
 }

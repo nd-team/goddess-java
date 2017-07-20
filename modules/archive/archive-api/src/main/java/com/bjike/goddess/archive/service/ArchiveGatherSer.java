@@ -5,6 +5,7 @@ import com.bjike.goddess.archive.bo.ArchiveGatherBO;
 import com.bjike.goddess.archive.dto.ArchiveGatherDTO;
 import com.bjike.goddess.archive.entity.ArchiveGather;
 import com.bjike.goddess.archive.to.ArchiveGatherTO;
+import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -20,6 +21,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ArchiveGatherSer extends Ser<ArchiveGather, ArchiveGatherDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存

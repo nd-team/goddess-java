@@ -100,4 +100,10 @@ public interface CommerceMemberSer extends Ser<CommerceMember, CommerceMemberDTO
         return null;
     }
 
+    /**
+     * 模板导入
+     */
+    default byte[] templateExport() throws SerException {
+        return null;
+    }
 }

@@ -3,7 +3,8 @@ package com.bjike.goddess.contacts.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.common.api.type.Status;
+import org.hibernate.validator.constraints.NotBlank;
+import com.bjike.goddess.contacts.enums.Status;
 
 import javax.validation.constraints.NotNull;
 
@@ -21,14 +22,15 @@ public class InternalContactsTO extends BaseTO {
     /**
      * 用户ID
      */
-    @NotNull(message = "用户ID不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "用户ID不能为空", groups = {ADD.class, EDIT.class})
     private String userId;
 
     /**
      * 联系电话
      */
-    @NotNull(message = "联系电话不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "联系电话不能为空", groups = {ADD.class, EDIT.class})
     private String phone;
+
 
     /**
      * 邮箱

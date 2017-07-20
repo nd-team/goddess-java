@@ -2,7 +2,6 @@ package com.bjike.goddess.contacts.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.contacts.bo.CommerceContactsBO;
 import com.bjike.goddess.contacts.bo.OtherContactsBO;
 import com.bjike.goddess.contacts.dto.OtherContactsDTO;
 import com.bjike.goddess.contacts.entity.OtherContacts;
@@ -24,6 +23,7 @@ public interface OtherContactsSer extends Ser<OtherContacts, OtherContactsDTO> {
 
     /**
      * 保存
+     *
      * @param to 其他通讯录传输对象
      * @return
      * @throws SerException
@@ -34,7 +34,8 @@ public interface OtherContactsSer extends Ser<OtherContacts, OtherContactsDTO> {
 
     /**
      * 修改
-     * @param to  其他通讯录传输对象
+     *
+     * @param to 其他通讯录传输对象
      * @return
      * @throws SerException
      */
@@ -44,7 +45,8 @@ public interface OtherContactsSer extends Ser<OtherContacts, OtherContactsDTO> {
 
     /**
      * 删除
-     * @param to  其他通讯录传输对象
+     *
+     * @param to 其他通讯录传输对象
      * @return
      * @throws SerException
      */
@@ -54,6 +56,7 @@ public interface OtherContactsSer extends Ser<OtherContacts, OtherContactsDTO> {
 
     /**
      * 列表数据
+     *
      * @param dto 其他通讯录数据传输对象
      * @return
      * @throws SerException
@@ -101,4 +104,8 @@ public interface OtherContactsSer extends Ser<OtherContacts, OtherContactsDTO> {
      * 导入
      */
     OtherContactsBO importExcel(List<OtherContactsTO> tocs) throws SerException;
+
+    default byte[] templateExport() throws SerException {
+        return null;
+    }
 }

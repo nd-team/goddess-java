@@ -149,4 +149,8 @@ public interface CommonalitySer extends Ser<Commonality, CommonalityDTO> {
      */
     default void importExcel(List<CommonalityTO> tocs) throws SerException {
     }
+
+    default byte[] templateExport() throws SerException {
+        return null;
+    }
 }

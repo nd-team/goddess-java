@@ -2,14 +2,17 @@ package com.bjike.goddess.contacts.service;
 
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.contacts.dto.CommonalityDTO;
 import com.bjike.goddess.contacts.entity.Commonality;
 import com.bjike.goddess.contacts.enums.GuideAddrStatus;
+import com.bjike.goddess.contacts.enums.Status;
+import com.bjike.goddess.contacts.excel.CommonalityTemplateExport;
 import com.bjike.goddess.contacts.to.CommonalityTO;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.message.api.MessageAPI;
@@ -30,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -66,15 +70,15 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
         String email = null;
         //是否发送邮件
         if (to.isSend()) {
-            String sendObject = to.getSendObject();
+            String sendObject = "综合资源部";
             if (StringUtils.isNotBlank(sendObject)) {
                 List<OpinionBO> opinionBOList = departmentDetailAPI.findThawOpinion();
                 for (OpinionBO opinionBO : opinionBOList) {
                     if (sendObject.equals(opinionBO.getValue())) {
                         //根据组织结构中的部门名称查询部门id
                         DepartmentDetailDTO departmentDetailDTO = new DepartmentDetailDTO();
-                        departmentDetailDTO.getConditions().add(Restrict.eq("department",sendObject));
-                        List<DepartmentDetailBO> departmentDetailBOList =departmentDetailAPI.view(departmentDetailDTO);
+                        departmentDetailDTO.getConditions().add(Restrict.eq("department", sendObject));
+                        List<DepartmentDetailBO> departmentDetailBOList = departmentDetailAPI.view(departmentDetailDTO);
                         String departmentId = departmentDetailBOList.get(0).getId();
                         //从公邮中得到部门的邮箱
                         CommonalityDTO dto = new CommonalityDTO();
@@ -287,12 +291,37 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
     @Override
     public void importExcel(List<CommonalityTO> commonalityTO) throws SerException {
 
-        List<Commonality> commonality = BeanTransform.copyProperties(commonalityTO, Commonality.class, true,"isSend","sendObject");
+        //对导入的数据进行判断是否已在数据库中存在
+        if (null != commonalityTO && commonalityTO.size() > 0) {
+            for (CommonalityTO to : commonalityTO) {
+                CommonalityDTO dto = new CommonalityDTO();
+                dto.getConditions().add(Restrict.eq("departmentId", to.getDepartmentId()));
+                List<Commonality> list = super.findByCis(dto);
+                if(null != list && list.size() > 0){
+                    throw new SerException("部门已存在");
+                }
+            }
+        }
+        List<Commonality> commonality = BeanTransform.copyProperties(commonalityTO, Commonality.class, true, "isSend", "sendObject");
         commonality.stream().forEach(str -> {
             str.setCreateTime(LocalDateTime.now());
             str.setModifyTime(LocalDateTime.now());
         });
         super.save(commonality);
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<CommonalityTemplateExport> commerceContactsExports = new ArrayList<>();
+
+        CommonalityTemplateExport excel = new CommonalityTemplateExport();
+        excel.setDepartmentId("移动通信类");
+        excel.setEmail("test");
+        excel.setStatus(Status.CONGEAL);
+        commerceContactsExports.add(excel);
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(commerceContactsExports, exce);
+        return bytes;
     }
 
     /**
@@ -365,9 +394,9 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
         return flag;
     }
 
-    public List<CommonalityBO> list(CommonalityDTO dto) throws SerException{
-        List<Commonality> commonalityList= super.findByCis(dto);
-        List<CommonalityBO> list = BeanTransform.copyProperties(commonalityList,CommonalityBO.class);
+    public List<CommonalityBO> list(CommonalityDTO dto) throws SerException {
+        List<Commonality> commonalityList = super.findByCis(dto);
+        List<CommonalityBO> list = BeanTransform.copyProperties(commonalityList, CommonalityBO.class);
         return list;
     }
 }

@@ -112,9 +112,16 @@ public interface QQGroupSer extends Ser<QQGroup, QQGroupDTO> {
     }
 
     /**
-     *  导入
+     * 导入
+     *
      * @param qqGroupTO QQ群管理
      * @return class QQGroupBO
      */
-    default QQGroupBO importExcel(List<QQGroupTO> qqGroupTO) throws SerException { return null;}
+    default QQGroupBO importExcel(List<QQGroupTO> qqGroupTO) throws SerException {
+        return null;
+    }
+
+    default byte[] templateExport() throws SerException {
+        return null;
+    }
 }

@@ -91,10 +91,18 @@ public interface CommerceMemberAPI {
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 模板导入
+     */
+    default byte[] templateExport() throws SerException {
         return null;
     }
 }

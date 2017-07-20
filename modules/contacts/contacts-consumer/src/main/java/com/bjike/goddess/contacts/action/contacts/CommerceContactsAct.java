@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -301,5 +302,7 @@ public class CommerceContactsAct extends BaseFileAction {
         }
         return new ActResult("delFile success");
     }
+
+
 
 }

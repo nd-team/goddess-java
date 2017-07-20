@@ -1,6 +1,6 @@
 package com.bjike.goddess.contacts.vo;
 
-import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.contacts.enums.Status;
 
 /**
  * 内部通讯录表现层对象

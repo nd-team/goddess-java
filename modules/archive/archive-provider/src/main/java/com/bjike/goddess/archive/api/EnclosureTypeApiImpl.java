@@ -4,6 +4,7 @@ import com.bjike.goddess.archive.bo.EnclosureTypeBO;
 import com.bjike.goddess.archive.dto.EnclosureTypeDTO;
 import com.bjike.goddess.archive.service.EnclosureTypeSer;
 import com.bjike.goddess.archive.to.EnclosureTypeTO;
+import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,16 @@ public class EnclosureTypeApiImpl implements EnclosureTypeAPI {
     @Autowired
     private EnclosureTypeSer enclosureTypeSer;
 
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return enclosureTypeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return enclosureTypeSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public EnclosureTypeBO save(EnclosureTypeTO to) throws SerException {
         return enclosureTypeSer.save(to);
