@@ -185,7 +185,7 @@ public class WeightAllotAction extends BaseFileAction {
         try {
             //跟前端约定好 ，文件路径是列表id
             // /id/....
-            String paths = "/businessproject/siginmanage/" + id;
+            String paths = "/" + id;
             List<InputStream> inputStreams = getInputStreams(request, paths);
             fileAPI.upload(inputStreams);
             return new ActResult("upload success");
@@ -206,7 +206,7 @@ public class WeightAllotAction extends BaseFileAction {
         try {
             //跟前端约定好 ，文件路径是列表id
             // /businessproject/id/....
-            String path = "/businessproject/siginmanage/" + id;
+            String path = "/" + id;
             FileInfo fileInfo = new FileInfo();
             fileInfo.setPath(path);
             Object storageToken = request.getAttribute("storageToken");
