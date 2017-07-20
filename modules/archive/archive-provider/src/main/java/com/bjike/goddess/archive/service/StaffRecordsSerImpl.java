@@ -1,5 +1,6 @@
 package com.bjike.goddess.archive.service;
 
+import com.bjike.goddess.archive.bo.PerBO;
 import com.bjike.goddess.archive.bo.StaffNameBO;
 import com.bjike.goddess.archive.bo.StaffRecordsBO;
 import com.bjike.goddess.archive.dto.StaffRecordsDTO;
@@ -12,6 +13,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +42,8 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
     private UserAPI userAPI;
     @Autowired
     private RotainCusPermissionSer cusPermissionSer;
+    @Autowired
+    private EntryBasicInfoAPI entryBasicInfoAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -253,5 +259,18 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
             }
         }
         return nameBOs;
+    }
+
+    @Override
+    public List<PerBO> getPerBO(String name) throws SerException {
+        EntryBasicInfoBO entryBasicInfoBO = entryBasicInfoAPI.getEntryBasicInfoByName(name).get(0);
+        String id = entryBasicInfoBO.getId();
+        StaffRecordsBO staffRecordsBO = getById(id);
+        PerBO perBO = new PerBO();
+        perBO.setPerid(staffRecordsBO.getIdentityCard());
+        perBO.setPhone(staffRecordsBO.getTelephone());
+        List<PerBO> list = new ArrayList<>();
+        list.add(perBO);
+        return list;
     }
 }

@@ -1,5 +1,6 @@
 package com.bjike.goddess.archive.api;
 
+import com.bjike.goddess.archive.bo.PerBO;
 import com.bjike.goddess.archive.bo.StaffNameBO;
 import com.bjike.goddess.archive.bo.StaffRecordsBO;
 import com.bjike.goddess.archive.dto.StaffRecordsDTO;
@@ -70,5 +71,10 @@ public class StaffRecordsApiImpl implements StaffRecordsAPI {
     @Override
     public List<StaffNameBO> getName() throws SerException {
         return staffRecordsSer.getName();
+    }
+
+    @Override
+    public List<PerBO> getPerBO(String name) throws SerException {
+        return staffRecordsSer.getPerBO(name);
     }
 }
