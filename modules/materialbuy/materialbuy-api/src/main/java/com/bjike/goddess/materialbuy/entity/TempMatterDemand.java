@@ -95,7 +95,7 @@ public class TempMatterDemand extends BaseEntity {
     /**
      * 审核状态
      */
-    @Column(name = "auditState", nullable = false, columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '审核状态'")
+    @Column(name = "auditState", columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '审核状态'")
     private AuditState auditState;
 
     /**

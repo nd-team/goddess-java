@@ -81,7 +81,7 @@ public class DeviceTypeAct {
     /**
      * 分页查询设备类型
      *
-     * @param dto           设备类型dto
+     * @param dto 设备类型dto
      * @return class DeviceTypeVO
      * @throws ActException
      * @version v1
@@ -100,7 +100,7 @@ public class DeviceTypeAct {
     /**
      * 添加设备类型
      *
-     * @param to     设备类型to
+     * @param to 设备类型to
      * @return class DeviceTypeVO
      * @throws ActException
      * @version v1
@@ -136,7 +136,7 @@ public class DeviceTypeAct {
     /**
      * 编辑设备类型
      *
-     * @param to     设备类型to
+     * @param to 设备类型to
      * @throws ActException
      * @version v1
      */
@@ -145,6 +145,22 @@ public class DeviceTypeAct {
         try {
             deviceTypeAPI.update(to);
             return new ActResult("edit success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(DeviceTypeDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(deviceTypeAPI.count(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

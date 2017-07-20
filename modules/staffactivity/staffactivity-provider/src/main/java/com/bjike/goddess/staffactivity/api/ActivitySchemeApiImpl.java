@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 活动方案业务接口实现
@@ -204,5 +205,10 @@ public class ActivitySchemeApiImpl implements ActivitySchemeAPI {
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return activitySchemeSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public Set<String> allTheme() throws SerException {
+        return activitySchemeSer.allTheme();
     }
 }

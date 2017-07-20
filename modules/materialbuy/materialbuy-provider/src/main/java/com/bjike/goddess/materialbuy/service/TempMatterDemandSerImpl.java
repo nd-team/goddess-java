@@ -6,7 +6,6 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialbuy.bo.TempMatterDemandBO;
 import com.bjike.goddess.materialbuy.dto.TempMatterDemandDTO;
-import com.bjike.goddess.materialbuy.entity.MaterialBuy;
 import com.bjike.goddess.materialbuy.entity.TempMatterDemand;
 import com.bjike.goddess.materialbuy.enums.GuideAddrStatus;
 import com.bjike.goddess.materialbuy.to.GuidePermissionTO;
@@ -217,7 +216,7 @@ public class TempMatterDemandSerImpl extends ServiceImpl<TempMatterDemand, TempM
     @Override
     public void update(TempMatterDemandTO to) throws SerException {
         checkAddIdentity();
-        if (StringUtils.isNotEmpty(to.getId())){
+        if (StringUtils.isNotEmpty(to.getId())) {
             TempMatterDemand model = super.findById(to.getId());
             if (model != null) {
                 updateTempMatterDemand(to, model);
@@ -232,7 +231,7 @@ public class TempMatterDemandSerImpl extends ServiceImpl<TempMatterDemand, TempM
     /**
      * 更新临时物资需求
      *
-     * @param to 临时物资需求to
+     * @param to    临时物资需求to
      * @param model 临时物资需求
      * @throws SerException
      */
@@ -264,5 +263,10 @@ public class TempMatterDemandSerImpl extends ServiceImpl<TempMatterDemand, TempM
     public TempMatterDemandBO checkDetail(String id) throws SerException {
         TempMatterDemand model = super.findById(id);
         return BeanTransform.copyProperties(model, TempMatterDemandBO.class);
+    }
+
+    @Override
+    public Long count(TempMatterDemandDTO dto) throws SerException {
+        return super.count(dto);
     }
 }

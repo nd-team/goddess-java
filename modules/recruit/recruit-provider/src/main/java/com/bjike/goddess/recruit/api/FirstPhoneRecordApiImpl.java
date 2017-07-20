@@ -7,11 +7,13 @@ import com.bjike.goddess.recruit.dto.FirstPhoneRecordDTO;
 import com.bjike.goddess.recruit.entity.FirstPhoneRecord;
 import com.bjike.goddess.recruit.service.FirstPhoneRecordSer;
 import com.bjike.goddess.recruit.to.FirstPhoneRecordTO;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 第一次电访记录
@@ -98,5 +100,20 @@ public class FirstPhoneRecordApiImpl implements FirstPhoneRecordAPI {
     @Override
     public void update(FirstPhoneRecordTO firstPhoneRecordTO) throws SerException {
         firstPhoneRecordSer.update(firstPhoneRecordTO);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return firstPhoneRecordSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return firstPhoneRecordSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public Set<String> allFirstName() throws SerException {
+        return firstPhoneRecordSer.allFirstName();
     }
 }
