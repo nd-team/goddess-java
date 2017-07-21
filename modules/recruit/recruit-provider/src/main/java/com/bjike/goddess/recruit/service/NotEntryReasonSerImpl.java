@@ -192,6 +192,9 @@ public class NotEntryReasonSerImpl extends ServiceImpl<NotEntryReason, NotEntryR
             case SEEFILE:
                 flag = guideSeeIdentity();
                 break;
+            case FULI:
+                flag = guideModuleIdentity();
+                break;
             default:
                 flag = true;
                 break;

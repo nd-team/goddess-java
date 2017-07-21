@@ -103,57 +103,25 @@ public class InventoryRecordBO extends BaseBO {
      */
     private Double profitLossCount;
 
-    /**
-     * 账面数汇总
-     */
-    private Integer quantitySum;
-
-    /**
-     * 盘点数汇总
-     */
-    private Integer inventoryNumSum;
-
-    /**
-     * 盈亏数汇总
-     */
-    private Integer profitLossSum;
-
-    /**
-     * 盈亏合计汇总
-     */
-    private Double profitLossCountSum;
-
-    public Integer getQuantitySum() {
-        return quantitySum;
-    }
-
-    public void setQuantitySum(Integer quantitySum) {
-        this.quantitySum = quantitySum;
-    }
-
-    public Integer getInventoryNumSum() {
-        return inventoryNumSum;
-    }
-
-    public void setInventoryNumSum(Integer inventoryNumSum) {
-        this.inventoryNumSum = inventoryNumSum;
-    }
-
-    public Integer getProfitLossSum() {
-        return profitLossSum;
-    }
-
-    public void setProfitLossSum(Integer profitLossSum) {
-        this.profitLossSum = profitLossSum;
-    }
-
-    public Double getProfitLossCountSum() {
-        return profitLossCountSum;
-    }
-
-    public void setProfitLossCountSum(Double profitLossCountSum) {
-        this.profitLossCountSum = profitLossCountSum;
-    }
+//    /**
+//     * 账面数汇总
+//     */
+//    private Integer quantitySum;
+//
+//    /**
+//     * 盘点数汇总
+//     */
+//    private Integer inventoryNumSum;
+//
+//    /**
+//     * 盈亏数汇总
+//     */
+//    private Integer profitLossSum;
+//
+//    /**
+//     * 盈亏合计汇总
+//     */
+//    private Double profitLossCountSum;
 
     public String getInventoryTime() {
         return inventoryTime;

@@ -168,4 +168,13 @@ public interface ActivitySchemeAPI {
      * @throws SerException
      */
     Set<String> allTheme() throws SerException;
+
+    /**
+     * 根据活动主题查找id
+     *
+     * @param theme
+     * @return
+     * @throws SerException
+     */
+    String findIdByTheme(String theme) throws SerException;
 }

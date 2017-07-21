@@ -4,16 +4,16 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.recruit.bo.ReportAddressInforBO;
-import com.bjike.goddess.recruit.dto.ReportAddressInforDTO;
-import com.bjike.goddess.recruit.entity.ReportAddressInfor;
+import com.bjike.goddess.recruit.bo.SituationBO;
+import com.bjike.goddess.recruit.dto.SituationDTO;
+import com.bjike.goddess.recruit.entity.Situation;
 import com.bjike.goddess.recruit.to.GuidePermissionTO;
-import com.bjike.goddess.recruit.to.ReportAddressInforTO;
+import com.bjike.goddess.recruit.to.SituationTO;
 import com.bjike.goddess.recruit.type.GuideAddrStatus;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,20 +21,21 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 报道地址信息
+ * 招聘情况统计业务实现
  *
- * @Author: [sunfengtao]
- * @Date: [2017-03-14 09:32]
- * @Description: [ ]
- * @Version: [1.0.0]
- * @Copy: [com.bjike]
+ * @Author: [ chenjunhao ]
+ * @Date: [ 2017-07-20 08:26 ]
+ * @Description: [ 招聘情况统计业务实现 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
  */
+@CacheConfig(cacheNames = "recruitSerCache")
 @Service
-public class ReportAddressInforSerImpl extends ServiceImpl<ReportAddressInfor, ReportAddressInforDTO> implements ReportAddressInforSer {
-    @Autowired
-    private UserAPI userAPI;
+public class SituationSerImpl extends ServiceImpl<Situation, SituationDTO> implements SituationSer {
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private UserAPI userAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -67,24 +68,6 @@ public class ReportAddressInforSerImpl extends ServiceImpl<ReportAddressInfor, R
             flag = cusPermissionSer.busCusPermission("2");
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
-            }
-        }
-        RpcTransmit.transmitUserToken(userToken);
-    }
-
-    /**
-     * 福利模块
-     */
-    private void checkModuleIdentity() throws SerException {
-        Boolean flag = false;
-        String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser();
-        RpcTransmit.transmitUserToken(userToken);
-        String userName = userBO.getUsername();
-        if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("3");
-            if (!flag) {
-                throw new SerException("您不是福利模块的人员，不可以操作");
             }
         }
         RpcTransmit.transmitUserToken(userToken);
@@ -124,32 +107,13 @@ public class ReportAddressInforSerImpl extends ServiceImpl<ReportAddressInfor, R
         return flag;
     }
 
-    /**
-     * 福利模块
-     */
-    private Boolean guideModuleIdentity() throws SerException {
-        Boolean flag = false;
-        String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser();
-        RpcTransmit.transmitUserToken(userToken);
-        String userName = userBO.getUsername();
-        if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("3");
-        } else {
-            flag = true;
-        }
-        return flag;
-    }
-
     @Override
     public Boolean sonPermission() throws SerException {
         String userToken = RpcTransmit.getUserToken();
         Boolean flagSee = guideSeeIdentity();
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagAdd = guideAddIdentity();
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagM = guideModuleIdentity();
-        if (flagSee || flagAdd || flagM) {
+        if (flagSee || flagAdd) {
             return true;
         } else {
             return false;
@@ -192,9 +156,6 @@ public class ReportAddressInforSerImpl extends ServiceImpl<ReportAddressInfor, R
             case SEEFILE:
                 flag = guideSeeIdentity();
                 break;
-            case FULI:
-                flag = guideModuleIdentity();
-                break;
             default:
                 flag = true;
                 break;
@@ -204,86 +165,57 @@ public class ReportAddressInforSerImpl extends ServiceImpl<ReportAddressInfor, R
         return flag;
     }
 
-    /**
-     * 分页查询报道地址信息
-     *
-     * @param dto
-     * @return
-     * @throws SerException
-     */
     @Override
     @Transactional(rollbackFor = {SerException.class})
-    public List<ReportAddressInforBO> list(ReportAddressInforDTO dto) throws SerException {
+    public SituationBO save(SituationTO to) throws SerException {
+        checkAddIdentity();
+        Situation entity = BeanTransform.copyProperties(to, Situation.class, true);
+        super.save(entity);
+        return BeanTransform.copyProperties(entity, SituationBO.class);
+    }
+
+    @Override
+    @Transactional(rollbackFor = {SerException.class})
+    public void edit(SituationTO to) throws SerException {
+        checkAddIdentity();
+        Situation entity = super.findById(to.getId());
+        LocalDateTime a = entity.getCreateTime();
+        entity = BeanTransform.copyProperties(to, Situation.class, true);
+        entity.setCreateTime(a);
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+    }
+
+    @Override
+    public List<SituationBO> list(SituationDTO dto) throws SerException {
         checkSeeIdentity();
-        List<ReportAddressInfor> list = super.findByPage(dto);
-        List<ReportAddressInforBO> listBO = BeanTransform.copyProperties(list, ReportAddressInforBO.class);
-        return listBO;
+        dto.getSorts().add("createTime=desc");
+        List<Situation> list = super.findByCis(dto, true);
+        return BeanTransform.copyProperties(list, SituationBO.class);
     }
 
-    /**
-     * 保存报道地址信息
-     *
-     * @param to
-     * @return
-     * @throws SerException
-     */
     @Override
     @Transactional(rollbackFor = {SerException.class})
-    public ReportAddressInforBO save(ReportAddressInforTO to) throws SerException {
-        checkModuleIdentity();
-        ReportAddressInfor failFirstInterviewReason = BeanTransform.copyProperties(to, ReportAddressInfor.class, true);
-        failFirstInterviewReason = super.save(failFirstInterviewReason);
-        ReportAddressInforBO bo = BeanTransform.copyProperties(failFirstInterviewReason, ReportAddressInforBO.class);
-        return bo;
-    }
-
-    /**
-     * 更新报道地址信息
-     *
-     * @param to 报道地址信息to
-     * @throws SerException
-     */
-    @Override
-    @Transactional(rollbackFor = SerException.class)
-    public void update(ReportAddressInforTO to) throws SerException {
-        checkModuleIdentity();
-        if (StringUtils.isNotEmpty(to.getId())) {
-            ReportAddressInfor model = super.findById(to.getId());
-            if (model != null) {
-                updateReportAddressInfor(to, model);
-            } else {
-                throw new SerException("更新对象不能为空");
-            }
-        } else {
-            throw new SerException("更新ID不能为空!");
+    public void delete(String id) throws SerException {
+        checkAddIdentity();
+        Situation entity = super.findById(id);
+        if (entity == null) {
+            throw new SerException("该对象不存在");
         }
-
+        super.remove(id);
     }
 
-    /**
-     * 更新报道地址信息
-     *
-     * @param to
-     * @param model
-     * @throws SerException
-     */
-    private void updateReportAddressInfor(ReportAddressInforTO to, ReportAddressInfor model) throws SerException {
-        BeanTransform.copyProperties(to, model, true);
-        model.setModifyTime(LocalDateTime.now());
-        super.update(model);
-    }
-
-    /**
-     * 删除报道地址信息
-     *
-     * @param entity
-     * @throws SerException
-     */
     @Override
-    @Transactional(rollbackFor = {SerException.class})
-    public void remove(ReportAddressInfor entity) throws SerException {
-        checkModuleIdentity();
-        super.remove(entity);
+    public SituationBO findByID(String id) throws SerException {
+        Situation entity = super.findById(id);
+        if (entity == null) {
+            throw new SerException("该对象不存在");
+        }
+        return BeanTransform.copyProperties(entity, SituationBO.class);
     }
 
+    @Override
+    public Long count(SituationDTO dto) throws SerException {
+        return super.count(dto);
+    }
 }

@@ -190,4 +190,20 @@ public class ActivityDivisionAct {
         }
     }
 
+    /**
+     * 根据活动主题获取活动方案id
+     *
+     * @param theme 活动主题
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findIdByTheme/{theme}")
+    public Result findIdByTheme(@PathVariable String theme) throws ActException {
+        try {
+            return ActResult.initialize(activitySchemeAPI.findIdByTheme(theme));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

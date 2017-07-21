@@ -11,10 +11,12 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffactivity.api.ActivityEvaluateAPI;
 import com.bjike.goddess.staffactivity.api.ActivityExecuteInfoAPI;
 import com.bjike.goddess.staffactivity.bo.ActivityEvaluateBO;
+import com.bjike.goddess.staffactivity.bo.EvaluateScoreSummaryBO;
 import com.bjike.goddess.staffactivity.dto.ActivityEvaluateDTO;
 import com.bjike.goddess.staffactivity.to.ActivityEvaluateTO;
 import com.bjike.goddess.staffactivity.to.GuidePermissionTO;
 import com.bjike.goddess.staffactivity.vo.ActivityEvaluateVO;
+import com.bjike.goddess.staffactivity.vo.EvaluateScoreSummaryVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -184,7 +186,25 @@ public class ActivityEvaluateAct {
     @GetMapping("v1/allActivityScheme")
     public Result allActivityScheme() throws ActException {
         try {
-            return ActResult.initialize(activityExecuteInfoAPI.allActivityScheme());
+            return ActResult.initialize(activityEvaluateAPI.allActivityScheme());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 活动评价得分汇总
+     *
+     * @param dto dto
+     * @return class EvaluateScoreSummaryVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/evaluateScoreSummary")
+    public Result evaluateScoreSummary(@Validated({ActivityEvaluateDTO.COUNT.class}) ActivityEvaluateDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            List<EvaluateScoreSummaryBO> list = activityEvaluateAPI.evaluateScoreSummary(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list, EvaluateScoreSummaryVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

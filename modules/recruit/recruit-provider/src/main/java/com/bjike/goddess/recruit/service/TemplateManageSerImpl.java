@@ -192,6 +192,9 @@ public class TemplateManageSerImpl extends ServiceImpl<TemplateManage, TemplateM
             case SEEFILE:
                 flag = guideSeeIdentity();
                 break;
+            case GUIHUA:
+                flag = guideModuleIdentity();
+                break;
             default:
                 flag = true;
                 break;

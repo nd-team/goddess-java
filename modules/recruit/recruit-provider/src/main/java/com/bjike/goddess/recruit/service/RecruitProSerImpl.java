@@ -161,7 +161,7 @@ public class RecruitProSerImpl extends ServiceImpl<RecruitPro, RecruitProDTO> im
     }
 
     /**
-     * 运营商务部意见
+     * 总经办审核
      */
     private Boolean guideMaIdentity() throws SerException {
         Boolean flag = false;
@@ -229,6 +229,12 @@ public class RecruitProSerImpl extends ServiceImpl<RecruitPro, RecruitProDTO> im
                 break;
             case SEEFILE:
                 flag = guideSeeIdentity();
+                break;
+            case BUINESS:
+                flag = guideSwIdentity();
+                break;
+            case MANAGER:
+                flag = guideMaIdentity();
                 break;
             default:
                 flag = true;
