@@ -6,9 +6,11 @@ import com.bjike.goddess.firmreward.bo.BonusBudgetBO;
 import com.bjike.goddess.firmreward.bo.RewardProgramRatioBO;
 import com.bjike.goddess.firmreward.dto.BonusBudgetDTO;
 import com.bjike.goddess.firmreward.entity.BonusBudget;
+import com.bjike.goddess.firmreward.excel.SonPermissionObject;
 import com.bjike.goddess.firmreward.service.BonusBudgetSer;
 import com.bjike.goddess.firmreward.to.BonusBudgetTO;
 import com.bjike.goddess.firmreward.to.RewardProgramRatiosTO;
+import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -131,6 +133,16 @@ public class BonusBudgetApiImpl implements BonusBudgetAPI {
     @Override
     public List<RewardProgramRatioBO> checkRewardProgramRatios(String id) throws SerException {
         return bonusBudgetSer.checkRewardProgramRatios(id);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return bonusBudgetSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return bonusBudgetSer.guidePermission( guidePermissionTO );
     }
 
 }

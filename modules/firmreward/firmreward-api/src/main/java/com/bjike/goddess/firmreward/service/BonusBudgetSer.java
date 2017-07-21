@@ -6,8 +6,10 @@ import com.bjike.goddess.firmreward.bo.BonusBudgetBO;
 import com.bjike.goddess.firmreward.bo.RewardProgramRatioBO;
 import com.bjike.goddess.firmreward.dto.BonusBudgetDTO;
 import com.bjike.goddess.firmreward.entity.BonusBudget;
+import com.bjike.goddess.firmreward.excel.SonPermissionObject;
 import com.bjike.goddess.firmreward.to.BonusBudgetTO;
 import com.bjike.goddess.firmreward.to.RewardProgramRatiosTO;
+import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 
 import java.util.List;
 
@@ -79,5 +81,19 @@ public interface BonusBudgetSer extends Ser<BonusBudget, BonusBudgetDTO> {
      * @throws SerException
      */
     List<RewardProgramRatioBO> checkRewardProgramRatios(String id) throws SerException;
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
 }

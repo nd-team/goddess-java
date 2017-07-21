@@ -7,6 +7,7 @@ import com.bjike.goddess.firmreward.dto.RewardProgramRatioDTO;
 import com.bjike.goddess.firmreward.entity.RewardProgramRatio;
 import com.bjike.goddess.firmreward.service.RewardProgramRatioSer;
 import com.bjike.goddess.firmreward.to.RewardProgramRatioTO;
+import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -94,5 +95,15 @@ public class RewardProgramRatioApiImpl implements RewardProgramRatioAPI {
     @Override
     public void update(RewardProgramRatioTO to) throws SerException {
         rewardProgramRatioSer.update(to);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return rewardProgramRatioSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return rewardProgramRatioSer.guidePermission(guidePermissionTO);
     }
 }

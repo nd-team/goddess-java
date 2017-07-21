@@ -6,6 +6,8 @@ import com.bjike.goddess.oilcardmanage.bo.OilCardReceiveBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardReceiveDTO;
 import com.bjike.goddess.oilcardmanage.entity.OilCardReceive;
 import com.bjike.goddess.oilcardmanage.enums.OilCardReceiveResult;
+import com.bjike.goddess.oilcardmanage.excel.SonPermissionObject;
+import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardReceiveTO;
 
 import java.util.List;
@@ -21,6 +23,19 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface OilCardReceiveSer extends Ser<OilCardReceive, OilCardReceiveDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 新增油卡领用记录

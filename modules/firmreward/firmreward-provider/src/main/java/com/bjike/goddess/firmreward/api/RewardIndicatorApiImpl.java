@@ -7,6 +7,7 @@ import com.bjike.goddess.firmreward.dto.RewardIndicatorDTO;
 import com.bjike.goddess.firmreward.entity.RewardIndicator;
 import com.bjike.goddess.firmreward.service.RewardIndicatorSer;
 import com.bjike.goddess.firmreward.to.RewardIndicatorTO;
+import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -94,5 +95,15 @@ public class RewardIndicatorApiImpl implements RewardIndicatorAPI {
     @Override
     public void update(RewardIndicatorTO to) throws SerException {
         rewardIndicatorSer.update(to);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return rewardIndicatorSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return rewardIndicatorSer.guidePermission(guidePermissionTO);
     }
 }
