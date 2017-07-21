@@ -1,9 +1,11 @@
 package com.bjike.goddess.rotation.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.rotation.bo.DetailBO;
 import com.bjike.goddess.rotation.bo.RotationStatisticsBO;
 import com.bjike.goddess.rotation.dto.RotationStatisticsDTO;
 import com.bjike.goddess.rotation.service.RotationStatisticsSer;
+import com.bjike.goddess.rotation.to.GuidePermissionTO;
 import com.bjike.goddess.rotation.to.RotationStatisticsTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,5 +55,20 @@ public class RotationStatisticsApiImpl implements RotationStatisticsAPI {
     @Override
     public Long getTotal() throws SerException {
         return rotationStatisticsSer.getTotal();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return rotationStatisticsSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return rotationStatisticsSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public List<DetailBO> getDetail() throws SerException {
+        return rotationStatisticsSer.getDetail();
     }
 }

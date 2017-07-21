@@ -4,10 +4,13 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.rotation.bo.CoverRotationBO;
 import com.bjike.goddess.rotation.bo.CoverRotationOpinionBO;
+import com.bjike.goddess.rotation.bo.FindNameBO;
 import com.bjike.goddess.rotation.dto.CoverRotationDTO;
+import com.bjike.goddess.rotation.excel.SonPermissionObject;
 import com.bjike.goddess.rotation.service.CoverRotationSer;
 import com.bjike.goddess.rotation.to.CoverRotationOpinionTO;
 import com.bjike.goddess.rotation.to.CoverRotationTO;
+import com.bjike.goddess.rotation.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,5 +69,20 @@ public class CoverRotationApiImpl implements CoverRotationAPI {
     @Override
     public Long getTotal() throws SerException {
         return coverRotationSer.getTotal();
+    }
+
+    @Override
+    public List<FindNameBO> getName() throws SerException {
+        return coverRotationSer.getName();
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return coverRotationSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return coverRotationSer.guidePermission( guidePermissionTO );
     }
 }

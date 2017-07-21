@@ -3,6 +3,7 @@ package com.bjike.goddess.rotation.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.rotation.bo.SubsidyStandardBO;
 import com.bjike.goddess.rotation.dto.SubsidyStandardDTO;
+import com.bjike.goddess.rotation.to.GuidePermissionTO;
 import com.bjike.goddess.rotation.to.SubsidyStandardTO;
 
 import java.util.List;
@@ -123,6 +124,20 @@ public interface SubsidyStandardAPI {
      * @throws SerException
      */
     default List<SubsidyStandardBO> findThaw() throws SerException {
+        return null;
+    }
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 

@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.rotation.bo.SubsidyStandardBO;
 import com.bjike.goddess.rotation.dto.CoverRotationDTO;
@@ -11,7 +12,11 @@ import com.bjike.goddess.rotation.dto.RecommendRotationDTO;
 import com.bjike.goddess.rotation.dto.RotationStatisticsDTO;
 import com.bjike.goddess.rotation.dto.SubsidyStandardDTO;
 import com.bjike.goddess.rotation.entity.SubsidyStandard;
+import com.bjike.goddess.rotation.enums.GuideAddrStatus;
+import com.bjike.goddess.rotation.to.GuidePermissionTO;
 import com.bjike.goddess.rotation.to.SubsidyStandardTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -39,6 +44,10 @@ public class SubsidyStandardSerImpl extends ServiceImpl<SubsidyStandard, Subsidy
     private RecommendRotationSer recommendRotationSer;
     @Autowired
     private RotationStatisticsSer rotationStatisticsSer;
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
 
     @Override
     public SubsidyStandardBO save(SubsidyStandardTO to) throws SerException {
@@ -79,12 +88,16 @@ public class SubsidyStandardSerImpl extends ServiceImpl<SubsidyStandard, Subsidy
         recommendRotationDTO.getConditions().add(Restrict.eq("rotationLevel.id", id));
 
         RotationStatisticsDTO rotationStatisticsDTO = new RotationStatisticsDTO();
-        recommendRotationDTO.getConditions().add(Restrict.eq("arrangement.id", id));
-        if (coverRotationSer.count(coverRotationDTO) != 0 || coverRotationSer.count(coverRotationApplyDTO) != 0
-                || recommendRotationSer.count(recommendRotationDTO) != 0 || recommendRotationSer.count(recommendRotationApplyDTO) != 0
-                || rotationStatisticsSer.count(rotationStatisticsDTO) != 0)
-            throw new SerException("存在依赖关系,无法删除");
+        rotationStatisticsDTO.getConditions().add(Restrict.eq("arrangement.id", id));
+
+        if (coverRotationSer.count(coverRotationDTO) != 0 ||
+                coverRotationSer.count(coverRotationApplyDTO) != 0 ||
+                recommendRotationSer.count(recommendRotationDTO) != 0 ||
+                recommendRotationSer.count(recommendRotationApplyDTO) != 0 ||
+                rotationStatisticsSer.count(rotationStatisticsDTO) != 0)
+            throw new SerException("存在依赖关系,无法删除,请确保该层级没有相关人员,方可删除");
         super.remove(entity);
+
         return BeanTransform.copyProperties(entity, SubsidyStandardBO.class);
     }
 
@@ -142,5 +155,146 @@ public class SubsidyStandardSerImpl extends ServiceImpl<SubsidyStandard, Subsidy
         SubsidyStandardDTO dto = new SubsidyStandardDTO();
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
         return BeanTransform.copyProperties(super.findByCis(dto), SubsidyStandardBO.class);
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
     }
 }

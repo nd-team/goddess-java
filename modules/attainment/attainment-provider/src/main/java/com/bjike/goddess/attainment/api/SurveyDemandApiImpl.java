@@ -5,6 +5,7 @@ import com.bjike.goddess.attainment.dto.SurveyDemandDTO;
 import com.bjike.goddess.attainment.enums.SurveyStatus;
 import com.bjike.goddess.attainment.service.SurveyDemandSer;
 import com.bjike.goddess.attainment.to.CloseDemandTO;
+import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.attainment.to.SurveyDemandTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,16 @@ public class SurveyDemandApiImpl implements SurveyDemandAPI {
 
     @Autowired
     private SurveyDemandSer surveyDemandSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return surveyDemandSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return surveyDemandSer.guidePermission(guidePermissionTO);
+    }
+
 
     @Override
     public SurveyDemandBO save(SurveyDemandTO to) throws SerException {
@@ -65,5 +76,10 @@ public class SurveyDemandApiImpl implements SurveyDemandAPI {
     @Override
     public Long getTotal() throws SerException {
         return surveyDemandSer.getTotal();
+    }
+
+    @Override
+    public List<String> getDemandId() throws SerException {
+        return surveyDemandSer.getDemandId();
     }
 }

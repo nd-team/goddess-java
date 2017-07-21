@@ -126,7 +126,7 @@ public interface CostStandardSer extends Ser<CostStandard, CostStandardDTO> {
      * @return
      * @throws SerException
      */
-    default List<CostStandardOpinionBO> findOpinion() throws SerException {
+    default List<CostStandardOpinionBO> findOpinion1() throws SerException {
         return null;
     }
 

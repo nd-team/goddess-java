@@ -14,6 +14,9 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public class FundPrepareObjectTO extends BaseTO {
+    /**
+     * 资金准备列表
+     */
     private List<FundPrepareTO> fundPrepareTOList;
 
     public List<FundPrepareTO> getFundPrepareTOList() {

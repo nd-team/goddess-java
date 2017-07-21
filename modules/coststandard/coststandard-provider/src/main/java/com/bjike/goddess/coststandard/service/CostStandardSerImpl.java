@@ -126,7 +126,6 @@ public class CostStandardSerImpl extends ServiceImpl<CostStandard, CostStandardD
         return super.count(dto);
     }
 
-    @Override
     public List<CostStandardOpinionBO> findOpinion() throws SerException {
         List<CostStandardOpinionBO> bos = new ArrayList<>(0);
         List<CostStandardBO> list = this.findThaw();
@@ -135,6 +134,20 @@ public class CostStandardSerImpl extends ServiceImpl<CostStandard, CostStandardD
             CostStandardOpinionBO opinionBO = new CostStandardOpinionBO();
             opinionBO.setId(bo.getId());
             opinionBO.setValue(String.format(format, bo.getName(), bo.getArea(), bo.getDepartment(), bo.getStandard()));
+            bos.add(opinionBO);
+        }
+        return bos;
+    }
+
+    @Override
+    public List<CostStandardOpinionBO> findOpinion1() throws SerException {
+        List<CostStandardOpinionBO> bos = new ArrayList<>(0);
+        List<CostStandardBO> list = this.findThaw();
+//        String format = "名称:%s 地区:%s 适用部门:%s 标准:%s";
+        for (CostStandardBO bo : list) {
+            CostStandardOpinionBO opinionBO = new CostStandardOpinionBO();
+            opinionBO.setId(bo.getId());
+            opinionBO.setValue( bo.getStandard());
             bos.add(opinionBO);
         }
         return bos;

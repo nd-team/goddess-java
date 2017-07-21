@@ -2,9 +2,11 @@ package com.bjike.goddess.commerce.action.commerce;
 
 import com.bjike.goddess.commerce.api.CommerceConferenceAPI;
 import com.bjike.goddess.commerce.dto.CommerceConferenceDTO;
+import com.bjike.goddess.commerce.excel.CommerceConferenceExcel;
 import com.bjike.goddess.commerce.to.CollectTO;
 import com.bjike.goddess.commerce.to.CommerceConferenceExcelTO;
 import com.bjike.goddess.commerce.to.CommerceConferenceTO;
+import com.bjike.goddess.commerce.to.GuidePermissionTO;
 import com.bjike.goddess.commerce.vo.CommerceConferenceVO;
 import com.bjike.goddess.commerce.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.entity.ADD;
@@ -227,7 +229,88 @@ public class CommerceConferenceAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
 
+            Boolean isHasPermission = commerceConferenceAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
+    /**
+     * 导入Excel
+     *
+     * @param request 注入HttpServletRequest对象
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/importExcel")
+    public Result importExcel(HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<CommerceConferenceExcel> tos = ExcelUtil.excelToClazz(is, CommerceConferenceExcel.class, excel);
+            List<CommerceConferenceTO> tocs = new ArrayList<>();
+            for (CommerceConferenceExcel str : tos) {
+                CommerceConferenceTO commerceConferenceTO = BeanTransform.copyProperties(str, CommerceConferenceTO.class);
+
+                commerceConferenceTO.setConferenceTime(String.valueOf(str.getConferenceTime()));
+                commerceConferenceTO.setWay(str.getWay());
+                commerceConferenceTO.setArea(str.getArea());
+                commerceConferenceTO.setPersonnel(str.getPersonnel());
+                commerceConferenceTO.setQuantity(str.getQuantity());
+                commerceConferenceTO.setOrganization(str.getOrganization());
+                commerceConferenceTO.setEmcee(str.getEmcee());
+                commerceConferenceTO.setRecorder(str.getRecorder());
+                commerceConferenceTO.setContent(str.getContent());
+                commerceConferenceTO.setBulletin(str.getBulletin());
+                commerceConferenceTO.setConsult(str.getConsult());
+                commerceConferenceTO.setNegotiation(str.getNegotiation());
+                commerceConferenceTO.setCooperation(str.getCooperation());
+                commerceConferenceTO.setRemark(str.getRemark());
+                tocs.add(commerceConferenceTO);
+            }
+            //注意序列化
+            commerceConferenceAPI.importExcel(tocs);
+            return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板商务会议
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "商务会议导入模板.xlsx";
+            super.writeOutFile(response, commerceConferenceAPI.templateExport( ), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
 
 }

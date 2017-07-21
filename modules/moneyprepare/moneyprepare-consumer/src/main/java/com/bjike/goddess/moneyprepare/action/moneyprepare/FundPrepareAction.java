@@ -234,7 +234,7 @@ public class FundPrepareAction {
      *
      * @param proportionObjectTO 项目分配详情
      * @return class FundPrepareVO
-     * @des 项目分配详情进行修改
+     * @des 项目分配详情进行修改(修改时除了加上fundId,还要加上比例分配的id)
      * @version v1
      */
     @LoginAuth

@@ -25,37 +25,37 @@ public class WeightAllotImportExcele extends BaseTO {
     /**
      * 信息提供占比
      */
-    @ExcelHeader(name = "信息提供占比", notNull = false)
+    @ExcelHeader(name = "信息提供占比", notNull = true)
     private Double messageProportion;
 
     /**
      * 业务揽接占比
      */
-    @ExcelHeader(name = "业务揽接占比", notNull = false)
+    @ExcelHeader(name = "业务揽接占比", notNull = true)
     private Double businessProportion;
 
     /**
      * 业务洽谈占比
      */
-    @ExcelHeader(name = "业务洽谈占比", notNull = false)
+    @ExcelHeader(name = "业务洽谈占比", notNull = true)
     private Double talkProportion;
 
     /**
      * 维护占比
      */
-    @ExcelHeader(name = "维护占比", notNull = false)
+    @ExcelHeader(name = "维护占比", notNull = true)
     private Double maintainProportion;
 
     /**
      * 剩余占比
      */
-    @ExcelHeader(name = "剩余占比", notNull = false)
+    @ExcelHeader(name = "剩余占比", notNull = true)
     private Double surplusProportion;
 
     /**
      * 总比例
      */
-    @ExcelHeader(name = "总比例", notNull = false)
+    @ExcelHeader(name = "总比例", notNull = true)
     private Double totalProportion;
 
     /**

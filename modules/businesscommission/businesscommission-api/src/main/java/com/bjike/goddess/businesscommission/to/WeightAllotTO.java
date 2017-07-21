@@ -32,31 +32,37 @@ public class WeightAllotTO extends BaseTO {
     /**
      * 信息提供占比
      */
+    @NotNull(groups = {WeightAllotTO.TestAdd.class} , message = "信息提供占比不能为空")
     private Double messageProportion;
 
     /**
      * 业务揽接占比
      */
+    @NotNull(groups = {WeightAllotTO.TestAdd.class} , message = "业务揽接占比不能为空")
     private Double businessProportion;
 
     /**
      * 业务洽谈占比
      */
+    @NotNull(groups = {WeightAllotTO.TestAdd.class} , message = "业务洽谈占比不能为空")
     private Double talkProportion;
 
     /**
      * 维护占比
      */
+    @NotNull(groups = {WeightAllotTO.TestAdd.class} , message = "维护占比不能为空")
     private Double maintainProportion;
 
     /**
      * 剩余占比
      */
+    @NotNull(groups = {WeightAllotTO.TestAdd.class} , message = "剩余占比不能为空")
     private Double surplusProportion;
 
     /**
      * 总比例
      */
+    @NotNull(groups = {WeightAllotTO.TestAdd.class} , message = "总比例不能为空")
     private Double totalProportion;
 
     /**

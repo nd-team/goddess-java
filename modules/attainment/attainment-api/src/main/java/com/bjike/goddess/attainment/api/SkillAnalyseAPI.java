@@ -2,6 +2,7 @@ package com.bjike.goddess.attainment.api;
 
 import com.bjike.goddess.attainment.bo.SkillAnalyseBO;
 import com.bjike.goddess.attainment.dto.SkillAnalyseDTO;
+import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.attainment.to.SkillAnalyseTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -18,6 +19,20 @@ import java.util.List;
  */
 public interface SkillAnalyseAPI {
 
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 保存
      *

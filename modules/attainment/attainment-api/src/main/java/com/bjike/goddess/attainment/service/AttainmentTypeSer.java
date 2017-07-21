@@ -3,7 +3,9 @@ package com.bjike.goddess.attainment.service;
 import com.bjike.goddess.attainment.bo.AttainmentTypeBO;
 import com.bjike.goddess.attainment.dto.AttainmentTypeDTO;
 import com.bjike.goddess.attainment.entity.AttainmentType;
+import com.bjike.goddess.attainment.excel.SonPermissionObject;
 import com.bjike.goddess.attainment.to.AttainmentTypeTO;
+import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -128,4 +130,17 @@ public interface AttainmentTypeSer extends Ser<AttainmentType, AttainmentTypeDTO
         return null;
     }
 
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

@@ -31,51 +31,61 @@ public class CommissionQuotaTO extends BaseTO {
     /**
      * 实际业务提成总额
      */
+    @NotNull(groups = {WeightAllotTO.TestAdd.class} , message = "实际业务提成总额不能为空")
     private Double actualAmount;
 
     /**
      * 信息提供人
      */
+    @NotNull(groups = {WeightAllotTO.TestAdd.class} , message = "信息提供人不能为空")
     private String informationProvide;
 
     /**
      * 信息提供占额
      */
+    @NotNull(groups = {WeightAllotTO.TestAdd.class} , message = "信息提供占额不能为空")
     private Double provideAccount;
 
     /**
      * 业务揽接人
      */
+    @NotNull(groups = {WeightAllotTO.TestAdd.class} , message = "业务揽接人不能为空")
     private String businessContracting;
 
     /**
      * 业务揽接占额
      */
+    @NotNull(groups = {WeightAllotTO.TestAdd.class} , message = "业务揽接占额不能为空")
     private Double contractAccount;
 
     /**
      * 业务洽谈人
      */
+    @NotNull(groups = {WeightAllotTO.TestAdd.class} , message = "业务洽谈人不能为空")
     private String businessNegotiation;
 
     /**
      * 业务洽谈占额
      */
+    @NotNull(groups = {WeightAllotTO.TestAdd.class} , message = "业务洽谈占额不能为空")
     private Double negotiationAccount;
 
     /**
      * 维护人
      */
+    @NotNull(groups = {WeightAllotTO.TestAdd.class} , message = "维护人不能为空")
     private String maintenance;
 
     /**
      * 维护占额
      */
+    @NotNull(groups = {WeightAllotTO.TestAdd.class} , message = "维护占额不能为空")
     private Double maintenanceAccount;
 
     /**
      * 剩余占额
      */
+    @NotNull(groups = {WeightAllotTO.TestAdd.class} , message = "剩余占额不能为空")
     private Double remainingAccount;
 
     /**
