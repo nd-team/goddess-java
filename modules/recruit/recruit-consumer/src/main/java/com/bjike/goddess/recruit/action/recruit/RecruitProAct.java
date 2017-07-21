@@ -9,6 +9,7 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.api.RecruitProAPI;
+import com.bjike.goddess.recruit.api.RecruitWayAPI;
 import com.bjike.goddess.recruit.bo.RecruitProBO;
 import com.bjike.goddess.recruit.dto.RecruitProDTO;
 import com.bjike.goddess.recruit.to.RecruitProTO;
@@ -37,6 +38,8 @@ public class RecruitProAct {
 
     @Autowired
     private RecruitProAPI recruitProAPI;
+    @Autowired
+    private RecruitWayAPI recruitWayAPI;
 
     /**
      * 根据id查询招聘方案
@@ -152,7 +155,7 @@ public class RecruitProAct {
     /**
      * 综合资源部审核
      *
-     * @param id 招聘方案唯一标识
+     * @param id        招聘方案唯一标识
      * @param zhOpinion 综合资源部意见
      * @version v1
      */
@@ -170,7 +173,7 @@ public class RecruitProAct {
     /**
      * 运营商务部审核
      *
-     * @param id 招聘方案唯一标识
+     * @param id        招聘方案唯一标识
      * @param yyOpinion 运营商务部意见
      * @version v1
      */
@@ -188,9 +191,9 @@ public class RecruitProAct {
     /**
      * 总经办意见
      *
-     * @param id 招聘方案唯一标识
+     * @param id         招聘方案唯一标识
      * @param zjbOpinion 总经办意见
-     * @param auditType 审核类型
+     * @param auditType  审核类型
      * @version v1
      */
     @LoginAuth
@@ -204,4 +207,18 @@ public class RecruitProAct {
         }
     }
 
+    /**
+     * 查看所有招聘网站（招聘渠道）
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/allRecruitName")
+    public Result allRecruitName() throws ActException {
+        try {
+            return ActResult.initialize(recruitWayAPI.allRecruitName());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

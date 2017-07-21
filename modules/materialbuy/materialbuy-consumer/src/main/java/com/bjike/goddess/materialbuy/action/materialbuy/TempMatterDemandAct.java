@@ -79,7 +79,7 @@ public class TempMatterDemandAct {
     /**
      * 分页查询临时物资需求
      *
-     * @param dto           临时物资需求dto
+     * @param dto 临时物资需求dto
      * @return class TempMatterDemandVO
      * @throws ActException
      * @version v1
@@ -98,7 +98,7 @@ public class TempMatterDemandAct {
     /**
      * 添加临时物资需求
      *
-     * @param to     临时物资需求to
+     * @param to 临时物资需求to
      * @return class TempMatterDemandVO
      * @throws ActException
      * @version v1
@@ -134,7 +134,7 @@ public class TempMatterDemandAct {
     /**
      * 编辑临时物资需求
      *
-     * @param to     临时物资需求to
+     * @param to 临时物资需求to
      * @throws ActException
      * @version v1
      */
@@ -151,7 +151,7 @@ public class TempMatterDemandAct {
     /**
      * 审核
      *
-     * @param to     临时物资需求to
+     * @param to 临时物资需求to
      * @throws ActException
      * @version v1
      */
@@ -179,6 +179,22 @@ public class TempMatterDemandAct {
             TempMatterDemandBO bo = tempMatterDemandAPI.checkDetail(id);
             TempMatterDemandVO vo = BeanTransform.copyProperties(bo, TempMatterDemandVO.class);
             return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(TempMatterDemandDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(tempMatterDemandAPI.count(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

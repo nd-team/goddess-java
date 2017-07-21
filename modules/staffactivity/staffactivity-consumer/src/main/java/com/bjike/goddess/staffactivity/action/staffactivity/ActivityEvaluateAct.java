@@ -9,6 +9,7 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffactivity.api.ActivityEvaluateAPI;
+import com.bjike.goddess.staffactivity.api.ActivityExecuteInfoAPI;
 import com.bjike.goddess.staffactivity.bo.ActivityEvaluateBO;
 import com.bjike.goddess.staffactivity.dto.ActivityEvaluateDTO;
 import com.bjike.goddess.staffactivity.to.ActivityEvaluateTO;
@@ -37,6 +38,8 @@ public class ActivityEvaluateAct {
 
     @Autowired
     private ActivityEvaluateAPI activityEvaluateAPI;
+    @Autowired
+    private ActivityExecuteInfoAPI activityExecuteInfoAPI;
 
     /**
      * 功能导航权限
@@ -167,6 +170,21 @@ public class ActivityEvaluateAct {
         try {
             activityEvaluateAPI.update(to);
             return new ActResult("edit success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找所有活动方案
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/allActivityScheme")
+    public Result allActivityScheme() throws ActException {
+        try {
+            return ActResult.initialize(activityExecuteInfoAPI.allActivityScheme());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

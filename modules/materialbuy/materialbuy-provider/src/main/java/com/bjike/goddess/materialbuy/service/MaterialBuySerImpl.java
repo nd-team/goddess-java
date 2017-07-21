@@ -6,14 +6,15 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contacts.api.CommonalityAPI;
+import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.materialbuy.bo.AreaBuyStatusDayCollectBO;
 import com.bjike.goddess.materialbuy.bo.MaterialBuyBO;
 import com.bjike.goddess.materialbuy.dto.MaterialBuyDTO;
 import com.bjike.goddess.materialbuy.entity.MaterialBuy;
+import com.bjike.goddess.materialbuy.enums.AuditState;
 import com.bjike.goddess.materialbuy.enums.GuideAddrStatus;
 import com.bjike.goddess.materialbuy.to.GuidePermissionTO;
 import com.bjike.goddess.materialbuy.to.MaterialBuyTO;
-import com.bjike.goddess.materialbuy.enums.AuditState;
 import com.bjike.goddess.materialbuy.vo.SonPermissionObject;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.to.MessageTO;
@@ -271,18 +272,21 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
                 "购买并在第二天" +
                 "17:00前填写审核情" +
                 "况";
-        String t=title;
-        send1(t,content);
+        String t = title;
+        send1(t, content);
         MaterialBuyBO bo = BeanTransform.copyProperties(entity, MaterialBuyBO.class);
         return bo;
     }
 
-    private void send1(String title,String content) throws SerException{
+    private void send1(String title, String content) throws SerException {
         List<String> emails = new ArrayList<>();
         List<DepartmentDetailBO> departs = departmentDetailAPI.findStatus();
         for (DepartmentDetailBO depart : departs) {
             if ("运营商务部".equals(depart.getDepartment()) || "综合资源部".equals(depart.getDepartment())) {
-                emails.add(commonalityAPI.findByDepartment(depart.getId()).getEmail());
+                CommonalityBO commonalityBO=commonalityAPI.findByDepartment(depart.getId());
+                if(commonalityBO!=null){
+                    emails.add(commonalityBO.getEmail());
+                }
             }
         }
         String[] mails = new String[emails.size()];
@@ -360,14 +364,17 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
         BeanTransform.copyProperties(to, model, true);
         model.setModifyTime(LocalDateTime.now());
         super.update(model);
-        if (AuditState.AUDITED.equals(model.getAuditState())){
-            String t="有物资购买审核通过";
-            String content=model.getRequisitioner()+"的物资购买申请已通过";
-            send1(t,content);
-            String content1="网页链接如下："+model.getBuyAddress()+"，请确认";
-            String title1="请确认网页链接";
-            String[] reciers=new String[]{userAPI.findByUsername(model.getRequisitioner()).getId()};
-            send(title1,content1,reciers);
+        if (AuditState.AUDITED.equals(model.getAuditState())) {
+            String t = "有物资购买审核通过";
+            String content = model.getRequisitioner() + "的物资购买申请已通过";
+            send1(t, content);
+            String content1 = "网页链接如下：" + model.getBuyAddress() + "，请确认";
+            String title1 = "请确认网页链接";
+            UserBO user=userAPI.findByUsername(model.getRequisitioner());
+            if (user!=null) {
+                String[] reciers = new String[]{user.getId()};
+                send(title1, content1, reciers);
+            }
         }
     }
 
@@ -471,5 +478,10 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
         }
 
         return null;
+    }
+
+    @Override
+    public Long count(MaterialBuyDTO dto) throws SerException {
+        return super.count(dto);
     }
 }

@@ -511,4 +511,14 @@ public class ActivitySchemeSerImpl extends ServiceImpl<ActivityScheme, ActivityS
         List<String> areaList = new ArrayList<>(areaSet);
         return areaList;
     }
+
+    @Override
+    public Set<String> allTheme() throws SerException {
+        List<ActivityScheme> list = super.findAll();
+        Set<String> set = new HashSet<>();
+        for (ActivityScheme a : list) {
+            set.add(a.getTheme());
+        }
+        return set;
+    }
 }

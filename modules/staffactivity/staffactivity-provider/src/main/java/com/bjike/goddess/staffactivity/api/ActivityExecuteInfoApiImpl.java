@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 活动执行信息业务接口实现
@@ -111,5 +112,10 @@ public class ActivityExecuteInfoApiImpl implements ActivityExecuteInfoAPI {
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return activityExecuteInfoSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public Set<String> allActivityScheme() throws SerException {
+        return activityExecuteInfoSer.allActivityScheme();
     }
 }

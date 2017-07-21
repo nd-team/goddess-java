@@ -105,4 +105,9 @@ public class DeviceTypeApiImpl implements DeviceTypeAPI {
     public List<String> findAllDeviceNames() throws SerException {
         return deviceTypeSer.findAllDeviceNames();
     }
+
+    @Override
+    public Long count(DeviceTypeDTO dto) throws SerException {
+        return deviceTypeSer.count(dto);
+    }
 }

@@ -9,6 +9,7 @@ import com.bjike.goddess.staffactivity.to.GuidePermissionTO;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 活动方案业务接口
@@ -159,4 +160,12 @@ public interface ActivitySchemeAPI {
      * @throws SerException
      */
     List<ActivityFundSummaryBO> activityFundSummary(String startDate, String endDate) throws SerException;
+
+    /**
+     * 查找所有活动主题
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allTheme() throws SerException;
 }

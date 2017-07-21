@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.recruit.api.FirstPhoneRecordAPI;
 import com.bjike.goddess.recruit.api.InterviewInforAPI;
 import com.bjike.goddess.recruit.bo.InterviewInforBO;
 import com.bjike.goddess.recruit.dto.InterviewInforDTO;
@@ -36,6 +37,8 @@ public class InterviewInforAct {
 
     @Autowired
     private InterviewInforAPI interviewInforAPI;
+    @Autowired
+    private FirstPhoneRecordAPI firstPhoneRecordAPI;
 
     /**
      * 根据id查询面试信息
@@ -148,4 +151,19 @@ public class InterviewInforAct {
         }
     }
 
+
+    /**
+     * 获取所有第一次电访记录的姓名名单
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/allFirstName")
+    public Result allFirstName() throws ActException {
+        try {
+            return ActResult.initialize(firstPhoneRecordAPI.allFirstName());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }
