@@ -515,10 +515,13 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
                 if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
                     for (EntryBasicInfoBO bo : entryBasicInfoBOs) {
                         InternalContactsDTO internalContactsDTO = new InternalContactsDTO();
-                        internalContactsDTO.getConditions().add(Restrict.in("userId",bo.getId()));
-                        InternalContactsBO internalContactsBO =  maps(internalContactsDTO).get(0);
-                        String str = bo.getEmail();
-                        strings.add(str);
+                        internalContactsDTO.getConditions().add(Restrict.in("userId", bo.getId()));
+                        List<InternalContactsBO> internalContactsBOs = maps(internalContactsDTO);
+                        if (null != internalContactsBOs && internalContactsBOs.size() > 0) {
+                            InternalContactsBO internalContactsBO = internalContactsBOs.get(0);
+                            String str = bo.getEmail();
+                            strings.add(str);
+                        }
                     }
                 }
             }
@@ -526,9 +529,28 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         return strings;
     }
 
+    @Override
+    public String getEmail(String name) throws SerException {
+        if (StringUtils.isNotBlank(name)) {
+            List<EntryBasicInfoBO> entryBasicInfoBOs = entryBasicInfoAPI.getEntryBasicInfoByName(name);
+            if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
+                for (EntryBasicInfoBO bo : entryBasicInfoBOs) {
+                    InternalContactsDTO internalContactsDTO = new InternalContactsDTO();
+                    internalContactsDTO.getConditions().add(Restrict.in("userId", bo.getId()));
+                    List<InternalContactsBO> internalContactsBOs = maps(internalContactsDTO);
+                    if (null != internalContactsBOs && internalContactsBOs.size() > 0) {
+                        return maps(internalContactsDTO).get(0).getEmail();
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * 核对查看权限（部门级别）
      */
+
     private void checkSeeIdentity() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
