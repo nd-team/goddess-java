@@ -90,4 +90,9 @@ public class CommonalityApiImpl implements CommonalityAPI {
     public void importExcel(List<CommonalityTO> tocs) throws SerException {
         commonalitySer.importExcel(tocs);
     }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return commonalitySer.templateExport();
+    }
 }

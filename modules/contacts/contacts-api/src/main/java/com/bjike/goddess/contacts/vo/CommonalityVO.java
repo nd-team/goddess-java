@@ -1,7 +1,6 @@
 package com.bjike.goddess.contacts.vo;
 
-import com.bjike.goddess.common.api.type.Status;
-
+import com.bjike.goddess.contacts.enums.Status;
 /**
 * 公共邮箱管理表现层对象
 * @Author:			[ dengjunren ]

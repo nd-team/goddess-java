@@ -8,6 +8,8 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.financeinit.api.AccountAPI;
+import com.bjike.goddess.financeinit.entity.Account;
 import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
 import com.bjike.goddess.lendreimbursement.bo.ApplyLendBO;
 import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
@@ -73,6 +75,8 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     private ApplyLendCopySer applyLendCopySer;
     @Autowired
     private LendPermissionSer cusPermissionSer;
+    @Autowired
+    private AccountAPI accountAPI;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -253,8 +257,9 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public Long countApplyLend(ApplyLendDTO applyLendDTO) throws SerException {
-        applyLendDTO.getConditions().add(Restrict.eq("receivePay", "否"));
+        applyLendDTO.getConditions().add(Restrict.eq("payCondition", "否"));
         applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{2, 6, 8, 9}));
+
         if (StringUtils.isNotBlank(applyLendDTO.getLendDate())) {
             applyLendDTO.getConditions().add(Restrict.eq("lendDate", LocalDate.parse(applyLendDTO.getLendDate(), formatter)));
         }
@@ -375,6 +380,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         }
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken( userToken );
         ApplyLend lend = super.findById(id);
 
         if (lend == null) {
@@ -1560,8 +1566,9 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public List<String> listAccountCom() throws SerException {
-        //TODO 账户来源
-        return null;
+        // 账户来源
+        List<String> list= accountAPI.listAccountOrigin();
+        return list;
     }
 
     /**

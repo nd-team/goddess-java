@@ -3,11 +3,13 @@ package com.bjike.goddess.courier.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.courier.bo.CourierCompanyBO;
-import com.bjike.goddess.courier.entity.CourierCompany;
 import com.bjike.goddess.courier.dto.CourierCompanyDTO;
+import com.bjike.goddess.courier.entity.CourierCompany;
 import com.bjike.goddess.courier.to.CourierCompanyTO;
+import com.bjike.goddess.courier.to.GuidePermissionTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 快递公司信息业务接口
@@ -19,6 +21,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CourierCompanySer extends Ser<CourierCompany, CourierCompanyDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 添加
      *
@@ -71,4 +87,30 @@ public interface CourierCompanySer extends Ser<CourierCompany, CourierCompanyDTO
     default CourierCompanyBO findByID(String id) throws SerException {
         return null;
     }
+
+    /**
+     * 获取所有快递公司
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allCompany() throws SerException;
+
+    /**
+     * 获取总记录数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(CourierCompanyDTO dto) throws SerException;
+
+    /**
+     * 根据快递公司获取快递公司的联系方式
+     *
+     * @param courierCompany
+     * @return
+     * @throws SerException
+     */
+    String findTel(String courierCompany) throws SerException;
 }

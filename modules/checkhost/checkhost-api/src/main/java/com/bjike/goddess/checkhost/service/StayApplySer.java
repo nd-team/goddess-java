@@ -1,14 +1,13 @@
 package com.bjike.goddess.checkhost.service;
 
-import com.bjike.goddess.checkhost.bo.HostApplyBO;
 import com.bjike.goddess.checkhost.bo.StayApplyBO;
-import com.bjike.goddess.checkhost.dto.HostApplyDTO;
+import com.bjike.goddess.checkhost.dto.StayApplyDTO;
+import com.bjike.goddess.checkhost.entity.StayApply;
+import com.bjike.goddess.checkhost.enums.CheckStatus;
 import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.to.StayApplyTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.checkhost.entity.StayApply;
-import com.bjike.goddess.checkhost.dto.StayApplyDTO;
 
 import java.util.List;
 
@@ -42,6 +41,7 @@ public interface StayApplySer extends Ser<StayApply, StayApplyDTO> {
     default Long countStayApply(StayApplyDTO stayApplyDTO) throws SerException {
         return null;
     }
+
     /**
      * 一个住宿申请
      *
@@ -50,6 +50,7 @@ public interface StayApplySer extends Ser<StayApply, StayApplyDTO> {
     default StayApplyBO getOne(String id) throws SerException {
         return null;
     }
+
     /**
      * 获取住宿申请
      *
@@ -96,13 +97,12 @@ public interface StayApplySer extends Ser<StayApply, StayApplyDTO> {
     /**
      * 福利模块负责人审核
      *
-     * @param applyTO
+     * @param id          id
+     * @param checkStatus 审核状态
      * @return class StayApplyBO
      * @throws SerException
      */
-    default StayApplyBO manageAudit(StayApplyTO applyTO) throws SerException {
-        return null;
-    }
+    StayApplyBO manageAudit(String id, CheckStatus checkStatus) throws SerException;
 
 
 }

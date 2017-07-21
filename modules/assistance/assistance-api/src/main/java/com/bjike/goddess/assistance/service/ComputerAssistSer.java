@@ -22,27 +22,36 @@ import java.util.List;
 public interface ComputerAssistSer extends Ser<ComputerAssist, ComputerAssistDTO> {
 
     /**
-     * 权限设置列表总条数
+     * 电脑补助列表总条数
      *
      */
     default Long countComputerAssist(ComputerAssistDTO computerAssistDTO) throws SerException {
         return null;
     }
+
+
     /**
-     * 权限设置列表
+     * 一个电脑补助
+     * @return class ComputerAssistBO
+     */
+    default ComputerAssistBO getOneById(String id) throws SerException {return null;}
+
+    
+    /**
+     * 电脑补助列表
      * @return class ComputerAssistBO
      */
     default List<ComputerAssistBO> listComputerAssist(ComputerAssistDTO computerAssistDTO) throws SerException {return null;}
     /**
      *  添加
-     * @param computerAssistTO 权限设置信息
+     * @param computerAssistTO 电脑补助信息
      * @return class ComputerAssistBO
      */
     default ComputerAssistBO addComputerAssist(ComputerAssistTO computerAssistTO) throws SerException { return null;}
 
     /**
      *  编辑
-     * @param computerAssistTO 权限设置信息
+     * @param computerAssistTO 电脑补助信息
      * @return class ComputerAssistBO
      */
     default ComputerAssistBO editComputerAssist(ComputerAssistTO computerAssistTO) throws SerException { return null;}

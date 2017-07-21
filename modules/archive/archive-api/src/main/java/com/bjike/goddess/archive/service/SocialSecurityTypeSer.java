@@ -3,6 +3,7 @@ package com.bjike.goddess.archive.service;
 import com.bjike.goddess.archive.bo.SocialSecurityTypeBO;
 import com.bjike.goddess.archive.dto.SocialSecurityTypeDTO;
 import com.bjike.goddess.archive.entity.SocialSecurityType;
+import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.archive.to.SocialSecurityTypeTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -20,6 +21,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SocialSecurityTypeSer extends Ser<SocialSecurityType, SocialSecurityTypeDTO> {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存

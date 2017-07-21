@@ -36,6 +36,10 @@ public class ReimburseAnalisisorVO {
     private String department;
 
     /**
+     * 备注
+     */
+    private String remark;
+    /**
      * 创建时间
      */
     private String createTime;
@@ -84,6 +88,14 @@ public class ReimburseAnalisisorVO {
 
     public void setDepartment(String department) {
         this.department = department;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public String getCreateTime() {

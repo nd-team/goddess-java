@@ -1,6 +1,7 @@
 package com.bjike.goddess.checkhost.service;
 
 import com.bjike.goddess.checkhost.bo.StayApplyBO;
+import com.bjike.goddess.checkhost.enums.CheckStatus;
 import com.bjike.goddess.checkhost.enums.GuideAddrStatus;
 import com.bjike.goddess.checkhost.enums.PassStatus;
 import com.bjike.goddess.checkhost.to.GuidePermissionTO;
@@ -251,17 +252,12 @@ public class StayApplySerImpl extends ServiceImpl<StayApply, StayApplyDTO> imple
         super.remove(id);
     }
     @Override
-    public StayApplyBO manageAudit(StayApplyTO applyTO) throws SerException {
+    public StayApplyBO manageAudit(String id, CheckStatus checkStatus) throws SerException {
         checkAduitIdentity();
-        UserBO userBO = userAPI.currentUser();
-        StayApply apply = super.findById(applyTO.getId());
-        apply.setHeadAudit(userBO.getUsername());
-        apply.setHeadAuditPass(applyTO.getHeadAuditPass());
-        if("通过".equals(applyTO.getHeadAuditPass())){
-            apply.setHeadAuditPass(String.valueOf(PassStatus.MANAGEPASS));
-        }else if("不通过".equals(applyTO.getHeadAuditPass())) {
-            apply.setHeadAuditPass(String.valueOf(PassStatus.MANAGENOPASS));
-        }
+//        UserBO userBO = userAPI.currentUser();
+        StayApply apply = super.findById(id);
+        apply.setCheckStatus(checkStatus);
+        apply.setModifyTime(LocalDateTime.now());
         super.update(apply);
         StayApplyBO bo = BeanTransform.copyProperties(apply,StayApplyBO.class);
         return bo;

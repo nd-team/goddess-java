@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Author: [xiazhili]
@@ -16,9 +17,10 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface DormitorySer extends Ser<Dormitory,DormitoryDTO>{
+public interface DormitorySer extends Ser<Dormitory, DormitoryDTO> {
     /**
      * 添加宿舍信息
+     *
      * @param dormitoryTO 宿舍信息数据集合
      * @throws SerException
      */
@@ -29,11 +31,11 @@ public interface DormitorySer extends Ser<Dormitory,DormitoryDTO>{
     /**
      * 编辑宿舍信息
      *
-     * @param dormitoryTO  宿舍信息数据to
+     * @param dormitoryTO 宿舍信息数据to
      * @return class rentalPreceptBO
      * @throws SerException
      */
-    default DormitoryBO editDormitory(DormitoryTO dormitoryTO ) throws SerException {
+    default DormitoryBO editDormitory(DormitoryTO dormitoryTO) throws SerException {
         return null;
     }
 
@@ -47,8 +49,10 @@ public interface DormitorySer extends Ser<Dormitory,DormitoryDTO>{
     default void removeDormitory(String id) throws SerException {
         return;
     }
+
     /**
      * 获取所有宿舍信息
+     *
      * @param dormitoryDTO 宿舍信息dto
      * @return class dormitory
      * @throws SerException
@@ -62,10 +66,30 @@ public interface DormitorySer extends Ser<Dormitory,DormitoryDTO>{
      */
     default void importFile() throws SerException {
     }
+
     /**
      * 导出宿舍信息明细
      */
-    default String exportExcel(String area)throws SerException {
+    default String exportExcel(String area) throws SerException {
         return null;
     }
+
+    /**
+     * chenjunhao
+     * 获取所有宿舍地址
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allDormitoryAddress() throws SerException;
+
+    /**
+     * chenjunhao
+     * 根据住宿地址获取负责人联系方式
+     *
+     * @param dormitoryAddress
+     * @return
+     * @throws SerException
+     */
+    String findContact(String dormitoryAddress) throws SerException;
 }

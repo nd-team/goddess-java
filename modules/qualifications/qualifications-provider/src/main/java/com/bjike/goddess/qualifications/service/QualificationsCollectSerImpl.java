@@ -142,8 +142,8 @@ public class QualificationsCollectSerImpl extends ServiceImpl<QualificationsColl
 
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
-        List<SonPermissionObject> list = new ArrayList<>();
         String userToken = RpcTransmit.getUserToken();
+        List<SonPermissionObject> list = new ArrayList<>();
         Boolean flagSeeSign = guideSeeIdentity();
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagAddSign = guideAddIdentity();

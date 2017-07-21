@@ -71,7 +71,7 @@ public class CommerceContacts extends BaseEntity {
      * 客户级别
      */
     @Column(name = "customerLevel_id", columnDefinition = "VARCHAR(36)   COMMENT '客户级别'")
-    private String customerLevel;
+    private String customerLevelName;
 
     /**
      * 客户来源
@@ -190,12 +190,12 @@ public class CommerceContacts extends BaseEntity {
         this.relation = relation;
     }
 
-    public String getCustomerLevel() {
-        return customerLevel;
+    public String getCustomerLevelName() {
+        return customerLevelName;
     }
 
-    public void setCustomerLevel(String customerLevel) {
-        this.customerLevel = customerLevel;
+    public void setCustomerLevelName(String customerLevelName) {
+        this.customerLevelName = customerLevelName;
     }
 
     public String getOrigin() {

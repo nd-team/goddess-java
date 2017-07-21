@@ -23,6 +23,17 @@ public class DepartYearIndexSetBO extends BaseBO {
     private String indexName;
 
     /**
+     * 年度指标编号
+     */
+    private Integer indexNumber;
+
+    /**
+     * 部门年度指标编号
+     */
+    private Integer yearIndexNumber;
+
+
+    /**
      * 年份
      */
     private String year;
@@ -367,5 +378,21 @@ public class DepartYearIndexSetBO extends BaseBO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public Integer getIndexNumber() {
+        return indexNumber;
+    }
+
+    public void setIndexNumber(Integer indexNumber) {
+        this.indexNumber = indexNumber;
+    }
+
+    public Integer getYearIndexNumber() {
+        return yearIndexNumber;
+    }
+
+    public void setYearIndexNumber(Integer yearIndexNumber) {
+        this.yearIndexNumber = yearIndexNumber;
     }
 }

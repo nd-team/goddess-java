@@ -24,6 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,7 +70,7 @@ public class UserLoginSerImpl implements UserLoginSer {
                     AuthCodeSession.remove(account);//清除验证码
                     saveLoginLog(loginTO, user);  //记录登录日志
                     LoginUser loginUser = saveToSessionAndRedis(user, token); //保存登录用户到session和redis
-                    setPermission(loginUser, token);
+//                    setPermission(loginUser, token);
                 } else {
                     throw new SerException("账号或者密码错误");
                 }

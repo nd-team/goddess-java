@@ -12,6 +12,7 @@ import com.bjike.goddess.staffactivity.api.ActivityEvaluateAPI;
 import com.bjike.goddess.staffactivity.bo.ActivityEvaluateBO;
 import com.bjike.goddess.staffactivity.dto.ActivityEvaluateDTO;
 import com.bjike.goddess.staffactivity.to.ActivityEvaluateTO;
+import com.bjike.goddess.staffactivity.to.GuidePermissionTO;
 import com.bjike.goddess.staffactivity.vo.ActivityEvaluateVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -36,6 +37,29 @@ public class ActivityEvaluateAct {
 
     @Autowired
     private ActivityEvaluateAPI activityEvaluateAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = activityEvaluateAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 根据id查询活动评价

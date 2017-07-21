@@ -27,6 +27,13 @@ public class YearIndexSet extends BaseEntity {
     private String indexName;
 
     /**
+     * 年度指标编号
+     */
+    @Column(name = "indexNumber", nullable = false, columnDefinition = "INT   COMMENT '年度指标编号'")
+    private Integer indexNumber;
+
+
+    /**
      * 年份
      */
     @Column(name = "year", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '年份'")
@@ -35,13 +42,13 @@ public class YearIndexSet extends BaseEntity {
     /**
      * 指标类型
      */
-    @Column(name = "indexType",   columnDefinition = "VARCHAR(255)   COMMENT '指标类型'")
+    @Column(name = "indexType", columnDefinition = "VARCHAR(255)   COMMENT '指标类型'")
     private String indexType;
 
     /**
      * 维度
      */
-    @Column(name = "dimension",   columnDefinition = "VARCHAR(255)   COMMENT '维度'")
+    @Column(name = "dimension", columnDefinition = "VARCHAR(255)   COMMENT '维度'")
     private String dimension;
 
     /**
@@ -72,19 +79,19 @@ public class YearIndexSet extends BaseEntity {
     /**
      * 年度指标添加人
      */
-    @Column(name = "yearPersion",  columnDefinition = "VARCHAR(255)   COMMENT '年度指标添加人'")
+    @Column(name = "yearPersion", columnDefinition = "VARCHAR(255)   COMMENT '年度指标添加人'")
     private String yearPersion;
 
     /**
      * 数据来源
      */
-    @Column(name = "dataOrigin",  columnDefinition = "VARCHAR(255)   COMMENT '数据来源'")
+    @Column(name = "dataOrigin", columnDefinition = "VARCHAR(255)   COMMENT '数据来源'")
     private String dataOrigin;
 
     /**
      * 年度指标添加时间
      */
-    @Column(name = "yearIndexTime",  columnDefinition = "DATE   COMMENT '年度指标添加时间'")
+    @Column(name = "yearIndexTime", columnDefinition = "DATE   COMMENT '年度指标添加时间'")
     private LocalDate yearIndexTime;
 
     /**
@@ -92,7 +99,6 @@ public class YearIndexSet extends BaseEntity {
      */
     @Column(name = "separateStatus", nullable = false, columnDefinition = "INT(2)   COMMENT '被分解状态'")
     private SeparateStatus separateStatus;
-
 
 
     public String getIndexName() {
@@ -190,6 +196,14 @@ public class YearIndexSet extends BaseEntity {
 
     public void setSeparateStatus(SeparateStatus separateStatus) {
         this.separateStatus = separateStatus;
+    }
+
+    public Integer getIndexNumber() {
+        return indexNumber;
+    }
+
+    public void setIndexNumber(Integer indexNumber) {
+        this.indexNumber = indexNumber;
     }
 
 }

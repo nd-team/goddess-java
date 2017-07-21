@@ -28,7 +28,12 @@ public class ComputerAssistApiImpl implements ComputerAssistAPI {
 
     @Override
     public Long countComputerAssist(ComputerAssistDTO computerAssistDTO) throws SerException {
-        return computerAssistSer.count( computerAssistDTO);
+        return computerAssistSer.countComputerAssist( computerAssistDTO);
+    }
+
+    @Override
+    public ComputerAssistBO getOneById(String id) throws SerException {
+        return computerAssistSer.getOneById(id);
     }
 
     @Override

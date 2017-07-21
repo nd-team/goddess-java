@@ -65,4 +65,9 @@ public class CommerceMemberApiImpl implements CommerceMemberAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return commerceMemberSer.guidePermission(guidePermissionTO);
     }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return commerceMemberSer.templateExport();
+    }
 }

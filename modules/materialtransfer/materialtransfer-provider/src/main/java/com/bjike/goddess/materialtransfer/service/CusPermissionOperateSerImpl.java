@@ -1,9 +1,9 @@
 package com.bjike.goddess.materialtransfer.service;
 
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.materialinstock.dto.CusPermissionOperateDTO;
-import com.bjike.goddess.materialinstock.entity.CusPermissionOperate;
-import com.bjike.goddess.materialinstock.service.CusPermissionOperateSer;
+import com.bjike.goddess.materialtransfer.dto.CusPermissionOperateDTO;
+import com.bjike.goddess.materialtransfer.entity.CusPermissionOperate;
+import com.bjike.goddess.materialtransfer.service.CusPermissionOperateSer;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 

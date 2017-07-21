@@ -25,6 +25,14 @@ public interface AgeAssistAPI {
     default Long countAgeAssist(AgeAssistDTO ageAssistDTO) throws SerException {
         return null;
     }
+
+
+    /**
+     * 一个工龄补助
+     * @return class AgeAssistBO
+     */
+    default AgeAssistBO getOneById(String id ) throws SerException {return null;}
+
     /**
      * 工龄补助列表
      * @return class AgeAssistBO

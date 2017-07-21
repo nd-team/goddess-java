@@ -18,4 +18,16 @@
 
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.courier.api.CourierAPI" ref="courierApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.courier.api.CourierCompanyAPI" ref="courierCompanyApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.courier.api.CusPermissionAPI" ref="cusPermissionApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.courier.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"/>
+
+
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.announcement.api.AnnouncementAPI" id="announcementApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.message.api.MessageAPI" id="messageApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.ArrangementAPI" id="arrangementApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
 </beans>

@@ -3,6 +3,7 @@ package com.bjike.goddess.checkhost.action.checkhost;
 import com.bjike.goddess.checkhost.api.StayDaysAPI;
 import com.bjike.goddess.checkhost.bo.StayDaysBO;
 import com.bjike.goddess.checkhost.dto.StayDaysDTO;
+import com.bjike.goddess.checkhost.enums.CheckStatus;
 import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.to.StayDaysTO;
 import com.bjike.goddess.checkhost.vo.CollectNameVO;
@@ -170,20 +171,22 @@ public class StayDaysAction {
     /**
      * 审核
      *
-     * @param stayDaysTO 员工住宿天数汇总数据bo
+     * @param id          id
+     * @param checkStatus 审核状态
      * @return class StayDaysVO
      * @des 审核员工住宿天数汇总
      * @version v1
      */
-    @PostMapping("v1/audit")
-    public Result audit(@Validated StayDaysTO stayDaysTO) throws ActException {
+    @PostMapping("v1/audit/{id}/{checkStatus}")
+    public Result audit(@PathVariable String id, @PathVariable CheckStatus checkStatus) throws ActException {
         try {
-            StayDaysBO stayDaysBO = stayDaysAPI.auditStayDays(stayDaysTO);
+            StayDaysBO stayDaysBO = stayDaysAPI.auditStayDays(id, checkStatus);
             return ActResult.initialize(BeanTransform.copyProperties(stayDaysBO, StayDaysVO.class, true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 汇总名字员工住宿天数汇总
      *
@@ -196,7 +199,7 @@ public class StayDaysAction {
     public Result collect(@RequestParam String[] names) throws ActException {
         try {
             List<CollectNameVO> collectNameVOS = BeanTransform.copyProperties(
-                    stayDaysAPI.collectName(names),CollectNameVO.class);
+                    stayDaysAPI.collectName(names), CollectNameVO.class);
             return ActResult.initialize(collectNameVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

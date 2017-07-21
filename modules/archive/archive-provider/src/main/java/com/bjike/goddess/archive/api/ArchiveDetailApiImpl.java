@@ -4,6 +4,7 @@ import com.bjike.goddess.archive.bo.ArchiveDetailBO;
 import com.bjike.goddess.archive.dto.ArchiveDetailDTO;
 import com.bjike.goddess.archive.service.ArchiveDetailSer;
 import com.bjike.goddess.archive.to.ArchiveDetailTO;
+import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,16 @@ public class ArchiveDetailApiImpl implements ArchiveDetailAPI {
 
     @Autowired
     private ArchiveDetailSer archiveDetailSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return archiveDetailSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return archiveDetailSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public ArchiveDetailBO save(ArchiveDetailTO to) throws SerException {

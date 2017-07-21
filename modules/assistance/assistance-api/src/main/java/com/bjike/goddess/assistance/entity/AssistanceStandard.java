@@ -21,13 +21,13 @@ public class AssistanceStandard extends BaseEntity {
     /**
      * 补助类型名称
      */
-    @Column(name = "name",  columnDefinition = "VARCHAR(255)   COMMENT '补助类型名称'")
+    @Column(name = "name", nullable = false , columnDefinition = "VARCHAR(255)   COMMENT '补助类型名称'")
     private String name;
 
     /**
      * 标准
      */
-    @Column(name = "standardForm",unique = true, columnDefinition = "VARCHAR(255)   COMMENT '标准'")
+    @Column(name = "standardForm",  columnDefinition = "VARCHAR(255)   COMMENT '标准'")
     private String standardForm;
 
     /**

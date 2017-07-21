@@ -5,6 +5,7 @@ import com.bjike.goddess.balancecard.dto.DepartYearIndexSetDTO;
 import com.bjike.goddess.balancecard.service.DepartYearIndexSetSer;
 import com.bjike.goddess.balancecard.to.DepartYearIndexSetTO;
 import com.bjike.goddess.balancecard.to.ExportExcelDepartTO;
+import com.bjike.goddess.balancecard.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -80,5 +81,34 @@ public class DepartYearIndexSetApiImpl implements DepartYearIndexSetAPI {
     @Override
     public List<String> listEmp() throws SerException {
         return departYearIndexSetSer.listEmp();
+    }
+
+    public DepartYearIndexSetApiImpl() {
+        super();
+    }
+
+    @Override
+    public void leadExcel(List<DepartYearIndexSetTO> toList) throws SerException {
+         departYearIndexSetSer.leadExcel(toList);
+    }
+
+    @Override
+    public byte[] exportExcel(ExportExcelDepartTO to) throws SerException {
+        return departYearIndexSetSer.exportExcel(to);
+    }
+
+    @Override
+    public List<DepartYearIndexSetBO> dendrogram(String id) throws SerException {
+        return departYearIndexSetSer.dendrogram(id);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return departYearIndexSetSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return departYearIndexSetSer.guidePermission(guidePermissionTO);
     }
 }

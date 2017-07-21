@@ -7,14 +7,13 @@ import com.bjike.goddess.balancecard.to.IndexTypeSetTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.balancecard.dto.IndexTypeSetDTO;
-import com.bjike.goddess.balancecard.entity.IndexTypeSet;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -81,15 +80,17 @@ public class IndexTypeSetSerImpl extends ServiceImpl<IndexTypeSet, IndexTypeSetD
         super.save( temp );
         return BeanTransform.copyProperties( temp , IndexTypeSetBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public IndexTypeSetBO editIndexTypeSet(IndexTypeSetTO indexTypeSetTO) throws SerException {
         if( StringUtils.isBlank(indexTypeSetTO.getId())){
             throw new SerException("失败，id不能为空");
-        }if( StringUtils.isBlank(indexTypeSetTO.getTypeName())){
+        }
+        if( StringUtils.isBlank(indexTypeSetTO.getTypeName())){
             throw new SerException("失败，指标类型不能为空");
         }
         IndexTypeSet temp = super.findById( indexTypeSetTO.getId() );
+        BeanTransform.copyProperties(indexTypeSetTO,temp,true);
         temp.setTypeName( indexTypeSetTO.getTypeName());
         temp.setDescribtion( indexTypeSetTO.getDescribtion() );
         temp.setModifyTime(LocalDateTime.now());

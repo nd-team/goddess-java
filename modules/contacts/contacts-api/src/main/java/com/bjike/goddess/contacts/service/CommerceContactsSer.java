@@ -97,4 +97,11 @@ public interface CommerceContactsSer extends Ser<CommerceContacts, CommerceConta
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
+    /**
+     *
+     */
+    default byte[] templateExport() throws SerException{
+        return null;
+    }
 }

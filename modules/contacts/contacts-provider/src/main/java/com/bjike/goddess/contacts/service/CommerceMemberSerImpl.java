@@ -10,8 +10,10 @@ import com.bjike.goddess.contacts.bo.CommerceMemberBO;
 import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.contacts.dto.CommerceMemberDTO;
 import com.bjike.goddess.contacts.dto.CommonalityDTO;
+import com.bjike.goddess.contacts.entity.CommerceContacts;
 import com.bjike.goddess.contacts.entity.CommerceMember;
 import com.bjike.goddess.contacts.enums.GuideAddrStatus;
+import com.bjike.goddess.contacts.excel.CommerceMemberTemplateExport;
 import com.bjike.goddess.contacts.to.CommerceMemberTO;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.message.api.MessageAPI;
@@ -193,6 +195,11 @@ public class CommerceMemberSerImpl extends ServiceImpl<CommerceMember, CommerceM
 
         RpcTransmit.transmitUserToken(userToken);
         return flag;
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return null;
     }
 
     /**

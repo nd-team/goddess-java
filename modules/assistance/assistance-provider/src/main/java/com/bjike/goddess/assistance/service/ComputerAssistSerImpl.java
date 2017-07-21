@@ -52,6 +52,16 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
     }
 
     @Override
+    public ComputerAssistBO getOneById(String id) throws SerException {
+        if( StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
+        ComputerAssist computerAssist = super.findById(id);
+
+        return BeanTransform.copyProperties(computerAssist, ComputerAssistBO.class);
+    }
+
+    @Override
     public List<ComputerAssistBO> listComputerAssist(ComputerAssistDTO computerAssistDTO) throws SerException {
         if (StringUtils.isNotBlank(computerAssistDTO.getEmpName())) {
             computerAssistDTO.getConditions().add(Restrict.like("empName", computerAssistDTO.getEmpName()));

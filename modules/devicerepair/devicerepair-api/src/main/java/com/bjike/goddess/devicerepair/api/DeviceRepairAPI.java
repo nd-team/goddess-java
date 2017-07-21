@@ -122,4 +122,24 @@ public interface DeviceRepairAPI {
      */
     void fetchDevice(FetchDeviceTO to) throws SerException;
 
+
+    /**
+     * 获取所有组织结构中的部门
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAddAllDetails() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有用户
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findallMonUser() throws SerException {
+        return null;
+    }
 }

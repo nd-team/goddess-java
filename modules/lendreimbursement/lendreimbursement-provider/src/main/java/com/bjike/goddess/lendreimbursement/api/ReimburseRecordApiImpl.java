@@ -3,6 +3,7 @@ package com.bjike.goddess.lendreimbursement.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
 import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
+import com.bjike.goddess.lendreimbursement.bo.CollectReimerDataBO;
 import com.bjike.goddess.lendreimbursement.bo.ReimburseRecordBO;
 import com.bjike.goddess.lendreimbursement.dto.ReimburseRecordDTO;
 import com.bjike.goddess.lendreimbursement.excel.SonPermissionObject;
@@ -188,28 +189,33 @@ public class ReimburseRecordApiImpl implements ReimburseRecordAPI {
 
 
     @Override
-    public List<CollectDataBO> collectLender(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+    public List<CollectReimerDataBO> collectLender(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         return reimburseRecordSer.collectLender(reimburseRecordDTO);
     }
 
     @Override
-    public List<CollectDataBO> collectArea(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+    public List<CollectReimerDataBO> collectArea(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         return reimburseRecordSer.collectArea(reimburseRecordDTO);
     }
 
     @Override
-    public List<CollectDataBO> collectFirstSubject(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+    public List<CollectReimerDataBO> collectFirstSubject(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         return reimburseRecordSer.collectFirstSubject(reimburseRecordDTO);
     }
 
     @Override
-    public List<CollectDataBO> collectProjectName(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+    public List<CollectReimerDataBO> collectProjectName(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         return reimburseRecordSer.collectProjectName(reimburseRecordDTO);
     }
 
     @Override
     public List<String> listAllUser() throws SerException {
         return reimburseRecordSer.listAllUser();
+    }
+
+    @Override
+    public List<String> reimNumByPrepay() throws SerException {
+        return reimburseRecordSer.reimNumByPrepay();
     }
 
     @Override
@@ -225,6 +231,11 @@ public class ReimburseRecordApiImpl implements ReimburseRecordAPI {
     @Override
     public List<String> listProject() throws SerException {
         return reimburseRecordSer.listProject();
+    }
+
+    @Override
+    public List<String> listReimUser() throws SerException {
+        return reimburseRecordSer.listReimUser();
     }
 
     @Override

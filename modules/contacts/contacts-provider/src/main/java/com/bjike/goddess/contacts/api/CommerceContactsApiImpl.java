@@ -66,4 +66,9 @@ public class CommerceContactsApiImpl implements CommerceContactsAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return commerceContactsSer.guidePermission(guidePermissionTO);
     }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return commerceContactsSer.templateExport();
+    }
 }

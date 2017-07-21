@@ -52,6 +52,25 @@ public class AssistancePlanAction {
         }
     }
 
+
+    /**
+     *  一个补助方案
+     *
+     * @param id  补助方案id
+     * @des 一个补助方案
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id ) throws ActException {
+        try {
+            AssistancePlanVO assistancePlanVO = BeanTransform.copyProperties(
+                    assistancePlanAPI.getOneById(id), AssistancePlanVO.class);
+            return ActResult.initialize(assistancePlanVO );
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
     /**
      * 补助方案列表
      *

@@ -37,7 +37,7 @@ public class ExamWaySetAction {
     private ExamWaySetAPI examWaySetAPI;
 
     /**
-     *  列表总条数
+     * 列表总条数
      *
      * @param examWaySetDTO  考核方式信息dto
      * @des 获取所有考核方式信息总条数

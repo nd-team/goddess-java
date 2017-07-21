@@ -48,7 +48,7 @@ public class ReimburseRecordDTO extends BaseDTO {
     private String endTime;
 
     /**
-     * 报销人
+     * 负责人
      */
     private String charger;
 

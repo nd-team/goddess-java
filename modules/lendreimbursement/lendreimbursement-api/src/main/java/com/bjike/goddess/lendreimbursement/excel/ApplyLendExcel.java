@@ -16,6 +16,13 @@ import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
 public class ApplyLendExcel extends BaseTO {
 
+
+    /**
+     * 借款日期
+     */
+    @ExcelHeader(name = "借款日期")
+    private String lendDate;
+
     /**
      * 预计借款日期
      */
@@ -142,11 +149,6 @@ public class ApplyLendExcel extends BaseTO {
     @ExcelHeader(name = "填单人")
     private String fillSingler;
 
-    /**
-     * 借款日期
-     */
-    @ExcelHeader(name = "借款日期")
-    private String lendDate;
 
     /**
      * 负责人审核意见

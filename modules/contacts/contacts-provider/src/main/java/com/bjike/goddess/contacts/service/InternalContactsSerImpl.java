@@ -2,20 +2,23 @@ package com.bjike.goddess.contacts.service;
 
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contacts.bo.InternalContactsBO;
+import com.bjike.goddess.contacts.bo.NameAndIdBO;
 import com.bjike.goddess.contacts.dto.InternalContactsDTO;
 import com.bjike.goddess.contacts.entity.InternalContacts;
 import com.bjike.goddess.contacts.enums.GuideAddrStatus;
+import com.bjike.goddess.contacts.enums.Status;
+import com.bjike.goddess.contacts.excel.InternalContactsTemplateExport;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.contacts.to.InternalContactsTO;
 import com.bjike.goddess.dimission.api.DimissionInfoAPI;
 import com.bjike.goddess.dimission.bo.DimissionInfoBO;
 import com.bjike.goddess.dimission.dto.DimissionInfoDTO;
-import com.bjike.goddess.dimission.enums.HandleStatus;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
@@ -24,8 +27,10 @@ import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
-import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
+import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -69,6 +74,9 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
     @Autowired
     private DimissionInfoAPI dimissionInfoAPI;
 
+    @Autowired
+    private EntryBasicInfoAPI entryBasicInfoAPI;
+
     private static final String foot = "（正确可忽略这个邮件，否则请发邮件到综合资源部。）";
     private static final String title = "关于通讯录信息正确性";
 
@@ -81,24 +89,46 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
      */
     private InternalContactsBO transformBO(InternalContacts entity) throws SerException {
         InternalContactsBO bo = BeanTransform.copyProperties(entity, InternalContactsBO.class);
+//        UserDTO userDTO = new UserDTO();
+//        userDTO.getConditions().add(Restrict.eq(ID, entity.getUserId()));
+//        List<UserBO> user = userAPI.findByCis(userDTO);
+//        if (null != user) {
+//            if (0 != user.size()) {
+//                bo.setUsername(user.get(0).getUsername());
+//                bo.setNumber(user.get(0).getEmployeeNumber());
+//                PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.get(0).getId());
+//                bo.setArea("");
+//                bo.setPosition("");
+//                bo.setDepartment("");
+//                if (null != detailBO)
+//                    for (String id : detailBO.getPositionIds().split(",")) {
+//                        PositionDetailBO position = positionDetailAPI.findBOById(id);
+//                        bo.setPosition(bo.getPosition() + "," + position.getPosition());
+//                        bo.setDepartment(bo.getDepartment() + "," + position.getDepartmentName());
+//                        bo.setArea(bo.getArea() + "," + position.getArea());
+//                    }
+//            }
+//        }
         UserDTO userDTO = new UserDTO();
-        userDTO.getConditions().add(Restrict.eq(ID, entity.getUserId()));
-        List<UserBO> user = userAPI.findByCis(userDTO);
+        EntryBasicInfoDTO entryBasicInfoDTO = new EntryBasicInfoDTO();
+        entryBasicInfoDTO.getConditions().add(Restrict.eq(ID, entity.getUserId()));
+        List<EntryBasicInfoBO> user = entryBasicInfoAPI.listEntryBasicInfo(entryBasicInfoDTO);
+
         if (null != user) {
             if (0 != user.size()) {
-                bo.setUsername(user.get(0).getUsername());
-                bo.setNumber(user.get(0).getEmployeeNumber());
+                bo.setUsername(user.get(0).getName());
+                bo.setNumber(user.get(0).getEmployeeID());
                 PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.get(0).getId());
-                bo.setArea("");
-                bo.setPosition("");
-                bo.setDepartment("");
-                if (null != detailBO)
-                    for (String id : detailBO.getPositionIds().split(",")) {
-                        PositionDetailBO position = positionDetailAPI.findBOById(id);
-                        bo.setPosition(bo.getPosition() + "," + position.getPosition());
-                        bo.setDepartment(bo.getDepartment() + "," + position.getDepartmentName());
-                        bo.setArea(bo.getArea() + "," + position.getArea());
-                    }
+                bo.setArea(user.get(0).getArea());
+                bo.setPosition(user.get(0).getPosition());
+                bo.setDepartment(user.get(0).getDepartment());
+//                if (null != detailBO)
+//                    for (String id : detailBO.getPositionIds().split(",")) {
+//                        PositionDetailBO position = positionDetailAPI.findBOById(id);
+//                        bo.setPosition(bo.getPosition() + "," + position.getPosition());
+//                        bo.setDepartment(bo.getDepartment() + "," + position.getDepartmentName());
+//                        bo.setArea(bo.getArea() + "," + position.getArea());
+//                    }
             }
         }
         return bo;
@@ -126,7 +156,8 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         dto.getConditions().add(Restrict.eq("userId", to.getUserId()));
         if (super.count(dto) != 0)
             throw new SerException("该用户数据已存在");
-        entity.setStatus(Status.THAW);
+
+        entity.setStatus(Status.CONGEAL);
         super.save(entity);
 
         if (to.isSend()) {
@@ -250,6 +281,7 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
 
     @Override
     public List<InternalContactsBO> maps(InternalContactsDTO dto) throws SerException {
+
         List<InternalContacts> list = super.findByPage(dto);
         return this.transformBOList(list);
     }
@@ -434,6 +466,64 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
                 }
             }
         }
+    }
+
+    @Override
+    public List<NameAndIdBO> getUserName() throws SerException {
+        EntryBasicInfoDTO entryBasicInfoDTO = new EntryBasicInfoDTO();
+        List<EntryBasicInfoBO> bos = entryBasicInfoAPI.listEntryBasicInfo(entryBasicInfoDTO);
+        List<NameAndIdBO> userNameList = new ArrayList<>();
+        if (null != bos && bos.size() > 0) {
+            for (EntryBasicInfoBO bo : bos) {
+                NameAndIdBO nameAndIdBO = new NameAndIdBO();
+                nameAndIdBO.setUserId(bo.getId());
+                nameAndIdBO.setName(bo.getName());
+                userNameList.add(nameAndIdBO);
+            }
+        }
+        return userNameList;
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<InternalContactsTemplateExport> commerceContactsExports = new ArrayList<>();
+
+        InternalContactsTemplateExport excel = new InternalContactsTemplateExport();
+        excel.setUserId("移动通信类");
+        excel.setPhone("test");
+        excel.setEmail("jkj");
+        excel.setBloc("jkj");
+        excel.setPhoneNumber("jkj");
+        excel.setQq("jkj");
+        excel.setWeChat("jkj");
+        excel.setEmergency("jkj");
+        excel.setEmergencyPhone("jkj");
+        excel.setRemark("jkj");
+        excel.setStatus(Status.CONGEAL);
+        commerceContactsExports.add(excel);
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(commerceContactsExports, exce);
+        return bytes;
+    }
+
+    @Override
+    public List<String> getEmails(String[] names) throws SerException {
+        List<String> strings = new ArrayList<>();
+        if (0 < names.length) {
+            for (String name : names) {
+                List<EntryBasicInfoBO> entryBasicInfoBOs = entryBasicInfoAPI.getEntryBasicInfoByName(name);
+                if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
+                    for (EntryBasicInfoBO bo : entryBasicInfoBOs) {
+                        InternalContactsDTO internalContactsDTO = new InternalContactsDTO();
+                        internalContactsDTO.getConditions().add(Restrict.in("userId",bo.getId()));
+                        InternalContactsBO internalContactsBO =  maps(internalContactsDTO).get(0);
+                        String str = bo.getEmail();
+                        strings.add(str);
+                    }
+                }
+            }
+        }
+        return strings;
     }
 
     /**

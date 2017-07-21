@@ -3,8 +3,7 @@ package com.bjike.goddess.contacts.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.common.api.type.Status;
-
+import com.bjike.goddess.contacts.enums.Status;
 import javax.validation.constraints.NotNull;
 
 /**

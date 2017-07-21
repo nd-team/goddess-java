@@ -535,14 +535,6 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
         return null;
     }
 
-    /**
-     * 获取所有账户来源
-     *
-     * @return
-     */
-    default List<String> listAccountCom() throws SerException {
-        return null;
-    }
 
     /**
      * 申请记录导出excel
@@ -589,6 +581,14 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
      */
     byte[] receiveExcel(ApplyLendDTO applyLendDTO) throws SerException;
 
+    /**
+     * 获取所有账户来源
+     * chenjunhao
+     * @return
+     */
+    default List<String> listAccountCom() throws SerException {
+        return null;
+    }
     /**
      * chenjunhao
      * 等待付款导出cjh

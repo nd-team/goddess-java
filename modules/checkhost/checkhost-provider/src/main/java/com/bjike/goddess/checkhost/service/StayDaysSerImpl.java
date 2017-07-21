@@ -2,6 +2,7 @@ package com.bjike.goddess.checkhost.service;
 
 import com.bjike.goddess.checkhost.bo.CollectNameBO;
 import com.bjike.goddess.checkhost.bo.StayDaysBO;
+import com.bjike.goddess.checkhost.enums.CheckStatus;
 import com.bjike.goddess.checkhost.enums.GuideAddrStatus;
 import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.to.StayDaysTO;
@@ -214,10 +215,13 @@ public class StayDaysSerImpl extends ServiceImpl<StayDays, StayDaysDTO> implemen
     }
 
     @Override
-    public StayDaysBO auditStayDays(StayDaysTO stayDaysTO) throws SerException {
+    public StayDaysBO auditStayDays(String id, CheckStatus checkStatus) throws SerException {
         checkAddIdentity();
-        stayDaysTO.setComprehensiveVerify(userAPI.currentUser().getUsername());
-        StayDays stayDays = BeanTransform.copyProperties(stayDaysTO, StayDays.class, true);
+//        stayDaysTO.setComprehensiveVerify(userAPI.currentUser().getUsername());
+//        StayDays stayDays = BeanTransform.copyProperties(stayDaysTO, StayDays.class, true);
+        StayDays stayDays=super.findById(id);
+        stayDays.setCheckStatus(checkStatus);
+        stayDays.setModifyTime(LocalDateTime.now());
         super.update(stayDays);
 
         StayDaysBO stayDaysBO = BeanTransform.copyProperties(stayDays, StayDaysBO.class);

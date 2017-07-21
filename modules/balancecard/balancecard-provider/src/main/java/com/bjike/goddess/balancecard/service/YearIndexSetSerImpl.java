@@ -9,15 +9,16 @@ import com.bjike.goddess.balancecard.entity.DepartMonIndexSet;
 import com.bjike.goddess.balancecard.entity.DepartYearIndexSet;
 import com.bjike.goddess.balancecard.entity.PositionIndexSet;
 import com.bjike.goddess.balancecard.entity.YearIndexSet;
+import com.bjike.goddess.balancecard.enums.GuideAddrStatus;
 import com.bjike.goddess.balancecard.enums.SeparateStatus;
 import com.bjike.goddess.balancecard.enums.SeperateComeStatus;
+import com.bjike.goddess.balancecard.excel.SonPermissionObject;
 import com.bjike.goddess.balancecard.excel.YearIndexSetExcel;
-import com.bjike.goddess.balancecard.to.DepartSerperateTO;
-import com.bjike.goddess.balancecard.to.ExportExcelYearTO;
-import com.bjike.goddess.balancecard.to.YearIndexSetTO;
+import com.bjike.goddess.balancecard.to.*;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
@@ -56,6 +57,102 @@ public class YearIndexSetSerImpl extends ServiceImpl<YearIndexSet, YearIndexSetD
     private DepartMonIndexSetSer departMonIndexSetSer;
     @Autowired
     private PositionIndexSetSer positionIndexSetSer;
+    @Autowired
+    private BalancecardPermissionSer cusPermissionSer;
+
+    //下拉导航权限
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        RpcTransmit.transmitUserToken(userToken);
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("yearIndex");
+        obj.setDescribesion("年度指标");
+        obj.setFlag(true);
+        list.add(obj);
+
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeDis = departYearIndexSetSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("departYearIndex");
+        obj.setDescribesion("部门年度指标");
+        obj.setFlag(true);
+        list.add(obj);
+
+        Boolean flagSeeCate = departMonIndexSetSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("contractcategory");
+        obj.setDescribesion("部门月度指标");
+        obj.setFlag(true);
+        list.add(obj);
+
+        Boolean flagSeeEmail = positionIndexSetSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("collectemail");
+        obj.setDescribesion("岗位指标");
+        obj.setFlag(true);
+        list.add(obj);
+
+        return list;
+    }
+    //功能导航权限
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = true;
+                break;
+            case ADD:
+                flag = true;
+                break;
+            case EDIT:
+                flag = true;
+                break;
+            case AUDIT:
+                flag = true;
+                break;
+            case DELETE:
+                flag = true;
+                break;
+            case IMPORT:
+                flag = true;
+                break;
+            case EXPORT:
+                flag = true;
+                break;
+            case UPLOAD:
+                flag = true;
+                break;
+            case DOWNLOAD:
+                flag = true;
+                break;
+            case SEE:
+                flag = true;
+                break;
+            case SEEFILE:
+                flag = true;
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
+
 
     @Override
     public Long countYearIndexSet(YearIndexSetDTO yearIndexSetDTO) throws SerException {
@@ -97,6 +194,15 @@ public class YearIndexSetSerImpl extends ServiceImpl<YearIndexSet, YearIndexSetD
         UserBO userBO = userAPI.currentUser();
         YearIndexSet yearIndexSets = BeanTransform.copyProperties(yearIndexSetTO, YearIndexSet.class, true);
         yearIndexSets.setYearPersion(userBO.getUsername());
+        //查询所有的指标编号之中最大的指标编号
+        String indexNumber = super.findByMaxField("indexNumber", YearIndexSet.class);
+        //判断indexNumber是否为空
+        if (indexNumber != null) {
+            //给新增的数据的指标编号加1
+            yearIndexSets.setIndexNumber(Integer.parseInt(indexNumber) + 1);
+        } else {
+            yearIndexSets.setIndexNumber(1);
+        }
         yearIndexSets.setYearIndexTime(LocalDate.now());
         yearIndexSets.setSeparateStatus(SeparateStatus.NONE);
 
@@ -238,6 +344,7 @@ public class YearIndexSetSerImpl extends ServiceImpl<YearIndexSet, YearIndexSetD
 
         listDYear.stream().forEach(str -> {
             str.setIndexName(yearIndexSet.getIndexName());
+            str.setIndexNumber(yearIndexSet.getIndexNumber());
             str.setYear(yearIndexSet.getYear());
             str.setIndexType(yearIndexSet.getIndexType());
             str.setDimension(yearIndexSet.getDimension());
@@ -263,32 +370,40 @@ public class YearIndexSetSerImpl extends ServiceImpl<YearIndexSet, YearIndexSetD
         DepartYearIndexSetDTO dyDTO = new DepartYearIndexSetDTO();
         dyDTO.getConditions().add(Restrict.eq("yearIndexSetId", id));
         List<DepartYearIndexSet> listDYear = departYearIndexSetSer.findByCis(dyDTO);
-        //所有部门年id
-        List<String> dyIdList = listDYear.stream().map(DepartYearIndexSet::getId).collect(Collectors.toList());
-        DepartMonIndexSetDTO dmDTO = new DepartMonIndexSetDTO();
-        dmDTO.getConditions().add(Restrict.in("departYearIndexSetId", (String[]) dyIdList.toArray()));
-        List<DepartMonIndexSet> listDMon = departMonIndexSetSer.findByCis(dmDTO);
-        //所有部门月id
-        List<String> dmIdList = listDMon.stream().map(DepartMonIndexSet::getId).collect(Collectors.toList());
-        PositionIndexSetDTO pDTO = new PositionIndexSetDTO();
-        pDTO.getConditions().add(Restrict.in("departMonIndexSetId", (String[]) dmIdList.toArray()));
-        List<PositionIndexSet> postList = positionIndexSetSer.findByCis(pDTO);
-        //删除岗位
-        if (postList != null && postList.size() > 0) {
-            positionIndexSetSer.remove(postList);
-        }
-        //删除部门月指标
-        if (listDMon != null && listDMon.size() > 0) {
-            departMonIndexSetSer.remove(listDMon);
-        }
+
         //删除部门年度指标
         if (listDYear != null && listDYear.size() > 0) {
             departYearIndexSetSer.remove(listDYear);
+            //所有部门年id
+            List<String> dyIdList = listDYear.stream().map(DepartYearIndexSet::getId).collect(Collectors.toList());
+            DepartMonIndexSetDTO dmDTO = new DepartMonIndexSetDTO();
+            dmDTO.getConditions().add(Restrict.in("departYearIndexSetId", (String[]) dyIdList.toArray()));
+            List<DepartMonIndexSet> listDMon = departMonIndexSetSer.findByCis(dmDTO);
+            //删除部门月指标
+            if (listDMon != null && listDMon.size() > 0) {
+                departMonIndexSetSer.remove(listDMon);
+                //所有部门月id
+                List<String> dmIdList = listDMon.stream().map(DepartMonIndexSet::getId).collect(Collectors.toList());
+                PositionIndexSetDTO pDTO = new PositionIndexSetDTO();
+                pDTO.getConditions().add(Restrict.in("departMonIndexSetId", (String[]) dmIdList.toArray()));
+                List<PositionIndexSet> postList = positionIndexSetSer.findByCis(pDTO);
+                if (postList != null && postList.size() > 0) {
+                    positionIndexSetSer.remove(postList);
+                } else {
+                    //删除年指标
+                    super.remove(id);
+                }
+            } else {
+                //删除年指标
+                super.remove(id);
+            }
+        } else {
+            //删除年指标
+            super.remove(id);
         }
-        //删除年指标
-        super.remove(id);
     }
 
+    //分解年度指标
     @Override
     public YearIndexSetBO seperateDepartYear(YearIndexSetTO yearIndexSetTO) throws SerException {
         if (StringUtils.isBlank(yearIndexSetTO.getId())) {
@@ -303,9 +418,21 @@ public class YearIndexSetSerImpl extends ServiceImpl<YearIndexSet, YearIndexSetD
             if (weigthSum != 100d) {
                 throw new SerException("分解失败,权重之和必须加起来等于100");
             }
+            //查询部门年度指标编号最大值
+            String yearIndexNumber = departYearIndexSetSer.findByMaxField("yearIndexNumber", DepartYearIndexSet.class);
             List<DepartYearIndexSet> departYearIndexSetList = new ArrayList<>();
             departSerperateTOS.stream().forEach(str -> {
                 DepartYearIndexSet departYearIndexSet = new DepartYearIndexSet();
+                departYearIndexSet.setIndexNumber(temp.getIndexNumber());
+                //判断部门年度指标编号最大值是否为空
+                if (yearIndexNumber != null) {
+                    departYearIndexSet.setYearIndexNumber(Integer.parseInt(yearIndexNumber) + 1);
+                } else if (departYearIndexSetList.size() >= 1) {
+                    departYearIndexSet.setYearIndexNumber(departYearIndexSetList.size() + 1);
+
+                } else {
+                    departYearIndexSet.setYearIndexNumber(1);
+                }
                 departYearIndexSet.setIndexName(temp.getIndexName());
                 departYearIndexSet.setYear(temp.getYear());
                 departYearIndexSet.setIndexType(temp.getIndexType());
@@ -333,11 +460,14 @@ public class YearIndexSetSerImpl extends ServiceImpl<YearIndexSet, YearIndexSetD
                 departYearIndexSet.setYearIndexSetId(yearIndexSetTO.getId());
                 departYearIndexSet.setCreateTime(LocalDateTime.now());
                 departYearIndexSet.setModifyTime(LocalDateTime.now());
-
                 departYearIndexSetList.add(departYearIndexSet);
             });
             departYearIndexSetSer.save(departYearIndexSetList);
         }
+        //分解成功后更新年度指标分解状态为1  2017-07-11 23:02 jiangzaixuan 改
+        temp.setSeparateStatus(SeparateStatus.SEPERATE);
+        super.update(temp);
+
         return BeanTransform.copyProperties(temp, YearIndexSetBO.class);
     }
 
@@ -364,13 +494,20 @@ public class YearIndexSetSerImpl extends ServiceImpl<YearIndexSet, YearIndexSetD
         for (int i = 1; i <= toList.size(); i++) {
             isExist(toList.get(i - 1), i);
         }
+        String indexNumber = super.findByMaxField("indexNumber", YearIndexSet.class);
         List<YearIndexSet> list = BeanTransform.copyProperties(toList, YearIndexSet.class, true);
-        list.stream().forEach(str->{
+        list.stream().forEach(str -> {
 
             str.setYearPersion(userBO.getUsername());
             str.setYearIndexTime(LocalDate.now());
             str.setSeparateStatus(SeparateStatus.NONE);
-
+            if (indexNumber != null) {
+                str.setIndexNumber(Integer.parseInt(indexNumber) + 1);
+            } else if (list.size() > 1) {
+                str.setIndexNumber(list.size() + 1);
+            } else {
+                str.setIndexNumber(1);
+            }
             str.setComplete(null == str.getComplete() ? 0d : str.getComplete());
             str.setCreateTime(LocalDateTime.now());
             str.setModifyTime(LocalDateTime.now());
@@ -381,16 +518,16 @@ public class YearIndexSetSerImpl extends ServiceImpl<YearIndexSet, YearIndexSetD
 
     //校验字段是否存在
     private void isExist(YearIndexSetTO to, Integer row) throws SerException {
-        if(StringUtils.isBlank( to.getIndexName() )){
-            throw new SerException("第" + row + "行的指标名称不能为空" );
+        if (StringUtils.isBlank(to.getIndexName())) {
+            throw new SerException("第" + row + "行的指标名称不能为空");
         }
-        if(StringUtils.isBlank( to.getYear() )){
-            throw new SerException("第" + row + "行的年份不能为空" );
+        if (StringUtils.isBlank(to.getYear())) {
+            throw new SerException("第" + row + "行的年份不能为空");
         }
-        if(null== to.getDescribtion()){
-            throw new SerException("第" + row + "行的指标权重不能为空" );
+        if (null == to.getDescribtion()) {
+            throw new SerException("第" + row + "行的指标权重不能为空");
         }
-        if ( null== to.getYearTarget()) {
+        if (null == to.getYearTarget()) {
             throw new SerException("第" + row + "行的年度目标值不能为空");
         }
     }
@@ -398,10 +535,10 @@ public class YearIndexSetSerImpl extends ServiceImpl<YearIndexSet, YearIndexSetD
     @Override
     public byte[] exportExcel(ExportExcelYearTO to) throws SerException {
         YearIndexSetDTO dto = new YearIndexSetDTO();
-        if (!StringUtils.isNotBlank(to.getIndexName())) {
+        if (StringUtils.isNotBlank(to.getIndexName())) {
             dto.getConditions().add(Restrict.eq("indexName", to.getIndexName()));
         }
-        if (!StringUtils.isNotBlank(to.getYear())) {
+        if (StringUtils.isNotBlank(to.getYear())) {
             dto.getConditions().add(Restrict.gt("year", to.getYear()));
         }
 
@@ -420,16 +557,16 @@ public class YearIndexSetSerImpl extends ServiceImpl<YearIndexSet, YearIndexSetD
     @Override
     public byte[] exportYearExcel(ExportExcelYearTO to) throws SerException {
         YearIndexSetDTO dto = new YearIndexSetDTO();
-        if ( StringUtils.isBlank(to.getStartTime()) && !StringUtils.isBlank(to.getEndTime())) {
+        if (StringUtils.isBlank(to.getStartTime()) && !StringUtils.isBlank(to.getEndTime())) {
             throw new SerException("请输入时间");
         }
         LocalDate start = LocalDate.parse(to.getStartTime());
-        LocalDate end  = LocalDate.parse(to.getEndTime());
+        LocalDate end = LocalDate.parse(to.getEndTime());
         String startYear = String.valueOf(start.getYear());
         String endYear = String.valueOf(end.getYear());
 
-        String [] years = new String[]{startYear,endYear};
-        dto.getConditions().add(Restrict.between("year", years ));
+        String[] years = new String[]{startYear, endYear};
+        dto.getConditions().add(Restrict.between("year", years));
 
         List<YearIndexSet> list = super.findByCis(dto);
         List<YearIndexSetExcel> toList = new ArrayList<YearIndexSetExcel>();
@@ -442,23 +579,24 @@ public class YearIndexSetSerImpl extends ServiceImpl<YearIndexSet, YearIndexSetD
         byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
         return bytes;
     }
+
     @Override
     public byte[] exportYearDeExcel(ExportExcelYearTO to) throws SerException {
         YearIndexSetDTO dto = new YearIndexSetDTO();
-        if(StringUtils.isNotBlank(to.getIndexType())){
-            dto.getConditions().add(Restrict.between("indexType", to.getIndexType() ));
+        if (StringUtils.isNotBlank(to.getIndexType())) {
+            dto.getConditions().add(Restrict.between("indexType", to.getIndexType()));
         }
-        if(StringUtils.isNotBlank(to.getDimension())){
-            dto.getConditions().add(Restrict.between("dimension", to.getDimension() ));
+        if (StringUtils.isNotBlank(to.getDimension())) {
+            dto.getConditions().add(Restrict.between("dimension", to.getDimension()));
         }
 
-        if ( StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime()) ) {
-            LocalDate start  = LocalDate.parse(to.getStartTime());
+        if (StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
+            LocalDate start = LocalDate.parse(to.getStartTime());
             LocalDate end = LocalDate.parse(to.getEndTime());
             String startYear = String.valueOf(start.getYear());
             String endYear = String.valueOf(end.getYear());
-            String [] years = new String[]{startYear,endYear};
-            dto.getConditions().add(Restrict.between("year", years ));
+            String[] years = new String[]{startYear, endYear};
+            dto.getConditions().add(Restrict.between("year", years));
         }
 
         List<YearIndexSet> list = super.findByCis(dto);
@@ -471,5 +609,18 @@ public class YearIndexSetSerImpl extends ServiceImpl<YearIndexSet, YearIndexSetD
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
         return bytes;
+    }
+
+    /**
+     * 树状图
+     * @param yearIndexSetDTO
+     * @return
+     * @throws SerException
+     */
+    @Override
+    public List<YearIndexSetBO> dendrogram(YearIndexSetDTO yearIndexSetDTO) throws SerException {
+        List<YearIndexSet> list = super.findByCis(yearIndexSetDTO, true);
+        List<YearIndexSetBO> listBO = BeanTransform.copyProperties(list, YearIndexSetBO.class);
+        return listBO;
     }
 }

@@ -3,6 +3,7 @@ package com.bjike.goddess.archive.api;
 import com.bjike.goddess.archive.bo.LaborRelationBO;
 import com.bjike.goddess.archive.dto.LaborRelationDTO;
 import com.bjike.goddess.archive.service.LaborRelationSer;
+import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.archive.to.LaborRelationTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
@@ -25,6 +26,16 @@ public class LaborRelationApiImpl implements LaborRelationAPI {
 
     @Autowired
     private LaborRelationSer laborRelationSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return laborRelationSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return laborRelationSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public LaborRelationBO save(LaborRelationTO to) throws SerException {

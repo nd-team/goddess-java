@@ -90,13 +90,13 @@ public class ExternalContacts extends BaseEntity {
     /**
      * 填写人
      */
-    @Column(name = "writer", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '填写人'")
+    @Column(name = "writer", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '填写人'")
     private String writer;
 
     /**
      * 填写人编号
      */
-    @Column(name = "writeNumber", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '填写人'")
+    @Column(name = "writeNumber", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '填写人'")
     private String writeNumber;
 
     /**

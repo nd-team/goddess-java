@@ -27,6 +27,30 @@ public class PositionIndexSet extends BaseEntity {
     private String indexName;
 
     /**
+     * 年度指标编号
+     */
+    @Column(name = "indexNumber", nullable = false, columnDefinition = "INT   COMMENT '年度指标编号'")
+    private Integer indexNumber;
+
+    /**
+     * 部门年度指标编号
+     */
+    @Column(name = "yearIndexNumber", nullable = false, columnDefinition = "INT   COMMENT '部门年度指标编号'")
+    private Integer yearIndexNumber;
+
+    /**
+     * 部门月度指标编号
+     */
+    @Column(name = "monthIndexNumber", nullable = false, columnDefinition = "INT   COMMENT '部门月度指标编号'")
+    private Integer monthIndexNumber;
+
+    /**
+     * 岗位指标编号
+     */
+    @Column(name = "postIndexNumber", nullable = false, columnDefinition = "INT   COMMENT '岗位指标编号'")
+    private Integer postIndexNumber;
+
+    /**
      * 年份
      */
     @Column(name = "year", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '年份'")
@@ -85,6 +109,12 @@ public class PositionIndexSet extends BaseEntity {
      */
     @Column(name = "positioner", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '责任人'")
     private String positioner;
+
+    /**
+     * 责任人工号
+     */
+    @Column(name = "positionerNumber", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '责任人工号'")
+    private String positionerNumber;
 
     /**
      * 岗位指标权重
@@ -411,5 +441,46 @@ public class PositionIndexSet extends BaseEntity {
 
     public void setDepartMonIndexSetId(String departMonIndexSetId) {
         this.departMonIndexSetId = departMonIndexSetId;
+    }
+
+    public Integer getIndexNumber() {
+        return indexNumber;
+    }
+
+    public void setIndexNumber(Integer indexNumber) {
+        this.indexNumber = indexNumber;
+    }
+
+    public Integer getYearIndexNumber() {
+        return yearIndexNumber;
+    }
+
+    public void setYearIndexNumber(Integer yearIndexNumber) {
+        this.yearIndexNumber = yearIndexNumber;
+    }
+
+    public Integer getMonthIndexNumber() {
+        return monthIndexNumber;
+    }
+
+    public void setMonthIndexNumber(Integer monthIndexNumber) {
+        this.monthIndexNumber = monthIndexNumber;
+    }
+
+    public Integer getPostIndexNumber() {
+        return postIndexNumber;
+    }
+
+    public void setPostIndexNumber(Integer postIndexNumber) {
+
+        this.postIndexNumber = postIndexNumber;
+    }
+
+    public String getPositionerNumber() {
+        return positionerNumber;
+    }
+
+    public void setPositionerNumber(String positionerNumber) {
+        this.positionerNumber = positionerNumber;
     }
 }

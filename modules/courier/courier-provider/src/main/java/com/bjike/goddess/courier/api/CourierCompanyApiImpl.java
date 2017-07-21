@@ -5,10 +5,12 @@ import com.bjike.goddess.courier.bo.CourierCompanyBO;
 import com.bjike.goddess.courier.dto.CourierCompanyDTO;
 import com.bjike.goddess.courier.service.CourierCompanySer;
 import com.bjike.goddess.courier.to.CourierCompanyTO;
+import com.bjike.goddess.courier.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 快递公司信息业务接口实现
@@ -47,5 +49,25 @@ public class CourierCompanyApiImpl implements CourierCompanyAPI {
     @Override
     public CourierCompanyBO findByID(String id) throws SerException {
         return courierCompanySer.findByID(id);
+    }
+
+    @Override
+    public Set<String> allCompany() throws SerException {
+        return courierCompanySer.allCompany();
+    }
+
+    @Override
+    public Long count(CourierCompanyDTO dto) throws SerException {
+        return courierCompanySer.count(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return courierCompanySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return courierCompanySer.guidePermission(guidePermissionTO);
     }
 }

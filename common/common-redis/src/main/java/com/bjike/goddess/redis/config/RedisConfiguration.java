@@ -25,16 +25,19 @@ public class RedisConfiguration {
      */
     @Autowired
     @Bean(name = "jedisPool")
-    public JedisPool jedisPool(Environment env) {
+    public JedisPool jedisPool(Environment env) throws InterruptedException{
         JedisPoolConfig config = new JedisPoolConfig();
         String host = env.getProperty("redis.host");
         int post = Integer.parseInt(env.getProperty("redis.post"));
         int maxTotal = Integer.parseInt(env.getProperty("redis.pool.maxTotal"));
         int maxIdle = Integer.parseInt(env.getProperty("redis.pool.maxIdle"));
         int maxWaitMillis = Integer.parseInt(env.getProperty("redis.pool.maxWaitMillis"));
+        long timeout = Long.parseLong(env.getProperty("redis.timeout"));
         config.setMaxTotal(maxTotal);
         config.setMaxIdle(maxIdle);
         config.setMaxWaitMillis(maxWaitMillis);
+        config.wait(timeout);
         return new JedisPool(config, host, post);
     }
+
 }

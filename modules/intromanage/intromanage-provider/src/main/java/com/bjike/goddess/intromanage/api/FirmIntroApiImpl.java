@@ -8,6 +8,7 @@ import com.bjike.goddess.intromanage.entity.FirmIntro;
 import com.bjike.goddess.intromanage.service.FirmIntroSer;
 import com.bjike.goddess.intromanage.to.FirmDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.FirmIntroTO;
+import com.bjike.goddess.intromanage.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,16 @@ public class FirmIntroApiImpl implements FirmIntroAPI {
 
     @Autowired
     private FirmIntroSer firmIntroSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return firmIntroSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return firmIntroSer.guidePermission(guidePermissionTO);
+    }
 
     /**
      * 根据id查询公司简介

@@ -1,8 +1,10 @@
 package com.bjike.goddess.archive.api;
 
+import com.bjike.goddess.archive.bo.StaffNameBO;
 import com.bjike.goddess.archive.bo.StaffRecordsBO;
 import com.bjike.goddess.archive.dto.StaffRecordsDTO;
 import com.bjike.goddess.archive.service.StaffRecordsSer;
+import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.archive.to.StaffRecordsExcelTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,16 @@ public class StaffRecordsApiImpl implements StaffRecordsAPI {
 
     @Autowired
     private StaffRecordsSer staffRecordsSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return staffRecordsSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return staffRecordsSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public void upload(List<StaffRecordsExcelTO> toList) throws SerException {
@@ -53,5 +65,10 @@ public class StaffRecordsApiImpl implements StaffRecordsAPI {
     @Override
     public Long getTotal() throws SerException {
         return staffRecordsSer.getTotal();
+    }
+
+    @Override
+    public List<StaffNameBO> getName() throws SerException {
+        return staffRecordsSer.getName();
     }
 }

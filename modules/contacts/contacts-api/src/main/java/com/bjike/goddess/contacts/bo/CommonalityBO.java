@@ -1,8 +1,7 @@
 package com.bjike.goddess.contacts.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.common.api.type.Status;
-
+import com.bjike.goddess.contacts.enums.Status;
 import javax.persistence.Column;
 /**
 * 公共邮箱管理业务传输对象

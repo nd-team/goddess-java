@@ -2,9 +2,11 @@ package com.bjike.goddess.archive.api;
 
 import com.bjike.goddess.archive.bo.ArchiveAccessBO;
 import com.bjike.goddess.archive.dto.ArchiveAccessDTO;
+import com.bjike.goddess.archive.excel.SonPermissionObject;
 import com.bjike.goddess.archive.service.ArchiveAccessSer;
 import com.bjike.goddess.archive.to.AccessAuditTO;
 import com.bjike.goddess.archive.to.ArchiveAccessTO;
+import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,16 @@ public class ArchiveAccessApiImpl implements ArchiveAccessAPI {
 
     @Autowired
     private ArchiveAccessSer archiveAccessSer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return archiveAccessSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return archiveAccessSer.guidePermission( guidePermissionTO );
+    }
 
     @Override
     public ArchiveAccessBO save(ArchiveAccessTO to) throws SerException {

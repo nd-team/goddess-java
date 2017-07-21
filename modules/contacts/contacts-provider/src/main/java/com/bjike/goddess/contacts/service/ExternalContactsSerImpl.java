@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contacts.api.CommonalityAPI;
 import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.contacts.bo.ExternalContactsBO;
@@ -12,6 +14,7 @@ import com.bjike.goddess.contacts.dto.CommonalityDTO;
 import com.bjike.goddess.contacts.dto.ExternalContactsDTO;
 import com.bjike.goddess.contacts.entity.ExternalContacts;
 import com.bjike.goddess.contacts.enums.GuideAddrStatus;
+import com.bjike.goddess.contacts.excel.ExternalContactsTemplateExport;
 import com.bjike.goddess.contacts.to.ExternalContactsTO;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.message.api.MessageAPI;
@@ -216,6 +219,32 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
 
         ExternalContactsBO externalContactsBO = BeanTransform.copyProperties(new ExternalContacts(), ExternalContactsBO.class);
         return externalContactsBO;
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<ExternalContactsTemplateExport> commerceContactsExports = new ArrayList<>();
+
+        ExternalContactsTemplateExport excel = new ExternalContactsTemplateExport();
+        excel.setArea("移动通信类");
+        excel.setProject( "test" );
+        excel.setUsername("jkj");
+        excel.setUnit("jkj");
+        excel.setPosition("jkj");
+        excel.setPhone("jkj");
+        excel.setEmail("jkj");
+        excel.setResponsible("jkj");
+        excel.setOther("jkj");
+        excel.setExternal("jkj");
+        excel.setFrequency("jkj");
+        excel.setWriter("jkj");
+        excel.setWriteNumber("jkj");
+        excel.setWriteTime(LocalDateTime.now());
+        excel.setRemark("jkj");
+        commerceContactsExports.add( excel );
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(commerceContactsExports, exce);
+        return bytes;
     }
 
     /**

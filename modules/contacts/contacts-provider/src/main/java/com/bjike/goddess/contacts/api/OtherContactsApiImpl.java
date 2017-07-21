@@ -70,4 +70,9 @@ public class OtherContactsApiImpl implements OtherContactsAPI {
     public OtherContactsBO importExcel(List<OtherContactsTO> tocs) throws SerException {
         return otherContactsSer.importExcel(tocs);
     }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return otherContactsSer.templateExport();
+    }
 }

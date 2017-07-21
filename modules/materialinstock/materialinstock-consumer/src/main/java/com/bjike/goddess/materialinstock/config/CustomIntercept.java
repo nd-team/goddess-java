@@ -45,7 +45,7 @@ public class CustomIntercept implements Interceptor {
          * 登录拦截器
          */
         HIInfo loginInfo = new HIInfo(new LoginIntercept(userAPI), "/**");
-        HIInfo storage = new HIInfo(new StorageIntercept(storageUserAPI,"bonusmoneyperparepay","123456","bonusmoneyperparepay"), "/**");
+        HIInfo storage = new HIInfo(new StorageIntercept(storageUserAPI,"materialinstock","123456","materialinstock"), "/**");
 
         /**
          * 权限拦截器

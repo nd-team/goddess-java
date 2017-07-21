@@ -1,8 +1,10 @@
 package com.bjike.goddess.archive.service;
 
+import com.bjike.goddess.archive.bo.StaffNameBO;
 import com.bjike.goddess.archive.bo.StaffRecordsBO;
 import com.bjike.goddess.archive.dto.StaffRecordsDTO;
 import com.bjike.goddess.archive.entity.StaffRecords;
+import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.archive.to.StaffRecordsExcelTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -19,6 +21,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface StaffRecordsSer extends Ser<StaffRecords, StaffRecordsDTO> {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 上传数据
@@ -83,4 +100,7 @@ public interface StaffRecordsSer extends Ser<StaffRecords, StaffRecordsDTO> {
         return null;
     }
 
+    default List<StaffNameBO> getName() throws SerException {
+        return null;
+    }
 }
