@@ -1,8 +1,8 @@
-package com.bjike.goddess.regionalprogresscollect.dao;
+package com.bjike.goddess.workprogress.dao;
 
 import com.bjike.goddess.common.jpa.dao.JpaRep;
-import com.bjike.goddess.regionalprogresscollect.dto.ReferenceTargetDTO;
-import com.bjike.goddess.regionalprogresscollect.entity.ReferenceTarget;
+import com.bjike.goddess.workprogress.dto.ReferenceTargetDTO;
+import com.bjike.goddess.workprogress.entity.ReferenceTarget;
 
 /**
 * 参考指标持久化接口, 继承基类可使用ｊｐａ命名查询

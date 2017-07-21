@@ -1,8 +1,8 @@
-package com.bjike.goddess.regionalprogresscollect.dao;
+package com.bjike.goddess.workprogress.dao;
 
 import com.bjike.goddess.common.jpa.dao.JpaRep;
-import com.bjike.goddess.regionalprogresscollect.dto.MonthTargetDTO;
-import com.bjike.goddess.regionalprogresscollect.entity.MonthTarget;
+import com.bjike.goddess.workprogress.dto.MonthTargetDTO;
+import com.bjike.goddess.workprogress.entity.MonthTarget;
 
 /**
 * 月指标持久化接口, 继承基类可使用ｊｐａ命名查询

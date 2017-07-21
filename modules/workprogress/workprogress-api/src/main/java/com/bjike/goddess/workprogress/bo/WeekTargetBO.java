@@ -1,7 +1,7 @@
-package com.bjike.goddess.regionalprogresscollect.bo;
+package com.bjike.goddess.workprogress.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.regionalprogresscollect.enums.CycleType;
+import com.bjike.goddess.workprogress.enums.CycleType;
 
 /**
  * 周指标业务传输对象

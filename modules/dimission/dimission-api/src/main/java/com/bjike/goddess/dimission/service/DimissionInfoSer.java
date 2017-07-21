@@ -264,4 +264,10 @@ public interface DimissionInfoSer extends Ser<DimissionInfo, DimissionInfoDTO> {
         return null;
     }
 
+    /**
+     * 获取全部用户名
+     */
+    default List<String> getAllName() throws SerException {
+        return null;
+    }
 }

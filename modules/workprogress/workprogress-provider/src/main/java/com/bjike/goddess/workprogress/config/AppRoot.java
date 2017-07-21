@@ -1,4 +1,4 @@
-package com.bjike.goddess.regionalprogresscollect.config;
+package com.bjike.goddess.workprogress.config;
 
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.*;
@@ -15,12 +15,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @Copy: [com.bjike]
  */
 @Configuration
-@EnableJpaRepositories(basePackages = {"com.bjike.goddess.regionalprogresscollect.dao"})//jpa 所在包
+@EnableJpaRepositories(basePackages = {"com.bjike.goddess.workprogress.dao"})//jpa 所在包
 @EnableTransactionManagement(proxyTargetClass = true)
 @EnableCaching
 @PropertySource({"classpath:config.properties"})
 @ImportResource({"classpath:application.xml"})
-@ComponentScan(basePackages = {"com.bjike.goddess.regionalprogresscollect"},
+@ComponentScan(basePackages = {"com.bjike.goddess.workprogress"},
         excludeFilters = {@ComponentScan.Filter(
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})

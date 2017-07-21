@@ -1,4 +1,4 @@
-package com.bjike.goddess.regionalprogresscollect.vo;
+package com.bjike.goddess.workprogress.vo;
 
 /**
  * 参考指标表现层对象

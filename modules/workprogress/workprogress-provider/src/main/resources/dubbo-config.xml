@@ -19,15 +19,15 @@
 
     <!--发布接口,供其他模块调用-->
     <!--另外注意命名,UserAPI为例,UserAPI是业务接口,则userSer是实现类@Service("userSer") 里注解的名字-->
-    <dubbo:service interface="com.bjike.goddess.regionalprogresscollect.api.DayTargetAPI" ref="dayTargetApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.regionalprogresscollect.api.MonthTargetAPI" ref="monthTargetApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.regionalprogresscollect.api.ReferenceTargetAPI"
+    <dubbo:service interface="com.bjike.goddess.workprogress.api.DayTargetAPI" ref="dayTargetApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.workprogress.api.MonthTargetAPI" ref="monthTargetApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.workprogress.api.ReferenceTargetAPI"
                    ref="referenceTargetApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.regionalprogresscollect.api.WeekTargetAPI" ref="weekTargetApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.workprogress.api.WeekTargetAPI" ref="weekTargetApiImpl"/>
 
 
-    <dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.regionalprogresscollect.api.CusPermissionAPI"></dubbo:service>
-    <dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.regionalprogresscollect.api.CusPermissionOperateAPI" />
+    <dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.workprogress.api.CusPermissionAPI"></dubbo:service>
+    <dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.workprogress.api.CusPermissionOperateAPI" />
 
     <!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
     否则不需要配置-->
