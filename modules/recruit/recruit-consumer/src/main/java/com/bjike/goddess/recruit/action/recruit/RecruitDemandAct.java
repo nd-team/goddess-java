@@ -8,6 +8,14 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.organize.vo.AreaVO;
+import com.bjike.goddess.organize.vo.DepartmentDetailVO;
+import com.bjike.goddess.organize.vo.PositionDetailVO;
 import com.bjike.goddess.recruit.api.RecruitDemandAPI;
 import com.bjike.goddess.recruit.bo.RecruitDemandBO;
 import com.bjike.goddess.recruit.dto.RecruitDemandDTO;
@@ -36,6 +44,10 @@ public class RecruitDemandAct {
 
     @Autowired
     private RecruitDemandAPI recruitDemandAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private PositionDetailAPI positionDetailAPI;
 
     /**
      * 根据id查询招聘需求
@@ -143,6 +155,57 @@ public class RecruitDemandAct {
         try {
             recruitDemandAPI.update(to);
             return new ActResult("edit success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找所有地区
+     *
+     * @return class AreaVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findArea")
+    public Result findArea(HttpServletRequest request) throws ActException {
+        try {
+            List<AreaBO> list = departmentDetailAPI.findArea();
+            return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找所有部门/项目组
+     *
+     * @return class DepartmentDetailVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findDepartment")
+    public Result findDepartment(HttpServletRequest request) throws ActException {
+        try {
+            List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
+            return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找所有岗位
+     *
+     * @return class PositionDetailVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findPosition")
+    public Result findPosition(HttpServletRequest request) throws ActException {
+        try {
+            List<PositionDetailBO> list = positionDetailAPI.findStatus();
+            return ActResult.initialize(BeanTransform.copyProperties(list, PositionDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

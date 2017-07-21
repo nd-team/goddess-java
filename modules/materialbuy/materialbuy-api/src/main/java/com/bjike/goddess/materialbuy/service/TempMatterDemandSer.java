@@ -84,4 +84,13 @@ public interface TempMatterDemandSer extends Ser<TempMatterDemand, TempMatterDem
      */
     TempMatterDemandBO checkDetail(String id) throws SerException;
 
+    /**
+     * 查找总记录数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(TempMatterDemandDTO dto) throws SerException;
+
 }

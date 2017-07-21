@@ -159,6 +159,9 @@ public class CourierCompanySerImpl extends ServiceImpl<CourierCompany, CourierCo
             case SEEFILE:
                 flag = guideSeeIdentity();
                 break;
+            default:
+                flag = true;
+                break;
         }
 
         RpcTransmit.transmitUserToken(userToken);

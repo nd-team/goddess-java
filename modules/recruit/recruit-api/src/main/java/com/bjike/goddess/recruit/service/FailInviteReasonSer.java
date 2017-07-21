@@ -6,6 +6,7 @@ import com.bjike.goddess.recruit.bo.FailInviteReasonBO;
 import com.bjike.goddess.recruit.dto.FailInviteReasonDTO;
 import com.bjike.goddess.recruit.entity.FailInviteReason;
 import com.bjike.goddess.recruit.to.FailInviteReasonTO;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +20,19 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface FailInviteReasonSer extends Ser<FailInviteReason, FailInviteReasonDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 分页查询所有未成功邀约原因

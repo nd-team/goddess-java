@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.recruit.bo.InterviewInforBO;
 import com.bjike.goddess.recruit.dto.InterviewInforDTO;
 import com.bjike.goddess.recruit.entity.InterviewInfor;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.InterviewInforTO;
 
 import java.util.List;
@@ -19,6 +20,19 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface InterviewInforSer extends Ser<InterviewInfor, InterviewInforDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 分页查询面试信息

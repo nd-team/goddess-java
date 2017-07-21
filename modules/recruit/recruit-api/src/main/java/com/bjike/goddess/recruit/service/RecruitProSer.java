@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.recruit.bo.RecruitProBO;
 import com.bjike.goddess.recruit.dto.RecruitProDTO;
 import com.bjike.goddess.recruit.entity.RecruitPro;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.RecruitProTO;
 import com.bjike.goddess.recruit.type.AuditType;
 
@@ -20,6 +21,19 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface RecruitProSer extends Ser<RecruitPro, RecruitProDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 分页查询招聘方案

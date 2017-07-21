@@ -6,11 +6,13 @@ import com.bjike.goddess.recruit.bo.RecruitWayBO;
 import com.bjike.goddess.recruit.dto.RecruitWayDTO;
 import com.bjike.goddess.recruit.entity.RecruitWay;
 import com.bjike.goddess.recruit.service.RecruitWaySer;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.RecruitWayTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 招聘渠道
@@ -95,5 +97,20 @@ public class RecruitWayApiImpl implements RecruitWayAPI {
     @Override
     public void update(RecruitWayTO recruitWayTO) throws SerException {
         recruitWaySer.update(recruitWayTO);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return recruitWaySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return recruitWaySer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public Set<String> allRecruitName() throws SerException {
+        return recruitWaySer.allRecruitName();
     }
 }

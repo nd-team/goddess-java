@@ -233,6 +233,9 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
         Courier courier = super.findById(to.getId());
         LocalDateTime a = courier.getCreateTime();
         courier = BeanTransform.copyProperties(to, Courier.class, true);
+        LocalDate sendTime = courier.getSendTime();
+        courier.setYear(sendTime.getYear());
+        courier.setMonth(sendTime.getMonthValue());
         courier.setFeeSum(courier.getFreight() + courier.getSecure());
         courier.setRemainingSum(courier.getCourierSum() - courier.getFeeSum());
         courier.setCourierTel(courierCompanySer.findTel(to.getCourierCompany()));

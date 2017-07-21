@@ -23,6 +23,9 @@
 	<dubbo:service validation="true" interface="com.bjike.goddess.firmreward.api.RewardIndicatorAPI" ref="rewardIndicatorApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.firmreward.api.RewardPeopleNoStatAPI" ref="rewardPeopleNoStatApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.firmreward.api.RewardProgramRatioAPI" ref="rewardProgramRatioApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.firmreward.api.RewardProgramRatioAPI" ref="rewardProgramRatioApiImpl"></dubbo:service>
+	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.firmreward.api.CusPermissionAPI" />
+	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.firmreward.api.CusPermissionOperateAPI" />
 
 	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
 	否则不需要配置-->

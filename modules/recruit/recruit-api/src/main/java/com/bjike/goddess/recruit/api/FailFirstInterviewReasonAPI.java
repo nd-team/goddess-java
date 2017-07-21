@@ -4,6 +4,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.recruit.bo.FailFirstInterviewReasonBO;
 import com.bjike.goddess.recruit.dto.FailFirstInterviewReasonDTO;
 import com.bjike.goddess.recruit.to.FailFirstInterviewReasonTO;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
+import com.bjike.goddess.recruit.vo.SonPermissionObject;
 
 import java.util.List;
 
@@ -17,6 +19,19 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface FailFirstInterviewReasonAPI {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 根据id查询未应约初试原因

@@ -1,5 +1,6 @@
 apply from: '../../../config.gradle' 
 
+
 jar {
     String buildDir = project.buildDir
     manifest {

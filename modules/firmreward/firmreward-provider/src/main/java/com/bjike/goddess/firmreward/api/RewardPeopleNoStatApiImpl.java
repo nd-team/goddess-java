@@ -8,6 +8,7 @@ import com.bjike.goddess.firmreward.dto.RewardPeopleNoStatDTO;
 import com.bjike.goddess.firmreward.entity.RewardPeopleNoStat;
 import com.bjike.goddess.firmreward.service.RewardPeopleNoStatSer;
 import com.bjike.goddess.firmreward.to.RewardPeopleNoStatTO;
+import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -129,5 +130,15 @@ public class RewardPeopleNoStatApiImpl implements RewardPeopleNoStatAPI {
     @Override
     public List<AwardDetailBO> checkAwardDetails(String statId) throws SerException {
         return rewardPeopleNoStatSer.checkAwardDetails(statId);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return rewardPeopleNoStatSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return rewardPeopleNoStatSer.guidePermission(guidePermissionTO);
     }
 }

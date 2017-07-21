@@ -156,4 +156,8 @@ public class MaterialBuyApiImpl implements MaterialBuyAPI {
         return materialBuySer.areaBuyStatusDaySum();
     }
 
+    @Override
+    public Long count(MaterialBuyDTO dto) throws SerException {
+        return materialBuySer.count(dto);
+    }
 }

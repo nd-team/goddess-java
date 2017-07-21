@@ -18,9 +18,13 @@ public class EmployeePromotedDTO extends BaseDTO {
      */
     private String name;
     /**
-     * 时间
+     * 开始时间
      */
-    private String times;
+    private String startTimes;
+    /**
+     * 结束时间
+     */
+    private String endTimes;
     /**
      * 状态
      */
@@ -34,12 +38,20 @@ public class EmployeePromotedDTO extends BaseDTO {
         this.name = name;
     }
 
-    public String getTimes() {
-        return times;
+    public String getStartTimes() {
+        return startTimes;
     }
 
-    public void setTimes(String times) {
-        this.times = times;
+    public void setStartTimes(String startTimes) {
+        this.startTimes = startTimes;
+    }
+
+    public String getEndTimes() {
+        return endTimes;
+    }
+
+    public void setEndTimes(String endTimes) {
+        this.endTimes = endTimes;
     }
 
     public String getStatus() {

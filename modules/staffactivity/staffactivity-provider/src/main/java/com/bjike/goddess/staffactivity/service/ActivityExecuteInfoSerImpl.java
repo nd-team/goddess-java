@@ -305,4 +305,14 @@ public class ActivityExecuteInfoSerImpl extends ServiceImpl<ActivityExecuteInfo,
             }
         }
     }
+
+    @Override
+    public Set<String> allActivityScheme() throws SerException {
+        List<ActivityExecuteInfo> list = super.findAll();
+        Set<String> set = new HashSet<>();
+        for (ActivityExecuteInfo a : list) {
+            set.add(a.getActivityScheme());
+        }
+        return set;
+    }
 }

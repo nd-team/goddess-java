@@ -20,10 +20,6 @@ public class JobsBetBO extends BaseBO {
      */
     private JobsBetABO jobsBetABO;
 
-    /**
-     * 岗位间对赌表B
-     */
-    private List<JobsBetBBO> jobsBetBBOS;
 
 
     public JobsBetABO getJobsBetABO() {
@@ -34,11 +30,4 @@ public class JobsBetBO extends BaseBO {
         this.jobsBetABO = jobsBetABO;
     }
 
-    public List<JobsBetBBO> getJobsBetBBOS() {
-        return jobsBetBBOS;
-    }
-
-    public void setJobsBetBBOS(List<JobsBetBBO> jobsBetBBOS) {
-        this.jobsBetBBOS = jobsBetBBOS;
-    }
 }

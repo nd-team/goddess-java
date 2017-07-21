@@ -112,4 +112,12 @@ public interface MaterialBuySer extends Ser<MaterialBuy, MaterialBuyDTO> {
      */
     List<AreaBuyStatusDayCollectBO> areaBuyStatusDaySum() throws SerException;
 
+    /**
+     * 查找总记录数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(MaterialBuyDTO dto) throws SerException;
 }

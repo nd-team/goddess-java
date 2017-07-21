@@ -118,4 +118,9 @@ public class TempMatterDemandApiImpl implements TempMatterDemandAPI {
     public TempMatterDemandBO checkDetail(String id) throws SerException {
         return tempMatterDemandSer.checkDetail(id);
     }
+
+    @Override
+    public Long count(TempMatterDemandDTO dto) throws SerException {
+        return tempMatterDemandSer.count(dto);
+    }
 }

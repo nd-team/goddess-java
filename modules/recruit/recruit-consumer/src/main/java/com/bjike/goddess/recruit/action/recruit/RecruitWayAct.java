@@ -5,25 +5,26 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.api.RecruitWayAPI;
-import com.bjike.goddess.recruit.bo.NotEntryReasonBO;
 import com.bjike.goddess.recruit.bo.RecruitWayBO;
-import com.bjike.goddess.recruit.dto.NotEntryReasonDTO;
 import com.bjike.goddess.recruit.dto.RecruitWayDTO;
-import com.bjike.goddess.recruit.to.NotEntryReasonTO;
 import com.bjike.goddess.recruit.to.RecruitWayTO;
-import com.bjike.goddess.recruit.vo.NotEntryReasonVO;
 import com.bjike.goddess.recruit.vo.RecruitWayVO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 招聘渠道
@@ -40,6 +41,8 @@ public class RecruitWayAct {
 
     @Autowired
     private RecruitWayAPI recruitWayAPI;
+    @Autowired
+    private UserAPI userAPI;
 
     /**
      * 根据id查询招聘渠道
@@ -147,6 +150,28 @@ public class RecruitWayAct {
         try {
             recruitWayAPI.update(to);
             return new ActResult("edit success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找所有用户名
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/allName")
+    public Result allName() throws ActException {
+        try {
+            List<UserBO> list = userAPI.findAllUser();
+            Set<String> set = new HashSet<>();
+            for (UserBO user : list) {
+                if (Status.THAW.equals(user.getStatus())) {
+                    set.add(user.getUsername());
+                }
+            }
+            return ActResult.initialize(set);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

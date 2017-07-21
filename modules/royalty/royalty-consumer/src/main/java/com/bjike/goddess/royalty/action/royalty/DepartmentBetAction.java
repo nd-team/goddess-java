@@ -6,16 +6,14 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.royalty.api.DepartmentBetAPI;
 import com.bjike.goddess.royalty.bo.DepartmentBetABO;
-import com.bjike.goddess.royalty.dto.DepartmentBetBDTO;
 import com.bjike.goddess.royalty.dto.DepartmentBetDDTO;
 import com.bjike.goddess.royalty.dto.DepartmentBetDTO;
-import com.bjike.goddess.royalty.entity.DepartmentBet;
 import com.bjike.goddess.royalty.to.DepartmentBetATO;
-import com.bjike.goddess.royalty.to.DepartmentBetTO;
 import com.bjike.goddess.royalty.to.GuidePermissionTO;
-import com.bjike.goddess.royalty.to.SystemBetATO;
 import com.bjike.goddess.royalty.vo.DepartmentBetAVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -38,6 +36,8 @@ import javax.servlet.http.HttpServletRequest;
 public class DepartmentBetAction {
     @Autowired
     private DepartmentBetAPI departmentBetAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
 
     /**
      * 功能导航权限
@@ -164,6 +164,22 @@ public class DepartmentBetAction {
         try {
             departmentBetAPI.delete(id);
             return new ActResult("delete success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取岗位
+     *
+     * @return class DepartmentDetailVO
+     * @des 获取岗位
+     * @version v1
+     */
+    @GetMapping("v1/department")
+    public Result department() throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(departmentDetailAPI.findStatus(), DepartmentDetailVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
