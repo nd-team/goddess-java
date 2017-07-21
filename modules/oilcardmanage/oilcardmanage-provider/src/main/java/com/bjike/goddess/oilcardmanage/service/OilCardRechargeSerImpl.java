@@ -195,6 +195,7 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
     @Override
     @Transactional(rollbackFor = SerException.class)
     public OilCardRechargeBO saveOilCardRecharge(OilCardRechargeTO to) throws SerException {
+        checkAddIdentity();
         OilCardBasic oilCardBasic = oilCardBasicSer.findById(to.getOilCardBasicId());
 
         if (oilCardBasic != null) {
@@ -221,6 +222,7 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
     @Override
     @Transactional(rollbackFor = SerException.class)
     public OilCardRechargeBO updateOilCardRecharge(OilCardRechargeTO to) throws SerException {
+        checkAddIdentity();
         // 记录修改前、后的数据Model
         OilCardRecharge model = super.findById(to.getId());
         Double currentRecharge = to.getRechargeMoney();//本次充值金额
