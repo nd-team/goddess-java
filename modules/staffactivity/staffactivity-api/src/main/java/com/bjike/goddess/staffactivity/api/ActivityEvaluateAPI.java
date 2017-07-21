@@ -9,6 +9,7 @@ import com.bjike.goddess.staffactivity.to.ActivityEvaluateTO;
 import com.bjike.goddess.staffactivity.to.GuidePermissionTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 活动评价业务接口
@@ -88,11 +89,11 @@ public interface ActivityEvaluateAPI {
     /**
      * 活动评价得分汇总
      *
-     * @param schemes 活动方案名称
+     * @param dto dto
      * @return class EvaluateScoreSummaryBO
      * @throws SerException
      */
-    List<EvaluateScoreSummaryBO> evaluateScoreSummary(String[] schemes) throws SerException;
+    List<EvaluateScoreSummaryBO> evaluateScoreSummary(ActivityEvaluateDTO dto) throws SerException;
 
     /**
      * 各活动评估汇总
@@ -103,4 +104,12 @@ public interface ActivityEvaluateAPI {
      * @throws SerException
      */
     List<ActivityEvaluateSummaryBO> evaluateSummary(String startDate, String endDate) throws SerException;
+
+    /**
+     * 查找所有活动方案
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allActivityScheme() throws SerException;
 }

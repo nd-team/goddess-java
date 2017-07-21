@@ -50,7 +50,23 @@ public enum GuideAddrStatus {
     /**
      * 查看附件
      */
-    SEEFILE(9);
+    SEEFILE(9),
+    /**
+     * 福利模块操作
+     */
+    FULI(10),
+    /**
+     * 规划模块操作
+     */
+    GUIHUA(11),
+    /**
+     * 运营商务部意见
+     */
+    BUINESS(12),
+    /**
+     * 总经办审核
+     */
+    MANAGER(13);
 
     private int code;
 

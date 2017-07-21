@@ -385,6 +385,9 @@ public class FailFirstInterviewReasonSerImpl extends ServiceImpl<FailFirstInterv
             case SEEFILE:
                 flag = guideSeeIdentity();
                 break;
+            case FULI:
+                flag = guideModuleIdentity();
+                break;
             default:
                 flag = true;
                 break;

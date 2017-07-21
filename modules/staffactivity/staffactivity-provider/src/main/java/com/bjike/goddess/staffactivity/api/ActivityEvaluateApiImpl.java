@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 活动评价业务接口实现
@@ -100,16 +101,9 @@ public class ActivityEvaluateApiImpl implements ActivityEvaluateAPI {
         activityEvaluateSer.update(to);
     }
 
-    /**
-     * 活动评价得分汇总
-     *
-     * @param schemes 活动方案名称
-     * @return class EvaluateScoreSummaryBO
-     * @throws SerException
-     */
     @Override
-    public List<EvaluateScoreSummaryBO> evaluateScoreSummary(String[] schemes) throws SerException {
-        return activityEvaluateSer.evaluateScoreSummary(schemes);
+    public List<EvaluateScoreSummaryBO> evaluateScoreSummary(ActivityEvaluateDTO dto) throws SerException {
+        return activityEvaluateSer.evaluateScoreSummary(dto);
     }
 
     /**
@@ -133,5 +127,10 @@ public class ActivityEvaluateApiImpl implements ActivityEvaluateAPI {
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return activityEvaluateSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public Set<String> allActivityScheme() throws SerException {
+        return activityEvaluateSer.allActivityScheme();
     }
 }

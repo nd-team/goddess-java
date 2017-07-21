@@ -521,4 +521,15 @@ public class ActivitySchemeSerImpl extends ServiceImpl<ActivityScheme, ActivityS
         }
         return set;
     }
+
+    @Override
+    public String findIdByTheme(String theme) throws SerException {
+        ActivitySchemeDTO dto = new ActivitySchemeDTO();
+        dto.getConditions().add(Restrict.eq("theme", theme));
+        List<ActivityScheme> list = super.findByCis(dto);
+        if (list != null && !list.isEmpty()) {
+            return list.get(0).getId();
+        }
+        throw new SerException("没有该主题对应的id");
+    }
 }

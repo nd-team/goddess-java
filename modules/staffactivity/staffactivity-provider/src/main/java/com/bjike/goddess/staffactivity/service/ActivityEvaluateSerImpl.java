@@ -26,7 +26,9 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 活动评价业务实现
@@ -261,7 +263,7 @@ public class ActivityEvaluateSerImpl extends ServiceImpl<ActivityEvaluate, Activ
     /**
      * 更新活动评价
      *
-     * @param to 活动评价to
+     * @param to    活动评价to
      * @param model 活动评价
      * @throws SerException
      */
@@ -274,14 +276,15 @@ public class ActivityEvaluateSerImpl extends ServiceImpl<ActivityEvaluate, Activ
     /**
      * 活动评价得分汇总
      *
-     * @param schemes 活动方案名称
+     * @param dto dto
      * @return class EvaluateScoreSummaryBO
      * @throws SerException
      */
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public List<EvaluateScoreSummaryBO> evaluateScoreSummary(String[] schemes) throws SerException {
+    public List<EvaluateScoreSummaryBO> evaluateScoreSummary(ActivityEvaluateDTO dto) throws SerException {
         checkSeeIdentity();
+        String[] schemes = dto.getSchemes();
         List<EvaluateScoreSummaryBO> boList = new ArrayList<>();
         for (String scheme : schemes) {
             List<ActivityEvaluate> list = getActivityEvaluateByScheme(scheme);
@@ -319,7 +322,7 @@ public class ActivityEvaluateSerImpl extends ServiceImpl<ActivityEvaluate, Activ
      */
     private List<ActivityEvaluate> getActivityEvaluateByScheme(String scheme) throws SerException {
         ActivityEvaluateDTO dto = new ActivityEvaluateDTO();
-        dto.getConditions().add(Restrict.eq("scheme", scheme));
+        dto.getConditions().add(Restrict.in("scheme", scheme));
         return super.findByCis(dto);
     }
 
@@ -346,7 +349,7 @@ public class ActivityEvaluateSerImpl extends ServiceImpl<ActivityEvaluate, Activ
      * 各活动评估汇总
      *
      * @param startDate 起始日期
-     * @param endDate 结束日期
+     * @param endDate   结束日期
      * @return class ActivityEvaluateSummaryBO
      * @throws SerException
      */
@@ -361,5 +364,15 @@ public class ActivityEvaluateSerImpl extends ServiceImpl<ActivityEvaluate, Activ
         dto.getConditions().add(Restrict.between("evaluateDate", evaluateDate));
         // TODO: 17-4-11
         return null;
+    }
+
+    @Override
+    public Set<String> allActivityScheme() throws SerException {
+        List<ActivityEvaluate> list = super.findAll();
+        Set<String> set = new HashSet<>();
+        for (ActivityEvaluate a : list) {
+            set.add(a.getScheme());
+        }
+        return set;
     }
 }
