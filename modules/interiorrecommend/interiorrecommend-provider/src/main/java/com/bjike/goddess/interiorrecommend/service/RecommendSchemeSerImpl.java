@@ -63,20 +63,20 @@ public class RecommendSchemeSerImpl extends ServiceImpl<RecommendScheme, Recomme
     /**
      * 核对是否有审核权限（部门级别）
      */
-    private void checkAddIdentity() throws SerException {
-        Boolean flag = false;
-        String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser();
-        RpcTransmit.transmitUserToken(userToken);
-        String userName = userBO.getUsername();
-        if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
-            if (!flag) {
-                throw new SerException("您不是相应部门的人员，不可以操作");
-            }
-        }
-        RpcTransmit.transmitUserToken(userToken);
-    }
+//    private void checkAddIdentity() throws SerException {
+//        Boolean flag = false;
+//        String userToken = RpcTransmit.getUserToken();
+//        UserBO userBO = userAPI.currentUser();
+//        RpcTransmit.transmitUserToken(userToken);
+//        String userName = userBO.getUsername();
+//        if (!"admin".equals(userName.toLowerCase())) {
+//            flag = cusPermissionSer.busCusPermission("2");
+//            if (!flag) {
+//                throw new SerException("您不是相应部门的人员，不可以操作");
+//            }
+//        }
+//        RpcTransmit.transmitUserToken(userToken);
+//    }
 
 
 
@@ -210,45 +210,54 @@ public class RecommendSchemeSerImpl extends ServiceImpl<RecommendScheme, Recomme
     @Override
     public void resourcesAudit(String id, String resourcesSuggest, Boolean resourcesAudit) throws SerException {
         //判断是否为综合部负责人
-        checkAddIdentity();
-        RecommendScheme model = super.findById(id);
-        if (model != null) {
-            //todo 尚未明确组织结构,需要判断当前用户是否为综合资源部负责人
-            model.setResourcesSuggest(resourcesSuggest);
-            model.setResourcesAudit(resourcesAudit);
-            super.update(model);
-        } else {
-            throw new SerException("非法Id,推荐方案对象不能为空!");
+        if(guideAddIdentity() == true) {
+            RecommendScheme model = super.findById(id);
+            if (model != null) {
+                //todo 尚未明确组织结构,需要判断当前用户是否为综合资源部负责人
+                model.setResourcesSuggest(resourcesSuggest);
+                model.setResourcesAudit(resourcesAudit);
+                super.update(model);
+            } else {
+                throw new SerException("非法Id,推荐方案对象不能为空!");
+            }
+        }else {
+            throw new SerException("你没有审核权限");
         }
     }
 
     @Override
     public void operateAudit(String id, String operateSuggest, Boolean operateAudit) throws SerException {
         //判断是否为运营部
-        checkAddIdentity();
-        RecommendScheme model = super.findById(id);
-        if (model != null) {
-            //todo 尚未明确组织结构，需要判断当前用户是否为运营商务部负责人
-            model.setOperateSuggest(operateSuggest);
-            model.setOperateAudit(operateAudit);
-            super.update(model);
-        } else {
-            throw new SerException("非法Id,推荐方案对象不能为空!");
+        if(guideAddIdentity() == true) {
+            RecommendScheme model = super.findById(id);
+            if (model != null) {
+                //todo 尚未明确组织结构，需要判断当前用户是否为运营商务部负责人
+                model.setOperateSuggest(operateSuggest);
+                model.setOperateAudit(operateAudit);
+                super.update(model);
+            } else {
+                throw new SerException("非法Id,推荐方案对象不能为空!");
+            }
+        }else{
+            throw new SerException("你没有审核权限");
         }
     }
 
     @Override
     public void generalAudit(String id, String generalSuggest, Boolean generalAudit) throws SerException {
         //判断为是否为总经办
-        checkAddIdentity();
-        RecommendScheme model = super.findById(id);
-        if (model != null) {
-            //todo 尚未明确组织结构，需要判断当前用户是否为总经办
-            model.setGeneralSuggest(generalSuggest);
-            model.setGeneralAudit(generalAudit);
-            super.update(model);
-        } else {
-            throw new SerException("非法Id,推荐方案对象不能为空!");
+        if(guideAddIdentity() == true) {
+            RecommendScheme model = super.findById(id);
+            if (model != null) {
+                //todo 尚未明确组织结构，需要判断当前用户是否为总经办
+                model.setGeneralSuggest(generalSuggest);
+                model.setGeneralAudit(generalAudit);
+                super.update(model);
+            } else {
+                throw new SerException("非法Id,推荐方案对象不能为空!");
+            }
+        }else {
+            throw new SerException("你没有审核权限");
         }
     }
 
