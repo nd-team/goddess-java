@@ -312,7 +312,7 @@ public class SystemBetSerImpl extends ServiceImpl<SystemBet, SystemBetDTO> imple
         List<SystemBetB> systemBetBS = new ArrayList<>();
         List<SystemBetC> systemBetCS = new ArrayList<>();
         List<SystemBetD> systemBetDS = new ArrayList<>();
-        List<SystemBetBTO> systemBetBTOS = systemBetATO.getSystemBetBTOS();
+
         //先删掉B表对应数据
         SystemBetBDTO systemBetBDTO = new SystemBetBDTO();
         systemBetBDTO.getConditions().add(Restrict.eq("systemBetA.id", systemBetA.getId()));
@@ -341,37 +341,44 @@ public class SystemBetSerImpl extends ServiceImpl<SystemBet, SystemBetDTO> imple
 
             systemBetBSer.remove(bList);
         }
-        //查询B表的数据并修改
-        for (SystemBetBTO systemBetBTO : systemBetBTOS) {
-            SystemBetB systemBetB = BeanTransform.copyProperties(systemBetBTO, SystemBetB.class, true);
-            systemBetB.setSystemBetA(systemBetA);
-            //基础得分（分值*目标-部门分配基础权重）
-            Double basesScore = systemBetATO.getScore() * systemBetBTO.getBaseWeight();
-            systemBetB.setBasesScore(basesScore);
+        List<SystemBetBTO> systemBetBTOS = systemBetATO.getSystemBetBTOS();
+        if (systemBetBTOS != null) {
+            //查询B表的数据并修改
+            for (SystemBetBTO systemBetBTO : systemBetBTOS) {
+                SystemBetB systemBetB = BeanTransform.copyProperties(systemBetBTO, SystemBetB.class, true);
+                systemBetB.setSystemBetA(systemBetA);
+                //基础得分（分值*目标-部门分配基础权重）
+                Double basesScore = systemBetATO.getScore() * systemBetBTO.getBaseWeight();
+                systemBetB.setBasesScore(basesScore);
 
-            systemBetBSer.update(systemBetB);
-            systemBetBS.add(systemBetB);
+                systemBetBSer.update(systemBetB);
+                systemBetBS.add(systemBetB);
 
-            //查询C表的数据并修改
-            List<SystemBetCTO> systemBetCTOS = systemBetBTO.getSystemBetCTOS();
-            for (SystemBetCTO systemBetCTO : systemBetCTOS) {
-                SystemBetC systemBetC = BeanTransform.copyProperties(systemBetCTO, SystemBetC.class, true);
-                systemBetC.setSystemBetB(systemBetB);
+                //查询C表的数据并修改
+                List<SystemBetCTO> systemBetCTOS = systemBetBTO.getSystemBetCTOS();
+                if (systemBetCTOS != null) {
+                    for (SystemBetCTO systemBetCTO : systemBetCTOS) {
+                        SystemBetC systemBetC = BeanTransform.copyProperties(systemBetCTO, SystemBetC.class, true);
+                        systemBetC.setSystemBetB(systemBetB);
 
-                //对赌得分（分值*目标-部门分配对赌权重）
-                Double betScore = systemBetATO.getScore() * systemBetCTO.getBetWeight();
-                systemBetC.setBetScore(betScore);
+                        //对赌得分（分值*目标-部门分配对赌权重）
+                        Double betScore = systemBetATO.getScore() * systemBetCTO.getBetWeight();
+                        systemBetC.setBetScore(betScore);
 
-                systemBetCSer.update(systemBetC);
-                systemBetCS.add(systemBetC);
+                        systemBetCSer.update(systemBetC);
+                        systemBetCS.add(systemBetC);
 
-                //查询D表的数据并修改
-                List<SystemBetETO> systemBetETOS = systemBetCTO.getSystemBetETOS();
-                for (SystemBetETO systemBetETO : systemBetETOS) {
-                    SystemBetD systemBetD = BeanTransform.copyProperties(systemBetETO, SystemBetD.class, true);
-                    systemBetD.setSystemBetC(systemBetC);
-                    systemBetDSer.update(systemBetD);
-                    systemBetDS.add(systemBetD);
+                        //查询D表的数据并修改
+                        List<SystemBetETO> systemBetETOS = systemBetCTO.getSystemBetETOS();
+                        if (systemBetETOS != null) {
+                            for (SystemBetETO systemBetETO : systemBetETOS) {
+                                SystemBetD systemBetD = BeanTransform.copyProperties(systemBetETO, SystemBetD.class, true);
+                                systemBetD.setSystemBetC(systemBetC);
+                                systemBetDSer.update(systemBetD);
+                                systemBetDS.add(systemBetD);
+                            }
+                        }
+                    }
                 }
             }
         }

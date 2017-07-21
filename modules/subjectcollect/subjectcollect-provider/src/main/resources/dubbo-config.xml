@@ -36,5 +36,4 @@
 	<dubbo:reference validation="true" id="firstSubjectApiImpl" interface="com.bjike.goddess.financeinit.api.FirstSubjectAPI" />
 	<dubbo:reference validation="true" id="categoryApiImpl" interface="com.bjike.goddess.financeinit.api.CategoryAPI" />
 	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
-	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
 </beans>

@@ -3,6 +3,7 @@ package com.bjike.goddess.managepromotion.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.managepromotion.bo.SkillPromotionApplyBO;
 import com.bjike.goddess.managepromotion.dto.SkillPromotionApplyDTO;
+import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managepromotion.to.SkillPromotionApplyTO;
 
 import java.util.List;
@@ -17,6 +18,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SkillPromotionApplyAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 技能晋升申请列表总条数
@@ -86,9 +99,9 @@ public interface SkillPromotionApplyAPI {
     }
 
     /**
-     * 预算审核
+     * 项目经理审核
      *
-     * @param skillPromotionApplyTO 预算审核数据to
+     * @param skillPromotionApplyTO 项目经理审核数据to
      * @return class SkillPromotionApplyBO
      * @throws SerException
      */

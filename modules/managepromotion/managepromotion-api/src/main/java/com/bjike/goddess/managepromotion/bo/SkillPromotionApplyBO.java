@@ -88,6 +88,10 @@ public class SkillPromotionApplyBO extends BaseBO {
      * 技能水平等级考试成绩
      */
     private Integer skillLevelScore;
+    /**
+     * 阶段
+     */
+    private Integer phase;
 
     /**
      * 模块负责人审核意见
@@ -112,12 +116,10 @@ public class SkillPromotionApplyBO extends BaseBO {
      * 总经办审核意见
      */
     private String managerOpinion;
-
     /**
-     * 审核状态（审核中/通过/不通过）
+     * 审核状态
      */
-    private String auditStatus;
-
+    private AuditStatus auditStatus;
 
     public String getArea() {
         return area;
@@ -239,6 +241,15 @@ public class SkillPromotionApplyBO extends BaseBO {
         this.skillLevelScore = skillLevelScore;
     }
 
+    public Integer getPhase() {
+        return phase;
+    }
+
+    public void setPhase(Integer phase) {
+        this.phase = phase;
+    }
+
+
     public String getHeadOpinion() {
         return headOpinion;
     }
@@ -246,6 +257,7 @@ public class SkillPromotionApplyBO extends BaseBO {
     public void setHeadOpinion(String headOpinion) {
         this.headOpinion = headOpinion;
     }
+
 
     public String getBudgetOpinion() {
         return budgetOpinion;
@@ -255,6 +267,7 @@ public class SkillPromotionApplyBO extends BaseBO {
         this.budgetOpinion = budgetOpinion;
     }
 
+
     public String getProjectManagerOpinion() {
         return projectManagerOpinion;
     }
@@ -262,6 +275,7 @@ public class SkillPromotionApplyBO extends BaseBO {
     public void setProjectManagerOpinion(String projectManagerOpinion) {
         this.projectManagerOpinion = projectManagerOpinion;
     }
+
 
     public String getPlanOpinion() {
         return planOpinion;
@@ -271,6 +285,7 @@ public class SkillPromotionApplyBO extends BaseBO {
         this.planOpinion = planOpinion;
     }
 
+
     public String getManagerOpinion() {
         return managerOpinion;
     }
@@ -279,11 +294,11 @@ public class SkillPromotionApplyBO extends BaseBO {
         this.managerOpinion = managerOpinion;
     }
 
-    public String getAuditStatus() {
+    public AuditStatus getAuditStatus() {
         return auditStatus;
     }
 
-    public void setAuditStatus(String auditStatus) {
+    public void setAuditStatus(AuditStatus auditStatus) {
         this.auditStatus = auditStatus;
     }
 }

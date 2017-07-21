@@ -31,15 +31,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import scala.collection.parallel.ParIterableLike;
+import scala.util.parsing.combinator.testing.Str;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -330,8 +329,8 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
     }
 
     @Override
-    public List<String> auditTime(String auditTime) throws SerException {
-        List<String> list = new ArrayList<>();
+    public Map<String,String> auditTime(String auditTime) throws SerException {
+        Map<String,String> map=new HashMap<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date date = sdf.parse(auditTime);
@@ -339,31 +338,31 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
             cal.setTime(date);
             cal.add(Calendar.DATE, 10);
             String countTime = sdf.format(cal.getTime());//ERP结算审批时间
-            list.add(countTime);
+            map.put("countTime",countTime);
 
             cal.setTime(date);
             cal.add(Calendar.DATE, 20);
             String billTime = sdf.format(cal.getTime());//发票审核时间
-            list.add(billTime);
+            map.put("billTime",billTime);
 
             cal.setTime(date);
             cal.add(Calendar.MONTH, 3);
             String planTime = sdf.format(cal.getTime());//预计支付时间
-            list.add(planTime);
+            map.put("planTime",planTime);
 
             cal.setTime(date);
             cal.add(Calendar.MONTH, 4);
             String accountTime = sdf.format(cal.getTime());//到账时间
-            list.add(accountTime);
+            map.put("accountTime",accountTime);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return list;
+        return map;
     }
 
     @Override
-    public List<String> countTime(String countTime) throws SerException {
-        List<String> list = new ArrayList<>();
+    public Map<String,String> countTime(String countTime) throws SerException {
+        Map<String,String> map = new HashMap<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date date = sdf.parse(countTime);
@@ -372,26 +371,26 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
             cal.setTime(date);
             cal.add(Calendar.DATE, 10);
             String billTime = sdf.format(cal.getTime());//发票审核时间
-            list.add(billTime);
+            map.put("billTime",billTime);
 
             cal.setTime(date);
             cal.add(Calendar.MONTH, 3);
             String planTime = sdf.format(cal.getTime());//预计支付时间
-            list.add(planTime);
+            map.put("planTime",planTime);
 
             cal.setTime(date);
             cal.add(Calendar.MONTH, 4);
             String accountTime = sdf.format(cal.getTime());//到账时间
-            list.add(accountTime);
+            map.put("accountTime",accountTime);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return list;
+        return map;
     }
 
     @Override
-    public List<String> billTime(String billTime) throws SerException {
-        List<String> list = new ArrayList<>();
+    public Map<String,String> billTime(String billTime) throws SerException {
+        Map<String,String> map = new HashMap<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date date = sdf.parse(billTime);
@@ -400,21 +399,23 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
             cal.setTime(date);
             cal.add(Calendar.MONTH, 3);
             String planTime = sdf.format(cal.getTime());//预计支付时间
-            list.add(planTime);
+            map.put("planTime",planTime);
+
 
             cal.setTime(date);
             cal.add(Calendar.MONTH, 4);
             String accountTime = sdf.format(cal.getTime());//到账时间
-            list.add(accountTime);
+            map.put("accountTime",accountTime);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return list;
+        return map;
     }
 
     @Override
-    public String planTime(String planTime) throws SerException {
-        List<String> list = new ArrayList<>();
+    public Map<String,String> planTime(String planTime) throws SerException {
+        Map<String,String> map = new HashMap<>();
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String accountTime = null;
         try {
@@ -424,11 +425,11 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
             cal.setTime(date);
             cal.add(Calendar.MONTH, 3);
             accountTime = sdf.format(cal.getTime());//到账时间
-            list.add(accountTime);
+            map.put("accountTime",accountTime);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return accountTime;
+        return map;
     }
 
     @Override
@@ -481,13 +482,11 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
 //
 //        messageAPI.send(to);
         //todo 编辑时间时发送邮件
-        subsidiary.setFinishTime(LocalDate.parse(receivableSubsidiaryTO.getFinishTime()));
-        subsidiary.setCheckTime(LocalDate.parse(receivableSubsidiaryTO.getCheckTime()));
-        subsidiary.setAuditTime(LocalDate.parse(receivableSubsidiaryTO.getAuditTime()));
-        subsidiary.setCountTime(LocalDate.parse(receivableSubsidiaryTO.getCountTime()));
-        subsidiary.setBillTime(LocalDate.parse(receivableSubsidiaryTO.getBillTime()));
-        subsidiary.setPlanTime(LocalDate.parse(receivableSubsidiaryTO.getPlanTime()));
-        subsidiary.setAccountTime(LocalDate.parse(receivableSubsidiaryTO.getAccountTime()));
+        subsidiary.setAuditTime(DateUtil.parseDate(receivableSubsidiaryTO.getAuditTime()));
+        subsidiary.setCountTime(DateUtil.parseDate(receivableSubsidiaryTO.getCountTime()));
+        subsidiary.setBillTime(DateUtil.parseDate(receivableSubsidiaryTO.getBillTime()));
+        subsidiary.setPlanTime(DateUtil.parseDate(receivableSubsidiaryTO.getPlanTime()));
+        subsidiary.setAccountTime(DateUtil.parseDate(receivableSubsidiaryTO.getAccountTime()));
         super.update(subsidiary);
         ReceivableSubsidiaryBO bo = BeanTransform.copyProperties(subsidiary, ReceivableSubsidiaryBO.class);
         return bo;

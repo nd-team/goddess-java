@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.managepromotion.bo.OverviewSkillLevelBO;
 import com.bjike.goddess.managepromotion.dto.OverviewSkillLevelDTO;
 import com.bjike.goddess.managepromotion.entity.OverviewSkillLevel;
+import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managepromotion.to.OverviewSkillLevelTO;
 
 import java.util.List;
@@ -20,6 +21,18 @@ import java.util.List;
  */
 public interface OverviewSkillLevelSer extends Ser<OverviewSkillLevel, OverviewSkillLevelDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 技能等级情况概览总条数
      */

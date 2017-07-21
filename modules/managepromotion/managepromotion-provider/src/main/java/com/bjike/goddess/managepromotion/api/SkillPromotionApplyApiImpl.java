@@ -4,10 +4,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.managepromotion.bo.SkillPromotionApplyBO;
 import com.bjike.goddess.managepromotion.dto.SkillPromotionApplyDTO;
 import com.bjike.goddess.managepromotion.service.SkillPromotionApplySer;
+import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managepromotion.to.SkillPromotionApplyTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,7 +24,15 @@ import java.util.List;
 public class SkillPromotionApplyApiImpl implements SkillPromotionApplyAPI {
     @Autowired
     private SkillPromotionApplySer skillPromotionApplySer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return skillPromotionApplySer.sonPermission();
+    }
 
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return skillPromotionApplySer.guidePermission( guidePermissionTO );
+    }
     @Override
     public Long countSkillPromotionApply(SkillPromotionApplyDTO skillPromotionApplyDTO) throws SerException {
         return skillPromotionApplySer.countSkillPromotionApply(skillPromotionApplyDTO);
@@ -47,6 +55,30 @@ public class SkillPromotionApplyApiImpl implements SkillPromotionApplyAPI {
     @Override
     public SkillPromotionApplyBO editSkillPromotionApply(SkillPromotionApplyTO skillPromotionApplyTO) throws SerException {
         return skillPromotionApplySer.editSkillPromotionApply(skillPromotionApplyTO);
+    }
+    @Override
+    public SkillPromotionApplyBO headAudit(SkillPromotionApplyTO skillPromotionApplyTO) throws SerException {
+        return skillPromotionApplySer.headAudit(skillPromotionApplyTO);
+    }
+
+    @Override
+    public SkillPromotionApplyBO budgetAudit(SkillPromotionApplyTO skillPromotionApplyTO) throws SerException {
+        return skillPromotionApplySer.budgetAudit(skillPromotionApplyTO);
+    }
+
+    @Override
+    public SkillPromotionApplyBO projectManagerAudit(SkillPromotionApplyTO skillPromotionApplyTO) throws SerException {
+        return skillPromotionApplySer.projectManagerAudit(skillPromotionApplyTO);
+    }
+
+    @Override
+    public SkillPromotionApplyBO planAudit(SkillPromotionApplyTO skillPromotionApplyTO) throws SerException {
+        return skillPromotionApplySer.planAudit(skillPromotionApplyTO);
+    }
+
+    @Override
+    public SkillPromotionApplyBO generalManagerAudit(SkillPromotionApplyTO skillPromotionApplyTO) throws SerException {
+        return skillPromotionApplySer.generalManagerAudit(skillPromotionApplyTO);
     }
 
 }

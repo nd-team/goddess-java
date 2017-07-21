@@ -13,7 +13,7 @@ import com.bjike.goddess.managepromotion.bo.EmployeeFunctionLevelBO;
 import com.bjike.goddess.managepromotion.bo.OverviewSkillLevelBO;
 import com.bjike.goddess.managepromotion.dto.EmployeeFunctionLevelDTO;
 import com.bjike.goddess.managepromotion.to.EmployeeFunctionLevelTO;
-import com.bjike.goddess.managepromotion.to.EmployeePromotedTO;
+import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managepromotion.vo.EmployeeFunctionLevelVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -37,6 +37,30 @@ import java.util.List;
 public class EmployeeFunctionLevelAction {
     @Autowired
     private EmployeeFunctionLevelAPI employeeFunctionLevelAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = employeeFunctionLevelAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
     /**
      * 员工职能定级列表总条数
      *
@@ -53,6 +77,7 @@ public class EmployeeFunctionLevelAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 一个员工职能定级
      *
@@ -146,6 +171,7 @@ public class EmployeeFunctionLevelAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 技能等级情况概览
      *
