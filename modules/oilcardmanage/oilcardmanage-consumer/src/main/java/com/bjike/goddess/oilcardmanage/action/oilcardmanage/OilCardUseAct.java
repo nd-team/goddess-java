@@ -11,11 +11,15 @@ import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.enums.FindType;
 import com.bjike.goddess.dispatchcar.vo.InfoForOilCardVO;
 import com.bjike.goddess.oilcardmanage.api.OilCardRechargeAPI;
+import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.vo.AnalyzeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -35,6 +39,8 @@ public class OilCardUseAct {
     private OilCardRechargeAPI oilCardRechargeAPI;
     @Autowired
     private DispatchCarInfoAPI dispatchCarInfoAPI;
+
+
 
 
     /**

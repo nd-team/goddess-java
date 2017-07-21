@@ -6,6 +6,7 @@ import com.bjike.goddess.firmreward.bo.RewardIndicatorBO;
 import com.bjike.goddess.firmreward.dto.RewardIndicatorDTO;
 import com.bjike.goddess.firmreward.entity.RewardIndicator;
 import com.bjike.goddess.firmreward.to.RewardIndicatorTO;
+import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 
 import java.util.List;
 
@@ -52,5 +53,18 @@ public interface RewardIndicatorSer extends Ser<RewardIndicator, RewardIndicator
      * @throws SerException
      */
     void update(RewardIndicatorTO to) throws SerException;
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
 }

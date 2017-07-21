@@ -7,6 +7,7 @@ import com.bjike.goddess.firmreward.bo.RewardPeopleNoStatBO;
 import com.bjike.goddess.firmreward.dto.RewardPeopleNoStatDTO;
 import com.bjike.goddess.firmreward.entity.RewardPeopleNoStat;
 import com.bjike.goddess.firmreward.to.RewardPeopleNoStatTO;
+import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 
 import java.util.List;
 
@@ -78,5 +79,18 @@ public interface RewardPeopleNoStatSer extends Ser<RewardPeopleNoStat, RewardPeo
      * @throws SerException
      */
     List<AwardDetailBO> checkAwardDetails(String statId) throws SerException;
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
 }

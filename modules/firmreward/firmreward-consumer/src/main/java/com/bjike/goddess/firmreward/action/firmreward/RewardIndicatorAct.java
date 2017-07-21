@@ -11,6 +11,7 @@ import com.bjike.goddess.firmreward.api.RewardIndicatorAPI;
 import com.bjike.goddess.firmreward.bo.RewardIndicatorBO;
 import com.bjike.goddess.firmreward.dto.RewardIndicatorDTO;
 import com.bjike.goddess.firmreward.to.RewardIndicatorTO;
+import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 import com.bjike.goddess.firmreward.vo.RewardIndicatorVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -35,6 +36,29 @@ public class RewardIndicatorAct {
 
     @Autowired
     private RewardIndicatorAPI rewardIndicatorAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = rewardIndicatorAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 根据id查询奖励指标

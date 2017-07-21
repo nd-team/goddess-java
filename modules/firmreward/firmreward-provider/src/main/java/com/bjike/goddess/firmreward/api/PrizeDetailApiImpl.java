@@ -7,6 +7,7 @@ import com.bjike.goddess.firmreward.dto.PrizeDetailDTO;
 import com.bjike.goddess.firmreward.entity.PrizeDetail;
 import com.bjike.goddess.firmreward.service.PrizeDetailSer;
 import com.bjike.goddess.firmreward.to.PrizeDetailTO;
+import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -94,5 +95,16 @@ public class PrizeDetailApiImpl implements PrizeDetailAPI {
     @Override
     public void update(PrizeDetailTO to) throws SerException {
         prizeDetailSer.update(to);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return prizeDetailSer.sonPermission();
+    }
+
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return prizeDetailSer.guidePermission(guidePermissionTO);
     }
 }
