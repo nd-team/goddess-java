@@ -7,6 +7,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
+import com.bjike.goddess.organize.dto.PositionDetailDTO;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
 import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.organize.entity.PositionDetailUser;
@@ -259,14 +260,40 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     public String getPosition(String name) throws SerException {
         PositionDetailUserDTO positionDetailUserDTO = new PositionDetailUserDTO();
         positionDetailUserDTO.getConditions().add(Restrict.eq("username", name));
-        PositionDetailUserBO positionDetailUserBO = maps(positionDetailUserDTO).get(0);
-        if (null != positionDetailUserBO) {
-            String str = positionDetailUserBO.getPosition();
-            return str;
-        } else {
-            return null;
+        if (null != maps(positionDetailUserDTO) && maps(positionDetailUserDTO).size() > 0) {
+            PositionDetailUserBO positionDetailUserBO = maps(positionDetailUserDTO).get(0);
+            if (null != positionDetailUserBO) {
+                return positionDetailUserBO.getPosition();
+            }
         }
+        return null;
     }
 
+    @Override
+    public List<String> getAllPosition() throws SerException {
+        PositionDetailUserDTO dto = new PositionDetailUserDTO();
+        List<PositionDetailUserBO> positionDetailUserBOList = maps(dto);
+        List<String> stringList = new ArrayList<>();
+        if (null != positionDetailUserBOList && positionDetailUserBOList.size() > 0) {
+            for (PositionDetailUserBO bo : positionDetailUserBOList) {
+                String str = "";
+                str = bo.getPosition();
+                stringList.add(str);
+            }
+        }
+        return stringList;
+    }
 
+    @Override
+    public List<String> getAllDepartment() throws SerException {
+        PositionDetailDTO dto = new PositionDetailDTO();
+        List<PositionDetailBO> positionDetailBOList = positionDetailSer.maps(dto);
+        List<String> list = new ArrayList<>();
+        if (null != positionDetailBOList && positionDetailBOList.size() > 0) {
+            for (PositionDetailBO bo : positionDetailBOList) {
+                list.add(bo.getDepartmentName());
+            }
+        }
+        return list;
+    }
 }
