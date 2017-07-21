@@ -187,4 +187,11 @@ public interface PositionDetailUserAPI {
         return null;
     }
 
+    /**
+     * 根据名字获取所在岗位
+     */
+    default String getPosition(String name) throws SerException {
+        return null;
+    }
+
 }

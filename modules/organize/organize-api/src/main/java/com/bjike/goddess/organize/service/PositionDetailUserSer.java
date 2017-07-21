@@ -179,5 +179,10 @@ public interface PositionDetailUserSer extends Ser<PositionDetailUser, PositionD
         return null;
     }
 
-
+    /**
+     * 根据名字获取岗位名称
+     */
+    default String getPosition(String name) throws SerException {
+        return null;
+    }
 }
