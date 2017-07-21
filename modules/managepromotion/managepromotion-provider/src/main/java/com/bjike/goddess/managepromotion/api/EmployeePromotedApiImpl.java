@@ -1,10 +1,13 @@
 package com.bjike.goddess.managepromotion.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.managepromotion.bo.CollectBO;
 import com.bjike.goddess.managepromotion.bo.EmployeePromotedBO;
 import com.bjike.goddess.managepromotion.dto.EmployeePromotedDTO;
 import com.bjike.goddess.managepromotion.service.EmployeePromotedSer;
+import com.bjike.goddess.managepromotion.to.CollectTO;
 import com.bjike.goddess.managepromotion.to.EmployeePromotedTO;
+import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +26,15 @@ import java.util.List;
 public class EmployeePromotedApiImpl implements EmployeePromotedAPI {
     @Autowired
     private EmployeePromotedSer employeePromotedSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return employeePromotedSer.sonPermission();
+    }
 
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return employeePromotedSer.guidePermission( guidePermissionTO );
+    }
     @Override
     public Long countEmployeePromoted(EmployeePromotedDTO employeePromotedDTO) throws SerException {
         return employeePromotedSer.countEmployeePromoted(employeePromotedDTO);
@@ -54,7 +65,15 @@ public class EmployeePromotedApiImpl implements EmployeePromotedAPI {
         employeePromotedSer.removeEmployeePromoted(id);
     }
     @Override
-    public List<EmployeePromotedBO> seach(EmployeePromotedDTO  employeePromotedDTO) throws SerException {
-        return employeePromotedSer.seach(employeePromotedDTO);
+    public List<CollectBO> collect(CollectTO to) throws SerException {
+        return employeePromotedSer.collect(to);
+    }
+    @Override
+    public List<String> getName() throws SerException {
+        return employeePromotedSer.getName();
+    }
+    @Override
+    public List<String> getStatus() throws SerException {
+        return employeePromotedSer.getStatus();
     }
 }

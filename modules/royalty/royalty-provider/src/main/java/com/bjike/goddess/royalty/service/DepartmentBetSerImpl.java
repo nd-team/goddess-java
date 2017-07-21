@@ -247,49 +247,55 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
         List<DepartmentBetD> departmentBetDS = new ArrayList<>();
         //B表
         List<DepartmentBetBTO> departmentBetBTOS = departmentBetATO.getDepartmentBetBTOS();
-        for (DepartmentBetBTO departmentBetBTO : departmentBetBTOS) {
-            DepartmentBetB departmentBetB = BeanTransform.copyProperties(departmentBetBTO, DepartmentBetB.class, true);
-            departmentBetB.setDepartmentBetA(departmentBetA);
-            //基础得分（部门总得分*目标-部门分配基础权重）
-            double departmentTotalScore = 0;
-            double basesScore = 0.0;
-            String[] fields = new String[]{"departmentTotalScore"};
-            String sql = "SELECT departmentTotalScore AS departmentTotalScore FROM royalty_systembetb WHERE department='" + departmentBetB.getDepartment() + "'";
-            List<SystemBetB> systemBetBS = systemBetBSer.findBySql(sql, SystemBetB.class, fields);
-            if (systemBetBS != null && !systemBetBS.isEmpty()) {
-                departmentTotalScore = systemBetBS.get(0).getDepartmentTotalScore();
-            }
-            if (departmentTotalScore != 0) {
-                basesScore = departmentTotalScore * departmentBetB.getBaseWeight();
-                departmentBetB.setBasesScore(basesScore);
-            }
-
-            //部门总得分
-            Double totalScore = departmentBetB.getRestrictScore() + basesScore;
-            departmentBetB.setDepartmentTotalScore(totalScore);
-
-            departmentBetB = departmentBetBSer.save(departmentBetB);
-            departmentBetBS.add(departmentBetB);
-            //C表
-            List<DepartmentBetCTO> departmentBetCTOS = departmentBetBTO.getDepartmentBetCTOS();
-            for (DepartmentBetCTO departmentBetCTO : departmentBetCTOS) {
-                DepartmentBetC departmentBetC = BeanTransform.copyProperties(departmentBetCTO, DepartmentBetC.class, true);
-                departmentBetC.setDepartmentBetB(departmentBetB);
-                //对赌得分
+        if (departmentBetBTOS != null) {
+            for (DepartmentBetBTO departmentBetBTO : departmentBetBTOS) {
+                DepartmentBetB departmentBetB = BeanTransform.copyProperties(departmentBetBTO, DepartmentBetB.class, true);
+                departmentBetB.setDepartmentBetA(departmentBetA);
+                //基础得分（部门总得分*目标-部门分配基础权重）
+                double departmentTotalScore = 0;
+                double basesScore = 0.0;
+                String[] fields = new String[]{"departmentTotalScore"};
+                String sql = "SELECT departmentTotalScore AS departmentTotalScore FROM royalty_systembetb WHERE department='" + departmentBetB.getDepartment() + "'";
+                List<SystemBetB> systemBetBS = systemBetBSer.findBySql(sql, SystemBetB.class, fields);
+                if (systemBetBS != null && !systemBetBS.isEmpty()) {
+                    departmentTotalScore = systemBetBS.get(0).getDepartmentTotalScore();
+                }
                 if (departmentTotalScore != 0) {
-                    double betScore = departmentTotalScore * departmentBetC.getBetWeight();
-                    departmentBetC.setBetScore(betScore);
+                    basesScore = departmentTotalScore * departmentBetB.getBaseWeight();
+                    departmentBetB.setBasesScore(basesScore);
                 }
 
-                departmentBetC = departmentBetCSer.save(departmentBetC);
-                departmentBetCS.add(departmentBetC);
-                //D表
-                List<DepartmentBetETO> departmentBetETOS = departmentBetCTO.getDepartmentBetETOS();
-                for (DepartmentBetETO departmentBetETO : departmentBetETOS) {
-                    DepartmentBetD departmentBetD = BeanTransform.copyProperties(departmentBetETO, DepartmentBetD.class, true);
-                    departmentBetD.setDepartmentBetC(departmentBetC);
-                    departmentBetD = departmentBetDSer.save(departmentBetD);
-                    departmentBetDS.add(departmentBetD);
+                //部门总得分
+                Double totalScore = departmentBetB.getRestrictScore() + basesScore;
+                departmentBetB.setDepartmentTotalScore(totalScore);
+
+                departmentBetB = departmentBetBSer.save(departmentBetB);
+                departmentBetBS.add(departmentBetB);
+                //C表
+                List<DepartmentBetCTO> departmentBetCTOS = departmentBetBTO.getDepartmentBetCTOS();
+                if (departmentBetCTOS != null) {
+                    for (DepartmentBetCTO departmentBetCTO : departmentBetCTOS) {
+                        DepartmentBetC departmentBetC = BeanTransform.copyProperties(departmentBetCTO, DepartmentBetC.class, true);
+                        departmentBetC.setDepartmentBetB(departmentBetB);
+                        //对赌得分
+                        if (departmentTotalScore != 0) {
+                            double betScore = departmentTotalScore * departmentBetC.getBetWeight();
+                            departmentBetC.setBetScore(betScore);
+                        }
+
+                        departmentBetC = departmentBetCSer.save(departmentBetC);
+                        departmentBetCS.add(departmentBetC);
+                        //D表
+                        List<DepartmentBetETO> departmentBetETOS = departmentBetCTO.getDepartmentBetETOS();
+                        if (departmentBetETOS != null) {
+                            for (DepartmentBetETO departmentBetETO : departmentBetETOS) {
+                                DepartmentBetD departmentBetD = BeanTransform.copyProperties(departmentBetETO, DepartmentBetD.class, true);
+                                departmentBetD.setDepartmentBetC(departmentBetC);
+                                departmentBetD = departmentBetDSer.save(departmentBetD);
+                                departmentBetDS.add(departmentBetD);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -330,57 +336,64 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
                 }
                 departmentBetCSer.remove(cList);
             }
-
             departmentBetBSer.remove(bList);
         }
         //B表
         List<DepartmentBetB> departmentBetBS = new ArrayList<>();
         List<DepartmentBetBTO> departmentBetBTOS = departmentBetATO.getDepartmentBetBTOS();
-        for (DepartmentBetBTO departmentBetBTO : departmentBetBTOS) {
-            DepartmentBetB departmentBetB = BeanTransform.copyProperties(departmentBetBTO, DepartmentBetB.class, true);
-            //基础得分（部门总得分*目标-部门分配基础权重）
-            double departmentTotalScore = 0;
-            double basesScore = 0.0;
-            String[] fields = new String[]{"departmentTotalScore"};
-            String sql = "SELECT departmentTotalScore AS departmentTotalScore FROM royalty_systembetb WHERE department='" + departmentBetB.getDepartment() + "'";
-            List<SystemBetB> systemBetBS = systemBetBSer.findBySql(sql, SystemBetB.class, fields);
-            if (systemBetBS != null && !systemBetBS.isEmpty()) {
-                departmentTotalScore = systemBetBS.get(0).getDepartmentTotalScore();
-            }
-            if (departmentTotalScore != 0) {
-                basesScore = departmentTotalScore * departmentBetB.getBaseWeight();
-                departmentBetB.setBasesScore(basesScore);
-            }
-
-            //部门总得分
-            Double totalScore = departmentBetB.getRestrictScore() + basesScore;
-            departmentBetB.setDepartmentTotalScore(totalScore);
-
-            departmentBetBSer.update(departmentBetB);
-            departmentBetBS.add(departmentBetB);
-            //C表
-            List<DepartmentBetC> departmentBetCS = new ArrayList<>();
-            List<DepartmentBetCTO> departmentBetCTOS = departmentBetBTO.getDepartmentBetCTOS();
-            for (DepartmentBetCTO departmentBetCTO : departmentBetCTOS) {
-                DepartmentBetC departmentBetC = BeanTransform.copyProperties(departmentBetCTO, DepartmentBetC.class, true);
-                departmentBetC.setDepartmentBetB(departmentBetB);
-
-                //对赌得分
+        if (departmentBetBTOS != null) {
+            for (DepartmentBetBTO departmentBetBTO : departmentBetBTOS) {
+                DepartmentBetB departmentBetB = BeanTransform.copyProperties(departmentBetBTO, DepartmentBetB.class, true);
+                //基础得分（部门总得分*目标-部门分配基础权重）
+                double departmentTotalScore = 0;
+                double basesScore = 0.0;
+                String[] fields = new String[]{"departmentTotalScore"};
+                String sql = "SELECT departmentTotalScore AS departmentTotalScore FROM royalty_systembetb WHERE department='" + departmentBetB.getDepartment() + "'";
+                List<SystemBetB> systemBetBS = systemBetBSer.findBySql(sql, SystemBetB.class, fields);
+                if (systemBetBS != null && !systemBetBS.isEmpty()) {
+                    departmentTotalScore = systemBetBS.get(0).getDepartmentTotalScore();
+                }
                 if (departmentTotalScore != 0) {
-                    double betScore = departmentTotalScore * departmentBetC.getBetWeight();
-                    departmentBetC.setBetScore(betScore);
+                    basesScore = departmentTotalScore * departmentBetB.getBaseWeight();
+                    departmentBetB.setBasesScore(basesScore);
                 }
 
-                departmentBetCSer.update(departmentBetC);
-                departmentBetCS.add(departmentBetC);
-                //D表
-                List<DepartmentBetD> departmentBetDS = new ArrayList<>();
-                List<DepartmentBetETO> departmentBetETOS = departmentBetCTO.getDepartmentBetETOS();
-                for (DepartmentBetETO departmentBetETO : departmentBetETOS) {
-                    DepartmentBetD departmentBetD = BeanTransform.copyProperties(departmentBetETO, DepartmentBetD.class, true);
-                    departmentBetD.setDepartmentBetC(departmentBetC);
-                    departmentBetDSer.update(departmentBetD);
-                    departmentBetDS.add(departmentBetD);
+                //部门总得分
+                Double totalScore = departmentBetB.getRestrictScore() + basesScore;
+                departmentBetB.setDepartmentTotalScore(totalScore);
+
+                departmentBetB.setDepartmentBetA(departmentBetA);
+                departmentBetBSer.update(departmentBetB);
+                departmentBetBS.add(departmentBetB);
+                //C表
+                List<DepartmentBetC> departmentBetCS = new ArrayList<>();
+                List<DepartmentBetCTO> departmentBetCTOS = departmentBetBTO.getDepartmentBetCTOS();
+                if (departmentBetCTOS != null) {
+                    for (DepartmentBetCTO departmentBetCTO : departmentBetCTOS) {
+                        DepartmentBetC departmentBetC = BeanTransform.copyProperties(departmentBetCTO, DepartmentBetC.class, true);
+                        departmentBetC.setDepartmentBetB(departmentBetB);
+
+                        //对赌得分
+                        if (departmentTotalScore != 0) {
+                            double betScore = departmentTotalScore * departmentBetC.getBetWeight();
+                            departmentBetC.setBetScore(betScore);
+                        }
+
+                        departmentBetCSer.update(departmentBetC);
+                        departmentBetCS.add(departmentBetC);
+                        //D表
+                        List<DepartmentBetD> departmentBetDS = new ArrayList<>();
+                        List<DepartmentBetETO> departmentBetETOS = departmentBetCTO.getDepartmentBetETOS();
+
+                        if (departmentBetETOS != null) {
+                            for (DepartmentBetETO departmentBetETO : departmentBetETOS) {
+                                DepartmentBetD departmentBetD = BeanTransform.copyProperties(departmentBetETO, DepartmentBetD.class, true);
+                                departmentBetD.setDepartmentBetC(departmentBetC);
+                                departmentBetDSer.update(departmentBetD);
+                                departmentBetDS.add(departmentBetD);
+                            }
+                        }
+                    }
                 }
             }
         }

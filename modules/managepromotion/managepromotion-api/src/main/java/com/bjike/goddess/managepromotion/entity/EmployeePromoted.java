@@ -6,6 +6,7 @@ import com.bjike.goddess.managepromotion.enums.AuditStatus;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 
 /**
@@ -55,7 +56,7 @@ public class EmployeePromoted extends BaseEntity {
      * 时间
      */
     @Column(name = "times", columnDefinition = "DATE   COMMENT '时间'")
-    private String times;
+    private LocalDate times;
 
     /**
      * 晋升前（不包括各项补助）
@@ -128,11 +129,11 @@ public class EmployeePromoted extends BaseEntity {
         this.channel = channel;
     }
 
-    public String getTimes() {
+    public LocalDate getTimes() {
         return times;
     }
 
-    public void setTimes(String times) {
+    public void setTimes(LocalDate times) {
         this.times = times;
     }
 

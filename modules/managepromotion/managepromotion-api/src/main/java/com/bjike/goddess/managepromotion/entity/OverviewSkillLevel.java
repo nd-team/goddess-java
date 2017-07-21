@@ -90,7 +90,7 @@ public class OverviewSkillLevel extends BaseEntity {
     /**
      * 主项/小项（是否为主项）
      */
-    @Column(name = "is_subject", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '主项/小项（是否为主项）'", insertable = false)
+    @Column(name = "is_subject", columnDefinition = "TINYINT(2)  COMMENT '主项/小项（是否为主项）'")
     private Boolean subject;
 
     /**

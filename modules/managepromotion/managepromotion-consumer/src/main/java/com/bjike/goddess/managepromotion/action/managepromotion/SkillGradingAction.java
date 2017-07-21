@@ -9,20 +9,22 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.managepromotion.api.SkillGradingAPI;
-import com.bjike.goddess.managepromotion.bo.EmployeeFunctionLevelBO;
-import com.bjike.goddess.managepromotion.bo.SkillGradingBO;
-import com.bjike.goddess.managepromotion.dto.EmployeeFunctionLevelDTO;
+import com.bjike.goddess.managepromotion.bo.SkillGradingABO;
+import com.bjike.goddess.managepromotion.dto.SkillGradingCDTO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingDTO;
-import com.bjike.goddess.managepromotion.to.EmployeeFunctionLevelTO;
-import com.bjike.goddess.managepromotion.to.SkillGradingTO;
-import com.bjike.goddess.managepromotion.vo.EmployeeFunctionLevelVO;
-import com.bjike.goddess.managepromotion.vo.SkillGradingVO;
+import com.bjike.goddess.managepromotion.excel.SonPermissionObject;
+import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
+import com.bjike.goddess.managepromotion.to.SkillGradingATO;
+import com.bjike.goddess.managepromotion.vo.SkillGradingAVO;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,35 +41,110 @@ import java.util.List;
 public class SkillGradingAction {
     @Autowired
     private SkillGradingAPI skillGradingAPI;
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result i() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = skillGradingAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = skillGradingAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
     /**
      * 技能定级列表总条数
      *
-     * @param skillGradingDTO 技能定级记录dto
+     * @param skillGradingCDTO 技能定级记录dto
      * @des 获取所有技能定级
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(SkillGradingDTO skillGradingDTO) throws ActException {
+    public Result count(SkillGradingCDTO skillGradingCDTO) throws ActException {
         try {
-            Long count = skillGradingAPI.countSkillGrading(skillGradingDTO);
+            Long count = skillGradingAPI.countSkillGrading(skillGradingCDTO);
             return ActResult.initialize(count);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 一个技能定级
      *
      * @param id
-     * @return class SkillGradingVO
+     * @return class SkillGradingAVO
      * @des 获取一个技能定级
      * @version v1
      */
     @GetMapping("v1/skill/{id}")
     public Result skill(@PathVariable String id) throws ActException {
         try {
-            SkillGradingBO skillGradingBO = skillGradingAPI.getOne(id);
-            return ActResult.initialize(BeanTransform.copyProperties(skillGradingBO, SkillGradingVO.class));
+            SkillGradingABO skillGradingABO = skillGradingAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(skillGradingABO, SkillGradingAVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -78,16 +155,13 @@ public class SkillGradingAction {
      * 技能定级列表
      *
      * @param skillGradingDTO 技能定级记录dto
-     * @return class SkillGradingVO
      * @des 获取所有技能定级
      * @version v1
      */
     @GetMapping("v1/list")
     public Result list(SkillGradingDTO skillGradingDTO, HttpServletRequest request) throws ActException {
         try {
-            List<SkillGradingVO> skillGradingVOS = BeanTransform.copyProperties(
-                    skillGradingAPI.findListSkillGrading(skillGradingDTO), SkillGradingVO.class, request);
-            return ActResult.initialize(skillGradingVOS);
+            return ActResult.initialize(skillGradingAPI.findListSkillGrading(skillGradingDTO));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -96,17 +170,16 @@ public class SkillGradingAction {
     /**
      * 添加技能定级
      *
-     * @param skillGradingTO 技能定级to
-     * @return class SkillGradingVO
+     * @param skillGradingATO 技能定级to
      * @des 添加技能定级
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class) SkillGradingTO skillGradingTO, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(ADD.class) SkillGradingATO skillGradingATO, BindingResult bindingResult) throws ActException {
         try {
-            SkillGradingBO skillGradingBO = skillGradingAPI.insertSkillGrading(skillGradingTO);
-            return ActResult.initialize(skillGradingBO);
+            skillGradingAPI.insertSkillGrading(skillGradingATO);
+            return ActResult.initialize("insert success");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -115,17 +188,16 @@ public class SkillGradingAction {
     /**
      * 编辑技能定级
      *
-     * @param skillGradingTO 技能定级数据to
-     * @return class SkillGradingVO
+     * @param skillGradingATO 技能定级数据to
      * @des 添加技能定级
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class) SkillGradingTO skillGradingTO, BindingResult bindingResult) throws ActException {
+    public Result edit(@Validated(EDIT.class) SkillGradingATO skillGradingATO, BindingResult bindingResult) throws ActException {
         try {
-            SkillGradingBO skillGradingBO = skillGradingAPI.editSkillGrading(skillGradingTO);
-            return ActResult.initialize(skillGradingBO);
+            skillGradingAPI.editSkillGrading(skillGradingATO);
+            return ActResult.initialize("edit success");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

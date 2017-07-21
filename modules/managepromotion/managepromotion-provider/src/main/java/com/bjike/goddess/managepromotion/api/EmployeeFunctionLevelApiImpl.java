@@ -6,6 +6,7 @@ import com.bjike.goddess.managepromotion.bo.OverviewSkillLevelBO;
 import com.bjike.goddess.managepromotion.dto.EmployeeFunctionLevelDTO;
 import com.bjike.goddess.managepromotion.service.EmployeeFunctionLevelSer;
 import com.bjike.goddess.managepromotion.to.EmployeeFunctionLevelTO;
+import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,15 @@ public class EmployeeFunctionLevelApiImpl implements EmployeeFunctionLevelAPI {
 
     @Autowired
     private EmployeeFunctionLevelSer employeeFunctionLevelSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return employeeFunctionLevelSer.sonPermission();
+    }
 
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return employeeFunctionLevelSer.guidePermission( guidePermissionTO );
+    }
     @Override
     public Long countEmployeeFunctionLevel(EmployeeFunctionLevelDTO employeeFunctionLevelDTO) throws SerException {
         return employeeFunctionLevelSer.countEmployeeFunctionLevel(employeeFunctionLevelDTO);

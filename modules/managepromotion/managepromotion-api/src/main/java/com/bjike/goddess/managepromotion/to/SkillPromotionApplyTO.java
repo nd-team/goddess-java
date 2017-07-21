@@ -6,6 +6,8 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.managepromotion.enums.AuditStatus;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 技能晋升申请
  *
@@ -16,6 +18,11 @@ import org.hibernate.validator.constraints.NotBlank;
  * @Copy: [ com.bjike ]
  */
 public class SkillPromotionApplyTO extends BaseTO {
+    public interface head{}
+    public interface budget{}
+    public interface projectManager{}
+    public interface plan{}
+    public interface manager{}
 
     /**
      * 地区
@@ -104,34 +111,43 @@ public class SkillPromotionApplyTO extends BaseTO {
      */
     private Integer skillLevelScore;
     /**
+     * 阶段
+     */
+    private Integer phase;
+
+    /**
      * 模块负责人审核意见
      */
+    @NotBlank(message = "模块负责人审核意见不能为空",groups = {SkillPromotionApplyTO.head.class})
     private String headOpinion;
     /**
      * 运营商务部预算模块审核意见
      */
+    @NotBlank(message = "运营商务部预算模块审核意见不能为空",groups = {SkillPromotionApplyTO.budget.class})
     private String budgetOpinion;
 
     /**
      * 项目经理审核意见
      */
+    @NotBlank(message = "项目经理审核意见不能为空",groups = {SkillPromotionApplyTO.projectManager.class})
     private String projectManagerOpinion;
 
     /**
      * 综合资源部规划模块审核意见
      */
+    @NotBlank(message = "综合资源部规划模块审核意见不能为空",groups = {SkillPromotionApplyTO.plan.class})
     private String planOpinion;
 
     /**
      * 总经办审核意见
      */
+    @NotBlank(message = "总经办审核意见不能为空",groups = {SkillPromotionApplyTO.manager.class})
     private String managerOpinion;
-
     /**
-     * 审核状态（审核中/通过/不通过）
+     * 审核状态
      */
-    private String auditStatus;
-
+    @NotNull(message = "审核状态不能为空",groups = {SkillPromotionApplyTO.manager.class})
+    private AuditStatus auditStatus;
 
     public String getArea() {
         return area;
@@ -253,6 +269,15 @@ public class SkillPromotionApplyTO extends BaseTO {
         this.skillLevelScore = skillLevelScore;
     }
 
+    public Integer getPhase() {
+        return phase;
+    }
+
+    public void setPhase(Integer phase) {
+        this.phase = phase;
+    }
+
+
     public String getHeadOpinion() {
         return headOpinion;
     }
@@ -260,6 +285,7 @@ public class SkillPromotionApplyTO extends BaseTO {
     public void setHeadOpinion(String headOpinion) {
         this.headOpinion = headOpinion;
     }
+
 
     public String getBudgetOpinion() {
         return budgetOpinion;
@@ -269,6 +295,7 @@ public class SkillPromotionApplyTO extends BaseTO {
         this.budgetOpinion = budgetOpinion;
     }
 
+
     public String getProjectManagerOpinion() {
         return projectManagerOpinion;
     }
@@ -276,6 +303,7 @@ public class SkillPromotionApplyTO extends BaseTO {
     public void setProjectManagerOpinion(String projectManagerOpinion) {
         this.projectManagerOpinion = projectManagerOpinion;
     }
+
 
     public String getPlanOpinion() {
         return planOpinion;
@@ -285,6 +313,7 @@ public class SkillPromotionApplyTO extends BaseTO {
         this.planOpinion = planOpinion;
     }
 
+
     public String getManagerOpinion() {
         return managerOpinion;
     }
@@ -293,11 +322,11 @@ public class SkillPromotionApplyTO extends BaseTO {
         this.managerOpinion = managerOpinion;
     }
 
-    public String getAuditStatus() {
+    public AuditStatus getAuditStatus() {
         return auditStatus;
     }
 
-    public void setAuditStatus(String auditStatus) {
+    public void setAuditStatus(AuditStatus auditStatus) {
         this.auditStatus = auditStatus;
     }
 }

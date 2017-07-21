@@ -14,8 +14,8 @@ import com.bjike.goddess.managepromotion.bo.OverviewSkillLevelBO;
 import com.bjike.goddess.managepromotion.bo.SkillPromotionApplyBO;
 import com.bjike.goddess.managepromotion.dto.EmployeePromotedDTO;
 import com.bjike.goddess.managepromotion.dto.SkillPromotionApplyDTO;
-import com.bjike.goddess.managepromotion.to.EmployeePromotedTO;
-import com.bjike.goddess.managepromotion.to.SkillPromotionApplyTO;
+import com.bjike.goddess.managepromotion.to.*;
+import com.bjike.goddess.managepromotion.vo.CollectVO;
 import com.bjike.goddess.managepromotion.vo.EmployeePromotedVO;
 import com.bjike.goddess.managepromotion.vo.SkillPromotionApplyVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +41,27 @@ public class EmployeePromotedAction {
 
     @Autowired
     private EmployeePromotedAPI  employeePromotedAPI;
+    /**
+     * 功能导航权限
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = employeePromotedAPI.guidePermission(guidePermissionTO);
+            if(! isHasPermission ){
+                //int code, String msg
+                return new ActResult(0,"没有权限",false );
+            }else{
+                return new ActResult(0,"有权限",true );
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 员工已晋升情况列表总条数
      *
@@ -152,22 +173,93 @@ public class EmployeePromotedAction {
         }
     }
     /**
-     * 员工已晋升情况列表
+     * 姓名汇总
      *
-     * @param employeePromotedDTO 员工已晋升情况记录dto
-     * @return class EmployeePromotedVO
-     * @des 获取所有员工已晋升情况
+     * @param to 汇总
+     * @return class CollectVO
+     * @des 姓名汇总
      * @version v1
      */
-    @GetMapping("v1/seach")
-    public Result seach(EmployeePromotedDTO employeePromotedDTO, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/name")
+    public Result name(@Validated(NameTO.collect.class) NameTO to,BindingResult bindingResult,HttpServletRequest request) throws ActException {
         try {
-            List<EmployeePromotedVO> employeePromotedVOS = BeanTransform.copyProperties(
-                    employeePromotedAPI.seach(employeePromotedDTO), EmployeePromotedVO.class, request);
-            return ActResult.initialize(employeePromotedVOS);
+            CollectTO collectTO = BeanTransform.copyProperties(to,CollectTO.class);
+            List<CollectVO> collectVOS = BeanTransform.copyProperties(
+                    employeePromotedAPI.collect(collectTO), CollectVO.class, request);
+            return ActResult.initialize(collectVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 时间汇总
+     *
+     * @param to 汇总
+     * @return class CollectVO
+     * @des 时间汇总
+     * @version v1
+     */
+    @GetMapping("v1/times")
+    public Result times(@Validated(TimesTO.collect.class) TimesTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+            CollectTO collectTO = BeanTransform.copyProperties(to,CollectTO.class);
+            List<CollectVO> collectVOS = BeanTransform.copyProperties(
+                    employeePromotedAPI.collect(collectTO), CollectVO.class, request);
+            return ActResult.initialize(collectVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 状态汇总
+     *
+     * @param to 汇总
+     * @return class CollectVO
+     * @des 状态汇总
+     * @version v1
+     */
+    @GetMapping("v1/status")
+    public Result status(@Validated(StatusTO.collect.class) StatusTO to,BindingResult bindingResult,HttpServletRequest request) throws ActException {
+        try {
+            CollectTO collectTO = BeanTransform.copyProperties(to,CollectTO.class);
+            List<CollectVO> collectVOS = BeanTransform.copyProperties(
+                    employeePromotedAPI.collect(collectTO), CollectVO.class, request);
+            return ActResult.initialize(collectVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取所有姓名
+     *
+     * @des 获取所有姓名
+     * @version v1
+     */
+    @GetMapping("v1/getNames")
+    public Result getNames() throws ActException {
+        try {
+            List<String> nameList = employeePromotedAPI.getName();
+            return ActResult.initialize(nameList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取所有状态
+     *
+     * @des 获取所有状态
+     * @version v1
+     */
+    @GetMapping("v1/getStatus")
+    public Result getStatus() throws ActException {
+        try {
+            List<String> statusList = employeePromotedAPI.getStatus();
+            return ActResult.initialize(statusList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
 
 }
