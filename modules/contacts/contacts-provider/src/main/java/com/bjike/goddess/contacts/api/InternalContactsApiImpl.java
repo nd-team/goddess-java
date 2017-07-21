@@ -107,4 +107,9 @@ public class InternalContactsApiImpl implements InternalContactsAPI {
     public List<String> getEmails(String[] names) throws SerException {
         return internalContactsSer.getEmails(names);
     }
+
+    @Override
+    public String getEmail(String name) throws SerException {
+        return internalContactsSer.getEmail(name);
+    }
 }

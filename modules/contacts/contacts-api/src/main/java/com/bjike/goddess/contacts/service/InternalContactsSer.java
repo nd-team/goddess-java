@@ -154,4 +154,11 @@ public interface InternalContactsSer extends Ser<InternalContacts, InternalConta
     default List<String> getEmails(String[] names) throws SerException {
         return null;
     }
+
+    /**
+     * 根据名字获邮箱
+     */
+    default String getEmail(String name) throws SerException {
+        return null;
+    }
 }
