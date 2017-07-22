@@ -113,4 +113,6 @@ public class RecruitWayApiImpl implements RecruitWayAPI {
     public Set<String> allRecruitName() throws SerException {
         return recruitWaySer.allRecruitName();
     }
+
+
 }

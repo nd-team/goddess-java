@@ -6,6 +6,7 @@ import com.bjike.goddess.recruit.bo.InterviewAddressInforBO;
 import com.bjike.goddess.recruit.dto.InterviewAddressInforDTO;
 import com.bjike.goddess.recruit.entity.InterviewAddressInfor;
 import com.bjike.goddess.recruit.service.InterviewAddressInforSer;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.InterviewAddressInforTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -95,5 +96,15 @@ public class InterviewAddressInforApiImpl implements InterviewAddressInforAPI {
     @Override
     public void update(InterviewAddressInforTO interviewAddressInforTO) throws SerException {
         interviewAddressInforSer.update(interviewAddressInforTO);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return interviewAddressInforSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return interviewAddressInforSer.guidePermission(guidePermissionTO);
     }
 }

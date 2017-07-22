@@ -7,10 +7,13 @@ import com.bjike.goddess.recruit.dto.FailFirstInterviewReasonDTO;
 import com.bjike.goddess.recruit.entity.FailFirstInterviewReason;
 import com.bjike.goddess.recruit.service.FailFirstInterviewReasonSer;
 import com.bjike.goddess.recruit.to.FailFirstInterviewReasonTO;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
+import com.bjike.goddess.recruit.vo.SonPermissionObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 未应约初试原因
@@ -95,5 +98,20 @@ public class FailFirstInterviewReasonApiImpl implements FailFirstInterviewReason
     @Override
     public void update(FailFirstInterviewReasonTO failFirstInterviewReasonTO) throws SerException {
         failFirstInterviewReasonSer.update(failFirstInterviewReasonTO);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return failFirstInterviewReasonSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return failFirstInterviewReasonSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public Set<String> allReason() throws SerException {
+        return failFirstInterviewReasonSer.allReason();
     }
 }

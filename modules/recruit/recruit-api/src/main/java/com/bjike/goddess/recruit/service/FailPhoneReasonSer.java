@@ -9,6 +9,7 @@ import com.bjike.goddess.recruit.to.FailPhoneReasonTO;
 import com.bjike.goddess.recruit.to.GuidePermissionTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 未成功通话原因
@@ -68,4 +69,11 @@ public interface FailPhoneReasonSer extends Ser<FailPhoneReason, FailPhoneReason
      */
     void update(FailPhoneReasonTO failPhoneReasonTO) throws SerException;
 
+    /**
+     * 查找所有未成功通话原因
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allReason() throws SerException;
 }

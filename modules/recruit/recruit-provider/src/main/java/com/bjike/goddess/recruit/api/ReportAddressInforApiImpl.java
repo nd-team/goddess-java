@@ -6,6 +6,7 @@ import com.bjike.goddess.recruit.bo.ReportAddressInforBO;
 import com.bjike.goddess.recruit.dto.ReportAddressInforDTO;
 import com.bjike.goddess.recruit.entity.ReportAddressInfor;
 import com.bjike.goddess.recruit.service.ReportAddressInforSer;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.ReportAddressInforTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -95,5 +96,15 @@ public class ReportAddressInforApiImpl implements ReportAddressInforAPI {
     @Override
     public void update(ReportAddressInforTO reportAddressInforTO) throws SerException {
         reportAddressInforSer.update(reportAddressInforTO);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return reportAddressInforSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return reportAddressInforSer.guidePermission(guidePermissionTO);
     }
 }
