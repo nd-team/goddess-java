@@ -1,9 +1,13 @@
 package com.bjike.goddess.managepromotion.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.managepromotion.bo.SkillGradingABO;
 import com.bjike.goddess.managepromotion.bo.SkillGradingBO;
+import com.bjike.goddess.managepromotion.dto.SkillGradingCDTO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingDTO;
-import com.bjike.goddess.managepromotion.to.SkillGradingTO;
+import com.bjike.goddess.managepromotion.excel.SonPermissionObject;
+import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
+import com.bjike.goddess.managepromotion.to.SkillGradingATO;
 
 import java.util.List;
 
@@ -17,18 +21,35 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SkillGradingAPI {
-
     /**
-     *技能定级列表总条数
+     * 下拉导航权限
      */
-    default Long countSkillGrading(SkillGradingDTO skillGradingDTO) throws SerException {
+    default List<SonPermissionObject> sonPermission() throws SerException {
         return null;
     }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 技能定级列表总条数
+     */
+    default Long countSkillGrading(SkillGradingCDTO skillGradingCDTO) throws SerException {
+        return null;
+    }
+
     /**
      * 一个技能定级
-     * @return class SkillGradingBO
+     *
+     * @return class SkillGradingABO
      */
-    default SkillGradingBO getOne(String id) throws SerException {return null;}
+    default SkillGradingABO getOne(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 技能定级
@@ -44,23 +65,19 @@ public interface SkillGradingAPI {
     /**
      * 添加技能定级
      *
-     * @param skillGradingTO 技能定级数据to
-     * @return class SkillGradingBO
+     * @param skillGradingATO 技能定级数据to
      * @throws SerException
      */
-    default SkillGradingBO insertSkillGrading(SkillGradingTO skillGradingTO) throws SerException {
-        return null;
+    default void insertSkillGrading(SkillGradingATO skillGradingATO) throws SerException {
     }
 
     /**
      * 编辑技能定级
      *
-     * @param skillGradingTO 技能定级数据to
-     * @return class SkillGradingBO
+     * @param skillGradingATO 技能定级数据to
      * @throws SerException
      */
-    default SkillGradingBO editSkillGrading(SkillGradingTO skillGradingTO) throws SerException {
-        return null;
+    default void editSkillGrading(SkillGradingATO skillGradingATO) throws SerException {
     }
 
     /**

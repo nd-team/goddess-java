@@ -58,6 +58,15 @@ public class AssistancePlanSerImpl extends ServiceImpl<AssistancePlan, Assistanc
     }
 
     @Override
+    public AssistancePlanBO getOneById(String id) throws SerException {
+        if (StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
+        AssistancePlan assistancePlan = super.findById(id);
+
+        return BeanTransform.copyProperties(assistancePlan, AssistancePlanBO.class);
+    }
+    @Override
     public List<AssistancePlanBO> listAssistancePlan(AssistancePlanDTO assistancePlanDTO) throws SerException {
         if (StringUtils.isNotBlank(assistancePlanDTO.getPlanNum())) {
             assistancePlanDTO.getConditions().add(Restrict.like("planNum", assistancePlanDTO.getPlanNum()));

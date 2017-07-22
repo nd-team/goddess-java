@@ -55,13 +55,13 @@ public class SkillPromotionApply extends BaseEntity {
     /**
      * 主项/小项
      */
-    @Column(name = "is_subject",  columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '主项/小项'", insertable = false)
+    @Column(name = "is_subject", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '主项/小项'", insertable = false)
     private Boolean subject;
 
     /**
      * 申请考试/晋升时间
      */
-    @Column(name = "applyTest",columnDefinition = "VARCHAR(255)   COMMENT '申请考试/晋升时间'")
+    @Column(name = "applyTest", columnDefinition = "VARCHAR(255)   COMMENT '申请考试/晋升时间'")
     private String applyTest;
 
     /**
@@ -79,7 +79,7 @@ public class SkillPromotionApply extends BaseEntity {
     /**
      * 当前技能等级
      */
-    @Column(name = "currentSkillLevel",  columnDefinition = "VARCHAR(255)   COMMENT '当前技能等级'")
+    @Column(name = "currentSkillLevel", columnDefinition = "VARCHAR(255)   COMMENT '当前技能等级'")
     private String currentSkillLevel;
 
     /**
@@ -91,7 +91,7 @@ public class SkillPromotionApply extends BaseEntity {
     /**
      * 已晋升次数
      */
-    @Column( columnDefinition = "VARCHAR(255)   COMMENT '已晋升次数'")
+    @Column(columnDefinition = "VARCHAR(255)   COMMENT '已晋升次数'")
     private Integer promotedNumber;
 
     /**
@@ -103,13 +103,13 @@ public class SkillPromotionApply extends BaseEntity {
     /**
      * 是否达到课时完成量
      */
-    @Column(name = "is_classCompletion", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否达到课时完成量'", insertable = false)
+    @Column(name = "is_classCompletion", columnDefinition = "TINYINT(2)  COMMENT '是否达到课时完成量'")
     private Boolean classCompletion;
 
     /**
      * 技能水平等级考试成绩
      */
-    @Column( columnDefinition = "VARCHAR(255)   COMMENT '技能水平等级考试成绩'")
+    @Column(columnDefinition = "VARCHAR(255)   COMMENT '技能水平等级考试成绩'")
     private Integer skillLevelScore;
     /**
      * 阶段
@@ -145,10 +145,10 @@ public class SkillPromotionApply extends BaseEntity {
     @Column(name = "managerOpinion", columnDefinition = "VARCHAR(255)   COMMENT '总经办审核意见'")
     private String managerOpinion;
     /**
-     * 审核状态（审核中/通过/不通过）
+     * 审核状态
      */
-    @Column( columnDefinition = "VARCHAR(255)   COMMENT '审核状态（审核中/通过/不通过）'")
-    private String auditStatus;
+    @Column(columnDefinition = "TINYINT(2)   COMMENT '审核状态'")
+    private AuditStatus auditStatus;
 
     public String getArea() {
         return area;
@@ -278,6 +278,7 @@ public class SkillPromotionApply extends BaseEntity {
         this.phase = phase;
     }
 
+
     public String getHeadOpinion() {
         return headOpinion;
     }
@@ -285,6 +286,7 @@ public class SkillPromotionApply extends BaseEntity {
     public void setHeadOpinion(String headOpinion) {
         this.headOpinion = headOpinion;
     }
+
 
     public String getBudgetOpinion() {
         return budgetOpinion;
@@ -294,6 +296,7 @@ public class SkillPromotionApply extends BaseEntity {
         this.budgetOpinion = budgetOpinion;
     }
 
+
     public String getProjectManagerOpinion() {
         return projectManagerOpinion;
     }
@@ -301,6 +304,7 @@ public class SkillPromotionApply extends BaseEntity {
     public void setProjectManagerOpinion(String projectManagerOpinion) {
         this.projectManagerOpinion = projectManagerOpinion;
     }
+
 
     public String getPlanOpinion() {
         return planOpinion;
@@ -310,6 +314,7 @@ public class SkillPromotionApply extends BaseEntity {
         this.planOpinion = planOpinion;
     }
 
+
     public String getManagerOpinion() {
         return managerOpinion;
     }
@@ -318,11 +323,11 @@ public class SkillPromotionApply extends BaseEntity {
         this.managerOpinion = managerOpinion;
     }
 
-    public String getAuditStatus() {
+    public AuditStatus getAuditStatus() {
         return auditStatus;
     }
 
-    public void setAuditStatus(String auditStatus) {
+    public void setAuditStatus(AuditStatus auditStatus) {
         this.auditStatus = auditStatus;
     }
 }

@@ -10,12 +10,14 @@ import com.bjike.goddess.lendreimbursement.api.FinoddinforAPI;
 import com.bjike.goddess.lendreimbursement.bo.FinoddinforBO;
 import com.bjike.goddess.lendreimbursement.dto.FinoddinforDTO;
 import com.bjike.goddess.lendreimbursement.to.FinoddinforTO;
+import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.vo.FinoddinforVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -35,6 +37,29 @@ public class FinoddinforAction {
 
     @Autowired
     private FinoddinforAPI finoddinforAPI;
+
+
+    /**
+     * 功能导航权限
+     * @param lendGuidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(LendGuidePermissionTO.TestAdd.class) LendGuidePermissionTO lendGuidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+//        try {
+
+//            Boolean isHasPermission = reimburseAnalisisorAPI.guidePermission(lendGuidePermissionTO);
+//            if(! isHasPermission ){
+        //int code, String msg
+//                return new ActResult(0,"没有权限",false );
+//            }else{
+        return new ActResult(0,"有权限",true );
+//            }
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+    }
 
     /**
      *  报销单号列表总条数

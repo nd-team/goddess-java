@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.rotation.bo.RotationConditionBO;
 import com.bjike.goddess.rotation.dto.RotationConditionDTO;
 import com.bjike.goddess.rotation.service.RotationConditionSer;
+import com.bjike.goddess.rotation.to.GuidePermissionTO;
 import com.bjike.goddess.rotation.to.RotationConditionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,5 +54,15 @@ public class RotationConditionApiImpl implements RotationConditionAPI {
     @Override
     public Long getTotal() throws SerException {
         return rotationConditionSer.getTotal();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return rotationConditionSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return rotationConditionSer.guidePermission(guidePermissionTO);
     }
 }

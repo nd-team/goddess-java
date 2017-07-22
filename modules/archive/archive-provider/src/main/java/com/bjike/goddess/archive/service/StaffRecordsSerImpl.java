@@ -1,5 +1,6 @@
 package com.bjike.goddess.archive.service;
 
+import com.bjike.goddess.archive.bo.PerBO;
 import com.bjike.goddess.archive.bo.StaffNameBO;
 import com.bjike.goddess.archive.bo.StaffRecordsBO;
 import com.bjike.goddess.archive.dto.StaffRecordsDTO;
@@ -12,6 +13,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +41,8 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
     private UserAPI userAPI;
     @Autowired
     private RotainCusPermissionSer cusPermissionSer;
+    @Autowired
+    private EntryBasicInfoAPI entryBasicInfoAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -244,8 +249,8 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
         StaffRecordsDTO dto = new StaffRecordsDTO();
         List<StaffRecordsBO> list = maps(dto);
         List<StaffNameBO> nameBOs = new ArrayList<>();
-        if(null != list && list.size() > 0){
-            for(StaffRecordsBO bo : list){
+        if (null != list && list.size() > 0) {
+            for (StaffRecordsBO bo : list) {
                 StaffNameBO staffNameBO = new StaffNameBO();
                 staffNameBO.setId(bo.getSerialNumber());
                 staffNameBO.setName(bo.getUsername());
@@ -253,5 +258,23 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
             }
         }
         return nameBOs;
+    }
+
+    @Override
+    public List<PerBO> getPerBO(String name) throws SerException {
+        List<PerBO> list = new ArrayList<>();
+        List<EntryBasicInfoBO> entryBasicInfoBOs = entryBasicInfoAPI.getEntryBasicInfoByName(name);
+        if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
+            EntryBasicInfoBO entryBasicInfoBO = entryBasicInfoAPI.getEntryBasicInfoByName(name).get(0);
+            String id = entryBasicInfoBO.getId();
+            StaffRecordsBO staffRecordsBO = getById(id);
+            if (null != staffRecordsBO) {
+                PerBO perBO = new PerBO();
+                perBO.setPerid(staffRecordsBO.getIdentityCard());
+                perBO.setPhone(staffRecordsBO.getTelephone());
+                list.add(perBO);
+            }
+        }
+        return list;
     }
 }

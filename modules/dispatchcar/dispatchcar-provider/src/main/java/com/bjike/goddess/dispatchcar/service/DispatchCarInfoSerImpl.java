@@ -27,9 +27,10 @@ import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.oilcardmanage.api.OilCardBasicAPI;
 import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
+import com.bjike.goddess.oilcardmanage.dto.OilCardBasicDTO;
 import com.bjike.goddess.oilcardmanage.entity.OilCardBasic;
-import com.bjike.goddess.oilcardmanage.service.OilCardBasicSer;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -75,7 +76,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     @Autowired
     private CusPermissionSer cusPermissionSer;
     @Autowired
-    private OilCardBasicSer oilCardBasicSer;
+    private OilCardBasicAPI oilCardBasicAPI;
     @Autowired
     private MessageAPI messageAPI;
 
@@ -133,7 +134,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         }
 
         //查询油卡余额
-        model.setOilCardBalance(oilCardBasicSer.findByCode(to.getOilCardNumber()).getBalance());
+        model.setOilCardBalance(oilCardBasicAPI.findByCode(to.getOilCardNumber()).getBalance());
         model.setOverWorkCost(model.getCarRentalCost() / 8 * model.getOverWorkTime());
         model.setCost(model.getMealCost() + model.getCarRentalCost() + model.getOverWorkCost() + model.getParkCost() + model.getRoadCost());
         model.setTotalCost(model.getMealCost() + model.getCarRentalCost() + model.getOverWorkCost() + model.getParkCost() + model.getRoadCost() + model.getOilCost());
@@ -200,7 +201,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
                 //查找租车费用
                 model.setCarRentalCost(findCost(to));
                 //查询油卡余额
-                model.setOilCardBalance(oilCardBasicSer.findByCode(to.getOilCardNumber()).getBalance());
+                model.setOilCardBalance(oilCardBasicAPI.findByCode(to.getOilCardNumber()).getBalance());
                 model.setOverWorkCost(model.getCarRentalCost() / 8 * model.getOverWorkTime());
                 model.setCost(model.getMealCost() + model.getCarRentalCost() + model.getOverWorkCost() + model.getParkCost() + model.getRoadCost());
                 model.setTotalCost(model.getMealCost() + model.getCarRentalCost() + model.getOverWorkCost() + model.getParkCost() + model.getRoadCost() + model.getOilCost());
@@ -454,10 +455,10 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             model.setFindType(FindType.PAYED);
             //付款后代表所有审核均通过，修改油余额
             //TODO 这里应该考虑分布式事务，联系焕来或贵钦解决该问题。 TCC
-            OilCardBasicBO basicBO = oilCardBasicSer.findByCode(model.getOilCardNumber());
-            OilCardBasic oilCardBasic = oilCardBasicSer.findById(basicBO.getId());
+            OilCardBasicBO basicBO = oilCardBasicAPI.findByCode(model.getOilCardNumber());
+            OilCardBasic oilCardBasic = oilCardBasicAPI.find(basicBO.getId());
             oilCardBasic.setBalance(oilCardBasic.getBalance() - model.getOilPrice());
-            oilCardBasicSer.update(oilCardBasic);
+            oilCardBasicAPI.updateOliCardBasic(oilCardBasic);
             if (oilCardBasic.getBalance() < 300) {
                 String content = "运营商务部的同事，你们好，" + oilCardBasic.getOilCardCode() + "号油卡余额" + oilCardBasic.getBalance() + "元，低于300元，请在一天内充值，请综合资源部同事跟进充值情况";
                 MessageTO to = new MessageTO("油卡余额不足300元", content);

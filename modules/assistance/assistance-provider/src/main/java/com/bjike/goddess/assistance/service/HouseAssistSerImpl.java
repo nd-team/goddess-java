@@ -46,6 +46,16 @@ public class HouseAssistSerImpl extends ServiceImpl<HouseAssist, HouseAssistDTO>
     }
 
     @Override
+    public HouseAssistBO getOneById(String id) throws SerException {
+        if (StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
+        HouseAssist list = super.findById(id  );
+
+        return BeanTransform.copyProperties(list, HouseAssistBO.class);
+    }
+
+    @Override
     public List<HouseAssistBO> listHouseAssist(HouseAssistDTO houseAssistDTO) throws SerException {
         if (StringUtils.isNotBlank(houseAssistDTO.getArea())) {
             houseAssistDTO.getConditions().add(Restrict.eq("area", houseAssistDTO.getArea()));

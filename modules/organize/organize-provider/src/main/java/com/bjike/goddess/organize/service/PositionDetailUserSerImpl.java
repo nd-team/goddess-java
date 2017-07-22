@@ -7,6 +7,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
+import com.bjike.goddess.organize.dto.PositionDetailDTO;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
 import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.organize.entity.PositionDetailUser;
@@ -14,7 +15,6 @@ import com.bjike.goddess.organize.to.PositionDetailUserTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dto.UserDTO;
-import com.bjike.goddess.user.entity.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -240,21 +240,60 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     @Override
     public List<UserBO> findUserListInOrgan() throws SerException {
         PositionDetailUserDTO dto = new PositionDetailUserDTO();
-        List<PositionDetailUser> list = super.findByCis( dto );
-        if( list != null && list.size()>0 ){
+        List<PositionDetailUser> list = super.findByCis(dto);
+        if (list != null && list.size() > 0) {
             List<String> userIds = new ArrayList<>();
             list.stream().forEach(str -> {
-                userIds.add( str.getUserId() );
+                userIds.add(str.getUserId());
             });
-            String [] idStrs =  userIds.toArray( new String[userIds.size()]);
+            String[] idStrs = userIds.toArray(new String[userIds.size()]);
             UserDTO userDTO = new UserDTO();
-            userDTO.getConditions().add(Restrict.in("id", idStrs ));
-            List<UserBO> userList = userAPI.findByCis( userDTO );
+            userDTO.getConditions().add(Restrict.in("id", idStrs));
+            List<UserBO> userList = userAPI.findByCis(userDTO);
 
             return userList;
         }
         return null;
     }
 
+    @Override
+    public String getPosition(String name) throws SerException {
+        PositionDetailUserDTO positionDetailUserDTO = new PositionDetailUserDTO();
+        positionDetailUserDTO.getConditions().add(Restrict.eq("username", name));
+        if (null != maps(positionDetailUserDTO) && maps(positionDetailUserDTO).size() > 0) {
+            PositionDetailUserBO positionDetailUserBO = maps(positionDetailUserDTO).get(0);
+            if (null != positionDetailUserBO) {
+                return positionDetailUserBO.getPosition();
+            }
+        }
+        return null;
+    }
 
+    @Override
+    public List<String> getAllPosition() throws SerException {
+        PositionDetailUserDTO dto = new PositionDetailUserDTO();
+        List<PositionDetailUserBO> positionDetailUserBOList = maps(dto);
+        List<String> stringList = new ArrayList<>();
+        if (null != positionDetailUserBOList && positionDetailUserBOList.size() > 0) {
+            for (PositionDetailUserBO bo : positionDetailUserBOList) {
+                String str = "";
+                str = bo.getPosition();
+                stringList.add(str);
+            }
+        }
+        return stringList;
+    }
+
+    @Override
+    public List<String> getAllDepartment() throws SerException {
+        PositionDetailDTO dto = new PositionDetailDTO();
+        List<PositionDetailBO> positionDetailBOList = positionDetailSer.maps(dto);
+        List<String> list = new ArrayList<>();
+        if (null != positionDetailBOList && positionDetailBOList.size() > 0) {
+            for (PositionDetailBO bo : positionDetailBOList) {
+                list.add(bo.getDepartmentName());
+            }
+        }
+        return list;
+    }
 }

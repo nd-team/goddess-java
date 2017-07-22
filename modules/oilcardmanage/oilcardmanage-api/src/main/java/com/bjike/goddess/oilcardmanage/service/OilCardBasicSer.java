@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardBasicDTO;
 import com.bjike.goddess.oilcardmanage.entity.OilCardBasic;
+import com.bjike.goddess.oilcardmanage.excel.SonPermissionObject;
+import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardBasicTO;
 
 import java.util.List;
@@ -20,6 +22,19 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface OilCardBasicSer extends Ser<OilCardBasic, OilCardBasicDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 新增油卡基本信息
@@ -65,4 +80,8 @@ public interface OilCardBasicSer extends Ser<OilCardBasic, OilCardBasicDTO> {
     List<OilCardBasicBO> pageList(OilCardBasicDTO dto) throws SerException;
 
     OilCardBasicBO findByCode(String oilCardCode) throws SerException;
+
+    OilCardBasic find(String id) throws SerException;
+
+    void updateOliCardBasic(OilCardBasic oilCardBasic) throws SerException;
 }

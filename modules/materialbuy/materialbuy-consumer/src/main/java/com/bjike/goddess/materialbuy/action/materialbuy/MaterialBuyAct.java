@@ -9,6 +9,7 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialbuy.api.MaterialBuyAPI;
 import com.bjike.goddess.materialbuy.bo.MaterialBuyBO;
+import com.bjike.goddess.materialbuy.dto.DeviceTypeDTO;
 import com.bjike.goddess.materialbuy.dto.MaterialBuyDTO;
 import com.bjike.goddess.materialbuy.to.DeleteFileTO;
 import com.bjike.goddess.materialbuy.to.GuidePermissionTO;
@@ -394,6 +395,22 @@ public class MaterialBuyAct extends BaseFileAction{
         try {
             List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
             return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(MaterialBuyDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(materialBuyAPI.count(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

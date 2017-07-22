@@ -1,5 +1,6 @@
 package com.bjike.goddess.archive.service;
 
+import com.bjike.goddess.archive.bo.PerBO;
 import com.bjike.goddess.archive.bo.StaffNameBO;
 import com.bjike.goddess.archive.bo.StaffRecordsBO;
 import com.bjike.goddess.archive.dto.StaffRecordsDTO;
@@ -101,6 +102,10 @@ public interface StaffRecordsSer extends Ser<StaffRecords, StaffRecordsDTO> {
     }
 
     default List<StaffNameBO> getName() throws SerException {
+        return null;
+    }
+
+    default List<PerBO> getPerBO(String name) throws SerException {
         return null;
     }
 }

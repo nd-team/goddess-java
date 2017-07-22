@@ -6,6 +6,7 @@ import com.bjike.goddess.firmreward.bo.PrizeDetailBO;
 import com.bjike.goddess.firmreward.dto.PrizeDetailDTO;
 import com.bjike.goddess.firmreward.entity.PrizeDetail;
 import com.bjike.goddess.firmreward.to.PrizeDetailTO;
+import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 
 import java.util.List;
 
@@ -52,5 +53,18 @@ public interface PrizeDetailSer extends Ser<PrizeDetail, PrizeDetailDTO> {
      * @throws SerException
      */
     void update(PrizeDetailTO to) throws SerException;
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
 }

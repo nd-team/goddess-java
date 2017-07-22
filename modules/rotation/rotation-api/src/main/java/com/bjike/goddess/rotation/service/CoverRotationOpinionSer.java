@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.rotation.bo.CoverRotationOpinionBO;
 import com.bjike.goddess.rotation.dto.CoverRotationOpinionDTO;
 import com.bjike.goddess.rotation.entity.CoverRotationOpinion;
+import com.bjike.goddess.rotation.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -50,6 +51,20 @@ public interface CoverRotationOpinionSer extends Ser<CoverRotationOpinion, Cover
      * @throws SerException
      */
     default CoverRotationOpinionBO transformBO(CoverRotationOpinion entity) throws SerException {
+        return null;
+    }
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 

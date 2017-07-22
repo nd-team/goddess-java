@@ -1,8 +1,5 @@
 package com.bjike.goddess.receivable.action.receivable;
 
-import ch.qos.logback.core.joran.util.beans.BeanUtil;
-import com.bjike.goddess.common.api.entity.ADD;
-import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -15,15 +12,12 @@ import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.receivable.api.ReceivableSubsidiaryAPI;
 import com.bjike.goddess.receivable.bo.ReceivableSubsidiaryBO;
 import com.bjike.goddess.receivable.dto.ReceivableSubsidiaryDTO;
-import com.bjike.goddess.receivable.entity.ReceivableSubsidiary;
-import com.bjike.goddess.receivable.enums.CompareStatus;
 import com.bjike.goddess.receivable.excel.ReceivableSubsidiaryExcel;
 import com.bjike.goddess.receivable.to.CollectCompareTO;
 import com.bjike.goddess.receivable.to.GuidePermissionTO;
 import com.bjike.goddess.receivable.to.ProgressTO;
 import com.bjike.goddess.receivable.to.ReceivableSubsidiaryTO;
 import com.bjike.goddess.receivable.vo.*;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -35,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 回款明细
@@ -47,11 +42,13 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("receivablesubsidiary")
-public class ReceivableSubsidiaryAction extends BaseFileAction{
+public class ReceivableSubsidiaryAction extends BaseFileAction {
     @Autowired
     private ReceivableSubsidiaryAPI receivableSubsidiaryAPI;
+
     /**
      * 功能导航权限
+     *
      * @param guidePermissionTO 导航类型数据
      * @throws ActException
      * @version v1
@@ -61,11 +58,11 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
         try {
 
             Boolean isHasPermission = receivableSubsidiaryAPI.guidePermission(guidePermissionTO);
-            if(! isHasPermission ){
+            if (!isHasPermission) {
                 //int code, String msg
-                return new ActResult(0,"没有权限",false );
-            }else{
-                return new ActResult(0,"有权限",true );
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
             }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -148,7 +145,7 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
     public Result add(@Validated(ReceivableSubsidiaryTO.TestAdd.class) ReceivableSubsidiaryTO receivableSubsidiaryTO, BindingResult bindingResult) throws ActException {
         try {
             ReceivableSubsidiaryBO receivableSubsidiaryBO = receivableSubsidiaryAPI.insertReceivableSubsidiary(receivableSubsidiaryTO);
-            return ActResult.initialize(BeanTransform.copyProperties(receivableSubsidiaryBO,ReceivableSubsidiaryVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(receivableSubsidiaryBO, ReceivableSubsidiaryVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -167,7 +164,7 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
     public Result edit(@Validated(ReceivableSubsidiaryTO.TestEdit.class) ReceivableSubsidiaryTO receivableSubsidiaryTO, BindingResult bindingResult) throws ActException {
         try {
             ReceivableSubsidiaryBO receivableSubsidiaryBO = receivableSubsidiaryAPI.editReceivableSubsidiary(receivableSubsidiaryTO);
-            return ActResult.initialize(BeanTransform.copyProperties(receivableSubsidiaryBO,ReceivableSubsidiaryVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(receivableSubsidiaryBO, ReceivableSubsidiaryVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -190,6 +187,7 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 签字审批时间
      *
@@ -199,12 +197,13 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
     @GetMapping("v1/auditTime")
     public Result auditTime(String auditTime) throws ActException {
         try {
-            List<String> audit = receivableSubsidiaryAPI.auditTime(auditTime);
+            Map<String, String> audit = receivableSubsidiaryAPI.auditTime(auditTime);
             return ActResult.initialize(audit);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * ERP结算审批时间
      *
@@ -214,7 +213,7 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
     @GetMapping("v1/countTime")
     public Result countTime(String countTime) throws ActException {
         try {
-            List<String> count = receivableSubsidiaryAPI.countTime(countTime);
+            Map<String, String> count = receivableSubsidiaryAPI.countTime(countTime);
             return ActResult.initialize(count);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -230,7 +229,7 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
     @GetMapping("v1/billTime")
     public Result billTime(String billTime) throws ActException {
         try {
-            List<String> bill = receivableSubsidiaryAPI.billTime(billTime);
+            Map<String, String> bill = receivableSubsidiaryAPI.billTime(billTime);
             return ActResult.initialize(bill);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -246,12 +245,13 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
     @GetMapping("v1/planTime")
     public Result planTime(String planTime) throws ActException {
         try {
-            String plan = receivableSubsidiaryAPI.planTime(planTime);
+            Map<String, String> plan = receivableSubsidiaryAPI.planTime(planTime);
             return ActResult.initialize(plan);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 时间
      *
@@ -263,8 +263,8 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
     @PostMapping("v1/editTime")
     public Result editTime(ReceivableSubsidiaryTO receivableSubsidiaryTO, String auditStatusStr, String countStatusStr, String billStatusStr, String planStatusStr) throws ActException {
         try {
-            ReceivableSubsidiaryBO receivableSubsidiaryBO = receivableSubsidiaryAPI.editTime(receivableSubsidiaryTO,auditStatusStr,countStatusStr,billStatusStr,planStatusStr);
-            return ActResult.initialize(BeanTransform.copyProperties(receivableSubsidiaryBO,ReceivableSubsidiaryVO.class));
+            ReceivableSubsidiaryBO receivableSubsidiaryBO = receivableSubsidiaryAPI.editTime(receivableSubsidiaryTO, auditStatusStr, countStatusStr, billStatusStr, planStatusStr);
+            return ActResult.initialize(BeanTransform.copyProperties(receivableSubsidiaryBO, ReceivableSubsidiaryVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -493,6 +493,7 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 导入Excel
      *
@@ -509,28 +510,28 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
             List<ReceivableSubsidiaryExcel> tos = ExcelUtil.excelToClazz(is, ReceivableSubsidiaryExcel.class, excel);
             List<ReceivableSubsidiaryTO> tocs = new ArrayList<>();
             for (ReceivableSubsidiaryExcel str : tos) {
-                ReceivableSubsidiaryTO receivableSubsidiaryTO = BeanTransform.copyProperties(str, ReceivableSubsidiaryTO.class,"contractor","pay","frame","pact","flow");
+                ReceivableSubsidiaryTO receivableSubsidiaryTO = BeanTransform.copyProperties(str, ReceivableSubsidiaryTO.class, "contractor", "pay", "frame", "pact", "flow");
 //                if(null != str.getContractor()) {
 //                  receivableSubsidiaryTO.setContractorName(str.getContractor());
 //                }
-                if(str.getPay().equals("是")){
+                if (str.getPay().equals("是")) {
                     receivableSubsidiaryTO.setPay(true);
-                }else{
+                } else {
                     receivableSubsidiaryTO.setPay(false);
                 }
-                if(str.getFrame().equals("是")){
+                if (str.getFrame().equals("是")) {
                     receivableSubsidiaryTO.setFrame(true);
-                }else{
+                } else {
                     receivableSubsidiaryTO.setFrame(false);
                 }
-                if(str.getPact().equals("是")){
+                if (str.getPact().equals("是")) {
                     receivableSubsidiaryTO.setPact(true);
-                }else{
+                } else {
                     receivableSubsidiaryTO.setPact(false);
                 }
-                if(str.getFlow().equals("是")){
+                if (str.getFlow().equals("是")) {
                     receivableSubsidiaryTO.setFlow(true);
-                }else{
+                } else {
                     receivableSubsidiaryTO.setFlow(false);
                 }
                 tocs.add(receivableSubsidiaryTO);
@@ -542,6 +543,7 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 导出excel
      *
@@ -562,6 +564,7 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
             throw new ActException(e1.getMessage());
         }
     }
+
     /**
      * excel模板下载
      *
@@ -572,7 +575,7 @@ public class ReceivableSubsidiaryAction extends BaseFileAction{
     public Result templateExport(HttpServletResponse response) throws ActException {
         try {
             String fileName = "回款管理导入模板.xlsx";
-            super.writeOutFile(response, receivableSubsidiaryAPI.templateExport( ), fileName);
+            super.writeOutFile(response, receivableSubsidiaryAPI.templateExport(), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

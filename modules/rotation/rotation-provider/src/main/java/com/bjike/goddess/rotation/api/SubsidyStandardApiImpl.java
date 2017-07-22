@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.rotation.bo.SubsidyStandardBO;
 import com.bjike.goddess.rotation.dto.SubsidyStandardDTO;
 import com.bjike.goddess.rotation.service.SubsidyStandardSer;
+import com.bjike.goddess.rotation.to.GuidePermissionTO;
 import com.bjike.goddess.rotation.to.SubsidyStandardTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,5 +74,15 @@ public class SubsidyStandardApiImpl implements SubsidyStandardAPI {
     @Override
     public List<SubsidyStandardBO> findThaw() throws SerException {
         return subsidyStandardSer.findThaw();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return subsidyStandardSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return subsidyStandardSer.guidePermission(guidePermissionTO);
     }
 }

@@ -153,4 +153,12 @@ public interface InternalContactsAPI {
     default List<String> getEmails(String[] names) throws SerException {
         return null;
     }
+
+    /**
+     * 根据单个名字获取邮箱
+     */
+    default String getEmail(String name) throws SerException {
+        return null;
+    }
+
 }

@@ -7,6 +7,7 @@ import com.bjike.goddess.staffactivity.to.ActivityExecuteInfoTO;
 import com.bjike.goddess.staffactivity.to.GuidePermissionTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 活动执行信息业务接口
@@ -89,4 +90,12 @@ public interface ActivityExecuteInfoAPI {
      * @throws SerException
      */
     void send() throws SerException;
+
+    /**
+     * 查找所有活动方案
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allActivityScheme() throws SerException;
 }

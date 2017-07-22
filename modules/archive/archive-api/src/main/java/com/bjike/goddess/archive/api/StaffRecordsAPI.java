@@ -1,5 +1,6 @@
 package com.bjike.goddess.archive.api;
 
+import com.bjike.goddess.archive.bo.PerBO;
 import com.bjike.goddess.archive.bo.StaffNameBO;
 import com.bjike.goddess.archive.bo.StaffRecordsBO;
 import com.bjike.goddess.archive.dto.StaffRecordsDTO;
@@ -98,6 +99,13 @@ public interface StaffRecordsAPI {
     }
 
     default List<StaffNameBO> getName() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据姓名获取员工身份证和电话号码
+     */
+    default List<PerBO> getPerBO(String name) throws SerException {
         return null;
     }
 }

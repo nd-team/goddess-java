@@ -582,6 +582,14 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
     byte[] receiveExcel(ApplyLendDTO applyLendDTO) throws SerException;
 
     /**
+     * 获取所有账户来源
+     * chenjunhao
+     * @return
+     */
+    default List<String> listAccountCom() throws SerException {
+        return null;
+    }
+    /**
      * chenjunhao
      * 等待付款导出cjh
      *

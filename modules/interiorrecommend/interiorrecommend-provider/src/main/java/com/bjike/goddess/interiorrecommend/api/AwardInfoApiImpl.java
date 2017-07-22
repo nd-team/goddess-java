@@ -4,8 +4,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.interiorrecommend.bo.AwardInfoBO;
 import com.bjike.goddess.interiorrecommend.bo.AwardStandardBO;
 import com.bjike.goddess.interiorrecommend.dto.AwardInfoDTO;
+import com.bjike.goddess.interiorrecommend.excel.SonPermissionObject;
 import com.bjike.goddess.interiorrecommend.service.AwardInfoSer;
 import com.bjike.goddess.interiorrecommend.to.AwardInfoTO;
+import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,4 +38,14 @@ public class AwardInfoApiImpl implements AwardInfoAPI {
         return awardInfoSer.pageList(dto);
     }
 
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return awardInfoSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return awardInfoSer.guidePermission(guidePermissionTO);
+    }
 }

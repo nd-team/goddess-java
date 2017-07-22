@@ -3,6 +3,7 @@ package com.bjike.goddess.attainment.api;
 import com.bjike.goddess.attainment.bo.SurveyActualizeBO;
 import com.bjike.goddess.attainment.dto.SurveyActualizeDTO;
 import com.bjike.goddess.attainment.service.SurveyActualizeSer;
+import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.attainment.to.SurveyActualizeTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,18 @@ import java.util.List;
  */
 @Service("surveyActualizeApiImpl")
 public class SurveyActualizeApiImpl implements SurveyActualizeAPI {
-
     @Autowired
     private SurveyActualizeSer surveyActualizeSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return surveyActualizeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return surveyActualizeSer.guidePermission(guidePermissionTO);
+    }
+
 
     @Override
     public SurveyActualizeBO save(SurveyActualizeTO to) throws SerException {

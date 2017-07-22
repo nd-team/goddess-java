@@ -35,61 +35,61 @@ public class CommissionQuota extends BaseEntity {
     /**
      * 实际业务提成总额
      */
-    @Column(name = "actualAmount", nullable = true, columnDefinition = "DECIMAL(10,2)   COMMENT '实际业务提成总额'")
+    @Column(name = "actualAmount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '实际业务提成总额'")
     private Double actualAmount;
 
     /**
      * 信息提供人
      */
-    @Column(name = "informationProvide", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '信息提供人'")
+    @Column(name = "informationProvide", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '信息提供人'")
     private String informationProvide;
 
     /**
      * 信息提供占额
      */
-    @Column(name = "provideAccount", nullable = true, columnDefinition = "DECIMAL(10,2)   COMMENT '信息提供占额'")
+    @Column(name = "provideAccount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '信息提供占额'")
     private Double provideAccount;
 
     /**
      * 业务揽接人
      */
-    @Column(name = "businessContracting", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '业务揽接人'")
+    @Column(name = "businessContracting", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '业务揽接人'")
     private String businessContracting;
 
     /**
      * 业务揽接占额
      */
-    @Column(name = "contractAccount", nullable = true, columnDefinition = "DECIMAL(10,2)   COMMENT '业务揽接占额'")
+    @Column(name = "contractAccount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '业务揽接占额'")
     private Double contractAccount;
 
     /**
      * 业务洽谈人
      */
-    @Column(name = "businessNegotiation", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '业务洽谈人'")
+    @Column(name = "businessNegotiation", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '业务洽谈人'")
     private String businessNegotiation;
 
     /**
      * 业务洽谈占额
      */
-    @Column(name = "negotiationAccount", nullable = true,columnDefinition = "DECIMAL(10,2)   COMMENT '业务洽谈占额'")
+    @Column(name = "negotiationAccount", nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '业务洽谈占额'")
     private Double negotiationAccount;
 
     /**
      * 维护人
      */
-    @Column(name = "maintenance", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '维护人'")
+    @Column(name = "maintenance", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '维护人'")
     private String maintenance;
 
     /**
      * 维护占额
      */
-    @Column(name = "maintenanceAccount", nullable = true, columnDefinition = "DECIMAL(10,2)   COMMENT '维护占额'")
+    @Column(name = "maintenanceAccount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '维护占额'")
     private Double maintenanceAccount;
 
     /**
      * 剩余占额
      */
-    @Column(name = "remainingAccount", nullable = true, columnDefinition = "DECIMAL(10,2)   COMMENT '剩余占额'")
+    @Column(name = "remainingAccount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '剩余占额'")
     private Double remainingAccount;
 
     /**

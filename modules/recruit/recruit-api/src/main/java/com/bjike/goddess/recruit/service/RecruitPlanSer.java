@@ -3,8 +3,10 @@ package com.bjike.goddess.recruit.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.recruit.bo.RecruitPlanBO;
+import com.bjike.goddess.recruit.bo.SituationBO;
 import com.bjike.goddess.recruit.dto.RecruitPlanDTO;
 import com.bjike.goddess.recruit.entity.RecruitPlan;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.RecruitPlanTO;
 
 import java.util.List;
@@ -19,6 +21,19 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface RecruitPlanSer extends Ser<RecruitPlan, RecruitPlanDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 分页查询招聘计划
@@ -54,4 +69,12 @@ public interface RecruitPlanSer extends Ser<RecruitPlan, RecruitPlanDTO> {
      */
     void update(RecruitPlanTO recruitPlanTO) throws SerException;
 
+    /**
+     * 招聘情况统计
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<SituationBO> countSituation(RecruitPlanDTO dto) throws SerException;
 }

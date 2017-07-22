@@ -3,11 +3,13 @@ package com.bjike.goddess.firmreward.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.firmreward.bo.*;
+import com.bjike.goddess.firmreward.dto.AwardDetailDTO;
 import com.bjike.goddess.firmreward.dto.PrizeApplyDTO;
 import com.bjike.goddess.firmreward.dto.PrizeApplyDTO;
 import com.bjike.goddess.firmreward.entity.PrizeApply;
 import com.bjike.goddess.firmreward.service.PrizeApplySer;
 import com.bjike.goddess.firmreward.to.PrizeApplyTO;
+import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -133,7 +135,6 @@ public class PrizeApplyApiImpl implements PrizeApplyAPI {
 
     /**
      * 员工奖励汇总
-     *
      * @return class StaffRewardCollectBO
      * @throws SerException
      */
@@ -162,5 +163,16 @@ public class PrizeApplyApiImpl implements PrizeApplyAPI {
     @Override
     public List<AreaRewardCollectBO> areaRewardCollect() throws SerException {
         return prizeApplySer.areaRewardCollect();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return prizeApplySer.sonPermission();
+    }
+
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return prizeApplySer.guidePermission(guidePermissionTO);
     }
 }

@@ -36,5 +36,13 @@
     <dubbo:reference validation="true" id="entryBasicInfoApiImpl"
                      interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI"/>
 
+    <dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+    <dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+    <dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+    <dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+    <dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+
+    <dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.rotation.api.CusPermissionAPI" />
+    <dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.rotation.api.CusPermissionOperateAPI" />
 
 </beans>

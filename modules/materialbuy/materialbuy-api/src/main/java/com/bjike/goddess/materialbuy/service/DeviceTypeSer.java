@@ -74,4 +74,12 @@ public interface DeviceTypeSer extends Ser<DeviceType, DeviceTypeDTO> {
      */
     List<String> findAllDeviceNames() throws SerException;
 
+    /**
+     * 查找总记录数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(DeviceTypeDTO dto) throws SerException;
 }

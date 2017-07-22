@@ -2,8 +2,10 @@ package com.bjike.goddess.attainment.api;
 
 import com.bjike.goddess.attainment.bo.AttainmentTypeBO;
 import com.bjike.goddess.attainment.dto.AttainmentTypeDTO;
+import com.bjike.goddess.attainment.excel.SonPermissionObject;
 import com.bjike.goddess.attainment.service.AttainmentTypeSer;
 import com.bjike.goddess.attainment.to.AttainmentTypeTO;
+import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,5 +75,15 @@ public class AttainmentTypeApiImpl implements AttainmentTypeAPI {
     @Override
     public Long getTotal() throws SerException {
         return attainmentTypeSer.getTotal();
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return attainmentTypeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return attainmentTypeSer.guidePermission( guidePermissionTO );
     }
 }

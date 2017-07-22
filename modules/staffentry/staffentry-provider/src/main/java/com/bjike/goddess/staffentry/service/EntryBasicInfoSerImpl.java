@@ -6,6 +6,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.bo.EntryOptionBO;
+import com.bjike.goddess.staffentry.bo.FindNameBO;
 import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
 import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
@@ -245,7 +246,7 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
     }
 
     @Override
-    public List<EntryBasicInfoVO> getEntryBasicInfoByName(String name) throws SerException {
+    public List<EntryBasicInfoBO> getEntryBasicInfoByName(String name) throws SerException {
         EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
         dto.getConditions().add(Restrict.eq("name", name));
         List<EntryBasicInfo> list = super.findByCis(dto);
@@ -261,6 +262,21 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
     }
 
     @Override
+    public List<FindNameBO> findName() throws SerException {
+        EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
+        List<EntryBasicInfoBO> entryBasicInfoBOs = listEntryBasicInfo(dto);
+        List<FindNameBO> findNameBOs = new ArrayList<>();
+        if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
+            for (EntryBasicInfoBO bo : entryBasicInfoBOs) {
+                FindNameBO findNameBO = new FindNameBO();
+                findNameBO.setUserId(bo.getId());
+                findNameBO.setName(bo.getName());
+                findNameBOs.add(findNameBO);
+            }
+        }
+        return findNameBOs;
+    }
+
     public List<EntryOptionBO> getEntryOptionByNameAndEmpNum(String name, String empNumer) throws SerException {
         EntryOptionBO entryOptionBO = new EntryOptionBO();
 
@@ -269,26 +285,28 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
         dto.getConditions().add(Restrict.eq("employeeID", empNumer));
         List<EntryBasicInfo> list = super.findByCis(dto);
         if (list != null && list.size() > 0) {
-            entryOptionBO.setEntryTime( list.get(0).getEntryTime().toString());
-        }else{
-            entryOptionBO.setEntryTime( "" );
+            entryOptionBO.setEntryTime(list.get(0).getEntryTime().toString());
+        } else {
+            entryOptionBO.setEntryTime("");
         }
         EntryRegisterDTO registerDTO = new EntryRegisterDTO();
         registerDTO.getConditions().add(Restrict.eq("username", name));
         registerDTO.getConditions().add(Restrict.eq("empNumber", empNumer));
         List<EntryRegister> registerList = entryRegisterSer.findByCis(registerDTO);
-        if (registerList != null && registerList.size()>0 ) {
-            entryOptionBO.setProfession( registerList.get(0).getProfession());
-            entryOptionBO.setEducation( registerList.get(0).getEducation());
-        }else{
-            entryOptionBO.setProfession( "" );
-            entryOptionBO.setEducation( "");
+        if (registerList != null && registerList.size() > 0) {
+            entryOptionBO.setProfession(registerList.get(0).getProfession());
+
+            entryOptionBO.setEducation(registerList.get(0).getEducation());
+        } else {
+            entryOptionBO.setProfession("");
+            entryOptionBO.setEducation("");
         }
 
-        entryOptionBO.setName( name );
-        entryOptionBO.setEmployeeID( empNumer );
+
+        entryOptionBO.setName(name);
+        entryOptionBO.setEmployeeID(empNumer);
         List<EntryOptionBO> entryOptionBOList = new ArrayList<>();
-        entryOptionBOList.add( entryOptionBO );
+        entryOptionBOList.add(entryOptionBO);
         return entryOptionBOList;
     }
 }

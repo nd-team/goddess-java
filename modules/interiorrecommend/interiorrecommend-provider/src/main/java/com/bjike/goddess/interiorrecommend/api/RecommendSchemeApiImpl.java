@@ -5,6 +5,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.interiorrecommend.bo.RecommendSchemeBO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendSchemeDTO;
 import com.bjike.goddess.interiorrecommend.service.RecommendSchemeSer;
+import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.RecommendSchemeTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,5 +70,15 @@ public class RecommendSchemeApiImpl implements RecommendSchemeAPI {
     @Override
     public Long count(RecommendSchemeDTO dto) throws SerException {
         return recommendSchemeSer.count(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return recommendSchemeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return recommendSchemeSer.guidePermission(guidePermissionTO);
     }
 }

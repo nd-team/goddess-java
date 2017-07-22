@@ -35,37 +35,37 @@ public class WeightAllot extends BaseEntity {
     /**
      * 信息提供占比
      */
-    @Column(name = "messageProportion", nullable = true, columnDefinition = "DECIMAL(10,2)  COMMENT '信息提供占比'")
+    @Column(name = "messageProportion", nullable = false, columnDefinition = "DECIMAL(10,2)  COMMENT '信息提供占比'")
     private Double messageProportion;
 
     /**
      * 业务揽接占比
      */
-    @Column(name = "businessProportion", nullable = true, columnDefinition = "DECIMAL(10,2)   COMMENT '业务揽接占比'")
+    @Column(name = "businessProportion", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '业务揽接占比'")
     private Double businessProportion;
 
     /**
      * 业务洽谈占比
      */
-    @Column(name = "talkProportion", nullable = true, columnDefinition = "DECIMAL(10,2)   COMMENT '业务洽谈占比'")
+    @Column(name = "talkProportion", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '业务洽谈占比'")
     private Double talkProportion;
 
     /**
      * 维护占比
      */
-    @Column(name = "maintainProportion", nullable = true, columnDefinition = "DECIMAL(10,2)   COMMENT '维护占比'")
+    @Column(name = "maintainProportion", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '维护占比'")
     private Double maintainProportion;
 
     /**
      * 剩余占比
      */
-    @Column(name = "surplusProportion", nullable = true, columnDefinition = "DECIMAL(10,2)   COMMENT '剩余占比'")
+    @Column(name = "surplusProportion", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '剩余占比'")
     private Double surplusProportion;
 
     /**
      * 总比例
      */
-    @Column(name = "totalProportion", nullable = true, columnDefinition = "DECIMAL(10,2)   COMMENT '总比例'")
+    @Column(name = "totalProportion", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '总比例'")
     private Double totalProportion;
 
     /**

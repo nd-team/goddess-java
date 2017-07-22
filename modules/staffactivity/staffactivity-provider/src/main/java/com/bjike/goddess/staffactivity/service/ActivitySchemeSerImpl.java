@@ -511,4 +511,25 @@ public class ActivitySchemeSerImpl extends ServiceImpl<ActivityScheme, ActivityS
         List<String> areaList = new ArrayList<>(areaSet);
         return areaList;
     }
+
+    @Override
+    public Set<String> allTheme() throws SerException {
+        List<ActivityScheme> list = super.findAll();
+        Set<String> set = new HashSet<>();
+        for (ActivityScheme a : list) {
+            set.add(a.getTheme());
+        }
+        return set;
+    }
+
+    @Override
+    public String findIdByTheme(String theme) throws SerException {
+        ActivitySchemeDTO dto = new ActivitySchemeDTO();
+        dto.getConditions().add(Restrict.eq("theme", theme));
+        List<ActivityScheme> list = super.findByCis(dto);
+        if (list != null && !list.isEmpty()) {
+            return list.get(0).getId();
+        }
+        throw new SerException("没有该主题对应的id");
+    }
 }

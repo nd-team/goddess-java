@@ -23,6 +23,7 @@ import com.bjike.goddess.regularization.to.*;
 import com.bjike.goddess.regularization.vo.ManagementScoreVO;
 import com.bjike.goddess.regularization.vo.RegularizationVO;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
 import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 import org.apache.commons.collections4.CollectionUtils;
@@ -418,9 +419,9 @@ public class RegularizationAct {
     public Result allEntryNum(@RequestParam String name) throws ActException {
         try {
             List<String> enNum = new ArrayList<>();
-            List<EntryBasicInfoVO> entryBasicInfoVOS = entryBasicInfoAPI.getEntryBasicInfoByName(name);
+            List<EntryBasicInfoBO> entryBasicInfoVOS = entryBasicInfoAPI.getEntryBasicInfoByName(name);
             if (entryBasicInfoVOS!=null && entryBasicInfoVOS.size()>0) {
-                for(EntryBasicInfoVO entryBasicInfoVO : entryBasicInfoVOS){
+                for(EntryBasicInfoBO entryBasicInfoVO : entryBasicInfoVOS){
                     String num = entryBasicInfoVO.getEmployeeID();
                     if(StringUtils.isNotBlank(num)){
                         enNum.add(num);

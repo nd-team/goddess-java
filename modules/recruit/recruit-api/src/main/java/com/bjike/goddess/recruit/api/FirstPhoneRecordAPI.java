@@ -4,8 +4,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.recruit.bo.FirstPhoneRecordBO;
 import com.bjike.goddess.recruit.dto.FirstPhoneRecordDTO;
 import com.bjike.goddess.recruit.to.FirstPhoneRecordTO;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 第一次电访记录
@@ -17,6 +19,19 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface FirstPhoneRecordAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 根据id查询第一次电访记录
@@ -68,5 +83,13 @@ public interface FirstPhoneRecordAPI {
      * @throws SerException
      */
     void update(FirstPhoneRecordTO firstPhoneRecordTO) throws SerException;
+
+    /**
+     * 查找所有第一次电放记录的姓名名单
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allFirstName() throws SerException;
 }
 

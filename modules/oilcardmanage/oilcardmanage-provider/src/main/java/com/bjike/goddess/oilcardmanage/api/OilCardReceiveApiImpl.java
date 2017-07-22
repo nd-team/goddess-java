@@ -6,6 +6,7 @@ import com.bjike.goddess.oilcardmanage.bo.OilCardReceiveBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardReceiveDTO;
 import com.bjike.goddess.oilcardmanage.enums.OilCardReceiveResult;
 import com.bjike.goddess.oilcardmanage.service.OilCardReceiveSer;
+import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardReceiveTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,5 +67,15 @@ public class OilCardReceiveApiImpl implements OilCardReceiveAPI {
     @Override
     public Long count(OilCardReceiveDTO dto) throws SerException {
         return oilCardReceiveSer.count(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return oilCardReceiveSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return oilCardReceiveSer.guidePermission(guidePermissionTO);
     }
 }

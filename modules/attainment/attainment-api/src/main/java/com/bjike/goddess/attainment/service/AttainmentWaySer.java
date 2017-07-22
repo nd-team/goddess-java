@@ -4,6 +4,7 @@ import com.bjike.goddess.attainment.bo.AttainmentWayBO;
 import com.bjike.goddess.attainment.dto.AttainmentWayDTO;
 import com.bjike.goddess.attainment.entity.AttainmentWay;
 import com.bjike.goddess.attainment.to.AttainmentWayTO;
+import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -19,6 +20,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface AttainmentWaySer extends Ser<AttainmentWay, AttainmentWayDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存

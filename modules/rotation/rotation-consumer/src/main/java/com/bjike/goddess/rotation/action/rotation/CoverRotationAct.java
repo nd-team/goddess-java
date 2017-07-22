@@ -9,19 +9,26 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.ArrangementAPI;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.organize.vo.OpinionVO;
 import com.bjike.goddess.rotation.api.CoverRotationAPI;
 import com.bjike.goddess.rotation.dto.CoverRotationDTO;
+import com.bjike.goddess.rotation.excel.SonPermissionObject;
 import com.bjike.goddess.rotation.to.CoverRotationOpinionTO;
 import com.bjike.goddess.rotation.to.CoverRotationTO;
+import com.bjike.goddess.rotation.to.GuidePermissionTO;
 import com.bjike.goddess.rotation.vo.CoverRotationOpinionVO;
 import com.bjike.goddess.rotation.vo.CoverRotationVO;
+import com.bjike.goddess.rotation.vo.FindNameVO;
+import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 岗位轮换自荐
@@ -40,6 +47,8 @@ public class CoverRotationAct {
     private CoverRotationAPI coverRotationAPI;
     @Autowired
     private ArrangementAPI arrangementAPI;
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
 
     /**
      * 保存
@@ -144,7 +153,8 @@ public class CoverRotationAct {
         }
     }
 
-    /**ArrangementAPI
+    /**
+     * ArrangementAPI
      * 列表
      *
      * @param dto 岗位轮换自荐数据传输对象
@@ -183,6 +193,91 @@ public class CoverRotationAct {
     public Result findThawOpinion() throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(arrangementAPI.findThawOpinion(), OpinionVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 岗位轮换姓名
+     * @return class FindNameVO
+     * @version v1
+     */
+    @GetMapping("v1/getName")
+    public Result getName() throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(coverRotationAPI.getName(), FindNameVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result setButtonPermission() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = coverRotationAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = coverRotationAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

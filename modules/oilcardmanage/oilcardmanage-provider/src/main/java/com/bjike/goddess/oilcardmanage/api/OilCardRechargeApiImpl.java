@@ -6,6 +6,7 @@ import com.bjike.goddess.oilcardmanage.bo.AnalyzeBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardRechargeBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardRechargeDTO;
 import com.bjike.goddess.oilcardmanage.service.OilCardRechargeSer;
+import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardRechargeTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,5 +67,15 @@ public class OilCardRechargeApiImpl implements OilCardRechargeAPI {
     @Override
     public AnalyzeBO analyze(String oilCardCode, Integer year, Integer month) throws SerException {
         return oilCardRechargeSer.analyze(oilCardCode, year, month);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return oilCardRechargeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return oilCardRechargeSer.guidePermission(guidePermissionTO);
     }
 }

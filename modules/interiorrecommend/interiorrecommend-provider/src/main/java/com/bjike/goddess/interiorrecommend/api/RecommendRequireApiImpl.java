@@ -5,6 +5,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.interiorrecommend.bo.RecommendRequireBO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendRequireDTO;
 import com.bjike.goddess.interiorrecommend.service.RecommendRequireSer;
+import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.RecommendRequireTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,5 +57,13 @@ public class RecommendRequireApiImpl implements RecommendRequireAPI {
         return BeanTransform.copyProperties(recommendRequireSer.findById(id), RecommendRequireBO.class);
     }
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return recommendRequireSer.sonPermission();
+    }
 
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return recommendRequireSer.guidePermission(guidePermissionTO);
+    }
 }

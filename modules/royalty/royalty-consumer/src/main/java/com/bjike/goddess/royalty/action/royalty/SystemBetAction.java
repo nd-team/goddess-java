@@ -6,6 +6,8 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.HierarchyAPI;
+import com.bjike.goddess.organize.vo.HierarchyVO;
 import com.bjike.goddess.royalty.api.SystemBetAPI;
 import com.bjike.goddess.royalty.bo.SystemBetABO;
 import com.bjike.goddess.royalty.dto.SystemBetDDTO;
@@ -35,6 +37,8 @@ import java.util.List;
 public class SystemBetAction {
     @Autowired
     private SystemBetAPI systemBetAPI;
+    @Autowired
+    private HierarchyAPI hierarchyAPI;
 
     /**
      * 功能导航权限
@@ -193,6 +197,22 @@ public class SystemBetAction {
         try {
             List<String> departmentList = systemBetAPI.getDepartment();
             return ActResult.initialize(departmentList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取体系
+     *
+     * @return class HierarchyVO
+     * @des 获取体系
+     * @version v1
+     */
+    @GetMapping("v1/hierarchy")
+    public Result hierarchy() throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(hierarchyAPI.findStatus(), HierarchyVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

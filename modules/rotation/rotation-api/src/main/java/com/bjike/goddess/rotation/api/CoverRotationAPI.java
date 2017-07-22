@@ -3,9 +3,12 @@ package com.bjike.goddess.rotation.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.rotation.bo.CoverRotationBO;
 import com.bjike.goddess.rotation.bo.CoverRotationOpinionBO;
+import com.bjike.goddess.rotation.bo.FindNameBO;
 import com.bjike.goddess.rotation.dto.CoverRotationDTO;
+import com.bjike.goddess.rotation.excel.SonPermissionObject;
 import com.bjike.goddess.rotation.to.CoverRotationOpinionTO;
 import com.bjike.goddess.rotation.to.CoverRotationTO;
+import com.bjike.goddess.rotation.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -107,4 +110,24 @@ public interface CoverRotationAPI {
         return null;
     }
 
+    /**
+     * 获得员工入职的姓名
+     */
+    default List<FindNameBO> getName() throws SerException {
+        return null;
+    }
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

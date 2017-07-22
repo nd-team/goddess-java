@@ -1,7 +1,11 @@
 package com.bjike.goddess.capability.service;
 
 import com.bjike.goddess.capability.bo.SelfCapabilityBO;
+import com.bjike.goddess.capability.dto.CapacityDTO;
+import com.bjike.goddess.capability.dto.SelfCapabilityDTO;
 import com.bjike.goddess.capability.dto.SelfCapabilitySocialDTO;
+import com.bjike.goddess.capability.entity.Capacity;
+import com.bjike.goddess.capability.entity.SelfCapability;
 import com.bjike.goddess.capability.entity.SelfCapabilitySocial;
 import com.bjike.goddess.capability.enums.GuideAddrStatus;
 import com.bjike.goddess.capability.excele.SelfCapabilityExcele;
@@ -10,8 +14,6 @@ import com.bjike.goddess.capability.to.SelfCapabilityTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.capability.dto.SelfCapabilityDTO;
-import com.bjike.goddess.capability.entity.SelfCapability;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
@@ -22,7 +24,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,8 +88,20 @@ public class SelfCapabilitySerImpl extends ServiceImpl<SelfCapability, SelfCapab
         if (StringUtils.isNotBlank(selfCapabilityDTO.getName())) {
             selfCapabilityDTO.getConditions().add(Restrict.like("name", selfCapabilityDTO.getName().trim()));
         }
-        List<SelfCapability> list = super.findByCis(selfCapabilityDTO, true);
 
+        List<SelfCapability> list = super.findByCis(selfCapabilityDTO, true);
+        if (null != list && list.size() > 0) {
+            for (SelfCapability entity : list) {
+                CapacityDTO capacityDTO = new CapacityDTO();
+                capacityDTO.getConditions().add(Restrict.eq("baseId", entity.getId()));
+                List<Capacity> capacities = capacitySer.findByCis(capacityDTO);
+                if (null != capacities && capacities.size() > 0) {
+                    for (Capacity capacity : capacities) {
+                        entity.setCapacity(capacity.getName());
+                    }
+                }
+            }
+        }
         return BeanTransform.copyProperties(list, SelfCapabilityBO.class);
     }
 
@@ -119,11 +132,11 @@ public class SelfCapabilitySerImpl extends ServiceImpl<SelfCapability, SelfCapab
             } else {
                 super.save(selfCapability);
                 //添加个人资质
-                String[] capacitys = selfCapabilityTO.getCapacitys();
+                String[] capacitys = selfCapabilityTO.getCapacity().split(";");
                 capacitySer.addCapacity(capacitys, selfCapability.getId());
 
                 //添加个人经手项目
-                String[] selfProjects = selfCapabilityTO.getSelfProjects();
+                String[] selfProjects = selfCapabilityTO.getSelfProject().split(";");
                 selfProjectSer.addSelfProject(selfProjects, selfCapability.getId());
             }
         } else {
@@ -162,7 +175,7 @@ public class SelfCapabilitySerImpl extends ServiceImpl<SelfCapability, SelfCapab
         super.update(selfCapabilityList);
 
         //编辑个人资质
-        String[] capacitys = selfCapabilityTO.getCapacitys();
+        String[] capacitys = selfCapabilityTO.getCapacity().split(";");
         capacitySer.editCapacity(capacitys, selfCapability.getId());
 
         //编辑个人经手项目

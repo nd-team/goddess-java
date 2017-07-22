@@ -165,6 +165,7 @@ public class DeviceTypeSerImpl extends ServiceImpl<DeviceType, DeviceTypeDTO> im
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
+
     /**
      * 分页查询设备类型
      *
@@ -216,7 +217,7 @@ public class DeviceTypeSerImpl extends ServiceImpl<DeviceType, DeviceTypeDTO> im
     @Override
     public void update(DeviceTypeTO to) throws SerException {
         checkAddIdentity();
-        if (StringUtils.isNotEmpty(to.getId())){
+        if (StringUtils.isNotEmpty(to.getId())) {
             DeviceType model = super.findById(to.getId());
             if (model != null) {
                 updateDeviceType(to, model);
@@ -231,7 +232,7 @@ public class DeviceTypeSerImpl extends ServiceImpl<DeviceType, DeviceTypeDTO> im
     /**
      * 更新设备类型
      *
-     * @param to 设备类型to
+     * @param to    设备类型to
      * @param model 设备类型
      * @throws SerException
      */
@@ -261,6 +262,11 @@ public class DeviceTypeSerImpl extends ServiceImpl<DeviceType, DeviceTypeDTO> im
         }
 
         return new ArrayList<>(set);
+    }
+
+    @Override
+    public Long count(DeviceTypeDTO dto) throws SerException {
+        return super.count(dto);
     }
 
 }

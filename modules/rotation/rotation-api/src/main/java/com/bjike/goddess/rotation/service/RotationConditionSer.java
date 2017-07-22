@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.rotation.bo.RotationConditionBO;
 import com.bjike.goddess.rotation.dto.RotationConditionDTO;
 import com.bjike.goddess.rotation.entity.RotationCondition;
+import com.bjike.goddess.rotation.to.GuidePermissionTO;
 import com.bjike.goddess.rotation.to.RotationConditionTO;
 
 import java.util.List;
@@ -82,6 +83,20 @@ public interface RotationConditionSer extends Ser<RotationCondition, RotationCon
      * @throws SerException
      */
     default Long getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 
