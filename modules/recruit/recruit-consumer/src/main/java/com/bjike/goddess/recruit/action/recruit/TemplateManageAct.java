@@ -13,6 +13,7 @@ import com.bjike.goddess.recruit.bo.RecruitWayBO;
 import com.bjike.goddess.recruit.bo.TemplateManageBO;
 import com.bjike.goddess.recruit.dto.RecruitWayDTO;
 import com.bjike.goddess.recruit.dto.TemplateManageDTO;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.RecruitWayTO;
 import com.bjike.goddess.recruit.to.TemplateManageTO;
 import com.bjike.goddess.recruit.vo.RecruitWayVO;
@@ -40,6 +41,29 @@ public class TemplateManageAct {
 
     @Autowired
     private TemplateManageAPI templateManageAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = templateManageAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 根据id查询模板管理

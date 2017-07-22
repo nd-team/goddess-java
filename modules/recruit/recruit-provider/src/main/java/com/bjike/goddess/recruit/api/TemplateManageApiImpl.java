@@ -6,6 +6,7 @@ import com.bjike.goddess.recruit.bo.TemplateManageBO;
 import com.bjike.goddess.recruit.dto.TemplateManageDTO;
 import com.bjike.goddess.recruit.entity.TemplateManage;
 import com.bjike.goddess.recruit.service.TemplateManageSer;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.TemplateManageTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -95,5 +96,15 @@ public class TemplateManageApiImpl implements TemplateManageAPI {
     @Override
     public void update(TemplateManageTO templateManageTO) throws SerException {
         templateManageSer.update(templateManageTO);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return templateManageSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return templateManageSer.guidePermission(guidePermissionTO);
     }
 }

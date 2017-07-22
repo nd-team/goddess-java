@@ -6,6 +6,7 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.bo.NotEntryReasonBO;
 import com.bjike.goddess.recruit.dto.NotEntryReasonDTO;
+import com.bjike.goddess.recruit.entity.FailPhoneReason;
 import com.bjike.goddess.recruit.entity.NotEntryReason;
 import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.NotEntryReasonTO;
@@ -18,7 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 未入职原因
@@ -284,5 +288,15 @@ public class NotEntryReasonSerImpl extends ServiceImpl<NotEntryReason, NotEntryR
     public void remove(NotEntryReason entity) throws SerException {
         checkModuleIdentity();
         super.remove(entity);
+    }
+
+    @Override
+    public Set<String> allReason() throws SerException {
+        List<NotEntryReason> list = new ArrayList<>();
+        Set<String> set = new HashSet<>();
+        for (NotEntryReason f : list) {
+            set.add(f.getNotEntryReasonType());
+        }
+        return set;
     }
 }

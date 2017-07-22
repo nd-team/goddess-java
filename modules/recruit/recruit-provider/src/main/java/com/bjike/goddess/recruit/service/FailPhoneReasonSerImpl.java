@@ -6,6 +6,7 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.bo.FailPhoneReasonBO;
 import com.bjike.goddess.recruit.dto.FailPhoneReasonDTO;
+import com.bjike.goddess.recruit.entity.FailInviteReason;
 import com.bjike.goddess.recruit.entity.FailPhoneReason;
 import com.bjike.goddess.recruit.to.FailPhoneReasonTO;
 import com.bjike.goddess.recruit.to.GuidePermissionTO;
@@ -18,8 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * 未成功通话原因
@@ -175,6 +175,7 @@ public class FailPhoneReasonSerImpl extends ServiceImpl<FailPhoneReason, FailPho
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public List<FailPhoneReasonBO> list(FailPhoneReasonDTO dto) throws SerException {
+        checkSeeIdentity();
         List<FailPhoneReason> list = super.findByPage(dto);
         List<FailPhoneReasonBO> listBO = BeanTransform.copyProperties(list, FailPhoneReasonBO.class);
         return listBO;
@@ -190,6 +191,7 @@ public class FailPhoneReasonSerImpl extends ServiceImpl<FailPhoneReason, FailPho
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public FailPhoneReasonBO save(FailPhoneReasonTO to) throws SerException {
+        checkAddIdentity();
         FailPhoneReason failFirstInterviewReason = BeanTransform.copyProperties(to, FailPhoneReason.class, true);
         failFirstInterviewReason = super.save(failFirstInterviewReason);
         FailPhoneReasonBO bo = BeanTransform.copyProperties(failFirstInterviewReason, FailPhoneReasonBO.class);
@@ -205,6 +207,7 @@ public class FailPhoneReasonSerImpl extends ServiceImpl<FailPhoneReason, FailPho
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(FailPhoneReasonTO to) throws SerException {
+        checkAddIdentity();
         if (StringUtils.isNotEmpty(to.getId())) {
             FailPhoneReason model = super.findById(to.getId());
             if (model != null) {
@@ -240,6 +243,17 @@ public class FailPhoneReasonSerImpl extends ServiceImpl<FailPhoneReason, FailPho
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void remove(FailPhoneReason entity) throws SerException {
+        checkAddIdentity();
         super.remove(entity);
+    }
+
+    @Override
+    public Set<String> allReason() throws SerException {
+        List<FailPhoneReason> list = new ArrayList<>();
+        Set<String> set = new HashSet<>();
+        for (FailPhoneReason f : list) {
+            set.add(f.getFailPhoneReasonType());
+        }
+        return set;
     }
 }

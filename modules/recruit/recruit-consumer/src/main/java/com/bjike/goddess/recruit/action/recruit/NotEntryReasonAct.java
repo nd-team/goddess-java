@@ -14,6 +14,7 @@ import com.bjike.goddess.recruit.bo.NotEntryReasonBO;
 import com.bjike.goddess.recruit.dto.FailFirstInterviewReasonDTO;
 import com.bjike.goddess.recruit.dto.NotEntryReasonDTO;
 import com.bjike.goddess.recruit.to.FailFirstInterviewReasonTO;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.NotEntryReasonTO;
 import com.bjike.goddess.recruit.vo.FailFirstInterviewReasonVO;
 import com.bjike.goddess.recruit.vo.NotEntryReasonVO;
@@ -40,6 +41,30 @@ public class NotEntryReasonAct {
 
     @Autowired
     private NotEntryReasonAPI notEntryReasonAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = notEntryReasonAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 根据id查询未入职原因
@@ -147,6 +172,21 @@ public class NotEntryReasonAct {
         try {
             notEntryReasonAPI.update(to);
             return new ActResult("edit success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找所有未入职原因
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/allReason")
+    public Result allReason() throws ActException {
+        try {
+            return ActResult.initialize(notEntryReasonAPI.allReason());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

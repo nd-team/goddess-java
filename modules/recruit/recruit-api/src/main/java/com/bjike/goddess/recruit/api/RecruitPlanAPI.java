@@ -1,6 +1,7 @@
 package com.bjike.goddess.recruit.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.recruit.bo.CountBO;
 import com.bjike.goddess.recruit.bo.RecruitPlanBO;
 import com.bjike.goddess.recruit.dto.RecruitPlanDTO;
 import com.bjike.goddess.recruit.to.GuidePermissionTO;
@@ -82,4 +83,40 @@ public interface RecruitPlanAPI {
      * @throws SerException
      */
     void update(RecruitPlanTO recruitPlanTO) throws SerException;
+
+    /**
+     * 计划与实际对比
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<Object> countSituation(RecruitPlanDTO dto) throws SerException;
+
+    /**
+     * 日汇总
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<CountBO> dayCount(RecruitPlanDTO dto) throws SerException;
+
+    /**
+     * 周汇总
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<CountBO> weekCount(RecruitPlanDTO dto) throws SerException;
+
+    /**
+     * 月汇总
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<CountBO> monthCount(RecruitPlanDTO dto) throws SerException;
 }

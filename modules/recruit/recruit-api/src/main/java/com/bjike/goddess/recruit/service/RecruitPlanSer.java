@@ -2,8 +2,8 @@ package com.bjike.goddess.recruit.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.recruit.bo.CountBO;
 import com.bjike.goddess.recruit.bo.RecruitPlanBO;
-import com.bjike.goddess.recruit.bo.SituationBO;
 import com.bjike.goddess.recruit.dto.RecruitPlanDTO;
 import com.bjike.goddess.recruit.entity.RecruitPlan;
 import com.bjike.goddess.recruit.to.GuidePermissionTO;
@@ -70,11 +70,38 @@ public interface RecruitPlanSer extends Ser<RecruitPlan, RecruitPlanDTO> {
     void update(RecruitPlanTO recruitPlanTO) throws SerException;
 
     /**
-     * 招聘情况统计
+     * 计划与实际对比
      *
      * @param dto
      * @return
      * @throws SerException
      */
-    List<SituationBO> countSituation(RecruitPlanDTO dto) throws SerException;
+    List<Object> countSituation(RecruitPlanDTO dto) throws SerException;
+
+    /**
+     * 日汇总
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<CountBO> dayCount(RecruitPlanDTO dto) throws SerException;
+
+    /**
+     * 周汇总
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<CountBO> weekCount(RecruitPlanDTO dto) throws SerException;
+
+    /**
+     * 月汇总
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<CountBO> monthCount(RecruitPlanDTO dto) throws SerException;
 }

@@ -176,6 +176,7 @@ public class RecruitWaySerImpl extends ServiceImpl<RecruitWay, RecruitWayDTO> im
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public List<RecruitWayBO> list(RecruitWayDTO dto) throws SerException {
+        checkSeeIdentity();
         List<RecruitWay> list = super.findByPage(dto);
         List<RecruitWayBO> listBO = BeanTransform.copyProperties(list, RecruitWayBO.class);
         return listBO;
@@ -191,6 +192,7 @@ public class RecruitWaySerImpl extends ServiceImpl<RecruitWay, RecruitWayDTO> im
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public RecruitWayBO save(RecruitWayTO to) throws SerException {
+        checkAddIdentity();
         RecruitWay failFirstInterviewReason = BeanTransform.copyProperties(to, RecruitWay.class, true);
         failFirstInterviewReason = super.save(failFirstInterviewReason);
         RecruitWayBO bo = BeanTransform.copyProperties(failFirstInterviewReason, RecruitWayBO.class);
@@ -206,6 +208,7 @@ public class RecruitWaySerImpl extends ServiceImpl<RecruitWay, RecruitWayDTO> im
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(RecruitWayTO to) throws SerException {
+        checkAddIdentity();
         if (StringUtils.isNotEmpty(to.getId())) {
             RecruitWay model = super.findById(to.getId());
             if (model != null) {
@@ -241,6 +244,7 @@ public class RecruitWaySerImpl extends ServiceImpl<RecruitWay, RecruitWayDTO> im
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void remove(RecruitWay entity) throws SerException {
+        checkAddIdentity();
         super.remove(entity);
     }
 
