@@ -278,12 +278,6 @@ public class RentPay extends BaseEntity {
     private Boolean rentMoneyMail;
 
     /**
-     * 房租收据附件
-     */
-    @Column(name = "rentReceiptAccessory", columnDefinition = "VARCHAR(255)   COMMENT '房租收据附件'")
-    private String rentReceiptAccessory;
-
-    /**
      * 备注
      */
     @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
@@ -634,13 +628,6 @@ public class RentPay extends BaseEntity {
         this.rentMoneyMail = rentMoneyMail;
     }
 
-    public String getRentReceiptAccessory() {
-        return rentReceiptAccessory;
-    }
-
-    public void setRentReceiptAccessory(String rentReceiptAccessory) {
-        this.rentReceiptAccessory = rentReceiptAccessory;
-    }
 
     public String getRemark() {
         return remark;
