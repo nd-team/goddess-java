@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import scala.util.parsing.combinator.testing.Str;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -185,6 +186,12 @@ public class InvolvedProcessingTaskSerImpl extends ServiceImpl<InvolvedProcessin
 
     @Override
     public Long countInvolvedProcessingTask(InvolvedProcessingTaskDTO involvedProcessingTaskDTO) throws SerException {
+        if(StringUtils.isNotBlank(involvedProcessingTaskDTO.getInternalProjectName())){
+            involvedProcessingTaskDTO.getConditions().add(Restrict.eq("internalProjectName",involvedProcessingTaskDTO.getInternalProjectName()));
+        }
+        if(StringUtils.isNotBlank(involvedProcessingTaskDTO.getHandler())){
+            involvedProcessingTaskDTO.getConditions().add(Restrict.eq("handler",involvedProcessingTaskDTO.getHandler()));
+        }
         Long counts = super.count(involvedProcessingTaskDTO);
         return counts;
     }
