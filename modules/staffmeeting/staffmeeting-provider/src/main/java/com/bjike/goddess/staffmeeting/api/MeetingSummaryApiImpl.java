@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffmeeting.bo.MeetingSummaryBO;
 import com.bjike.goddess.staffmeeting.dto.MeetingSummaryDTO;
 import com.bjike.goddess.staffmeeting.service.MeetingSummarySer;
+import com.bjike.goddess.staffmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.staffmeeting.to.MeetingSummaryTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,16 @@ public class MeetingSummaryApiImpl implements MeetingSummaryAPI {
 
     @Autowired
     private MeetingSummarySer meetingSummarySer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return meetingSummarySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return meetingSummarySer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public MeetingSummaryBO findById(String id) throws SerException {
