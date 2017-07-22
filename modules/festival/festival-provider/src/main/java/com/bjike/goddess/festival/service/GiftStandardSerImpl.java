@@ -2,12 +2,18 @@ package com.bjike.goddess.festival.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.festival.bo.GiftStandardBO;
 import com.bjike.goddess.festival.dto.GiftStandardDTO;
 import com.bjike.goddess.festival.entity.GiftStandard;
 import com.bjike.goddess.festival.to.GiftStandardTO;
+import com.bjike.goddess.festival.to.GuidePermissionTO;
+import com.bjike.goddess.festival.type.GuideAddrStatus;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +35,96 @@ import java.util.stream.Collectors;
 @Service
 public class GiftStandardSerImpl extends ServiceImpl<GiftStandard, GiftStandardDTO> implements GiftStandardSer {
 
+
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 检查权限(部门)
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是本部门人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideIdentity();
+                break;
+            case ADD:
+                flag = guideIdentity();
+                break;
+            case EDIT:
+                flag = guideIdentity();
+                break;
+            case DELETE:
+                flag = guideIdentity();
+                break;
+            case SEE:
+                flag = guideIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
     @Override
     public Long countGiftStandard(GiftStandardDTO giftStandardDTO) throws SerException {
         return super.count( giftStandardDTO );
@@ -46,7 +142,7 @@ public class GiftStandardSerImpl extends ServiceImpl<GiftStandard, GiftStandardD
 
     @Override
     public List<GiftStandardBO> listGiftStandard(GiftStandardDTO giftStandardDTO) throws SerException {
-
+        checkPermission();
         giftStandardDTO.getSorts().add("createTime=desc");
         List<GiftStandard> list = super.findByCis(giftStandardDTO);
 
@@ -57,6 +153,7 @@ public class GiftStandardSerImpl extends ServiceImpl<GiftStandard, GiftStandardD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public GiftStandardBO addGiftStandard(GiftStandardTO giftStandardTO) throws SerException {
+        checkPermission();
         GiftStandard giftStandard = BeanTransform.copyProperties(giftStandardTO,GiftStandard.class,true);
         giftStandard.setCreateTime(LocalDateTime.now());
         super.save( giftStandard );
@@ -66,6 +163,7 @@ public class GiftStandardSerImpl extends ServiceImpl<GiftStandard, GiftStandardD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public GiftStandardBO editGiftStandard(GiftStandardTO giftStandardTO) throws SerException {
+        checkPermission();
         GiftStandard giftStandard = BeanTransform.copyProperties(giftStandardTO,GiftStandard.class,true);
         GiftStandard temp = super.findById( giftStandardTO.getId() );
 
@@ -79,6 +177,7 @@ public class GiftStandardSerImpl extends ServiceImpl<GiftStandard, GiftStandardD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteGiftStandard(String id) throws SerException {
+        checkPermission();
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }

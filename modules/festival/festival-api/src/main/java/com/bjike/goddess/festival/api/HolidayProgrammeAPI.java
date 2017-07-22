@@ -3,6 +3,8 @@ package com.bjike.goddess.festival.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.festival.bo.HolidayProgrammeBO;
 import com.bjike.goddess.festival.dto.HolidayProgrammeDTO;
+import com.bjike.goddess.festival.excel.SonPermissionObject;
+import com.bjike.goddess.festival.to.GuidePermissionTO;
 import com.bjike.goddess.festival.to.HolidayProgrammeTO;
 
 import java.util.List;
@@ -18,6 +20,20 @@ import java.util.List;
  */
 public interface HolidayProgrammeAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 法定节假日放假方案列表总条数
      *

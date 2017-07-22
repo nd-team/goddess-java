@@ -82,30 +82,6 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
             flag = true;
         }
         if (!flag) {
-            throw new SerException("您不是本部门人员,没有该操作权限");
-        }
-        RpcTransmit.transmitUserToken(userToken);
-
-    }
-
-    /**
-     * 核对审核权限(模块)
-     *
-     * @throws SerException
-     */
-    private void checkAuditMPermission() throws SerException {
-        Boolean flag = false;
-        String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser();
-        RpcTransmit.transmitUserToken(userToken);
-        String userName = userBO.getUsername();
-        //商务模块权限
-        if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("2");
-        } else {
-            flag = true;
-        }
-        if (!flag) {
             throw new SerException("您不是商务模块人员,没有该操作权限");
         }
         RpcTransmit.transmitUserToken(userToken);
@@ -123,9 +99,9 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        //商务模块权限
+
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.arrCusPermission("3");
+            flag = cusPermissionSer.arrCusPermission("2");
         } else {
             flag = true;
         }
@@ -154,23 +130,6 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
     }
 
     /**
-     * 核对审核权限（模块级别）
-     */
-    private Boolean guideAuditMIdentity() throws SerException {
-        Boolean flag = false;
-        String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser();
-        RpcTransmit.transmitUserToken(userToken);
-        String userName = userBO.getUsername();
-        if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("2");
-        } else {
-            flag = true;
-        }
-        return flag;
-    }
-
-    /**
      * 核对审核权限（层次级别）
      */
     private Boolean guideAuditAIdentity() throws SerException {
@@ -180,7 +139,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.arrCusPermission("3");
+            flag = cusPermissionSer.arrCusPermission("2");
         } else {
             flag = true;
         }
@@ -192,11 +151,9 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
         String userToken = RpcTransmit.getUserToken();
         Boolean flagSee = guideIdentity();
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAuditM = guideAuditMIdentity();
-        RpcTransmit.transmitUserToken(userToken);
         Boolean flagAuditA = guideAuditAIdentity();
         RpcTransmit.transmitUserToken(userToken);
-        if (flagSee || flagAuditM || flagAuditA) {
+        if (flagSee || flagAuditA) {
             return true;
         } else {
             return false;
@@ -249,7 +206,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
                 flag = guideIdentity();
                 break;
             case MONEYAUDIT:
-                flag = guideAuditMIdentity();
+                flag = guideIdentity();
                 break;
             case DECISIONAUDIT:
                 flag = guideAuditAIdentity();
@@ -371,7 +328,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void fundModuleOpinion(String id, String fundModuleOpinion) throws SerException {
-        checkAuditMPermission();
+        checkPermission();
         MarketServeApply model = super.findById(id);
         model.setModifyTime(LocalDateTime.now());
         model.setFundModuleOpinion(fundModuleOpinion);

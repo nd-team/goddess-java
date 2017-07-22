@@ -1,6 +1,6 @@
 package com.bjike.goddess.buyticket.entity;
 
-import com.bjike.goddess.buyticket.enums.AuditorType;
+import com.bjike.goddess.buyticket.enums.AuditType;
 import com.bjike.goddess.buyticket.enums.TripType;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
@@ -106,16 +106,28 @@ public class BuyTicketApply extends BaseEntity {
     private String remark;
 
     /**
-     * 负责人
+     * 规划模块负责人
      */
-    @Column(name = "auditor",  columnDefinition = "INT(2)   COMMENT '负责人'")
-    private AuditorType auditor;
+    @Column(name = "planAuditor",  columnDefinition = "VARCHAR(255)  COMMENT '规划模块负责人'")
+    private String planAuditor;
 
     /**
-     * 审核意见
+     * 规划模块审核意见
      */
-    @Column(name = "auditOpinion", columnDefinition = "VARCHAR(255)   COMMENT '审核意见'")
-    private String auditOpinion;
+    @Column(name = "planAuditOpinion", columnDefinition = "TINYINT(2)   COMMENT '规划模块审核意见'")
+    private AuditType planAuditOpinion;
+
+    /**
+     * 福利模块负责人
+     */
+    @Column(name = "welfAuditor",  columnDefinition = "VARCHAR(255)   COMMENT '福利模块负责人'")
+    private String welfAuditor;
+
+    /**
+     * 福利模块审核意见
+     */
+    @Column(name = "welfAuditOpinion", columnDefinition = "TINYINT(2)  COMMENT '福利模块审核意见'")
+    private AuditType welfAuditOpinion;
 
 
     public String getApplicant() {
@@ -230,19 +242,35 @@ public class BuyTicketApply extends BaseEntity {
         this.remark = remark;
     }
 
-    public AuditorType getAuditor() {
-        return auditor;
+    public String getPlanAuditor() {
+        return planAuditor;
     }
 
-    public void setAuditor(AuditorType auditor) {
-        this.auditor = auditor;
+    public void setPlanAuditor(String planAuditor) {
+        this.planAuditor = planAuditor;
     }
 
-    public String getAuditOpinion() {
-        return auditOpinion;
+    public AuditType getPlanAuditOpinion() {
+        return planAuditOpinion;
     }
 
-    public void setAuditOpinion(String auditOpinion) {
-        this.auditOpinion = auditOpinion;
+    public void setPlanAuditOpinion(AuditType planAuditOpinion) {
+        this.planAuditOpinion = planAuditOpinion;
+    }
+
+    public String getWelfAuditor() {
+        return welfAuditor;
+    }
+
+    public void setWelfAuditor(String welfAuditor) {
+        this.welfAuditor = welfAuditor;
+    }
+
+    public AuditType getWelfAuditOpinion() {
+        return welfAuditOpinion;
+    }
+
+    public void setWelfAuditOpinion(AuditType welfAuditOpinion) {
+        this.welfAuditOpinion = welfAuditOpinion;
     }
 }

@@ -9,20 +9,24 @@ package com.bjike.goddess.buyticket.enums;
  * @Version: [1.0.0]
  * @Copy: [com.bjike.goddess]
  */
-public enum AuditorType {
+public enum AuditType {
     /**
-     * 规划模块
+     * 未通过
      */
-    PLANMODULE(0),
+    NONE(0),
     /**
-     * 福利模块
+     * 通过
      */
-    WELFAREMODULE(1),
-    ;
+    ALLOWED(1),
+    /**
+     * 拒绝
+     */
+    DENIED(2);
+
 
     private int code;
 
-    AuditorType(int code) {
+    AuditType(int code) {
         this.code = code;
     }
 

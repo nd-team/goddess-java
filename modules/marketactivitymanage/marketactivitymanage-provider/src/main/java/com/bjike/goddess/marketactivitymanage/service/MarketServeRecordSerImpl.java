@@ -75,30 +75,6 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
             flag = true;
         }
         if (!flag) {
-            throw new SerException("您不是相应模块人员,没有该操作权限");
-        }
-        RpcTransmit.transmitUserToken(userToken);
-
-    }
-
-    /**
-     * 核对审核权限(模块)
-     *
-     * @throws SerException
-     */
-    private void checkAuditMPermission() throws SerException {
-        Boolean flag = false;
-        String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser();
-        RpcTransmit.transmitUserToken(userToken);
-        String userName = userBO.getUsername();
-        //商务模块权限
-        if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("2");
-        } else {
-            flag = true;
-        }
-        if (!flag) {
             throw new SerException("您不是商务模块人员,没有该操作权限");
         }
         RpcTransmit.transmitUserToken(userToken);
@@ -116,9 +92,9 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        //商务模块权限
+
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.arrCusPermission("3");
+            flag = cusPermissionSer.arrCusPermission("2");
         } else {
             flag = true;
         }
@@ -128,6 +104,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
         RpcTransmit.transmitUserToken(userToken);
 
     }
+
     /**
      * 核对查看权限（部门级别）
      */
@@ -146,23 +123,6 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
     }
 
     /**
-     * 核对审核权限（模块级别）
-     */
-    private Boolean guideAuditMIdentity() throws SerException {
-        Boolean flag = false;
-        String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser();
-        RpcTransmit.transmitUserToken(userToken);
-        String userName = userBO.getUsername();
-        if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("2");
-        } else {
-            flag = true;
-        }
-        return flag;
-    }
-
-    /**
      * 核对审核权限（层次级别）
      */
     private Boolean guideAuditAIdentity() throws SerException {
@@ -172,22 +132,21 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("3");
+            flag = cusPermissionSer.arrCusPermission("2");
         } else {
             flag = true;
         }
         return flag;
     }
+
     @Override
     public Boolean sonPermission() throws SerException {
         String userToken = RpcTransmit.getUserToken();
         Boolean flagSee = guideIdentity();
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAuditM = guideAuditMIdentity();
-        RpcTransmit.transmitUserToken(userToken);
         Boolean flagAuditA = guideAuditAIdentity();
         RpcTransmit.transmitUserToken(userToken);
-        if (flagSee || flagAuditM || flagAuditA) {
+        if (flagSee || flagAuditA) {
             return true;
         } else {
             return false;
@@ -240,7 +199,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
                 flag = guideIdentity();
                 break;
             case MONEYAUDIT:
-                flag = guideAuditMIdentity();
+                flag = guideIdentity();
                 break;
             case DECISIONAUDIT:
                 flag = guideAuditAIdentity();
@@ -253,7 +212,6 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
-
     /**
      * 分页查询市场招待记录
      *

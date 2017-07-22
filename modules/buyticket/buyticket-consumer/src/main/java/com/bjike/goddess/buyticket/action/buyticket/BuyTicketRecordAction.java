@@ -4,8 +4,8 @@ import com.bjike.goddess.buyticket.api.BuyTicketRecordAPI;
 import com.bjike.goddess.buyticket.bo.BuyTicketRecordBO;
 import com.bjike.goddess.buyticket.dto.BuyTicketRecordDTO;
 import com.bjike.goddess.buyticket.to.BuyTicketRecordTO;
+import com.bjike.goddess.buyticket.to.BuyGuidePermissionTO;
 import com.bjike.goddess.buyticket.vo.BuyTicketRecordVO;
-import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -37,6 +37,28 @@ public class BuyTicketRecordAction {
     @Autowired
     private BuyTicketRecordAPI buyTicketRecordAPI;
 
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(BuyGuidePermissionTO.TestAdd.class) BuyGuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = buyTicketRecordAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 车票购买记录列表总条数
      *
@@ -92,25 +114,6 @@ public class BuyTicketRecordAction {
     }
 
     /**
-     * 添加车票购买记录
-     *
-     * @param buyTicketRecordTO 车票购买记录数据to
-     * @return class BuyTicketRecordVO
-     * @des 添加车票购买记录
-     * @version v1
-     */
-    @LoginAuth
-    @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class) BuyTicketRecordTO buyTicketRecordTO, BindingResult bindingResult) throws ActException {
-        try {
-            BuyTicketRecordBO buyTicketRecordBO = buyTicketRecordAPI.insertBuyTicketRecord(buyTicketRecordTO);
-            return ActResult.initialize(buyTicketRecordBO);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
      * 编辑车票购买记录
      *
      * @param buyTicketRecordTO 车票购买记录数据to
@@ -144,23 +147,6 @@ public class BuyTicketRecordAction {
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
-    }
-
-
-    /**
-     * 发送邮件
-     *
-     * @version v1
-     */
-    @PostMapping("v1/send")
-    public Result send(BuyTicketRecordTO buyTicketRecordTO) throws ActException {
-        try {
-            BuyTicketRecordBO buyTicketRecordBO = buyTicketRecordAPI.sendBuyTicketRecord(buyTicketRecordTO);
-            return ActResult.initialize(buyTicketRecordBO);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-
     }
 
 }

@@ -2,7 +2,10 @@ package com.bjike.goddess.buyticket.api;
 
 import com.bjike.goddess.buyticket.bo.BuyTicketApplyBO;
 import com.bjike.goddess.buyticket.dto.BuyTicketApplyDTO;
+import com.bjike.goddess.buyticket.enums.AuditType;
+import com.bjike.goddess.buyticket.excel.SonPermissionObject;
 import com.bjike.goddess.buyticket.to.BuyTicketApplyTO;
+import com.bjike.goddess.buyticket.to.BuyGuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -18,6 +21,20 @@ import java.util.List;
  */
 public interface BuyTicketApplyAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(BuyGuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 车票购买申请列表总条数
      */
@@ -73,21 +90,43 @@ public interface BuyTicketApplyAPI {
 
     }
 
+
     /**
-     * 审核
+     * 获取所有组织结构中的部门
      *
-     * @return class BuyTicketApplyBO
+     * @return
+     * @throws SerException
      */
-    default BuyTicketApplyBO auditBuyTicketApply(BuyTicketApplyTO buyTicketApplyTO) throws SerException {
+    default List<String> findAddAllDetails() throws SerException {
         return null;
     }
 
     /**
-     * 发送邮件
+     * 获取所有用户
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findallMonUser() throws SerException {
+        return null;
+    }
+
+    /**
+     * 规划模块审核
      *
      * @return class BuyTicketApplyBO
      */
-    default BuyTicketApplyBO sendBuyTicketApply(BuyTicketApplyTO buyTicketApplyTO) throws SerException {
-        return null;
+    default void planAuditBuyTicketApply(String id,AuditType planAuditOpinion) throws SerException {
+        return;
     }
+
+    /**
+     * 福利模块审核
+     *
+     * @return class BuyTicketApplyBO
+     */
+    default void welfAuditBuyTicketApply(String id,AuditType welfAuditOpinion) throws SerException {
+        return;
+    }
+
 }

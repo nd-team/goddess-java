@@ -102,16 +102,40 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     }
 
     /**
-     * 核对审核权限（模块级别）
+     * 核对审核权限(层次)
+     *
+     * @throws SerException
      */
-    private Boolean guideAuditMIdentity() throws SerException {
+    private void checkAuditAPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.arrCusPermission("2");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是决策层人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideIdentity() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("2");
+            flag = cusPermissionSer.busCusPermission("1");
         } else {
             flag = true;
         }
@@ -128,26 +152,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.arrCusPermission("3");
-        } else {
-            flag = true;
-        }
-        return flag;
-    }
-
-    /**
-     * 导航检查权限
-     *
-     * @throws SerException
-     */
-    private Boolean guildPermission() throws SerException {
-        Boolean flag = false;
-        String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser();
-        RpcTransmit.transmitUserToken(userToken);
-        String userName = userBO.getUsername();
-        if (!"admin".equals(userName.toLowerCase())) {
-            flag =  cusPermissionSer.busCusPermission("1");
+            flag = cusPermissionSer.arrCusPermission("2");
         } else {
             flag = true;
         }
@@ -158,9 +163,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     public List<SonPermissionObject> sonPermission() throws SerException {
         List<SonPermissionObject> list = new ArrayList<>();
         String userToken = RpcTransmit.getUserToken();
-        Boolean flagSummSeeSign = guildPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSummMISign = guideAuditMIdentity();
+        Boolean flagSummSeeSign = guideIdentity();
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagSummAISign = guideAuditAIdentity();
         RpcTransmit.transmitUserToken(userToken);
@@ -169,7 +172,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
         obj = new SonPermissionObject();
         obj.setName("marketservesummary");
         obj.setDescribesion("市场活动招待记录汇总及发送邮件");
-        if (flagSummSeeSign || flagSummMISign || flagSummAISign) {
+        if (flagSummSeeSign || flagSummAISign) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -214,46 +217,46 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
         Boolean flag = true;
         switch (guideAddrStatus) {
             case LIST:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case ADD:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case EDIT:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case DELETE:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case CONGEL:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case THAW:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case COLLECT:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case UPLOAD:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case DOWNLOAD:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case IMPORT:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case EXPORT:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case SEE:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case SEEFILE:
-                flag = guildPermission();
+                flag = guideIdentity();
                 break;
             case MONEYAUDIT:
-                flag = guideAuditMIdentity();
+                flag = guideIdentity();
                 break;
             case DECISIONAUDIT:
                 flag = guideAuditAIdentity();

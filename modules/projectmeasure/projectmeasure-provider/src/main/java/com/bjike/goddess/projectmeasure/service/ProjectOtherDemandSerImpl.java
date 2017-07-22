@@ -160,7 +160,7 @@ public class ProjectOtherDemandSerImpl extends ServiceImpl<ProjectOtherDemand, P
                 " a left join projectmeasure_projectcoststatus b on a.projectName " +
                 "= b.projectName left join projectmeasure_singleprojectsingleui c " +
                 " on b.projectName = c.projectName left join" +
-                " projectmeasure_projectpersonneldemand d on c.projectName = d.projectName where 1=1 " + con + " limit 0," + demandDTO.getLimit();
+                " projectmeasure_projectpersonneldemand d on c.projectName = d.projectName where 1=1 " + con + " limit " + demandDTO.getPage() + "," + demandDTO.getLimit();
 
         List<ProjectEvaluateResultBO> projectEvaluateResultBOS = new ArrayList<>();
         projectEvaluateResultBOS = projectBasicInfoSer.findBySql(sql, ProjectEvaluateResultBO.class, field);
