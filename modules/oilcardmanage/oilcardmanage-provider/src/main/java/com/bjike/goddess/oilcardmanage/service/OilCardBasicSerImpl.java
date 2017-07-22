@@ -52,7 +52,7 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicD
     private OilCardRechargeSer oilCardRechargeSer;
 
     /**
-     * 核对查看权限（部门级别）
+     * 核对查看权限（层级别）
      */
     private void checkSeeIdentity() throws SerException {
         Boolean flag = false;
@@ -71,7 +71,7 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicD
     }
 
     /**
-     * 核对添加修改删除审核权限（岗位级别）
+     * 核对添加修改删除审核权限（层级别）
      */
     private void checkAddIdentity() throws SerException {
         Boolean flag = false;
@@ -90,7 +90,7 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicD
     }
 
     /**
-     * 导航栏核对查看权限（部门级别）
+     * 导航栏核对查看权限（层级别）
      */
     private Boolean guideSeeIdentity() throws SerException {
         Boolean flag = false;
@@ -107,7 +107,7 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicD
     }
 
     /**
-     * 导航栏核对添加修改删除审核权限（岗位级别）
+     * 导航栏核对添加修改删除审核权限（层级别）
      */
     private Boolean guideAddIdentity() throws SerException {
         Boolean flag = false;
@@ -176,6 +176,7 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicD
     @Override
     @Transactional(rollbackFor = SerException.class)
     public OilCardBasicBO saveOilCarBasic(OilCardBasicTO to) throws SerException {
+        checkAddIdentity();
         OilCardBasic model = BeanTransform.copyProperties(to, OilCardBasic.class, true);
         model.setCardStatus(OilCardStatus.IDLE);
         model.setBalance(model.getCycleEarlyMoney());
@@ -186,6 +187,7 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicD
     @Override
     @Transactional(rollbackFor = SerException.class)
     public OilCardBasicBO updateOilCardBasic(OilCardBasicTO to) throws SerException {
+        checkAddIdentity();
         OilCardBasic model = super.findById(to.getId());
         if (model != null) {
             updateModel(to);
@@ -198,6 +200,7 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void freezeOilCardBasic(String id) throws SerException {
+        checkAddIdentity();
         OilCardBasic model = super.findById(id);
         if (model != null) {
             if (model.getStatus() != Status.CONGEAL) {
@@ -213,6 +216,7 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicD
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void breakFreeze(String id) throws SerException {
+        checkAddIdentity();
         OilCardBasic model = super.findById(id);
         if (model != null) {
             if (model.getStatus() != Status.THAW) {

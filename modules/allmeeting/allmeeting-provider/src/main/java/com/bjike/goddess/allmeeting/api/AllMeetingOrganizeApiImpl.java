@@ -3,8 +3,10 @@ package com.bjike.goddess.allmeeting.api;
 import com.bjike.goddess.allmeeting.bo.AllMeetingOrganizeBO;
 import com.bjike.goddess.allmeeting.bo.MeetingLayBO;
 import com.bjike.goddess.allmeeting.dto.AllMeetingOrganizeDTO;
+import com.bjike.goddess.allmeeting.excel.SonPermissionObject;
 import com.bjike.goddess.allmeeting.service.AllMeetingOrganizeSer;
 import com.bjike.goddess.allmeeting.to.AllMeetingOrganizeTO;
+import com.bjike.goddess.allmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
@@ -25,6 +27,17 @@ import java.util.List;
  */
 @Service("allMeetingOrganizeApiImpl")
 public class AllMeetingOrganizeApiImpl implements AllMeetingOrganizeAPI {
+
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return allMeetingOrganizeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return allMeetingOrganizeSer.guidePermission(guidePermissionTO);
+    }
 
     @Autowired
     private AllMeetingOrganizeSer allMeetingOrganizeSer;

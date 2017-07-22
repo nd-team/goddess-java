@@ -3,6 +3,7 @@ package com.bjike.goddess.allmeeting.api;
 import com.bjike.goddess.allmeeting.bo.WorkCollectPrepareBO;
 import com.bjike.goddess.allmeeting.dto.WorkCollectPrepareDTO;
 import com.bjike.goddess.allmeeting.service.WorkCollectPrepareSer;
+import com.bjike.goddess.allmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.allmeeting.to.WorkCollectPrepareTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -23,8 +24,19 @@ import java.util.List;
 @Service("workCollectPrepareApiImpl")
 public class WorkCollectPrepareApiImpl implements WorkCollectPrepareAPI {
 
+
     @Autowired
     private WorkCollectPrepareSer workCollectPrepareSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return workCollectPrepareSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return workCollectPrepareSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public WorkCollectPrepareBO findById(String id) throws SerException {

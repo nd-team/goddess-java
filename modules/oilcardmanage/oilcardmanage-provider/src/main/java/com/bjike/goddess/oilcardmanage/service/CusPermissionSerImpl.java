@@ -339,13 +339,13 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         //checkAsUserArrangement
         //checkAsUserModule
 //        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
-//        Boolean arrangementFlag = positionDetailUserAPI.checkAsUserArrangement(userId, operateIds);
+        Boolean arrangementFlag = positionDetailUserAPI.checkAsUserArrangement(userId, operateIds);
 //        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId, operateIds);
-        Boolean depart = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
+//        Boolean depart = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
 
 
         //TODO 部门
-        if (  depart) {
+        if (  arrangementFlag) {
             flag = true;
         } else {
             flag = false;
