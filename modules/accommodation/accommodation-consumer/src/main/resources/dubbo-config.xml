@@ -19,8 +19,8 @@
 	<dubbo:reference  validation="true" id="rentalPreceptApiImpl" interface="com.bjike.goddess.accommodation.api.RentalPreceptAPI" />
 	<dubbo:reference  validation="true" id="rentalApplyApiImpl" interface="com.bjike.goddess.accommodation.api.RentalApplyAPI" />
 	<dubbo:reference  validation="true" id="rentalApiImpl" interface="com.bjike.goddess.accommodation.api.RentalAPI" />
-	<dubbo:reference  validation="true" id="dormitoryApiImpl" interface="com.bjike.goddess.accommodation.api.DormitoryAPI" />
-
+	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.accommodation.api.CusPermissionAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.accommodation.api.CusPermissionOperateAPI" />
 
 	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />

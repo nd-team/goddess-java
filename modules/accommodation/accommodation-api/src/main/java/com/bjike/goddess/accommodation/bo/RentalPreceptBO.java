@@ -11,6 +11,10 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  */
 public class RentalPreceptBO extends BaseBO {
     /**
+     * 租房编号
+     */
+    private String rentNum;
+    /**
      * 姓名（用户名称）
      */
     private String name;
@@ -111,6 +115,14 @@ public class RentalPreceptBO extends BaseBO {
      * 备注
      */
     private String remark;
+
+    public String getRentNum() {
+        return rentNum;
+    }
+
+    public void setRentNum(String rentNum) {
+        this.rentNum = rentNum;
+    }
 
     public String getName() {
         return name;

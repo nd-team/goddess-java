@@ -15,7 +15,14 @@ import javax.validation.constraints.NotNull;
  * @Copy: [com.bjike]
  */
 public class RentalApplyTO extends BaseTO {
+    public interface TestBusiness{}
+    public interface TestFinance{}
+    public interface TestResource{}
     public interface TestManage{}
+    /**
+     * 租房编号
+     */
+    private String rentNum;
     /**
      * 姓名（用户名称）
      */
@@ -69,47 +76,88 @@ public class RentalApplyTO extends BaseTO {
     /**
      * 租房地址
      */
+    @NotBlank(message = "租房地址不能为空", groups = {ADD.class, EDIT.class})
     private String address;
     /**
      * 房东姓名
      */
+    @NotBlank(message = "房东姓名不能为空", groups = {ADD.class, EDIT.class})
     private String landlord;
     /**
      * 联系方式
      */
+    @NotBlank(message = "联系方式不能为空", groups = {ADD.class, EDIT.class})
     private String contact;
     /**
      * 中介费
      */
+    @NotNull(message = "中介费不能为空", groups = {ADD.class, EDIT.class})
     private Double agency;
     /**
      * 押金
      */
+    @NotNull(message = "押金不能为空", groups = {ADD.class, EDIT.class})
     private Double deposit;
     /**
      * 房租
      */
+    @NotNull(message = "房租不能为空", groups = {ADD.class, EDIT.class})
     private Double rent;
+    /**
+     * 房租缴费方
+     */
+    @NotBlank(message = "房租缴费方不能为空", groups = {ADD.class, EDIT.class})
+    private String rentPay;
     /**
      * 房租管理费
      */
+    @NotNull(message = "房租管理费不能为空", groups = {ADD.class, EDIT.class})
     private Double rentFee;
+    /**
+     * 房租管理费缴费方
+     */
+    @NotBlank(message = "房租管理费缴费方不能为空", groups = {ADD.class, EDIT.class})
+    private String rentFeePay;
     /**
      * 卫生费
      */
+    @NotNull(message = "卫生费不能为空", groups = {ADD.class, EDIT.class})
     private Double sanitation;
     /**
-     * 水费计价
+     * 卫生费缴费方
      */
+    @NotBlank(message = "卫生费缴费方不能为空", groups = {ADD.class, EDIT.class})
+    private String sanitationPay;
+    /**
+     * 水费计价额
+     */
+    @NotNull(message = "水费计价额不能为空", groups = {ADD.class, EDIT.class})
     private Double water;
     /**
-     * 电费计价
+     * 水费缴费方
      */
+    @NotBlank(message = "水费缴费方不能为空", groups = {ADD.class, EDIT.class})
+    private String waterPay;
+    /**
+     * 电费计价额
+     */
+    @NotNull(message = "电费计价额不能为空", groups = {ADD.class, EDIT.class})
     private Double energy;
+    /**
+     * 电费缴费方
+     */
+    @NotBlank(message = "电费缴费方不能为空", groups = {ADD.class, EDIT.class})
+    private String energyPay;
     /**
      * 网络套餐费用
      */
+    @NotNull(message = "网络套餐费用不能为空", groups = {ADD.class, EDIT.class})
     private Double network;
+    /**
+     * 网络套餐费用缴费方
+     */
+    @NotBlank(message = "网络套餐费用缴费方不能为空", groups = {ADD.class, EDIT.class})
+    private String networkPay;
     /**
      * 项目经理
      */
@@ -119,26 +167,37 @@ public class RentalApplyTO extends BaseTO {
      */
     private String manageOpinion;
     /**
-     * 项目经理是否通过(是/否)
+     * 项目经理是否通过(通过/不通过)
      */
     @NotBlank(message = "项目经理是否通过不能为空",groups = {RentalApplyTO.TestManage.class})
     private String managePass;
     /**
-     * 商务发展部意见
+     * 商务发展部意见(通过/不通过)
      */
+    @NotBlank(message = "商务发展部意见不能为空",groups = {RentalApplyTO.TestBusiness.class})
     private String commerceRemark;
     /**
-     * 综合资源部意见
+     * 综合资源部意见(通过/不通过)
      */
+    @NotBlank(message = "综合资源部意见不能为空",groups = {RentalApplyTO.TestFinance.class})
     private String comprehensiveRemark;
     /**
-     * 运营财务部意见
+     * 运营财务部意见(通过/不通过)
      */
+    @NotBlank(message = "运营财务部意见不能为空",groups = {RentalApplyTO.TestResource.class})
     private String operatingRemark;
     /**
      * 备注
      */
     private String remark;
+
+    public String getRentNum() {
+        return rentNum;
+    }
+
+    public void setRentNum(String rentNum) {
+        this.rentNum = rentNum;
+    }
 
     public String getName() {
         return name;
@@ -362,5 +421,53 @@ public class RentalApplyTO extends BaseTO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getRentPay() {
+        return rentPay;
+    }
+
+    public void setRentPay(String rentPay) {
+        this.rentPay = rentPay;
+    }
+
+    public String getRentFeePay() {
+        return rentFeePay;
+    }
+
+    public void setRentFeePay(String rentFeePay) {
+        this.rentFeePay = rentFeePay;
+    }
+
+    public String getSanitationPay() {
+        return sanitationPay;
+    }
+
+    public void setSanitationPay(String sanitationPay) {
+        this.sanitationPay = sanitationPay;
+    }
+
+    public String getWaterPay() {
+        return waterPay;
+    }
+
+    public void setWaterPay(String waterPay) {
+        this.waterPay = waterPay;
+    }
+
+    public String getEnergyPay() {
+        return energyPay;
+    }
+
+    public void setEnergyPay(String energyPay) {
+        this.energyPay = energyPay;
+    }
+
+    public String getNetworkPay() {
+        return networkPay;
+    }
+
+    public void setNetworkPay(String networkPay) {
+        this.networkPay = networkPay;
     }
 }
