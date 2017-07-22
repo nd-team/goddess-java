@@ -1,9 +1,11 @@
 package com.bjike.goddess.accommodation.api;
 
+import com.bjike.goddess.accommodation.bo.CollectBO;
 import com.bjike.goddess.accommodation.bo.RentalBO;
 import com.bjike.goddess.accommodation.dto.RentalDTO;
 import com.bjike.goddess.accommodation.entity.Rental;
 import com.bjike.goddess.accommodation.service.RentalSer;
+import com.bjike.goddess.accommodation.to.GuidePermissionTO;
 import com.bjike.goddess.accommodation.to.RentalTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -24,6 +26,15 @@ import java.util.Set;
 public class RentalApiImpl implements RentalAPI{
     @Autowired
     private RentalSer rentalSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return rentalSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return rentalSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long count(RentalDTO rentalDTO) throws SerException {
         return rentalSer.count(rentalDTO);
@@ -54,6 +65,10 @@ public class RentalApiImpl implements RentalAPI{
     @Override
     public byte[] exportExcel(RentalDTO dto) throws SerException {
         return rentalSer.exportExcel(dto);
+    }
+    @Override
+    public List<CollectBO> collect(String [] areas) throws SerException {
+        return rentalSer.collect(areas);
     }
     @Override
     public List<String> getArea() throws SerException {

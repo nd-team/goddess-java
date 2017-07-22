@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.individualvision.bo.CareerPlanningCustomBO;
 import com.bjike.goddess.individualvision.dto.CareerPlanningCustomDTO;
 import com.bjike.goddess.individualvision.to.CareerPlanningCustomTO;
+import com.bjike.goddess.individualvision.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -17,6 +18,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CareerPlanningCustomAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 职业规划定制列表总条数
      */
@@ -32,6 +47,7 @@ public interface CareerPlanningCustomAPI {
     default CareerPlanningCustomBO getOne(String id) throws SerException {
         return null;
     }
+
     /**
      * 获取职业规划定制
      *
@@ -73,6 +89,7 @@ public interface CareerPlanningCustomAPI {
     default void removeCareerPlanningCustom(String id) throws SerException {
 
     }
+
     /**
      * 发送邮件
      *

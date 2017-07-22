@@ -1,16 +1,26 @@
 package com.bjike.goddess.accommodation.service;
 
+import com.bjike.goddess.accommodation.bo.CollectBO;
 import com.bjike.goddess.accommodation.bo.RentalBO;
 import com.bjike.goddess.accommodation.dto.RentalDTO;
+import com.bjike.goddess.accommodation.entity.CusPermission;
 import com.bjike.goddess.accommodation.entity.Rental;
+import com.bjike.goddess.accommodation.enums.GuideAddrStatus;
 import com.bjike.goddess.accommodation.excel.RentalExport;
+import com.bjike.goddess.accommodation.to.GuidePermissionTO;
 import com.bjike.goddess.accommodation.to.RentalTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
+import javafx.scene.shape.SVGPath;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +44,145 @@ import java.util.stream.Collectors;
 @CacheConfig(cacheNames = "accommodationSerCache")
 @Service
 public class RentalSerImpl extends ServiceImpl<Rental, RentalDTO> implements RentalSer {
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
+
     @Override
     public Long count(RentalDTO rentalDTO) throws SerException {
         Long count = super.count(rentalDTO);
@@ -57,8 +206,9 @@ public class RentalSerImpl extends ServiceImpl<Rental, RentalDTO> implements Ren
     @Transactional(rollbackFor = SerException.class)
     @Override
     public RentalBO insertRental(RentalTO rentalTO) throws SerException {
-        Rental rental = BeanTransform.copyProperties(rentalTO, Rental.class, true);
+        Rental rental = BeanTransform.copyProperties(rentalTO, Rental.class, true,"projectName");
         rental.setCreateTime(LocalDateTime.now());
+        rental.setProjectName(StringUtils.join(rentalTO.getProjectName(),","));
         super.save(rental);
         return BeanTransform.copyProperties(rental, RentalBO.class);
     }
@@ -69,8 +219,9 @@ public class RentalSerImpl extends ServiceImpl<Rental, RentalDTO> implements Ren
     public RentalBO editRental(RentalTO rentalTO) throws SerException {
 
         Rental rental = super.findById(rentalTO.getId());
-        BeanTransform.copyProperties(rentalTO, rental, true);
+        BeanTransform.copyProperties(rentalTO, rental, true,"projectName");
         rental.setModifyTime(LocalDateTime.now());
+        rental.setProjectName(StringUtils.join(rentalTO.getProjectName(),","));
         super.update(rental);
         return BeanTransform.copyProperties(rentalTO, RentalBO.class);
     }
@@ -99,6 +250,41 @@ public class RentalSerImpl extends ServiceImpl<Rental, RentalDTO> implements Ren
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(exports, excel);
         return bytes;
+    }
+    @Override
+    public List<CollectBO> collect(String [] areas) throws SerException {
+        if(areas == null && areas.length <= 0){
+            throw new SerException("地区不能为空");
+        }
+        String[] areasTemp = new String[areas.length];
+        for(int i = 0 ;i<areas.length;i++){
+            areasTemp[i] = "'"+areas[i]+"'";
+        }
+        String areasStr = StringUtils.join(areasTemp,",");
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT * FROM ");
+        sb.append(" (SELECT area ,projectGroup AS projectGroup,projectName AS projectName,address AS address, ");
+        sb.append(" sum(rent) AS rent,sum(agency) AS agency,sum(deposit) AS deposit,sum(managementFee) AS managementFee, ");
+        sb.append(" sum(healthFee) AS healthFee,sum(network) AS network,sum(gas) AS gas, ");
+        sb.append(" (sum(rent)+sum(agency)+sum(deposit)+sum(managementFee)+sum(healthFee)+sum(network)+sum(gas)) AS remark ");
+        sb.append(" FROM accommodation_rental a WHERE area IN (%s) GROUP BY area,projectGroup,projectName,address ORDER BY area)A ");
+        sb.append(" UNION ");
+        sb.append(" SELECT '合计' AS area,NULL AS projectGroup ,NULL AS projectName,NULL AS address, ");
+        sb.append(" sum(rent) AS rent ,sum(agency) AS agency,sum(deposit) AS deposit,sum(managementFee) AS managementFee, ");
+        sb.append(" sum(healthFee) AS healthFee,sum(network) AS network,sum(gas) AS gas, ");
+        sb.append(" (sum(rent)+sum(agency)+sum(deposit)+sum(managementFee)+sum(healthFee)+sum(network)+sum(gas)) AS remark ");
+        sb.append(" from ");
+        sb.append(" (SELECT area ,projectGroup AS projectGroup,projectName AS projectName,address AS address, ");
+        sb.append(" sum(rent) AS rent,sum(agency) AS agency,sum(deposit) AS deposit,sum(managementFee) AS managementFee, ");
+        sb.append(" sum(healthFee) AS healthFee,sum(network) AS network,sum(gas) AS gas, ");
+        sb.append(" (sum(rent)+sum(agency)+sum(deposit)+sum(managementFee)+sum(healthFee)+sum(network)+sum(gas)) AS remark ");
+        sb.append(" FROM accommodation_rental a WHERE area IN (%s) GROUP BY area,projectGroup,projectName,address ORDER BY area)A ");
+        String sql = sb.toString();
+        sql = String.format(sql, areasStr,areasStr);
+        String[] fields = new String[]{"area","projectGroup","projectName","address","rent","agency","deposit","managementFee",
+        "healthFee","network","gas","remark"};
+        List<CollectBO> collectBOS = super.findBySql(sql,CollectBO.class,fields);
+        return collectBOS;
     }
 
     @Override

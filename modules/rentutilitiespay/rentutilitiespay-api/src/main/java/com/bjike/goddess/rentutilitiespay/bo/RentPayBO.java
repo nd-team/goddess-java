@@ -234,11 +234,6 @@ public class RentPayBO extends BaseBO {
     private Boolean rentMoneyMail;
 
     /**
-     * 房租收据附件
-     */
-    private String rentReceiptAccessory;
-
-    /**
      * 备注
      */
     private String remark;
@@ -589,13 +584,6 @@ public class RentPayBO extends BaseBO {
         this.rentMoneyMail = rentMoneyMail;
     }
 
-    public String getRentReceiptAccessory() {
-        return rentReceiptAccessory;
-    }
-
-    public void setRentReceiptAccessory(String rentReceiptAccessory) {
-        this.rentReceiptAccessory = rentReceiptAccessory;
-    }
 
     public String getRemark() {
         return remark;

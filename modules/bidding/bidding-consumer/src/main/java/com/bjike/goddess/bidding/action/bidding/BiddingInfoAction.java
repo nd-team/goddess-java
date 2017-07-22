@@ -240,25 +240,6 @@ public class BiddingInfoAction extends BaseFileAction{
     }
 
     /**
-     * 搜索
-     *
-     * @param biddingInfoDTO 招标信息dto
-     * @return class BiddingInfoVO
-     * @des 搜索获取所有招标信息
-     * @version v1
-     */
-    @GetMapping("v1/search")
-    public Result search(BiddingInfoDTO biddingInfoDTO, HttpServletRequest request) throws ActException {
-        try {
-            List<BiddingInfoVO> biddingInfoVOS = BeanTransform.copyProperties(
-                    biddingInfoAPI.searchBiddingInfo(biddingInfoDTO), BiddingInfoVO.class,request);
-            return ActResult.initialize(biddingInfoVOS);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
      * 汇总招标信息
      *
      * @param cities 地市

@@ -1,8 +1,10 @@
 package com.bjike.goddess.accommodation.service;
 
+import com.bjike.goddess.accommodation.bo.CollectBO;
 import com.bjike.goddess.accommodation.bo.RentalBO;
 import com.bjike.goddess.accommodation.dto.RentalDTO;
 import com.bjike.goddess.accommodation.entity.Rental;
+import com.bjike.goddess.accommodation.to.GuidePermissionTO;
 import com.bjike.goddess.accommodation.to.RentalTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -18,6 +20,19 @@ import java.util.Set;
  * @Copy: [com.bjike]
  */
 public interface RentalSer extends Ser<Rental, RentalDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 租房信息列表总条数
      */
@@ -93,6 +108,16 @@ public interface RentalSer extends Ser<Rental, RentalDTO> {
      * @return class String
      */
     default List<String> getArea() throws SerException {
+        return null;
+    }
+    /**
+     * 汇总
+     *
+     * @param areas 地区
+     * @return class CollectBO
+     * @throws SerException
+     */
+    default List<CollectBO> collect(String [] areas) throws SerException {
         return null;
     }
 

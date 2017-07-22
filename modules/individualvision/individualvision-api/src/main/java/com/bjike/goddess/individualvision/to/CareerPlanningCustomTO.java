@@ -6,6 +6,8 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 职业规划定制
  *
@@ -72,62 +74,69 @@ public class CareerPlanningCustomTO extends BaseTO {
     /**
      * 此路径能力提升程度的选择
      */
+    @NotBlank(message = "此路径能力提升程度的选择不能为空",groups = {ADD.class, EDIT.class})
     private String degreeAbilityAscend;
 
     /**
      * 此时的权利及义务
      */
+    @NotBlank(message = "此时的权利及义务不能为空",groups = {ADD.class, EDIT.class})
     private String rightsObligations;
 
     /**
      * 预计完成时间
      */
+    @NotBlank(message = "预计完成时间不能为空",groups = {ADD.class, EDIT.class})
     private String expectedCompletionTime;
 
     /**
      * 实际完成时间
      */
+    @NotBlank(message = "实际完成时间不能为空",groups = {ADD.class, EDIT.class})
     private String actualCompletionTime;
 
     /**
      * 是否按时完成
      */
+    @NotNull(message = "是否按时完成不能为空",groups = {ADD.class, EDIT.class})
     private Boolean finish;
 
     /**
      * 期望周收益（元）
      */
+    @NotBlank(message = "期望周收益（元）不能为空",groups = {ADD.class, EDIT.class})
     private String expectWeeksEarnings;
 
     /**
      * 期望月收益（元）
      */
+    @NotBlank(message = "期望月收益（元）不能为空",groups = {ADD.class, EDIT.class})
     private String expectMonthsEarnings;
 
     /**
      * 期望年收益（元）
      */
+    @NotBlank(message = "期望年收益（元）不能为空",groups = {ADD.class, EDIT.class})
     private String expectYearsEarnings;
 
     /**
      * 实际周收益（元）
      */
+    @NotBlank(message = "实际周收益（元）不能为空",groups = {ADD.class, EDIT.class})
     private String actualWeeksEarnings;
 
     /**
      * 实际月收益（元）
      */
+    @NotBlank(message = "实际月收益（元）不能为空",groups = {ADD.class, EDIT.class})
     private String actualMonthsEarnings;
 
     /**
      * 实际年收益（元）
      */
+    @NotBlank(message = "实际年收益（元）不能为空",groups = {ADD.class, EDIT.class})
     private String actualYearsEarnings;
 
-    private String notUpStandard; //未达标项内容
-    private String completeDegree;//此定制项完成程度
-    private String standard;//此定制项标准
-    private String surplusTime;//剩余时间
 
     public String getAvailableBenefitPackage() {
         return availableBenefitPackage;
@@ -290,35 +299,4 @@ public class CareerPlanningCustomTO extends BaseTO {
         this.actualYearsEarnings = actualYearsEarnings;
     }
 
-    public String getNotUpStandard() {
-        return notUpStandard;
-    }
-
-    public void setNotUpStandard(String notUpStandard) {
-        this.notUpStandard = notUpStandard;
-    }
-
-    public String getCompleteDegree() {
-        return completeDegree;
-    }
-
-    public void setCompleteDegree(String completeDegree) {
-        this.completeDegree = completeDegree;
-    }
-
-    public String getStandard() {
-        return standard;
-    }
-
-    public void setStandard(String standard) {
-        this.standard = standard;
-    }
-
-    public String getSurplusTime() {
-        return surplusTime;
-    }
-
-    public void setSurplusTime(String surplusTime) {
-        this.surplusTime = surplusTime;
-    }
 }

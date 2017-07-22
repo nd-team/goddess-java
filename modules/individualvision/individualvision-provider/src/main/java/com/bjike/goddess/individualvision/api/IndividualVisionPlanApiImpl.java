@@ -5,7 +5,9 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.individualvision.bo.IndividualVisionPlanBO;
 import com.bjike.goddess.individualvision.dto.IndividualVisionPlanDTO;
 import com.bjike.goddess.individualvision.entity.IndividualVisionPlan;
+import com.bjike.goddess.individualvision.excel.SonPermissionObject;
 import com.bjike.goddess.individualvision.service.IndividualVisionPlanSer;
+import com.bjike.goddess.individualvision.to.GuidePermissionTO;
 import com.bjike.goddess.individualvision.to.IndividualVisionPlanTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -28,6 +30,15 @@ import java.util.List;
 public class IndividualVisionPlanApiImpl implements IndividualVisionPlanAPI {
     @Autowired
     private IndividualVisionPlanSer individualVisionPlanSer;
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return individualVisionPlanSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return individualVisionPlanSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countIndividualVisionPlan(IndividualVisionPlanDTO individualVisionPlanDTO) throws SerException {
         return individualVisionPlanSer.countIndividualVisionPlan(individualVisionPlanDTO);

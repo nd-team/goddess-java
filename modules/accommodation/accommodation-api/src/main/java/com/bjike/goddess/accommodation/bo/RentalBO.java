@@ -11,6 +11,10 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  */
 public class RentalBO extends BaseBO {
     /**
+     * 租房编号
+     */
+    private String rentNum;
+    /**
      * 地区
      */
     private String area;
@@ -83,6 +87,10 @@ public class RentalBO extends BaseBO {
      */
     private String paymentFrequency;
     /**
+     * 水电费缴费日期
+     */
+    private String paymentTime;
+    /**
      * 中介费
      */
     private Double agency;
@@ -95,25 +103,74 @@ public class RentalBO extends BaseBO {
      */
     private Double rent;
     /**
-     * 水费计价
+     * 管理费
+     */
+    private Double managementFee;
+    /**
+     * 卫生费
+     */
+    private Double healthFee;
+    /**
+     * 房租缴费方
+     */
+    private String rentPay;
+    /**
+     * 水费期初数目
      */
     private Double water;
     /**
-     * 电费计价
+     * 水费计价金额(元/吨)
+     */
+    private Double waterMoney;
+
+    /**
+     * 水费缴费方
+     */
+    private String waterPay;
+    /**
+     * 电费期初数目
      */
     private Double energy;
     /**
-     * 网络套餐费用
+     * 电费计价金额(元/吨)
      */
-    private Double network;
+    private Double energyMoney;
     /**
-     * 燃气费
+     * 电费缴费方
+     */
+    private String energyPay;
+    /**
+     * 网络套餐费用使用期限
+     */
+    private String network;
+    /**
+     * 网络套餐费用缴纳金额
+     */
+    private Double networkMoney;
+    /**
+     * 网络套餐费用缴费方
+     */
+    private String networkPay;
+    /**
+     * 管道燃气费充值额度
      */
     private Double gas;
+    /**
+     * 燃气费缴费方
+     */
+    private String gasPay;
     /**
      * 备注
      */
     private String remark;
+
+    public String getRentNum() {
+        return rentNum;
+    }
+
+    public void setRentNum(String rentNum) {
+        this.rentNum = rentNum;
+    }
 
     public String getArea() {
         return area;
@@ -259,6 +316,14 @@ public class RentalBO extends BaseBO {
         this.paymentFrequency = paymentFrequency;
     }
 
+    public String getPaymentTime() {
+        return paymentTime;
+    }
+
+    public void setPaymentTime(String paymentTime) {
+        this.paymentTime = paymentTime;
+    }
+
     public Double getAgency() {
         return agency;
     }
@@ -283,12 +348,52 @@ public class RentalBO extends BaseBO {
         this.rent = rent;
     }
 
+    public Double getManagementFee() {
+        return managementFee;
+    }
+
+    public void setManagementFee(Double managementFee) {
+        this.managementFee = managementFee;
+    }
+
+    public Double getHealthFee() {
+        return healthFee;
+    }
+
+    public void setHealthFee(Double healthFee) {
+        this.healthFee = healthFee;
+    }
+
+    public String getRentPay() {
+        return rentPay;
+    }
+
+    public void setRentPay(String rentPay) {
+        this.rentPay = rentPay;
+    }
+
     public Double getWater() {
         return water;
     }
 
     public void setWater(Double water) {
         this.water = water;
+    }
+
+    public Double getWaterMoney() {
+        return waterMoney;
+    }
+
+    public void setWaterMoney(Double waterMoney) {
+        this.waterMoney = waterMoney;
+    }
+
+    public String getWaterPay() {
+        return waterPay;
+    }
+
+    public void setWaterPay(String waterPay) {
+        this.waterPay = waterPay;
     }
 
     public Double getEnergy() {
@@ -299,12 +404,44 @@ public class RentalBO extends BaseBO {
         this.energy = energy;
     }
 
-    public Double getNetwork() {
+    public Double getEnergyMoney() {
+        return energyMoney;
+    }
+
+    public void setEnergyMoney(Double energyMoney) {
+        this.energyMoney = energyMoney;
+    }
+
+    public String getEnergyPay() {
+        return energyPay;
+    }
+
+    public void setEnergyPay(String energyPay) {
+        this.energyPay = energyPay;
+    }
+
+    public String getNetwork() {
         return network;
     }
 
-    public void setNetwork(Double network) {
+    public void setNetwork(String network) {
         this.network = network;
+    }
+
+    public Double getNetworkMoney() {
+        return networkMoney;
+    }
+
+    public void setNetworkMoney(Double networkMoney) {
+        this.networkMoney = networkMoney;
+    }
+
+    public String getNetworkPay() {
+        return networkPay;
+    }
+
+    public void setNetworkPay(String networkPay) {
+        this.networkPay = networkPay;
     }
 
     public Double getGas() {
@@ -313,6 +450,14 @@ public class RentalBO extends BaseBO {
 
     public void setGas(Double gas) {
         this.gas = gas;
+    }
+
+    public String getGasPay() {
+        return gasPay;
+    }
+
+    public void setGasPay(String gasPay) {
+        this.gasPay = gasPay;
     }
 
     public String getRemark() {
