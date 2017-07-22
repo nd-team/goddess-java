@@ -15,6 +15,8 @@ import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
+import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.bo.FindNameBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -53,6 +55,9 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
     private PositionDetailAPI positionDetailAPI;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
+
+    @Autowired
+    private EntryBasicInfoAPI entryBasicInfoAPI;
 
 
     private DimissionInfoBO transformBO(DimissionInfo entity) throws SerException {
@@ -535,5 +540,17 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
     public Long getTotal() throws SerException {
         DimissionInfoDTO dto = new DimissionInfoDTO();
         return super.count(dto);
+    }
+
+    @Override
+    public List<String> getAllName() throws SerException {
+        List<String> stringList = new ArrayList<>();
+        List<FindNameBO> list = entryBasicInfoAPI.findName();
+        if (null != list && list.size() > 0) {
+            for (FindNameBO bo : list) {
+                stringList.add(bo.getName());
+            }
+        }
+        return stringList;
     }
 }

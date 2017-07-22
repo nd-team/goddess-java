@@ -1,4 +1,4 @@
-package com.bjike.goddess.regionalprogresscollect.config;
+package com.bjike.goddess.workprogress.config;
 
 import com.bjike.goddess.common.jpa.boot.EntityToScanImpl;
 import org.springframework.stereotype.Component;
@@ -16,6 +16,6 @@ import org.springframework.stereotype.Component;
 public class AppEntityToScan extends EntityToScanImpl<AppRoot> {
     @Override
     public String[] entityScan() {
-        return new String[]{"com.bjike.goddess.regionalprogresscollect.entity"};
+        return new String[]{"com.bjike.goddess.workprogress.entity"};
     }
 }

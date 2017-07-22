@@ -1,4 +1,4 @@
-package com.bjike.goddess.regionalprogresscollect.service;
+package com.bjike.goddess.workprogress.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -7,15 +7,15 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contractquotemanager.api.ContractNodeStandardAPI;
 import com.bjike.goddess.contractquotemanager.bo.ContractNodeStandardBO;
 import com.bjike.goddess.contractquotemanager.to.FilterTO;
-import com.bjike.goddess.regionalprogresscollect.bo.MonthTargetBO;
-import com.bjike.goddess.regionalprogresscollect.bo.ReferenceTargetBO;
-import com.bjike.goddess.regionalprogresscollect.dto.MonthTargetDTO;
-import com.bjike.goddess.regionalprogresscollect.entity.MonthTarget;
-import com.bjike.goddess.regionalprogresscollect.enums.GuideAddrStatus;
-import com.bjike.goddess.regionalprogresscollect.to.FindTO;
-import com.bjike.goddess.regionalprogresscollect.to.GuidePermissionTO;
-import com.bjike.goddess.regionalprogresscollect.to.MonthTargetTO;
-import com.bjike.goddess.regionalprogresscollect.to.StandardTO;
+import com.bjike.goddess.workprogress.bo.MonthTargetBO;
+import com.bjike.goddess.workprogress.bo.ReferenceTargetBO;
+import com.bjike.goddess.workprogress.dto.MonthTargetDTO;
+import com.bjike.goddess.workprogress.entity.MonthTarget;
+import com.bjike.goddess.workprogress.enums.GuideAddrStatus;
+import com.bjike.goddess.workprogress.to.FindTO;
+import com.bjike.goddess.workprogress.to.GuidePermissionTO;
+import com.bjike.goddess.workprogress.to.MonthTargetTO;
+import com.bjike.goddess.workprogress.to.StandardTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@CacheConfig(cacheNames = "regionalprogresscollectSerCache")
+@CacheConfig(cacheNames = "workprogressSerCache")
 @Service
 public class MonthTargetSerImpl extends ServiceImpl<MonthTarget, MonthTargetDTO> implements MonthTargetSer {
 

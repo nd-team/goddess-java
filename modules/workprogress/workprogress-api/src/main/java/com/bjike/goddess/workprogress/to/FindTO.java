@@ -1,4 +1,4 @@
-package com.bjike.goddess.regionalprogresscollect.to;
+package com.bjike.goddess.workprogress.to;
 
 import java.io.Serializable;
 

@@ -1,11 +1,11 @@
-package com.bjike.goddess.regionalprogresscollect.api;
+package com.bjike.goddess.workprogress.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.regionalprogresscollect.bo.ReferenceTargetBO;
-import com.bjike.goddess.regionalprogresscollect.dto.ReferenceTargetDTO;
-import com.bjike.goddess.regionalprogresscollect.to.FindTO;
-import com.bjike.goddess.regionalprogresscollect.to.GuidePermissionTO;
-import com.bjike.goddess.regionalprogresscollect.to.ReferenceTargetTO;
+import com.bjike.goddess.workprogress.bo.ReferenceTargetBO;
+import com.bjike.goddess.workprogress.dto.ReferenceTargetDTO;
+import com.bjike.goddess.workprogress.to.FindTO;
+import com.bjike.goddess.workprogress.to.GuidePermissionTO;
+import com.bjike.goddess.workprogress.to.ReferenceTargetTO;
 
 import java.util.List;
 

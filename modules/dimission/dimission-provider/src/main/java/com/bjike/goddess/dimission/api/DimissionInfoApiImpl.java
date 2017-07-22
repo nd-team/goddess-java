@@ -137,4 +137,9 @@ public class DimissionInfoApiImpl implements DimissionInfoAPI {
     public Long getTotal() throws SerException {
         return dimissionInfoSer.getTotal();
     }
+
+    @Override
+    public List<String> getAllName() throws SerException {
+        return dimissionInfoSer.getAllName();
+    }
 }

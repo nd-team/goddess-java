@@ -1,4 +1,4 @@
-package com.bjike.goddess.regionalprogresscollect.config;
+package com.bjike.goddess.workprogress.config;
 
 
 import com.bjike.goddess.common.jpa.boot.JpaCache;

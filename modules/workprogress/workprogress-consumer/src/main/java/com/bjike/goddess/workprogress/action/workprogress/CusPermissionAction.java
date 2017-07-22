@@ -1,4 +1,4 @@
-package com.bjike.goddess.regionalprogresscollect.action.regionalprogresscollect;
+package com.bjike.goddess.workprogress.action.workprogress;
 
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -7,13 +7,13 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.vo.OpinionVO;
-import com.bjike.goddess.regionalprogresscollect.api.CusPermissionAPI;
-import com.bjike.goddess.regionalprogresscollect.bo.CusOperateBO;
-import com.bjike.goddess.regionalprogresscollect.bo.CusPermissionBO;
-import com.bjike.goddess.regionalprogresscollect.dto.CusPermissionDTO;
-import com.bjike.goddess.regionalprogresscollect.to.CusPermissionTO;
-import com.bjike.goddess.regionalprogresscollect.vo.CusOperateVO;
-import com.bjike.goddess.regionalprogresscollect.vo.CusPermissionVO;
+import com.bjike.goddess.workprogress.api.CusPermissionAPI;
+import com.bjike.goddess.workprogress.bo.CusOperateBO;
+import com.bjike.goddess.workprogress.bo.CusPermissionBO;
+import com.bjike.goddess.workprogress.dto.CusPermissionDTO;
+import com.bjike.goddess.workprogress.to.CusPermissionTO;
+import com.bjike.goddess.workprogress.vo.CusOperateVO;
+import com.bjike.goddess.workprogress.vo.CusPermissionVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;

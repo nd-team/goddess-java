@@ -1,4 +1,4 @@
-package com.bjike.goddess.regionalprogresscollect.action.regionalprogresscollect;
+package com.bjike.goddess.workprogress.action.workprogress;
 
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -7,12 +7,12 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.regionalprogresscollect.api.WeekTargetAPI;
-import com.bjike.goddess.regionalprogresscollect.dto.WeekTargetDTO;
-import com.bjike.goddess.regionalprogresscollect.to.GuidePermissionTO;
-import com.bjike.goddess.regionalprogresscollect.to.StandardTO;
-import com.bjike.goddess.regionalprogresscollect.to.WeekTargetTO;
-import com.bjike.goddess.regionalprogresscollect.vo.WeekTargetVO;
+import com.bjike.goddess.workprogress.api.WeekTargetAPI;
+import com.bjike.goddess.workprogress.dto.WeekTargetDTO;
+import com.bjike.goddess.workprogress.to.GuidePermissionTO;
+import com.bjike.goddess.workprogress.to.StandardTO;
+import com.bjike.goddess.workprogress.to.WeekTargetTO;
+import com.bjike.goddess.workprogress.vo.WeekTargetVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -156,7 +156,6 @@ public class WeekTargetAction {
     @GetMapping("v1/guidePermission")
     public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-
             Boolean isHasPermission = weekTargetAPI.guidePermission(guidePermissionTO);
             if (!isHasPermission) {
                 //int code, String msg
@@ -165,6 +164,20 @@ public class WeekTargetAction {
                 return new ActResult(0, "有权限", true);
             }
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取节点标准
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getStandard")
+    public Result getStandard() throws ActException{
+        try{
+            return ActResult.initialize(weekTargetAPI.getStandard());
+        }catch(SerException e){
             throw new ActException(e.getMessage());
         }
     }

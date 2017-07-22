@@ -1,4 +1,4 @@
-package com.bjike.goddess.regionalprogresscollect.api;
+package com.bjike.goddess.workprogress.api;
 
 import org.springframework.stereotype.Service;
 

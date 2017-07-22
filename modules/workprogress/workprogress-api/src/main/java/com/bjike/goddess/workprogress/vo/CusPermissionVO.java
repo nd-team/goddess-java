@@ -1,9 +1,9 @@
-package com.bjike.goddess.regionalprogresscollect.vo;
+package com.bjike.goddess.workprogress.vo;
 
 
 
 
-import com.bjike.goddess.regionalprogresscollect.enums.CusPermissionType;
+import com.bjike.goddess.workprogress.enums.CusPermissionType;
 
 import java.util.List;
 

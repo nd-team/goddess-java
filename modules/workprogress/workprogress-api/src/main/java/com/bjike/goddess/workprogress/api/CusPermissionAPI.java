@@ -1,10 +1,10 @@
-package com.bjike.goddess.regionalprogresscollect.api;
+package com.bjike.goddess.workprogress.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.OpinionBO;
-import com.bjike.goddess.regionalprogresscollect.bo.CusPermissionBO;
-import com.bjike.goddess.regionalprogresscollect.dto.CusPermissionDTO;
-import com.bjike.goddess.regionalprogresscollect.to.CusPermissionTO;
+import com.bjike.goddess.workprogress.bo.CusPermissionBO;
+import com.bjike.goddess.workprogress.dto.CusPermissionDTO;
+import com.bjike.goddess.workprogress.to.CusPermissionTO;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.bjike.goddess.regionalprogresscollect.entity;
+package com.bjike.goddess.workprogress.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
@@ -17,7 +17,7 @@ import javax.persistence.Table;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "businessproject_cuspermissionoperate")
+@Table(name = "workprogress_cuspermissionoperate")
 public class CusPermissionOperate extends BaseEntity {
 
 

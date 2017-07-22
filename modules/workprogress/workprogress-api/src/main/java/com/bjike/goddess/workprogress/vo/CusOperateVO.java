@@ -1,4 +1,4 @@
-package com.bjike.goddess.regionalprogresscollect.vo;
+package com.bjike.goddess.workprogress.vo;
 
 /**
  * 客户权限配置表现层对象

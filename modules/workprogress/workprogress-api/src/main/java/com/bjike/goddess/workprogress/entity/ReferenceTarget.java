@@ -1,4 +1,4 @@
-package com.bjike.goddess.regionalprogresscollect.entity;
+package com.bjike.goddess.workprogress.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
@@ -17,7 +17,7 @@ import javax.persistence.Table;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "regionalprogresscollect_reference_target")
+@Table(name = "workprogress_reference_target")
 public class ReferenceTarget extends BaseEntity {
 
     /**

@@ -1,6 +1,6 @@
-package com.bjike.goddess.regionalprogresscollect.vo;
+package com.bjike.goddess.workprogress.vo;
 
-import com.bjike.goddess.regionalprogresscollect.enums.CycleType;
+import com.bjike.goddess.workprogress.enums.CycleType;
 
 /**
  * 周指标表现层对象

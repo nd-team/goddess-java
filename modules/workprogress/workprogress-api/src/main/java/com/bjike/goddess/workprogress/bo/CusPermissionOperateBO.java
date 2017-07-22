@@ -1,4 +1,4 @@
-package com.bjike.goddess.regionalprogresscollect.bo;
+package com.bjike.goddess.workprogress.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 

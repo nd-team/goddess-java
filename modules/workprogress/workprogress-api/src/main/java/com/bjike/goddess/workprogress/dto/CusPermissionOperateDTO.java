@@ -1,4 +1,4 @@
-package com.bjike.goddess.regionalprogresscollect.dto;
+package com.bjike.goddess.workprogress.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
 

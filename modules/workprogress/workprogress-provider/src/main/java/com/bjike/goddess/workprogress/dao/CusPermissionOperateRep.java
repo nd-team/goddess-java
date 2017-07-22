@@ -1,8 +1,8 @@
-package com.bjike.goddess.regionalprogresscollect.dao;
+package com.bjike.goddess.workprogress.dao;
 
 import com.bjike.goddess.common.jpa.dao.JpaRep;
-import com.bjike.goddess.regionalprogresscollect.dto.CusPermissionOperateDTO;
-import com.bjike.goddess.regionalprogresscollect.entity.CusPermissionOperate;
+import com.bjike.goddess.workprogress.dto.CusPermissionOperateDTO;
+import com.bjike.goddess.workprogress.entity.CusPermissionOperate;
 
 /**
 * 客户权限配置操作对象持久化接口, 继承基类可使用ｊｐａ命名查询

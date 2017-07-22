@@ -1,4 +1,4 @@
-package com.bjike.goddess.regionalprogresscollect.service;
+package com.bjike.goddess.workprogress.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -6,16 +6,17 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contractquotemanager.api.ContractNodeStandardAPI;
 import com.bjike.goddess.contractquotemanager.bo.ContractNodeStandardBO;
+import com.bjike.goddess.contractquotemanager.dto.ContractNodeStandardDTO;
 import com.bjike.goddess.contractquotemanager.to.FilterTO;
-import com.bjike.goddess.regionalprogresscollect.bo.ReferenceTargetBO;
-import com.bjike.goddess.regionalprogresscollect.bo.WeekTargetBO;
-import com.bjike.goddess.regionalprogresscollect.dto.WeekTargetDTO;
-import com.bjike.goddess.regionalprogresscollect.entity.WeekTarget;
-import com.bjike.goddess.regionalprogresscollect.enums.GuideAddrStatus;
-import com.bjike.goddess.regionalprogresscollect.to.FindTO;
-import com.bjike.goddess.regionalprogresscollect.to.GuidePermissionTO;
-import com.bjike.goddess.regionalprogresscollect.to.StandardTO;
-import com.bjike.goddess.regionalprogresscollect.to.WeekTargetTO;
+import com.bjike.goddess.workprogress.bo.ReferenceTargetBO;
+import com.bjike.goddess.workprogress.bo.WeekTargetBO;
+import com.bjike.goddess.workprogress.dto.WeekTargetDTO;
+import com.bjike.goddess.workprogress.entity.WeekTarget;
+import com.bjike.goddess.workprogress.enums.GuideAddrStatus;
+import com.bjike.goddess.workprogress.to.FindTO;
+import com.bjike.goddess.workprogress.to.GuidePermissionTO;
+import com.bjike.goddess.workprogress.to.StandardTO;
+import com.bjike.goddess.workprogress.to.WeekTargetTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@CacheConfig(cacheNames = "regionalprogresscollectSerCache")
+@CacheConfig(cacheNames = "workprogressSerCache")
 @Service
 public class WeekTargetSerImpl extends ServiceImpl<WeekTarget, WeekTargetDTO> implements WeekTargetSer {
 
@@ -234,6 +235,19 @@ public class WeekTargetSerImpl extends ServiceImpl<WeekTarget, WeekTargetDTO> im
                 break;
         }
         return flag;
+    }
+
+    @Override
+    public List<Integer> getStandard() throws SerException {
+        ContractNodeStandardDTO dto = new ContractNodeStandardDTO();
+        List<ContractNodeStandardBO> boList = contractNodeStandardAPI.list(dto);
+        List<Integer> stringList = new ArrayList<>();
+        if(null != boList && boList.size() > 0 ){
+            for(ContractNodeStandardBO bo : boList){
+                stringList.add(bo.getNodeStandard());
+            }
+        }
+        return stringList;
     }
 
 

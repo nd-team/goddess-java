@@ -1,12 +1,12 @@
-package com.bjike.goddess.regionalprogresscollect.api;
+package com.bjike.goddess.workprogress.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.regionalprogresscollect.bo.WeekTargetBO;
-import com.bjike.goddess.regionalprogresscollect.dto.WeekTargetDTO;
-import com.bjike.goddess.regionalprogresscollect.service.WeekTargetSer;
-import com.bjike.goddess.regionalprogresscollect.to.GuidePermissionTO;
-import com.bjike.goddess.regionalprogresscollect.to.StandardTO;
-import com.bjike.goddess.regionalprogresscollect.to.WeekTargetTO;
+import com.bjike.goddess.workprogress.bo.WeekTargetBO;
+import com.bjike.goddess.workprogress.dto.WeekTargetDTO;
+import com.bjike.goddess.workprogress.service.WeekTargetSer;
+import com.bjike.goddess.workprogress.to.GuidePermissionTO;
+import com.bjike.goddess.workprogress.to.StandardTO;
+import com.bjike.goddess.workprogress.to.WeekTargetTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,5 +65,10 @@ public class WeekTargetApiImpl implements WeekTargetAPI {
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return weekTargetSer.guidePermission( guidePermissionTO );
+    }
+
+    @Override
+    public List<Integer> getStandard() throws SerException {
+        return weekTargetSer.getStandard();
     }
 }

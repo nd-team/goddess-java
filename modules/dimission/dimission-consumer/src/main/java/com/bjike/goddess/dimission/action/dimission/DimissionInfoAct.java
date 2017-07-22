@@ -16,6 +16,7 @@ import com.bjike.goddess.dimission.to.*;
 import com.bjike.goddess.dimission.vo.DimissionInfoCollectVO;
 import com.bjike.goddess.dimission.vo.DimissionInfoVO;
 import com.bjike.goddess.dimission.vo.DimissionReasonVO;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
@@ -47,6 +48,8 @@ public class DimissionInfoAct extends BaseFileAction {
     private DimissionInfoAPI dimissionInfoAPI;
     @Autowired
     private FileAPI fileAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
 
     /**
@@ -502,5 +505,43 @@ public class DimissionInfoAct extends BaseFileAction {
         }
     }
 
-
+    /**
+     * 获取所有的用户名
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getAllName")
+    public Result getAllName() throws ActException {
+        try {
+            return ActResult.initialize(dimissionInfoAPI.getAllName());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取全部岗位
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getPosition")
+    public Result getPosition() throws ActException{
+        try {
+            return ActResult.initialize(positionDetailUserAPI.getAllPosition());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取全部部门
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getDepartment")
+    public Result getDepartment() throws ActException{
+        try {
+            return ActResult.initialize(positionDetailUserAPI.getAllDepartment());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }
