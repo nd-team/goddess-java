@@ -6,6 +6,8 @@ import com.bjike.goddess.staffwelfaremanage.bo.StaffBirthdaySchemeBO;
 import com.bjike.goddess.staffwelfaremanage.bo.WishesStatementBO;
 import com.bjike.goddess.staffwelfaremanage.dto.StaffBirthdaySchemeDTO;
 import com.bjike.goddess.staffwelfaremanage.entity.HeadPortraitHat;
+import com.bjike.goddess.staffwelfaremanage.excel.SonPermissionObject;
+import com.bjike.goddess.staffwelfaremanage.to.GuidePermissionTO;
 import com.bjike.goddess.staffwelfaremanage.to.StaffBirthdaySchemeTO;
 
 import java.util.List;
@@ -20,6 +22,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface StaffBirthdaySchemeAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 新增员工生日福利方案

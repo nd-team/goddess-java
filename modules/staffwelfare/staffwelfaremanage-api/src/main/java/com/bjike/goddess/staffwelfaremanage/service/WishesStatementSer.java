@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.staffwelfaremanage.bo.WishesStatementBO;
 import com.bjike.goddess.staffwelfaremanage.dto.WishesStatementDTO;
 import com.bjike.goddess.staffwelfaremanage.entity.WishesStatement;
+import com.bjike.goddess.staffwelfaremanage.to.GuidePermissionTO;
 import com.bjike.goddess.staffwelfaremanage.to.WishesStatementTO;
 
 import java.util.List;
@@ -19,6 +20,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface WishesStatementSer extends Ser<WishesStatement, WishesStatementDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 新增祝福语

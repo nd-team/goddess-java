@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.staffwelfaremanage.bo.PersonalFestivalWishBO;
 import com.bjike.goddess.staffwelfaremanage.dto.PersonalFestivalWishDTO;
 import com.bjike.goddess.staffwelfaremanage.entity.PersonalFestivalWish;
+import com.bjike.goddess.staffwelfaremanage.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -18,6 +19,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface PersonalFestivalWishSer extends Ser<PersonalFestivalWish, PersonalFestivalWishDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 分页查询个人节日祝福
