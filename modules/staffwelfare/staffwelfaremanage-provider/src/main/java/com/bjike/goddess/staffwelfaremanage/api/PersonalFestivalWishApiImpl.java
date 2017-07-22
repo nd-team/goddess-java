@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffwelfaremanage.bo.PersonalFestivalWishBO;
 import com.bjike.goddess.staffwelfaremanage.dto.PersonalFestivalWishDTO;
 import com.bjike.goddess.staffwelfaremanage.service.PersonalFestivalWishSer;
+import com.bjike.goddess.staffwelfaremanage.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +22,19 @@ import java.util.List;
 @Service("personalFestivalWishApiImpl")
 public class PersonalFestivalWishApiImpl implements PersonalFestivalWishAPI {
 
+
     @Autowired
     private PersonalFestivalWishSer personalFestivalWishSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return personalFestivalWishSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return personalFestivalWishSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public List<PersonalFestivalWishBO> pageList(PersonalFestivalWishDTO dto) throws SerException {

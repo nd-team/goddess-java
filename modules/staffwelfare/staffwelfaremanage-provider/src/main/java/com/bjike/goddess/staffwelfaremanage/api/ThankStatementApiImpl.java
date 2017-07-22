@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffwelfaremanage.bo.ThankStatementBO;
 import com.bjike.goddess.staffwelfaremanage.dto.ThankStatementDTO;
 import com.bjike.goddess.staffwelfaremanage.service.ThankStatementSer;
+import com.bjike.goddess.staffwelfaremanage.to.GuidePermissionTO;
 import com.bjike.goddess.staffwelfaremanage.to.ThankStatementTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,15 @@ public class ThankStatementApiImpl implements ThankStatementAPI {
     @Autowired
     private ThankStatementSer thankStatementSer;
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return thankStatementSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return thankStatementSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public ThankStatementBO addModel(ThankStatementTO to) throws SerException {
