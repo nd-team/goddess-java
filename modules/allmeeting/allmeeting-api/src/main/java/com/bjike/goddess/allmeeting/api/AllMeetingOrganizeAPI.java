@@ -3,7 +3,9 @@ package com.bjike.goddess.allmeeting.api;
 import com.bjike.goddess.allmeeting.bo.AllMeetingOrganizeBO;
 import com.bjike.goddess.allmeeting.bo.MeetingLayBO;
 import com.bjike.goddess.allmeeting.dto.AllMeetingOrganizeDTO;
+import com.bjike.goddess.allmeeting.excel.SonPermissionObject;
 import com.bjike.goddess.allmeeting.to.AllMeetingOrganizeTO;
+import com.bjike.goddess.allmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -18,6 +20,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface AllMeetingOrganizeAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 根据Id查询会议组织内容

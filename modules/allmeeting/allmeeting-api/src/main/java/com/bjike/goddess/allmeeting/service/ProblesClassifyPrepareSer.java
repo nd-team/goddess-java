@@ -3,6 +3,7 @@ package com.bjike.goddess.allmeeting.service;
 import com.bjike.goddess.allmeeting.bo.ProblesClassifyPrepareBO;
 import com.bjike.goddess.allmeeting.dto.ProblesClassifyPrepareDTO;
 import com.bjike.goddess.allmeeting.entity.ProblesClassifyPrepare;
+import com.bjike.goddess.allmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.allmeeting.to.ProblesClassifyPrepareTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -19,6 +20,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ProblesClassifyPrepareSer extends Ser<ProblesClassifyPrepare, ProblesClassifyPrepareDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     ProblesClassifyPrepareBO insertModel(ProblesClassifyPrepareTO to) throws SerException;
 

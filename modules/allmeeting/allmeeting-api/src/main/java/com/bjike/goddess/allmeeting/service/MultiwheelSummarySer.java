@@ -2,6 +2,7 @@ package com.bjike.goddess.allmeeting.service;
 
 import com.bjike.goddess.allmeeting.bo.MultiwheelSummaryBO;
 import com.bjike.goddess.allmeeting.bo.OrganizeForSummaryBO;
+import com.bjike.goddess.allmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.allmeeting.to.MultiwheelSummaryTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -19,6 +20,18 @@ import java.util.List;
 * @Copy:   		[ com.bjike ]
 */
 public interface MultiwheelSummarySer extends Ser<MultiwheelSummary, MultiwheelSummaryDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     MultiwheelSummaryBO updateModel(MultiwheelSummaryTO to) throws SerException;
 

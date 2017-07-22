@@ -3,6 +3,7 @@ package com.bjike.goddess.allmeeting.api;
 import com.bjike.goddess.allmeeting.bo.ProblesAllotPrepareBO;
 import com.bjike.goddess.allmeeting.dto.ProblesAllotPrepareDTO;
 import com.bjike.goddess.allmeeting.service.ProblesAllotPrepareSer;
+import com.bjike.goddess.allmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.allmeeting.to.ProblesAllotPrepareTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -26,6 +27,15 @@ public class ProblesAllotPrepareApiImpl implements ProblesAllotPrepareAPI {
     @Autowired
     ProblesAllotPrepareSer problesAllotPrepareSer;
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return problesAllotPrepareSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return problesAllotPrepareSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public ProblesAllotPrepareBO add(ProblesAllotPrepareTO to) throws SerException {
