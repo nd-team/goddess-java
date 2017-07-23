@@ -27,6 +27,11 @@ public class MeetingLayApiImpl implements MeetingLayAPI {
     private MeetingLaySer meetingLaySer;
 
     @Override
+    public String[] get() throws SerException {
+        return meetingLaySer.get();
+    }
+
+    @Override
     public Boolean sonPermission() throws SerException {
         return meetingLaySer.sonPermission();
     }

@@ -14,8 +14,11 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailAPI;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.entity.Position;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -50,6 +53,9 @@ public class MeetingLaySerImpl extends ServiceImpl<MeetingLay, MeetingLayDTO> im
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
+
+    @Autowired
+    private PositionDetailAPI positionDetailAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -119,6 +125,19 @@ public class MeetingLaySerImpl extends ServiceImpl<MeetingLay, MeetingLayDTO> im
             flag = true;
         }
         return flag;
+    }
+
+    @Override
+    public String[] get() throws SerException {
+        List<OpinionBO> position = positionDetailAPI.findAllOpinion();
+        List<String> postionList = new ArrayList<>();
+        for(OpinionBO positions2 : position)
+        {
+            postionList.add(positions2.getValue());
+        }
+        String[] positions = new String[position.size()];
+        positions=postionList.toArray(positions);
+        return positions;
     }
 
     @Override
@@ -269,7 +288,7 @@ public class MeetingLaySerImpl extends ServiceImpl<MeetingLay, MeetingLayDTO> im
         List<AllMeetingOrganize> organizeList = allMeetingOrganizeSer.findByCis(organizeDTO);
         if (CollectionUtils.isEmpty(organizeList)) {
             super.remove(id);
-        }else{
+        } else {
             throw new SerException("该层面存在会议组织关联,请确保会议会议层面无数据关联!");
         }
     }

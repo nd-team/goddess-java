@@ -256,5 +256,20 @@ public class AllMeetingOrganizeAct {
         }
     }
 
+    /**
+     * 查询参会人员
+     * @version v1
+     */
+    @GetMapping("v1/getPlanPeople")
+    public Result getPlanPeople() throws ActException{
+        try {
+            String[] planPeople = allMeetingOrganizeAPI.getPlanPeople();
+            return ActResult.initialize(planPeople);
+        }catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
 
 }

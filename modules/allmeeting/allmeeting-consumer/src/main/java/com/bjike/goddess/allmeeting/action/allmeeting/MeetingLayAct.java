@@ -84,6 +84,23 @@ public class MeetingLayAct {
     }
 
     /**
+     * 查询所有岗位
+     * @version v1
+     */
+
+    @LoginAuth
+    @GetMapping("v1/get")
+    public Result get() throws ActException{
+        try {
+            String[] positions = meetingLayAPI.get();
+            return ActResult.initialize(positions);
+        }catch (SerException e)
+        {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 编辑
      *
      * @param to 会议层面

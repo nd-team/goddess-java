@@ -78,5 +78,10 @@ public interface MeetingTopicAPI {
      */
     MeetingTopicBO findById(String id) throws SerException;
 
+    /**
+     * 查询会议议题列表
+     * @return
+     * @throws SerException
+     */
     List<MeetingTopicBO> topics() throws SerException;
 }

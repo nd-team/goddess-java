@@ -77,4 +77,8 @@ public class AllMeetingOrganizeApiImpl implements AllMeetingOrganizeAPI {
         return allMeetingOrganizeSer.pageList(dto);
     }
 
+    @Override
+    public String[] getPlanPeople() throws SerException {
+        return allMeetingOrganizeSer.getPlanPeople();
+    }
 }

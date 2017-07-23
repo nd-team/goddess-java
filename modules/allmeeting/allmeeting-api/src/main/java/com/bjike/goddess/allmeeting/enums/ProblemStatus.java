@@ -1,7 +1,7 @@
 package com.bjike.goddess.allmeeting.enums;
 
 /**
- * 会议形式
+ * 问题处理状态
  * <p>
  * Created by ike on 17-5-31.
  */
