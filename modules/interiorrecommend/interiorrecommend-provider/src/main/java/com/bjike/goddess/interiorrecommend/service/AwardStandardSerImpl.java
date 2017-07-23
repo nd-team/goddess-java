@@ -187,6 +187,7 @@ public class AwardStandardSerImpl extends ServiceImpl<AwardStandard, AwardStanda
 
     @Override
     public AwardStandardBO insertModel(AwardStandardTO to) throws SerException {
+        checkAddIdentity();
         RecommendRequire recommendRequire = recommendRequireSer.findById(to.getRequireId());
         if (recommendRequire != null) {
             AwardStandard model = BeanTransform.copyProperties(to, AwardStandard.class, true);
@@ -201,6 +202,7 @@ public class AwardStandardSerImpl extends ServiceImpl<AwardStandard, AwardStanda
 
     @Override
     public AwardStandardBO updateModel(AwardStandardTO to) throws SerException {
+        checkAddIdentity();
         AwardStandard model = super.findById(to.getId());
         if (model != null) {
             RecommendRequire recommendRequire = recommendRequireSer.findById(to.getRequireId());
@@ -220,6 +222,7 @@ public class AwardStandardSerImpl extends ServiceImpl<AwardStandard, AwardStanda
 
     @Override
     public List<AwardStandardBO> pageList(AwardStandardDTO dto) throws SerException {
+        checkSeeIdentity();
         dto.getSorts().add("createTime=desc");
         List<AwardStandard> list = super.findByPage(dto);
         if (!CollectionUtils.isEmpty(list)) {

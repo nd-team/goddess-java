@@ -186,6 +186,7 @@ public class RecommendTypeSerImpl extends ServiceImpl<RecommendType, RecommendTy
     @Override
     @Transactional(rollbackFor = SerException.class)
     public RecommendTypeBO insertModel(RecommendTypeTO to) throws SerException {
+        checkAddIdentity();
         RecommendType recommendType = isExist(to.getTypeName());
         if (recommendType == null) {
             RecommendType model = BeanTransform.copyProperties(to, RecommendType.class, true);
@@ -212,6 +213,7 @@ public class RecommendTypeSerImpl extends ServiceImpl<RecommendType, RecommendTy
     @Override
     @Transactional(rollbackFor = SerException.class)
     public RecommendTypeBO updateModel(RecommendTypeTO to) throws SerException {
+        checkAddIdentity();
         if (!StringUtils.isEmpty(to.getId())) {
             RecommendType model = super.findById(to.getId());
             if (model != null) {
@@ -235,6 +237,7 @@ public class RecommendTypeSerImpl extends ServiceImpl<RecommendType, RecommendTy
 
     @Override
     public List<RecommendTypeBO> pageList(RecommendTypeDTO dto) throws SerException {
+        checkSeeIdentity();
         dto.getSorts().add("createTime=desc");
         List<RecommendType> list = super.findByPage(dto);
         return BeanTransform.copyProperties(list, RecommendTypeBO.class);
