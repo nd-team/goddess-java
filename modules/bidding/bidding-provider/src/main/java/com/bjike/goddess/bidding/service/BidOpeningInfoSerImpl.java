@@ -198,6 +198,9 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
     @Override
     public Long countBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
         bidOpeningInfoDTO.getSorts().add("createTime=desc");
+        if (StringUtils.isNotBlank(bidOpeningInfoDTO.getCompetitive())){
+            bidOpeningInfoDTO.getConditions().add(Restrict.eq("competitive",bidOpeningInfoDTO.getCompetitive()));
+        }
         Long count = super.count(bidOpeningInfoDTO);
         return count;
     }
@@ -214,6 +217,7 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
     @Override
     public List<BidOpeningInfoBO> findListBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
         checkSeeIdentity();
+        searchBidOpeningInfo(bidOpeningInfoDTO);
         bidOpeningInfoDTO.getSorts().add("createTime=desc");
         List<BidOpeningInfo> bidOpeningInfos = super.findByCis(bidOpeningInfoDTO, true);
         List<BidOpeningInfoBO> bidOpeningInfoBOS = BeanTransform.copyProperties(bidOpeningInfos, BidOpeningInfoBO.class);
@@ -257,17 +261,13 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
 
     }
 
-    @Override
-    public List<BidOpeningInfoBO> searchBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
+    public void searchBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
         /**
          * 竞争公司
          */
         if (StringUtils.isNotBlank(bidOpeningInfoDTO.getCompetitive())) {
-            bidOpeningInfoDTO.getConditions().add(Restrict.like("competitive", bidOpeningInfoDTO.getCompetitive()));
+            bidOpeningInfoDTO.getConditions().add(Restrict.eq("competitive", bidOpeningInfoDTO.getCompetitive()));
         }
-        List<BidOpeningInfo> bidOpeningInfos = super.findByCis(bidOpeningInfoDTO, true);
-        List<BidOpeningInfoBO> bidOpeningInfoBOS = BeanTransform.copyProperties(bidOpeningInfos, BidOpeningInfoBO.class);
-        return bidOpeningInfoBOS;
     }
 
     @Override

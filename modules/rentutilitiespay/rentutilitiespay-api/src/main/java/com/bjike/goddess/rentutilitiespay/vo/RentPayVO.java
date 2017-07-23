@@ -230,10 +230,6 @@ public class RentPayVO {
      */
     private Boolean rentMoneyMail;
 
-    /**
-     * 房租收据附件
-     */
-    private String rentReceiptAccessory;
 
     /**
      * 备注
@@ -593,13 +589,6 @@ public class RentPayVO {
         this.rentMoneyMail = rentMoneyMail;
     }
 
-    public String getRentReceiptAccessory() {
-        return rentReceiptAccessory;
-    }
-
-    public void setRentReceiptAccessory(String rentReceiptAccessory) {
-        this.rentReceiptAccessory = rentReceiptAccessory;
-    }
 
     public String getRemark() {
         return remark;

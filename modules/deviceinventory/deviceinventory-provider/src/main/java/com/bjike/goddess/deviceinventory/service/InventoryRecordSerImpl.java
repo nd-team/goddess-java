@@ -199,9 +199,9 @@ public class InventoryRecordSerImpl extends ServiceImpl<InventoryRecord, Invento
         InventoryRecordDTO dto = new InventoryRecordDTO();
         dto.getConditions().add(Restrict.between("inventoryTime", time));
         List<InventoryRecord> list = super.findByCis(dto);
-        if (list==null||list.isEmpty()){
-            throw new SerException("该时间段没有数据");
-        }
+//        if (list==null||list.isEmpty()){
+//            throw new SerException("该时间段没有数据");
+//        }
         List<InventoryRecordExcel> toList=BeanTransform.copyProperties(list,InventoryRecordExcel.class,true);
         Excel excel=new Excel(0,2);
         byte[] bytes= ExcelUtil.clazzToExcel(toList,excel);

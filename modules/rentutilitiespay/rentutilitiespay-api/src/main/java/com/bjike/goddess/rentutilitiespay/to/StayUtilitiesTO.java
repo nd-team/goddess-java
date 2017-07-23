@@ -18,6 +18,8 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class StayUtilitiesTO extends BaseTO {
+    public interface financeAudit{}
+    public interface resourceAudit{}
 
     /**
      * 地区
@@ -34,8 +36,8 @@ public class StayUtilitiesTO extends BaseTO {
     /**
      * 项目名称
      */
-    @NotBlank(message = "项目名称不能为空",groups = {ADD.class, EDIT.class})
-    private String projectName;
+    @NotNull(message = "项目名称不能为空",groups = {ADD.class, EDIT.class})
+    private String[] projectName;
 
     /**
      * 住宿地址
@@ -58,11 +60,13 @@ public class StayUtilitiesTO extends BaseTO {
     /**
      * 住宿开始时间
      */
+    @NotBlank(message = "住宿开始时间不能为空",groups = {ADD.class, EDIT.class})
     private String stayStartTime;
 
     /**
      * 住宿结束时间
      */
+    @NotBlank(message = "住宿结束时间不能为空",groups = {ADD.class, EDIT.class})
     private String stayEndTime;
 
     /**
@@ -147,11 +151,13 @@ public class StayUtilitiesTO extends BaseTO {
     /**
      * 综合资源部核实情况（是否需要修改）
      */
+    @NotNull(message = "综合资源部核实情况（是否需要修改）不能为空",groups = {StayUtilitiesTO.resourceAudit.class})
     private Boolean comprehensiveVerifySituation;
 
     /**
      * 扣款情况（运营商务部确认）
      */
+    @NotBlank(message = "扣款情况（运营商务部确认）不能为空",groups = {StayUtilitiesTO.financeAudit.class})
     private String deductionSituation;
 
     /**
@@ -176,11 +182,11 @@ public class StayUtilitiesTO extends BaseTO {
         this.projectGroup = projectGroup;
     }
 
-    public String getProjectName() {
+    public String[] getProjectName() {
         return projectName;
     }
 
-    public void setProjectName(String projectName) {
+    public void setProjectName(String[] projectName) {
         this.projectName = projectName;
     }
 

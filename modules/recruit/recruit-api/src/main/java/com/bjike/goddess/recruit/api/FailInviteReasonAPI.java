@@ -7,6 +7,7 @@ import com.bjike.goddess.recruit.to.FailInviteReasonTO;
 import com.bjike.goddess.recruit.to.GuidePermissionTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 未邀约成功原因
@@ -82,4 +83,12 @@ public interface FailInviteReasonAPI {
      * @throws SerException
      */
     void update(FailInviteReasonTO failInviteReasonTO) throws SerException;
+
+    /**
+     * 查找所有未邀约成功原因
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allReason() throws SerException;
 }

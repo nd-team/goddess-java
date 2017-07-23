@@ -2,8 +2,11 @@ package com.bjike.goddess.rentutilitiespay.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.rentutilitiespay.bo.CollectNameBO;
+import com.bjike.goddess.rentutilitiespay.bo.RentPayBO;
 import com.bjike.goddess.rentutilitiespay.bo.StayUtilitiesBO;
 import com.bjike.goddess.rentutilitiespay.dto.StayUtilitiesDTO;
+import com.bjike.goddess.rentutilitiespay.to.GuidePermissionTO;
+import com.bjike.goddess.rentutilitiespay.to.RentPayTO;
 import com.bjike.goddess.rentutilitiespay.to.StayUtilitiesTO;
 
 import java.util.List;
@@ -18,6 +21,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface StayUtilitiesAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 员工住宿水电费列表总条数
      */
@@ -94,5 +109,24 @@ public interface StayUtilitiesAPI {
     default List<String> getName() throws SerException {
         return null;
     }
-
+    /**
+     * 综合资源部
+     *
+     * @param to to
+     * @return class StayUtilitiesBO
+     * @throws SerException
+     */
+    default StayUtilitiesBO resourceAudit(StayUtilitiesTO to) throws SerException {
+        return null;
+    }
+    /**
+     * 运营财务部
+     *
+     * @param to to
+     * @return class StayUtilitiesBO
+     * @throws SerException
+     */
+    default StayUtilitiesBO financeAudit(StayUtilitiesTO to) throws SerException {
+        return null;
+    }
 }

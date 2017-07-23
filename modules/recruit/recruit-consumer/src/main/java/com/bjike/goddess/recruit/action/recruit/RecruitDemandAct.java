@@ -19,6 +19,7 @@ import com.bjike.goddess.organize.vo.PositionDetailVO;
 import com.bjike.goddess.recruit.api.RecruitDemandAPI;
 import com.bjike.goddess.recruit.bo.RecruitDemandBO;
 import com.bjike.goddess.recruit.dto.RecruitDemandDTO;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.RecruitDemandTO;
 import com.bjike.goddess.recruit.vo.RecruitDemandVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,29 @@ public class RecruitDemandAct {
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private PositionDetailAPI positionDetailAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = recruitDemandAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 根据id查询招聘需求
@@ -178,7 +202,7 @@ public class RecruitDemandAct {
     }
 
     /**
-     * 查找所有部门/项目组
+     * 查找所有部门项目组
      *
      * @return class DepartmentDetailVO
      * @throws ActException

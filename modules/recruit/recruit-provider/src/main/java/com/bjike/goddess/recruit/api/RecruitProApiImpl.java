@@ -6,6 +6,7 @@ import com.bjike.goddess.recruit.bo.RecruitProBO;
 import com.bjike.goddess.recruit.dto.RecruitProDTO;
 import com.bjike.goddess.recruit.entity.RecruitPro;
 import com.bjike.goddess.recruit.service.RecruitProSer;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.RecruitProTO;
 import com.bjike.goddess.recruit.type.AuditType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,4 +136,13 @@ public class RecruitProApiImpl implements RecruitProAPI {
         recruitProSer.zjbOpinion(id, zjbOpinion, auditType);
     }
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return recruitProSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return recruitProSer.guidePermission(guidePermissionTO);
+    }
 }

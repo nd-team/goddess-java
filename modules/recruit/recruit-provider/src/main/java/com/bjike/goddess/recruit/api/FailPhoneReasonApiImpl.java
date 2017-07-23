@@ -7,10 +7,12 @@ import com.bjike.goddess.recruit.dto.FailPhoneReasonDTO;
 import com.bjike.goddess.recruit.entity.FailPhoneReason;
 import com.bjike.goddess.recruit.service.FailPhoneReasonSer;
 import com.bjike.goddess.recruit.to.FailPhoneReasonTO;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 未成功通话原因
@@ -95,5 +97,20 @@ public class FailPhoneReasonApiImpl implements FailPhoneReasonAPI {
     @Override
     public void update(FailPhoneReasonTO failPhoneReasonTO) throws SerException {
         failPhoneReasonSer.update(failPhoneReasonTO);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return failPhoneReasonSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return failPhoneReasonSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public Set<String> allReason() throws SerException {
+        return failPhoneReasonSer.allReason();
     }
 }

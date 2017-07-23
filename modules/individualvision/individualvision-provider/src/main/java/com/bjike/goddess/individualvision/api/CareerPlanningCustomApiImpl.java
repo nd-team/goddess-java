@@ -7,6 +7,7 @@ import com.bjike.goddess.individualvision.dto.CareerPlanningCustomDTO;
 import com.bjike.goddess.individualvision.entity.CareerPlanningCustom;
 import com.bjike.goddess.individualvision.service.CareerPlanningCustomSer;
 import com.bjike.goddess.individualvision.to.CareerPlanningCustomTO;
+import com.bjike.goddess.individualvision.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,15 @@ import java.util.List;
 public class CareerPlanningCustomApiImpl implements CareerPlanningCustomAPI {
     @Autowired
     private CareerPlanningCustomSer careerPlanningCustomSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return careerPlanningCustomSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return careerPlanningCustomSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countCareerPlanningCustom(CareerPlanningCustomDTO careerPlanningCustomDTO) throws SerException {
         return careerPlanningCustomSer.countCareerPlanningCustom(careerPlanningCustomDTO);

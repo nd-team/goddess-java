@@ -174,6 +174,7 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public List<InterviewInforBO> list(InterviewInforDTO dto) throws SerException {
+        checkSeeIdentity();
         List<InterviewInfor> list = super.findByPage(dto);
         List<InterviewInforBO> listBO = BeanTransform.copyProperties(list, InterviewInforBO.class);
         return listBO;
@@ -189,6 +190,7 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public InterviewInforBO save(InterviewInforTO to) throws SerException {
+        checkAddIdentity();
         InterviewInfor failFirstInterviewReason = BeanTransform.copyProperties(to, InterviewInfor.class, true);
         failFirstInterviewReason = super.save(failFirstInterviewReason);
         InterviewInforBO bo = BeanTransform.copyProperties(failFirstInterviewReason, InterviewInforBO.class);
@@ -204,6 +206,7 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(InterviewInforTO to) throws SerException {
+        checkAddIdentity();
         if (StringUtils.isNotEmpty(to.getId())) {
             InterviewInfor model = super.findById(to.getId());
             if (model != null) {
@@ -259,6 +262,7 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void remove(InterviewInfor entity) throws SerException {
+        checkAddIdentity();
         super.remove(entity);
     }
 

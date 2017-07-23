@@ -24,49 +24,64 @@ public enum GuideAddrStatus {
      */
     EDIT(2),
     /**
-     * 审核
+     * 运营财务部审核
      */
-    AUDIT(3),
+    FINANCEAUDIT(3),
+
+    /**
+     * 综合资源部审核
+     */
+    RESOURCEAUDIT(4),
+
     /**
      * 删除
      */
-    DELETE(4),
+    DELETE(5),
+
     /**
      * 冻结
      */
-    CONGEL(5),
+    CONGEL(6),
+
     /**
      * 解冻
      */
-    THAW(6),
+    THAW(7),
+
     /**
      * 汇总
      */
-    COLLECT(7),
+    COLLECT(8),
+
     /**
      * 上传附件
      */
-    UPLOAD(8),
+    UPLOAD(9),
+
     /**
      * 下载附件
      */
-    DOWNLOAD(9),
+    DOWNLOAD(10),
+
     /**
      * 导入
      */
-    IMPORT(10),
+    IMPORT(11),
+
     /**
      * 导出
      */
-    EXPORT(11),
+    EXPORT(12),
+
     /**
      * 查看
      */
-    SEE(12),
+    SEE(13),
+
     /**
      * 查看附件
      */
-    SEEFILE(13);
+    SEEFILE(14);
 
     private int code;
 
@@ -78,4 +93,4 @@ public enum GuideAddrStatus {
         return this.code;
     }
 
-}
+    }

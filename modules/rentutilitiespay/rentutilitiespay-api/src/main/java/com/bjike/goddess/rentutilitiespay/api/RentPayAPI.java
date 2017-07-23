@@ -4,6 +4,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.rentutilitiespay.bo.CollectAreaBO;
 import com.bjike.goddess.rentutilitiespay.bo.RentPayBO;
 import com.bjike.goddess.rentutilitiespay.dto.RentPayDTO;
+import com.bjike.goddess.rentutilitiespay.excel.SonPermissionObject;
+import com.bjike.goddess.rentutilitiespay.to.GuidePermissionTO;
 import com.bjike.goddess.rentutilitiespay.to.RentPayTO;
 
 import java.util.List;
@@ -18,6 +20,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface RentPayAPI {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 房租缴费列表总条数
      */
@@ -77,12 +92,6 @@ public interface RentPayAPI {
     }
 
     /**
-     * 上传附件
-     */
-    default void uploadAttachments() throws SerException {
-        return ;
-    }
-    /**
      * 汇总
      *
      * @param areas areas
@@ -99,6 +108,16 @@ public interface RentPayAPI {
      * @return class String
      */
     default List<String> getArea() throws SerException {
+        return null;
+    }
+    /**
+     * 运营财务部
+     *
+     * @param rentPayTO rentPayTO
+     * @return class RentPayBO
+     * @throws SerException
+     */
+    default RentPayBO financeAudit(RentPayTO rentPayTO) throws SerException {
         return null;
     }
 

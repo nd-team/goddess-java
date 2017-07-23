@@ -28,6 +28,13 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.RecruitWayAPI" id="RecruitWayApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.ReportAddressInforAPI" id="reportAddressInforApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.TemplateManageAPI" id="templateManageApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.CusPermissionAPI" id="cusPermissionApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.CusPermissionOperateAPI" id="cusPermissionOperateApiImpl"/>
 
 	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.storage.api.StorageUserAPI" id="storageUserApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl"/>
 </beans>

@@ -329,9 +329,9 @@ public class InventorySerImpl extends ServiceImpl<Inventory, InventoryDTO> imple
         InventoryDTO dto = new InventoryDTO();
         dto.getConditions().add(Restrict.between("inventoryTime", time));
         List<Inventory> list = super.findByCis(dto);
-        if (list == null || list.isEmpty()) {
-            throw new SerException("该时间段没有数据");
-        }
+//        if (list == null || list.isEmpty()) {
+//            throw new SerException("该时间段没有数据");
+//        }
         List<InventoryBO> boList = new ArrayList<InventoryBO>();
         for (Inventory i : list) {
             InventoryBO bo = BeanTransform.copyProperties(i, InventoryBO.class);

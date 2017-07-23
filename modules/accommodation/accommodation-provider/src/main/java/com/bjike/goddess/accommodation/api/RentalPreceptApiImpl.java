@@ -4,7 +4,9 @@ import com.bjike.goddess.accommodation.bo.RentalPreceptBO;
 import com.bjike.goddess.accommodation.dto.RentalPreceptDTO;
 import com.bjike.goddess.accommodation.entity.RentalPrecept;
 import com.bjike.goddess.accommodation.enums.PassStatus;
+import com.bjike.goddess.accommodation.excel.SonPermissionObject;
 import com.bjike.goddess.accommodation.service.RentalPreceptSer;
+import com.bjike.goddess.accommodation.to.GuidePermissionTO;
 import com.bjike.goddess.accommodation.to.RentalPreceptTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -25,6 +27,15 @@ import java.util.List;
 public class RentalPreceptApiImpl implements RentalPreceptAPI{
     @Autowired
     private RentalPreceptSer rentalPreceptSer;
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return rentalPreceptSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return rentalPreceptSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countRentalPrecept(RentalPreceptDTO rentalPreceptDTO) throws SerException {
         return rentalPreceptSer.countRentalPrecept(rentalPreceptDTO);
@@ -51,7 +62,18 @@ public class RentalPreceptApiImpl implements RentalPreceptAPI{
     public void removePecept(String id) throws SerException {
         rentalPreceptSer.removePecept(id);
     }
-
+    @Override
+    public RentalPreceptBO businessAudit(RentalPreceptTO preceptTO) throws SerException {
+        return rentalPreceptSer.businessAudit(preceptTO);
+    }
+    @Override
+    public RentalPreceptBO financeAudit(RentalPreceptTO preceptTO) throws SerException {
+        return rentalPreceptSer.financeAudit(preceptTO);
+    }
+    @Override
+    public RentalPreceptBO resourceAudit(RentalPreceptTO preceptTO) throws SerException {
+        return rentalPreceptSer.resourceAudit(preceptTO);
+    }
 
     @Override
     public RentalPreceptBO manageAudit(RentalPreceptTO preceptTO) throws SerException {
@@ -61,5 +83,18 @@ public class RentalPreceptApiImpl implements RentalPreceptAPI{
     @Override
     public RentalPreceptBO generalAudit(RentalPreceptTO preceptTO) throws SerException {
         return rentalPreceptSer.generalAudit(preceptTO);
+    }
+    @Override
+    public List<String> getNum() throws SerException {
+        return rentalPreceptSer.getNum();
+    }
+
+    @Override
+    public RentalPreceptBO getRent(String rentNum) throws SerException {
+        return rentalPreceptSer.getRent(rentNum);
+    }
+    @Override
+    public List<UserBO> getUser() throws SerException {
+        return rentalPreceptSer.getUser();
     }
 }

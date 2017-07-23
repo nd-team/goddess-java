@@ -2,10 +2,12 @@ package com.bjike.goddess.recruit.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.recruit.bo.CountBO;
 import com.bjike.goddess.recruit.bo.RecruitPlanBO;
 import com.bjike.goddess.recruit.dto.RecruitPlanDTO;
 import com.bjike.goddess.recruit.entity.RecruitPlan;
 import com.bjike.goddess.recruit.service.RecruitPlanSer;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.RecruitPlanTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -97,4 +99,36 @@ public class RecruitPlanApiImpl implements RecruitPlanAPI {
     public void update(RecruitPlanTO recruitPlanTO) throws SerException {
         recruitPlanSer.update(recruitPlanTO);
     }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return recruitPlanSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return recruitPlanSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public List<Object> countSituation(RecruitPlanDTO dto) throws SerException {
+        return recruitPlanSer.countSituation(dto);
+    }
+
+    @Override
+    public List<CountBO> dayCount(RecruitPlanDTO dto) throws SerException {
+        return recruitPlanSer.dayCount(dto);
+    }
+
+    @Override
+    public List<CountBO> weekCount(RecruitPlanDTO dto) throws SerException {
+        return recruitPlanSer.weekCount(dto);
+    }
+
+    @Override
+    public List<CountBO> monthCount(RecruitPlanDTO dto) throws SerException {
+        return recruitPlanSer.monthCount(dto);
+    }
+
+
 }
