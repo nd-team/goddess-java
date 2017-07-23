@@ -67,4 +67,8 @@ public class MeetingLayApiImpl implements MeetingLayAPI {
         return BeanTransform.copyProperties(meetingLaySer.findById(id), MeetingLayBO.class);
     }
 
+    @Override
+    public String[] findPosition() throws SerException {
+        return meetingLaySer.findPosition();
+    }
 }

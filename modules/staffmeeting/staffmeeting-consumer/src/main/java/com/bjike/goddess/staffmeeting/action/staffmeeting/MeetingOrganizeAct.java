@@ -185,5 +185,18 @@ public class MeetingOrganizeAct {
         }
     }
 
+    /**
+     * 查询所有人员
+     */
+    @GetMapping("v1/findPlanUser")
+    public Result findPlanUser() throws ActException{
+        try {
+            String[] planUser = meetingOrganizeAPI.findPlanUser();
+            return ActResult.initialize(planUser);
+        }catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }

@@ -80,4 +80,9 @@ public interface MeetingLayAPI {
      */
     MeetingLayBO findById(String id) throws SerException;
 
+    /**
+     * 查询所有岗位
+     */
+    String[] findPosition() throws SerException;
+
 }

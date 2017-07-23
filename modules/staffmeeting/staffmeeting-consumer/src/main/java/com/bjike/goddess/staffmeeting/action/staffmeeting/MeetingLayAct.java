@@ -165,4 +165,17 @@ public class MeetingLayAct {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 查询所有岗位
+     */
+    @GetMapping("v1/getPosition")
+    public Result getPosition() throws ActException{
+        try {
+            String[] postion = meetingLayAPI.findPosition();
+            return ActResult.initialize(postion);
+        }catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

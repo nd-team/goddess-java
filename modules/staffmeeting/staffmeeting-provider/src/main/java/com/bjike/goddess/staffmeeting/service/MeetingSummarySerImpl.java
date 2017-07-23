@@ -279,6 +279,7 @@ public class MeetingSummarySerImpl extends ServiceImpl<MeetingSummary, MeetingSu
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void unFreeze(String id) throws SerException {
+        checkAddIdentity();
         MeetingSummary model = super.findById(id);
         if (model != null) {
             if (model.getStatus() != Status.THAW) {

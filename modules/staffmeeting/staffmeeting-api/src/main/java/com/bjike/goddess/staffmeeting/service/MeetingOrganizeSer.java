@@ -65,5 +65,14 @@ public interface MeetingOrganizeSer extends Ser<MeetingOrganize, MeetingOrganize
      */
     List<MeetingOrganizeBO> pageList(MeetingOrganizeDTO dto) throws SerException;
 
+    /**
+     * 解冻组织内容
+     * @param id
+     * @throws SerException
+     */
     void unfreeze(String id) throws SerException;
+    /**
+     * 查询所有人员
+     */
+    String[] findPlanUser() throws SerException;
 }

@@ -36,7 +36,7 @@ public class MeetingLayBO extends BaseBO {
     /**
      * 计划参会岗位
      */
-    private String position;
+    private String[] position;
 
     /**
      * 关联功能
@@ -76,11 +76,11 @@ public class MeetingLayBO extends BaseBO {
         this.name = name;
     }
 
-    public String getPosition() {
+    public String[] getPosition() {
         return position;
     }
 
-    public void setPosition(String position) {
+    public void setPosition(String[] position) {
         this.position = position;
     }
 

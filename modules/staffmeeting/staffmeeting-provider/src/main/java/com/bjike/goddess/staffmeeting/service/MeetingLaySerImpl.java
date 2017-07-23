@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailAPI;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.staffmeeting.bo.MeetingLayBO;
 import com.bjike.goddess.staffmeeting.dto.MeetingLayDTO;
 import com.bjike.goddess.staffmeeting.dto.MeetingOrganizeDTO;
@@ -45,6 +47,8 @@ public class MeetingLaySerImpl extends ServiceImpl<MeetingLay, MeetingLayDTO> im
     private MeetingOrganizeSer meetingOrganizeSer;
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private PositionDetailAPI positionDetailAPI;
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
@@ -287,5 +291,18 @@ public class MeetingLaySerImpl extends ServiceImpl<MeetingLay, MeetingLayDTO> im
             }
         }
         return boList;
+    }
+
+    @Override
+    public String[] findPosition() throws SerException {
+        List<OpinionBO> positons = positionDetailAPI.findAllOpinion();
+        List<String> positionList = new ArrayList<>();
+        for(OpinionBO postion : positons)
+        {
+            positionList.add(postion.getValue());
+        }
+        String[] positonAll = new String[positons.size()];
+        positonAll=positionList.toArray(positonAll);
+        return positonAll;
     }
 }

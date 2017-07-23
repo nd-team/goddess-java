@@ -154,36 +154,36 @@ public class FeedbackComplainSerImpl extends ServiceImpl<FeedbackComplain, Feedb
 
 
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeeDis = meetingLaySer.sonPermission();
+        Boolean flagMeetingLay = meetingLaySer.sonPermission();
         RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("meetingLay");
         obj.setDescribesion("会议层面表");
-        if (flagSeeDis) {
+        if (flagMeetingLay) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        Boolean flagSeeCate = meetingOrganizeSer.sonPermission();
+        Boolean flagMeetingOrganize = meetingOrganizeSer.sonPermission();
         RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("meetingOrganize");
         obj.setDescribesion("会议组织表");
-        if (flagSeeCate) {
+        if (flagMeetingOrganize) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        Boolean flagSeeEmail = meetingSummarySer.sonPermission();
+        Boolean flagMeetingSummary = meetingSummarySer.sonPermission();
         RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("meetingSummary");
         obj.setDescribesion("员工代表大会纪要表");
-        if (flagSeeEmail) {
+        if (flagMeetingSummary) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -263,7 +263,7 @@ public class FeedbackComplainSerImpl extends ServiceImpl<FeedbackComplain, Feedb
     @Override
     @Transactional(rollbackFor = SerException.class)
     public FeedbackComplainBO insertModel(FeedbackComplainTO to) throws SerException {
-        checkAddIdentity();
+        checkSeeIdentity();
         UserBO userBO = userAPI.currentUser();
         String username = userBO.getUsername();
         String userNum = userBO.getEmployeeNumber();
@@ -303,7 +303,7 @@ public class FeedbackComplainSerImpl extends ServiceImpl<FeedbackComplain, Feedb
     @Override
     @Transactional(rollbackFor = SerException.class)
     public FeedbackComplainBO updateModel(FeedbackComplainTO to) throws SerException {
-        checkAddIdentity();
+        checkSeeIdentity();
         UserBO userBO = userAPI.currentUser();
         String username = userBO.getUsername();
         String userNum = userBO.getEmployeeNumber();
@@ -349,6 +349,7 @@ public class FeedbackComplainSerImpl extends ServiceImpl<FeedbackComplain, Feedb
 
     @Override
     public List<FeedbackComplainBO> pageList(FeedbackComplainDTO dto) throws SerException {
+        checkSeeIdentity();
         dto.getSorts().add("createTime=desc");
         dto.getSorts().add("dissentUserNum=asc");
         dto.getConditions().add(Restrict.eq("status", dto.getStatus()));
