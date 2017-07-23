@@ -83,6 +83,24 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
     }
 
     /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
      * 导航栏核对查看权限（部门级别）
      */
     private Boolean guideSeeIdentity() throws SerException {
@@ -122,12 +140,12 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
         String userToken = RpcTransmit.getUserToken();
         Boolean flagSeeSign = guideSeeIdentity();
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAddSign = prizeApplySer.sonPermission();
+        Boolean flagAddSign = guideAddIdentity();
 
         SonPermissionObject obj = new SonPermissionObject();
 
         obj = new SonPermissionObject();
-        obj.setName("siginmanage");
+        obj.setName("bonusBudget");
         obj.setDescribesion("奖金预算");
         if (flagSeeSign || flagAddSign) {
             obj.setFlag(true);
@@ -138,73 +156,36 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
 
 
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeeDis = prizeApplySer.sonPermission();
+        Boolean flagPrize = prizeApplySer.sonPermission();
         RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("dispatchsheet");
+        obj.setName("prizeApply");
         obj.setDescribesion("奖品申请");
-        if (flagSeeDis) {
+        if (flagPrize) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        Boolean flagSeeCate = prizeApplySer.sonPermission();
+        Boolean flagRewardIndicator = rewardIndicatorSer.sonPermission();
         RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("contractcategory");
-        obj.setDescribesion("奖品明细");
-        if (flagSeeCate) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
-
-        Boolean flagSeeEmail = rewardProgramRatioSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        obj = new SonPermissionObject();
-        obj.setName("collectemail");
+        obj.setName("rewardIndicator");
         obj.setDescribesion("奖励指标");
-        if (flagSeeEmail) {
+        if (flagRewardIndicator) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        Boolean flagSeeBase = rewardPeopleNoStatSer.sonPermission();
+        Boolean flagRewardPeople = rewardPeopleNoStatSer.sonPermission();
         RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("baseinfomanage");
-        obj.setDescribesion("奖励人数");
-        if (flagSeeBase) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
-
-        Boolean flagReward = rewardProgramRatioSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        obj = new SonPermissionObject();
-        obj.setName("baseinfomanage");
-        obj.setDescribesion("奖励项目");
-        if (flagSeeBase) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
-
-
-        Boolean flag = awardDetailSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        obj = new SonPermissionObject();
-        obj.setName("baseinfomanage");
-        obj.setDescribesion("奖励项目");
-        if (flagSeeBase) {
+        obj.setName("rewardPeople");
+        obj.setDescribesion("奖励人数统计");
+        if (flagRewardPeople) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -277,6 +258,7 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
      */
     @Override
     public List<BonusBudgetBO> list(BonusBudgetDTO dto) throws SerException {
+        checkAddIdentity();
         List<BonusBudget> list = super.findByPage(dto);
         List<BonusBudgetBO> listBO = BeanTransform.copyProperties(list, BonusBudgetBO.class);
         return listBO;
@@ -292,6 +274,7 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
     @Override
     @Transactional(rollbackFor = SerException.class)
     public BonusBudgetBO save(BonusBudgetTO to) throws SerException {
+        checkAddIdentity();
         BonusBudget entity = BeanTransform.copyProperties(to, BonusBudget.class, true);
         entity = super.save(entity);
         BonusBudgetBO bo = BeanTransform.copyProperties(entity, BonusBudgetBO.class);
@@ -307,6 +290,7 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
+        checkAddIdentity();
         List<RewardProgramRatio> list = getRewardRatioById(id);
         rewardProgramRatioSer.remove(list);//删除子表中的数据
         super.remove(id);
@@ -321,6 +305,7 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(BonusBudgetTO to) throws SerException {
+        checkAddIdentity();
         if (StringUtils.isNotEmpty(to.getId())) {
             BonusBudget model = super.findById(to.getId());
             if (model != null) {
@@ -340,6 +325,7 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
      * @param model 奖金预算
      */
     private void updateBonusBudget(BonusBudgetTO to, BonusBudget model) throws SerException {
+        checkAddIdentity();
         BeanTransform.copyProperties(to, model, true);
         model.setModifyTime(LocalDateTime.now());
         super.update(model);
@@ -353,6 +339,7 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
      */
     @Override
     public void addRewardProgramRatios(RewardProgramRatiosTO to) throws SerException {
+        checkAddIdentity();
         String bonusBudgetId = to.getId();//奖金预算额度
         String[] rewardPrograms = to.getRewardPrograms();//奖励项目
         String[] focusingDegrees = to.getFocusingDegrees();//当月侧重程度
@@ -395,6 +382,7 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
      */
     @Override
     public void updateRewardProgramRatios(RewardProgramRatiosTO to) throws SerException {
+        checkAddIdentity();
         List<RewardProgramRatio> list = getRatioByBudgetTo(to);
         rewardProgramRatioSer.remove(list);//删除奖励项目比例
         addRewardProgramRatios(to);//重新执行插入操作
@@ -408,6 +396,7 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
      * @throws SerException
      */
     private List<RewardProgramRatio> getRatioByBudgetTo(RewardProgramRatiosTO to) throws SerException {
+        checkSeeIdentity();
         String bonusBudgetId = to.getId();//奖金预算id
         if (StringUtils.isBlank(bonusBudgetId)) {
             throw new SerException("奖金预算唯一标识为空,无法执行查询");
@@ -423,6 +412,7 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
      * @throws SerException
      */
     private List<RewardProgramRatio> getRewardRatioById(String bonusBudgetId) throws SerException {
+        checkSeeIdentity();
         RewardProgramRatioDTO dto = new RewardProgramRatioDTO();
         dto.getConditions().add(Restrict.eq("bonusBudgetId", bonusBudgetId));
         return rewardProgramRatioSer.findByCis(dto);
@@ -437,6 +427,7 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
      */
     @Override
     public List<RewardProgramRatioBO> checkRewardProgramRatios(String id) throws SerException {
+        checkSeeIdentity();
         List<RewardProgramRatio> list = getRewardRatioById(id);
         return BeanTransform.copyProperties(list, RewardProgramRatioBO.class);
     }
