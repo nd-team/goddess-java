@@ -269,6 +269,7 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<OilCardReceiveBO> pageList(OilCardReceiveDTO dto) throws SerException {
+        checkSeeIdentity();
         dto.getSorts().add("createTime=desc");
         List<OilCardReceive> list = super.findByPage(dto);
         if (!CollectionUtils.isEmpty(list)) {
@@ -290,6 +291,7 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void audit(String id, String auditSuggestion, OilCardReceiveResult oilCardReceiveResult) throws SerException {
+        checkAddIdentity();
         OilCardReceive model = super.findById(id);
         if (model != null) {
 
