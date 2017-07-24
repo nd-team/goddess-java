@@ -33,6 +33,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -96,7 +97,7 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
     @Transactional(rollbackFor = SerException.class)
     public CompetitorCollectBO editModel(CompetitorCollectTO to) throws SerException {
         String userToken = RpcTransmit.getUserToken();
-        getCusPermission();
+//        getCusPermission();
 
         if (to.getSendIntervalType() == SendIntervalType.MINUTE && to.getSendInterval() < 30) {
             throw new SerException("汇总发送间隔不能低于30分钟!");
@@ -109,6 +110,13 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
                 BeanTransform.copyProperties(to, model, true);
                 model.setModifyTime(LocalDateTime.now());
                 model.setOperateUser(userAPI.currentUser().getUsername());
+                String[] sendUsers = to.getSendUsers();
+                String sendUser = new String();
+                for(String user : sendUsers){
+                     sendUser = user + ";"+sendUser;
+                }
+                sendUser = sendUser.substring(0,sendUser.length()-1);
+                model.setSendUser(sendUser);
                 super.update(model);
             } else {
                 throw new SerException("更新对象不能为空!");
@@ -487,7 +495,7 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<CompetitorCollectBO> pageList(CompetitorCollectDTO dto) throws SerException {
-        getCusPermission();
+//        getCusPermission();
         dto.getSorts().add("createTime=desc");
         List<CompetitorCollect> list = super.findByPage(dto);
         return BeanTransform.copyProperties(list, CompetitorCollectBO.class);
