@@ -2,7 +2,9 @@ package com.bjike.goddess.carinfo.api;
 
 import com.bjike.goddess.carinfo.bo.DriverInfoBO;
 import com.bjike.goddess.carinfo.dto.DriverInfoDTO;
+import com.bjike.goddess.carinfo.excel.SonPermissionObject;
 import com.bjike.goddess.carinfo.to.DriverInfoTO;
+import com.bjike.goddess.carinfo.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -17,6 +19,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface DriverInfoAPI {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存
