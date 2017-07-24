@@ -5,6 +5,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.interiorrecommend.bo.RecommendTypeBO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendTypeDTO;
 import com.bjike.goddess.interiorrecommend.service.RecommendTypeSer;
+import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.RecommendTypeTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,5 +55,15 @@ public class RecommendTypeApiImpl implements RecommendTypeAPI {
     @Override
     public Long count(RecommendTypeDTO dto) throws SerException {
         return recommendTypeSer.count(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return recommendTypeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return recommendTypeSer.guidePermission(guidePermissionTO);
     }
 }

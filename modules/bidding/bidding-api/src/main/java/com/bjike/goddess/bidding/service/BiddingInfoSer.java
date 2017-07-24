@@ -95,15 +95,6 @@ public interface BiddingInfoSer extends Ser<BiddingInfo, BiddingInfoDTO> {
 
     }
 
-    /**
-     * 搜索
-     *
-     * @throws SerException
-     */
-    default List<BiddingInfoBO> searchBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
-        return null;
-    }
-
 
     /**
      * 汇总

@@ -7,14 +7,17 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffwelfaremanage.api.StaffBirthdaySchemeAPI;
 import com.bjike.goddess.staffwelfaremanage.dto.StaffBirthdaySchemeDTO;
+import com.bjike.goddess.staffwelfaremanage.to.GuidePermissionTO;
 import com.bjike.goddess.staffwelfaremanage.to.StaffBirthdaySchemeTO;
 import com.bjike.goddess.staffwelfaremanage.vo.StaffBirthdaySchemeVO;
 import com.bjike.goddess.staffwelfaremanage.vo.WishesStatementVO;
 import com.bjike.goddess.user.api.DepartmentAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -34,6 +37,29 @@ public class StaffBirthdaySchemeAct {
     private StaffBirthdaySchemeAPI staffBirthdaySchemeAPI;
     @Autowired
     private DepartmentAPI departmentAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = staffBirthdaySchemeAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 查询所有地区

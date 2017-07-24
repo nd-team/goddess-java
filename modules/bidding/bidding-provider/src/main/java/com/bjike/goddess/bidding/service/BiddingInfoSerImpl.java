@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -276,6 +277,18 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
     @Override
     public Long countBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
         biddingInfoDTO.getSorts().add("createTime=desc");
+        if (StringUtils.isNotBlank(biddingInfoDTO.getWebName())) {
+            biddingInfoDTO.getConditions().add(Restrict.eq("webName",biddingInfoDTO.getWebName()));
+        }
+        if(StringUtils.isNotBlank(biddingInfoDTO.getUrl())){
+            biddingInfoDTO.getConditions().add(Restrict.eq("url",biddingInfoDTO.getUrl()));
+        }
+        if(StringUtils.isNotBlank(biddingInfoDTO.getCities())){
+            biddingInfoDTO.getConditions().add(Restrict.eq("cities",biddingInfoDTO.getCities()));
+        }
+        if(StringUtils.isNotBlank(biddingInfoDTO.getProvinces())){
+            biddingInfoDTO.getConditions().add(Restrict.eq("provinces",biddingInfoDTO.getProvinces()));
+        }
         Long count = super.count(biddingInfoDTO);
         return count;
     }
@@ -292,6 +305,7 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
     @Override
     public List<BiddingInfoBO> findListBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
         checkSeeIdentity();
+        searchBiddingInfo(biddingInfoDTO);
         biddingInfoDTO.getSorts().add("createTime=desc");
         List<BiddingInfo> biddingInfo = super.findByCis(biddingInfoDTO, true);
         List<BiddingInfoBO> biddingInfoBOS = BeanTransform.copyProperties(biddingInfo, BiddingInfoBO.class);
@@ -333,38 +347,34 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         super.remove(id);
     }
 
-    @Override
-    public List<BiddingInfoBO> searchBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
+    public void searchBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
         /**
          * 网站名称
          */
         if (StringUtils.isNotBlank(biddingInfoDTO.getWebName())) {
-            biddingInfoDTO.getConditions().add(Restrict.like("webName", biddingInfoDTO.getWebName()));
+            biddingInfoDTO.getConditions().add(Restrict.eq("webName", biddingInfoDTO.getWebName()));
         }
         /**
          * 网址
          */
         if (StringUtils.isNotBlank(biddingInfoDTO.getUrl())) {
-            biddingInfoDTO.getConditions().add(Restrict.like("url", biddingInfoDTO.getUrl()));
+            biddingInfoDTO.getConditions().add(Restrict.eq("url", biddingInfoDTO.getUrl()));
         }
         /**
          * 省份
          */
 
         if (StringUtils.isNotBlank(biddingInfoDTO.getProvinces())) {
-            biddingInfoDTO.getConditions().add(Restrict.like("provinces", biddingInfoDTO.getProvinces()));
+            biddingInfoDTO.getConditions().add(Restrict.eq("provinces", biddingInfoDTO.getProvinces()));
 
         }
         /**
          * 地市
          */
         if (StringUtils.isNotBlank(biddingInfoDTO.getCities())) {
-            biddingInfoDTO.getConditions().add(Restrict.like("cities", biddingInfoDTO.getCities()));
+            biddingInfoDTO.getConditions().add(Restrict.eq("cities", biddingInfoDTO.getCities()));
 
         }
-        List<BiddingInfo> biddingInfos = super.findByCis(biddingInfoDTO, true);
-        List<BiddingInfoBO> biddingInfoBOS = BeanTransform.copyProperties(biddingInfos, BiddingInfoBO.class);
-        return biddingInfoBOS;
     }
 
     @Override

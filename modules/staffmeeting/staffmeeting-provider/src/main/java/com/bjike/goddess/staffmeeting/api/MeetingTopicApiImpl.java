@@ -5,6 +5,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffmeeting.bo.MeetingTopicBO;
 import com.bjike.goddess.staffmeeting.dto.MeetingTopicDTO;
 import com.bjike.goddess.staffmeeting.service.MeetingTopicSer;
+import com.bjike.goddess.staffmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.staffmeeting.to.MeetingTopicTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,16 @@ import java.util.List;
 public class MeetingTopicApiImpl implements MeetingTopicAPI {
     @Autowired
     private MeetingTopicSer meetingTopicSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return meetingTopicSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return meetingTopicSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public MeetingTopicBO add(MeetingTopicTO to) throws SerException {

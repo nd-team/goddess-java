@@ -5,14 +5,18 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.staffwelfaremanage.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.dto.UserDetailDTO;
 import com.bjike.goddess.user.vo.UserDetailVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -30,6 +34,8 @@ public class StaffBirthdayAct {
 
     @Autowired
     private UserDetailAPI userDetailAPI;
+
+
 
     /**
      * 查询员工生日信息

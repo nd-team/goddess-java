@@ -10,6 +10,10 @@ package com.bjike.goddess.accommodation.vo;
  */
 public class RentalApplyVO {
     /**
+     * 租房编号
+     */
+    private String rentNum;
+    /**
      * 姓名（用户名称）
      */
     private String name;
@@ -74,25 +78,49 @@ public class RentalApplyVO {
      */
     private Double rent;
     /**
+     * 房租缴费方
+     */
+    private String rentPay;
+    /**
      * 房租管理费
      */
     private Double rentFee;
+    /**
+     * 房租管理费缴费方
+     */
+    private String rentFeePay;
     /**
      * 卫生费
      */
     private Double sanitation;
     /**
-     * 水费计价
+     * 卫生费缴费方
+     */
+    private String sanitationPay;
+    /**
+     * 水费计价额
      */
     private Double water;
     /**
-     * 电费计价
+     * 水费缴费方
+     */
+    private String waterPay;
+    /**
+     * 电费计价额
      */
     private Double energy;
+    /**
+     * 电费缴费方
+     */
+    private String energyPay;
     /**
      * 网络套餐费用
      */
     private Double network;
+    /**
+     * 网络套餐费用缴费方
+     */
+    private String networkPay;
     /**
      * 项目经理
      */
@@ -102,25 +130,33 @@ public class RentalApplyVO {
      */
     private String manageOpinion;
     /**
-     * 项目经理是否通过(是/否)
+     * 项目经理是否通过(通过/不通过)
      */
     private String managePass;
     /**
-     * 商务发展部意见
+     * 商务发展部意见(通过/不通过)
      */
     private String commerceRemark;
     /**
-     * 综合资源部意见
+     * 综合资源部意见(通过/不通过)
      */
     private String comprehensiveRemark;
     /**
-     * 运营财务部意见
+     * 运营财务部意见(通过/不通过)
      */
     private String operatingRemark;
     /**
      * 备注
      */
     private String remark;
+
+    public String getRentNum() {
+        return rentNum;
+    }
+
+    public void setRentNum(String rentNum) {
+        this.rentNum = rentNum;
+    }
 
     public String getName() {
         return name;
@@ -344,5 +380,53 @@ public class RentalApplyVO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getRentPay() {
+        return rentPay;
+    }
+
+    public void setRentPay(String rentPay) {
+        this.rentPay = rentPay;
+    }
+
+    public String getRentFeePay() {
+        return rentFeePay;
+    }
+
+    public void setRentFeePay(String rentFeePay) {
+        this.rentFeePay = rentFeePay;
+    }
+
+    public String getSanitationPay() {
+        return sanitationPay;
+    }
+
+    public void setSanitationPay(String sanitationPay) {
+        this.sanitationPay = sanitationPay;
+    }
+
+    public String getWaterPay() {
+        return waterPay;
+    }
+
+    public void setWaterPay(String waterPay) {
+        this.waterPay = waterPay;
+    }
+
+    public String getEnergyPay() {
+        return energyPay;
+    }
+
+    public void setEnergyPay(String energyPay) {
+        this.energyPay = energyPay;
+    }
+
+    public String getNetworkPay() {
+        return networkPay;
+    }
+
+    public void setNetworkPay(String networkPay) {
+        this.networkPay = networkPay;
     }
 }

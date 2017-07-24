@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffwelfaremanage.bo.PersonalFestivalBO;
 import com.bjike.goddess.staffwelfaremanage.dto.PersonalFestivalDTO;
 import com.bjike.goddess.staffwelfaremanage.service.PersonalFestivalSer;
+import com.bjike.goddess.staffwelfaremanage.to.GuidePermissionTO;
 import com.bjike.goddess.staffwelfaremanage.to.PersonalFestivalTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,16 @@ public class PersonalFestivalApiImpl implements PersonalFestivalAPI {
 
     @Autowired
     private PersonalFestivalSer personalFestivalSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return personalFestivalSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return personalFestivalSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public PersonalFestivalBO addModel(PersonalFestivalTO to) throws SerException {

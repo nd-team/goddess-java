@@ -6,6 +6,7 @@ import com.bjike.goddess.recruit.bo.RecruitDemandBO;
 import com.bjike.goddess.recruit.dto.RecruitDemandDTO;
 import com.bjike.goddess.recruit.entity.RecruitDemand;
 import com.bjike.goddess.recruit.service.RecruitDemandSer;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.RecruitDemandTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -97,4 +98,13 @@ public class RecruitDemandApiImpl implements RecruitDemandAPI {
         recruitDemandSer.update(recruitDemandTO);
     }
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return recruitDemandSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return recruitDemandSer.guidePermission(guidePermissionTO);
+    }
 }

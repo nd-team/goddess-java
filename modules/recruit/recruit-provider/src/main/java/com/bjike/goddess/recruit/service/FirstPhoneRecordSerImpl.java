@@ -176,6 +176,7 @@ public class FirstPhoneRecordSerImpl extends ServiceImpl<FirstPhoneRecord, First
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public List<FirstPhoneRecordBO> list(FirstPhoneRecordDTO dto) throws SerException {
+        checkSeeIdentity();
         List<FirstPhoneRecord> list = super.findByPage(dto);
         List<FirstPhoneRecordBO> listBO = BeanTransform.copyProperties(list, FirstPhoneRecordBO.class);
         return listBO;
@@ -191,6 +192,7 @@ public class FirstPhoneRecordSerImpl extends ServiceImpl<FirstPhoneRecord, First
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public FirstPhoneRecordBO save(FirstPhoneRecordTO to) throws SerException {
+        checkAddIdentity();
         FirstPhoneRecord failFirstInterviewReason = BeanTransform.copyProperties(to, FirstPhoneRecord.class, true);
         failFirstInterviewReason = super.save(failFirstInterviewReason);
         FirstPhoneRecordBO bo = BeanTransform.copyProperties(failFirstInterviewReason, FirstPhoneRecordBO.class);
@@ -206,6 +208,7 @@ public class FirstPhoneRecordSerImpl extends ServiceImpl<FirstPhoneRecord, First
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(FirstPhoneRecordTO to) throws SerException {
+        checkAddIdentity();
         if (StringUtils.isNotEmpty(to.getId())) {
             FirstPhoneRecord model = super.findById(to.getId());
             if (model != null) {
@@ -241,6 +244,7 @@ public class FirstPhoneRecordSerImpl extends ServiceImpl<FirstPhoneRecord, First
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void remove(FirstPhoneRecord entity) throws SerException {
+        checkAddIdentity();
         super.remove(entity);
     }
 

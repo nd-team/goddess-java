@@ -5,8 +5,10 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffmeeting.bo.FeedbackComplainBO;
 import com.bjike.goddess.staffmeeting.dto.FeedbackComplainDTO;
 import com.bjike.goddess.staffmeeting.entity.FeedbackComplain;
+import com.bjike.goddess.staffmeeting.excel.SonPermissionObject;
 import com.bjike.goddess.staffmeeting.service.FeedbackComplainSer;
 import com.bjike.goddess.staffmeeting.to.FeedbackComplainTO;
+import com.bjike.goddess.staffmeeting.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,16 @@ import java.util.List;
  */
 @Service("feedbackComplainApiImpl")
 public class FeedbackComplainApiImpl implements FeedbackComplainAPI {
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return feedbackComplainSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return feedbackComplainSer.guidePermission(guidePermissionTO);
+    }
 
     @Autowired
     private FeedbackComplainSer feedbackComplainSer;

@@ -5,6 +5,7 @@ import com.bjike.goddess.allmeeting.bo.OrganizeForSummaryBO;
 import com.bjike.goddess.allmeeting.dto.ConciseSummaryDTO;
 import com.bjike.goddess.allmeeting.service.ConciseSummarySer;
 import com.bjike.goddess.allmeeting.to.ConciseSummaryTO;
+import com.bjike.goddess.allmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,15 @@ import java.util.List;
  */
 @Service("conciseSummaryApiImpl")
 public class ConciseSummaryApiImpl implements ConciseSummaryAPI {
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return conciseSummarySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return conciseSummarySer.guidePermission(guidePermissionTO);
+    }
 
     @Autowired
     private ConciseSummarySer conciseSummarySer;

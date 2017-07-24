@@ -4,7 +4,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.interiorrecommend.bo.AwardInfoBO;
 import com.bjike.goddess.interiorrecommend.bo.AwardStandardBO;
 import com.bjike.goddess.interiorrecommend.dto.AwardInfoDTO;
+import com.bjike.goddess.interiorrecommend.excel.SonPermissionObject;
 import com.bjike.goddess.interiorrecommend.to.AwardInfoTO;
+import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -18,6 +20,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface AwardInfoAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 编辑奖励信息

@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.staffmeeting.bo.MeetingSummaryBO;
 import com.bjike.goddess.staffmeeting.dto.MeetingSummaryDTO;
 import com.bjike.goddess.staffmeeting.entity.MeetingSummary;
+import com.bjike.goddess.staffmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.staffmeeting.to.MeetingSummaryTO;
 
 import java.util.List;
@@ -19,6 +20,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface MeetingSummarySer extends Ser<MeetingSummary, MeetingSummaryDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 根据Id查询纪要并填充属性

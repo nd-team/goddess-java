@@ -16,8 +16,13 @@ import java.time.LocalDate;
  * @Copy: [com.bjike]
  */
 @Entity
-@Table(name = "accommodation_rentalPrecept")
+@Table(name = "accommodation_rentalprecept")
 public class RentalPrecept extends BaseEntity {
+    /**
+     * 租房编号
+     */
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '租房编号'",unique = true)
+    private String rentNum;
     /**
      * 姓名（用户名称）
      */
@@ -149,6 +154,14 @@ public class RentalPrecept extends BaseEntity {
      */
     @Column(columnDefinition = "VARCHAR(255) COMMENT '备注'")
     private String remark;
+
+    public String getRentNum() {
+        return rentNum;
+    }
+
+    public void setRentNum(String rentNum) {
+        this.rentNum = rentNum;
+    }
 
     public String getName() {
         return name;

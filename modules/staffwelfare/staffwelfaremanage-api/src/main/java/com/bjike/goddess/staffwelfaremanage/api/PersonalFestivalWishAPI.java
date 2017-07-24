@@ -3,6 +3,8 @@ package com.bjike.goddess.staffwelfaremanage.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffwelfaremanage.bo.PersonalFestivalWishBO;
 import com.bjike.goddess.staffwelfaremanage.dto.PersonalFestivalWishDTO;
+import com.bjike.goddess.staffwelfaremanage.excel.SonPermissionObject;
+import com.bjike.goddess.staffwelfaremanage.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -16,6 +18,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface PersonalFestivalWishAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 分页查询个人节日祝福

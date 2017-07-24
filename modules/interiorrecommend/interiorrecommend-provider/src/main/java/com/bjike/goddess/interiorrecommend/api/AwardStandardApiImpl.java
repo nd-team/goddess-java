@@ -5,6 +5,7 @@ import com.bjike.goddess.interiorrecommend.bo.AwardStandardBO;
 import com.bjike.goddess.interiorrecommend.dto.AwardStandardDTO;
 import com.bjike.goddess.interiorrecommend.service.AwardStandardSer;
 import com.bjike.goddess.interiorrecommend.to.AwardStandardTO;
+import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,5 +44,15 @@ public class AwardStandardApiImpl implements AwardStandardAPI {
     @Override
     public List<AwardStandardBO> pageList(AwardStandardDTO dto) throws SerException {
         return awardStandardSer.pageList(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return awardStandardSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return awardStandardSer.guidePermission(guidePermissionTO);
     }
 }

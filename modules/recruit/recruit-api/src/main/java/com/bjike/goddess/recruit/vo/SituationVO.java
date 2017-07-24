@@ -51,11 +51,6 @@ public class SituationVO {
     private Integer dayFilterCountDiff;
 
     /**
-     * 使用建立点数
-     */
-    private String buildCount;
-
-    /**
      * 计划日邀约面试量
      */
     private Integer planInviteCount;
@@ -168,14 +163,6 @@ public class SituationVO {
 
     public void setDayFilterCountDiff(Integer dayFilterCountDiff) {
         this.dayFilterCountDiff = dayFilterCountDiff;
-    }
-
-    public String getBuildCount() {
-        return buildCount;
-    }
-
-    public void setBuildCount(String buildCount) {
-        this.buildCount = buildCount;
     }
 
     public Integer getPlanInviteCount() {

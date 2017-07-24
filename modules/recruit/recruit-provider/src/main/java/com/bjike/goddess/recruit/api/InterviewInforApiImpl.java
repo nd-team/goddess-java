@@ -6,6 +6,7 @@ import com.bjike.goddess.recruit.bo.InterviewInforBO;
 import com.bjike.goddess.recruit.dto.InterviewInforDTO;
 import com.bjike.goddess.recruit.entity.InterviewInfor;
 import com.bjike.goddess.recruit.service.InterviewInforSer;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.InterviewInforTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -108,5 +109,15 @@ public class InterviewInforApiImpl implements InterviewInforAPI {
     @Override
     public void zjbAudit(String id, Boolean whetherPassBoss, String bossAdvice) throws SerException {
         interviewInforSer.zjbAudit(id, whetherPassBoss, bossAdvice);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return interviewInforSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return interviewInforSer.guidePermission(guidePermissionTO);
     }
 }

@@ -7,6 +7,7 @@ import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.NotEntryReasonTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 未入职原因
@@ -82,4 +83,12 @@ public interface NotEntryReasonAPI {
      * @throws SerException
      */
     void update(NotEntryReasonTO notEntryReasonTO) throws SerException;
+
+    /**
+     * 查找所有未入职原因
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allReason() throws SerException;
 }

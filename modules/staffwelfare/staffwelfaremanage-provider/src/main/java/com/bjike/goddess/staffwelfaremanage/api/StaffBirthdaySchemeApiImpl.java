@@ -9,6 +9,7 @@ import com.bjike.goddess.staffwelfaremanage.entity.HeadPortraitHat;
 import com.bjike.goddess.staffwelfaremanage.service.HeadPortraitHatSer;
 import com.bjike.goddess.staffwelfaremanage.service.StaffBirthdaySchemeSer;
 import com.bjike.goddess.staffwelfaremanage.service.WishesStatementSer;
+import com.bjike.goddess.staffwelfaremanage.to.GuidePermissionTO;
 import com.bjike.goddess.staffwelfaremanage.to.StaffBirthdaySchemeTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,16 @@ public class StaffBirthdaySchemeApiImpl implements StaffBirthdaySchemeAPI {
     private WishesStatementSer wishesStatementSer;
     @Autowired
     private HeadPortraitHatSer headPortraitHatSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return staffBirthdaySchemeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return staffBirthdaySchemeSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public StaffBirthdaySchemeBO addModel(StaffBirthdaySchemeTO to) throws SerException {

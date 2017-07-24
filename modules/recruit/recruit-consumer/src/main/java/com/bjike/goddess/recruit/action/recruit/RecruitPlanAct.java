@@ -9,13 +9,12 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.api.RecruitPlanAPI;
-import com.bjike.goddess.recruit.bo.NotEntryReasonBO;
+import com.bjike.goddess.recruit.bo.CountBO;
 import com.bjike.goddess.recruit.bo.RecruitPlanBO;
-import com.bjike.goddess.recruit.dto.NotEntryReasonDTO;
 import com.bjike.goddess.recruit.dto.RecruitPlanDTO;
-import com.bjike.goddess.recruit.to.NotEntryReasonTO;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.RecruitPlanTO;
-import com.bjike.goddess.recruit.vo.NotEntryReasonVO;
+import com.bjike.goddess.recruit.vo.CountVO;
 import com.bjike.goddess.recruit.vo.RecruitPlanVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -41,6 +40,29 @@ public class RecruitPlanAct {
 
     @Autowired
     private RecruitPlanAPI recruitPlanAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = recruitPlanAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 根据id查询招聘计划
@@ -153,4 +175,73 @@ public class RecruitPlanAct {
         }
     }
 
+    /**
+     * 计划与实际对比
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/countSituation")
+    public Result countSituation(@Validated({RecruitPlanDTO.Situation.class}) RecruitPlanDTO dto, BindingResult result) throws ActException {
+        try {
+            return ActResult.initialize(recruitPlanAPI.countSituation(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 日汇总
+     *
+     * @param dto dto
+     * @return class CountVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/dayCount")
+    public Result dayCount(@Validated({RecruitPlanDTO.DAY.class}) RecruitPlanDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            List<CountBO> list = recruitPlanAPI.dayCount(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list, CountVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 周汇总
+     *
+     * @param dto dto
+     * @return class CountVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/weekCount")
+    public Result weekCount(@Validated({RecruitPlanDTO.WEEK.class}) RecruitPlanDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            List<CountBO> list = recruitPlanAPI.weekCount(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list, CountVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 月汇总
+     *
+     * @param dto dto
+     * @return class CountVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/monthCount")
+    public Result monthCount(@Validated({RecruitPlanDTO.MONTH.class}) RecruitPlanDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            List<CountBO> list = recruitPlanAPI.monthCount(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list, CountVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

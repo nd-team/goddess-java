@@ -7,6 +7,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffmeeting.bo.MeetingOrganizeBO;
 import com.bjike.goddess.staffmeeting.dto.MeetingOrganizeDTO;
 import com.bjike.goddess.staffmeeting.service.MeetingOrganizeSer;
+import com.bjike.goddess.staffmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.staffmeeting.to.MeetingOrganizeTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,16 @@ public class MeetingOrganizeApiImpl implements MeetingOrganizeAPI {
 
     @Autowired
     private MeetingOrganizeSer meetingOrganizeSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return meetingOrganizeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return meetingOrganizeSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long count(MeetingOrganizeDTO dto) throws SerException {

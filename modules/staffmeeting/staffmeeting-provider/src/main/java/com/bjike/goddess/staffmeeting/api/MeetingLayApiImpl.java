@@ -5,6 +5,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffmeeting.bo.MeetingLayBO;
 import com.bjike.goddess.staffmeeting.dto.MeetingLayDTO;
 import com.bjike.goddess.staffmeeting.service.MeetingLaySer;
+import com.bjike.goddess.staffmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.staffmeeting.to.MeetingLayTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,16 @@ public class MeetingLayApiImpl implements MeetingLayAPI {
 
     @Autowired
     private MeetingLaySer meetingLaySer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return meetingLaySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return meetingLaySer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public MeetingLayBO add(MeetingLayTO to) throws SerException {

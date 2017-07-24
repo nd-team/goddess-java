@@ -202,7 +202,15 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
 
     @Override
     public Long countProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws SerException {
-        searchProblemHandlingResult(problemHandlingResultDTO);
+        if (StringUtils.isNotBlank(problemHandlingResultDTO.getInternalProjectName())) {
+            problemHandlingResultDTO.getConditions().add(Restrict.like("internalProjectName", problemHandlingResultDTO.getInternalProjectName()));
+        }
+        if (StringUtils.isNotBlank(problemHandlingResultDTO.getProjectType())) {
+            problemHandlingResultDTO.getConditions().add(Restrict.like("projectType", problemHandlingResultDTO.getProjectType()));
+        }
+        if (StringUtils.isNotBlank(problemHandlingResultDTO.getProblemObject())) {
+            problemHandlingResultDTO.getConditions().add(Restrict.like("problemObject", problemHandlingResultDTO.getProblemObject()));
+        }
         Long counts = super.count(problemHandlingResultDTO);
         return counts;
     }

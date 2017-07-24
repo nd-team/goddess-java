@@ -10,6 +10,7 @@ import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.vo.SonPermissionObject;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 未应约初试原因
@@ -67,4 +68,12 @@ public interface FailFirstInterviewReasonSer extends Ser<FailFirstInterviewReaso
      * @throws SerException
      */
     void update(FailFirstInterviewReasonTO failFirstInterviewReasonTO) throws SerException;
+
+    /**
+     * 查找所有未应约初试原因
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allReason() throws SerException;
 }
