@@ -38,13 +38,13 @@ public class MarketServeSummary extends BaseEntity {
     /**
      * 创建/修改人
      */
-    @Column(name = "createUser", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '创建/修改人'")
+    @Column(name = "createUser",  columnDefinition = "VARCHAR(255) COMMENT '创建/修改人'")
     private String createUser;
 
     /**
      * 更新时间
      */
-    @Column(name = "updateTime", nullable = false, columnDefinition = "DATETIME COMMENT '更新时间'")
+    @Column(name = "updateTime",  columnDefinition = "DATETIME COMMENT '更新时间'")
     private LocalDateTime updateTime;
 
     /**
@@ -62,25 +62,25 @@ public class MarketServeSummary extends BaseEntity {
     /**
      * 发送间隔
      */
-    @Column(name = "sendInterval", nullable = false, columnDefinition = "DECIMAL(10,2) COMMENT '发送间隔'")
+    @Column(name = "sendInterval", columnDefinition = "DECIMAL(10,2) COMMENT '发送间隔'")
     private Double sendInterval;
 
     /**
      * 发送时间格式
      */
-    @Column(name = "cycle", nullable = false, columnDefinition = "TINYINT(2) COMMENT '发送时间格式'")
+    @Column(name = "cycle",  columnDefinition = "TINYINT(2) COMMENT '发送时间格式'")
     private CycleType cycle;
 
     /**
      * 汇总间隔开始时间
      */
-    @Column(name = "startTime", nullable = false, columnDefinition = "DATETIME COMMENT '汇总间隔开始时间'")
+    @Column(name = "startTime",columnDefinition = "DATETIME COMMENT '汇总间隔开始时间'")
     private LocalDateTime startTime;
 
     /**
      * 汇总间隔结束时间
      */
-    @Column(name = "endTime", nullable = false, columnDefinition = "DATETIME COMMENT '汇总间隔结束时间'")
+    @Column(name = "endTime",  columnDefinition = "DATETIME COMMENT '汇总间隔结束时间'")
     private LocalDateTime endTime;
 
     /**
@@ -92,7 +92,7 @@ public class MarketServeSummary extends BaseEntity {
     /**
      * 状态
      */
-    @Column(name = "status", nullable = false, columnDefinition = "TINYINT(2) COMMENT '状态'")
+    @Column(name = "status", columnDefinition = "TINYINT(2) COMMENT '状态'")
     private Status status;
 
 

@@ -2,6 +2,7 @@ package com.bjike.goddess.businsurance.service;
 
 import com.bjike.goddess.businsurance.bo.GroupByInsurerBO;
 import com.bjike.goddess.businsurance.to.GroupByInsurerTO;
+import com.bjike.goddess.businsurance.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.businsurance.entity.GroupByInsurer;
@@ -20,6 +21,19 @@ import java.util.List;
  */
 public interface GroupByInsurerSer extends Ser<GroupByInsurer, GroupByInsurerDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 被保险人信息列表总条数
      *

@@ -1,6 +1,7 @@
 package com.bjike.goddess.businsurance.service;
 
 import com.bjike.goddess.businsurance.bo.InsureRecordBO;
+import com.bjike.goddess.businsurance.to.GuidePermissionTO;
 import com.bjike.goddess.businsurance.to.InsureRecordTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -20,6 +21,19 @@ import java.util.List;
  */
 public interface InsureRecordSer extends Ser<InsureRecord, InsureRecordDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 意外险记录列表总条数
      *
@@ -59,7 +73,13 @@ public interface InsureRecordSer extends Ser<InsureRecord, InsureRecordDTO> {
     default InsureRecordBO getInsureRecord(String id ) throws SerException {return null;}
 
 
-
+    /**
+     * 导出excel
+     *
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel( ) throws SerException{return null;}
 
 
 

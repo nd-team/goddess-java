@@ -102,6 +102,30 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     }
 
     /**
+     * 核对审核权限(运营商务部)
+     *
+     * @throws SerException
+     */
+    private void checkBusinPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是运营商务部人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
      * 核对审核权限(层次)
      *
      * @throws SerException
@@ -114,7 +138,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
         String userName = userBO.getUsername();
 
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.arrCusPermission("2");
+            flag = cusPermissionSer.arrCusPermission("3");
         } else {
             flag = true;
         }
@@ -143,6 +167,23 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     }
 
     /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideBusinIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
      * 核对审核权限（层次级别）
      */
     private Boolean guideAuditAIdentity() throws SerException {
@@ -152,7 +193,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.arrCusPermission("2");
+            flag = cusPermissionSer.arrCusPermission("3");
         } else {
             flag = true;
         }
@@ -163,16 +204,18 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     public List<SonPermissionObject> sonPermission() throws SerException {
         List<SonPermissionObject> list = new ArrayList<>();
         String userToken = RpcTransmit.getUserToken();
-        Boolean flagSummSeeSign = guideIdentity();
+        Boolean flagSee = guideIdentity();
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSummAISign = guideAuditAIdentity();
+        Boolean flagAuditA = guideAuditAIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAuditB = guideBusinIdentity();
         RpcTransmit.transmitUserToken(userToken);
         SonPermissionObject obj = new SonPermissionObject();
 
         obj = new SonPermissionObject();
         obj.setName("marketservesummary");
         obj.setDescribesion("市场活动招待记录汇总及发送邮件");
-        if (flagSummSeeSign || flagSummAISign) {
+        if (flagSee || flagAuditA || flagAuditB) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -256,7 +299,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
                 flag = guideIdentity();
                 break;
             case MONEYAUDIT:
-                flag = guideIdentity();
+                flag = guideBusinIdentity();
                 break;
             case DECISIONAUDIT:
                 flag = guideAuditAIdentity();
@@ -410,7 +453,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      */
     @Override
     public List<ServeSummaryBO> summarize(Boolean type, String[] projectGroups, String startTimeString, String endTimeString) throws SerException {
-        //checkPermission();
+        checkPermission();
         if(type==null){
             throw new SerException("汇总类型不能为空");
         }else {

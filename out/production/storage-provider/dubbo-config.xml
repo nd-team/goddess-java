@@ -12,16 +12,15 @@
     <context:property-placeholder location="classpath:dubbo.properties"/>
 
     <dubbo:application name="${dubbo.application.name}"/>
+    <dubbo:provider timeout="${dubbo.provider.timeout}" filter="userFilter"/>
     <dubbo:consumer check="false" timeout="15000"/>
     <dubbo:registry address="${dubbo.registry.address}"/>
+    <dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}"/>
+    <dubbo:protocol name="hessian" port="5555" server="jetty"/>
 
-    <!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
-    <dubbo:reference validation="true" interface="com.bjike.goddess.annual.api.AnnualApplyAPI" id="annualApplyApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.annual.api.AnnualArrangementStandardAPI"
-                     id="annualArrangementStandardApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.annual.api.AnnualInfoAPI" id="annualInfoApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.annual.api.AnnualStandardAPI"
-                     id="annualStandardApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+    <!--发布接口,供其他模块调用-->
+    <dubbo:service  protocol="hessian"  interface="com.bjike.goddess.storage.api.FileAPI" ref="fileApiImpl" />
+    <dubbo:service  interface="com.bjike.goddess.storage.api.StorageUserAPI" ref="storageUserApiImpl"/>
+    <dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
 </beans>

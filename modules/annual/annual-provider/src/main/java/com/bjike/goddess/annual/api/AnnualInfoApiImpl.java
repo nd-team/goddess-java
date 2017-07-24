@@ -3,6 +3,7 @@ package com.bjike.goddess.annual.api;
 import com.bjike.goddess.annual.bo.AnnualInfoBO;
 import com.bjike.goddess.annual.dto.AnnualInfoDTO;
 import com.bjike.goddess.annual.service.AnnualInfoSer;
+import com.bjike.goddess.annual.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,16 @@ public class AnnualInfoApiImpl implements AnnualInfoAPI {
 
     @Autowired
     private AnnualInfoSer annualInfoSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return annualInfoSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return annualInfoSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public List<AnnualInfoBO> findByUsername(String username) throws SerException {

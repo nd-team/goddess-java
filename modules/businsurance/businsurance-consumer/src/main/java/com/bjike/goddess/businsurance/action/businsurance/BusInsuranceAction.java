@@ -4,19 +4,30 @@ import com.bjike.goddess.businsurance.api.BusInsuranceAPI;
 import com.bjike.goddess.businsurance.bo.BusInsuranceBO;
 import com.bjike.goddess.businsurance.dto.BusInsuranceDTO;
 import com.bjike.goddess.businsurance.to.BusInsuranceTO;
+import com.bjike.goddess.businsurance.to.SiginManageDeleteFileTO;
 import com.bjike.goddess.businsurance.vo.BusInsuranceVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.storage.api.FileAPI;
+import com.bjike.goddess.storage.to.FileInfo;
+import com.bjike.goddess.storage.vo.FileVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,10 +41,12 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("businsurance")
-public class BusInsuranceAction {
+public class BusInsuranceAction extends BaseFileAction{
 
     @Autowired
     private BusInsuranceAPI busInsuranceAPI;
+    @Autowired
+    private FileAPI fileAPI;
 
     /**
      *  商业保险方案列表总条数
@@ -226,25 +239,149 @@ public class BusInsuranceAction {
 
 
     /**
-     * 导出
+     * 导出excel
      *
-     * @param busInsuranceDTO busInsuranceDTO
-     * @des 导出
-     * @return  class BusInsuranceVO
+     * @param dto 商业保险方案
+     * @des 导出 商业保险方案
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/export")
-    public Result export(BusInsuranceDTO busInsuranceDTO ) throws ActException {
-//        try {
-//            BusInsuranceBO busInsuranceBO1 = busInsuranceAPI.getBusInsurance(id);
-//            return ActResult.initialize(BeanTransform.copyProperties(busInsuranceBO1,BusInsuranceVO.class,true));
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-        return ActResult.initialize(null);
+    public Result exportReport(BusInsuranceDTO dto, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "商业保险方案.xlsx";
+            super.writeOutFile(response, busInsuranceAPI.exportExcel(dto), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
     }
 
+    /**
+     * 上传附件
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/uploadFile/{id}")
+    public Result uploadFile(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            // /id/....
+            String path = "/" + id;
+            List<InputStream> inputStreams = getInputStreams(request, path);
+            fileAPI.upload(inputStreams);
+            return new ActResult("upload success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
+    /**
+     * 文件附件列表
+     *
+     * @param id id
+     * @return class FileVO
+     * @version v1
+     */
+    @GetMapping("v1/listFile/{id}")
+    public Result list(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            String path = "/" + id;
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
+            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
+            return ActResult.initialize(files);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
-    
+    /**
+     * 文件下载
+     *
+     * @param path 文件路径
+     * @version v1
+     */
+    @GetMapping("v1/downloadFile")
+    public Result download(@RequestParam String path, HttpServletRequest request, HttpServletResponse response) throws ActException {
+        try {
+            //该文件的路径
+            FileInfo fileInfo = new FileInfo();
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
+            fileInfo.setPath(path);
+            String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
+            byte[] buffer = fileAPI.download(fileInfo);
+            writeOutFile(response, buffer, filename);
+            return new ActResult("download success");
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
+
+    /**
+     * 删除文件或文件夹
+     *
+     * @param siginManageDeleteFileTO 多文件信息路径
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/deleteFile")
+    public Result delFile(@Validated(SiginManageDeleteFileTO.TestDEL.class) SiginManageDeleteFileTO siginManageDeleteFileTO, HttpServletRequest request) throws SerException {
+        if (null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length >= 0) {
+            Object storageToken = request.getAttribute("storageToken");
+            fileAPI.delFile(storageToken.toString(), siginManageDeleteFileTO.getPaths());
+        }
+        return new ActResult("delFile success");
+    }
+
+    /**
+     * 获取所有保险公司
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findAllInsureComapny")
+    public Result findAllInsureComapny() throws ActException {
+        try {
+            List<String> insureComapny = new ArrayList<>();
+            insureComapny = busInsuranceAPI.getAllInsureComapny();
+            return ActResult.initialize(insureComapny);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取投保险种
+     */
+    @GetMapping("v1/findAllInsureType")
+    public Result findAllInsureType() throws ActException {
+        try {
+            List<String> insureType = new ArrayList<>();
+            insureType = busInsuranceAPI.getAllInsureType();
+            return ActResult.initialize(insureType);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取保险条件
+     */
+    @GetMapping("v1/findAllInsureCondition")
+    public Result findAllInsureCondition() throws ActException {
+        try {
+            List<String> insureCondition = new ArrayList<>();
+            insureCondition = busInsuranceAPI.getAllInsureCondition();
+            return ActResult.initialize(insureCondition);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }
