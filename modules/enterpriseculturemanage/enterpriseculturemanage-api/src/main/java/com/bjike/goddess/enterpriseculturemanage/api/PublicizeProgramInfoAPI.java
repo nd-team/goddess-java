@@ -5,6 +5,7 @@ import com.bjike.goddess.enterpriseculturemanage.bo.EnterpriseCultureInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.bo.PublicizeProgramInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.dto.PublicizeProgramInfoDTO;
 import com.bjike.goddess.enterpriseculturemanage.enums.AuditResult;
+import com.bjike.goddess.enterpriseculturemanage.to.GuidePermissionTO;
 import com.bjike.goddess.enterpriseculturemanage.to.PublicizeProgramInfoTO;
 
 import java.util.List;
@@ -19,6 +20,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface PublicizeProgramInfoAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 查询企业文化信息

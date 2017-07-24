@@ -8,6 +8,7 @@ import com.bjike.goddess.enterpriseculturemanage.dto.PublicizeProgramInfoDTO;
 import com.bjike.goddess.enterpriseculturemanage.enums.AuditResult;
 import com.bjike.goddess.enterpriseculturemanage.service.EnterpriseCultureInfoSer;
 import com.bjike.goddess.enterpriseculturemanage.service.PublicizeProgramInfoSer;
+import com.bjike.goddess.enterpriseculturemanage.to.GuidePermissionTO;
 import com.bjike.goddess.enterpriseculturemanage.to.PublicizeProgramInfoTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,16 @@ public class PublicizeProgramInfoApiImpl implements PublicizeProgramInfoAPI {
     private PublicizeProgramInfoSer publicizeProgramInfoSer;
     @Autowired
     private EnterpriseCultureInfoSer enterpriseCultureInfoSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return publicizeProgramInfoSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return enterpriseCultureInfoSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public List<EnterpriseCultureInfoBO> findInfo() throws SerException {
