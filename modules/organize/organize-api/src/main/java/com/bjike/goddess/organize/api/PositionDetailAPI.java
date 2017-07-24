@@ -205,4 +205,12 @@ public interface PositionDetailAPI {
         return null;
     }
 
+    /**
+     * 查询地区
+     */
+    default List<String> findArea() throws SerException {
+        return null;
+    }
+
+    ;
 }

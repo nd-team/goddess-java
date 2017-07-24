@@ -114,4 +114,6 @@ public class PositionDetailApiImpl implements PositionDetailAPI {
     public List<OpinionBO> findAllOpinion() throws SerException {
         return positionDetailSer.findAllOpinion();
     }
+
+
 }

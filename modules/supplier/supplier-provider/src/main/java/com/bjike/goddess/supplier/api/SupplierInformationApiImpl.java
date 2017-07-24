@@ -30,6 +30,16 @@ public class SupplierInformationApiImpl implements SupplierInformationAPI {
     private SupplierInformationSer supplierInformationSer;
 
     @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return supplierInformationSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return supplierInformationSer.guidePermission( guidePermissionTO );
+    }
+
+    @Override
     public SupplierInformationBO save(SupplierInformationTO to) throws SerException {
         return supplierInformationSer.save(to);
     }
@@ -81,17 +91,12 @@ public class SupplierInformationApiImpl implements SupplierInformationAPI {
     }
 
     @Override
-    public List<SonPermissionObject> sonPermission() throws SerException {
-        return supplierInformationSer.sonPermission();
-    }
-
-    @Override
     public List<SupplierInformationBO> findByName(String name) throws SerException {
         return supplierInformationSer.findByName(name);
     }
 
     @Override
-    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
-        return supplierInformationSer.guidePermission(guidePermissionTO);
+    public List<String> listType() throws SerException {
+        return supplierInformationSer.listType();
     }
 }

@@ -3,6 +3,7 @@ package com.bjike.goddess.supplier.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.supplier.bo.RewardSituationBO;
 import com.bjike.goddess.supplier.service.RewardSituationSer;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import com.bjike.goddess.supplier.to.RewardSituationTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,16 @@ public class RewardSituationApiImpl implements RewardSituationAPI {
 
     @Autowired
     private RewardSituationSer rewardSituationSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return rewardSituationSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return rewardSituationSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public List<RewardSituationBO> findByInformation(String info_id) throws SerException {

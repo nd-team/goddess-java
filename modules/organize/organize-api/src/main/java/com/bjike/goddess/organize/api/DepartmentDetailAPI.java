@@ -202,4 +202,6 @@ public interface DepartmentDetailAPI {
     default List<OpinionBO> findAllOpinion() throws SerException {
         return null;
     }
+
+
 }

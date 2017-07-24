@@ -1,10 +1,18 @@
 package com.bjike.goddess.attainment.action.attainment;
 
 import com.bjike.goddess.attainment.api.SurveyActualizeAPI;
+import com.bjike.goddess.attainment.api.SurveyPlanAPI;
+import com.bjike.goddess.attainment.bo.SurveyQuestionnaireOptionUsersBO;
+import com.bjike.goddess.attainment.bo.SurveyQuestionnaireUsersBO;
+import com.bjike.goddess.attainment.bo.SurveyQuestionnairesBO;
 import com.bjike.goddess.attainment.dto.SurveyActualizeDTO;
 import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.attainment.to.SurveyActualizeTO;
+import com.bjike.goddess.attainment.to.SurveyActualizesTO;
+import com.bjike.goddess.attainment.to.SurveyQuestionnaireOptionUsersTO;
+import com.bjike.goddess.attainment.vo.SurPlanvo;
 import com.bjike.goddess.attainment.vo.SurveyActualizeVO;
+import com.bjike.goddess.attainment.vo.SurveyActualizesVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -18,6 +26,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 实施记录
@@ -34,6 +43,8 @@ public class SurveyActualizeAct {
 
     @Autowired
     private SurveyActualizeAPI surveyActualizeAPI;
+    @Autowired
+    private SurveyPlanAPI surveyPlanAPI;
 
 
     /**
@@ -58,6 +69,7 @@ public class SurveyActualizeAct {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 保存
      *
@@ -169,4 +181,66 @@ public class SurveyActualizeAct {
         }
     }
 
+    /**
+     * 获取调研计划
+     *
+     * @return class SurPlanvo
+     * @version v1
+     */
+    @GetMapping("v1/getSurveyPlan")
+    public Result getSurveyPlan() throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(surveyPlanAPI.getSurveyPlan(), SurPlanvo.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 建立问卷
+     *
+     * @param to 问卷数据
+     * @version v1
+     */
+    @PostMapping("v1/questionnaire")
+    public Result questionnaire(@Validated(ADD.class) SurveyActualizesTO to, BindingResult result) throws ActException {
+        try {
+            surveyPlanAPI.questionnaire(to);
+            return ActResult.initialize("建立问卷成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据实施记录id查看问卷
+     *
+     * @return class SurveyQuestionnairesBO
+     * @version v1
+     */
+    @GetMapping("v1/getQuestionnaire/{id}")
+    public Result getQuestionnaire(@PathVariable String id) throws ActException {
+        try {
+            List<SurveyQuestionnairesBO> list = surveyPlanAPI.getQuestionnaire(id);
+//            return ActResult.initialize(BeanTransform.copyProperties(list, SurveyActualizesVO.class));
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据实施记录id问卷调研
+     *
+     * @version v1
+     */
+    @PostMapping("v1/editQuestionnaire")
+    public Result editQuestionnaire(@Validated(ADD.class) SurveyQuestionnaireOptionUsersTO to) throws ActException {
+        try {
+            List<SurveyQuestionnaireOptionUsersBO> list = surveyPlanAPI.editQuestionnaire(to);
+            return null;
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

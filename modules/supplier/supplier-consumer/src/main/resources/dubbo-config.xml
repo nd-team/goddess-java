@@ -35,5 +35,13 @@
                      id="collectSendApiImpl"/>
     <dubbo:reference validation="true" id="userSetPermissionApiImpl"
                      interface="com.bjike.goddess.organize.api.UserSetPermissionAPI"/>
+    <dubbo:reference validation="true" id="departmentDetailApiImpl"
+                     interface="com.bjike.goddess.organize.api.DepartmentDetailAPI"/>
+    <dubbo:reference validation="true" id="supCusPermissionApiImpl"
+                     interface="com.bjike.goddess.supplier.api.SupCusPermissionAPI"/>
+    <dubbo:reference validation="true" id="supCusPermissionOperateApiImpl"
+                     interface="com.bjike.goddess.supplier.api.SupCusPermissionOperateAPI"/>
+    <dubbo:reference validation="true" id="permissionApiImpl"
+                     interface="com.bjike.goddess.user.api.rbac.PermissionAPI"/>
 
 </beans>

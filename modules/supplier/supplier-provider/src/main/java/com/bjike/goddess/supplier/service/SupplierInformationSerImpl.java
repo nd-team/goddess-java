@@ -5,10 +5,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.supplier.bo.EnterpriseQualificationBO;
-import com.bjike.goddess.supplier.bo.SupplierInfoCollectBO;
-import com.bjike.goddess.supplier.bo.SupplierInfoCollectTitleBO;
-import com.bjike.goddess.supplier.bo.SupplierInformationBO;
+import com.bjike.goddess.supplier.bo.*;
 import com.bjike.goddess.supplier.dto.*;
 import com.bjike.goddess.supplier.entity.*;
 import com.bjike.goddess.supplier.enums.GuideAddrStatus;
@@ -57,7 +54,7 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
     @Autowired
     private SupplierTypeSer supplierTypeSer;
     @Autowired
-    private SupPermissionSer supPermissionSer;
+    private SupCusPermissionSer cusPermissionSer;
     @Autowired
     private UserAPI userAPI;
 
@@ -173,31 +170,31 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
         String message = "存在依赖关系,无法删除";
 
         ContactSituationDTO dto = new ContactSituationDTO();
-        dto.getConditions().add(Restrict.eq("id","information.id"));
-        List<ContactSituation> listContact = contactSituationSer.findByCis( dto );
+        dto.getConditions().add(Restrict.eq("id", "information.id"));
+        List<ContactSituation> listContact = contactSituationSer.findByCis(dto);
         if (listContact.size() > 0) {
-            contactSituationSer.remove(  listContact );
+            contactSituationSer.remove(listContact);
         }
 
         CooperationSituationDTO cooperationSituationDTO = new CooperationSituationDTO();
-        cooperationSituationDTO.getConditions().add(Restrict.eq("id","information_id"));
+        cooperationSituationDTO.getConditions().add(Restrict.eq("id", "information_id"));
         List<CooperationSituation> listcoop = cooperationSituationSer.findByCis(cooperationSituationDTO);
-        if (listcoop.size() > 0){
+        if (listcoop.size() > 0) {
             cooperationSituationSer.remove(listcoop);
         }
 
         EnterpriseQualificationDTO enterpriseQualificationDTO = new EnterpriseQualificationDTO();
-        enterpriseQualificationDTO.getConditions().add(Restrict.eq("id","information_id"));
+        enterpriseQualificationDTO.getConditions().add(Restrict.eq("id", "information_id"));
         List<EnterpriseQualification> listEnterp = enterpriseQualificationSer.findByCis(enterpriseQualificationDTO);
-        if (listEnterp.size() > 0){
+        if (listEnterp.size() > 0) {
             enterpriseQualificationSer.remove(listEnterp);
         }
 
         RewardSituationDTO rewardSituationDTO = new RewardSituationDTO();
-        rewardSituationDTO.getConditions().add(Restrict.eq("id","information_id"));
+        rewardSituationDTO.getConditions().add(Restrict.eq("id", "information_id"));
         List<RewardSituation> listrew = rewardSituationSer.findByCis(rewardSituationDTO);
 
-        if (listrew.size() > 0){
+        if (listrew.size() > 0) {
             rewardSituationSer.remove(listrew);
         }
         super.remove(entity);
@@ -228,8 +225,8 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
 
     @Override
     public void changeEnclosure(String id) throws SerException {
-        if (!supPermissionSer.getSupPermission(idFlag))
-            throw new SerException("您的帐号没有权限");
+//        if (!supPermissionSer.getSupPermission(idFlag))
+//            throw new SerException("您的帐号没有权限");
         SupplierInformation entity = super.findById(id);
         if (null == entity)
             throw new SerException("数据对象不能为空");
@@ -318,115 +315,260 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
         }
     }
 
-    @Override
-    public List<SonPermissionObject> sonPermission() throws SerException {
-        List<SonPermissionObject> list = new ArrayList<>();
-        String userToken = RpcTransmit.getUserToken();
-        Boolean flagSeeSign = supPermissionSer.getSupPermission(idFlag);
-        SonPermissionObject obj;
-
-        obj = new SonPermissionObject();
-        obj.setName("supplierinformation");
-        obj.setDescribesion("供应商基本信息");
-        if (flagSeeSign) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
-
-
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSee = supplierTypeSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        obj = new SonPermissionObject();
-        obj.setName("suppliertype");
-        obj.setDescribesion("供应商类型管理");
-        if (flagSee) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
-
-        flagSee = contactSituationSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        obj = new SonPermissionObject();
-        obj.setName("contactsituation");
-        obj.setDescribesion("联系情况");
-        if (flagSee) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
-
-        flagSee = cooperationSituationSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        obj = new SonPermissionObject();
-        obj.setName("cooperationsituation");
-        obj.setDescribesion("合作情况");
-        if (flagSee) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
-
-        flagSee = enterpriseQualificationSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        obj = new SonPermissionObject();
-        obj.setName("enterprisequalification");
-        obj.setDescribesion("企业资质");
-        if (flagSee) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
-
-        RpcTransmit.transmitUserToken(userToken);
-        flagSee = rewardSituationSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        obj = new SonPermissionObject();
-        obj.setName("rewardsituation");
-        obj.setDescribesion("获奖情况");
-        if (flagSee) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
-
-
-        RpcTransmit.transmitUserToken(userToken);
-        flagSee = collectSendSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        obj = new SonPermissionObject();
-        obj.setName("collectsend");
-        obj.setDescribesion("供应商汇总");
-        if (flagSee) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
-
-        return list;
-    }
+//    @Override
+//    public List<SonPermissionObject> sonPermission() throws SerException {
+//        List<SonPermissionObject> list = new ArrayList<>();
+//        String userToken = RpcTransmit.getUserToken();
+//        Boolean flagSeeSign = supPermissionSer.getSupPermission(userToken);
+//        SonPermissionObject obj;
+//
+//        obj = new SonPermissionObject();
+//        obj.setName("supplierinformation");
+//        obj.setDescribesion("供应商基本信息");
+//        if (flagSeeSign) {
+//            obj.setFlag(true);
+//        } else {
+//            obj.setFlag(false);
+//        }
+//        list.add(obj);
+//
+//
+//        RpcTransmit.transmitUserToken(userToken);
+//        Boolean flagSee = supplierTypeSer.sonPermission();
+//        RpcTransmit.transmitUserToken(userToken);
+//        obj = new SonPermissionObject();
+//        obj.setName("suppliertype");
+//        obj.setDescribesion("供应商类型管理");
+//        if (flagSee) {
+//            obj.setFlag(true);
+//        } else {
+//            obj.setFlag(false);
+//        }
+//        list.add(obj);
+//
+//        flagSee = contactSituationSer.sonPermission();
+//        RpcTransmit.transmitUserToken(userToken);
+//        obj = new SonPermissionObject();
+//        obj.setName("contactsituation");
+//        obj.setDescribesion("联系情况");
+//        if (flagSee) {
+//            obj.setFlag(true);
+//        } else {
+//            obj.setFlag(false);
+//        }
+//        list.add(obj);
+//
+//        flagSee = cooperationSituationSer.sonPermission();
+//        RpcTransmit.transmitUserToken(userToken);
+//        obj = new SonPermissionObject();
+//        obj.setName("cooperationsituation");
+//        obj.setDescribesion("合作情况");
+//        if (flagSee) {
+//            obj.setFlag(true);
+//        } else {
+//            obj.setFlag(false);
+//        }
+//        list.add(obj);
+//
+//        flagSee = enterpriseQualificationSer.sonPermission();
+//        RpcTransmit.transmitUserToken(userToken);
+//        obj = new SonPermissionObject();
+//        obj.setName("enterprisequalification");
+//        obj.setDescribesion("企业资质");
+//        if (flagSee) {
+//            obj.setFlag(true);
+//        } else {
+//            obj.setFlag(false);
+//        }
+//        list.add(obj);
+//
+//        RpcTransmit.transmitUserToken(userToken);
+//        flagSee = rewardSituationSer.sonPermission();
+//        RpcTransmit.transmitUserToken(userToken);
+//        obj = new SonPermissionObject();
+//        obj.setName("rewardsituation");
+//        obj.setDescribesion("获奖情况");
+//        if (flagSee) {
+//            obj.setFlag(true);
+//        } else {
+//            obj.setFlag(false);
+//        }
+//        list.add(obj);
+//
+//
+//        RpcTransmit.transmitUserToken(userToken);
+//        flagSee = collectSendSer.sonPermission();
+//        RpcTransmit.transmitUserToken(userToken);
+//        obj = new SonPermissionObject();
+//        obj.setName("collectsend");
+//        obj.setDescribesion("供应商汇总");
+//        if (flagSee) {
+//            obj.setFlag(true);
+//        } else {
+//            obj.setFlag(false);
+//        }
+//        list.add(obj);
+//
+//        return list;
+//    }
 
     @Override
     //chenjunhao
-    public List<SupplierInformationBO>  findByName(String name) throws SerException {
+    public List<SupplierInformationBO> findByName(String name) throws SerException {
         SupplierInformationDTO dto = new SupplierInformationDTO();
         dto.getConditions().add(Restrict.eq("supplierName", name));
         List<SupplierInformation> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, SupplierInformationBO.class);
     }
 
+    @Override
+    public List<String> listType() throws SerException {
+        List<SupplierTypeBO> supplierTypeBOs = supplierTypeSer.findStatus();
+        List<String> list = new ArrayList<>();
+        if (null != supplierTypeBOs && supplierTypeBOs.size() > 0 ){
+            for (SupplierTypeBO bo : supplierTypeBOs) {
+                list.add(bo.getName());
+            }
+        }
+        return list;
+    }
+
+
+//    /**
+//     * 核对查看权限（部门级别）
+//     */
+//    private Boolean guideSeeIdentity() throws SerException {
+//        Boolean flag = false;
+//        String userToken = RpcTransmit.getUserToken();
+//        UserBO userBO = userAPI.currentUser();
+//        RpcTransmit.transmitUserToken(userToken);
+//        String userName = userBO.getUsername();
+//        if (!"admin".equals(userName.toLowerCase())) {
+//            flag = supPermissionSer.getSupPermission(idFlag);
+//        } else {
+//            flag = true;
+//        }
+//        return flag;
+//    }
+
+//    /**
+//     * 核对添加修改删除审核权限（岗位级别）
+//     */
+//    private Boolean guideAddIdentity() throws SerException {
+//        Boolean flag = false;
+//        String userToken = RpcTransmit.getUserToken();
+//        UserBO userBO = userAPI.currentUser();
+//        RpcTransmit.transmitUserToken(userToken);
+//        String userName = userBO.getUsername();
+//        if (!"admin".equals(userName.toLowerCase())) {
+//            flag = supPermissionSer.getSupPermission(idFlag);
+//        } else {
+//            flag = true;
+//        }
+//        return flag;
+//    }
+//
+//    @Override
+//    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+//        String userToken = RpcTransmit.getUserToken();
+//        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+//        Boolean flag = true;
+//        switch (guideAddrStatus) {
+//            case LIST:
+//                flag = guideSeeIdentity();
+//                break;
+//            case ADD:
+//                flag = guideAddIdentity();
+//                break;
+//            case EDIT:
+//                flag = guideAddIdentity();
+//                break;
+//            case AUDIT:
+//                flag = guideAddIdentity();
+//                break;
+//            case DELETE:
+//                flag = guideAddIdentity();
+//                break;
+//            case CONGEL:
+//                flag = guideAddIdentity();
+//                break;
+//            case THAW:
+//                flag = guideAddIdentity();
+//                break;
+//            case COLLECT:
+//                flag = guideAddIdentity();
+//                break;
+//            case IMPORT:
+//                flag = guideAddIdentity();
+//                break;
+//            case EXPORT:
+//                flag = guideAddIdentity();
+//                break;
+//            case UPLOAD:
+//                flag = guideAddIdentity();
+//                break;
+//            case DOWNLOAD:
+//                flag = guideAddIdentity();
+//                break;
+//            case SEE:
+//                flag = guideSeeIdentity();
+//                break;
+//            case SEEFILE:
+//                flag = guideSeeIdentity();
+//                break;
+//            default:
+//                flag = true;
+//                break;
+//        }
+//
+//        RpcTransmit.transmitUserToken(userToken);
+//        return flag;
+//    }
+//
+
+
+
 
     /**
      * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getSupCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busSupCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 导航栏核对查看权限（部门级别）
      */
     private Boolean guideSeeIdentity() throws SerException {
         Boolean flag = false;
@@ -435,7 +577,7 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = supPermissionSer.getSupPermission(idFlag);
+            flag = cusPermissionSer.getSupCusPermission("1");
         } else {
             flag = true;
         }
@@ -443,7 +585,7 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
     }
 
     /**
-     * 核对添加修改删除审核权限（岗位级别）
+     * 导航栏核对添加修改删除审核权限（岗位级别）
      */
     private Boolean guideAddIdentity() throws SerException {
         Boolean flag = false;
@@ -452,11 +594,108 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = supPermissionSer.getSupPermission(idFlag);
+            flag = cusPermissionSer.busSupCusPermission("2");
         } else {
             flag = true;
         }
         return flag;
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAddSign = guideAddIdentity();
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("supplierinformation");
+        obj.setDescribesion("供应商基本信息");
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeBase2 = supplierTypeSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("supplierType");
+        obj.setDescribesion("供应商类型管理");
+        if (flagSeeBase2) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeDis = collectSendSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("collectsend");
+        obj.setDescribesion("供应商汇总");
+        if (flagSeeDis) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeCate = contactSituationSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("contactsituation");
+        obj.setDescribesion("联系情况");
+        if (flagSeeCate) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeEmail = cooperationSituationSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("cooperationsituation");
+        obj.setDescribesion("合作情况");
+        if (flagSeeEmail) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeBase = enterpriseQualificationSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("enterpriseQualification");
+        obj.setDescribesion("企业资质");
+        if (flagSeeBase) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeBase1 = rewardSituationSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("rewardsituation");
+        obj.setDescribesion("获奖情况");
+        if (flagSeeBase1) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
     }
 
     @Override
@@ -511,8 +750,6 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
                 flag = true;
                 break;
         }
-
-        RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
 }

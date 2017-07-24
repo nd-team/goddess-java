@@ -1,10 +1,12 @@
 package com.bjike.goddess.attainment.service;
 
-import com.bjike.goddess.attainment.bo.SurveyPlanBO;
+import com.bjike.goddess.attainment.bo.*;
 import com.bjike.goddess.attainment.dto.SurveyPlanDTO;
 import com.bjike.goddess.attainment.entity.SurveyPlan;
 import com.bjike.goddess.attainment.to.GuidePermissionTO;
+import com.bjike.goddess.attainment.to.SurveyActualizesTO;
 import com.bjike.goddess.attainment.to.SurveyPlanTO;
+import com.bjike.goddess.attainment.to.SurveyQuestionnaireOptionUsersTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -108,6 +110,34 @@ public interface SurveyPlanSer extends Ser<SurveyPlan, SurveyPlanDTO> {
      * @throws SerException
      */
     default Long getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取调研计划
+     */
+    default List<SurPlanbo> getSurveyPlan() throws SerException {
+        return null;
+    }
+
+    /**
+     * 建立问卷
+     */
+    default List<SurveyActualizesBO> questionnaire(SurveyActualizesTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查看问卷
+     */
+    default List<SurveyQuestionnairesBO> getQuestionnaire(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 问卷调研
+     */
+    default List<SurveyQuestionnaireOptionUsersBO> editQuestionnaire(SurveyQuestionnaireOptionUsersTO to) throws SerException {
         return null;
     }
 }

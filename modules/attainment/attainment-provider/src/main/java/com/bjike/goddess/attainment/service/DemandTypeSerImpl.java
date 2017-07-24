@@ -14,6 +14,7 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,7 +40,8 @@ import java.util.List;
 public class DemandTypeSerImpl extends ServiceImpl<DemandType, DemandTypeDTO> implements DemandTypeSer {
 
 
-
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
     @Autowired
     private SurveyDemandSer surveyDemandSer;
     @Autowired
@@ -131,6 +134,18 @@ public class DemandTypeSerImpl extends ServiceImpl<DemandType, DemandTypeDTO> im
     public Long getTotal() throws SerException {
         DemandTypeDTO dto = new DemandTypeDTO();
         return super.count(dto);
+    }
+
+    @Override
+    public List<String> getObject() throws SerException {
+        List<UserBO> userBOList = positionDetailUserAPI.findUserList();
+        List<String> list = new ArrayList<>();
+        if(null != userBOList && userBOList.size() > 0){
+            for(UserBO userBO : userBOList){
+                list.add(userBO.getUsername());
+            }
+        }
+        return list;
     }
 
     /**

@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 岗位详细
@@ -259,6 +260,5 @@ public class PositionDetailAct {
             throw new ActException(e.getMessage());
         }
     }
-
 
 }

@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.supplier.bo.ContactSituationBO;
 import com.bjike.goddess.supplier.service.ContactSituationSer;
 import com.bjike.goddess.supplier.to.ContactSituationTO;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,16 @@ public class ContactSituationApiImpl implements ContactSituationAPI {
 
     @Autowired
     private ContactSituationSer contactSituationSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return contactSituationSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return contactSituationSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public List<ContactSituationBO> findByInformation(String info_id) throws SerException {

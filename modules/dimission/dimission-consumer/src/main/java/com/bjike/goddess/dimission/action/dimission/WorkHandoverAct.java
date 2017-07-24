@@ -12,6 +12,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dimission.api.WorkHandoverAPI;
 import com.bjike.goddess.dimission.dto.WorkHandoverDTO;
 import com.bjike.goddess.dimission.to.DeleteFileTO;
+import com.bjike.goddess.dimission.to.GuidePermissionTO;
 import com.bjike.goddess.dimission.to.HandoverSuccessTO;
 import com.bjike.goddess.dimission.to.WorkHandoverTO;
 import com.bjike.goddess.dimission.vo.WorkHandoverVO;
@@ -47,6 +48,29 @@ public class WorkHandoverAct extends BaseFileAction {
     @Autowired
     private FileAPI fileAPI;
 
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = workHandoverAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 保存
      *

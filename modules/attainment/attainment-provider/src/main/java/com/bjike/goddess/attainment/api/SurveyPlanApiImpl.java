@@ -1,10 +1,12 @@
 package com.bjike.goddess.attainment.api;
 
-import com.bjike.goddess.attainment.bo.SurveyPlanBO;
+import com.bjike.goddess.attainment.bo.*;
 import com.bjike.goddess.attainment.dto.SurveyPlanDTO;
 import com.bjike.goddess.attainment.service.SurveyPlanSer;
 import com.bjike.goddess.attainment.to.GuidePermissionTO;
+import com.bjike.goddess.attainment.to.SurveyActualizesTO;
 import com.bjike.goddess.attainment.to.SurveyPlanTO;
+import com.bjike.goddess.attainment.to.SurveyQuestionnaireOptionUsersTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,5 +70,25 @@ public class SurveyPlanApiImpl implements SurveyPlanAPI {
     @Override
     public Long getTotal() throws SerException {
         return surveyPlanSer.getTotal();
+    }
+
+    @Override
+    public List<SurPlanbo> getSurveyPlan() throws SerException {
+        return surveyPlanSer.getSurveyPlan();
+    }
+
+    @Override
+    public List<SurveyActualizesBO> questionnaire(SurveyActualizesTO to) throws SerException {
+        return surveyPlanSer.questionnaire(to);
+    }
+
+    @Override
+    public List<SurveyQuestionnairesBO> getQuestionnaire(String id) throws SerException {
+        return surveyPlanSer.getQuestionnaire(id);
+    }
+
+    @Override
+    public List<SurveyQuestionnaireOptionUsersBO> editQuestionnaire(SurveyQuestionnaireOptionUsersTO to) throws SerException {
+        return surveyPlanSer.editQuestionnaire(to);
     }
 }

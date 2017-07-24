@@ -6,6 +6,7 @@ import com.bjike.goddess.supplier.bo.EnterpriseQualificationBO;
 import com.bjike.goddess.supplier.dto.EnterpriseQualificationDTO;
 import com.bjike.goddess.supplier.entity.EnterpriseQualification;
 import com.bjike.goddess.supplier.to.EnterpriseQualificationTO;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +20,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface EnterpriseQualificationSer extends Ser<EnterpriseQualification, EnterpriseQualificationDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 根据供应商基本信息ID查询企业资质
@@ -83,13 +98,6 @@ public interface EnterpriseQualificationSer extends Ser<EnterpriseQualification,
      * @throws SerException
      */
     default List<EnterpriseQualificationBO> findByInformationIds(String... ids) throws SerException {
-        return null;
-    }
-
-    /**
-     * 下拉导航权限
-     */
-    default Boolean sonPermission() throws SerException {
         return null;
     }
 }

@@ -175,7 +175,7 @@ public class YearPlanSerImpl extends ServiceImpl<YearPlan, YearPlanDTO> implemen
     public List<YearPlanBO> maps(YearPlanDTO dto) throws SerException {
 //        if (!isPermission(planCheck))
 //            throw new SerException("您的帐号没有权限");
-        dto.getSorts().add("year=desc");
+        dto.getSorts().add("createTime=desc");
         return BeanTransform.copyProperties(super.findByPage(dto), YearPlanBO.class);
     }
     

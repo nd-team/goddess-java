@@ -130,4 +130,10 @@ public interface DemandTypeAPI {
         return null;
     }
 
+    /**
+     * 调研对象
+     */
+    default List<String> getObject() throws SerException {
+        return null;
+    }
 }
