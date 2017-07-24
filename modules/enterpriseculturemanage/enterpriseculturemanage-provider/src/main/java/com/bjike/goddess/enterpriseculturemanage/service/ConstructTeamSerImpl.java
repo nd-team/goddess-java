@@ -247,7 +247,9 @@ public class ConstructTeamSerImpl extends ServiceImpl<ConstructTeam, ConstructTe
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ConstructTeamBO insertModel(ConstructTeamTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         checkAddIdentity();
+        RpcTransmit.transmitUserToken(userToken);
         if (isUserNameExist(to)) {
             throw new SerException("该用户已存在!");
         }
@@ -275,7 +277,9 @@ public class ConstructTeamSerImpl extends ServiceImpl<ConstructTeam, ConstructTe
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ConstructTeamBO updateModel(ConstructTeamTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         checkAddIdentity();
+        RpcTransmit.transmitUserToken(userToken);
         if (!StringUtils.isEmpty(to.getId())) {
             ConstructTeam model = super.findById(to.getId());
             if (model != null) {
@@ -297,7 +301,9 @@ public class ConstructTeamSerImpl extends ServiceImpl<ConstructTeam, ConstructTe
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<ConstructTeamBO> pageList(ConstructTeamDTO dto) throws SerException {
-        checkSeeIdentity();
+        String userToken = RpcTransmit.getUserToken();
+        checkAddIdentity();
+        RpcTransmit.transmitUserToken(userToken);
         dto.getSorts().add("createTime=desc");
         List<ConstructTeam> list = super.findByPage(dto);
         return BeanTransform.copyProperties(list, ConstructTeamBO.class);

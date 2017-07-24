@@ -46,4 +46,7 @@
 	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
 	<dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
 
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+
+
 </beans>
