@@ -23,7 +23,7 @@ public class StorageUserTO extends BaseTO {
 
     /**
      * 用户Token
-     * 从header 获取
+     *
      */
     private String userToken;
 

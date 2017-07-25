@@ -40,7 +40,7 @@ public class DepartmentAct {
 
 
     /**
-     * 获取部门树结构
+     * 树结构
      *
      * @param id 通id不为空时查询下层子节点,参数为空时查询最顶层
      * @return class DepartmentVO
@@ -58,7 +58,7 @@ public class DepartmentAct {
     }
 
     /**
-     * 添加部门
+     * 添加
      *
      * @param departmentTO 部门信息
      * @return class DepartmentVO
@@ -77,7 +77,7 @@ public class DepartmentAct {
     }
 
     /**
-     * 删除部门
+     * 删除
      *
      * @param id 部门唯一标示
      * @userToken yes
@@ -95,7 +95,7 @@ public class DepartmentAct {
     }
 
     /**
-     * 编辑部门信息
+     * 编辑
      *
      * @param departmentTO 部门信息
      * @userToken yes

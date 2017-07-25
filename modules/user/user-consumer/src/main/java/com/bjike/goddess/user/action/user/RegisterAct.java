@@ -28,7 +28,7 @@ public class RegisterAct {
     private UserRegisterAPI userRegisterAPI;
 
     /**
-     * 注册用户
+     * 注册
      *
      * @param registerTO 注册用户信息
      * @throws ActException
@@ -46,7 +46,7 @@ public class RegisterAct {
 
 
     /**
-     * 发送手机验证码
+     * 发送验证码
      *
      * @param phone 手机号码
      * @throws ActException

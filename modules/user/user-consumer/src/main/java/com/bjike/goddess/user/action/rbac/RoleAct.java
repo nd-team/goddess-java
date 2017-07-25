@@ -38,7 +38,7 @@ public class RoleAct {
     private RoleAPI roleAPI;
 
     /**
-     * 获取角色树结构
+     * 树结构
      *
      * @param id id不为空时查询下层子节点,参数为空时查询最顶层
      * @return class RoleVO
@@ -57,7 +57,7 @@ public class RoleAct {
     }
 
     /**
-     * 添加角色
+     * 添加
      *
      * @param roleTO 新的角色信息
      * @return class RoleVO
@@ -76,7 +76,7 @@ public class RoleAct {
     }
 
     /**
-     * 删除角色
+     * 删除
      *
      * @param id 角色唯一标示
      * @userToken yes
@@ -94,7 +94,7 @@ public class RoleAct {
     }
 
     /**
-     * 编辑角色信息
+     * 编辑
      *
      * @param roleTO
      * @userToken yes

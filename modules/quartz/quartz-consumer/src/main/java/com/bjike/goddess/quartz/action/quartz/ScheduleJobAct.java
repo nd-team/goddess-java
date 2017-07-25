@@ -54,7 +54,7 @@ public class ScheduleJobAct {
     }
 
     /**
-     * 列表数据条数
+     * 数据量
      *
      * @param dto 分页数据
      * @version v1
@@ -70,7 +70,7 @@ public class ScheduleJobAct {
     }
 
     /**
-     * 通过id查询数据
+     * 通过id查询
      *
      * @param id
      * @version v1
@@ -88,7 +88,7 @@ public class ScheduleJobAct {
 
 
     /**
-     * 添加任务调度
+     * 添加
      *
      * @param scheduleJobTO 实体数据
      * @version v1
@@ -104,7 +104,7 @@ public class ScheduleJobAct {
     }
 
     /**
-     * 编辑任务调度
+     * 编辑
      *
      * @param scheduleJobTO 实体数据
      * @version v1
@@ -120,7 +120,7 @@ public class ScheduleJobAct {
     }
 
     /**
-     * 删除任务调度
+     * 删除
      *
      * @param id
      * @version v1
@@ -136,7 +136,7 @@ public class ScheduleJobAct {
     }
 
     /**
-     * 开启关闭任务调度
+     * 开启关闭
      *
      * @param id
      * @param enable 开启

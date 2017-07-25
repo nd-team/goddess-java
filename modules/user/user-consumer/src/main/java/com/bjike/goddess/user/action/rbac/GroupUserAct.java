@@ -30,14 +30,14 @@ import org.springframework.web.bind.annotation.RestController;
 @LoginAuth
 @DefaultProperties
 @RestController
-@RequestMapping("group-user")
+@RequestMapping("group/user")
 public class GroupUserAct {
 
     @Autowired
     private GroupUserAPI groupUserAPI;
 
     /**
-     * 添加组用户
+     * 添加
      *
      * @param groupUserTO 组用户信息
      * @return class GroupUserVO
