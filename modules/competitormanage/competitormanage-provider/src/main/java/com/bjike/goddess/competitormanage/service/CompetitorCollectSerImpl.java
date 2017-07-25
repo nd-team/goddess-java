@@ -97,7 +97,7 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
     @Transactional(rollbackFor = SerException.class)
     public CompetitorCollectBO editModel(CompetitorCollectTO to) throws SerException {
         String userToken = RpcTransmit.getUserToken();
-//        getCusPermission();
+        getCusPermission();
 
         if (to.getSendIntervalType() == SendIntervalType.MINUTE && to.getSendInterval() < 30) {
             throw new SerException("汇总发送间隔不能低于30分钟!");
@@ -495,7 +495,7 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<CompetitorCollectBO> pageList(CompetitorCollectDTO dto) throws SerException {
-//        getCusPermission();
+        getCusPermission();
         dto.getSorts().add("createTime=desc");
         List<CompetitorCollect> list = super.findByPage(dto);
         return BeanTransform.copyProperties(list, CompetitorCollectBO.class);
