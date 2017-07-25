@@ -64,4 +64,9 @@ public class SkillAnalyseApiImpl implements SkillAnalyseAPI {
     public Long getTotal() throws SerException {
         return skillAnalyseSer.getTotal();
     }
+
+    @Override
+    public List<String> getUser() throws SerException {
+        return skillAnalyseSer.getUser();
+    }
 }

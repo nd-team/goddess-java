@@ -30,4 +30,7 @@
     <dubbo:reference validation="true" interface="com.bjike.goddess.projectroyalty.api.WeightAllocationAPI"
                      id="weightAllocationApiImpl"/>
 
+
+
+
 </beans>

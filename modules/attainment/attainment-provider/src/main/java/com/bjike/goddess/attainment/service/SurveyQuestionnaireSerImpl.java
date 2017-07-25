@@ -105,6 +105,7 @@ public class SurveyQuestionnaireSerImpl extends ServiceImpl<SurveyQuestionnaire,
         return this.transformBOList(list);
     }
 
+
     /**
      * 核对查看权限（部门级别）
      */

@@ -1,12 +1,12 @@
-package com.bjike.goddess.supplier.action.supplier;
+package com.bjike.goddess.projectroyalty.action.projectroyalty;
 
-import com.bjike.goddess.supplier.api.SupCusPermissionAPI;
-import com.bjike.goddess.supplier.bo.SupCusOperateBO;
-import com.bjike.goddess.supplier.bo.SupCusPermissionBO;
-import com.bjike.goddess.supplier.dto.SupCusPermissionDTO;
-import com.bjike.goddess.supplier.to.SupCusPermissionTO;
-import com.bjike.goddess.supplier.vo.SupCusOperateVO;
-import com.bjike.goddess.supplier.vo.SupCusPermissionVO;
+import com.bjike.goddess.projectroyalty.api.CusPermissionAPI;
+import com.bjike.goddess.projectroyalty.bo.CusOperateBO;
+import com.bjike.goddess.projectroyalty.bo.CusPermissionBO;
+import com.bjike.goddess.projectroyalty.dto.CusPermissionDTO;
+import com.bjike.goddess.projectroyalty.to.CusPermissionTO;
+import com.bjike.goddess.projectroyalty.vo.CusOperateVO;
+import com.bjike.goddess.projectroyalty.vo.CusPermissionVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -33,23 +33,23 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("supcuspermission")
-public class SupCusPermissionAction {
+@RequestMapping("cuspermission")
+public class CusPermissionAction {
 
     @Autowired
-    private SupCusPermissionAPI supCusPermissionAPI;
+    private CusPermissionAPI cusPermissionAPI;
 
     /**
      * 列表总条数
      *
-     * @param supCusPermissionDTO 客户权限信息dto
+     * @param cusPermissionDTO 客户权限信息dto
      * @des 获取所有客户权限信息总条数
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(SupCusPermissionDTO supCusPermissionDTO) throws ActException {
+    public Result count(CusPermissionDTO cusPermissionDTO) throws ActException {
         try {
-            Long count = supCusPermissionAPI.countPermission(supCusPermissionDTO);
+            Long count = cusPermissionAPI.countPermission(cusPermissionDTO);
             return ActResult.initialize(count);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -60,26 +60,26 @@ public class SupCusPermissionAction {
      * 一个客户权限
      *
      * @param id 客户权限信息id
-     * @return class SupCusPermissionVO
+     * @return class CusPermissionVO
      * @des 根据id获取所有客户权限信息
      * @version v1
      */
     @GetMapping("v1/getOneById/{id}")
     public Result getOneById(@PathVariable String id) throws ActException {
         try {
-            SupCusPermissionBO temp = supCusPermissionAPI.getOneById(id);
-            SupCusPermissionVO supCusPermissionVOList = BeanTransform.copyProperties(
-                    temp , SupCusPermissionVO.class);
+            CusPermissionBO temp = cusPermissionAPI.getOneById(id);
+            CusPermissionVO cusPermissionVOList = BeanTransform.copyProperties(
+                    temp , CusPermissionVO.class);
             if( null != temp   ){
-                List<SupCusOperateBO> cboList  = temp.getSupCusOperateBO();
-                List<SupCusOperateVO> cvoList = new ArrayList<>();
+                List<CusOperateBO> cboList  = temp.getCusOperateBO();
+                List<CusOperateVO> cvoList = new ArrayList<>();
                 if( cboList != null && cboList.size()>0 ){
                     cvoList = BeanTransform.copyProperties(
-                            cboList , SupCusOperateVO.class);
+                            cboList , CusOperateVO.class);
                 }
-                supCusPermissionVOList.setCusOperateVO( cvoList );
+                cusPermissionVOList.setCusOperateVO( cvoList );
             }
-            return ActResult.initialize(supCusPermissionVOList);
+            return ActResult.initialize(cusPermissionVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -88,14 +88,14 @@ public class SupCusPermissionAction {
      * 获取类型下对象
      *
      * @param id 客户权限信息id
-     * @return class SupCusPermissionVO
+     * @return class CusPermissionVO
      * @des 根据id获取所有客户权限获取类型下对象
      * @version v1
      */
     @GetMapping("v1/listOperateById/{id}")
     public Result listOperateById(@PathVariable String id) throws ActException {
         try {
-            List<OpinionVO> list = BeanTransform.copyProperties(supCusPermissionAPI.listOperateById(id),OpinionVO.class);
+            List<OpinionVO> list = BeanTransform.copyProperties(cusPermissionAPI.listOperateById(id),OpinionVO.class);
             return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -105,47 +105,50 @@ public class SupCusPermissionAction {
     /**
      * 客户权限列表
      *
-     * @param supCusPermissionDTO 客户权限信息dto
+     * @param cusPermissionDTO 客户权限信息dto
      * @param request      前端过滤参数
-     * @return class SupCusPermissionVO
+     * @return class CusPermissionVO
      * @des 获取所有客户权限信息
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result findListCusPermission(SupCusPermissionDTO supCusPermissionDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result findListCusPermission(CusPermissionDTO cusPermissionDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            List<SupCusPermissionBO> boList = supCusPermissionAPI.list(supCusPermissionDTO);
-            List<SupCusPermissionVO> supCusPermissionVOList = new ArrayList<>();
+            List<CusPermissionBO> boList = cusPermissionAPI.list(cusPermissionDTO);
+            List<CusPermissionVO> cusPermissionVOList = new ArrayList<>();
             boList.stream().forEach(str->{
-                SupCusPermissionVO temp = BeanTransform.copyProperties( str, SupCusPermissionVO.class, request);
-                List<SupCusOperateVO> covo = new ArrayList<>();
-                if(null != str.getSupCusOperateBO()){
-                    covo = BeanTransform.copyProperties(str.getSupCusOperateBO(),SupCusOperateVO.class);
+                CusPermissionVO temp = BeanTransform.copyProperties( str, CusPermissionVO.class, request);
+                List<CusOperateVO> covo = new ArrayList<>();
+                if(null != str.getCusOperateBO()){
+                    covo = BeanTransform.copyProperties(str.getCusOperateBO(),CusOperateVO.class);
                 }
                 temp.setCusOperateVO( covo );
-                supCusPermissionVOList.add( temp );
+                cusPermissionVOList.add( temp );
             });
 
-            return ActResult.initialize(supCusPermissionVOList);
+            return ActResult.initialize(cusPermissionVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
+
+
+
     /**
      * 编辑客户权限
      *
-     * @param supCusPermissionTO 客户权限基本信息数据bo
-     * @return class SupCusPermissionVO
+     * @param cusPermissionTO 客户权限基本信息数据bo
+     * @return class CusPermissionVO
      * @des 编辑客户权限
      * @version v1
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result editCusPermission(@Validated SupCusPermissionTO supCusPermissionTO) throws ActException {
+    public Result editCusPermission(@Validated CusPermissionTO cusPermissionTO) throws ActException {
         try {
-            SupCusPermissionBO supCusPermissionBO1 = supCusPermissionAPI.edit(supCusPermissionTO);
-            return ActResult.initialize(BeanTransform.copyProperties(supCusPermissionBO1, SupCusPermissionVO.class));
+            CusPermissionBO cusPermissionBO1 = cusPermissionAPI.edit(cusPermissionTO);
+            return ActResult.initialize(BeanTransform.copyProperties(cusPermissionBO1, CusPermissionVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

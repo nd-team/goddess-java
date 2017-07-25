@@ -155,4 +155,18 @@ public class SkillAnalyseAct {
         }
     }
 
+    /**
+     * 获取用户
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getUser")
+    public Result getUser() throws ActException {
+        try {
+            return ActResult.initialize(skillAnalyseAPI.getUser());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

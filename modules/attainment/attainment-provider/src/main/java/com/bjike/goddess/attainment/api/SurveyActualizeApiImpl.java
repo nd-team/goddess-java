@@ -69,4 +69,9 @@ public class SurveyActualizeApiImpl implements SurveyActualizeAPI {
     public Long getTotal() throws SerException {
         return surveyActualizeSer.getTotal();
     }
+
+    @Override
+    public List<String> getName() throws SerException {
+        return surveyActualizeSer.getName();
+    }
 }

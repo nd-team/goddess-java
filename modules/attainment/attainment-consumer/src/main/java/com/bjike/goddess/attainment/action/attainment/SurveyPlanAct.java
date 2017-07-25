@@ -46,7 +46,6 @@ public class SurveyPlanAct {
     @GetMapping("v1/guidePermission")
     public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-
             Boolean isHasPermission = surveyPlanAPI.guidePermission(guidePermissionTO);
             if (!isHasPermission) {
                 //int code, String msg
@@ -58,6 +57,7 @@ public class SurveyPlanAct {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 添加
      *

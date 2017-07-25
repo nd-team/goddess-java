@@ -1,11 +1,11 @@
 package com.bjike.goddess.projectroyalty.service;
 
+import com.bjike.goddess.projectroyalty.bo.CusPermissionBO;
+import com.bjike.goddess.projectroyalty.dto.CusPermissionDTO;
+import com.bjike.goddess.projectroyalty.entity.CusPermission;
+import com.bjike.goddess.projectroyalty.to.CusPermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.moneyprepare.bo.CusPermissionBO;
-import com.bjike.goddess.moneyprepare.dto.CusPermissionDTO;
-import com.bjike.goddess.moneyprepare.entity.CusPermission;
-import com.bjike.goddess.moneyprepare.to.CusPermissionTO;
 import com.bjike.goddess.organize.bo.OpinionBO;
 
 import java.util.List;
