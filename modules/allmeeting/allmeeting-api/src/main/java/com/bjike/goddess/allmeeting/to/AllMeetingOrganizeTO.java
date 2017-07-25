@@ -41,7 +41,7 @@ public class AllMeetingOrganizeTO extends BaseTO {
      * 计划参会人员
      */
     @NotBlank(message = "计划参会人员不能为空!", groups = {ADD.class, EDIT.class})
-    private String planUser;
+    private String[] planUser;
 
     /**
      * 计划会议时间
@@ -86,11 +86,11 @@ public class AllMeetingOrganizeTO extends BaseTO {
         this.relation = relation;
     }
 
-    public String getPlanUser() {
+    public String[] getPlanUser() {
         return planUser;
     }
 
-    public void setPlanUser(String planUser) {
+    public void setPlanUser(String[] planUser) {
         this.planUser = planUser;
     }
 

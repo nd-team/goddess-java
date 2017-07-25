@@ -2,6 +2,7 @@ package com.bjike.goddess.annual.api;
 
 import com.bjike.goddess.annual.bo.AnnualInfoBO;
 import com.bjike.goddess.annual.dto.AnnualInfoDTO;
+import com.bjike.goddess.annual.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -17,6 +18,19 @@ import java.util.List;
  */
 public interface AnnualInfoAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 获取指定用户的年假信息
      *

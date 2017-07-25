@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.workjoin.bo.JoinInfoBO;
 import com.bjike.goddess.workjoin.dto.JoinInfoDTO;
 import com.bjike.goddess.workjoin.entity.JoinInfo;
+import com.bjike.goddess.workjoin.to.GuidePermissionTO;
 import com.bjike.goddess.workjoin.to.JoinInfoTO;
 
 import java.util.List;
@@ -19,6 +20,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface JoinInfoSer extends Ser<JoinInfo, JoinInfoDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 交接资料列表总条数

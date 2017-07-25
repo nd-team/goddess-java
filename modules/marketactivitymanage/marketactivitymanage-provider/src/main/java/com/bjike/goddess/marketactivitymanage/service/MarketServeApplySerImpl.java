@@ -82,31 +82,31 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
             flag = true;
         }
         if (!flag) {
-            throw new SerException("您不是本部门人员,没有该操作权限");
+            throw new SerException("您不是商务模块人员,没有该操作权限");
         }
         RpcTransmit.transmitUserToken(userToken);
 
     }
 
     /**
-     * 核对审核权限(模块)
+     * 核对审核权限(运营商务部)
      *
      * @throws SerException
      */
-    private void checkAuditMPermission() throws SerException {
+    private void checkBusinPermission() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        //商务模块权限
+
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("2");
+            flag = cusPermissionSer.busCusPermission("2");
         } else {
             flag = true;
         }
         if (!flag) {
-            throw new SerException("您不是商务模块人员,没有该操作权限");
+            throw new SerException("您不是运营商务部人员,没有该操作权限");
         }
         RpcTransmit.transmitUserToken(userToken);
 
@@ -123,7 +123,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        //商务模块权限
+
         if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.arrCusPermission("3");
         } else {
@@ -154,16 +154,16 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
     }
 
     /**
-     * 核对审核权限（模块级别）
+     * 核对查看权限（部门级别）
      */
-    private Boolean guideAuditMIdentity() throws SerException {
+    private Boolean guideBusinIdentity() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("2");
+            flag = cusPermissionSer.busCusPermission("2");
         } else {
             flag = true;
         }
@@ -192,11 +192,11 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
         String userToken = RpcTransmit.getUserToken();
         Boolean flagSee = guideIdentity();
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAuditM = guideAuditMIdentity();
-        RpcTransmit.transmitUserToken(userToken);
         Boolean flagAuditA = guideAuditAIdentity();
         RpcTransmit.transmitUserToken(userToken);
-        if (flagSee || flagAuditM || flagAuditA) {
+        Boolean flagAuditB = guideBusinIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee || flagAuditA || flagAuditB) {
             return true;
         } else {
             return false;
@@ -249,7 +249,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
                 flag = guideIdentity();
                 break;
             case MONEYAUDIT:
-                flag = guideAuditMIdentity();
+                flag = guideBusinIdentity();
                 break;
             case DECISIONAUDIT:
                 flag = guideAuditAIdentity();
@@ -273,7 +273,6 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
     @Override
     public List<MarketServeApplyBO> list(MarketServeApplyDTO dto) throws SerException {
         checkPermission();
-        dto.getConditions().add(Restrict.ne("executiveAuditOpinion",1));
         List<MarketServeApply> list = super.findByPage(dto);
         List<MarketServeApplyBO> listBO = BeanTransform.copyProperties(list, MarketServeApplyBO.class);
         return listBO;
@@ -371,8 +370,11 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void fundModuleOpinion(String id, String fundModuleOpinion) throws SerException {
-        checkAuditMPermission();
+        checkBusinPermission();
         MarketServeApply model = super.findById(id);
+        if(model.getFundModuleOpinion()!=null ){
+            throw new SerException("您已审核了,就不能再审核了");
+        }
         model.setModifyTime(LocalDateTime.now());
         model.setFundModuleOpinion(fundModuleOpinion);
         super.update(model);
@@ -391,24 +393,28 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
         checkAuditAPermission();
 
         MarketServeApply model = super.findById(id);
-        model.setModifyTime(LocalDateTime.now());
-        model.setExecutiveAuditOpinion(executiveAuditOpinion);
-        super.update(model);
-        if(model.getExecutiveAuditOpinion().equals(AuditType.ALLOWED)){
-            MarketServeRecord marketServeRecord = new MarketServeRecord();
-            BeanUtils.copyProperties(model,marketServeRecord);
-            marketServeRecord = marketServeRecordSer.save(marketServeRecord);
-            List<CustomerInfoBO> list = customerInfoSer.findByMarketServeId(model.getId());
-            if(null != list && list.size()!=0){
-                for (CustomerInfoBO customerInfoBO : list){
-                    CustomerInfo customerInfo = BeanTransform.copyProperties(customerInfoBO,CustomerInfo.class,true,"marketServeId","id");
-                    customerInfo.setCreateTime(LocalDateTime.now());
-                    customerInfo.setModifyTime(LocalDateTime.now());
-                    customerInfo.setMarketServeId(marketServeRecord.getId());
-                    customerInfoSer.save(customerInfo);
+        if(model.getExecutiveAuditOpinion()!=null){
+            throw new SerException("您已审核了,就不能再审核了");
+        }else{
+            model.setModifyTime(LocalDateTime.now());
+            model.setExecutiveAuditOpinion(executiveAuditOpinion);
+            super.update(model);
+            if(model.getExecutiveAuditOpinion().equals(AuditType.ALLOWED)){
+                MarketServeRecord marketServeRecord = new MarketServeRecord();
+                BeanUtils.copyProperties(model,marketServeRecord);
+                marketServeRecord = marketServeRecordSer.save(marketServeRecord);
+                List<CustomerInfoBO> list = customerInfoSer.findByMarketServeId(model.getId());
+                if(null != list && list.size()!=0){
+                    for (CustomerInfoBO customerInfoBO : list){
+                        CustomerInfo customerInfo = BeanTransform.copyProperties(customerInfoBO,CustomerInfo.class,true,"marketServeId","id");
+                        customerInfo.setCreateTime(LocalDateTime.now());
+                        customerInfo.setModifyTime(LocalDateTime.now());
+                        customerInfo.setMarketServeId(marketServeRecord.getId());
+                        customerInfoSer.save(customerInfo);
+                    }
                 }
+                //TODO : lijuntao插数据到借款记录表未明白
             }
-            //TODO : lijuntao插数据到借款记录表未明白
         }
     }
 
@@ -636,7 +642,6 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
 
     @Override
     public byte[] templateExport() throws SerException {
-        // checkPermission();
         List<MarketServeApplyTemplateExprot> marketServeApplyTemplateExprots = new ArrayList<>();
 
         MarketServeApplyTemplateExprot excel = new MarketServeApplyTemplateExprot();

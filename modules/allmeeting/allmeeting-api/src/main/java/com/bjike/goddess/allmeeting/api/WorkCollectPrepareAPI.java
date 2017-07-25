@@ -31,17 +31,57 @@ public interface WorkCollectPrepareAPI {
         return null;
     }
 
+    /**
+     * 根据id来查询工作汇总议题准备信息
+     * @param id
+     * @return
+     * @throws SerException
+     */
     WorkCollectPrepareBO findById(String id) throws SerException;
 
+    /**
+     * 查询总记录数
+     * @param dto
+     * @return
+     * @throws SerException
+     */
     Long count(WorkCollectPrepareDTO dto) throws SerException;
 
+    /**
+     * 查询列表
+     * @param dto
+     * @return
+     * @throws SerException
+     */
     List<WorkCollectPrepareBO> pageList(WorkCollectPrepareDTO dto) throws SerException;
 
+    /**
+     * 解冻
+     * @param id
+     * @throws SerException
+     */
     void unfreeze(String id) throws SerException;
 
+    /**
+     * 冻结
+     * @param id
+     * @throws SerException
+     */
     void freeze(String id) throws SerException;
 
+    /**
+     * 编辑
+     * @param to
+     * @return
+     * @throws SerException
+     */
     WorkCollectPrepareBO edit(WorkCollectPrepareTO to) throws SerException;
 
+    /**
+     * 添加
+     * @param to
+     * @return
+     * @throws SerException
+     */
     WorkCollectPrepareBO add(WorkCollectPrepareTO to) throws SerException;
 }

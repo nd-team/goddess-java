@@ -48,6 +48,13 @@ public interface MeetingLayAPI {
      */
     MeetingLayBO edit(MeetingLayTO to) throws SerException;
 
+
+    /**
+     * 获取计划参会岗位
+     * @return 计划参会岗位
+     */
+    String[] get() throws SerException;
+
     /**
      * 删除会议层面
      *

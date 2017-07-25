@@ -193,6 +193,7 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
 
     @Override
     public RecommendInfoBO insertModel(RecommendInfoTO to) throws SerException {
+        checkSeeIdentity();
         UserBO userBO = userAPI.currentUser();
         RecommendRequire recommendRequire = recommendRequireSer.findById(to.getRequireId());
         if (recommendRequire != null) {
@@ -218,6 +219,7 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
 
     @Override
     public RecommendInfoBO updateModel(RecommendInfoTO to) throws SerException {
+        checkSeeIdentity();
         RecommendRequire recommendRequire = recommendRequireSer.findById(to.getRequireId());
         if (recommendRequire != null) {
             RecommendInfo model = super.findById(to.getId());
@@ -248,11 +250,13 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
 
     @Override
     public void delete(String id) throws SerException {
+        checkSeeIdentity();
         super.remove(id);
     }
 
     @Override
     public List<RecommendInfoBO> pageList(RecommendInfoDTO dto) throws SerException {
+        checkSeeIdentity();
         dto.getSorts().add("createTime=desc");
         List<RecommendInfo> list = super.findByPage(dto);
         if (!CollectionUtils.isEmpty(list)) {
@@ -274,6 +278,7 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
 
     @Override
     public void acceptAudit(String id, String reason, Boolean accept) throws SerException {
+        checkAddIdentity();
         RecommendInfo model = super.findById(id);
         if (model != null) {
             model.setReason(reason);
@@ -286,6 +291,7 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
 
     @Override
     public void conformAudit(String id, Boolean conform) throws SerException {
+        checkAddIdentity();
         RecommendInfo model = super.findById(id);
         if (model != null) {
             if (model.getAccept() != Boolean.TRUE) {
@@ -307,6 +313,7 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
 
     @Override
     public List<RecommendInfoBO> awardlist() throws SerException {
+        checkSeeIdentity();
         return null;
     }
 }

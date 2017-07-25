@@ -49,6 +49,7 @@ public class ScoreFormulaSetSerImpl extends ServiceImpl<ScoreFormulaSet, ScoreFo
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.busCusPermission("1");

@@ -5,7 +5,9 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.workjoin.bo.WorkJoinBO;
 import com.bjike.goddess.workjoin.dto.WorkJoinDTO;
 import com.bjike.goddess.workjoin.entity.WorkJoin;
+import com.bjike.goddess.workjoin.excel.SonPermissionObject;
 import com.bjike.goddess.workjoin.service.WorkJoinSer;
+import com.bjike.goddess.workjoin.to.GuidePermissionTO;
 import com.bjike.goddess.workjoin.to.WorkJoinTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,15 @@ import java.util.List;
 public class WorkJoinApiImpl implements WorkJoinAPI {
     @Autowired
     private WorkJoinSer workJoinSer;
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return workJoinSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return workJoinSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countWorkJoin(WorkJoinDTO workJoinDTO) throws SerException {
         return workJoinSer.countWorkJoin(workJoinDTO);
@@ -54,6 +65,14 @@ public class WorkJoinApiImpl implements WorkJoinAPI {
     @Override
     public void removeWorkJoin(String id) throws SerException {
         workJoinSer.removeWorkJoin(id);
+    }
+    @Override
+    public List<String> getNum() throws SerException {
+        return workJoinSer.getNum();
+    }
+    @Override
+    public WorkJoinBO audit(WorkJoinTO to) throws SerException {
+        return workJoinSer.audit(to);
     }
 
 }

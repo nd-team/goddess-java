@@ -113,6 +113,13 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
             if (model != null) {
                 BeanTransform.copyProperties(to, model, true);
                 model.setModifyTime(LocalDateTime.now());
+                String[] users = to.getSendUsers();
+                String sendUser = new String();
+                for(String user : users){
+                    sendUser = user + ","+sendUser;
+                }
+                sendUser.substring(0,sendUser.length()-1);
+                model.setSendUser(sendUser);
                 model.setOperateUser(userAPI.currentUser(token).getUsername());
                 super.update(model);
             } else {

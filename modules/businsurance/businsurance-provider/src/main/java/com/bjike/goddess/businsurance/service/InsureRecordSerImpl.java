@@ -3,12 +3,16 @@ package com.bjike.goddess.businsurance.service;
 import com.bjike.goddess.businsurance.bo.InsureRecordBO;
 import com.bjike.goddess.businsurance.dto.InsureRecordDTO;
 import com.bjike.goddess.businsurance.entity.InsureRecord;
+import com.bjike.goddess.businsurance.excel.InsureRecordExcel;
 import com.bjike.goddess.businsurance.to.InsureRecordTO;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.businsurance.dto.InsureRecordDTO;
 import com.bjike.goddess.businsurance.entity.InsureRecord;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheConfig;
@@ -16,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -85,6 +90,20 @@ public class InsureRecordSerImpl extends ServiceImpl<InsureRecord, InsureRecordD
         }
         InsureRecord cusLevel = super.findById( id  );
         return BeanTransform.copyProperties(cusLevel, InsureRecordBO.class);
+    }
+
+    @Override
+    public byte[] exportExcel( ) throws SerException {
+        InsureRecordDTO insureRecordDTO = new InsureRecordDTO();
+        List<InsureRecord> insureRecords = super.findByCis(insureRecordDTO);
+        List<InsureRecordExcel> insureRecordExcels = new ArrayList<>();
+        insureRecords.stream().forEach(str -> {
+            InsureRecordExcel excel = BeanTransform.copyProperties(str,InsureRecordExcel.class);
+            insureRecordExcels.add(excel);
+        });
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(insureRecordExcels, excel);
+        return bytes;
     }
     
 }

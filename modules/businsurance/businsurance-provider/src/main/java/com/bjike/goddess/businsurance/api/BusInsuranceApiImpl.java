@@ -74,4 +74,24 @@ public class BusInsuranceApiImpl implements BusInsuranceAPI {
     public BusInsuranceBO getBusInsurance(String id) throws SerException {
         return busInsuranceSer.getBusInsurance(id);
     }
+
+    @Override
+    public byte[] exportExcel(BusInsuranceDTO busInsuranceDTO) throws SerException {
+        return busInsuranceSer.exportExcel(busInsuranceDTO);
+    }
+
+    @Override
+    public List<String> getAllInsureComapny() throws SerException {
+        return busInsuranceSer.getAllInsureComapny();
+    }
+
+    @Override
+    public List<String> getAllInsureType() throws SerException {
+        return busInsuranceSer.getAllInsureType();
+    }
+
+    @Override
+    public List<String> getAllInsureCondition() throws SerException {
+        return busInsuranceSer.getAllInsureCondition();
+    }
 }

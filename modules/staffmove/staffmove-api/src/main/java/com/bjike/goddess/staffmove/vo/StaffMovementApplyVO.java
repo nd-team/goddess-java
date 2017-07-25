@@ -2,6 +2,8 @@ package com.bjike.goddess.staffmove.vo;
 
 import com.bjike.goddess.staffmove.enums.AuditorType;
 
+import javax.persistence.Column;
+
 /**
  * 人员调动申请表现层对象
  *
@@ -93,30 +95,56 @@ public class StaffMovementApplyVO {
     private String remark;
 
     /**
-     * 审核人
+     * 规划模块审核人
      */
-    private AuditorType auditor;
-
-    /**
-     * 总经办审核意见
-     */
-    private String generalAuditOpinion;
-    /**
-     * 原决策层审核意见
-     */
-    private String originalAuditOpinion;
-    /**
-     * 调往决策层审核意见
-     */
-    private String transferAuditOpinion;
+    private String planAuditor;
     /**
      * 规划模块审核意见
      */
     private String planAuditOpinion;
     /**
+     * 预算模块审核人
+     */
+    private String budgetAuditor;
+    /**
      * 预算审核意见
      */
     private String budgetAuditOpinion;
+    /**
+     * 原决策层审核人
+     */
+    private String originalAuditor;
+    /**
+     * 原决策层审核意见
+     */
+    private String originalAuditOpinion;
+    /**
+     * 原决策层是否同意调动
+     */
+    private String originalMove;
+
+    /**
+     * 调往决策层审核人
+     */
+    private String transferAuditor;
+    /**
+     * 调往决策层审核意见
+     */
+    private String transferAuditOpinion;
+    /**
+     * 调往决策层是否同意调动
+     */
+    private String transferMove;
+    /**
+     * 总经办审核人
+     */
+    private String generalAuditor;
+
+    /**
+     * 总经办审核意见
+     */
+    private String generalAuditOpinion;
+
 
 
     public String getId() {
@@ -125,6 +153,22 @@ public class StaffMovementApplyVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getOriginalMove() {
+        return originalMove;
+    }
+
+    public void setOriginalMove(String originalMove) {
+        this.originalMove = originalMove;
+    }
+
+    public String getTransferMove() {
+        return transferMove;
+    }
+
+    public void setTransferMove(String transferMove) {
+        this.transferMove = transferMove;
     }
 
     public String getFillPerson() {
@@ -247,14 +291,45 @@ public class StaffMovementApplyVO {
         this.remark = remark;
     }
 
-    public AuditorType getAuditor() {
-        return auditor;
+    public String getPlanAuditor() {
+        return planAuditor;
     }
 
-    public void setAuditor(AuditorType auditor) {
-        this.auditor = auditor;
+    public void setPlanAuditor(String planAuditor) {
+        this.planAuditor = planAuditor;
     }
 
+    public String getBudgetAuditor() {
+        return budgetAuditor;
+    }
+
+    public void setBudgetAuditor(String budgetAuditor) {
+        this.budgetAuditor = budgetAuditor;
+    }
+
+    public String getOriginalAuditor() {
+        return originalAuditor;
+    }
+
+    public void setOriginalAuditor(String originalAuditor) {
+        this.originalAuditor = originalAuditor;
+    }
+
+    public String getTransferAuditor() {
+        return transferAuditor;
+    }
+
+    public void setTransferAuditor(String transferAuditor) {
+        this.transferAuditor = transferAuditor;
+    }
+
+    public String getGeneralAuditor() {
+        return generalAuditor;
+    }
+
+    public void setGeneralAuditor(String generalAuditor) {
+        this.generalAuditor = generalAuditor;
+    }
 
     public String getGeneralAuditOpinion() {
         return generalAuditOpinion;

@@ -4,6 +4,7 @@ import com.bjike.goddess.annual.bo.AnnualApplyBO;
 import com.bjike.goddess.annual.dto.AnnualApplyDTO;
 import com.bjike.goddess.annual.to.AnnualApplyAuditTo;
 import com.bjike.goddess.annual.to.AnnualApplyTO;
+import com.bjike.goddess.annual.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -19,6 +20,19 @@ import java.util.List;
  */
 public interface AnnualApplyAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 保存年假申请实体数据
      *

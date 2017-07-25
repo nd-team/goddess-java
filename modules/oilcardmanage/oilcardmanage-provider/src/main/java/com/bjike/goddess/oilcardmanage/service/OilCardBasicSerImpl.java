@@ -233,6 +233,7 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicD
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<OilCardBasicBO> pageList(OilCardBasicDTO dto) throws SerException {
+        checkSeeIdentity();
         if (dto.getStatus() != null) {
             dto.getConditions().add(Restrict.eq("status", dto.getStatus()));
         }

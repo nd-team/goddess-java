@@ -1,6 +1,6 @@
 package com.bjike.goddess.buyticket.vo;
 
-import com.bjike.goddess.buyticket.enums.AuditorType;
+import com.bjike.goddess.buyticket.enums.AuditType;
 import com.bjike.goddess.buyticket.enums.TripType;
 
 
@@ -90,14 +90,24 @@ public class BuyTicketApplyVO {
     private String remark;
 
     /**
-     * 负责人
+     * 规划模块负责人
      */
-    private AuditorType auditor;
+    private String planAuditor;
 
     /**
-     * 审核意见
+     * 规划模块审核意见
      */
-    private String auditOpinion;
+    private AuditType planAuditOpinion;
+
+    /**
+     * 福利模块负责人
+     */
+    private String welfAuditor;
+
+    /**
+     * 福利模块审核意见
+     */
+    private AuditType welfAuditOpinion;
 
 
     public String getId() {
@@ -220,19 +230,35 @@ public class BuyTicketApplyVO {
         this.remark = remark;
     }
 
-    public AuditorType getAuditor() {
-        return auditor;
+    public String getPlanAuditor() {
+        return planAuditor;
     }
 
-    public void setAuditor(AuditorType auditor) {
-        this.auditor = auditor;
+    public void setPlanAuditor(String planAuditor) {
+        this.planAuditor = planAuditor;
     }
 
-    public String getAuditOpinion() {
-        return auditOpinion;
+    public AuditType getPlanAuditOpinion() {
+        return planAuditOpinion;
     }
 
-    public void setAuditOpinion(String auditOpinion) {
-        this.auditOpinion = auditOpinion;
+    public void setPlanAuditOpinion(AuditType planAuditOpinion) {
+        this.planAuditOpinion = planAuditOpinion;
+    }
+
+    public String getWelfAuditor() {
+        return welfAuditor;
+    }
+
+    public void setWelfAuditor(String welfAuditor) {
+        this.welfAuditor = welfAuditor;
+    }
+
+    public AuditType getWelfAuditOpinion() {
+        return welfAuditOpinion;
+    }
+
+    public void setWelfAuditOpinion(AuditType welfAuditOpinion) {
+        this.welfAuditOpinion = welfAuditOpinion;
     }
 }

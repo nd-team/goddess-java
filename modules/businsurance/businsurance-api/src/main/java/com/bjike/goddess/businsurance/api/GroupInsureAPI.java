@@ -3,6 +3,7 @@ package com.bjike.goddess.businsurance.api;
 import com.bjike.goddess.businsurance.bo.GroupInsureBO;
 import com.bjike.goddess.businsurance.dto.GroupInsureDTO;
 import com.bjike.goddess.businsurance.to.GroupInsureTO;
+import com.bjike.goddess.businsurance.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -18,6 +19,19 @@ import java.util.List;
  */
 public interface GroupInsureAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 团体意外险列表总条数
      *

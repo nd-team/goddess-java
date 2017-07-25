@@ -21,7 +21,7 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@Service("collectEmailApiImpl")
+@Service("projectEmailApiImpl")
 public class CollectEmailApiImpl implements CollectEmailAPI {
 
     @Autowired

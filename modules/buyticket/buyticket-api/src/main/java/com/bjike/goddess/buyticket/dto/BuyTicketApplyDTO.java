@@ -13,4 +13,5 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  */
 public class BuyTicketApplyDTO extends BaseDTO {
 
+
 }

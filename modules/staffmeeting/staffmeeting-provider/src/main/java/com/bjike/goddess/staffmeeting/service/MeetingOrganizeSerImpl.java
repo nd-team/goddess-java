@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.staffmeeting.api.MeetingLayAPI;
 import com.bjike.goddess.staffmeeting.bo.MeetingLayBO;
 import com.bjike.goddess.staffmeeting.bo.MeetingOrganizeBO;
@@ -329,5 +330,17 @@ public class MeetingOrganizeSerImpl extends ServiceImpl<MeetingOrganize, Meeting
         } else {
             throw new SerException("非法Id，更新对象不能为空");
         }
+    }
+
+    @Override
+    public String[] findPlanUser() throws SerException {
+        List<UserBO> user = userAPI.findAllUser();
+        List<String> userList = new ArrayList<>();
+        for(UserBO users : user) {
+            userList.add(users.getUsername());
+        }
+        String[] userAll = new String [user.size()];
+        userAll = userList.toArray(userAll);
+        return userAll;
     }
 }

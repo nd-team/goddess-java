@@ -8,6 +8,8 @@ import com.bjike.goddess.workjoin.dto.TaskJoinDTO;
 import com.bjike.goddess.workjoin.dto.WorkJoinDTO;
 import com.bjike.goddess.workjoin.entity.WorkJoin;
 import com.bjike.goddess.workjoin.entity.WorkJoinTimeSpecification;
+import com.bjike.goddess.workjoin.excel.SonPermissionObject;
+import com.bjike.goddess.workjoin.to.GuidePermissionTO;
 import com.bjike.goddess.workjoin.to.TaskJoinTO;
 import com.bjike.goddess.workjoin.to.WorkJoinTO;
 
@@ -23,6 +25,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface WorkJoinSer extends Ser<WorkJoin, WorkJoinDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 工作交接列表总条数
      */
@@ -81,5 +96,24 @@ public interface WorkJoinSer extends Ser<WorkJoin, WorkJoinDTO> {
     default void removeWorkJoin(String id) throws SerException {
 
     }
+    /**
+     * 获取工作编号
+     *
+     * @return class String
+     * @throws SerException
+     */
+    default List<String> getNum() throws SerException {
+        return null;
+    }
+    /**
+     * 负责人审核
+     *
+     * @return class String
+     * @throws SerException
+     */
+    default WorkJoinBO audit(WorkJoinTO to) throws SerException {
+        return null;
+    }
+
 
 }

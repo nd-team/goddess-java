@@ -31,17 +31,57 @@ public interface ProblesClassifyPrepareAPI {
         return null;
     }
 
+    /**
+     * 根据id查询问题分类
+     * @param id
+     * @return
+     * @throws SerException
+     */
     ProblesClassifyPrepareBO findById(String id) throws SerException;
 
+    /**
+     * 查询总记录数
+     * @param dto
+     * @return
+     * @throws SerException
+     */
     Long count(ProblesClassifyPrepareDTO dto) throws SerException;
 
+    /**
+     * 问题分类
+     * @param to
+     * @return
+     * @throws SerException
+     */
     ProblesClassifyPrepareBO add(ProblesClassifyPrepareTO to) throws SerException;
 
+    /**
+     * 编辑
+     * @param to
+     * @return
+     * @throws SerException
+     */
     ProblesClassifyPrepareBO edit(ProblesClassifyPrepareTO to) throws SerException;
 
+    /**
+     * 冻结
+     * @param id
+     * @throws SerException
+     */
     void freeze(String id) throws SerException;
 
+    /**
+     * 查询列表
+     * @param dto
+     * @return
+     * @throws SerException
+     */
     List<ProblesClassifyPrepareBO> pageList(ProblesClassifyPrepareDTO dto) throws SerException;
 
+    /**
+     * 解冻
+     * @param id
+     * @throws SerException
+     */
     void unfreeze(String id) throws SerException;
 }

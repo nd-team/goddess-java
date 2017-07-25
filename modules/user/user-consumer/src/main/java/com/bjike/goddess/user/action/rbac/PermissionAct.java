@@ -38,7 +38,7 @@ public class PermissionAct {
     private PermissionAPI permissionAPI;
 
     /**
-     * 获取权限资源树
+     * 资源树
      *
      * @param id id不为空时查询下层子节点,参数为空时查询最顶层
      * @return class PermissionVO
@@ -57,7 +57,7 @@ public class PermissionAct {
     }
 
     /**
-     * 添加资源
+     * 添加
      *
      * @param permissionTO 新的资源信息
      * @return class PermissionVO
@@ -76,7 +76,7 @@ public class PermissionAct {
     }
 
     /**
-     * 通过id删除权限资源
+     * 通过id删除
      *
      * @param id 权限资源唯一标示
      * @userToken yes
@@ -94,7 +94,7 @@ public class PermissionAct {
     }
 
     /**
-     * 编辑权限资源信息
+     * 编辑
      *
      * @param permissionTO
      * @userToken yes

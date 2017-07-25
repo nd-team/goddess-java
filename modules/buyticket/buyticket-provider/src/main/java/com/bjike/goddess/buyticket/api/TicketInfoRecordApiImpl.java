@@ -2,17 +2,13 @@ package com.bjike.goddess.buyticket.api;
 
 import com.bjike.goddess.buyticket.bo.TicketInfoRecordBO;
 import com.bjike.goddess.buyticket.dto.TicketInfoRecordDTO;
-import com.bjike.goddess.buyticket.entity.TicketInfoRecord;
 import com.bjike.goddess.buyticket.service.TicketInfoRecordSer;
+import com.bjike.goddess.buyticket.to.BuyGuidePermissionTO;
 import com.bjike.goddess.buyticket.to.TicketInfoRecordTO;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.type.Status;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -29,6 +25,17 @@ public class TicketInfoRecordApiImpl implements TicketInfoRecordAPI {
 
     @Autowired
     private TicketInfoRecordSer ticketInfoRecordSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return ticketInfoRecordSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(BuyGuidePermissionTO guidePermissionTO) throws SerException {
+        return ticketInfoRecordSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long countTicketInfoRecord(TicketInfoRecordDTO ticketInfoRecordDTO) throws SerException {
         return ticketInfoRecordSer.countTicketInfoRecord(ticketInfoRecordDTO);

@@ -72,7 +72,19 @@ public interface ConciseSummaryAPI {
      */
     ConciseSummaryBO findById(String id) throws SerException;
 
+    /**
+     * 组织内容
+     * @param id
+     * @return
+     * @throws SerException
+     */
+
     OrganizeForSummaryBO organize(String id) throws SerException;
 
+    /**
+     * 解冻
+     * @param id
+     * @throws SerException
+     */
     void unfreeze(String id) throws SerException;
 }

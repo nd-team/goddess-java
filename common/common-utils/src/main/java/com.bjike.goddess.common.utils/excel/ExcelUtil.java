@@ -75,14 +75,21 @@ public class ExcelUtil {
                     if (cellSize > 0) {
                         Object obj = clazz.newInstance();
                         for (int j = 0; j < cellSize; j++) {
-                            ExcelHeader eh = headers.get(j);
-                            String cellVal = getCellValue(row.getCell(j), eh);
-                            Object val = convertValue(cellVal, eh, fields);
-                            if (eh.notNull() && null == val) {
-                                throw new ActException(rowIndex + " 行,列[" + eh.name() + "]不能为空!");
-                            } else if (null != val) {
-                                setFieldValue(obj, eh.name(), val, fields);
-                            }
+                            ExcelHeader eh = null;
+                                if (headers.size() > j) {
+                                    eh = headers.get(j);
+                                    String cellVal = getCellValue(row.getCell(j), eh);
+                                    Object val = convertValue(cellVal, eh, fields);
+                                    if (eh.notNull() && null == val) {
+                                        throw new ActException(rowIndex + " 行,列[" + eh.name() + "]不能为空!");
+                                    } else if (null != val) {
+                                        setFieldValue(obj, eh.name(), val, fields);
+                                    }
+                                }else{
+                                    throw new ActException("不符合导入表格要求");
+                                }
+
+
                         }
                         objects.add((T) obj);
                     }
@@ -557,7 +564,7 @@ public class ExcelUtil {
                 }
             }
             if (!exist) {
-                throw new ActException("["+field.getAnnotation(ExcelHeader.class).name()+ "]字段只能填写:[" + StringUtils.join(fields, ",") + "]");
+                throw new ActException("[" + field.getAnnotation(ExcelHeader.class).name() + "]字段只能填写:[" + StringUtils.join(fields, ",") + "]");
             }
 
         } catch (Exception e) {

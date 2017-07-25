@@ -5,6 +5,7 @@ import com.bjike.goddess.annual.bo.AnnualArrangementStandardBO;
 import com.bjike.goddess.annual.dto.AnnualArrangementStandardDTO;
 import com.bjike.goddess.annual.entity.AnnualArrangementStandard;
 import com.bjike.goddess.annual.to.AnnualArrangementStandardTO;
+import com.bjike.goddess.annual.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -21,6 +22,19 @@ import java.util.List;
  */
 public interface AnnualArrangementStandardSer extends Ser<AnnualArrangementStandard, AnnualArrangementStandardDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 更新年假层级标准实体数据
      *

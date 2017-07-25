@@ -3,9 +3,10 @@ package com.bjike.goddess.staffmove.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.staffmove.enums.AuditorType;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 
 /**
@@ -60,7 +61,7 @@ public class StaffMovementApply extends BaseEntity {
     /**
      * 部门
      */
-    @Column(name = "department",  columnDefinition = "VARCHAR(255)   COMMENT '部门'")
+    @Column(name = "department", columnDefinition = "VARCHAR(255)   COMMENT '部门'")
     private String department;
 
     /**
@@ -96,13 +97,13 @@ public class StaffMovementApply extends BaseEntity {
     /**
      * 计划到岗时间
      */
-    @Column(name = "planArriveTime",  columnDefinition = "DATE   COMMENT '计划到岗时间'")
+    @Column(name = "planArriveTime", columnDefinition = "DATE   COMMENT '计划到岗时间'")
     private LocalDate planArriveTime;
 
     /**
      * 实际到岗时间
      */
-    @Column(name = "actualArriveTime",columnDefinition = "DATE   COMMENT '实际到岗时间'")
+    @Column(name = "actualArriveTime", columnDefinition = "DATE   COMMENT '实际到岗时间'")
     private LocalDate actualArriveTime;
 
     /**
@@ -112,36 +113,69 @@ public class StaffMovementApply extends BaseEntity {
     private String remark;
 
     /**
-     * 审核人
+     * 规划模块审核人
      */
-    @Column(name = "auditor", columnDefinition = "INT(2)   COMMENT '审核人'")
-    private AuditorType auditor;
-
-    /**
-     * 总经办审核意见
-     */
-    @Column(name = "generalAuditOpinion", columnDefinition = "VARCHAR(255)   COMMENT '总经办审核意见'")
-    private String generalAuditOpinion;
-    /**
-     * 原决策层审核意见
-     */
-    @Column(name = "originalAuditOpinion", columnDefinition = "VARCHAR(255)   COMMENT '原决策层审核意见'")
-    private String originalAuditOpinion;
-    /**
-     * 调往决策层审核意见
-     */
-    @Column(name = "transferAuditOpinion", columnDefinition = "VARCHAR(255)   COMMENT '调往决策层审核意见'")
-    private String transferAuditOpinion;
+    @Column(name = "planAuditor", columnDefinition = "VARCHAR(255)   COMMENT '规划模块审核人'")
+    private String planAuditor;
     /**
      * 规划模块审核意见
      */
     @Column(name = "planAuditOpinion", columnDefinition = "VARCHAR(255)   COMMENT '规划模块审核意见'")
     private String planAuditOpinion;
     /**
+     * 预算模块审核人
+     */
+    @Column(name = "budgetAuditor", columnDefinition = "VARCHAR(255)   COMMENT '预算模块审核人'")
+    private String budgetAuditor;
+    /**
      * 预算审核意见
      */
     @Column(name = "budgetAuditOpinion", columnDefinition = "VARCHAR(255)   COMMENT '预算审核意见'")
     private String budgetAuditOpinion;
+
+    /**
+     * 原决策层审核人
+     */
+    @Column(name = "originalAuditor", columnDefinition = "VARCHAR(255)   COMMENT '原决策层审核人'")
+    private String originalAuditor;
+
+    /**
+     * 原决策层审核意见
+     */
+    @Column(name = "originalAuditOpinion", columnDefinition = "VARCHAR(255)   COMMENT '原决策层审核意见'")
+    private String originalAuditOpinion;
+    /**
+     * 原决策层是否同意调动
+     */
+    @Column(name = "originalMove", columnDefinition = "VARCHAR(255)   COMMENT '原决策层是否同意调动'")
+    private String originalMove;
+
+    /**
+     * 调往决策层审核人
+     */
+    @Column(name = "transferAuditor", columnDefinition = "VARCHAR(255)   COMMENT '调往决策层审核人'")
+    private String transferAuditor;
+    /**
+     * 调往决策层审核意见
+     */
+    @Column(name = "transferAuditOpinion", columnDefinition = "VARCHAR(255)   COMMENT '调往决策层审核意见'")
+    private String transferAuditOpinion;
+    /**
+     * 调往决策层是否同意调动
+     */
+    @Column(name = "transferMove", columnDefinition = "VARCHAR(255)   COMMENT '调往决策层是否同意调动'")
+    private String transferMove;
+    /**
+     * 总经办审核人
+     */
+    @Column(name = "generalAuditor", columnDefinition = "VARCHAR(255)   COMMENT '总经办审核人'")
+    private String generalAuditor;
+
+    /**
+     * 总经办审核意见
+     */
+    @Column(name = "generalAuditOpinion", columnDefinition = "VARCHAR(255)   COMMENT '总经办审核意见'")
+    private String generalAuditOpinion;
 
 
     public String getFillPerson() {
@@ -264,14 +298,61 @@ public class StaffMovementApply extends BaseEntity {
         this.remark = remark;
     }
 
-    public AuditorType getAuditor() {
-        return auditor;
+    public String getPlanAuditor() {
+        return planAuditor;
     }
 
-    public void setAuditor(AuditorType auditor) {
-        this.auditor = auditor;
+    public void setPlanAuditor(String planAuditor) {
+        this.planAuditor = planAuditor;
     }
 
+    public String getBudgetAuditor() {
+        return budgetAuditor;
+    }
+
+    public void setBudgetAuditor(String budgetAuditor) {
+        this.budgetAuditor = budgetAuditor;
+    }
+
+    public String getOriginalAuditor() {
+        return originalAuditor;
+    }
+
+    public void setOriginalAuditor(String originalAuditor) {
+        this.originalAuditor = originalAuditor;
+    }
+
+    public String getTransferAuditor() {
+        return transferAuditor;
+    }
+
+    public String getOriginalMove() {
+        return originalMove;
+    }
+
+    public void setOriginalMove(String originalMove) {
+        this.originalMove = originalMove;
+    }
+
+    public String getTransferMove() {
+        return transferMove;
+    }
+
+    public void setTransferMove(String transferMove) {
+        this.transferMove = transferMove;
+    }
+
+    public void setTransferAuditor(String transferAuditor) {
+        this.transferAuditor = transferAuditor;
+    }
+
+    public String getGeneralAuditor() {
+        return generalAuditor;
+    }
+
+    public void setGeneralAuditor(String generalAuditor) {
+        this.generalAuditor = generalAuditor;
+    }
 
     public String getGeneralAuditOpinion() {
         return generalAuditOpinion;

@@ -4,6 +4,7 @@ import com.bjike.goddess.carinfo.bo.DriverRecruitBO;
 import com.bjike.goddess.carinfo.dto.DriverRecruitDTO;
 import com.bjike.goddess.carinfo.service.DriverRecruitSer;
 import com.bjike.goddess.carinfo.to.DriverRecruitTO;
+import com.bjike.goddess.carinfo.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,16 @@ import java.util.List;
 public class DriverRecruitApiImpl implements DriverRecruitAPI {
     @Autowired
     private DriverRecruitSer driverRecruitSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return driverRecruitSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return driverRecruitSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public DriverRecruitBO save(DriverRecruitTO to) throws SerException {

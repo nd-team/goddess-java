@@ -5,7 +5,9 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffmove.bo.StaffMovementApplyBO;
 import com.bjike.goddess.staffmove.dto.StaffMovementApplyDTO;
 import com.bjike.goddess.staffmove.entity.StaffMovementApply;
+import com.bjike.goddess.staffmove.excel.SonPermissionObject;
 import com.bjike.goddess.staffmove.service.StaffMovementApplySer;
+import com.bjike.goddess.staffmove.to.GuidePermissionTO;
 import com.bjike.goddess.staffmove.to.StaffMovementApplyTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,15 @@ import java.util.List;
 public class StaffMovementApplyApiImpl implements StaffMovementApplyAPI {
     @Autowired
     private StaffMovementApplySer staffMovementApplySer;
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return staffMovementApplySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return staffMovementApplySer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countStaffMovementApply(StaffMovementApplyDTO staffMovementApplyDTO) throws SerException {
@@ -57,7 +68,23 @@ public class StaffMovementApplyApiImpl implements StaffMovementApplyAPI {
         staffMovementApplySer.removeStaffMovementApply(id);
     }
     @Override
-    public StaffMovementApplyBO auditStaffMovementApply(StaffMovementApplyTO staffMovementApplyTO) throws SerException {
-        return staffMovementApplySer.auditStaffMovementApply(staffMovementApplyTO);
+    public StaffMovementApplyBO planAudit(StaffMovementApplyTO to) throws SerException {
+        return staffMovementApplySer.planAudit(to);
+    }
+    @Override
+    public StaffMovementApplyBO budgetAudit(StaffMovementApplyTO to) throws SerException {
+        return staffMovementApplySer.budgetAudit(to);
+    }
+    @Override
+    public StaffMovementApplyBO originalAudit(StaffMovementApplyTO to) throws SerException {
+        return staffMovementApplySer.originalAudit(to);
+    }
+    @Override
+    public StaffMovementApplyBO transferAudit(StaffMovementApplyTO to) throws SerException {
+        return staffMovementApplySer.transferAudit(to);
+    }
+    @Override
+    public StaffMovementApplyBO generalAudit(StaffMovementApplyTO to) throws SerException {
+        return staffMovementApplySer.generalAudit(to);
     }
 }

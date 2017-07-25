@@ -36,7 +36,7 @@ public class GroupAct {
     private GroupAPI groupAPI;
 
     /**
-     * 获取组树结构
+     * 树结构
      *
      * @param id id不为空时查询下层子节点,参数为空时查询最顶层
      * @return class GroupVO
@@ -55,7 +55,7 @@ public class GroupAct {
     }
 
     /**
-     * 添加组
+     * 添加
      *
      * @param groupTO 新的组信息
      * @return class GroupVO
@@ -73,7 +73,7 @@ public class GroupAct {
     }
 
     /**
-     * 删除组
+     * 删除
      *
      * @param id 组唯一标示
      * @userToken yes
@@ -91,7 +91,7 @@ public class GroupAct {
     }
 
     /**
-     * 编辑组信息
+     * 编辑
      *
      * @param groupTO
      * @userToken yes

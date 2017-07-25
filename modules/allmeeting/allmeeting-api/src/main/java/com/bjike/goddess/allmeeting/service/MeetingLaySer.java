@@ -53,6 +53,12 @@ public interface MeetingLaySer extends Ser<MeetingLay, MeetingLayDTO> {
     MeetingLayBO updateModel(MeetingLayTO to) throws SerException;
 
     /**
+     * 获取计划参会岗位
+     * @return 计划参会岗位
+     */
+    String[] get() throws SerException;
+
+    /**
      * 列表分页查询
      *
      * @param dto 分页条件

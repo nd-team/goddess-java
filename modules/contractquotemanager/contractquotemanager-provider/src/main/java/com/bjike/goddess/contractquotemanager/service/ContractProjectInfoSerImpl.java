@@ -1,7 +1,5 @@
 package com.bjike.goddess.contractquotemanager.service;
 
-import com.bjike.goddess.businessproject.bo.ContractCategoryBO;
-import com.bjike.goddess.businessproject.bo.SiginManageBO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -151,6 +149,7 @@ public class ContractProjectInfoSerImpl extends ServiceImpl<ContractProjectInfo,
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
+
     /**
      * 分页查询合同项目基本信息
      *
@@ -257,8 +256,8 @@ public class ContractProjectInfoSerImpl extends ServiceImpl<ContractProjectInfo,
 
     @Override
     public byte[] exportExcel(ContractProjectInfoDTO contractProjectInfoDTO) throws SerException {
-
-        if (null != contractProjectInfoDTO.getAreas() && contractProjectInfoDTO.getAreas().length!=0) {
+        checkPermission();
+        if (null != contractProjectInfoDTO.getAreas() && contractProjectInfoDTO.getAreas().length != 0) {
             contractProjectInfoDTO.getConditions().add(Restrict.in("area", contractProjectInfoDTO.getAreas()));
         }
 
@@ -292,21 +291,21 @@ public class ContractProjectInfoSerImpl extends ServiceImpl<ContractProjectInfo,
 
         ContractProjectInfoExcel excel = new ContractProjectInfoExcel();
         excel.setArea("广州");
-        excel.setProjectGroup( "广州研发组" );
+        excel.setProjectGroup("广州研发组");
         excel.setProjectInner("扁平化");
         excel.setDispatchProject("test");
         excel.setDispatchNum("A2321232");
-        excel.setOutProjectNum( "test");
+        excel.setOutProjectNum("test");
         excel.setStartProjectTime("test");
-        excel.setEndProjectTime("test" );
-        excel.setCompleteTime(5 );
+        excel.setEndProjectTime("test");
+        excel.setCompleteTime(5);
         excel.setMoney(6000d);
-        excel.setMajorCompany("华为" );
-        excel.setContractScale( "3000M");
-        excel.setReceivableNum( 38d);
+        excel.setMajorCompany("华为");
+        excel.setContractScale("3000M");
+        excel.setReceivableNum(38d);
         excel.setEmphasis("重要");
-        excel.setDifficulty( "难");
-        contractProjectInfoExcels.add( excel );
+        excel.setDifficulty("难");
+        contractProjectInfoExcels.add(excel);
 
         Excel exce = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(contractProjectInfoExcels, exce);

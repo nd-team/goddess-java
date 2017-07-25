@@ -90,4 +90,11 @@ public interface AllMeetingOrganizeAPI {
      */
     List<AllMeetingOrganizeBO> pageList(AllMeetingOrganizeDTO dto) throws SerException;
 
+    /**
+     * 查询计划参会人员
+     */
+    default String[] getPlanPeople() throws SerException{
+        return null;
+    }
+
 }

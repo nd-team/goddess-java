@@ -5,6 +5,7 @@ import com.bjike.goddess.festival.bo.CompanyFestivalTimeBO;
 import com.bjike.goddess.festival.dto.CompanyFestivalTimeDTO;
 import com.bjike.goddess.festival.service.CompanyFestivalTimeSer;
 import com.bjike.goddess.festival.to.CompanyFestivalTimeTO;
+import com.bjike.goddess.festival.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,16 @@ public class CompanyFestivalTimeApiImpl implements CompanyFestivalTimeAPI {
 
     @Autowired
     private CompanyFestivalTimeSer companyFestivalTimeSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return companyFestivalTimeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return companyFestivalTimeSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countCompanyFestivalTime(CompanyFestivalTimeDTO companyFestivalTimeDTO) throws SerException {

@@ -31,14 +31,14 @@ import org.springframework.web.bind.annotation.RestController;
 @LoginAuth
 @DefaultProperties
 @RestController
-@RequestMapping("group-role")
+@RequestMapping("group/role")
 public class GroupRoleAct {
 
     @Autowired
     private GroupRoleAPI groupRoleAPI;
 
     /**
-     * 添加组角色
+     * 添加
      * @userToken yes
      * @param groupRoleTO 角色组信息
      * @return class GroupRoleVO

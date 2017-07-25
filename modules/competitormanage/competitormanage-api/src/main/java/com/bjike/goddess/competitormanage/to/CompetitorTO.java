@@ -73,6 +73,8 @@ public class CompetitorTO extends BaseTO {
     @NotBlank(message = "级别定义方式不能为空", groups = {ADD.class, EDIT.class})
     private String leveldefinition;
 
+
+
     /**
      * 其他备注
      */

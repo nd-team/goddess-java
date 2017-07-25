@@ -40,48 +40,6 @@ public enum AuditType {
         return value;
     }
 
-    public static AuditType getEnumConvert(int code) {
-        AuditType auditType = AuditType.NONE;
-        if (code == AuditType.NONE.getValue()) {
-            auditType = AuditType.NONE;
-        }
-        if (code == AuditType.ALLOWED.getValue()) {
-            auditType = AuditType.ALLOWED;
-        }
-        if (code == AuditType.DENIED.getValue()) {
-            auditType = AuditType.DENIED;
-        }
-
-        return auditType;
-    }
-
-    public static String getStrConvert(int code) {
-        String name = "";
-        if (code == AuditType.NONE.getValue()) {
-            name = "未通过";
-        }
-        if (code == AuditType.ALLOWED.getValue()) {
-            name = "通过";
-        }
-        if (code == AuditType.DENIED.getValue()) {
-            name = "拒绝";
-        }
-        return name;
-    }
-
-    public static String getFirstLetter(AuditType auditType) {
-        String name = "";
-        if (AuditType.NONE.equals(auditType)) {
-            name = "WT";
-        }
-        if (AuditType.ALLOWED.equals(auditType)) {
-            name = "TG";
-        }
-        if (AuditType.DENIED.equals(auditType)) {
-            name = "JJ";
-        }
-        return name;
-    }
 
     public static String exportStrConvert(AuditType auditType) {
         String name = "";

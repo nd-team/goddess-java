@@ -76,6 +76,24 @@ public class RewardIndicatorSerImpl extends ServiceImpl<RewardIndicator, RewardI
         return flag;
     }
 
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
     @Override
     public Boolean sonPermission() throws SerException {
         String userToken = RpcTransmit.getUserToken();
@@ -183,6 +201,7 @@ public class RewardIndicatorSerImpl extends ServiceImpl<RewardIndicator, RewardI
     @Override
     @Transactional(rollbackFor = SerException.class)
     public RewardIndicatorBO save(RewardIndicatorTO to) throws SerException {
+        checkAddIdentity();
         RewardIndicator entity = BeanTransform.copyProperties(to, RewardIndicator.class, true);
         entity = super.save(entity);
         RewardIndicatorBO bo = BeanTransform.copyProperties(entity, RewardIndicatorBO.class);
@@ -198,6 +217,7 @@ public class RewardIndicatorSerImpl extends ServiceImpl<RewardIndicator, RewardI
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
+        checkAddIdentity();
         super.remove(id);
     }
 

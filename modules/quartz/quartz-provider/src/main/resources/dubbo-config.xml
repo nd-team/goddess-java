@@ -23,5 +23,10 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 	<!--<dubbo:reference  validation="true"  interface="com.bjike.goddess.customer.api.CusEmailAPI" id="cusEmailApiImpl"/>-->
 	<!--<dubbo:reference  validation="true"  interface="com.bjike.goddess.businessproject.api.CollectEmailAPI" id="collectEmailAPI"/>-->
+	<dubbo:reference validation="true" interface="com.bjike.goddess.salaryconfirm.api.SalaryconfirmAPI" id="salaryConfirmAPI"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.bidding.api.CollectEmailAPI" id="biddingEmailAPI"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.market.api.CollectEmailAPI" id="marketEmailAPI"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.projectissuehandle.api.CollectEmailAPI" id="projectEmailAPI"/>
+
 
 </beans>

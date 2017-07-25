@@ -16,6 +16,10 @@ public class JoinInfoVO {
      */
     private String id;
     /**
+     * 工作交接编号
+     */
+    private String workJoinNum;
+    /**
      * 制度文件夹编号
      */
     private String systemFolderNum;
@@ -52,6 +56,14 @@ public class JoinInfoVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getWorkJoinNum() {
+        return workJoinNum;
+    }
+
+    public void setWorkJoinNum(String workJoinNum) {
+        this.workJoinNum = workJoinNum;
     }
 
     public String getSystemFolderNum() {

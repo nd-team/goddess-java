@@ -65,5 +65,10 @@ public interface MeetingSummarySer extends Ser<MeetingSummary, MeetingSummaryDTO
      */
     List<MeetingSummaryBO> pageList(MeetingSummaryDTO dto) throws SerException;
 
+    /**
+     * 解冻
+     * @param id
+     * @throws SerException
+     */
     void unFreeze(String id) throws SerException;
 }

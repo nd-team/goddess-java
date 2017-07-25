@@ -8,6 +8,7 @@ import com.bjike.goddess.enterpriseculturemanage.dto.PeriodicalProgramInfoDTO;
 import com.bjike.goddess.enterpriseculturemanage.enums.AuditResult;
 import com.bjike.goddess.enterpriseculturemanage.service.EnterpriseCultureInfoSer;
 import com.bjike.goddess.enterpriseculturemanage.service.PeriodicalProgramInfoSer;
+import com.bjike.goddess.enterpriseculturemanage.to.GuidePermissionTO;
 import com.bjike.goddess.enterpriseculturemanage.to.PeriodicalProgramInfoTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,15 @@ public class PeriodicalProgramInfoApiImpl implements PeriodicalProgramInfoAPI {
     @Autowired
     private EnterpriseCultureInfoSer enterpriseCultureInfoSer;
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return periodicalProgramInfoSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return periodicalProgramInfoSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public List<EnterpriseCultureInfoBO> findInfo() throws SerException {

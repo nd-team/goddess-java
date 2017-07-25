@@ -50,4 +50,11 @@ public interface AllMeetingOrganizeSer extends Ser<AllMeetingOrganize, AllMeetin
     //会议编号校验，防止非法数据提交
     void validNum(String meetingNum) throws SerException;
 
+    /**
+     * 查询计划参会人员
+     */
+    default String[] getPlanPeople() throws SerException{
+        return null;
+    }
+
 }

@@ -62,7 +62,7 @@ public class UserAct {
     }
 
     /**
-     * 添加用户
+     * 添加
      *
      * @param userTO 用户
      * @version v1
