@@ -61,7 +61,7 @@ public class EnterpriseCultureInfoApiImpl implements EnterpriseCultureInfoAPI {
     }
 
     @Override
-    public PublicizeProgramInfoBO findPublicize(String id) throws SerException {
+    public List<PublicizeProgramInfoBO> findPublicize(String id) throws SerException {
         return enterpriseCultureInfoSer.findPublicize(id);
     }
 

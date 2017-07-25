@@ -4,8 +4,10 @@ import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.enterpriseculturemanage.enums.AuditResult;
+import com.bjike.goddess.enterpriseculturemanage.enums.PublicizeWay;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -35,7 +37,7 @@ public class PeriodicalProgramInfoTO extends BaseTO {
      * 发刊形式
      */
     @NotBlank(message = "刊物理念不能为空", groups = {ADD.class, EDIT.class})
-    private String way;
+    private PublicizeWay way;
 
     /**
      * 发刊规格
@@ -94,11 +96,11 @@ public class PeriodicalProgramInfoTO extends BaseTO {
         this.ida = ida;
     }
 
-    public String getWay() {
+    public PublicizeWay getWay() {
         return way;
     }
 
-    public void setWay(String way) {
+    public void setWay(PublicizeWay way) {
         this.way = way;
     }
 

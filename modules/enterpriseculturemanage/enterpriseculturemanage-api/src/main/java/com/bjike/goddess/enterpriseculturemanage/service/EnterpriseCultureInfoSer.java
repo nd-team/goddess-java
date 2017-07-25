@@ -67,7 +67,7 @@ public interface EnterpriseCultureInfoSer extends Ser<EnterpriseCultureInfo, Ent
      * @param id 企业文化信息id
      * @return 宣传方案
      */
-    PublicizeProgramInfoBO findPublicize(String id) throws SerException;
+    List<PublicizeProgramInfoBO> findPublicize(String id) throws SerException;
 
     /**
      * 根据企业文化信息id查询刊物方案

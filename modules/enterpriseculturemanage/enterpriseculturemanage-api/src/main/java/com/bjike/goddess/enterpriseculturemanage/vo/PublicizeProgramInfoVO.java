@@ -46,7 +46,7 @@ public class PublicizeProgramInfoVO {
     /**
      * 执行费用
      */
-    private String executeCost;
+    private Double executeCost;
 
     /**
      * 审核结果
@@ -111,11 +111,11 @@ public class PublicizeProgramInfoVO {
         this.executeCycle = executeCycle;
     }
 
-    public String getExecuteCost() {
+    public Double getExecuteCost() {
         return executeCost;
     }
 
-    public void setExecuteCost(String executeCost) {
+    public void setExecuteCost(Double executeCost) {
         this.executeCost = executeCost;
     }
 

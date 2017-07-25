@@ -41,6 +41,9 @@
 
     <dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.carinfo.api.CusPermissionAPI" />
     <dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.carinfo.api.CusPermissionOperateAPI" />
+    <dubbo:service  ref="carSendEmailApiImpl" interface="com.bjike.goddess.carinfo.api.CarSendEmailAPI" />
+
+    <dubbo:reference interface="com.bjike.goddess.contacts.api.InternalContactsAPI" id="internalContactsApiImpl"/>
 
 
 </beans>

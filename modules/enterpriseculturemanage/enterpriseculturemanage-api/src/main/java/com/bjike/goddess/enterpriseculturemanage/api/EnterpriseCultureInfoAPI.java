@@ -74,7 +74,7 @@ public interface EnterpriseCultureInfoAPI {
      * @param id
      * @return
      */
-    PublicizeProgramInfoBO findPublicize(String id) throws SerException;
+    List<PublicizeProgramInfoBO> findPublicize(String id) throws SerException;
 
     /**
      * 查询刊物方案信息
