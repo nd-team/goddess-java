@@ -3,6 +3,7 @@ package com.bjike.goddess.workjoin.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.workjoin.bo.WorkJoinDutyBO;
 import com.bjike.goddess.workjoin.dto.WorkJoinDutyDTO;
+import com.bjike.goddess.workjoin.to.GuidePermissionTO;
 import com.bjike.goddess.workjoin.to.WorkJoinDutyTO;
 
 import java.util.List;
@@ -17,6 +18,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface WorkJoinDutyAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 工作交接责任义务列表总条数
      */

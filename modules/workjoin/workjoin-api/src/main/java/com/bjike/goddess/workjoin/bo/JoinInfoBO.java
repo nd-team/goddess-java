@@ -12,7 +12,10 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Copy: [ com.bjike ]
  */
 public class JoinInfoBO extends BaseBO {
-
+    /**
+     * 工作交接编号
+     */
+    private String workJoinNum;
     /**
      * 制度文件夹编号
      */
@@ -43,6 +46,13 @@ public class JoinInfoBO extends BaseBO {
      */
     private String accountPath;
 
+    public String getWorkJoinNum() {
+        return workJoinNum;
+    }
+
+    public void setWorkJoinNum(String workJoinNum) {
+        this.workJoinNum = workJoinNum;
+    }
 
     public String getSystemFolderNum() {
         return systemFolderNum;

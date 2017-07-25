@@ -7,6 +7,7 @@ import com.bjike.goddess.workjoin.bo.TaskJoinBO;
 import com.bjike.goddess.workjoin.dto.JoinInfoDTO;
 import com.bjike.goddess.workjoin.dto.TaskJoinDTO;
 import com.bjike.goddess.workjoin.entity.TaskJoin;
+import com.bjike.goddess.workjoin.to.GuidePermissionTO;
 import com.bjike.goddess.workjoin.to.JoinInfoTO;
 import com.bjike.goddess.workjoin.to.TaskJoinTO;
 
@@ -22,6 +23,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface TaskJoinSer extends Ser<TaskJoin, TaskJoinDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 任务交接列表总条数

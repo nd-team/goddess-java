@@ -29,7 +29,7 @@ public class WorkJoinDuty extends BaseEntity {
     /**
      * 责任与义务
      */
-    @Column(name = "duty", columnDefinition = "VARCHAR(255)   COMMENT '责任与义务'")
+    @Column(name = "duty", columnDefinition = "TEXT   COMMENT '责任与义务'")
     private String duty;
 
 
