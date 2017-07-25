@@ -32,7 +32,7 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.bidding.api.BidOpeningInfoAPI" id="bidOpeningInfoApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.bidding.api.BiddingAnswerQuestionsAPI" id="biddingAnswerQuestionsApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.bidding.api.TenderInfoAPI" id="tenderInfoApiImpl"/>
-	<dubbo:reference  validation="true"  interface="com.bjike.goddess.bidding.api.CollectEmailAPI" id="collectEmailApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.bidding.api.CollectEmailAPI" id="biddingEmailApiImpl"/>
 
 	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.bidding.api.CusPermissionAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.bidding.api.CusPermissionOperateAPI" />
