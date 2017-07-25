@@ -2,6 +2,7 @@ package com.bjike.goddess.materialinstock.vo;
 
 import com.bjike.goddess.materialinstock.type.InstockType;
 import com.bjike.goddess.materialinstock.type.MaterialState;
+import com.bjike.goddess.materialinstock.type.UseState;
 
 /**
  * 物资入库表现层对象
@@ -108,7 +109,10 @@ public class MaterialInStockVO {
      * 物资状态
      */
     private MaterialState materialState;
-
+    /**
+     * 使用状态
+     */
+    private UseState useState;
     /**
      * 外借人
      */
@@ -217,6 +221,14 @@ public class MaterialInStockVO {
 
     public String getMaterialType() {
         return materialType;
+    }
+
+    public UseState getUseState() {
+        return useState;
+    }
+
+    public void setUseState(UseState useState) {
+        this.useState = useState;
     }
 
     public void setMaterialType(String materialType) {

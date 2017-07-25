@@ -8,6 +8,7 @@ import com.bjike.goddess.businsurance.vo.InsureRecordVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -16,7 +17,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -30,7 +33,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("insurerecord")
-public class InsureRecordAction {
+public class InsureRecordAction extends BaseFileAction{
 
     @Autowired
     private InsureRecordAPI insureRecordAPI;
@@ -153,20 +156,21 @@ public class InsureRecordAction {
     /**
      * 导出
      *
-     * @param insureRecordDTO insureRecordDTO
      * @des 导出
      * @return  class InsureRecordVO
      * @version v1
      */
     @GetMapping("v1/export")
-    public Result export(InsureRecordDTO insureRecordDTO ) throws ActException {
-//        try {
-//            InsureRecordBO insureRecordBO1 = insureRecordAPI.getInsureRecord(id);
-//            return ActResult.initialize(BeanTransform.copyProperties(insureRecordBO1,InsureRecordVO.class,true));
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-        return ActResult.initialize(null);
+    public Result export( HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "意外险记录.xlsx";
+            super.writeOutFile(response, insureRecordAPI.exportExcel(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
     }
 
 }

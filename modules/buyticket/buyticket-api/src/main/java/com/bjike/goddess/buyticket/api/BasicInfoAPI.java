@@ -3,6 +3,7 @@ package com.bjike.goddess.buyticket.api;
 import com.bjike.goddess.buyticket.bo.BasicInfoBO;
 import com.bjike.goddess.buyticket.dto.BasicInfoDTO;
 import com.bjike.goddess.buyticket.to.BasicInfoTO;
+import com.bjike.goddess.buyticket.to.BuyGuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -17,6 +18,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface BasicInfoAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(BuyGuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 基本信息设置列表总条数
      */
@@ -71,5 +86,34 @@ public interface BasicInfoAPI {
     default void removeBasicInfo(String id) throws SerException {
 
     }
-
+    /**
+     * 购票原因
+     */
+    default List<String> findAllTicketCause() throws SerException{
+        return null;
+    }
+    /**
+     * 车票类型
+     */
+    default List<String> findAllTicketType() throws SerException{
+        return null;
+    }
+    /**
+     * 购买方式
+     */
+    default List<String> findAllBuyPattern() throws SerException{
+        return null;
+    }
+    /**
+     * 汇总类型
+     */
+    default List<String> findAllSummaryType() throws SerException{
+        return null;
+    }
+    /**
+     * 数据汇总呈现类型
+     */
+    default List<String> findAllDataAggregationType() throws SerException{
+        return null;
+    }
 }

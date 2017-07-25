@@ -5,10 +5,13 @@ import com.bjike.goddess.annual.bo.AnnualInfoBO;
 import com.bjike.goddess.annual.bo.AnnualStandardBO;
 import com.bjike.goddess.annual.dto.AnnualInfoDTO;
 import com.bjike.goddess.annual.entity.AnnualInfo;
+import com.bjike.goddess.annual.enums.GuideAddrStatus;
+import com.bjike.goddess.annual.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.MsgType;
@@ -68,12 +71,145 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
     private MessageAPI messageAPI;
     @Autowired
     private EntryBasicInfoAPI entryBasicInfoAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
     //定时器格式 : * 00 00 31 12 ?
     private static final String header = "%d年1月1日至%d年12月30日一年内您的病假天数已超过规定天数，根据公司制度您今年将不享受带薪年假。标准：";
     private static final String standard = "职员工龄%d-%d年，请病假累计%d个月以上的,";
     private static final String foot = "以上情况将不享受带薪年假。";
     private static final String title = "关于年假通知";
 
+    /**
+     * 检查权限(部门)
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是本部门人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 检查权限(项目经理)
+     *
+     * @throws SerException
+     */
+    private void checkPonsPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.positCusPermission("2");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是该岗位人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    /**
+     * 核对总经办审核权限（岗位级别）
+     */
+    private Boolean guidePosinIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.positCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagPosin = guidePosinIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee || flagPosin) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideIdentity();
+                break;
+            case ADD:
+                flag = guideIdentity();
+                break;
+            case EDIT:
+                flag = guideIdentity();
+                break;
+            case DELETE:
+                flag = guideIdentity();
+                break;
+            case SEE:
+                flag = guideIdentity();
+                break;
+            case AUDIT:
+                flag = guidePosinIdentity();
+                break;
+            case SEEMYSELF:
+                flag = true;
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
     @Override
     public List<AnnualInfoBO> findByUsername(String username) throws SerException {
         AnnualInfoDTO dto = new AnnualInfoDTO();

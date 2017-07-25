@@ -296,11 +296,11 @@ public class MarketServeSummaryAct {
      * @version v1
      */
     @GetMapping("v1/findProjectName")
-    public Result findApplyProjectName(Boolean type) throws ActException {
+    public Result findApplyProjectName(@RequestParam Boolean type) throws ActException {
         try {
-            if(type==null){
-                throw new SerException("类型不能为空");
-            }
+//            if(type==null){
+//                throw new SerException("类型不能为空");
+//            }
             List<String> projectNames = new ArrayList<>();
             if (type) {
                 projectNames = marketServeApplyAPI.findAllProjectName();

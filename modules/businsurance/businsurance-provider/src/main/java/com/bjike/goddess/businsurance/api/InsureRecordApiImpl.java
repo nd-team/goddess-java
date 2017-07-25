@@ -57,5 +57,9 @@ public class InsureRecordApiImpl implements InsureRecordAPI {
     public InsureRecordBO getInsureRecord(String id) throws SerException {
         return insureRecordSer.getInsureRecord(id);
     }
-    
+
+    @Override
+    public byte[] exportExcel() throws SerException {
+        return insureRecordSer.exportExcel();
+    }
 }

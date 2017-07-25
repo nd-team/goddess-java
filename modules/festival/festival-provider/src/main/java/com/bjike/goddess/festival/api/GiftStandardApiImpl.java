@@ -5,6 +5,7 @@ import com.bjike.goddess.festival.bo.GiftStandardBO;
 import com.bjike.goddess.festival.dto.GiftStandardDTO;
 import com.bjike.goddess.festival.service.GiftStandardSer;
 import com.bjike.goddess.festival.to.GiftStandardTO;
+import com.bjike.goddess.festival.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,16 @@ public class GiftStandardApiImpl implements GiftStandardAPI {
 
     @Autowired
     private GiftStandardSer giftStandardSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return giftStandardSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return giftStandardSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countGiftStandard(GiftStandardDTO giftStandardDTO) throws SerException {

@@ -53,6 +53,7 @@ public class TimeCriteriaSetSerImpl extends ServiceImpl<TimeCriteriaSet, TimeCri
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         String userName = userBO.getUsername();
+        RpcTransmit.transmitUserToken(userToken);
         if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.busCusPermission("1");
         } else {

@@ -4,6 +4,7 @@ import com.bjike.goddess.buyticket.api.BuyTicketStandardAPI;
 import com.bjike.goddess.buyticket.bo.BuyTicketStandardBO;
 import com.bjike.goddess.buyticket.dto.BuyTicketStandardDTO;
 import com.bjike.goddess.buyticket.to.BuyTicketStandardTO;
+import com.bjike.goddess.buyticket.to.BuyGuidePermissionTO;
 import com.bjike.goddess.buyticket.vo.BuyTicketStandardVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -36,6 +37,28 @@ public class BuyTicketStandardAction {
     @Autowired
     private BuyTicketStandardAPI buyTicketStandardAPI;
 
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(BuyGuidePermissionTO.TestAdd.class) BuyGuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = buyTicketStandardAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 购票标准列表总条数
      *

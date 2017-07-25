@@ -239,9 +239,12 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
                             } else {
                                 Field[] enumFields = field.getType().getFields();
                                 for (int k = 0; k < enumFields.length; k++) {
-                                    int val = Integer.parseInt(arr_obj[j].toString());
-                                    String name = enumFields[k].getName();
-                                    if (val == k) {
+                                    Integer val = null;
+                                    if (null != arr_obj[j]) {
+                                        val = Integer.parseInt(arr_obj[j].toString());
+                                    }
+                                    if (null != val && val == k) {
+                                        String name = enumFields[k].getName();
                                         field.set(obj, field.getType().getField(name).get(name));
                                     }
                                 }

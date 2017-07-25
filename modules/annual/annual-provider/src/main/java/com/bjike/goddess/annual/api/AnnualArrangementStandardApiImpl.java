@@ -4,6 +4,7 @@ import com.bjike.goddess.annual.bo.AnnualArrangementStandardBO;
 import com.bjike.goddess.annual.dto.AnnualArrangementStandardDTO;
 import com.bjike.goddess.annual.service.AnnualArrangementStandardSer;
 import com.bjike.goddess.annual.to.AnnualArrangementStandardTO;
+import com.bjike.goddess.annual.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,15 @@ public class AnnualArrangementStandardApiImpl implements AnnualArrangementStanda
     @Autowired
     private AnnualArrangementStandardSer annualArrangementStandardSer;
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return annualArrangementStandardSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return annualArrangementStandardSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public AnnualArrangementStandardBO update(AnnualArrangementStandardTO to) throws SerException {

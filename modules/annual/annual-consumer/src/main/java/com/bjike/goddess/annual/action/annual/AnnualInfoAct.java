@@ -31,7 +31,7 @@ public class AnnualInfoAct {
     private AnnualInfoAPI annualInfoAPI;
 
     /**
-     * 获取指定用户的年假信息
+     * 获取指定用户的年假信息(我的年假记录)
      *
      * @param username 用户名
      * @return class AnnualInfoVO

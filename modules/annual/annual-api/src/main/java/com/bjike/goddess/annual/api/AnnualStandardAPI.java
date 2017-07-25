@@ -2,7 +2,9 @@ package com.bjike.goddess.annual.api;
 
 import com.bjike.goddess.annual.bo.AnnualStandardBO;
 import com.bjike.goddess.annual.dto.AnnualStandardDTO;
+import com.bjike.goddess.annual.excel.SonPermissionObject;
 import com.bjike.goddess.annual.to.AnnualStandardTO;
+import com.bjike.goddess.annual.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -18,6 +20,20 @@ import java.util.List;
  */
 public interface AnnualStandardAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 保存年假标准实体数据
      *

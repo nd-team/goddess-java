@@ -2,6 +2,7 @@ package com.bjike.goddess.businsurance.service;
 
 import com.bjike.goddess.businsurance.bo.BusInsuranceBO;
 import com.bjike.goddess.businsurance.to.BusInsuranceTO;
+import com.bjike.goddess.businsurance.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.businsurance.entity.BusInsurance;
@@ -20,7 +21,19 @@ import java.util.List;
  */
 public interface BusInsuranceSer extends Ser<BusInsurance, BusInsuranceDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
 
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 商业保险方案列表总条数
      *
@@ -85,6 +98,27 @@ public interface BusInsuranceSer extends Ser<BusInsurance, BusInsuranceDTO> {
      */
     default BusInsuranceBO getBusInsurance(String id ) throws SerException {return null;}
 
+    /**
+     * 获取保险公司
+     */
+    default List<String> getAllInsureComapny( ) throws SerException {return null;}
+    /**
+     * 获取投保险种
+     */
+    default List<String> getAllInsureType( ) throws SerException {return null;}
+    /**
+     * 获取保险条件
+     */
+    default List<String> getAllInsureCondition( ) throws SerException {return null;}
 
-
+    /**
+     * 导出excel
+     *
+     * @param busInsuranceDTO
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel(BusInsuranceDTO busInsuranceDTO) throws SerException{
+        return null;
+    }
 }
