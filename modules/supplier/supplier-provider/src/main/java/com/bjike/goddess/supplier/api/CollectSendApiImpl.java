@@ -6,6 +6,7 @@ import com.bjike.goddess.supplier.dto.CollectSendDTO;
 import com.bjike.goddess.supplier.service.CollectSendSer;
 import com.bjike.goddess.supplier.to.CollectSendTO;
 import com.bjike.goddess.supplier.to.CollectTo;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,16 @@ public class CollectSendApiImpl implements CollectSendAPI {
 
     @Autowired
     private CollectSendSer collectSendSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return collectSendSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return collectSendSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public CollectSendBO save(CollectSendTO to) throws SerException {

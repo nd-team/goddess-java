@@ -1,14 +1,12 @@
 package com.bjike.goddess.attainment.service;
 
-import com.bjike.goddess.attainment.bo.SurveyPlanBO;
+import com.bjike.goddess.attainment.bo.*;
 import com.bjike.goddess.attainment.dto.SurveyActualizeDTO;
 import com.bjike.goddess.attainment.dto.SurveyPlanDTO;
-import com.bjike.goddess.attainment.entity.SurveyDemand;
-import com.bjike.goddess.attainment.entity.SurveyPlan;
+import com.bjike.goddess.attainment.entity.*;
 import com.bjike.goddess.attainment.enums.AuditType;
 import com.bjike.goddess.attainment.enums.GuideAddrStatus;
-import com.bjike.goddess.attainment.to.GuidePermissionTO;
-import com.bjike.goddess.attainment.to.SurveyPlanTO;
+import com.bjike.goddess.attainment.to.*;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -46,11 +44,15 @@ public class SurveyPlanSerImpl extends ServiceImpl<SurveyPlan, SurveyPlanDTO> im
     private SurveyAnalyseSer surveyAnalyseSer;
     @Autowired
     private SurveyPlanAuditSer surveyPlanAuditSer;
+    @Autowired
+    private SurveyQuestionnaireOptionSer surveyQuestionnaireOptionSer;
 
     @Autowired
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private SurveyQuestionnaireSer surveyQuestionnaireSer;
 
     private SurveyPlanBO transformBO(SurveyPlan entity) throws SerException {
         SurveyPlanBO bo = BeanTransform.copyProperties(entity, SurveyPlanBO.class);
@@ -143,6 +145,101 @@ public class SurveyPlanSerImpl extends ServiceImpl<SurveyPlan, SurveyPlanDTO> im
     public Long getTotal() throws SerException {
         SurveyPlanDTO dto = new SurveyPlanDTO();
         return super.count(dto);
+    }
+
+    @Override
+    public List<SurPlanbo> getSurveyPlan() throws SerException {
+        List<SurveyPlan> surveyPlanList = super.findAll();
+        List<SurPlanbo> list = new ArrayList<>();
+        if (null != surveyPlanList && surveyPlanList.size() > 0) {
+            for (SurveyPlan entity : surveyPlanList) {
+                SurPlanbo surPlanbo = new SurPlanbo();
+                surPlanbo.setSurPlanId(entity.getId());
+                surPlanbo.setSerialNumber(entity.getSerialNumber());
+                list.add(surPlanbo);
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<SurveyActualizesBO> questionnaire(SurveyActualizesTO to) throws SerException {
+        List<SurveyActualizesBO> list = new ArrayList<>();
+        if (null != to) {
+            SurveyActualizeTO surveyActualizeTO = BeanTransform.copyProperties(to, SurveyActualizeTO.class, "surveyQuestionnairesTOs");
+            SurveyActualizeBO surveyActualizeBO = surveyActualizeSer.save(surveyActualizeTO);
+            SurveyActualize surveyActualize = BeanTransform.copyProperties(surveyActualizeBO, SurveyActualize.class, true);
+            String actualizeId = surveyActualize.getId();
+
+            List<SurveyQuestionnairesTO> surveyQuestionnairesTOs = to.getSurveyQuestionnairesTOs();
+            if (null != surveyQuestionnairesTOs && surveyQuestionnairesTOs.size() > 0) {
+                for (SurveyQuestionnairesTO surveyQuestionnairesTO : surveyQuestionnairesTOs) {
+                    SurveyQuestionnaireTO surveyQuestionnaireTO = BeanTransform.copyProperties(surveyQuestionnairesTO, SurveyQuestionnaireTO.class, "surveyQuestionnaireOptionTOs");
+                    surveyQuestionnaireTO.setActualizeId(actualizeId);
+                    SurveyQuestionnaireBO surveyQuestionnaireBO = surveyQuestionnaireSer.save(surveyQuestionnaireTO);
+                    SurveyQuestionnaire surveyQuestionnaire = BeanTransform.copyProperties(surveyQuestionnaireBO, SurveyQuestionnaire.class);
+                    List<SurveyQuestionnaireOptionTO> surveyQuestionnaireOptionTOs = surveyQuestionnairesTO.getSurveyQuestionnaireOptionTOs();
+                    if (null != surveyQuestionnaireOptionTOs && surveyQuestionnaireOptionTOs.size() > 0) {
+                        for (SurveyQuestionnaireOptionTO surveyQuestionnaireOptionTO : surveyQuestionnaireOptionTOs) {
+                            String questionnaireId = surveyQuestionnaire.getId();
+                            surveyQuestionnaireOptionTO.setQuestionnaireId(questionnaireId);
+                            surveyQuestionnaireOptionSer.save(surveyQuestionnaireOptionTO);
+                        }
+                    }
+                }
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<SurveyQuestionnairesBO> getQuestionnaire(String id) throws SerException {
+        List<SurveyQuestionnaireBO> surveyQuestionnaireBOs = surveyQuestionnaireSer.findByActualize(id);
+        if (null != surveyQuestionnaireBOs && surveyQuestionnaireBOs.size() > 0) {
+            List<SurveyQuestionnairesBO> list = new ArrayList<>();
+            List<SurveyQuestionnaireOptionBO> surveyQuestionnaireOptionBOList = new ArrayList<>();
+            if (null != surveyQuestionnaireBOs && surveyQuestionnaireBOs.size() > 0) {
+                for (SurveyQuestionnaireBO surveyQuestionnaireBO : surveyQuestionnaireBOs) {
+                    SurveyQuestionnairesBO surveyQuestionnairesBO = new SurveyQuestionnairesBO();
+                    surveyQuestionnairesBO.setActualizeId(surveyQuestionnaireBO.getActualizeId());
+                    surveyQuestionnairesBO.setMultiple(surveyQuestionnaireBO.getMultiple());
+                    surveyQuestionnairesBO.setNum(surveyQuestionnaireBO.getNum());
+                    surveyQuestionnairesBO.setQuestionnaire(surveyQuestionnaireBO.getQuestionnaire());
+                    surveyQuestionnairesBO.setId(surveyQuestionnaireBO.getId());
+                    //根据问题id获取问题选项
+                    List<SurveyQuestionnaireOptionBO> surveyQuestionnaireOptionBOs = surveyQuestionnaireOptionSer.findByQuestion(surveyQuestionnaireBO.getId());
+                    if (null != surveyQuestionnaireOptionBOs && surveyQuestionnaireOptionBOs.size() > 0) {
+                        surveyQuestionnairesBO.setSurveyQuestionnaireOptionBOs(surveyQuestionnaireOptionBOs);
+                    }
+                    list.add(surveyQuestionnairesBO);
+                }
+            }
+            return list;
+        }
+        return null;
+    }
+
+    @Override
+    public List<SurveyQuestionnaireOptionUsersBO> editQuestionnaire(SurveyQuestionnaireOptionUsersTO to) throws SerException {
+        //前端传过来选项的id,表名,员工的list(选项id不能为空)
+        List<SurveyQuestionnaireOptionUserTO> surveyQuestionnaireOptionUserTOs = to.getSurveyQuestionnaireOptionUserTOs();
+        if (null != surveyQuestionnaireOptionUserTOs && surveyQuestionnaireOptionUserTOs.size() > 0)
+            for (SurveyQuestionnaireOptionUserTO to1 : surveyQuestionnaireOptionUserTOs) {
+                SurveyQuestionnaireOptionUser surveyQuestionnaireOptionUser = new SurveyQuestionnaireOptionUser();
+                surveyQuestionnaireOptionUser.setTableName(to1.getTableName());
+                surveyQuestionnaireOptionUser.setUser(to1.getUser());
+                //选项id
+                String surveyQuestionnaireOptionID = to1.getOptionId();
+                //根据选项id获得问题选项
+                SurveyQuestionnaireOption surveyQuestionnaireOption = surveyQuestionnaireOptionSer.findById(surveyQuestionnaireOptionID);
+                SurveyQuestionnaireOption surveyQuestionnaireOption1 = new SurveyQuestionnaireOption();
+                surveyQuestionnaireOption1.set
+                BeanTransform.copyProperties(surveyQuestionnaireOption,SurveyQuestionnaireOption.class,"id");
+                surveyQuestionnaireOption.setContent();
+
+                surveyQuestionnaireOption.setContent();
+        //把填好的问卷
+        return;
     }
 
     /**

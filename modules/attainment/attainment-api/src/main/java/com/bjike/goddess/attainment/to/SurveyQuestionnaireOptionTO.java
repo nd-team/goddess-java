@@ -20,7 +20,7 @@ public class SurveyQuestionnaireOptionTO extends BaseTO {
     /**
      * 问题id
      */
-    @NotNull(message = "问题id不能为空", groups = {ADD.class, EDIT.class})
+//    @NotNull(message = "问题id不能为空", groups = {ADD.class, EDIT.class})
     private String questionnaireId;
 
     /**

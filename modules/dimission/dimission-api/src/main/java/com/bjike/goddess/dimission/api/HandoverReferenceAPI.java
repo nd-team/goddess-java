@@ -3,6 +3,7 @@ package com.bjike.goddess.dimission.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.dimission.bo.HandoverReferenceBO;
 import com.bjike.goddess.dimission.dto.HandoverReferenceDTO;
+import com.bjike.goddess.dimission.to.GuidePermissionTO;
 import com.bjike.goddess.dimission.to.HandoverReferenceTO;
 
 import java.util.List;
@@ -17,6 +18,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface HandoverReferenceAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存

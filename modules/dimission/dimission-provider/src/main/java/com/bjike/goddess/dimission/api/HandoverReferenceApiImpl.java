@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.dimission.bo.HandoverReferenceBO;
 import com.bjike.goddess.dimission.dto.HandoverReferenceDTO;
 import com.bjike.goddess.dimission.service.HandoverReferenceSer;
+import com.bjike.goddess.dimission.to.GuidePermissionTO;
 import com.bjike.goddess.dimission.to.HandoverReferenceTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,16 @@ public class HandoverReferenceApiImpl implements HandoverReferenceAPI {
 
     @Autowired
     private HandoverReferenceSer handoverReferenceSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return handoverReferenceSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return handoverReferenceSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public HandoverReferenceBO save(HandoverReferenceTO to) throws SerException {

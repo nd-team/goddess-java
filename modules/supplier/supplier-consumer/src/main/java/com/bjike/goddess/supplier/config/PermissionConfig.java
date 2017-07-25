@@ -1,9 +1,9 @@
 package com.bjike.goddess.supplier.config;
 
+import com.bjike.goddess.supplier.api.SupCusPermissionAPI;
+import com.bjike.goddess.supplier.enums.SupCusPermissionType;
+import com.bjike.goddess.supplier.to.SupCusPermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.supplier.api.SupPermissionAPI;
-import com.bjike.goddess.supplier.enums.SupPermissionType;
-import com.bjike.goddess.supplier.to.SupPermissionTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -25,7 +25,7 @@ public class PermissionConfig {
     }
 
     @Autowired
-    private SupPermissionAPI cusPermissionAPI;
+    private SupCusPermissionAPI supCusPermissionAPI;
     @Autowired
     private Environment env;
 
@@ -33,10 +33,7 @@ public class PermissionConfig {
     private static List<String> descList = new ArrayList<>();
     private static List<String> idList = new ArrayList<>();
     private static List<String> typeList = new ArrayList<>();
-//
-//    public static void main(String[] args) throws IOException{
-//        generatePerssion();
-//    }
+
 
     //解析permission.propertity文档
     public void generatePerssion() throws IOException {
@@ -68,22 +65,8 @@ public class PermissionConfig {
             typeList.add(type.trim());
         }
 
-
-        //获取输入文件路径
-//        String inputPath = System.getProperty("user.dir") + "/modules/customer/customer-consumer/src/main/permission/permission.properties";
-//        System.err.println(inputPath);
-//        String fieldsString = null;
-//        File file = new File(inputPath);
-//        BufferedReader reader = new BufferedReader(new FileReader(file));
-//        Stream<String> stream = reader.lines();
-//        List<String> lines = stream.collect(Collectors.toList());
-//        System.out.println(lines);
-//        //[#描述, describe=客户添加权限, #对应id, id=1]
-//        System.out.println(lines.size());
-//        createDeails(lines);
-
         //插入数据库
-        List<SupPermissionTO> listTO = new ArrayList<>();
+        List<SupCusPermissionTO> listTO = new ArrayList<>();
         if (descList.size() != idList.size() && descList.size() != typeList.size()) {
             return;
         }
@@ -91,17 +74,17 @@ public class PermissionConfig {
             String desc = descList.get(i);
             String id = idList.get(i);
             String type = typeList.get(i);
-            SupPermissionTO to = new SupPermissionTO();
+            SupCusPermissionTO to = new SupCusPermissionTO();
             to.setIdFlag(id);
             to.setDescription(desc);
-            if (SupPermissionType.LEVEL.name().equals(type.trim())) {
-                to.setType(SupPermissionType.LEVEL);
-            } else if (SupPermissionType.MODULE.name().equals(type.trim())) {
-                to.setType(SupPermissionType.MODULE);
-            } else if (SupPermissionType.POSITION.name().equals(type.trim())) {
-                to.setType(SupPermissionType.POSITION);
-            } else if (SupPermissionType.DEPART.name().equals(type.trim())) {
-                to.setType(SupPermissionType.DEPART);
+            if (SupCusPermissionType.LEVEL.name().equals(type.trim())) {
+                to.setType(SupCusPermissionType.LEVEL);
+            } else if (SupCusPermissionType.MODULE.name().equals(type.trim())) {
+                to.setType(SupCusPermissionType.MODULE);
+            } else if (SupCusPermissionType.POSITION.name().equals(type.trim())) {
+                to.setType(SupCusPermissionType.POSITION);
+            } else if (SupCusPermissionType.DEPART.name().equals(type.trim())) {
+                to.setType(SupCusPermissionType.DEPART);
             }
             to.setOperator("");
             listTO.add(to);
@@ -109,7 +92,7 @@ public class PermissionConfig {
         }
         try {
             if (listTO != null && listTO.size() > 0) {
-                cusPermissionAPI.add(listTO);
+                supCusPermissionAPI.add(listTO);
             }
         } catch (SerException e) {
             e.printStackTrace();
@@ -118,63 +101,4 @@ public class PermissionConfig {
 
     }
 
-    /**
-     * 构建类描述
-     */
-    private static void createDeails(List<String> lines) {
-        descList = new ArrayList<>();
-        idList = new ArrayList<>();
-        int index = 0;
-        StringBuffer descSb = new StringBuffer("");
-        StringBuffer idSb = new StringBuffer("");
-        StringBuffer typeSb = new StringBuffer("");
-        for (int i = 0; i < lines.size(); i++) {
-            String line = lines.get(i);
-            if (line.startsWith("ids=")) {
-                index = -1;
-            }
-            if (line.startsWith("type=")) {
-                index = -2;
-            }
-            if (!line.startsWith("#")) {
-                if (!line.startsWith("ids=") && index != -1 && index != -2) {
-                    descSb.append(line.replace(";\\", ";"));
-                }
-                if (index == -1) {
-                    idSb.append(line.replace(";\\", ";"));
-                }
-                if (index == -2) {
-                    typeSb.append(line.replace(";\\", ";"));
-                }
-            }
-
-        }
-        //描述
-        int indexFlag = descSb.toString().indexOf("=");
-        String describeStr = descSb.toString().substring(indexFlag + 1);
-        //id
-        indexFlag = idSb.toString().indexOf("=");
-        String idStr = idSb.toString().substring(indexFlag + 1);
-        //type
-        indexFlag = typeSb.toString().indexOf("=");
-        String typeStr = typeSb.toString().substring(indexFlag + 1);
-
-        String[] describeStrList = describeStr.split(";");
-        String[] idStrList = idStr.split(";");
-        String[] typeStrList = typeStr.split(";");
-
-        for (String desc : describeStrList) {
-            descList.add(desc.trim());
-        }
-        for (String id : idStrList) {
-            idList.add(id.trim());
-        }
-        for (String type : typeStrList) {
-            typeList.add(type.trim());
-        }
-
-        System.out.println(descSb + "复活节客队：" + describeStr);
-        System.out.println(idSb + "复活节客队：" + idStr);
-        System.out.println(typeSb + "复活节客队：" + typeStr);
-    }
 }

@@ -216,4 +216,6 @@ public interface PositionDetailSer extends Ser<PositionDetail, PositionDetailDTO
     default PositionDetailBO findByPosition(String position) throws SerException {
         return null;
     }
+
+
 }

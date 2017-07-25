@@ -27,6 +27,16 @@ public class SupplierTypeApiImpl implements SupplierTypeAPI {
     private SupplierTypeSer supplierTypeSer;
 
     @Override
+    public Boolean sonPermission() throws SerException {
+        return supplierTypeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return supplierTypeSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
     public List<SupplierTypeBO> findStatus() throws SerException {
         return supplierTypeSer.findStatus();
     }
@@ -72,8 +82,4 @@ public class SupplierTypeApiImpl implements SupplierTypeAPI {
         return supplierTypeSer.count(dto);
     }
 
-    @Override
-    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
-        return supplierTypeSer.guidePermission(guidePermissionTO);
-    }
 }

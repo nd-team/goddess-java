@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.supplier.bo.EnterpriseQualificationBO;
 import com.bjike.goddess.supplier.service.EnterpriseQualificationSer;
 import com.bjike.goddess.supplier.to.EnterpriseQualificationTO;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,16 @@ public class EnterpriseQualificationApiImpl implements EnterpriseQualificationAP
 
     @Autowired
     private EnterpriseQualificationSer enterpriseQualificationSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return enterpriseQualificationSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return enterpriseQualificationSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public List<EnterpriseQualificationBO> findByInformation(String info_id) throws SerException {

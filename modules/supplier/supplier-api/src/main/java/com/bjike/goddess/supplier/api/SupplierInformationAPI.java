@@ -128,12 +128,6 @@ public interface SupplierInformationAPI {
     }
 
 
-    /**
-     * 下拉导航权限
-     */
-    default List<SonPermissionObject> sonPermission() throws SerException {
-        return null;
-    }
 
 
     /**
@@ -146,11 +140,21 @@ public interface SupplierInformationAPI {
      */
     List<SupplierInformationBO> findByName(String name) throws SerException;
 
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
 
     /**
      * 导航权限
      */
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    default List<String> listType() throws SerException {
         return null;
     }
 }

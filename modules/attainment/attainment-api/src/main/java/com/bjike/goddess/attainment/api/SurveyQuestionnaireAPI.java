@@ -1,6 +1,7 @@
 package com.bjike.goddess.attainment.api;
 
 import com.bjike.goddess.attainment.bo.SurveyQuestionnaireBO;
+import com.bjike.goddess.attainment.dto.SurveyQuestionnaireDTO;
 import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.attainment.to.SurveyQuestionnaireTO;
 import com.bjike.goddess.common.api.exception.SerException;

@@ -12,6 +12,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -145,9 +147,9 @@ public class DemandTypeAct {
      * @version v1
      */
     @GetMapping("v1/findThaw")
-    public Result findThaw( HttpServletRequest request) throws ActException {
+    public Result findThaw(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(demandTypeAPI.findThaw(), DemandTypeVO.class,request));
+            return ActResult.initialize(BeanTransform.copyProperties(demandTypeAPI.findThaw(), DemandTypeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -198,4 +200,19 @@ public class DemandTypeAct {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 调研对象
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getObject")
+    public Result getObject() throws ActException {
+        try {
+            return ActResult.initialize(demandTypeAPI.getObject());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

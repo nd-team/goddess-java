@@ -240,4 +240,5 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
                 bos.add(new OpinionBO(entity.getId(), entity.getDepartment()));
         return bos;
     }
+
 }

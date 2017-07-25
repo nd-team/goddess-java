@@ -192,4 +192,5 @@ public interface DepartmentDetailSer extends Ser<DepartmentDetail, DepartmentDet
     default List<OpinionBO> findAllOpinion() throws SerException {
         return null;
     }
+
 }

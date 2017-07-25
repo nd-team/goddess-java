@@ -9,11 +9,15 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.vo.AreaVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import com.bjike.goddess.supplier.api.SupplierInformationAPI;
+import com.bjike.goddess.supplier.api.SupplierTypeAPI;
 import com.bjike.goddess.supplier.bo.SupplierInfoCollectBO;
 import com.bjike.goddess.supplier.dto.SupplierInformationDTO;
 import com.bjike.goddess.supplier.to.CollectTo;
@@ -55,6 +59,10 @@ public class SupplierInformationAct extends BaseFileAction {
 
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private SupplierTypeAPI supplierTypeAPI;
 
 
     /**
@@ -89,7 +97,7 @@ public class SupplierInformationAct extends BaseFileAction {
      */
     @LoginAuth
     @GetMapping("v1/setButtonPermission")
-    public Result i() throws ActException {
+    public Result setButtonPermission() throws ActException {
         List<SonPermissionObject> list = new ArrayList<>();
         try {
             SonPermissionObject obj = new SonPermissionObject();
@@ -120,6 +128,7 @@ public class SupplierInformationAct extends BaseFileAction {
     @GetMapping("v1/sonPermission")
     public Result sonPermission() throws ActException {
         try {
+
             List<SonPermissionObject> hasPermissionList = supplierInformationAPI.sonPermission();
             return new ActResult(0, "有权限", hasPermissionList);
 
@@ -127,7 +136,6 @@ public class SupplierInformationAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
-
 
     /**
      * 保存供应商基本信息数据
@@ -343,7 +351,6 @@ public class SupplierInformationAct extends BaseFileAction {
         } catch (Exception e) {
             throw new ActException(e.getMessage());
         }
-
     }
 
     /**
@@ -362,4 +369,36 @@ public class SupplierInformationAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 获取地区
+     *
+     * @return class AreaVO
+     * @version v1
+     */
+    @GetMapping("v1/listArea")
+    public Result listArea() throws ActException {
+        try {
+            List<AreaBO> list = departmentDetailAPI.findArea();
+            return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取类型
+     *
+     * @version v1
+     */
+    @GetMapping("v1/listType")
+    public Result listType() throws ActException {
+        try {
+            List<String> list = supplierInformationAPI.listType();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

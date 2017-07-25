@@ -294,4 +294,6 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         else
             return this.transformationToBO(entity);
     }
+
+
 }
