@@ -12,6 +12,10 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Copy: [ com.bjike ]
  */
 public class DeviceJoinBO extends BaseBO {
+    /**
+     * 工作交接编号
+     */
+    private String workJoinNum;
 
     /**
      * 设备编号
@@ -28,6 +32,13 @@ public class DeviceJoinBO extends BaseBO {
      */
     private String devicePath;
 
+    public String getWorkJoinNum() {
+        return workJoinNum;
+    }
+
+    public void setWorkJoinNum(String workJoinNum) {
+        this.workJoinNum = workJoinNum;
+    }
 
     public String getDeviceNum() {
         return deviceNum;

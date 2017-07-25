@@ -12,7 +12,10 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Copy: [ com.bjike ]
  */
 public class TaskJoinBO extends BaseBO {
-
+    /**
+     * 工作交接编号
+     */
+    private String workJoinNum;
     /**
      * 任务名称
      */
@@ -58,6 +61,13 @@ public class TaskJoinBO extends BaseBO {
      */
     private String taskPath;
 
+    public String getWorkJoinNum() {
+        return workJoinNum;
+    }
+
+    public void setWorkJoinNum(String workJoinNum) {
+        this.workJoinNum = workJoinNum;
+    }
 
     public String getTaskName() {
         return taskName;

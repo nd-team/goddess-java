@@ -19,6 +19,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "workjoin_devicejoin")
 public class DeviceJoin extends BaseEntity {
+    /**
+     * 工作交接编号
+     */
+    @Column(name = "workJoinNum", columnDefinition = "VARCHAR(255)   COMMENT '工作交接编号'",unique = true)
+    private String workJoinNum;
 
     /**
      * 设备编号
@@ -38,6 +43,13 @@ public class DeviceJoin extends BaseEntity {
     @Column(name = "devicePath", columnDefinition = "VARCHAR(255)   COMMENT '关于设备使用的相关资料存储路径'")
     private String devicePath;
 
+    public String getWorkJoinNum() {
+        return workJoinNum;
+    }
+
+    public void setWorkJoinNum(String workJoinNum) {
+        this.workJoinNum = workJoinNum;
+    }
 
     public String getDeviceNum() {
         return deviceNum;

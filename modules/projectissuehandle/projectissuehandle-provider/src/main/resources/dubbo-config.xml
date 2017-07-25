@@ -32,7 +32,7 @@
 	<dubbo:service interface="com.bjike.goddess.projectissuehandle.api.ProblemAcceptAPI" ref="problemAcceptApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.projectissuehandle.api.ProblemHandlingResultAPI" ref="problemHandlingResultApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.projectissuehandle.api.InvolvedProcessingTaskAPI" ref="involvedProcessingTaskApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.projectissuehandle.api.CollectEmailAPI" ref="collectEmailApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.projectissuehandle.api.CollectEmailAPI" ref="projectEmailApiImpl"/>
 	<dubbo:service  ref="proPermissionApiImpl" interface="com.bjike.goddess.projectissuehandle.api.ProPermissionAPI" />
 	<dubbo:service  ref="proPermissionOperateApiImpl" interface="com.bjike.goddess.projectissuehandle.api.ProPermissionOperateAPI" />
 

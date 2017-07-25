@@ -1,6 +1,9 @@
 package com.bjike.goddess.workjoin.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 任务交接
@@ -12,6 +15,11 @@ import com.bjike.goddess.common.api.to.BaseTO;
  * @Copy: [ com.bjike ]
  */
 public class TaskJoinTO extends BaseTO {
+    /**
+     * 工作交接编号
+     */
+    @NotBlank(message = "工作交接不能为空",groups = {ADD.class, EDIT.class})
+    private String workJoinNum;
 
     /**
      * 任务名称
@@ -58,6 +66,13 @@ public class TaskJoinTO extends BaseTO {
      */
     private String taskPath;
 
+    public String getWorkJoinNum() {
+        return workJoinNum;
+    }
+
+    public void setWorkJoinNum(String workJoinNum) {
+        this.workJoinNum = workJoinNum;
+    }
 
     public String getTaskName() {
         return taskName;

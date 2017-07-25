@@ -17,6 +17,7 @@ import com.bjike.goddess.workjoin.bo.JoinInfoBO;
 import com.bjike.goddess.workjoin.bo.TaskJoinBO;
 import com.bjike.goddess.workjoin.dto.JoinInfoDTO;
 import com.bjike.goddess.workjoin.dto.TaskJoinDTO;
+import com.bjike.goddess.workjoin.to.GuidePermissionTO;
 import com.bjike.goddess.workjoin.to.JoinInfoTO;
 import com.bjike.goddess.workjoin.to.TaskJoinTO;
 import com.bjike.goddess.workjoin.to.WorkJoinDeleteFileTO;
@@ -49,6 +50,29 @@ public class TaskJoinAction extends BaseFileAction{
     private TaskJoinAPI taskJoinAPI;
     @Autowired
     private FileAPI fileAPI;
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = taskJoinAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
     /**
      * 任务交接列表总条数
      *

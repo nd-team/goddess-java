@@ -19,7 +19,7 @@
 	<dubbo:reference  validation="true" id="problemAcceptApiImpl" interface="com.bjike.goddess.projectissuehandle.api.ProblemAcceptAPI" />
 	<dubbo:reference  validation="true" id="problemHandlingResultApiImpl" interface="com.bjike.goddess.projectissuehandle.api.ProblemHandlingResultAPI" />
 	<dubbo:reference  validation="true" id="involvedProcessingTaskApiImpl" interface="com.bjike.goddess.projectissuehandle.api.InvolvedProcessingTaskAPI" />
-	<dubbo:reference  validation="true" id="collectEmail" interface="com.bjike.goddess.projectissuehandle.api.CollectEmailAPI" />
+	<dubbo:reference  validation="true" id="projectEmailApiImpl" interface="com.bjike.goddess.projectissuehandle.api.CollectEmailAPI" />
 	<dubbo:reference  validation="true" id="proPermissionApiImpl" interface="com.bjike.goddess.projectissuehandle.api.ProPermissionAPI" />
 	<dubbo:reference  validation="true" id="proPermissionOperateApiImpl" interface="com.bjike.goddess.projectissuehandle.api.ProPermissionOperateAPI" />
 

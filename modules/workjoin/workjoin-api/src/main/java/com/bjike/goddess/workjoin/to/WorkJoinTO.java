@@ -1,5 +1,7 @@
 package com.bjike.goddess.workjoin.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -15,88 +17,104 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class WorkJoinTO extends BaseTO {
+    public interface audit{}
+    /**
+     * 工作交接编号
+     */
+    @NotBlank(message = "工作交接编号不能为空",groups = {ADD.class, EDIT.class})
+    private String workJoinNum;
 
     /**
      * 工作交接开始时间
      */
-    @NotBlank(message = "工作交接开始时间不能为空")
+    @NotBlank(message = "工作交接开始时间不能为空",groups = {ADD.class, EDIT.class})
     private String workJoinStartTime;
 
     /**
      * 工作交接结束时间
      */
-    @NotBlank(message = "工作交接结束时间不能为空")
+    @NotBlank(message = "工作交接结束时间不能为空",groups = {ADD.class, EDIT.class})
     private String workJoinendTime;
 
     /**
      * 所属模块/组别
      */
-    @NotBlank(message = "所属模块/组别不能为空")
+    @NotBlank(message = "所属模块/组别不能为空",groups = {ADD.class, EDIT.class})
     private String belongModule;
 
     /**
      * 岗位
      */
-    @NotBlank(message = "岗位不能为空")
+    @NotBlank(message = "岗位不能为空",groups = {ADD.class, EDIT.class})
     private String jobs;
 
     /**
      * 工作交接原因
      */
-    @NotBlank(message = "工作交接原因不能为空")
+    @NotBlank(message = "工作交接原因不能为空",groups = {ADD.class, EDIT.class})
     private String workJoinCause;
 
     /**
      * 工作范围
      */
-    @NotBlank(message = "工作范围不能为空")
+    @NotBlank(message = "工作范围不能为空",groups = {ADD.class, EDIT.class})
     private String workScope;
 
     /**
      * 工作目的
      */
-    @NotBlank(message = "工作目的不能为空")
+    @NotBlank(message = "工作目的不能为空",groups = {ADD.class, EDIT.class})
     private String workPurpose;
 
     /**
      * 工作权限
      */
-    @NotBlank(message = "工作权限不能为空")
+    @NotBlank(message = "工作权限不能为空",groups = {ADD.class, EDIT.class})
     private String workPermission;
 
     /**
      * 交接人
      */
-    @NotBlank(message = "交接人不能为空")
+    @NotBlank(message = "交接人不能为空",groups = {ADD.class, EDIT.class})
     private String successor;
 
     /**
      * 交接人确认(是/否)
      */
+    @NotNull(message = "交接人确认(是/否)不能为空",groups = {ADD.class, EDIT.class})
     private Boolean heir;
 
     /**
      * 接手人
      */
-    @NotBlank(message = "接手人不能为空")
+    @NotBlank(message = "接手人不能为空",groups = {ADD.class, EDIT.class})
     private String replacement;
 
     /**
      * 接手人确认(是/否)
      */
+    @NotNull(message = "接手人确认(是/否)不能为空",groups = {ADD.class, EDIT.class})
     private Boolean inheritor;
 
     /**
      * 负责人
      */
-    @NotBlank(message = "负责人不能为空")
+    @NotBlank(message = "负责人不能为空",groups = {WorkJoinTO.audit.class})
     private String principal;
 
     /**
      * 负责人确认(是/否)
      */
+    @NotNull(message = "负责人确认(是/否)不能为空",groups = {WorkJoinTO.audit.class})
     private Boolean head;
 
+    public String getWorkJoinNum() {
+        return workJoinNum;
+    }
+
+    public void setWorkJoinNum(String workJoinNum) {
+        this.workJoinNum = workJoinNum;
+    }
 
     public String getWorkJoinStartTime() {
         return workJoinStartTime;
