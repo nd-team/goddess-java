@@ -4,8 +4,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.enterpriseculturemanage.bo.ConstructTeamBO;
 import com.bjike.goddess.enterpriseculturemanage.dto.ConstructTeamDTO;
+import com.bjike.goddess.enterpriseculturemanage.excel.SonPermissionObject;
 import com.bjike.goddess.enterpriseculturemanage.service.ConstructTeamSer;
 import com.bjike.goddess.enterpriseculturemanage.to.ConstructTeamTO;
+import com.bjike.goddess.enterpriseculturemanage.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,17 @@ public class ConstructTeamApiImpl implements ConstructTeamAPI {
 
     @Autowired
     private ConstructTeamSer constructTeamSer;
+
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return constructTeamSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return constructTeamSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public ConstructTeamBO addModel(ConstructTeamTO to) throws SerException {

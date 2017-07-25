@@ -52,7 +52,7 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
     private CusPermissionSer cusPermissionSer;
 
     /**
-     * 核对查看权限（部门级别）
+     * 核对查看权限（层级别）
      */
     private void checkSeeIdentity() throws SerException {
         Boolean flag = false;

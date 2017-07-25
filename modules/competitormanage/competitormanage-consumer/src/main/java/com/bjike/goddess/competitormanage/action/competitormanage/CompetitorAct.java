@@ -12,6 +12,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.competitormanage.api.CompetitorAPI;
+import com.bjike.goddess.competitormanage.bo.CompetitorBO;
 import com.bjike.goddess.competitormanage.dto.CompetitorDTO;
 import com.bjike.goddess.competitormanage.excel.CompetitorExcel;
 import com.bjike.goddess.competitormanage.excel.SonPermissionObject;
@@ -318,7 +319,7 @@ public class CompetitorAct extends BaseFileAction {
      * @param endDate   结束时间
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @GetMapping("v1/export")
     public Result exportExcel(String startDate, String endDate, HttpServletResponse response) throws ActException {
         try {
@@ -416,4 +417,5 @@ public class CompetitorAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
 }

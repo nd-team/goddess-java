@@ -47,7 +47,7 @@ public class MeetingOrganizeVO {
     /**
      * 计划参会人员
      */
-    private String planUser;
+    private String[] planUser;
 
     /**
      * 计划参会时间
@@ -127,11 +127,11 @@ public class MeetingOrganizeVO {
         this.content = content;
     }
 
-    public String getPlanUser() {
+    public String[] getPlanUser() {
         return planUser;
     }
 
-    public void setPlanUser(String planUser) {
+    public void setPlanUser(String[] planUser) {
         this.planUser = planUser;
     }
 

@@ -197,6 +197,7 @@ public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, Recom
 
     @Override
     public RecommendRequireBO insertModel(RecommendRequireTO to) throws SerException {
+        checkAddIdentity();
 
         RecommendScheme recommendScheme = recommendSchemeSer.findById(to.getRecommendSchemeId());
         RecommendType recommendType = recommendTypeSer.findById(to.getRecommendTypeId());
@@ -231,6 +232,7 @@ public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, Recom
 
     @Override
     public RecommendRequireBO updateModel(RecommendRequireTO to) throws SerException {
+        checkAddIdentity();
         RecommendScheme recommendScheme = recommendSchemeSer.findById(to.getRecommendSchemeId());
         RecommendType recommendType = recommendTypeSer.findById(to.getRecommendTypeId());
         if (recommendScheme != null) {
@@ -275,6 +277,7 @@ public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, Recom
 
     @Override
     public List<RecommendRequireBO> pageList(RecommendRequireDTO dto) throws SerException {
+        checkSeeIdentity();
         dto.getSorts().add("createTime=desc");
         List<RecommendRequire> list = super.findByPage(dto);
         if (!CollectionUtils.isEmpty(list)) {
@@ -295,6 +298,7 @@ public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, Recom
 
     @Override
     public void delete(String id) throws SerException {
+        checkAddIdentity();
         RecommendRequire model = super.findById(id);
         if (model != null) {
             super.remove(id);

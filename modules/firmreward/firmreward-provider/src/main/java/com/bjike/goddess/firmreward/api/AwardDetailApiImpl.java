@@ -100,11 +100,11 @@ public class AwardDetailApiImpl implements AwardDetailAPI {
 
     @Override
     public Boolean sonPermission() throws SerException {
-        return null;
+        return awardDetailSer.sonPermission();
     }
 
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
-        return null;
+        return awardDetailSer.guidePermission(guidePermissionTO);
     }
 }

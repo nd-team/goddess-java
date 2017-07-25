@@ -32,7 +32,7 @@ public class MeetingLayTO extends BaseTO {
      * 计划参会岗位
      */
     @NotBlank(message = "计划参会岗位不能为空",groups = {ADD.class, EDIT.class})
-    private String position;
+    private String[] position;
 
     /**
      * 关联功能
@@ -57,11 +57,11 @@ public class MeetingLayTO extends BaseTO {
         this.name = name;
     }
 
-    public String getPosition() {
+    public String[] getPosition() {
         return position;
     }
 
-    public void setPosition(String position) {
+    public void setPosition(String[] position) {
         this.position = position;
     }
 

@@ -32,16 +32,52 @@ public interface ProblesAllotPrepareAPI {
         return null;
     }
 
+    /**
+     * 新增问题分类议题
+     * @param to
+     * @return
+     * @throws SerException
+     */
     ProblesAllotPrepareBO add(ProblesAllotPrepareTO to) throws SerException;
 
+    /**
+     * 修改问题分类议题
+     * @param to
+     * @return
+     * @throws SerException
+     */
     ProblesAllotPrepareBO edit(ProblesAllotPrepareTO to) throws SerException;
+
+    /**
+     * 冻结
+     * @param id
+     * @throws SerException
+     */
 
     void freeze(String id) throws SerException;
 
+    /**
+     * 查询列表
+     * @param dto
+     * @return
+     * @throws SerException
+     */
     List<ProblesAllotPrepareBO> pageList(ProblesAllotPrepareDTO dto) throws SerException;
 
+    /**
+     * 查询总记录数
+     * @param dto
+     * @return
+     * @throws SerException
+     */
     Long count(ProblesAllotPrepareDTO dto) throws SerException;
 
+    /**
+     * 根据id查询工作汇总议题准备
+     * @param id
+     * @return
+     * @throws SerException
+     */
     ProblesAllotPrepareBO findById(String id) throws SerException;
 
 }

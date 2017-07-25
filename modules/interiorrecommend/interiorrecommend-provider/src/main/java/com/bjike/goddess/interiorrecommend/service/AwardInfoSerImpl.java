@@ -136,7 +136,7 @@ public class AwardInfoSerImpl extends ServiceImpl<AwardInfo, AwardInfoDTO> imple
     public List<SonPermissionObject> sonPermission() throws SerException {
         List<SonPermissionObject> list = new ArrayList<>();
         String userToken = RpcTransmit.getUserToken();
-        Boolean flagSeeSign = guideSeeIdentity();
+        Boolean flagAwardInfo = guideSeeIdentity();
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagAddSign = guideAddIdentity();
 
@@ -145,7 +145,7 @@ public class AwardInfoSerImpl extends ServiceImpl<AwardInfo, AwardInfoDTO> imple
         obj = new SonPermissionObject();
         obj.setName("awardinfo");
         obj.setDescribesion("推荐奖励信息");
-        if (flagSeeSign || flagAddSign) {
+        if (flagAwardInfo || flagAddSign) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -158,7 +158,7 @@ public class AwardInfoSerImpl extends ServiceImpl<AwardInfo, AwardInfoDTO> imple
         RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("awardstandard");
-        obj.setDescribesion("推荐奖励要求");
+        obj.setDescribesion("推荐奖励要求标准");
         if (flagStandard) {
             obj.setFlag(true);
         } else {
@@ -274,6 +274,7 @@ public class AwardInfoSerImpl extends ServiceImpl<AwardInfo, AwardInfoDTO> imple
 
     @Override
     public AwardInfoBO updateModel(AwardInfoTO to) throws SerException {
+        checkAddIdentity();
         if (!StringUtils.isEmpty(to.getId())) {
             AwardInfo model = super.findById(to.getId());
             if (model != null) {
@@ -303,6 +304,7 @@ public class AwardInfoSerImpl extends ServiceImpl<AwardInfo, AwardInfoDTO> imple
 
     @Override
     public List<AwardInfoBO> pageList(AwardInfoDTO dto) throws SerException {
+        checkSeeIdentity();
         dto.getSorts().add("creatTime=desc");
         return BeanTransform.copyProperties(super.findByPage(dto), AwardInfoBO.class);
     }

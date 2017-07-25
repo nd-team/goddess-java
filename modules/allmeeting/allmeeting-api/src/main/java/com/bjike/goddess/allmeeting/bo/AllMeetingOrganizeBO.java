@@ -38,7 +38,7 @@ public class AllMeetingOrganizeBO extends BaseBO {
     /**
      * 计划参会岗位
      */
-    private String position;
+    private StringBuilder[] position;
 
     /**
      * 会议内容
@@ -53,7 +53,7 @@ public class AllMeetingOrganizeBO extends BaseBO {
     /**
      * 计划参会人员
      */
-    private String planUser;
+    private String[] planUser;
 
     /**
      * 计划会议时间
@@ -112,11 +112,11 @@ public class AllMeetingOrganizeBO extends BaseBO {
         this.layName = layName;
     }
 
-    public String getPosition() {
+    public StringBuilder[] getPosition() {
         return position;
     }
 
-    public void setPosition(String position) {
+    public void setPosition(StringBuilder[] position) {
         this.position = position;
     }
 
@@ -136,11 +136,11 @@ public class AllMeetingOrganizeBO extends BaseBO {
         this.relation = relation;
     }
 
-    public String getPlanUser() {
+    public String[] getPlanUser() {
         return planUser;
     }
 
-    public void setPlanUser(String planUser) {
+    public void setPlanUser(String[] planUser) {
         this.planUser = planUser;
     }
 

@@ -11,7 +11,7 @@ import java.io.IOException;
 public class JapiTest {
 
 	public static void main(String[] args) throws IOException {
-		JapiClient.setPrefixPath("/home/ike/github/goddess-java/");//路径前缀
+		JapiClient.setPrefixPath("/media/data4/jzx/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
 		JapiClient.setProjectJavaPath(
 				"modules/enterpriseculturemanage/enterpriseculturemanage-consumer");//主项目位置

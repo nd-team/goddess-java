@@ -59,5 +59,15 @@ public interface MeetingLaySer extends Ser<MeetingLay, MeetingLayDTO> {
 
     List<MeetingLayBO> lays() throws SerException;
 
+    /**
+     * 根据id来删除
+     * @param id
+     * @throws SerException
+     */
     void delete(String id) throws SerException;
+
+    /**
+     * 查询所有岗位
+     */
+    String[] findPosition() throws SerException;
 }

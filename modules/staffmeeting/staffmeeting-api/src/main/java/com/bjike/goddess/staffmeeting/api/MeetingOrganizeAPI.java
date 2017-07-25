@@ -86,4 +86,9 @@ public interface MeetingOrganizeAPI {
      * @param id
      */
     void unfreeze(String id) throws SerException;
+
+    /**
+     * 获取所有人员
+     */
+    String[] findPlanUser() throws SerException;
 }

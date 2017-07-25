@@ -7,10 +7,7 @@ import com.bjike.goddess.allmeeting.api.MultiwheelSummaryAPI;
 import com.bjike.goddess.allmeeting.dto.MeetingDiscussionDTO;
 import com.bjike.goddess.allmeeting.dto.MultiPermissionDTO;
 import com.bjike.goddess.allmeeting.dto.MultiwheelSummaryDTO;
-import com.bjike.goddess.allmeeting.to.DiscussionVoteTO;
-import com.bjike.goddess.allmeeting.to.FirstDiscussionTO;
-import com.bjike.goddess.allmeeting.to.MultiwheelSummaryTO;
-import com.bjike.goddess.allmeeting.to.SecondDiscussionTO;
+import com.bjike.goddess.allmeeting.to.*;
 import com.bjike.goddess.allmeeting.vo.*;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.entity.ADD;
@@ -51,6 +48,29 @@ public class MultiwheelSummaryAct {
     private MeetingDiscussionAPI meetingDiscussionAPI;
     @Autowired
     private MultiPermissionAPI multiPermissionAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = multiwheelSummaryAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 组织内容

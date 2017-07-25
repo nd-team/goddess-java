@@ -74,4 +74,9 @@ public class MeetingOrganizeApiImpl implements MeetingOrganizeAPI {
     public void unfreeze(String id) throws SerException {
         meetingOrganizeSer.unfreeze(id);
     }
+
+    @Override
+    public String[] findPlanUser() throws SerException {
+        return meetingOrganizeSer.findPlanUser();
+    }
 }

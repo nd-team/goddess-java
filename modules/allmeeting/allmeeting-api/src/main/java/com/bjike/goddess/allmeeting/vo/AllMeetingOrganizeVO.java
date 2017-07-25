@@ -29,7 +29,7 @@ public class AllMeetingOrganizeVO {
     private String topic;
 
     /**
-     * 会议议题
+     * 会议议题包含内容
      */
     private String topicContent;
 
@@ -56,7 +56,7 @@ public class AllMeetingOrganizeVO {
     /**
      * 计划参会人员
      */
-    private String planUser;
+    private String[] planUser;
 
     /**
      * 计划会议时间
@@ -147,11 +147,11 @@ public class AllMeetingOrganizeVO {
         this.relation = relation;
     }
 
-    public String getPlanUser() {
+    public String[] getPlanUser() {
         return planUser;
     }
 
-    public void setPlanUser(String planUser) {
+    public void setPlanUser(String[] planUser) {
         this.planUser = planUser;
     }
 
