@@ -1,9 +1,9 @@
 package com.bjike.goddess.businsurance.config;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.devicerepair.api.CusPermissionAPI;
-import com.bjike.goddess.devicerepair.to.CusPermissionTO;
-import com.bjike.goddess.devicerepair.type.CusPermissionType;
+import com.bjike.goddess.businsurance.api.CusPermissionAPI;
+import com.bjike.goddess.businsurance.to.CusPermissionTO;
+import com.bjike.goddess.businsurance.enums.CusPermissionType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;

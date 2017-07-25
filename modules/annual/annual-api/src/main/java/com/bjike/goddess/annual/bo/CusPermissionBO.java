@@ -1,7 +1,7 @@
 package com.bjike.goddess.annual.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.annual.type.CusPermissionType;
+import com.bjike.goddess.annual.enums.CusPermissionType;
 
 import java.util.List;
 

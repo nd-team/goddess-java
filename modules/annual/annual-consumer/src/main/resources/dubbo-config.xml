@@ -17,13 +17,14 @@
 
     <!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
     <dubbo:reference validation="true" interface="com.bjike.goddess.annual.api.AnnualApplyAPI" id="annualApplyApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.annual.api.AnnualArrangementStandardAPI"
-                     id="annualArrangementStandardApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.annual.api.AnnualArrangementStandardAPI" id="annualArrangementStandardApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.annual.api.AnnualInfoAPI" id="annualInfoApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.annual.api.AnnualStandardAPI"
-                     id="annualStandardApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.annual.api.AnnualStandardAPI" id="annualStandardApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.annual.api.CusPermissionAPI" id="cusPermissionApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.annual.api.CusPermissionOperateAPI" id="cusPermissionOperateApiImpl"/>
 
+
+    <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
     <dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
 
 

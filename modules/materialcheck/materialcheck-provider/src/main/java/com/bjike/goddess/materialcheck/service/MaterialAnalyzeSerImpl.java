@@ -372,7 +372,7 @@ public class MaterialAnalyzeSerImpl extends ServiceImpl<MaterialAnalyze, Materia
     @Override
     public List<String> findAddAllDetails() throws SerException {
         List<DepartmentDetailBO> departmentDetailBOS = departmentDetailAPI.findStatus();
-        if (org.apache.commons.collections4.CollectionUtils.isEmpty(departmentDetailBOS)) {
+        if (CollectionUtils.isEmpty(departmentDetailBOS)) {
             return Collections.emptyList();
         }
         Set<String> set = new HashSet<>();
@@ -388,7 +388,7 @@ public class MaterialAnalyzeSerImpl extends ServiceImpl<MaterialAnalyze, Materia
     @Override
     public List<String> findallMonUser() throws SerException {
         List<UserBO> userBOS = positionDetailUserAPI.findUserList();
-        if (org.apache.commons.collections4.CollectionUtils.isEmpty(userBOS)) {
+        if (CollectionUtils.isEmpty(userBOS)) {
             return Collections.emptyList();
         }
         Set<String> set = new HashSet<>();

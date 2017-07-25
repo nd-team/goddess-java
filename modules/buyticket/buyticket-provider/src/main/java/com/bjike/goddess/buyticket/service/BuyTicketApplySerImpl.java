@@ -194,7 +194,13 @@ public class BuyTicketApplySerImpl extends ServiceImpl<BuyTicketApply, BuyTicket
         return flag;
     }
 
+    /**
+     * 权限
+     */
+    private Boolean guideAllTrueIdentity() throws SerException {
 
+        return true;
+    }
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
 
@@ -204,13 +210,15 @@ public class BuyTicketApplySerImpl extends ServiceImpl<BuyTicketApply, BuyTicket
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagGuidePosi = guidePosinIdentity();
         RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAllTrue = guideAllTrueIdentity();
+        RpcTransmit.transmitUserToken(userToken);
 
         SonPermissionObject obj = new SonPermissionObject();
 
         obj = new SonPermissionObject();
         obj.setName("buyTicketapply");
         obj.setDescribesion("车票购买申请");
-        if (flagAppMod || flagGuidePosi) {
+        if (flagAppMod || flagGuidePosi || flagAllTrue) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -281,13 +289,13 @@ public class BuyTicketApplySerImpl extends ServiceImpl<BuyTicketApply, BuyTicket
         Boolean flag = true;
         switch (guideAddrStatus) {
             case APPLIST:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             case APPADD:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             case APPEDIT:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             case LIST:
                 flag = guideMondIdentity();
@@ -314,7 +322,7 @@ public class BuyTicketApplySerImpl extends ServiceImpl<BuyTicketApply, BuyTicket
                 flag = guideMondIdentity();
                 break;
             case RECORDLIST:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             default:
                 flag = true;

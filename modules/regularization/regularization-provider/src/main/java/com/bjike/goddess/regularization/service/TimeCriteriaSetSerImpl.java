@@ -241,6 +241,13 @@ public class TimeCriteriaSetSerImpl extends ServiceImpl<TimeCriteriaSet, TimeCri
             return false;
         }
     }
+    /**
+     * 权限
+     */
+    private Boolean guideAllTrueIdentity() throws SerException {
+
+        return true;
+    }
 
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
@@ -249,13 +256,13 @@ public class TimeCriteriaSetSerImpl extends ServiceImpl<TimeCriteriaSet, TimeCri
         Boolean flag = true;
         switch (guideAddrStatus) {
             case ZZLIST:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             case ZZADD:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             case ZZEDIT:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             case LIST:
                 flag = guideIdentity();

@@ -162,7 +162,13 @@ public class BuyTicketStandardSerImpl extends ServiceImpl<BuyTicketStandard, Buy
         }
         return flag;
     }
+    /**
+     * 权限
+     */
+    private Boolean guideAllTrueIdentity() throws SerException {
 
+        return true;
+    }
 
     @Override
     public Boolean sonPermission() throws SerException {
@@ -185,13 +191,13 @@ public class BuyTicketStandardSerImpl extends ServiceImpl<BuyTicketStandard, Buy
         Boolean flag = true;
         switch (guideAddrStatus) {
             case APPLIST:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             case APPADD:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             case APPEDIT:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             case LIST:
                 flag = guideMondIdentity();
@@ -218,7 +224,7 @@ public class BuyTicketStandardSerImpl extends ServiceImpl<BuyTicketStandard, Buy
                 flag = guideMondIdentity();
                 break;
             case RECORDLIST:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             default:
                 flag = true;

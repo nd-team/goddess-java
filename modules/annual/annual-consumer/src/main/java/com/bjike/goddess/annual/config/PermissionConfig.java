@@ -1,9 +1,9 @@
 package com.bjike.goddess.annual.config;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.devicerepair.api.CusPermissionAPI;
-import com.bjike.goddess.devicerepair.to.CusPermissionTO;
-import com.bjike.goddess.devicerepair.type.CusPermissionType;
+import com.bjike.goddess.annual.api.CusPermissionAPI;
+import com.bjike.goddess.annual.to.CusPermissionTO;
+import com.bjike.goddess.annual.enums.CusPermissionType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
