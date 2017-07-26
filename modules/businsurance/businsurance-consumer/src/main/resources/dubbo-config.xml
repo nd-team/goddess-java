@@ -24,6 +24,8 @@
 	<dubbo:reference  validation="true" id="groupInsureApiImpl" interface="com.bjike.goddess.businsurance.api.GroupInsureAPI" />
 	<dubbo:reference  validation="true" id="insureRecordApiImpl" interface="com.bjike.goddess.businsurance.api.InsureRecordAPI" />
 	<dubbo:reference  validation="true" id="towerInsureApiImpl" interface="com.bjike.goddess.businsurance.api.TowerInsureAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.businsurance.api.CusPermissionAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.businsurance.api.CusPermissionOperateAPI" />
 
 	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
 	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
@@ -31,6 +33,8 @@
 	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
 	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
 	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
+	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
 
 
 </beans>

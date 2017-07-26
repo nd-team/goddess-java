@@ -148,4 +148,14 @@ public class MaterialTransferApiImpl implements MaterialTransferAPI {
     public void wealModConfirm(String id, String recipient, Boolean confirmDeploy, String finishDeployTime) throws SerException {
         materialTransferSer.wealModConfirm(id, recipient, confirmDeploy, finishDeployTime);
     }
+
+    @Override
+    public List<String> findAddAllDetails() throws SerException {
+        return materialTransferSer.findAddAllDetails();
+    }
+
+    @Override
+    public List<String> findallMonUser() throws SerException {
+        return materialTransferSer.findallMonUser();
+    }
 }

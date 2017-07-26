@@ -175,7 +175,13 @@ public class BuyTicketRecordSerImpl extends ServiceImpl<BuyTicketRecord, BuyTick
         return flag;
     }
 
+    /**
+     * 权限
+     */
+    private Boolean guideAllTrueIdentity() throws SerException {
 
+        return true;
+    }
     @Override
     public Boolean sonPermission() throws SerException {
         String userToken = RpcTransmit.getUserToken();
@@ -183,7 +189,9 @@ public class BuyTicketRecordSerImpl extends ServiceImpl<BuyTicketRecord, BuyTick
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagGuidePosi = guidePosinIdentity();
         RpcTransmit.transmitUserToken(userToken);
-        if (flagGuideMod || flagGuidePosi) {
+        Boolean flagAllTrue = guideAllTrueIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagGuideMod || flagGuidePosi || flagAllTrue) {
             return true;
         } else {
             return false;
@@ -197,13 +205,13 @@ public class BuyTicketRecordSerImpl extends ServiceImpl<BuyTicketRecord, BuyTick
         Boolean flag = true;
         switch (guideAddrStatus) {
             case APPLIST:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             case APPADD:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             case APPEDIT:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             case LIST:
                 flag = guideMondIdentity();
@@ -230,7 +238,7 @@ public class BuyTicketRecordSerImpl extends ServiceImpl<BuyTicketRecord, BuyTick
                 flag = guideMondIdentity();
                 break;
             case RECORDLIST:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             default:
                 flag = true;

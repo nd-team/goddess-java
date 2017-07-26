@@ -225,6 +225,14 @@ public class PerformanceScoreSerImpl extends ServiceImpl<PerformanceScore, Perfo
         return flag;
     }
 
+    /**
+     * 权限
+     */
+    private Boolean guideAllTrueIdentity() throws SerException {
+
+        return true;
+    }
+
     @Override
     public Boolean sonPermission() throws SerException {
         String userToken = RpcTransmit.getUserToken();
@@ -250,13 +258,13 @@ public class PerformanceScoreSerImpl extends ServiceImpl<PerformanceScore, Perfo
         Boolean flag = true;
         switch (guideAddrStatus) {
             case ZZLIST:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             case ZZADD:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             case ZZEDIT:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             case LIST:
                 flag = guideIdentity();

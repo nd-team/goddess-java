@@ -4,6 +4,7 @@ import com.bjike.goddess.businsurance.bo.BusInsuranceBO;
 import com.bjike.goddess.businsurance.dto.BusInsuranceDTO;
 import com.bjike.goddess.businsurance.service.BusInsuranceSer;
 import com.bjike.goddess.businsurance.to.BusInsuranceTO;
+import com.bjike.goddess.businsurance.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,16 @@ public class BusInsuranceApiImpl implements BusInsuranceAPI {
 
     @Autowired
     private BusInsuranceSer busInsuranceSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return busInsuranceSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return busInsuranceSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countBusInsurance(BusInsuranceDTO busInsuranceDTO) throws SerException {

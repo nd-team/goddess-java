@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.PropertySource;
 
 import java.io.IOException;
 
@@ -15,6 +16,7 @@ import java.io.IOException;
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.bjike.goddess.businsurance.action", "com.bjike.goddess.businsurance.config","com.bjike.goddess.common.consumer"})
 @ImportResource("classpath:app.xml")
+@PropertySource(value = {"classpath:permission.properties"}, encoding = "utf-8")
 @EnableAutoConfiguration(exclude = {ValidationAutoConfiguration.class})
 public class Application {
 

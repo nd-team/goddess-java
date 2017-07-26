@@ -10,19 +10,19 @@ package com.bjike.goddess.annual.enums;
  * @Copy: [ com.bjike ]
  */
 public enum AuditType {
-	NONE(0),//未处理
-	ALLOWED(1)//通过
-	, DENIED(2)//拒绝
-	;
+    NONE(0),//未处理
+    ALLOWED(1)//通过
+    , DENIED(2)//拒绝
+    ;
 
-	private int value;
+    private int value;
 
-	private AuditType(int value) {
-		this.value = value;
-	}
+    private AuditType(int value) {
+        this.value = value;
+    }
 
-	public int getValue() {
-		return value;
-	}
+    public int getValue() {
+        return value;
+    }
 
 }

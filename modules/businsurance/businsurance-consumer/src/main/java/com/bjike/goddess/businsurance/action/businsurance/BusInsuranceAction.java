@@ -4,6 +4,7 @@ import com.bjike.goddess.businsurance.api.BusInsuranceAPI;
 import com.bjike.goddess.businsurance.bo.BusInsuranceBO;
 import com.bjike.goddess.businsurance.dto.BusInsuranceDTO;
 import com.bjike.goddess.businsurance.to.BusInsuranceTO;
+import com.bjike.goddess.businsurance.to.GuidePermissionTO;
 import com.bjike.goddess.businsurance.to.SiginManageDeleteFileTO;
 import com.bjike.goddess.businsurance.vo.BusInsuranceVO;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -48,6 +49,28 @@ public class BusInsuranceAction extends BaseFileAction{
     @Autowired
     private FileAPI fileAPI;
 
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = busInsuranceAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      *  商业保险方案列表总条数
      *

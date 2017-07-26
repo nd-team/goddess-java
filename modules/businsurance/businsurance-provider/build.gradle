@@ -29,7 +29,6 @@ dependencies {
     compile project(":common:common-jpa")
     compile project(":common:common-provider")
     compile project(":modules:businsurance:businsurance-api")
-    compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
     compile project(":common:common-utils")
 }
 

@@ -17,8 +17,12 @@ import com.bjike.goddess.materialtransfer.to.MaterialTransferTO;
 import com.bjike.goddess.materialtransfer.type.AuditState;
 import com.bjike.goddess.materialtransfer.type.GuideAddrStatus;
 import com.bjike.goddess.materialtransfer.type.MaterialState;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -27,8 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 物资调动业务实现
@@ -52,6 +55,10 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     @Autowired
     private CusPermissionSer cusPermissionSer;
 
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
     /**
      * 检查权限(部门)
      *
@@ -461,4 +468,35 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
         super.update(model);
     }
 
+    @Override
+    public List<String> findAddAllDetails() throws SerException {
+            List<DepartmentDetailBO> departmentDetailBOS = departmentDetailAPI.findStatus();
+            if (CollectionUtils.isEmpty(departmentDetailBOS)) {
+                return Collections.emptyList();
+            }
+            Set<String> set = new HashSet<>();
+            for (DepartmentDetailBO departmentDetailBO : departmentDetailBOS){
+                String details = departmentDetailBO.getDepartment();
+                if (StringUtils.isNotBlank(departmentDetailBO.getDepartment())) {
+                    set.add(details);
+                }
+            }
+            return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> findallMonUser() throws SerException {
+        List<UserBO> userBOS = positionDetailUserAPI.findUserList();
+        if (org.apache.commons.collections4.CollectionUtils.isEmpty(userBOS)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (UserBO userBO : userBOS){
+            String userName = userBO.getUsername();
+            if (StringUtils.isNotBlank(userBO.getUsername())) {
+                set.add(userName);
+            }
+        }
+        return new ArrayList<>(set);
+    }
 }

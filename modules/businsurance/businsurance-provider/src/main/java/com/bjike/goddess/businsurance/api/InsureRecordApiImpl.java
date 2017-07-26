@@ -3,6 +3,7 @@ package com.bjike.goddess.businsurance.api;
 import com.bjike.goddess.businsurance.bo.InsureRecordBO;
 import com.bjike.goddess.businsurance.dto.InsureRecordDTO;
 import com.bjike.goddess.businsurance.service.InsureRecordSer;
+import com.bjike.goddess.businsurance.to.GuidePermissionTO;
 import com.bjike.goddess.businsurance.to.InsureRecordTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,16 @@ public class InsureRecordApiImpl implements InsureRecordAPI {
 
     @Autowired
     private InsureRecordSer insureRecordSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return insureRecordSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return insureRecordSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countInsureRecord(InsureRecordDTO insureRecordDTO) throws SerException {

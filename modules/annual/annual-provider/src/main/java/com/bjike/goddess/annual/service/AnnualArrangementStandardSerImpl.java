@@ -129,7 +129,12 @@ public class AnnualArrangementStandardSerImpl extends ServiceImpl<AnnualArrangem
         }
         return flag;
     }
-
+    /**
+     * 权限
+     */
+    private Boolean guideAllTrueIdentity() throws SerException {
+        return true;
+    }
 
     @Override
     public Boolean sonPermission() throws SerException {
@@ -138,7 +143,9 @@ public class AnnualArrangementStandardSerImpl extends ServiceImpl<AnnualArrangem
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagPosin = guidePosinIdentity();
         RpcTransmit.transmitUserToken(userToken);
-        if (flagSee || flagPosin) {
+        Boolean flagTrue = guideAllTrueIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee || flagPosin ) {
             return true;
         } else {
             return false;
@@ -169,9 +176,26 @@ public class AnnualArrangementStandardSerImpl extends ServiceImpl<AnnualArrangem
             case AUDIT:
                 flag = guidePosinIdentity();
                 break;
-            case SEEMYSELF:
-                flag = true;
+            case CONGEL:
+                flag = guideIdentity();
                 break;
+            case THAW:
+                flag = guideIdentity();
+                break;
+            case XXLIST:
+                flag = guideAllTrueIdentity();
+                break;
+            case XXADD:
+                flag = guideAllTrueIdentity();
+                break;
+            case XXAPPLY:
+                flag = guideAllTrueIdentity();
+                break;
+            case XXSEE:
+                flag = guideAllTrueIdentity();
+                break;
+            case XXMYSELF:
+                flag = guideAllTrueIdentity();
             default:
                 flag = true;
                 break;
@@ -180,7 +204,6 @@ public class AnnualArrangementStandardSerImpl extends ServiceImpl<AnnualArrangem
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
-
     /**
      * 转换年假层级标准传输对象
      *
@@ -218,6 +241,7 @@ public class AnnualArrangementStandardSerImpl extends ServiceImpl<AnnualArrangem
     @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualArrangementStandardBO update(AnnualArrangementStandardTO to) throws SerException {
+        checkPermission();
         AnnualArrangementStandardBO bo = this.findByArrangementStandard(to.getStandardId(), to.getArrangementId());
         AnnualArrangementStandard entity;
         if (bo == null) {

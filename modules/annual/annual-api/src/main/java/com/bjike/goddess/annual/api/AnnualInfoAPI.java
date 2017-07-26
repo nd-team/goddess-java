@@ -2,6 +2,7 @@ package com.bjike.goddess.annual.api;
 
 import com.bjike.goddess.annual.bo.AnnualInfoBO;
 import com.bjike.goddess.annual.dto.AnnualInfoDTO;
+import com.bjike.goddess.annual.to.AnnualInfoTO;
 import com.bjike.goddess.annual.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -34,7 +35,6 @@ public interface AnnualInfoAPI {
     /**
      * 获取指定用户的年假信息
      *
-     * @param username 用户名
      * @return
      * @throws SerException
      */
@@ -82,6 +82,16 @@ public interface AnnualInfoAPI {
      * @throws SerException
      */
     default Long getTotal() throws SerException {
+        return null;
+    }
+    /**
+     * 保存年假申请实体数据
+     *
+     * @param to 年假申请传输对象
+     * @return
+     * @throws SerException
+     */
+    default AnnualInfoBO save(AnnualInfoTO to) throws SerException {
         return null;
     }
 }

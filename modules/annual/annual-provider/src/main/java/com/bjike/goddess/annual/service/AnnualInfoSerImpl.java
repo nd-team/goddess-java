@@ -6,6 +6,7 @@ import com.bjike.goddess.annual.bo.AnnualStandardBO;
 import com.bjike.goddess.annual.dto.AnnualInfoDTO;
 import com.bjike.goddess.annual.entity.AnnualInfo;
 import com.bjike.goddess.annual.enums.GuideAddrStatus;
+import com.bjike.goddess.annual.to.AnnualInfoTO;
 import com.bjike.goddess.annual.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -36,6 +37,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -159,7 +161,12 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
         }
         return flag;
     }
-
+    /**
+     * 权限
+     */
+    private Boolean guideAllTrueIdentity() throws SerException {
+        return true;
+    }
 
     @Override
     public Boolean sonPermission() throws SerException {
@@ -168,7 +175,9 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagPosin = guidePosinIdentity();
         RpcTransmit.transmitUserToken(userToken);
-        if (flagSee || flagPosin) {
+        Boolean flagTrue = guideAllTrueIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee || flagPosin || flagTrue) {
             return true;
         } else {
             return false;
@@ -199,9 +208,26 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
             case AUDIT:
                 flag = guidePosinIdentity();
                 break;
-            case SEEMYSELF:
-                flag = true;
+            case CONGEL:
+                flag = guideIdentity();
                 break;
+            case THAW:
+                flag = guideIdentity();
+                break;
+            case XXLIST:
+                flag = guideAllTrueIdentity();
+                break;
+            case XXADD:
+                flag = guideAllTrueIdentity();
+                break;
+            case XXAPPLY:
+                flag = guideAllTrueIdentity();
+                break;
+            case XXSEE:
+                flag = guideAllTrueIdentity();
+                break;
+            case XXMYSELF:
+                flag = guideAllTrueIdentity();
             default:
                 flag = true;
                 break;
@@ -357,5 +383,13 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
     public Long getTotal() throws SerException {
         AnnualInfoDTO dto = new AnnualInfoDTO();
         return super.count(dto);
+    }
+
+    @Override
+    public AnnualInfoBO save(AnnualInfoTO to) throws SerException {
+        AnnualInfo annualInfo = BeanTransform.copyProperties(to,AnnualInfo.class,true);
+        annualInfo.setCreateTime(LocalDateTime.now());
+        super.save(annualInfo);
+        return BeanTransform.copyProperties(annualInfo,AnnualInfoBO.class);
     }
 }
