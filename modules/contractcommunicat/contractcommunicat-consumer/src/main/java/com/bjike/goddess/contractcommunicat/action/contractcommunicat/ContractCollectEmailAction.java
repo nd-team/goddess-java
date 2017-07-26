@@ -9,6 +9,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contractcommunicat.api.ContractCollectEmailAPI;
 import com.bjike.goddess.contractcommunicat.bo.CollectEmailBO;
 import com.bjike.goddess.contractcommunicat.dto.CollectEmailDTO;
+import com.bjike.goddess.contractcommunicat.entity.CollectEmail;
 import com.bjike.goddess.contractcommunicat.to.CollectEmailTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.vo.CollectEmailVO;
@@ -78,27 +79,9 @@ public class ContractCollectEmailAction {
         }
     }
 
-    /**
-     * 一个项目合同邮件
-     *
-     * @param id 项目项目合同邮件信息id
-     * @return class CollectEmailVO
-     * @des 根据id获取项目项目合同邮件信息
-     * @version v1
-     */
-    @GetMapping("v1/getOneById/{id}")
-    public Result getOneById(@PathVariable String id) throws ActException {
-        try {
-            CollectEmailVO projectCarryVO = BeanTransform.copyProperties(
-                    collectEmailAPI.getOne(id), CollectEmailVO.class);
-            return ActResult.initialize(projectCarryVO);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
 
     /**
-     * 商务邮件汇总列表
+     * 商务洽谈邮件汇总列表
      *
      * @param collectEmailDTO 商务邮件汇总信息dto
      * @return class CollectEmailVO
@@ -117,7 +100,7 @@ public class ContractCollectEmailAction {
     }
 
     /**
-     * 添加商务邮件汇总
+     * 添加商务洽谈邮件汇总
      *
      * @param collectEmailTO 商务邮件汇总基本信息数据to
      * @return class CollectEmailVO
@@ -137,7 +120,7 @@ public class ContractCollectEmailAction {
 
 
     /**
-     * 编辑商务邮件汇总
+     * 编辑商务洽谈邮件汇总
      *
      * @param collectEmailTO 商务邮件汇总基本信息数据bo
      * @return class CollectEmailVO
@@ -159,7 +142,7 @@ public class ContractCollectEmailAction {
      * 删除
      *
      * @param id id
-     * @des 根据id删除商务邮件汇总信息记录
+     * @des 根据id删除商务洽谈邮件汇总信息记录
      * @version v1
      */
     @LoginAuth
@@ -178,7 +161,7 @@ public class ContractCollectEmailAction {
      * 冻结
      *
      * @param id id
-     * @des 根据id冻结商务邮件汇总记录
+     * @des 根据id冻结商务洽谈邮件汇总记录
      * @version v1
      */
     @LoginAuth
@@ -197,7 +180,7 @@ public class ContractCollectEmailAction {
      * 解冻
      *
      * @param id id
-     * @des 根据id解冻商务邮件汇总记录
+     * @des 根据id解冻商务洽谈邮件汇总记录
      * @version v1
      */
     @LoginAuth
@@ -213,24 +196,21 @@ public class ContractCollectEmailAction {
 
 
     /**
-     * 汇总签订合同与预订
+     * 汇总项目承包商务洽谈
      *
-     * @param collectEmailDTO 地区
+     * @param collectEmailTO 地区
      * @return class CollectEmailVO
      * @des 商务邮件汇总签订合同与预订
      * @version v1
      */
 
-    @GetMapping("v1/collectSign")
-    public Result collectSign(@Validated(CollectEmailDTO.TestArea.class) CollectEmailDTO collectEmailDTO, BindingResult bindingResult) throws ActException {
-        String[] areas = collectEmailDTO.getAreas();
+    @GetMapping("v1/collectContact")
+    public Result collectContact(@Validated(CollectEmailDTO.TestArea.class) CollectEmailTO collectEmailTO, BindingResult bindingResult) throws ActException {
         List<CollectEmailVO> collectEmailVOList = new ArrayList<>();
-        if (areas == null || areas.length <= 0) {
-            return ActResult.initialize(collectEmailVOList);
-        }
+        CollectEmail collectEmail = BeanTransform.copyProperties(collectEmailTO, CollectEmail.class);
         try {
             collectEmailVOList = BeanTransform.copyProperties(
-                    collectEmailAPI.collectCollectEmail(areas), CollectEmailVO.class, true);
+                    collectEmailAPI.gatherPb(collectEmail), CollectEmailVO.class, true);
             return ActResult.initialize(collectEmailVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -238,48 +218,26 @@ public class ContractCollectEmailAction {
     }
 
     /**
-     * 汇总合同基本信息
+     * 汇总项目外包商务洽谈
      *
-     * @param collectEmailDTO 甲方
+     * @param collectEmailTO 甲方
      * @return class CollectEmailVO
      * @des 汇总合同基本信息
      * @version v1
      */
-    @GetMapping("v1/collectBaseInfo")
-    public Result CollectBaseInfo(@Validated(CollectEmailDTO.TestFirstCompany.class) CollectEmailDTO collectEmailDTO, BindingResult bindingResult) throws ActException {
-        String[] firstCompany = collectEmailDTO.getFirstCompany();
+    @GetMapping("v1/collect/outsourcing")
+    public Result collectOutsourcing(@Validated(CollectEmailDTO.TestFirstCompany.class) CollectEmailTO collectEmailTO, BindingResult bindingResult) throws ActException {
         List<CollectEmailVO> collectEmailVOList = new ArrayList<>();
-        if (firstCompany == null || firstCompany.length <= 0) {
-            return ActResult.initialize(collectEmailVOList);
-        }
+        CollectEmail collectEmail = BeanTransform.copyProperties(collectEmailTO,CollectEmail.class);
         try {
             collectEmailVOList = BeanTransform.copyProperties(
-                    collectEmailAPI.collectBaseInfoEmail(firstCompany), CollectEmailVO.class);
+                    collectEmailAPI.gatherPc(collectEmail), CollectEmailVO.class);
             return ActResult.initialize(collectEmailVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
-    /**
-     * 汇总派工合同
-     *
-     * @param collectEmailDTO 地区
-     * @return class CollectEmailVO
-     * @des 商务邮件汇总汇总派工合同
-     * @version v1
-     */
-    @GetMapping("v1/collectDispatch")
-    public Result CollectDispatch(@Validated(CollectEmailDTO.TestArea.class) CollectEmailDTO collectEmailDTO, BindingResult bindingResult) throws ActException {
-        String[] areas = collectEmailDTO.getAreas();
-        try {
-            List<CollectEmailVO> collectEmailVOList = BeanTransform.copyProperties(
-                    collectEmailAPI.collectDispatchEmail(areas), CollectEmailVO.class);
-            return ActResult.initialize(collectEmailVOList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
 
 
     /**
