@@ -6,6 +6,7 @@ import com.bjike.goddess.projectroyalty.bo.OpinionBO;
 import com.bjike.goddess.projectroyalty.dto.FacilityDTO;
 import com.bjike.goddess.projectroyalty.service.FacilitySer;
 import com.bjike.goddess.projectroyalty.to.FacilityTO;
+import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,18 @@ public class FacilityApiImpl implements FacilityAPI {
 
     @Autowired
     private FacilitySer facilitySer;
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return facilitySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return facilitySer.guidePermission(guidePermissionTO);
+    }
+
 
     @Override
     public FacilityBO save(FacilityTO to) throws SerException {

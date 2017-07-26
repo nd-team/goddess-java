@@ -5,6 +5,7 @@ import com.bjike.goddess.projectroyalty.bo.OpinionBO;
 import com.bjike.goddess.projectroyalty.bo.WeightAllocationBO;
 import com.bjike.goddess.projectroyalty.dto.WeightAllocationDTO;
 import com.bjike.goddess.projectroyalty.service.WeightAllocationSer;
+import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
 import com.bjike.goddess.projectroyalty.to.WeightAllocationTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,18 @@ public class WeightAllocationApiImpl implements WeightAllocationAPI {
 
     @Autowired
     private WeightAllocationSer weightAllocationSer;
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return weightAllocationSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return weightAllocationSer.guidePermission(guidePermissionTO);
+    }
+
 
     @Override
     public WeightAllocationBO saveTarget(WeightAllocationTO to) throws SerException {

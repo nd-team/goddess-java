@@ -7,8 +7,11 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.projectroyalty.api.WeightAllocationAPI;
 import com.bjike.goddess.projectroyalty.dto.WeightAllocationDTO;
+import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
 import com.bjike.goddess.projectroyalty.to.WeightAllocationTO;
 import com.bjike.goddess.projectroyalty.vo.WeightAllocationVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 项目提成权重分配
@@ -33,6 +37,33 @@ public class WeightAllocationAction {
 
     @Autowired
     private WeightAllocationAPI weightAllocationAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = weightAllocationAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 保存项目提成目标权重分配
@@ -174,4 +205,46 @@ public class WeightAllocationAction {
         }
     }
 
+    /**
+     * 地区
+     *
+     * @version v1
+     */
+    @GetMapping("v1/area/list")
+    public Result listArea() throws ActException {
+        try {
+            List<AreaBO> list = departmentDetailAPI.findArea();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 项目提成目标权重分配
+     *
+     * @version v1
+     */
+    @GetMapping("v1/target/find")
+    public Result findTargetOpinion() throws ActException {
+        try {
+            return ActResult.initialize(weightAllocationAPI.findTargetOpinion());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 项目提成实际权重分配
+     *
+     * @version v1
+     */
+    @GetMapping("v1/actual/find")
+    public Result findActualOpinion() throws ActException {
+        try {
+            return ActResult.initialize(weightAllocationAPI.findActualOpinion());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

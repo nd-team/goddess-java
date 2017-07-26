@@ -6,6 +6,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.financeinit.api.CategoryAPI;
 import com.bjike.goddess.financeinit.api.FirstSubjectAPI;
 import com.bjike.goddess.moneyprepare.api.ProportionAPI;
 import com.bjike.goddess.moneyprepare.bo.*;
@@ -50,6 +51,8 @@ public class FundPrepareSerImpl extends ServiceImpl<FundPrepare, FundPrepareDTO>
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private CategoryAPI categoryAPI;
 
     @Override
     public Long countFundPrepare(FundPrepareDTO fundPrepareDTO) throws SerException {
@@ -399,8 +402,7 @@ public class FundPrepareSerImpl extends ServiceImpl<FundPrepare, FundPrepareDTO>
     @Override
     public List<String> findSecondSubject() throws SerException {
         //从财务模块得到三级科目
-        //// TODO: 17-7-10  
-        return null;
+        return categoryAPI.listAllThirdName();
     }
 
 

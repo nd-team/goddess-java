@@ -22,9 +22,3 @@ include ':modules:message:message-provider'
 include ':modules:storage:storage-api'
 include ':modules:storage:storage-consumer'
 include ':modules:storage:storage-provider'
-
-//#quartz 任务调度模块-liguiqin
-include ':modules:quartz:quartz-api'
-include ':modules:quartz:quartz-consumer'
-include ':modules:quartz:quartz-provider'
-
