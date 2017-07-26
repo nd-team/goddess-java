@@ -6,6 +6,7 @@ import com.bjike.goddess.projectroyalty.bo.OpinionBO;
 import com.bjike.goddess.projectroyalty.bo.RatioBO;
 import com.bjike.goddess.projectroyalty.dto.RatioDTO;
 import com.bjike.goddess.projectroyalty.entity.Ratio;
+import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
 import com.bjike.goddess.projectroyalty.to.RatioTO;
 
 import java.util.List;
@@ -20,6 +21,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface RatioSer extends Ser<Ratio, RatioDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存

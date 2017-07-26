@@ -6,6 +6,7 @@ import com.bjike.goddess.projectroyalty.bo.OpinionBO;
 import com.bjike.goddess.projectroyalty.dto.ContractAmountDTO;
 import com.bjike.goddess.projectroyalty.service.ContractAmountSer;
 import com.bjike.goddess.projectroyalty.to.ContractAmountTO;
+import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,17 @@ public class ContractAmountApiImpl implements ContractAmountAPI {
 
     @Autowired
     private ContractAmountSer contractAmountSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return contractAmountSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return contractAmountSer.guidePermission(guidePermissionTO);
+    }
+
 
     @Override
     public ContractAmountBO save(ContractAmountTO to) throws SerException {
