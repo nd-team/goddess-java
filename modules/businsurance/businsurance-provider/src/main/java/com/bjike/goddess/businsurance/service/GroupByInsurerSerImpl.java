@@ -4,6 +4,7 @@ import com.bjike.goddess.businsurance.bo.GroupByInsurerBO;
 import com.bjike.goddess.businsurance.dto.GroupByInsurerDTO;
 import com.bjike.goddess.businsurance.entity.GroupByInsurer;
 import com.bjike.goddess.businsurance.to.GroupByInsurerTO;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.businsurance.dto.GroupByInsurerDTO;
@@ -38,6 +39,8 @@ public class GroupByInsurerSerImpl extends ServiceImpl<GroupByInsurer, GroupByIn
         if(StringUtils.isBlank(groupByInsurerDTO.getGroupInsureId())){
             throw new SerException("团体意外险id不能为空");
         }
+
+        groupByInsurerDTO.getConditions().add(Restrict.eq("groupInsureId",groupByInsurerDTO.getGroupInsureId()));
         Long count = super.count(groupByInsurerDTO);
         return count;
     }
@@ -48,6 +51,7 @@ public class GroupByInsurerSerImpl extends ServiceImpl<GroupByInsurer, GroupByIn
             throw new SerException("团体意外险id不能为空");
         }
         groupByInsurerDTO.getSorts().add("createTime=asc");
+        groupByInsurerDTO.getConditions().add(Restrict.eq("groupInsureId",groupByInsurerDTO.getGroupInsureId()));
         List<GroupByInsurer> list = super.findByCis(groupByInsurerDTO,true);
 
         return BeanTransform.copyProperties(list, GroupByInsurerBO.class );

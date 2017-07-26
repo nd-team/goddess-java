@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 public class CollectEmail extends BaseEntity {
 
     /**
-     * 汇总类型
+     * 汇总类型(商业能力展示汇总(0),个人能力展示汇总(1),合作对象能力汇总(2))
      */
     @Column(name = "type", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '汇总类型'")
     private String type;

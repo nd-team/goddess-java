@@ -63,6 +63,12 @@ public class CustomerDetail extends BaseEntity {
     @Column(name = "characterEvaluation",  columnDefinition = "MEDIUMTEXT   COMMENT '性格评价'")
     private String characterEvaluation;
 
+    /**
+     * 排序字段
+     */
+    @Column(name = "sortWord",  columnDefinition = "DECIMAL(10,2)   COMMENT '排序字段'")
+    private Double sortWord;
+
 
     /**
      * 客户基本信息
@@ -125,6 +131,14 @@ public class CustomerDetail extends BaseEntity {
 
     public void setCharacterEvaluation(String characterEvaluation) {
         this.characterEvaluation = characterEvaluation;
+    }
+
+    public Double getSortWord() {
+        return sortWord;
+    }
+
+    public void setSortWord(Double sortWord) {
+        this.sortWord = sortWord;
     }
 
     public CustomerBaseInfo getCustomerBaseInfo() {
