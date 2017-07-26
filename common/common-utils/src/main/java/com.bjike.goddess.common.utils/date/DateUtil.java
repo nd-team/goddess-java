@@ -174,6 +174,52 @@ public class DateUtil {
 
     }
 
+
+    /**
+     * 获取本季度开始的时间
+     *
+     * @return
+     */
+
+    public static LocalDateTime getStartQuart() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime quarte_start = null;
+        int mon = now.getMonthValue();
+        if( mon%3 == 1){
+            quarte_start = now.minusMonths(0);
+        }else if( mon%3 == 2){
+            quarte_start = now.minusMonths(1);
+        }else if( mon%3 == 0){
+            quarte_start = now.minusMonths(2);
+        }
+        return  quarte_start;
+
+    }
+
+
+    /**
+     * 获取本季度结束的时间
+     *
+     * @return
+     */
+
+    public static LocalDateTime getEndQuart() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime quarte_end = null;
+        int mon = now.getMonthValue();
+        if( mon%3 == 1){
+            quarte_end = now.plusMonths(2);
+        }else if( mon%3 == 2){
+            quarte_end = now.plusMonths(1);
+        }else if( mon%3 == 0){
+            quarte_end = now.plusMonths(0);
+        }
+
+        return quarte_end;
+    }
+
+
+
     //获取今年指定月份的第一天 月份从0开始算0~11
     public static LocalDate getStartDayOfMonth(Integer month) {
         Calendar calendar = Calendar.getInstance();
