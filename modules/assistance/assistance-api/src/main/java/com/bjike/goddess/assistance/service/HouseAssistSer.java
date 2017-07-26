@@ -1,6 +1,7 @@
 package com.bjike.goddess.assistance.service;
 
 import com.bjike.goddess.assistance.bo.HouseAssistBO;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.to.HouseAssistTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -19,7 +20,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface HouseAssistSer extends Ser<HouseAssist, HouseAssistDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
 
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 住宿补助列表总条数
      *

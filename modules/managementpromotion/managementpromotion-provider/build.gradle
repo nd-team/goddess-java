@@ -30,9 +30,11 @@ dependencies {
     compile project(":common:common-provider")
     compile project(":modules:managementpromotion:managementpromotion-api")
     compile project(":modules:message:message-api")
+    compile project(":modules:regularization:regularization-api")
     compile project(":modules:user:user-api")
     compile project(":modules:organize:organize-api")
     compile project(":modules:staffentry:staffentry-api")
+    compile project(":modules:contacts:contacts-api")
     compile project(":common:common-utils")
 }
 

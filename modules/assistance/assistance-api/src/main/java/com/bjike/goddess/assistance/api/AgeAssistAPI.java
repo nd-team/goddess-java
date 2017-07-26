@@ -3,6 +3,8 @@ package com.bjike.goddess.assistance.api;
 import com.bjike.goddess.assistance.bo.AgeAssistBO;
 import com.bjike.goddess.assistance.dto.AgeAssistDTO;
 import com.bjike.goddess.assistance.to.AgeAssistTO;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
+import com.bjike.goddess.assistance.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -17,6 +19,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface AgeAssistAPI {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 工龄补助列表总条数

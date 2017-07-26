@@ -6,6 +6,8 @@ import com.bjike.goddess.secure.dto.AddEmployeeDTO;
 import com.bjike.goddess.secure.service.AddEmployeeSer;
 import com.bjike.goddess.secure.to.AddEmployeeTO;
 import com.bjike.goddess.secure.to.EmployeeSecureTO;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
+import com.bjike.goddess.secure.vo.SonPermissionObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,11 +64,6 @@ public class AddEmployeeApiImpl implements AddEmployeeAPI {
     }
 
     @Override
-    public void managerConfirmAdd(String id) throws SerException {
-        addEmployeeSer.managerConfirmAdd(id);
-    }
-
-    @Override
     public void confirmAdd(String id) throws SerException {
         addEmployeeSer.confirmAdd(id);
     }
@@ -74,5 +71,20 @@ public class AddEmployeeApiImpl implements AddEmployeeAPI {
     @Override
     public Long count(AddEmployeeDTO dto) throws SerException {
         return addEmployeeSer.count(dto);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return addEmployeeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return addEmployeeSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public void managerConfirmAdd(AddEmployeeDTO dto, String id) throws SerException {
+        addEmployeeSer.managerConfirmAdd(dto,id);
     }
 }

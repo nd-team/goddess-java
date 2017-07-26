@@ -4,6 +4,7 @@ import com.bjike.goddess.assistance.bo.AssistancePlanBO;
 import com.bjike.goddess.assistance.dto.AssistancePlanDTO;
 import com.bjike.goddess.assistance.service.AssistancePlanSer;
 import com.bjike.goddess.assistance.to.AssistancePlanTO;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,5 +69,15 @@ public class AssistancePlanApiImpl implements AssistancePlanAPI {
     @Override
     public List<AssistancePlanBO> getPlanByNum(AssistancePlanDTO assistancePlanDTO) throws SerException {
         return assistancePlanSer.getPlanByNum(assistancePlanDTO);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return assistancePlanSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return assistancePlanSer.guidePermission(guidePermissionTO);
     }
 }

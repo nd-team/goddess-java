@@ -3,6 +3,7 @@ package com.bjike.goddess.assistance.api;
 import com.bjike.goddess.assistance.bo.HotAssistBO;
 import com.bjike.goddess.assistance.dto.HotAssistDTO;
 import com.bjike.goddess.assistance.service.HotAssistSer;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.to.HotAssistTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,5 +61,19 @@ public class HotAssistApiImpl implements HotAssistAPI {
     public List<HotAssistBO> collectByProGroup(HotAssistDTO hotAssistDTO) throws SerException {
         return hotAssistSer.collectByProGroup(hotAssistDTO);
     }
-    
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return hotAssistSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return hotAssistSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public HotAssistBO getOneById(String id) throws SerException {
+        return hotAssistSer.getOneById(id);
+    }
 }

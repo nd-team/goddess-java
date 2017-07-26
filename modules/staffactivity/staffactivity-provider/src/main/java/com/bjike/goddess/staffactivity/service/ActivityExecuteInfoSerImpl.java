@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.staffactivity.bo.ActivityExecuteInfoBO;
@@ -49,6 +50,8 @@ public class ActivityExecuteInfoSerImpl extends ServiceImpl<ActivityExecuteInfo,
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private InternalContactsAPI internalContactsAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -298,7 +301,7 @@ public class ActivityExecuteInfoSerImpl extends ServiceImpl<ActivityExecuteInfo,
                     MessageTO messageTO = new MessageTO();
                     messageTO.setTitle("您有活动执行未填写");
                     messageTO.setContent("您有活动执行未填写，请上系统填写");
-                    String[] r = new String[]{userAPI.findByUsername(name).getId()};
+                    String[] r = new String[]{internalContactsAPI.getEmail(name)};
                     messageTO.setReceivers(r);
                     messageAPI.send(messageTO);
                 }

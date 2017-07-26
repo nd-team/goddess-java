@@ -40,6 +40,8 @@ dependencies {
     compile project(":modules:bidding:bidding-api")
     compile project(":modules:capability:capability-api")
 
+    compile project(":modules:secure:secure-api")
+
 
 }
 

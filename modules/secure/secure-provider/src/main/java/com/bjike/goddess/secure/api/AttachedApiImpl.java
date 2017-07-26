@@ -2,9 +2,11 @@ package com.bjike.goddess.secure.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.secure.bo.AttachedBO;
+import com.bjike.goddess.secure.dto.AddEmployeeDTO;
 import com.bjike.goddess.secure.dto.AttachedDTO;
 import com.bjike.goddess.secure.service.AttachedSer;
 import com.bjike.goddess.secure.to.AttachedTO;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,16 +53,6 @@ public class AttachedApiImpl implements AttachedAPI {
     }
 
     @Override
-    public void pass(String id) throws SerException {
-        attachedSer.pass(id);
-    }
-
-    @Override
-    public void notPass(String id) throws SerException {
-        attachedSer.notPass(id);
-    }
-
-    @Override
     public AttachedBO complete(AttachedTO to) throws SerException {
         return attachedSer.complete(to);
     }
@@ -73,5 +65,25 @@ public class AttachedApiImpl implements AttachedAPI {
     @Override
     public AttachedBO edit(AttachedTO to) throws SerException {
         return attachedSer.edit(to);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return attachedSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return attachedSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public void pass(AddEmployeeDTO dto, String id) throws SerException {
+        attachedSer.pass(dto,id);
+    }
+
+    @Override
+    public void notPass(AddEmployeeDTO dto, String id) throws SerException {
+        attachedSer.notPass(dto, id);
     }
 }

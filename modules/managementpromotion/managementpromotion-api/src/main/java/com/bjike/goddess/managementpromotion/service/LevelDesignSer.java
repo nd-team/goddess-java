@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.managementpromotion.bo.LevelDesignBO;
 import com.bjike.goddess.managementpromotion.dto.LevelDesignDTO;
 import com.bjike.goddess.managementpromotion.entity.LevelDesign;
+import com.bjike.goddess.managementpromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managementpromotion.to.LevelDesignTO;
 
 import java.util.List;
@@ -20,6 +21,20 @@ import java.util.Set;
  * @Copy: [ com.bjike ]
  */
 public interface LevelDesignSer extends Ser<LevelDesign, LevelDesignDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 添加
      *

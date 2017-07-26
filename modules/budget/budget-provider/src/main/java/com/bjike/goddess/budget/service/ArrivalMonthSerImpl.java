@@ -285,7 +285,7 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
                     bo.setTargetWorkSum(targetWorkSum);
                     bo.setActualWorkSum(actualWorkSum);
                     bo.setWorkDifferencesSum(workDifferencesSum);
-                    Double scale = planIncomeSum / targetIncomeSum;
+                    Double scale = Double.parseDouble(String.format("%.2f", planIncomeSum / targetIncomeSum));
                     bo.setScale(scale);
                     boList.add(bo);
                     targetIncomeSum = 0.00;
@@ -340,7 +340,7 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
                         bo.setTargetWorkSum(targetWorkSum);
                         bo.setActualWorkSum(actualWorkSum);
                         bo.setWorkDifferencesSum(workDifferencesSum);
-                        Double scale = planIncomeSum / targetIncomeSum;
+                        Double scale = Double.parseDouble(String.format("%.2f", planIncomeSum / targetIncomeSum));
                         bo.setScale(scale);
                         boList.add(bo);
                         targetIncomeSum = 0.00;

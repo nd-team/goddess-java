@@ -4,6 +4,8 @@ import com.bjike.goddess.assistance.bo.AgeAssistBO;
 import com.bjike.goddess.assistance.dto.AgeAssistDTO;
 import com.bjike.goddess.assistance.service.AgeAssistSer;
 import com.bjike.goddess.assistance.to.AgeAssistTO;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
+import com.bjike.goddess.assistance.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,8 +23,6 @@ import java.util.List;
  */
 @Service("ageAssistApiImpl")
 public class AgeAssistApiImpl implements AgeAssistAPI {
-
-
 
     @Autowired
     private AgeAssistSer ageAssistSer;
@@ -56,5 +56,14 @@ public class AgeAssistApiImpl implements AgeAssistAPI {
     public void deleteAgeAssist(String id) throws SerException {
         ageAssistSer.deleteAgeAssist(id);
     }
-    
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return ageAssistSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return ageAssistSer.guidePermission(guidePermissionTO);
+    }
 }

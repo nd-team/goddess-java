@@ -291,7 +291,7 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
             for (String project : projects) {
                 for (Integer year : years) {
                     for (Integer month : months) {
-//                        for (Double price : prices) {   //todo:有bug单价问题
+//                        for (Double price : prices) {
                         for (ProjectWeek projectWeek : list) {
 //                                boolean b = projectWeek.getPrice().compareTo(price) == 0 ? true : false;
                             if (projectWeek.getArrival().equals(arrival) && projectWeek.getProject().equals(project) && projectWeek.getYear().equals(year) && projectWeek.getMonth().equals(month)/* && b*/) {

@@ -32,5 +32,8 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.bidding.api.CollectEmailAPI" id="collectEmailApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.capability.api.CollectEmailAPI" id="capabilityEmail"/>
 
-
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.secure.api.BeforeAddAPI" id="beforeAddApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.secure.api.BeforeRemoveEmployeeAPI" id="beforeRemoveEmployeeApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.secure.api.SecureCartAPI" id="secureCartApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.secure.api.AttachedEndAPI" id="attachedEndApiImpl"/>
 </beans>

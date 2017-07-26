@@ -7,6 +7,7 @@ import com.bjike.goddess.secure.dto.AttachedEndDTO;
 import com.bjike.goddess.secure.dto.EmployeeSecureDTO;
 import com.bjike.goddess.secure.to.AttachedEndTO;
 import com.bjike.goddess.secure.to.EmployeeSecureTO;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -20,6 +21,15 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface EmployeeSecureAPI {
+    /**
+     * 下拉导航权限
+     */
+    Boolean sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
     /**
      * 添加
      *

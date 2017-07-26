@@ -6,6 +6,7 @@ import com.bjike.goddess.secure.bo.AbandonBO;
 import com.bjike.goddess.secure.dto.AbandonDTO;
 import com.bjike.goddess.secure.entity.Abandon;
 import com.bjike.goddess.secure.to.AbandonTO;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +20,15 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface AbandonSer extends Ser<Abandon, AbandonDTO> {
+    /**
+     * 下拉导航权限
+     */
+    Boolean sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
     /**
      * 添加
      *

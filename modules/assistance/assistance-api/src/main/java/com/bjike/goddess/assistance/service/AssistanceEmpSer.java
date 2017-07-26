@@ -2,6 +2,7 @@ package com.bjike.goddess.assistance.service;
 
         import com.bjike.goddess.assistance.bo.AssistanceEmpBO;
         import com.bjike.goddess.assistance.to.AssistanceEmpTO;
+        import com.bjike.goddess.assistance.to.GuidePermissionTO;
         import com.bjike.goddess.common.api.exception.SerException;
         import com.bjike.goddess.common.api.service.Ser;
         import com.bjike.goddess.assistance.entity.AssistanceEmp;
@@ -19,7 +20,19 @@ package com.bjike.goddess.assistance.service;
  * @Copy: [ com.bjike ]
  */
 public interface AssistanceEmpSer extends Ser<AssistanceEmp, AssistanceEmpDTO> {
+        /**
+         * 下拉导航权限
+         */
+        default Boolean sonPermission() throws SerException {
+                return null;
+        }
 
+        /**
+         * 导航权限
+         */
+        default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+                return null;
+        }
         /**
          * 补助员工名单列表总条数
          *

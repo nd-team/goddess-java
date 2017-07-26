@@ -4,6 +4,7 @@ import com.bjike.goddess.assistance.bo.AssistanceEmpBO;
 import com.bjike.goddess.assistance.dto.AssistanceEmpDTO;
 import com.bjike.goddess.assistance.service.AssistanceEmpSer;
 import com.bjike.goddess.assistance.to.AssistanceEmpTO;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,5 +49,15 @@ public class AssistanceEmpApiImpl implements AssistanceEmpAPI {
     @Override
     public void deleteAssistanceEmp(String id) throws SerException {
         assistanceEmpSer.deleteAssistanceEmp(id);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return assistanceEmpSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return assistanceEmpSer.guidePermission(guidePermissionTO);
     }
 }

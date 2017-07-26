@@ -2,8 +2,10 @@ package com.bjike.goddess.secure.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.secure.bo.BeforeAddBO;
+import com.bjike.goddess.secure.dto.AddEmployeeDTO;
 import com.bjike.goddess.secure.dto.BeforeAddDTO;
 import com.bjike.goddess.secure.to.BeforeAddTO;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -17,6 +19,15 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface BeforeAddAPI {
+    /**
+     * 下拉导航权限
+     */
+    Boolean sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
     /**
      * 添加
      *
@@ -69,12 +80,12 @@ public interface BeforeAddAPI {
      */
     void send() throws SerException;
 
-    /**
-     * 启动定时方法
-     *
-     * @throws SerException
-     */
-    void quartz() throws SerException;
+//    /**
+//     * 启动定时方法
+//     *
+//     * @throws SerException
+//     */
+//    void quartz() throws SerException;
 
     /**
      * 补全信息
@@ -91,7 +102,7 @@ public interface BeforeAddAPI {
      * @param id id
      * @throws SerException
      */
-    void add(String id) throws SerException;
+    void add(AddEmployeeDTO dto, String id) throws SerException;
 
     /**
      * 查找总记录数

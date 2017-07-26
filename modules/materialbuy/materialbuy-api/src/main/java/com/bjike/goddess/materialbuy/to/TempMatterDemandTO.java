@@ -79,6 +79,7 @@ public class TempMatterDemandTO extends BaseTO {
     /**
      * 需求原因
      */
+    @NotBlank(groups = {TempMatterDemandTO.TempMatterDemandAdd.class, TempMatterDemandTO.TempMatterDemandEdit.class}, message = "需求原因不能为空")
     private String needReason;
 
     /**

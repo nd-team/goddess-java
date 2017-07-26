@@ -4,6 +4,7 @@ import com.bjike.goddess.assistance.bo.AssistanceRecordBO;
 import com.bjike.goddess.assistance.dto.AssistanceRecordDTO;
 import com.bjike.goddess.assistance.service.AssistanceRecordSer;
 import com.bjike.goddess.assistance.to.AssistanceRecordTO;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,4 +53,13 @@ public class AssistanceRecordApiImpl implements AssistanceRecordAPI {
         assistanceRecordSer.deleteAssistanceRecord(id);
     }
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return assistanceRecordSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return assistanceRecordSer.guidePermission(guidePermissionTO);
+    }
 }
