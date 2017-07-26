@@ -1,9 +1,9 @@
 package com.bjike.goddess.businsurance.config;
 
+import com.bjike.goddess.businsurance.api.CusPermissionAPI;
+import com.bjike.goddess.businsurance.enums.CusPermissionType;
+import com.bjike.goddess.businsurance.to.CusPermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.devicerepair.api.CusPermissionAPI;
-import com.bjike.goddess.devicerepair.to.CusPermissionTO;
-import com.bjike.goddess.devicerepair.type.CusPermissionType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -11,7 +11,12 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -85,6 +90,7 @@ public class PermissionConfig {
         //插入数据库
         List<CusPermissionTO> listTO = new ArrayList<>();
         if (descList.size() != idList.size() && descList.size() != typeList.size()) {
+
             return;
         }
         for (int i = 0; i < descList.size(); i++) {
@@ -118,6 +124,37 @@ public class PermissionConfig {
 
     }
 
+    public static void main(String[] args) {
+        LocalDateTime d = LocalDateTime.now();
+        int temp_count_start = d.getDayOfWeek().getValue();
+        System.out.println(d.plusDays(6-temp_count_start));//周六
+        System.out.println(d.minusDays(temp_count_start));//周日
+
+        LocalDateTime quarte_start = null;
+        LocalDateTime quarte_end = null;
+        int mon = d.getMonthValue();
+        if( mon%3 == 1){
+            quarte_start = d.minusMonths(0);
+            quarte_end = d.plusMonths(2);
+        }else if( mon%3 == 2){
+
+            quarte_start = d.minusMonths(1);
+            quarte_end = d.plusMonths(1);
+        }else if( mon%3 == 0){
+
+            quarte_start = d.minusMonths(2);
+            quarte_end = d.plusMonths(0);
+        }
+        System.out.println( quarte_start );
+        System.out.println( quarte_end );
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+//        Date date = calendar.getTime();
+//        Instant instant = date.toInstant();
+//        ZoneId zoneId = ZoneId.systemDefault();
+//        System.out.println( LocalDateTime.ofInstant(instant, zoneId).toLocalDate());
+
+    }
     /**
      * 构建类描述
      */

@@ -270,7 +270,7 @@ public class BusInsuranceAction extends BaseFileAction{
         try {
             //跟前端约定好 ，文件路径是列表id
             // /id/....
-            String path = "/" + id;
+            String path = "/businsurance/busInsure/" + id;
             List<InputStream> inputStreams = getInputStreams(request, path);
             fileAPI.upload(inputStreams);
             return new ActResult("upload success");
@@ -290,7 +290,7 @@ public class BusInsuranceAction extends BaseFileAction{
     public Result list(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             //跟前端约定好 ，文件路径是列表id
-            String path = "/" + id;
+            String path = "/businsurance/busInsure/" + id;
             FileInfo fileInfo = new FileInfo();
             fileInfo.setPath(path);
             Object storageToken = request.getAttribute("storageToken");
