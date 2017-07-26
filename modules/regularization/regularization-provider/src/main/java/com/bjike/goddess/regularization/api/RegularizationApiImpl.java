@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 员工转正业务接口实现
@@ -194,5 +195,15 @@ public class RegularizationApiImpl implements RegularizationAPI {
     @Override
     public List<RegularizationBO> findAddRusult(String name, String empNumer) throws SerException {
         return regularizationSer.findAddRusult(name,empNumer);
+    }
+
+    @Override
+    public String time(String empNo) throws SerException {
+        return regularizationSer.time(empNo);
+    }
+
+    @Override
+    public Set<String> allNum() throws SerException {
+        return regularizationSer.allNum();
     }
 }

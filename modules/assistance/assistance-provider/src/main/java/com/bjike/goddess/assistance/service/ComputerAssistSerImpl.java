@@ -3,10 +3,13 @@ package com.bjike.goddess.assistance.service;
 import com.bjike.goddess.assistance.bo.ComputerAssistBO;
 import com.bjike.goddess.assistance.dto.ComputerAssistDTO;
 import com.bjike.goddess.assistance.entity.ComputerAssist;
+import com.bjike.goddess.assistance.enums.GuideAddrStatus;
 import com.bjike.goddess.assistance.to.ComputerAssistTO;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
@@ -39,7 +42,135 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
     @Autowired
     private UserAPI userAPI;
     @Autowired
-    private EntryBasicInfoAPI entryBasicInfoAPI;
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideSeeIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
 
     @Override
     public Long countComputerAssist(ComputerAssistDTO computerAssistDTO) throws SerException {
@@ -63,6 +194,7 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
 
     @Override
     public List<ComputerAssistBO> listComputerAssist(ComputerAssistDTO computerAssistDTO) throws SerException {
+        checkSeeIdentity();
         if (StringUtils.isNotBlank(computerAssistDTO.getEmpName())) {
             computerAssistDTO.getConditions().add(Restrict.like("empName", computerAssistDTO.getEmpName()));
         }
@@ -75,6 +207,7 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ComputerAssistBO addComputerAssist(ComputerAssistTO computerAssistTO) throws SerException {
+        checkAddIdentity();
         ComputerAssist computerAssist = BeanTransform.copyProperties(computerAssistTO, ComputerAssist.class, true);
         if (Double.isNaN(computerAssistTO.getAssistDays())) {
             throw new SerException("补助天数不能为非数字");
@@ -98,6 +231,7 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ComputerAssistBO editComputerAssist(ComputerAssistTO computerAssistTO) throws SerException {
+        checkAddIdentity();
         if (Double.isNaN(computerAssistTO.getAssistDays())) {
             throw new SerException("补助天数不能为非数字");
         }
@@ -125,6 +259,7 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteComputerAssist(String id) throws SerException {
+        checkAddIdentity();
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
@@ -134,6 +269,7 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
     @Override
     public List<ComputerAssistBO> collectByArea(ComputerAssistDTO computerAssistDTO) throws SerException {
         //地区不为空
+        checkSeeIdentity();
         String[] fields = new String[]{"empName", "projectGroup", "area", "assistStartTime", "assistEndTime",
                 "salaryStartTime", "salaryEndTime", "assistDays", "assistMoney"};
         String sql = "";
@@ -154,6 +290,7 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
     @Override
     public List<ComputerAssistBO> collectByProGroup(ComputerAssistDTO computerAssistDTO) throws SerException {
         //项目组不为空
+        checkSeeIdentity();
         String[] fields = new String[]{"empName", "projectGroup", "area", "assistStartTime", "assistEndTime",
                 "salaryStartTime", "salaryEndTime", "assistDays", "assistMoney"};
         String sql = "";

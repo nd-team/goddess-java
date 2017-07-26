@@ -6,6 +6,7 @@ import com.bjike.goddess.secure.bo.BeforeRemoveEmployeeBO;
 import com.bjike.goddess.secure.dto.BeforeRemoveEmployeeDTO;
 import com.bjike.goddess.secure.entity.BeforeRemoveEmployee;
 import com.bjike.goddess.secure.to.BeforeRemoveEmployeeTO;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +20,15 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface BeforeRemoveEmployeeSer extends Ser<BeforeRemoveEmployee, BeforeRemoveEmployeeDTO> {
+    /**
+     * 下拉导航权限
+     */
+    Boolean sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
     /**
      * 添加
      *
@@ -70,12 +80,12 @@ public interface BeforeRemoveEmployeeSer extends Ser<BeforeRemoveEmployee, Befor
      */
     void send() throws SerException;
 
-    /**
-     * 启动定时方法
-     *
-     * @throws SerException
-     */
-    void quartz() throws SerException;
+//    /**
+//     * 启动定时方法
+//     *
+//     * @throws SerException
+//     */
+//    void quartz() throws SerException;
 
     /**
      * 减员

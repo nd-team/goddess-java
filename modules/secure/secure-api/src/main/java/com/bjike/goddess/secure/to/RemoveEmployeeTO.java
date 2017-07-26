@@ -85,7 +85,7 @@ public class RemoveEmployeeTO extends BaseTO {
     /**
      * 员工编号
      */
-    @NotBlank(groups = {EDIT.class}, message = "员工编号不能为空")
+    @NotBlank(groups = {RemoveEmployeeTO.search.class, EDIT.class}, message = "员工编号不能为空")
     private String employeeId;
 
     /**

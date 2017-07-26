@@ -6,12 +6,9 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
-import com.bjike.goddess.organize.api.ArrangementAPI;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
-import com.bjike.goddess.organize.entity.DepartmentDetail;
-import com.bjike.goddess.organize.service.PositionDetailUserSer;
 import com.bjike.goddess.regularization.bo.ManagementScoreBO;
 import com.bjike.goddess.regularization.bo.RegularizationBO;
 import com.bjike.goddess.regularization.dto.ManagementScoreDTO;
@@ -22,9 +19,7 @@ import com.bjike.goddess.regularization.excel.SonPermissionObject;
 import com.bjike.goddess.regularization.to.*;
 import com.bjike.goddess.regularization.type.GuideAddrStatus;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
-import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.bo.EntryOptionBO;
-import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.collections4.CollectionUtils;
@@ -34,7 +29,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.StyledEditorKit;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -74,7 +68,6 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
-
 
 
     /**
@@ -389,6 +382,7 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
+
     /**
      * 分页查询员工转正
      *
@@ -398,15 +392,15 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     @Override
     public List<RegularizationBO> list(RegularizationDTO dto) throws SerException {
         List<RegularizationBO> listBO = new ArrayList<>();
-        if(checkzzSeePermission()){
+        if (checkzzSeePermission()) {
             List<Regularization> list = super.findByPage(dto);
             listBO = BeanTransform.copyProperties(list, RegularizationBO.class);
-        }else{
+        } else {
             RegularizationDTO regularizationDTO = new RegularizationDTO();
-            String userName =  getCurUsername();
-            regularizationDTO.getConditions().add(Restrict.eq("name",userName));
+            String userName = getCurUsername();
+            regularizationDTO.getConditions().add(Restrict.eq("name", userName));
             List<Regularization> regularizations = super.findByCis(regularizationDTO);
-            listBO = BeanTransform.copyProperties(regularizations,RegularizationBO.class);
+            listBO = BeanTransform.copyProperties(regularizations, RegularizationBO.class);
         }
         return listBO;
     }
@@ -591,7 +585,7 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void planModuleSupply(PlanModuleSupplyTO to) throws SerException {
-       checkModPermission();
+        checkModPermission();
         String curUsername = getCurUsername();
         Regularization model = super.findById(to.getId());
         if (model == null) {
@@ -614,7 +608,7 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void budgetModuleSupply(String id, String budgetPositiveComment) throws SerException {
-       checkModPermission();
+        checkModPermission();
         String curUsername = getCurUsername();
         Regularization model = super.findById(id);
         if (model == null) {
@@ -634,7 +628,7 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void zjbApproval(ZjbApprovalTO to) throws SerException {
-       checkPonsPermission();
+        checkPonsPermission();
         String curUsername = getCurUsername();
         Regularization model = super.findById(to.getId());
         if (model == null) {
@@ -654,7 +648,7 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
             return Collections.emptyList();
         }
         Set<String> set = new HashSet<>();
-        for (DepartmentDetailBO departmentDetailBO : departmentDetailBOS){
+        for (DepartmentDetailBO departmentDetailBO : departmentDetailBOS) {
             String details = departmentDetailBO.getDepartment();
             if (StringUtils.isNotBlank(departmentDetailBO.getDepartment())) {
                 set.add(details);
@@ -670,7 +664,7 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
             return Collections.emptyList();
         }
         Set<String> set = new HashSet<>();
-        for (UserBO userBO : userBOS){
+        for (UserBO userBO : userBOS) {
             String userName = userBO.getUsername();
             if (StringUtils.isNotBlank(userBO.getUsername())) {
                 set.add(userName);
@@ -680,17 +674,41 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     }
 
     @Override
-    public List<RegularizationBO> findAddRusult(String name,String empNumer) throws SerException {
-        List<EntryOptionBO> entryOptionBOS = entryBasicInfoAPI.getEntryOptionByNameAndEmpNum(name,empNumer);
-        return BeanTransform.copyProperties(entryOptionBOS,RegularizationBO.class);
+    public List<RegularizationBO> findAddRusult(String name, String empNumer) throws SerException {
+        List<EntryOptionBO> entryOptionBOS = entryBasicInfoAPI.getEntryOptionByNameAndEmpNum(name, empNumer);
+        return BeanTransform.copyProperties(entryOptionBOS, RegularizationBO.class);
     }
 
     @Override
     public List<RegularizationBO> findByName() throws SerException {
         RegularizationDTO regularizationDTO = new RegularizationDTO();
-        String userName =  getCurUsername();
-        regularizationDTO.getConditions().add(Restrict.eq("name",userName));
+        String userName = getCurUsername();
+        regularizationDTO.getConditions().add(Restrict.eq("name", userName));
         List<Regularization> regularizations = super.findByCis(regularizationDTO);
-        return BeanTransform.copyProperties(regularizations,RegularizationBO.class);
+        return BeanTransform.copyProperties(regularizations, RegularizationBO.class);
+    }
+
+    @Override
+    //chenjunhao
+    public String time(String empNo) throws SerException {
+        RegularizationDTO dto = new RegularizationDTO();
+        dto.getConditions().add(Restrict.eq("empNo", empNo));
+        List<Regularization> list = super.findByCis(dto);
+        if (list != null && !list.isEmpty()) {
+            return DateUtil.dateToString(list.get(0).getPositiveDate());
+        }
+        throw new SerException("没有该员工编号的对应转正时间");
+    }
+
+
+    @Override
+    //chenjunhao
+    public Set<String> allNum() throws SerException {
+        List<Regularization> list=super.findAll();
+        Set<String> set=new HashSet<>();
+        for (Regularization r:list){
+            set.add(r.getEmpNo());
+        }
+        return set;
     }
 }

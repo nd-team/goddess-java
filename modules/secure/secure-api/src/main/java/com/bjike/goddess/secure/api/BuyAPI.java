@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.secure.bo.BuyBO;
 import com.bjike.goddess.secure.dto.BuyDTO;
 import com.bjike.goddess.secure.to.BuyTO;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -17,6 +18,15 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface BuyAPI {
+    /**
+     * 下拉导航权限
+     */
+    Boolean sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
     /**
      * 查找
      *

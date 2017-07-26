@@ -1,6 +1,7 @@
 package com.bjike.goddess.recruit.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.recruit.type.AuditType;
 
 /**
  * 招聘方案
@@ -116,6 +117,19 @@ public class RecruitProBO extends BaseBO {
      * 备注
      */
     private String note;
+
+    /**
+     * 审核状态
+     */
+    private AuditType auditType;
+
+    public AuditType getAuditType() {
+        return auditType;
+    }
+
+    public void setAuditType(AuditType auditType) {
+        this.auditType = auditType;
+    }
 
     public String getRecruitSite() {
         return recruitSite;

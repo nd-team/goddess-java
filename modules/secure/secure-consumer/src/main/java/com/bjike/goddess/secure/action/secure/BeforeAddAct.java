@@ -10,8 +10,10 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.secure.api.BeforeAddAPI;
 import com.bjike.goddess.secure.bo.BeforeAddBO;
+import com.bjike.goddess.secure.dto.AddEmployeeDTO;
 import com.bjike.goddess.secure.dto.BeforeAddDTO;
 import com.bjike.goddess.secure.to.BeforeAddTO;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
 import com.bjike.goddess.secure.vo.BeforeAddVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -37,20 +39,43 @@ public class BeforeAddAct {
     private BeforeAddAPI beforeAddAPI;
 
     /**
-     * 启动定时方法
+     * 功能导航权限
      *
+     * @param guidePermissionTO 导航类型数据
      * @throws ActException
      * @version v1
      */
-    @PostMapping("v1/quartz")
-    public Result quartz() throws ActException {
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            beforeAddAPI.quartz();
-            return new ActResult("启动定时方法成功");
+
+            Boolean isHasPermission = beforeAddAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
+//    /**
+//     * 启动定时方法
+//     *
+//     * @throws ActException
+//     * @version v1
+//     */
+//    @PostMapping("v1/quartz")
+//    public Result quartz() throws ActException {
+//        try {
+//            beforeAddAPI.quartz();
+//            return new ActResult("启动定时方法成功");
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
     /**
      * 添加
@@ -175,9 +200,9 @@ public class BeforeAddAct {
      */
     @LoginAuth
     @PatchMapping("v1/add/{id}")
-    public Result add(@PathVariable String id) throws ActException {
+    public Result add(@Validated(AddEmployeeDTO.CONFIRM.class) AddEmployeeDTO dto,@PathVariable String id) throws ActException {
         try {
-            beforeAddAPI.add(id);
+            beforeAddAPI.add(dto,id);
             return new ActResult("审批通过");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

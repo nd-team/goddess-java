@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.secure.bo.SecureCartBO;
 import com.bjike.goddess.secure.dto.SecureCartDTO;
 import com.bjike.goddess.secure.service.SecureCartSer;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
 import com.bjike.goddess.secure.to.SecureCartTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,13 +55,23 @@ public class SecureCartApiImpl implements SecureCartAPI {
         return secureCartSer.count(dto);
     }
 
-    @Override
-    public void quartz() throws SerException {
-        secureCartSer.quartz();
-    }
+//    @Override
+//    public void quartz() throws SerException {
+//        secureCartSer.quartz();
+//    }
 
     @Override
     public SecureCartBO save(SecureCartTO to) throws SerException {
         return secureCartSer.save(to);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return secureCartSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return secureCartSer.guidePermission(guidePermissionTO);
     }
 }

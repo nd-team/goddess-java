@@ -4,6 +4,7 @@ import com.bjike.goddess.assistance.bo.AssistanceStandardBO;
 import com.bjike.goddess.assistance.dto.AssistanceStandardDTO;
 import com.bjike.goddess.assistance.service.AssistanceStandardSer;
 import com.bjike.goddess.assistance.to.AssistanceStandardTO;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,5 +59,15 @@ public class AssistanceStandardApiImpl implements AssistanceStandardAPI {
     @Override
     public List<AssistanceStandardBO> getAgeStands() throws SerException {
         return assistanceStandardSer.getAgeStands();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return assistanceStandardSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return assistanceStandardSer.guidePermission(guidePermissionTO);
     }
 }

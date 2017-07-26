@@ -118,10 +118,10 @@ public class FirstPhoneRecordBO extends BaseBO {
      */
     private String other;
 
-    /**
-     * 附件地址
-     */
-    private String attachmentAddr;
+//    /**
+//     * 附件地址
+//     */
+//    private String attachmentAddr;
 
     public String getDate() {
         return date;
@@ -283,11 +283,11 @@ public class FirstPhoneRecordBO extends BaseBO {
         this.other = other;
     }
 
-    public String getAttachmentAddr() {
-        return attachmentAddr;
-    }
-
-    public void setAttachmentAddr(String attachmentAddr) {
-        this.attachmentAddr = attachmentAddr;
-    }
+//    public String getAttachmentAddr() {
+//        return attachmentAddr;
+//    }
+//
+//    public void setAttachmentAddr(String attachmentAddr) {
+//        this.attachmentAddr = attachmentAddr;
+//    }
 }

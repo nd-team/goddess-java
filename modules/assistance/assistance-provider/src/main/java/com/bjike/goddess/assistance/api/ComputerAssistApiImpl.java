@@ -4,6 +4,7 @@ import com.bjike.goddess.assistance.bo.ComputerAssistBO;
 import com.bjike.goddess.assistance.dto.ComputerAssistDTO;
 import com.bjike.goddess.assistance.service.ComputerAssistSer;
 import com.bjike.goddess.assistance.to.ComputerAssistTO;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,5 +75,15 @@ public class ComputerAssistApiImpl implements ComputerAssistAPI {
     @Override
     public EntryBasicInfoBO getUserByName(ComputerAssistDTO computerAssistDTO) throws SerException {
         return computerAssistSer.getUserByName(computerAssistDTO);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return computerAssistSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return computerAssistSer.guidePermission(guidePermissionTO);
     }
 }

@@ -273,6 +273,26 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     }
 
     @Override
+    public VoucherGenerateBO getByIdCJh(String id) throws SerException {
+        VoucherGenerate vg = super.findById(id);
+        if (vg==null){
+            return null;
+        }
+        VoucherGenerateBO bo = BeanTransform.copyProperties(vg, VoucherGenerateBO.class);
+        bo.setFirstSubjects(Arrays.asList(bo.getFirstSubject()));
+        bo.setSecondSubjects(Arrays.asList(bo.getSecondSubject()));
+        bo.setThirdSubjects(Arrays.asList(bo.getThirdSubject()));
+        bo.setLoanMoneys(Arrays.asList(bo.getLoanMoney()));
+        bo.setBorrowMoneys(Arrays.asList(bo.getBorrowMoney()));
+
+        VoucherTotal vt = voucherTotalSer.findById(vg.getTotalId());
+        bo.setMoneyTotal(vt.getMoney());
+
+        return bo;
+
+    }
+
+    @Override
     public Long countVoucherGenerate(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
         voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.NONE));
         Long count = super.count(voucherGenerateDTO);

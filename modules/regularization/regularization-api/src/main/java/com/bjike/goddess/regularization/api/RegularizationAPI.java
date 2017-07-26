@@ -8,6 +8,7 @@ import com.bjike.goddess.regularization.excel.SonPermissionObject;
 import com.bjike.goddess.regularization.to.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 员工转正业务接口
@@ -166,4 +167,23 @@ public interface RegularizationAPI {
     default List<RegularizationBO> findAddRusult(String name,String empNumer) throws SerException {
         return null;
     }
+
+    /**
+     * chenjunhao
+     * 根据员工编号查找转正时间
+     *
+     * @param empNo 员工编号
+     * @return
+     * @throws SerException
+     */
+    String time(String empNo) throws SerException;
+
+    /**
+     * chenjunhao
+     * 获取所有员工编号
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allNum() throws SerException;
 }

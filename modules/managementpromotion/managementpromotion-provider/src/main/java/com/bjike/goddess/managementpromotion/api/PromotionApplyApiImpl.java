@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.managementpromotion.bo.PromotionApplyBO;
 import com.bjike.goddess.managementpromotion.dto.PromotionApplyDTO;
 import com.bjike.goddess.managementpromotion.service.PromotionApplySer;
+import com.bjike.goddess.managementpromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managementpromotion.to.PromotionApplyTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -97,5 +98,15 @@ public class PromotionApplyApiImpl implements PromotionApplyAPI {
     @Override
     public void send() throws SerException {
         promotionApplySer.send();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return promotionApplySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return promotionApplySer.guidePermission(guidePermissionTO);
     }
 }

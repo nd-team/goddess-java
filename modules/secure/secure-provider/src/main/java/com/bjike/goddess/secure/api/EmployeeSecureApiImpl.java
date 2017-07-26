@@ -5,6 +5,7 @@ import com.bjike.goddess.secure.bo.EmployeeSecureBO;
 import com.bjike.goddess.secure.dto.EmployeeSecureDTO;
 import com.bjike.goddess.secure.service.EmployeeSecureSer;
 import com.bjike.goddess.secure.to.EmployeeSecureTO;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,5 +63,15 @@ public class EmployeeSecureApiImpl implements EmployeeSecureAPI {
     @Override
     public Long count(EmployeeSecureDTO dto) throws SerException {
         return employeeSecureSer.count(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return employeeSecureSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return employeeSecureSer.guidePermission(guidePermissionTO);
     }
 }

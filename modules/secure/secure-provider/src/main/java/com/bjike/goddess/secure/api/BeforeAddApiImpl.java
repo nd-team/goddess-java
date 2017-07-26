@@ -2,9 +2,11 @@ package com.bjike.goddess.secure.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.secure.bo.BeforeAddBO;
+import com.bjike.goddess.secure.dto.AddEmployeeDTO;
 import com.bjike.goddess.secure.dto.BeforeAddDTO;
 import com.bjike.goddess.secure.service.BeforeAddSer;
 import com.bjike.goddess.secure.to.BeforeAddTO;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,10 +51,10 @@ public class BeforeAddApiImpl implements BeforeAddAPI {
         beforeAddSer.send();
     }
 
-    @Override
-    public void quartz() throws SerException {
-        beforeAddSer.quartz();
-    }
+//    @Override
+//    public void quartz() throws SerException {
+//        beforeAddSer.quartz();
+//    }
 
     @Override
     public BeforeAddBO complete(BeforeAddTO to) throws SerException {
@@ -60,8 +62,18 @@ public class BeforeAddApiImpl implements BeforeAddAPI {
     }
 
     @Override
-    public void add(String id) throws SerException {
-        beforeAddSer.add(id);
+    public Boolean sonPermission() throws SerException {
+        return beforeAddSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return beforeAddSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public void add(AddEmployeeDTO dto, String id) throws SerException {
+        beforeAddSer.add(dto, id);
     }
 
     @Override

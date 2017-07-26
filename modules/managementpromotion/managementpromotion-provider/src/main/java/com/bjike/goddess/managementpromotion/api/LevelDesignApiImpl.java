@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.managementpromotion.bo.LevelDesignBO;
 import com.bjike.goddess.managementpromotion.dto.LevelDesignDTO;
 import com.bjike.goddess.managementpromotion.service.LevelDesignSer;
+import com.bjike.goddess.managementpromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managementpromotion.to.LevelDesignTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,5 +74,15 @@ public class LevelDesignApiImpl implements LevelDesignAPI {
     @Override
     public Long count(LevelDesignDTO dto) throws SerException {
         return levelDesignSer.count(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return levelDesignSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return levelDesignSer.guidePermission(guidePermissionTO);
     }
 }

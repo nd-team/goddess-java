@@ -19,6 +19,10 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.managementpromotion.api.LevelDesignAPI" id="levelDesignApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.managementpromotion.api.LevelShowAPI" id="levelShowApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.managementpromotion.api.PromotionApplyAPI" id="promotionApplyApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.managementpromotion.api.CusPermissionAPI" id="cusPermissionApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.managementpromotion.api.CusPermissionOperateAPI" id="cusPermissionOperateApiImpl"/>
 
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.regularization.api.RegularizationAPI" id="regularizationApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl"/>
 </beans>

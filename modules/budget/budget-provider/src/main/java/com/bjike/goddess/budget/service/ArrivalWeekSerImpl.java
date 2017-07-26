@@ -255,7 +255,7 @@ public class ArrivalWeekSerImpl extends ServiceImpl<ArrivalWeek, ArrivalWeekDTO>
             arrivalMonthTO.setIncomeDifferences(bo.getIncomeDifferencesSum());
             Double planIncome = bo.getPlanIncome();
             Double targetIncome = bo.getTargetIncomeSum();
-            Double scale = planIncome / targetIncome;
+            Double scale = Double.parseDouble(String.format("%.2f", planIncome / targetIncome));
             arrivalMonthTO.setScale(scale);
             arrivalMonthSer.save(arrivalMonthTO);
         }
@@ -288,7 +288,7 @@ public class ArrivalWeekSerImpl extends ServiceImpl<ArrivalWeek, ArrivalWeekDTO>
             arrivalMonthTO.setIncomeDifferences(bo.getIncomeDifferencesSum());
             Double planIncome = bo.getPlanIncome();
             Double targetIncome = bo.getTargetIncomeSum();
-            Double scale = planIncome / targetIncome;
+            Double scale = Double.parseDouble(String.format("%.2f", planIncome / targetIncome));
             arrivalMonthTO.setScale(scale);
             arrivalMonthSer.save(arrivalMonthTO);
         }
@@ -314,7 +314,7 @@ public class ArrivalWeekSerImpl extends ServiceImpl<ArrivalWeek, ArrivalWeekDTO>
             arrivalMonthTO.setIncomeDifferences(bo.getIncomeDifferencesSum());
             Double planIncome = bo.getPlanIncome();
             Double targetIncome = bo.getTargetIncomeSum();
-            Double scale = planIncome / targetIncome;
+            Double scale = Double.parseDouble(String.format("%.2f", planIncome / targetIncome));
             arrivalMonthTO.setScale(scale);
             arrivalMonthSer.save(arrivalMonthTO);
         }

@@ -3,6 +3,7 @@ package com.bjike.goddess.assistance.api;
 import com.bjike.goddess.assistance.bo.HouseAssistBO;
 import com.bjike.goddess.assistance.dto.HouseAssistDTO;
 import com.bjike.goddess.assistance.service.HouseAssistSer;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.to.HouseAssistTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,4 +58,13 @@ public class HouseAssistApiImpl implements HouseAssistAPI {
         houseAssistSer.deleteHouseAssist(id);
     }
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return houseAssistSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return houseAssistSer.guidePermission(guidePermissionTO);
+    }
 }

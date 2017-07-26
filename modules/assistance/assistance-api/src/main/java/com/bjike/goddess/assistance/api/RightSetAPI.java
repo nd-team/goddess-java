@@ -2,6 +2,7 @@ package com.bjike.goddess.assistance.api;
 
 import com.bjike.goddess.assistance.bo.RightSetBO;
 import com.bjike.goddess.assistance.dto.RightSetDTO;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.to.RightSetTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -17,7 +18,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface RightSetAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
 
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 权限设置列表总条数
      *
