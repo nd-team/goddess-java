@@ -33,6 +33,7 @@ public interface SkillAnalyseAPI {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 保存
      *
@@ -99,4 +100,12 @@ public interface SkillAnalyseAPI {
     }
 
 
+    /**
+     * 获取用户
+     */
+    default List<String> getUser() throws SerException {
+        return null;
+    }
+
+    ;
 }

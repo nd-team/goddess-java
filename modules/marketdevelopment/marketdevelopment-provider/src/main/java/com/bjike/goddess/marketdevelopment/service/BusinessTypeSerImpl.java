@@ -214,6 +214,7 @@ public class BusinessTypeSerImpl extends ServiceImpl<BusinessType, BusinessTypeD
     public List<BusinessTypeBO> findThaw() throws SerException {
         BusinessTypeDTO dto = new BusinessTypeDTO();
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
+        dto.getSorts().add("createTime=desc");
         List<BusinessType> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, BusinessTypeBO.class);
     }

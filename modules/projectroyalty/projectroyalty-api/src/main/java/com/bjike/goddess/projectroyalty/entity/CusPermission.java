@@ -1,7 +1,7 @@
 package com.bjike.goddess.projectroyalty.entity;
 
+import com.bjike.goddess.projectroyalty.enums.CusPermissionType;
 import com.bjike.goddess.common.api.entity.BaseEntity;
-import com.bjike.goddess.moneyprepare.enums.CusPermissionType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,7 +18,7 @@ import javax.persistence.Table;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "moneyprepare_cuspermission")
+@Table(name = "projectroyalty_cuspermission")
 public class CusPermission extends BaseEntity {
 
     /**

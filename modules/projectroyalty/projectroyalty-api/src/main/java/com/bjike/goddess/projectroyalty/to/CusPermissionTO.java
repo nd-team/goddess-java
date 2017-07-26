@@ -1,7 +1,7 @@
 package com.bjike.goddess.projectroyalty.to;
 
+import com.bjike.goddess.projectroyalty.enums.CusPermissionType;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.moneyprepare.enums.CusPermissionType;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**

@@ -126,6 +126,7 @@ public class TargetInformationSerImpl extends ServiceImpl<TargetInformation, Tar
     public List<TargetInformation> findByPage(TargetInformationDTO dto) throws SerException {
 //        if (!marPermissionSer.getMarPermission(marketCheck))
 //            throw new SerException("您的帐号没有权限");
+        dto.getSorts().add("createTime=desc");
         return super.findByPage(dto);
     }
 

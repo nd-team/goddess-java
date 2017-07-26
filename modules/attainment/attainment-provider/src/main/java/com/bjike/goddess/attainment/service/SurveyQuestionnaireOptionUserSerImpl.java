@@ -59,14 +59,16 @@ public class SurveyQuestionnaireOptionUserSerImpl extends ServiceImpl<SurveyQues
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyQuestionnaireOptionUserBO save(SurveyQuestionnaireOptionUserTO to) throws SerException {
-        UserBO user = userAPI.currentUser();
+        String userToken = RpcTransmit.getUserToken();
+        UserBO user = userAPI.currentUser(userToken);
         SurveyQuestionnaireOptionUser entity = new SurveyQuestionnaireOptionUser();
         SurveyQuestionnaireOption option = optionSer.findById(to.getOptionId());
         if (null == option)
             throw new SerException("选项对象不存在,无法保存");
-        entity.setUser(user.getUsername());
+        entity.setUser(to.getUser());
         entity.setOption(option);
         entity.setTableName(entity.getOption().getQuestionnaire().getQuestionnaire());
+        RpcTransmit.transmitUserToken(userToken);
         super.save(entity);
         option.setBallot(option.getBallot() + 1);
         optionSer.update(option);

@@ -2,17 +2,11 @@ package com.bjike.goddess.attainment.action.attainment;
 
 import com.bjike.goddess.attainment.api.SurveyActualizeAPI;
 import com.bjike.goddess.attainment.api.SurveyPlanAPI;
-import com.bjike.goddess.attainment.bo.SurveyQuestionnaireOptionUsersBO;
-import com.bjike.goddess.attainment.bo.SurveyQuestionnaireUsersBO;
 import com.bjike.goddess.attainment.bo.SurveyQuestionnairesBO;
 import com.bjike.goddess.attainment.dto.SurveyActualizeDTO;
-import com.bjike.goddess.attainment.to.GuidePermissionTO;
-import com.bjike.goddess.attainment.to.SurveyActualizeTO;
-import com.bjike.goddess.attainment.to.SurveyActualizesTO;
-import com.bjike.goddess.attainment.to.SurveyQuestionnaireOptionUsersTO;
+import com.bjike.goddess.attainment.to.*;
 import com.bjike.goddess.attainment.vo.SurPlanvo;
 import com.bjike.goddess.attainment.vo.SurveyActualizeVO;
-import com.bjike.goddess.attainment.vo.SurveyActualizesVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -230,15 +224,46 @@ public class SurveyActualizeAct {
     }
 
     /**
-     * 根据实施记录id问卷调研
+     * 问卷调研
      *
+     * @param to 问卷数据
      * @version v1
      */
     @PostMapping("v1/editQuestionnaire")
-    public Result editQuestionnaire(@Validated(ADD.class) SurveyQuestionnaireOptionUsersTO to) throws ActException {
+    public Result editQuestionnaire(@Validated(ADD.class) SurveyQuestionnaireOptionUsersTO to, BindingResult result) throws ActException {
         try {
-            List<SurveyQuestionnaireOptionUsersBO> list = surveyPlanAPI.editQuestionnaire(to);
-            return null;
+            surveyPlanAPI.editQuestionnaire(to);
+            return ActResult.initialize("问卷填写成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据调研表id修改问卷
+     *
+     * @param to 问卷数据
+     * @version v1
+     */
+    @PutMapping("v1/edit/{id}")
+    public Result edit(@Validated(EDIT.class) SurveyActualizesTO to, BindingResult result) throws ActException {
+        try {
+            surveyPlanAPI.edit(to);
+            return ActResult.initialize("修改成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有的调研表名称
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getName")
+    public Result getName() throws ActException {
+        try {
+            return ActResult.initialize(surveyActualizeAPI.getName());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

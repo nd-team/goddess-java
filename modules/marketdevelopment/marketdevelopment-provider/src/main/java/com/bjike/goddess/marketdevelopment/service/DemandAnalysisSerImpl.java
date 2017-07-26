@@ -213,6 +213,7 @@ public class DemandAnalysisSerImpl extends ServiceImpl<DemandAnalysis, DemandAna
     public List<DemandAnalysis> findByPage(DemandAnalysisDTO dto) throws SerException {
 //        if (!marPermissionSer.getMarPermission(demandManage))
 //            throw new SerException("您的帐号没有权限");
+        dto.getSorts().add("createTime=desc");
         return super.findByPage(dto);
     }
 

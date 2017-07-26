@@ -22,7 +22,7 @@ public class SurveyActualizesTO extends BaseTO {
     /**
      * 调研计划id
      */
-    @NotNull(message = "调研计划id不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "调研计划id不能为空", groups = {ADD.class})
     private String planId;
 
     /**

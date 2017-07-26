@@ -1,7 +1,7 @@
 package com.bjike.goddess.projectroyalty.bo;
 
+import com.bjike.goddess.projectroyalty.enums.CusPermissionType;
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.moneyprepare.enums.CusPermissionType;
 
 import java.util.List;
 

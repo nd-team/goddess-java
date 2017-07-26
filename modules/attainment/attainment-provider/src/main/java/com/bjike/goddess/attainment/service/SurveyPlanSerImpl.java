@@ -3,7 +3,10 @@ package com.bjike.goddess.attainment.service;
 import com.bjike.goddess.attainment.bo.*;
 import com.bjike.goddess.attainment.dto.SurveyActualizeDTO;
 import com.bjike.goddess.attainment.dto.SurveyPlanDTO;
-import com.bjike.goddess.attainment.entity.*;
+import com.bjike.goddess.attainment.entity.SurveyActualize;
+import com.bjike.goddess.attainment.entity.SurveyDemand;
+import com.bjike.goddess.attainment.entity.SurveyPlan;
+import com.bjike.goddess.attainment.entity.SurveyQuestionnaire;
 import com.bjike.goddess.attainment.enums.AuditType;
 import com.bjike.goddess.attainment.enums.GuideAddrStatus;
 import com.bjike.goddess.attainment.to.*;
@@ -14,6 +17,7 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -46,6 +50,8 @@ public class SurveyPlanSerImpl extends ServiceImpl<SurveyPlan, SurveyPlanDTO> im
     private SurveyPlanAuditSer surveyPlanAuditSer;
     @Autowired
     private SurveyQuestionnaireOptionSer surveyQuestionnaireOptionSer;
+    @Autowired
+    private SurveyQuestionnaireOptionUserSer surveyQuestionnaireOptionUserSer;
 
     @Autowired
     private UserAPI userAPI;
@@ -162,6 +168,7 @@ public class SurveyPlanSerImpl extends ServiceImpl<SurveyPlan, SurveyPlanDTO> im
         return list;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public List<SurveyActualizesBO> questionnaire(SurveyActualizesTO to) throws SerException {
         List<SurveyActualizesBO> list = new ArrayList<>();
@@ -192,6 +199,7 @@ public class SurveyPlanSerImpl extends ServiceImpl<SurveyPlan, SurveyPlanDTO> im
         return list;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public List<SurveyQuestionnairesBO> getQuestionnaire(String id) throws SerException {
         List<SurveyQuestionnaireBO> surveyQuestionnaireBOs = surveyQuestionnaireSer.findByActualize(id);
@@ -219,27 +227,92 @@ public class SurveyPlanSerImpl extends ServiceImpl<SurveyPlan, SurveyPlanDTO> im
         return null;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public List<SurveyQuestionnaireOptionUsersBO> editQuestionnaire(SurveyQuestionnaireOptionUsersTO to) throws SerException {
         //前端传过来选项的id,表名,员工的list(选项id不能为空)
         List<SurveyQuestionnaireOptionUserTO> surveyQuestionnaireOptionUserTOs = to.getSurveyQuestionnaireOptionUserTOs();
-        if (null != surveyQuestionnaireOptionUserTOs && surveyQuestionnaireOptionUserTOs.size() > 0)
+        if (null != surveyQuestionnaireOptionUserTOs && surveyQuestionnaireOptionUserTOs.size() > 0) {
             for (SurveyQuestionnaireOptionUserTO to1 : surveyQuestionnaireOptionUserTOs) {
-                SurveyQuestionnaireOptionUser surveyQuestionnaireOptionUser = new SurveyQuestionnaireOptionUser();
-                surveyQuestionnaireOptionUser.setTableName(to1.getTableName());
-                surveyQuestionnaireOptionUser.setUser(to1.getUser());
-                //选项id
-                String surveyQuestionnaireOptionID = to1.getOptionId();
-                //根据选项id获得问题选项
-                SurveyQuestionnaireOption surveyQuestionnaireOption = surveyQuestionnaireOptionSer.findById(surveyQuestionnaireOptionID);
-                SurveyQuestionnaireOption surveyQuestionnaireOption1 = new SurveyQuestionnaireOption();
-                surveyQuestionnaireOption1.set
-                BeanTransform.copyProperties(surveyQuestionnaireOption,SurveyQuestionnaireOption.class,"id");
-                surveyQuestionnaireOption.setContent();
+                String userToken = RpcTransmit.getUserToken();
+                RpcTransmit.transmitUserToken(userToken);
+                UserBO user = userAPI.currentUser();
+                to1.setUser(user.getUsername());
+                RpcTransmit.transmitUserToken(userToken);
+                surveyQuestionnaireOptionUserSer.save(to1);
+            }
+        }
+        return null;
+    }
 
-                surveyQuestionnaireOption.setContent();
-        //把填好的问卷
-        return;
+    @Override
+    public List<SurveyActualizesBO> edit(SurveyActualizesTO to) throws SerException {
+        if (StringUtils.isBlank(to.getId())) {
+            throw new SerException("调研实施记录id不能为空");
+        }
+        //根据调研实施记录id查看问卷
+        List<SurveyQuestionnairesBO> surveyQuestionnairesBOList = this.getQuestionnaire(to.getId());
+        if (null != surveyQuestionnairesBOList && surveyQuestionnairesBOList.size() > 0) {
+            for (SurveyQuestionnairesBO surveyQuestionnairesBO : surveyQuestionnairesBOList) {
+                List<SurveyQuestionnairesTO> surveyQuestionnairesTOList = to.getSurveyQuestionnairesTOs();
+                if (null != surveyQuestionnairesTOList && surveyQuestionnairesTOList.size() > 0) {
+                    for (SurveyQuestionnairesTO surveyQuestionnairesTO : surveyQuestionnairesTOList) {
+                        if (StringUtils.isBlank(surveyQuestionnairesTO.getId())) {
+                            throw new SerException("调研表id不能为空");
+                        }
+                        //调研表id,问题id一样,修改问题
+                        if (surveyQuestionnairesBO.getId().equals(surveyQuestionnairesTO.getId())
+//                                && surveyQuestionnairesBO.getActualizeId().equals(surveyQuestionnairesTO.getActualizeId())
+                                ) {
+                            SurveyQuestionnaireTO surveyQuestionnaireTO = BeanTransform.copyProperties(surveyQuestionnairesTO, SurveyQuestionnaireTO.class, "surveyQuestionnaireOptionTOs");
+                            surveyQuestionnaireTO.setActualizeId(to.getId());
+                            surveyQuestionnaireSer.update(surveyQuestionnaireTO);
+                            //问题选项id一样,修改问题选项
+                            List<SurveyQuestionnaireOptionTO> surveyQuestionnaireOptionTOList = surveyQuestionnairesTO.getSurveyQuestionnaireOptionTOs();
+                            if (null != surveyQuestionnaireOptionTOList && surveyQuestionnaireOptionTOList.size() > 0) {
+                                for (SurveyQuestionnaireOptionTO surveyQuestionnaireOptionTO : surveyQuestionnaireOptionTOList) {
+                                    List<SurveyQuestionnaireOptionBO> surveyQuestionnaireOptionBOList = surveyQuestionnairesBO.getSurveyQuestionnaireOptionBOs();
+                                    if (null != surveyQuestionnaireOptionBOList && surveyQuestionnaireOptionBOList.size() > 0) {
+                                        for (SurveyQuestionnaireOptionBO surveyQuestionnaireOptionBO : surveyQuestionnaireOptionBOList) {
+                                            if(StringUtils.isBlank(surveyQuestionnaireOptionTO.getId())){
+                                                throw new SerException("问题选型id不能为空");
+                                            }
+                                            if (surveyQuestionnaireOptionBO.getId().equals(surveyQuestionnaireOptionTO.getId())) {
+                                                surveyQuestionnaireOptionTO.setQuestionnaireId(surveyQuestionnairesTO.getId());
+                                                surveyQuestionnaireOptionSer.update(surveyQuestionnaireOptionTO);
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            throw new SerException("数据不存在");
+        }
+        return null;
+//
+//        SurveyPlan entity = super.findById(to.getId());
+//        if (null == entity)
+//            throw new SerException("数据不存在");
+//        BeanTransform.copyProperties(to, entity, true);
+//        entity.setModifyTime(LocalDateTime.now());
+//        entity.setDemand(demandSer.findById(to.getDemandId()));
+//        if (null == entity.getDemand())
+//            throw new SerException("选择的调研需求不存在,无法保存");
+//        super.update(entity);
+//        return this.transformBO(entity);
+
+    }
+
+
+    @Override
+    public List<String> getName() throws SerException {
+        List<SurveyPlan> list = super.findAll();
+        return null;
     }
 
     /**

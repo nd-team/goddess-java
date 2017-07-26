@@ -110,4 +110,11 @@ public interface SurveyActualizeSer extends Ser<SurveyActualize, SurveyActualize
     default Long getTotal() throws SerException {
         return null;
     }
+
+    /**
+     * 获取调研表名称
+     */
+    default List<String> getName() throws SerException {
+        return null;
+    }
 }
