@@ -79,6 +79,24 @@ public class AwardDetailSerImpl extends ServiceImpl<AwardDetail, AwardDetailDTO>
         return flag;
     }
 
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
     @Override
     public Boolean sonPermission() throws SerException {
         String userToken = RpcTransmit.getUserToken();
@@ -171,6 +189,7 @@ public class AwardDetailSerImpl extends ServiceImpl<AwardDetail, AwardDetailDTO>
      */
     @Override
     public List<AwardDetailBO> list(AwardDetailDTO dto) throws SerException {
+        checkSeeIdentity();
         List<AwardDetail> list = super.findByPage(dto);
         List<AwardDetailBO> listBO = BeanTransform.copyProperties(list, AwardDetailBO.class);
         return listBO;
@@ -186,6 +205,7 @@ public class AwardDetailSerImpl extends ServiceImpl<AwardDetail, AwardDetailDTO>
     @Override
     @Transactional(rollbackFor = SerException.class)
     public AwardDetailBO save(AwardDetailTO to) throws SerException {
+        checkSeeIdentity();
         AwardDetail entity = BeanTransform.copyProperties(to, AwardDetail.class, true);
         entity = super.save(entity);
         AwardDetailBO bo = BeanTransform.copyProperties(entity, AwardDetailBO.class);
@@ -234,6 +254,7 @@ public class AwardDetailSerImpl extends ServiceImpl<AwardDetail, AwardDetailDTO>
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
+        checkAddIdentity();
         super.remove(id);
     }
 }

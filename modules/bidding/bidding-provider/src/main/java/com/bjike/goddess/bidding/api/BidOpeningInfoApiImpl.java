@@ -69,10 +69,6 @@ public class BidOpeningInfoApiImpl implements BidOpeningInfoAPI {
 
 
     @Override
-    public List<BidOpeningInfoBO> searchBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
-        return bidOpeningInfoSer.searchBidOpeningInfo(bidOpeningInfoDTO);
-    }
-    @Override
     public List<BidOpeningCollectBO> collectBidOpening(String[] cities) throws SerException {
         return bidOpeningInfoSer.collectBidOpening(cities);
     }

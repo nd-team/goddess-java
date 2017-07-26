@@ -1,6 +1,11 @@
 package com.bjike.goddess.accommodation.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * @Author: [xiazhili]
@@ -11,32 +16,43 @@ import com.bjike.goddess.common.api.to.BaseTO;
  */
 public class RentalTO extends BaseTO {
     /**
+     * 租房编号
+     */
+    private String rentNum;
+    /**
      * 地区
      */
+    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private String area;
     /**
      * 项目组
      */
+    @NotBlank(message = "项目组不能为空", groups = {ADD.class, EDIT.class})
     private String projectGroup;
     /**
      * 项目名称
      */
+    @NotNull(message = "项目名称不能为空", groups = {ADD.class, EDIT.class})
     private String[] projectName;
     /**
      * 租赁人
      */
+    @NotBlank(message = "租赁人不能为空", groups = {ADD.class, EDIT.class})
     private String lessee;
     /**
      * 租房地址
      */
+    @NotBlank(message = "租房地址不能为空", groups = {ADD.class, EDIT.class})
     private String address;
     /**
      * 房东姓名
      */
+    @NotBlank(message = "房东姓名不能为空", groups = {ADD.class, EDIT.class})
     private String landlord;
     /**
      * 联系方式
      */
+    @NotBlank(message = "联系方式不能为空", groups = {ADD.class, EDIT.class})
     private String contact;
     /**
      * 账户名称
@@ -53,6 +69,7 @@ public class RentalTO extends BaseTO {
     /**
      * 租房用途
      */
+    @NotBlank(message = "租房用途不能为空", groups = {ADD.class, EDIT.class})
     private String purpose;
     /**
      * 租房合同
@@ -83,37 +100,110 @@ public class RentalTO extends BaseTO {
      */
     private String paymentFrequency;
     /**
+     * 水电费缴费日期
+     */
+    private String paymentTime;
+    /**
      * 中介费
      */
+    @NotNull(message = "中介费不能为空", groups = {ADD.class, EDIT.class})
     private Double agency;
     /**
      * 押金
      */
+    @NotNull(message = "押金不能为空", groups = {ADD.class, EDIT.class})
     private Double deposit;
     /**
      * 房租
      */
+    @NotNull(message = "房租不能为空", groups = {ADD.class, EDIT.class})
     private Double rent;
     /**
-     * 水费计价
+     * 管理费
+     */
+    @NotNull(message = "管理费不能为空", groups = {ADD.class, EDIT.class})
+    private Double managementFee;
+    /**
+     * 卫生费
+     */
+    @NotNull(message = "卫生费不能为空", groups = {ADD.class, EDIT.class})
+    private Double healthFee;
+    /**
+     * 房租缴费方
+     */
+    @NotBlank(message = "房租缴费方不能为空", groups = {ADD.class, EDIT.class})
+    private String rentPay;
+    /**
+     * 水费期初数目
      */
     private Double water;
     /**
-     * 电费计价
+     * 水费计价金额(元/吨)
+     */
+    @NotNull(message = "水费计价额不能为空", groups = {ADD.class, EDIT.class})
+    private Double waterMoney;
+
+    /**
+     * 水费缴费方
+     */
+    @NotBlank(message = "水费缴费方不能为空", groups = {ADD.class, EDIT.class})
+    private String waterPay;
+    /**
+     * 电费期初数目
      */
     private Double energy;
     /**
-     * 网络套餐费用
+     * 电费计价金额(元/吨)
      */
-    private Double network;
+    @NotNull(message = "电费计价额不能为空", groups = {ADD.class, EDIT.class})
+    private Double energyMoney;
     /**
-     * 燃气费
+     * 电费缴费方
+     */
+    @NotBlank(message = "电费缴费方不能为空", groups = {ADD.class, EDIT.class})
+    private String energyPay;
+    /**
+     * 网络套餐费用使用期限
+     */
+    private String network;
+    /**
+     * 网络套餐费用缴纳金额
+     */
+    @NotNull(message = "网络套餐费用不能为空", groups = {ADD.class, EDIT.class})
+    private Double networkMoney;
+    /**
+     * 网络套餐费用缴费方
+     */
+    @NotBlank(message = "网络套餐费用缴费方不能为空", groups = {ADD.class, EDIT.class})
+    private String networkPay;
+    /**
+     * 管道燃气费充值额度
      */
     private Double gas;
+    /**
+     * 燃气费缴费方
+     */
+    private String gasPay;
     /**
      * 备注
      */
     private String remark;
+
+    public String getNetwork() {
+        return network;
+    }
+
+    public String getNetworkPay() {
+        return networkPay;
+    }
+
+    public String getRentNum() {
+        return rentNum;
+    }
+
+    public void setRentNum(String rentNum) {
+        this.rentNum = rentNum;
+    }
 
     public String getArea() {
         return area;
@@ -259,6 +349,14 @@ public class RentalTO extends BaseTO {
         this.paymentFrequency = paymentFrequency;
     }
 
+    public String getPaymentTime() {
+        return paymentTime;
+    }
+
+    public void setPaymentTime(String paymentTime) {
+        this.paymentTime = paymentTime;
+    }
+
     public Double getAgency() {
         return agency;
     }
@@ -283,12 +381,60 @@ public class RentalTO extends BaseTO {
         this.rent = rent;
     }
 
+    public Double getManagementFee() {
+        return managementFee;
+    }
+
+    public void setManagementFee(Double managementFee) {
+        this.managementFee = managementFee;
+    }
+
+    public Double getHealthFee() {
+        return healthFee;
+    }
+
+    public void setHealthFee(Double healthFee) {
+        this.healthFee = healthFee;
+    }
+
+    public String getRentPay() {
+        return rentPay;
+    }
+
+    public void setRentPay(String rentPay) {
+        this.rentPay = rentPay;
+    }
+
     public Double getWater() {
         return water;
     }
 
     public void setWater(Double water) {
         this.water = water;
+    }
+
+    public Double getWaterMoney() {
+        return waterMoney;
+    }
+
+    public void setWaterMoney(Double waterMoney) {
+        this.waterMoney = waterMoney;
+    }
+
+    public String getWaterPay() {
+        return waterPay;
+    }
+
+    public void setWaterPay(String waterPay) {
+        this.waterPay = waterPay;
+    }
+
+    public void setNetwork(String network) {
+        this.network = network;
+    }
+
+    public void setNetworkPay(String networkPay) {
+        this.networkPay = networkPay;
     }
 
     public Double getEnergy() {
@@ -299,13 +445,31 @@ public class RentalTO extends BaseTO {
         this.energy = energy;
     }
 
-    public Double getNetwork() {
-        return network;
+    public Double getEnergyMoney() {
+        return energyMoney;
     }
 
-    public void setNetwork(Double network) {
-        this.network = network;
+    public void setEnergyMoney(Double energyMoney) {
+        this.energyMoney = energyMoney;
     }
+
+    public String getEnergyPay() {
+        return energyPay;
+    }
+
+    public void setEnergyPay(String energyPay) {
+        this.energyPay = energyPay;
+    }
+
+
+    public Double getNetworkMoney() {
+        return networkMoney;
+    }
+
+    public void setNetworkMoney(Double networkMoney) {
+        this.networkMoney = networkMoney;
+    }
+
 
     public Double getGas() {
         return gas;
@@ -313,6 +477,14 @@ public class RentalTO extends BaseTO {
 
     public void setGas(Double gas) {
         this.gas = gas;
+    }
+
+    public String getGasPay() {
+        return gasPay;
+    }
+
+    public void setGasPay(String gasPay) {
+        this.gasPay = gasPay;
     }
 
     public String getRemark() {

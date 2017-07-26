@@ -35,8 +35,15 @@ public class MeetingLay extends BaseEntity {
      * 计划参会岗位
      */
     @Column(name = "position", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '计划参会岗位'")
-    private String position;
+    private StringBuilder[] position;
 
+    public StringBuilder[] getPosition() {
+        return position;
+    }
+
+    public void setPosition(StringBuilder[] position) {
+        this.position = position;
+    }
 
     public MeetingTopic getMeetingTopic() {
         return meetingTopic;
@@ -54,11 +61,5 @@ public class MeetingLay extends BaseEntity {
         this.name = name;
     }
 
-    public String getPosition() {
-        return position;
-    }
 
-    public void setPosition(String position) {
-        this.position = position;
-    }
 }

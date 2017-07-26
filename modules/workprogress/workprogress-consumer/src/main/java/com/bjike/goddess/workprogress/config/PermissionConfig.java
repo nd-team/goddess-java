@@ -1,9 +1,9 @@
-package com.bjike.goddess.regionalprogresscollect.config;
+package com.bjike.goddess.workprogress.config;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.regionalprogresscollect.api.CusPermissionAPI;
-import com.bjike.goddess.regionalprogresscollect.enums.CusPermissionType;
-import com.bjike.goddess.regionalprogresscollect.to.CusPermissionTO;
+import com.bjike.goddess.workprogress.api.CusPermissionAPI;
+import com.bjike.goddess.workprogress.enums.CusPermissionType;
+import com.bjike.goddess.workprogress.to.CusPermissionTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;

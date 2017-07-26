@@ -37,7 +37,7 @@ public class LoginLogAct {
 
 
     /**
-     * 获取登录日志列表
+     * 列表
      *
      * @param id 用户id
      * @return class UserLoginLogVO

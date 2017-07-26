@@ -1,8 +1,10 @@
 package com.bjike.goddess.accommodation.api;
 
 import com.bjike.goddess.accommodation.bo.RentalApplyBO;
+import com.bjike.goddess.accommodation.bo.RentalBO;
 import com.bjike.goddess.accommodation.bo.RentalPreceptBO;
 import com.bjike.goddess.accommodation.dto.RentalApplyDTO;
+import com.bjike.goddess.accommodation.to.GuidePermissionTO;
 import com.bjike.goddess.accommodation.to.RentalApplyTO;
 import com.bjike.goddess.accommodation.to.RentalPreceptTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -17,6 +19,19 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface RentalApplyAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 租房方案列表总条数
      */
@@ -76,6 +91,37 @@ public interface RentalApplyAPI {
     default void removeApply(String id) throws SerException {
         return;
     }
+    /**
+     * 商务发展部
+     *
+     * @param applyTO
+     * @return class RentalApplyBO
+     * @throws SerException
+     */
+    default RentalApplyBO businessAudit(RentalApplyTO applyTO) throws SerException {
+        return null;
+    }
+    /**
+     * 运营财务部
+     *
+     * @param applyTO
+     * @return class RentalApplyBO
+     * @throws SerException
+     */
+    default RentalApplyBO financeAudit(RentalApplyTO applyTO) throws SerException {
+        return null;
+    }
+    /**
+     * 综合资源部
+     *
+     * @param applyTO
+     * @return class RentalApplyBO
+     * @throws SerException
+     */
+    default RentalApplyBO resourceAudit(RentalApplyTO applyTO) throws SerException {
+        return null;
+    }
+
 
     /**
      * 项目经理审核
@@ -88,11 +134,15 @@ public interface RentalApplyAPI {
         return null;
     }
     /**
-     * 租房申请汇总到租房信息中
+     * 租房信息
+     *
+     * @param to
+     * @return class RentalBO
+     * @throws SerException
      */
-    default void summary() throws SerException {
+    default RentalBO rentInfo(RentalApplyTO to) throws SerException {
+        return null;
     }
-
     /**
      * 导出Excel
      *

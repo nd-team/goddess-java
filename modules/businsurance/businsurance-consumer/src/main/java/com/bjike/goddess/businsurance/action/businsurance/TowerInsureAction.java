@@ -263,42 +263,4 @@ public class TowerInsureAction {
         }
     }
 
-    /**
-     * 上传附件
-     *
-     * @param towerInsureDTO 塔工意外险基本信息数据towerInsureDTO
-     * @des 上传附件
-     * @version v1
-     */
-    @LoginAuth
-    @PostMapping("v1/uploadFile")
-    public Result uploadFile(TowerInsureDTO towerInsureDTO, BindingResult bindingResult) throws ActException {
-//        try {
-//            TowerInsureBO towerInsureBO1 = towerInsureAPI.uploadFile(towerInsureDTO);
-//            return ActResult.initialize(BeanTransform.copyProperties(towerInsureBO1, TowerInsureVO.class, true));
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-        return new ActResult(null);
-    }
-
-
-    /**
-     * 查看附件
-     *
-     * @param id 塔工意外险基本信息数据id
-     * @des 查看附件
-     * @version v1
-     */
-    @GetMapping("v1/getFile/{id}")
-    public Result getFile(@PathVariable String id , BindingResult bindingResult) throws ActException {
-//        try {
-//            TowerInsureBO towerInsureBO1 = towerInsureAPI.addTowerInsure(towerInsureTO);
-//            return ActResult.initialize(BeanTransform.copyProperties(towerInsureBO1, TowerInsureVO.class, true));
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-        return new ActResult(null);
-    }
-
 }

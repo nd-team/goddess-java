@@ -1,4 +1,4 @@
-package com.bjike.goddess.regionalprogresscollect.action.regionalprogresscollect;
+package com.bjike.goddess.workprogress.action.workprogress;
 
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -7,12 +7,12 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.regionalprogresscollect.api.MonthTargetAPI;
-import com.bjike.goddess.regionalprogresscollect.dto.MonthTargetDTO;
-import com.bjike.goddess.regionalprogresscollect.to.GuidePermissionTO;
-import com.bjike.goddess.regionalprogresscollect.to.MonthTargetTO;
-import com.bjike.goddess.regionalprogresscollect.to.StandardTO;
-import com.bjike.goddess.regionalprogresscollect.vo.MonthTargetVO;
+import com.bjike.goddess.workprogress.api.MonthTargetAPI;
+import com.bjike.goddess.workprogress.dto.MonthTargetDTO;
+import com.bjike.goddess.workprogress.to.GuidePermissionTO;
+import com.bjike.goddess.workprogress.to.MonthTargetTO;
+import com.bjike.goddess.workprogress.to.StandardTO;
+import com.bjike.goddess.workprogress.vo.MonthTargetVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;

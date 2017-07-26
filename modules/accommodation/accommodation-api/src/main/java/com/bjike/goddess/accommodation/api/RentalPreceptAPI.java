@@ -2,8 +2,11 @@ package com.bjike.goddess.accommodation.api;
 
 import com.bjike.goddess.accommodation.bo.RentalPreceptBO;
 import com.bjike.goddess.accommodation.dto.RentalPreceptDTO;
+import com.bjike.goddess.accommodation.excel.SonPermissionObject;
+import com.bjike.goddess.accommodation.to.GuidePermissionTO;
 import com.bjike.goddess.accommodation.to.RentalPreceptTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.user.bo.UserBO;
 
 import java.util.List;
 
@@ -15,6 +18,19 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface RentalPreceptAPI {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 租房方案列表总条数
      */
@@ -74,6 +90,39 @@ public interface RentalPreceptAPI {
         return;
     }
 
+    /**
+     * 商务发展部
+     *
+     * @param preceptTO
+     * @return class RentalPreceptBO
+     * @throws SerException
+     */
+    default RentalPreceptBO businessAudit(RentalPreceptTO preceptTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 运营财务部
+     *
+     * @param preceptTO
+     * @return class RentalPreceptBO
+     * @throws SerException
+     */
+    default RentalPreceptBO financeAudit(RentalPreceptTO preceptTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 综合资源部
+     *
+     * @param preceptTO
+     * @return class RentalPreceptBO
+     * @throws SerException
+     */
+    default RentalPreceptBO resourceAudit(RentalPreceptTO preceptTO) throws SerException {
+        return null;
+    }
+
 
     /**
      * 项目经理审核
@@ -85,6 +134,7 @@ public interface RentalPreceptAPI {
     default RentalPreceptBO manageAudit(RentalPreceptTO preceptTO) throws SerException {
         return null;
     }
+
     /**
      * 总经办审核
      *
@@ -95,6 +145,32 @@ public interface RentalPreceptAPI {
     default RentalPreceptBO generalAudit(RentalPreceptTO preceptTO) throws SerException {
         return null;
     }
-
+    /**
+     * 获取租房编号
+     *
+     * @return class String
+     * @throws SerException
+     */
+    default List<String> getNum() throws SerException {
+        return null;
+    }
+    /**
+     * 根据编号获取租房方案
+     *
+     * @return class RentalPreceptBO
+     * @throws SerException
+     */
+    default RentalPreceptBO getRent(String rentNum) throws SerException {
+        return null;
+    }
+    /**
+     * 根据所有用户
+     *
+     * @return class UserBO
+     * @throws SerException
+     */
+    default List<UserBO> getUser() throws SerException {
+        return null;
+    }
 
 }

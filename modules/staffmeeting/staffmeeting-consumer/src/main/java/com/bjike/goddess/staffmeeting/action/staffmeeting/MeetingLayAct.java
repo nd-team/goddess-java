@@ -11,6 +11,7 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffmeeting.api.MeetingLayAPI;
 import com.bjike.goddess.staffmeeting.dto.MeetingLayDTO;
+import com.bjike.goddess.staffmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.staffmeeting.to.MeetingLayTO;
 import com.bjike.goddess.staffmeeting.vo.MeetingLayVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,29 @@ public class MeetingLayAct {
 
     @Autowired
     private MeetingLayAPI meetingLayAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = meetingLayAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 新增会议层面
@@ -138,6 +162,19 @@ public class MeetingLayAct {
             MeetingLayVO vo = BeanTransform.copyProperties(meetingLayAPI.findById(id), MeetingLayVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有岗位
+     */
+    @GetMapping("v1/getPosition")
+    public Result getPosition() throws ActException{
+        try {
+            String[] postion = meetingLayAPI.findPosition();
+            return ActResult.initialize(postion);
+        }catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }

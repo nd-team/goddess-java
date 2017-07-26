@@ -6,6 +6,7 @@ import com.bjike.goddess.supplier.bo.ContactSituationBO;
 import com.bjike.goddess.supplier.dto.ContactSituationDTO;
 import com.bjike.goddess.supplier.entity.ContactSituation;
 import com.bjike.goddess.supplier.to.ContactSituationTO;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +20,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ContactSituationSer extends Ser<ContactSituation, ContactSituationDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 根据供应商基本信息ID查询联系情况
@@ -75,11 +90,4 @@ public interface ContactSituationSer extends Ser<ContactSituation, ContactSituat
         return null;
     }
 
-
-    /**
-     * 下拉导航权限
-     */
-    default Boolean sonPermission() throws SerException {
-        return null;
-    }
 }

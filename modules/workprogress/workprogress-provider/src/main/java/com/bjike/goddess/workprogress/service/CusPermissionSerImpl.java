@@ -1,4 +1,4 @@
-package com.bjike.goddess.regionalprogresscollect.service;
+package com.bjike.goddess.workprogress.service;
 
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -7,14 +7,14 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.*;
 import com.bjike.goddess.organize.bo.OpinionBO;
-import com.bjike.goddess.regionalprogresscollect.bo.CusOperateBO;
-import com.bjike.goddess.regionalprogresscollect.bo.CusPermissionBO;
-import com.bjike.goddess.regionalprogresscollect.dto.CusPermissionDTO;
-import com.bjike.goddess.regionalprogresscollect.dto.CusPermissionOperateDTO;
-import com.bjike.goddess.regionalprogresscollect.entity.CusPermission;
-import com.bjike.goddess.regionalprogresscollect.entity.CusPermissionOperate;
-import com.bjike.goddess.regionalprogresscollect.enums.CusPermissionType;
-import com.bjike.goddess.regionalprogresscollect.to.CusPermissionTO;
+import com.bjike.goddess.workprogress.bo.CusOperateBO;
+import com.bjike.goddess.workprogress.bo.CusPermissionBO;
+import com.bjike.goddess.workprogress.dto.CusPermissionDTO;
+import com.bjike.goddess.workprogress.dto.CusPermissionOperateDTO;
+import com.bjike.goddess.workprogress.entity.CusPermission;
+import com.bjike.goddess.workprogress.entity.CusPermissionOperate;
+import com.bjike.goddess.workprogress.enums.CusPermissionType;
+import com.bjike.goddess.workprogress.to.CusPermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;

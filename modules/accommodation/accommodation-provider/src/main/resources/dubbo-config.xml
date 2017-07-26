@@ -34,7 +34,8 @@
 	<dubbo:service interface="com.bjike.goddess.accommodation.api.RentalPreceptAPI" ref="rentalPreceptApiImpl" />
 	<dubbo:service interface="com.bjike.goddess.accommodation.api.RentalApplyAPI" ref="rentalApplyApiImpl" />
 	<dubbo:service interface="com.bjike.goddess.accommodation.api.RentalAPI" ref="rentalApiImpl" />
-	<dubbo:service interface="com.bjike.goddess.accommodation.api.DormitoryAPI" ref="dormitoryApiImpl" />
+	<dubbo:service interface="com.bjike.goddess.accommodation.api.CusPermissionAPI" ref="cusPermissionApiImpl" />
+	<dubbo:service interface="com.bjike.goddess.accommodation.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl" />
 
 
 	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.

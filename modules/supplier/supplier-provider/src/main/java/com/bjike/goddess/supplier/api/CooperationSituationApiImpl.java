@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.supplier.bo.CooperationSituationBO;
 import com.bjike.goddess.supplier.service.CooperationSituationSer;
 import com.bjike.goddess.supplier.to.CooperationSituationTO;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,16 @@ public class CooperationSituationApiImpl implements CooperationSituationAPI {
 
     @Autowired
     private CooperationSituationSer cooperationSituationSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return cooperationSituationSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return cooperationSituationSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public List<CooperationSituationBO> findByInformation(String info_id) throws SerException {

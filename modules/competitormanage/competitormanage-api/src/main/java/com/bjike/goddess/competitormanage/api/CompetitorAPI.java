@@ -103,4 +103,5 @@ public interface CompetitorAPI {
     byte[] exportExcelModule() throws SerException;
 
     List<CompetitorBO> areas() throws SerException;
+
 }

@@ -3,6 +3,8 @@ package com.bjike.goddess.staffmove.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffmove.bo.StaffMovementApplyBO;
 import com.bjike.goddess.staffmove.dto.StaffMovementApplyDTO;
+import com.bjike.goddess.staffmove.excel.SonPermissionObject;
+import com.bjike.goddess.staffmove.to.GuidePermissionTO;
 import com.bjike.goddess.staffmove.to.StaffMovementApplyTO;
 
 import java.util.List;
@@ -17,6 +19,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface StaffMovementApplyAPI {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 人员调动申请列表总条数
      */
@@ -75,13 +90,51 @@ public interface StaffMovementApplyAPI {
 
     }
     /**
-     * 审核
+     * 规划模块审核
      *
      * @return class StaffMovementApplyBO
+     * @throws SerException
      */
-    default StaffMovementApplyBO auditStaffMovementApply(StaffMovementApplyTO staffMovementApplyTO) throws SerException {
+    default StaffMovementApplyBO planAudit(StaffMovementApplyTO to) throws SerException {
         return null;
     }
+    /**
+     * 预算模块审核
+     *
+     * @return class StaffMovementApplyBO
+     * @throws SerException
+     */
+    default StaffMovementApplyBO budgetAudit(StaffMovementApplyTO to) throws SerException {
+        return null;
+    }
+    /**
+     * 原决策层审核
+     *
+     * @return class StaffMovementApplyBO
+     * @throws SerException
+     */
+    default StaffMovementApplyBO originalAudit(StaffMovementApplyTO to) throws SerException {
+        return null;
+    }
+    /**
+     * 调往决策层审核
+     *
+     * @return class StaffMovementApplyBO
+     * @throws SerException
+     */
+    default StaffMovementApplyBO transferAudit(StaffMovementApplyTO to) throws SerException {
+        return null;
+    }
+    /**
+     * 总经办审核
+     *
+     * @return class StaffMovementApplyBO
+     * @throws SerException
+     */
+    default StaffMovementApplyBO generalAudit(StaffMovementApplyTO to) throws SerException {
+        return null;
+    }
+
 
 
 }

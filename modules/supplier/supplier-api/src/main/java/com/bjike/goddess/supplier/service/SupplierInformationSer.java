@@ -25,7 +25,14 @@ import java.util.List;
 public interface SupplierInformationSer extends Ser<SupplierInformation, SupplierInformationDTO> {
 
     /**
-     * 导航权限
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
      */
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
@@ -126,14 +133,6 @@ public interface SupplierInformationSer extends Ser<SupplierInformation, Supplie
         return null;
     }
 
-
-    /**
-     * 下拉导航权限
-     */
-    default List<SonPermissionObject> sonPermission() throws SerException {
-        return null;
-    }
-
     /**
      * chenjunhao
      * 通过供应商名称查找
@@ -143,4 +142,8 @@ public interface SupplierInformationSer extends Ser<SupplierInformation, Supplie
      * @throws SerException
      */
     List<SupplierInformationBO> findByName(String name) throws SerException;
+
+    default List<String> listType() throws SerException {
+        return null;
+    }
 }

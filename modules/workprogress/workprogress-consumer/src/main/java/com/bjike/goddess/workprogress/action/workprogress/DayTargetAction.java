@@ -1,4 +1,4 @@
-package com.bjike.goddess.regionalprogresscollect.action.regionalprogresscollect;
+package com.bjike.goddess.workprogress.action.workprogress;
 
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -9,13 +9,13 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
-import com.bjike.goddess.regionalprogresscollect.api.DayTargetAPI;
-import com.bjike.goddess.regionalprogresscollect.dto.DayTargetDTO;
-import com.bjike.goddess.regionalprogresscollect.excel.SonPermissionObject;
-import com.bjike.goddess.regionalprogresscollect.to.DayTargetTO;
-import com.bjike.goddess.regionalprogresscollect.to.GuidePermissionTO;
-import com.bjike.goddess.regionalprogresscollect.to.StandardTO;
-import com.bjike.goddess.regionalprogresscollect.vo.DayTargetVO;
+import com.bjike.goddess.workprogress.api.DayTargetAPI;
+import com.bjike.goddess.workprogress.dto.DayTargetDTO;
+import com.bjike.goddess.workprogress.excel.SonPermissionObject;
+import com.bjike.goddess.workprogress.to.DayTargetTO;
+import com.bjike.goddess.workprogress.to.GuidePermissionTO;
+import com.bjike.goddess.workprogress.to.StandardTO;
+import com.bjike.goddess.workprogress.vo.DayTargetVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;

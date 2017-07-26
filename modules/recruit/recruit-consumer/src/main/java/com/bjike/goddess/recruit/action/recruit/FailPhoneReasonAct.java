@@ -12,6 +12,7 @@ import com.bjike.goddess.recruit.api.FailPhoneReasonAPI;
 import com.bjike.goddess.recruit.bo.FailPhoneReasonBO;
 import com.bjike.goddess.recruit.dto.FailPhoneReasonDTO;
 import com.bjike.goddess.recruit.to.FailPhoneReasonTO;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.vo.FailPhoneReasonVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -36,6 +37,30 @@ public class FailPhoneReasonAct {
 
     @Autowired
     private FailPhoneReasonAPI failPhoneReasonAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = failPhoneReasonAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 根据id查询未成功通话原因
@@ -143,6 +168,21 @@ public class FailPhoneReasonAct {
         try {
             failPhoneReasonAPI.update(to);
             return new ActResult("edit success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找所有未成功通话原因
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/allReason")
+    public Result allReason() throws ActException {
+        try {
+            return ActResult.initialize(failPhoneReasonAPI.allReason());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -1,7 +1,7 @@
-package com.bjike.goddess.regionalprogresscollect.to;
+package com.bjike.goddess.workprogress.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.regionalprogresscollect.enums.CusPermissionType;
+import com.bjike.goddess.workprogress.enums.CusPermissionType;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**

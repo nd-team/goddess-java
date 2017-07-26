@@ -2,7 +2,9 @@ package com.bjike.goddess.allmeeting.service;
 
 import com.bjike.goddess.allmeeting.bo.AllMeetingOrganizeBO;
 import com.bjike.goddess.allmeeting.bo.MeetingLayBO;
+import com.bjike.goddess.allmeeting.excel.SonPermissionObject;
 import com.bjike.goddess.allmeeting.to.AllMeetingOrganizeTO;
+import com.bjike.goddess.allmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.allmeeting.to.WorkCollectPrepareTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -21,6 +23,20 @@ import java.util.List;
 */
 public interface AllMeetingOrganizeSer extends Ser<AllMeetingOrganize, AllMeetingOrganizeDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     AllMeetingOrganizeBO insertModel(AllMeetingOrganizeTO to) throws SerException;
 
     AllMeetingOrganizeBO updateModel(AllMeetingOrganizeTO to) throws SerException;
@@ -33,5 +49,12 @@ public interface AllMeetingOrganizeSer extends Ser<AllMeetingOrganize, AllMeetin
 
     //会议编号校验，防止非法数据提交
     void validNum(String meetingNum) throws SerException;
+
+    /**
+     * 查询计划参会人员
+     */
+    default String[] getPlanPeople() throws SerException{
+        return null;
+    }
 
 }

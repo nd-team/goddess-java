@@ -33,6 +33,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -109,6 +110,13 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
                 BeanTransform.copyProperties(to, model, true);
                 model.setModifyTime(LocalDateTime.now());
                 model.setOperateUser(userAPI.currentUser().getUsername());
+                String[] sendUsers = to.getSendUsers();
+                String sendUser = new String();
+                for(String user : sendUsers){
+                     sendUser = user + ";"+sendUser;
+                }
+                sendUser = sendUser.substring(0,sendUser.length()-1);
+                model.setSendUser(sendUser);
                 super.update(model);
             } else {
                 throw new SerException("更新对象不能为空!");

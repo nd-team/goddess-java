@@ -12,7 +12,10 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Copy: [ com.bjike ]
  */
 public class WorkJoinBO extends BaseBO {
-
+    /**
+     * 工作交接编号
+     */
+    private String workJoinNum;
     /**
      * 工作交接开始时间
      */
@@ -83,6 +86,13 @@ public class WorkJoinBO extends BaseBO {
      */
     private Boolean head;
 
+    public String getWorkJoinNum() {
+        return workJoinNum;
+    }
+
+    public void setWorkJoinNum(String workJoinNum) {
+        this.workJoinNum = workJoinNum;
+    }
 
     public String getWorkJoinStartTime() {
         return workJoinStartTime;

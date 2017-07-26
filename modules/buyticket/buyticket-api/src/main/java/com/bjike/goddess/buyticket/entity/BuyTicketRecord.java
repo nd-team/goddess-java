@@ -185,6 +185,7 @@ public class BuyTicketRecord extends BaseEntity {
     private LocalDateTime confirmInfoTime;
 
 
+
     public String getApplicant() {
         return applicant;
     }

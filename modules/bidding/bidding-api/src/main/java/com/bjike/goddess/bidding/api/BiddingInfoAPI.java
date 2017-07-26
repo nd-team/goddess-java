@@ -95,15 +95,6 @@ public interface BiddingInfoAPI {
 
 
     /**
-     * 搜索
-     *
-     * @throws SerException
-     */
-    default List<BiddingInfoBO> searchBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
-        return null;
-    }
-
-    /**
      * 汇总
      *
      * @param cities cities

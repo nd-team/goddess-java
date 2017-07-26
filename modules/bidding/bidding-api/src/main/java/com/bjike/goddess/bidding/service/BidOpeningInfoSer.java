@@ -92,15 +92,6 @@ public interface BidOpeningInfoSer extends Ser<BidOpeningInfo, BidOpeningInfoDTO
     }
 
     /**
-     * 搜索
-     *
-     * @throws SerException
-     */
-    default List<BidOpeningInfoBO> searchBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
-        return null;
-    }
-
-    /**
      * 汇总
      *
      * @param cities 地市

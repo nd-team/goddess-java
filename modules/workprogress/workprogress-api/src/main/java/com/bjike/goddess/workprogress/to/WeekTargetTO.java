@@ -1,9 +1,9 @@
-package com.bjike.goddess.regionalprogresscollect.to;
+package com.bjike.goddess.workprogress.to;
 
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.regionalprogresscollect.enums.CycleType;
+import com.bjike.goddess.workprogress.enums.CycleType;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;

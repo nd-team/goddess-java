@@ -6,6 +6,7 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.bo.FailInviteReasonBO;
 import com.bjike.goddess.recruit.dto.FailInviteReasonDTO;
+import com.bjike.goddess.recruit.entity.FailFirstInterviewReason;
 import com.bjike.goddess.recruit.entity.FailInviteReason;
 import com.bjike.goddess.recruit.to.FailInviteReasonTO;
 import com.bjike.goddess.recruit.to.GuidePermissionTO;
@@ -18,7 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 未邀约成功原因
@@ -174,6 +178,7 @@ public class FailInviteReasonSerImpl extends ServiceImpl<FailInviteReason, FailI
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public List<FailInviteReasonBO> list(FailInviteReasonDTO dto) throws SerException {
+        checkSeeIdentity();
         List<FailInviteReason> list = super.findByPage(dto);
         List<FailInviteReasonBO> listBO = BeanTransform.copyProperties(list, FailInviteReasonBO.class);
         return listBO;
@@ -189,6 +194,7 @@ public class FailInviteReasonSerImpl extends ServiceImpl<FailInviteReason, FailI
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public FailInviteReasonBO save(FailInviteReasonTO to) throws SerException {
+        checkAddIdentity();
         FailInviteReason failFirstInterviewReason = BeanTransform.copyProperties(to, FailInviteReason.class, true);
         failFirstInterviewReason = super.save(failFirstInterviewReason);
         FailInviteReasonBO bo = BeanTransform.copyProperties(failFirstInterviewReason, FailInviteReasonBO.class);
@@ -204,6 +210,7 @@ public class FailInviteReasonSerImpl extends ServiceImpl<FailInviteReason, FailI
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(FailInviteReasonTO to) throws SerException {
+        checkAddIdentity();
         if (StringUtils.isNotEmpty(to.getId())) {
             FailInviteReason model = super.findById(to.getId());
             if (model != null) {
@@ -239,6 +246,17 @@ public class FailInviteReasonSerImpl extends ServiceImpl<FailInviteReason, FailI
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void remove(FailInviteReason entity) throws SerException {
+        checkAddIdentity();
         super.remove(entity);
+    }
+
+    @Override
+    public Set<String> allReason() throws SerException {
+        List<FailInviteReason> list = new ArrayList<>();
+        Set<String> set = new HashSet<>();
+        for (FailInviteReason f : list) {
+            set.add(f.getFailInviteReasonType());
+        }
+        return set;
     }
 }

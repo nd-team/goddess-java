@@ -24,6 +24,8 @@ public class MeetingDiscussionApiImpl implements MeetingDiscussionAPI {
     @Autowired
     private MeetingDiscussionSer meetingDiscussionSer;
 
+
+
     @Override
     public MeetingDiscussionBO add(MeetingDiscussionTO to) throws SerException {
         return meetingDiscussionSer.insertModel(to);

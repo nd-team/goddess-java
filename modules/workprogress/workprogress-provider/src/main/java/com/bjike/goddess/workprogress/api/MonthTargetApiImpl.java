@@ -1,12 +1,12 @@
-package com.bjike.goddess.regionalprogresscollect.api;
+package com.bjike.goddess.workprogress.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.regionalprogresscollect.bo.MonthTargetBO;
-import com.bjike.goddess.regionalprogresscollect.dto.MonthTargetDTO;
-import com.bjike.goddess.regionalprogresscollect.service.MonthTargetSer;
-import com.bjike.goddess.regionalprogresscollect.to.GuidePermissionTO;
-import com.bjike.goddess.regionalprogresscollect.to.MonthTargetTO;
-import com.bjike.goddess.regionalprogresscollect.to.StandardTO;
+import com.bjike.goddess.workprogress.bo.MonthTargetBO;
+import com.bjike.goddess.workprogress.dto.MonthTargetDTO;
+import com.bjike.goddess.workprogress.service.MonthTargetSer;
+import com.bjike.goddess.workprogress.to.GuidePermissionTO;
+import com.bjike.goddess.workprogress.to.MonthTargetTO;
+import com.bjike.goddess.workprogress.to.StandardTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

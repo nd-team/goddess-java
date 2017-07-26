@@ -3,7 +3,9 @@ package com.bjike.goddess.annual.service;
 import com.bjike.goddess.annual.bo.AnnualStandardBO;
 import com.bjike.goddess.annual.dto.AnnualStandardDTO;
 import com.bjike.goddess.annual.entity.AnnualStandard;
+import com.bjike.goddess.annual.excel.SonPermissionObject;
 import com.bjike.goddess.annual.to.AnnualStandardTO;
+import com.bjike.goddess.annual.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -21,6 +23,20 @@ import java.util.List;
  */
 public interface AnnualStandardSer extends Ser<AnnualStandard, AnnualStandardDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 保存年假标准实体数据
      *

@@ -1,7 +1,7 @@
-package com.bjike.goddess.regionalprogresscollect.to;
+package com.bjike.goddess.workprogress.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.regionalprogresscollect.enums.GuideAddrStatus;
+import com.bjike.goddess.workprogress.enums.GuideAddrStatus;
 
 import javax.validation.constraints.NotNull;
 

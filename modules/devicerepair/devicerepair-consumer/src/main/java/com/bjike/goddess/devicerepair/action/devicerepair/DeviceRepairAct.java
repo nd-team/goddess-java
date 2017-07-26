@@ -18,6 +18,7 @@ import com.bjike.goddess.devicerepair.type.AuditState;
 import com.bjike.goddess.devicerepair.vo.DeviceRepairVO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.materialinstock.api.MaterialInStockAPI;
 import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
@@ -60,6 +61,8 @@ public class DeviceRepairAct extends BaseFileAction {
 
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private MaterialInStockAPI materialInStockAPI;
 
 
     /**
@@ -449,14 +452,14 @@ public class DeviceRepairAct extends BaseFileAction {
      *
      * @version v1
      */
-//    @GetMapping("v1/allGetNo")
-//    public Result allGetNo() throws ActException {
-//        try {
-//            Set<String> getNo = new HashSet<>();
-//            getNo = materialInStockAPI.allstockEncoding();
-//            return ActResult.initialize(new ArrayList<>(getNo));
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-//    }
+    @GetMapping("v1/allGetNo")
+    public Result allGetNo() throws ActException {
+        try {
+            Set<String> getNo = new HashSet<>();
+            getNo = materialInStockAPI.allstockEncoding();
+            return ActResult.initialize(new ArrayList<>(getNo));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

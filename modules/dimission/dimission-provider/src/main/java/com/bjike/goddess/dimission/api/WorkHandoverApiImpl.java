@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.dimission.bo.WorkHandoverBO;
 import com.bjike.goddess.dimission.dto.WorkHandoverDTO;
 import com.bjike.goddess.dimission.service.WorkHandoverSer;
+import com.bjike.goddess.dimission.to.GuidePermissionTO;
 import com.bjike.goddess.dimission.to.HandoverSuccessTO;
 import com.bjike.goddess.dimission.to.WorkHandoverTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,16 @@ public class WorkHandoverApiImpl implements WorkHandoverAPI {
 
     @Autowired
     private WorkHandoverSer workHandoverSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return workHandoverSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return workHandoverSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public WorkHandoverBO save(WorkHandoverTO to) throws SerException {

@@ -3,6 +3,7 @@ package com.bjike.goddess.staffmeeting.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffmeeting.bo.MeetingOrganizeBO;
 import com.bjike.goddess.staffmeeting.dto.MeetingOrganizeDTO;
+import com.bjike.goddess.staffmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.staffmeeting.to.MeetingOrganizeTO;
 
 import java.util.List;
@@ -17,6 +18,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface MeetingOrganizeAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 查询总记录数
@@ -72,4 +86,9 @@ public interface MeetingOrganizeAPI {
      * @param id
      */
     void unfreeze(String id) throws SerException;
+
+    /**
+     * 获取所有人员
+     */
+    String[] findPlanUser() throws SerException;
 }

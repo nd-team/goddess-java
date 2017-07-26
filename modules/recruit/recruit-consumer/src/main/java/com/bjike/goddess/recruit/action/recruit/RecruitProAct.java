@@ -12,6 +12,7 @@ import com.bjike.goddess.recruit.api.RecruitProAPI;
 import com.bjike.goddess.recruit.api.RecruitWayAPI;
 import com.bjike.goddess.recruit.bo.RecruitProBO;
 import com.bjike.goddess.recruit.dto.RecruitProDTO;
+import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.RecruitProTO;
 import com.bjike.goddess.recruit.type.AuditType;
 import com.bjike.goddess.recruit.vo.RecruitProVO;
@@ -40,6 +41,29 @@ public class RecruitProAct {
     private RecruitProAPI recruitProAPI;
     @Autowired
     private RecruitWayAPI recruitWayAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = recruitProAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 根据id查询招聘方案

@@ -35,7 +35,6 @@ public class SupplierTypeAct {
     @Autowired
     private SupplierTypeAPI supplierTypeAPI;
 
-
     /**
      * 功能导航权限
      *

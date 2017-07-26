@@ -5,6 +5,7 @@ import com.bjike.goddess.interiorrecommend.bo.RecommendContentBO;
 import com.bjike.goddess.interiorrecommend.bo.RecommendInfoBO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendInfoDTO;
 import com.bjike.goddess.interiorrecommend.service.RecommendInfoSer;
+import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.RecommendInfoTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,5 +60,15 @@ public class RecommendInfoApiImpl implements RecommendInfoAPI {
     @Override
     public List<RecommendInfoBO> awardlist() throws SerException {
         return recommendInfoSer.awardlist();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return recommendInfoSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return recommendInfoSer.guidePermission(guidePermissionTO);
     }
 }

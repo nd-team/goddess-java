@@ -3,6 +3,7 @@ package com.bjike.goddess.allmeeting.api;
 import com.bjike.goddess.allmeeting.bo.ProblesClassifyPrepareBO;
 import com.bjike.goddess.allmeeting.dto.ProblesClassifyPrepareDTO;
 import com.bjike.goddess.allmeeting.service.ProblesClassifyPrepareSer;
+import com.bjike.goddess.allmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.allmeeting.to.ProblesClassifyPrepareTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -25,6 +26,16 @@ public class ProblesClassifyPrepareApiImpl implements ProblesClassifyPrepareAPI 
 
     @Autowired
     private ProblesClassifyPrepareSer problesClassifyPrepareSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return problesClassifyPrepareSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return problesClassifyPrepareSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public ProblesClassifyPrepareBO findById(String id) throws SerException {

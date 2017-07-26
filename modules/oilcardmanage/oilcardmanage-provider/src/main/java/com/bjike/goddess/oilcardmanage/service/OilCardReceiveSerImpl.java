@@ -54,7 +54,7 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
     private CusPermissionSer cusPermissionSer;
 
     /**
-     * 核对查看权限（部门级别）
+     * 核对查看权限（层级别）
      */
     private void checkSeeIdentity() throws SerException {
         Boolean flag = false;
@@ -72,7 +72,7 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
     }
 
     /**
-     * 核对添加修改删除审核权限（岗位级别）
+     * 核对添加修改删除审核权限（层级别）
      */
     private void checkAddIdentity() throws SerException {
         Boolean flag = false;
@@ -90,7 +90,7 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
     }
 
     /**
-     * 核对查看权限（部门级别）
+     * 核对查看权限（层级别）
      */
     private Boolean guideSeeIdentity() throws SerException {
         Boolean flag = false;
@@ -107,7 +107,7 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
     }
 
     /**
-     * 核对添加修改删除审核权限（岗位级别）
+     * 核对添加修改删除审核权限（层级别）
      */
     private Boolean guideAddIdentity() throws SerException {
         Boolean flag = false;
@@ -196,6 +196,7 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
     @Override
     @Transactional(rollbackFor = SerException.class)
     public OilCardReceiveBO insertModel(OilCardReceiveTO to) throws SerException {
+        checkSeeIdentity();
         //油卡
         OilCardBasic oilCardBasic = oilCardBasicSer.findById(to.getOilCardBasicId());
         if (oilCardBasic != null) {
@@ -229,6 +230,7 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
     @Override
     @Transactional(rollbackFor = SerException.class)
     public OilCardReceiveBO updateModel(OilCardReceiveTO to) throws SerException { //油卡
+        checkSeeIdentity();
         OilCardBasic oilCardBasic = oilCardBasicSer.findById(to.getOilCardBasicId());
         if (oilCardBasic != null) {
             if (oilCardBasic.getCardStatus() != OilCardStatus.IDLE) {
@@ -251,6 +253,7 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void returnOilCardReceive(String id) throws SerException {
+        checkSeeIdentity();
         OilCardReceive model = super.findById(id);
         if (model != null) {
             OilCardBasic oilCardBasic = model.getOilCardBasic();
@@ -266,6 +269,7 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<OilCardReceiveBO> pageList(OilCardReceiveDTO dto) throws SerException {
+        checkSeeIdentity();
         dto.getSorts().add("createTime=desc");
         List<OilCardReceive> list = super.findByPage(dto);
         if (!CollectionUtils.isEmpty(list)) {
@@ -287,6 +291,7 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void audit(String id, String auditSuggestion, OilCardReceiveResult oilCardReceiveResult) throws SerException {
+        checkAddIdentity();
         OilCardReceive model = super.findById(id);
         if (model != null) {
 

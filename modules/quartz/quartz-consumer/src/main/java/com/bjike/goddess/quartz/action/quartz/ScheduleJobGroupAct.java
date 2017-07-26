@@ -37,7 +37,7 @@ public class ScheduleJobGroupAct {
     private ScheduleJobGroupAPI scheduleJobGroupAPI;
 
     /**
-     * 组分页列表
+     * 分页列表
      *
      * @param dto
      * @return class ScheduleJobGroupVO
@@ -54,7 +54,7 @@ public class ScheduleJobGroupAct {
         }
     }
     /**
-     * 组列表
+     * 列表
      *
      * @param dto
      * @return class ScheduleJobGroupVO
@@ -71,7 +71,7 @@ public class ScheduleJobGroupAct {
     }
 
     /**
-     * 组数据条数
+     * 数据量
      *
      * @param dto
      * @version v1
@@ -87,7 +87,7 @@ public class ScheduleJobGroupAct {
     }
 
     /**
-     * 通过id查询数据
+     * 通过id查询
      *
      * @param id
      * @version v1
@@ -103,7 +103,7 @@ public class ScheduleJobGroupAct {
     }
 
     /**
-     * 添加任务调度组
+     * 添加
      *
      * @param jobGroupTO
      * @version v1
@@ -119,7 +119,7 @@ public class ScheduleJobGroupAct {
     }
 
     /**
-     * 编辑任务调度组
+     * 编辑
      *
      * @param jobGroupTO
      * @version v1
@@ -135,7 +135,7 @@ public class ScheduleJobGroupAct {
     }
 
     /**
-     * 删除任务调度组
+     * 删除
      *
      * @param id
      * @version v1
@@ -151,7 +151,7 @@ public class ScheduleJobGroupAct {
     }
 
     /**
-     * 开启关闭任务调度组
+     * 开启关闭
      *
      * @param id
      * @param enable 开启

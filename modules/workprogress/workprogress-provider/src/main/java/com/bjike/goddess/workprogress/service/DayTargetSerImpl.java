@@ -1,4 +1,4 @@
-package com.bjike.goddess.regionalprogresscollect.service;
+package com.bjike.goddess.workprogress.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -7,16 +7,16 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contractquotemanager.api.ContractNodeStandardAPI;
 import com.bjike.goddess.contractquotemanager.bo.ContractNodeStandardBO;
 import com.bjike.goddess.contractquotemanager.to.FilterTO;
-import com.bjike.goddess.regionalprogresscollect.bo.DayTargetBO;
-import com.bjike.goddess.regionalprogresscollect.bo.ReferenceTargetBO;
-import com.bjike.goddess.regionalprogresscollect.dto.DayTargetDTO;
-import com.bjike.goddess.regionalprogresscollect.entity.DayTarget;
-import com.bjike.goddess.regionalprogresscollect.enums.GuideAddrStatus;
-import com.bjike.goddess.regionalprogresscollect.excel.SonPermissionObject;
-import com.bjike.goddess.regionalprogresscollect.to.DayTargetTO;
-import com.bjike.goddess.regionalprogresscollect.to.FindTO;
-import com.bjike.goddess.regionalprogresscollect.to.GuidePermissionTO;
-import com.bjike.goddess.regionalprogresscollect.to.StandardTO;
+import com.bjike.goddess.workprogress.bo.DayTargetBO;
+import com.bjike.goddess.workprogress.bo.ReferenceTargetBO;
+import com.bjike.goddess.workprogress.dto.DayTargetDTO;
+import com.bjike.goddess.workprogress.entity.DayTarget;
+import com.bjike.goddess.workprogress.enums.GuideAddrStatus;
+import com.bjike.goddess.workprogress.excel.SonPermissionObject;
+import com.bjike.goddess.workprogress.to.DayTargetTO;
+import com.bjike.goddess.workprogress.to.FindTO;
+import com.bjike.goddess.workprogress.to.GuidePermissionTO;
+import com.bjike.goddess.workprogress.to.StandardTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@CacheConfig(cacheNames = "regionalprogresscollectSerCache")
+@CacheConfig(cacheNames = "workprogressSerCache")
 @Service
 public class DayTargetSerImpl extends ServiceImpl<DayTarget, DayTargetDTO> implements DayTargetSer {
 

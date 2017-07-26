@@ -5,14 +5,20 @@ import com.bjike.goddess.allmeeting.bo.AllMeetingOrganizeBO;
 import com.bjike.goddess.allmeeting.bo.MeetingLayBO;
 import com.bjike.goddess.allmeeting.dto.AllMeetingOrganizeDTO;
 import com.bjike.goddess.allmeeting.entity.*;
+import com.bjike.goddess.allmeeting.enums.GuideAddrStatus;
+import com.bjike.goddess.allmeeting.excel.SonPermissionObject;
 import com.bjike.goddess.allmeeting.to.AllMeetingOrganizeTO;
+import com.bjike.goddess.allmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.allmeeting.util.ChineseCharToEn;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -41,12 +47,269 @@ public class AllMeetingOrganizeSerImpl extends ServiceImpl<AllMeetingOrganize, A
     private UserAPI userAPI;
     @Autowired
     private MeetingLayAPI meetingLayAPI;
+
+    @Autowired
+    private ConciseSummarySer conciseSummarySer;
+
+
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
     @Autowired
     private MeetingLaySer meetingLaySer;
     @Autowired
-    private ConciseSummarySer conciseSummarySer;
+    private MeetingTopicSer meetingTopicSer;
+
     @Autowired
     private MultiwheelSummarySer multiwheelSummarySer;
+
+    @Autowired
+    private  ProblesAllotPrepareSer problesAllotPrepareSer;
+
+    @Autowired
+    private ProblesClassifyPrepareSer problesClassifyPrepareSer;
+
+    @Autowired
+    private WorkCollectPrepareSer workCollectPrepareSer;
+
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAddSign = guideAddIdentity();
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("allmeetingOranize");
+        obj.setDescribesion("所有工作内容汇总会议组织内容");
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeDis = conciseSummarySer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("conciseSummary");
+        obj.setDescribesion("简洁交流讨论纪要表");
+        if (flagSeeDis) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeCate = meetingLaySer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("meetingLay");
+        obj.setDescribesion("层面管理");
+        if (flagSeeCate) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeEmail = meetingTopicSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("meetingTopic");
+        obj.setDescribesion("议题管理");
+        if (flagSeeEmail) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeBase = multiwheelSummarySer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("multiwheelSummary");
+        obj.setDescribesion("多轮交流讨论纪要表");
+        if (flagSeeBase) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagAllot = problesAllotPrepareSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("problesAllot");
+        obj.setDescribesion("问题分配责任模块议题准备信息");
+        if (flagAllot) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagClassify = problesClassifyPrepareSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("problesClassify");
+        obj.setDescribesion("问题分类议题准备信息");
+        if (flagClassify) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagCollect = workCollectPrepareSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("workCollect");
+        obj.setDescribesion("工作汇总议题准备信息");
+        if (flagCollect) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
 
     @Override
     @Transactional(rollbackFor = SerException.class)
@@ -226,5 +489,18 @@ public class AllMeetingOrganizeSerImpl extends ServiceImpl<AllMeetingOrganize, A
         } else {
             throw new SerException("会议编号不存在!");
         }
+    }
+
+    @Override
+    public String[] getPlanPeople() throws SerException {
+        List<UserBO> planPeople = positionDetailUserAPI.findUserList();
+        List<String> planUserList = new ArrayList<>();
+        String[] planUser = new String[planPeople.size()];
+        for(UserBO userBo :planPeople)
+        {
+            planUserList.add(userBo.getUsername());
+        }
+        planUser = planUserList.toArray(planUser);
+        return planUser;
     }
 }

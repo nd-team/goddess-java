@@ -1,4 +1,4 @@
-package com.bjike.goddess.regionalprogresscollect.action.regionalprogresscollect;
+package com.bjike.goddess.workprogress.action.workprogress;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

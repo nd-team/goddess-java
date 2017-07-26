@@ -16,13 +16,13 @@
     <dubbo:registry address="${dubbo.registry.address}"/>
 
     <!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
-    <dubbo:reference validation="true" interface="com.bjike.goddess.regionalprogresscollect.api.DayTargetAPI"
+    <dubbo:reference validation="true" interface="com.bjike.goddess.workprogress.api.DayTargetAPI"
                      id="dayTargetApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.regionalprogresscollect.api.MonthTargetAPI"
+    <dubbo:reference validation="true" interface="com.bjike.goddess.workprogress.api.MonthTargetAPI"
                      id="monthTargetApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.regionalprogresscollect.api.ReferenceTargetAPI"
+    <dubbo:reference validation="true" interface="com.bjike.goddess.workprogress.api.ReferenceTargetAPI"
                      id="referenceTargetApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.regionalprogresscollect.api.WeekTargetAPI"
+    <dubbo:reference validation="true" interface="com.bjike.goddess.workprogress.api.WeekTargetAPI"
                      id="weekTargetApiImpl"/>
     <!--<dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>-->
 
@@ -31,7 +31,9 @@
                      id="storageUserApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI"
                      id="userSetPermissionApiImpl"/>
-    <dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.regionalprogresscollect.api.CusPermissionAPI" />
-    <dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.regionalprogresscollect.api.CusPermissionOperateAPI" />
+    <dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.workprogress.api.CusPermissionAPI" />
+    <dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.workprogress.api.CusPermissionOperateAPI" />
+    <dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+    <dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
 
 </beans>

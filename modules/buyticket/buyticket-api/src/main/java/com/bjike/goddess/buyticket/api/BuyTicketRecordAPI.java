@@ -3,6 +3,7 @@ package com.bjike.goddess.buyticket.api;
 import com.bjike.goddess.buyticket.bo.BuyTicketRecordBO;
 import com.bjike.goddess.buyticket.dto.BuyTicketRecordDTO;
 import com.bjike.goddess.buyticket.to.BuyTicketRecordTO;
+import com.bjike.goddess.buyticket.to.BuyGuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -17,6 +18,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface BuyTicketRecordAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(BuyGuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 车票购买记录列表总条数
      */
@@ -42,17 +57,6 @@ public interface BuyTicketRecordAPI {
     }
 
     /**
-     * 添加车票购买记录
-     *
-     * @param buyTicketRecordTO 车票购买记录数据to
-     * @return class BuyTicketRecordBO
-     * @throws SerException
-     */
-    default BuyTicketRecordBO insertBuyTicketRecord(BuyTicketRecordTO buyTicketRecordTO) throws SerException {
-        return null;
-    }
-
-    /**
      * 编辑车票购买记录
      *
      * @param buyTicketRecordTO 车票购买记录数据to
@@ -74,13 +78,5 @@ public interface BuyTicketRecordAPI {
     }
 
 
-    /**
-     * 发送邮件
-     *
-     * @return class BuyTicketApplyBO
-     */
-    default BuyTicketRecordBO sendBuyTicketRecord(BuyTicketRecordTO buyTicketRecordTO) throws SerException {
-        return null;
-    }
 
 }

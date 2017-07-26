@@ -2,26 +2,26 @@ package com.bjike.goddess.rentutilitiespay.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.rentutilitiespay.bo.CollectNameBO;
-import com.bjike.goddess.rentutilitiespay.bo.RentPayBO;
 import com.bjike.goddess.rentutilitiespay.bo.StayUtilitiesBO;
 import com.bjike.goddess.rentutilitiespay.dto.StayUtilitiesDTO;
 import com.bjike.goddess.rentutilitiespay.entity.StayUtilities;
+import com.bjike.goddess.rentutilitiespay.enums.GuideAddrStatus;
 import com.bjike.goddess.rentutilitiespay.enums.StaffVerify;
+import com.bjike.goddess.rentutilitiespay.to.GuidePermissionTO;
 import com.bjike.goddess.rentutilitiespay.to.StayUtilitiesTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -36,6 +36,227 @@ import java.util.stream.Collectors;
 @CacheConfig(cacheNames = "rentutilitiespaySerCache")
 @Service
 public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtilitiesDTO> implements StayUtilitiesSer {
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+
+    /**
+     * 核对综合资源部审核权限（岗位级别）
+     */
+    private void checkResAuditIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("4");
+            if (!flag) {
+                throw new SerException("您不是相应综合资源部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对运营财务部审核权限（岗位级别）
+     */
+    private void checkFinAuditIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("5");
+            if (!flag) {
+                throw new SerException("您不是相应运营财务部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对综合资源部审核权限（部门级别）
+     */
+    private Boolean guideResAuditIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("4");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对运营财务部审核权限（岗位级别）
+     */
+    private Boolean guideFinAuditIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("5");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        Boolean flagFin = guideFinAuditIdentity();
+        Boolean flagRes = guideResAuditIdentity();
+        if (flagSee || flagAdd || flagFin || flagRes) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case FINANCEAUDIT:
+                flag = guideFinAuditIdentity();
+                break;
+            case RESOURCEAUDIT:
+                flag = guideResAuditIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
     @Override
     public Long countStayUtilities(StayUtilitiesDTO stayUtilitiesDTO) throws SerException {
         Long count = super.count(stayUtilitiesDTO);
@@ -45,11 +266,13 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
     @Override
     public StayUtilitiesBO getOne(String id) throws SerException {
         StayUtilities stayUtilities = super.findById(id);
-        return BeanTransform.copyProperties(stayUtilities,StayUtilitiesBO.class);
+        return BeanTransform.copyProperties(stayUtilities, StayUtilitiesBO.class);
     }
 
     @Override
     public List<StayUtilitiesBO> findListStayUtilities(StayUtilitiesDTO stayUtilitiesDTO) throws SerException {
+        checkSeeIdentity();
+        stayUtilitiesDTO.getSorts().add("createTime=desc");
         List<StayUtilities> stayUtilities = super.findByPage(stayUtilitiesDTO);
         List<StayUtilitiesBO> stayUtilitiesBOS = BeanTransform.copyProperties(stayUtilities, StayUtilitiesBO.class);
         return stayUtilitiesBOS;
@@ -58,18 +281,10 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
     @Transactional(rollbackFor = SerException.class)
     @Override
     public StayUtilitiesBO insertStayUtilities(StayUtilitiesTO stayUtilitiesTO) throws SerException {
-        StayUtilities stayUtilities = BeanTransform.copyProperties(stayUtilitiesTO, StayUtilities.class, true);
-//        //是否需要修改
-//        if (stayUtilities.getComprehensiveVerifySituation()) {
-//            stayUtilities.setStaffVerify(StaffVerify.ERROR);
-//        } else {
-//            stayUtilities.setComprehensiveVerifySituation(true);
-//            stayUtilities.setStaffVerify(StaffVerify.CONFIRM);
-//            stayUtilities.setCreateTime(LocalDateTime.now());
-//            stayUtilities = count(stayUtilities);
-//            super.save(stayUtilities);
-//        }
+        checkAddIdentity();
+        StayUtilities stayUtilities = BeanTransform.copyProperties(stayUtilitiesTO, StayUtilities.class, true,"projectName");
         stayUtilities = count(stayUtilities);
+        stayUtilities.setProjectName(StringUtils.join(stayUtilitiesTO.getProjectName(),","));
         super.save(stayUtilities);
         return BeanTransform.copyProperties(stayUtilities, StayUtilitiesBO.class);
     }
@@ -77,16 +292,18 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
     @Transactional(rollbackFor = SerException.class)
     @Override
     public StayUtilitiesBO editStayUtilities(StayUtilitiesTO stayUtilitiesTO) throws SerException {
+        checkAddIdentity();
         StayUtilities stayUtilities = super.findById(stayUtilitiesTO.getId());
-        BeanTransform.copyProperties(stayUtilitiesTO, stayUtilities, true);
+        BeanTransform.copyProperties(stayUtilitiesTO, stayUtilities, true,"projectName");
         stayUtilities.setModifyTime(LocalDateTime.now());
         stayUtilities = count(stayUtilities);
         //是否需要修改
         if (stayUtilities.getStaffVerify().equals(StaffVerify.ERROR)) {
             stayUtilities.setComprehensiveVerifySituation(true);
-        } else if(stayUtilities.getStaffVerify().equals(StaffVerify.CONFIRM)){
+        } else if (stayUtilities.getStaffVerify().equals(StaffVerify.CONFIRM)) {
             stayUtilities.setComprehensiveVerifySituation(false);
             stayUtilities.setCreateTime(LocalDateTime.now());
+            stayUtilities.setProjectName(StringUtils.join(stayUtilitiesTO.getProjectName(),","));
             super.update(stayUtilities);
         }
         return BeanTransform.copyProperties(stayUtilitiesTO, StayUtilitiesBO.class);
@@ -103,7 +320,7 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
         Integer sumDays = sum.get(0).getSumDays();
 
         //个人员工住宿天数
-        fields = new String[]{"personalDays","name"};
+        fields = new String[]{"personalDays", "name"};
         //String name = stayUtilities.getName();
         //sql = "select cast(sum(stayDay)as SIGNED ) as personalDays from rentutilitiespay_stayutilities where name = '"+name+"' ";
         sql = "select cast(sum(stayDay)as SIGNED ) as personalDays,name from rentutilitiespay_stayutilities group by name ";
@@ -129,8 +346,9 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeStayUtilities(String id) throws SerException {
-        if (StringUtils.isBlank(id)){
-            throw  new SerException("id不能为空");
+        checkAddIdentity();
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空");
         }
         super.remove(id);
 
@@ -139,8 +357,8 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
     @Override
     public List<CollectNameBO> collectName(String[] names) throws SerException {
         String[] namesTemp = new String[names.length];
-        for(int i = 0;i<names.length;i++){
-            namesTemp[i] = "'"+names[i]+"'";
+        for (int i = 0; i < names.length; i++) {
+            namesTemp[i] = "'" + names[i] + "'";
         }
         String namesStr = StringUtils.join(namesTemp, ",");
 
@@ -161,10 +379,10 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
         sb.append(" FROM rentutilitiespay_stayutilities WHERE name IN (%s) GROUP BY name,num,area,projectGroup,projectName,address, ");
         sb.append(" name ORDER BY name)A ");
         String sql = sb.toString();
-        sql = String.format(sql, namesStr,namesStr);
-        String [] fields = new String[]{"name","num","area","projectGroup","projectName","address",
-               "waterStaffPay","energyStaffPay","gasStaffPay","remark"};
-        List<CollectNameBO> collectNameBOS = super.findBySql(sql,CollectNameBO.class,fields);
+        sql = String.format(sql, namesStr, namesStr);
+        String[] fields = new String[]{"name", "num", "area", "projectGroup", "projectName", "address",
+                "waterStaffPay", "energyStaffPay", "gasStaffPay", "remark"};
+        List<CollectNameBO> collectNameBOS = super.findBySql(sql, CollectNameBO.class, fields);
         return collectNameBOS;
     }
 
@@ -178,6 +396,26 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
 
 
         return nameList;
+    }
+
+    @Override
+    public StayUtilitiesBO resourceAudit(StayUtilitiesTO to) throws SerException {
+        checkResAuditIdentity();
+        StayUtilities stayUtilities = super.findById(to.getId());
+        BeanTransform.copyProperties(to, stayUtilities, true);
+        stayUtilities.setComprehensiveVerifySituation(to.getComprehensiveVerifySituation());
+        super.update(stayUtilities);
+        return BeanTransform.copyProperties(stayUtilities, StayUtilitiesBO.class);
+    }
+
+    @Override
+    public StayUtilitiesBO financeAudit(StayUtilitiesTO to) throws SerException {
+        checkFinAuditIdentity();
+        StayUtilities stayUtilities = super.findById(to.getId());
+        BeanTransform.copyProperties(to, stayUtilities, true);
+        stayUtilities.setDeductionSituation(to.getDeductionSituation());
+        super.update(stayUtilities);
+        return BeanTransform.copyProperties(stayUtilities, StayUtilitiesBO.class);
     }
 
 }

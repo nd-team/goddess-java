@@ -20,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 未应约初试原因
@@ -334,7 +336,7 @@ public class FailFirstInterviewReasonSerImpl extends ServiceImpl<FailFirstInterv
         list.add(obj);
 
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeeT= templateManageSer.sonPermission();
+        Boolean flagSeeT = templateManageSer.sonPermission();
         RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("templatemanage");
@@ -475,5 +477,15 @@ public class FailFirstInterviewReasonSerImpl extends ServiceImpl<FailFirstInterv
     public void remove(FailFirstInterviewReason entity) throws SerException {
         checkModuleIdentity();
         super.remove(entity);
+    }
+
+    @Override
+    public Set<String> allReason() throws SerException {
+        List<FailFirstInterviewReason> list = new ArrayList<>();
+        Set<String> set = new HashSet<>();
+        for (FailFirstInterviewReason f : list) {
+            set.add(f.getFailFirstInterviewReasonType());
+        }
+        return set;
     }
 }

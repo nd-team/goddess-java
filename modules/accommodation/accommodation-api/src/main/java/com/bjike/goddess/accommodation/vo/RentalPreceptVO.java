@@ -10,6 +10,10 @@ package com.bjike.goddess.accommodation.vo;
  */
 public class RentalPreceptVO {
     /**
+     * 租房编号
+     */
+    private String rentNum;
+    /**
      * 姓名（用户名称）
      */
     private String name;
@@ -110,6 +114,14 @@ public class RentalPreceptVO {
      * 备注
      */
     private String remark;
+
+    public String getRentNum() {
+        return rentNum;
+    }
+
+    public void setRentNum(String rentNum) {
+        this.rentNum = rentNum;
+    }
 
     public String getName() {
         return name;

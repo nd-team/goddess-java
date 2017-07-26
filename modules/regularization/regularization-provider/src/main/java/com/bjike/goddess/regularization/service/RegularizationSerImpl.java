@@ -86,6 +86,7 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.busCusPermission("1");
@@ -278,20 +279,6 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         obj.setName("regularization");
         obj.setDescribesion("员工转正");
         if (flagGuide || flagGuideMod || flagGuidePosi || flagGuideArr) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
-
-
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagGuidMana = managementScoreSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        obj = new SonPermissionObject();
-        obj.setName("managementscore");
-        obj.setDescribesion("管理层评分");
-        if (flagGuidMana) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -577,10 +564,6 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         if (model == null) {
             throw new SerException("查询对象为空,无法进行决策层评价操作操作.");
         }
-        String decisionLevel = model.getDecisionLevel();
-        if (!curUsername.equals(decisionLevel)) {
-            throw new SerException("您无权限进行该操作.");
-        }
         model.setDecisionLevelEvaluate(decisionLevelEvaluate);
         model.setDecisionLevelRank(decisionLevelRank);
         model.setDecisionLevelScore(decisionLevelScore);
@@ -602,10 +585,6 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         Regularization model = super.findById(to.getId());
         if (model == null) {
             throw new SerException("查询对象为空,无法进行该操作.");
-        }
-        String planModule = model.getPlanModule();//规划模块
-        if (!curUsername.equals(planModule)) {
-            throw new SerException("您不是规划模块,无权进行该操作.");
         }
         model.setAfterPost(to.getAfterPost());//转正后岗位
         model.setAfterSkillRank(to.getAfterSkillRank());//转正技能定级
@@ -630,10 +609,6 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         if (model == null) {
             throw new SerException("查询对象为空,无法进行预算模块补充操作.");
         }
-        String budgetModule = model.getBudgetModule();//获取预算模块
-        if (!curUsername.equals(budgetModule)) {
-            throw new SerException("您不是预算模块,无法进行该操作.");
-        }
         model.setBudgetPositiveComment(budgetPositiveComment);//预算模块转正意见
         model.setModifyTime(LocalDateTime.now());
         super.update(model);
@@ -653,10 +628,6 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         Regularization model = super.findById(to.getId());
         if (model == null) {
             throw new SerException("查询对象为空,无法进行该操作.");
-        }
-        String gmOffice = model.getGmOffice();//总经办
-        if (!curUsername.equals(gmOffice)) {
-            throw new SerException("您不是总经办,无权进行该操作.");
         }
         model.setModifyTime(LocalDateTime.now());
         model.setPositiveType(to.getPositiveType());//转正类型

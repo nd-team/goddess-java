@@ -5,6 +5,7 @@ import com.bjike.goddess.annual.dto.AnnualApplyDTO;
 import com.bjike.goddess.annual.service.AnnualApplySer;
 import com.bjike.goddess.annual.to.AnnualApplyAuditTo;
 import com.bjike.goddess.annual.to.AnnualApplyTO;
+import com.bjike.goddess.annual.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,16 @@ public class AnnualApplyApiImpl implements AnnualApplyAPI {
 
     @Autowired
     private AnnualApplySer annualApplySer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return annualApplySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return annualApplySer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public AnnualApplyBO save(AnnualApplyTO to) throws SerException {

@@ -6,6 +6,7 @@ import com.bjike.goddess.dimission.bo.DimissionInfoCollectBO;
 import com.bjike.goddess.dimission.bo.DimissionReasonBO;
 import com.bjike.goddess.dimission.dto.DimissionInfoDTO;
 import com.bjike.goddess.dimission.enums.DimissionType;
+import com.bjike.goddess.dimission.excel.SonPermissionObject;
 import com.bjike.goddess.dimission.service.DimissionInfoSer;
 import com.bjike.goddess.dimission.to.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,16 @@ public class DimissionInfoApiImpl implements DimissionInfoAPI {
 
     @Autowired
     private DimissionInfoSer dimissionInfoSer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return dimissionInfoSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return dimissionInfoSer.guidePermission( guidePermissionTO );
+    }
 
     @Override
     public DimissionInfoBO apply(DimissionInfoTO to) throws SerException {
@@ -136,5 +147,10 @@ public class DimissionInfoApiImpl implements DimissionInfoAPI {
     @Override
     public Long getTotal() throws SerException {
         return dimissionInfoSer.getTotal();
+    }
+
+    @Override
+    public List<String> getAllName() throws SerException {
+        return dimissionInfoSer.getAllName();
     }
 }

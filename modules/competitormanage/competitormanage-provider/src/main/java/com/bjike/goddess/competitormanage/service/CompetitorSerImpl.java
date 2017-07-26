@@ -106,16 +106,18 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
     @Override
     @Transactional(rollbackFor = SerException.class)
     public CompetitorBO editOrganization(CompetitorOrganizaeTO to) throws SerException {
-        CompetitorTO competitorTO = BeanTransform.copyProperties(to,CompetitorTO.class);
-        updateModel(competitorTO);
+        Competitor competitor = BeanTransform.copyProperties(to,Competitor.class);
+        updateModel(competitor);
         return BeanTransform.copyProperties(to, CompetitorBO.class);
     }
+
+
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<CompetitorBO> pageList(CompetitorDTO dto) throws SerException {
 
-        getCusPermission();
+//        getCusPermission();
 
         dto.getSorts().add("createTime=desc");
         dto.getConditions().add(Restrict.eq("status", Status.THAW));
@@ -158,6 +160,7 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
         if (!StringUtils.isEmpty(endDate)) {
             dto.getConditions().add(Restrict.lt("createTime", endDate));
         }
+        dto.getConditions().add(Restrict.eq("status",Status.THAW));
         List<Competitor> list = super.findByCis(dto);
         List<CompetitorExcel> excelList = new ArrayList<CompetitorExcel>();
         if (!CollectionUtils.isEmpty(list)) {
@@ -306,6 +309,23 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
             flag = true;
         }
         return flag;
+    }
+
+    /**
+     * 更新数据（编辑、审核）
+     *
+     * @param to 竞争对手信息
+     */
+    public void updateModel(Competitor to) throws SerException {
+
+        Competitor model = super.findById(to.getId());
+        if (model != null) {
+            BeanTransform.copyProperties(to, model, true);
+            model.setModifyTime(LocalDateTime.now());
+            super.update(model);
+        } else {
+            throw new SerException("更新对象不能为空");
+        }
     }
 
     /**

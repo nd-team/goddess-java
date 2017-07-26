@@ -1,11 +1,11 @@
-package com.bjike.goddess.regionalprogresscollect.api;
+package com.bjike.goddess.workprogress.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.regionalprogresscollect.bo.WeekTargetBO;
-import com.bjike.goddess.regionalprogresscollect.dto.WeekTargetDTO;
-import com.bjike.goddess.regionalprogresscollect.to.GuidePermissionTO;
-import com.bjike.goddess.regionalprogresscollect.to.StandardTO;
-import com.bjike.goddess.regionalprogresscollect.to.WeekTargetTO;
+import com.bjike.goddess.workprogress.bo.WeekTargetBO;
+import com.bjike.goddess.workprogress.dto.WeekTargetDTO;
+import com.bjike.goddess.workprogress.to.GuidePermissionTO;
+import com.bjike.goddess.workprogress.to.StandardTO;
+import com.bjike.goddess.workprogress.to.WeekTargetTO;
 
 import java.util.List;
 
@@ -100,6 +100,13 @@ public interface WeekTargetAPI {
      * 导航权限
      */
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取节点标准
+     */
+    default List<Integer> getStandard() throws SerException {
         return null;
     }
 }

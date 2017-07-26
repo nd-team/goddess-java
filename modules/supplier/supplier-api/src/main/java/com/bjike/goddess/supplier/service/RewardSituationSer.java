@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.supplier.bo.RewardSituationBO;
 import com.bjike.goddess.supplier.dto.RewardSituationDTO;
 import com.bjike.goddess.supplier.entity.RewardSituation;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import com.bjike.goddess.supplier.to.RewardSituationTO;
 
 import java.util.List;
@@ -19,6 +20,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface RewardSituationSer extends Ser<RewardSituation, RewardSituationDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
 
     /**
@@ -73,14 +88,6 @@ public interface RewardSituationSer extends Ser<RewardSituation, RewardSituation
      * @throws SerException
      */
     default RewardSituationBO getById(String id) throws SerException {
-        return null;
-    }
-
-
-    /**
-     * 下拉导航权限
-     */
-    default Boolean sonPermission() throws SerException {
         return null;
     }
 

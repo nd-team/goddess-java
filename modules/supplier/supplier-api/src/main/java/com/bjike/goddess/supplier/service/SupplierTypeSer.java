@@ -22,6 +22,20 @@ import java.util.List;
 public interface SupplierTypeSer extends Ser<SupplierType, SupplierTypeDTO> {
 
     /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 查询未冻结的供应商类型
      *
      * @return
@@ -108,19 +122,4 @@ public interface SupplierTypeSer extends Ser<SupplierType, SupplierTypeDTO> {
         return null;
     }
 
-
-    /**
-     * 下拉导航权限
-     */
-    default Boolean sonPermission() throws SerException {
-        return null;
-    }
-
-
-    /**
-     * 导航权限
-     */
-    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
-        return null;
-    }
 }

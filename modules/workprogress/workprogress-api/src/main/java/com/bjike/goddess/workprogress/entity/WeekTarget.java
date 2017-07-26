@@ -1,7 +1,7 @@
-package com.bjike.goddess.regionalprogresscollect.entity;
+package com.bjike.goddess.workprogress.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
-import com.bjike.goddess.regionalprogresscollect.enums.CycleType;
+import com.bjike.goddess.workprogress.enums.CycleType;
 
 import javax.persistence.*;
 
@@ -16,7 +16,7 @@ import javax.persistence.*;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "regionalprogresscollect_week_target")
+@Table(name = "workprogress_week_target")
 public class WeekTarget extends BaseEntity {
 
     /**

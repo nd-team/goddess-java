@@ -1,4 +1,4 @@
-package com.bjike.goddess.regionalprogresscollect.entity;
+package com.bjike.goddess.workprogress.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
@@ -16,7 +16,7 @@ import java.time.LocalDate;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "regionalprogresscollect_day_target")
+@Table(name = "workprogress_day_target")
 public class DayTarget extends BaseEntity {
 
     /**

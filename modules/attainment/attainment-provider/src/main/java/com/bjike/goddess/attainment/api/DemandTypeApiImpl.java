@@ -80,4 +80,9 @@ public class DemandTypeApiImpl implements DemandTypeAPI {
     public Long getTotal() throws SerException {
         return demandTypeSer.getTotal();
     }
+
+    @Override
+    public List<String> getObject() throws SerException {
+        return demandTypeSer.getObject();
+    }
 }

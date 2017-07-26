@@ -3,6 +3,7 @@ package com.bjike.goddess.staffwelfaremanage.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffwelfaremanage.bo.ThankStatementBO;
 import com.bjike.goddess.staffwelfaremanage.dto.ThankStatementDTO;
+import com.bjike.goddess.staffwelfaremanage.to.GuidePermissionTO;
 import com.bjike.goddess.staffwelfaremanage.to.ThankStatementTO;
 
 import java.util.List;
@@ -17,6 +18,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ThankStatementAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 新增感谢语

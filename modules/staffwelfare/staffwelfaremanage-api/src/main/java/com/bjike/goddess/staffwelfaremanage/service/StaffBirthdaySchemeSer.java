@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.staffwelfaremanage.bo.StaffBirthdaySchemeBO;
 import com.bjike.goddess.staffwelfaremanage.dto.StaffBirthdaySchemeDTO;
 import com.bjike.goddess.staffwelfaremanage.entity.StaffBirthdayScheme;
+import com.bjike.goddess.staffwelfaremanage.to.GuidePermissionTO;
 import com.bjike.goddess.staffwelfaremanage.to.StaffBirthdaySchemeTO;
 
 import java.util.List;
@@ -19,6 +20,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface StaffBirthdaySchemeSer extends Ser<StaffBirthdayScheme, StaffBirthdaySchemeDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 新增员工生日福利方案

@@ -5,6 +5,7 @@ import com.bjike.goddess.allmeeting.bo.OrganizeForSummaryBO;
 import com.bjike.goddess.allmeeting.dto.ConciseSummaryDTO;
 import com.bjike.goddess.allmeeting.dto.MultiwheelSummaryDTO;
 import com.bjike.goddess.allmeeting.service.MultiwheelSummarySer;
+import com.bjike.goddess.allmeeting.to.GuidePermissionTO;
 import com.bjike.goddess.allmeeting.to.MultiwheelSummaryTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -27,6 +28,16 @@ public class MultiwheelSummaryApiImpl implements MultiwheelSummaryAPI {
 
     @Autowired
     private MultiwheelSummarySer multiwheelSummarySer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return multiwheelSummarySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return multiwheelSummarySer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public MultiwheelSummaryBO findById(String id) throws SerException {

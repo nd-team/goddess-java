@@ -197,7 +197,14 @@ public interface PositionDetailUserAPI {
     /**
      * 获取全部的岗位
      */
-    default List<String> getAllPosition() throws SerException {
+    default List<String> getAllPositions() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取全部的岗位
+     */
+    default List<String[]> getAllPosition() throws SerException {
         return null;
     }
 

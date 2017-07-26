@@ -1,8 +1,8 @@
-package com.bjike.goddess.regionalprogresscollect.service;
+package com.bjike.goddess.workprogress.service;
 
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.regionalprogresscollect.dto.CusPermissionOperateDTO;
-import com.bjike.goddess.regionalprogresscollect.entity.CusPermissionOperate;
+import com.bjike.goddess.workprogress.dto.CusPermissionOperateDTO;
+import com.bjike.goddess.workprogress.entity.CusPermissionOperate;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 

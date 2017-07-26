@@ -16,6 +16,10 @@ public class DeviceJoinVO {
      */
     private String id;
     /**
+     * 工作交接编号
+     */
+    private String workJoinNum;
+    /**
      * 设备编号
      */
     private String deviceNum;
@@ -37,6 +41,14 @@ public class DeviceJoinVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getWorkJoinNum() {
+        return workJoinNum;
+    }
+
+    public void setWorkJoinNum(String workJoinNum) {
+        this.workJoinNum = workJoinNum;
     }
 
     public String getDeviceNum() {

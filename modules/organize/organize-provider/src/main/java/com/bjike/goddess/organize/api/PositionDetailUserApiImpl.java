@@ -109,7 +109,12 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     }
 
     @Override
-    public List<String> getAllPosition() throws SerException {
+    public List<String> getAllPositions() throws SerException {
+        return positionDetailUserSer.getAllPositions();
+    }
+
+    @Override
+    public List<String[]> getAllPosition() throws SerException {
         return positionDetailUserSer.getAllPosition();
     }
 

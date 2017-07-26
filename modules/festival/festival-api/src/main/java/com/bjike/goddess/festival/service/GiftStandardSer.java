@@ -6,6 +6,7 @@ import com.bjike.goddess.festival.bo.GiftStandardBO;
 import com.bjike.goddess.festival.entity.GiftStandard;
 import com.bjike.goddess.festival.dto.GiftStandardDTO;
 import com.bjike.goddess.festival.to.GiftStandardTO;
+import com.bjike.goddess.festival.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -20,6 +21,19 @@ import java.util.List;
  */
 public interface GiftStandardSer extends Ser<GiftStandard, GiftStandardDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 节假日礼品标准列表总条数
      *

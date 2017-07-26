@@ -35,7 +35,7 @@ public interface DiscussionVoteAPI {
     List<SummaryVoteBO> listBySummary(String summaryId) throws SerException;
 
     /**
-     *
+     * 查询投票结果
      * @param summaryId
      * @return
      * @throws SerException

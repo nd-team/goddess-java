@@ -3,7 +3,9 @@ package com.bjike.goddess.enterpriseculturemanage.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.enterpriseculturemanage.bo.ConstructTeamBO;
 import com.bjike.goddess.enterpriseculturemanage.dto.ConstructTeamDTO;
+import com.bjike.goddess.enterpriseculturemanage.excel.SonPermissionObject;
 import com.bjike.goddess.enterpriseculturemanage.to.ConstructTeamTO;
+import com.bjike.goddess.enterpriseculturemanage.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -17,6 +19,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ConstructTeamAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 新增建设小组

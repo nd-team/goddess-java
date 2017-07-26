@@ -7,6 +7,7 @@ import com.bjike.goddess.supplier.dto.CollectSendDTO;
 import com.bjike.goddess.supplier.entity.CollectSend;
 import com.bjike.goddess.supplier.to.CollectSendTO;
 import com.bjike.goddess.supplier.to.CollectTo;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -20,6 +21,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CollectSendSer extends Ser<CollectSend, CollectSendDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存
@@ -137,11 +152,4 @@ public interface CollectSendSer extends Ser<CollectSend, CollectSendDTO> {
      */
     void sendEmail() throws SerException;
 
-
-    /**
-     * 下拉导航权限
-     */
-    default Boolean sonPermission() throws SerException {
-        return null;
-    }
 }

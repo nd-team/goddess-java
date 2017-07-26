@@ -1,6 +1,7 @@
 package com.bjike.goddess.attainment.api;
 
 import com.bjike.goddess.attainment.bo.SurveyQuestionnaireBO;
+import com.bjike.goddess.attainment.dto.SurveyQuestionnaireDTO;
 import com.bjike.goddess.attainment.service.SurveyQuestionnaireSer;
 import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.attainment.to.SurveyQuestionnaireTO;
@@ -54,4 +55,5 @@ public class SurveyQuestionnaireApiImpl implements SurveyQuestionnaireAPI {
     public List<SurveyQuestionnaireBO> findByActualize(String actualize_id) throws SerException {
         return surveyQuestionnaireSer.findByActualize(actualize_id);
     }
+
 }

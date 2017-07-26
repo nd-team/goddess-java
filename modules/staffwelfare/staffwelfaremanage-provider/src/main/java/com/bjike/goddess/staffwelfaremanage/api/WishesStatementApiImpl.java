@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffwelfaremanage.bo.WishesStatementBO;
 import com.bjike.goddess.staffwelfaremanage.dto.WishesStatementDTO;
 import com.bjike.goddess.staffwelfaremanage.service.WishesStatementSer;
+import com.bjike.goddess.staffwelfaremanage.to.GuidePermissionTO;
 import com.bjike.goddess.staffwelfaremanage.to.WishesStatementTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,16 @@ public class WishesStatementApiImpl implements WishesStatementAPI {
 
     @Autowired
     private WishesStatementSer wishesStatementSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return wishesStatementSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return wishesStatementSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public WishesStatementBO addModel(WishesStatementTO to) throws SerException {

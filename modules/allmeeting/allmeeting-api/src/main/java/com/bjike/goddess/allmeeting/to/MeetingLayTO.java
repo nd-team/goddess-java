@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 会议层面
  *
@@ -31,8 +33,8 @@ public class MeetingLayTO extends BaseTO {
     /**
      * 计划参会岗位
      */
-    @NotBlank(message = "计划参会岗位不能为空", groups = {ADD.class, EDIT.class})
-    private String position;
+    @NotNull(message = "计划参会岗位不能为空", groups = {ADD.class, EDIT.class})
+    private String[] position;
 
 
     public String getTopicId() {
@@ -51,11 +53,11 @@ public class MeetingLayTO extends BaseTO {
         this.name = name;
     }
 
-    public String getPosition() {
+    public String[] getPosition() {
         return position;
     }
 
-    public void setPosition(String position) {
+    public void setPosition(String[] position) {
         this.position = position;
     }
 }

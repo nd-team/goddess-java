@@ -6,6 +6,7 @@ import com.bjike.goddess.individualvision.bo.CareerPlanningCustomBO;
 import com.bjike.goddess.individualvision.dto.CareerPlanningCustomDTO;
 import com.bjike.goddess.individualvision.entity.CareerPlanningCustom;
 import com.bjike.goddess.individualvision.to.CareerPlanningCustomTO;
+import com.bjike.goddess.individualvision.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,7 +20,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CareerPlanningCustomSer extends Ser<CareerPlanningCustom, CareerPlanningCustomDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
 
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 职业规划定制列表总条数
      */

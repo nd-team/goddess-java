@@ -64,7 +64,7 @@ public class MeetingOrganize extends BaseEntity {
      * 计划参会人员
      */
     @Column(name = "planUser", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '计划参会人员'")
-    private String planUser;
+    private String[] planUser;
 
     /**
      * 计划参会时间
@@ -151,11 +151,11 @@ public class MeetingOrganize extends BaseEntity {
         this.content = content;
     }
 
-    public String getPlanUser() {
+    public String[] getPlanUser() {
         return planUser;
     }
 
-    public void setPlanUser(String planUser) {
+    public void setPlanUser(String[] planUser) {
         this.planUser = planUser;
     }
 

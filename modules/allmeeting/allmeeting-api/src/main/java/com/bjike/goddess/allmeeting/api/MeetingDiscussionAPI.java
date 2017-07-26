@@ -20,16 +20,53 @@ import java.util.List;
 public interface MeetingDiscussionAPI  {
 
 
-
+    /**
+     * 查询交流讨论列表
+     * @param id
+     * @return
+     * @throws SerException
+     */
     List<MeetingDiscussionBO> listBySummaryId(String id) throws SerException;
 
+    /**
+     * 交流讨论的第一轮意见
+     * @param to
+     * @return
+     * @throws SerException
+     */
     MeetingDiscussionBO addFirst(FirstDiscussionTO to) throws SerException;
 
+    /**
+     * 交流讨论的第二轮意见
+     * @param to
+     * @return
+     * @throws SerException
+     */
     MeetingDiscussionBO addSecond(SecondDiscussionTO to) throws SerException;
+
+    /**
+     * 根据交流讨论Id查询交流讨论信息
+     * @param id
+     * @return
+     * @throws SerException
+     */
 
     MeetingDiscussionBO findById(String id) throws SerException;
 
+    /**
+     * 查询交流讨论总记录数
+     * @param dto
+     * @return
+     * @throws SerException
+     */
     Long count(MeetingDiscussionDTO dto) throws SerException;
+
+    /**
+     * 交流讨论编辑
+     * @param to
+     * @return
+     * @throws SerException
+     */
 
     MeetingDiscussionBO addFirstByCon(MeetingDiscussionTO to) throws SerException;
 }

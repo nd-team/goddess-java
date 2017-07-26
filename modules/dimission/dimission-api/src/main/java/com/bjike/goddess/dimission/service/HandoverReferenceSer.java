@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.dimission.bo.HandoverReferenceBO;
 import com.bjike.goddess.dimission.dto.HandoverReferenceDTO;
 import com.bjike.goddess.dimission.entity.HandoverReference;
+import com.bjike.goddess.dimission.to.GuidePermissionTO;
 import com.bjike.goddess.dimission.to.HandoverReferenceTO;
 
 import java.util.List;
@@ -19,6 +20,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface HandoverReferenceSer extends Ser<HandoverReference, HandoverReferenceDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存

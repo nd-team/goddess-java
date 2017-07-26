@@ -1,4 +1,4 @@
-package com.bjike.goddess.regionalprogresscollect.api;
+package com.bjike.goddess.workprogress.api;
 
 /**
  * 客户权限配置操作对象业务接口

@@ -1,6 +1,6 @@
-package com.bjike.goddess.regionalprogresscollect;
+package com.bjike.goddess.workprogress;
 
-import com.bjike.goddess.regionalprogresscollect.config.AppRoot;
+import com.bjike.goddess.workprogress.config.AppRoot;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.IOException;

@@ -270,7 +270,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     }
 
     @Override
-    public List<String> getAllPosition() throws SerException {
+    public List<String> getAllPositions() throws SerException {
         PositionDetailUserDTO dto = new PositionDetailUserDTO();
         List<PositionDetailUserBO> positionDetailUserBOList = maps(dto);
         List<String> stringList = new ArrayList<>();
@@ -279,6 +279,21 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
                 String str = "";
                 str = bo.getPosition();
                 stringList.add(str);
+            }
+        }
+        return stringList;
+    }
+
+    @Override
+    public List<String[]> getAllPosition() throws SerException {
+        PositionDetailUserDTO dto = new PositionDetailUserDTO();
+        List<PositionDetailUserBO> positionDetailUserBOList = maps(dto);
+        List<String[]> stringList = new ArrayList<>();
+        if (null != positionDetailUserBOList && positionDetailUserBOList.size() > 0) {
+            String string[] = new String[positionDetailUserBOList.size()];
+            for (PositionDetailUserBO bo : positionDetailUserBOList) {
+                string = bo.getPosition().split(";");
+                stringList.add(string);
             }
         }
         return stringList;

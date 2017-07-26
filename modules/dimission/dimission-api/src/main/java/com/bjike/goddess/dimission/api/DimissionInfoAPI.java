@@ -6,6 +6,7 @@ import com.bjike.goddess.dimission.bo.DimissionInfoCollectBO;
 import com.bjike.goddess.dimission.bo.DimissionReasonBO;
 import com.bjike.goddess.dimission.dto.DimissionInfoDTO;
 import com.bjike.goddess.dimission.enums.DimissionType;
+import com.bjike.goddess.dimission.excel.SonPermissionObject;
 import com.bjike.goddess.dimission.to.*;
 
 import java.util.List;
@@ -20,6 +21,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface DimissionInfoAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 申请离职
@@ -263,4 +278,10 @@ public interface DimissionInfoAPI {
         return null;
     }
 
+    /**
+     * 获取全部用户名
+     */
+    default List<String> getAllName() throws SerException{
+        return null;
+    }
 }

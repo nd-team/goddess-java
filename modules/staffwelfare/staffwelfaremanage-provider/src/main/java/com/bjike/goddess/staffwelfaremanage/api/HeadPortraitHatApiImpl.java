@@ -3,7 +3,9 @@ package com.bjike.goddess.staffwelfaremanage.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffwelfaremanage.bo.HeadPortraitHatBO;
 import com.bjike.goddess.staffwelfaremanage.dto.HeadPortraitHatDTO;
+import com.bjike.goddess.staffwelfaremanage.excel.SonPermissionObject;
 import com.bjike.goddess.staffwelfaremanage.service.HeadPortraitHatSer;
+import com.bjike.goddess.staffwelfaremanage.to.GuidePermissionTO;
 import com.bjike.goddess.staffwelfaremanage.to.HeadPortraitHatTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,8 +24,19 @@ import java.util.List;
 @Service("headPortraitHatApiImpl")
 public class HeadPortraitHatApiImpl implements HeadPortraitHatAPI {
 
+
     @Autowired
     private HeadPortraitHatSer headPortraitHatSer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return headPortraitHatSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return headPortraitHatSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public HeadPortraitHatBO addModel(HeadPortraitHatTO to) throws SerException {

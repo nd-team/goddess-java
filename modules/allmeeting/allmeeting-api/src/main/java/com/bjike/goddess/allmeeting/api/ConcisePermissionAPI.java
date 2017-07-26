@@ -15,10 +15,26 @@ import java.util.List;
 * @Copy:   		[ com.bjike ]
 */
 public interface ConcisePermissionAPI  {
-
+    /**
+     * 申请调阅权限
+     * @return
+     * @throws SerException
+     */
     ConcisePermissionBO add() throws SerException;
+
+    /**
+     * 申请权限调阅列表
+     * @param dto
+     * @return
+     * @throws SerException
+     */
 
     List<ConcisePermissionBO> pageList(ConcisePermissionDTO dto) throws SerException;
 
+    /**
+     * 调阅权限审核
+     * @param id
+     * @throws SerException
+     */
     void agree(String id) throws SerException;
 }

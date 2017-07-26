@@ -16,6 +16,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * @Copy: [ com.bjike ]
  */
 public class IndividualVisionPlanTO extends BaseTO {
+    public interface TestAudit{}
 
     /**
      * 姓名
@@ -74,49 +75,59 @@ public class IndividualVisionPlanTO extends BaseTO {
     /**
      * 期望此能力的提升程度
      */
+    @NotBlank(message = "期望此能力的提升程度不能为空",groups = {ADD.class, EDIT.class})
     private String degreeAbilityAscend;
 
     /**
      * 期望学到的东西
      */
+    @NotBlank(message = "选择发展路径：不能为空",groups = {ADD.class, EDIT.class})
     private String expectLearnThings;
 
     /**
      * 预想的权利及义务
      */
+    @NotBlank(message = "预想的权利及义务不能为空",groups = {ADD.class, EDIT.class})
     private String rightsObligations;
 
     /**
      * 预计完成时间
      */
+    @NotBlank(message = "预计完成时间不能为空",groups = {ADD.class, EDIT.class})
     private String expectedCompletionTime;
 
     /**
      * 期望此时的职位状态
      */
+    @NotBlank(message = "期望此时的职位状态不能为空",groups = {ADD.class, EDIT.class})
     private String positionsStatus;
 
     /**
      * 期望周收益（元）
      */
+    @NotBlank(message = "期望周收益（元）不能为空",groups = {ADD.class, EDIT.class})
     private String expectWeeksEarnings;
 
     /**
      * 期望月收益（元）
      */
+    @NotBlank(message = "期望月收益（元）不能为空",groups = {ADD.class, EDIT.class})
     private String expectMonthsEarnings;
 
     /**
      * 期望年收益（元）
      */
+    @NotBlank(message = "期望年收益（元）不能为空",groups = {ADD.class, EDIT.class})
     private String expectYearsEarnings;
     /**
      * 审核人
      */
+    @NotBlank(message = "审核人不能为空",groups = {IndividualVisionPlanTO.TestAudit.class})
     private String audit;
     /**
      * 审核状态
      */
+    @NotBlank(message = "审核状态不能为空",groups = {IndividualVisionPlanTO.TestAudit.class})
     private String auditStatus;
 
     public String getAudit() {

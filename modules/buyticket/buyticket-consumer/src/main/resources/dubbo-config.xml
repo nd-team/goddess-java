@@ -23,5 +23,18 @@
 	<dubbo:reference  validation="true" id="buyTicketRecordApiImpl" interface="com.bjike.goddess.buyticket.api.BuyTicketRecordAPI" />
 	<dubbo:reference  validation="true" id="buyTicketCollectApiImpl" interface="com.bjike.goddess.buyticket.api.BuyTicketCollectAPI" />
 	<dubbo:reference  validation="true" id="buyTicketStandardApiImpl" interface="com.bjike.goddess.buyticket.api.BuyTicketStandardAPI" />
+	<dubbo:reference  validation="true" id="buyCusPermissionApiImpl" interface="com.bjike.goddess.buyticket.api.BuyCusPermissionAPI" />
+	<dubbo:reference  validation="true" id="buyCusPermissionOperateApiImpl" interface="com.bjike.goddess.buyticket.api.BuyCusPermissionOperateAPI" />
+
+	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
+
+
+	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
+	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
 
 </beans>

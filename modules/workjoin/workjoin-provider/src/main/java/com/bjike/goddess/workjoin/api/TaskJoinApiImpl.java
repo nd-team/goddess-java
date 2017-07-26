@@ -6,6 +6,7 @@ import com.bjike.goddess.workjoin.bo.TaskJoinBO;
 import com.bjike.goddess.workjoin.dto.TaskJoinDTO;
 import com.bjike.goddess.workjoin.entity.TaskJoin;
 import com.bjike.goddess.workjoin.service.TaskJoinSer;
+import com.bjike.goddess.workjoin.to.GuidePermissionTO;
 import com.bjike.goddess.workjoin.to.TaskJoinTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,15 @@ import java.util.List;
 public class TaskJoinApiImpl implements TaskJoinAPI {
     @Autowired
     private TaskJoinSer taskJoinSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return taskJoinSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return taskJoinSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countTaskJoin(TaskJoinDTO taskJoinDTO) throws SerException {
         return taskJoinSer.countTaskJoin(taskJoinDTO);

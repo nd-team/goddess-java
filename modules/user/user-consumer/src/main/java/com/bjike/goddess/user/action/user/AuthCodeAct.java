@@ -36,7 +36,7 @@ public class AuthCodeAct {
     private UserAuthCodeAPI userAuthCodeAPI;
 
     /**
-     * 登录是否需要验证码
+     * 是否需要验证码
      *
      * @param account 账号email,username,phone
      * @des true代表需要要验证, false代表不需要验证码,返回true时调用generate-code方法生成验证码

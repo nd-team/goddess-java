@@ -1,4 +1,4 @@
-package com.bjike.goddess.regionalprogresscollect.enums;
+package com.bjike.goddess.workprogress.enums;
 
 /**
  * 导航栏类型

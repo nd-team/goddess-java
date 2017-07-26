@@ -44,9 +44,8 @@ public class FileAct extends BaseFileAction {
     /**
      * 预览文件
      *
-     * @param fileInfo
-     * @param result
-     * @return
+     * @param fileInfo 文件信息
+     * @version v1
      * @throws ActException
      */
     @GetMapping("v1/preview")
@@ -140,7 +139,7 @@ public class FileAct extends BaseFileAction {
     }
 
     /**
-     * 删除文件、文件夹
+     * 删除文件
      *
      * @param storageToken 登录令牌
      * @param paths    文件路径
@@ -154,7 +153,7 @@ public class FileAct extends BaseFileAction {
 
 
     /**
-     * 重命名文件、文件夹
+     * 重命名文件
      *
      * @param fileInfo 文件信息
      * @version v1
@@ -188,14 +187,11 @@ public class FileAct extends BaseFileAction {
 
     /**
      * 获取缩略图
-     * @param fileInfo
-     * @param response
-     * @param result
-     * @return
-     * @throws ActException
+     * @param fileInfo 文件信息
+     * @version v1
      */
     @GetMapping("v1/thumbnails")
-    public Result thumbnails(@Validated({FileInfo.COMMON.class}) FileInfo fileInfo, HttpServletResponse response, BindingResult result) throws ActException {
+    public Result thumbnails(@Validated({FileInfo.COMMON.class}) FileInfo fileInfo,  BindingResult result,HttpServletResponse response) throws ActException {
         try {
             handlerToken(fileInfo);
             String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
@@ -209,13 +205,11 @@ public class FileAct extends BaseFileAction {
 
     /**
      * 获取原图
-     * @param fileInfo
-     * @param response
-     * @param result
-     * @return
-     * @throws ActException
+     * @param fileInfo 文件信息
+     * @version v1
      */
-  public Result originals(@Validated({FileInfo.COMMON.class}) FileInfo fileInfo, HttpServletResponse response, BindingResult result) throws ActException {
+    @GetMapping("v1/originals")
+    public Result originals(@Validated({FileInfo.COMMON.class}) FileInfo fileInfo, BindingResult result, HttpServletResponse response) throws ActException {
         try {
             handlerToken(fileInfo);
             String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
@@ -230,7 +224,7 @@ public class FileAct extends BaseFileAction {
 
 
     /**
-     * 文件、文件夹移动
+     * 文件移动
      *
      * @param fileInfo 文件信息
      * @version v1
@@ -248,7 +242,7 @@ public class FileAct extends BaseFileAction {
     }
 
     /**
-     * 文件、文件夹回收
+     * 文件回收
      *
      * @param fileInfo 文件信息
      * @version v1
@@ -265,7 +259,7 @@ public class FileAct extends BaseFileAction {
     }
 
     /**
-     * 文件、文件夹还原
+     * 文件还原
      *
      * @param fileInfo 文件信息
      * @version v1
@@ -287,7 +281,7 @@ public class FileAct extends BaseFileAction {
      * @param fileInfo 文件夹路径
      * @version v1
      */
-    @GetMapping("v1/recycle-list")
+    @GetMapping("v1/recycle/list")
     public Result recycleList(@Validated(FileInfo.COMMON.class) FileInfo fileInfo, BindingResult result) throws ActException {
         try {
             handlerToken(fileInfo);
@@ -298,11 +292,7 @@ public class FileAct extends BaseFileAction {
         }
     }
 
-    /**
-     * 获取storageToken
-     *
-     * @param fileInfo
-     */
+
     private void handlerToken(FileInfo fileInfo) {
         if(StringUtils.isBlank(fileInfo.getStorageToken())){
             fileInfo.setStorageToken(RpcContext.getContext().getAttachment(RpcCommon.STORAGE_TOKEN));

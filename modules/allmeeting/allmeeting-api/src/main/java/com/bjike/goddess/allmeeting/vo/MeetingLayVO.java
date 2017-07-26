@@ -34,7 +34,7 @@ public class MeetingLayVO {
     /**
      * 计划参会岗位
      */
-    private String position;
+    private String[] position;
 
 
     public String getId() {
@@ -69,11 +69,11 @@ public class MeetingLayVO {
         this.name = name;
     }
 
-    public String getPosition() {
+    public String[] getPosition() {
         return position;
     }
 
-    public void setPosition(String position) {
+    public void setPosition(String[] position) {
         this.position = position;
     }
 }

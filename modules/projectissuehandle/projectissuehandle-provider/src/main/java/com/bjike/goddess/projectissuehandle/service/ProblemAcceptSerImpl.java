@@ -241,6 +241,12 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
 
     @Override
     public Long countProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
+        if (StringUtils.isNotBlank(problemAcceptDTO.getInternalProjectName())) {
+            problemAcceptDTO.getConditions().add(Restrict.like("internalProjectName", problemAcceptDTO.getInternalProjectName()));
+        }
+        if (StringUtils.isNotBlank(problemAcceptDTO.getProjectType())) {
+            problemAcceptDTO.getConditions().add(Restrict.like("projectType", problemAcceptDTO.getProjectType()));
+        }
         Long counts = super.count(problemAcceptDTO);
         return counts;
     }
