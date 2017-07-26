@@ -4,6 +4,7 @@ import com.bjike.goddess.businsurance.bo.GroupByInsurerBO;
 import com.bjike.goddess.businsurance.dto.GroupByInsurerDTO;
 import com.bjike.goddess.businsurance.service.GroupByInsurerSer;
 import com.bjike.goddess.businsurance.to.GroupByInsurerTO;
+import com.bjike.goddess.businsurance.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,16 @@ public class GroupByInsurerApiImpl implements GroupByInsurerAPI {
 
     @Autowired
     private GroupByInsurerSer groupByInsurerSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return groupByInsurerSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return groupByInsurerSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countGroupByInsurer(GroupByInsurerDTO groupByInsurerDTO) throws SerException {

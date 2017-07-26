@@ -11,6 +11,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,6 +43,8 @@ public class SkillAnalyseSerImpl extends ServiceImpl<SkillAnalyse, SkillAnalyseD
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     @Transactional(rollbackFor = SerException.class)
     @Override
@@ -104,6 +108,18 @@ public class SkillAnalyseSerImpl extends ServiceImpl<SkillAnalyse, SkillAnalyseD
     public Long getTotal() throws SerException {
         SkillAnalyseDTO dto = new SkillAnalyseDTO();
         return super.count(dto);
+    }
+
+    @Override
+    public List<String> getUser() throws SerException {
+        List<UserBO> userBOs = positionDetailUserAPI.findUserListInOrgan();
+        List<String> list = new ArrayList<>();
+        if(null != userBOs && userBOs.size() > 0 ){
+            for(UserBO bo : userBOs){
+                list.add(bo.getUsername());
+            }
+        }
+        return list;
     }
 
     /**

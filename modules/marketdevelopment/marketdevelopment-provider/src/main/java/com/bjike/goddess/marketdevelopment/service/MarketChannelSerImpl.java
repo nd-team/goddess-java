@@ -212,6 +212,7 @@ public class MarketChannelSerImpl extends ServiceImpl<MarketChannel, MarketChann
     public List<MarketChannel> findByPage(MarketChannelDTO dto) throws SerException {
 //        if (!marPermissionSer.getMarPermission(channelManage))
 //            throw new SerException("您的帐号没有权限");
+        dto.getSorts().add("createTime=desc");
         return super.findByPage(dto);
     }
 

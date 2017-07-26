@@ -2,6 +2,8 @@ package com.bjike.goddess.businsurance.api;
 
 import com.bjike.goddess.businsurance.bo.TowerInsureBO;
 import com.bjike.goddess.businsurance.dto.TowerInsureDTO;
+import com.bjike.goddess.businsurance.excel.SonPermissionObject;
+import com.bjike.goddess.businsurance.to.GuidePermissionTO;
 import com.bjike.goddess.businsurance.to.TowerInsureTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -18,6 +20,20 @@ import java.util.List;
  */
 public interface TowerInsureAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 塔工意外险信息列表总条数
      *

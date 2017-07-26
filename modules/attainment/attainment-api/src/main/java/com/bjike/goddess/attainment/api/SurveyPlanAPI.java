@@ -138,4 +138,22 @@ public interface SurveyPlanAPI {
     default List<SurveyQuestionnaireOptionUsersBO> editQuestionnaire(SurveyQuestionnaireOptionUsersTO to) throws SerException {
         return null;
     }
+
+    /**
+     * 修改问卷
+     */
+    default List<SurveyActualizesBO> edit(SurveyActualizesTO to) throws SerException {
+        return null;
+    }
+
+    default List<SurPlanbo> getPlanId() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取调研表名称
+     */
+    default List<String> getName() throws SerException {
+        return null;
+    }
 }

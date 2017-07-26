@@ -1,6 +1,10 @@
 package com.bjike.goddess.annual.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 年假信息
@@ -16,56 +20,67 @@ public class AnnualInfoTO extends BaseTO {
     /**
      * 年度
      */
+    @NotNull(message = "年度不能为空", groups = { ADD.class})
     private Integer year;
 
     /**
      * 姓名
      */
+    @NotNull(message = "姓名不能为空", groups = { ADD.class})
     private String username;
 
     /**
      * 地区
      */
+    @NotNull(message = "地区不能为空", groups = { ADD.class})
     private String area;
 
     /**
      * 岗位
      */
+    @NotNull(message = "岗位不能为空", groups = { ADD.class})
     private String position;
 
     /**
      * 项目组/部门
      */
+    @NotNull(message = "项目组不能为空", groups = { ADD.class})
     private String department;
 
     /**
      * 岗位层级
      */
+    @NotNull(message = "岗位层级不能为空", groups = { ADD.class})
     private String arrangement;
 
     /**
      * 入职时间
      */
+    @NotNull(message = "入职时间不能为空", groups = { ADD.class})
     private String entryTime;
 
     /**
      * 工龄
      */
+    @NotNull(message = "工龄不能为空", groups = { ADD.class})
     private String seniority;
 
     /**
      * 可休年假天数
      */
+    @NotNull(message = "可休年假天数不能为空", groups = { ADD.class})
     private Integer annual;
 
     /**
      * 剩余年假天数
      */
+    @NotNull(message = "剩余年假天数不能为空", groups = { ADD.class})
     private Double surplus;
 
     /**
      * 是否已休假
      */
+    @NotNull(message = "是否已休假不能为空", groups = { ADD.class})
     private Boolean already;
 
     /**
@@ -154,11 +169,11 @@ public class AnnualInfoTO extends BaseTO {
         this.surplus = surplus;
     }
 
-    public Boolean isAlready() {
+    public Boolean getAlready() {
         return already;
     }
 
-    public void isAlready(Boolean already) {
+    public void setAlready(Boolean already) {
         this.already = already;
     }
 

@@ -2,7 +2,9 @@ package com.bjike.goddess.businsurance.api;
 
 import com.bjike.goddess.businsurance.bo.TowerInsureBO;
 import com.bjike.goddess.businsurance.dto.TowerInsureDTO;
+import com.bjike.goddess.businsurance.excel.SonPermissionObject;
 import com.bjike.goddess.businsurance.service.TowerInsureSer;
+import com.bjike.goddess.businsurance.to.GuidePermissionTO;
 import com.bjike.goddess.businsurance.to.TowerInsureTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,16 @@ public class TowerInsureApiImpl implements TowerInsureAPI {
 
     @Autowired
     private TowerInsureSer towerInsureSer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return towerInsureSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return towerInsureSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countTowerInsure(TowerInsureDTO towerInsureDTO) throws SerException {

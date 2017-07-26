@@ -100,4 +100,10 @@ public interface SkillAnalyseSer extends Ser<SkillAnalyse, SkillAnalyseDTO> {
         return null;
     }
 
+    /**
+     * 获取用户
+     */
+    default List<String> getUser() throws SerException {
+        return null;
+    }
 }

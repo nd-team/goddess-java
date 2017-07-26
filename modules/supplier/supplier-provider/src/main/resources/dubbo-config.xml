@@ -27,9 +27,6 @@
     <dubbo:service interface="com.bjike.goddess.supplier.api.RewardSituationAPI" ref="rewardSituationApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.supplier.api.SupplierTypeAPI" ref="supplierTypeApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.supplier.api.SupplierInformationAPI" ref="supplierInformationApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.supplier.api.SupPermissionAPI" ref="supPermissionApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.supplier.api.SupPermissionOperateAPI"
-                   ref="supPermissionOperateApiImpl"/>
 
     <dubbo:service interface="com.bjike.goddess.supplier.api.SupCusPermissionAPI" ref="supCusPermissionApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.supplier.api.SupCusPermissionOperateAPI"

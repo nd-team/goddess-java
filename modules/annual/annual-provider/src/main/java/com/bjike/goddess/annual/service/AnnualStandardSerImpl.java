@@ -1,5 +1,7 @@
 package com.bjike.goddess.annual.service;
 
+import com.bjike.goddess.annual.api.AnnualApplyAPI;
+import com.bjike.goddess.annual.api.AnnualInfoAPI;
 import com.bjike.goddess.annual.bo.AnnualStandardBO;
 import com.bjike.goddess.annual.dto.AnnualStandardDTO;
 import com.bjike.goddess.annual.entity.AnnualStandard;
@@ -43,6 +45,11 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private AnnualApplySer annualApplySer;
+    @Autowired
+    private AnnualInfoSer annualInfoSer;
+
 
     /**
      * 检查权限(部门)
@@ -124,7 +131,12 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
         }
         return flag;
     }
-
+    /**
+     * 权限
+     */
+    private Boolean guideAllTrueIdentity() throws SerException {
+        return true;
+    }
 
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
@@ -139,8 +151,8 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
             SonPermissionObject obj = new SonPermissionObject();
 
             obj = new SonPermissionObject();
-            obj.setName("materialanalyzedaily");
-            obj.setDescribesion("物质盘点日盘");
+            obj.setName("annualstandard");
+            obj.setDescribesion("年假标准管理");
             if (flagInvenDai || flagInvenPosinDai) {
                 obj.setFlag(true);
             } else {
@@ -150,18 +162,31 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
 
 
 
-//            RpcTransmit.transmitUserToken(userToken);
-//            Boolean flagAnalyAnnu = materialAnalyzeSer.sonPermission();
-//            RpcTransmit.transmitUserToken(userToken);
-//            obj = new SonPermissionObject();
-//            obj.setName("materialAnalyzeannual");
-//            obj.setDescribesion("物质分析年盘");
-//            if (flagAnalyAnnu) {
-//                obj.setFlag(true);
-//            } else {
-//                obj.setFlag(false);
-//            }
-//            list.add(obj);
+            RpcTransmit.transmitUserToken(userToken);
+            Boolean flagInfo = annualInfoSer.sonPermission();
+            RpcTransmit.transmitUserToken(userToken);
+            obj = new SonPermissionObject();
+            obj.setName("annualinfo");
+            obj.setDescribesion("年假信息记录");
+            if (flagInfo) {
+                obj.setFlag(true);
+            } else {
+                obj.setFlag(false);
+            }
+            list.add(obj);
+
+            RpcTransmit.transmitUserToken(userToken);
+            Boolean flagApply = annualApplySer.sonPermission();
+            RpcTransmit.transmitUserToken(userToken);
+            obj = new SonPermissionObject();
+            obj.setName("annualapply");
+            obj.setDescribesion("年假申请记录");
+            if (flagApply) {
+                obj.setFlag(true);
+            } else {
+                obj.setFlag(false);
+            }
+            list.add(obj);
 
 
             return list;
@@ -192,9 +217,26 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
             case AUDIT:
                 flag = guidePosinIdentity();
                 break;
-            case SEEMYSELF:
-                flag = true;
+            case CONGEL:
+                flag = guideIdentity();
                 break;
+            case THAW:
+                flag = guideIdentity();
+                break;
+            case XXLIST:
+                flag = guideAllTrueIdentity();
+                break;
+            case XXADD:
+                flag = guideAllTrueIdentity();
+                break;
+            case XXAPPLY:
+                flag = guideAllTrueIdentity();
+                break;
+            case XXSEE:
+                flag = guideAllTrueIdentity();
+                break;
+            case XXMYSELF:
+                flag = guideAllTrueIdentity();
             default:
                 flag = true;
                 break;
@@ -207,6 +249,7 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
     @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualStandardBO save(AnnualStandardTO to) throws SerException {
+        checkPermission();
         AnnualStandard entity = BeanTransform.copyProperties(to, AnnualStandard.class);
         entity.setStatus(Status.THAW);
         List<AnnualStandardBO> bos = this.findThaw();
@@ -222,6 +265,7 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
     @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualStandardBO update(AnnualStandardTO to) throws SerException {
+        checkPermission();
         AnnualStandard entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据不存在");
@@ -234,6 +278,7 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
     @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualStandardBO delete(AnnualStandardTO to) throws SerException {
+        checkPermission();
         AnnualStandard entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据不存在");
@@ -246,6 +291,7 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
     @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualStandardBO congeal(AnnualStandardTO to) throws SerException {
+        checkPermission();
         AnnualStandard entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据不存在");
@@ -257,6 +303,7 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
     @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualStandardBO thaw(AnnualStandardTO to) throws SerException {
+        checkPermission();
         AnnualStandard entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据不存在");
@@ -289,6 +336,7 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
 
     @Override
     public List<AnnualStandardBO> maps(AnnualStandardDTO dto) throws SerException {
+        checkPermission();
         dto.getSorts().add("status=asc");
         return BeanTransform.copyProperties(super.findByPage(dto), AnnualStandardBO.class);
     }

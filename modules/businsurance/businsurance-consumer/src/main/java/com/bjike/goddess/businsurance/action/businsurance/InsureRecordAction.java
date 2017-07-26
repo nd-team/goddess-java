@@ -3,6 +3,7 @@ package com.bjike.goddess.businsurance.action.businsurance;
 import com.bjike.goddess.businsurance.api.InsureRecordAPI;
 import com.bjike.goddess.businsurance.bo.InsureRecordBO;
 import com.bjike.goddess.businsurance.dto.InsureRecordDTO;
+import com.bjike.goddess.businsurance.to.GuidePermissionTO;
 import com.bjike.goddess.businsurance.to.InsureRecordTO;
 import com.bjike.goddess.businsurance.vo.InsureRecordVO;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -17,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -38,6 +40,28 @@ public class InsureRecordAction extends BaseFileAction{
     @Autowired
     private InsureRecordAPI insureRecordAPI;
 
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = insureRecordAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      *  总条数
      *

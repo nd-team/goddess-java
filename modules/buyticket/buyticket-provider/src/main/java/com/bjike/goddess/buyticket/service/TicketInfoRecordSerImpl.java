@@ -175,6 +175,13 @@ public class TicketInfoRecordSerImpl extends ServiceImpl<TicketInfoRecord, Ticke
         }
     }
 
+    /**
+     * 权限
+     */
+    private Boolean guideAllTrueIdentity() throws SerException {
+
+        return true;
+    }
     @Override
     public Boolean guidePermission(BuyGuidePermissionTO guidePermissionTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
@@ -182,13 +189,13 @@ public class TicketInfoRecordSerImpl extends ServiceImpl<TicketInfoRecord, Ticke
         Boolean flag = true;
         switch (guideAddrStatus) {
             case APPLIST:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             case APPADD:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             case APPEDIT:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             case LIST:
                 flag = guideMondIdentity();
@@ -215,7 +222,7 @@ public class TicketInfoRecordSerImpl extends ServiceImpl<TicketInfoRecord, Ticke
                 flag = guideMondIdentity();
                 break;
             case RECORDLIST:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             default:
                 flag = true;

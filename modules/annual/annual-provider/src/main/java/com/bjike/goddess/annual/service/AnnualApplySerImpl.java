@@ -121,6 +121,13 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
         return flag;
     }
 
+    /**
+     * 权限
+     */
+    private Boolean guideAllTrueIdentity() throws SerException {
+        return true;
+    }
+
 
     /**
      * 核对总经办审核权限（岗位级别）
@@ -147,7 +154,9 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagPosin = guidePosinIdentity();
         RpcTransmit.transmitUserToken(userToken);
-        if (flagSee || flagPosin) {
+        Boolean flagTrue = guideAllTrueIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee || flagPosin || flagTrue) {
             return true;
         } else {
             return false;
@@ -178,9 +187,26 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
             case AUDIT:
                 flag = guidePosinIdentity();
                 break;
-            case SEEMYSELF:
-                flag = true;
+            case CONGEL:
+                flag = guideIdentity();
                 break;
+            case THAW:
+                flag = guideIdentity();
+                break;
+            case XXLIST:
+                flag = guideAllTrueIdentity();
+                break;
+            case XXADD:
+                flag = guideAllTrueIdentity();
+                break;
+            case XXAPPLY:
+                flag = guideAllTrueIdentity();
+                break;
+            case XXSEE:
+                flag = guideAllTrueIdentity();
+                break;
+            case XXMYSELF:
+                flag = guideAllTrueIdentity();
             default:
                 flag = true;
                 break;
@@ -189,6 +215,7 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
+
     /**
      * 转换年假申请传输对象
      *
@@ -262,6 +289,7 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
     @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualApplyBO audit(AnnualApplyAuditTo to) throws SerException {
+        checkPonsPermission();
         UserBO auditor = userAPI.currentUser();
         AnnualApply entity = super.findById(to.getId());
         if (null == entity)

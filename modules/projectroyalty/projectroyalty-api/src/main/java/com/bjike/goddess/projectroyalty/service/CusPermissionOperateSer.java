@@ -1,5 +1,9 @@
 package com.bjike.goddess.projectroyalty.service;
 
+import com.bjike.goddess.projectroyalty.dto.CusPermissionOperateDTO;
+import com.bjike.goddess.projectroyalty.entity.CusPermissionOperate;
+import com.bjike.goddess.common.api.service.Ser;
+
 /**
  * 客户权限配置操作对象业务接口
  *
@@ -9,6 +13,6 @@ package com.bjike.goddess.projectroyalty.service;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public interface CusPermissionOperateSer {
+public interface CusPermissionOperateSer extends Ser<CusPermissionOperate, CusPermissionOperateDTO> {
 
 }

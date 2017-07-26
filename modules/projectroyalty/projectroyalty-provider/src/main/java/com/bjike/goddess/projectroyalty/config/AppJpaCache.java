@@ -2,7 +2,12 @@ package com.bjike.goddess.projectroyalty.config;
 
 
 import com.bjike.goddess.common.jpa.boot.JpaCache;
+import org.springframework.cache.Cache;
+import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -17,4 +22,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class AppJpaCache implements JpaCache {
 
+    @Override
+    public List<Cache> initCaches() {
+        ConcurrentMapCache serCache = new ConcurrentMapCache("projectroyaltySerCache");
+        serCache.put("timeToLiveSeconds", 60 * 60);//1小时过期
+        serCache.put("timeToIdleSeconds", 60 * 60 * 12);//闲置时间
+
+        ConcurrentMapCache daoCache = new ConcurrentMapCache("projectroyaltyDaoCache");
+        daoCache.put("timeToLiveSeconds", 60 * 60);//1小时过期
+        daoCache.put("timeToIdleSeconds", 60 * 60 * 12);//闲置时间
+
+        return Arrays.asList(serCache, daoCache);
+    }
 }

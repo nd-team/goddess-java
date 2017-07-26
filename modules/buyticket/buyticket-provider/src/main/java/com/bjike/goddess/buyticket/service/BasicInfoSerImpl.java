@@ -161,7 +161,13 @@ public class BasicInfoSerImpl extends ServiceImpl<BasicInfo, BasicInfoDTO> imple
         }
         return flag;
     }
+    /**
+     * 权限
+     */
+    private Boolean guideAllTrueIdentity() throws SerException {
 
+        return true;
+    }
 
     @Override
     public Boolean sonPermission() throws SerException {
@@ -184,13 +190,13 @@ public class BasicInfoSerImpl extends ServiceImpl<BasicInfo, BasicInfoDTO> imple
         Boolean flag = true;
         switch (guideAddrStatus) {
             case APPLIST:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             case APPADD:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             case APPEDIT:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             case LIST:
                 flag = guideMondIdentity();
@@ -217,7 +223,7 @@ public class BasicInfoSerImpl extends ServiceImpl<BasicInfo, BasicInfoDTO> imple
                 flag = guideMondIdentity();
                 break;
             case RECORDLIST:
-                flag = true;
+                flag = guideAllTrueIdentity();
                 break;
             default:
                 flag = true;

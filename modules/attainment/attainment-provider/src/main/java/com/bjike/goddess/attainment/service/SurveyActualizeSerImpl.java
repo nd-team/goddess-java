@@ -133,6 +133,18 @@ public class SurveyActualizeSerImpl extends ServiceImpl<SurveyActualize, SurveyA
         return super.count(dto);
     }
 
+    @Override
+    public List<String> getName() throws SerException {
+        List<SurveyActualize> list = super.findAll();
+        List<String> stringList = new ArrayList<>();
+        if(null !=  list && list.size() > 0){
+            for(SurveyActualize entity : list){
+                stringList.add(entity.getQuestionnaire());
+            }
+        }
+        return null;
+    }
+
     /**
      * 核对查看权限（部门级别）
      */

@@ -124,37 +124,6 @@ public class PermissionConfig {
 
     }
 
-    public static void main(String[] args) {
-        LocalDateTime d = LocalDateTime.now();
-        int temp_count_start = d.getDayOfWeek().getValue();
-        System.out.println(d.plusDays(6-temp_count_start));//周六
-        System.out.println(d.minusDays(temp_count_start));//周日
-
-        LocalDateTime quarte_start = null;
-        LocalDateTime quarte_end = null;
-        int mon = d.getMonthValue();
-        if( mon%3 == 1){
-            quarte_start = d.minusMonths(0);
-            quarte_end = d.plusMonths(2);
-        }else if( mon%3 == 2){
-
-            quarte_start = d.minusMonths(1);
-            quarte_end = d.plusMonths(1);
-        }else if( mon%3 == 0){
-
-            quarte_start = d.minusMonths(2);
-            quarte_end = d.plusMonths(0);
-        }
-        System.out.println( quarte_start );
-        System.out.println( quarte_end );
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-//        Date date = calendar.getTime();
-//        Instant instant = date.toInstant();
-//        ZoneId zoneId = ZoneId.systemDefault();
-//        System.out.println( LocalDateTime.ofInstant(instant, zoneId).toLocalDate());
-
-    }
     /**
      * 构建类描述
      */

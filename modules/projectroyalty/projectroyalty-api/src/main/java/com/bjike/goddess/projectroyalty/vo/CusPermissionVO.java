@@ -1,5 +1,6 @@
 package com.bjike.goddess.projectroyalty.vo;
 
+import com.bjike.goddess.projectroyalty.enums.CusPermissionType;
 
 import java.util.List;
 
@@ -31,7 +32,10 @@ public class CusPermissionVO {
      * 操作对象
      */
     private String operator;
-
+    /**
+     * 类型
+     */
+    private CusPermissionType type;
     /**
      * 创建时间
      */
@@ -80,6 +84,13 @@ public class CusPermissionVO {
         this.operator = operator;
     }
 
+    public CusPermissionType getType() {
+        return type;
+    }
+
+    public void setType(CusPermissionType type) {
+        this.type = type;
+    }
 
     public String getCreateTime() {
         return createTime;
