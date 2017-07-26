@@ -203,7 +203,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
     public List<CustomerDetailBO> listCustomerDetail(CustomerDetailDTO customerDetailDTO) throws SerException {
         checkSeeIdentity("1");
 
-        customerDetailDTO.getSorts().add("createTime=desc");
+        customerDetailDTO.getSorts().add("sortWord=desc");
         List<CustomerDetail> list = super.findByCis(customerDetailDTO, true);
         List<CustomerDetailBO> customerDetailBOArrayList = new ArrayList<>();
         for (CustomerDetail str : list) {
@@ -223,23 +223,23 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
         }
         List<CustomerDetailBO> boList = BeanTransform.copyProperties(customerDetailBOArrayList, CustomerDetailBO.class);
 
-        if( boList != null && boList.size()>0 ){
-            Collections.sort(boList,new Comparator<CustomerDetailBO>(){
-                @Override
-                public int compare(CustomerDetailBO o1, CustomerDetailBO o2) {
-                    int o1Num = Integer.parseInt(o1.getCustomerNum().substring(4,o1.getCustomerNum().length()));
-                    int o2Num = Integer.parseInt(o2.getCustomerNum().substring(4,o2.getCustomerNum().length()));
-                    if( o1Num < o2Num ){
-                        return -1;
-                    }else if( o1Num == o2Num ){
-                        return 0;
-                    }else {
-                        return 1;
-                    }
-                }
-
-            });
-        }
+//        if( boList != null && boList.size()>0 ){
+//            Collections.sort(boList,new Comparator<CustomerDetailBO>(){
+//                @Override
+//                public int compare(CustomerDetailBO o1, CustomerDetailBO o2) {
+//                    int o1Num = Integer.parseInt(o1.getCustomerNum().substring(4,o1.getCustomerNum().length()));
+//                    int o2Num = Integer.parseInt(o2.getCustomerNum().substring(4,o2.getCustomerNum().length()));
+//                    if( o1Num < o2Num ){
+//                        return 1;
+//                    }else if( o1Num == o2Num ){
+//                        return 0;
+//                    }else {
+//                        return -1;
+//                    }
+//                }
+//
+//            });
+//        }
 
         return boList;
     }
@@ -248,8 +248,10 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
     @Override
     public CustomerDetailBO addCustomerDetail(CustomerDetailTO customerDetailTO) throws SerException {
         //商务模块添加权限
-        checkAddIdentity("4");
-
+//        checkAddIdentity("4");
+        if( StringUtils.isBlank( customerDetailTO.getCustomerNum())){
+            throw new SerException("客户编号不能为空");
+        }
         String baseInfoNum = customerDetailTO.getCustomerNum();
         CustomerBaseInfoDTO baseInfoDTO = new CustomerBaseInfoDTO();
         baseInfoDTO.getConditions().add(Restrict.eq("customerNum", baseInfoNum));
@@ -258,6 +260,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
         CustomerDetail customerDetail = BeanTransform.copyProperties(customerDetailTO, CustomerDetail.class, true);
         customerDetail.setCreateTime(LocalDateTime.now());
         customerDetail.setCustomerBaseInfo(baseInfo);
+        customerDetail.setSortWord( Double.parseDouble(baseInfoNum.substring(4, baseInfoNum.length())) );
         customerDetail = super.save(customerDetail);
 
         //添加家庭信息4条家庭信息

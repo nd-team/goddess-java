@@ -1,9 +1,9 @@
 package com.bjike.goddess.businsurance.config;
 
-import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.businsurance.api.CusPermissionAPI;
-import com.bjike.goddess.businsurance.to.CusPermissionTO;
 import com.bjike.goddess.businsurance.enums.CusPermissionType;
+import com.bjike.goddess.businsurance.to.CusPermissionTO;
+import com.bjike.goddess.common.api.exception.SerException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -11,7 +11,12 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -85,6 +90,7 @@ public class PermissionConfig {
         //插入数据库
         List<CusPermissionTO> listTO = new ArrayList<>();
         if (descList.size() != idList.size() && descList.size() != typeList.size()) {
+
             return;
         }
         for (int i = 0; i < descList.size(); i++) {

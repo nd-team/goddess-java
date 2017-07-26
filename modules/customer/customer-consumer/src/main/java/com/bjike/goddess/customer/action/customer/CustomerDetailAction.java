@@ -175,6 +175,7 @@ public class CustomerDetailAction  extends BaseFileAction {
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
+//        return null;
     }
 
 

@@ -37,4 +37,5 @@
 	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
 
 
+
 </beans>

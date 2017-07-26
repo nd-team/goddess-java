@@ -17,6 +17,7 @@ import com.bjike.goddess.customer.entity.CustomerLevel;
 import com.bjike.goddess.customer.enums.CustomerSex;
 import com.bjike.goddess.customer.enums.GuideAddrStatus;
 import com.bjike.goddess.customer.to.CustomerBaseInfoTO;
+import com.bjike.goddess.customer.to.CustomerDetailTO;
 import com.bjike.goddess.customer.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -259,6 +260,12 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
                     Double.parseDouble(customerBaseInfoTO.getCustomerNum().substring(5, customerBaseInfoTO.getCustomerNum().length())));
 
             super.save(customerBaseInfo);
+
+            //添加客户详细信息
+            CustomerDetailTO customerDetailTO = new CustomerDetailTO();
+            customerDetailTO.setCustomerNum( customerBaseInfo.getCustomerNum() );
+            customerDetailAPI.addCustomerDetail( customerDetailTO );
+
             return BeanTransform.copyProperties(customerBaseInfoTO, CustomerBaseInfoBO.class);
         }
     }
