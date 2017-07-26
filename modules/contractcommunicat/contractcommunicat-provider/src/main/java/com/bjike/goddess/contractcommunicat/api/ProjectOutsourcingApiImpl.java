@@ -58,7 +58,7 @@ public class ProjectOutsourcingApiImpl implements ProjectOutsourcingAPI {
 
     @Override
     public void setCollectSend(QuartzCycleType cycleType) throws SerException {
-        throw new SerException("该功能尚未添加。");
+        projectOutsourcingSer.setCollectSend(cycleType);
     }
 
     @Override

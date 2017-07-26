@@ -3,10 +3,7 @@ package com.bjike.goddess.oilcardmanage;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.*;
 
 import java.io.IOException;
 
@@ -15,6 +12,7 @@ import java.io.IOException;
 		excludeFilters = {@ComponentScan.Filter(
 				type = FilterType.ANNOTATION,
 				value = {Configuration.class})})
+@PropertySource(value = {"classpath:permission.properties"},encoding="utf-8")
 @ImportResource({"classpath:app.xml"})
 public class Application {
 

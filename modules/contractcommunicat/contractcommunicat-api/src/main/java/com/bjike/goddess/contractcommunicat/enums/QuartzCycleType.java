@@ -32,15 +32,8 @@ public enum QuartzCycleType {
     /**
      * 日
      */
-    DAY(4),
-    /**
-     * 时
-     */
-    HOUR(5),
-    /**
-     * 分
-     */
-    MINUTE(6);
+    DAY(4);
+
 
 
     private int code;

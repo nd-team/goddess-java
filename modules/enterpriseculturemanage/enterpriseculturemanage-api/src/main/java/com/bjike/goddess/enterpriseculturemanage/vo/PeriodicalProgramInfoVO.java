@@ -1,6 +1,7 @@
 package com.bjike.goddess.enterpriseculturemanage.vo;
 
 import com.bjike.goddess.enterpriseculturemanage.enums.AuditResult;
+import com.bjike.goddess.enterpriseculturemanage.enums.PublicizeWay;
 
 /**
  * 刊物方案信息表现层对象
@@ -35,7 +36,7 @@ public class PeriodicalProgramInfoVO {
     /**
      * 发刊形式
      */
-    private String way;
+    private PublicizeWay way;
 
     /**
      * 发刊规格
@@ -114,11 +115,11 @@ public class PeriodicalProgramInfoVO {
         this.ida = ida;
     }
 
-    public String getWay() {
+    public PublicizeWay getWay() {
         return way;
     }
 
-    public void setWay(String way) {
+    public void setWay(PublicizeWay way) {
         this.way = way;
     }
 

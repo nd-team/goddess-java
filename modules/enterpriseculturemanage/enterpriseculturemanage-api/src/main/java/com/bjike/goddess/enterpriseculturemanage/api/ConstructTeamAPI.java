@@ -6,6 +6,7 @@ import com.bjike.goddess.enterpriseculturemanage.dto.ConstructTeamDTO;
 import com.bjike.goddess.enterpriseculturemanage.excel.SonPermissionObject;
 import com.bjike.goddess.enterpriseculturemanage.to.ConstructTeamTO;
 import com.bjike.goddess.enterpriseculturemanage.to.GuidePermissionTO;
+import com.bjike.goddess.user.entity.User;
 
 import java.util.List;
 
@@ -68,4 +69,14 @@ public interface ConstructTeamAPI {
     ConstructTeamBO findById(String id) throws SerException;
 
     Long count(ConstructTeamDTO dto) throws SerException;
+
+    /**
+     * 根据工号来查询用户所有信息
+     * @param number
+     * @return
+     * @throws SerException
+     */
+    default List<User> findByJobNumber(String number) throws SerException{
+        return null;
+    }
 }

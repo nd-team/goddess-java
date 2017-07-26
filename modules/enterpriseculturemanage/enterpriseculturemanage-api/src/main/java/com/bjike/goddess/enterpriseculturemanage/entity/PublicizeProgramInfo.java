@@ -55,8 +55,8 @@ public class PublicizeProgramInfo extends BaseEntity {
     /**
      * 执行费用
      */
-    @Column(name = "executeCost", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '执行费用'")
-    private String executeCost;
+    @Column(name = "executeCost", nullable = false, columnDefinition = "Double(10,2)   COMMENT '执行费用'")
+    private Double executeCost;
 
     /**
      * 审核结果
@@ -116,11 +116,11 @@ public class PublicizeProgramInfo extends BaseEntity {
         this.executeCycle = executeCycle;
     }
 
-    public String getExecuteCost() {
+    public Double getExecuteCost() {
         return executeCost;
     }
 
-    public void setExecuteCost(String executeCost) {
+    public void setExecuteCost(Double executeCost) {
         this.executeCost = executeCost;
     }
 
