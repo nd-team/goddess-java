@@ -95,6 +95,10 @@ public interface CommonalityAPI {
         return null;
     }
 
+    default List<CommonalityBO> findAll() throws SerException {
+        return null;
+    }
+
     /**
      * 根据部门ID查询公共邮箱
      *
@@ -155,4 +159,5 @@ public interface CommonalityAPI {
     default byte[] templateExport() throws SerException {
         return null;
     }
+
 }

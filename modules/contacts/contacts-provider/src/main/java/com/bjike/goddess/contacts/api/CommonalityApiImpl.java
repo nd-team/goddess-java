@@ -62,6 +62,11 @@ public class CommonalityApiImpl implements CommonalityAPI {
     }
 
     @Override
+    public List<CommonalityBO> findAll() throws SerException {
+        return commonalitySer.findAlls();
+    }
+
+    @Override
     public CommonalityBO findByDepartment(String department) throws SerException {
         return commonalitySer.findByDepartment(department);
     }

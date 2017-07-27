@@ -7,6 +7,7 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.contacts.bo.InternalContactsBO;
 import com.bjike.goddess.contacts.bo.NameAndIdBO;
 import com.bjike.goddess.contacts.dto.InternalContactsDTO;
@@ -112,13 +113,17 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         UserDTO userDTO = new UserDTO();
         EntryBasicInfoDTO entryBasicInfoDTO = new EntryBasicInfoDTO();
         entryBasicInfoDTO.getConditions().add(Restrict.eq(ID, entity.getUserId()));
+        String userToken = RpcTransmit.getUserToken();
         List<EntryBasicInfoBO> user = entryBasicInfoAPI.listEntryBasicInfo(entryBasicInfoDTO);
+        RpcTransmit.transmitUserToken(userToken);
 
         if (null != user) {
             if (0 != user.size()) {
                 bo.setUsername(user.get(0).getName());
                 bo.setNumber(user.get(0).getEmployeeID());
+                userToken = RpcTransmit.getUserToken();
                 PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.get(0).getId());
+                RpcTransmit.transmitUserToken(userToken);
                 bo.setArea(user.get(0).getArea());
                 bo.setPosition(user.get(0).getPosition());
                 bo.setDepartment(user.get(0).getDepartment());
@@ -151,6 +156,11 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
     @Transactional(rollbackFor = SerException.class)
     @Override
     public InternalContactsBO save(InternalContactsTO to) throws SerException {
+        if (StringUtils.isNotBlank(to.getEmail())) {
+            if (!Validator.isEmail(to.getEmail())) {
+                throw new SerException("输入的邮箱格式不正确");
+            }
+        }
         InternalContacts entity = BeanTransform.copyProperties(to, InternalContacts.class);
         InternalContactsDTO dto = new InternalContactsDTO();
         dto.getConditions().add(Restrict.eq("userId", to.getUserId()));
@@ -159,7 +169,8 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
 
         entity.setStatus(Status.CONGEAL);
         super.save(entity);
-
+        String [] emails = new String[1];
+        emails[0] = to.getEmail();
         if (to.isSend()) {
             //发送邮件测试邮箱是否有误
             MessageTO messageTO = new MessageTO();
@@ -168,7 +179,7 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
             messageTO.setContent("测试,收到此邮箱信息请回复,谢谢");
             messageTO.setSendType(SendType.EMAIL);
             messageTO.setRangeType(RangeType.SPECIFIED);
-            messageTO.setReceivers(to.getEmail().split(";"));
+            messageTO.setReceivers(emails);
             messageAPI.send(messageTO);
         }
         return this.transformBO(entity);
@@ -470,6 +481,8 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
 
     @Override
     public List<NameAndIdBO> getUserName() throws SerException {
+        String token = RpcTransmit.getUserToken();
+        RpcTransmit.transmitUserToken(token);
         EntryBasicInfoDTO entryBasicInfoDTO = new EntryBasicInfoDTO();
         List<EntryBasicInfoBO> bos = entryBasicInfoAPI.listEntryBasicInfo(entryBasicInfoDTO);
         List<NameAndIdBO> userNameList = new ArrayList<>();
@@ -481,6 +494,7 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
                 userNameList.add(nameAndIdBO);
             }
         }
+
         return userNameList;
     }
 

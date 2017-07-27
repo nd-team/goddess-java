@@ -97,6 +97,10 @@ public interface CommonalitySer extends Ser<Commonality, CommonalityDTO> {
         return null;
     }
 
+    default List<CommonalityBO> findAlls() throws SerException {
+        return null;
+    }
+
     /**
      * 根据部门ID查询公共邮箱
      *

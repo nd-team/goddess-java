@@ -71,7 +71,7 @@ public class QQGroupAct extends BaseFileAction{
     @PutMapping("v1/update/{id}")
     public Result update(@Validated(EDIT.class) QQGroupTO to, BindingResult result) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qqGroupAPI.save(to), QQGroupVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(qqGroupAPI.update(to), QQGroupVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -87,7 +87,7 @@ public class QQGroupAct extends BaseFileAction{
     @DeleteMapping("v1/delete/{id}")
     public Result delete(QQGroupTO to) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qqGroupAPI.update(to), QQGroupVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(qqGroupAPI.delete(to), QQGroupVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -103,7 +103,7 @@ public class QQGroupAct extends BaseFileAction{
     @PutMapping("v1/close/{id}")
     public Result close(QQGroupTO to) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qqGroupAPI.delete(to), QQGroupVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(qqGroupAPI.close(to), QQGroupVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
