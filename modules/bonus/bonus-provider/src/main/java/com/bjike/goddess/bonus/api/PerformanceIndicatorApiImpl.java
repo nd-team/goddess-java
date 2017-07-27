@@ -2,7 +2,9 @@ package com.bjike.goddess.bonus.api;
 
 import com.bjike.goddess.bonus.bo.PerformanceIndicatorBO;
 import com.bjike.goddess.bonus.dto.PerformanceIndicatorDTO;
+import com.bjike.goddess.bonus.excel.SonPermissionObject;
 import com.bjike.goddess.bonus.service.PerformanceIndicatorSer;
+import com.bjike.goddess.bonus.to.GuidePermissionTO;
 import com.bjike.goddess.bonus.to.PerformanceIndicatorTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,16 @@ public class PerformanceIndicatorApiImpl implements PerformanceIndicatorAPI {
 
     @Autowired
     private PerformanceIndicatorSer performanceIndicatorSer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return performanceIndicatorSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return performanceIndicatorSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public PerformanceIndicatorBO save(PerformanceIndicatorTO to) throws SerException {

@@ -5,6 +5,7 @@ import com.bjike.goddess.bonus.dto.DisciplineRecordDTO;
 import com.bjike.goddess.bonus.service.DisciplineRecordSer;
 import com.bjike.goddess.bonus.to.CollectFilterTO;
 import com.bjike.goddess.bonus.to.DisciplineRecordTO;
+import com.bjike.goddess.bonus.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,16 @@ public class DisciplineRecordApiImpl implements DisciplineRecordAPI {
 
     @Autowired
     private DisciplineRecordSer disciplineRecordSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return disciplineRecordSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return disciplineRecordSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public DisciplineRecordBO save(DisciplineRecordTO to) throws SerException {

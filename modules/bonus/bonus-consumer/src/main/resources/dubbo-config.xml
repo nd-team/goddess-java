@@ -18,7 +18,19 @@
     <!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
     <dubbo:reference interface="com.bjike.goddess.bonus.api.DisciplineRecordAPI" id="disciplineRecordApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.bonus.api.PerformanceIndicatorAPI" id="performanceIndicatorApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.bonus.api.CusPermissionAPI" id="cusPermissionApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.bonus.api.CusPermissionOperateAPI" id="cusPermissionOperateApiImpl"/>
+
 
     <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+
+    <dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+    <dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+    <dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+    <dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+    <dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
+    <dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+    <dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
+    <dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
 
 </beans>
