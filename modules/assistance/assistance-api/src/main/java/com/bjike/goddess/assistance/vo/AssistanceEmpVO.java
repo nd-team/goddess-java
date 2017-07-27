@@ -85,7 +85,6 @@ public class AssistanceEmpVO {
      */
     private String modifyTime;
 
-
     public String getId() {
         return id;
     }

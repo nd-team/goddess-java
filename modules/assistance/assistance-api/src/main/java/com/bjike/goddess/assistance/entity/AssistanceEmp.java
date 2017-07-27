@@ -2,7 +2,9 @@ package com.bjike.goddess.assistance.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDate;
 
 
@@ -22,31 +24,31 @@ public class AssistanceEmp extends BaseEntity {
     /**
      * 补助方案序号
      */
-    @Column(name = "planNumber",  columnDefinition = "VARCHAR(255)   COMMENT '补助方案序号'")
+    @Column(name = "planNumber", columnDefinition = "VARCHAR(255)   COMMENT '补助方案序号'")
     private String planNumber;
 
     /**
      * 补助类型名称
      */
-    @Column(name = "assistName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '补助类型名称'")
+    @Column(name = "assistName", columnDefinition = "VARCHAR(255)   COMMENT '补助类型名称'")
     private String assistName;
 
     /**
      * 补助内容
      */
-    @Column(name = "assistContent",  columnDefinition = "VARCHAR(255)   COMMENT '补助内容'")
+    @Column(name = "assistContent", columnDefinition = "VARCHAR(255)   COMMENT '补助内容'")
     private String assistContent;
 
     /**
      * 内容明细
      */
-    @Column(name = "contentDetail",  columnDefinition = "VARCHAR(255)   COMMENT '内容明细'")
+    @Column(name = "contentDetail", columnDefinition = "VARCHAR(255)   COMMENT '内容明细'")
     private String contentDetail;
 
     /**
      * 获得补助的开始时间
      */
-    @Column(name = "recieveStartTime",  columnDefinition = "DATE   COMMENT '获得补助的开始时间'")
+    @Column(name = "recieveStartTime", columnDefinition = "DATE   COMMENT '获得补助的开始时间'")
     private LocalDate recieveStartTime;
 
     /**
@@ -88,7 +90,7 @@ public class AssistanceEmp extends BaseEntity {
     /**
      * 入职时间
      */
-    @Column(name = "entryJobTime",  columnDefinition = "DATE  COMMENT '入职时间'")
+    @Column(name = "entryJobTime", columnDefinition = "DATE  COMMENT '入职时间'")
     private LocalDate entryJobTime;
 
     public String getPlanNumber() {

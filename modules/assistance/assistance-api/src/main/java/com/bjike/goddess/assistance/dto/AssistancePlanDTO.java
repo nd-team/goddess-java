@@ -20,7 +20,7 @@ public class AssistancePlanDTO extends BaseDTO {
     /**
      * 方案序号
      */
-    @NotBlank(message = "方案序号不能为空")
+    @NotBlank(groups = {AssistancePlanDTO.TestQueryByNum.class},message = "方案序号不能为空")
     private String planNum;
 
     /**

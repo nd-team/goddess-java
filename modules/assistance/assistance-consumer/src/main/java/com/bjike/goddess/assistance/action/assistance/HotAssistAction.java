@@ -3,8 +3,11 @@ package com.bjike.goddess.assistance.action.assistance;
 import com.bjike.goddess.assistance.api.HotAssistAPI;
 import com.bjike.goddess.assistance.bo.HotAssistBO;
 import com.bjike.goddess.assistance.dto.HotAssistDTO;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.to.HotAssistTO;
 import com.bjike.goddess.assistance.vo.HotAssistVO;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -16,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -34,6 +38,29 @@ public class HotAssistAction {
 
     @Autowired
     private HotAssistAPI hotAssistAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = hotAssistAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      *  高温补助列表总条数
@@ -99,7 +126,7 @@ public class HotAssistAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result addHotAssist(@Validated HotAssistTO hotAssistTO, BindingResult bindingResult) throws ActException {
+    public Result addHotAssist(@Validated(ADD.class) HotAssistTO hotAssistTO, BindingResult bindingResult) throws ActException {
         try {
             HotAssistBO hotAssistBO1 = hotAssistAPI.addHotAssist(hotAssistTO);
             return ActResult.initialize(BeanTransform.copyProperties(hotAssistBO1,HotAssistVO.class,true));
@@ -119,7 +146,7 @@ public class HotAssistAction {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result editHotAssist(@Validated HotAssistTO hotAssistTO) throws ActException {
+    public Result editHotAssist(@Validated(EDIT.class) HotAssistTO hotAssistTO) throws ActException {
         try {
             HotAssistBO hotAssistBO1 = hotAssistAPI.editHotAssist(hotAssistTO);
             return ActResult.initialize(BeanTransform.copyProperties(hotAssistBO1,HotAssistVO.class,true));

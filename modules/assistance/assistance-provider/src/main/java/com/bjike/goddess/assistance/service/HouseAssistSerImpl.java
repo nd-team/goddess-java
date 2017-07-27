@@ -149,15 +149,6 @@ public class HouseAssistSerImpl extends ServiceImpl<HouseAssist, HouseAssistDTO>
             case SEE:
                 flag = guideSeeIdentity();
                 break;
-            case UPLOAD:
-                flag = guideAddIdentity();
-                break;
-            case DOWNLOAD:
-                flag = guideAddIdentity();
-                break;
-            case SEEFILE:
-                flag = guideSeeIdentity();
-                break;
             default:
                 flag = true;
                 break;
@@ -185,10 +176,10 @@ public class HouseAssistSerImpl extends ServiceImpl<HouseAssist, HouseAssistDTO>
 
     @Override
     public HouseAssistBO getOneById(String id) throws SerException {
-        if (StringUtils.isBlank(id)){
+        if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
-        HouseAssist list = super.findById(id  );
+        HouseAssist list = super.findById(id);
 
         return BeanTransform.copyProperties(list, HouseAssistBO.class);
     }
@@ -215,21 +206,23 @@ public class HouseAssistSerImpl extends ServiceImpl<HouseAssist, HouseAssistDTO>
     @Override
     public HouseAssistBO addHouseAssist(HouseAssistTO houseAssistTO) throws SerException {
         checkAddIdentity();
-        if( houseAssistTO.getOutDays()==null || houseAssistTO.getOutDays().isNaN()){
+        if (houseAssistTO.getOutDays() == null || houseAssistTO.getOutDays().isNaN()) {
             throw new SerException("外宿天数不能为空，且只能是数字");
         }
 
         HouseAssist houseAssist = BeanTransform.copyProperties(houseAssistTO, HouseAssist.class, true);
 
         //住宿补助额度   200×（外术天数/计薪周期(开始/结束相减总天数）
-        if(StringUtils.isNotBlank(houseAssistTO.getSalaryStartTime())
-                || StringUtils.isNotBlank(houseAssistTO.getSalaryEndTime())){
-            throw  new SerException("计薪开始时间和结束时间不能为空");
+        if (StringUtils.isBlank(houseAssistTO.getSalaryStartTime())
+                || StringUtils.isBlank(houseAssistTO.getSalaryEndTime())) {
+            throw new SerException("计薪开始时间和结束时间不能为空");
         }
         //设置钱
-        Long day = houseAssist.getSalaryEndTime().toEpochDay()-houseAssist.getSalaryStartTime().toEpochDay();
-        Double money = houseAssistTO.getOutDays()*(houseAssistTO.getOutDays()/day);
-        houseAssist.setMoney( money );
+        Long day = houseAssist.getSalaryEndTime().toEpochDay() - houseAssist.getSalaryStartTime().toEpochDay();
+        Double money = houseAssistTO.getOutDays() * (houseAssistTO.getOutDays() / day);
+        if (!(money.isInfinite() || money.isInfinite())) {
+            houseAssist.setMoney(money);
+        }
 
         houseAssist.setCreateTime(LocalDateTime.now());
         super.save(houseAssist);
@@ -244,7 +237,7 @@ public class HouseAssistSerImpl extends ServiceImpl<HouseAssist, HouseAssistDTO>
         if (StringUtils.isBlank(houseAssistTO.getId())) {
             throw new SerException("id不能为空");
         }
-        if( houseAssistTO.getOutDays()==null || houseAssistTO.getOutDays().isNaN()){
+        if (houseAssistTO.getOutDays() == null || houseAssistTO.getOutDays().isNaN()) {
             throw new SerException("外宿天数不能为空，且只能是数字");
         }
 
@@ -252,14 +245,16 @@ public class HouseAssistSerImpl extends ServiceImpl<HouseAssist, HouseAssistDTO>
         HouseAssist rs = super.findById(houseAssistTO.getId());
 
         //住宿补助额度   200×（外术天数/计薪周期(开始/结束相减总天数）
-        if(StringUtils.isNotBlank(houseAssistTO.getSalaryStartTime())
-                || StringUtils.isNotBlank(houseAssistTO.getSalaryEndTime())){
-            throw  new SerException("计薪开始时间和结束时间不能为空");
+        if (StringUtils.isBlank(houseAssistTO.getSalaryStartTime())
+                || StringUtils.isBlank(houseAssistTO.getSalaryEndTime())) {
+            throw new SerException("计薪开始时间和结束时间不能为空");
         }
         //设置钱
-        Long day = houseAssist.getSalaryEndTime().toEpochDay()-houseAssist.getSalaryStartTime().toEpochDay();
-        Double money = houseAssistTO.getOutDays()*(houseAssistTO.getOutDays()/day);
-        rs.setMoney( money );
+        Long day = houseAssist.getSalaryEndTime().toEpochDay() - houseAssist.getSalaryStartTime().toEpochDay();
+        Double money = houseAssistTO.getOutDays() * (houseAssistTO.getOutDays() / day);
+        if (!(money.isInfinite() || money.isInfinite())) {
+            rs.setMoney(money);
+        }
 
         rs.setEmpName(houseAssist.getEmpName());
         rs.setModifyTime(LocalDateTime.now());
@@ -278,6 +273,4 @@ public class HouseAssistSerImpl extends ServiceImpl<HouseAssist, HouseAssistDTO>
     }
 
 
-
-    
 }

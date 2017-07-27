@@ -4,6 +4,7 @@ import com.bjike.goddess.assistance.api.AssistanceStandardAPI;
 import com.bjike.goddess.assistance.bo.AssistanceStandardBO;
 import com.bjike.goddess.assistance.dto.AssistanceStandardDTO;
 import com.bjike.goddess.assistance.to.AssistanceStandardTO;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.vo.AssistanceStandardVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -16,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -35,6 +37,29 @@ public class AssistanceStandardAction {
 
     @Autowired
     private AssistanceStandardAPI assistanceStandardAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = assistanceStandardAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      *  补助标准列表总条数
@@ -156,14 +181,14 @@ public class AssistanceStandardAction {
      * @version v1
      */
     @LoginAuth
-    @DeleteMapping("v1/getAgeStands")
-    public Result getAgeStands( ) throws ActException {
+    @GetMapping("v1/getAgeStands")
+    public Result getAgeStands( HttpServletRequest request) throws ActException {
         try {
             List<AssistanceStandardVO> list = BeanTransform.copyProperties(
                     assistanceStandardAPI.getAgeStands( ) ,AssistanceStandardVO.class);
-            return new ActResult("delete success!");
+            return ActResult.initialize(BeanTransform.copyProperties(list,AssistanceStandardVO.class,request));
         } catch (SerException e) {
-            throw new ActException("删除失败："+e.getMessage());
+            throw new ActException(e.getMessage());
         }
     }
 

@@ -282,15 +282,6 @@ public class AgeAssistSerImpl extends ServiceImpl<AgeAssist, AgeAssistDTO> imple
             case SEE:
                 flag = guideSeeIdentity();
                 break;
-            case UPLOAD:
-                flag = guideAddIdentity();
-                break;
-            case DOWNLOAD:
-                flag = guideAddIdentity();
-                break;
-            case SEEFILE:
-                flag = guideSeeIdentity();
-                break;
             default:
                 flag = true;
                 break;
@@ -385,7 +376,4 @@ public class AgeAssistSerImpl extends ServiceImpl<AgeAssist, AgeAssistDTO> imple
         }
         super.remove(id);
     }
-
-    @Override
-    public List<AgeAssistBO>
 }

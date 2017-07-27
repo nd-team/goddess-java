@@ -1,5 +1,7 @@
 package com.bjike.goddess.assistance.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -82,12 +84,13 @@ public class HotAssistTO extends BaseTO {
     /**
      * 高温补贴金额(6.9元/天)(有/无)
      */
+    @NotBlank(groups = {ADD.class, EDIT.class},message = "高温补贴金额(6.9元/天)(有/无)不能为空")
     private String moneyCondition;
 
     /**
      * 物资发放(有/无)
      */
-    @NotBlank(message = "物资发放(有/无)不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class},message = "物资发放(有/无)不能为空")
     private String thingCondtion;
 
     /**

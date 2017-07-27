@@ -275,7 +275,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     @Override
     public VoucherGenerateBO getByIdCJh(String id) throws SerException {
         VoucherGenerate vg = super.findById(id);
-        if (vg==null){
+        if (vg == null) {
             return null;
         }
         VoucherGenerateBO bo = BeanTransform.copyProperties(vg, VoucherGenerateBO.class);
@@ -307,13 +307,12 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
         List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
         List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        if( listBO != null && listBO.size()>0 ){
+        if (listBO != null && listBO.size() > 0) {
             for (VoucherGenerateBO str : listBO) {
                 VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
                 str.setMoneyTotal(vt.getMoney());
             }
         }
-
 
 
         return listBO;
@@ -530,9 +529,11 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
         List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
         List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        for (VoucherGenerateBO str : listBO) {
-            VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
-            str.setMoneyTotal(vt.getMoney());
+        if (listBO != null) {
+            for (VoucherGenerateBO str : listBO) {
+                VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
+                str.setMoneyTotal(vt.getMoney());
+            }
         }
 
 
@@ -638,11 +639,12 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         voucherGenerateDTO.getSorts().add("createTime=desc");
         List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
         List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        for (VoucherGenerateBO str : listBO) {
-            VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
-            str.setMoneyTotal(vt.getMoney());
+        if (listBO != null) {
+            for (VoucherGenerateBO str : listBO) {
+                VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
+                str.setMoneyTotal(vt.getMoney());
+            }
         }
-
 
         return listBO;
     }
@@ -879,11 +881,12 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         voucherGenerateDTO.getSorts().add("totalId=desc");
         List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
         List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        for (VoucherGenerateBO str : listBO) {
-            VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
-            str.setMoneyTotal(vt.getMoney());
+        if (listBO != null) {
+            for (VoucherGenerateBO str : listBO) {
+                VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
+                str.setMoneyTotal(vt.getMoney());
+            }
         }
-
 
         return listBO;
     }
@@ -1129,9 +1132,11 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         voucherGenerateDTO.getSorts().add("voucherDate=desc");
         List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
         List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        for (VoucherGenerateBO str : listBO) {
-            VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
-            str.setMoneyTotal(vt.getMoney());
+        if (listBO != null) {
+            for (VoucherGenerateBO str : listBO) {
+                VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
+                str.setMoneyTotal(vt.getMoney());
+            }
         }
 
 
@@ -1338,11 +1343,12 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         voucherGenerateDTO.getSorts().add("totalId=desc");
         List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
         List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        for (VoucherGenerateBO str : listBO) {
-            VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
-            str.setMoneyTotal(vt.getMoney());
+        if (listBO != null) {
+            for (VoucherGenerateBO str : listBO) {
+                VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
+                str.setMoneyTotal(vt.getMoney());
+            }
         }
-
 
         return listBO;
     }
@@ -1679,14 +1685,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         for (int i = 0; i < conditions.length; i++) {
             sql += " select sum(borrowMoney+loanMoney) as money from voucher_vouchergenerate where " +
                     " secondSubject ='" + conditions[i] + "' or thirdSubject ='" + conditions[i] + "'";
-            if ( i < conditions.length - 1) {
+            if (i < conditions.length - 1) {
                 sql += " UNION ";
             }
         }
         System.out.println(sql);
         List<PartBO> list = super.findBySql(sql, PartBO.class, fields);
         if (list != null && list.size() > 0) {
-            for(int i=0;i<list.size();i++){
+            for (int i = 0; i < list.size(); i++) {
                 list.get(i).setName(conditions[i]);
             }
         }

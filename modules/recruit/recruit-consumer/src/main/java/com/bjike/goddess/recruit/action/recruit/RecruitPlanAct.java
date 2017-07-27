@@ -109,7 +109,7 @@ public class RecruitPlanAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(@Validated RecruitPlanDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result list(RecruitPlanDTO dto,HttpServletRequest request) throws ActException {
         try {
             List<RecruitPlanBO> boList = recruitPlanAPI.list(dto);
             List<RecruitPlanVO> voList = BeanTransform.copyProperties(boList, RecruitPlanVO.class, request);

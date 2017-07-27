@@ -1,6 +1,11 @@
 package com.bjike.goddess.assistance.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 公司员工补助信息记录
@@ -16,6 +21,7 @@ public class AssistanceRecordTO extends BaseTO {
     /**
      * 员工名称
      */
+    @NotBlank(groups = {ADD.class, EDIT.class},message = "员工名称不能为空")
     private String empName;
 
     /**
@@ -101,6 +107,7 @@ public class AssistanceRecordTO extends BaseTO {
     /**
      * 本人是否已领补助(是/否)
      */
+    @NotNull(groups = {ADD.class, EDIT.class},message = "本人是否已领补助(是/否)不能为空")
     private String recieveCondition;
 
     /**
