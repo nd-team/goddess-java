@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.secure.bo.PayDetailBO;
 import com.bjike.goddess.secure.dto.PayDetailDTO;
 import com.bjike.goddess.secure.entity.PayDetail;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
 import com.bjike.goddess.secure.to.PayDetailTO;
 
 import java.util.List;
@@ -19,6 +20,15 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface PayDetailSer extends Ser<PayDetail, PayDetailDTO> {
+    /**
+     * 下拉导航权限
+     */
+    Boolean sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
     /**
      * 添加
      *

@@ -5,15 +5,16 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.managementpromotion.api.GradeLevelAPI;
 import com.bjike.goddess.managementpromotion.api.PromotionApplyAPI;
 import com.bjike.goddess.managementpromotion.bo.PromotionApplyBO;
 import com.bjike.goddess.managementpromotion.dto.PromotionApplyDTO;
+import com.bjike.goddess.managementpromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managementpromotion.to.PromotionApplyTO;
 import com.bjike.goddess.managementpromotion.vo.PromotionApplyVO;
+import com.bjike.goddess.regularization.api.RegularizationAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -39,6 +40,31 @@ public class PromotionApplyAct {
     private PromotionApplyAPI promotionApplyAPI;
     @Autowired
     private GradeLevelAPI gradeLevelAPI;
+    @Autowired
+    private RegularizationAPI regularizationAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = promotionApplyAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 管理等级晋升申请列表总条数
@@ -100,7 +126,7 @@ public class PromotionApplyAct {
      * @return class PromotionApplyVO
      * @version v1
      */
-  //  @LoginAuth
+    //  @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated(ADD.class) PromotionApplyTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
@@ -119,7 +145,7 @@ public class PromotionApplyAct {
      * @des 编辑管理等级晋升申请信息
      * @version v1
      */
-  //  @LoginAuth
+    //  @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated(EDIT.class) PromotionApplyTO to, BindingResult bindingResult) throws ActException {
         try {
@@ -137,7 +163,7 @@ public class PromotionApplyAct {
      * @des 根据用户id删除管理等级晋升申请信息记录
      * @version v1
      */
-   // @LoginAuth
+    // @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -155,9 +181,9 @@ public class PromotionApplyAct {
      * @throws ActException
      * @version v1
      */
-  //  @LoginAuth
+    //  @LoginAuth
     @PatchMapping("v1/conform")
-        public Result conform(@Validated(PromotionApplyTO.Conform.class) PromotionApplyTO to, BindingResult bindingResult) throws ActException {
+    public Result conform(@Validated(PromotionApplyTO.Conform.class) PromotionApplyTO to, BindingResult bindingResult) throws ActException {
         try {
             promotionApplyAPI.conform(to);
             return new ActResult("填写成功!");
@@ -295,6 +321,22 @@ public class PromotionApplyAct {
     public Result allHierarchys() throws ActException {
         try {
             Set<String> set = gradeLevelAPI.allHierarchys();
+            return ActResult.initialize(set);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有员工编号
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/allNum")
+    public Result allNum() throws ActException {
+        try {
+            Set<String> set = regularizationAPI.allNum();
             return ActResult.initialize(set);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

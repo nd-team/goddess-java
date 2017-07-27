@@ -478,48 +478,52 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     /**
      * chenjunhao
      * 查询所有一级科目为销售费用的记录
+     *
      * @return class VoucherGenerateBO
      * @throws SerException
      */
-    default List<VoucherGenerateBO> allSales() throws SerException{
+    default List<VoucherGenerateBO> allSales() throws SerException {
         return null;
     }
 
     /**
      * xiazhili
      * 在已过账记录里面根据二级或三级统计金额
+     *
      * @return class PartBO
      * @throws SerException
      */
-    default List<PartBO> findByCondition(String[] conditions ) throws SerException{
+    default List<PartBO> findByCondition(String[] conditions) throws SerException {
         return null;
     }
-
 
 
     /**
      * xiazhili
      * 在资金和对里面根据一级和二级和三级统计借方金额和贷方金额
+     *
      * @return class PartOptionBO
      * @throws SerException
      */
-    default PartOptionBO findMoneyByCondition(String first, String second, String third ) throws SerException{
+    default PartOptionBO findMoneyByCondition(String first, String second, String third) throws SerException {
         return null;
     }
 
 
     /**
      * 地区分析
-     * @param year 年份
+     *
+     * @param year  年份
      * @param month 月份
-     * @param area 地区
+     * @param area  地区
      * @return 分页结果集
      */
     List<VoucherGenerateBO> areaAnalyze(Integer year, Integer month, String area) throws SerException;
 
     /**
      * 项目组分析
-     * @param year 年份
+     *
+     * @param year  年份
      * @param month 月份
      * @param group 地区
      * @return 分页结果集
@@ -528,8 +532,9 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
 
     /**
      * 项目分析
-     * @param year 年份
-     * @param month 月份
+     *
+     * @param year    年份
+     * @param month   月份
      * @param project 地区
      * @return 分页结果集
      */
@@ -537,16 +542,18 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
 
     /**
      * 导出Excel
+     *
      * @param dto
      * @throws SerException
      */
-    byte[] exportExcel(VoucherGenerateExportDTO dto ) throws SerException;
+    byte[] exportExcel(VoucherGenerateExportDTO dto) throws SerException;
 
     /**
      * 导出Excel导入模板
+     *
      * @throws SerException
      */
-    byte[] templateExport(  ) throws SerException;
+    byte[] templateExport() throws SerException;
 
 
     /**
@@ -560,6 +567,12 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     }
 
 
-
-
+    /**
+     * chenjunhao
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    VoucherGenerateBO getByIdCJh(String id) throws SerException;
 }

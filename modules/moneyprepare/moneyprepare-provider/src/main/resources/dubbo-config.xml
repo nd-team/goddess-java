@@ -41,6 +41,7 @@
 	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
 	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
 	<dubbo:reference  validation="true" id="firstSubjectApiImpl" interface="com.bjike.goddess.financeinit.api.FirstSubjectAPI" />
+	<dubbo:reference  validation="true" id="categoryApiImpl" interface="com.bjike.goddess.financeinit.api.CategoryAPI" />
 
 	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.moneyprepare.api.CusPermissionAPI" />
 	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.moneyprepare.api.CusPermissionOperateAPI" />

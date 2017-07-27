@@ -5,6 +5,8 @@ import com.bjike.goddess.managementpromotion.bo.GradeLevelBO;
 import com.bjike.goddess.managementpromotion.dto.GradeLevelDTO;
 import com.bjike.goddess.managementpromotion.service.GradeLevelSer;
 import com.bjike.goddess.managementpromotion.to.GradeLevelTO;
+import com.bjike.goddess.managementpromotion.to.GuidePermissionTO;
+import com.bjike.goddess.managementpromotion.vo.SonPermissionObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,5 +60,15 @@ public class GradeLevelApiImpl implements GradeLevelAPI {
     @Override
     public Set<String> allHierarchys() throws SerException {
         return gradeLevelSer.allHierarchys();
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return gradeLevelSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return gradeLevelSer.guidePermission(guidePermissionTO);
     }
 }

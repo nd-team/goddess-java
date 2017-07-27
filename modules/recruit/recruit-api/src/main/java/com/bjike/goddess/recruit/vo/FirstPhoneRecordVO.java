@@ -118,11 +118,11 @@ public class FirstPhoneRecordVO {
      * 其他
      */
     private String other;
-
-    /**
-     * 附件地址
-     */
-    private String attachmentAddr;
+//
+//    /**
+//     * 附件地址
+//     */
+//    private String attachmentAddr;
 
     public String getId() {
         return id;
@@ -292,11 +292,11 @@ public class FirstPhoneRecordVO {
         this.other = other;
     }
 
-    public String getAttachmentAddr() {
-        return attachmentAddr;
-    }
-
-    public void setAttachmentAddr(String attachmentAddr) {
-        this.attachmentAddr = attachmentAddr;
-    }
+//    public String getAttachmentAddr() {
+//        return attachmentAddr;
+//    }
+//
+//    public void setAttachmentAddr(String attachmentAddr) {
+//        this.attachmentAddr = attachmentAddr;
+//    }
 }

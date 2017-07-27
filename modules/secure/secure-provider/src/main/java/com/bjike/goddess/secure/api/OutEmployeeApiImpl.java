@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.secure.bo.OutEmployeeBO;
 import com.bjike.goddess.secure.dto.OutEmployeeDTO;
 import com.bjike.goddess.secure.service.OutEmployeeSer;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
 import com.bjike.goddess.secure.to.OutEmployeeTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,5 +48,15 @@ public class OutEmployeeApiImpl implements OutEmployeeAPI {
     @Override
     public OutEmployeeBO findByID(String id) throws SerException {
         return outEmployeeSer.findByID(id);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return outEmployeeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return outEmployeeSer.guidePermission(guidePermissionTO);
     }
 }

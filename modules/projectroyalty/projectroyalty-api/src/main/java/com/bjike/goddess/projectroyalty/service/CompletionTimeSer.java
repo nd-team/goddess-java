@@ -7,6 +7,7 @@ import com.bjike.goddess.projectroyalty.bo.OpinionBO;
 import com.bjike.goddess.projectroyalty.dto.CompletionTimeDTO;
 import com.bjike.goddess.projectroyalty.entity.CompletionTime;
 import com.bjike.goddess.projectroyalty.to.CompletionTimeTO;
+import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -20,6 +21,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CompletionTimeSer extends Ser<CompletionTime, CompletionTimeDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存

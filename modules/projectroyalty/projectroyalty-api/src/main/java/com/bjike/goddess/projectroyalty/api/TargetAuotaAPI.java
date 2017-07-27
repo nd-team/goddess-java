@@ -3,6 +3,7 @@ package com.bjike.goddess.projectroyalty.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectroyalty.bo.TargetAuotaBO;
 import com.bjike.goddess.projectroyalty.dto.TargetAuotaDTO;
+import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
 import com.bjike.goddess.projectroyalty.to.TargetAuotaTO;
 
 import java.util.List;
@@ -17,6 +18,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface TargetAuotaAPI {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存项目提成目标定额

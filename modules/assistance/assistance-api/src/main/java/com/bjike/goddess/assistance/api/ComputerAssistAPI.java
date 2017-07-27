@@ -3,6 +3,7 @@ package com.bjike.goddess.assistance.api;
 import com.bjike.goddess.assistance.bo.ComputerAssistBO;
 import com.bjike.goddess.assistance.dto.ComputerAssistDTO;
 import com.bjike.goddess.assistance.to.ComputerAssistTO;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 
@@ -18,7 +19,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ComputerAssistAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
 
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 电脑补助列表总条数
      *

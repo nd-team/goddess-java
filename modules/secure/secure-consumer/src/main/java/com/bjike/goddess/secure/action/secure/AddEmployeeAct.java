@@ -8,17 +8,24 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.secure.api.AddEmployeeAPI;
 import com.bjike.goddess.secure.bo.AddEmployeeBO;
 import com.bjike.goddess.secure.dto.AddEmployeeDTO;
 import com.bjike.goddess.secure.to.AddEmployeeTO;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
 import com.bjike.goddess.secure.vo.AddEmployeeVO;
+import com.bjike.goddess.secure.vo.SonPermissionObject;
+import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,6 +42,81 @@ import java.util.List;
 public class AddEmployeeAct {
     @Autowired
     private AddEmployeeAPI addEmployeeAPI;
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result setButtonPermission() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = addEmployeeAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = addEmployeeAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 查找
@@ -131,15 +213,16 @@ public class AddEmployeeAct {
     /**
      * 总经办确认新增
      *
-     * @param id 增员id
+     * @param id  增员id
+     * @param dto dto
      * @throws ActException
      * @version v1
      */
     @LoginAuth
     @PatchMapping("v1/managerConfirmAdd/{id}")
-    public Result managerConfirmAdd(@PathVariable String id) throws ActException {
+    public Result managerConfirmAdd(@Validated(AddEmployeeDTO.CONFIRM.class) AddEmployeeDTO dto, BindingResult result, @PathVariable String id) throws ActException {
         try {
-            addEmployeeAPI.managerConfirmAdd(id);
+            addEmployeeAPI.managerConfirmAdd(dto, id);
             return new ActResult("确认新增成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -195,6 +278,23 @@ public class AddEmployeeAct {
         try {
             AddEmployeeBO bo = addEmployeeAPI.save(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, AddEmployeeVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有用户
+     *
+     * @return class UserVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findUser")
+    public Result findUser(HttpServletRequest request) throws ActException {
+        try {
+            List<UserBO> list = positionDetailUserAPI.findUserListInOrgan();
+            return ActResult.initialize(BeanTransform.copyProperties(list, UserVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

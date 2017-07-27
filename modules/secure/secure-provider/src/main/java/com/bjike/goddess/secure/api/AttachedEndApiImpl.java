@@ -5,6 +5,7 @@ import com.bjike.goddess.secure.bo.AttachedEndBO;
 import com.bjike.goddess.secure.dto.AttachedEndDTO;
 import com.bjike.goddess.secure.service.AttachedEndSer;
 import com.bjike.goddess.secure.to.AttachedEndTO;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,13 +55,23 @@ public class AttachedEndApiImpl implements AttachedEndAPI {
         attachedEndSer.send();
     }
 
-    @Override
-    public void quartz() throws SerException {
-        attachedEndSer.quartz();
-    }
+//    @Override
+//    public void quartz() throws SerException {
+//        attachedEndSer.quartz();
+//    }
 
     @Override
     public Long count(AttachedEndDTO dto) throws SerException {
         return attachedEndSer.count(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return attachedEndSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return attachedEndSer.guidePermission(guidePermissionTO);
     }
 }

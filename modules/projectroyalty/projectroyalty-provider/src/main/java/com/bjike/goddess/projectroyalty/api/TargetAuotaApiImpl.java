@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectroyalty.bo.TargetAuotaBO;
 import com.bjike.goddess.projectroyalty.dto.TargetAuotaDTO;
 import com.bjike.goddess.projectroyalty.service.TargetAuotaSer;
+import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
 import com.bjike.goddess.projectroyalty.to.TargetAuotaTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,17 @@ public class TargetAuotaApiImpl implements TargetAuotaAPI {
 
     @Autowired
     private TargetAuotaSer targetAuotaSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return targetAuotaSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return targetAuotaSer.guidePermission(guidePermissionTO);
+    }
+
 
     @Override
     public TargetAuotaBO targetSave(TargetAuotaTO to) throws SerException {

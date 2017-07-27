@@ -5,6 +5,7 @@ import com.bjike.goddess.managementpromotion.bo.LevelShowBO;
 import com.bjike.goddess.managementpromotion.dto.LevelShowDTO;
 import com.bjike.goddess.managementpromotion.entity.LevelShow;
 import com.bjike.goddess.managementpromotion.service.LevelShowSer;
+import com.bjike.goddess.managementpromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managementpromotion.to.LevelShowTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,7 +57,17 @@ public class LevelShowApiImpl implements LevelShowAPI {
     }
 
     @Override
-    public LevelShow findBySql(String employeeId) throws SerException {
-        return levelShowSer.findBySql(employeeId);
+    public Boolean sonPermission() throws SerException {
+        return levelShowSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return levelShowSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public LevelShow findByEmployeeId(String employeeId) throws SerException {
+        return levelShowSer.findByEmployeeId(employeeId);
     }
 }

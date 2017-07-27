@@ -2,6 +2,8 @@ package com.bjike.goddess.assistance.service;
 
 import com.bjike.goddess.assistance.bo.AgeAssistBO;
 import com.bjike.goddess.assistance.to.AgeAssistTO;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
+import com.bjike.goddess.assistance.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.assistance.entity.AgeAssist;
@@ -19,6 +21,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface AgeAssistSer extends Ser<AgeAssist, AgeAssistDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 工龄补助列表总条数

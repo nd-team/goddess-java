@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.secure.bo.PayDetailBO;
 import com.bjike.goddess.secure.dto.PayDetailDTO;
 import com.bjike.goddess.secure.service.PayDetailSer;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
 import com.bjike.goddess.secure.to.PayDetailTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,5 +53,15 @@ public class PayDetailApiImpl implements PayDetailAPI {
     @Override
     public Long count(PayDetailDTO dto) throws SerException {
         return payDetailSer.count(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return payDetailSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return payDetailSer.guidePermission(guidePermissionTO);
     }
 }

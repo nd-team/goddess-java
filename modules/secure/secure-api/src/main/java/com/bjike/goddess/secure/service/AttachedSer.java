@@ -3,9 +3,11 @@ package com.bjike.goddess.secure.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.secure.bo.AttachedBO;
+import com.bjike.goddess.secure.dto.AddEmployeeDTO;
 import com.bjike.goddess.secure.dto.AttachedDTO;
 import com.bjike.goddess.secure.entity.Attached;
 import com.bjike.goddess.secure.to.AttachedTO;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +21,15 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface AttachedSer extends Ser<Attached, AttachedDTO> {
+    /**
+     * 下拉导航权限
+     */
+    Boolean sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
     /**
      * 添加
      *
@@ -91,7 +102,7 @@ public interface AttachedSer extends Ser<Attached, AttachedDTO> {
      * @param id id
      * @throws SerException
      */
-    void pass(String id) throws SerException;
+    void pass(AddEmployeeDTO dto, String id) throws SerException;
 
     /**
      * 不通过
@@ -99,7 +110,7 @@ public interface AttachedSer extends Ser<Attached, AttachedDTO> {
      * @param id
      * @throws SerException
      */
-    void notPass(String id) throws SerException;
+    void notPass(AddEmployeeDTO dto, String id) throws SerException;
 
     /**
      * 补全信息

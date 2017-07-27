@@ -6,6 +6,7 @@ import com.bjike.goddess.projectroyalty.bo.OpinionBO;
 import com.bjike.goddess.projectroyalty.bo.WeightAllocationBO;
 import com.bjike.goddess.projectroyalty.dto.WeightAllocationDTO;
 import com.bjike.goddess.projectroyalty.entity.WeightAllocation;
+import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
 import com.bjike.goddess.projectroyalty.to.WeightAllocationTO;
 
 import java.util.List;
@@ -20,6 +21,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface WeightAllocationSer extends Ser<WeightAllocation, WeightAllocationDTO> {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存项目提成目标权重分配

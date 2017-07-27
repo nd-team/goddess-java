@@ -3,6 +3,7 @@ package com.bjike.goddess.assistance.api;
 import com.bjike.goddess.assistance.bo.RightSetBO;
 import com.bjike.goddess.assistance.dto.RightSetDTO;
 import com.bjike.goddess.assistance.service.RightSetSer;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.to.RightSetTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,13 @@ public class RightSetApiImpl implements RightSetAPI {
         rightSetSer.deleteRightSet(id);
     }
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return rightSetSer.sonPermission();
+    }
 
-
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return rightSetSer.guidePermission(guidePermissionTO);
+    }
 }

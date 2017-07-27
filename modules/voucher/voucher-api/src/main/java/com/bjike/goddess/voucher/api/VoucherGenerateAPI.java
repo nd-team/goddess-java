@@ -554,5 +554,12 @@ public interface VoucherGenerateAPI {
         return null;
     }
 
-
+    /**
+     * chenjunhao
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    VoucherGenerateBO getByIdCJh(String id) throws SerException;
 }

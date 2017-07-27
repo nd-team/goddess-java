@@ -6,6 +6,8 @@ import com.bjike.goddess.secure.bo.AddEmployeeBO;
 import com.bjike.goddess.secure.dto.AddEmployeeDTO;
 import com.bjike.goddess.secure.entity.AddEmployee;
 import com.bjike.goddess.secure.to.AddEmployeeTO;
+import com.bjike.goddess.secure.to.GuidePermissionTO;
+import com.bjike.goddess.secure.vo.SonPermissionObject;
 
 import java.util.List;
 
@@ -19,6 +21,16 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface AddEmployeeSer extends Ser<AddEmployee, AddEmployeeDTO> {
+    /**
+     * 下拉导航权限
+     */
+    List<SonPermissionObject> sonPermission() throws SerException;
+
+    /**
+     * 导航权限
+     */
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
     /**
      * 查找
      *
@@ -84,7 +96,7 @@ public interface AddEmployeeSer extends Ser<AddEmployee, AddEmployeeDTO> {
      * @param id
      * @throws SerException
      */
-    void managerConfirmAdd(String id) throws SerException;
+    void managerConfirmAdd(AddEmployeeDTO dto, String id) throws SerException;
 
     /**
      * 社保管理负责人确认增员

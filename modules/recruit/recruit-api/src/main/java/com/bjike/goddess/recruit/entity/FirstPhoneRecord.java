@@ -142,11 +142,11 @@ public class FirstPhoneRecord extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(255) COMMENT '其他' ")
     private String other;
 
-    /**
-     * 附件地址
-     */
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '附件地址' ")
-    private String attachmentAddr;
+//    /**
+//     * 附件地址
+//     */
+//    @Column(columnDefinition = "VARCHAR(255) COMMENT '附件地址' ")
+//    private String attachmentAddr;
 
     public FirstPhoneRecord() {
     }
@@ -311,11 +311,11 @@ public class FirstPhoneRecord extends BaseEntity {
         this.other = other;
     }
 
-    public String getAttachmentAddr() {
-        return attachmentAddr;
-    }
-
-    public void setAttachmentAddr(String attachmentAddr) {
-        this.attachmentAddr = attachmentAddr;
-    }
+//    public String getAttachmentAddr() {
+//        return attachmentAddr;
+//    }
+//
+//    public void setAttachmentAddr(String attachmentAddr) {
+//        this.attachmentAddr = attachmentAddr;
+//    }
 }

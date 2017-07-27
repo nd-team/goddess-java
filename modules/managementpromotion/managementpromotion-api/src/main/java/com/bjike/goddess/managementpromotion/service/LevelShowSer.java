@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.managementpromotion.bo.LevelShowBO;
 import com.bjike.goddess.managementpromotion.dto.LevelShowDTO;
 import com.bjike.goddess.managementpromotion.entity.LevelShow;
+import com.bjike.goddess.managementpromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managementpromotion.to.LevelShowTO;
 
 import java.util.List;
@@ -19,6 +20,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface LevelShowSer extends Ser<LevelShow, LevelShowDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 添加
      *
@@ -89,5 +104,5 @@ public interface LevelShowSer extends Ser<LevelShow, LevelShowDTO> {
      * @return class LevelShow
      * @throws SerException
      */
-    LevelShow findBySql(String employeeId) throws SerException;
+    LevelShow findByEmployeeId(String employeeId) throws SerException;
 }

@@ -3,6 +3,7 @@ package com.bjike.goddess.assistance.api;
 import com.bjike.goddess.assistance.bo.AssistancePlanBO;
 import com.bjike.goddess.assistance.dto.AssistancePlanDTO;
 import com.bjike.goddess.assistance.to.AssistancePlanTO;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -17,7 +18,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface AssistancePlanAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
 
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 补助方案列表总条数
      */

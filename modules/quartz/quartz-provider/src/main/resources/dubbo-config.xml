@@ -38,5 +38,10 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.capability.api.CollectEmailAPI" id="capabilityEmailApiImpl"/>
 	<!-- 商务洽谈-->
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.contractcommunicat.api.ContractCollectEmailAPI" id="contractCollectEmailApiImpl"/>
+	<!-- 社保管理-->
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.secure.api.BeforeAddAPI" id="beforeAddApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.secure.api.BeforeRemoveEmployeeAPI" id="beforeRemoveEmployeeApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.secure.api.SecureCartAPI" id="secureCartApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.secure.api.AttachedEndAPI" id="attachedEndApiImpl"/>
 
 </beans>

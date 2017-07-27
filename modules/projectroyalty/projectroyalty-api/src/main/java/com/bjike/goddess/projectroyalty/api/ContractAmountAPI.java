@@ -5,6 +5,7 @@ import com.bjike.goddess.projectroyalty.bo.ContractAmountBO;
 import com.bjike.goddess.projectroyalty.bo.OpinionBO;
 import com.bjike.goddess.projectroyalty.dto.ContractAmountDTO;
 import com.bjike.goddess.projectroyalty.to.ContractAmountTO;
+import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -18,6 +19,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ContractAmountAPI {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存

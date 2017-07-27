@@ -308,7 +308,7 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
 
     @Override
     public byte[] exportExcel(VoucherGenerateExportDTO dto) throws SerException {
-        return voucherGenerateSer.exportExcel( dto );
+        return voucherGenerateSer.exportExcel(dto);
     }
 
     @Override
@@ -321,6 +321,8 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
         return voucherGenerateSer.importExcel(voucherGenerateTO);
     }
 
-
-
+    @Override
+    public VoucherGenerateBO getByIdCJh(String id) throws SerException {
+        return voucherGenerateSer.getByIdCJh(id);
+    }
 }

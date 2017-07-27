@@ -6,6 +6,7 @@ import com.bjike.goddess.projectroyalty.bo.OpinionBO;
 import com.bjike.goddess.projectroyalty.dto.CompletionTimeDTO;
 import com.bjike.goddess.projectroyalty.service.CompletionTimeSer;
 import com.bjike.goddess.projectroyalty.to.CompletionTimeTO;
+import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,17 @@ public class CompletionTimeApiImpl implements CompletionTimeAPI {
 
     @Autowired
     private CompletionTimeSer completionTimeSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return completionTimeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return completionTimeSer.guidePermission(guidePermissionTO);
+    }
+
 
     @Override
     public CompletionTimeBO save(CompletionTimeTO to) throws SerException {
