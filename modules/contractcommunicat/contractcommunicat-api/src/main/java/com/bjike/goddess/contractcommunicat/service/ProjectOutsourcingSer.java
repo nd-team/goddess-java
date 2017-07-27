@@ -81,4 +81,5 @@ public interface ProjectOutsourcingSer extends Ser<ProjectOutsourcing, ProjectOu
     Boolean guidePermission(GuidePermissionTO to) throws SerException;
 
     byte[] exportExcelModule() throws SerException;
+
 }

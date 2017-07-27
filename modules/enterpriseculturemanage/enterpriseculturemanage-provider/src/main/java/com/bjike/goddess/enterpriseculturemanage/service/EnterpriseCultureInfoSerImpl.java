@@ -11,6 +11,7 @@ import com.bjike.goddess.enterpriseculturemanage.bo.PeriodicalProgramInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.bo.PublicizeProgramInfoBO;
 import com.bjike.goddess.enterpriseculturemanage.dto.EnterpriseCultureInfoDTO;
 import com.bjike.goddess.enterpriseculturemanage.dto.PeriodicalProgramInfoDTO;
+import com.bjike.goddess.enterpriseculturemanage.dto.PublicizeProgramInfoDTO;
 import com.bjike.goddess.enterpriseculturemanage.entity.ConstructTeam;
 import com.bjike.goddess.enterpriseculturemanage.entity.EnterpriseCultureInfo;
 import com.bjike.goddess.enterpriseculturemanage.entity.PeriodicalProgramInfo;
@@ -20,6 +21,7 @@ import com.bjike.goddess.enterpriseculturemanage.enums.UpdateType;
 import com.bjike.goddess.enterpriseculturemanage.to.EnterpriseCultureInfoEditTO;
 import com.bjike.goddess.enterpriseculturemanage.to.EnterpriseCultureInfoTO;
 import com.bjike.goddess.enterpriseculturemanage.to.GuidePermissionTO;
+import com.bjike.goddess.enterpriseculturemanage.to.PublicizeProgramInfoTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.BeanUtils;
@@ -272,18 +274,21 @@ public class EnterpriseCultureInfoSerImpl extends ServiceImpl<EnterpriseCultureI
     }
 
     @Override
-    public PublicizeProgramInfoBO findPublicize(String id) throws SerException {
+    public List<PublicizeProgramInfoBO> findPublicize(String id) throws SerException {
         checkSeeIdentity();
         EnterpriseCultureInfo model = super.findById(id);
         if (model != null) {
-            PublicizeProgramInfo publicizeProgramInfo = publicizeProgramInfoSer.findById(model.getId());
-            if (publicizeProgramInfo != null) {
-                return BeanTransform.copyProperties(publicizeProgramInfo, PublicizeProgramInfoBO.class);
+            PublicizeProgramInfoDTO dto = new PublicizeProgramInfoDTO();
+            dto.getConditions().add(Restrict.eq("infoId",model.getId()));
+//            PublicizeProgramInfo publicizeProgramInfo = publicizeProgramInfoSer.findById(model.getId());
+            List<PublicizeProgramInfo> info = publicizeProgramInfoSer.findByCis(dto);
+            if (info.size() > 0 && info != null) {
+                 return BeanTransform.copyProperties(info,PeriodicalProgramInfoBO.class);
             }
         } else {
             throw new SerException("非法Id,企业文化对象不存在!");
         }
-        return new PublicizeProgramInfoBO();
+        return null;
     }
 
     @Override

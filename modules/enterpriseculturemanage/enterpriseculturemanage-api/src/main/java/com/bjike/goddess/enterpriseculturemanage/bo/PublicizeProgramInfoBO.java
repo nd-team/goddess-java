@@ -43,7 +43,7 @@ public class PublicizeProgramInfoBO extends BaseBO {
     /**
      * 执行费用
      */
-    private String executeCost;
+    private Double executeCost;
 
     /**
      * 审核结果
@@ -108,11 +108,11 @@ public class PublicizeProgramInfoBO extends BaseBO {
         this.executeCycle = executeCycle;
     }
 
-    public String getExecuteCost() {
+    public Double getExecuteCost() {
         return executeCost;
     }
 
-    public void setExecuteCost(String executeCost) {
+    public void setExecuteCost(Double executeCost) {
         this.executeCost = executeCost;
     }
 

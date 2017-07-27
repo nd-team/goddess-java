@@ -17,6 +17,7 @@ import com.bjike.goddess.enterpriseculturemanage.to.GuidePermissionTO;
 import com.bjike.goddess.enterpriseculturemanage.vo.ConstructTeamVO;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -236,6 +237,22 @@ public class ConstructTeamAct {
             List<ConstructTeamVO> voList = BeanTransform.copyProperties(constructTeamAPI.pageList(dto), ConstructTeamVO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据员工工号来查询员工信息
+     * @param number
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findByJobNumber")
+    public Result findByJobNumber(String number) throws ActException{
+        try {
+            List<User> users = constructTeamAPI.findByJobNumber(number);
+            return ActResult.initialize(users);
+        }catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }

@@ -20,6 +20,7 @@ import java.io.IOException;
         excludeFilters = {@ComponentScan.Filter(
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})
+@PropertySource(value = {"classpath:permission.properties"},encoding="utf-8")
 @ImportResource({"classpath:app.xml"})
 public class Application {
 

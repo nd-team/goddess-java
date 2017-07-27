@@ -8,6 +8,7 @@ import com.bjike.goddess.enterpriseculturemanage.excel.SonPermissionObject;
 import com.bjike.goddess.enterpriseculturemanage.service.ConstructTeamSer;
 import com.bjike.goddess.enterpriseculturemanage.to.ConstructTeamTO;
 import com.bjike.goddess.enterpriseculturemanage.to.GuidePermissionTO;
+import com.bjike.goddess.user.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,5 +68,10 @@ public class ConstructTeamApiImpl implements ConstructTeamAPI {
     @Override
     public Long count(ConstructTeamDTO dto) throws SerException {
         return constructTeamSer.count(dto);
+    }
+
+    @Override
+    public List<User> findByJobNumber(String number) throws SerException {
+        return constructTeamSer.findByJobNumber(number);
     }
 }

@@ -14,6 +14,9 @@ import com.bjike.goddess.enterpriseculturemanage.to.ConstructTeamTO;
 import com.bjike.goddess.enterpriseculturemanage.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.dto.UserDTO;
+import com.bjike.goddess.user.entity.User;
+import com.bjike.goddess.user.to.UserTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -309,4 +312,13 @@ public class ConstructTeamSerImpl extends ServiceImpl<ConstructTeam, ConstructTe
         return BeanTransform.copyProperties(list, ConstructTeamBO.class);
     }
 
+    @Override
+    public List<User> findByJobNumber(String number) throws SerException {
+        UserDTO userDTO = new UserDTO();
+        userDTO.getConditions().add(Restrict.eq("employeeNumber",number));
+        List<UserBO> userBO = userAPI.findByCis(userDTO);
+        List<UserTO> userTO = BeanTransform.copyProperties(userBO, UserTO.class);
+        List<User> user = BeanTransform.copyProperties(userTO,User.class);
+        return user;
+    }
 }
