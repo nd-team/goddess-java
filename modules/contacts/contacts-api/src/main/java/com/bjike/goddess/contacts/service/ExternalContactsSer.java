@@ -117,6 +117,9 @@ public interface ExternalContactsSer extends Ser<ExternalContacts, ExternalConta
      */
     ExternalContactsBO importExcel(List<ExternalContactsTO> tocs) throws SerException;
 
+    /**
+     * 模板下载
+     */
     default byte[] templateExport() throws SerException {
         return null;
     }

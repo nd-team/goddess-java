@@ -88,12 +88,13 @@ public class OtherContactsSerImpl extends ServiceImpl<OtherContacts, OtherContac
                         String departmentId = departmentDetailBOList.get(0).getId();
                         //从公邮中得到部门的邮箱
                         CommonalityDTO dto = new CommonalityDTO();
-                        List<CommonalityBO> commonalityBOList = commonalityAPI.maps(dto);
+                        List<CommonalityBO> commonalityBOList = commonalityAPI.findAll();
                         for (CommonalityBO commonalityBO : commonalityBOList) {
                             if (departmentId.equals(commonalityBO.getDepartmentId())) {
                                 email = commonalityBO.getEmail();
                                 String content = html(to);
-
+                                String[] email1 = new String[1];
+                                email1[0] = email;
                                 //调用发送邮箱接口
                                 MessageTO messageTO = new MessageTO();
                                 messageTO.setTitle("其他通讯录");
@@ -101,7 +102,7 @@ public class OtherContactsSerImpl extends ServiceImpl<OtherContacts, OtherContac
                                 messageTO.setContent(content);
                                 messageTO.setSendType(SendType.EMAIL);
                                 messageTO.setRangeType(RangeType.SPECIFIED);
-                                messageTO.setReceivers(email.split(";"));
+                                messageTO.setReceivers(email1);
                                 messageAPI.send(messageTO);
                             }
                         }

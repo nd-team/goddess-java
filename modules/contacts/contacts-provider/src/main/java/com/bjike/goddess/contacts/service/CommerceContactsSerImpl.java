@@ -7,6 +7,7 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.contacts.api.CommonalityAPI;
 import com.bjike.goddess.contacts.bo.CommerceContactsBO;
 import com.bjike.goddess.contacts.bo.CommonalityBO;
@@ -85,6 +86,10 @@ public class CommerceContactsSerImpl extends ServiceImpl<CommerceContacts, Comme
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CommerceContactsBO save(CommerceContactsTO to) throws SerException {
+        if(!Validator.isEmail(to.getCusEmail())){
+            throw new SerException("输入的邮箱格式不正确");
+        }
+
         CommerceContacts entity = BeanTransform.copyProperties(to, CommerceContacts.class);
         CommerceContactsDTO dto = new CommerceContactsDTO();
         dto.getConditions().add(Restrict.eq("customerNum", to.getCustomerNum()));
@@ -410,7 +415,7 @@ public class CommerceContactsSerImpl extends ServiceImpl<CommerceContacts, Comme
         String[] allEmails = null;
         //从公共邮箱中得到部门的邮箱
         CommonalityDTO commonalityDTO = new CommonalityDTO();
-        List<CommonalityBO> commonalityBOList = commonalityAPI.maps(commonalityDTO);
+        List<CommonalityBO> commonalityBOList = commonalityAPI.findAll();
         List<String> stringList = new ArrayList<>();
         for (CommonalityBO commonalityBO : commonalityBOList) {
             if (commonalityBO.getDepartmentId().equals(this.getDepartment("综合资源部"))) {

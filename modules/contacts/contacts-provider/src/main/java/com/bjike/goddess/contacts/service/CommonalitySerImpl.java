@@ -7,6 +7,7 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.contacts.dto.CommonalityDTO;
 import com.bjike.goddess.contacts.entity.Commonality;
@@ -62,6 +63,9 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CommonalityBO save(CommonalityTO to) throws SerException {
+        if(!Validator.isEmail(to.getEmail())){
+            throw new SerException("输入的邮箱格式不正确");
+        }
         Commonality entity = BeanTransform.copyProperties(to, Commonality.class);
         entity.setStatus(Status.THAW);
         super.save(entity);
@@ -83,12 +87,13 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
                         //从公邮中得到部门的邮箱
                         CommonalityDTO dto = new CommonalityDTO();
 //                        dto.getConditions().add(Restrict.eq("departmentId",departmentId));
-                        List<CommonalityBO> commonalityBOList = this.maps(dto);
+                        List<CommonalityBO> commonalityBOList = this.findAlls();
                         for (CommonalityBO commonalityBO : commonalityBOList) {
                             if (departmentId.equals(commonalityBO.getDepartmentId())) {
                                 email = commonalityBO.getEmail();
                                 String content = html(to);
-
+                                String[] email1 = new String[1];
+                                email1[0] = email;
                                 //调用发送邮箱接口
                                 MessageTO messageTO = new MessageTO();
                                 messageTO.setTitle("公共邮箱");
@@ -96,7 +101,7 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
                                 messageTO.setContent(content);
                                 messageTO.setSendType(SendType.EMAIL);
                                 messageTO.setRangeType(RangeType.SPECIFIED);
-                                messageTO.setReceivers(email.split(";"));
+                                messageTO.setReceivers(email1);
                                 messageAPI.send(messageTO);
                             }
                         }
@@ -190,6 +195,12 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
     @Override
     public List<CommonalityBO> maps(CommonalityDTO dto) throws SerException {
         List<Commonality> list = super.findByPage(dto);
+        return BeanTransform.copyProperties(list, CommonalityBO.class);
+    }
+
+    @Override
+    public List<CommonalityBO> findAlls( ) throws SerException {
+        List<Commonality> list = super.findAll();
         return BeanTransform.copyProperties(list, CommonalityBO.class);
     }
 
@@ -290,14 +301,21 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void importExcel(List<CommonalityTO> commonalityTO) throws SerException {
-
         //对导入的数据进行判断是否已在数据库中存在
         if (null != commonalityTO && commonalityTO.size() > 0) {
             for (CommonalityTO to : commonalityTO) {
+
+                if (Status.CONGEAL == to.getStatus() || Status.DELETE == to.getStatus() ) {
+                    throw new SerException("不能导入状态为删除或冻结的数据");
+                }
+                if (null == to.getStatus()) {
+                    to.setStatus(Status.THAW);
+                }
+
                 CommonalityDTO dto = new CommonalityDTO();
                 dto.getConditions().add(Restrict.eq("departmentId", to.getDepartmentId()));
                 List<Commonality> list = super.findByCis(dto);
-                if(null != list && list.size() > 0){
+                if (null != list && list.size() > 0) {
                     throw new SerException("部门已存在");
                 }
             }
@@ -317,7 +335,7 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
         CommonalityTemplateExport excel = new CommonalityTemplateExport();
         excel.setDepartmentId("移动通信类");
         excel.setEmail("test");
-        excel.setStatus(Status.CONGEAL);
+        excel.setStatus(Status.THAW);
         commerceContactsExports.add(excel);
         Excel exce = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(commerceContactsExports, exce);

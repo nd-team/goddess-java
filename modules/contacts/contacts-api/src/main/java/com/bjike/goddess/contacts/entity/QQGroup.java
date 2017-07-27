@@ -47,7 +47,7 @@ public class QQGroup extends BaseEntity {
     /**
      * Q群状态
      */
-    @Column(name = "is_status", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT 'Q群状态'", insertable = false)
+    @Column(name = "is_status", nullable = false, columnDefinition = "TINYINT(1)   COMMENT 'Q群状态'")
     private Boolean status;
 
 
@@ -83,11 +83,11 @@ public class QQGroup extends BaseEntity {
         this.manager = manager;
     }
 
-    public Boolean isStatus() {
+    public Boolean getStatus() {
         return status;
     }
 
-    public void isStatus(Boolean status) {
+    public void setStatus(Boolean status) {
         this.status = status;
     }
 }
