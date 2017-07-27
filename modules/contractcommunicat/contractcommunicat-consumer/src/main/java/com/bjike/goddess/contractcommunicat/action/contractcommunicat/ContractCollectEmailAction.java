@@ -32,7 +32,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("collectemail")
+@RequestMapping("colletEmail")
 public class ContractCollectEmailAction {
 
     @Autowired
@@ -204,8 +204,8 @@ public class ContractCollectEmailAction {
      * @version v1
      */
 
-    @GetMapping("v1/collectContact")
-    public Result collectContact(@Validated(CollectEmailDTO.TestArea.class) CollectEmailTO collectEmailTO, BindingResult bindingResult) throws ActException {
+    @PostMapping("v1/collectContact")
+    public Result collectContact(CollectEmailTO collectEmailTO, BindingResult bindingResult) throws ActException {
         List<CollectEmailVO> collectEmailVOList = new ArrayList<>();
         CollectEmail collectEmail = BeanTransform.copyProperties(collectEmailTO, CollectEmail.class);
         try {
@@ -246,8 +246,8 @@ public class ContractCollectEmailAction {
      * @des 商务邮件汇总汇总派工合同
      * @version v1
      */
-    @GetMapping("v1/checkEmail")
-    public Result checkEmail(   ) throws ActException {
+    @GetMapping("v1/checkSendEmail")
+    public Result checkSendEmail(   ) throws ActException {
         try {
             collectEmailAPI.checkSendEmail( );
             return ActResult.initialize("发送成功");

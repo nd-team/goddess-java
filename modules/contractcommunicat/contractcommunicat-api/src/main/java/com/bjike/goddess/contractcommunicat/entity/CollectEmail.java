@@ -3,6 +3,7 @@ package com.bjike.goddess.contractcommunicat.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.contractcommunicat.enums.CollectSendUnit;
+import com.bjike.goddess.contractcommunicat.enums.CollectType;
 import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
 
 import javax.persistence.Column;
@@ -21,13 +22,13 @@ import java.time.LocalDateTime;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "businessproject_collectemail")
+@Table(name = "contractcommunicate_collectemail")
 public class CollectEmail extends BaseEntity {
 
     /**
      * 汇总类型
      */
-    @Column(name = "type", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '汇总类型'")
+    @Column(name = "type", nullable = false, columnDefinition = "VARCHAR(255)    COMMENT '汇总类型'")
     private String type;
 
 
@@ -67,6 +68,8 @@ public class CollectEmail extends BaseEntity {
     @Column(columnDefinition = "TINYINT(2)  COMMENT '汇总间隔'"  )
     private QuartzCycleType collectUnit;
 
+
+
     /**
      * 发送对象
      */
@@ -93,7 +96,6 @@ public class CollectEmail extends BaseEntity {
 
 
 
-
     public String getType() {
         return type;
     }
@@ -109,6 +111,7 @@ public class CollectEmail extends BaseEntity {
     public void setCondi(String condi) {
         this.condi = condi;
     }
+
 
     public String getRemark() {
         return remark;

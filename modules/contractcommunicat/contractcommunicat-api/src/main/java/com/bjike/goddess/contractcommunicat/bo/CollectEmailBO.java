@@ -3,6 +3,7 @@ package com.bjike.goddess.contractcommunicat.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.contractcommunicat.enums.CollectSendUnit;
+import com.bjike.goddess.contractcommunicat.enums.CollectType;
 import com.bjike.goddess.contractcommunicat.enums.CommunicateResult;
 import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
 

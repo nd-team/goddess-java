@@ -53,7 +53,7 @@ import java.util.*;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@CacheConfig(cacheNames = "businessprojectSerCache")
+@CacheConfig(cacheNames = "contractcommunicatSerCache")
 @Service
 public class ContractCollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailDTO> implements ContractCollectEmailSer {
 
@@ -397,16 +397,16 @@ public class ContractCollectEmailSerImpl extends ServiceImpl<CollectEmail, Colle
      */
     @Override
     public List<ProjectContractCollectBO> gatherPb(CollectEmail to) throws SerException {
-        getCusPermission();
+//        getCusPermission();
         ProjectContractDTO dto = new ProjectContractDTO();
         dto.getSorts().add("createTime=desc");
         if (!StringUtils.isEmpty(to.getType())) {
             dto.getConditions().add(Restrict.like("contractInProject", to.getType()));
         }
         if (to.getCollectUnit() == QuartzCycleType.YEAR) {
-            String startTime = LocalDateTime.now().getYear() + "-01-01";
-            LocalDate sta = DateUtil.parseDate(startTime);
-            LocalDate[] interval = new LocalDate[]{sta, LocalDate.now()};
+            String startTime = LocalDateTime.now().getYear() + "-01-01 00:00:00";
+            LocalDateTime sta = DateUtil.parseDateTime(startTime);
+            LocalDateTime[] interval = new LocalDateTime[]{sta, LocalDateTime.now()};
             dto.getConditions().add(Restrict.between("createTime", interval));
         } else if (to.getCollectUnit() == QuartzCycleType.QUARTER) {
             LocalDateTime start = DateUtil.getStartQuart();
@@ -419,16 +419,16 @@ public class ContractCollectEmailSerImpl extends ServiceImpl<CollectEmail, Colle
             LocalDate sta2 = DateUtil.parseDate(endTime);
             LocalDate sta = DateUtil.parseDate(startTime);
             LocalDate[] interval = new LocalDate[]{sta, sta2};
-            dto.getConditions().add(Restrict.between("interval", interval));
+            dto.getConditions().add(Restrict.between("createTime", interval));
         } else if (to.getCollectUnit() == QuartzCycleType.WEEK) {
             LocalDate startTime = DateUtil.getStartWeek();
             LocalDate endTime = LocalDate.now();
             LocalDate[] interval = new LocalDate[]{startTime, endTime};
-            dto.getConditions().add(Restrict.between("interval", interval));
+            dto.getConditions().add(Restrict.between("createTime", interval));
         } else if (to.getCollectUnit() == QuartzCycleType.DAY) {
-            dto.getConditions().add(Restrict.eq("interval", LocalDate.now()));
+            dto.getConditions().add(Restrict.eq("createTime", LocalDate.now()));
         }
-        return setCollectFieldPc(projectContractSer.findByPage(dto));
+        return setCollectFieldPc(projectContractSer.findByCis(dto));
     }
 
     //设置汇总项目承包商务洽谈字段
@@ -452,6 +452,7 @@ public class ContractCollectEmailSerImpl extends ServiceImpl<CollectEmail, Colle
                     bo.setAbandon("项目丢弃");
                     totalAbandon++;
                 }
+
             }
             totalCostBudget = returnBoList.stream().mapToDouble(p -> p.getCostBudget()).sum();
         } else {
@@ -478,7 +479,7 @@ public class ContractCollectEmailSerImpl extends ServiceImpl<CollectEmail, Colle
     //汇总项目外包商务洽谈
     @Override
     public List<ProjectOutsourcingCollectBO> gatherPc(CollectEmail to) throws SerException {
-        getCusPermission();
+//        getCusPermission();
         ProjectOutsourcingDTO dto = new ProjectOutsourcingDTO();
         dto.getSorts().add("createTime=desc");
         if (!StringUtils.isEmpty(to.getType())) {
@@ -500,22 +501,22 @@ public class ContractCollectEmailSerImpl extends ServiceImpl<CollectEmail, Colle
             LocalDate sta2 = DateUtil.parseDate(endTime);
             LocalDate sta = DateUtil.parseDate(startTime);
             LocalDate[] interval = new LocalDate[]{sta, sta2};
-            dto.getConditions().add(Restrict.between("interval", interval));
+            dto.getConditions().add(Restrict.between("createTime", interval));
         } else if (to.getCollectUnit() == QuartzCycleType.WEEK) {
             LocalDate startTime = DateUtil.getStartWeek();
             LocalDate endTime = LocalDate.now();
             LocalDate[] interval = new LocalDate[]{startTime, endTime};
             dto.getConditions().add(Restrict.between("interval", interval));
         } else if (to.getCollectUnit() == QuartzCycleType.DAY) {
-            dto.getConditions().add(Restrict.eq("interval", LocalDate.now()));
+            dto.getConditions().add(Restrict.eq("createTime", LocalDate.now()));
         }
-        return setCollectField(projectOutsourcingSer.findByPage(dto));
+        return setCollectField(projectOutsourcingSer.findByCis(dto));
     }
 
     //设置汇总项目外包商务洽谈字段
     public List<ProjectOutsourcingCollectBO> setCollectField(List<ProjectOutsourcing> list) throws SerException {
 
-        List<ProjectOutsourcingCollectBO> boList = BeanTransform.copyProperties(list, ProjectOutsourcingBO.class);
+        List<ProjectOutsourcingBO> boList = BeanTransform.copyProperties(list, ProjectOutsourcingBO.class);
 
         List<ProjectOutsourcingCollectBO> returnBoList = BeanTransform.copyProperties(list, ProjectOutsourcingCollectBO.class);
         Integer totalCooperate = 0;
@@ -588,7 +589,6 @@ public class ContractCollectEmailSerImpl extends ServiceImpl<CollectEmail, Colle
         List<CollectEmail> allEmails = new ArrayList<>();
         List<CollectEmail> signEmails = new ArrayList<>();
         List<CollectEmail> dispatchEmails = new ArrayList<>();
-        List<CollectEmail> baseInfoEmails = new ArrayList<>();
 
         //检测有哪些需要发送的
         //上次发送时间
@@ -612,6 +612,7 @@ public class ContractCollectEmailSerImpl extends ServiceImpl<CollectEmail, Colle
             String type = str.getType();
             //发送对象;隔开
             String sendObject = str.getSendObject();
+            Boolean flagSend = false;
 
             Long mis = nowTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
                     - lastTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
@@ -623,7 +624,7 @@ public class ContractCollectEmailSerImpl extends ServiceImpl<CollectEmail, Colle
                     temp_sendNum = sendNum * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusMinutes(sendNum.longValue()));
+                        str.setLastSendTime(nowTime.plusMinutes(sendNum.longValue()));
                     }
                     break;
                 case HOURS:
@@ -702,6 +703,21 @@ public class ContractCollectEmailSerImpl extends ServiceImpl<CollectEmail, Colle
             sb.append("<td>项目跟进</td>");
             sb.append("<td>项目丢弃</td>");
             sb.append("<tr>");
+            for(int i = 0;i <= baseinfoBOList.size()-2;i++){
+                if(baseinfoBOList.get(i).getCooperate() != null){
+                    baseinfoBOList.get(i).setTrail(" ");
+                    baseinfoBOList.get(i).setAbandon(" ");
+                }else if(baseinfoBOList.get(i).getTrail() != null){
+                    baseinfoBOList.get(i).setCooperate(" ");
+                    baseinfoBOList.get(i).setAbandon(" ");
+                }else if(baseinfoBOList.get(i).getAbandon() == null){
+                    baseinfoBOList.get(i).setTrail(" ");
+                    baseinfoBOList.get(i).setCooperate(" ");
+                }
+            }
+            baseinfoBOList.get(baseinfoBOList.size()-1).setContractInProject(" ");
+            baseinfoBOList.get(baseinfoBOList.size()-1).setCommunicateUser(" ");
+            baseinfoBOList.get(baseinfoBOList.size()-1).setCommunicateTimes(" ");
 
             //拼body部分
             for (ProjectContractCollectBO bo : baseinfoBOList) {
@@ -733,7 +749,7 @@ public class ContractCollectEmailSerImpl extends ServiceImpl<CollectEmail, Colle
             sb.append("<tr>");
             sb.append("<td>合同外部项目名称</td>");
             sb.append("<td>内部项目名称(元)</td>");
-            sb.append("<td>外部项目名称(元)</td>");
+            sb.append("<td>外包项目名称(元)</td>");
             sb.append("<td>洽谈轮次</td>");
             sb.append("<td>洽谈对象</td>");
             sb.append("<td>费用预算</td>");
@@ -741,6 +757,22 @@ public class ContractCollectEmailSerImpl extends ServiceImpl<CollectEmail, Colle
             sb.append("<td>项目跟进</td>");
             sb.append("<td>项目丢弃</td>");
             sb.append("<tr>");
+            for(int i = 0;i <= dispatchEmails.size()-2;i++){
+                if(dispatchEmails.get(i).getCooperate() != null){
+                    dispatchEmails.get(i).setTrail(" ");
+                    dispatchEmails.get(i).setAbandon(" ");
+                }else if(dispatchEmails.get(i).getTrail() != null){
+                    dispatchEmails.get(i).setCooperate(" ");
+                    dispatchEmails.get(i).setAbandon(" ");
+                }else if(dispatchEmails.get(i).getAbandon() == null){
+                    dispatchEmails.get(i).setTrail(" ");
+                    dispatchEmails.get(i).setCooperate(" ");
+                }
+            }
+            dispatchEmails.get(dispatchEmails.size()-1).setContractInProject(" ");
+            dispatchEmails.get(dispatchEmails.size()-1).setCommunicateUser(" ");
+            dispatchEmails.get(dispatchEmails.size()-1).setCommunicateTimes(" ");
+            dispatchEmails.get(dispatchEmails.size()-1).setOutsourcingProject(" ");
 
             //拼body部分
             for (ProjectOutsourcingCollectBO bo : dispatchEmails) {
@@ -798,7 +830,6 @@ public class ContractCollectEmailSerImpl extends ServiceImpl<CollectEmail, Colle
         RpcTransmit.transmitUserToken(userToken);
         if (dispatchEmails != null && dispatchEmails.size() > 0) {
             for (CollectEmail dispa : dispatchEmails) {
-//                String[] condis = dispa.getCondi().split(";");
                 List<ProjectOutsourcingCollectBO> dispatchBOList = ContractCollectEmailSer.gatherPc(dispa);
                 //拼表格
                 String content = htmlDispatch(dispatchBOList);

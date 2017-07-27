@@ -2,7 +2,8 @@ package com.bjike.goddess.contractcommunicat.vo;
 
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.contractcommunicat.enums.CollectSendUnit;
-import com.bjike.goddess.contractcommunicat.enums.CollectUnit;
+import com.bjike.goddess.contractcommunicat.enums.CollectType;
+import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
 
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,7 @@ public class CollectEmailVO {
     /**
      * 汇总间隔
      */
-    private CollectUnit collectUnit;
+    private QuartzCycleType collectUnit;
 
     /**
      * 发送对象
@@ -64,6 +65,7 @@ public class CollectEmailVO {
      * 发送对象数组
      */
     private List<String> sendObjectList;
+
 
     /**
      * 上次发送时间
@@ -79,6 +81,31 @@ public class CollectEmailVO {
      * 创建人
      */
     private String createPersion;
+
+    /**
+     * 合同外部项目名称
+     */
+    private String contractExtProject;
+
+    /**
+     * 费用预算
+     */
+    private Double costBudget;
+
+    /**
+     * 项目合作次数
+     */
+    private String cooperate;
+
+    /**
+     * 项目跟进统计
+     */
+    private String trail;
+
+    /**
+     * 项目丢弃统计
+     */
+    private String abandon;
 
     /**
      * 创建时间
@@ -103,46 +130,42 @@ public class CollectEmailVO {
      * 数据库枚举转换
      */
     private int enumConvert;
-    /**
-     * 业务类型汇总集合
-     */
-    private List<Map<String, String>> busTypeMap;
-
-    /**
-     * 合作方式汇总集合
-     */
-    private List<Map<String, String>> cooperWaysMap;
 
 
-    /**
-     * 合同属性汇总集合
-     */
-    private List<Map<String, String>> contractPropertyMap;
 
-    /**
-     * 立项情况汇总集合
-     */
-    private List<Map<String, String>> makeProjectMap;
 
-    /**
-     * 合同签订情况汇总集合
-     */
-    private List<Map<String, String>> signMap;
 
-    /**
-     * 派工单个数
-     */
-    private Integer dispatchProjectCount;
+    public Double getCostBudget() {
+        return costBudget;
+    }
 
-    /**
-     * 已完工个数
-     */
-    private Integer complete;
+    public void setCostBudget(Double costBudget) {
+        this.costBudget = costBudget;
+    }
 
-    /**
-     * 未完工个数
-     */
-    private Integer notComplete;
+    public String getCooperate() {
+        return cooperate;
+    }
+
+    public void setCooperate(String cooperate) {
+        this.cooperate = cooperate;
+    }
+
+    public String getTrail() {
+        return trail;
+    }
+
+    public void setTrail(String trail) {
+        this.trail = trail;
+    }
+
+    public String getAbandon() {
+        return abandon;
+    }
+
+    public void setAbandon(String abandon) {
+        this.abandon = abandon;
+    }
 
     public String getId() {
         return id;
@@ -200,11 +223,11 @@ public class CollectEmailVO {
         this.collectSendUnit = collectSendUnit;
     }
 
-    public CollectUnit getCollectUnit() {
+    public QuartzCycleType getCollectUnit() {
         return collectUnit;
     }
 
-    public void setCollectUnit(CollectUnit collectUnit) {
+    public void setCollectUnit(QuartzCycleType collectUnit) {
         this.collectUnit = collectUnit;
     }
 
@@ -288,67 +311,11 @@ public class CollectEmailVO {
         this.enumConvert = enumConvert;
     }
 
-    public List<Map<String, String>> getBusTypeMap() {
-        return busTypeMap;
+    public String getContractExtProject() {
+        return contractExtProject;
     }
 
-    public void setBusTypeMap(List<Map<String, String>> busTypeMap) {
-        this.busTypeMap = busTypeMap;
-    }
-
-    public List<Map<String, String>> getCooperWaysMap() {
-        return cooperWaysMap;
-    }
-
-    public void setCooperWaysMap(List<Map<String, String>> cooperWaysMap) {
-        this.cooperWaysMap = cooperWaysMap;
-    }
-
-    public List<Map<String, String>> getContractPropertyMap() {
-        return contractPropertyMap;
-    }
-
-    public void setContractPropertyMap(List<Map<String, String>> contractPropertyMap) {
-        this.contractPropertyMap = contractPropertyMap;
-    }
-
-    public List<Map<String, String>> getMakeProjectMap() {
-        return makeProjectMap;
-    }
-
-    public void setMakeProjectMap(List<Map<String, String>> makeProjectMap) {
-        this.makeProjectMap = makeProjectMap;
-    }
-
-    public List<Map<String, String>> getSignMap() {
-        return signMap;
-    }
-
-    public void setSignMap(List<Map<String, String>> signMap) {
-        this.signMap = signMap;
-    }
-
-    public Integer getDispatchProjectCount() {
-        return dispatchProjectCount;
-    }
-
-    public void setDispatchProjectCount(Integer dispatchProjectCount) {
-        this.dispatchProjectCount = dispatchProjectCount;
-    }
-
-    public Integer getComplete() {
-        return complete;
-    }
-
-    public void setComplete(Integer complete) {
-        this.complete = complete;
-    }
-
-    public Integer getNotComplete() {
-        return notComplete;
-    }
-
-    public void setNotComplete(Integer notComplete) {
-        this.notComplete = notComplete;
+    public void setContractExtProject(String contractExtProject) {
+        this.contractExtProject = contractExtProject;
     }
 }

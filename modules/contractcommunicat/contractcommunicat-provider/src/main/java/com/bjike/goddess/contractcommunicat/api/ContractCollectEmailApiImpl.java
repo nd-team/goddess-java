@@ -8,7 +8,6 @@ import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.CollectEmailDTO;
 import com.bjike.goddess.contractcommunicat.entity.CollectEmail;
 import com.bjike.goddess.contractcommunicat.service.ContractCollectEmailSer;
-import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.CollectEmailTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 商务项目合同邮件业务接口实现
+ * 项目商务洽谈合同邮件业务接口实现
  *
  * @Author: [ tanghaixiang ]
  * @Date: [ 2017-03-16T19:08:18.889 ]
@@ -25,74 +24,74 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@Service("collectEmailApiImpl")
+@Service("contractCollectEmailApiImpl")
 public class ContractCollectEmailApiImpl implements ContractCollectEmailAPI {
 
     @Autowired
-    private ContractCollectEmailSer collectEmailSer;
+    private ContractCollectEmailSer contractCollectEmailSer;
 
 
     @Override
     public Boolean sonPermission() throws SerException {
-        return collectEmailSer.sonPermission();
+        return contractCollectEmailSer.sonPermission();
     }
 
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
-        return collectEmailSer.guidePermission( guidePermissionTO );
+        return contractCollectEmailSer.guidePermission( guidePermissionTO );
     }
     @Override
     public Long counts(CollectEmailDTO collectEmailDTO) throws SerException {
-        return collectEmailSer.counts(collectEmailDTO);
+        return contractCollectEmailSer.counts(collectEmailDTO);
     }
 
     @Override
     public CollectEmailBO getOne(String id) throws SerException {
-        return collectEmailSer.getOne(id);
+        return contractCollectEmailSer.getOne(id);
     }
     @Override
     public List<CollectEmailBO> listCollectEmail(CollectEmailDTO collectEmailDTO) throws SerException {
-        return collectEmailSer.listCollectEmail( collectEmailDTO );
+        return contractCollectEmailSer.listCollectEmail( collectEmailDTO );
     }
 
     @Override
     public CollectEmailBO addCollectEmail(CollectEmailTO collectEmailTO) throws SerException {
-        return collectEmailSer.addCollectEmail( collectEmailTO);
+        return contractCollectEmailSer.addCollectEmail( collectEmailTO);
     }
 
     @Override
     public CollectEmailBO editCollectEmail(CollectEmailTO collectEmailTO) throws SerException {
-        return collectEmailSer.editCollectEmail(collectEmailTO);
+        return contractCollectEmailSer.editCollectEmail(collectEmailTO);
     }
 
     @Override
     public void deleteCollectEmail(String id) throws SerException {
-        collectEmailSer.deleteCollectEmail(id);
+        contractCollectEmailSer.deleteCollectEmail(id);
     }
 
     @Override
     public void congealCollectEmail(String id) throws SerException {
-        collectEmailSer.congealCollectEmail(id);
+        contractCollectEmailSer.congealCollectEmail(id);
     }
 
     @Override
     public void thawCollectEmail(String id) throws SerException {
-        collectEmailSer.thawCollectEmail(id);
+        contractCollectEmailSer.thawCollectEmail(id);
     }
 
     @Override
     public List<ProjectContractCollectBO> gatherPb(CollectEmail to) throws SerException {
-        return collectEmailSer.gatherPb(to);
+        return contractCollectEmailSer.gatherPb(to);
     }
 
     @Override
     public List<ProjectOutsourcingCollectBO> gatherPc(CollectEmail to) throws SerException {
-        return collectEmailSer.gatherPc(to);
+        return contractCollectEmailSer.gatherPc(to);
     }
 
 
     @Override
     public void checkSendEmail() throws SerException {
-         collectEmailSer.checkSendEmail();
+        contractCollectEmailSer.checkSendEmail();
     }
 }

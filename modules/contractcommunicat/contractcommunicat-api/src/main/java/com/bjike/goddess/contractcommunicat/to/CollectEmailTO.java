@@ -3,6 +3,7 @@ package com.bjike.goddess.contractcommunicat.to;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.contractcommunicat.enums.CollectSendUnit;
+import com.bjike.goddess.contractcommunicat.enums.CollectType;
 import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -61,6 +62,7 @@ public class CollectEmailTO extends BaseTO {
      */
     private QuartzCycleType collectUnit;
 
+
     /**
      * 发送对象
      */
@@ -101,6 +103,7 @@ public class CollectEmailTO extends BaseTO {
      * 行业字符串数组
      */
     private String[] works;
+
 
 
     public String getType() {

@@ -56,10 +56,10 @@ public class ProjectOutsourcingApiImpl implements ProjectOutsourcingAPI {
         return projectOutsourcingSer.collect(to);
     }
 
-    @Override
-    public void setCollectSend(QuartzCycleType cycleType) throws SerException {
-        projectOutsourcingSer.setCollectSend(cycleType);
-    }
+//    @Override
+//    public void setCollectSend(QuartzCycleType cycleType) throws SerException {
+//        projectOutsourcingSer.setCollectSend(cycleType);
+//    }
 
     @Override
     public Long count(ProjectOutsourcingDTO dto) throws SerException {
