@@ -4,7 +4,9 @@ import com.bjike.goddess.assistance.api.AssistanceEmpAPI;
 import com.bjike.goddess.assistance.bo.AssistanceEmpBO;
 import com.bjike.goddess.assistance.dto.AssistanceEmpDTO;
 import com.bjike.goddess.assistance.to.AssistanceEmpTO;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.vo.AssistanceEmpVO;
+import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -16,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -36,7 +39,28 @@ public class AssistanceEmpAction {
 
     @Autowired
     private AssistanceEmpAPI assistanceEmpAPI;
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
 
+            Boolean isHasPermission = assistanceEmpAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      *  补助员工名单总条数
      *
@@ -83,7 +107,7 @@ public class AssistanceEmpAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result addAssistanceEmp(@Validated AssistanceEmpTO assistanceEmpTO, BindingResult bindingResult) throws ActException {
+    public Result addAssistanceEmp(@Validated(ADD.class) AssistanceEmpTO assistanceEmpTO, BindingResult bindingResult) throws ActException {
         try {
             AssistanceEmpBO assistanceEmpBO1 = assistanceEmpAPI.addAssistanceEmp(assistanceEmpTO);
             return ActResult.initialize(BeanTransform.copyProperties(assistanceEmpBO1,AssistanceEmpVO.class,true));
@@ -103,7 +127,7 @@ public class AssistanceEmpAction {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result editAssistanceEmp(@Validated AssistanceEmpTO assistanceEmpTO) throws ActException {
+    public Result editAssistanceEmp(@Validated(ADD.class) AssistanceEmpTO assistanceEmpTO,BindingResult result) throws ActException {
         try {
             AssistanceEmpBO assistanceEmpBO1 = assistanceEmpAPI.editAssistanceEmp(assistanceEmpTO);
             return ActResult.initialize(BeanTransform.copyProperties(assistanceEmpBO1,AssistanceEmpVO.class,true));

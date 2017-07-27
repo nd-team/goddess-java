@@ -85,7 +85,6 @@ public class AssistanceEmpBO extends BaseBO {
      */
     private String modifyTime;
 
-
     public String getPlanNumber() {
         return planNumber;
     }

@@ -43,6 +43,8 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private EntryBasicInfoAPI entryBasicInfoAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -154,15 +156,6 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
             case SEE:
                 flag = guideSeeIdentity();
                 break;
-            case UPLOAD:
-                flag = guideAddIdentity();
-                break;
-            case DOWNLOAD:
-                flag = guideAddIdentity();
-                break;
-            case SEEFILE:
-                flag = guideSeeIdentity();
-                break;
             default:
                 flag = true;
                 break;
@@ -184,7 +177,7 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
 
     @Override
     public ComputerAssistBO getOneById(String id) throws SerException {
-        if( StringUtils.isBlank(id)){
+        if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
         ComputerAssist computerAssist = super.findById(id);
@@ -209,19 +202,21 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
     public ComputerAssistBO addComputerAssist(ComputerAssistTO computerAssistTO) throws SerException {
         checkAddIdentity();
         ComputerAssist computerAssist = BeanTransform.copyProperties(computerAssistTO, ComputerAssist.class, true);
-        if (Double.isNaN(computerAssistTO.getAssistDays())) {
+        if (null != computerAssistTO.getAssistDays() && Double.isNaN(computerAssistTO.getAssistDays())) {
             throw new SerException("补助天数不能为非数字");
         }
 
         //补助金额补助金额（100元/月） 后台计算公式(100×（补助天数/补助计薪周期相减总天数）)
-        if (StringUtils.isNotBlank(computerAssistTO.getSalaryStartTime())
-                || StringUtils.isNotBlank(computerAssistTO.getSalaryEndTime())) {
+        if (StringUtils.isBlank(computerAssistTO.getSalaryStartTime())
+                || StringUtils.isBlank(computerAssistTO.getSalaryEndTime())) {
             throw new SerException("计薪开始时间和结束时间不能为空");
         }
         //设置钱
         Long day = computerAssist.getSalaryEndTime().toEpochDay() - computerAssist.getSalaryStartTime().toEpochDay();
-        Double money = computerAssistTO.getAssistDays() * (computerAssistTO.getAssistDays() / day);
-        computerAssist.setAssistMoney(money);
+        if (null != computerAssistTO.getAssistDays()) {
+            Double money = computerAssistTO.getAssistDays() * (computerAssistTO.getAssistDays() / day);
+            computerAssist.setAssistMoney(money);
+        }
         computerAssist.setCreateTime(LocalDateTime.now());
         super.save(computerAssist);
         return BeanTransform.copyProperties(computerAssist, ComputerAssistBO.class);
@@ -232,7 +227,7 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
     @Override
     public ComputerAssistBO editComputerAssist(ComputerAssistTO computerAssistTO) throws SerException {
         checkAddIdentity();
-        if (Double.isNaN(computerAssistTO.getAssistDays())) {
+        if (null != computerAssistTO.getAssistDays() && Double.isNaN(computerAssistTO.getAssistDays())) {
             throw new SerException("补助天数不能为非数字");
         }
         ComputerAssist computerAssist = BeanTransform.copyProperties(computerAssistTO, ComputerAssist.class, true);
@@ -242,14 +237,16 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
         rs.setRemark(computerAssist.getRemark());
 
         //补助金额补助金额（100元/月） 后台计算公式(100×（补助天数/补助计薪周期相减总天数）)
-        if (StringUtils.isNotBlank(computerAssistTO.getSalaryStartTime())
-                || StringUtils.isNotBlank(computerAssistTO.getSalaryEndTime())) {
+        if (StringUtils.isBlank(computerAssistTO.getSalaryStartTime())
+                || StringUtils.isBlank(computerAssistTO.getSalaryEndTime())) {
             throw new SerException("计薪开始时间和结束时间不能为空");
         }
         //设置钱
         Long day = computerAssist.getSalaryEndTime().toEpochDay() - computerAssist.getSalaryStartTime().toEpochDay();
-        Double money = computerAssistTO.getAssistDays() * (computerAssistTO.getAssistDays() / day);
-        rs.setAssistMoney(money);
+        if (null != computerAssistTO.getAssistDays()) {
+            Double money = computerAssistTO.getAssistDays() * (computerAssistTO.getAssistDays() / day);
+            computerAssist.setAssistMoney(money);
+        }
 
         rs.setModifyTime(LocalDateTime.now());
         super.update(rs);
@@ -320,8 +317,10 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
         if (StringUtils.isBlank(computerAssistDTO.getEmpName())) {
             throw new SerException("员工姓名不能为空");
         }
-//            此處錯誤,注釋人:黎貴欽
-//        EntryBasicInfoVO entryBasicInfoBO = entryBasicInfoAPI.getEntryBasicInfoByName( computerAssistDTO.getEmpName() );
+        List<EntryBasicInfoBO> entryBasicInfoBO = entryBasicInfoAPI.getEntryBasicInfoByName( computerAssistDTO.getEmpName() );
+        if (entryBasicInfoBO!=null&&!entryBasicInfoBO.isEmpty()){
+            return entryBasicInfoBO.get(0);
+        }
         return null;
     }
 }

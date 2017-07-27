@@ -4,6 +4,7 @@ import com.bjike.goddess.assistance.api.AssistanceRecordAPI;
 import com.bjike.goddess.assistance.bo.AssistanceRecordBO;
 import com.bjike.goddess.assistance.dto.AssistanceRecordDTO;
 import com.bjike.goddess.assistance.to.AssistanceRecordTO;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.vo.AssistanceRecordVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -16,7 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -37,9 +38,32 @@ public class AssistanceRecordAction {
     private AssistanceRecordAPI assistanceRecordAPI;
 
     /**
-     *  补助信息记录总条数
+     * 功能导航权限
      *
-     * @param assistanceRecordDTO  公司员工补助信息记录信息dto
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = assistanceRecordAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 补助信息记录总条数
+     *
+     * @param assistanceRecordDTO 公司员工补助信息记录信息dto
      * @des 获取所有公司员工补助信息记录信息总条数
      * @version v1
      */
@@ -57,8 +81,8 @@ public class AssistanceRecordAction {
      * 公司员工补助信息记录列表
      *
      * @param assistanceRecordDTO 公司员工补助信息记录信息dto
+     * @return class AssistanceRecordVO
      * @des 获取所有公司员工补助信息记录信息
-     * @return  class AssistanceRecordVO
      * @version v1
      */
     @GetMapping("v1/listAssistanceRecord")
@@ -76,8 +100,8 @@ public class AssistanceRecordAction {
      * 添加公司员工补助信息记录
      *
      * @param assistanceRecordTO 公司员工补助信息记录基本信息数据to
+     * @return class AssistanceRecordVO
      * @des 添加公司员工补助信息记录
-     * @return  class AssistanceRecordVO
      * @version v1
      */
     @LoginAuth
@@ -85,7 +109,7 @@ public class AssistanceRecordAction {
     public Result addAssistanceRecord(@Validated AssistanceRecordTO assistanceRecordTO, BindingResult bindingResult) throws ActException {
         try {
             AssistanceRecordBO assistanceRecordBO1 = assistanceRecordAPI.addAssistanceRecord(assistanceRecordTO);
-            return ActResult.initialize(BeanTransform.copyProperties(assistanceRecordBO1,AssistanceRecordVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(assistanceRecordBO1, AssistanceRecordVO.class, true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -96,8 +120,8 @@ public class AssistanceRecordAction {
      * 编辑公司员工补助信息记录
      *
      * @param assistanceRecordTO 公司员工补助信息记录基本信息数据bo
+     * @return class AssistanceRecordVO
      * @des 添加公司员工补助信息记录
-     * @return  class AssistanceRecordVO
      * @version v1
      */
     @LoginAuth
@@ -105,7 +129,7 @@ public class AssistanceRecordAction {
     public Result editAssistanceRecord(@Validated AssistanceRecordTO assistanceRecordTO) throws ActException {
         try {
             AssistanceRecordBO assistanceRecordBO1 = assistanceRecordAPI.editAssistanceRecord(assistanceRecordTO);
-            return ActResult.initialize(BeanTransform.copyProperties(assistanceRecordBO1,AssistanceRecordVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(assistanceRecordBO1, AssistanceRecordVO.class, true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -125,11 +149,9 @@ public class AssistanceRecordAction {
             assistanceRecordAPI.deleteAssistanceRecord(id);
             return new ActResult("delete success!");
         } catch (SerException e) {
-            throw new ActException("删除失败："+e.getMessage());
+            throw new ActException("删除失败：" + e.getMessage());
         }
     }
 
 
-
-    
 }

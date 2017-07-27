@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class AttachedTO extends BaseTO {
-    public interface complete {//补全信息
+    public interface COM {//补全信息
     }
 
     /**
@@ -68,37 +68,37 @@ public class AttachedTO extends BaseTO {
     /**
      * 担保人在司岗位
      */
-    @NotBlank(groups = {AttachedTO.complete.class, EDIT.class}, message = "担保人在司岗位不能为空")
+    @NotBlank(groups = {AttachedTO.COM.class, EDIT.class}, message = "担保人在司岗位不能为空")
     private String assureJob;
 
     /**
      * 担保人所属地区
      */
-    @NotBlank(groups = {AttachedTO.complete.class, EDIT.class}, message = "担保人所属地区不能为空")
+    @NotBlank(groups = {AttachedTO.COM.class, EDIT.class}, message = "担保人所属地区不能为空")
     private String assureArrival;
 
     /**
      * 担保人联系电话
      */
-    @NotBlank(groups = {AttachedTO.complete.class, EDIT.class}, message = "担保人联系电话不能为空")
+    @NotBlank(groups = {AttachedTO.COM.class, EDIT.class}, message = "担保人联系电话不能为空")
     private String assureTel;
 
     /**
      * 挂靠开始时间
      */
-    @NotBlank(groups = {AttachedTO.complete.class, EDIT.class}, message = "挂靠开始时间不能为空")
+    @NotBlank(groups = {AttachedTO.COM.class, EDIT.class}, message = "挂靠开始时间不能为空")
     private String startTime;
 
     /**
      * 挂靠结束时间
      */
-    @NotBlank(groups = {AttachedTO.complete.class, EDIT.class}, message = "挂靠结束时间不能为空")
+    @NotBlank(groups = {AttachedTO.COM.class, EDIT.class}, message = "挂靠结束时间不能为空")
     private String endTime;
 
     /**
      * 挂靠的公司
      */
-    @NotBlank(groups = {AttachedTO.complete.class, EDIT.class}, message = "挂靠的公司不能为空")
+    @NotBlank(groups = {AttachedTO.COM.class, EDIT.class}, message = "挂靠的公司不能为空")
     private String company;
 
     /**
@@ -110,8 +110,8 @@ public class AttachedTO extends BaseTO {
     /**
      * 挂靠的缴费金
      */
-    @NotNull(groups = {AttachedTO.complete.class, EDIT.class}, message = "挂靠的缴费金不能为空")
-    @DecimalMin(value = "0.00", groups = {AttachedTO.complete.class, EDIT.class}, message = "挂靠的缴费金必须大于0", inclusive = false)
+    @NotNull(groups = {AttachedTO.COM.class, EDIT.class}, message = "挂靠的缴费金不能为空")
+    @DecimalMin(value = "0.00", groups = {AttachedTO.COM.class, EDIT.class}, message = "挂靠的缴费金必须大于0", inclusive = false)
     private Double money;
 
     /**

@@ -149,15 +149,6 @@ public class RightSetSerImpl extends ServiceImpl<RightSet, RightSetDTO> implemen
             case SEE:
                 flag = guideSeeIdentity();
                 break;
-            case UPLOAD:
-                flag = guideAddIdentity();
-                break;
-            case DOWNLOAD:
-                flag = guideAddIdentity();
-                break;
-            case SEEFILE:
-                flag = guideSeeIdentity();
-                break;
             default:
                 flag = true;
                 break;
@@ -169,8 +160,8 @@ public class RightSetSerImpl extends ServiceImpl<RightSet, RightSetDTO> implemen
 
     @Override
     public Long countRightSet(RightSetDTO rightSetDTO) throws SerException {
-        if( StringUtils.isNotBlank(rightSetDTO.getEmpName() )){
-            rightSetDTO.getConditions().add(Restrict.like("empName",rightSetDTO.getEmpName() ));
+        if (StringUtils.isNotBlank(rightSetDTO.getEmpName())) {
+            rightSetDTO.getConditions().add(Restrict.like("empName", rightSetDTO.getEmpName()));
         }
         rightSetDTO.getSorts().add("empRight=desc");
         Long count = super.count(rightSetDTO);
@@ -180,22 +171,22 @@ public class RightSetSerImpl extends ServiceImpl<RightSet, RightSetDTO> implemen
     @Override
     public List<RightSetBO> listRightSet(RightSetDTO rightSetDTO) throws SerException {
         checkSeeIdentity();
-        if( StringUtils.isNotBlank(rightSetDTO.getEmpName() )){
-            rightSetDTO.getConditions().add(Restrict.like("empName",rightSetDTO.getEmpName() ));
+        if (StringUtils.isNotBlank(rightSetDTO.getEmpName())) {
+            rightSetDTO.getConditions().add(Restrict.like("empName", rightSetDTO.getEmpName()));
         }
         rightSetDTO.getSorts().add("empRight=desc");
-        List<RightSet> list = super.findByCis(rightSetDTO,true);
+        List<RightSet> list = super.findByCis(rightSetDTO, true);
 
-        return BeanTransform.copyProperties(list, RightSetBO.class );
+        return BeanTransform.copyProperties(list, RightSetBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public RightSetBO addRightSet(RightSetTO rightSetTO) throws SerException {
         checkAddIdentity();
-        RightSet rightSet = BeanTransform.copyProperties(rightSetTO,RightSet.class,true);
+        RightSet rightSet = BeanTransform.copyProperties(rightSetTO, RightSet.class, true);
         rightSet.setCreateTime(LocalDateTime.now());
-        super.save( rightSet );
+        super.save(rightSet);
         return BeanTransform.copyProperties(rightSet, RightSetBO.class);
     }
 
@@ -203,14 +194,14 @@ public class RightSetSerImpl extends ServiceImpl<RightSet, RightSetDTO> implemen
     @Override
     public RightSetBO editRightSet(RightSetTO rightSetTO) throws SerException {
         checkAddIdentity();
-        RightSet rightSet = BeanTransform.copyProperties(rightSetTO,RightSet.class,true);
-        RightSet rs = super.findById( rightSetTO.getId() );
+        RightSet rightSet = BeanTransform.copyProperties(rightSetTO, RightSet.class, true);
+        RightSet rs = super.findById(rightSetTO.getId());
 
-        rs.setEmpName( rightSet.getEmpName() );
-        rs.setRemark( rightSet.getRemark() );
-        rs.setEmpRight( rightSet.getEmpRight() );
+        rs.setEmpName(rightSet.getEmpName());
+        rs.setRemark(rightSet.getRemark());
+        rs.setEmpRight(rightSet.getEmpRight());
         rs.setModifyTime(LocalDateTime.now());
-        super.update( rs );
+        super.update(rs);
         return BeanTransform.copyProperties(rs, RightSetBO.class);
     }
 
@@ -218,10 +209,10 @@ public class RightSetSerImpl extends ServiceImpl<RightSet, RightSetDTO> implemen
     @Override
     public void deleteRightSet(String id) throws SerException {
         checkAddIdentity();
-        if (StringUtils.isBlank(id)){
+        if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
-        super.remove( id );
+        super.remove(id);
     }
 
 }
