@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -47,16 +48,19 @@ public class EmailApiImpl implements EmailAPI {
             initHtmlEmailInfo(email, em);
             email.send();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new SerException(e.getMessage());
         }
 
     }
+
 
     private void initHtmlEmail(HtmlEmail email, Email em) {
         try {
             String username = StringUtils.isNotBlank(em.getUsername()) ? em.getUsername() : env.getProperty("email.username");
             String password = StringUtils.isNotBlank(em.getPassword()) ? em.getPassword() : env.getProperty("email.password");
             password = new String(new BASE64Decoder().decodeBuffer(password));
+//                password="ychthx9822";
             String host = StringUtils.isNotBlank(em.getHost()) ? em.getHost() : env.getProperty("email.host");
             String sender = StringUtils.isNotBlank(em.getSender()) ? em.getSender() : env.getProperty("email.sender");
             String senderName = StringUtils.isNotBlank(em.getSenderName()) ? em.getSenderName() : env.getProperty("email.senderName");

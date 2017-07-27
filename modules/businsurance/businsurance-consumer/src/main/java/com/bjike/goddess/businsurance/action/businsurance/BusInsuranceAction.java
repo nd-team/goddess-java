@@ -46,8 +46,7 @@ public class BusInsuranceAction extends BaseFileAction{
 
     @Autowired
     private BusInsuranceAPI busInsuranceAPI;
-    @Autowired
-    private FileAPI fileAPI;
+
 
     /**
      * 功能导航权限
@@ -282,88 +281,6 @@ public class BusInsuranceAction extends BaseFileAction{
         }
     }
 
-    /**
-     * 上传附件
-     *
-     * @version v1
-     */
-    @LoginAuth
-    @PostMapping("v1/uploadFile/{id}")
-    public Result uploadFile(@PathVariable String id, HttpServletRequest request) throws ActException {
-        try {
-            //跟前端约定好 ，文件路径是列表id
-            // /id/....
-            String path = "/businsurance/busInsure/" + id;
-            List<InputStream> inputStreams = getInputStreams(request, path);
-            fileAPI.upload(inputStreams);
-            return new ActResult("upload success");
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 文件附件列表
-     *
-     * @param id id
-     * @return class FileVO
-     * @version v1
-     */
-    @GetMapping("v1/listFile/{id}")
-    public Result list(@PathVariable String id, HttpServletRequest request) throws ActException {
-        try {
-            //跟前端约定好 ，文件路径是列表id
-            String path = "/businsurance/busInsure/" + id;
-            FileInfo fileInfo = new FileInfo();
-            fileInfo.setPath(path);
-            Object storageToken = request.getAttribute("storageToken");
-            fileInfo.setStorageToken(storageToken.toString());
-            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
-            return ActResult.initialize(files);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 文件下载
-     *
-     * @param path 文件路径
-     * @version v1
-     */
-    @GetMapping("v1/downloadFile")
-    public Result download(@RequestParam String path, HttpServletRequest request, HttpServletResponse response) throws ActException {
-        try {
-            //该文件的路径
-            FileInfo fileInfo = new FileInfo();
-            Object storageToken = request.getAttribute("storageToken");
-            fileInfo.setStorageToken(storageToken.toString());
-            fileInfo.setPath(path);
-            String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
-            byte[] buffer = fileAPI.download(fileInfo);
-            writeOutFile(response, buffer, filename);
-            return new ActResult("download success");
-        } catch (Exception e) {
-            throw new ActException(e.getMessage());
-        }
-
-    }
-
-    /**
-     * 删除文件或文件夹
-     *
-     * @param siginManageDeleteFileTO 多文件信息路径
-     * @version v1
-     */
-    @LoginAuth
-    @PostMapping("v1/deleteFile")
-    public Result delFile(@Validated(SiginManageDeleteFileTO.TestDEL.class) SiginManageDeleteFileTO siginManageDeleteFileTO, HttpServletRequest request) throws SerException {
-        if (null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length >= 0) {
-            Object storageToken = request.getAttribute("storageToken");
-            fileAPI.delFile(storageToken.toString(), siginManageDeleteFileTO.getPaths());
-        }
-        return new ActResult("delFile success");
-    }
 
     /**
      * 获取所有保险公司
@@ -383,6 +300,8 @@ public class BusInsuranceAction extends BaseFileAction{
     }
     /**
      * 获取投保险种
+     * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/findAllInsureType")
     public Result findAllInsureType() throws ActException {
@@ -396,6 +315,8 @@ public class BusInsuranceAction extends BaseFileAction{
     }
     /**
      * 获取保险条件
+     * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/findAllInsureCondition")
     public Result findAllInsureCondition() throws ActException {

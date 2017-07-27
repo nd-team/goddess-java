@@ -22,15 +22,21 @@
 
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
-	<!--<dubbo:reference  validation="true"  interface="com.bjike.goddess.customer.api.CusEmailAPI" id="cusEmailApiImpl"/>-->
-	<!--<dubbo:reference  validation="true"  interface="com.bjike.goddess.businessproject.api.CollectEmailAPI" id="collectEmailAPI"/>-->
+	<!-- 薪资确认-->
 	<dubbo:reference validation="true" interface="com.bjike.goddess.salaryconfirm.api.SalaryconfirmAPI" id="salaryConfirmAPI"/>
+	<!-- 市场信息-->
 	<dubbo:reference validation="true" interface="com.bjike.goddess.market.api.CollectEmailAPI" id="marketEmailAPI"/>
+	<!-- 项目中问题受理和处理-->
 	<dubbo:reference validation="true" interface="com.bjike.goddess.projectissuehandle.api.CollectEmailAPI" id="projectEmailAPI"/>
+	<!-- 客户信息-->
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.customer.api.CusEmailAPI" id="cusEmailApiImpl"/>
+	<!-- 商务合同-->
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.businessproject.api.CollectEmailAPI" id="businessprojectEmail"/>
+	<!-- 招投标-->
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.bidding.api.CollectEmailAPI" id="collectEmailApiImpl"/>
-	<dubbo:reference  validation="true"  interface="com.bjike.goddess.capability.api.CollectEmailAPI" id="capabilityEmail"/>
-
+	<!-- 商业能力-->
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.capability.api.CollectEmailAPI" id="capabilityEmailApiImpl"/>
+	<!-- 商务洽谈-->
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.contractcommunicat.api.ContractCollectEmailAPI" id="contractCollectEmailApiImpl"/>
 
 </beans>
