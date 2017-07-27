@@ -5,6 +5,7 @@ import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.rentcar.bo.CarSendEmailBO;
 import com.bjike.goddess.rentcar.to.CarSendEmailTO;
+import com.bjike.goddess.rentcar.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -18,6 +19,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CarSendEmailAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 发送邮箱方法
      * @throws SerException

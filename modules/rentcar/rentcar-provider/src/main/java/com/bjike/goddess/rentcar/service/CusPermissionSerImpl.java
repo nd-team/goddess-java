@@ -1,14 +1,5 @@
-package com.bjike.goddess.allmeeting.service;
+package com.bjike.goddess.rentcar.service;
 
-
-import com.bjike.goddess.allmeeting.bo.CusOperateBO;
-import com.bjike.goddess.allmeeting.bo.CusPermissionBO;
-import com.bjike.goddess.allmeeting.dto.CusPermissionDTO;
-import com.bjike.goddess.allmeeting.dto.CusPermissionOperateDTO;
-import com.bjike.goddess.allmeeting.entity.CusPermission;
-import com.bjike.goddess.allmeeting.entity.CusPermissionOperate;
-import com.bjike.goddess.allmeeting.enums.CusPermissionType;
-import com.bjike.goddess.allmeeting.to.CusPermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -16,6 +7,14 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.*;
 import com.bjike.goddess.organize.bo.OpinionBO;
+import com.bjike.goddess.rentcar.bo.CusOperateBO;
+import com.bjike.goddess.rentcar.bo.CusPermissionBO;
+import com.bjike.goddess.rentcar.dto.CusPermissionDTO;
+import com.bjike.goddess.rentcar.dto.CusPermissionOperateDTO;
+import com.bjike.goddess.rentcar.entity.CusPermission;
+import com.bjike.goddess.rentcar.entity.CusPermissionOperate;
+import com.bjike.goddess.rentcar.enums.CusPermissionType;
+import com.bjike.goddess.rentcar.to.CusPermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -38,7 +37,7 @@ import java.util.stream.Collectors;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@CacheConfig(cacheNames = "allmeetingSerCache")
+@CacheConfig(cacheNames = "rentcarSerCache")
 @Service
 public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissionDTO> implements CusPermissionSer {
 

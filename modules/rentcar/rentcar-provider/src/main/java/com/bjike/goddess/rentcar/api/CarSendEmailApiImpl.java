@@ -25,6 +25,15 @@ import java.util.List;
 public class CarSendEmailApiImpl implements CarSendEmailAPI {
     @Autowired
     private CarSendEmailSer carSendEmailSer;
+
+    public CarSendEmailSer getCarSendEmailSer() {
+        return carSendEmailSer;
+    }
+
+    public void setCarSendEmailSer(CarSendEmailSer carSendEmailSer) {
+        this.carSendEmailSer = carSendEmailSer;
+    }
+
     @Override
     public void sendEmail() throws SerException {
         carSendEmailSer.sendEmail();
