@@ -6,6 +6,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.carinfo.entity.CarSendEmail;
 import com.bjike.goddess.carinfo.dto.CarSendEmailDTO;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.organize.entity.PositionDetail;
 
@@ -32,7 +34,7 @@ public interface CarSendEmailSer extends Ser<CarSendEmail, CarSendEmailDTO> {
      * @return
      * @throws SerException
      */
-    default List<DepartmentDetail> findDepartMent() throws SerException{
+    default List<DepartmentDetailBO> findDepartMent() throws SerException{
         return null;
     }
 
@@ -42,7 +44,7 @@ public interface CarSendEmailSer extends Ser<CarSendEmail, CarSendEmailDTO> {
      * @return
      * @throws SerException
      */
-    default List<PositionDetail> findPosition(String id) throws SerException{
+    default List<PositionDetailBO> findPosition(String id) throws SerException{
         return null;
     }
 
@@ -62,6 +64,17 @@ public interface CarSendEmailSer extends Ser<CarSendEmail, CarSendEmailDTO> {
      * @throws SerException
      */
     default List<CarSendEmailBO> list() throws SerException{
+        return null;
+    }
+
+
+    /**
+     * 修改项目经理和商务人员
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    default CarSendEmailBO edit(CarSendEmailTO to) throws SerException{
         return null;
     }
 }

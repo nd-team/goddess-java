@@ -89,23 +89,7 @@ public class ContractCollectEmailSerImpl extends ServiceImpl<CollectEmail, Colle
         RpcTransmit.transmitUserToken(userToken);
     }
 
-    /**
-     * 核对添加修改删除审核权限（岗位级别）
-     */
-    private void checkAddIdentity() throws SerException {
-        Boolean flag = false;
-        String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser();
-        RpcTransmit.transmitUserToken(userToken);
-        String userName = userBO.getUsername();
-        if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
-            if (!flag) {
-                throw new SerException("您不是相应部门的人员，不可以操作");
-            }
-        }
-        RpcTransmit.transmitUserToken(userToken);
-    }
+
 
     /**
      * 导航栏核对查看权限（部门级别）
@@ -124,90 +108,6 @@ public class ContractCollectEmailSerImpl extends ServiceImpl<CollectEmail, Colle
         return flag;
     }
 
-    /**
-     * 导航栏核对添加修改删除审核权限（岗位级别）
-     */
-    private Boolean guideAddIdentity() throws SerException {
-        Boolean flag = false;
-        String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser();
-        RpcTransmit.transmitUserToken(userToken);
-        String userName = userBO.getUsername();
-        if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
-        } else {
-            flag = true;
-        }
-        return flag;
-    }
-
-    @Override
-    public Boolean sonPermission() throws SerException {
-        String userToken = RpcTransmit.getUserToken();
-        Boolean flagSee = guideSeeIdentity();
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAdd = guideAddIdentity();
-        if (flagSee || flagAdd) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
-        String userToken = RpcTransmit.getUserToken();
-        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
-        Boolean flag = true;
-        switch (guideAddrStatus) {
-            case LIST:
-                flag = guideSeeIdentity();
-                break;
-            case ADD:
-                flag = guideAddIdentity();
-                break;
-            case EDIT:
-                flag = guideAddIdentity();
-                break;
-            case AUDIT:
-                flag = guideAddIdentity();
-                break;
-            case DELETE:
-                flag = guideAddIdentity();
-                break;
-            case CONGEL:
-                flag = guideAddIdentity();
-                break;
-            case THAW:
-                flag = guideAddIdentity();
-                break;
-            case COLLECT:
-                flag = guideAddIdentity();
-                break;
-            case IMPORT:
-                flag = guideAddIdentity();
-                break;
-            case EXPORT:
-                flag = guideAddIdentity();
-                break;
-            case UPLOAD:
-                flag = guideAddIdentity();
-                break;
-            case DOWNLOAD:
-                flag = guideAddIdentity();
-                break;
-            case SEE:
-                flag = guideSeeIdentity();
-                break;
-            case SEEFILE:
-                flag = guideSeeIdentity();
-                break;
-            default:
-                flag = true;
-                break;
-        }
-        return flag;
-    }
 
 
     @Override
@@ -240,7 +140,6 @@ public class ContractCollectEmailSerImpl extends ServiceImpl<CollectEmail, Colle
     @Override
     public CollectEmailBO addCollectEmail(CollectEmailTO collectEmailTO) throws SerException {
         String useToken = RpcTransmit.getUserToken();
-        checkAddIdentity();
         RpcTransmit.transmitUserToken(useToken);
 
         if (collectEmailTO.getSendNum() < 0) {
@@ -303,7 +202,6 @@ public class ContractCollectEmailSerImpl extends ServiceImpl<CollectEmail, Colle
     @Override
     public CollectEmailBO editCollectEmail(CollectEmailTO collectEmailTO) throws SerException {
         String useToken = RpcTransmit.getUserToken();
-        checkAddIdentity();
         RpcTransmit.transmitUserToken(useToken);
 
         if (collectEmailTO.getSendNum() < 0) {
@@ -362,7 +260,6 @@ public class ContractCollectEmailSerImpl extends ServiceImpl<CollectEmail, Colle
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteCollectEmail(String id) throws SerException {
-        checkAddIdentity();
 
         super.remove(id);
     }
@@ -370,7 +267,6 @@ public class ContractCollectEmailSerImpl extends ServiceImpl<CollectEmail, Colle
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void congealCollectEmail(String id) throws SerException {
-        checkAddIdentity();
 
         CollectEmail collectEmail = super.findById(id);
         collectEmail.setStatus(Status.CONGEAL);
@@ -381,7 +277,6 @@ public class ContractCollectEmailSerImpl extends ServiceImpl<CollectEmail, Colle
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void thawCollectEmail(String id) throws SerException {
-        checkAddIdentity();
 
         CollectEmail collectEmail = super.findById(id);
         collectEmail.setStatus(Status.THAW);
