@@ -169,7 +169,7 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
 
         entity.setStatus(Status.CONGEAL);
         super.save(entity);
-        String [] emails = new String[1];
+        String[] emails = new String[1];
         emails[0] = to.getEmail();
         if (to.isSend()) {
             //发送邮件测试邮箱是否有误
@@ -416,6 +416,25 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
     @Override
     public InternalContactsBO importExcel(List<InternalContactsTO> internalContactsTO) throws SerException {
 
+        for (InternalContactsTO to : internalContactsTO) {
+            if(StringUtils.isNotBlank(to.getEmail()) && !Validator.isEmail(to.getEmail())){
+                throw new SerException("输入的邮箱格式不正确");
+            }
+            InternalContacts entity = BeanTransform.copyProperties(to, InternalContacts.class);
+            InternalContactsDTO dto = new InternalContactsDTO();
+            dto.getConditions().add(Restrict.eq("userId", to.getUserId()));
+            if (super.count(dto) != 0) {
+                throw new SerException("该用户数据已存在");
+            }
+            //判断是否是入职员工
+            EntryBasicInfoDTO entryBasicInfoDTO = new EntryBasicInfoDTO();
+            entryBasicInfoDTO.getConditions().add(Restrict.eq("name", entity.getUserId()));
+            String userToken = RpcTransmit.getUserToken();
+            List<EntryBasicInfoBO> user = entryBasicInfoAPI.listEntryBasicInfo(entryBasicInfoDTO);
+            if(null != user && user.size() > 0){
+                throw new SerException("导入的员工应该为已入职员工");
+            }
+        }
         List<InternalContacts> internalContacts = BeanTransform.copyProperties(internalContactsTO, InternalContacts.class, true);
         internalContacts.stream().forEach(str -> {
             str.setCreateTime(LocalDateTime.now());

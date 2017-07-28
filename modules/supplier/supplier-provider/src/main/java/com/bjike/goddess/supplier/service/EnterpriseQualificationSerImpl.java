@@ -150,7 +150,7 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getSupCusPermission("1");
+            flag = cusPermissionSer.getSupCusPermission(idFlag);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -168,7 +168,7 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busSupCusPermission("2");
+            flag = cusPermissionSer.busSupCusPermission(idFlag);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -186,7 +186,7 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getSupCusPermission("1");
+            flag = cusPermissionSer.getSupCusPermission(idFlag);
         } else {
             flag = true;
         }
@@ -203,7 +203,7 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busSupCusPermission("2");
+            flag = cusPermissionSer.busSupCusPermission(idFlag);
         } else {
             flag = true;
         }
