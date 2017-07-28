@@ -50,6 +50,11 @@ public class CollectionTotalVO {
      */
     private Long food;
 
+    /**
+     * 竞争对手
+     */
+    private Long competitor;
+
     public String getArea() {
         return area;
     }
@@ -120,5 +125,13 @@ public class CollectionTotalVO {
 
     public void setFood(Long food) {
         this.food = food;
+    }
+
+    public Long getCompetitor() {
+        return competitor;
+    }
+
+    public void setCompetitor(Long competitor) {
+        this.competitor = competitor;
     }
 }

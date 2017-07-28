@@ -12,7 +12,6 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.competitormanage.api.CompetitorAPI;
-import com.bjike.goddess.competitormanage.bo.CompetitorBO;
 import com.bjike.goddess.competitormanage.dto.CompetitorDTO;
 import com.bjike.goddess.competitormanage.excel.CompetitorExcel;
 import com.bjike.goddess.competitormanage.excel.SonPermissionObject;
@@ -21,6 +20,7 @@ import com.bjike.goddess.competitormanage.to.CompetitorOrganizaeTO;
 import com.bjike.goddess.competitormanage.to.CompetitorTO;
 import com.bjike.goddess.competitormanage.to.GuidePermissionTO;
 import com.bjike.goddess.competitormanage.vo.CompetitorVO;
+import com.bjike.goddess.competitormanage.vo.OrganizationVO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.organize.bo.AreaBO;
@@ -413,6 +413,22 @@ public class CompetitorAct extends BaseFileAction {
         try {
             List<CompetitorVO> voList = BeanTransform.copyProperties(competitorAPI.pageList(dto), CompetitorVO.class, request);
             return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查看组织结构
+     *
+     * @param id 竞争对手信息id
+     * @return class OrganizationVO
+     * @version v1
+     */
+    @GetMapping("v1/organize/{id}")
+    public Result organizeList(@PathVariable String id) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(competitorAPI.organizeList(id), OrganizationVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

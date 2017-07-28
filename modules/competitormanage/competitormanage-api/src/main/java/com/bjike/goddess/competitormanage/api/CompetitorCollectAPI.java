@@ -3,6 +3,7 @@ package com.bjike.goddess.competitormanage.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.competitormanage.bo.CollectionTotalBO;
 import com.bjike.goddess.competitormanage.bo.CompetitorCollectBO;
+import com.bjike.goddess.competitormanage.bo.CompetitorCollectsBO;
 import com.bjike.goddess.competitormanage.dto.CompetitorCollectDTO;
 import com.bjike.goddess.competitormanage.to.CompetitorCollectTO;
 import com.bjike.goddess.competitormanage.to.GuidePermissionTO;
@@ -62,7 +63,7 @@ public interface CompetitorCollectAPI {
      */
     List<CollectionTotalBO> collectionTotal() throws SerException;
 
-    List<CompetitorCollectBO> pageList(CompetitorCollectDTO dto) throws SerException;
+    List<CompetitorCollectsBO> pageList(CompetitorCollectDTO dto) throws SerException;
 
     /**
      * 查询总记录数
