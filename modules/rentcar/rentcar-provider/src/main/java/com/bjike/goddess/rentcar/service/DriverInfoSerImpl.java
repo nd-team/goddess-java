@@ -9,6 +9,7 @@ import com.bjike.goddess.rentcar.bo.DriverInfoBO;
 import com.bjike.goddess.rentcar.dto.DriverInfoDTO;
 import com.bjike.goddess.rentcar.entity.DriverInfo;
 import com.bjike.goddess.rentcar.excel.SonPermissionObject;
+import com.bjike.goddess.rentcar.to.CarSendEmailTO;
 import com.bjike.goddess.rentcar.to.DriverInfoTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -201,9 +202,10 @@ public class DriverInfoSerImpl extends ServiceImpl<DriverInfo, DriverInfoDTO> im
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void audit(String id, String suggest, Boolean audit) throws SerException {
+        checkAddIdentity();
         DriverInfo model = super.findById(id);
         if (model != null) {
-            //TODO 未明确组织结构信息及账务模块审核对象
+//            TODO 未明确组织结构信息及账务模块审核对象
             model.setSuggest(suggest);
             model.setAudit(audit);
             super.update(model);
@@ -211,4 +213,5 @@ public class DriverInfoSerImpl extends ServiceImpl<DriverInfo, DriverInfoDTO> im
             throw new SerException("非法Id,司机信息对象不能为空!");
         }
     }
+
 }

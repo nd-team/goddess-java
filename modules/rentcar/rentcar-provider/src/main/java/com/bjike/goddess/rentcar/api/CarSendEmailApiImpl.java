@@ -2,11 +2,14 @@ package com.bjike.goddess.rentcar.api;
 
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.rentcar.bo.CarSendEmailBO;
 import com.bjike.goddess.rentcar.service.CarSendEmailSer;
 import com.bjike.goddess.rentcar.to.CarSendEmailTO;
+import com.bjike.goddess.rentcar.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,12 +43,12 @@ public class CarSendEmailApiImpl implements CarSendEmailAPI {
     }
 
     @Override
-    public List<DepartmentDetail> findDepartMent() throws SerException {
+    public List<DepartmentDetailBO> findDepartMent() throws SerException {
         return carSendEmailSer.findDepartMent();
     }
 
     @Override
-    public List<PositionDetail> findPosition(String id) throws SerException {
+    public List<PositionDetailBO> findPosition(String id) throws SerException {
         return carSendEmailSer.findPosition(id);
     }
 
@@ -57,5 +60,20 @@ public class CarSendEmailApiImpl implements CarSendEmailAPI {
     @Override
     public List<CarSendEmailBO> list() throws SerException {
         return carSendEmailSer.list();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    @Override
+    public CarSendEmailBO edit(CarSendEmailTO to) throws SerException {
+        return carSendEmailSer.edit(to);
     }
 }

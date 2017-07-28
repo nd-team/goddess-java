@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +48,7 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@CacheConfig(cacheNames = "carinfoSerCache")
+@CacheConfig(cacheNames = "rentcarSerCache")
 @Service
 public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailDTO> implements CarSendEmailSer {
     @Autowired
@@ -241,19 +242,15 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
     }
 
     @Override
-    public List<DepartmentDetail> findDepartMent() throws SerException {
+    public List<DepartmentDetailBO> findDepartMent() throws SerException {
         List<DepartmentDetailBO> departmentBOS = departmentDetailAPI.findStatus();
-        List<DepartmentDetailTO> departmentDetailTOS = BeanTransform.copyProperties(departmentBOS, DepartmentDetailTO.class);
-        List<DepartmentDetail> departmentDetails = BeanTransform.copyProperties(departmentDetailTOS, DepartmentDetailTO.class);
-        return departmentDetails;
+        return departmentBOS;
     }
 
     @Override
-    public List<PositionDetail> findPosition(String id) throws SerException {
+    public List<PositionDetailBO> findPosition(String id) throws SerException {
         List<PositionDetailBO> positionBOS = positionDetailAPI.findByDepartment(id);
-        List<PositionDetailTO> positionDetailTOS = BeanTransform.copyProperties(positionBOS, PositionDetailTO.class);
-        List<PositionDetail> positionDetails = BeanTransform.copyProperties(positionDetailTOS, PositionDetail.class);
-        return positionDetails;
+        return positionBOS;
     }
 
     @Override
@@ -268,5 +265,17 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
     public List<CarSendEmailBO> list() throws SerException {
         List<CarSendEmail> carSendEmailTOS = super.findAll();
         return BeanTransform.copyProperties(carSendEmailTOS, CarSendEmailVO.class);
+    }
+
+    @Override
+    public CarSendEmailBO edit(CarSendEmailTO to) throws SerException{
+        CarSendEmail model = super.findById(to.getId());
+        if(model != null){
+            model.setModifyTime(LocalDateTime.now());
+            super.update(model);
+            return BeanTransform.copyProperties(to,CarSendEmailBO.class);
+        }else {
+            throw new SerException("非法Id,发送对象不能为空！");
+        }
     }
 }

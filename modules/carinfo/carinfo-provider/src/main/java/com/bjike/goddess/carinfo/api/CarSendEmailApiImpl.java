@@ -4,7 +4,8 @@ import com.bjike.goddess.carinfo.bo.CarSendEmailBO;
 import com.bjike.goddess.carinfo.service.CarSendEmailSer;
 import com.bjike.goddess.carinfo.to.CarSendEmailTO;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.organize.entity.DepartmentDetail;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.entity.PositionDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,12 +31,12 @@ public class CarSendEmailApiImpl implements CarSendEmailAPI {
     }
 
     @Override
-    public List<DepartmentDetail> findDepartMent() throws SerException {
+    public List<DepartmentDetailBO> findDepartMent() throws SerException {
         return carSendEmailSer.findDepartMent();
     }
 
     @Override
-    public List<PositionDetail> findPosition(String id) throws SerException {
+    public List<PositionDetailBO> findPosition(String id) throws SerException {
         return carSendEmailSer.findPosition(id);
     }
 
@@ -47,5 +48,10 @@ public class CarSendEmailApiImpl implements CarSendEmailAPI {
     @Override
     public List<CarSendEmailBO> list() throws SerException {
         return carSendEmailSer.list();
+    }
+
+    @Override
+    public CarSendEmailBO edit(CarSendEmailTO to) throws SerException {
+        return carSendEmailSer.edit(to);
     }
 }

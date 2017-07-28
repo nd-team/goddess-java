@@ -222,6 +222,7 @@ public class DriverRecruitSerImpl extends ServiceImpl<DriverRecruit, DriverRecru
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void audit(String id, String suggest, Boolean audit) throws SerException {
+        checkAddIdentity();
         DriverRecruit model = super.findById(id);
         if (model != null) {
 
