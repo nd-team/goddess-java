@@ -11,9 +11,12 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectmeasure.api.MultipleProjectSingleUIAPI;
 import com.bjike.goddess.projectmeasure.bo.MultipleProjectSingleUIBO;
 import com.bjike.goddess.projectmeasure.bo.MultipleProjectSingleUIBO;
+import com.bjike.goddess.projectmeasure.dto.MultipleProjectSingleUIBDTO;
 import com.bjike.goddess.projectmeasure.dto.MultipleProjectSingleUIDTO;
 import com.bjike.goddess.projectmeasure.dto.MultipleProjectSingleUIDTO;
+import com.bjike.goddess.projectmeasure.entity.MultipleProjectSingleUIB;
 import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
+import com.bjike.goddess.projectmeasure.to.MultipleProjectSingleUIBTO;
 import com.bjike.goddess.projectmeasure.to.MultipleProjectSingleUITO;
 import com.bjike.goddess.projectmeasure.to.MultipleProjectSingleUITO;
 import com.bjike.goddess.projectmeasure.vo.MultipleProjectSingleUIVO;
@@ -108,16 +111,13 @@ public class MultipleProjectSingleUIAct {
      * 分页查询多项目单个界面
      *
      * @param dto 多项目单个界面传输对象
-     * @return class MultipleProjectSingleUIVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(MultipleProjectSingleUIDTO dto, HttpServletRequest request) throws ActException {
+    public Result list(MultipleProjectSingleUIBDTO dto, HttpServletRequest request) throws ActException {
         try {
-            List<MultipleProjectSingleUIBO> boList = multipleProjectSingleUIAPI.list(dto);
-            List<MultipleProjectSingleUIVO> voList = BeanTransform.copyProperties(boList, MultipleProjectSingleUIVO.class, request);
-            return ActResult.initialize(voList);
+            return ActResult.initialize(multipleProjectSingleUIAPI.list(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -133,11 +133,10 @@ public class MultipleProjectSingleUIAct {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated(value = {ADD.class}) MultipleProjectSingleUITO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) MultipleProjectSingleUIBTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            MultipleProjectSingleUIBO bo = multipleProjectSingleUIAPI.save(to);
-            MultipleProjectSingleUIVO vo = BeanTransform.copyProperties(bo, MultipleProjectSingleUIVO.class, request);
-            return ActResult.initialize(vo);
+            multipleProjectSingleUIAPI.save(to);
+            return ActResult.initialize("insert success");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -170,7 +169,7 @@ public class MultipleProjectSingleUIAct {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(@Validated(value = {EDIT.class}) MultipleProjectSingleUITO to, BindingResult result) throws ActException {
+    public Result edit(@Validated(value = {EDIT.class}) MultipleProjectSingleUIBTO to, BindingResult result) throws ActException {
         try {
             multipleProjectSingleUIAPI.update(to);
             return new ActResult("edit success!");

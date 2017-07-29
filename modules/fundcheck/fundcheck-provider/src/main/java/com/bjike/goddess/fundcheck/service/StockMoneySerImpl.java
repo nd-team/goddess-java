@@ -227,6 +227,7 @@ public class StockMoneySerImpl extends ServiceImpl<StockMoney, StockMoneyDTO> im
     public StockMoneyBO edit(StockMoneyTO stockMoneyTO) throws SerException {
         checkAddIdentity();
         StockMoney stockMoney = super.findById(stockMoneyTO.getId());
+        BeanTransform.copyProperties(stockMoneyTO,stockMoney,true);
         stockMoney.setModifyTime(LocalDateTime.now());
         super.update(stockMoney);
         return BeanTransform.copyProperties(stockMoney, StockMoneyBO.class);

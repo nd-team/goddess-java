@@ -273,6 +273,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
         waitPay.setConfirmFirstSalary(ConfirmStatus.NO);
         waitPay.setConfirmSalary(ConfirmStatus.NO);
         waitPay.setFindType(FindType.WAIT);
+        waitPay.setIncomeTax(waitPayTO.getIncomeTax());
         super.save(waitPay);
         return BeanTransform.copyProperties(waitPay, WaitPayBO.class);
     }

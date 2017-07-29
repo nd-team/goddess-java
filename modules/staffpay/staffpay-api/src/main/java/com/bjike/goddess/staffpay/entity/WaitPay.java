@@ -177,7 +177,7 @@ public class WaitPay extends BaseEntity {
     /**
      * 是否缴纳个人所得税
      */
-    @Column(name = "is_incomeTax", columnDefinition = "TINYINT(2)  COMMENT '是否缴纳个人所得税'", insertable = false)
+    @Column(name = "is_incomeTax", columnDefinition = "TINYINT(1)  COMMENT '是否缴纳个人所得税'")
     private Boolean incomeTax;
 
     /**

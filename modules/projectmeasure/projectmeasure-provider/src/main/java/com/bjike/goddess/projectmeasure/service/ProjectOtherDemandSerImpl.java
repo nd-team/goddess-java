@@ -167,6 +167,7 @@ public class ProjectOtherDemandSerImpl extends ServiceImpl<ProjectOtherDemand, P
         if (projectEvaluateResultBOS != null && projectEvaluateResultBOS.size() > 0) {
             for (ProjectEvaluateResultBO str : projectEvaluateResultBOS) {
                 ProjectEvaluateResultBO projectEvaluateResultBO = str;
+                double labour = projectEvaluateResultBO.getLabour();//人工成本
                 double serviceCharge = projectEvaluateResultBO.getServiceCharge();//服务费用
                 double royalties = projectEvaluateResultBO.getRoyalties();//提成
                 double serveCharge = projectEvaluateResultBO.getServeCharge();//招待费
@@ -176,11 +177,12 @@ public class ProjectOtherDemandSerImpl extends ServiceImpl<ProjectOtherDemand, P
                 double otherCharge = projectEvaluateResultBO.getOtherCharge();//其他费用
                 double consumptionCosts = serviceCharge + royalties + serveCharge + deviceCharge + vehicleCharge + configCharge + otherCharge;//消耗费用
                 double amount = projectEvaluateResultBO.getAmount();//金额
-                int totalCost = projectEvaluateResultBO.getTotalCost();//成本
+                double totalCost = labour+consumptionCosts;//总成本
                 double taxes = projectEvaluateResultBO.getTaxes();//税金
                 double profit = amount - consumptionCosts - totalCost - taxes;
 
                 projectEvaluateResultBO.setConsumptionCosts(consumptionCosts);
+                projectEvaluateResultBO.setTotalCost(totalCost);
                 projectEvaluateResultBO.setProfit(profit);
 
             }

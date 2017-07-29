@@ -20,6 +20,7 @@ public class BiddingAnswerQuestionsTO extends BaseTO {
     /**
      * 编号
      */
+    @NotBlank(message = "编号不能为空",groups = {ADD.class, EDIT.class})
     private String biddingNumber;
     /**
      * 项目名称
@@ -30,26 +31,31 @@ public class BiddingAnswerQuestionsTO extends BaseTO {
     /**
      * 答疑准备人
      */
+    @NotBlank(message = "答疑准备人不能为空",groups = {ADD.class, EDIT.class})
     private String peopleAnswerQuestions;
 
     /**
      * 答疑时间
      */
+    @NotBlank(message = "答疑时间不能为空",groups = {ADD.class, EDIT.class})
     private String officeHour;
 
     /**
      * 解答单位
      */
+    @NotBlank(message = "解答单位不能为空",groups = {ADD.class, EDIT.class})
     private String answersUnit;
 
     /**
      * 问题
      */
+    @NotBlank(message = "问题不能为空",groups = {ADD.class, EDIT.class})
     private String problem;
 
     /**
      * 回复
      */
+    @NotBlank(message = "回复不能为空",groups = {ADD.class, EDIT.class})
     private String reply;
 
     public String getBiddingNumber() {

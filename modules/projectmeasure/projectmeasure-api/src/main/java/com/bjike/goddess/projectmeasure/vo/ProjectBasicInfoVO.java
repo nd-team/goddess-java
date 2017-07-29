@@ -51,6 +51,10 @@ public class ProjectBasicInfoVO {
      * 起始时间
      */
     private String startTime;
+    /**
+     * 结束时间
+     */
+    private String endTime;
 
     /**
      * 经历时间
@@ -161,6 +165,14 @@ public class ProjectBasicInfoVO {
 
     public void setArea(String area) {
         this.area = area;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
     public String getStartTime() {

@@ -102,16 +102,13 @@ public class SingleProjectMultipleUIAct {
      * 分页查询单个项目多个界面
      *
      * @param dto 单个项目多个界面传输对象
-     * @return class SingleProjectMultipleUIVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/list")
     public Result list(SingleProjectMultipleUIDTO dto, HttpServletRequest request) throws ActException {
         try {
-            List<SingleProjectMultipleUIBO> boList = singleProjectMultipleUIAPI.list(dto);
-            List<SingleProjectMultipleUIVO> voList = BeanTransform.copyProperties(boList, SingleProjectMultipleUIVO.class, request);
-            return ActResult.initialize(voList);
+            return ActResult.initialize(singleProjectMultipleUIAPI.list(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -121,7 +118,6 @@ public class SingleProjectMultipleUIAct {
      * 添加单个项目多个界面
      *
      * @param to 单个项目多个界面to信息
-     * @return class SingleProjectMultipleUIVO
      * @throws ActException
      * @version v1
      */
@@ -129,9 +125,8 @@ public class SingleProjectMultipleUIAct {
     @PostMapping("v1/add")
     public Result add(@Validated(value = {ADD.class}) SingleProjectMultipleUITO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            SingleProjectMultipleUIBO bo = singleProjectMultipleUIAPI.save(to);
-            SingleProjectMultipleUIVO vo = BeanTransform.copyProperties(bo, SingleProjectMultipleUIVO.class, request);
-            return ActResult.initialize(vo);
+            singleProjectMultipleUIAPI.save(to);
+            return ActResult.initialize("insert success");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

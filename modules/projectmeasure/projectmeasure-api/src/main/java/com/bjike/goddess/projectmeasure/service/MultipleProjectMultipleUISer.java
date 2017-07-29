@@ -2,10 +2,14 @@ package com.bjike.goddess.projectmeasure.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.projectmeasure.bo.MultipleProjectMultipleUIBBO;
 import com.bjike.goddess.projectmeasure.bo.MultipleProjectMultipleUIBO;
+import com.bjike.goddess.projectmeasure.dto.MultipleProjectMultipleUIBDTO;
 import com.bjike.goddess.projectmeasure.dto.MultipleProjectMultipleUIDTO;
 import com.bjike.goddess.projectmeasure.entity.MultipleProjectMultipleUI;
+import com.bjike.goddess.projectmeasure.entity.MultipleProjectMultipleUIB;
 import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
+import com.bjike.goddess.projectmeasure.to.MultipleProjectMultipleUIBTO;
 import com.bjike.goddess.projectmeasure.to.MultipleProjectMultipleUITO;
 
 import java.util.List;
@@ -48,7 +52,7 @@ public interface MultipleProjectMultipleUISer extends Ser<MultipleProjectMultipl
      * @return class MultipleProjectMultipleUIBO
      * @throws SerException
      */
-    MultipleProjectMultipleUIBO save(MultipleProjectMultipleUITO to) throws SerException;
+    void save(MultipleProjectMultipleUITO to) throws SerException;
 
     /**
      * 根据id删除多项目多个界面

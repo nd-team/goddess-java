@@ -601,46 +601,53 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                     temp_sendNum = sendNum * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusMinutes( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusMinutes( sendNum.longValue() ));
+                        str.setLastSendTime(LocalDateTime.now());
                     }
                     break;
                 case HOURS:
                     temp_sendNum = sendNum * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusHours( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusHours( sendNum.longValue() ));
+                        str.setLastSendTime(LocalDateTime.now());
                     }
                     break;
                 case DAY:
                     temp_sendNum = sendNum * 24 * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusDays( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusDays( sendNum.longValue() ));
+                        str.setLastSendTime(LocalDateTime.now());
                     }
                     break;
                 case WEEK:
                     temp_sendNum = sendNum * 7 * 24 * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusWeeks( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusWeeks( sendNum.longValue() ));
+                        str.setLastSendTime(LocalDateTime.now());
                     }
                     break;
                 case MONTH:
                     if (nowTime.minusMonths(sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusMonths( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusMonths( sendNum.longValue() ));
+                        str.setLastSendTime(LocalDateTime.now());
                     }
                     break;
                 case QUARTER:
                     if (nowTime.minusMonths(3*sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(3*sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusMonths( 3* sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusMonths( 3* sendNum.longValue() ));
+                        str.setLastSendTime(LocalDateTime.now());
                     }
                     break;
                 case YEAR:
                     if (nowTime.minusYears(sendNum.longValue()).isEqual(lastTime) || nowTime.minusYears(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusYears( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusYears( sendNum.longValue() ));
+                        str.setLastSendTime(LocalDateTime.now());
                     }
                     break;
             }

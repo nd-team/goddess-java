@@ -1,13 +1,14 @@
 package com.bjike.goddess.projectmeasure.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.projectmeasure.bo.MultipleProjectSingleUIBBO;
 import com.bjike.goddess.projectmeasure.bo.MultipleProjectSingleUIBO;
+import com.bjike.goddess.projectmeasure.dto.MultipleProjectSingleUIBDTO;
 import com.bjike.goddess.projectmeasure.dto.MultipleProjectSingleUIDTO;
-import com.bjike.goddess.projectmeasure.entity.MultipleProjectSingleUI;
+import com.bjike.goddess.projectmeasure.entity.MultipleProjectSingleUIB;
 import com.bjike.goddess.projectmeasure.service.MultipleProjectSingleUISer;
 import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
-import com.bjike.goddess.projectmeasure.to.MultipleProjectSingleUITO;
+import com.bjike.goddess.projectmeasure.to.MultipleProjectSingleUIBTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,7 +59,7 @@ public class MultipleProjectSingleUIApiImpl implements MultipleProjectSingleUIAP
      * @throws SerException
      */
     @Override
-    public List<MultipleProjectSingleUIBO> list(MultipleProjectSingleUIDTO dto) throws SerException {
+    public List<MultipleProjectSingleUIBBO> list(MultipleProjectSingleUIBDTO dto) throws SerException {
         return multipleProjectSingleUISer.list(dto);
     }
 
@@ -70,8 +71,8 @@ public class MultipleProjectSingleUIApiImpl implements MultipleProjectSingleUIAP
      * @throws SerException
      */
     @Override
-    public MultipleProjectSingleUIBO save(MultipleProjectSingleUITO to) throws SerException {
-        return multipleProjectSingleUISer.save(to);
+    public void save(MultipleProjectSingleUIBTO to) throws SerException {
+         multipleProjectSingleUISer.save(to);
     }
 
     /**
@@ -92,7 +93,7 @@ public class MultipleProjectSingleUIApiImpl implements MultipleProjectSingleUIAP
      * @throws SerException
      */
     @Override
-    public void update(MultipleProjectSingleUITO to) throws SerException {
+    public void update(MultipleProjectSingleUIBTO to) throws SerException {
         multipleProjectSingleUISer.update(to);
     }
 

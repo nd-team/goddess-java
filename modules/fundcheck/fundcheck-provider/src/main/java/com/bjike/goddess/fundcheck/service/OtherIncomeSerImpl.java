@@ -258,7 +258,7 @@ public class OtherIncomeSerImpl extends ServiceImpl<OtherIncome, OtherIncomeDTO>
         }
         //获取所有类型(科目)对应的金额
         List<Double> moneyList = new ArrayList<>();
-        sql = "SELECT money FROM fundcheck_otherincome WHERE date BETWEEN '" + startTime + "' AND '" + endTime + "' GROUP BY money;";
+        sql = "SELECT money FROM fundcheck_otherincome WHERE date BETWEEN '" + startTime + "' AND '" + endTime + "' GROUP BY money";
         List<Object> objectList = super.findBySql(sql);
         if (null != objectList && objectList.size() > 0) {
             moneyList.addAll((List) objectList);

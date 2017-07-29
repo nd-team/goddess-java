@@ -63,7 +63,7 @@ public interface SingleProjectMultipleUIAPI {
      * @return class SingleProjectMultipleUIBO
      * @throws SerException
      */
-    SingleProjectMultipleUIBO save(SingleProjectMultipleUITO to) throws SerException;
+    void save(SingleProjectMultipleUITO to) throws SerException;
 
     /**
      * 根据id删除单个项目多个界面
