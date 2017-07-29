@@ -3,6 +3,7 @@ package com.bjike.goddess.businsurance.api;
 import com.bjike.goddess.businsurance.bo.InsureRecordBO;
 import com.bjike.goddess.businsurance.dto.InsureRecordDTO;
 import com.bjike.goddess.businsurance.to.GuidePermissionTO;
+import com.bjike.goddess.businsurance.to.InsureRecordNextTO;
 import com.bjike.goddess.businsurance.to.InsureRecordTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -57,6 +58,13 @@ public interface InsureRecordAPI {
      * @return class InsureRecordBO
      */
     default InsureRecordBO editInsureRecord(InsureRecordTO insureRecordTO) throws SerException { return null;}
+
+    /**
+     *  续保
+     * @param insureRecordNextTO 意外险记录信息
+     * @return class InsureRecordBO
+     */
+    default InsureRecordBO editNextInsureRecord(InsureRecordNextTO insureRecordNextTO) throws SerException { return null;}
 
     /**
      * 删除
