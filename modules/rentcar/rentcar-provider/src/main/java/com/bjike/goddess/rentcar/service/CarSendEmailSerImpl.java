@@ -272,6 +272,8 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
         CarSendEmail model = super.findById(to.getId());
         if(model != null){
             model.setModifyTime(LocalDateTime.now());
+            model.setPositionNameId(to.getProjetManagerId());
+            model.setProjectManageId(to.getProjetManagerId());
             super.update(model);
             return BeanTransform.copyProperties(to,CarSendEmailBO.class);
         }else {
