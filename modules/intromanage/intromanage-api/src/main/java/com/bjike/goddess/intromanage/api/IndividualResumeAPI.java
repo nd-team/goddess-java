@@ -42,7 +42,7 @@ public interface IndividualResumeAPI {
      * @return class IndividualResumeBO
      * @throws SerException
      */
-    IndividualResumeBO findById(String id) throws SerException;
+    IndividualResumeBO findResumeById(String id) throws SerException;
 
     /**
      * 计算总条数

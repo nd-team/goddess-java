@@ -4,6 +4,7 @@ import com.bjike.goddess.businsurance.bo.InsureRecordBO;
 import com.bjike.goddess.businsurance.dto.InsureRecordDTO;
 import com.bjike.goddess.businsurance.service.InsureRecordSer;
 import com.bjike.goddess.businsurance.to.GuidePermissionTO;
+import com.bjike.goddess.businsurance.to.InsureRecordNextTO;
 import com.bjike.goddess.businsurance.to.InsureRecordTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,11 @@ public class InsureRecordApiImpl implements InsureRecordAPI {
     @Override
     public InsureRecordBO editInsureRecord(InsureRecordTO insureRecordTO) throws SerException {
         return insureRecordSer.editInsureRecord(insureRecordTO);
+    }
+
+    @Override
+    public InsureRecordBO editNextInsureRecord(InsureRecordNextTO insureRecordNextTO) throws SerException {
+        return insureRecordSer.editNextInsureRecord(insureRecordNextTO);
     }
 
     @Override

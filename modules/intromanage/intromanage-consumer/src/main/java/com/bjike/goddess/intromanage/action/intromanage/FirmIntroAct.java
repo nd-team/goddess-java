@@ -14,7 +14,7 @@ import com.bjike.goddess.intromanage.dto.FirmIntroDTO;
 import com.bjike.goddess.intromanage.to.FirmDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.FirmIntroTO;
 import com.bjike.goddess.intromanage.to.GuidePermissionTO;
-import com.bjike.goddess.intromanage.vo.FirmIntroVO;
+import com.bjike.goddess.intromanage.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -74,7 +74,24 @@ public class FirmIntroAct {
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             FirmIntroBO bo = firmIntroAPI.findById(id);
+            //查询荣誉与资质
+            List<HonorAndQualityVO> honorAndQualitieVOs = BeanTransform.copyProperties( bo.getHonorAndQualityBOS() ,HonorAndQualityVO.class );
+            //查询主业介绍
+            List<MainBusinessIntroVO> mainBusinessIntroVOS = BeanTransform.copyProperties( bo.getMainBusinessIntroBOS() ,MainBusinessIntroVO.class );
+            //查询成功案例
+            List<SuccessStoriesVO> successStoriesVOS = BeanTransform.copyProperties( bo.getSuccessStoriesBOS() ,SuccessStoriesVO.class );
+            //查询客户及合作伙伴
+            List<CustomerAndPartnerVO> customerAndPartnerVOS = BeanTransform.copyProperties( bo.getCustomerAndPartnerBOS() ,CustomerAndPartnerVO.class );
+            //查询通讯途径
+            List<CommunicationPathVO> communicationPathVOS = BeanTransform.copyProperties( bo.getCommunicationPathBOS() ,CommunicationPathVO.class );
+
             FirmIntroVO vo = BeanTransform.copyProperties(bo, FirmIntroVO.class, request);
+            vo.setHonorAndQualityVOS( honorAndQualitieVOs );
+            vo.setMainBusinessIntroVOS( mainBusinessIntroVOS );
+            vo.setSuccessStoriesVOS( successStoriesVOS );
+            vo.setCustomerAndPartnerVOS( customerAndPartnerVOS );
+            vo.setCommunicationPathVOS( communicationPathVOS );
+
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -6,12 +6,10 @@ import com.bjike.goddess.businsurance.entity.InsureRecord;
 import com.bjike.goddess.businsurance.enums.GuideAddrStatus;
 import com.bjike.goddess.businsurance.excel.InsureRecordExcel;
 import com.bjike.goddess.businsurance.to.GuidePermissionTO;
+import com.bjike.goddess.businsurance.to.InsureRecordNextTO;
 import com.bjike.goddess.businsurance.to.InsureRecordTO;
-import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.businsurance.dto.InsureRecordDTO;
-import com.bjike.goddess.businsurance.entity.InsureRecord;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
@@ -25,6 +23,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -304,6 +303,9 @@ public class InsureRecordSerImpl extends ServiceImpl<InsureRecord, InsureRecordD
     @Override
     public InsureRecordBO editInsureRecord(InsureRecordTO insureRecordTO) throws SerException {
         checkPermission();
+        if(StringUtils.isBlank(insureRecordTO.getId())){
+            throw new SerException("id不能为空");
+        }
         InsureRecord insureRecord = BeanTransform.copyProperties(insureRecordTO,InsureRecord.class,true);
         InsureRecord cusLevel = super.findById( insureRecordTO.getId() );
 
@@ -311,6 +313,30 @@ public class InsureRecordSerImpl extends ServiceImpl<InsureRecord, InsureRecordD
         cusLevel.setModifyTime(LocalDateTime.now());
         super.update( cusLevel );
         return BeanTransform.copyProperties(insureRecord, InsureRecordBO.class);
+    }
+
+
+    @Override
+    public InsureRecordBO editNextInsureRecord(InsureRecordNextTO insureRecordNextTO) throws SerException {
+        checkPermission();
+        if(StringUtils.isBlank(insureRecordNextTO.getId())){
+            throw new SerException("id不能为空");
+        }
+
+        InsureRecord cusLevel = super.findById( insureRecordNextTO.getId() );
+        InsureRecord temp = new InsureRecord();
+
+        BeanUtils.copyProperties(cusLevel , temp ,"id","createTime","modifyTime");
+        temp.setStartDate( LocalDate.parse(insureRecordNextTO.getStartDate()));
+        temp.setEndDate( LocalDate.parse(insureRecordNextTO.getEndDate()));
+        temp.setCreateTime(LocalDateTime.now());
+        temp.setModifyTime(LocalDateTime.now());
+
+        cusLevel.setRenewal("是");
+        super.update( cusLevel );
+
+        super.save( temp );
+        return BeanTransform.copyProperties(cusLevel, InsureRecordBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
