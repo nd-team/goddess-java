@@ -302,9 +302,13 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
     @Override
     public Boolean getCusPermission(String idFlag) throws SerException {
+        String token = RpcTransmit.getUserToken();
         Boolean flag = false;
         //但前用户
         UserBO userBO = userAPI.currentUser();
+
+        RpcTransmit.transmitUserToken(token);
+
         String userId = userBO.getId();
         if (StringUtils.isBlank(idFlag)) {
             throw new SerException("idFlag不能为空");
@@ -356,9 +360,12 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
     @Override
     public Boolean busCusPermission(String idFlag) throws SerException {
+        String token = RpcTransmit.getUserToken();
         Boolean flag = false;
         //但前用户
         UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(token);
+
         String userId = userBO.getId();
         if (StringUtils.isBlank(idFlag)) {
             throw new SerException("idFlag不能为空");
@@ -402,9 +409,12 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
     @Override
     public Boolean moudleCusPermission(String idFlag) throws SerException {
+        String token = RpcTransmit.getUserToken();
         Boolean flag = false;
         //但前用户
         UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(token);
+
         String userId = userBO.getId();
         if (StringUtils.isBlank(idFlag)) {
             throw new SerException("idFlag不能为空");

@@ -4,6 +4,7 @@ import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -11,12 +12,20 @@ import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.staffentry.to.EntryBasicInfoTO;
+import com.bjike.goddess.staffentry.to.SiginManageDeleteFileTO;
 import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
+import com.bjike.goddess.storage.api.FileAPI;
+import com.bjike.goddess.storage.to.FileInfo;
+import com.bjike.goddess.storage.vo.FileVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -30,10 +39,12 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("entrybasicinfo")
-public class EntryBasicInfoAction {
+public class EntryBasicInfoAction extends BaseFileAction{
 
     @Autowired
     private EntryBasicInfoAPI entryBasicInfoAPI;
+    @Autowired
+    private FileAPI fileAPI;
 
 
     /**
@@ -227,30 +238,91 @@ public class EntryBasicInfoAction {
     /**
      * 上传附件
      *
-     * @des 上传附件
-     * @return class EntryBasicInfoVO
+     * @des 审核项目签订与立项
      * @version v1
      */
     @LoginAuth
-    @PutMapping("v1/uploadFile")
-    public Result uploadFile( ) throws ActException {
-        //TODO: tanghaixiang 2017-03-10 上传附件
-        return ActResult.initialize(null);
+    @PostMapping("v1/uploadFile/{id}")
+    public Result uploadFile(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            // /id/....
+            String paths = "/businessproject/siginmanage/" + id;
+            List<InputStream> inputStreams = getInputStreams(request, paths);
+            fileAPI.upload(inputStreams);
+            return new ActResult("upload success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
     }
 
     /**
-     * 查看附件
+     * 文件附件列表
      *
-     * @des 查看附件
-     * @return class EntryBasicInfoVO
+     * @param id 签订与立项id
+     * @return class FileVO
+     * @version v1
+     */
+    @GetMapping("v1/listFile/{id}")
+    public Result list(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            // /businessproject/id/....
+            String path = "/businessproject/siginmanage/" + id;
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
+            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
+            return ActResult.initialize(files);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param path 文件信息路径
+     * @version v1
+     */
+    @GetMapping("v1/downloadFile")
+    public Result download(@RequestParam String path, HttpServletRequest request, HttpServletResponse response) throws ActException {
+        try {
+
+
+            //该文件的路径
+            Object storageToken = request.getAttribute("storageToken");
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            fileInfo.setStorageToken(storageToken.toString());
+            String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
+            byte[] buffer = fileAPI.download(fileInfo);
+            writeOutFile(response, buffer, filename);
+            return new ActResult("download success");
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
+
+    /**
+     * 删除文件或文件夹
+     *
+     * @param siginManageDeleteFileTO 多文件信息路径
      * @version v1
      */
     @LoginAuth
-    @PutMapping("v1/getFile")
-    public Result getFile( ) throws ActException {
-        //TODO: tanghaixiang 2017-03-10 查看附件
-        return ActResult.initialize(null);
+    @PostMapping("v1/deleteFile")
+    public Result delFile(@Validated(SiginManageDeleteFileTO.TestDEL.class) SiginManageDeleteFileTO siginManageDeleteFileTO, HttpServletRequest request) throws SerException {
+        if(null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length>=0 ){
+            Object storageToken = request.getAttribute("storageToken");
+            fileAPI.delFile(storageToken.toString(),siginManageDeleteFileTO.getPaths());
+        }
+        return new ActResult("delFile success");
     }
+
+
 
 
 }
