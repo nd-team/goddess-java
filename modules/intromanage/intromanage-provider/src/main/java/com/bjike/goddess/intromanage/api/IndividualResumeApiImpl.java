@@ -48,9 +48,8 @@ public class IndividualResumeApiImpl implements IndividualResumeAPI {
      * @throws SerException
      */
     @Override
-    public IndividualResumeBO findById(String id) throws SerException {
-        IndividualResume model = individualResumeSer.findById(id);
-        return BeanTransform.copyProperties(model, IndividualResumeBO.class);
+    public IndividualResumeBO findResumeById(String id) throws SerException {
+        return  individualResumeSer.findResumeById(id);
     }
 
     /**

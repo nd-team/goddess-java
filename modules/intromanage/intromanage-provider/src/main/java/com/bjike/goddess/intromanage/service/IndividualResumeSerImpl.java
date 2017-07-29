@@ -5,13 +5,11 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.intromanage.bo.IndividualResumeBO;
+import com.bjike.goddess.intromanage.bo.*;
 import com.bjike.goddess.intromanage.dto.*;
 import com.bjike.goddess.intromanage.entity.*;
 import com.bjike.goddess.intromanage.excel.SonPermissionObject;
-import com.bjike.goddess.intromanage.to.GuidePermissionTO;
-import com.bjike.goddess.intromanage.to.IndividualDisplayFieldTO;
-import com.bjike.goddess.intromanage.to.IndividualResumeTO;
+import com.bjike.goddess.intromanage.to.*;
 import com.bjike.goddess.intromanage.type.GuideAddrStatus;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -178,11 +176,11 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
      * 根据id查询个人简介
      *
      * @param id 个人简介唯一标识
-     * @return class IndividualResume
+     * @return class IndividualResumeBO
      * @throws SerException
      */
     @Override
-    public IndividualResume findById(String id) throws SerException {
+    public IndividualResumeBO findResumeById(String id) throws SerException {
         IndividualResume individualResume = super.findById(id);
         if (individualResume == null) {
             return null;
@@ -202,7 +200,40 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
             }
         }
 
-        return individualResume;
+
+        //查询员工奖励
+        StaffRewardDTO staffRewardDTO =  new StaffRewardDTO();
+        staffRewardDTO.getConditions().add(Restrict.eq("staffId", id));
+        List<StaffReward> honorAndQualities = staffRewardSer.findByCis( staffRewardDTO );
+        List<StaffRewardBO> honorAndQualitieBOs = BeanTransform.copyProperties( honorAndQualities ,StaffRewardBO.class );
+        //查询员工荣誉
+        StaffHonorDTO staffHonorDTO =  new StaffHonorDTO();
+        staffHonorDTO.getConditions().add(Restrict.eq("staffId", id));
+        List<StaffHonor> mainBusinessIntros = staffHonorSer.findByCis( staffHonorDTO );
+        List<StaffHonorBO> mainBusinessIntroBOS = BeanTransform.copyProperties( mainBusinessIntros ,StaffHonorBO.class );
+        //查询教育经历
+        EducateExperienceDTO educateExperienceDTO =  new EducateExperienceDTO();
+        educateExperienceDTO.getConditions().add(Restrict.eq("staffId", id));
+        List<EducateExperience> successStories = educateExperienceSer.findByCis( educateExperienceDTO );
+        List<EducateExperienceBO> successStoriesBOS = BeanTransform.copyProperties( successStories ,EducateExperienceBO.class );
+        //查询工作经历
+        WorkExperienceDTO workExperienceDTO =  new WorkExperienceDTO();
+        workExperienceDTO.getConditions().add(Restrict.eq("staffId", id));
+        List<WorkExperience> customerAndPartners = workExperienceSer.findByCis( workExperienceDTO );
+        List<WorkExperienceBO> customerAndPartnerBOS = BeanTransform.copyProperties( customerAndPartners ,WorkExperienceBO.class );
+        //查询证书情况
+        CredentialSituationDTO credentialSituationDTO =  new CredentialSituationDTO();
+        credentialSituationDTO.getConditions().add(Restrict.eq("staffId", id));
+        List<CredentialSituation> communicationPaths = credentialSituationSer.findByCis( credentialSituationDTO );
+        List<CredentialSituationBO> communicationPathBOS = BeanTransform.copyProperties( communicationPaths ,CredentialSituationBO.class );
+
+        IndividualResumeBO individualResumeBO = BeanTransform.copyProperties( individualResume , IndividualResumeBO.class);
+        individualResumeBO.setStaffRewardBOS( honorAndQualitieBOs );
+        individualResumeBO.setStaffHonorBOS( mainBusinessIntroBOS );
+        individualResumeBO.setEducateExperienceBOS( successStoriesBOS );
+        individualResumeBO.setWorkExperienceBOS( customerAndPartnerBOS );
+        individualResumeBO.setCredentialSituationBOS( communicationPathBOS );
+        return individualResumeBO;
     }
 
     /**
@@ -395,23 +426,38 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
      * @throws SerException
      */
     private void saveCredentialSituation(IndividualResumeTO to, String staffId) throws SerException {
-        String[] certificateTitles = to.getCertificateTitles();//获取的专业证书
-        String[] certificateTimes = to.getCertificateTimes();  //获取证书的时间
-        String[] certificateNos = to.getCertificateNos();      //证书编号
-        boolean certificateTitlesNotEmpty = (certificateTitles != null) && (certificateTitles.length > 0);
-        if (certificateTitlesNotEmpty) {
-            List<CredentialSituation> list = new ArrayList<>(0);
-            int len = certificateTitles.length;
-            for (int i = 0; i < len; i++) {
+        List<CredentialSituationTO> credentialSituationTOS = to.getCredentialSituationTOS();
+        List<CredentialSituation> list = new ArrayList<>(0);
+        if( credentialSituationTOS != null && credentialSituationTOS.size()>0 ){
+            for ( CredentialSituationTO temp : credentialSituationTOS){
                 CredentialSituation model = new CredentialSituation();
-                model.setCertificateTitle(certificateTitles[i]);
-                model.setCertificateTime(certificateTimes[i]);
-                model.setCertificateNo(certificateNos[i]);
+                model.setCertificateTitle(temp.getCertificateTitle());
+                model.setCertificateTime(temp.getCertificateTime());
+                model.setCertificateNo(temp.getCertificateNo());
                 model.setStaffId(staffId);
                 list.add(model);
             }
+
             credentialSituationSer.save(list);
         }
+
+//        String[] certificateTitles = to.getCertificateTitles();//获取的专业证书
+//        String[] certificateTimes = to.getCertificateTimes();  //获取证书的时间
+//        String[] certificateNos = to.getCertificateNos();      //证书编号
+//        boolean certificateTitlesNotEmpty = (certificateTitles != null) && (certificateTitles.length > 0);
+//        if (certificateTitlesNotEmpty) {
+//            List<CredentialSituation> list = new ArrayList<>(0);
+//            int len = certificateTitles.length;
+//            for (int i = 0; i < len; i++) {
+//                CredentialSituation model = new CredentialSituation();
+//                model.setCertificateTitle(certificateTitles[i]);
+//                model.setCertificateTime(certificateTimes[i]);
+//                model.setCertificateNo(certificateNos[i]);
+//                model.setStaffId(staffId);
+//                list.add(model);
+//            }
+//            credentialSituationSer.save(list);
+//        }
     }
 
     /**
@@ -422,21 +468,36 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
      * @throws SerException
      */
     private void saveWorkExperiences(IndividualResumeTO to, String staffId) throws SerException {
-        String[] participatedActivities = to.getParticipatedActivities();//曾经参与的组织与活动
-        String[] projectExperiences = to.getProjectExperiences();//项目经历
-        boolean participatedActivitiesNotEmpty = (participatedActivities != null) && (participatedActivities.length > 0);
-        if (participatedActivitiesNotEmpty) {
-            List<WorkExperience> list = new ArrayList<>(0);
-            int len = participatedActivities.length;
-            for (int i = 0; i < len; i++) {
+        List<WorkExperienceTO> workExperienceTOS = to.getWorkExperienceTOS();
+        List<WorkExperience> list = new ArrayList<>(0);
+        if( workExperienceTOS != null && workExperienceTOS.size()>0 ){
+            for ( WorkExperienceTO temp : workExperienceTOS){
                 WorkExperience model = new WorkExperience();
-                model.setParticipatedActivity(participatedActivities[i]);
-                model.setProjectExperience(projectExperiences[i]);
+                model.setParticipatedActivity(temp.getParticipatedActivity());
+                model.setProjectExperience(temp.getProjectExperience());
                 model.setStaffId(staffId);
                 list.add(model);
             }
+
             workExperienceSer.save(list);
         }
+
+
+//        String[] participatedActivities = to.getParticipatedActivities();//曾经参与的组织与活动
+//        String[] projectExperiences = to.getProjectExperiences();//项目经历
+//        boolean participatedActivitiesNotEmpty = (participatedActivities != null) && (participatedActivities.length > 0);
+//        if (participatedActivitiesNotEmpty) {
+//            List<WorkExperience> list = new ArrayList<>(0);
+//            int len = participatedActivities.length;
+//            for (int i = 0; i < len; i++) {
+//                WorkExperience model = new WorkExperience();
+//                model.setParticipatedActivity(participatedActivities[i]);
+//                model.setProjectExperience(projectExperiences[i]);
+//                model.setStaffId(staffId);
+//                list.add(model);
+//            }
+//            workExperienceSer.save(list);
+//        }
     }
 
     /**
@@ -447,21 +508,35 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
      * @throws SerException
      */
     private void saveEducateExperiences(IndividualResumeTO to, String staffId) throws SerException {
-        String[] educatAddresses = to.getEducatAddresses();//教育地址
-        String[] trainingExperiences = to.getTrainingExperiences();//培训经历
-        boolean educatAddressesNotEmpty = (educatAddresses != null) && (educatAddresses.length > 0);
-        if (educatAddressesNotEmpty) {
-            List<EducateExperience> list = new ArrayList<>(0);
-            int len = educatAddresses.length;
-            for (int i = 0; i < len; i++) {
+        List<EducateExperienceTO> educateExperienceTOS = to.getEducateExperienceTOS();
+        List<EducateExperience> list = new ArrayList<>(0);
+        if( educateExperienceTOS != null && educateExperienceTOS.size()>0 ){
+            for ( EducateExperienceTO temp : educateExperienceTOS){
                 EducateExperience model = new EducateExperience();
-                model.setEducatAddress(educatAddresses[i]);
-                model.setTrainingExperience(trainingExperiences[i]);
+                model.setEducatAddress(temp.getEducatAddress());
+                model.setTrainingExperience(temp.getTrainingExperience());
                 model.setStaffId(staffId);
                 list.add(model);
             }
+
             educateExperienceSer.save(list);
         }
+
+//        String[] educatAddresses = to.getEducatAddresses();//教育地址
+//        String[] trainingExperiences = to.getTrainingExperiences();//培训经历
+//        boolean educatAddressesNotEmpty = (educatAddresses != null) && (educatAddresses.length > 0);
+//        if (educatAddressesNotEmpty) {
+//            List<EducateExperience> list = new ArrayList<>(0);
+//            int len = educatAddresses.length;
+//            for (int i = 0; i < len; i++) {
+//                EducateExperience model = new EducateExperience();
+//                model.setEducatAddress(educatAddresses[i]);
+//                model.setTrainingExperience(trainingExperiences[i]);
+//                model.setStaffId(staffId);
+//                list.add(model);
+//            }
+//            educateExperienceSer.save(list);
+//        }
     }
 
     /**
@@ -472,23 +547,39 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
      * @throws SerException
      */
     private void saveStaffHonors(IndividualResumeTO to, String staffId) throws SerException {
-        String[] honorNames = to.getHonorNames();//荣誉名称
-        String[] honorGrades = to.getHonorGrades();//荣誉等级
-        String[] firmSubsidies = to.getFirmSubsidies();//公司补助
-        boolean honorNamesNotEmpty = (honorNames != null) && (honorNames.length > 0);
-        if (honorNamesNotEmpty) {
-            List<StaffHonor> list = new ArrayList<>(0);
-            int len = honorNames.length;
-            for (int i = 0; i < len; i++) {
+        List<StaffHonorTO> staffHonorTOS = to.getStaffHonorTOS();
+        List<StaffHonor> list = new ArrayList<>(0);
+        if( staffHonorTOS != null && staffHonorTOS.size()>0 ){
+            for ( StaffHonorTO temp : staffHonorTOS){
                 StaffHonor model = new StaffHonor();
-                model.setHonorName(honorNames[i]);
-                model.setHonorGrade(honorGrades[i]);
-                model.setFirmSubsidy(firmSubsidies[i]);
+                model.setHonorName(temp.getHonorName());
+                model.setHonorGrade(temp.getHonorGrade());
+                model.setFirmSubsidy(temp.getFirmSubsidy());
                 model.setStaffId(staffId);
                 list.add(model);
             }
+
             staffHonorSer.save(list);
         }
+
+
+//        String[] honorNames = to.getHonorNames();//荣誉名称
+//        String[] honorGrades = to.getHonorGrades();//荣誉等级
+//        String[] firmSubsidies = to.getFirmSubsidies();//公司补助
+//        boolean honorNamesNotEmpty = (honorNames != null) && (honorNames.length > 0);
+//        if (honorNamesNotEmpty) {
+//            List<StaffHonor> list = new ArrayList<>(0);
+//            int len = honorNames.length;
+//            for (int i = 0; i < len; i++) {
+//                StaffHonor model = new StaffHonor();
+//                model.setHonorName(honorNames[i]);
+//                model.setHonorGrade(honorGrades[i]);
+//                model.setFirmSubsidy(firmSubsidies[i]);
+//                model.setStaffId(staffId);
+//                list.add(model);
+//            }
+//            staffHonorSer.save(list);
+//        }
     }
 
     /**
@@ -499,23 +590,38 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
      * @throws SerException
      */
     private void saveStaffRewards(IndividualResumeTO to, String staffId) throws SerException {
-        String[] rewardsNames = to.getRewardsNames();//奖励名称
-        String[] prizes = to.getPrizes();//奖品
-        String[] bonuses = to.getBonuses();//奖金
-        boolean rewardsNamesNotEmpty = (rewardsNames != null) && (rewardsNames.length > 0);
-        if (rewardsNamesNotEmpty) {
-            List<StaffReward> list = new ArrayList<>(0);
-            int len = rewardsNames.length;
-            for (int i = 0; i < len; i++) {
+        List<StaffRewardTO> staffRewardTOS = to.getStaffRewardTOS();
+        List<StaffReward> list = new ArrayList<>(0);
+        if( staffRewardTOS != null && staffRewardTOS.size()>0 ){
+            for ( StaffRewardTO temp : staffRewardTOS){
                 StaffReward model = new StaffReward();
-                model.setRewardsName(rewardsNames[i]);
-                model.setPrize(prizes[i]);
-                model.setBonus(bonuses[i]);
+                model.setRewardsName(temp.getRewardsName());
+                model.setPrize(temp.getPrize());
+                model.setBonus(temp.getBonus());
                 model.setStaffId(staffId);
                 list.add(model);
             }
+
             staffRewardSer.save(list);
         }
+
+//        String[] rewardsNames = to.getRewardsNames();//奖励名称
+//        String[] prizes = to.getPrizes();//奖品
+//        String[] bonuses = to.getBonuses();//奖金
+//        boolean rewardsNamesNotEmpty = (rewardsNames != null) && (rewardsNames.length > 0);
+//        if (rewardsNamesNotEmpty) {
+//            List<StaffReward> list = new ArrayList<>(0);
+//            int len = rewardsNames.length;
+//            for (int i = 0; i < len; i++) {
+//                StaffReward model = new StaffReward();
+//                model.setRewardsName(rewardsNames[i]);
+//                model.setPrize(prizes[i]);
+//                model.setBonus(bonuses[i]);
+//                model.setStaffId(staffId);
+//                list.add(model);
+//            }
+//            staffRewardSer.save(list);
+//        }
     }
 
     /**
