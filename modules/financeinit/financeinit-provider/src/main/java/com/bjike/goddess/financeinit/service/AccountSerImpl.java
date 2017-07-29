@@ -125,7 +125,7 @@ public class AccountSerImpl extends ServiceImpl<Account, AccountDTO> implements 
         Boolean flagSee = guideSeeIdentity();
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagAdd = guideAddIdentity();
-        if( flagSee || flagAdd ){
+        if (flagSee || flagAdd) {
             return true;
         } else {
             return false;
@@ -192,8 +192,10 @@ public class AccountSerImpl extends ServiceImpl<Account, AccountDTO> implements 
         List<Account> list = super.findByCis(accountDTO);
         List<AccountBO> cb = BeanTransform.copyProperties(list, AccountBO.class);
         Set<String> set = new HashSet<String>();
-        for (AccountBO a : cb) {
-            set.add(a.getName());
+        if (cb != null) {
+            for (AccountBO a : cb) {
+                set.add(a.getName());
+            }
         }
         return set;
     }

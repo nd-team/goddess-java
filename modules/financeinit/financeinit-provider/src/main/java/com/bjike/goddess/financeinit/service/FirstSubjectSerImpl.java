@@ -384,10 +384,13 @@ public class FirstSubjectSerImpl extends ServiceImpl<FirstSubject, FirstSubjectD
         return code;
     }
 
+
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public FirstSubjectBO importExcel(List<FirstSubjectTO> firstSubjectTO) throws SerException {
         List<FirstSubject> list = new ArrayList<>();
         if( firstSubjectTO!= null && firstSubjectTO.size()>0 ){
+            String code = getCodeGenerate(firstSubjectTO.get(0).getCategory());
             for(FirstSubjectTO str : firstSubjectTO ){
 
                 FirstSubjectDTO dto = new FirstSubjectDTO();
@@ -398,16 +401,21 @@ public class FirstSubjectSerImpl extends ServiceImpl<FirstSubject, FirstSubjectD
                     throw new SerException("该级别所属类别'"+str.getCategory()+"'下的一级类别名'"+str.getName()+"'已经存在，不可以再填,请检查导入数据");
                 }
 
-                String code = getCodeGenerate(str.getCategory());
+//                String code = getCodeGenerate(str.getCategory());
 
                 FirstSubject firstSubject = BeanTransform.copyProperties(str, FirstSubject.class, true);
                 firstSubject.setCode(code);
                 firstSubject.setCreateTime(LocalDateTime.now());
+                firstSubject.setId(null);
                 list.add( firstSubject );
+
+                //
+                int num = Integer.parseInt(code.trim()) + 1;
+                code = String.valueOf(num);
             }
         }
         if( list != null && list.size() >0 ){
-            super.save( list );
+//            super.save( list );
         }
         return new FirstSubjectBO();
     }
