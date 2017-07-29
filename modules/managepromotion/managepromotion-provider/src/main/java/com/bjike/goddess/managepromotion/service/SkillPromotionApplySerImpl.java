@@ -191,7 +191,7 @@ public class SkillPromotionApplySerImpl extends ServiceImpl<SkillPromotionApply,
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        if (!"admin".equals(userName.toLowerCase())) {
+        if (!"admin".equalsIgnoreCase(userName)) {
             flag = cusPermissionSer.busCusPermission("2");
         } else {
             flag = true;

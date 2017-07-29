@@ -49,9 +49,9 @@ public class ProjectEvaluateResultBO extends BaseBO {
     private String timeLimit;
 
     /**
-     * 人工
+     * 人工成本
      */
-    private Integer labour;
+    private Double labour;
 
     /**
      * 耗时费用
@@ -59,9 +59,9 @@ public class ProjectEvaluateResultBO extends BaseBO {
     private Double consumptionCosts;
 
     /**
-     * 成本
+     * 总成本
      */
-    private Integer totalCost;
+    private Double totalCost;
 
     /**
      * 利润
@@ -103,7 +103,6 @@ public class ProjectEvaluateResultBO extends BaseBO {
      */
     private Double otherCharge;
 
-
     public String getProjectName() {
         return projectName;
     }
@@ -144,6 +143,14 @@ public class ProjectEvaluateResultBO extends BaseBO {
         this.backDate = backDate;
     }
 
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
     public String getTimeLimit() {
         return timeLimit;
     }
@@ -152,11 +159,11 @@ public class ProjectEvaluateResultBO extends BaseBO {
         this.timeLimit = timeLimit;
     }
 
-    public Integer getLabour() {
+    public Double getLabour() {
         return labour;
     }
 
-    public void setLabour(Integer labour) {
+    public void setLabour(Double labour) {
         this.labour = labour;
     }
 
@@ -168,11 +175,11 @@ public class ProjectEvaluateResultBO extends BaseBO {
         this.consumptionCosts = consumptionCosts;
     }
 
-    public Integer getTotalCost() {
+    public Double getTotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(Integer totalCost) {
+    public void setTotalCost(Double totalCost) {
         this.totalCost = totalCost;
     }
 
@@ -238,13 +245,5 @@ public class ProjectEvaluateResultBO extends BaseBO {
 
     public void setOtherCharge(Double otherCharge) {
         this.otherCharge = otherCharge;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
     }
 }

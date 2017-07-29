@@ -264,8 +264,6 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
      */
     private void checkDate(BiddingInfoTO biddingInfoTO) throws SerException {
         try {
-            DateUtil.parseDate(biddingInfoTO.getRegistrationTime());
-            DateUtil.parseDate(biddingInfoTO.getBiddingTime());
             DateUtil.parseDate(biddingInfoTO.getBuyTenderTime());
             DateUtil.parseDate(biddingInfoTO.getMarginTime());
             DateUtil.parseDate(biddingInfoTO.getBackTimeDeposit());
@@ -317,7 +315,8 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
     public BiddingInfoBO insertBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {
         checkAddIdentity();
         checkDate(biddingInfoTO);
-        BiddingInfo biddingInfo = BeanTransform.copyProperties(biddingInfoTO, BiddingInfo.class, true);
+        BiddingInfo biddingInfo = BeanTransform.copyProperties(biddingInfoTO, BiddingInfo.class, true,"tenderModule");
+        biddingInfo.setTenderModule(StringUtils.join(biddingInfoTO.getTenderModule(),","));
         super.save(biddingInfo);
         return BeanTransform.copyProperties(biddingInfo, BiddingInfoBO.class);
     }
@@ -330,11 +329,12 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
             throw new SerException("id不能为空");
         }
         BiddingInfo biddingInfo = super.findById(biddingInfoTO.getId());
-        BeanTransform.copyProperties(biddingInfoTO, biddingInfo, true);
+        BeanTransform.copyProperties(biddingInfoTO, biddingInfo, true,"tenderModule");
         checkDate(biddingInfoTO);
         biddingInfo.setModifyTime(LocalDateTime.now());
+        biddingInfo.setTenderModule(StringUtils.join(biddingInfoTO.getTenderModule(),","));
         super.update(biddingInfo);
-        return BeanTransform.copyProperties(biddingInfoTO, BiddingInfoBO.class);
+        return BeanTransform.copyProperties(biddingInfo, BiddingInfoBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -483,17 +483,17 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
             BiddingInfoExport export = BeanTransform.copyProperties(str, BiddingInfoExport.class, "biddingType", "businessType", "status");
             export.setBiddingType(BiddingType.exportStrConvert(str.getBiddingType()));
             export.setBusinessType(BusinessType.exportStrConvert(str.getBusinessType()));
-            if (str.getStatus().equals(Status.THAW)) {
-                export.setStatus("解冻");
-            } else if (str.getStatus().equals(Status.CONGEAL)) {
-                export.setStatus("冻结");
-            } else if (str.getStatus().equals(Status.DELETE)) {
-                export.setStatus("删除");
-            } else if (str.getStatus().equals(Status.NOACTIVE)) {
-                export.setStatus("未激活");
-            } else if (str.getStatus().equals(Status.UNREVIEW)) {
-                export.setStatus("未审核");
-            }
+//            if (str.getStatus().equals(Status.THAW)) {
+//                export.setStatus("解冻");
+//            } else if (str.getStatus().equals(Status.CONGEAL)) {
+//                export.setStatus("冻结");
+//            } else if (str.getStatus().equals(Status.DELETE)) {
+//                export.setStatus("删除");
+//            } else if (str.getStatus().equals(Status.NOACTIVE)) {
+//                export.setStatus("未激活");
+//            } else if (str.getStatus().equals(Status.UNREVIEW)) {
+//                export.setStatus("未审核");
+//            }
             biddingInfoExports.add(export);
         });
         Excel excel = new Excel(0, 2);

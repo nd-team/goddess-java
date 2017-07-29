@@ -23,25 +23,6 @@ public class MultipleProjectMultipleUIVO {
      */
     private String projectName;
 
-    /**
-     * 项目类别
-     */
-    private ProjectCategory projectCategory;
-
-    /**
-     * 界面选择
-     */
-    private InterfaceSelect interfaceSelect;
-
-    /**
-     * 工作量
-     */
-    private Integer workload;
-
-    /**
-     * 利润
-     */
-    private Double profit;
 
     /**
      * 项目比重
@@ -75,37 +56,7 @@ public class MultipleProjectMultipleUIVO {
         this.projectName = projectName;
     }
 
-    public ProjectCategory getProjectCategory() {
-        return projectCategory;
-    }
 
-    public void setProjectCategory(ProjectCategory projectCategory) {
-        this.projectCategory = projectCategory;
-    }
-
-    public InterfaceSelect getInterfaceSelect() {
-        return interfaceSelect;
-    }
-
-    public void setInterfaceSelect(InterfaceSelect interfaceSelect) {
-        this.interfaceSelect = interfaceSelect;
-    }
-
-    public Integer getWorkload() {
-        return workload;
-    }
-
-    public void setWorkload(Integer workload) {
-        this.workload = workload;
-    }
-
-    public Double getProfit() {
-        return profit;
-    }
-
-    public void setProfit(Double profit) {
-        this.profit = profit;
-    }
 
     public String getProjectRatio() {
         return projectRatio;

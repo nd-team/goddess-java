@@ -70,8 +70,8 @@ public class SingleProjectMultipleUIApiImpl implements SingleProjectMultipleUIAP
      * @throws SerException
      */
     @Override
-    public SingleProjectMultipleUIBO save(SingleProjectMultipleUITO to) throws SerException {
-        return singleProjectMultipleUISer.save(to);
+    public void save(SingleProjectMultipleUITO to) throws SerException {
+         singleProjectMultipleUISer.save(to);
     }
 
     /**

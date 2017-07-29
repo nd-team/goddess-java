@@ -4,6 +4,8 @@ import com.bjike.goddess.bidding.enums.BiddingType;
 import com.bjike.goddess.bidding.enums.BusinessType;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.type.Status;
+import org.apache.commons.lang3.StringUtils;
+import scala.util.parsing.combinator.testing.Str;
 
 /**
  * 招标信息业务传输对象
@@ -45,7 +47,7 @@ public class BiddingInfoBO extends BaseBO {
     private String businessDirectionSubject;
 
     /**
-     * 标书模块
+     * 标书类型
      */
     private String tenderModule;
 
@@ -55,9 +57,13 @@ public class BiddingInfoBO extends BaseBO {
     private String projectName;
 
     /**
-     * 报名时间
+     * 报名开始时间
      */
-    private String registrationTime;
+    private String registrationStartTime;
+    /**
+     * 报名结束时间
+     */
+    private String registrationEndTime;
 
     /**
      * 投标时间
@@ -102,7 +108,7 @@ public class BiddingInfoBO extends BaseBO {
     /**
      * 状态
      */
-    private Status status;
+    private String status;
 
     /**
      * 购买标书时间
@@ -204,12 +210,20 @@ public class BiddingInfoBO extends BaseBO {
         this.projectName = projectName;
     }
 
-    public String getRegistrationTime() {
-        return registrationTime;
+    public String getRegistrationStartTime() {
+        return registrationStartTime;
     }
 
-    public void setRegistrationTime(String registrationTime) {
-        this.registrationTime = registrationTime;
+    public void setRegistrationStartTime(String registrationStartTime) {
+        this.registrationStartTime = registrationStartTime;
+    }
+
+    public String getRegistrationEndTime() {
+        return registrationEndTime;
+    }
+
+    public void setRegistrationEndTime(String registrationEndTime) {
+        this.registrationEndTime = registrationEndTime;
     }
 
     public String getBiddingTime() {
@@ -276,11 +290,11 @@ public class BiddingInfoBO extends BaseBO {
         this.registrationInfo = registrationInfo;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

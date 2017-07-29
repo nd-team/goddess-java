@@ -1,5 +1,11 @@
 package com.bjike.goddess.market.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.market.bo.CollectEmailBO;
 import com.bjike.goddess.market.bo.MarketCollectBO;
@@ -10,12 +16,6 @@ import com.bjike.goddess.market.enums.CollectSendUnit;
 import com.bjike.goddess.market.enums.GuideAddrStatus;
 import com.bjike.goddess.market.to.CollectEmailTO;
 import com.bjike.goddess.market.to.GuidePermissionTO;
-import com.bjike.goddess.common.api.dto.Restrict;
-import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.type.Status;
-import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.common.provider.utils.RpcTransmit;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
@@ -410,6 +410,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         }
         return unit;
     }
+
     @Override
     public List<MarketCollectBO> marketCollect(String[] areas) throws SerException {
         if (areas == null || areas.length <= 0) {
@@ -532,46 +533,53 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                     temp_sendNum = sendNum * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusMinutes( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusMinutes( sendNum.longValue() ));
+                        str.setLastSendTime(LocalDateTime.now());
                     }
                     break;
                 case HOURS:
                     temp_sendNum = sendNum * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusHours( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusHours( sendNum.longValue() ));
+                        str.setLastSendTime(LocalDateTime.now());
                     }
                     break;
                 case DAY:
                     temp_sendNum = sendNum * 24 * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusDays( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusDays(sendNum.longValue()));
+                        str.setLastSendTime(LocalDateTime.now());
                     }
                     break;
                 case WEEK:
                     temp_sendNum = sendNum * 7 * 24 * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusWeeks( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusWeeks(sendNum.longValue()));
+                        str.setLastSendTime(LocalDateTime.now());
                     }
                     break;
                 case MONTH:
                     if (nowTime.minusMonths(sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusMonths( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusMonths(sendNum.longValue()));
+                        str.setLastSendTime(LocalDateTime.now());
                     }
                     break;
                 case QUARTER:
-                    if (nowTime.minusMonths(3*sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(3*sendNum.longValue()).isAfter(lastTime)) {
+                    if (nowTime.minusMonths(3 * sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(3 * sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusMonths( 3* sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusMonths(3 * sendNum.longValue()));
+                        str.setLastSendTime(LocalDateTime.now());
                     }
                     break;
                 case YEAR:
                     if (nowTime.minusYears(sendNum.longValue()).isEqual(lastTime) || nowTime.minusYears(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusYears( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusYears(sendNum.longValue()));
+                        str.setLastSendTime(LocalDateTime.now());
                     }
                     break;
             }
@@ -619,19 +627,19 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
             //拼body部分
             for (MarketCollectBO bo : marketBOS) {
                 sb.append("<tr>");
-                sb.append("<td>" + (StringUtils.isBlank(bo.getArea())? "" : bo.getArea()) + "</td>");
+                sb.append("<td>" + (StringUtils.isBlank(bo.getArea()) ? "" : bo.getArea()) + "</td>");
                 sb.append("<td>" + (null == bo.getMobile() ? "" : bo.getMobile()) + "</td>");
                 sb.append("<td>" + (null == bo.getSoft() ? "" : bo.getSoft()) + "</td>");
                 sb.append("<td>" + (null == bo.getSystem() ? "" : bo.getSystem()) + "</td>");
                 sb.append("<td>" + (null == bo.getPlan() ? "" : bo.getPlan()) + "</td>");
-                sb.append("<td>" + (null == bo.getFirst()? "" :bo.getFirst()) + "</td>");
-                sb.append("<td>" + (null == bo.getSecond() ?"" : bo.getSecond()) + "</td>");
-                sb.append("<td>" + (null == bo.getThird() ?"" : bo.getThird()) + "</td>");
-                sb.append("<td>" + (null == bo.getFourth() ?"" : bo.getFourth()) + "</td>");
-                sb.append("<td>" + (null == bo.getHas() ?"" : bo.getHas()) + "</td>");
-                sb.append("<td>" + (null == bo.getNotHas() ?"" : bo.getNotHas()) + "</td>");
-                sb.append("<td>" + (null == bo.getFresh() ?"" : bo.getFresh()) + "</td>");
-                sb.append("<td>" + (null == bo.getOld() ?"" : bo.getOld()) + "</td>");
+                sb.append("<td>" + (null == bo.getFirst() ? "" : bo.getFirst()) + "</td>");
+                sb.append("<td>" + (null == bo.getSecond() ? "" : bo.getSecond()) + "</td>");
+                sb.append("<td>" + (null == bo.getThird() ? "" : bo.getThird()) + "</td>");
+                sb.append("<td>" + (null == bo.getFourth() ? "" : bo.getFourth()) + "</td>");
+                sb.append("<td>" + (null == bo.getHas() ? "" : bo.getHas()) + "</td>");
+                sb.append("<td>" + (null == bo.getNotHas() ? "" : bo.getNotHas()) + "</td>");
+                sb.append("<td>" + (null == bo.getFresh() ? "" : bo.getFresh()) + "</td>");
+                sb.append("<td>" + (null == bo.getOld() ? "" : bo.getOld()) + "</td>");
 
                 sb.append("<tr>");
             }

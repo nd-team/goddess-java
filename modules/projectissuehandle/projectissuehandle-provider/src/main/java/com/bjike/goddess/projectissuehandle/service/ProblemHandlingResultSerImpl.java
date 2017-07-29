@@ -19,7 +19,6 @@ import com.bjike.goddess.projectissuehandle.to.ProblemHandlingResultTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -255,7 +254,7 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
 
         checkAddIdentity();
         checkDate(problemHandlingResultTO);
-        ProblemHandlingResult problemHandlingResult = BeanTransform.copyProperties(problemHandlingResultTO, ProblemHandlingResult.class, true,"problemRelevantDepartment");
+        ProblemHandlingResult problemHandlingResult = BeanTransform.copyProperties(problemHandlingResultTO, ProblemHandlingResult.class, true, "problemRelevantDepartment");
         problemHandlingResult.setProblemRelevantDepartment(StringUtils.join(problemHandlingResultTO.getProblemRelevantDepartment(), ","));
         problemHandlingResult.setCreateTime(LocalDateTime.now());
         super.save(problemHandlingResult);
@@ -293,6 +292,7 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
 //        problemHandlingResult.setProjectType(p.getProjectType());
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ProblemHandlingResultBO editProblemHandlingResult(ProblemHandlingResultTO problemHandlingResultTO) throws SerException {
         checkAddIdentity();
@@ -301,7 +301,7 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
         }
         ProblemHandlingResult problemHandlingResult = super.findById(problemHandlingResultTO.getId());
         checkDate(problemHandlingResultTO);
-        BeanUtils.copyProperties(problemHandlingResultTO, problemHandlingResult,"problemRelevantDepartment");
+        BeanTransform.copyProperties(problemHandlingResultTO, problemHandlingResult, true, "problemRelevantDepartment");
         problemHandlingResult.setProblemRelevantDepartment(StringUtils.join(problemHandlingResultTO.getProblemRelevantDepartment(), ","));
 
         problemHandlingResult.setModifyTime(LocalDateTime.now());
@@ -309,6 +309,7 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
         return BeanTransform.copyProperties(problemHandlingResult, ProblemHandlingResultBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeProblemHandlingResult(String id) throws SerException {
         checkAddIdentity();
@@ -368,7 +369,7 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
 
         List<ProblemHandlingResultExport> problemHandlingResultExports = new ArrayList<>();
         list.stream().forEach(str -> {
-            ProblemHandlingResultExport export = BeanTransform.copyProperties(str, ProblemHandlingResultExport.class,  "problemProcessingResult");
+            ProblemHandlingResultExport export = BeanTransform.copyProperties(str, ProblemHandlingResultExport.class, "problemProcessingResult");
             export.setProblemProcessingResult(ProblemProcessingResult.exportStrConvert(str.getProblemProcessingResult()));
             problemHandlingResultExports.add(export);
         });
@@ -382,8 +383,8 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
         String[] fields = new String[]{"internalProjectName"};
         List<ProblemHandlingResultBO> problemHandlingResultBOS = super.findBySql("select distinct internalProjectName from projectissuehandle_problemhandlingresult group by internalProjectName order by internalProjectName asc ", ProblemHandlingResultBO.class, fields);
 
-            List<String> collectList = problemHandlingResultBOS.stream().map(ProblemHandlingResultBO::getInternalProjectName)
-                    .filter(internalProjectName -> (internalProjectName != null || !"".equals(internalProjectName.trim()))).distinct().collect(Collectors.toList());
+        List<String> collectList = problemHandlingResultBOS.stream().map(ProblemHandlingResultBO::getInternalProjectName)
+                .filter(internalProjectName -> (internalProjectName != null || !"".equals(internalProjectName.trim()))).distinct().collect(Collectors.toList());
 
         return collectList;
     }
