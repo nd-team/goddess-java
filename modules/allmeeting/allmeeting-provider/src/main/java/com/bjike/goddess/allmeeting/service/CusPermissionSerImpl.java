@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@CacheConfig(cacheNames = "businessprojectSerCache")
+@CacheConfig(cacheNames = "allmeetingSerCache")
 @Service
 public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissionDTO> implements CusPermissionSer {
 

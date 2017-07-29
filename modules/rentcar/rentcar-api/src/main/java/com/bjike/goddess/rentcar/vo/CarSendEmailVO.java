@@ -23,7 +23,7 @@ public class CarSendEmailVO {
     /**
      * 岗位Id
      */
-    private String positionNameId;
+    private String[] positionNameId;
 
 
     public String getId() {
@@ -42,11 +42,11 @@ public class CarSendEmailVO {
         this.projectManagerId = projectManagerId;
     }
 
-    public String getPositionNameId() {
+    public String[] getPositionNameId() {
         return positionNameId;
     }
 
-    public void setPositionNameId(String positionNameId) {
+    public void setPositionNameId(String[] positionNameId) {
         this.positionNameId = positionNameId;
     }
 }

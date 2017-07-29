@@ -1,10 +1,13 @@
 package com.bjike.goddess.rentcar.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.rentcar.bo.CarSendEmailBO;
 import com.bjike.goddess.rentcar.to.CarSendEmailTO;
+import com.bjike.goddess.rentcar.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -18,6 +21,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CarSendEmailAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 发送邮箱方法
      * @throws SerException
@@ -29,7 +45,7 @@ public interface CarSendEmailAPI {
      * @return
      * @throws SerException
      */
-    default List<DepartmentDetail> findDepartMent() throws SerException{
+    default List<DepartmentDetailBO> findDepartMent() throws SerException{
         return null;
     }
 
@@ -39,7 +55,7 @@ public interface CarSendEmailAPI {
      * @return
      * @throws SerException
      */
-    default List<PositionDetail> findPosition(String id) throws SerException{
+    default List<PositionDetailBO> findPosition(String id) throws SerException{
         return null;
     }
 
@@ -59,6 +75,16 @@ public interface CarSendEmailAPI {
      * @throws SerException
      */
     default List<CarSendEmailBO> list() throws SerException{
+        return null;
+    }
+
+    /**
+     * 修改项目经理和商务人员
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    default CarSendEmailBO edit(CarSendEmailTO to) throws SerException{
         return null;
     }
 

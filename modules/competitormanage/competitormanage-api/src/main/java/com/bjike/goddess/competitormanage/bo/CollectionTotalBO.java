@@ -51,6 +51,13 @@ public class CollectionTotalBO extends BaseBO {
      */
     private Long food;
 
+
+    /**
+     * 竞争对手
+     */
+    private Long competitor;
+
+
     public String getArea() {
         return area;
     }
@@ -123,14 +130,23 @@ public class CollectionTotalBO extends BaseBO {
         this.food = food;
     }
 
+    public Long getCompetitor() {
+        return competitor;
+    }
+
+    public void setCompetitor(Long competitor) {
+        this.competitor = competitor;
+    }
+
     public CollectionTotalBO() {
 
     }
 
-    public CollectionTotalBO(String area, Long communicate, Long software,
+    public CollectionTotalBO(String area, Long competitor, Long communicate, Long software,
                              Long marketingplan, Long intelligentize, Long electroniccommerce,
                              Long realty, Long financial, Long food) {
         this.area = area;
+        this.competitor = competitor;
         this.communicate = communicate;
         this.software = software;
         this.marketingplan = marketingplan;

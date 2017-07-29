@@ -57,9 +57,8 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     @Transactional(rollbackFor = SerException.class)
     public ProjectContractBO saveProjectContract(ProjectContractTO to) throws SerException {
 
-//        getCusPermission();
+        getCusPermission();
 
-//        isExist(to, null);
         ProjectContract model = BeanTransform.copyProperties(to, ProjectContract.class, true);
         super.save(model);
         to.setId(model.getId());

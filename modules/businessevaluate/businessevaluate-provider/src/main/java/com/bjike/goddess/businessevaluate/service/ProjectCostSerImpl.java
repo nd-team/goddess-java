@@ -7,6 +7,7 @@ import com.bjike.goddess.businessevaluate.entity.ProjectCost;
 import com.bjike.goddess.businessevaluate.enums.GuideAddrStatus;
 import com.bjike.goddess.businessevaluate.to.GuidePermissionTO;
 import com.bjike.goddess.businessevaluate.to.ProjectCostTO;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -45,6 +46,13 @@ public class ProjectCostSerImpl extends ServiceImpl<ProjectCost, ProjectCostDTO>
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectCostBO insertModel(ProjectCostTO to) throws SerException {
+        //zhuangkaiqin
+        ProjectCostDTO costDTO = new ProjectCostDTO();
+        costDTO.getConditions().add(Restrict.eq("projectInfoId", to.getProjectInfoId()));
+        ProjectCost projectCost = this.findOne(costDTO);
+        if(null != projectCost){
+            throw new SerException("该项目费用已存在,不可再添加");
+        }
 
         ProjectCost model = BeanTransform.copyProperties(to, ProjectCost.class);
         super.save(model);

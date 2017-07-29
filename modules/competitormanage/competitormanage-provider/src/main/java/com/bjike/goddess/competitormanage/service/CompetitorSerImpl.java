@@ -9,6 +9,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.competitormanage.bo.CompetitorBO;
+import com.bjike.goddess.competitormanage.bo.OrganizationBO;
 import com.bjike.goddess.competitormanage.dto.CompetitorDTO;
 import com.bjike.goddess.competitormanage.entity.Competitor;
 import com.bjike.goddess.competitormanage.enums.GuideAddrStatus;
@@ -106,18 +107,17 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
     @Override
     @Transactional(rollbackFor = SerException.class)
     public CompetitorBO editOrganization(CompetitorOrganizaeTO to) throws SerException {
-        Competitor competitor = BeanTransform.copyProperties(to,Competitor.class);
+        Competitor competitor = BeanTransform.copyProperties(to, Competitor.class);
         updateModel(competitor);
         return BeanTransform.copyProperties(to, CompetitorBO.class);
     }
-
 
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<CompetitorBO> pageList(CompetitorDTO dto) throws SerException {
 
-//        getCusPermission();
+        getCusPermission();
 
         dto.getSorts().add("createTime=desc");
         dto.getConditions().add(Restrict.eq("status", Status.THAW));
@@ -160,7 +160,7 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
         if (!StringUtils.isEmpty(endDate)) {
             dto.getConditions().add(Restrict.lt("createTime", endDate));
         }
-        dto.getConditions().add(Restrict.eq("status",Status.THAW));
+        dto.getConditions().add(Restrict.eq("status", Status.THAW));
         List<Competitor> list = super.findByCis(dto);
         List<CompetitorExcel> excelList = new ArrayList<CompetitorExcel>();
         if (!CollectionUtils.isEmpty(list)) {
@@ -169,7 +169,7 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
                 BeanUtils.copyProperties(model, excel);
                 excelList.add(excel);
             }
-        }else{
+        } else {
             excelList.add(new CompetitorExcel());
         }
         Excel excel = new Excel(0, 2);
@@ -263,7 +263,7 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
         Excel excel = new Excel(0, 2);
         List<CompetitorExcel> list = new ArrayList<CompetitorExcel>();
         list.add(new CompetitorExcel());
-        byte[] bytes = ExcelUtil.clazzToExcel(list , excel);
+        byte[] bytes = ExcelUtil.clazzToExcel(list, excel);
         return bytes;
     }
 
@@ -274,11 +274,32 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
         //查询解冻状态的地区
         sql.append("select distinct area from competitormanage_competitor where status = 0 ");
 
-        return super.findBySql(sql.toString(),CompetitorBO.class,new String[]{"area"});
+        return super.findBySql(sql.toString(), CompetitorBO.class, new String[]{"area"});
+    }
+
+    @Override
+    public OrganizationBO organizeList(String id) throws SerException {
+        if(StringUtils.isEmpty(id)){
+            throw new SerException("竞争对手id不能为空");
+        }
+        Competitor competitor = this.findById(id);
+        OrganizationBO organizationBO = new OrganizationBO();
+        if(competitor != null){
+            organizationBO.setDirectDepartment(competitor.getDirectDepartment());
+            organizationBO.setDirector(competitor.getDirector());
+            organizationBO.setDirectAuthority(competitor.getDirectAuthority());
+            organizationBO.setChargeItems(competitor.getChargeItems());
+            organizationBO.setCustomerInfoCode(competitor.getCustomerInfoCode());
+            organizationBO.setBranchedDepartment(competitor.getBranchedDepartment());
+            organizationBO.setChargeMan(competitor.getChargeMan());
+            organizationBO.setChargeManAuthority(competitor.getChargeManAuthority());
+            organizationBO.setInterfaceMan(competitor.getInterfaceMan());
+        }
+        return organizationBO;
     }
 
     /**
-     *  导航栏核对查看权限（岗位级别）
+     * 导航栏核对查看权限（岗位级别）
      */
     private Boolean guideSeeIdentity() throws SerException {
         Boolean flag = false;
@@ -346,8 +367,14 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
     }
 
     public void getCusPermission() throws SerException {
-
+        //zhuangkaiqin
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ("admin".equals(userBO.getUsername())) {
+            permission = true;
+        }
 
         if (!permission) {
             throw new SerException("该模块只有商务模块负责人可操作，您的帐号尚无权限");
