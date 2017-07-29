@@ -9,7 +9,6 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -25,11 +24,11 @@ import java.util.List;
 
 /**
  * 发送邮件
- * @Author:			[ jiangzaixuan ]
- * @Date:			[  2017-07-25 09:50 ]
- * @Description:	[ 发送邮件 ]
- * @Version:		[ v1.0.0 ]
- * @Copy:   		[ com.bjike ]
+ * @Author: [ jiangzaixuan ]
+ * @Date: [  2017-07-25 09:50 ]
+ * @Description: [ 发送邮件 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
  */
 @RestController
 @RequestMapping("carsendemail")
@@ -37,9 +36,11 @@ public class CarSendEmailAction {
 
     @Autowired
     private CarSendEmailAPI carSendEmailAPI;
+
     /**
      * 新增邮件发送对象
-     * @param to　　邮件发送对象
+     *
+     * @param to 邮件发送对象
      * @return class CarSendEmailVO
      * @version v1
      */
@@ -52,11 +53,11 @@ public class CarSendEmailAction {
         }catch (SerException e) {
             throw new ActException(e.getMessage());
         }
-
     }
 
     /**
      * 编辑
+     *
      * @param to 邮件发送对象
      * @return class CarSendEmailVO
      * @version v1
@@ -74,6 +75,7 @@ public class CarSendEmailAction {
 
     /**
      * 查询出所有未冻结的部门
+     *
      * @return class DepartmentDetailVO
      * @version v1
      */
@@ -88,9 +90,9 @@ public class CarSendEmailAction {
     }
 
     /**
-     * 根据部门id查询出该部门下所有的岗位
-     * @param id
-     * @return PositionDetailVO
+     * 根据部门id查询出岗位信息
+     *
+     * @return class PositionDetailVO
      * @version v1
      */
     @GetMapping("v1/find/position/{id}")
@@ -105,7 +107,8 @@ public class CarSendEmailAction {
 
     /**
      * 发送对象列表
-     * @return CarSendEmailVO
+     *
+     * @return class CarSendEmailVO
      * @version v1
      */
     @GetMapping("v1/list")
@@ -120,9 +123,11 @@ public class CarSendEmailAction {
 
     /**
      * 发送邮件
+     *
      * @version v1
      */
-    public Result sendSemail() throws ActException{
+    @GetMapping("v1/sendEmail")
+    public Result sendEmail() throws ActException{
         try {
             carSendEmailAPI.sendEmail();
             return new ActResult();

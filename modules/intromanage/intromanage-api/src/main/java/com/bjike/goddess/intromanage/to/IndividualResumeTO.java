@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 个人简介
@@ -213,75 +214,38 @@ public class IndividualResumeTO extends BaseTO {
      */
     private String workExperience;
 
-    //员工奖励
     /**
-     * 奖励名称
+     * 员工奖励
      */
-    private String[] rewardsNames;
+    private List<StaffRewardTO> staffRewardTOS;
+
 
     /**
-     * 奖品
+     *
+     * 员工荣誉
      */
-    private String[] prizes;
+    private List<StaffHonorTO> staffHonorTOS;
+
 
     /**
-     * 奖金
+     *
+     * 教育经历
      */
-    private String[] bonuses;
+    private List<EducateExperienceTO> educateExperienceTOS;
 
-    //员工荣誉
-    /**
-     * 荣誉名称
-     */
-    private String[] honorNames;
 
     /**
-     * 荣誉等级
+     *
+     * 工作经历
      */
-    private String[] honorGrades;
+    private List<WorkExperienceTO> workExperienceTOS;
 
     /**
-     * 公司补助
+     *
+     * 证书情况
      */
-    private String[] firmSubsidies;
+    private List<CredentialSituationTO> credentialSituationTOS;
 
-    //教育经历
-    /**
-     * 教育地址
-     */
-    private String[] educatAddresses;
-
-    /**
-     * 培训经历
-     */
-    private String[] trainingExperiences;
-
-    //工作经历
-    /**
-     * 曾经参与的组织与活动
-     */
-    private String[] participatedActivities;
-
-    /**
-     * 项目经历
-     */
-    private String[] projectExperiences;
-
-    //证书情况
-    /**
-     * 获取的专业证书
-     */
-    private String[] certificateTitles;
-
-    /**
-     * 获取证书的时间
-     */
-    private String[] certificateTimes;
-
-    /**
-     * 证书编号
-     */
-    private String[] certificateNos;
 
     public String getArea() {
         return area;
@@ -587,107 +551,43 @@ public class IndividualResumeTO extends BaseTO {
         this.eMsil = eMsil;
     }
 
-    public String[] getRewardsNames() {
-        return rewardsNames;
+    public List<StaffRewardTO> getStaffRewardTOS() {
+        return staffRewardTOS;
     }
 
-    public void setRewardsNames(String[] rewardsNames) {
-        this.rewardsNames = rewardsNames;
+    public void setStaffRewardTOS(List<StaffRewardTO> staffRewardTOS) {
+        this.staffRewardTOS = staffRewardTOS;
     }
 
-    public String[] getPrizes() {
-        return prizes;
+    public List<StaffHonorTO> getStaffHonorTOS() {
+        return staffHonorTOS;
     }
 
-    public void setPrizes(String[] prizes) {
-        this.prizes = prizes;
+    public void setStaffHonorTOS(List<StaffHonorTO> staffHonorTOS) {
+        this.staffHonorTOS = staffHonorTOS;
     }
 
-    public String[] getBonuses() {
-        return bonuses;
+    public List<EducateExperienceTO> getEducateExperienceTOS() {
+        return educateExperienceTOS;
     }
 
-    public void setBonuses(String[] bonuses) {
-        this.bonuses = bonuses;
+    public void setEducateExperienceTOS(List<EducateExperienceTO> educateExperienceTOS) {
+        this.educateExperienceTOS = educateExperienceTOS;
     }
 
-    public String[] getHonorNames() {
-        return honorNames;
+    public List<WorkExperienceTO> getWorkExperienceTOS() {
+        return workExperienceTOS;
     }
 
-    public void setHonorNames(String[] honorNames) {
-        this.honorNames = honorNames;
+    public void setWorkExperienceTOS(List<WorkExperienceTO> workExperienceTOS) {
+        this.workExperienceTOS = workExperienceTOS;
     }
 
-    public String[] getHonorGrades() {
-        return honorGrades;
+    public List<CredentialSituationTO> getCredentialSituationTOS() {
+        return credentialSituationTOS;
     }
 
-    public void setHonorGrades(String[] honorGrades) {
-        this.honorGrades = honorGrades;
-    }
-
-    public String[] getFirmSubsidies() {
-        return firmSubsidies;
-    }
-
-    public void setFirmSubsidies(String[] firmSubsidies) {
-        this.firmSubsidies = firmSubsidies;
-    }
-
-    public String[] getEducatAddresses() {
-        return educatAddresses;
-    }
-
-    public void setEducatAddresses(String[] educatAddresses) {
-        this.educatAddresses = educatAddresses;
-    }
-
-    public String[] getTrainingExperiences() {
-        return trainingExperiences;
-    }
-
-    public void setTrainingExperiences(String[] trainingExperiences) {
-        this.trainingExperiences = trainingExperiences;
-    }
-
-    public String[] getParticipatedActivities() {
-        return participatedActivities;
-    }
-
-    public void setParticipatedActivities(String[] participatedActivities) {
-        this.participatedActivities = participatedActivities;
-    }
-
-    public String[] getProjectExperiences() {
-        return projectExperiences;
-    }
-
-    public void setProjectExperiences(String[] projectExperiences) {
-        this.projectExperiences = projectExperiences;
-    }
-
-    public String[] getCertificateTitles() {
-        return certificateTitles;
-    }
-
-    public void setCertificateTitles(String[] certificateTitles) {
-        this.certificateTitles = certificateTitles;
-    }
-
-    public String[] getCertificateTimes() {
-        return certificateTimes;
-    }
-
-    public void setCertificateTimes(String[] certificateTimes) {
-        this.certificateTimes = certificateTimes;
-    }
-
-    public String[] getCertificateNos() {
-        return certificateNos;
-    }
-
-    public void setCertificateNos(String[] certificateNos) {
-        this.certificateNos = certificateNos;
+    public void setCredentialSituationTOS(List<CredentialSituationTO> credentialSituationTOS) {
+        this.credentialSituationTOS = credentialSituationTOS;
     }
 }

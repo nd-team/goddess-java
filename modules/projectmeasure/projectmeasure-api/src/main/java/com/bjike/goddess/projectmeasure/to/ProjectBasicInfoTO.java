@@ -60,6 +60,11 @@ public class ProjectBasicInfoTO extends BaseTO {
      */
     @NotBlank(groups = {ADD.class, EDIT.class}, message = "起始时间不能为空")
     private String startTime;
+    /**
+     * 结束时间
+     */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "结束时间不能为空")
+    private String endTime;
 
     /**
      * 经历时间
@@ -163,6 +168,14 @@ public class ProjectBasicInfoTO extends BaseTO {
 
     public String getArea() {
         return area;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
     public void setArea(String area) {

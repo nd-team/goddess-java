@@ -26,11 +26,11 @@ import java.util.List;
 
 /**
  * 发送邮件
- * @Author:			[ jiangzaixuan ]
- * @Date:			[  2017-07-25 09:50 ]
- * @Description:	[ 发送邮件 ]
- * @Version:		[ v1.0.0 ]
- * @Copy:   		[ com.bjike ]
+ * @Author:	[ jiangzaixuan ]
+ * @Date: [  2017-07-25 09:50 ]
+ * @Description: [ 发送邮件 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
  */
 @RestController
 @RequestMapping("carsendemail")
@@ -40,7 +40,7 @@ public class CarSendEmailAction {
     private CarSendEmailAPI carSendEmailAPI;
     /**
      * 新增邮件发送对象
-     * @param to　　邮件发送对象
+     * @param to 邮件发送对象
      * @return class CarSendEmailVO
      * @version v1
      */
@@ -90,8 +90,8 @@ public class CarSendEmailAction {
 
     /**
      * 根据部门id查询出该部门下所有的岗位
-     * @param id
-     * @return PositionDetailVO
+     * @param id 部门id
+     * @return class PositionDetailVO
      * @version v1
      */
     @GetMapping("v1/find/position/{id}")
@@ -106,7 +106,7 @@ public class CarSendEmailAction {
 
     /**
      * 发送对象列表
-     * @return CarSendEmailVO
+     * @return class CarSendEmailVO
      * @version v1
      */
     @GetMapping("v1/list")
@@ -123,7 +123,8 @@ public class CarSendEmailAction {
      * 发送邮件
      * @version v1
      */
-    public Result sendSemail() throws ActException{
+    @GetMapping("v1/sendEmail")
+    public Result sendEmail() throws ActException{
         try {
             carSendEmailAPI.sendEmail();
             return new ActResult();

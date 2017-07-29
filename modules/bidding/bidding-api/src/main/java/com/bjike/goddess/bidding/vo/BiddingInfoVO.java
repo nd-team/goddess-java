@@ -50,7 +50,7 @@ public class BiddingInfoVO {
     private String businessDirectionSubject;
 
     /**
-     * 标书模块
+     * 标书类型
      */
     private String tenderModule;
 
@@ -61,9 +61,13 @@ public class BiddingInfoVO {
     private String projectName;
 
     /**
-     * 报名时间
+     * 报名开始时间
      */
-    private String registrationTime;
+    private String registrationStartTime;
+    /**
+     * 报名结束时间
+     */
+    private String registrationEndTime;
 
     /**
      * 投标时间
@@ -108,7 +112,7 @@ public class BiddingInfoVO {
     /**
      * 状态
      */
-    private Status status;
+    private String status;
 
     /**
      * 购买标书时间
@@ -218,12 +222,20 @@ public class BiddingInfoVO {
         this.projectName = projectName;
     }
 
-    public String getRegistrationTime() {
-        return registrationTime;
+    public String getRegistrationStartTime() {
+        return registrationStartTime;
     }
 
-    public void setRegistrationTime(String registrationTime) {
-        this.registrationTime = registrationTime;
+    public void setRegistrationStartTime(String registrationStartTime) {
+        this.registrationStartTime = registrationStartTime;
+    }
+
+    public String getRegistrationEndTime() {
+        return registrationEndTime;
+    }
+
+    public void setRegistrationEndTime(String registrationEndTime) {
+        this.registrationEndTime = registrationEndTime;
     }
 
     public String getBiddingTime() {
@@ -290,11 +302,11 @@ public class BiddingInfoVO {
         this.registrationInfo = registrationInfo;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

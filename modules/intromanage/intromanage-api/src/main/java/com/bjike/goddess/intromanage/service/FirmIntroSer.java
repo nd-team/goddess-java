@@ -44,6 +44,14 @@ public interface FirmIntroSer extends Ser<FirmIntro, FirmIntroDTO> {
     List<FirmIntroBO> list(FirmIntroDTO dto) throws SerException;
 
     /**
+     * 一个公司简介
+     *
+     * @return class FirmIntroBO
+     * @throws SerException
+     */
+    FirmIntroBO findByFirmId(String id) throws SerException;
+
+    /**
      * 保存公司简介
      *
      * @param to 公司简介to

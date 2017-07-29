@@ -47,6 +47,14 @@ public interface IndividualResumeSer extends Ser<IndividualResume, IndividualRes
     List<IndividualResumeBO> list(IndividualResumeDTO dto) throws SerException;
 
     /**
+     *一个个人简介
+     *
+     * @return class IndividualResumeBO
+     * @throws SerException
+     */
+    IndividualResumeBO findResumeById(String id) throws SerException;
+
+    /**
      * 保存个人简介
      *
      * @param to 个人简介to

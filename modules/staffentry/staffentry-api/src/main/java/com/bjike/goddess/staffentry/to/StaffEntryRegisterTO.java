@@ -33,25 +33,21 @@ public class StaffEntryRegisterTO extends BaseTO {
     /**
      * 所属部门
      */
-    @NotBlank(groups = {StaffEntryRegisterTO.TestAdd.class} , message = "所属部门不能为空")
     private String department;
 
     /**
      * 角色列表
      */
-    @NotBlank(groups = {StaffEntryRegisterTO.TestAdd.class} , message = "角色列表不能为空")
     private String role;
 
     /**
      * 职位
      */
-    @NotBlank(groups = {StaffEntryRegisterTO.TestAdd.class} , message = "职位不能为空")
     private String position;
 
     /**
      * 项目组
      */
-    @NotBlank(groups = {StaffEntryRegisterTO.TestAdd.class} , message = "项目组不能为空")
     private String projectGroup;
 
     /**

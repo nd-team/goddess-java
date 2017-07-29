@@ -50,10 +50,19 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
      * @throws SerException
      */
     private void checkMoudleIdentity(String idFlag) throws SerException{
-        Boolean flag = cusPermissionSer.moudleCusPermission( idFlag );
-        if( !flag){
-            throw new SerException("你不是相应模块的人员，不能进行操作");
+
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        Boolean flag = false;
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.moudleCusPermission(idFlag);
+            if( !flag){
+                throw new SerException("你不是相应模块的人员，不能进行操作");
+            }
         }
+
     }
 
 
@@ -63,10 +72,19 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
      * @throws SerException
      */
     private void checkLevelIdentity(String idFlag) throws SerException{
-        Boolean flag = cusPermissionSer.getCusPermission( idFlag );
-        if( !flag){
-            throw new SerException("你不是相应层级的人员，不能进行操作");
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        Boolean flag = false;
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission(idFlag);
+            if( !flag){
+                throw new SerException("你不是相应层级的人员，不能进行操作");
+            }
         }
+
+
     }
 
     @Override
@@ -99,7 +117,7 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
 
         String token = RpcTransmit.getUserToken();
         checkLevelIdentity("1");
-
+        RpcTransmit.transmitUserToken(token);
         List<StaffEntryRegister> list = super.findByCis(staffEntryRegisterDTO, true);
         List<StaffEntryRegisterBO> boList = BeanTransform.copyProperties(list, StaffEntryRegisterBO.class);
         if (list != null && list.size() > 0) {
@@ -108,6 +126,7 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
                 userDTO.getConditions().add(Restrict.eq("id", temp.getUserId()));
                 RpcTransmit.transmitUserToken(token);
                 List<UserBO> userBOList = userAPI.findByCis(userDTO);
+                RpcTransmit.transmitUserToken(token);
                 if (userBOList != null && userBOList.size() > 0) {
                     UserBO userBO = userBOList.get(0);
                     temp.setEmpNumber(userBO.getEmployeeNumber());

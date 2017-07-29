@@ -38,9 +38,9 @@ public class ProjectEvaluateResultVO {
     private String timeLimit;
 
     /**
-     * 人工
+     * 人工成本
      */
-    private Integer labour;
+    private Double labour;
 
     /**
      * 耗时费用
@@ -48,9 +48,9 @@ public class ProjectEvaluateResultVO {
     private Double consumptionCosts;
 
     /**
-     * 成本
+     * 总成本
      */
-    private Integer totalCost;
+    private Double totalCost;
 
     /**
      * 利润
@@ -97,11 +97,11 @@ public class ProjectEvaluateResultVO {
         this.timeLimit = timeLimit;
     }
 
-    public Integer getLabour() {
+    public Double getLabour() {
         return labour;
     }
 
-    public void setLabour(Integer labour) {
+    public void setLabour(Double labour) {
         this.labour = labour;
     }
 
@@ -113,11 +113,11 @@ public class ProjectEvaluateResultVO {
         this.consumptionCosts = consumptionCosts;
     }
 
-    public Integer getTotalCost() {
+    public Double getTotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(Integer totalCost) {
+    public void setTotalCost(Double totalCost) {
         this.totalCost = totalCost;
     }
 

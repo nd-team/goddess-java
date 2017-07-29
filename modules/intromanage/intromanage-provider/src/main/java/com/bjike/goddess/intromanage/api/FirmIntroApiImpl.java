@@ -48,8 +48,7 @@ public class FirmIntroApiImpl implements FirmIntroAPI {
      */
     @Override
     public FirmIntroBO findById(String id) throws SerException {
-        FirmIntro model = firmIntroSer.findById(id);
-        return BeanTransform.copyProperties(model, FirmIntroBO.class);
+        return firmIntroSer.findByFirmId(id);
     }
 
     /**

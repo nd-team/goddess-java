@@ -5,12 +5,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.intromanage.bo.FirmIntroBO;
+import com.bjike.goddess.intromanage.bo.*;
 import com.bjike.goddess.intromanage.dto.*;
 import com.bjike.goddess.intromanage.entity.*;
-import com.bjike.goddess.intromanage.to.FirmDisplayFieldTO;
-import com.bjike.goddess.intromanage.to.FirmIntroTO;
-import com.bjike.goddess.intromanage.to.GuidePermissionTO;
+import com.bjike.goddess.intromanage.to.*;
 import com.bjike.goddess.intromanage.type.GuideAddrStatus;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -154,7 +152,10 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
      * @throws SerException
      */
     @Override
-    public FirmIntro findById(String id) throws SerException {
+    public FirmIntroBO findByFirmId (String id) throws SerException {
+        if (StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
         FirmIntro firmIntro = super.findById(id);
         UserBO userBO = userAPI.currentUser();
         String currentUsername = userBO.getUsername();//获取当前用户姓名
@@ -171,7 +172,39 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
             }
         }
 
-        return firmIntro;
+        //查询荣誉与资质
+        HonorAndQualityDTO honorAndQualityDTO =  new HonorAndQualityDTO();
+        honorAndQualityDTO.getConditions().add(Restrict.eq("firmId", id));
+        List<HonorAndQuality> honorAndQualities = honorAndQualitySer.findByCis( honorAndQualityDTO );
+        List<HonorAndQualityBO> honorAndQualitieBOs = BeanTransform.copyProperties( honorAndQualities ,HonorAndQualityBO.class );
+        //查询主业介绍
+        MainBusinessIntroDTO mainBusinessIntroDTO =  new MainBusinessIntroDTO();
+        mainBusinessIntroDTO.getConditions().add(Restrict.eq("firmId", id));
+        List<MainBusinessIntro> mainBusinessIntros = mainBusinessIntroSer.findByCis( mainBusinessIntroDTO );
+        List<MainBusinessIntroBO> mainBusinessIntroBOS = BeanTransform.copyProperties( mainBusinessIntros ,MainBusinessIntroBO.class );
+        //查询成功案例
+        SuccessStoriesDTO successStoriesDTO =  new SuccessStoriesDTO();
+        successStoriesDTO.getConditions().add(Restrict.eq("firmId", id));
+        List<SuccessStories> successStories = successStoriesSer.findByCis( successStoriesDTO );
+        List<SuccessStoriesBO> successStoriesBOS = BeanTransform.copyProperties( successStories ,SuccessStoriesBO.class );
+        //查询客户及合作伙伴
+        CustomerAndPartnerDTO customerAndPartnerDTO =  new CustomerAndPartnerDTO();
+        successStoriesDTO.getConditions().add(Restrict.eq("firmId", id));
+        List<CustomerAndPartner> customerAndPartners = customerAndPartnerSer.findByCis( customerAndPartnerDTO );
+        List<CustomerAndPartnerBO> customerAndPartnerBOS = BeanTransform.copyProperties( customerAndPartners ,CustomerAndPartnerBO.class );
+        //查询通讯途径
+        CommunicationPathDTO communicationPathDTO =  new CommunicationPathDTO();
+        communicationPathDTO.getConditions().add(Restrict.eq("firmId", id));
+        List<CommunicationPath> communicationPaths = communicationPathSer.findByCis( communicationPathDTO );
+        List<CommunicationPathBO> communicationPathBOS = BeanTransform.copyProperties( communicationPaths ,CommunicationPathBO.class );
+
+        FirmIntroBO firmIntroBO = BeanTransform.copyProperties( firmIntro , FirmIntroBO.class);
+        firmIntroBO.setHonorAndQualityBOS( honorAndQualitieBOs );
+        firmIntroBO.setMainBusinessIntroBOS( mainBusinessIntroBOS );
+        firmIntroBO.setSuccessStoriesBOS( successStoriesBOS );
+        firmIntroBO.setCustomerAndPartnerBOS( customerAndPartnerBOS );
+        firmIntroBO.setCommunicationPathBOS( communicationPathBOS );
+        return firmIntroBO;
     }
 
     /**
@@ -203,6 +236,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
         List<FirmIntroBO> boList = BeanTransform.copyProperties(list, FirmIntroBO.class);
         return boList;
     }
+
 
     /**
      * 检查是否显示字段
@@ -305,25 +339,41 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
      * @throws SerException
      */
     private void saveCommunicationPaths(FirmIntroTO to, String firmId) throws SerException {
-        String[] headOfficeAddresses = to.getHeadOfficeAddresses();//获取总公司地址
-        String[] headOfficeContactes = to.getHeadOfficeContactes();//获取总公司联系方式
-        String[] branchAddresses = to.getBranchAddresses();//获取分公司地址
-        String[] branchPhones = to.getBranchPhones();//获取分公司联系方式
-        boolean headOfficeAddressesNotEmpty = (headOfficeAddresses != null) && (headOfficeAddresses.length > 0);
-        if (headOfficeAddressesNotEmpty) {
-            List<CommunicationPath> list = new ArrayList<>(0);
-            int len = headOfficeAddresses.length;
-            for (int i = 0; i < len; i++) {
+        List<CommunicationPathTO> communicationPathTOS = to.getCommunicationPathTOS();
+        List<CommunicationPath> list = new ArrayList<>(0);
+        if( communicationPathTOS != null && communicationPathTOS.size()>0 ){
+            for ( CommunicationPathTO temp : communicationPathTOS){
                 CommunicationPath model = new CommunicationPath();
-                model.setHeadOfficeAddress(headOfficeAddresses[i]);
-                model.setHeadOfficeContact(headOfficeContactes[i]);
-                model.setBranchAddress(branchAddresses[i]);
-                model.setBranchPhone(branchPhones[i]);
+                model.setHeadOfficeAddress(temp.getHeadOfficeAddress());
+                model.setHeadOfficeContact(temp.getHeadOfficeContact());
+                model.setBranchAddress(temp.getBranchAddress());
+                model.setBranchPhone(temp.getBranchPhone());
                 model.setFirmId(firmId);
                 list.add(model);
             }
+
             communicationPathSer.save(list);
         }
+
+//        String[] headOfficeAddresses = to.getHeadOfficeAddresses();//获取总公司地址
+//        String[] headOfficeContactes = to.getHeadOfficeContactes();//获取总公司联系方式
+//        String[] branchAddresses = to.getBranchAddresses();//获取分公司地址
+//        String[] branchPhones = to.getBranchPhones();//获取分公司联系方式
+//        boolean headOfficeAddressesNotEmpty = (headOfficeAddresses != null) && (headOfficeAddresses.length > 0);
+//        if (headOfficeAddressesNotEmpty) {
+//            List<CommunicationPath> list = new ArrayList<>(0);
+//            int len = headOfficeAddresses.length;
+//            for (int i = 0; i < len; i++) {
+//                CommunicationPath model = new CommunicationPath();
+//                model.setHeadOfficeAddress(headOfficeAddresses[i]);
+//                model.setHeadOfficeContact(headOfficeContactes[i]);
+//                model.setBranchAddress(branchAddresses[i]);
+//                model.setBranchPhone(branchPhones[i]);
+//                model.setFirmId(firmId);
+//                list.add(model);
+//            }
+//            communicationPathSer.save(list);
+//        }
     }
 
     /**
@@ -334,25 +384,41 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
      * @throws SerException
      */
     private void saveCustomerAndPartners(FirmIntroTO to, String firmId) throws SerException {
-        String[] operators = to.getOperators();//运营商
-        String[] manufacturers = to.getManufacturers();//厂家
-        String[] governmentUnits = to.getGovernmentUnits();//各政府单位
-        String[] partners = to.getPartners();//合作伙伴
-        boolean operatorsNotEmpty = (operators != null) && (operators.length > 0);
-        if (operatorsNotEmpty) {
-            List<CustomerAndPartner> list = new ArrayList<>(0);
-            int len = operators.length;
-            for (int i = 0; i < len; i++) {
+        List<CustomerAndPartnerTO> customerAndPartnerTOS = to.getCustomerAndPartnerTOS();
+        List<CustomerAndPartner> list = new ArrayList<>(0);
+        if( customerAndPartnerTOS != null && customerAndPartnerTOS.size()>0 ){
+            for ( CustomerAndPartnerTO temp : customerAndPartnerTOS){
                 CustomerAndPartner model = new CustomerAndPartner();
-                model.setOperators(operators[i]);
-                model.setManufacturer(manufacturers[i]);
-                model.setGovernmentUnit(governmentUnits[i]);
-                model.setPartner(partners[i]);
+                model.setOperators(temp.getOperators());
+                model.setManufacturer(temp.getManufacturer());
+                model.setGovernmentUnit(temp.getGovernmentUnit());
+                model.setPartner(temp.getPartner());
                 model.setFirmId(firmId);
                 list.add(model);
             }
+
             customerAndPartnerSer.save(list);
         }
+
+//        String[] operators = to.getOperators();//运营商
+//        String[] manufacturers = to.getManufacturers();//厂家
+//        String[] governmentUnits = to.getGovernmentUnits();//各政府单位
+//        String[] partners = to.getPartners();//合作伙伴
+//        boolean operatorsNotEmpty = (operators != null) && (operators.length > 0);
+//        if (operatorsNotEmpty) {
+//            List<CustomerAndPartner> list = new ArrayList<>(0);
+//            int len = operators.length;
+//            for (int i = 0; i < len; i++) {
+//                CustomerAndPartner model = new CustomerAndPartner();
+//                model.setOperators(operators[i]);
+//                model.setManufacturer(manufacturers[i]);
+//                model.setGovernmentUnit(governmentUnits[i]);
+//                model.setPartner(partners[i]);
+//                model.setFirmId(firmId);
+//                list.add(model);
+//            }
+//            customerAndPartnerSer.save(list);
+//        }
     }
 
     /**
@@ -363,25 +429,41 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
      * @throws SerException
      */
     private void saveSuccessStories(FirmIntroTO to, String firmId) throws SerException {
-        String[] communications = to.getCommunications();//通信类
-        String[] softwares = to.getSoftwares();//软件类
-        String[] systemIntegrations = to.getSystemIntegrations();//系统集成类
-        String[] marketingPlannings = to.getMarketingPlannings();//营销策划类
-        boolean communicationsNotEmpty = (communications != null) && (communications.length > 0);
-        if (communicationsNotEmpty) {
-            List<SuccessStories> list = new ArrayList<>(0);
-            int len = communications.length;
-            for (int i = 0; i < len; i++) {
+        List<SuccessStoriesTO> successStoriesTOS = to.getSuccessStoriesTOS();
+        List<SuccessStories> list = new ArrayList<>(0);
+        if( successStoriesTOS != null && successStoriesTOS.size()>0 ){
+            for ( SuccessStoriesTO temp : successStoriesTOS){
                 SuccessStories model = new SuccessStories();
-                model.setCommunication(communications[i]);
-                model.setSoftware(softwares[i]);
-                model.setSystemIntegration(systemIntegrations[i]);
-                model.setMarketingPlanning(marketingPlannings[i]);
+                model.setCommunication(temp.getCommunication());
+                model.setSoftware(temp.getSoftware());
+                model.setSystemIntegration(temp.getSystemIntegration());
+                model.setMarketingPlanning(temp.getMarketingPlanning());
                 model.setFirmId(firmId);
                 list.add(model);
             }
+
             successStoriesSer.save(list);
         }
+
+//        String[] communications = to.getCommunications();//通信类
+//        String[] softwares = to.getSoftwares();//软件类
+//        String[] systemIntegrations = to.getSystemIntegrations();//系统集成类
+//        String[] marketingPlannings = to.getMarketingPlannings();//营销策划类
+//        boolean communicationsNotEmpty = (communications != null) && (communications.length > 0);
+//        if (communicationsNotEmpty) {
+//            List<SuccessStories> list = new ArrayList<>(0);
+//            int len = communications.length;
+//            for (int i = 0; i < len; i++) {
+//                SuccessStories model = new SuccessStories();
+//                model.setCommunication(communications[i]);
+//                model.setSoftware(softwares[i]);
+//                model.setSystemIntegration(systemIntegrations[i]);
+//                model.setMarketingPlanning(marketingPlannings[i]);
+//                model.setFirmId(firmId);
+//                list.add(model);
+//            }
+//            successStoriesSer.save(list);
+//        }
     }
 
     /**
@@ -392,21 +474,35 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
      * @throws SerException
      */
     private void saveMainBusinessIntros(FirmIntroTO to, String firmId) throws SerException {
-        String[] businessTypes = to.getBusinessTypes();//获取业务类型
-        String[] projectSubjects = to.getProjectSubjects();//获取项目科目
-        boolean businessTypesNotEmpty = (businessTypes != null) && (businessTypes.length > 0);
-        if (businessTypesNotEmpty) {
-            List<MainBusinessIntro> list = new ArrayList<>(0);
-            int len = businessTypes.length;
-            for (int i = 0; i < len; i++) {
+        List<MainBusinessIntroTO> mainBusinessIntroTOS = to.getMainBusinessIntroTOS();
+        List<MainBusinessIntro> list = new ArrayList<>(0);
+        if( mainBusinessIntroTOS != null && mainBusinessIntroTOS.size()>0 ){
+            for ( MainBusinessIntroTO temp : mainBusinessIntroTOS){
                 MainBusinessIntro model = new MainBusinessIntro();
-                model.setBusinessType(businessTypes[i]);
-                model.setProjectSubject(projectSubjects[i]);
+                model.setBusinessType(temp.getBusinessType());
+                model.setProjectSubject(temp.getProjectSubject());
                 model.setFirmId(firmId);
                 list.add(model);
             }
+
             mainBusinessIntroSer.save(list);
         }
+
+//        String[] businessTypes = to.getBusinessTypes();//获取业务类型
+//        String[] projectSubjects = to.getProjectSubjects();//获取项目科目
+//        boolean businessTypesNotEmpty = (businessTypes != null) && (businessTypes.length > 0);
+//        if (businessTypesNotEmpty) {
+//            List<MainBusinessIntro> list = new ArrayList<>(0);
+//            int len = businessTypes.length;
+//            for (int i = 0; i < len; i++) {
+//                MainBusinessIntro model = new MainBusinessIntro();
+//                model.setBusinessType(businessTypes[i]);
+//                model.setProjectSubject(projectSubjects[i]);
+//                model.setFirmId(firmId);
+//                list.add(model);
+//            }
+//            mainBusinessIntroSer.save(list);
+//        }
     }
 
     /**
@@ -417,21 +513,34 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
      * @throws SerException
      */
     private void saveHonorAndQualities(FirmIntroTO to, String firmId) throws SerException {
-        String[] certificates = to.getCertificates();
-        String[] softwareCopyrights = to.getSoftwareCopyrights();
-        boolean certificatesNotEmpty = (certificates != null) && (certificates.length > 0);
-        if (certificatesNotEmpty) {
-            List<HonorAndQuality> list = new ArrayList<>(0);
-            int len = certificates.length;
-            for (int i = 0; i < len; i++) {
+        List<HonorAndQualityTO> honorAndQualityTOS = to.getHonorAndQualityTOS();
+        List<HonorAndQuality> list = new ArrayList<>(0);
+        if( honorAndQualityTOS != null && honorAndQualityTOS.size()>0 ){
+            for ( HonorAndQualityTO temp : honorAndQualityTOS){
                 HonorAndQuality model = new HonorAndQuality();//荣誉与资质
-                model.setCertificates(certificates[i]);
-                model.setSoftwareCopyright(softwareCopyrights[i]);
+                model.setCertificates(temp.getCertificates());
+                model.setSoftwareCopyright( temp.getSoftwareCopyright() );
                 model.setFirmId(firmId);//设置逻辑外键
                 list.add(model);
             }
+
             honorAndQualitySer.save(list);
         }
+//        String[] certificates = to.getCertificates();
+//        String[] softwareCopyrights = to.getSoftwareCopyrights();
+//        boolean certificatesNotEmpty = (certificates != null) && (certificates.length > 0);
+//        if (certificatesNotEmpty) {
+//            List<HonorAndQuality> list = new ArrayList<>(0);
+//            int len = certificates.length;
+//            for (int i = 0; i < len; i++) {
+//                HonorAndQuality model = new HonorAndQuality();//荣誉与资质
+//                model.setCertificates(certificates[i]);
+//                model.setSoftwareCopyright(softwareCopyrights[i]);
+//                model.setFirmId(firmId);//设置逻辑外键
+//                list.add(model);
+//            }
+//            honorAndQualitySer.save(list);
+//        }
     }
 
     /**

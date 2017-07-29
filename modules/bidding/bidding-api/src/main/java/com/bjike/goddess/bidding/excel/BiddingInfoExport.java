@@ -53,7 +53,7 @@ public class BiddingInfoExport {
     private String businessDirectionSubject;
 
     /**
-     * 标书模块
+     * 标书类型
      */
     @ExcelHeader(name = "标书模块", notNull = true)
     private String tenderModule;
@@ -66,10 +66,15 @@ public class BiddingInfoExport {
     private String projectName;
 
     /**
-     * 报名时间
+     * 报名开始时间
      */
-    @ExcelHeader(name = "报名时间", notNull = true)
-    private String registrationTime;
+    @ExcelHeader(name = "报名开始时间", notNull = true)
+    private String registrationStartTime;
+    /**
+     * 报名开始时间
+     */
+    @ExcelHeader(name = "报名开始时间", notNull = true)
+    private String registrationEndTime;
 
     /**
      * 投标时间
@@ -232,12 +237,20 @@ public class BiddingInfoExport {
         this.projectName = projectName;
     }
 
-    public String getRegistrationTime() {
-        return registrationTime;
+    public String getRegistrationStartTime() {
+        return registrationStartTime;
     }
 
-    public void setRegistrationTime(String registrationTime) {
-        this.registrationTime = registrationTime;
+    public void setRegistrationStartTime(String registrationStartTime) {
+        this.registrationStartTime = registrationStartTime;
+    }
+
+    public String getRegistrationEndTime() {
+        return registrationEndTime;
+    }
+
+    public void setRegistrationEndTime(String registrationEndTime) {
+        this.registrationEndTime = registrationEndTime;
     }
 
     public String getBiddingTime() {

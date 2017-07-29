@@ -289,6 +289,8 @@ public class CarInsureSerImpl extends ServiceImpl<CarInsure, CarInsureDTO> imple
     public CarInsureBO addCarInsure(CarInsureTO carInsureTO) throws SerException {
         checkPermission();
         CarInsure carInsure = BeanTransform.copyProperties(carInsureTO,CarInsure.class,true);
+
+        carInsure.setTotalFee( carInsureTO.getTotalFee() == null ? 0d : carInsureTO.getTotalFee());
         carInsure.setCreateTime(LocalDateTime.now());
         super.save( carInsure );
         return BeanTransform.copyProperties(carInsure, CarInsureBO.class);
@@ -298,10 +300,14 @@ public class CarInsureSerImpl extends ServiceImpl<CarInsure, CarInsureDTO> imple
     @Override
     public CarInsureBO editCarInsure(CarInsureTO carInsureTO) throws SerException {
         checkPermission();
+        if(StringUtils.isBlank( carInsureTO.getId())){
+            throw new SerException("id不能为空");
+        }
         CarInsure carInsure = BeanTransform.copyProperties(carInsureTO,CarInsure.class,true);
         CarInsure cusLevel = super.findById( carInsureTO.getId() );
 
         BeanUtils.copyProperties(carInsure , cusLevel ,"id","createTime");
+        cusLevel.setTotalFee( carInsureTO.getTotalFee() == null ? 0d : carInsureTO.getTotalFee());
         cusLevel.setModifyTime(LocalDateTime.now());
         super.update( cusLevel );
         return BeanTransform.copyProperties(carInsure, CarInsureBO.class);
@@ -344,7 +350,7 @@ public class CarInsureSerImpl extends ServiceImpl<CarInsure, CarInsureDTO> imple
         cusLevel.setApproveLoad( carInsureTO.getApproveLoad());
         cusLevel.setOutputVolume( carInsureTO.getOutputVolume());
         cusLevel.setPower( carInsureTO.getPower());
-        cusLevel.setCarInitialDate( LocalDate.parse( carInsureTO.getCarInitialDate()));
+        cusLevel.setCarInitialDate( StringUtils.isBlank( carInsureTO.getCarInitialDate() )? null: LocalDate.parse( carInsureTO.getCarInitialDate()));
         cusLevel.setModifyTime(LocalDateTime.now());
         super.update( cusLevel );
         return BeanTransform.copyProperties(cusLevel, CarInsureBO.class);
@@ -364,8 +370,8 @@ public class CarInsureSerImpl extends ServiceImpl<CarInsure, CarInsureDTO> imple
         cusLevel.setOrNotFee( carInsureTO.getOrNotFee());
         cusLevel.setRateFloat( carInsureTO.getRateFloat());
         cusLevel.setInsureLimitFee( carInsureTO.getInsureLimitFee());
-        cusLevel.setInsureFee( carInsureTO.getInsureFee());
-        cusLevel.setInsureTotalFee( carInsureTO.getInsureTotalFee());
+        cusLevel.setInsureFee( carInsureTO.getInsureFee()== null ? 0d: carInsureTO.getInsureFee());
+        cusLevel.setInsureTotalFee( carInsureTO.getInsureTotalFee()== null ? 0d: carInsureTO.getInsureTotalFee());
         cusLevel.setModifyTime(LocalDateTime.now());
         super.update( cusLevel );
         return BeanTransform.copyProperties(cusLevel, CarInsureBO.class);
@@ -401,7 +407,7 @@ public class CarInsureSerImpl extends ServiceImpl<CarInsure, CarInsureDTO> imple
         cusLevel.setOrganContact( carInsureTO.getOrganContact());
         cusLevel.setInterAddr( carInsureTO.getInterAddr());
         cusLevel.setPostCode( carInsureTO.getPostCode());
-        cusLevel.setSignDate( LocalDate.parse(carInsureTO.getSignDate()));
+        cusLevel.setSignDate( StringUtils.isBlank( carInsureTO.getSignDate() )? null: LocalDate.parse(carInsureTO.getSignDate()));
         cusLevel.setModifyTime(LocalDateTime.now());
         super.update( cusLevel );
         return BeanTransform.copyProperties(cusLevel, CarInsureBO.class);

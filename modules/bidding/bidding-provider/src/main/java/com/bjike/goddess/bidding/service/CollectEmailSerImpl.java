@@ -451,46 +451,57 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                     temp_sendNum = sendNum * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusMinutes( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusMinutes( sendNum.longValue() ));
+                        str.setLastSendTime(LocalDateTime.now());
+
                     }
                     break;
                 case HOURS:
                     temp_sendNum = sendNum * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusHours( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusHours( sendNum.longValue() ));
+                        str.setLastSendTime(LocalDateTime.now());
+
                     }
                     break;
                 case DAY:
                     temp_sendNum = sendNum * 24 * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusDays( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusDays( sendNum.longValue() ));
+                        str.setLastSendTime(LocalDateTime.now());
+
                     }
                     break;
                 case WEEK:
                     temp_sendNum = sendNum * 7 * 24 * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusWeeks( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusWeeks( sendNum.longValue() ));
+                        str.setLastSendTime(LocalDateTime.now());
+
                     }
                     break;
                 case MONTH:
                     if (nowTime.minusMonths(sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusMonths( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusMonths( sendNum.longValue() ));
+                        str.setLastSendTime(LocalDateTime.now());
                     }
                     break;
                 case QUARTER:
                     if (nowTime.minusMonths(3*sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(3*sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusMonths( 3* sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusMonths( 3* sendNum.longValue() ));
+                        str.setLastSendTime(LocalDateTime.now());
                     }
                     break;
                 case YEAR:
                     if (nowTime.minusYears(sendNum.longValue()).isEqual(lastTime) || nowTime.minusYears(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastSendTime(lastTime.plusYears( sendNum.longValue() ));
+//                        str.setLastSendTime(lastTime.plusYears( sendNum.longValue() ));
+                        str.setLastSendTime(LocalDateTime.now());
                     }
                     break;
             }
@@ -590,6 +601,9 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                 List<BiddingInfoCollectBO> biddingInfoCollectBOS = biddingInfoSer.collectBiddingInfo(condis);
                 //拼表格
                 String content = htmlBidding(biddingInfoCollectBOS);
+                if (StringUtils.isBlank(content)){
+                    throw new SerException("内容要与汇总数据相对应");
+                }
                 MessageTO messageTO = new MessageTO();
                 messageTO.setContent(content);
                 messageTO.setTitle("定时发送招标信息汇总");
@@ -614,6 +628,9 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                 List<BidOpeningCollectBO> bidOpeningCollectBOS = bidOpeningInfoSer.collectBidOpening(condis);
                 //拼表格
                 String content = htmlBidOpen(bidOpeningCollectBOS);
+                if (StringUtils.isBlank(content)){
+                    throw new SerException("内容要与汇总数据相对应");
+                }
                 MessageTO messageTO = new MessageTO();
                 messageTO.setContent(content);
                 messageTO.setTitle("定时发送开标信息汇总");

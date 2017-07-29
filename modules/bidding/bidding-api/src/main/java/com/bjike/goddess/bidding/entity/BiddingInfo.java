@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 /**
@@ -60,7 +61,7 @@ public class BiddingInfo extends BaseEntity {
     private String businessDirectionSubject;
 
     /**
-     * 标书模块
+     * 标书类型
      */
     @Column(name = "tenderModule", columnDefinition = "VARCHAR(255)   COMMENT '标书模块'")
     private String tenderModule;
@@ -73,16 +74,21 @@ public class BiddingInfo extends BaseEntity {
     private String projectName;
 
     /**
-     * 报名时间
+     * 报名开始时间
      */
-    @Column(name = "registrationTime", columnDefinition = "DATE   COMMENT '报名时间'")
-    private LocalDate registrationTime;
+    @Column(name = "registrationStartTime", columnDefinition = "DATETIME   COMMENT '报名时间'")
+    private LocalDateTime registrationStartTime;
+    /**
+     * 报名结束时间
+     */
+    @Column(name = "registrationEndTime", columnDefinition = "DATETIME   COMMENT '报名时间'")
+    private LocalDateTime registrationEndTime;
 
     /**
      * 投标时间
      */
-    @Column(name = "biddingTime", columnDefinition = "DATE   COMMENT '投标时间'")
-    private LocalDate biddingTime;
+    @Column(name = "biddingTime", columnDefinition = "DATETIME   COMMENT '投标时间'")
+    private LocalDateTime biddingTime;
 
     /**
      * 投标资格要求
@@ -130,7 +136,7 @@ public class BiddingInfo extends BaseEntity {
      * 状态
      */
     @Column(columnDefinition = "VARCHAR(255)   COMMENT '状态'")
-    private Status status;
+    private String status;
 
     /**
      * 购买标书时间
@@ -239,19 +245,27 @@ public class BiddingInfo extends BaseEntity {
         this.projectName = projectName;
     }
 
-    public LocalDate getRegistrationTime() {
-        return registrationTime;
+    public LocalDateTime getRegistrationStartTime() {
+        return registrationStartTime;
     }
 
-    public void setRegistrationTime(LocalDate registrationTime) {
-        this.registrationTime = registrationTime;
+    public void setRegistrationStartTime(LocalDateTime registrationStartTime) {
+        this.registrationStartTime = registrationStartTime;
     }
 
-    public LocalDate getBiddingTime() {
+    public LocalDateTime getRegistrationEndTime() {
+        return registrationEndTime;
+    }
+
+    public void setRegistrationEndTime(LocalDateTime registrationEndTime) {
+        this.registrationEndTime = registrationEndTime;
+    }
+
+    public LocalDateTime getBiddingTime() {
         return biddingTime;
     }
 
-    public void setBiddingTime(LocalDate biddingTime) {
+    public void setBiddingTime(LocalDateTime biddingTime) {
         this.biddingTime = biddingTime;
     }
 
@@ -311,11 +325,11 @@ public class BiddingInfo extends BaseEntity {
         this.registrationInfo = registrationInfo;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
