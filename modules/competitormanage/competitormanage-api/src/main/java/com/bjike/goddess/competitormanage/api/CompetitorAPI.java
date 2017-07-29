@@ -2,6 +2,7 @@ package com.bjike.goddess.competitormanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.competitormanage.bo.CompetitorBO;
+import com.bjike.goddess.competitormanage.bo.OrganizationBO;
 import com.bjike.goddess.competitormanage.dto.CompetitorDTO;
 import com.bjike.goddess.competitormanage.excel.SonPermissionObject;
 import com.bjike.goddess.competitormanage.to.CompetitorOrganizaeTO;
@@ -104,4 +105,6 @@ public interface CompetitorAPI {
 
     List<CompetitorBO> areas() throws SerException;
 
+    //zhuangkaiqin
+    OrganizationBO organizeList(String id) throws SerException;
 }

@@ -312,7 +312,9 @@ public class SupCusPermissionSerImpl extends ServiceImpl<SupCusPermission, SupCu
         SupCusPermissionDTO dto = new SupCusPermissionDTO();
         dto.getConditions().add(Restrict.eq("idFlag", idFlag));
         SupCusPermission cusPermission = super.findOne(dto);
-
+        if(cusPermission == null ){
+            throw new SerException("aa");
+        }
         //先查询获操作对象
         List<String> idList = new ArrayList<>();
         SupCusPermissionOperateDTO cpoDTO = new SupCusPermissionOperateDTO();

@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.competitormanage.bo.CollectionTotalBO;
 import com.bjike.goddess.competitormanage.bo.CompetitorCollectBO;
+import com.bjike.goddess.competitormanage.bo.CompetitorCollectsBO;
 import com.bjike.goddess.competitormanage.dto.CompetitorCollectDTO;
 import com.bjike.goddess.competitormanage.entity.CompetitorCollect;
 import com.bjike.goddess.competitormanage.to.CompetitorCollectTO;
@@ -62,7 +63,7 @@ public interface CompetitorCollectSer extends Ser<CompetitorCollect, CompetitorC
      *
      * @param dto 分页条件
      */
-    List<CompetitorCollectBO> pageList(CompetitorCollectDTO dto) throws SerException;
+    List<CompetitorCollectsBO> pageList(CompetitorCollectDTO dto) throws SerException;
 
     /**
      * 发送汇总邮件
