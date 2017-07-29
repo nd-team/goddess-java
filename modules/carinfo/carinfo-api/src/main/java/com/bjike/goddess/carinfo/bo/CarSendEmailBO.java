@@ -19,6 +19,22 @@ public class CarSendEmailBO extends BaseBO {
 
     private String projectManagerId;
 
+    public String getPositionNameId() {
+        return positionNameId;
+    }
+
+    public void setPositionNameId(String positionNameId) {
+        this.positionNameId = positionNameId;
+    }
+
+    public String getProjectManagerId() {
+        return projectManagerId;
+    }
+
+    public void setProjectManagerId(String projectManagerId) {
+        this.projectManagerId = projectManagerId;
+    }
+
     @Override
     public String getId() {
         return super.getId();

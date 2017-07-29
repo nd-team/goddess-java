@@ -28,6 +28,21 @@ public class CarSendEmailTO extends BaseTO {
     @NotBlank(message = "岗位Id不能为空", groups = {ADD.class, EDIT.class})
     private String projetManagerId;
 
+    public String getPositionNameId() {
+        return positionNameId;
+    }
+
+    public void setPositionNameId(String positionNameId) {
+        this.positionNameId = positionNameId;
+    }
+
+    public String getProjetManagerId() {
+        return projetManagerId;
+    }
+
+    public void setProjetManagerId(String projetManagerId) {
+        this.projetManagerId = projetManagerId;
+    }
 
     @Override
     public String getId() {

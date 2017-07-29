@@ -15,7 +15,7 @@ public class JapiTest {
 
     public static void main(String[] args) {
 //                JapiClient.delete(true);
-        JapiClient.setPrefixPath("/home/ike/github/goddess-java/");//路径前缀
+        JapiClient.setPrefixPath("/media/data4/jzx/goddess-java/");//路径前缀
         JapiClient.setpostfixPath("/src/main/java");
 
         JapiClient.setProjectJavaPath("modules/rentcar/rentcar-consumer");//主项目位置
@@ -23,6 +23,7 @@ public class JapiTest {
         JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
                 "modules/rentcar/rentcar-api",
                 "modules/storage/storage-api",
+                "modules/organize/organize-api",
                 "common/common-api"
         });
 //                JapiClient.saveHistory(false);
