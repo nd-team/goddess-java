@@ -4,7 +4,10 @@ import com.bjike.goddess.assistance.api.AssistancePlanAPI;
 import com.bjike.goddess.assistance.bo.AssistancePlanBO;
 import com.bjike.goddess.assistance.dto.AssistancePlanDTO;
 import com.bjike.goddess.assistance.to.AssistancePlanTO;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.vo.AssistancePlanVO;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -16,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -34,7 +38,28 @@ public class AssistancePlanAction {
 
     @Autowired
     private AssistancePlanAPI assistancePlanAPI;
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
 
+            Boolean isHasPermission = assistancePlanAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      *  补助方案列表总条数
      *
@@ -80,10 +105,10 @@ public class AssistancePlanAction {
      * @version v1
      */
     @GetMapping("v1/listAssistancePlan")
-    public Result findListAssistancePlan(AssistancePlanDTO assistancePlanDTO, BindingResult bindingResult) throws ActException {
+    public Result findListAssistancePlan(AssistancePlanDTO assistancePlanDTO,HttpServletRequest request) throws ActException {
         try {
             List<AssistancePlanVO> assistancePlanVOList = BeanTransform.copyProperties(
-                    assistancePlanAPI.listAssistancePlan(assistancePlanDTO), AssistancePlanVO.class, true);
+                    assistancePlanAPI.listAssistancePlan(assistancePlanDTO), AssistancePlanVO.class, request);
             return ActResult.initialize(assistancePlanVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -100,7 +125,7 @@ public class AssistancePlanAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result addAssistancePlan(@Validated AssistancePlanTO assistancePlanTO, BindingResult bindingResult) throws ActException {
+    public Result addAssistancePlan(@Validated({ADD.class}) AssistancePlanTO assistancePlanTO, BindingResult bindingResult) throws ActException {
         try {
             AssistancePlanBO assistancePlanBO1 = assistancePlanAPI.addAssistancePlan(assistancePlanTO);
             return ActResult.initialize(BeanTransform.copyProperties(assistancePlanBO1,AssistancePlanVO.class,true));
@@ -120,7 +145,7 @@ public class AssistancePlanAction {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result editAssistancePlan(@Validated AssistancePlanTO assistancePlanTO) throws ActException {
+    public Result editAssistancePlan(@Validated(EDIT.class) AssistancePlanTO assistancePlanTO,BindingResult result) throws ActException {
         try {
             AssistancePlanBO assistancePlanBO1 = assistancePlanAPI.editAssistancePlan(assistancePlanTO);
             return ActResult.initialize(BeanTransform.copyProperties(assistancePlanBO1,AssistancePlanVO.class,true));

@@ -320,6 +320,9 @@ public class BusInsuranceSerImpl extends ServiceImpl<BusInsurance, BusInsuranceD
     @Override
     public BusInsuranceBO editBusInsurance(BusInsuranceTO busInsuranceTO) throws SerException {
         checkPermission();
+        if(StringUtils.isBlank( busInsuranceTO.getId())){
+            throw new SerException("id不能为空");
+        }
         BusInsurance busInsurance = BeanTransform.copyProperties(busInsuranceTO, BusInsurance.class, true);
         BusInsurance cusLevel = super.findById(busInsuranceTO.getId());
 

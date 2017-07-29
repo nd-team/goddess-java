@@ -25,25 +25,25 @@ public class ProjectContract extends BaseEntity {
     /**
      * 合同外部项目名称
      */
-    @Column(name = "contractExtProject", nullable = false, unique = true, columnDefinition = "VARCHAR(255)   COMMENT '合同外部项目名称'")
+    @Column(name = "contractExtProject", nullable = false,  columnDefinition = "VARCHAR(255)   COMMENT '合同外部项目名称'")
     private String contractExtProject;
 
     /**
      * 合同外部编号
      */
-    @Column(name = "contractExtCode", nullable = false, unique = true, columnDefinition = "VARCHAR(255)   COMMENT '合同外部编号'")
+    @Column(name = "contractExtCode", nullable = false,  columnDefinition = "VARCHAR(255)   COMMENT '合同外部编号'")
     private String contractExtCode;
 
     /**
      * 内部项目名称
      */
-    @Column(name = "contractInProject", nullable = false, unique = true, columnDefinition = "VARCHAR(255)   COMMENT '内部项目名称'")
+    @Column(name = "contractInProject", nullable = false,  columnDefinition = "VARCHAR(255)   COMMENT '内部项目名称'")
     private String contractInProject;
 
     /**
      * 内部项目编号
      */
-    @Column(name = "contractInCode", nullable = false, unique = true, columnDefinition = "VARCHAR(255)   COMMENT '内部项目编号'")
+    @Column(name = "contractInCode", nullable = false,  columnDefinition = "VARCHAR(255)   COMMENT '内部项目编号'")
     private String contractInCode;
 
     /**

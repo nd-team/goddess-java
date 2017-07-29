@@ -346,6 +346,7 @@ public class ProjectContractAct extends BaseFileAction {
             List<ProjectContractExcel> tos = ExcelUtil.excelToClazz(is, ProjectContractExcel.class, excel);
             List<ProjectContractTO> toList = BeanTransform.copyProperties(tos, ProjectContractTO.class);
             projectContractAPI.leadExcel(toList);
+
             return new ActResult("导入成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

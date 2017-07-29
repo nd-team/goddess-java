@@ -27,12 +27,18 @@
 	<dubbo:service  ref="hotAssistApiImpl" interface="com.bjike.goddess.assistance.api.HotAssistAPI" />
 	<dubbo:service  ref="houseAssistApiImpl" interface="com.bjike.goddess.assistance.api.HouseAssistAPI" />
 	<dubbo:service  ref="rightSetApiImpl" interface="com.bjike.goddess.assistance.api.RightSetAPI" />
+	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.assistance.api.CusPermissionAPI" />
+	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.assistance.api.CusPermissionOperateAPI" />
 
 	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
 	否则不需要配置-->
 
 	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 	<dubbo:reference validation="true" id="entryBasicInfoApiImpl" interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" />
-
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.ArrangementAPI" id="arrangementApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
 
 </beans>

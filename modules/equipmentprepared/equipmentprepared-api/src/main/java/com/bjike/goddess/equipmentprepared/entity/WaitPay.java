@@ -85,7 +85,7 @@ public class WaitPay extends BaseEntity {
     /**
      * 备注
      */
-    @Column(name = "comment", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @Column(name = "comment",columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String comment;
 
     /**

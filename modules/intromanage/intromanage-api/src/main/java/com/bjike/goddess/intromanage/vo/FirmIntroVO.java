@@ -2,6 +2,8 @@ package com.bjike.goddess.intromanage.vo;
 
 import com.bjike.goddess.intromanage.type.DemandType;
 
+import java.util.List;
+
 /**
  * 公司简介表现层对象
  *
@@ -107,6 +109,31 @@ public class FirmIntroVO {
      * 需求类型
      */
     private DemandType demandType;
+
+
+    /**
+     * 荣誉与资质
+     */
+    private List<HonorAndQualityVO> honorAndQualityVOS;
+    /**
+     * 主业介绍
+     */
+    private List<MainBusinessIntroVO> mainBusinessIntroVOS;
+    /**
+     * 成功案例
+     */
+    private List<SuccessStoriesVO> successStoriesVOS;
+
+    /**
+     * 客户及合作伙伴
+     */
+    private List<CustomerAndPartnerVO> customerAndPartnerVOS;
+
+    /**
+     * 通讯途径
+     */
+    private List<CommunicationPathVO> communicationPathVOS;
+
 
     public String getId() {
         return id;
@@ -258,5 +285,45 @@ public class FirmIntroVO {
 
     public void setDemandType(DemandType demandType) {
         this.demandType = demandType;
+    }
+
+    public List<HonorAndQualityVO> getHonorAndQualityVOS() {
+        return honorAndQualityVOS;
+    }
+
+    public void setHonorAndQualityVOS(List<HonorAndQualityVO> honorAndQualityVOS) {
+        this.honorAndQualityVOS = honorAndQualityVOS;
+    }
+
+    public List<MainBusinessIntroVO> getMainBusinessIntroVOS() {
+        return mainBusinessIntroVOS;
+    }
+
+    public void setMainBusinessIntroVOS(List<MainBusinessIntroVO> mainBusinessIntroVOS) {
+        this.mainBusinessIntroVOS = mainBusinessIntroVOS;
+    }
+
+    public List<SuccessStoriesVO> getSuccessStoriesVOS() {
+        return successStoriesVOS;
+    }
+
+    public void setSuccessStoriesVOS(List<SuccessStoriesVO> successStoriesVOS) {
+        this.successStoriesVOS = successStoriesVOS;
+    }
+
+    public List<CustomerAndPartnerVO> getCustomerAndPartnerVOS() {
+        return customerAndPartnerVOS;
+    }
+
+    public void setCustomerAndPartnerVOS(List<CustomerAndPartnerVO> customerAndPartnerVOS) {
+        this.customerAndPartnerVOS = customerAndPartnerVOS;
+    }
+
+    public List<CommunicationPathVO> getCommunicationPathVOS() {
+        return communicationPathVOS;
+    }
+
+    public void setCommunicationPathVOS(List<CommunicationPathVO> communicationPathVOS) {
+        this.communicationPathVOS = communicationPathVOS;
     }
 }

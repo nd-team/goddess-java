@@ -2,6 +2,7 @@ package com.bjike.goddess.enterpriseculturemanage.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.enterpriseculturemanage.enums.AuditResult;
+import com.bjike.goddess.enterpriseculturemanage.enums.PublicizeWay;
 
 /**
  * 刊物方案信息业务传输对象
@@ -32,7 +33,7 @@ public class PeriodicalProgramInfoBO extends BaseBO {
     /**
      * 发刊形式
      */
-    private String way;
+    private PublicizeWay way;
 
     /**
      * 发刊规格
@@ -103,11 +104,11 @@ public class PeriodicalProgramInfoBO extends BaseBO {
         this.ida = ida;
     }
 
-    public String getWay() {
+    public PublicizeWay getWay() {
         return way;
     }
 
-    public void setWay(String way) {
+    public void setWay(PublicizeWay way) {
         this.way = way;
     }
 

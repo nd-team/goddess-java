@@ -981,12 +981,12 @@ public class RecruitPlanSerImpl extends ServiceImpl<RecruitPlan, RecruitPlanDTO>
         String depart = dto.getDepart();
         String position = dto.getPosition();
         FirstPhoneRecordDTO firstPhoneRecordDTO = new FirstPhoneRecordDTO();
-        firstPhoneRecordDTO.getConditions().add(Restrict.in("date", fTimes));
+//        firstPhoneRecordDTO.getConditions().add(Restrict.eq("date", fTimes));
         InterviewInforDTO interviewInforDTO = new InterviewInforDTO();
-        interviewInforDTO.getConditions().add(Restrict.in("date", iTimes));
+//        interviewInforDTO.getConditions().add(Restrict.eq("date", iTimes));
         interviewInforDTO.getConditions().add(Restrict.eq("area", area));
         RecruitPlanDTO recruitPlanDTO = new RecruitPlanDTO();
-        recruitPlanDTO.getConditions().add(Restrict.in("recruitDate", rTimes));
+//        recruitPlanDTO.getConditions().add(Restrict.eq("recruitDate", rTimes));
         recruitPlanDTO.getConditions().add(Restrict.eq("recruitArea", area));
         if (StringUtils.isNotBlank(depart)) {
             interviewInforDTO.getConditions().add(Restrict.eq("department", depart));
@@ -1004,9 +1004,32 @@ public class RecruitPlanSerImpl extends ServiceImpl<RecruitPlan, RecruitPlanDTO>
         int actualSuccess = 0;   //实际日成功通过面试量
         int employ = 0;   //录用量
         int entry = 0;   //入职量
-        List<InterviewInfor> interviewInfors = interviewInforSer.findByCis(interviewInforDTO);
-        List<FirstPhoneRecord> firstPhoneRecords = firstPhoneRecordSer.findByCis(firstPhoneRecordDTO);
-        List<RecruitPlan> recruitPlans = super.findByCis(recruitPlanDTO);
+        List<InterviewInfor> interviewInfor = interviewInforSer.findByCis(interviewInforDTO);
+        List<FirstPhoneRecord> firstPhoneRecord= firstPhoneRecordSer.findByCis(firstPhoneRecordDTO);
+        List<RecruitPlan> recruitPlan = super.findByCis(recruitPlanDTO);
+        List<InterviewInfor> interviewInfors=new ArrayList<>();
+        List<FirstPhoneRecord> firstPhoneRecords=new ArrayList<>();
+        List<RecruitPlan> recruitPlans=new ArrayList<>();
+        for (LocalDate l:iTimes){
+            for (InterviewInfor i:interviewInfor){
+                if (l.getYear()==i.getDate().getYear()&&l.getMonthValue()==i.getDate().getMonthValue()){
+                    interviewInfors.add(i);
+                }
+            }
+        }
+        for (LocalDate l:fTimes){
+            for (FirstPhoneRecord i:firstPhoneRecord){
+                if (l.getYear()==i.getDate().getYear()&&l.getMonthValue()==i.getDate().getMonthValue()){
+                    firstPhoneRecords.add(i);
+                }
+            }
+        }for (LocalDate l:rTimes){
+            for (RecruitPlan i:recruitPlan){
+                if (l.getYear()==i.getRecruitDate().getYear()&&l.getMonthValue()==i.getRecruitDate().getMonthValue()){
+                    recruitPlans.add(i);
+                }
+            }
+        }
         for (RecruitPlan r : recruitPlans) {
             planRecruitNo += r.getPlanRecruitNo();
         }

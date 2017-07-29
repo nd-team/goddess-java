@@ -7,6 +7,7 @@ import com.bjike.goddess.intromanage.type.DemandType;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 公司简介
@@ -121,90 +122,106 @@ public class FirmIntroTO extends BaseTO {
     @NotNull(groups = {ADD.class, EDIT.class}, message = "需求类型不能为空")
     private DemandType demandType;
 
-    //荣誉与资质
     /**
-     * 各类证书
+     * 荣誉与资质
      */
-    private String[] certificates;
+    private List<HonorAndQualityTO> honorAndQualityTOS;
+//    /**
+//     * 各类证书
+//     */
+//    private String[] certificates;
+//
+//    /**
+//     * 软件著作权
+//     */
+//    private String[] softwareCopyrights;
 
     /**
-     * 软件著作权
+     * 主业介绍
      */
-    private String[] softwareCopyrights;
-
-    //主业介绍
-    /**
-     * 业务类型
-     */
-    private String[] businessTypes;
-
-    /**
-     * 项目科目
-     */
-    private String[] projectSubjects;
-
-    //成功案例
-    /**
-     * 通信类
-     */
-    private String[] communications;
+    private List<MainBusinessIntroTO> mainBusinessIntroTOS;
+//    /**
+//     * 业务类型
+//     */
+//    private String[] businessTypes;
+//
+//    /**
+//     * 项目科目
+//     */
+//    private String[] projectSubjects;
 
     /**
-     * 软件类
+     * 成功案例
      */
-    private String[] softwares;
+    private List<SuccessStoriesTO> successStoriesTOS;
+//    /**
+//     * 通信类
+//     */
+//    private String[] communications;
+//
+//    /**
+//     * 软件类
+//     */
+//    private String[] softwares;
+//
+//    /**
+//     * 系统集成类
+//     */
+//    private String[] systemIntegrations;
+//
+//    /**
+//     * 营销策划类
+//     */
+//    private String[] marketingPlannings;
 
     /**
-     * 系统集成类
+     * 客户及合作伙伴
      */
-    private String[] systemIntegrations;
+    private List<CustomerAndPartnerTO> customerAndPartnerTOS;
+//    /**
+//     * 运营商
+//     */
+//    private String[] operators;
+//
+//    /**
+//     * 厂家
+//     */
+//    private String[] manufacturers;
+//
+//    /**
+//     * 各政府单位
+//     */
+//    private String[] governmentUnits;
+//
+//    /**
+//     * 合作伙伴
+//     */
+//    private String[] partners;
 
     /**
-     * 营销策划类
+     * 通讯途径
      */
-    private String[] marketingPlannings;
+    private List<CommunicationPathTO> communicationPathTOS;
+//    /**
+//     * 总公司地址
+//     */
+//    private String[] headOfficeAddresses;
+//
+//    /**
+//     * 总公司联系方式
+//     */
+//    private String[] headOfficeContactes;
+//
+//    /**
+//     * 分公司地址
+//     */
+//    private String[] branchAddresses;
+//
+//    /**
+//     * 分公司联系方式
+//     */
+//    private String[] branchPhones;
 
-    //客户及合作伙伴
-    /**
-     * 运营商
-     */
-    private String[] operators;
-
-    /**
-     * 厂家
-     */
-    private String[] manufacturers;
-
-    /**
-     * 各政府单位
-     */
-    private String[] governmentUnits;
-
-    /**
-     * 合作伙伴
-     */
-    private String[] partners;
-
-    //通讯途径
-    /**
-     * 总公司地址
-     */
-    private String[] headOfficeAddresses;
-
-    /**
-     * 总公司联系方式
-     */
-    private String[] headOfficeContactes;
-
-    /**
-     * 分公司地址
-     */
-    private String[] branchAddresses;
-
-    /**
-     * 分公司联系方式
-     */
-    private String[] branchPhones;
 
     public String getFirmName() {
         return firmName;
@@ -342,131 +359,43 @@ public class FirmIntroTO extends BaseTO {
         this.demandType = demandType;
     }
 
-    public String[] getCertificates() {
-        return certificates;
+    public List<HonorAndQualityTO> getHonorAndQualityTOS() {
+        return honorAndQualityTOS;
     }
 
-    public void setCertificates(String[] certificates) {
-        this.certificates = certificates;
+    public void setHonorAndQualityTOS(List<HonorAndQualityTO> honorAndQualityTOS) {
+        this.honorAndQualityTOS = honorAndQualityTOS;
     }
 
-    public String[] getSoftwareCopyrights() {
-        return softwareCopyrights;
+    public List<MainBusinessIntroTO> getMainBusinessIntroTOS() {
+        return mainBusinessIntroTOS;
     }
 
-    public void setSoftwareCopyrights(String[] softwareCopyrights) {
-        this.softwareCopyrights = softwareCopyrights;
+    public void setMainBusinessIntroTOS(List<MainBusinessIntroTO> mainBusinessIntroTOS) {
+        this.mainBusinessIntroTOS = mainBusinessIntroTOS;
     }
 
-    public String[] getBusinessTypes() {
-        return businessTypes;
+    public List<SuccessStoriesTO> getSuccessStoriesTOS() {
+        return successStoriesTOS;
     }
 
-    public void setBusinessTypes(String[] businessTypes) {
-        this.businessTypes = businessTypes;
+    public void setSuccessStoriesTOS(List<SuccessStoriesTO> successStoriesTOS) {
+        this.successStoriesTOS = successStoriesTOS;
     }
 
-    public String[] getProjectSubjects() {
-        return projectSubjects;
+    public List<CustomerAndPartnerTO> getCustomerAndPartnerTOS() {
+        return customerAndPartnerTOS;
     }
 
-    public void setProjectSubjects(String[] projectSubjects) {
-        this.projectSubjects = projectSubjects;
+    public void setCustomerAndPartnerTOS(List<CustomerAndPartnerTO> customerAndPartnerTOS) {
+        this.customerAndPartnerTOS = customerAndPartnerTOS;
     }
 
-    public String[] getCommunications() {
-        return communications;
+    public List<CommunicationPathTO> getCommunicationPathTOS() {
+        return communicationPathTOS;
     }
 
-    public void setCommunications(String[] communications) {
-        this.communications = communications;
-    }
-
-    public String[] getSoftwares() {
-        return softwares;
-    }
-
-    public void setSoftwares(String[] softwares) {
-        this.softwares = softwares;
-    }
-
-    public String[] getSystemIntegrations() {
-        return systemIntegrations;
-    }
-
-    public void setSystemIntegrations(String[] systemIntegrations) {
-        this.systemIntegrations = systemIntegrations;
-    }
-
-    public String[] getMarketingPlannings() {
-        return marketingPlannings;
-    }
-
-    public void setMarketingPlannings(String[] marketingPlannings) {
-        this.marketingPlannings = marketingPlannings;
-    }
-
-    public String[] getOperators() {
-        return operators;
-    }
-
-    public void setOperators(String[] operators) {
-        this.operators = operators;
-    }
-
-    public String[] getManufacturers() {
-        return manufacturers;
-    }
-
-    public void setManufacturers(String[] manufacturers) {
-        this.manufacturers = manufacturers;
-    }
-
-    public String[] getGovernmentUnits() {
-        return governmentUnits;
-    }
-
-    public void setGovernmentUnits(String[] governmentUnits) {
-        this.governmentUnits = governmentUnits;
-    }
-
-    public String[] getPartners() {
-        return partners;
-    }
-
-    public void setPartners(String[] partners) {
-        this.partners = partners;
-    }
-
-    public String[] getHeadOfficeAddresses() {
-        return headOfficeAddresses;
-    }
-
-    public void setHeadOfficeAddresses(String[] headOfficeAddresses) {
-        this.headOfficeAddresses = headOfficeAddresses;
-    }
-
-    public String[] getHeadOfficeContactes() {
-        return headOfficeContactes;
-    }
-
-    public void setHeadOfficeContactes(String[] headOfficeContactes) {
-        this.headOfficeContactes = headOfficeContactes;
-    }
-
-    public String[] getBranchAddresses() {
-        return branchAddresses;
-    }
-
-    public void setBranchAddresses(String[] branchAddresses) {
-        this.branchAddresses = branchAddresses;
-    }
-
-    public String[] getBranchPhones() {
-        return branchPhones;
-    }
-
-    public void setBranchPhones(String[] branchPhones) {
-        this.branchPhones = branchPhones;
+    public void setCommunicationPathTOS(List<CommunicationPathTO> communicationPathTOS) {
+        this.communicationPathTOS = communicationPathTOS;
     }
 }

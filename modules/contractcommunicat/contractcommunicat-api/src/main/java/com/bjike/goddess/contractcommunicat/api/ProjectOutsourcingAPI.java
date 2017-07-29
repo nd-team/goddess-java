@@ -62,12 +62,12 @@ public interface ProjectOutsourcingAPI {
      */
     List<ProjectOutsourcingCollectBO> collect(CollectConditionTO to) throws SerException;
 
-    /**
-     * 定时发送汇总
-     *
-     * @param cycleType 定时器条件
-     */
-    void setCollectSend(QuartzCycleType cycleType) throws SerException;
+//    /**
+//     * 定时发送汇总
+//     *
+//     * @param cycleType 定时器条件
+//     */
+//    void setCollectSend(QuartzCycleType cycleType) throws SerException;
 
     /**
      * 查询总记录数

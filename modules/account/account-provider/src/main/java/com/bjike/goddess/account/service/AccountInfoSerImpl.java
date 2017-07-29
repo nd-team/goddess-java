@@ -485,7 +485,7 @@ public class AccountInfoSerImpl extends ServiceImpl<AccountInfo, AccountInfoDTO>
     @Override
     public List<String> getProjectGroup() throws SerException {
         String[] fields = new String[]{"projectGroup"};
-        List<AccountCollectBO> accountCollectBOS = super.findBySql("select distinct area from account_accountinfo group by area order by area asc ", AccountCollectBO.class, fields);
+        List<AccountCollectBO> accountCollectBOS = super.findBySql("select distinct projectGroup from account_accountinfo group by projectGroup order by projectGroup asc ", AccountCollectBO.class, fields);
 
         List<String> projectGroupList = accountCollectBOS.stream().map(AccountCollectBO::getProjectGroup)
                 .filter(projectGroup -> (projectGroup != null || !"".equals(projectGroup.trim()))).distinct().collect(Collectors.toList());

@@ -67,7 +67,7 @@ public class QQGroupSerImpl extends ServiceImpl<QQGroup, QQGroupDTO> implements 
     @Override
     public QQGroupBO save(QQGroupTO to) throws SerException {
         QQGroup entity = BeanTransform.copyProperties(to, QQGroup.class);
-        entity.isStatus(Boolean.TRUE);
+        entity.setStatus(true);
         entity.setCreateTime(LocalDateTime.now());
         entity.setModifyTime(LocalDateTime.now());
         super.save(entity);
@@ -88,12 +88,13 @@ public class QQGroupSerImpl extends ServiceImpl<QQGroup, QQGroupDTO> implements 
                         String departmentId = departmentDetailBOList.get(0).getId();
                         //从公邮中得到部门的邮箱
                         CommonalityDTO dto = new CommonalityDTO();
-                        List<CommonalityBO> commonalityBOList = commonalityAPI.maps(dto);
+                        List<CommonalityBO> commonalityBOList = commonalityAPI.findAll();
                         for (CommonalityBO commonalityBO : commonalityBOList) {
                             if (departmentId.equals(commonalityBO.getDepartmentId())) {
                                 email = commonalityBO.getEmail();
                                 String content = html(to);
-
+                                String[] email1 = new String[1];
+                                email1[0] = email;
                                 //调用发送邮箱接口
                                 MessageTO messageTO = new MessageTO();
                                 messageTO.setTitle("QQ群");
@@ -101,7 +102,7 @@ public class QQGroupSerImpl extends ServiceImpl<QQGroup, QQGroupDTO> implements 
                                 messageTO.setContent(content);
                                 messageTO.setSendType(SendType.EMAIL);
                                 messageTO.setRangeType(RangeType.SPECIFIED);
-                                messageTO.setReceivers(email.split(";"));
+                                messageTO.setReceivers(email1);
                                 messageAPI.send(messageTO);
                             }
                         }
@@ -151,7 +152,7 @@ public class QQGroupSerImpl extends ServiceImpl<QQGroup, QQGroupDTO> implements 
             throw new SerException("该数据不存在");
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
-        entity.isStatus(Boolean.TRUE);
+        entity.setStatus(true);
         super.update(entity);
         return BeanTransform.copyProperties(entity, QQGroupBO.class);
     }
@@ -172,14 +173,15 @@ public class QQGroupSerImpl extends ServiceImpl<QQGroup, QQGroupDTO> implements 
         QQGroup entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("该数据不存在");
-        entity.isStatus(Boolean.FALSE);
+        entity.setStatus(Boolean.FALSE);
         super.update(entity);
         return BeanTransform.copyProperties(entity, QQGroupBO.class);
     }
 
     @Override
     public List<QQGroupBO> maps(QQGroupDTO dto) throws SerException {
-        dto.getSorts().add("status=asc");
+        dto.getSorts().add("status=desc");
+//        dto.getConditions().add(Restrict.eq("status",false));
         List<QQGroup> list = super.findByPage(dto);
         return BeanTransform.copyProperties(list, QQGroupBO.class);
     }

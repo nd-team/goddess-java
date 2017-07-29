@@ -15,7 +15,7 @@ import com.bjike.goddess.intromanage.excel.SonPermissionObject;
 import com.bjike.goddess.intromanage.to.GuidePermissionTO;
 import com.bjike.goddess.intromanage.to.IndividualDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.IndividualResumeTO;
-import com.bjike.goddess.intromanage.vo.IndividualResumeVO;
+import com.bjike.goddess.intromanage.vo.*;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -126,8 +126,25 @@ public class IndividualResumeAct {
     @GetMapping("v1/individualresume/{id}")
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            IndividualResumeBO bo = individualResumeAPI.findById(id);
+            IndividualResumeBO bo = individualResumeAPI.findResumeById(id);
             IndividualResumeVO vo = BeanTransform.copyProperties(bo, IndividualResumeVO.class, request);
+
+            //查询员工奖励
+            List<StaffRewardVO> honorAndQualitieVOs = BeanTransform.copyProperties( bo.getStaffRewardBOS() ,StaffRewardVO.class );
+            //查询员工荣誉
+            List<StaffHonorVO> mainBusinessIntroVOS = BeanTransform.copyProperties( bo.getStaffHonorBOS() ,StaffHonorVO.class );
+            //查询教育经历
+            List<EducateExperienceVO> successStoriesVOS = BeanTransform.copyProperties( bo.getEducateExperienceBOS() ,EducateExperienceVO.class );
+            //查询工作经历
+            List<WorkExperienceVO> customerAndPartnerVOS = BeanTransform.copyProperties( bo.getWorkExperienceBOS() ,WorkExperienceVO.class );
+            //查询证书情况
+            List<CredentialSituationVO> communicationPathVOS = BeanTransform.copyProperties( bo.getCredentialSituationBOS() ,CredentialSituationVO.class );
+
+            vo.setStaffRewardVOS( honorAndQualitieVOs );
+            vo.setStaffHonorVOS( mainBusinessIntroVOS );
+            vo.setEducateExperienceVOS( successStoriesVOS );
+            vo.setWorkExperienceVOS( customerAndPartnerVOS );
+            vo.setCredentialSituationVOS( communicationPathVOS );
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -7,7 +7,6 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.message.api.MessageAPI;
-import com.bjike.goddess.message.entity.Message;
 import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
@@ -15,9 +14,7 @@ import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.projectmeasure.bo.ProjectEvaluateResultBO;
 import com.bjike.goddess.projectmeasure.bo.ProjectMeasureBO;
 import com.bjike.goddess.projectmeasure.bo.ProjectMeasureSummaryBO;
-import com.bjike.goddess.projectmeasure.dto.ProjectBasicInfoDTO;
-import com.bjike.goddess.projectmeasure.dto.ProjectMeasureSummaryDTO;
-import com.bjike.goddess.projectmeasure.dto.ProjectOtherDemandDTO;
+import com.bjike.goddess.projectmeasure.dto.*;
 import com.bjike.goddess.projectmeasure.entity.*;
 import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.ProjectMeasureSummaryTO;
@@ -26,7 +23,6 @@ import com.bjike.goddess.projectmeasure.type.GuideAddrStatus;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.kafka.common.network.Send;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -37,7 +33,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.*;
+import java.util.Set;
 
 /**
  * 项目测算汇总业务实现
@@ -81,6 +77,10 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
 
     @Autowired
     private ProjectMeasureSummarySer projectMeasureSummarySer;
+    @Autowired
+    private SingleProjectMultipleUIBSer singleProjectMultipleUIBSer;
+    @Autowired
+    private MultipleProjectMultipleUIBSer multipleProjectMultipleUIBSer;
 
     /**
      * 检查权限
@@ -105,6 +105,7 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
         RpcTransmit.transmitUserToken(userToken);
 
     }
+
     /**
      * 导航检查权限
      *
@@ -152,12 +153,12 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
         checkPermission();
         String curUsername = userAPI.currentUser().getUsername();
         String sb = getProjectGroup(to);
-        ProjectMeasureSummary entity = BeanTransform.copyProperties(to, ProjectMeasureSummary.class, true,"areas","emails");
+        ProjectMeasureSummary entity = BeanTransform.copyProperties(to, ProjectMeasureSummary.class, true, "areas", "emails");
         entity.setStatus(Status.THAW);
         entity.setCreateUser(curUsername);
         entity.setProjectGroups(sb);
-        String areas = StringUtils.join(to.getAreas(),",");
-        String emails = StringUtils.join(to.getEmails(),",");
+        String areas = StringUtils.join(to.getAreas(), ",");
+        String emails = StringUtils.join(to.getEmails(), ",");
         entity.setAreas(areas);
         entity.setEmails(emails);
         entity.setLastTime(LocalDateTime.now());
@@ -216,14 +217,14 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
      */
     private void updateProjectMeasureSummary(ProjectMeasureSummaryTO to, ProjectMeasureSummary model) throws SerException {
         String sb = getProjectGroup(to);
-        String areas = StringUtils.join(to.getAreas(),",");
+        String areas = StringUtils.join(to.getAreas(), ",");
 //       BeanTransform.copyProperties(to, model, true);
-        String emails = StringUtils.join(to.getEmails(),",");
+        String emails = StringUtils.join(to.getEmails(), ",");
 
         model.setDetailInterval(to.getDetailInterval());
         model.setDetailCycle(to.getDetailCycle());
-        model.setSendInterval( to.getSendInterval() );
-        model.setCycle( to.getCycle() );
+        model.setSendInterval(to.getSendInterval());
+        model.setCycle(to.getCycle());
         model.setModifyTime(LocalDateTime.now());
         model.setProjectGroups(sb);
         model.setUpdateTime(LocalDateTime.now());
@@ -285,8 +286,8 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
             Integer longTermProjectNo = countLongTermProjectNo(area);//计算长期合作项目数量
             Integer matterProjectNo = countMatterProjectNo(area);//计算事项合作项目
             Integer intermediaryProjectNo = countIntermediaryProjectNo(area);//计算中介合作项目
-            Integer winProNo = countWinProNo(area,1);//计算盈利项目的数量
-            Integer deficitNo = countWinProNo(area,2);//计算亏损项目的数量
+            Integer winProNo = countWinProNo(area, 1);//计算盈利项目的数量
+            Integer deficitNo = countWinProNo(area, 2);//计算亏损项目的数量
 
 
             ProjectMeasureBO bo = new ProjectMeasureBO();
@@ -500,15 +501,24 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
      * @return 多项目多界面的的利润
      * @throws SerException
      */
+
+
     private Double getmMProfitTotal(Set<String> projectNameSet) throws SerException {
         Double mMProjectProfitTotal = 0d;
         List<MultipleProjectMultipleUI> mMList = multipleProjectMultipleUISer.findAll();
+        MultipleProjectMultipleUIBDTO dto = new MultipleProjectMultipleUIBDTO();
+
         for (String projectName : projectNameSet) {
             for (MultipleProjectMultipleUI mmUI : mMList) {
-                if (projectName.equals(mmUI.getProjectName())) {
-                    Double mmProjectProfit = mmUI.getProfit();//获取多项目多界面的利润
-                    mMProjectProfitTotal += mmProjectProfit;
+                dto.getConditions().add(Restrict.eq("multipleProjectMultipleUI.id",mmUI.getId()));
+                List<MultipleProjectMultipleUIB> mMBList = multipleProjectMultipleUIBSer.findByCis(dto);
+                for (MultipleProjectMultipleUIB mmBUI : mMBList) {
+                    if (projectName.equals(mmUI.getProjectName())) {
+                        Double mmProjectProfit = mmBUI.getProfit();//获取多项目多界面的利润
+                        mMProjectProfitTotal += mmProjectProfit;
+                    }
                 }
+
             }
         }
         return mMProjectProfitTotal;
@@ -533,6 +543,7 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
      * @return 多项目单界面的总利润
      * @throws SerException
      */
+
     private Double getmSProfitTotal(Set<String> projectNameSet) throws SerException {
         Double msProjectProfitTotal = 0d;
         List<MultipleProjectSingleUI> msList = multipleProjectSingleUISer.findAll();
@@ -565,14 +576,20 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
      * @param projectNameSet 项目名称
      * @return 单个项目多个界面的利润
      */
+
     private Double getSmProfitTotal(Set<String> projectNameSet) throws SerException {
         Double smProjectProfitTotal = 0d;
         List<SingleProjectMultipleUI> smList = singleProjectMultipleUISer.findAll();
+        SingleProjectMultipleUIBDTO dto = new SingleProjectMultipleUIBDTO();
         for (String projectName : projectNameSet) {
             for (SingleProjectMultipleUI smUI : smList) {
-                if (projectName.equals(smUI.getProjectName())) {
-                    Double smProjectProfit = smUI.getProfit();//获取单项目多界面的利润
-                    smProjectProfitTotal += smProjectProfit;
+                dto.getConditions().add(Restrict.eq("singleProjectMultipleUI.id",smUI.getId()));
+                List<SingleProjectMultipleUIB> smBList = singleProjectMultipleUIBSer.findByCis(dto);
+                for (SingleProjectMultipleUIB smUIB : smBList) {
+                    if (projectName.equals(smUI.getProjectName())) {
+                        Double smProjectProfit = smUIB.getProfit();//获取单项目多界面的利润
+                        smProjectProfitTotal += smProjectProfit;
+                    }
                 }
             }
         }
@@ -655,23 +672,23 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
      *
      * @return 盈利项目数量
      */
-    private Integer countWinProNo(String area , Integer value) throws SerException {
+    private Integer countWinProNo(String area, Integer value) throws SerException {
         ProjectOtherDemandDTO projectOtherDemandDTO = new ProjectOtherDemandDTO();
         projectOtherDemandDTO.setArea(area);
         List<ProjectEvaluateResultBO> projectEvaluateResultBOList = projectOtherDemandSer.findEvaluateResult(projectOtherDemandDTO);
         Integer countWin = 0;
         Integer countDeficit = 0;
-        if( projectEvaluateResultBOList != null && projectEvaluateResultBOList.size()>0 ){
-            for ( ProjectEvaluateResultBO str : projectEvaluateResultBOList ) {
-                Double profit = str.getProfit()==null ? 0d:str.getProfit();
-                if(profit>0){
+        if (projectEvaluateResultBOList != null && projectEvaluateResultBOList.size() > 0) {
+            for (ProjectEvaluateResultBO str : projectEvaluateResultBOList) {
+                Double profit = str.getProfit() == null ? 0d : str.getProfit();
+                if (profit > 0) {
                     countWin++;
-                }else {
+                } else {
                     countDeficit++;
                 }
             }
         }
-        return value==1? countWin : countDeficit;
+        return value == 1 ? countWin : countDeficit;
     }
 
     @Override
@@ -679,7 +696,7 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
         String userToken = RpcTransmit.getUserToken();
         Boolean flagSee = guildPermission();
         RpcTransmit.transmitUserToken(userToken);
-        if (flagSee ) {
+        if (flagSee) {
             return true;
         } else {
             return false;
@@ -804,46 +821,46 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
                     temp_sendNum = sendNum * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastTime(lastTime.plusMinutes( sendNum.longValue() ));
+                        str.setLastTime(lastTime.plusMinutes(sendNum.longValue()));
                     }
                     break;
                 case HOUR:
                     temp_sendNum = sendNum * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastTime(lastTime.plusHours( sendNum.longValue() ));
+                        str.setLastTime(lastTime.plusHours(sendNum.longValue()));
                     }
                     break;
                 case DAY:
                     temp_sendNum = sendNum * 24 * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastTime(lastTime.plusDays( sendNum.longValue() ));
+                        str.setLastTime(lastTime.plusDays(sendNum.longValue()));
                     }
                     break;
                 case WEEK:
                     temp_sendNum = sendNum * 7 * 24 * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastTime(lastTime.plusWeeks( sendNum.longValue() ));
+                        str.setLastTime(lastTime.plusWeeks(sendNum.longValue()));
                     }
                     break;
                 case MONTH:
                     if (nowTime.minusMonths(sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastTime(lastTime.plusMonths( sendNum.longValue() ));
+                        str.setLastTime(lastTime.plusMonths(sendNum.longValue()));
                     }
                     break;
                 case QUARTER:
-                    if (nowTime.minusMonths(3*sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(3*sendNum.longValue()).isAfter(lastTime)) {
+                    if (nowTime.minusMonths(3 * sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(3 * sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastTime(lastTime.plusMonths( 3* sendNum.longValue() ));
+                        str.setLastTime(lastTime.plusMonths(3 * sendNum.longValue()));
                     }
                     break;
                 case YEAR:
                     if (nowTime.minusYears(sendNum.longValue()).isEqual(lastTime) || nowTime.minusYears(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastTime(lastTime.plusYears( sendNum.longValue() ));
+                        str.setLastTime(lastTime.plusYears(sendNum.longValue()));
                     }
                     break;
             }
@@ -860,53 +877,53 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
         }
     }
 
-        private String htmlSummary(List<ProjectMeasureBO> summaryBOList) throws SerException {
-            StringBuffer sb = new StringBuffer("");
-            if (summaryBOList != null && summaryBOList.size() > 0) {
-                sb = new StringBuffer("<h4>项目测算汇总:</h4>");
-                sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
-                //拼表头
-                ProjectMeasureBO title = summaryBOList.get(summaryBOList.size() - 1);
+    private String htmlSummary(List<ProjectMeasureBO> summaryBOList) throws SerException {
+        StringBuffer sb = new StringBuffer("");
+        if (summaryBOList != null && summaryBOList.size() > 0) {
+            sb = new StringBuffer("<h4>项目测算汇总:</h4>");
+            sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
+            //拼表头
+            ProjectMeasureBO title = summaryBOList.get(summaryBOList.size() - 1);
+            sb.append("<tr>");
+            sb.append("<td>地区</td>");
+            sb.append("<td>项目数量</td>");
+            sb.append("<td>项目利润</td>");
+            sb.append("<td>多项目多界面项目数量</td>");
+            sb.append("<td>多项目单界面项目数量</td>");
+            sb.append("<td>单项目多界面项目数量</td>");
+            sb.append("<td>多项目多界面项目数量</td>");
+            sb.append("<td>长期合作项目数量</td>");
+            sb.append("<td>事项合作项目</td>");
+            sb.append("<td>中介合作项目</td>");
+            sb.append("<td>盈利项目的数量</td>");
+            sb.append("<td>亏损项目的数量</td>");
+
+            sb.append("<tr>");
+
+            //拼body部分
+            for (ProjectMeasureBO bo : summaryBOList) {
                 sb.append("<tr>");
-                sb.append("<td>地区</td>");
-                sb.append("<td>项目数量</td>");
-                sb.append("<td>项目利润</td>");
-                sb.append("<td>多项目多界面项目数量</td>");
-                sb.append("<td>多项目单界面项目数量</td>");
-                sb.append("<td>单项目多界面项目数量</td>");
-                sb.append("<td>多项目多界面项目数量</td>");
-                sb.append("<td>长期合作项目数量</td>");
-                sb.append("<td>事项合作项目</td>");
-                sb.append("<td>中介合作项目</td>");
-                sb.append("<td>盈利项目的数量</td>");
-                sb.append("<td>亏损项目的数量</td>");
+                sb.append("<td>" + bo.getArea() + "</td>");
+                sb.append("<td>" + bo.getProjectCount() + "</td>");
+                sb.append("<td>" + bo.getProjectProfit() + "</td>");
+                sb.append("<td>" + bo.getMmProjectCount() + "</td>");
+                sb.append("<td>" + bo.getMsProjectCount() + "</td>");
+                sb.append("<td>" + bo.getSmProjectCount() + "</td>");
+                sb.append("<td>" + bo.getSsProjectCount() + "</td>");
+                sb.append("<td>" + bo.getLongTermProjectCount() + "</td>");
+                sb.append("<td>" + bo.getMatterProjectCount() + "</td>");
+                sb.append("<td>" + bo.getAgencyProjectCount() + "</td>");
+                sb.append("<td>" + bo.getTestProfitProjectCount() + "</td>");
+                sb.append("<td>" + bo.getTestDeficitProjectCount() + "</td>");
 
                 sb.append("<tr>");
-
-                //拼body部分
-                for (ProjectMeasureBO bo : summaryBOList) {
-                    sb.append("<tr>");
-                    sb.append("<td>" + bo.getArea() + "</td>");
-                    sb.append("<td>" + bo.getProjectCount() + "</td>");
-                    sb.append("<td>" + bo.getProjectProfit() + "</td>");
-                    sb.append("<td>" + bo.getMmProjectCount() + "</td>");
-                    sb.append("<td>" + bo.getMsProjectCount() + "</td>");
-                    sb.append("<td>" + bo.getSmProjectCount() + "</td>");
-                    sb.append("<td>" + bo.getSsProjectCount() + "</td>");
-                    sb.append("<td>" + bo.getLongTermProjectCount() + "</td>");
-                    sb.append("<td>" + bo.getMatterProjectCount() + "</td>");
-                    sb.append("<td>" + bo.getAgencyProjectCount() + "</td>");
-                    sb.append("<td>" + bo.getTestProfitProjectCount() + "</td>");
-                    sb.append("<td>" + bo.getTestDeficitProjectCount() + "</td>");
-
-                    sb.append("<tr>");
-                }
-
-                //结束
-                sb.append("</table>");
             }
-            return sb.toString();
+
+            //结束
+            sb.append("</table>");
         }
+        return sb.toString();
+    }
 
 
     private List<ProjectMeasureSummary> sendObject(List<ProjectMeasureSummary> summaryEmails) throws SerException {
@@ -918,23 +935,23 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
             for (ProjectMeasureSummary sign : summaryEmails) {
 
                 String area = sign.getAreas();
-                String [] condis = area.split(",");
+                String[] condis = area.split(",");
                 List<ProjectMeasureBO> measureBOList = projectMeasureSummarySer.summarize(condis);
                 //拼表格
                 String content = htmlSummary(measureBOList);
 
                 MessageTO messageTO = new MessageTO();
-                messageTO.setContent( content );
+                messageTO.setContent(content);
                 messageTO.setTitle("项目测算汇总");
                 messageTO.setMsgType(MsgType.SYS);
-                messageTO.setSendType( SendType.EMAIL);
-                messageTO.setRangeType( RangeType.SPECIFIED);
+                messageTO.setSendType(SendType.EMAIL);
+                messageTO.setRangeType(RangeType.SPECIFIED);
                 //定时发送必须写
                 messageTO.setSenderId("SYSTEM");
                 messageTO.setSenderName("SYSTEM");
 
-                messageTO.setReceivers(sign.getEmails().split(",") );
-                messageAPI.send(  messageTO );
+                messageTO.setReceivers(sign.getEmails().split(","));
+                messageAPI.send(messageTO);
 
                 sign.setModifyTime(LocalDateTime.now());
                 allEmails.add(sign);

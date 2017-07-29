@@ -7,6 +7,7 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.contacts.api.CommonalityAPI;
 import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.contacts.bo.ExternalContactsBO;
@@ -27,6 +28,7 @@ import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -61,10 +63,14 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
     private DepartmentDetailAPI departmentDetailAPI;
 
 
-
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ExternalContactsBO save(ExternalContactsTO to) throws SerException {
+        if (StringUtils.isNotBlank(to.getEmail())) {
+            if (!Validator.isEmail(to.getEmail())) {
+                throw new SerException("输入的邮箱格式不正确");
+            }
+        }
         UserBO user = userAPI.currentUser();
         ExternalContacts entity = BeanTransform.copyProperties(to, ExternalContacts.class, true);
         entity.setWriter(user.getUsername());
@@ -210,6 +216,16 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ExternalContactsBO importExcel(List<ExternalContactsTO> externalContactsTO) throws SerException {
+        if (null != externalContactsTO && externalContactsTO.size() > 0) {
+            for (ExternalContactsTO to : externalContactsTO) {
+                if (!Validator.isEmail(to.getEmail())) {
+                    throw new SerException("导入的邮箱格式不正确");
+                }
+                if (!Validator.isPhone(to.getPhone())) {
+                    throw new SerException("导入的电话号码格式不正确");
+                }
+            }
+        }
         List<ExternalContacts> externalContacts = BeanTransform.copyProperties(externalContactsTO, ExternalContacts.class, true);
         externalContacts.stream().forEach(str -> {
             str.setCreateTime(LocalDateTime.now());
@@ -227,7 +243,7 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
 
         ExternalContactsTemplateExport excel = new ExternalContactsTemplateExport();
         excel.setArea("移动通信类");
-        excel.setProject( "test" );
+        excel.setProject("test");
         excel.setUsername("jkj");
         excel.setUnit("jkj");
         excel.setPosition("jkj");
@@ -241,7 +257,7 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
         excel.setWriteNumber("jkj");
         excel.setWriteTime(LocalDateTime.now());
         excel.setRemark("jkj");
-        commerceContactsExports.add( excel );
+        commerceContactsExports.add(excel);
         Excel exce = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(commerceContactsExports, exce);
         return bytes;
@@ -320,14 +336,13 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
     /**
      * 增加或更新时发送邮件
      */
-    private void send(ExternalContactsTO to) throws SerException{
+    private void send(ExternalContactsTO to) throws SerException {
         //获得综合资源部,商务发展部,总经办的邮箱
         String[] allEmails = null;
         //从公共邮箱中得到部门的邮箱
-        CommonalityDTO commonalityDTO = new CommonalityDTO();
-        List<CommonalityBO> commonalityBOList = commonalityAPI.maps(commonalityDTO);
+        List<CommonalityBO> commonalityBOList = commonalityAPI.findAll();
         List<String> stringList = new ArrayList<>();
-        for(CommonalityBO commonalityBO : commonalityBOList){
+        for (CommonalityBO commonalityBO : commonalityBOList) {
             if (commonalityBO.getDepartmentId().equals(this.getDepartment("综合资源部"))) {
                 stringList.add(commonalityBO.getEmail());
             }
@@ -399,7 +414,7 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
     }
 
     //得到对应部门的id号
-    private String getDepartment(String department) throws SerException{
+    private String getDepartment(String department) throws SerException {
         //根据组织结构中的部门名称查询部门id
         DepartmentDetailDTO departmentDetailDTO = new DepartmentDetailDTO();
         departmentDetailDTO.getConditions().add(Restrict.eq("department", department));

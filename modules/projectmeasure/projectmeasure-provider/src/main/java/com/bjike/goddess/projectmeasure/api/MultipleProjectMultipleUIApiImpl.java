@@ -59,7 +59,7 @@ public class MultipleProjectMultipleUIApiImpl implements MultipleProjectMultiple
      */
     @Override
     public List<MultipleProjectMultipleUIBO> list(MultipleProjectMultipleUIDTO dto) throws SerException {
-        return multipleProjectMultipleUISer.list(dto);
+         return multipleProjectMultipleUISer.list(dto);
     }
 
     /**
@@ -70,8 +70,8 @@ public class MultipleProjectMultipleUIApiImpl implements MultipleProjectMultiple
      * @throws SerException
      */
     @Override
-    public MultipleProjectMultipleUIBO save(MultipleProjectMultipleUITO to) throws SerException {
-        return multipleProjectMultipleUISer.save(to);
+    public void save(MultipleProjectMultipleUITO to) throws SerException {
+         multipleProjectMultipleUISer.save(to);
     }
 
     /**

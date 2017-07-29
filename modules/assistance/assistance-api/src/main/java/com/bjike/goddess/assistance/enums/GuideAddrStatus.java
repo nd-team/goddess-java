@@ -38,19 +38,7 @@ public enum GuideAddrStatus {
     /**
      * 查看
      */
-    SEE(6),
-    /**
-     * 上传附件
-     */
-    UPLOAD(7),
-    /**
-     * 下载附件
-     */
-    DOWNLOAD(8),
-    /**
-     * 查看附件
-     */
-    SEEFILE(9);
+    SEE(6);
 
     private int code;
 

@@ -3,6 +3,8 @@ package com.bjike.goddess.recruit.dto;
 import com.bjike.goddess.common.api.dto.BaseDTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 招聘计划
  *
@@ -46,17 +48,17 @@ public class RecruitPlanDTO extends BaseDTO {
     /**
      * 年份
      */
-    @NotBlank(groups = {RecruitPlanDTO.WEEK.class, RecruitPlanDTO.MONTH.class}, message = "年份不能为空")
+    @NotNull(groups = {RecruitPlanDTO.WEEK.class, RecruitPlanDTO.MONTH.class}, message = "年份不能为空")
     private Integer year;
     /**
      * 月份
      */
-    @NotBlank(groups = {RecruitPlanDTO.WEEK.class, RecruitPlanDTO.MONTH.class}, message = "月份不能为空")
+    @NotNull(groups = {RecruitPlanDTO.WEEK.class, RecruitPlanDTO.MONTH.class}, message = "月份不能为空")
     private Integer month;
     /**
      * 周数
      */
-    @NotBlank(groups = {RecruitPlanDTO.WEEK.class}, message = "周数不能为空")
+    @NotNull(groups = {RecruitPlanDTO.WEEK.class}, message = "周数不能为空")
     private Integer week;
 
     public Integer getYear() {

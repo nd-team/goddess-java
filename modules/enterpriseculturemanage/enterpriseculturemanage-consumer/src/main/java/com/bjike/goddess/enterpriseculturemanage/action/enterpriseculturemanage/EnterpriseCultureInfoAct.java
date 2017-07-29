@@ -175,7 +175,7 @@ public class EnterpriseCultureInfoAct {
     @GetMapping("v1/publicize/{id}")
     public Result findPublicize(@PathVariable String id) throws ActException {
         try {
-            PublicizeProgramInfoVO vo = BeanTransform.copyProperties(enterpriseCultureInfoAPI.findPublicize(id), PublicizeProgramInfoVO.class);
+           List<PublicizeProgramInfoVO> vo = BeanTransform.copyProperties(enterpriseCultureInfoAPI.findPublicize(id), PublicizeProgramInfoVO.class);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -267,13 +267,13 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
         }
         List<ProjectOutsourcing> list = super.findByCis(dto);
         List<ProjectOutsourcingExcel> excelList = new ArrayList<ProjectOutsourcingExcel>();
-        if(!CollectionUtils.isEmpty(list)){
+        if (!CollectionUtils.isEmpty(list)) {
             for (ProjectOutsourcing model : list) {
                 ProjectOutsourcingExcel excel = new ProjectOutsourcingExcel();
                 BeanUtils.copyProperties(model, excel);
                 excelList.add(excel);
             }
-        }else{
+        } else {
             excelList.add(new ProjectOutsourcingExcel());
         }
 
@@ -358,12 +358,12 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
         Excel excel = new Excel(0, 2);
         List<ProjectOutsourcingExcel> list = new ArrayList<ProjectOutsourcingExcel>();
         list.add(new ProjectOutsourcingExcel());
-        byte[] bytes = ExcelUtil.clazzToExcel(list , excel);
+        byte[] bytes = ExcelUtil.clazzToExcel(list, excel);
         return bytes;
     }
 
     /**
-     *  导航栏核对查看权限（部门级别）
+     * 导航栏核对查看权限（部门级别）
      */
     private Boolean guideSeeIdentity() throws SerException {
         Boolean flag = false;
@@ -419,7 +419,7 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
                 }
             }
             totalCostBudget = boList.stream().mapToDouble(p -> p.getCostBudget()).sum();
-        }else{
+        } else {
             returnBoList = new ArrayList<ProjectOutsourcingCollectBO>();
         }
 
@@ -438,4 +438,5 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
             throw new SerException("该模块只有商务部可操作，您的帐号尚无权限");
         }
     }
+
 }

@@ -90,7 +90,7 @@ public class AttachedAct {
      */
     @LoginAuth
     @PutMapping("v1/complete")
-    public Result complete(@Validated({AttachedTO.complete.class}) AttachedTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result complete(@Validated({AttachedTO.COM.class}) AttachedTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             AttachedBO bo = attachedAPI.complete(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, AttachedVO.class, request));

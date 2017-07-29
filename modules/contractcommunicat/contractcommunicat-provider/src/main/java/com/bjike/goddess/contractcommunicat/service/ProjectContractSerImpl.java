@@ -59,7 +59,6 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
 
         getCusPermission();
 
-        isExist(to, null);
         ProjectContract model = BeanTransform.copyProperties(to, ProjectContract.class, true);
         super.save(model);
         to.setId(model.getId());

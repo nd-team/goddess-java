@@ -1,5 +1,7 @@
 package com.bjike.goddess.assistance.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -19,19 +21,19 @@ public class ComputerAssistTO extends BaseTO {
     /**
      * 员工名称
      */
-    @NotBlank(message = "员工名称不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class},message = "员工名称不能为空")
     private String empName;
 
     /**
      * 项目组
      */
-    @NotBlank(message = "项目组不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class},message = "项目组不能为空")
     private String projectGroup;
 
     /**
      * 地区
      */
-    @NotBlank(message = "地区不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class},message = "地区不能为空")
     private String area;
 
     /**
@@ -47,13 +49,13 @@ public class ComputerAssistTO extends BaseTO {
     /**
      * 补助计薪周期开始时间
      */
-    @NotBlank(message = "补助计薪周期开始时间不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class},message = "补助计薪周期开始时间不能为空")
     private String salaryStartTime;
 
     /**
      * 补助计薪周期结束时间
      */
-    @NotBlank(message = "补助计薪周期结束时间不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class},message = "补助计薪周期结束时间不能为空")
     private String salaryEndTime;
 
     /**

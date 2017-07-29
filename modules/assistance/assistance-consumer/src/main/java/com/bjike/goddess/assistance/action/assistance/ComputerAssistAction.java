@@ -4,7 +4,10 @@ import com.bjike.goddess.assistance.api.ComputerAssistAPI;
 import com.bjike.goddess.assistance.bo.ComputerAssistBO;
 import com.bjike.goddess.assistance.dto.ComputerAssistDTO;
 import com.bjike.goddess.assistance.to.ComputerAssistTO;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.vo.ComputerAssistVO;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -17,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -35,6 +39,29 @@ public class ComputerAssistAction {
 
     @Autowired
     private ComputerAssistAPI computerAssistAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = computerAssistAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 电脑补助列表总条数
@@ -102,7 +129,7 @@ public class ComputerAssistAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result addComputerAssist(@Validated ComputerAssistTO computerAssistTO, BindingResult bindingResult) throws ActException {
+    public Result addComputerAssist(@Validated(ADD.class) ComputerAssistTO computerAssistTO, BindingResult bindingResult) throws ActException {
         try {
             ComputerAssistBO computerAssistBO1 = computerAssistAPI.addComputerAssist(computerAssistTO);
             return ActResult.initialize(BeanTransform.copyProperties(computerAssistBO1, ComputerAssistVO.class, true));
@@ -122,7 +149,7 @@ public class ComputerAssistAction {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result editComputerAssist(@Validated ComputerAssistTO computerAssistTO) throws ActException {
+    public Result editComputerAssist(@Validated(EDIT.class) ComputerAssistTO computerAssistTO) throws ActException {
         try {
             ComputerAssistBO computerAssistBO1 = computerAssistAPI.editComputerAssist(computerAssistTO);
             return ActResult.initialize(BeanTransform.copyProperties(computerAssistBO1, ComputerAssistVO.class, true));

@@ -71,11 +71,11 @@ public class QQGroupBO extends BaseBO {
         this.manager = manager;
     }
 
-    public Boolean isStatus() {
+    public Boolean getStatus() {
         return status;
     }
 
-    public void isStatus(Boolean status) {
+    public void setStatus(Boolean status) {
         this.status = status;
     }
 }

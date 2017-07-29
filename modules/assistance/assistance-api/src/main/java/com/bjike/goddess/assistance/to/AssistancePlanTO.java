@@ -1,6 +1,9 @@
 package com.bjike.goddess.assistance.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 补助方案
@@ -16,6 +19,7 @@ public class AssistancePlanTO extends BaseTO {
     /**
      * 补助类型名称
      */
+    @NotBlank(groups = {ADD.class, EDIT.class},message = "补助类型名称不能为空")
     private String typeName;
 
     /**
@@ -31,11 +35,13 @@ public class AssistancePlanTO extends BaseTO {
     /**
      * 补助开始时间
      */
+    @NotBlank(groups = {ADD.class, EDIT.class},message = "补助开始时间不能为空")
     private String helpStartTime;
 
     /**
      * 补助结束时间
      */
+    @NotBlank(groups = {ADD.class, EDIT.class},message = "补助结束时间不能为空")
     private String helpEndTime;
 
     /**

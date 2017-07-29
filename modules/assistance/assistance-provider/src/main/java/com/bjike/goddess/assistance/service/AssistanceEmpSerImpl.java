@@ -148,15 +148,6 @@ public class AssistanceEmpSerImpl extends ServiceImpl<AssistanceEmp, AssistanceE
             case SEE:
                 flag = guideSeeIdentity();
                 break;
-            case UPLOAD:
-                flag = guideAddIdentity();
-                break;
-            case DOWNLOAD:
-                flag = guideAddIdentity();
-                break;
-            case SEEFILE:
-                flag = guideSeeIdentity();
-                break;
             default:
                 flag = true;
                 break;

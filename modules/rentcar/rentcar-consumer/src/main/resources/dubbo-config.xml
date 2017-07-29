@@ -34,5 +34,17 @@
 
     <dubbo:reference interface="com.bjike.goddess.user.api.rbac.PermissionAPI" id="permissionApiImpl"/>
 
+    <dubbo:reference  validation="true" id="carSendEmailApiImpl" interface="com.bjike.goddess.rentcar.api.CarSendEmailAPI" />
+
+
+    <dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+    <dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+    <dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+    <dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+    <dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
+    <dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+
+    <dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.rentcar.api.CusPermissionAPI" />
+    <dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.rentcar.api.CusPermissionOperateAPI" />
 
 </beans>
