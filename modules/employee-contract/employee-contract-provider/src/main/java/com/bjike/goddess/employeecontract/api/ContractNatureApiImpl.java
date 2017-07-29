@@ -5,6 +5,7 @@ import com.bjike.goddess.employeecontract.bo.ContractNatureBO;
 import com.bjike.goddess.employeecontract.dto.ContractNatureDTO;
 import com.bjike.goddess.employeecontract.service.ContractNatureSer;
 import com.bjike.goddess.employeecontract.to.ContractNatureTO;
+import com.bjike.goddess.employeecontract.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,16 @@ public class ContractNatureApiImpl implements ContractNatureAPI {
 
     @Autowired
     private ContractNatureSer contractNatureSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return contractNatureSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return contractNatureSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public ContractNatureBO save(ContractNatureTO to) throws SerException {

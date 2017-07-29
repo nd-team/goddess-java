@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.employeecontract.bo.ContractNatureBO;
 import com.bjike.goddess.employeecontract.dto.ContractNatureDTO;
 import com.bjike.goddess.employeecontract.to.ContractNatureTO;
+import com.bjike.goddess.employeecontract.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -18,6 +19,19 @@ import java.util.List;
  */
 public interface ContractNatureAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 添加
      *

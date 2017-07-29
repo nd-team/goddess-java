@@ -20,6 +20,7 @@ import com.bjike.goddess.marketactivitymanage.entity.MarketServeSummary;
 import com.bjike.goddess.marketactivitymanage.excel.SonPermissionObject;
 import com.bjike.goddess.marketactivitymanage.to.GuidePermissionTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeSummaryTO;
+import com.bjike.goddess.marketactivitymanage.to.SummaryTO;
 import com.bjike.goddess.marketactivitymanage.type.CycleType;
 import com.bjike.goddess.marketactivitymanage.type.GuideAddrStatus;
 import com.bjike.goddess.message.api.MessageAPI;
@@ -444,23 +445,20 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     /**
      * 市场招待汇总
      *
-     * @param type            汇总类型
-     * @param projectGroups   部门/项目组
-     * @param startTimeString 起始时间
-     * @param endTimeString   结束时间
+     * @param summaryTO
      * @return class MarketServeSummaryVO
      * @throws SerException
      */
     @Override
-    public List<ServeSummaryBO> summarize(Boolean type, String[] projectGroups, String startTimeString, String endTimeString) throws SerException {
+    public List<ServeSummaryBO> summarize(SummaryTO summaryTO) throws SerException {
         checkPermission();
-        if(type==null){
+        if(summaryTO.getType()==null){
             throw new SerException("汇总类型不能为空");
         }else {
-            if (type) {
-                return summarizePlan(projectGroups, startTimeString, endTimeString);
+            if (summaryTO.getType()) {
+                return summarizePlan(summaryTO);
             } else {
-                return summarizeActual(projectGroups, startTimeString, endTimeString);
+                return summarizeActual(summaryTO);
             }
         }
     }
@@ -468,30 +466,28 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     /**
      * 市场招待记录汇总
      *
-     * @param projectGroups
-     * @param startTimeString
-     * @param endTimeString
+     * @param summaryTO
      * @return
      * @throws SerException
      */
-    private List<ServeSummaryBO> summarizeActual(String[] projectGroups, String startTimeString, String endTimeString) throws SerException {
+    private List<ServeSummaryBO> summarizeActual(SummaryTO summaryTO) throws SerException {
         LocalDateTime[] actualActivityTiming = null;
-        if (StringUtils.isNotBlank(startTimeString) && StringUtils.isNotBlank(endTimeString)) {
-            LocalDateTime startTime = DateUtil.parseDateTime(startTimeString);//起始时间
-            LocalDateTime endTime = DateUtil.parseDateTime(endTimeString);//结束时间
+        if (StringUtils.isNotBlank(summaryTO.getStartTimeString()) && StringUtils.isNotBlank(summaryTO.getEndTimeString())) {
+            LocalDateTime startTime = DateUtil.parseDateTime(summaryTO.getStartTimeString());//起始时间
+            LocalDateTime endTime = DateUtil.parseDateTime(summaryTO.getEndTimeString());//结束时间
             actualActivityTiming = new LocalDateTime[]{startTime, endTime};
-        }else if(StringUtils.isNotBlank(startTimeString) && StringUtils.isBlank(endTimeString)){
+        }else if(StringUtils.isNotBlank(summaryTO.getStartTimeString()) && StringUtils.isBlank(summaryTO.getEndTimeString())){
             throw new SerException("参数检验不通过");
-        }else if(StringUtils.isBlank(startTimeString) && StringUtils.isNotBlank(endTimeString)){
+        }else if(StringUtils.isBlank(summaryTO.getStartTimeString()) && StringUtils.isNotBlank(summaryTO.getEndTimeString())){
             throw new SerException("参数检验不通过");
         }
-        if(projectGroups==null || projectGroups.length<=0){
-            throw new SerException("项目组不能为空");
+        if(summaryTO.getProjectGroups()==null || summaryTO.getProjectGroups().length<=0){
+            throw new SerException("项目名不能为空");
         }
         List<ServeSummaryBO> serveSummaryBOList = new ArrayList<>(0);
 
             //按照项目组查询
-            for (String projectGroup : projectGroups) {
+            for (String projectGroup : summaryTO.getProjectGroups()) {
                 MarketServeRecordDTO dto = new MarketServeRecordDTO();
                 dto.getConditions().add(Restrict.eq("projectName", projectGroup));
                 if (actualActivityTiming != null) {
@@ -506,7 +502,10 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
                     //遍历集合查询
                     for (MarketServeRecord obj : marketServeRecordList) {
                         String clientName = getClientName(obj);
-                        String actualActivityTimingStr = obj.getActualActivityTiming().toString().replace("T", " ").substring(0, 19);
+                        String actualActivityTimingStr = "";
+                        if(obj.getActualActivityTiming()!=null){
+                            actualActivityTimingStr = obj.getActualActivityTiming().toString().replace("T", " ");
+                        }
                         String whetherTemporaryServe = getWhetherTemporaryServe(obj);
 
                         ServeSummaryBO serveSummaryBO = new ServeSummaryBO();
@@ -775,30 +774,28 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     /**
      * 市场招待记录申请汇总
      *
-     * @param projectGroups
-     * @param startTimeString
-     * @param endTimeString
+     * @param summaryTO
      * @return
      * @throws SerException
      */
-    private List<ServeSummaryBO> summarizePlan(String[] projectGroups, String startTimeString, String endTimeString) throws SerException {
+    private List<ServeSummaryBO> summarizePlan(SummaryTO summaryTO) throws SerException {
         LocalDateTime[] planActivityTiming = null;
-        if (StringUtils.isNotBlank(startTimeString) && StringUtils.isNotBlank(endTimeString)) {
-            LocalDateTime startTime = DateUtil.parseDateTime(startTimeString);//起始时间
-            LocalDateTime endTime = DateUtil.parseDateTime(endTimeString);//结束时间
+        if (StringUtils.isNotBlank(summaryTO.getStartTimeString()) && StringUtils.isNotBlank(summaryTO.getEndTimeString())) {
+            LocalDateTime startTime = DateUtil.parseDateTime(summaryTO.getStartTimeString());//起始时间
+            LocalDateTime endTime = DateUtil.parseDateTime(summaryTO.getEndTimeString());//结束时间
             planActivityTiming = new LocalDateTime[]{startTime, endTime};
-        }else if(StringUtils.isNotBlank(startTimeString) && StringUtils.isBlank(endTimeString)){
+        }else if(StringUtils.isNotBlank(summaryTO.getStartTimeString()) && StringUtils.isBlank(summaryTO.getEndTimeString())){
             throw new SerException("参数检验不通过");
-        }else if(StringUtils.isBlank(startTimeString) && StringUtils.isNotBlank(endTimeString)){
+        }else if(StringUtils.isBlank(summaryTO.getStartTimeString()) && StringUtils.isNotBlank(summaryTO.getEndTimeString())){
             throw new SerException("参数检验不通过");
         }
-        if(projectGroups==null || projectGroups.length<=0){
+        if(summaryTO.getProjectGroups()==null || summaryTO.getProjectGroups().length<=0){
             throw new SerException("项目组不能为空");
         }
         List<ServeSummaryBO> serveSummaryBOList = new ArrayList<>(0);
 
         //按照项目组查询
-        for (String projectGroup : projectGroups) {
+        for (String projectGroup : summaryTO.getProjectGroups()) {
             MarketServeApplyDTO dto = new MarketServeApplyDTO();
             dto.getConditions().add(Restrict.eq("projectName", projectGroup));
             if (planActivityTiming != null) {
@@ -814,7 +811,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
                 //遍历查询集合
                 for (MarketServeApply obj : marketServeApplyList) {
                     String clientName = getClientName(obj);
-                    String planActivityTimingStr = obj.getPlanActivityTiming().toString().replace("T", " ").substring(0, 19);
+                    String planActivityTimingStr = obj.getPlanActivityTiming().toString().replace("T", " ");
                     String whetherTemporaryServe = getWhetherTemporaryServe(obj);
 
                     ServeSummaryBO serveSummaryBO = new ServeSummaryBO();
@@ -1276,8 +1273,13 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
                     startTime = String.valueOf(sign.getStartTime()).replace("T", " ").substring(0, 19);
                     endTime = String.valueOf(sign.getEndTime()).replace("T", " ").substring(0, 19);
                 }
+                SummaryTO summaryTO = new SummaryTO();
+                summaryTO.setType(type);
+                summaryTO.setProjectGroups(condis);
+                summaryTO.setStartTimeString(startTime);
+                summaryTO.setEndTimeString(endTime);
 
-                List<ServeSummaryBO> measureBOList = marketServeSummarySer.summarize(type, condis, startTime, endTime);
+                List<ServeSummaryBO> measureBOList = marketServeSummarySer.summarize(summaryTO);
                 //拼表格
                 String content = htmlSummary(measureBOList);
 

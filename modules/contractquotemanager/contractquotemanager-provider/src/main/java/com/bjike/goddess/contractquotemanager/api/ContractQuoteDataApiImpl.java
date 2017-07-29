@@ -60,6 +60,7 @@ public class ContractQuoteDataApiImpl implements ContractQuoteDataAPI {
      */
     @Override
     public Long count(ContractQuoteDataDTO dto) throws SerException {
+        contractQuoteDataSer.condiy(dto);
         return contractQuoteDataSer.count(dto);
     }
 
