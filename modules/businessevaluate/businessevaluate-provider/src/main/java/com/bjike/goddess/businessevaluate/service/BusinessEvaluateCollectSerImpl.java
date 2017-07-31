@@ -92,6 +92,7 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
             throw new SerException("发送对象不能为空!");
         }
         model.setOperateUser(userAPI.currentUser(token).getUsername());
+        model.setLastSendTime(LocalDateTime.now());
         super.save(model);
         to.setId(model.getId());
         return BeanTransform.copyProperties(to, BusinessEvaluateCollectBO.class);
