@@ -406,7 +406,6 @@ public class FirstSubjectSerImpl extends ServiceImpl<FirstSubject, FirstSubjectD
                 FirstSubject firstSubject = BeanTransform.copyProperties(str, FirstSubject.class, true);
                 firstSubject.setCode(code);
                 firstSubject.setCreateTime(LocalDateTime.now());
-                firstSubject.setId(null);
                 list.add( firstSubject );
 
                 //

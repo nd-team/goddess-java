@@ -126,102 +126,26 @@ public class FirmIntroTO extends BaseTO {
      * 荣誉与资质
      */
     private List<HonorAndQualityTO> honorAndQualityTOS;
-//    /**
-//     * 各类证书
-//     */
-//    private String[] certificates;
-//
-//    /**
-//     * 软件著作权
-//     */
-//    private String[] softwareCopyrights;
 
     /**
      * 主业介绍
      */
     private List<MainBusinessIntroTO> mainBusinessIntroTOS;
-//    /**
-//     * 业务类型
-//     */
-//    private String[] businessTypes;
-//
-//    /**
-//     * 项目科目
-//     */
-//    private String[] projectSubjects;
 
     /**
      * 成功案例
      */
     private List<SuccessStoriesTO> successStoriesTOS;
-//    /**
-//     * 通信类
-//     */
-//    private String[] communications;
-//
-//    /**
-//     * 软件类
-//     */
-//    private String[] softwares;
-//
-//    /**
-//     * 系统集成类
-//     */
-//    private String[] systemIntegrations;
-//
-//    /**
-//     * 营销策划类
-//     */
-//    private String[] marketingPlannings;
 
     /**
      * 客户及合作伙伴
      */
     private List<CustomerAndPartnerTO> customerAndPartnerTOS;
-//    /**
-//     * 运营商
-//     */
-//    private String[] operators;
-//
-//    /**
-//     * 厂家
-//     */
-//    private String[] manufacturers;
-//
-//    /**
-//     * 各政府单位
-//     */
-//    private String[] governmentUnits;
-//
-//    /**
-//     * 合作伙伴
-//     */
-//    private String[] partners;
 
     /**
      * 通讯途径
      */
     private List<CommunicationPathTO> communicationPathTOS;
-//    /**
-//     * 总公司地址
-//     */
-//    private String[] headOfficeAddresses;
-//
-//    /**
-//     * 总公司联系方式
-//     */
-//    private String[] headOfficeContactes;
-//
-//    /**
-//     * 分公司地址
-//     */
-//    private String[] branchAddresses;
-//
-//    /**
-//     * 分公司联系方式
-//     */
-//    private String[] branchPhones;
-
 
     public String getFirmName() {
         return firmName;

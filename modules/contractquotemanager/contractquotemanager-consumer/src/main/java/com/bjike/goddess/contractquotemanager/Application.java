@@ -23,6 +23,7 @@ import java.io.IOException;
 @EnableAutoConfiguration(exclude = {ValidationAutoConfiguration.class})
 @PropertySource(value = {"classpath:permission.properties"},encoding="utf-8")
 public class Application{
+
     @Bean
     public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
@@ -30,6 +31,7 @@ public class Application{
         factory.setMaxRequestSize("800MB");
         return factory.createMultipartConfig();
     }
+
     public static void main(String[] args) throws IOException {
         SpringApplication.run(Application.class,args);
         System.in.read();
