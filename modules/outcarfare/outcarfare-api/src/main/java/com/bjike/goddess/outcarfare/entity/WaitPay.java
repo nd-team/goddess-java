@@ -114,7 +114,7 @@ public class WaitPay extends BaseEntity {
     /**
      * 出车等待付款id
      */
-    @Column(name = "dispatchCarInfo_id", nullable = false, unique = true, columnDefinition = "VARCHAR(255)   COMMENT '出车等待付款id'")
+    @Column(name = "dispatchCarInfo_id", unique = true, columnDefinition = "VARCHAR(255)   COMMENT '出车等待付款id'")
     private String dispatchCarInfoId;
 
     public String getDriverName() {

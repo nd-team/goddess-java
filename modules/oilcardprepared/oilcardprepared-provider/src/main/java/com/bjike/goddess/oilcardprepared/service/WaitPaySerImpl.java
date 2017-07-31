@@ -21,12 +21,14 @@ import com.bjike.goddess.oilcardprepared.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardprepared.to.WaitPayTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -186,6 +188,46 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
         return BeanTransform.copyProperties(waitPay, WaitPayBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public WaitPayBO save(WaitPayTO to) throws SerException {
+        checkAddIdentity();
+        WaitPay waitPay = BeanTransform.copyProperties(to, WaitPay.class, true);
+        waitPay.setCreateTime(LocalDateTime.now());
+        waitPay.setPay(false);
+        super.save(waitPay);
+        return BeanTransform.copyProperties(waitPay, WaitPayBO.class);
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public WaitPayBO edit(WaitPayTO to) throws SerException {
+        checkAddIdentity();
+        if (StringUtils.isNotBlank(to.getId())) {
+            WaitPay waitPay = super.findById(to.getId());
+            BeanTransform.copyProperties(to, waitPay, true);
+            waitPay.setModifyTime(LocalDateTime.now());
+            waitPay.setPay(false);
+            super.update(waitPay);
+            return BeanTransform.copyProperties(waitPay, WaitPayBO.class);
+        } else {
+            throw new SerException("id不能为空");
+        }
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public void delete(String id) throws SerException {
+        checkAddIdentity();
+        if (StringUtils.isNotBlank(id)) {
+            super.remove(id);
+        } else {
+            throw new SerException("id不能为空");
+        }
+
+
+    }
+
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void confirmPay(WaitPayTO to) throws SerException {
@@ -209,22 +251,24 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
             for (DispatchCarInfoBO v : list) {
                 if (waitPays.size() == 0) {
                     WaitPay waitPay = new WaitPay();
-                    waitPay.setWaitId(v.getId());
-                    waitPay.setOilCardCode(v.getOilCardNumber());
-                    waitPay.setOilCardBalance(v.getOilCardBalance());
-                    OilCardBasicBO oilCardBasicBO = oilCardBasicAPI.findByCode(v.getOilCardNumber());
-                    waitPay.setOilCardNumber(oilCardBasicBO.getOilCardNumber());
-                    List<OilCardRechargeBO> oilCardRechargeBOs = oilCardRechargeAPI.findByBasicId(oilCardBasicBO.getId());
-                    if (oilCardRechargeBOs != null && !oilCardRechargeBOs.isEmpty()) {
-                        OilCardRechargeBO oilCardRechargeBO = oilCardRechargeBOs.get(0);
-                        waitPay.setRechargeDate(DateUtil.parseDateTime(oilCardRechargeBO.getRechargeDate()));
-                        waitPay.setMonth(DateUtil.parseDateTime(oilCardRechargeBO.getRechargeDate()).getMonthValue());
-                        waitPay.setYear(DateUtil.parseDateTime(oilCardRechargeBO.getRechargeDate()).getYear());
-                        waitPay.setRechargeMoney(oilCardRechargeBO.getRechargeMoney());
-                        waitPay.setRechargeUser(oilCardRechargeBO.getRechargeUser());
-                        waitPay.setRechargeWay(oilCardRechargeBO.getRechargeWay());
-                        waitPay.setPay(v.getPay());
-                        super.save(waitPay);
+                    if (null != v.getId()) {
+                        waitPay.setWaitId(v.getId());
+                        waitPay.setOilCardCode(v.getOilCardNumber());
+                        waitPay.setOilCardBalance(v.getOilCardBalance());
+                        OilCardBasicBO oilCardBasicBO = oilCardBasicAPI.findByCode(v.getOilCardNumber());
+                        waitPay.setOilCardNumber(oilCardBasicBO.getOilCardNumber());
+                        List<OilCardRechargeBO> oilCardRechargeBOs = oilCardRechargeAPI.findByBasicId(oilCardBasicBO.getId());
+                        if (oilCardRechargeBOs != null && !oilCardRechargeBOs.isEmpty()) {
+                            OilCardRechargeBO oilCardRechargeBO = oilCardRechargeBOs.get(0);
+                            waitPay.setRechargeDate(DateUtil.parseDateTime(oilCardRechargeBO.getRechargeDate()));
+                            waitPay.setMonth(DateUtil.parseDateTime(oilCardRechargeBO.getRechargeDate()).getMonthValue());
+                            waitPay.setYear(DateUtil.parseDateTime(oilCardRechargeBO.getRechargeDate()).getYear());
+                            waitPay.setRechargeMoney(oilCardRechargeBO.getRechargeMoney());
+                            waitPay.setRechargeUser(oilCardRechargeBO.getRechargeUser());
+                            waitPay.setRechargeWay(oilCardRechargeBO.getRechargeWay());
+                            waitPay.setPay(v.getPay());
+                            super.save(waitPay);
+                        }
                     }
                 } else {
                     boolean b1 = true;
@@ -257,9 +301,11 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
             }
         }
         for (WaitPay p : super.findAll()) {
-            DispatchCarInfoBO v = dispatchCarInfoAPI.findById(p.getWaitId());
-            if (v == null || v.getPay()) {
-                super.remove(p.getId());
+            if (null != p.getWaitId()) {
+                DispatchCarInfoBO v = dispatchCarInfoAPI.findById(p.getWaitId());
+                if (v == null || v.getPay()) {
+                    super.remove(p.getId());
+                }
             }
         }
         dto.getConditions().add(Restrict.eq("pay", Boolean.TRUE));

@@ -42,6 +42,16 @@ public interface WaitPayAPI {
     default WaitPayBO save(WaitPayTO to) throws SerException {
         return null;
     }
+    /**
+     * 编辑
+     *
+     * @param to 等待付款信息
+     * @return class WaitPayBO
+     * @throws SerException
+     */
+    default WaitPayBO edit(WaitPayTO to) throws SerException {
+        return null;
+    }
 
     /**
      * 确认付款

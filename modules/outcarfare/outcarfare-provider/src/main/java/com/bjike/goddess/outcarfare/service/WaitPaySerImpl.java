@@ -7,7 +7,6 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
 import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
-import com.bjike.goddess.dispatchcar.entity.DispatchCarInfo;
 import com.bjike.goddess.outcarfare.bo.*;
 import com.bjike.goddess.outcarfare.dto.WaitPayDTO;
 import com.bjike.goddess.outcarfare.entity.WaitPay;
@@ -16,6 +15,7 @@ import com.bjike.goddess.outcarfare.to.GuidePermissionTO;
 import com.bjike.goddess.outcarfare.to.WaitPayTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -169,12 +169,28 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
         return flag;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public WaitPayBO save(WaitPayTO to) throws SerException {
         checkAddIdentity();
         WaitPay waitPay = BeanTransform.copyProperties(to, WaitPay.class, true);
         super.save(waitPay);
         return BeanTransform.copyProperties(waitPay, WaitPayBO.class);
+    }
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public WaitPayBO edit(WaitPayTO to) throws SerException {
+        checkAddIdentity();
+        if(StringUtils.isNotBlank(to.getId())){
+            WaitPay waitPay = super.findById(to.getId());
+            BeanTransform.copyProperties(to,waitPay,true);
+            waitPay.setModifyTime(LocalDateTime.now());
+            super.update(waitPay);
+            return BeanTransform.copyProperties(waitPay,WaitPayBO.class);
+        }else {
+            throw new SerException("id不能为空");
+        }
+
     }
 
     @Override
@@ -184,9 +200,15 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
         waitPay.setIsPay(to.getIsPay());
         super.update(waitPay);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void delete(String id) throws SerException {
+        checkAddIdentity();
+        if(StringUtils.isNotBlank(id)){
+            super.remove(id);
+        }else {
+            throw new SerException("id不能为空");
+        }
 
     }
 
@@ -194,7 +216,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Transactional(rollbackFor = {SerException.class})
     public List<WaitPayBO> list(WaitPayDTO dto) throws SerException {
         checkSeeIdentity();
-        String userToken=RpcTransmit.getUserToken();
+        String userToken = RpcTransmit.getUserToken();
         List<DispatchCarInfoBO> list = dispatchCarInfoAPI.allWaitPay();
         List<WaitPay> waitPays = super.findAll();
         if (list != null) {
@@ -219,31 +241,34 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
                 } else {
                     boolean b1 = true;
                     for (WaitPay p : waitPays) {
-                        if (p.getDispatchCarInfoId().equals(v.getId())) {
-                            LocalDateTime a = p.getCreateTime();
-                            LocalDateTime b = p.getModifyTime();
-                            String id = p.getId();
-                            BeanUtils.copyProperties(v, p);
-                            p.setId(id);
-                            p.setCreateTime(a);
-                            p.setModifyTime(b);
-                            p.setDriverName(v.getDriver());
-                            p.setCarDate(v.getDispatchDate());
-                            p.setNumber(v.getNumber());
-                            p.setArrival(v.getArea());
-                            p.setAcctype(v.getAcctype());
-                            p.setCarPrice(v.getCarRentalCost());
-                            p.setOvertimeHour((double) v.getOverWorkTime());
-                            p.setOvertimeFee(v.getOverWorkCost());
-                            p.setAllowance(v.getMealCost());
-                            p.setParkFee(v.getParkCost() + v.getRoadCost());
-                            p.setAmount(v.getCost());
-                            p.setOvertimePrice(v.getCarRentalCost() / 8);
-                            p.setDispatchCarInfoId(v.getId());
-                            p.setDispatchCarInfoId(v.getId());
-                            super.update(p);
-                            b1 = false;
+                        if (null != p.getDispatchCarInfoId()) {
+                            if (p.getDispatchCarInfoId().equals(v.getId())) {
+                                LocalDateTime a = p.getCreateTime();
+                                LocalDateTime b = p.getModifyTime();
+                                String id = p.getId();
+                                BeanUtils.copyProperties(v, p);
+                                p.setId(id);
+                                p.setCreateTime(a);
+                                p.setModifyTime(b);
+                                p.setDriverName(v.getDriver());
+                                p.setCarDate(v.getDispatchDate());
+                                p.setNumber(v.getNumber());
+                                p.setArrival(v.getArea());
+                                p.setAcctype(v.getAcctype());
+                                p.setCarPrice(v.getCarRentalCost());
+                                p.setOvertimeHour((double) v.getOverWorkTime());
+                                p.setOvertimeFee(v.getOverWorkCost());
+                                p.setAllowance(v.getMealCost());
+                                p.setParkFee(v.getParkCost() + v.getRoadCost());
+                                p.setAmount(v.getCost());
+                                p.setOvertimePrice(v.getCarRentalCost() / 8);
+                                p.setDispatchCarInfoId(v.getId());
+                                p.setDispatchCarInfoId(v.getId());
+                                super.update(p);
+                                b1 = false;
+                            }
                         }
+
                     }
                     if (b1) {
                         WaitPay waitPay = new WaitPay();
@@ -268,9 +293,11 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
             }
         }
         for (WaitPay p : super.findAll()) {
-            DispatchCarInfoBO v = dispatchCarInfoAPI.findById(p.getDispatchCarInfoId());
-            if (v == null || v.getPay()) {
-                super.remove(p.getId());
+            if (null != p.getDispatchCarInfoId()) {
+                DispatchCarInfoBO v = dispatchCarInfoAPI.findById(p.getDispatchCarInfoId());
+                if (v == null || v.getPay()) {
+                    super.remove(p.getId());
+                }
             }
         }
         dto.getConditions().add(Restrict.eq("isPay", Boolean.TRUE));
