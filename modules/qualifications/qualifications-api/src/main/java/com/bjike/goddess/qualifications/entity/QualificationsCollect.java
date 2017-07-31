@@ -61,7 +61,7 @@ public class QualificationsCollect extends BaseEntity {
     /**
      * 办理状态
      */
-    @Column(name = "handle", nullable = false, columnDefinition = "TINYINT(2) DEFAULT 0   COMMENT '办理状态'", insertable = false)
+    @Column(name = "handle", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '办理状态'")
     private HandleStatus handle;
 
     /**
