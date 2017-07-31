@@ -75,7 +75,7 @@ public class BeforeAdd extends BaseEntity {
     /**
      * 可参保人员姓名
      */
-    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '可参保人员姓名'")
+    @Column(name = "name", columnDefinition = "VARCHAR(255)   COMMENT '可参保人员姓名'")
     private String name;
 
     /**

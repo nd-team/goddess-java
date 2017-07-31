@@ -7,6 +7,7 @@ import com.bjike.goddess.checkhost.enums.GuideAddrStatus;
 import com.bjike.goddess.checkhost.to.DormitoryInfoTO;
 import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.vo.SonPermissionObject;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -21,7 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 宿舍信息管理业务实现
@@ -223,7 +226,7 @@ public class DormitoryInfoSerImpl extends ServiceImpl<DormitoryInfo, DormitoryIn
             throw new SerException("id不能为空");
         }
         DormitoryInfo dormitoryInfo = super.findById(id);
-        return BeanTransform.copyProperties(dormitoryInfo,DormitoryInfoBO.class);
+        return BeanTransform.copyProperties(dormitoryInfo, DormitoryInfoBO.class);
     }
 
     @Override
@@ -268,4 +271,26 @@ public class DormitoryInfoSerImpl extends ServiceImpl<DormitoryInfo, DormitoryIn
         super.remove(id);
     }
 
+    @Override
+    //chenjunhao
+    public Set<String> allAddress() throws SerException {
+        Set<String> set = new HashSet<>();
+        List<DormitoryInfo> list = super.findAll();
+        for (DormitoryInfo d : list) {
+            set.add(d.getAddress());
+        }
+        return set;
+    }
+
+    @Override
+    //chenjunhao
+    public String findContact(String address) throws SerException {
+        DormitoryInfoDTO dto = new DormitoryInfoDTO();
+        dto.getConditions().add(Restrict.eq("address", address));
+        DormitoryInfo dormitoryInfo = super.findOne(dto);
+        if (dormitoryInfo != null) {
+            return dormitoryInfo.getHeadContact();
+        }
+        return "";
+    }
 }

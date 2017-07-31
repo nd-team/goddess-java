@@ -1,5 +1,6 @@
 package com.bjike.goddess.secure.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -269,6 +270,14 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
     @Override
     public List<RemoveEmployeeBO> find(RemoveEmployeeDTO dto) throws SerException {
         checkSeeIdentity();
+        String removeName = dto.getRemoveName();
+        String employeeId = dto.getEmployeeId();
+        if (StringUtils.isNotBlank(removeName)) {
+            dto.getConditions().add(Restrict.eq("removeName", removeName));
+        }
+        if (StringUtils.isNotBlank(employeeId)) {
+            dto.getConditions().add(Restrict.eq("employeeId", employeeId));
+        }
         List<RemoveEmployee> list = super.findByCis(dto, true);
         return BeanTransform.copyProperties(list, RemoveEmployeeBO.class);
     }
@@ -337,7 +346,7 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
     @Transactional(rollbackFor = SerException.class)
     public void confirmRemove(String id) throws SerException {
         checkSBIdentity();
-        String userToken=RpcTransmit.getUserToken();
+        String userToken = RpcTransmit.getUserToken();
         RemoveEmployee removeEmployee = super.findById(id);
         removeEmployee.setConfirmRemove(true);
         removeEmployee.setModifyTime(LocalDateTime.now());
@@ -372,6 +381,14 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
 
     @Override
     public Long count(RemoveEmployeeDTO dto) throws SerException {
+        String removeName = dto.getRemoveName();
+        String employeeId = dto.getEmployeeId();
+        if (StringUtils.isNotBlank(removeName)) {
+            dto.getConditions().add(Restrict.eq("removeName", removeName));
+        }
+        if (StringUtils.isNotBlank(employeeId)) {
+            dto.getConditions().add(Restrict.eq("employeeId", employeeId));
+        }
         return super.count(dto);
     }
 

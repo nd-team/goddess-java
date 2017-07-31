@@ -1,7 +1,7 @@
 package com.bjike.goddess.courier.action.courier;
 
-import com.bjike.goddess.accommodation.api.DormitoryAPI;
 import com.bjike.goddess.accommodation.api.RentalAPI;
+import com.bjike.goddess.checkhost.api.DormitoryInfoAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -60,7 +60,7 @@ public class CourierAct extends BaseFileAction {
     @Autowired
     private CourierAPI courierAPI;
     @Autowired
-    private DormitoryAPI dormitoryAPI;
+    private DormitoryInfoAPI dormitoryInfoAPI;
     @Autowired
     private RentalAPI rentalAPI;
     @Autowired
@@ -526,7 +526,7 @@ public class CourierAct extends BaseFileAction {
     @GetMapping("v1/findAllAreas")
     public Result findAllAreas() throws ActException {
         try {
-            Set<String> dormitoryAddress = dormitoryAPI.allDormitoryAddress();
+            Set<String> dormitoryAddress = dormitoryInfoAPI.allAddress();
             Set<String> address = rentalAPI.allAddress();
             Set<String> set = new HashSet<>();
             set.addAll(dormitoryAddress);
@@ -562,9 +562,12 @@ public class CourierAct extends BaseFileAction {
     @GetMapping("v1/allMonth")
     public Result allMonth() throws ActException {
         try {
-            Set<Integer> set = courierAPI.allMonth();
+            Set<Integer> set = new HashSet<>();
+            for (int i=1;i<=12;i++){
+                set.add(i);
+            }
             return ActResult.initialize(set);
-        } catch (SerException e) {
+        } catch (Exception e) {
             throw new ActException(e.getMessage());
         }
     }
@@ -594,7 +597,7 @@ public class CourierAct extends BaseFileAction {
     @GetMapping("v1/findContact/{dormitoryAddress}")
     public Result findContact(@PathVariable String dormitoryAddress) throws ActException {
         try {
-            return ActResult.initialize(dormitoryAPI.findContact(dormitoryAddress));
+            return ActResult.initialize(dormitoryInfoAPI.findContact(dormitoryAddress));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

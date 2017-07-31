@@ -1,15 +1,16 @@
 package com.bjike.goddess.checkhost.service;
 
 import com.bjike.goddess.checkhost.bo.DormitoryInfoBO;
+import com.bjike.goddess.checkhost.dto.DormitoryInfoDTO;
+import com.bjike.goddess.checkhost.entity.DormitoryInfo;
 import com.bjike.goddess.checkhost.to.DormitoryInfoTO;
 import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.checkhost.entity.DormitoryInfo;
-import com.bjike.goddess.checkhost.dto.DormitoryInfoDTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 宿舍信息管理业务接口
@@ -34,12 +35,14 @@ public interface DormitoryInfoSer extends Ser<DormitoryInfo, DormitoryInfoDTO> {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 宿舍信息管理列表总条数
      */
     default Long countDormitoryInfo(DormitoryInfoDTO dormitoryInfoDTO) throws SerException {
         return null;
     }
+
     /**
      * 一个宿舍信息管理
      *
@@ -48,6 +51,7 @@ public interface DormitoryInfoSer extends Ser<DormitoryInfo, DormitoryInfoDTO> {
     default DormitoryInfoBO getOne(String id) throws SerException {
         return null;
     }
+
     /**
      * 宿舍信息列表
      *
@@ -91,4 +95,20 @@ public interface DormitoryInfoSer extends Ser<DormitoryInfo, DormitoryInfoDTO> {
 
     }
 
+    /**
+     * 获取所有宿舍地址
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allAddress() throws SerException;
+
+    /**
+     * 根据宿舍地址查找联系方式
+     *
+     * @param address
+     * @return
+     * @throws SerException
+     */
+    String findContact(String address) throws SerException;
 }
