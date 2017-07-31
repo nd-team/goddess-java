@@ -34,7 +34,10 @@ public class WaitPayApiImpl implements WaitPayAPI {
     public void pay(WaitPayTO to) throws SerException {
         waitPaySer.pay(to);
     }
-
+    @Override
+    public WaitPayBO edit(WaitPayTO to) throws SerException {
+        return waitPaySer.edit(to);
+    }
     @Override
     public void delete(String id) throws SerException {
         waitPaySer.delete(id);

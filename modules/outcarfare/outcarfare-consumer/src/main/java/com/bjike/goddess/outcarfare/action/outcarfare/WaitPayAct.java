@@ -65,24 +65,46 @@ public class WaitPayAct {
         }
     }
 
-//    /**
-//     * 添加
-//     *
-//     * @param to      等待付款信息
-//     * @param request 请求对象
-//     * @return class WaitPayVO
-//     * @throws ActException
-//     * @version v1
-//     */
-//    @PostMapping("v1/save")
-//    public Result save(@Validated({ADD.class}) WaitPayTO to, BindingResult result, HttpServletRequest request) throws ActException {
-//        try {
-//            WaitPayBO bo = waitPayAPI.save(to);
-//            return ActResult.initialize(BeanTransform.copyProperties(bo, WaitPayVO.class, request));
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-//    }
+    /**
+     * 添加
+     *
+     * @param to      等待付款信息
+     * @param request 请求对象
+     * @return class WaitPayVO
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/save")
+    public Result save(@Validated({WaitPayTO.TestAdd.class}) WaitPayTO to, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            WaitPayBO bo = waitPayAPI.save(to);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, WaitPayVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 编辑
+     *
+     * @param to      等待付款信息
+     * @param request 请求对象
+     * @return class WaitPayVO
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/edit")
+    public Result edit(@Validated({WaitPayTO.TestEdit.class}) WaitPayTO to, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            WaitPayBO bo = waitPayAPI.edit(to);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, WaitPayVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 确认付款
@@ -102,22 +124,23 @@ public class WaitPayAct {
         }
     }
 
-//    /**
-//     * 删除
-//     *
-//     * @param id 等待付款id
-//     * @throws ActException
-//     * @version v1
-//     */
-//    @DeleteMapping("v1/delete/{id}")
-//    public Result delete(@PathVariable String id) throws ActException {
-//        try {
-//            waitPayAPI.delete(id);
-//            return new ActResult("删除成功!");
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-//    }
+    /**
+     * 删除
+     *
+     * @param id 等待付款id
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @DeleteMapping("v1/delete/{id}")
+    public Result delete(@PathVariable String id) throws ActException {
+        try {
+            waitPayAPI.delete(id);
+            return new ActResult("删除成功!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 等待付款列表

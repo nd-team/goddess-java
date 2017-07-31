@@ -34,6 +34,37 @@ public interface WaitPaySer extends Ser<WaitPay, WaitPayDTO> {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+    /**
+     * 添加
+     *
+     * @param to 等待付款信息
+     * @return class WaitPayBO
+     * @throws SerException
+     */
+    default WaitPayBO save(WaitPayTO to) throws SerException {
+        return null;
+    }
+    /**
+     * 编辑
+     *
+     * @param to 等待付款信息
+     * @return class WaitPayBO
+     * @throws SerException
+     */
+    default WaitPayBO edit(WaitPayTO to) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 删除
+     *
+     * @param id 等待付款信息id
+     * @throws SerException
+     */
+    default void delete(String id) throws SerException {
+
+    }
 
     /**
      * 通过id查找

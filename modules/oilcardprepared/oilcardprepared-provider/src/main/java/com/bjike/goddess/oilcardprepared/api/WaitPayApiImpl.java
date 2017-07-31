@@ -1,15 +1,20 @@
 package com.bjike.goddess.oilcardprepared.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.oilcardprepared.bo.ContrastBO;
 import com.bjike.goddess.oilcardprepared.bo.WaitPayBO;
 import com.bjike.goddess.oilcardprepared.dto.WaitPayDTO;
+import com.bjike.goddess.oilcardprepared.entity.WaitPay;
 import com.bjike.goddess.oilcardprepared.service.WaitPaySer;
 import com.bjike.goddess.oilcardprepared.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardprepared.to.WaitPayTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -49,6 +54,20 @@ public class WaitPayApiImpl implements WaitPayAPI {
     @Override
     public WaitPayBO findByID(String id) throws SerException {
         return waitPaySer.findByID(id);
+    }
+    @Override
+    public WaitPayBO save(WaitPayTO to) throws SerException {
+        return waitPaySer.save(to);
+    }
+
+    @Override
+    public WaitPayBO edit(WaitPayTO to) throws SerException {
+        return waitPaySer.edit(to);
+    }
+
+    @Override
+    public void delete(String id) throws SerException {
+        waitPaySer.delete(id);
     }
 
     @Override

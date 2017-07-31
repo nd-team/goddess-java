@@ -66,13 +66,13 @@ public class WaitPay extends BaseEntity {
     /**
      * 是否付款
      */
-    @Column(name = "is_pay", nullable = false, columnDefinition = "TINYINT(1) COMMENT '是否付款'")
+    @Column(name = "is_pay",  columnDefinition = "TINYINT(1) COMMENT '是否付款'")
     private Boolean pay;
 
     /**
      * 出车等待付款id
      */
-    @Column(name = "wait_id", nullable = false, unique = true, columnDefinition = "VARCHAR(36)   COMMENT '出车等待付款id'")
+    @Column(name = "wait_id", unique = true, columnDefinition = "VARCHAR(36)   COMMENT '出车等待付款id'")
     private String waitId;
 
     /**

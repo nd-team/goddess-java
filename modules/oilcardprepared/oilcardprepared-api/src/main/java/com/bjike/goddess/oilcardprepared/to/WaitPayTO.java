@@ -2,6 +2,7 @@ package com.bjike.goddess.oilcardprepared.to;
 
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
@@ -15,46 +16,56 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class WaitPayTO extends BaseTO {
+    public interface TestAdd{}
+    public interface TestEdit{}
+    public interface ConfirmPay{}
 
     /**
      * 油卡编号
      */
+    @NotBlank(message = "油卡编号不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
     private String oilCardCode;
 
     /**
      * 卡号
      */
+    @NotBlank(message = "卡号不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
     private String oilCardNumber;
 
     /**
      * 充值日期
      */
+    @NotBlank(message = "充值日期不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
     private String rechargeDate;
 
     /**
      * 充值金额
      */
+    @NotNull(message = "充值金额不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
     private Double rechargeMoney;
 
     /**
      * 充值人
      */
+    @NotBlank(message = "充值人不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
     private String rechargeUser;
 
     /**
      * 充值方式
      */
+    @NotBlank(message = "充值方式不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
     private String rechargeWay;
 
     /**
      * 初始余额
      */
+    @NotNull(message = "初始余额不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
     private Double oilCardBalance;
 
     /**
      * 是否付款
      */
-    @NotNull(groups = {EDIT.class},message = "是否付款不能为空")
+    @NotNull(groups = {WaitPayTO.ConfirmPay.class},message = "是否付款不能为空")
     private Boolean pay;
 
 
