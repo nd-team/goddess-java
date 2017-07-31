@@ -61,12 +61,20 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
         return new ModelAndView();
     }
 
-    private String handleJapException(Exception throwable) {
+    private String handleJapException(Throwable throwable) {
         String msg = throwable.getMessage();
         String result = null;
         result = StringUtils.substringAfter(msg, "Caused by: java.sql.SQLIntegrityConstraintViolationException:");
-        if (StringUtils.isNotBlank(result)) {
 
+        if (StringUtils.isNotBlank(result)) {
+            /**
+             * 处理唯一约束
+             */
+            result = StringUtils.substringBefore(result, "' for key");
+            result = StringUtils.substringAfter(result, "Duplicate entry '");
+            if (StringUtils.isNotBlank(result)) {
+               return "[" + result + "]该名称已被占用!";
+            }
             /**
              * 处理非空约束
              */
@@ -76,16 +84,8 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
             if (StringUtils.isNotBlank(result)) {
                 return "[" + result + "]不能为空!";
             }
-            /**
-             * 处理唯一约束
-             */
-            result = StringUtils.substringBefore(result, "' for key");
-            result = StringUtils.substringAfter(result, "Duplicate entry '");
-            if (StringUtils.isNotBlank(result)) {
-                return "[" + result + "]该名称已被占用!";
-            }
         }
-        result =StringUtils.substringAfter(msg,"com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Data too long for column '");
+        result = StringUtils.substringAfter(msg, "com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Data too long for column '");
         if (StringUtils.isNotBlank(result)) {
             /**
              * 数据长度
@@ -93,6 +93,6 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
             result = StringUtils.substringBefore(result, "' at row");
             return "[" + result + "]超出长度范围!";
         }
-        return null;
+        return result;
     }
 }
