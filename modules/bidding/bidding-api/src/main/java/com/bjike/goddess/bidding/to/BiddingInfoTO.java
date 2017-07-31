@@ -8,6 +8,8 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 
 /**
  * 招标信息
@@ -23,7 +25,7 @@ public class BiddingInfoTO extends BaseTO {
     /**
      * 编号
      */
-    @NotBlank(message = "编号不能为空",groups = {ADD.class})
+    @NotBlank(message = "编号不能为空",groups = {EDIT.class})
     private String biddingNumber;
     /**
      * 网站名称
@@ -40,22 +42,26 @@ public class BiddingInfoTO extends BaseTO {
     /**
      * 招投标类型
      */
+    @NotNull(message = "招投标类型不能为空",groups = {ADD.class, EDIT.class})
     private BiddingType biddingType;
 
     /**
      * 业务类型
      */
+    @NotNull(message = "业务类型不能为空",groups = {ADD.class, EDIT.class})
     private BusinessType businessType;
 
     /**
      * 业务方向科目
      */
+    @NotBlank(message = "业务方向科目不能为空",groups = {ADD.class, EDIT.class})
     private String businessDirectionSubject;
 
     /**
-     * 标书模块
+     * 标书类型
      */
-    private String tenderModule;
+    @NotNull(message = "标书类型不能为空",groups = {ADD.class, EDIT.class})
+    private String[] tenderModule;
 
     /**
      * 项目名称
@@ -64,18 +70,25 @@ public class BiddingInfoTO extends BaseTO {
     private String projectName;
 
     /**
-     * 报名时间
+     * 报名开始时间
      */
-    private String registrationTime;
-
+    @NotBlank(message = "报名开始时间不能为空",groups = {ADD.class, EDIT.class})
+    private String registrationStartTime;
+    /**
+     * 报名结束时间
+     */
+    @NotBlank(message = "报名结束时间不能为空",groups = {ADD.class, EDIT.class})
+    private String registrationEndTime;
     /**
      * 投标时间
      */
+    @NotBlank(message = "投标时间不能为空",groups = {ADD.class, EDIT.class})
     private String biddingTime;
 
     /**
      * 投标资格要求
      */
+    @NotBlank(message = "投标资格要求不能为空",groups = {ADD.class, EDIT.class})
     private String biddingQualifications;
 
     /**
@@ -93,6 +106,7 @@ public class BiddingInfoTO extends BaseTO {
     /**
      * 账号
      */
+
     private String account;
 
     /**
@@ -113,36 +127,42 @@ public class BiddingInfoTO extends BaseTO {
     /**
      * 状态
      */
-    private Status status;
+    private String status;
 
     /**
      * 购买标书时间
      */
+    @NotBlank(message = "购买标书时间不能为空",groups = {ADD.class, EDIT.class})
     private String buyTenderTime;
 
     /**
      * 价格
      */
+    @NotNull(message = "价格不能为空",groups = {ADD.class, EDIT.class})
     private Double price;
 
     /**
      * 购买标书要求
      */
+    @NotBlank(message = "购买标书要求不能为空",groups = {ADD.class, EDIT.class})
     private String buyTenderRequirements;
 
     /**
      * 交保证金时间
      */
+    @NotBlank(message = "交保证金时间不能为空",groups = {ADD.class, EDIT.class})
     private String marginTime;
 
     /**
      * 交保证金方式
      */
+    @NotBlank(message = "交保证金方式不能为空",groups = {ADD.class, EDIT.class})
     private String marginMethod;
 
     /**
      * 保证金退回时间
      */
+    @NotBlank(message = "保证金退回时间不能为空",groups = {ADD.class, EDIT.class})
     private String backTimeDeposit;
 
     /**
@@ -191,11 +211,11 @@ public class BiddingInfoTO extends BaseTO {
         this.businessDirectionSubject = businessDirectionSubject;
     }
 
-    public String getTenderModule() {
+    public String[] getTenderModule() {
         return tenderModule;
     }
 
-    public void setTenderModule(String tenderModule) {
+    public void setTenderModule(String[] tenderModule) {
         this.tenderModule = tenderModule;
     }
 
@@ -215,12 +235,20 @@ public class BiddingInfoTO extends BaseTO {
         this.projectName = projectName;
     }
 
-    public String getRegistrationTime() {
-        return registrationTime;
+    public String getRegistrationStartTime() {
+        return registrationStartTime;
     }
 
-    public void setRegistrationTime(String registrationTime) {
-        this.registrationTime = registrationTime;
+    public void setRegistrationStartTime(String registrationStartTime) {
+        this.registrationStartTime = registrationStartTime;
+    }
+
+    public String getRegistrationEndTime() {
+        return registrationEndTime;
+    }
+
+    public void setRegistrationEndTime(String registrationEndTime) {
+        this.registrationEndTime = registrationEndTime;
     }
 
     public String getBiddingTime() {
@@ -287,11 +315,11 @@ public class BiddingInfoTO extends BaseTO {
         this.registrationInfo = registrationInfo;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

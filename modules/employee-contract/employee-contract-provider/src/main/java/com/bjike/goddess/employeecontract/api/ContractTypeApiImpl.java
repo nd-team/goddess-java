@@ -5,6 +5,7 @@ import com.bjike.goddess.employeecontract.bo.ContractTypeBO;
 import com.bjike.goddess.employeecontract.dto.ContractTypeDTO;
 import com.bjike.goddess.employeecontract.service.ContractTypeSer;
 import com.bjike.goddess.employeecontract.to.ContractTypeTO;
+import com.bjike.goddess.employeecontract.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,16 @@ public class ContractTypeApiImpl implements ContractTypeAPI {
 
     @Autowired
     private ContractTypeSer contractTypeSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return contractTypeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return contractTypeSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public ContractTypeBO save(ContractTypeTO to) throws SerException {

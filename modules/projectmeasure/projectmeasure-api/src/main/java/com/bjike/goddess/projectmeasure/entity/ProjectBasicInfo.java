@@ -63,6 +63,11 @@ public class ProjectBasicInfo extends BaseEntity {
      */
     @Column(name = "startTime", nullable = false, columnDefinition = "DATETIME COMMENT '起始时间'")
     private LocalDateTime startTime;
+    /**
+     * 结束时间
+     */
+    @Column(name = "endTime", nullable = false, columnDefinition = "DATETIME COMMENT '结束时间'")
+    private LocalDateTime endTime;
 
     /**
      * 经历时间
@@ -177,6 +182,14 @@ public class ProjectBasicInfo extends BaseEntity {
 
     public void setArea(String area) {
         this.area = area;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
     public LocalDateTime getStartTime() {

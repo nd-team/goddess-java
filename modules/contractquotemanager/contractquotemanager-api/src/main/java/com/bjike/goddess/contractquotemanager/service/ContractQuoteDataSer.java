@@ -121,4 +121,15 @@ public interface ContractQuoteDataSer extends Ser<ContractQuoteData, ContractQuo
         return null;
     }
 
+    /**
+     * 根据地区和客户名
+     *
+     * @param contractQuoteDataDTO
+     * @return class ContractQuoteDataBO
+     * @throws SerException
+     */
+    default void condiy(ContractQuoteDataDTO contractQuoteDataDTO) throws SerException {
+        return;
+    }
+
 }

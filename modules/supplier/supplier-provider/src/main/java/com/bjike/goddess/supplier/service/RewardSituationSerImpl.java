@@ -43,7 +43,7 @@ public class RewardSituationSerImpl extends ServiceImpl<RewardSituation, RewardS
     @Autowired
     private UserAPI userAPI;
 
-    private static final String idFlag = "supplier-01";
+//    private static final String idFlag = "supplier-01";
 
     /**
      * 转换获奖情况传输对象
@@ -140,7 +140,7 @@ public class RewardSituationSerImpl extends ServiceImpl<RewardSituation, RewardS
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getSupCusPermission(idFlag);
+            flag = cusPermissionSer.getSupCusPermission("1");
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -158,7 +158,7 @@ public class RewardSituationSerImpl extends ServiceImpl<RewardSituation, RewardS
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busSupCusPermission(idFlag);
+            flag = cusPermissionSer.busSupCusPermission("2");
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -176,7 +176,7 @@ public class RewardSituationSerImpl extends ServiceImpl<RewardSituation, RewardS
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getSupCusPermission(idFlag);
+            flag = cusPermissionSer.getSupCusPermission("1");
         } else {
             flag = true;
         }
@@ -193,7 +193,7 @@ public class RewardSituationSerImpl extends ServiceImpl<RewardSituation, RewardS
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busSupCusPermission(idFlag);
+            flag = cusPermissionSer.busSupCusPermission("2");
         } else {
             flag = true;
         }

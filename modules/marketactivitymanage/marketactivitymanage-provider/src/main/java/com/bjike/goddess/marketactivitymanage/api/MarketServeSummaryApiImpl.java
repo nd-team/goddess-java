@@ -10,6 +10,7 @@ import com.bjike.goddess.marketactivitymanage.excel.SonPermissionObject;
 import com.bjike.goddess.marketactivitymanage.service.MarketServeSummarySer;
 import com.bjike.goddess.marketactivitymanage.to.GuidePermissionTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeSummaryTO;
+import com.bjike.goddess.marketactivitymanage.to.SummaryTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -135,16 +136,13 @@ public class MarketServeSummaryApiImpl implements MarketServeSummaryAPI {
     /**
      * 市场招待汇总
      *
-     * @param type 汇总类型
-     * @param projectGroups 部门/项目组
-     * @param startTimeString 起始时间
-     * @param endTimeString 结束时间
+     * @param summaryTO
      * @return class MarketServeSummaryVO
      * @throws SerException
      */
     @Override
-    public List<ServeSummaryBO> summarize(Boolean type, String[] projectGroups, String startTimeString, String endTimeString) throws SerException {
-        return marketServeSummarySer.summarize(type, projectGroups, startTimeString, endTimeString);
+    public List<ServeSummaryBO> summarize(SummaryTO summaryTO) throws SerException {
+        return marketServeSummarySer.summarize(summaryTO);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.bjike.goddess.projectmeasure.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.projectmeasure.type.CooperationType;
 
+import javax.print.DocFlavor;
 import java.time.LocalDateTime;
 
 /**
@@ -50,6 +51,10 @@ public class ProjectBasicInfoBO extends BaseBO {
      * 起始时间
      */
     private String startTime;
+    /**
+     * 结束时间
+     */
+    private String endTime;
 
     /**
      * 经历时间
@@ -153,6 +158,14 @@ public class ProjectBasicInfoBO extends BaseBO {
 
     public void setArea(String area) {
         this.area = area;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
     public String getStartTime() {

@@ -3,19 +3,20 @@ package com.bjike.goddess.bonus.service;
 import com.bjike.goddess.bonus.bo.*;
 import com.bjike.goddess.bonus.dto.DisciplineRecordDTO;
 import com.bjike.goddess.bonus.entity.DisciplineRecord;
+import com.bjike.goddess.bonus.enums.GuideAddrStatus;
 import com.bjike.goddess.bonus.to.CollectFilterTO;
 import com.bjike.goddess.bonus.to.DisciplineRecordTO;
+import com.bjike.goddess.bonus.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.user.api.UserAPI;
-import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,18 +44,302 @@ import java.util.stream.Collectors;
 public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, DisciplineRecordDTO> implements DisciplineRecordSer {
 
     @Autowired
-    private UserAPI userAPI;
-    @Autowired
-    private UserDetailAPI userDetailAPI;
-    @Autowired
-    private DepartmentDetailAPI departmentDetailAPI;
-    @Autowired
     private PositionDetailAPI positionDetailAPI;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
 
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 检查权限(部门)
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是本部门人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+
+    /**
+     * 调整(总经办)
+     *
+     * @throws SerException
+     */
+    private Boolean checkPosin() throws SerException {
+        Boolean flag = true;
+        String userToken = RpcTransmit.getUserToken();
+        flag = cusPermissionSer.positCusPermission("2");
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
+    /**
+     * 调整(决策层)
+     *
+     * @throws SerException
+     */
+    private Boolean checkLeve() throws SerException {
+        Boolean flag = true;
+        String userToken = RpcTransmit.getUserToken();
+        flag = cusPermissionSer.leveCusPermission("3");
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
+    /**
+     * 调整(规划模块)
+     *
+     * @throws SerException
+     */
+    private Boolean checkModule() throws SerException {
+        Boolean flag = true;
+        String userToken = RpcTransmit.getUserToken();
+        flag = cusPermissionSer.getCusPermission("4");
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
+    /**
+     * 调整权限(总经办,决策层,规划模块)
+     *
+     * @throws SerException
+     */
+    private void checkAdjustPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        Boolean posinFlag = checkPosin();
+        Boolean leveFlag = checkLeve();
+        Boolean moduleFlag = checkModule();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            if (posinFlag || leveFlag || moduleFlag) {
+                flag = true;
+            }
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是相关人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 发起奖励处罚(综合资源部)
+     *
+     * @throws SerException
+     */
+    private Boolean checkDetail() throws SerException {
+        Boolean flag = true;
+        String userToken = RpcTransmit.getUserToken();
+        flag = cusPermissionSer.positCusPermission("5");
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
+    /**
+     * 发起奖励处罚(福利模块或规划模块)
+     *
+     * @throws SerException
+     */
+    private Boolean checkModulePlan() throws SerException {
+        Boolean flag = true;
+        String userToken = RpcTransmit.getUserToken();
+        flag = cusPermissionSer.leveCusPermission("6");
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
+    /**
+     * 发起奖励处罚(总经办,决策层,规划模块)
+     *
+     * @throws SerException
+     */
+    private void checkInitiPerm() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        Boolean detailFlag = checkDetail();
+        Boolean planFlag = checkModulePlan();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            if (detailFlag || planFlag) {
+                flag = true;
+            }
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是相关人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 调整权限(总经办,决策层,规划模块)
+     */
+    private Boolean guideAdjustIdentity() throws SerException {
+        Boolean flag = false;
+        Boolean posinFlag = checkPosin();
+        Boolean leveFlag = checkLeve();
+        Boolean moduleFlag = checkModule();
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            if (posinFlag || leveFlag || moduleFlag) {
+                flag = true;
+            }
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 发起奖励处罚(总经办,决策层,规划模块)
+     */
+    private Boolean guideInitiPerm() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        Boolean detailFlag = checkDetail();
+        Boolean planFlag = checkModulePlan();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            if (detailFlag || planFlag) {
+                flag = true;
+            }
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 权限
+     */
+    private Boolean guideAllTrue() throws SerException {
+        return true;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdjust = guideAdjustIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagIniti = guideInitiPerm();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagTrue = guideAllTrue();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee || flagAdjust || flagIniti || flagTrue) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideIdentity() || guideAdjustIdentity();
+                break;
+            case ADD:
+                flag = guideIdentity() || guideAdjustIdentity();
+                break;
+            case EDIT:
+                flag = guideIdentity() || guideAdjustIdentity();
+                break;
+            case DELETE:
+                flag = guideIdentity() || guideAdjustIdentity();
+                break;
+            case OPERS:
+                flag = guideIdentity() || guideAdjustIdentity();
+                break;
+            case CLOSES:
+                flag = guideIdentity() || guideAdjustIdentity();
+                break;
+            case SUMMARY:
+                flag = guideInitiPerm();
+                break;
+            case PROJECTRANK:
+                flag = guideInitiPerm();
+                break;
+            case PERSONRANK:
+                flag = guideAllTrue();
+                break;
+            case JCLIST:
+                flag = guideInitiPerm();
+                break;
+            case JCADD:
+                flag = guideInitiPerm();
+                break;
+            case JCEDIT:
+                flag = guideInitiPerm();
+                break;
+            case JCDELETE:
+                flag = guideInitiPerm();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
     @Override
     public DisciplineRecordBO save(DisciplineRecordTO to) throws SerException {
+        checkDetail();
         UserBO user = userAPI.currentUser();
         DisciplineRecord entity = BeanTransform.copyProperties(to, DisciplineRecord.class, true);
         entity = this.checkEntity(entity);
@@ -105,6 +390,7 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
 
     @Override
     public DisciplineRecordBO update(DisciplineRecordTO to) throws SerException {
+        checkDetail();
         UserBO user = userAPI.currentUser();
         if (StringUtils.isNotBlank(to.getId())) {
             DisciplineRecord entity = super.findById(to.getId());
@@ -123,6 +409,7 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
 
     @Override
     public DisciplineRecordBO delete(String id) throws SerException {
+        checkDetail();
         UserBO user = userAPI.currentUser();
         DisciplineRecord entity = super.findById(id);
         if (null == entity)
@@ -135,6 +422,7 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
 
     @Override
     public List<DisciplineRecordRankBO> projectRank(CollectFilterTO to, Boolean status) throws SerException {
+        checkDetail();
         DisciplineRecordDTO dto = new DisciplineRecordDTO();
         dto.getSorts().add("project=asc");
         List<DisciplineRecord> list = this.getListByFilter(to, dto).stream()
@@ -212,6 +500,7 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
 
     @Override
     public List<DisciplineRecordDetailBO> disciplineDetailCollect(CollectFilterTO to) throws SerException {
+        checkDetail();
         DisciplineRecordDTO dto = new DisciplineRecordDTO();
         dto.getSorts().add("occurrence=asc");
         dto.getSorts().add("username=asc");
@@ -246,6 +535,7 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
 
     @Override
     public List<DisciplineRecordQuantityBO> disciplineQuantityCollect(CollectFilterTO to) throws SerException {
+        checkDetail();
         DisciplineRecordDTO dto = new DisciplineRecordDTO();
         dto.getSorts().add("area=asc");
         dto.getSorts().add("project=asc");
@@ -277,6 +567,7 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
 
     @Override
     public List<DisciplineRecordScoreBO> disciplineScoreCollect(CollectFilterTO to) throws SerException {
+        checkDetail();
         DisciplineRecordDTO dto = new DisciplineRecordDTO();
         dto.getSorts().add("area=asc");
         dto.getSorts().add("project=asc");
@@ -353,12 +644,14 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
 
     @Override
     public List<DisciplineRecordBO> rewardMaps(DisciplineRecordDTO dto) throws SerException {
+        checkDetail();
         dto.getConditions().add(Restrict.eq("status", !Boolean.TRUE));
         return BeanTransform.copyProperties(super.findByPage(dto), DisciplineRecordBO.class);
     }
 
     @Override
     public List<DisciplineRecordBO> pushMaps(DisciplineRecordDTO dto) throws SerException {
+        checkDetail();
         dto.getConditions().add(Restrict.eq("status", !Boolean.FALSE));
         return BeanTransform.copyProperties(super.findByPage(dto), DisciplineRecordBO.class);
     }

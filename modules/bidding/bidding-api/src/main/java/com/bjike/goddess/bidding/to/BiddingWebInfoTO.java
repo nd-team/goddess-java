@@ -1,6 +1,9 @@
 package com.bjike.goddess.bidding.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 招投标网站信息
@@ -16,12 +19,43 @@ public class BiddingWebInfoTO extends BaseTO {
     /**
      * 网站名称
      */
+    @NotBlank(message = "网站名称不能为空",groups = {ADD.class, EDIT.class})
     private String webName;
 
     /**
      * 网址
      */
+    @NotBlank(message = "网址不能为空",groups = {ADD.class, EDIT.class})
     private String url;
+    /**
+     * 账号
+     */
+    @NotBlank(message = "账号不能为空",groups = {ADD.class, EDIT.class})
+    private String account;
+
+    /**
+     * 密码
+     */
+    @NotBlank(message = "密码不能为空",groups = {ADD.class, EDIT.class})
+    private String password;
+
+    /**
+     * 注册人
+     */
+    @NotBlank(message = "注册人不能为空",groups = {ADD.class, EDIT.class})
+    private String registrant;
+
+    /**
+     * 注册信息
+     */
+    @NotBlank(message = "注册信息不能为空",groups = {ADD.class, EDIT.class})
+    private String registrationInfo;
+
+    /**
+     * 状态
+     */
+    @NotBlank(message = "状态不能为空",groups = {ADD.class, EDIT.class})
+    private String status;
 
 
     public String getWebName() {
@@ -38,5 +72,45 @@ public class BiddingWebInfoTO extends BaseTO {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRegistrant() {
+        return registrant;
+    }
+
+    public void setRegistrant(String registrant) {
+        this.registrant = registrant;
+    }
+
+    public String getRegistrationInfo() {
+        return registrationInfo;
+    }
+
+    public void setRegistrationInfo(String registrationInfo) {
+        this.registrationInfo = registrationInfo;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

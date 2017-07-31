@@ -4,6 +4,7 @@ import com.bjike.goddess.bonus.api.DisciplineRecordAPI;
 import com.bjike.goddess.bonus.dto.DisciplineRecordDTO;
 import com.bjike.goddess.bonus.to.CollectFilterTO;
 import com.bjike.goddess.bonus.to.DisciplineRecordTO;
+import com.bjike.goddess.bonus.to.GuidePermissionTO;
 import com.bjike.goddess.bonus.vo.*;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -37,6 +38,28 @@ public class DisciplineRecordAct {
     private DisciplineRecordAPI disciplineRecordAPI;
 
 
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = disciplineRecordAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 保存
      *

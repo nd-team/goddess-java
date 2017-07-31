@@ -1,7 +1,9 @@
 package com.bjike.goddess.projectmeasure.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.projectmeasure.bo.MultipleProjectMultipleUIBBO;
 import com.bjike.goddess.projectmeasure.bo.MultipleProjectMultipleUIBO;
+import com.bjike.goddess.projectmeasure.dto.MultipleProjectMultipleUIBDTO;
 import com.bjike.goddess.projectmeasure.dto.MultipleProjectMultipleUIDTO;
 import com.bjike.goddess.projectmeasure.to.GuidePermissionTO;
 import com.bjike.goddess.projectmeasure.to.MultipleProjectMultipleUITO;
@@ -25,12 +27,14 @@ public interface MultipleProjectMultipleUIAPI {
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 根据id查询多项目单个界面
      *
@@ -38,7 +42,7 @@ public interface MultipleProjectMultipleUIAPI {
      * @return class MultipleProjectMultipleUIBO
      * @throws SerException
      */
-    default MultipleProjectMultipleUIBO getOne(String id) throws SerException{
+    default MultipleProjectMultipleUIBO getOne(String id) throws SerException {
         return null;
     }
 
@@ -65,7 +69,7 @@ public interface MultipleProjectMultipleUIAPI {
      * @return class MultipleProjectMultipleUIBO
      * @throws SerException
      */
-    MultipleProjectMultipleUIBO save(MultipleProjectMultipleUITO to) throws SerException;
+    void save(MultipleProjectMultipleUITO to) throws SerException;
 
     /**
      * 根据id删除多项目多个界面

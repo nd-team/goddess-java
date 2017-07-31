@@ -27,7 +27,6 @@ import java.io.IOException;
 @EnableAutoConfiguration(exclude = {ValidationAutoConfiguration.class})
 public class Application {
 
-
     @Bean
     public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();

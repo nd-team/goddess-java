@@ -6,11 +6,9 @@ import com.bjike.goddess.employeecontract.bo.ContractInfoBO;
 import com.bjike.goddess.employeecontract.bo.ContractManageBO;
 import com.bjike.goddess.employeecontract.bo.ContractPersonalBO;
 import com.bjike.goddess.employeecontract.dto.ContractManageDTO;
+import com.bjike.goddess.employeecontract.excel.SonPermissionObject;
 import com.bjike.goddess.employeecontract.service.ContractManageSer;
-import com.bjike.goddess.employeecontract.to.ContractChangeTO;
-import com.bjike.goddess.employeecontract.to.ContractInfoTO;
-import com.bjike.goddess.employeecontract.to.ContractManageTO;
-import com.bjike.goddess.employeecontract.to.ContractPersonalTO;
+import com.bjike.goddess.employeecontract.to.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +28,16 @@ public class ContractManageApiImpl implements ContractManageAPI {
 
     @Autowired
     private ContractManageSer contractManageSer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return contractManageSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return contractManageSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public ContractManageBO save(ContractManageTO to) throws SerException {

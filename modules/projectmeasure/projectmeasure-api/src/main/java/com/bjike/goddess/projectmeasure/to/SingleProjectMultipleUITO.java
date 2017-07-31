@@ -3,11 +3,9 @@ package com.bjike.goddess.projectmeasure.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.projectmeasure.type.InterfaceSelect;
-import com.bjike.goddess.projectmeasure.type.ProjectCategory;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 单个项目多个界面
@@ -25,35 +23,10 @@ public class SingleProjectMultipleUITO extends BaseTO {
      */
     @NotBlank(groups = {ADD.class, EDIT.class}, message = "项目名称不能为空")
     private String projectName;
-
     /**
-     * 项目类别
+     * 单项目多界面
      */
-    private ProjectCategory projectCategory;
-
-    /**
-     * 界面选择
-     */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "界面选择不能为空")
-    private InterfaceSelect interfaceSelect;
-
-    /**
-     * 工作量
-     */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "工作量不能为空")
-    private Integer workload;
-
-    /**
-     * 利润
-     */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "利润不能为空")
-    private Double profit;
-
-    /**
-     * 界面利润对比
-     */
-    private String interfaceProfitContrast;
-
+    private List<SingleProjectMultipleUIBTO> singleProjectMultipleUIBTOS;
 
     public String getProjectName() {
         return projectName;
@@ -63,43 +36,11 @@ public class SingleProjectMultipleUITO extends BaseTO {
         this.projectName = projectName;
     }
 
-    public ProjectCategory getProjectCategory() {
-        return projectCategory;
+    public List<SingleProjectMultipleUIBTO> getSingleProjectMultipleUIBTOS() {
+        return singleProjectMultipleUIBTOS;
     }
 
-    public void setProjectCategory(ProjectCategory projectCategory) {
-        this.projectCategory = projectCategory;
-    }
-
-    public InterfaceSelect getInterfaceSelect() {
-        return interfaceSelect;
-    }
-
-    public void setInterfaceSelect(InterfaceSelect interfaceSelect) {
-        this.interfaceSelect = interfaceSelect;
-    }
-
-    public Integer getWorkload() {
-        return workload;
-    }
-
-    public void setWorkload(Integer workload) {
-        this.workload = workload;
-    }
-
-    public Double getProfit() {
-        return profit;
-    }
-
-    public void setProfit(Double profit) {
-        this.profit = profit;
-    }
-
-    public String getInterfaceProfitContrast() {
-        return interfaceProfitContrast;
-    }
-
-    public void setInterfaceProfitContrast(String interfaceProfitContrast) {
-        this.interfaceProfitContrast = interfaceProfitContrast;
+    public void setSingleProjectMultipleUIBTOS(List<SingleProjectMultipleUIBTO> singleProjectMultipleUIBTOS) {
+        this.singleProjectMultipleUIBTOS = singleProjectMultipleUIBTOS;
     }
 }

@@ -5,6 +5,7 @@ import com.bjike.goddess.bonus.dto.DisciplineRecordDTO;
 import com.bjike.goddess.bonus.entity.DisciplineRecord;
 import com.bjike.goddess.bonus.to.CollectFilterTO;
 import com.bjike.goddess.bonus.to.DisciplineRecordTO;
+import com.bjike.goddess.bonus.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -21,6 +22,21 @@ import java.util.List;
  */
 public interface DisciplineRecordSer extends Ser<DisciplineRecord, DisciplineRecordDTO> {
 
+
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 保存
      *

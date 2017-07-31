@@ -1,12 +1,20 @@
-模块名:zjx
-类名:ZjxTest
-作者:jiangzaixuan
-描述:测试
+模块名:materialsummary
+类名:RecipReturnSendEmail
+作者:lijuntao
+描述:物质领用归还发送邮件
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String module 模块;
-Double money 钱;
+String type 汇总类型;
+String remark 备注;
+Double sendNum 发送间隔;
+String sendNumAndUnit 发送间隔和单位;
+String collectSendUnit 发送单位;
+String collectUnit 汇总间隔;
+String sendObject 发送对象;
+LocalDateTime lastSendTime 上次发送时间;
+String status 状态;
+String createPersion 创建人;
 )

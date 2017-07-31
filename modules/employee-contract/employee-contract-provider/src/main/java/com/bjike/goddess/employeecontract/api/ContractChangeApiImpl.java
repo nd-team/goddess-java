@@ -6,6 +6,7 @@ import com.bjike.goddess.employeecontract.dto.ContractChangeDTO;
 import com.bjike.goddess.employeecontract.entity.ContractChange;
 import com.bjike.goddess.employeecontract.service.ContractChangeSer;
 import com.bjike.goddess.employeecontract.to.ContractChangeTO;
+import com.bjike.goddess.employeecontract.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,16 @@ public class ContractChangeApiImpl implements ContractChangeAPI {
 
     @Autowired
     private ContractChangeSer contractChangeSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return contractChangeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return contractChangeSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public ContractChangeBO update(ContractChangeTO to) throws SerException {
