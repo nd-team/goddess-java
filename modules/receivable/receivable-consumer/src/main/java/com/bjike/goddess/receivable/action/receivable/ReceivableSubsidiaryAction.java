@@ -9,6 +9,8 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.vo.AreaVO;
 import com.bjike.goddess.receivable.api.ReceivableSubsidiaryAPI;
 import com.bjike.goddess.receivable.bo.ReceivableSubsidiaryBO;
 import com.bjike.goddess.receivable.dto.ReceivableSubsidiaryDTO;
@@ -45,6 +47,8 @@ import java.util.Map;
 public class ReceivableSubsidiaryAction extends BaseFileAction {
     @Autowired
     private ReceivableSubsidiaryAPI receivableSubsidiaryAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
 
     /**
      * 功能导航权限
@@ -120,12 +124,13 @@ public class ReceivableSubsidiaryAction extends BaseFileAction {
             List<ReceivableSubsidiaryVO> receivableSubsidiaryVOS = BeanTransform.copyProperties
                     (bo, ReceivableSubsidiaryVO.class, request);
 
-            for (int i = 0; i < bo.size(); i++) {
-                ReceivableSubsidiaryBO temp = bo.get(i);
-                ContractorVO cvo = BeanTransform.copyProperties(temp.getContractorBO(), ContractorVO.class);
-                receivableSubsidiaryVOS.get(i).setContractorVO(cvo);
+            if (bo != null) {
+                for (int i = 0; i < bo.size(); i++) {
+                    ReceivableSubsidiaryBO temp = bo.get(i);
+                    ContractorVO cvo = BeanTransform.copyProperties(temp.getContractorBO(), ContractorVO.class);
+                    receivableSubsidiaryVOS.get(i).setContractorVO(cvo);
+                }
             }
-
             return ActResult.initialize(receivableSubsidiaryVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -581,6 +586,20 @@ public class ReceivableSubsidiaryAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         } catch (IOException e1) {
             throw new ActException(e1.getMessage());
+        }
+    }
+    /**
+     * 查询地区
+     *
+     * @return class AreaVO
+     * @version v1
+     */
+    @GetMapping("v1/findArea")
+    public Result findArea(HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(departmentDetailAPI.findArea(), AreaVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
         }
     }
 

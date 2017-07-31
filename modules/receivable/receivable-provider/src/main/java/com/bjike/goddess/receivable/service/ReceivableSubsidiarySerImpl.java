@@ -31,8 +31,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import scala.collection.parallel.ParIterableLike;
-import scala.util.parsing.combinator.testing.Str;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -320,17 +318,20 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
     @Override
     public void removeReceivableSubsidiary(String id) throws SerException {
         checkAddIdentity();
-        try {
+            ReceivableSubsidiary entity=super.findById(id);
+            if (entity==null){
+                throw new SerException("该对象不存在");
+            }
+            if (entity.getContractor()==null){
+                throw new SerException("承包商为空时不能删除，需编辑后就可删除");
+            }
             super.remove(id);
-        } catch (SerException e) {
-            throw new SerException(e.getMessage());
-        }
 
     }
 
     @Override
-    public Map<String,String> auditTime(String auditTime) throws SerException {
-        Map<String,String> map=new HashMap<>();
+    public Map<String, String> auditTime(String auditTime) throws SerException {
+        Map<String, String> map = new HashMap<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date date = sdf.parse(auditTime);
@@ -338,22 +339,22 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
             cal.setTime(date);
             cal.add(Calendar.DATE, 10);
             String countTime = sdf.format(cal.getTime());//ERP结算审批时间
-            map.put("countTime",countTime);
+            map.put("countTime", countTime);
 
             cal.setTime(date);
             cal.add(Calendar.DATE, 20);
             String billTime = sdf.format(cal.getTime());//发票审核时间
-            map.put("billTime",billTime);
+            map.put("billTime", billTime);
 
             cal.setTime(date);
             cal.add(Calendar.MONTH, 3);
             String planTime = sdf.format(cal.getTime());//预计支付时间
-            map.put("planTime",planTime);
+            map.put("planTime", planTime);
 
             cal.setTime(date);
             cal.add(Calendar.MONTH, 4);
             String accountTime = sdf.format(cal.getTime());//到账时间
-            map.put("accountTime",accountTime);
+            map.put("accountTime", accountTime);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -361,8 +362,8 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
     }
 
     @Override
-    public Map<String,String> countTime(String countTime) throws SerException {
-        Map<String,String> map = new HashMap<>();
+    public Map<String, String> countTime(String countTime) throws SerException {
+        Map<String, String> map = new HashMap<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date date = sdf.parse(countTime);
@@ -371,17 +372,17 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
             cal.setTime(date);
             cal.add(Calendar.DATE, 10);
             String billTime = sdf.format(cal.getTime());//发票审核时间
-            map.put("billTime",billTime);
+            map.put("billTime", billTime);
 
             cal.setTime(date);
             cal.add(Calendar.MONTH, 3);
             String planTime = sdf.format(cal.getTime());//预计支付时间
-            map.put("planTime",planTime);
+            map.put("planTime", planTime);
 
             cal.setTime(date);
             cal.add(Calendar.MONTH, 4);
             String accountTime = sdf.format(cal.getTime());//到账时间
-            map.put("accountTime",accountTime);
+            map.put("accountTime", accountTime);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -389,8 +390,8 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
     }
 
     @Override
-    public Map<String,String> billTime(String billTime) throws SerException {
-        Map<String,String> map = new HashMap<>();
+    public Map<String, String> billTime(String billTime) throws SerException {
+        Map<String, String> map = new HashMap<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date date = sdf.parse(billTime);
@@ -399,13 +400,13 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
             cal.setTime(date);
             cal.add(Calendar.MONTH, 3);
             String planTime = sdf.format(cal.getTime());//预计支付时间
-            map.put("planTime",planTime);
+            map.put("planTime", planTime);
 
 
             cal.setTime(date);
             cal.add(Calendar.MONTH, 4);
             String accountTime = sdf.format(cal.getTime());//到账时间
-            map.put("accountTime",accountTime);
+            map.put("accountTime", accountTime);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -413,8 +414,8 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
     }
 
     @Override
-    public Map<String,String> planTime(String planTime) throws SerException {
-        Map<String,String> map = new HashMap<>();
+    public Map<String, String> planTime(String planTime) throws SerException {
+        Map<String, String> map = new HashMap<>();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String accountTime = null;
@@ -425,7 +426,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
             cal.setTime(date);
             cal.add(Calendar.MONTH, 3);
             accountTime = sdf.format(cal.getTime());//到账时间
-            map.put("accountTime",accountTime);
+            map.put("accountTime", accountTime);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -756,14 +757,18 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
 
     @Override
     public ReceivableSubsidiaryBO collectId(String id) throws SerException {
-        ReceivableSubsidiary receivableSubsidiary = super.findById(id);
-        ReceivableSubsidiaryBO bo = BeanTransform.copyProperties(receivableSubsidiary, ReceivableSubsidiaryBO.class);
-        ContractorBO cbo = new ContractorBO();
-        if (null != receivableSubsidiary.getContractor()) {
-            cbo = BeanTransform.copyProperties(receivableSubsidiary.getContractor(), ContractorBO.class);
+        if (StringUtils.isNotBlank(id)) {
+            ReceivableSubsidiary receivableSubsidiary = super.findById(id);
+            ReceivableSubsidiaryBO bo = BeanTransform.copyProperties(receivableSubsidiary, ReceivableSubsidiaryBO.class);
+            ContractorBO cbo = new ContractorBO();
+            if (null != receivableSubsidiary.getContractor()) {
+                cbo = BeanTransform.copyProperties(receivableSubsidiary.getContractor(), ContractorBO.class);
+            }
+            bo.setContractorBO(cbo);
+            return bo;
+        } else {
+            throw new SerException("id不能为空");
         }
-        bo.setContractorBO(cbo);
-        return bo;
 
     }
 
@@ -777,7 +782,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         //处理月份,季度,年份
         if (TimeStatus.MONTH.equals(to.getTimeStatus())) {
             int year = LocalDate.now().getYear();
-            int month = LocalDate.now().getMonthValue();
+            int month =to.getMonth();
             int prev_year = year;
             int prev_month = month - 1;
             if (to.getMonth() == 1) {
@@ -823,7 +828,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         }
 
         StringBuilder sb = new StringBuilder();
-        if(groupField.equals("contractor_id")){
+        if (groupField.equals("contractor_id")) {
             sb.append("select c.name,b.taskPrice,b.pactSize" +
                     ",b.accountMoney,b.managementFee,b.taxes,b.afterTax" +
                     ",b.phaseAccount,b.phaseFee,b.phaseTaxes,b.phaseAfterTax," +
@@ -843,7 +848,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         sb.append(" sum(managementFee)as managementFee,sum(taxes)as taxes,sum(afterTax)as afterTax ");
         sb.append(" FROM receivable_receivablesubsidiary");
         sb.append(" where accountTime BETWEEN '" + prev_startTime + "' AND '" + prev_endTime + "' GROUP BY " + groupField + " ORDER BY " + groupField + ")b");
-        if(groupField.equals("contractor_id")){
+        if (groupField.equals("contractor_id")) {
             sb.append(")b where b.groupField=c.id");
         }
         String sql = sb.toString();

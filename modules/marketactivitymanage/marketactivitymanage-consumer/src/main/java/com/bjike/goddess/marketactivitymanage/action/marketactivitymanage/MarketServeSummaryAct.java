@@ -17,6 +17,7 @@ import com.bjike.goddess.marketactivitymanage.dto.MarketServeSummaryDTO;
 import com.bjike.goddess.marketactivitymanage.excel.SonPermissionObject;
 import com.bjike.goddess.marketactivitymanage.to.GuidePermissionTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeSummaryTO;
+import com.bjike.goddess.marketactivitymanage.to.SummaryTO;
 import com.bjike.goddess.marketactivitymanage.vo.MarketServeSummaryVO;
 import com.bjike.goddess.marketactivitymanage.vo.ServeSummaryVO;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
@@ -269,18 +270,15 @@ public class MarketServeSummaryAct {
     /**
      * 市场招待汇总
      *
-     * @param type            汇总类型true:按照计划汇总,false:按照实际汇总
-     * @param projectGroups   部门/项目组
-     * @param startTimeString 起始时间
-     * @param endTimeString   结束时间
+     * @param summaryTO
      * @return class MarketServeSummaryVO
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/summarize")
-    public Result summarize(Boolean type, String[] projectGroups, String startTimeString, String endTimeString, HttpServletRequest request) throws ActException {
+    public Result summarize(SummaryTO summaryTO, HttpServletRequest request) throws ActException {
         try {
-            List<ServeSummaryBO> boList = marketServeSummaryAPI.summarize(type, projectGroups, startTimeString, endTimeString);
+            List<ServeSummaryBO> boList = marketServeSummaryAPI.summarize(summaryTO);
             List<ServeSummaryVO> voList = BeanTransform.copyProperties(boList, ServeSummaryVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {

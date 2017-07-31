@@ -3,6 +3,7 @@ package com.bjike.goddess.staffentry.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.bo.EntryOptionBO;
@@ -13,6 +14,8 @@ import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
 import com.bjike.goddess.staffentry.entity.EntryRegister;
 import com.bjike.goddess.staffentry.to.EntryBasicInfoTO;
 import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +47,8 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private EntryRegisterSer entryRegisterSer;
+    @Autowired
+    private UserAPI userAPI;
 //    @Autowired
 //    private MessageAPI messageAPI;
 
@@ -55,9 +60,16 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
      * @throws SerException
      */
     private void checkDepartIdentity(String idFlag) throws SerException {
-        Boolean flag = cusPermissionSer.busCusPermission(idFlag);
-        if (!flag) {
-            throw new SerException("你不是相应部门的人员，不能进行操作");
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        Boolean flag = false;
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission(idFlag);
+            if( !flag){
+                throw new SerException("你不是相应部门的人员，不能进行操作");
+            }
         }
     }
 

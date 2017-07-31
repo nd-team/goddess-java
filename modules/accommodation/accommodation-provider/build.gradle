@@ -16,6 +16,7 @@ task copyJars(type:Copy) {
 }
 build.dependsOn copyJars
 
+
 def env = hasProperty("pro")?"pro":(hasProperty("dev")?"dev":null)
 sourceSets {
     main {

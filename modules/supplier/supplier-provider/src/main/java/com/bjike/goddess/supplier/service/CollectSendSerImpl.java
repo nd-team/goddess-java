@@ -63,7 +63,7 @@ public class CollectSendSerImpl extends ServiceImpl<CollectSend, CollectSendDTO>
     @Autowired
     private UserAPI userAPI;
 
-    private static final String idFlag = "supplier-01";
+//    private static final String idFlag = "supplier-01";
 
     private static final String tableF = "<table cellspacing='0px' style='width:80%;border:2px #808080 outset;border-collapse:collapse;border-spacing:0px;'>";
     private static final String tableL = "</table>";
@@ -367,7 +367,7 @@ public class CollectSendSerImpl extends ServiceImpl<CollectSend, CollectSendDTO>
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getSupCusPermission(idFlag);
+            flag = cusPermissionSer.getSupCusPermission("1");
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -385,7 +385,7 @@ public class CollectSendSerImpl extends ServiceImpl<CollectSend, CollectSendDTO>
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busSupCusPermission(idFlag);
+            flag = cusPermissionSer.busSupCusPermission("2");
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -403,7 +403,7 @@ public class CollectSendSerImpl extends ServiceImpl<CollectSend, CollectSendDTO>
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getSupCusPermission(idFlag);
+            flag = cusPermissionSer.getSupCusPermission("1");
         } else {
             flag = true;
         }
@@ -420,7 +420,7 @@ public class CollectSendSerImpl extends ServiceImpl<CollectSend, CollectSendDTO>
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busSupCusPermission(idFlag);
+            flag = cusPermissionSer.busSupCusPermission("2");
         } else {
             flag = true;
         }

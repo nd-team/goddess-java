@@ -160,9 +160,21 @@ public class ContractNodeStandardSerImpl extends ServiceImpl<ContractNodeStandar
     @Transactional(rollbackFor = SerException.class)
     public List<ContractNodeStandardBO> list(ContractNodeStandardDTO dto) throws SerException {
         checkPermission();
+        condiy(dto);
         List<ContractNodeStandard> list = super.findByPage(dto);
         List<ContractNodeStandardBO> boList = BeanTransform.copyProperties(list, ContractNodeStandardBO.class);
         return boList;
+    }
+
+
+    @Override
+    public void condiy(ContractNodeStandardDTO dto) throws SerException {
+        if(StringUtils.isNotBlank(dto.getArea())){
+            dto.getConditions().add(Restrict.eq("area",dto.getArea()));
+        }
+        if(StringUtils.isNotBlank(dto.getProject())){
+            dto.getConditions().add(Restrict.eq("project",dto.getProject()));
+        }
     }
 
     /**
@@ -311,8 +323,9 @@ public class ContractNodeStandardSerImpl extends ServiceImpl<ContractNodeStandar
                     .filter(c -> c.getDate().getYear() == to.getYear() && c.getDate().getMonthValue() == to.getMonth())
                     .collect(Collectors.toList());
         }
-        if (null == list || list.size() == 0)
+        if (null == list || list.size() == 0){
             return new ArrayList<>(0);
+        }
         return BeanTransform.copyProperties(list, ContractNodeStandardBO.class);
     }
 }

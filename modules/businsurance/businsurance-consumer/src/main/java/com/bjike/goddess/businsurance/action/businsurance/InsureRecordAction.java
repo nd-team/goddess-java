@@ -4,6 +4,7 @@ import com.bjike.goddess.businsurance.api.InsureRecordAPI;
 import com.bjike.goddess.businsurance.bo.InsureRecordBO;
 import com.bjike.goddess.businsurance.dto.InsureRecordDTO;
 import com.bjike.goddess.businsurance.to.GuidePermissionTO;
+import com.bjike.goddess.businsurance.to.InsureRecordNextTO;
 import com.bjike.goddess.businsurance.to.InsureRecordTO;
 import com.bjike.goddess.businsurance.vo.InsureRecordVO;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -131,6 +132,26 @@ public class InsureRecordAction extends BaseFileAction{
     public Result edit(@Validated(InsureRecordTO.TestAdd.class) InsureRecordTO insureRecordTO) throws ActException {
         try {
             InsureRecordBO insureRecordBO1 = insureRecordAPI.editInsureRecord(insureRecordTO);
+            return ActResult.initialize(BeanTransform.copyProperties(insureRecordBO1,InsureRecordVO.class,true));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 续保
+     *
+     * @param insureRecordNextTO 意外险记录基本信息数据bo
+     * @des 编辑意外险记录
+     * @return  class InsureRecordVO
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/editNext")
+    public Result editNext(@Validated(InsureRecordNextTO.TestAdd.class) InsureRecordNextTO insureRecordNextTO) throws ActException {
+        try {
+            InsureRecordBO insureRecordBO1 = insureRecordAPI.editNextInsureRecord(insureRecordNextTO);
             return ActResult.initialize(BeanTransform.copyProperties(insureRecordBO1,InsureRecordVO.class,true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

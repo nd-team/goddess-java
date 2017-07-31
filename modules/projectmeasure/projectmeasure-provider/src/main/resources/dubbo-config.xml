@@ -28,8 +28,13 @@
 	<dubbo:service validation="true" interface="com.bjike.goddess.projectmeasure.api.CusPermissionAPI" ref="cusPermissionApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.projectmeasure.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.projectmeasure.api.ProjectOtherDemandAPI" ref="projectOtherDemandApiImpl"/>
+	<dubbo:service validation="true" interface="com.bjike.goddess.projectmeasure.api.SingleProjectMultipleUIBAPI" ref="singleProjectMultipleUIBApiImpl"/>
+	<dubbo:service validation="true" interface="com.bjike.goddess.projectmeasure.api.MultipleProjectSingleUIBAPI" ref="multipleProjectSingleUIBApiImpl"/>
+	<dubbo:service validation="true" interface="com.bjike.goddess.projectmeasure.api.MultipleProjectMultipleUIBAPI" ref="multipleProjectMultipleUIBApiImpl"/>
+
 
 	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+	<dubbo:reference validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
 	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
 	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
 	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />

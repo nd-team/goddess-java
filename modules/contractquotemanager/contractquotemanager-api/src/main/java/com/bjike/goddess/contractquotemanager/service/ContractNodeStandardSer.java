@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.contractquotemanager.bo.ColationBO;
 import com.bjike.goddess.contractquotemanager.bo.ContractNodeStandardBO;
 import com.bjike.goddess.contractquotemanager.dto.ContractNodeStandardDTO;
+import com.bjike.goddess.contractquotemanager.dto.ContractQuoteDataDTO;
 import com.bjike.goddess.contractquotemanager.entity.ContractNodeStandard;
 import com.bjike.goddess.contractquotemanager.to.ContractNodeStandardTO;
 import com.bjike.goddess.contractquotemanager.to.FilterTO;
@@ -59,6 +60,17 @@ public interface ContractNodeStandardSer extends Ser<ContractNodeStandard, Contr
         return null;
     }
 
+
+    /**
+     * 根据地区和项目组
+     *
+     * @param dto
+     * @return class ContractNodeStandardDTO
+     * @throws SerException
+     */
+    default void condiy(ContractNodeStandardDTO dto) throws SerException {
+        return;
+    }
     /**
      * 编辑合同节点标准信息
      *

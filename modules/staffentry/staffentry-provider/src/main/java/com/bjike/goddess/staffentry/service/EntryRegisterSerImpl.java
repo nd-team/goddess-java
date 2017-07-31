@@ -3,12 +3,14 @@ package com.bjike.goddess.staffentry.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.bo.*;
 import com.bjike.goddess.staffentry.dto.*;
 import com.bjike.goddess.staffentry.entity.*;
 import com.bjike.goddess.staffentry.to.*;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -61,9 +63,16 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
      * @throws SerException
      */
     private void checkDepartIdentity(String idFlag) throws SerException{
-        Boolean flag = cusPermissionSer.busCusPermission( idFlag );
-        if( !flag){
-            throw new SerException("你不是相应部门的人员，不能进行操作");
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        Boolean flag = false;
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission(idFlag);
+            if( !flag){
+                throw new SerException("你不是相应部门的人员，不能进行操作");
+            }
         }
     }
 

@@ -43,4 +43,7 @@
 	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.staffentry.api.CusPermissionOperateAPI" />
 
 
+	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
+	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
+
 </beans>

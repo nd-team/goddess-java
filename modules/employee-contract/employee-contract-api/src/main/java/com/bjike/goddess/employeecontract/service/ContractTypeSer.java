@@ -6,6 +6,7 @@ import com.bjike.goddess.employeecontract.bo.ContractTypeBO;
 import com.bjike.goddess.employeecontract.dto.ContractTypeDTO;
 import com.bjike.goddess.employeecontract.entity.ContractType;
 import com.bjike.goddess.employeecontract.to.ContractTypeTO;
+import com.bjike.goddess.employeecontract.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -20,6 +21,19 @@ import java.util.List;
  */
 public interface ContractTypeSer extends Ser<ContractType, ContractTypeDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 添加
      *

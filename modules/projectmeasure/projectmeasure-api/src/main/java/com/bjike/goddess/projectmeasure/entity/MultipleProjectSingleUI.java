@@ -25,19 +25,6 @@ public class MultipleProjectSingleUI extends BaseEntity {
      */
     @Column(name = "projectName", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '项目名称'")
     private String projectName;
-
-    /**
-     * 项目类别
-     */
-    @Column(name = "projectCategory", nullable = false, columnDefinition = "TINYINT(2) COMMENT '项目类别'")
-    private ProjectCategory projectCategory;
-
-    /**
-     * 界面选择
-     */
-    @Column(name = "interfaceSelect", nullable = false, columnDefinition = "TINYINT(2) COMMENT '界面选择'")
-    private InterfaceSelect interfaceSelect;
-
     /**
      * 工作量
      */
@@ -57,11 +44,19 @@ public class MultipleProjectSingleUI extends BaseEntity {
     private String projectRatio;
 
     /**
-     * 项目利润对比
+     * 多个项目单个界面
      */
-    @Column(name = "projectProfitContrast", columnDefinition = "VARCHAR(255) COMMENT '项目利润对比'")
-    private String projectProfitContrast;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "multipleProjectSingleUIB_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '多个项目单个界面'")
+    private MultipleProjectSingleUIB multipleProjectSingleUIB;
 
+    public MultipleProjectSingleUIB getMultipleProjectSingleUIB() {
+        return multipleProjectSingleUIB;
+    }
+
+    public void setMultipleProjectSingleUIB(MultipleProjectSingleUIB multipleProjectSingleUIB) {
+        this.multipleProjectSingleUIB = multipleProjectSingleUIB;
+    }
 
     public String getProjectName() {
         return projectName;
@@ -69,22 +64,6 @@ public class MultipleProjectSingleUI extends BaseEntity {
 
     public void setProjectName(String projectName) {
         this.projectName = projectName;
-    }
-
-    public ProjectCategory getProjectCategory() {
-        return projectCategory;
-    }
-
-    public void setProjectCategory(ProjectCategory projectCategory) {
-        this.projectCategory = projectCategory;
-    }
-
-    public InterfaceSelect getInterfaceSelect() {
-        return interfaceSelect;
-    }
-
-    public void setInterfaceSelect(InterfaceSelect interfaceSelect) {
-        this.interfaceSelect = interfaceSelect;
     }
 
     public Integer getWorkload() {
@@ -109,13 +88,5 @@ public class MultipleProjectSingleUI extends BaseEntity {
 
     public void setProjectRatio(String projectRatio) {
         this.projectRatio = projectRatio;
-    }
-
-    public String getProjectProfitContrast() {
-        return projectProfitContrast;
-    }
-
-    public void setProjectProfitContrast(String projectProfitContrast) {
-        this.projectProfitContrast = projectProfitContrast;
     }
 }

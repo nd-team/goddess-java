@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 开标信息
  *
@@ -19,6 +21,7 @@ public class BidOpeningInfoTO extends BaseTO {
     /**
      * 编号
      */
+    @NotBlank(message = "编号不能为空", groups = {ADD.class, EDIT.class})
     private String biddingNumber;
 
     /**
@@ -30,19 +33,23 @@ public class BidOpeningInfoTO extends BaseTO {
     /**
      * 开标时间
      */
+    @NotBlank(message = "开标时间不能为空", groups = {ADD.class, EDIT.class})
     private String bidOpeningTime;
     /**
      * 开标地点
      */
+    @NotBlank(message = "开标地点不能为空", groups = {ADD.class, EDIT.class})
     private String bidOpeningPlace;
     /**
      * 委托人
      */
+    @NotBlank(message = "委托人不能为空", groups = {ADD.class, EDIT.class})
     private String principal;
 
     /**
      * 记录人
      */
+    @NotBlank(message = "记录人不能为空", groups = {ADD.class, EDIT.class})
     private String recorder;
 
     /**
@@ -54,16 +61,19 @@ public class BidOpeningInfoTO extends BaseTO {
     /**
      * 地市
      */
+    @NotBlank(message = "地市不能为空", groups = {ADD.class, EDIT.class})
     private String cities;
 
     /**
      * 竞争公司报价
      */
+    @NotNull(message = "竞争公司报价不能为空", groups = {ADD.class, EDIT.class})
     private Double competitivePrice;
 
     /**
      * 比率(%)
      */
+    @NotNull(message = "比率(%)不能为空", groups = {ADD.class, EDIT.class})
     private Double ratio;
 
 

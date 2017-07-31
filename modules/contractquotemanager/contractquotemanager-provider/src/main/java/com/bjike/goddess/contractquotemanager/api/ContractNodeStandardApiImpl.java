@@ -61,6 +61,7 @@ public class ContractNodeStandardApiImpl implements ContractNodeStandardAPI {
      */
     @Override
     public Long count(ContractNodeStandardDTO dto) throws SerException {
+        contractNodeStandardSer.condiy(dto);
         return contractNodeStandardSer.count(dto);
     }
 

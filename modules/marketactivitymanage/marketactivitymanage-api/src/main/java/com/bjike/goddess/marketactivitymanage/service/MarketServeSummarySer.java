@@ -9,6 +9,7 @@ import com.bjike.goddess.marketactivitymanage.entity.MarketServeSummary;
 import com.bjike.goddess.marketactivitymanage.excel.SonPermissionObject;
 import com.bjike.goddess.marketactivitymanage.to.GuidePermissionTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeSummaryTO;
+import com.bjike.goddess.marketactivitymanage.to.SummaryTO;
 
 import java.util.List;
 
@@ -88,17 +89,16 @@ public interface MarketServeSummarySer extends Ser<MarketServeSummary, MarketSer
      */
     void congeal(String id) throws SerException;
 
+
+
     /**
      * 市场招待汇总
      *
-     * @param type            汇总类型
-     * @param projectGroups   部门/项目组
-     * @param startTimeString 起始时间
-     * @param endTimeString   结束时间
+     * @param summaryTO
      * @return class MarketServeSummaryVO
      * @throws SerException
      */
-    default List<ServeSummaryBO> summarize(Boolean type, String[] projectGroups, String startTimeString, String endTimeString) throws SerException {
+    default List<ServeSummaryBO> summarize(SummaryTO summaryTO) throws SerException {
         return null;
     }
 
