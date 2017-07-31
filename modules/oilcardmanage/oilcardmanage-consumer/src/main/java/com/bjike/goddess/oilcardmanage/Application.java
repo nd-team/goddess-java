@@ -3,8 +3,10 @@ package com.bjike.goddess.oilcardmanage;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.*;
 
+import javax.servlet.MultipartConfigElement;
 import java.io.IOException;
 
 @SpringBootApplication

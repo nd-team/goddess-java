@@ -12,15 +12,15 @@ package com.bjike.goddess.competitormanage.enums;
 public enum CollectIntervalType {
 
     /**
-     * 天
+     * 每天
      */
     ONEDAY(0),
     /**
-     * 周
+     * 每周
      */
     ONEWEEK(1),
     /**
-     * 月
+     * 每月
      */
     ONEMONTH(2);
 
