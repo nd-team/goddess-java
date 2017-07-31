@@ -5,6 +5,7 @@ import com.bjike.goddess.employeecontract.bo.ContractChangeBO;
 import com.bjike.goddess.employeecontract.dto.ContractChangeDTO;
 import com.bjike.goddess.employeecontract.entity.ContractChange;
 import com.bjike.goddess.employeecontract.to.ContractChangeTO;
+import com.bjike.goddess.employeecontract.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +20,19 @@ import java.util.List;
  */
 public interface ContractChangeAPI {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 修改
      *

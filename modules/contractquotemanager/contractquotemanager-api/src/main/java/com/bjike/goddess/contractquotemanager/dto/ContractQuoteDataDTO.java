@@ -24,10 +24,16 @@ public class ContractQuoteDataDTO extends BaseDTO {
      */
     @Size(min = 1, groups = {ContractQuoteDataDTO.Collect.class}, message = "地区不能为空,最小数目必须为1")
     private String[] area;
+
+    /**
+     * 根据地区搜索
+     */
+    private String areas;
+
     /**
      * 用户名称
      */
-    @NotBlank(groups = {ContractQuoteDataDTO.Collect.class}, message = "地区不能为空")
+    @NotBlank(groups = {ContractQuoteDataDTO.Collect.class}, message = "用户名称不能为空")
     private String customerName;
 
     /**
@@ -73,4 +79,11 @@ public class ContractQuoteDataDTO extends BaseDTO {
         this.endDate = endDate;
     }
 
+    public String getAreas() {
+        return areas;
+    }
+
+    public void setAreas(String areas) {
+        this.areas = areas;
+    }
 }

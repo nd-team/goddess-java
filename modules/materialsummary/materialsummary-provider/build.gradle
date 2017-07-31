@@ -29,8 +29,14 @@ dependencies {
     compile project(":common:common-jpa")
     compile project(":common:common-provider")
     compile project(":modules:materialsummary:materialsummary-api")
+    compile project(":modules:user:user-api")
     compile project(":modules:organize:organize-api")
     compile project(":modules:materialbuy:materialbuy-api")
+    compile project(":modules:materialcheck:materialcheck-api")
+    compile project(":modules:materialinstock:materialinstock-api")
+    compile project(":modules:materialreceive:materialreceive-api")
+    compile project(":modules:materialtransfer:materialtransfer-api")
+    compile project(":modules:devicerepair:devicerepair-api")
     compile project(":common:common-utils")
 }
 
