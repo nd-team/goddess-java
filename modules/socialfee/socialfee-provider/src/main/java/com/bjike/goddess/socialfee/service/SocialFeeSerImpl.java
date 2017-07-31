@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.socialfee.to.GuidePermissionTO;
@@ -713,7 +714,6 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
     @Override
     public byte[] exportExcel(SocialFeeDTO socialFeeDTO) throws SerException {
         //查询
-        checkPermission();
         if (StringUtils.isNotBlank(socialFeeDTO.getPayFeer())) {
             socialFeeDTO.getConditions().add(Restrict.eq("payFeer", socialFeeDTO.getPayFeer()));
         }
@@ -721,16 +721,15 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
             socialFeeDTO.getConditions().add(Restrict.eq("empName", socialFeeDTO.getEmpName()));
         }
         if (StringUtils.isNotBlank(socialFeeDTO.getStartTime()) && StringUtils.isNotBlank(socialFeeDTO.getEndTime())) {
-            String startYear = LocalDate.parse(socialFeeDTO.getStartTime()).getYear() + "";
-            int startMonthValue = LocalDate.parse(socialFeeDTO.getStartTime()).getMonthValue();
-            String startMonth = startMonthValue < 10 ? "0" + startMonthValue : startMonthValue + "";
+            String startYear = StringUtils.substringBefore(socialFeeDTO.getStartTime(),"-");
+            String startMonth = StringUtils.substringAfter(socialFeeDTO.getStartTime(),"-");
             String startYearMonth = startYear + startMonth;
-
-            String endYear = LocalDate.parse(socialFeeDTO.getEndTime()).getYear() + "";
-            int endMonthValue = LocalDate.parse(socialFeeDTO.getEndTime()).getMonthValue();
-            String endMonth = endMonthValue < 10 ? "0" + endMonthValue : endMonthValue + "";
+            String endYear = StringUtils.substringBefore(socialFeeDTO.getEndTime(),"-");
+            String endMonth = StringUtils.substringAfter(socialFeeDTO.getEndTime(),"-");
             String endYearMonth = endYear + endMonth;
-            socialFeeDTO.getConditions().add(Restrict.between("payTime", Arrays.asList("'" + startYearMonth + "'", "'" + endYearMonth + "'")));
+            socialFeeDTO.getConditions().add(Restrict.between("payTime", new String[]{"'" + startYearMonth + "'","'" + endYearMonth + "'"}));
+            socialFeeDTO.getConditions().add(Restrict.or("payTime",startYearMonth));
+            socialFeeDTO.getConditions().add(Restrict.or("payTime",endYearMonth));
         }
         List<SocialFee> list = super.findByCis(socialFeeDTO);
         List<SocialFeeExcel> socialFeeExcels = new ArrayList<>();
