@@ -19,6 +19,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -311,6 +312,78 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
             return boList;
         }
     }
+
+    @Override
+    public List<CollectCompareBO> readyCollect(String date) throws SerException {
+        Integer year = LocalDate.parse(date).getYear();
+        Integer month = LocalDate.parse(date).getMonthValue();
+        Set<String> projectGroups = findAllProjectGroup();
+        MoneyReadyDTO dto = new MoneyReadyDTO();
+        List<MoneyReady> list = super.findByCis(dto);
+        List<CollectCompareBO> boList = new ArrayList<>();
+        Double reserveSum = 0.0;
+        Double lastReserveSum = 0.0;
+        if (month != 1) {
+            for (String projectGroup : projectGroups) {
+                for (MoneyReady m : list) {
+                    if (m.getProjectGroup().equals(projectGroup) && m.getYear().equals(year) && m.getMonth().equals(month)) {
+                        reserveSum += m.getReserves();
+                    }
+                    if (m.getProjectGroup().equals(projectGroup) && m.getYear().equals(year) && m.getMonth().equals(month - 1)) {
+                        lastReserveSum += m.getReserves();
+                    }
+                }
+                if ((reserveSum != 0) || (lastReserveSum != 0)) {
+                    CollectCompareBO bo = new CollectCompareBO();
+                    bo.setProjectGroup(projectGroup);
+                    bo.setMonth(month);
+                    bo.setReserveSum(reserveSum);
+                    bo.setLastReserveSum(lastReserveSum);
+                    bo.setBalance(reserveSum-lastReserveSum);
+                    bo.setIncrease((reserveSum-lastReserveSum)/lastReserveSum*100);
+                    /*if (lastReserveSum != 0) {
+                        bo.setIncrease((reserveSum - lastReserveSum) / lastReserveSum);
+                    } else {
+                        bo.setIncrease(1.00);
+                    }*/
+                    boList.add(bo);
+                    reserveSum = 0.00;
+                    lastReserveSum = 0.00;    //置为0
+                }
+            }
+            return boList;
+        } else {
+            for (String projectGroup : projectGroups) {
+                for (MoneyReady m : list) {
+                    if (m.getProjectGroup().equals(projectGroup) && m.getYear().equals(year) && m.getMonth().equals(month)) {
+                        reserveSum += m.getReserves();
+                    }
+                    if (m.getProjectGroup().equals(projectGroup) && m.getYear().equals(year - 1) && m.getMonth().equals(12)) {
+                        lastReserveSum += m.getReserves();
+                    }
+                }
+                if ((reserveSum != 0) || (lastReserveSum != 0)) {
+                    CollectCompareBO bo = new CollectCompareBO();
+                    bo.setProjectGroup(projectGroup);
+                    bo.setMonth(month);
+                    bo.setReserveSum(reserveSum);
+                    bo.setLastReserveSum(lastReserveSum);
+                    bo.setBalance(reserveSum-lastReserveSum);
+                    bo.setIncrease((reserveSum-lastReserveSum)/lastReserveSum*100);
+                    /*if (lastReserveSum != 0) {
+                        bo.setIncrease((reserveSum - lastReserveSum) / lastReserveSum);
+                    } else {
+                        bo.setIncrease(1.00);
+                    }*/
+                    boList.add(bo);
+                    reserveSum = 0.00;
+                    lastReserveSum = 0.00;    //置为0
+                }
+            }
+            return boList;
+        }
+    }
+
     private Set<String> findAllProjectGroup() throws SerException {
         List<MoneyReady> list = super.findAll();
         Set<String> set = new HashSet<String>();

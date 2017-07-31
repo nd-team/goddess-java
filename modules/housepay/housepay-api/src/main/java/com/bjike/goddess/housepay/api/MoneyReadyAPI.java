@@ -98,4 +98,16 @@ public interface MoneyReadyAPI {
     default List<CollectCompareBO> collectCompare(Integer month) throws SerException {
         return null;
     }
+
+    /**
+     * zhuagnkaiqin
+     * 汇总
+     *
+     * @param date
+     * @return
+     * @throws SerException
+     */
+    default List<CollectCompareBO> readyCollect(String date) throws SerException {
+        return null;
+    }
 }

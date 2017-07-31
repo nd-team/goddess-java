@@ -17,11 +17,75 @@ public class SubjectCollectDTO extends BaseDTO {
      */
     private String[] area;
 
+    /**
+     * 一级科目
+     */
+    private String firstSubject;
+
+    /**
+     * 项目名称
+     */
+    private String projectName;
+
+    /**
+     * 项目组/部门
+     */
+    private String projectGroup;
+
+    /**
+     * 开始时间
+     */
+    private String startTime;
+    /**
+     * 结束时间
+     */
+    private String endTime;
+
     public String[] getArea() {
         return area;
     }
 
     public void setArea(String[] area) {
         this.area = area;
+    }
+
+    public String getFirstSubject() {
+        return firstSubject;
+    }
+
+    public void setFirstSubject(String firstSubject) {
+        this.firstSubject = firstSubject;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public String getProjectGroup() {
+        return projectGroup;
+    }
+
+    public void setProjectGroup(String projectGroup) {
+        this.projectGroup = projectGroup;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 }

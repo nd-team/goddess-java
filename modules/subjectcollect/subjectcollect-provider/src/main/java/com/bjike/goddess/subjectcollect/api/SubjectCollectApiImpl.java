@@ -8,6 +8,7 @@ import com.bjike.goddess.subjectcollect.excel.SonPermissionObject;
 import com.bjike.goddess.subjectcollect.service.SubjectCollectSer;
 import com.bjike.goddess.subjectcollect.to.GuidePermissionTO;
 import com.bjike.goddess.subjectcollect.to.SubjectCollectTO;
+import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,5 +95,30 @@ public class SubjectCollectApiImpl implements SubjectCollectAPI {
     @Override
     public Set<String> allProjectNames() throws SerException {
         return subjectCollectSer.allProjectNames();
+    }
+
+    @Override
+    public List<VoucherGenerateBO> synchrodata() throws SerException {
+        return subjectCollectSer.synchrodata();
+    }
+
+    @Override
+    public List<SubjectCollectBO> subjectCollect(SubjectCollectDTO subjectCollectDTO) throws SerException {
+        return subjectCollectSer.subjectCollect(subjectCollectDTO);
+    }
+
+    @Override
+    public List<SubjectCollectBO> areaCollect(SubjectCollectDTO subjectCollectDTO) throws SerException {
+        return subjectCollectSer.areaCollect(subjectCollectDTO);
+    }
+
+    @Override
+    public List<SubjectCollectBO> groupCollect(SubjectCollectDTO subjectCollectDTO) throws SerException {
+        return subjectCollectSer.groupCollect(subjectCollectDTO);
+    }
+
+    @Override
+    public List<SubjectCollectBO> pNameCollect(SubjectCollectDTO subjectCollectDTO) throws SerException {
+        return subjectCollectSer.pNameCollect(subjectCollectDTO);
     }
 }

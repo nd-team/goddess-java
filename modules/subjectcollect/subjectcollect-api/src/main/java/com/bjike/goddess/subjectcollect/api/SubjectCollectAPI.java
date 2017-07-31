@@ -7,6 +7,7 @@ import com.bjike.goddess.subjectcollect.dto.SubjectCollectDTO;
 import com.bjike.goddess.subjectcollect.excel.SonPermissionObject;
 import com.bjike.goddess.subjectcollect.to.GuidePermissionTO;
 import com.bjike.goddess.subjectcollect.to.SubjectCollectTO;
+import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 
 import java.util.List;
 import java.util.Set;
@@ -146,4 +147,53 @@ public interface SubjectCollectAPI {
      * @throws SerException
      */
     Set<String> allProjectNames() throws SerException;
+
+    /**
+     * zhuangkaiqin
+     * 同步记账凭证数据
+     *
+     * @return
+     * @throws SerException
+     */
+    List<VoucherGenerateBO> synchrodata() throws SerException;
+
+    /**
+     * zhuangkaiqin
+     * 科目汇总
+     *
+     * @param subjectCollectDTO
+     * @return
+     * @throws SerException
+     */
+    List<SubjectCollectBO> subjectCollect(SubjectCollectDTO subjectCollectDTO) throws SerException;
+
+    /**
+     * zhuangkaiqin
+     * 地区汇总
+     *
+     * @param subjectCollectDTO
+     * @return
+     * @throws SerException
+     */
+    List<SubjectCollectBO> areaCollect(SubjectCollectDTO subjectCollectDTO) throws SerException;
+
+    /**
+     * zhuangkaiqin
+     * 项目组汇总
+     *
+     * @param subjectCollectDTO
+     * @return
+     * @throws SerException
+     */
+    List<SubjectCollectBO> groupCollect(SubjectCollectDTO subjectCollectDTO) throws SerException;
+
+    /**
+     * zhuangkaiqin
+     * 项目名称汇总
+     *
+     * @param subjectCollectDTO
+     * @return
+     * @throws SerException
+     */
+    List<SubjectCollectBO> pNameCollect(SubjectCollectDTO subjectCollectDTO) throws SerException;
 }

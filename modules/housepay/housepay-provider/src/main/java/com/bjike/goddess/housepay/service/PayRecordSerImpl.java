@@ -199,7 +199,7 @@ public class PayRecordSerImpl extends ServiceImpl<PayRecord, PayRecordDTO> imple
         sb.append(" sum(rent+water+energy+fee+otherFee) AS total FROM housepay_waitpay a ");
         sb.append(" WHERE area IN (");
         sb.append(areasStr);
-        sb.append(")GROUP BY payTime,area ORDER BY area ");
+        sb.append(") and pay = 0 GROUP BY payTime,area ORDER BY area ");
         String sql = sb.toString();
         String [] fields = new String[]{"area","payTime","rent","water","energy","fee","otherFee","total"};
         List<AreaCollectBO> areaCollectBOS = super.findBySql(sql,AreaCollectBO.class,fields);
@@ -233,7 +233,7 @@ public class PayRecordSerImpl extends ServiceImpl<PayRecord, PayRecordDTO> imple
         sb.append(" sum(rent+water+energy+fee+otherFee) AS total FROM housepay_waitpay a ");
         sb.append(" WHERE project IN ( ");
         sb.append(projectsStr);
-        sb.append(" )GROUP BY payTime,project ORDER BY project ");
+        sb.append(" ) and pay = 0 GROUP BY payTime,project ORDER BY project ");
         String sql = sb.toString();
         System.out.println(sql);
         String [] fields = new String[]{"project","payTime","rent","water","energy","fee","otherFee","total"};
