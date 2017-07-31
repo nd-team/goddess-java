@@ -26,7 +26,7 @@ public class SubjectCollect extends BaseEntity {
     /**
      * 月份
      */
-    @Column(name = "",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '月份'"  )
+    @Column(nullable = false,columnDefinition = "INT(11)   COMMENT '月份'"  )
     private Integer  months;
 
 

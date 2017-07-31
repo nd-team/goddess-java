@@ -254,7 +254,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
 //        }
         waitPay.setPay(PayStatus.NO);
         waitPay.setCreateTime(LocalDateTime.now());
-        Double total = waitPay.getRent() + waitPay.getWater() + waitPay.getEnergy() + waitPay.getOtherFee();
+        Double total = waitPay.getRent() + waitPay.getWater() + waitPay.getEnergy() + waitPay.getOtherFee() +waitPay.getFee();
         waitPay.setTotal(total);
         super.save(waitPay);
         return BeanTransform.copyProperties(waitPay, WaitPayBO.class);
@@ -268,6 +268,8 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
         BeanTransform.copyProperties(waitPayTO, waitPay, true);
         waitPay.setModifyTime(LocalDateTime.now());
         waitPay.setPay(PayStatus.NO);
+        Double total = waitPay.getRent() + waitPay.getWater() + waitPay.getEnergy() + waitPay.getOtherFee() +waitPay.getFee();
+        waitPay.setTotal(total);
         super.update(waitPay);
         return BeanTransform.copyProperties(waitPay, WaitPayBO.class);
     }

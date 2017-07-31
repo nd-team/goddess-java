@@ -18,12 +18,16 @@ import com.bjike.goddess.subjectcollect.to.GuidePermissionTO;
 import com.bjike.goddess.subjectcollect.to.SubjectCollectTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
+import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
+import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -47,6 +51,8 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private VoucherGenerateAPI voucherGenerateAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -223,6 +229,10 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
     @Override
     public SubjectCollectBO insertSubjectCollect(SubjectCollectTO subjectCollectTO) throws SerException {
         checkAddIdentity();
+        //zhuangkaiqin
+        if (1 > subjectCollectTO.getMonths() || 12 < subjectCollectTO.getMonths()) {
+            throw new SerException("输入的月份不符合");
+        }
         SubjectCollect subjectCollect = BeanTransform.copyProperties(subjectCollectTO, SubjectCollect.class);
         subjectCollect.setCreateTime(LocalDateTime.now());
         super.save(subjectCollect);
@@ -262,6 +272,7 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
         checkAddIdentity();
         super.remove(id);
     }
+
     @Override
     public List<String> getArea() throws SerException {
         String[] fields = new String[]{"area"};
@@ -352,5 +363,110 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
             set.add(s.getProjectName());
         }
         return set;
+    }
+
+    @Override
+    public List<VoucherGenerateBO> synchrodata() throws SerException {
+        VoucherGenerateDTO voucherGenerateDTO = new VoucherGenerateDTO();
+        List<VoucherGenerateBO> voucherGenerateBOs = voucherGenerateAPI.listNoPage(voucherGenerateDTO);
+        List<SubjectCollectBO> subjectCollectBOs = new ArrayList<>();
+        if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
+            for (VoucherGenerateBO voucherGenerateBO : voucherGenerateBOs) {
+                SubjectCollectBO subjectCollectBO = new SubjectCollectBO();
+                subjectCollectBO.setVoucher(true);
+                subjectCollectBO.setCode(voucherGenerateBO.getVoucherNum().toString());
+                subjectCollectBO.setMonths(LocalDate.parse(voucherGenerateBO.getVoucherDate()).getMonthValue());
+                subjectCollectBO.setFirstSubject(voucherGenerateBO.getFirstSubject());
+                subjectCollectBO.setArea(voucherGenerateBO.getArea());
+                subjectCollectBO.setProjectName(voucherGenerateBO.getProjectName());
+                subjectCollectBO.setProjectGroup(voucherGenerateBO.getProjectGroup());
+                subjectCollectBO.setBeginningDebitAmount(voucherGenerateBO.getBorrowMoney());
+                subjectCollectBO.setBeginningCreditAmount(voucherGenerateBO.getLoanMoney());
+
+            }
+        }
+        return null;
+    }
+
+    //zhuangkaiqin
+    @Override
+    public List<SubjectCollectBO> subjectCollect(SubjectCollectDTO subjectCollectDTO) throws SerException {
+        String firstSubject = subjectCollectDTO.getFirstSubject();
+        String[] field = new String[]{"firstSubject", "months", "beginningDebitAmount",
+                "beginningCreditAmount", "issueDebitAmount", "issueCreditAmount",
+                "endDebitAmount", "endCreditAmount"};
+        String sql = getSql("firstSubject", firstSubject, subjectCollectDTO);
+        List<SubjectCollect> list = new ArrayList<>();
+        //表头为一级科目/月份/期初借方余额/期初贷方余额/本期借方发生额/本期贷方发生额/期末借方余额/期末贷方月余额
+        list = super.findBySql(sql, SubjectCollect.class, field);
+        return BeanTransform.copyProperties(list, SubjectCollectBO.class);
+    }
+
+    //zhuangkaiqin
+    @Override
+    public List<SubjectCollectBO> areaCollect(SubjectCollectDTO subjectCollectDTO) throws SerException {
+        String area = "";
+        if (null != subjectCollectDTO.getArea() && subjectCollectDTO.getArea().length > 0) {
+            area = subjectCollectDTO.getArea()[0];
+        }
+        String[] field = new String[]{"area", "months", "beginningDebitAmount",
+                                        "beginningCreditAmount", "issueDebitAmount",
+                                        "issueCreditAmount", "endDebitAmount", "endCreditAmount"};
+        String sql = getSql("area", area, subjectCollectDTO);
+        List<SubjectCollect> list = new ArrayList<>();
+        //表头为地区/月份/期初借方余额/期初贷方余额/本期借方发生额/本期贷方发生额/期末借方余额/期末贷方月余额
+        list = super.findBySql(sql, SubjectCollect.class, field);
+        return BeanTransform.copyProperties(list, SubjectCollectBO.class);
+    }
+
+    @Override
+    public List<SubjectCollectBO> groupCollect(SubjectCollectDTO subjectCollectDTO) throws SerException {
+        String projectGroup = subjectCollectDTO.getProjectGroup();
+        String[] field = new String[]{"projectGroup", "months", "beginningDebitAmount",
+                                        "beginningCreditAmount", "issueDebitAmount", "issueCreditAmount",
+                                        "endDebitAmount", "endCreditAmount"};
+        String sql = getSql("projectGroup", projectGroup, subjectCollectDTO);
+        List<SubjectCollect> list = new ArrayList<>();
+        //表头为项目组/月份/期初借方余额/期初贷方余额/本期借方发生额/本期贷方发生额/期末借方余额/期末贷方月余额
+        list = super.findBySql(sql.toString(), SubjectCollect.class, field);
+        return BeanTransform.copyProperties(list, SubjectCollectBO.class);
+    }
+
+    @Override
+    public List<SubjectCollectBO> pNameCollect(SubjectCollectDTO subjectCollectDTO) throws SerException {
+        String projectName = subjectCollectDTO.getProjectName();
+        String[] field = new String[]{"projectName", "months", "beginningDebitAmount",
+                                        "beginningCreditAmount", "issueDebitAmount", "issueCreditAmount",
+                                        "endDebitAmount", "endCreditAmount"};
+        String sql = getSql("projectName", projectName, subjectCollectDTO);
+        List<SubjectCollect> list = new ArrayList<>();
+        //表头为项目名称/月份/期初借方余额/期初贷方余额/本期借方发生额/本期贷方发生额/期末借方余额/期末贷方余额
+        list = super.findBySql(sql.toString(), SubjectCollect.class, field);
+        return BeanTransform.copyProperties(list, SubjectCollectBO.class);
+    }
+
+    //zhuangkaiiqn
+    private String getSql(String file, String fileValue, SubjectCollectDTO subjectCollectDTO) throws SerException {
+        StringBuffer sql = new StringBuffer("");
+        String start = LocalDate.parse(subjectCollectDTO.getStartTime()).getMonthValue() + "";
+        String end = LocalDate.parse(subjectCollectDTO.getEndTime()).getMonthValue() + "";
+        sql.append(" select " + file + ", months,");
+        sql.append(" sum(beginningDebitAmount) as beginningDebitAmounts, ");
+        sql.append(" sum(beginningCreditAmount) as beginningCreditAmounts, ");
+        sql.append(" sum(issueDebitAmount) as issueDebitAmounts, ");
+        sql.append(" sum(issueCreditAmount) as issueCreditAmounts, ");
+        sql.append(" sum(endDebitAmount) as endDebitAmounts, ");
+        sql.append(" sum(endCreditAmount) as endCreditAmounts ");
+        sql.append(" from subjectcollect_subjectcollect ");
+        if (StringUtils.isBlank(fileValue)) {
+            sql.append(" where 1 = 1 ");
+        } else {
+            sql.append(" where " + file + " = '" + fileValue + "'");
+        }
+        if (StringUtils.isNotBlank(start) && StringUtils.isNotBlank(end)) {
+            sql.append(" and months between " + start + " and " + end + " ");
+        }
+        sql.append(" group by " + file + " ,months");
+        return sql.toString();
     }
 }
