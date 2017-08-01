@@ -2,10 +2,6 @@ package com.bjike.goddess.subjectcollect.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import javax.persistence.Column;
-import java.util.List;
-import java.util.Map;
-
 /**
  * 科目汇总表业务传输对象
  *
@@ -24,7 +20,7 @@ public class SubjectCollectBO extends BaseBO {
     /**
      * 月份
      */
-    private Integer  months;
+    private Integer months;
     /**
      * 一级科目
      */
@@ -74,6 +70,11 @@ public class SubjectCollectBO extends BaseBO {
      * 期末贷方余额
      */
     private Double endCreditAmount;
+
+    /**
+     * 是否为记账凭证数据
+     */
+    private Boolean isVoucher;
 
 
     public String getCode() {
@@ -170,5 +171,13 @@ public class SubjectCollectBO extends BaseBO {
 
     public void setEndCreditAmount(Double endCreditAmount) {
         this.endCreditAmount = endCreditAmount;
+    }
+
+    public Boolean getVoucher() {
+        return isVoucher;
+    }
+
+    public void setVoucher(Boolean voucher) {
+        isVoucher = voucher;
     }
 }

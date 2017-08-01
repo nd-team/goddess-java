@@ -414,7 +414,7 @@ public class FirstSubjectSerImpl extends ServiceImpl<FirstSubject, FirstSubjectD
             }
         }
         if( list != null && list.size() >0 ){
-//            super.save( list );
+                super.save( list );
         }
         return new FirstSubjectBO();
     }

@@ -112,7 +112,7 @@ public class QualificationsCollectAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/findByFilter")
-    public Result findByFilter(QualificationsCollectFilterTO to, HttpServletRequest request) throws ActException {
+    public Result findByFilter(@Validated(QualificationsCollectFilterTO.Select.class) QualificationsCollectFilterTO to, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(qualificationsCollectAPI.findByFilter(to), QualificationsCollectVO.class, request));
         } catch (SerException e) {
@@ -172,7 +172,7 @@ public class QualificationsCollectAct extends BaseFileAction {
      * @param id 通信系统集成资质进度汇总数据id
      * @version v1
      */
-//    @LoginAuth
+    @LoginAuth
     @PostMapping("v1/uploadEnclosure/{id}")
     public Result uploadEnclosure(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {

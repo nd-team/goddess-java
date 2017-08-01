@@ -44,13 +44,14 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("subjectcollect")
-public class SubjectCollectAction extends BaseFileAction{
+public class SubjectCollectAction extends BaseFileAction {
     @Autowired
     private SubjectCollectAPI subjectCollectAPI;
     @Autowired
     private VoucherGenerateAPI voucherGenerateAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+
     /**
      * 模块设置导航权限
      *
@@ -121,6 +122,7 @@ public class SubjectCollectAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 科目汇总表列表总条数
      *
@@ -169,7 +171,7 @@ public class SubjectCollectAction extends BaseFileAction{
     public Result list(SubjectCollectDTO subjectCollectDTO, HttpServletRequest request) throws ActException {
         try {
             List<SubjectCollectVO> subjectCollectVOS = BeanTransform.copyProperties(
-                    subjectCollectAPI.findListSubjectCollect(subjectCollectDTO),SubjectCollectVO.class, request);
+                    subjectCollectAPI.findListSubjectCollect(subjectCollectDTO), SubjectCollectVO.class, request);
             return ActResult.initialize(subjectCollectVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -213,6 +215,7 @@ public class SubjectCollectAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取地区
      *
@@ -228,6 +231,7 @@ public class SubjectCollectAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 导出excel
      *
@@ -248,6 +252,7 @@ public class SubjectCollectAction extends BaseFileAction{
             throw new ActException(e1.getMessage());
         }
     }
+
     /**
      * 删除科目汇总表
      *
@@ -266,81 +271,82 @@ public class SubjectCollectAction extends BaseFileAction{
         }
     }
 
-    /**
-     * 记账凭证记录科目汇总
-     *
-     * @param voucherGenerateDTO 记账凭证信息dto
-     * @return class VoucherGenerateVO
-     * @des 在所有记账凭证记录记账凭证信息进行科目汇总
-     * @version v1
-     */
-    @GetMapping("v1/ctReSub")
-    public Result ctReSub(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
-        try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
-                    voucherGenerateAPI.ctReSub(voucherGenerateDTO), VoucherGenerateVO.class, true);
-            return ActResult.initialize(voucherGenerateVOList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 记账凭证记录科目汇总
+//     *
+//     * @param voucherGenerateDTO 记账凭证信息dto
+//     * @return class VoucherGenerateVO
+//     * @des 在所有记账凭证记录记账凭证信息进行科目汇总
+//     * @version v1
+//     */
+//    @GetMapping("v1/ctReSub")
+//    public Result ctReSub(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
+//        try {
+//            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+//                    voucherGenerateAPI.ctReSub(voucherGenerateDTO), VoucherGenerateVO.class, true);
+//            return ActResult.initialize(voucherGenerateVOList);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
-    /**
-     * 记账凭证记录地区汇总
-     *
-     * @param voucherGenerateDTO 记账凭证信息dto
-     * @return class VoucherGenerateVO
-     * @des 在所有记账凭证记录记账凭证信息进行地区汇总
-     * @version v1
-     */
-    @GetMapping("v1/ctReArea")
-    public Result ctReArea(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
-        try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
-                    voucherGenerateAPI.ctReArea(voucherGenerateDTO), VoucherGenerateVO.class, true);
-            return ActResult.initialize(voucherGenerateVOList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 记账凭证记录地区汇总
+//     *
+//     * @param voucherGenerateDTO 记账凭证信息dto
+//     * @return class VoucherGenerateVO
+//     * @des 在所有记账凭证记录记账凭证信息进行地区汇总
+//     * @version v1
+//     */
+//    @GetMapping("v1/ctReArea")
+//    public Result ctReArea(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
+//        try {
+//            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+//                    voucherGenerateAPI.ctReArea(voucherGenerateDTO), VoucherGenerateVO.class, true);
+//            return ActResult.initialize(voucherGenerateVOList);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
-    /**
-     * 记账凭证记录项目组汇总
-     *
-     * @param voucherGenerateDTO 记账凭证信息dto
-     * @return class VoucherGenerateVO
-     * @des 在所有记账凭证记录记账凭证信息进行项目组汇总
-     * @version v1
-     */
-    @GetMapping("v1/ctReGroup")
-    public Result ctReGroup(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
-        try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
-                    voucherGenerateAPI.ctReGroup(voucherGenerateDTO), VoucherGenerateVO.class, true);
-            return ActResult.initialize(voucherGenerateVOList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 记账凭证记录项目组汇总
+//     *
+//     * @param voucherGenerateDTO 记账凭证信息dto
+//     * @return class VoucherGenerateVO
+//     * @des 在所有记账凭证记录记账凭证信息进行项目组汇总
+//     * @version v1
+//     */
+//    @GetMapping("v1/ctReGroup")
+//    public Result ctReGroup(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
+//        try {
+//            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+//                    voucherGenerateAPI.ctReGroup(voucherGenerateDTO), VoucherGenerateVO.class, true);
+//            return ActResult.initialize(voucherGenerateVOList);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
-    /**
-     * 记账凭证记录项目名称汇总
-     *
-     * @param voucherGenerateDTO 记账凭证信息dto
-     * @return class VoucherGenerateVO
-     * @des 在所有记账凭证记录记账凭证信息进行项目名称汇总
-     * @version v1
-     */
-    @GetMapping("v1/ctRePname")
-    public Result ctRePname(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
-        try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
-                    voucherGenerateAPI.ctRePname(voucherGenerateDTO), VoucherGenerateVO.class, true);
-            return ActResult.initialize(voucherGenerateVOList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 记账凭证记录项目名称汇总
+//     *
+//     * @param voucherGenerateDTO 记账凭证信息dto
+//     * @return class VoucherGenerateVO
+//     * @des 在所有记账凭证记录记账凭证信息进行项目名称汇总
+//     * @version v1
+//     */
+//    @GetMapping("v1/ctRePname")
+//    public Result ctRePname(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
+//        try {
+//            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+//                    voucherGenerateAPI.ctRePname(voucherGenerateDTO), VoucherGenerateVO.class, true);
+//            return ActResult.initialize(voucherGenerateVOList);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+
     /**
      * 获取所有一级科目
      *
@@ -356,6 +362,7 @@ public class SubjectCollectAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有二级科目
      *
@@ -435,6 +442,7 @@ public class SubjectCollectAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 汇总对比
      *
@@ -444,16 +452,106 @@ public class SubjectCollectAction extends BaseFileAction{
      * @version v1
      */
     @GetMapping("v1/collectCompare")
-    public Result collectCompare(@RequestParam Integer [] months) throws ActException {
+    public Result collectCompare(@RequestParam Integer[] months) throws ActException {
         try {
             List<CompareCollectVO> compareCollectVOS = BeanTransform.copyProperties(
-                    subjectCollectAPI.collectCompare(months),CompareCollectVO.class);
+                    subjectCollectAPI.collectCompare(months), CompareCollectVO.class);
             return ActResult.initialize(compareCollectVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
+    /**
+     * 同步数据
+     *
+     * @version v1
+     */
+    @GetMapping("v1/synchrodata")
+    public Result synchrodata() throws ActException {
+        try {
+            subjectCollectAPI.synchrodata();
+            return ActResult.initialize(null);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 科目汇总
+     *
+     * @param subjectCollectDTO 科目汇总信息dto
+     * @return class SubjectCollectVO
+     * @des 科目汇总
+     * @version v1
+     */
+    @GetMapping("v1/ctReSub")
+    public Result subjectCollect(@Validated SubjectCollectDTO subjectCollectDTO, BindingResult bindingResult) throws ActException {
+        try {
+            List<SubjectCollectVO> subjectCollectVOList = BeanTransform.copyProperties(
+                    subjectCollectAPI.subjectCollect(subjectCollectDTO), SubjectCollectVO.class);
+            return ActResult.initialize(subjectCollectVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 地区汇总
+     *
+     * @param subjectCollectDTO 地区汇总信息dto
+     * @return class SubjectCollectVO
+     * @des 地区汇总
+     * @version v1
+     */
+    @GetMapping("v1/ctReArea")
+    public Result areaCollect(@Validated SubjectCollectDTO subjectCollectDTO, BindingResult bindingResult) throws ActException {
+        try {
+            List<SubjectCollectVO> subjectCollectVOList = BeanTransform.copyProperties(
+                    subjectCollectAPI.areaCollect(subjectCollectDTO), SubjectCollectVO.class);
+            return ActResult.initialize(subjectCollectVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 项目组汇总
+     *
+     * @param subjectCollectDTO 项目组汇总信息dto
+     * @return class SubjectCollectVO
+     * @des 项目组汇总
+     * @version v1
+     */
+    @GetMapping("v1/ctReGroup")
+    public Result groupCollect(@Validated SubjectCollectDTO subjectCollectDTO, BindingResult bindingResult) throws ActException {
+        try {
+            List<SubjectCollectVO> subjectCollectVOList = BeanTransform.copyProperties(
+                    subjectCollectAPI.groupCollect(subjectCollectDTO), SubjectCollectVO.class);
+            return ActResult.initialize(subjectCollectVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 项目名称汇总
+     *
+     * @param subjectCollectDTO 项目名称汇总信息dto
+     * @return class SubjectCollectVO
+     * @des 项目名称汇总
+     * @version v1
+     */
+    @GetMapping("v1/ctRePname")
+    public Result pNameCollect(@Validated SubjectCollectDTO subjectCollectDTO, BindingResult bindingResult) throws ActException {
+        try {
+            List<SubjectCollectVO> subjectCollectVOList = BeanTransform.copyProperties(
+                    subjectCollectAPI.pNameCollect(subjectCollectDTO), SubjectCollectVO.class);
+            return ActResult.initialize(subjectCollectVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
 }
