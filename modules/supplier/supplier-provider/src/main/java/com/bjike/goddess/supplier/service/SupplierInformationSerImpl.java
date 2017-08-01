@@ -128,12 +128,13 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
         if (StringUtils.isNotBlank(to.getId())) {
             try {
                 SupplierInformation entity = super.findById(to.getId());
-                BeanTransform.copyProperties(to, entity, true);
-                entity.setExecution(this.countExecution(entity));
-                entity.setId(to.getId());
-                entity.setModifyTime(LocalDateTime.now());
-                super.update(entity);
-                return BeanTransform.copyProperties(entity, SupplierInformationBO.class);
+                SupplierInformation supplierInformation = BeanTransform.copyProperties(to, SupplierInformation.class, true);
+                supplierInformation.setExecution(this.countExecution(entity));
+                supplierInformation.setId(to.getId());
+                supplierInformation.setCreateTime(entity.getCreateTime());
+                supplierInformation.setModifyTime(LocalDateTime.now());
+                super.update(supplierInformation);
+                return BeanTransform.copyProperties(supplierInformation, SupplierInformationBO.class);
             } catch (Exception e) {
                 throw new SerException("数据对象不能为空");
             }

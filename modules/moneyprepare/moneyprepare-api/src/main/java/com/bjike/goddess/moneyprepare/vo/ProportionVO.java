@@ -35,6 +35,11 @@ public class ProportionVO {
      */
     private Double eachFund;
 
+    /**
+     * 资金准备id
+     */
+    private String fundId;
+
 
     public String getId() {
         return id;
@@ -74,5 +79,13 @@ public class ProportionVO {
 
     public void setEachFund(Double eachFund) {
         this.eachFund = eachFund;
+    }
+
+    public String getFundId() {
+        return fundId;
+    }
+
+    public void setFundId(String fundId) {
+        this.fundId = fundId;
     }
 }

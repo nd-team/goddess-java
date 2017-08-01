@@ -70,10 +70,11 @@ public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeD
         if (StringUtils.isNotBlank(to.getId())) {
             try {
                 SupplierType entity = super.findById(to.getId());
-                BeanTransform.copyProperties(to, entity, true);
-                entity.setModifyTime(LocalDateTime.now());
-                super.update(entity);
-                return BeanTransform.copyProperties(entity, SupplierTypeBO.class);
+                SupplierType supplierType = BeanTransform.copyProperties(to, SupplierType.class, true);
+                supplierType.setCreateTime(entity.getCreateTime());
+                supplierType.setModifyTime(LocalDateTime.now());
+                super.update(supplierType);
+                return BeanTransform.copyProperties(supplierType, SupplierTypeBO.class);
             } catch (Exception e) {
                 throw new SerException("数据对象不能为空");
             }

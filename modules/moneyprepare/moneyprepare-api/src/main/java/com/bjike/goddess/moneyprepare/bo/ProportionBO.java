@@ -33,6 +33,11 @@ public class ProportionBO extends BaseBO {
      */
     private Double eachFund;
 
+    /**
+     * 资金准备id
+     */
+    private String fundId;
+
 
     public String getTime() {
         return time;
@@ -64,5 +69,13 @@ public class ProportionBO extends BaseBO {
 
     public void setEachFund(Double eachFund) {
         this.eachFund = eachFund;
+    }
+
+    public String getFundId() {
+        return fundId;
+    }
+
+    public void setFundId(String fundId) {
+        this.fundId = fundId;
     }
 }
