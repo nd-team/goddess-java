@@ -290,25 +290,6 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
         return list;
     }
 
-    @Override
-    public List<SonPermissionObject> sonPermission() throws SerException {
-        List<SonPermissionObject> list = new ArrayList<>();
-
-        Boolean flagAddSign = guideSeeIdentity();
-        SonPermissionObject obj = new SonPermissionObject();
-
-        obj = new SonPermissionObject();
-        obj.setName("outsource");
-        obj.setDescribesion("项目外包洽谈");
-        if (flagAddSign) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
-
-        return list;
-    }
 
     @Override
     public Boolean guidePermission(GuidePermissionTO to) throws SerException {
@@ -431,12 +412,57 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
     }
 
     public void getCusPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+//        Boolean permission = cusPermissionSer.getCusPermission("1");
+//
+//        if (!permission) {
+//            throw new SerException("该模块只有商务部可操作，您的帐号尚无权限");
+//        }
+//    }
+    }
 
-        Boolean permission = cusPermissionSer.getCusPermission("1");
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
 
-        if (!permission) {
-            throw new SerException("该模块只有商务部可操作，您的帐号尚无权限");
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
         }
     }
 
 }
+

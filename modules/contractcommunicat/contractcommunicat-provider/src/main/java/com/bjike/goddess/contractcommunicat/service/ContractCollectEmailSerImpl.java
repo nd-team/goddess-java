@@ -108,6 +108,93 @@ public class ContractCollectEmailSerImpl extends ServiceImpl<CollectEmail, Colle
         return flag;
     }
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
 
 
     @Override
@@ -176,16 +263,16 @@ public class ContractCollectEmailSerImpl extends ServiceImpl<CollectEmail, Colle
         collectEmail.setSendNumAndUnit(collectEmail.getSendNum() + unit);
 
         //设置汇总条件
-        StringBuffer condiSb = new StringBuffer("");
-        String[] condis = collectEmailTO.getCondis();
-        if (condis != null && condis.length >= 0) {
-            for (String condiStr : condis) {
-                condiSb.append(condiStr + ";");
-            }
-            collectEmail.setCondi(StringUtils.substringBeforeLast(condiSb.toString(), ";"));
-        } else {
-            throw new SerException("发送条件不能为空");
-        }
+//        StringBuffer condiSb = new StringBuffer("");
+//        String[] condis = collectEmailTO.getCondis();
+//        if (condis != null && condis.length >= 0) {
+//            for (String condiStr : condis) {
+//                condiSb.append(condiStr + ";");
+//            }
+//            collectEmail.setCondi(StringUtils.substringBeforeLast(condiSb.toString(), ";"));
+//        } else {
+//            throw new SerException("发送条件不能为空");
+//        }
 
         //设置发送对象
         collectEmail.setSendObject(String.valueOf(emails));
@@ -238,16 +325,16 @@ public class ContractCollectEmailSerImpl extends ServiceImpl<CollectEmail, Colle
         temp.setSendNumAndUnit(collectEmail.getSendNum() + unit);
 
         //设置汇总条件
-        StringBuffer condiSb = new StringBuffer("");
-        String[] condis = collectEmailTO.getCondis();
-        if (condis != null && condis.length >= 0) {
-            for (String condiStr : condis) {
-                condiSb.append(condiStr + ";");
-            }
-            temp.setCondi(StringUtils.substringBeforeLast(condiSb.toString(), ";"));
-        } else {
-            throw new SerException("发送条件不能为空");
-        }
+//        StringBuffer condiSb = new StringBuffer("");
+//        String[] condis = collectEmailTO.getCondis();
+//        if (condis != null && condis.length >= 0) {
+//            for (String condiStr : condis) {
+//                condiSb.append(condiStr + ";");
+//            }
+//            temp.setCondi(StringUtils.substringBeforeLast(condiSb.toString(), ";"));
+//        } else {
+//            throw new SerException("发送条件不能为空");
+//        }
 
 
         //设置发送对象
