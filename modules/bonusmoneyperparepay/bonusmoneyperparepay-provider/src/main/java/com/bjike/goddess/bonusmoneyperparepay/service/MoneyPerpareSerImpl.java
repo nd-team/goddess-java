@@ -258,7 +258,7 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
                     Double reserve = 0d;
                     for (MoneyPerpare moneyPerpare : moneyPerpares) {
                         PerpareBO perpareBO = new PerpareBO();
-                        perpareBO.setYearsMoth(moneyPerpare.getYears() + "-" + (moneyPerpare.getMonth() > 10 ? moneyPerpare.getMonth() : "0" + moneyPerpare.getMonth()));//时间
+                        perpareBO.setYearsMoth(moneyPerpare.getYears() + "-" + (moneyPerpare.getMonth() > 9 ? moneyPerpare.getMonth() : "0" + moneyPerpare.getMonth()));//时间
                         perpareBO.setProjectGroup(project);//项目组
                         perpareBO.setSubjects(moneyPerpare.getSubjects());//科目
                         perpareBO.setTotalReserve(moneyPerpare.getTotalReserve());//总准备金
@@ -302,7 +302,7 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
             Double reserve = 0d;
             for (MoneyPerpare moneyPerpare : moneyPerpares) {
                 PerpareBO perpareBO = new PerpareBO();
-                perpareBO.setYearsMoth(moneyPerpare.getYears() + "-" + (moneyPerpare.getMonth() > 10 ? moneyPerpare.getMonth() : "0" + moneyPerpare.getMonth()));//时间
+                perpareBO.setYearsMoth(moneyPerpare.getYears() + "-" + (moneyPerpare.getMonth() > 9 ? moneyPerpare.getMonth() : "0" + moneyPerpare.getMonth()));//时间
                 perpareBO.setProjectGroup(moneyPerpare.getProjectGroup());//项目组
                 perpareBO.setSubjects(moneyPerpare.getSubjects());//科目
                 perpareBO.setTotalReserve(moneyPerpare.getTotalReserve());//总准备金
@@ -338,7 +338,7 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
             Double reserve = 0d;
             for (MoneyPerpare moneyPerpare : moneyPerpares) {
                 PerpareBO perpareBO = new PerpareBO();
-                perpareBO.setYearsMoth(moneyPerpare.getYears() + "-" + (moneyPerpare.getMonth() > 10 ? moneyPerpare.getMonth() : "0" + moneyPerpare.getMonth()));//时间
+                perpareBO.setYearsMoth(moneyPerpare.getYears() + "-" + (moneyPerpare.getMonth() > 9 ? moneyPerpare.getMonth() : "0" + moneyPerpare.getMonth()));//时间
                 perpareBO.setProjectGroup(moneyPerpare.getProjectGroup());//项目组
                 perpareBO.setSubjects(moneyPerpare.getSubjects());//科目
                 perpareBO.setTotalReserve(moneyPerpare.getTotalReserve());//总准备金
@@ -411,7 +411,7 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
                     if (lastReserveSum == 0) {
                         moneyPerpareContrastBO.setGrowthRate(0d);
                     } else {
-                        moneyPerpareContrastBO.setGrowthRate(((reserveSum - lastReserveSum) / lastReserveSum * 100));
+                        moneyPerpareContrastBO.setGrowthRate(Double.valueOf(String.format("%.2f",((reserveSum - lastReserveSum) / lastReserveSum * 100))));
                     }
 
                     moneyPerpareContrastBOList.add(moneyPerpareContrastBO);
@@ -443,7 +443,7 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
                     if (lastReserveSum == 0) {
                         moneyPerpareContrastBO.setGrowthRate(0d);
                     } else {
-                        moneyPerpareContrastBO.setGrowthRate(((reserveSum - lastReserveSum) / lastReserveSum * 100));
+                        moneyPerpareContrastBO.setGrowthRate(Double.valueOf(String.format("%.2f",((reserveSum - lastReserveSum) / lastReserveSum * 100))));
                     }
 
                     moneyPerpareContrastBOList.add(moneyPerpareContrastBO);

@@ -10,8 +10,10 @@ import com.bjike.goddess.intromanage.dto.*;
 import com.bjike.goddess.intromanage.entity.*;
 import com.bjike.goddess.intromanage.to.*;
 import com.bjike.goddess.intromanage.type.GuideAddrStatus;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -19,8 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 公司简介业务实现
@@ -61,6 +62,8 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     /**
      * 检查权限(部门)
@@ -715,5 +718,21 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
         firmDisplayUser.setUsernames(usernameStr);
         firmDisplayUser.setDisplayId(displayFieldId);
         firmDisplayUserSer.save(firmDisplayUser);
+    }
+
+    @Override
+    public List<String> findallMonUser() throws SerException {
+        List<UserBO> userBOS = positionDetailUserAPI.findUserList();
+        if (CollectionUtils.isEmpty(userBOS)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (UserBO userBO : userBOS){
+            String userName = userBO.getUsername();
+            if (StringUtils.isNotBlank(userBO.getUsername())) {
+                set.add(userName);
+            }
+        }
+        return new ArrayList<>(set);
     }
 }

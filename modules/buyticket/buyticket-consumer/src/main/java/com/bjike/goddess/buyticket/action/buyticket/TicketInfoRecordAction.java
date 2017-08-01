@@ -3,7 +3,7 @@ package com.bjike.goddess.buyticket.action.buyticket;
 import com.bjike.goddess.buyticket.api.TicketInfoRecordAPI;
 import com.bjike.goddess.buyticket.bo.TicketInfoRecordBO;
 import com.bjike.goddess.buyticket.dto.TicketInfoRecordDTO;
-import com.bjike.goddess.buyticket.to.BuyGuidePermissionTO;
+import com.bjike.goddess.buyticket.to.GuidePermissionTO;
 import com.bjike.goddess.buyticket.to.TicketInfoRecordTO;
 import com.bjike.goddess.buyticket.vo.TicketInfoRecordVO;
 import com.bjike.goddess.common.api.entity.ADD;
@@ -45,7 +45,7 @@ public class TicketInfoRecordAction {
      * @version v1
      */
     @GetMapping("v1/guidePermission")
-    public Result guidePermission(@Validated(BuyGuidePermissionTO.TestAdd.class) BuyGuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
 
             Boolean isHasPermission = ticketInfoRecordAPI.guidePermission(guidePermissionTO);

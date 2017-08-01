@@ -25,11 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 年假标准
+ * 年假标准管理
  *
  * @Author: [ dengjunren ]
  * @Date: [ 2017-03-27 04:26 ]
- * @Description: [ 年假标准 ]
+ * @Description: [ 年假标准管理 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -114,7 +114,7 @@ public class AnnualStandardAct {
     }
 
     /**
-     * 保存年假标准实体数据
+     * 增加范围
      *
      * @param to 年假标准传输对象
      * @return class AnnualStandardVO
@@ -130,7 +130,7 @@ public class AnnualStandardAct {
     }
 
     /**
-     * 修改年假标准实体数据
+     * 编辑范围
      *
      * @param to 年假标准传输对象
      * @return class AnnualStandardVO
@@ -146,7 +146,7 @@ public class AnnualStandardAct {
     }
 
     /**
-     * 删除年假表尊实体数据
+     * 删除年假标准实体数据
      *
      * @param to 年假标准传输对象
      * @return class AnnualStandardVO
@@ -226,7 +226,7 @@ public class AnnualStandardAct {
 
 
     /**
-     * 查询列表
+     * 年假标准列表
      *
      * @param dto 年假标准数据传输对象
      * @return class AnnualStandardVO

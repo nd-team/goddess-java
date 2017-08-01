@@ -71,7 +71,7 @@ public class SendEmail extends BaseEntity {
     /**
      * 发送对象
      */
-    @Column(name = "sendObject", nullable = false, columnDefinition = "MEDIUMTEXT DEFAULT 0   COMMENT '发送对象'")
+    @Column(name = "sendObject", nullable = false, columnDefinition = "MEDIUMTEXT   COMMENT '发送对象'")
     private String sendObject;
 
     /**

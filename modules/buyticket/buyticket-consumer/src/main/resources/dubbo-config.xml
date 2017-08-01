@@ -23,8 +23,8 @@
 	<dubbo:reference  validation="true" id="buyTicketRecordApiImpl" interface="com.bjike.goddess.buyticket.api.BuyTicketRecordAPI" />
 	<dubbo:reference  validation="true" id="buyTicketCollectApiImpl" interface="com.bjike.goddess.buyticket.api.BuyTicketCollectAPI" />
 	<dubbo:reference  validation="true" id="buyTicketStandardApiImpl" interface="com.bjike.goddess.buyticket.api.BuyTicketStandardAPI" />
-	<dubbo:reference  validation="true" id="buyCusPermissionApiImpl" interface="com.bjike.goddess.buyticket.api.BuyCusPermissionAPI" />
-	<dubbo:reference  validation="true" id="buyCusPermissionOperateApiImpl" interface="com.bjike.goddess.buyticket.api.BuyCusPermissionOperateAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.buyticket.api.CusPermissionAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.buyticket.api.CusPermissionOperateAPI" />
 
 	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
