@@ -431,7 +431,7 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
             entryBasicInfoDTO.getConditions().add(Restrict.eq("name", entity.getUserId()));
             String userToken = RpcTransmit.getUserToken();
             List<EntryBasicInfoBO> user = entryBasicInfoAPI.listEntryBasicInfo(entryBasicInfoDTO);
-            if(null != user && user.size() > 0){
+            if(null == user || user.size() < 1){
                 throw new SerException("导入的员工应该为已入职员工");
             }
         }
@@ -522,9 +522,9 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         List<InternalContactsTemplateExport> commerceContactsExports = new ArrayList<>();
 
         InternalContactsTemplateExport excel = new InternalContactsTemplateExport();
-        excel.setUserId("移动通信类");
+        excel.setUserId("test");
         excel.setPhone("test");
-        excel.setEmail("jkj");
+        excel.setEmail("7878121@qq.com");
         excel.setBloc("jkj");
         excel.setPhoneNumber("jkj");
         excel.setQq("jkj");
@@ -532,7 +532,7 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         excel.setEmergency("jkj");
         excel.setEmergencyPhone("jkj");
         excel.setRemark("jkj");
-        excel.setStatus(Status.CONGEAL);
+        excel.setStatus(Status.THAW);
         commerceContactsExports.add(excel);
         Excel exce = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(commerceContactsExports, exce);
