@@ -323,7 +323,7 @@ public class CompetitorAct extends BaseFileAction {
     @GetMapping("v1/export")
     public Result exportExcel(String startDate, String endDate, HttpServletResponse response) throws ActException {
         try {
-            String fileName = "竞争对手管理.xlsx";
+            String fileName = "竞争对手信息.xlsx";
             super.writeOutFile(response, competitorAPI.exportExcel(startDate, endDate), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
@@ -341,7 +341,7 @@ public class CompetitorAct extends BaseFileAction {
     @GetMapping("v1/module")
     public Result exportModule(HttpServletResponse response) throws ActException {
         try {
-            String fileName = "竞争对手管理模板.xlsx";
+            String fileName = "竞争对手信息模板.xlsx";
             super.writeOutFile(response, competitorAPI.exportExcelModule(), fileName);
             return new ActResult(0, "导出成功");
         } catch (SerException e) {
