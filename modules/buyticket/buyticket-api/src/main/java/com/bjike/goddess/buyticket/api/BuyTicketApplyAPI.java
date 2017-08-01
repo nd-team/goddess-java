@@ -5,7 +5,7 @@ import com.bjike.goddess.buyticket.dto.BuyTicketApplyDTO;
 import com.bjike.goddess.buyticket.enums.AuditType;
 import com.bjike.goddess.buyticket.excel.SonPermissionObject;
 import com.bjike.goddess.buyticket.to.BuyTicketApplyTO;
-import com.bjike.goddess.buyticket.to.BuyGuidePermissionTO;
+import com.bjike.goddess.buyticket.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -32,7 +32,7 @@ public interface BuyTicketApplyAPI {
     /**
      * 功能导航权限
      */
-    default Boolean guidePermission(BuyGuidePermissionTO guidePermissionTO) throws SerException {
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
     /**

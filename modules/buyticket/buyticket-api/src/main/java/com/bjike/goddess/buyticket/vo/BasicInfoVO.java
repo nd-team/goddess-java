@@ -36,6 +36,11 @@ public class BasicInfoVO {
     private String summaryType;
 
     /**
+     * 汇总周期
+     */
+    private String summaryCycle;
+
+    /**
      * 数据汇总呈现类型
      */
     private String dataAggregationType;
@@ -94,6 +99,14 @@ public class BasicInfoVO {
 
     public void setSummaryType(String summaryType) {
         this.summaryType = summaryType;
+    }
+
+    public String getSummaryCycle() {
+        return summaryCycle;
+    }
+
+    public void setSummaryCycle(String summaryCycle) {
+        this.summaryCycle = summaryCycle;
     }
 
     public String getDataAggregationType() {

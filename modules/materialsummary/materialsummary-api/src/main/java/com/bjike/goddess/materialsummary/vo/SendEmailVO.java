@@ -1,5 +1,6 @@
 package com.bjike.goddess.materialsummary.vo;
 
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.materialsummary.type.CollectSendUnit;
 import com.bjike.goddess.materialsummary.type.CollectUnit;
 import com.bjike.goddess.materialsummary.type.ModuleType;
@@ -68,7 +69,7 @@ public class SendEmailVO {
     /**
      * 状态
      */
-    private String status;
+    private Status status;
 
     /**
      * 创建人
@@ -156,11 +157,11 @@ public class SendEmailVO {
         this.lastSendTime = lastSendTime;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

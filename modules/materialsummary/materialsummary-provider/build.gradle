@@ -37,6 +37,7 @@ dependencies {
     compile project(":modules:materialreceive:materialreceive-api")
     compile project(":modules:materialtransfer:materialtransfer-api")
     compile project(":modules:devicerepair:devicerepair-api")
+    compile project(":modules:message:message-api")
     compile project(":common:common-utils")
 }
 

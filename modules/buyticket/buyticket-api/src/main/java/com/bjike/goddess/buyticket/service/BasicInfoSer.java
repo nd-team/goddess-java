@@ -2,7 +2,7 @@ package com.bjike.goddess.buyticket.service;
 
 import com.bjike.goddess.buyticket.bo.BasicInfoBO;
 import com.bjike.goddess.buyticket.to.BasicInfoTO;
-import com.bjike.goddess.buyticket.to.BuyGuidePermissionTO;
+import com.bjike.goddess.buyticket.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.buyticket.entity.BasicInfo;
@@ -31,7 +31,7 @@ public interface BasicInfoSer extends Ser<BasicInfo, BasicInfoDTO> {
     /**
      * 导航权限
      */
-    default Boolean guidePermission(BuyGuidePermissionTO guidePermissionTO) throws SerException {
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
     /**
@@ -111,6 +111,12 @@ public interface BasicInfoSer extends Ser<BasicInfo, BasicInfoDTO> {
      * 汇总类型
      */
     default List<String> findAllSummaryType() throws SerException{
+        return null;
+    }
+    /**
+     * 汇总周期
+     */
+    default List<String> findAllSummaryCycle() throws SerException{
         return null;
     }
     /**

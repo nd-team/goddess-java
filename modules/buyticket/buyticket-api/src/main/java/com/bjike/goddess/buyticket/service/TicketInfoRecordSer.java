@@ -3,7 +3,7 @@ package com.bjike.goddess.buyticket.service;
 import com.bjike.goddess.buyticket.bo.TicketInfoRecordBO;
 import com.bjike.goddess.buyticket.dto.TicketInfoRecordDTO;
 import com.bjike.goddess.buyticket.entity.TicketInfoRecord;
-import com.bjike.goddess.buyticket.to.BuyGuidePermissionTO;
+import com.bjike.goddess.buyticket.to.GuidePermissionTO;
 import com.bjike.goddess.buyticket.to.TicketInfoRecordTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -31,7 +31,7 @@ public interface TicketInfoRecordSer extends Ser<TicketInfoRecord, TicketInfoRec
     /**
      * 导航权限
      */
-    default Boolean guidePermission(BuyGuidePermissionTO guidePermissionTO) throws SerException {
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
     /**

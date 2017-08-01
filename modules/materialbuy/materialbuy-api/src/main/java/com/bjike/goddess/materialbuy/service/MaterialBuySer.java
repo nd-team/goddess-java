@@ -10,6 +10,7 @@ import com.bjike.goddess.materialbuy.to.GuidePermissionTO;
 import com.bjike.goddess.materialbuy.to.MaterialBuyTO;
 import com.bjike.goddess.materialbuy.vo.SonPermissionObject;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -120,4 +121,76 @@ public interface MaterialBuySer extends Ser<MaterialBuy, MaterialBuyDTO> {
      * @throws SerException
      */
     Long count(MaterialBuyDTO dto) throws SerException;
+
+    /**
+     * 物质汇总所需接口
+     * 查找所有类型
+     *
+     * @return
+     * @throws SerException
+     */
+    List<String> findDevType(String[] intervalTime) throws SerException;
+
+    /**
+     * 物质汇总所需接口
+     * 根据设备类型查找所有地区
+     *
+     * @return
+     * @throws SerException
+     */
+    List<String> findAreaByType(String devType, String[] intervalTime) throws SerException;
+
+    /**
+     * 物质汇总所需接口
+     * 根据设备类型和地区查找所有信息
+     *
+     * @return
+     * @throws SerException
+     */
+    List<MaterialBuyBO> findByTyAndAr(String devType, String area, String[] intervalTime) throws SerException;
+
+    /**
+     * 物质汇总所需接口
+     * 查找所有地区
+     *
+     * @return
+     * @throws SerException
+     */
+    List<String> findArea(String[] intervalTime) throws SerException;
+
+    /**
+     * 物质汇总所需接口
+     * 根据地区查找所有部门
+     *
+     * @return
+     * @throws SerException
+     */
+    List<String> findDepByArea(String area,String[] intervalTime) throws SerException;
+
+    /**
+     * 物质汇总所需接口
+     * 根据地区,部门查找所有信息
+     *
+     * @return
+     * @throws SerException
+     */
+    List<MaterialBuyBO> findByTeamAnArea(String area,String projectTeam,String[] intervalTime) throws SerException;
+
+    /**
+     * 物质汇总所需接口
+     * 查找所有申购人
+     *
+     * @return
+     * @throws SerException
+     */
+    List<String> findRequis(String[] intervalTime) throws SerException;
+
+    /**
+     * 物质汇总所需接口
+     * 根据申购人查找所有信息
+     *
+     * @return
+     * @throws SerException
+     */
+    List<MaterialBuyBO> findByRequis(String requisitioner, String[] intervalTime) throws SerException;
 }

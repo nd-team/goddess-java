@@ -7,6 +7,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeSummaryBO;
 import com.bjike.goddess.marketactivitymanage.bo.ServeSummaryBO;
 import com.bjike.goddess.marketactivitymanage.dto.CustomerInfoDTO;
@@ -340,11 +341,32 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     @Transactional(rollbackFor = SerException.class)
     public MarketServeSummaryBO save(MarketServeSummaryTO to) throws SerException {
         checkPermission();
+        if (to.getSendInterval() < 0) {
+            throw new SerException("发送间隔不能小于0");
+        }
+        if (to.getSendInterval() < 30 && to.getCycle().equals(CycleType.MINUTE)) {
+            throw new SerException("发送间隔单位为分钟的间隔数不能小于30分钟");
+        }
+
+        if (to.getSendInterval() > to.getSendInterval().longValue() && to.getSendInterval() < (to.getSendInterval().longValue() + 1)) {
+            throw new SerException("发送间隔不能为小数");
+        }
+
+        String[] sendObject = to.getEmails();
+        StringBuffer emails = new StringBuffer("");
+        if (sendObject != null && sendObject.length > 0) {
+            for (String emailStr : sendObject) {
+                if (!Validator.isEmail(emailStr)) {
+                    throw new SerException("邮箱书写不正确");
+                }
+                emails.append(emailStr + ",");
+            }
+        }
         String sb = getProjectGroup(to);
         String curUsername = userAPI.currentUser().getUsername();
         MarketServeSummary marketServeSummary = BeanTransform.copyProperties(to, MarketServeSummary.class, true, "emails");
         marketServeSummary.setStatus(Status.THAW);
-        marketServeSummary.setEmails(StringUtils.join(to.getEmails(), ","));
+        marketServeSummary.setEmails(emails.toString());
         marketServeSummary.setCreateUser(curUsername);
         marketServeSummary.setProjectGroups(sb);
         marketServeSummary.setUpdateTime(LocalDateTime.now());
@@ -354,12 +376,11 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
         return bo;
     }
 
-    private String getProjectGroup(MarketServeSummaryTO to) {
+    private String getProjectGroup(MarketServeSummaryTO to) throws SerException{
         String[] projectGroups = to.getProjects();
         boolean projectGroupNotEmpty = (projectGroups != null) && (projectGroups.length > 0);
         StringBuilder sb = new StringBuilder();
         if (projectGroupNotEmpty) {
-
             for (int i = 0; i < projectGroups.length; i++) {
                 if (i < projectGroups.length - 1) {
                     sb.append(projectGroups[i]).append(",");
@@ -402,8 +423,29 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * @throws SerException
      */
     private void updateMarketServeSummary(MarketServeSummaryTO to, MarketServeSummary model) throws SerException {
+        if (to.getSendInterval() < 0) {
+            throw new SerException("发送间隔不能小于0");
+        }
+        if (to.getSendInterval() < 30 && to.getCycle().equals(CycleType.MINUTE)) {
+            throw new SerException("发送间隔单位为分钟的间隔数不能小于30分钟");
+        }
+
+        if (to.getSendInterval() > to.getSendInterval().longValue() && to.getSendInterval() < (to.getSendInterval().longValue() + 1)) {
+            throw new SerException("发送间隔不能为小数");
+        }
+        String[] sendObject = to.getEmails();
+        StringBuffer emails = new StringBuffer("");
+        if (sendObject != null && sendObject.length > 0) {
+            for (String emailStr : sendObject) {
+                if (!Validator.isEmail(emailStr)) {
+                    throw new SerException("邮箱书写不正确");
+                }
+                emails.append(emailStr + ",");
+            }
+        }
         String sb = getProjectGroup(to);
-        BeanTransform.copyProperties(to, model, true);
+        BeanTransform.copyProperties(to, model, true,"emails");
+        model.setEmails(emails.toString());
         model.setModifyTime(LocalDateTime.now());
         model.setProjectGroups(sb);
         model.setUpdateTime(LocalDateTime.now());
@@ -482,7 +524,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
             throw new SerException("参数检验不通过");
         }
         if(summaryTO.getProjectGroups()==null || summaryTO.getProjectGroups().length<=0){
-            throw new SerException("项目名不能为空");
+            throw new SerException("项目名称不能为空");
         }
         List<ServeSummaryBO> serveSummaryBOList = new ArrayList<>(0);
 
@@ -790,7 +832,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
             throw new SerException("参数检验不通过");
         }
         if(summaryTO.getProjectGroups()==null || summaryTO.getProjectGroups().length<=0){
-            throw new SerException("项目组不能为空");
+            throw new SerException("项目名称不能为空");
         }
         List<ServeSummaryBO> serveSummaryBOList = new ArrayList<>(0);
 

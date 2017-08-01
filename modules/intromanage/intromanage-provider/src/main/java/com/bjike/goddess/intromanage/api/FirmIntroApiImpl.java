@@ -118,4 +118,9 @@ public class FirmIntroApiImpl implements FirmIntroAPI {
     public void setFirmDisplayField(String[] username, FirmDisplayFieldTO to) throws SerException {
         firmIntroSer.setFirmDisplayField(username, to);
     }
+
+    @Override
+    public List<String> findallMonUser() throws SerException {
+        return firmIntroSer.findallMonUser();
+    }
 }

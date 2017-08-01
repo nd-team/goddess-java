@@ -5,7 +5,7 @@ import com.bjike.goddess.buyticket.dto.BasicInfoDTO;
 import com.bjike.goddess.buyticket.entity.BasicInfo;
 import com.bjike.goddess.buyticket.enums.GuideAddrStatus;
 import com.bjike.goddess.buyticket.to.BasicInfoTO;
-import com.bjike.goddess.buyticket.to.BuyGuidePermissionTO;
+import com.bjike.goddess.buyticket.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -35,7 +35,7 @@ import java.util.*;
 public class BasicInfoSerImpl extends ServiceImpl<BasicInfo, BasicInfoDTO> implements BasicInfoSer {
 
     @Autowired
-    private BuyCusPermissionSer cusPermissionSer;
+    private CusPermissionSer cusPermissionSer;
     @Autowired
     private UserAPI userAPI;
 
@@ -184,7 +184,7 @@ public class BasicInfoSerImpl extends ServiceImpl<BasicInfo, BasicInfoDTO> imple
     }
 
     @Override
-    public Boolean guidePermission(BuyGuidePermissionTO guidePermissionTO) throws SerException {
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
         Boolean flag = true;
@@ -340,6 +340,22 @@ public class BasicInfoSerImpl extends ServiceImpl<BasicInfo, BasicInfoDTO> imple
             String summaryType = model.getSummaryType();
             if (StringUtils.isNotBlank(model.getSummaryType())) {
                 set.add(summaryType);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> findAllSummaryCycle() throws SerException {
+        List<BasicInfo> list = super.findAll();
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (BasicInfo model : list) {
+            String summaryCycle = model.getSummaryCycle();
+            if (StringUtils.isNotBlank(model.getSummaryCycle())) {
+                set.add(summaryCycle);
             }
         }
         return new ArrayList<>(set);

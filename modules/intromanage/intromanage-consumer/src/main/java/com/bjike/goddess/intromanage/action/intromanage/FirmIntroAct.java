@@ -15,12 +15,16 @@ import com.bjike.goddess.intromanage.to.FirmDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.FirmIntroTO;
 import com.bjike.goddess.intromanage.to.GuidePermissionTO;
 import com.bjike.goddess.intromanage.vo.*;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -206,6 +210,24 @@ public class FirmIntroAct {
         try {
             firmIntroAPI.setFirmDisplayField(username, to);
             return new ActResult("setFirmDisplayField success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有的用户
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/findAllUser")
+    public Result findAllUser() throws ActException {
+        try {
+            List<String> userName = new ArrayList<>();
+            userName = firmIntroAPI.findallMonUser();
+            return ActResult.initialize(userName);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
