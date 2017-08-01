@@ -54,7 +54,7 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
          * 处理数据库异常
          */
         String msg = handleJapException(e);
-        if(null!=msg){
+        if(StringUtils.isNotBlank(msg)){
             actResult.setMsg(msg);
         }
         ResponseContext.writeData(actResult);
