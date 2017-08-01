@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 报道地址信息
@@ -106,5 +107,10 @@ public class ReportAddressInforApiImpl implements ReportAddressInforAPI {
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return reportAddressInforSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public Set<String> allAddress() throws SerException {
+        return reportAddressInforSer.allAddress();
     }
 }

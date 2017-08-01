@@ -73,6 +73,20 @@ public class AnnouncementTO extends BaseTO {
     @NotNull(groups = {ADD.class, EDIT.class}, message = "是否全部发送不能为空")
     private Boolean all;
 
+    /**
+     * uuid
+     */
+    @NotBlank(groups = {ADD.class}, message = "uuid不能为空")
+    private String uuid;
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
     public Boolean getAll() {
         return all;
     }

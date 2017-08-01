@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 宿舍信息管理业务接口实现
@@ -65,5 +66,15 @@ public class DormitoryInfoApiImpl implements DormitoryInfoAPI {
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return dormitoryInfoSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public Set<String> allAddress() throws SerException {
+        return dormitoryInfoSer.allAddress();
+    }
+
+    @Override
+    public String findContact(String address) throws SerException {
+        return dormitoryInfoSer.findContact(address);
     }
 }

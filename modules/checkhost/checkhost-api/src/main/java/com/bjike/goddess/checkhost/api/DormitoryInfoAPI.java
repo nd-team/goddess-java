@@ -8,6 +8,7 @@ import com.bjike.goddess.checkhost.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 宿舍信息管理业务接口
@@ -39,6 +40,7 @@ public interface DormitoryInfoAPI {
     default Long countDormitoryInfo(DormitoryInfoDTO dormitoryInfoDTO) throws SerException {
         return null;
     }
+
     /**
      * 一个宿舍信息管理
      *
@@ -47,6 +49,7 @@ public interface DormitoryInfoAPI {
     default DormitoryInfoBO getOne(String id) throws SerException {
         return null;
     }
+
     /**
      * 获取宿舍信息
      *
@@ -90,5 +93,20 @@ public interface DormitoryInfoAPI {
 
     }
 
+    /**
+     * 获取所有宿舍地址
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allAddress() throws SerException;
 
+    /**
+     * 根据宿舍地址查找联系方式
+     *
+     * @param address
+     * @return
+     * @throws SerException
+     */
+    String findContact(String address) throws SerException;
 }

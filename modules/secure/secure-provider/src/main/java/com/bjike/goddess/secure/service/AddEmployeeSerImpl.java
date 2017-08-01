@@ -715,7 +715,7 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
         sb.append("<td>" + addEmployeeBO.getJob() + "</td>");
         sb.append("<td>" + addEmployeeBO.getJobLevel() + "</td>");
         sb.append("<td>" + addEmployeeBO.getIdCart() + "</td>");
-        sb.append("<td>" + addEmployeeBO.getArrival() + "</td>");
+        sb.append("<td>" + addEmployeeBO.getBorn() + "</td>");
         sb.append("<td>" + addEmployeeBO.getTel() + "</td>");
         sb.append("<td>" + addEmployeeBO.getStartTime() + "</td>");
         sb.append("<td>" + addEmployeeBO.getOfficialTime() + "</td>");

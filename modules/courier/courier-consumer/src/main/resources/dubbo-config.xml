@@ -29,8 +29,9 @@
                      id="storageUserApiImpl"/>
     <dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
     <dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl"/>
-    <dubbo:reference  validation="true"  interface="com.bjike.goddess.accommodation.api.DormitoryAPI" id="dormitoryApiImpl"/>
+    <!--<dubbo:reference  validation="true"  interface="com.bjike.goddess.accommodation.api.DormitoryAPI" id="dormitoryApiImpl"/>-->
     <dubbo:reference  validation="true"  interface="com.bjike.goddess.accommodation.api.RentalAPI" id="rentalApiImpl"/>
     <dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
+    <dubbo:reference  validation="true"  interface="com.bjike.goddess.checkhost.api.DormitoryInfoAPI" id="dormitoryInfoApiImpl"/>
 
 </beans>
