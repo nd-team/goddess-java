@@ -434,6 +434,7 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
         //遍历所有未冻结汇总定时器,
         for (BusinessEvaluateCollect model : list) {
             validate(model);
+            model.setLastSendTime(LocalDateTime.now());
         }
     }
 
@@ -545,6 +546,7 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
 
         StringBuffer sb = new StringBuffer();
         if (!CollectionUtils.isEmpty(list)) {
+            list.get(list.size()-1).setProject("合计");
             sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
             //拼表头
             sb.append("<tr>");
