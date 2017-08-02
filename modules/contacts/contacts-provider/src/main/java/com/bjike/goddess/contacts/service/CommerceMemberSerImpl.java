@@ -5,16 +5,13 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.contacts.api.CommonalityAPI;
 import com.bjike.goddess.contacts.bo.CommerceMemberBO;
 import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.contacts.dto.CommerceMemberDTO;
 import com.bjike.goddess.contacts.dto.CommonalityDTO;
-import com.bjike.goddess.contacts.entity.CommerceContacts;
 import com.bjike.goddess.contacts.entity.CommerceMember;
 import com.bjike.goddess.contacts.enums.GuideAddrStatus;
-import com.bjike.goddess.contacts.excel.CommerceMemberTemplateExport;
 import com.bjike.goddess.contacts.to.CommerceMemberTO;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.message.api.MessageAPI;
@@ -343,8 +340,11 @@ public class CommerceMemberSerImpl extends ServiceImpl<CommerceMember, CommerceM
         DepartmentDetailDTO departmentDetailDTO = new DepartmentDetailDTO();
         departmentDetailDTO.getConditions().add(Restrict.eq("department", department));
         List<DepartmentDetailBO> departmentDetailBOList = departmentDetailAPI.view(departmentDetailDTO);
-        String departmentId = departmentDetailBOList.get(0).getId();
-        return departmentId;
+        if (null != departmentDetailBOList && departmentDetailBOList.size() > 0) {
+            String departmentId = departmentDetailBOList.get(0).getId();
+            return departmentId;
+        }
+        return null;
     }
 
 
