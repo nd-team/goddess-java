@@ -3,6 +3,7 @@ package com.bjike.goddess.balancecard.api;
 import com.bjike.goddess.balancecard.bo.IndexTypeSetBO;
 import com.bjike.goddess.balancecard.dto.IndexTypeSetDTO;
 import com.bjike.goddess.balancecard.service.IndexTypeSetSer;
+import com.bjike.goddess.balancecard.to.GuidePermissionTO;
 import com.bjike.goddess.balancecard.to.IndexTypeSetTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,5 +60,15 @@ public class IndexTypeSetApiImpl implements IndexTypeSetAPI {
     @Override
     public List<String> listName( ) throws SerException {
         return indexTypeSetSer.listName();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return indexTypeSetSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return indexTypeSetSer.guidePermission(guidePermissionTO);
     }
 }
