@@ -94,7 +94,7 @@ public interface IndexNameSetAPI {
      *
      *
      */
-    default List<String> listName(   ) throws SerException {
+    default List<String> listName() throws SerException {
         return null;
     }
 

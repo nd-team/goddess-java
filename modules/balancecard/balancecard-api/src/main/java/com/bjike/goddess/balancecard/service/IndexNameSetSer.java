@@ -97,7 +97,7 @@ public interface IndexNameSetSer extends Ser<IndexNameSet, IndexNameSetDTO> {
      * 获取所有指标名称
      *
      */
-    default List<String> listName(   ) throws SerException {
+    default List<String> listName() throws SerException {
         return null;
     }
 

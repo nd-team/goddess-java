@@ -49,8 +49,11 @@ public class DimensionSetSerImpl extends ServiceImpl<DimensionSet, DimensionSetD
 
     @Override
     public DimensionSetBO getOneById(String id) throws SerException {
-
-        return null;
+        if(StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空");
+        }
+        DimensionSet dimensionSet = super.findById(id);
+        return BeanTransform.copyProperties(dimensionSet,DimensionSetBO.class);
     }
 
     @Override
