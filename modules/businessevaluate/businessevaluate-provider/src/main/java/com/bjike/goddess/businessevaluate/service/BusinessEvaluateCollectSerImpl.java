@@ -593,6 +593,27 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
 
             //结束
             sb.append("</table>");
+        }else {
+            sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
+            //拼表头
+            sb.append("<tr>");
+
+            sb.append("<td>地区</td>");
+            sb.append("<td>项目</td>");
+            sb.append("<td>项目问题数量</td>");
+            sb.append("<td>长期合作项目数</td>");
+            sb.append("<td>事项合作项目数</td>");
+            sb.append("<td>中介合作项目数</td>");
+            sb.append("<td>项目成本</td>");
+            sb.append("<td>项目费用</td>");
+            sb.append("<td>项目税金</td>");
+            sb.append("<td>项目管理费</td>");
+            sb.append("<td>项目利润</td>");
+            sb.append("<td>项目总金额</td>");
+
+            sb.append("<tr>");
+            //结束
+            sb.append("</table>");
         }
         return sb.toString();
     }
