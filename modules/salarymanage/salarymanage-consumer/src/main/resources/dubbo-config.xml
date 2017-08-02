@@ -17,7 +17,7 @@
 	<!-- 注册接口-->
 
     <!-- 薪资确认API -->
-	<dubbo:reference interface="com.bjike.goddess.salaryconfirm.api.SalaryconfirmAPI" id="salaryconfirmApiImpl" />
+	<dubbo:reference interface="com.bjike.goddess.salaryconfirm.api.Sala" id="salaryconfirmApiImpl" />
   	<!-- 上交发票API -->
 	<dubbo:reference interface="com.bjike.goddess.salaryconfirm.api.InvoiceSubmitAPI" id="invoiceSubmitApiImpl" />
 	<!-- userAPI -->

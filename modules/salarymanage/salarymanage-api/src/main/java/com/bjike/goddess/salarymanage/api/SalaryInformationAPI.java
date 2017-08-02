@@ -1,13 +1,76 @@
 package com.bjike.goddess.salarymanage.api;
 
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.salarymanage.bo.SalaryBasicBO;
+import com.bjike.goddess.salarymanage.bo.SalaryInformationBO;
+import com.bjike.goddess.salarymanage.dto.SalaryBasicDTO;
+import com.bjike.goddess.salarymanage.dto.SalaryInformationDTO;
+import com.bjike.goddess.salarymanage.excel.SalaryInformaiionSetExcel;
+import com.bjike.goddess.salarymanage.to.ExportSalaryInformationTO;
+import com.bjike.goddess.salarymanage.to.SalaryBasicTO;
+import com.bjike.goddess.salarymanage.to.SalaryInformationTO;
+
+import java.util.List;
+
 /**
-* 薪资管理业务接口
+* 薪资管理薪资资料业务接口
 * @Author:			[ jiangzaixuan ]
 * @Date:			[  2017-07-31 01:45 ]
-* @Description:	[ 薪资管理业务接口 ]
+* @Description:	[ 薪资管理薪资资料业务接口 ]
 * @Version:		[ v1.0.0 ]
 * @Copy:   		[ com.bjike ]
 */
-public interface SalaryInformationAPI  { 
+public interface SalaryInformationAPI  {
+    /**
+     * 查询列表
+     * @param dto
+     * @throws SerException
+     */
+    default List<SalaryInformationBO> pageList(SalaryInformationDTO dto) throws SerException{
+        return null;
+    }
 
+    /**
+     * 添加
+     * @param to
+     * @throws SerException
+     */
+    default SalaryInformationBO addSalaryInformation(SalaryInformationTO to) throws SerException{
+        return null;
+    }
+
+    /**
+     * 修改
+     * @param to
+     * @throws SerException
+     */
+    default SalaryInformationBO editSalaryInformation(SalaryInformationTO to) throws SerException{
+        return null;
+    }
+
+    /**
+     * 删除
+     * @param id
+     * @throws SerException
+     */
+    default void deleteSalaryInformation(String id) throws SerException{
+        return;
+    }
+
+    /**
+     * 导入
+     * @param toList
+     * @throws SerException
+     */
+    default void leadExcel(List<SalaryInformationTO> toList) throws SerException{
+        return;
+    };
+
+    /**
+     * 导出
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    byte[] exportExcel(ExportSalaryInformationTO to) throws SerException;
  }

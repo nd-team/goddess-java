@@ -9,6 +9,7 @@ import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.salarymanage.bo.SalaryBasicBO;
 import com.bjike.goddess.salarymanage.entity.SalaryBasic;
 import com.bjike.goddess.salarymanage.dto.SalaryBasicDTO;
+import com.bjike.goddess.salarymanage.to.ExportSalaryBasicTO;
 import com.bjike.goddess.salarymanage.to.SalaryBasicTO;
 
 import java.util.List;
@@ -104,4 +105,21 @@ public interface SalaryBasicSer extends Ser<SalaryBasic, SalaryBasicDTO> {
     * @throws SerException
     */
    default void delete(String id) throws SerException{return;};
+
+    /**
+     * 导入
+     * @param toList
+     * @throws SerException
+     */
+    default void leadExcel(List<SalaryBasicTO> toList) throws SerException{
+        return;
+    };
+
+    /**
+     * 导出
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    byte[] exportExcel(ExportSalaryBasicTO to) throws SerException;
  }

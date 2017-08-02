@@ -8,6 +8,7 @@ import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.salarymanage.bo.SalaryBasicBO;
 import com.bjike.goddess.salarymanage.dto.SalaryBasicDTO;
 import com.bjike.goddess.salarymanage.service.SalaryBasicSer;
+import com.bjike.goddess.salarymanage.to.ExportSalaryBasicTO;
 import com.bjike.goddess.salarymanage.to.SalaryBasicTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,5 +70,15 @@ public class SalaryBasicApiImpl implements SalaryBasicAPI  {
     @Override
     public void delete(String id) throws SerException {
         salaryBasicSer.delete(id);
+    }
+
+    @Override
+    public void leadExcel(List<SalaryBasicTO> toList) throws SerException {
+        salaryBasicSer.leadExcel(toList);
+    }
+
+    @Override
+    public byte[] exportExcel(ExportSalaryBasicTO to) throws SerException {
+        return salaryBasicSer.exportExcel(to);
     }
 }
