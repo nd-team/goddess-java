@@ -124,7 +124,7 @@ public class AwardInfoAct {
 
     /**
      * 推荐信息列表
-     *
+     * @return class AwardStandardVO
      * @version v1
      */
     @LoginAuth
@@ -142,6 +142,7 @@ public class AwardInfoAct {
      * 编辑
      *
      * @param to 推荐奖励信息
+     * @return class AwardInfoVO
      * @version v1
      */
     @PostMapping("v1/edit")
@@ -158,6 +159,7 @@ public class AwardInfoAct {
      * 列表
      *
      * @param dto 分页条件
+     * @return class AwardStandardVO
      * @version v1
      */
     @LoginAuth
