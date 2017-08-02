@@ -5,7 +5,7 @@ import com.bjike.goddess.buyticket.dto.BuyTicketRecordDTO;
 import com.bjike.goddess.buyticket.entity.BuyTicketRecord;
 import com.bjike.goddess.buyticket.enums.GuideAddrStatus;
 import com.bjike.goddess.buyticket.to.BuyTicketRecordTO;
-import com.bjike.goddess.buyticket.to.BuyGuidePermissionTO;
+import com.bjike.goddess.buyticket.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -46,7 +46,7 @@ public class BuyTicketRecordSerImpl extends ServiceImpl<BuyTicketRecord, BuyTick
     private MessageAPI messageAPI;
 
     @Autowired
-    private BuyCusPermissionSer cusPermissionSer;
+    private CusPermissionSer cusPermissionSer;
     @Autowired
     private UserAPI userAPI;
 
@@ -199,7 +199,7 @@ public class BuyTicketRecordSerImpl extends ServiceImpl<BuyTicketRecord, BuyTick
     }
 
     @Override
-    public Boolean guidePermission(BuyGuidePermissionTO guidePermissionTO) throws SerException {
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
         Boolean flag = true;

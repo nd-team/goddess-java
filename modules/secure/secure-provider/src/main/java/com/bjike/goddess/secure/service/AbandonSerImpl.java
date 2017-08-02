@@ -37,6 +37,8 @@ public class AbandonSerImpl extends ServiceImpl<Abandon, AbandonDTO> implements 
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private UserDetailAPI userDetailAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -158,13 +160,16 @@ public class AbandonSerImpl extends ServiceImpl<Abandon, AbandonDTO> implements 
     @Transactional(rollbackFor = {SerException.class})
     //填写放弃原因，点击放弃购买按钮
     public AbandonBO save(AbandonTO to) throws SerException {
-        String name = userAPI.currentUser().getUsername();
-//        String eNum = userAPI.currentUser().getEmployeeNumber();
-//        String groupName = userDetailAPI.findByUserId(userAPI.currentUser().getId()).getGroupName();
+        UserBO userBO = userAPI.currentUser();
+        String name = userBO.getUsername();
+        String eNum = userBO.getEmployeeNumber();
         Abandon abandon = BeanTransform.copyProperties(to, Abandon.class, true);
         abandon.setName(name);
-//        abandon.setEmployeeNum(eNum);
-//        abandon.setGroup1(groupName);
+        abandon.setEmployeeNum(eNum);
+        if (null != userDetailAPI.findByUserId(userBO.getId())) {
+            String groupName = userDetailAPI.findByUserId(userBO.getId()).getGroupName();
+            abandon.setGroup1(groupName);
+        }
         abandon.setSign(true);
         super.save(abandon);
         return BeanTransform.copyProperties(abandon, AbandonBO.class);
@@ -183,8 +188,12 @@ public class AbandonSerImpl extends ServiceImpl<Abandon, AbandonDTO> implements 
     public AbandonBO edit(AbandonTO to) throws SerException {
         Abandon abandon = super.findById(to.getId());
         LocalDateTime a = abandon.getCreateTime();
+        String num=abandon.getEmployeeNum();
+        String group=abandon.getGroup1();
         abandon = BeanTransform.copyProperties(to, Abandon.class, true);
         abandon.setCreateTime(a);
+        abandon.setEmployeeNum(num);
+        abandon.setGroup1(group);
         abandon.setModifyTime(LocalDateTime.now());
         super.update(abandon);
         return BeanTransform.copyProperties(abandon, AbandonBO.class);

@@ -19,6 +19,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,13 +92,14 @@ public class RewardSituationSerImpl extends ServiceImpl<RewardSituation, RewardS
         RewardSituation entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据对象不能为空");
-        BeanTransform.copyProperties(to, entity, true);
-        entity.setInformation(supplierInformationSer.findById(to.getInformationId()));
-        if (null == entity.getInformation())
+        RewardSituation rewardSituation = BeanTransform.copyProperties(to, RewardSituation.class, true);
+        rewardSituation.setInformation(supplierInformationSer.findById(to.getInformationId()));
+        if (null == rewardSituation.getInformation())
             throw new SerException("供应商基本信息id错误,无法查询对应数据");
-        entity.setModifyTime(LocalDateTime.now());
-        super.update(entity);
-        return this.transformBO(entity);
+        rewardSituation.setCreateTime(entity.getCreateTime());
+        rewardSituation.setModifyTime(LocalDateTime.now());
+        super.update(rewardSituation);
+        return this.transformBO(rewardSituation);
     }
 
     @Transactional(rollbackFor = SerException.class)

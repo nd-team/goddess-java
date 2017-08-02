@@ -1,7 +1,5 @@
 package com.bjike.goddess.secure.vo;
 
-import javax.persistence.Column;
-
 /**
  * 社保增员信息名单表现层对象
  *
@@ -55,7 +53,7 @@ public class AddEmployeeVO {
     /**
      * 身份证籍贯
      */
-    private String arrival;
+    private String born;
 
     /**
      * 联系方式
@@ -186,12 +184,12 @@ public class AddEmployeeVO {
         this.idCart = idCart;
     }
 
-    public String getArrival() {
-        return arrival;
+    public String getBorn() {
+        return born;
     }
 
-    public void setArrival(String arrival) {
-        this.arrival = arrival;
+    public void setBorn(String born) {
+        this.born = born;
     }
 
     public String getTel() {

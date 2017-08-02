@@ -204,7 +204,7 @@ public class SecureCartSerImpl extends ServiceImpl<SecureCart, SecureCartDTO> im
         checkAddIdentity();
         SecureCart secureCart = super.findById(to.getId());
         LocalDateTime a = secureCart.getCreateTime();
-        secureCart = BeanTransform.copyProperties(to, SecureCart.class);
+        secureCart = BeanTransform.copyProperties(to, SecureCart.class,true);
         secureCart.setCreateTime(a);
         secureCart.setModifyTime(LocalDateTime.now());
         super.update(secureCart);

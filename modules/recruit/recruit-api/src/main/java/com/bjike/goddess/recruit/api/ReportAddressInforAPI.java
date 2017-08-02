@@ -7,6 +7,7 @@ import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.ReportAddressInforTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 报道地址信息
@@ -82,4 +83,12 @@ public interface ReportAddressInforAPI {
      * @throws SerException
      */
     void update(ReportAddressInforTO reportAddressInforTO) throws SerException;
+
+    /**
+     * 获取所有入职报道地址
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allAddress() throws SerException;
 }

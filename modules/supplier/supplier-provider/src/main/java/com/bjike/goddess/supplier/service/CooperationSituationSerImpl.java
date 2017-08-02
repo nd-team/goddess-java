@@ -89,13 +89,14 @@ public class CooperationSituationSerImpl extends ServiceImpl<CooperationSituatio
         CooperationSituation entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据对象不能为空");
-        BeanTransform.copyProperties(to, entity, true);
-        entity.setInformation(supplierInformationSer.findById(to.getInformationId()));
-        if (null == entity.getInformation())
+        CooperationSituation cooperationSituation = BeanTransform.copyProperties(to, CooperationSituation.class, true);
+        cooperationSituation.setInformation(supplierInformationSer.findById(to.getInformationId()));
+        if (null == cooperationSituation.getInformation())
             throw new SerException("供应商基本信息id错误,无法查询对应数据");
-        entity.setModifyTime(LocalDateTime.now());
-        super.update(entity);
-        return this.transformBO(entity);
+        cooperationSituation.setCreateTime(entity.getCreateTime());
+        cooperationSituation.setModifyTime(LocalDateTime.now());
+        super.update(cooperationSituation);
+        return this.transformBO(cooperationSituation);
     }
 
     @Transactional(rollbackFor = SerException.class)

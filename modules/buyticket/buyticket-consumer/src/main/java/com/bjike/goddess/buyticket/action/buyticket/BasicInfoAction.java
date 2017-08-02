@@ -4,7 +4,7 @@ import com.bjike.goddess.buyticket.api.BasicInfoAPI;
 import com.bjike.goddess.buyticket.bo.BasicInfoBO;
 import com.bjike.goddess.buyticket.dto.BasicInfoDTO;
 import com.bjike.goddess.buyticket.to.BasicInfoTO;
-import com.bjike.goddess.buyticket.to.BuyGuidePermissionTO;
+import com.bjike.goddess.buyticket.to.GuidePermissionTO;
 import com.bjike.goddess.buyticket.vo.BasicInfoVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -46,7 +46,7 @@ public class BasicInfoAction {
      * @version v1
      */
     @GetMapping("v1/guidePermission")
-    public Result guidePermission(@Validated(BuyGuidePermissionTO.TestAdd.class) BuyGuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
 
             Boolean isHasPermission = basicInfoAPI.guidePermission(guidePermissionTO);
@@ -230,6 +230,23 @@ public class BasicInfoAction {
             List<String> summaryType = new ArrayList<>();
             summaryType = basicInfoAPI.findAllSummaryType();
             return ActResult.initialize(summaryType);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有汇总周期
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findSummaryCycle")
+    public Result findSummaryCycle() throws ActException {
+        try {
+            List<String> summaryCycle = new ArrayList<>();
+            summaryCycle = basicInfoAPI.findAllSummaryCycle();
+            return ActResult.initialize(summaryCycle);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

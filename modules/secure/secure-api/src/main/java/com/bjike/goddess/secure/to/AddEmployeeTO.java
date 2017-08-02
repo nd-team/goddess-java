@@ -15,104 +15,104 @@ import org.hibernate.validator.constraints.NotBlank;
  * @Copy: [ com.bjike ]
  */
 public class AddEmployeeTO extends BaseTO {
-    public interface AUDIT{
+    public interface AUDIT {
         //运营商务部审核
     }
 
     /**
      * 姓名
      */
-    @NotBlank(groups = {ADD.class,EDIT.class}, message = "姓名不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "姓名不能为空")
     private String name;
 
     /**
      * 员工编号
      */
-    @NotBlank(groups = {ADD.class,EDIT.class}, message = "员工编号不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "员工编号不能为空")
     private String employeeNum;
 
     /**
      * 地区
      */
-    @NotBlank(groups = {ADD.class,EDIT.class}, message = "地区不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "地区不能为空")
     private String city;
 
     /**
      * 项目组
      */
-    @NotBlank(groups = {ADD.class,EDIT.class}, message = "项目组不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "项目组不能为空")
     private String team;
 
     /**
      * 岗位
      */
-    @NotBlank(groups = {ADD.class,EDIT.class}, message = "岗位不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "岗位不能为空")
     private String job;
 
     /**
      * 岗位层级
      */
-    @NotBlank(groups = {ADD.class,EDIT.class}, message = "岗位层级不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "岗位层级不能为空")
     private String jobLevel;
 
     /**
      * 身份证号码
      */
-    @NotBlank(groups = {ADD.class,EDIT.class}, message = "身份证号码不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "身份证号码不能为空")
     private String idCart;
 
     /**
      * 身份证籍贯
      */
-    @NotBlank(groups = {ADD.class,EDIT.class}, message = "身份证籍贯不能为空")
-    private String arrival;
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "身份证籍贯不能为空")
+    private String born;
 
     /**
      * 联系方式
      */
-    @NotBlank(groups = {ADD.class,EDIT.class}, message = "联系方式不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "联系方式不能为空")
     private String tel;
 
     /**
      * 入职时间
      */
-    @NotBlank(groups = {ADD.class,EDIT.class}, message = "入职时间不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "入职时间不能为空")
     private String startTime;
 
     /**
      * 转正时间
      */
-    @NotBlank(groups = {ADD.class,EDIT.class}, message = "转正时间不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "转正时间不能为空")
     private String officialTime;
 
     /**
      * 参保公司
      */
-    @NotBlank(groups = {ADD.class,EDIT.class}, message = "参保公司不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "参保公司不能为空")
     private String company;
 
     /**
      * 参保地市
      */
-    @NotBlank(groups = {ADD.class,EDIT.class}, message = "参保地市不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "参保地市不能为空")
     private String secureCity;
 
     /**
      * 参保户口
      */
-    @NotBlank(groups = {ADD.class,EDIT.class}, message = "参保户口不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "参保户口不能为空")
     private String bornLocal;
 
     /**
      * 参保类型
      */
-    @NotBlank(groups = {ADD.class,EDIT.class}, message = "参保类型不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "参保类型不能为空")
     private String type;
 
     /**
      * 购买方式
      */
-    @NotBlank(groups = {ADD.class,EDIT.class}, message = "购买方式不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "购买方式不能为空")
     private String payType;
 
     /**
@@ -198,12 +198,12 @@ public class AddEmployeeTO extends BaseTO {
         this.idCart = idCart;
     }
 
-    public String getArrival() {
-        return arrival;
+    public String getBorn() {
+        return born;
     }
 
-    public void setArrival(String arrival) {
-        this.arrival = arrival;
+    public void setBorn(String born) {
+        this.born = born;
     }
 
     public String getTel() {

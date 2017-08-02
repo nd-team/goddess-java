@@ -89,13 +89,14 @@ public class ContactSituationSerImpl extends ServiceImpl<ContactSituation, Conta
         ContactSituation entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据对象不能为空");
-        BeanTransform.copyProperties(to, entity, true);
-        entity.setInformation(supplierInformationSer.findById(to.getInformationId()));
-        if (null == entity.getInformation())
+        ContactSituation contactSituation = BeanTransform.copyProperties(to, ContactSituation.class, true);
+        contactSituation.setInformation(supplierInformationSer.findById(to.getInformationId()));
+        if (null == contactSituation.getInformation())
             throw new SerException("供应商基本信息id错误,无法查询对应数据");
-        entity.setModifyTime(LocalDateTime.now());
-        super.update(entity);
-        return this.transformBO(entity);
+        contactSituation.setCreateTime(entity.getCreateTime());
+        contactSituation.setModifyTime(LocalDateTime.now());
+        super.update(contactSituation);
+        return this.transformBO(contactSituation);
     }
 
     @Transactional(rollbackFor = SerException.class)

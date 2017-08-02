@@ -6,6 +6,7 @@ import com.bjike.goddess.announcement.dto.AnnouncementDTO;
 import com.bjike.goddess.announcement.to.AnnouncementTO;
 import com.bjike.goddess.announcement.to.GuidePermissionTO;
 import com.bjike.goddess.announcement.vo.AnnouncementVO;
+import com.bjike.goddess.announcement.vo.MyFileVO;
 import com.bjike.goddess.announcement.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -30,12 +31,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 公告
@@ -236,6 +240,7 @@ public class AnnouncementAct extends BaseFileAction {
     /**
      * 上传附件
      *
+     * @return class MyFileVO
      * @version v1
      */
     @LoginAuth
@@ -246,8 +251,18 @@ public class AnnouncementAct extends BaseFileAction {
             // /id/....
             String path = "/announcement/announcement/" + id;
             List<InputStream> inputStreams = getInputStreams(request, path);
+            List<MultipartFile> list = getMultipartFile(request);
+            String s = null;
+            if (list != null && !list.isEmpty()) {
+                s = list.get(0).getOriginalFilename();
+            }
             fileAPI.upload(inputStreams);
-            return new ActResult("upload success");
+            MyFileVO fileVO = new MyFileVO();
+            String s1 = path + "/" + s;
+            String s2 = s1.substring(s1.lastIndexOf(".") + 1).toUpperCase();
+            fileVO.setPath(s1);
+            fileVO.setType(s2);
+            return ActResult.initialize(fileVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -527,6 +542,57 @@ public class AnnouncementAct extends BaseFileAction {
             return ActResult.initialize(BeanTransform.copyProperties(list, UserVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取uuid
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/uuid")
+    public Result uuid() throws ActException {
+        try {
+            return ActResult.initialize(UUID.randomUUID());
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 通过request获取上传文件
+     *
+     * @param request
+     * @return
+     * @throws SerException
+     */
+    private List<MultipartFile> getMultipartFile(HttpServletRequest request) throws SerException {
+
+        if (null != request && !isMultipartContent(request)) {
+            throw new SerException("上传表单不是multipart/form-data类型");
+        }
+        MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request; // 转换成多部分request
+        return multiRequest.getFiles("files");
+
+    }
+
+    /**
+     * 上传是否合理
+     *
+     * @param request
+     * @return
+     */
+    private boolean isMultipartContent(HttpServletRequest request) {
+        if (!"post".equals(request.getMethod().toLowerCase())) {
+            return false;
+        }
+
+        String contentType = request.getContentType();  //获取Content-Type
+        if ((contentType != null) && (contentType.toLowerCase().startsWith("multipart/"))) {
+            return true;
+        } else {
+            return false;
         }
     }
 

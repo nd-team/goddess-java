@@ -4,7 +4,7 @@ import com.bjike.goddess.buyticket.bo.BasicInfoBO;
 import com.bjike.goddess.buyticket.dto.BasicInfoDTO;
 import com.bjike.goddess.buyticket.service.BasicInfoSer;
 import com.bjike.goddess.buyticket.to.BasicInfoTO;
-import com.bjike.goddess.buyticket.to.BuyGuidePermissionTO;
+import com.bjike.goddess.buyticket.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class BasicInfoApiImpl implements BasicInfoAPI {
     }
 
     @Override
-    public Boolean guidePermission(BuyGuidePermissionTO guidePermissionTO) throws SerException {
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return basicInfoSer.guidePermission(guidePermissionTO);
     }
 
@@ -82,6 +82,11 @@ public class BasicInfoApiImpl implements BasicInfoAPI {
     @Override
     public List<String> findAllSummaryType() throws SerException {
         return basicInfoSer.findAllSummaryType();
+    }
+
+    @Override
+    public List<String> findAllSummaryCycle() throws SerException {
+        return basicInfoSer.findAllSummaryCycle();
     }
 
     @Override

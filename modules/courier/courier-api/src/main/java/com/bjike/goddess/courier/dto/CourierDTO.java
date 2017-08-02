@@ -42,13 +42,13 @@ public class CourierDTO extends BaseDTO {
     /**
      * 月份
      */
-    @NotNull(groups = {CourierDTO.WEEK.class, CourierDTO.MONTH.class, CourierDTO.YEAR.class}, message = "月份不能为空")
+    @NotNull(groups = {CourierDTO.WEEK.class, CourierDTO.MONTH.class}, message = "月份不能为空")
     private Integer month;
 
     /**
      * 周数
      */
-    @NotNull(groups = {CourierDTO.WEEK.class, CourierDTO.MONTH.class, CourierDTO.YEAR.class}, message = "周数不能为空")
+    @NotNull(groups = {CourierDTO.WEEK.class}, message = "周数不能为空")
     private Integer week;
 
     public Integer getYear() {

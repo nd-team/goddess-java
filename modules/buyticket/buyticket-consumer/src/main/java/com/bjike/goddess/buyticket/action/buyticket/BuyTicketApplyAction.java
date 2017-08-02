@@ -6,7 +6,7 @@ import com.bjike.goddess.buyticket.dto.BuyTicketApplyDTO;
 import com.bjike.goddess.buyticket.enums.AuditType;
 import com.bjike.goddess.buyticket.excel.SonPermissionObject;
 import com.bjike.goddess.buyticket.to.BuyTicketApplyTO;
-import com.bjike.goddess.buyticket.to.BuyGuidePermissionTO;
+import com.bjike.goddess.buyticket.to.GuidePermissionTO;
 import com.bjike.goddess.buyticket.vo.BuyTicketApplyVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -102,7 +102,7 @@ public class BuyTicketApplyAction {
      * @version v1
      */
     @GetMapping("v1/guidePermission")
-    public Result guidePermission(@Validated(BuyGuidePermissionTO.TestAdd.class) BuyGuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
 
             Boolean isHasPermission = buyTicketApplyAPI.guidePermission(guidePermissionTO);

@@ -91,4 +91,13 @@ public interface FirmIntroAPI {
      * @throws SerException
      */
     void setFirmDisplayField(String[] username, FirmDisplayFieldTO to) throws SerException;
+    /**
+     * 获取所有用户
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findallMonUser() throws SerException {
+        return null;
+    }
 }

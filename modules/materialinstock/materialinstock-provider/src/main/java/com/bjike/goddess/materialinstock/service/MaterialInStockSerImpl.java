@@ -398,7 +398,7 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
             return Collections.emptyList();
         }
         Set<String> set = new HashSet<>();
-        for (DepartmentDetailBO departmentDetailBO : departmentDetailBOS){
+        for (DepartmentDetailBO departmentDetailBO : departmentDetailBOS) {
             String details = departmentDetailBO.getDepartment();
             if (StringUtils.isNotBlank(departmentDetailBO.getDepartment())) {
                 set.add(details);
@@ -414,7 +414,7 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
             return Collections.emptyList();
         }
         Set<String> set = new HashSet<>();
-        for (UserBO userBO : userBOS){
+        for (UserBO userBO : userBOS) {
             String userName = userBO.getUsername();
             if (StringUtils.isNotBlank(userBO.getUsername())) {
                 set.add(userName);

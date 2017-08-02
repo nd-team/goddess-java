@@ -4,7 +4,7 @@ import com.bjike.goddess.buyticket.bo.BuyTicketRecordBO;
 import com.bjike.goddess.buyticket.dto.BuyTicketRecordDTO;
 import com.bjike.goddess.buyticket.service.BuyTicketRecordSer;
 import com.bjike.goddess.buyticket.to.BuyTicketRecordTO;
-import com.bjike.goddess.buyticket.to.BuyGuidePermissionTO;
+import com.bjike.goddess.buyticket.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class BuyTicketRecordApiImpl implements BuyTicketRecordAPI {
     }
 
     @Override
-    public Boolean guidePermission(BuyGuidePermissionTO guidePermissionTO) throws SerException {
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return buyTicketRecordSer.guidePermission(guidePermissionTO);
     }
 

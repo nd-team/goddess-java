@@ -3,7 +3,7 @@ package com.bjike.goddess.buyticket.api;
 import com.bjike.goddess.buyticket.bo.BuyTicketStandardBO;
 import com.bjike.goddess.buyticket.dto.BuyTicketStandardDTO;
 import com.bjike.goddess.buyticket.to.BuyTicketStandardTO;
-import com.bjike.goddess.buyticket.to.BuyGuidePermissionTO;
+import com.bjike.goddess.buyticket.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public interface BuyTicketStandardAPI {
     /**
      * 导航权限
      */
-    default Boolean guidePermission(BuyGuidePermissionTO guidePermissionTO) throws SerException {
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
     /**

@@ -291,7 +291,7 @@ public class WaitingPaySerImpl extends ServiceImpl<WaitingPay, WaitingPayDTO> im
                     Double reserve = 0d;
                     for (WaitingPay waitingPay : waitingPays) {
                         WaitingBO waitingBO = new WaitingBO();
-                        waitingBO.setYearsMonth(waitingPay.getYears() + "-" + (waitingPay.getMonth() > 10 ? waitingPay.getMonth() : "0" + waitingPay.getMonth()));//时间
+                        waitingBO.setYearsMonth(waitingPay.getYears() + "-" + (waitingPay.getMonth() > 9 ? waitingPay.getMonth() : "0" + waitingPay.getMonth()));//时间
                         waitingBO.setProjectGroup(project);//项目组
                         waitingBO.setPayStatus(waitingPay.getPayStatus());//付款状态
                         waitingBO.setSubjects(waitingPay.getSubjects());//科目
@@ -333,7 +333,7 @@ public class WaitingPaySerImpl extends ServiceImpl<WaitingPay, WaitingPayDTO> im
             Double reserve = 0d;
             for (WaitingPay waitingPay : waitingPays) {
                 WaitingBO waitingBO = new WaitingBO();
-                waitingBO.setYearsMonth(waitingPay.getYears() + "-" + (waitingPay.getMonth() > 10 ? waitingPay.getMonth() : "0" + waitingPay.getMonth()));//时间
+                waitingBO.setYearsMonth(waitingPay.getYears() + "-" + (waitingPay.getMonth() > 9 ? waitingPay.getMonth() : "0" + waitingPay.getMonth()));//时间
                 waitingBO.setProjectGroup(waitingPay.getProjectGroup());//项目组
                 waitingBO.setPayStatus(waitingPay.getPayStatus());//付款状态
                 waitingBO.setSubjects(waitingPay.getSubjects());//科目
@@ -380,7 +380,7 @@ public class WaitingPaySerImpl extends ServiceImpl<WaitingPay, WaitingPayDTO> im
             Double reserve = 0d;
             for (WaitingPay waitingPay : waitingPays) {
                 WaitingBO waitingBO = new WaitingBO();
-                waitingBO.setYearsMonth(waitingPay.getYears() + "-" + (waitingPay.getMonth() > 10 ? waitingPay.getMonth() : "0" + waitingPay.getMonth()));//时间
+                waitingBO.setYearsMonth(waitingPay.getYears() + "-" + (waitingPay.getMonth() > 9 ? waitingPay.getMonth() : "0" + waitingPay.getMonth()));//时间
                 waitingBO.setProjectGroup(waitingPay.getProjectGroup());//项目组
                 waitingBO.setPayStatus(waitingPay.getPayStatus());//付款状态
                 waitingBO.setSubjects(waitingPay.getSubjects());//科目
@@ -430,7 +430,7 @@ public class WaitingPaySerImpl extends ServiceImpl<WaitingPay, WaitingPayDTO> im
         List<WaitingPayExcel> waitingPayExcels = new ArrayList<>();
         list.stream().forEach(str -> {
             WaitingPayExcel excel = BeanTransform.copyProperties(str, WaitingPayExcel.class);
-            excel.setYearsMonth(str.getYears() + "-" + (str.getMonth() > 10 ? str.getMonth() : "0" + str.getMonth()));
+            excel.setYearsMonth(str.getYears() + "-" + (str.getMonth() > 9 ? str.getMonth() : "0" + str.getMonth()));
             waitingPayExcels.add(excel);
         });
         Excel excel = new Excel(0, 2);
@@ -504,7 +504,7 @@ public class WaitingPaySerImpl extends ServiceImpl<WaitingPay, WaitingPayDTO> im
                 if (payMoneySum == 0) {
                     perpareActualDifferencesBO.setGrowthRate(0d);
                 } else {
-                    perpareActualDifferencesBO.setGrowthRate(((reserveSum - payMoneySum) / payMoneySum * 100));
+                    perpareActualDifferencesBO.setGrowthRate(Double.valueOf(String.format("%.2f",((reserveSum - payMoneySum) / payMoneySum * 100))));
                 }
 
                 moneyPerpareContrastBOList.add(perpareActualDifferencesBO);

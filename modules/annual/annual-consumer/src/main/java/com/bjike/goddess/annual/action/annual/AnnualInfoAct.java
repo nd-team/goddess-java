@@ -78,7 +78,7 @@ public class AnnualInfoAct {
         }
     }
     /**
-     * 获取指定用户的年假信息(我的年假记录)
+     * 我的年假申请记录
      *
      * @return class AnnualInfoVO
      * @version v1
@@ -111,7 +111,7 @@ public class AnnualInfoAct {
 
 
     /**
-     * 查询列表
+     * 年假信息记录
      *
      * @param dto 年假信息数据传输对象
      * @return class AnnualInfoVO
@@ -158,7 +158,7 @@ public class AnnualInfoAct {
     }
 
     /**
-     * 为体验时提供保存年假信息数据
+     * 体验时提供添加(添加)
      *
      * @param to 年假信息传输对象
      * @return class AnnualInfoVO
