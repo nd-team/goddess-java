@@ -284,6 +284,7 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
         //遍历所有未冻结汇总定时器,
         for (CompetitorCollect model : list) {
             validate(model);
+            model.setLastSendTime(LocalDateTime.now());
         }
     }
 
@@ -492,6 +493,24 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
 
                 sb.append("<tr>");
             }
+            //结束
+            sb.append("</table>");
+        }else{
+            sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
+            //拼表头
+            sb.append("<tr>");
+
+            sb.append("<td>地区</td>");
+            sb.append("<td>通讯类</td>");
+            sb.append("<td>软件类</td>");
+            sb.append("<td>营销策划类</td>");
+            sb.append("<td>智能化类</td>");
+            sb.append("<td>电子商务类</td>");
+            sb.append("<td>房地产类</td>");
+            sb.append("<td>理财类</td>");
+            sb.append("<td>食品类</td>");
+
+            sb.append("<tr>");
             //结束
             sb.append("</table>");
         }
