@@ -129,7 +129,7 @@ public class BuyTicketApplyTO extends BaseTO {
     /**
      * 是否发送邮件
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否发送邮件不能为空")
+    @NotNull(groups = {ADD.class}, message = "是否发送邮件不能为空")
     private Boolean sendEmail;
 
     /**

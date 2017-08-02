@@ -504,6 +504,24 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
             }
         }
     }
+/**
+     * 市场招待汇总
+     *
+     * @param summaryTO
+     * @return class MarketServeSummaryVO
+     * @throws SerException
+     */
+    private List<ServeSummaryBO> summarize2(SummaryTO summaryTO) throws SerException {
+        if(summaryTO.getType()==null){
+            throw new SerException("汇总类型不能为空");
+        }else {
+            if (summaryTO.getType()) {
+                return summarizePlan(summaryTO);
+            } else {
+                return summarizeActual(summaryTO);
+            }
+        }
+    }
 
     /**
      * 市场招待记录汇总
@@ -813,6 +831,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
         return clientNameString;
     }
 
+
     /**
      * 市场招待记录申请汇总
      *
@@ -823,8 +842,8 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     private List<ServeSummaryBO> summarizePlan(SummaryTO summaryTO) throws SerException {
         LocalDateTime[] planActivityTiming = null;
         if (StringUtils.isNotBlank(summaryTO.getStartTimeString()) && StringUtils.isNotBlank(summaryTO.getEndTimeString())) {
-            LocalDateTime startTime = DateUtil.parseDateTime(summaryTO.getStartTimeString());//起始时间
-            LocalDateTime endTime = DateUtil.parseDateTime(summaryTO.getEndTimeString());//结束时间
+            LocalDateTime startTime =  LocalDateTime.parse(summaryTO.getStartTimeString());//起始时间
+            LocalDateTime endTime =  LocalDateTime.parse(summaryTO.getEndTimeString());//结束时间
             planActivityTiming = new LocalDateTime[]{startTime, endTime};
         }else if(StringUtils.isNotBlank(summaryTO.getStartTimeString()) && StringUtils.isBlank(summaryTO.getEndTimeString())){
             throw new SerException("参数检验不通过");
@@ -1189,46 +1208,54 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
                     temp_sendNum = sendNum * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastTime(lastTime.plusMinutes( sendNum.longValue() ));
+//                        str.setLastTime(lastTime.plusMinutes( sendNum.longValue() ));
+                        str.setLastTime(LocalDateTime.now());
+
                     }
                     break;
                 case HOUR:
                     temp_sendNum = sendNum * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastTime(lastTime.plusHours( sendNum.longValue() ));
+//                        str.setLastTime(lastTime.plusHours( sendNum.longValue() ));
+                        str.setLastTime(LocalDateTime.now());
                     }
                     break;
                 case DAY:
                     temp_sendNum = sendNum * 24 * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastTime(lastTime.plusDays( sendNum.longValue() ));
+//                        str.setLastTime(lastTime.plusDays( sendNum.longValue() ));
+                        str.setLastTime(LocalDateTime.now());
                     }
                     break;
                 case WEEK:
                     temp_sendNum = sendNum * 7 * 24 * 60 * 60 * 1000;
                     if (temp_sendNum <= mis.doubleValue()) {
                         flag = true;
-                        str.setLastTime(lastTime.plusWeeks( sendNum.longValue() ));
+//                        str.setLastTime(lastTime.plusHours( sendNum.longValue() ));
+                        str.setLastTime(LocalDateTime.now());
                     }
                     break;
                 case MONTH:
                     if (nowTime.minusMonths(sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastTime(lastTime.plusMonths( sendNum.longValue() ));
+//                        str.setLastTime(lastTime.plusHours( sendNum.longValue() ));
+                        str.setLastTime(LocalDateTime.now());
                     }
                     break;
                 case QUARTER:
                     if (nowTime.minusMonths(3*sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(3*sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastTime(lastTime.plusMonths( 3* sendNum.longValue() ));
+//                        str.setLastTime(lastTime.plusHours( sendNum.longValue() ));
+                        str.setLastTime(LocalDateTime.now());
                     }
                     break;
                 case YEAR:
                     if (nowTime.minusYears(sendNum.longValue()).isEqual(lastTime) || nowTime.minusYears(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
-                        str.setLastTime(lastTime.plusYears( sendNum.longValue() ));
+//                        str.setLastTime(lastTime.plusHours( sendNum.longValue() ));
+                        str.setLastTime(LocalDateTime.now());
                     }
                     break;
             }
@@ -1247,23 +1274,23 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
 
     private String htmlSummary(List<ServeSummaryBO> summaryBOList) throws SerException {
         StringBuffer sb = new StringBuffer("");
-        if (summaryBOList != null && summaryBOList.size() > 0) {
-            sb = new StringBuffer("<h4>市场活动汇总:</h4>");
-            sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
-            //拼表头
-            ServeSummaryBO title = summaryBOList.get(summaryBOList.size() - 1);
-            sb.append("<tr>");
-            sb.append("<td>项目名称</td>");
-            sb.append("<td>地区</td>");
-            sb.append("<td>招待负责人</td>");
-            sb.append("<td>客户姓名</td>");
-            sb.append("<td>计划/实际活动类型</td>");
-            sb.append("<td>计划/实际活动时间点</td>");
-            sb.append("<td>否临时招待</td>");
-            sb.append("<td>参加人数</td>");
-            sb.append("<td>费用</td>");
+        sb = new StringBuffer("<h4>市场活动汇总:</h4>");
+        sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
+        //拼表头
+//        ServeSummaryBO title = summaryBOList.get(summaryBOList.size() - 1);
+        sb.append("<tr>");
+        sb.append("<td>项目名称</td>");
+        sb.append("<td>地区</td>");
+        sb.append("<td>招待负责人</td>");
+        sb.append("<td>客户姓名</td>");
+        sb.append("<td>计划/实际活动类型</td>");
+        sb.append("<td>计划/实际活动时间点</td>");
+        sb.append("<td>否临时招待</td>");
+        sb.append("<td>参加人数</td>");
+        sb.append("<td>费用</td>");
 
-            sb.append("<tr>");
+        sb.append("</tr>");
+        if (summaryBOList != null && summaryBOList.size() > 0) {
 
             //拼body部分
             for (ServeSummaryBO bo : summaryBOList) {
@@ -1278,18 +1305,30 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
                 sb.append("<td>" + bo.getAttendPeopleNo() + "</td>");
                 sb.append("<td>" + bo.getCharge() + "</td>");
 
-                sb.append("<tr>");
+                sb.append("</tr>");
             }
 
-            //结束
-            sb.append("</table>");
+        }else{
+            sb.append("<tr>");
+            sb.append("<td> </td>");
+            sb.append("<td> </td>");
+            sb.append("<td> </td>");
+            sb.append("<td> </td>");
+            sb.append("<td> </td>");
+            sb.append("<td> </td>");
+            sb.append("<td> </td>");
+            sb.append("<td> </td>");
+            sb.append("<td> </td>");
+
+            sb.append("</tr>");
         }
+        //结束
+        sb.append("</table>");
         return sb.toString();
     }
 
 
     private List<MarketServeSummary> sendObject(List<MarketServeSummary> summaryEmails) throws SerException {
-        String userToken = RpcTransmit.getUserToken();
         List<MarketServeSummary> allEmails = new ArrayList<>();
         //市场活动汇总
 
@@ -1300,20 +1339,13 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
                 String projectName = sign.getProjectGroups();
                 String[] condis = projectName.split(",");
                 //处理汇总间隔
-                /*Integer collectTime = sign.getDetailInterval();//汇总间隔数
-                CyclePerType cyclePerType = sign.getDetailCycle();//汇总间隔单位　年
-                switch (cyclePerType){
-                    case DAY:
-                }
-                int year  = LocalDate.now().getYear();
-                DateTimeFormatter fotmatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                startTime = String.valueOf(LocalDate.parse( year+"-01-01", fotmatter));
-                endTime = String.valueOf(LocalDate.now());*/
                 String startTime ="";
                 String endTime ="";
                 if(sign.getStartTime()!=null && sign.getEndTime()!=null){
-                    startTime = String.valueOf(sign.getStartTime()).replace("T", " ").substring(0, 19);
-                    endTime = String.valueOf(sign.getEndTime()).replace("T", " ").substring(0, 19);
+//                    startTime = String.valueOf(sign.getStartTime()).replace("T", " ").substring(0, 19);
+//                    endTime = String.valueOf(sign.getEndTime()).replace("T", " ").substring(0, 19);
+                    startTime = String.valueOf(sign.getStartTime());
+                    endTime = String.valueOf(sign.getEndTime());
                 }
                 SummaryTO summaryTO = new SummaryTO();
                 summaryTO.setType(type);
@@ -1321,7 +1353,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
                 summaryTO.setStartTimeString(startTime);
                 summaryTO.setEndTimeString(endTime);
 
-                List<ServeSummaryBO> measureBOList = marketServeSummarySer.summarize(summaryTO);
+                List<ServeSummaryBO> measureBOList = summarize2(summaryTO);
                 //拼表格
                 String content = htmlSummary(measureBOList);
 

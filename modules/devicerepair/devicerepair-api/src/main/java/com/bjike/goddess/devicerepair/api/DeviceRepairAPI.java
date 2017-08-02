@@ -9,6 +9,7 @@ import com.bjike.goddess.devicerepair.to.FetchDeviceTO;
 import com.bjike.goddess.devicerepair.to.GuidePermissionTO;
 import com.bjike.goddess.devicerepair.to.WelfareAuditTO;
 import com.bjike.goddess.devicerepair.type.AuditState;
+import com.bjike.goddess.devicerepair.type.MaterialState;
 
 import java.util.List;
 
@@ -140,6 +141,78 @@ public interface DeviceRepairAPI {
      * @throws SerException
      */
     default List<String> findallMonUser() throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有维修状态
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<MaterialState> findDeviceStatus(String[] intervalTime) throws SerException {
+        return null;
+    }
+    /**
+     * 根据维修状态获取所有地区
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAreaByStatus(String[] intervalTime,MaterialState materialState) throws SerException {
+        return null;
+    }
+    /**
+     * 根据维修状态地区获取部门
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findProjectByStaAnAr(String[] intervalTime,MaterialState materialState,String area) throws SerException {
+        return null;
+    }
+    /**
+     * 根据维修状态地区获取信息
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<DeviceRepairBO> findByStaAnAr(String[] intervalTime,MaterialState materialState,String area,String projectGroup) throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有是否为保修期状态
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<Boolean> findBool(String[] intervalTime) throws SerException {
+        return null;
+    }
+    /**
+     * 根据是否为保修期状态查询地区
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAreaByBool(String[] intervalTime,Boolean whetherWarranty) throws SerException {
+        return null;
+    }
+    /**
+     * 根据是否为保修期状态和地区查询部门
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findProjByBoArea(String[] intervalTime,String area,Boolean whetherWarranty) throws SerException {
+        return null;
+    }
+    /**
+     * 根据是否为保修期状态和地区和部门查询信息
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<DeviceRepairBO> findByBoAnArDep(String[] intervalTime,String area,Boolean whetherWarranty,String projectGroup) throws SerException {
         return null;
     }
 }

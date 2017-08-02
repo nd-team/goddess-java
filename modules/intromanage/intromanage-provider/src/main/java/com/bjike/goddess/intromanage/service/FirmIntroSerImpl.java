@@ -218,6 +218,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
      */
     @Override
     public List<FirmIntroBO> list(FirmIntroDTO dto) throws SerException {
+        checkPermission();
         List<FirmIntro> list = super.findByPage(dto);
         UserBO userBO = userAPI.currentUser();
         String currentUsername = userBO.getUsername();//获取当前用户姓名
@@ -248,6 +249,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
      * @param firmIntro 公司简介信息
      */
     private void checkShowFields(FirmDisplayField firmDisplayField, FirmIntro firmIntro) {
+
         if (firmDisplayField.getIfShowFirmName() != Boolean.TRUE) {
             firmIntro.setFirmName(null);
         }
@@ -311,6 +313,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public FirmIntroBO save(FirmIntroTO to) throws SerException {
+        checkPermission();
         FirmIntro entity = BeanTransform.copyProperties(to, FirmIntro.class, true);
         entity = super.save(entity);
         FirmIntroBO bo = BeanTransform.copyProperties(entity, FirmIntroBO.class);
@@ -555,6 +558,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void update(FirmIntroTO to) throws SerException {
+        checkPermission();
         String firmId = to.getId();
         if (StringUtils.isNotEmpty(firmId)) {
             FirmIntro model = super.findById(firmId);
@@ -590,6 +594,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
      * @throws SerException
      */
     private void removeSubObj(String firmId) throws SerException {
+        checkPermission();
         removeHonorAndQualities(firmId);//删除荣誉与资质
         removeMainBusinessIntro(firmId);//删除主业介绍
         removeSuccessStories(firmId);   //删除成功案例

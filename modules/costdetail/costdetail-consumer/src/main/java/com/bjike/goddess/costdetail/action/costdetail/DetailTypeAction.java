@@ -11,6 +11,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.costdetail.api.DetailTypeAPI;
 import com.bjike.goddess.costdetail.bo.DetailTypeBO;
 import com.bjike.goddess.costdetail.dto.DetailTypeDTO;
+import com.bjike.goddess.costdetail.entity.DetailType;
 import com.bjike.goddess.costdetail.excel.SonPermissionObject;
 import com.bjike.goddess.costdetail.to.DetailTypeTO;
 import com.bjike.goddess.costdetail.to.GuidePermissionTO;
@@ -151,6 +152,24 @@ public class DetailTypeAction {
     }
 
     /**
+     * 明细分类列表
+     *
+     * @param detailTypeDTO 明细分类dto
+     * @return class DetailTypeVO
+     * @des 获取所有明细分类
+     * @version v1
+     */
+    @GetMapping("v1/list")
+    public Result findList(DetailTypeDTO detailTypeDTO, HttpServletRequest request) throws ActException {
+        try {
+            List<DetailTypeVO> detailTypeVOS = BeanTransform.copyProperties(
+                    detailTypeAPI.list(detailTypeDTO), DetailTypeVO.class, request);
+            return ActResult.initialize(detailTypeVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
      * 添加明细分类
      *
      * @param detailTypeTO 明细分类to
@@ -183,6 +202,24 @@ public class DetailTypeAction {
         try {
             DetailTypeBO detailTypeBO = detailTypeAPI.edit(detailTypeTO);
             return ActResult.initialize(BeanTransform.copyProperties(detailTypeBO, DetailTypeVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 删除
+     *
+     * @param id
+     * @des 根据id删除成本明细
+     * @version v1
+     */
+    @LoginAuth
+    @DeleteMapping("v1/delete/{id}")
+    public Result delete(@PathVariable String id) throws ActException {
+        try {
+            detailTypeAPI.delete(id);
+            return new ActResult("delete success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

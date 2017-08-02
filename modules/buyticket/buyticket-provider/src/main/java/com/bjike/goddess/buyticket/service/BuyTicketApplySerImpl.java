@@ -15,6 +15,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
@@ -344,7 +345,7 @@ public class BuyTicketApplySerImpl extends ServiceImpl<BuyTicketApply, BuyTicket
     @Override
     public BuyTicketApplyBO getOne(String id) throws SerException {
         BuyTicketApply buyTicketApply = super.findById(id);
-        return BeanTransform.copyProperties(buyTicketApply, BuyTicketApplyBO.class, true);
+        return BeanTransform.copyProperties(buyTicketApply, BuyTicketApplyBO.class);
     }
 
     @Override
@@ -354,11 +355,12 @@ public class BuyTicketApplySerImpl extends ServiceImpl<BuyTicketApply, BuyTicket
         RpcTransmit.transmitUserToken(userToken);
         Boolean flag1 = checkAppSeePermission();
         RpcTransmit.transmitUserToken(userToken);
-        String[] filed = {"applicant", "area", "department", "passenger", "passengerNum", "ticketCause", "ticketType", "buyPattern",
+        String[] filed = {"id","applicant", "area", "department", "passenger", "passengerNum", "ticketCause", "ticketType", "buyPattern",
                 "tripType", "origin", "destination", "planDepartureTime", "planArrivalTime", "remark", "planAuditor", "planAuditOpinion", "welfAuditor", "welfAuditOpinion"};
         String sql = "";
         if (flag || flag1) {
             sql = "SELECT " +
+                    "  id                AS id,"+
                     "  applicant         AS applicant," +
                     "  area              AS area," +
                     "  department        AS department," +
@@ -385,6 +387,7 @@ public class BuyTicketApplySerImpl extends ServiceImpl<BuyTicketApply, BuyTicket
         } else {
             UserBO user = userAPI.currentUser();
             sql = "SELECT " +
+                    "  id                AS id,"+
                     "  applicant         AS applicant," +
                     "  area              AS area," +
                     "  department        AS department," +
@@ -426,7 +429,15 @@ public class BuyTicketApplySerImpl extends ServiceImpl<BuyTicketApply, BuyTicket
             String origin = buyTicketApply.getOrigin();
             String destination = buyTicketApply.getDestination();
             String planDepartureTime = buyTicketApply.getPlanDepartureTime().toString();
-
+            //校验邮箱书写
+            String[] sendObject = buyTicketApplyTO.getSendObject();
+            if (sendObject != null && sendObject.length > 0) {
+                for (String emailStr : sendObject) {
+                    if (!Validator.isEmail(emailStr)) {
+                        throw new SerException("邮箱书写不正确");
+                    }
+                }
+            }
             StringBuffer content = new StringBuffer();
             content.append("福利模块、规划模块负责人:你们好! " + passName + " 因" + ticketCause + "从" + origin + "前往" + destination + "," + planDepartureTime + "需要出发,请尽快审核跟进处理");
 
@@ -477,12 +488,15 @@ public class BuyTicketApplySerImpl extends ServiceImpl<BuyTicketApply, BuyTicket
     public void planAuditBuyTicketApply(String id, AuditType planAuditOpinion) throws SerException {
         guidePosinIdentity();
         BuyTicketApply buyTicketApply = super.findById(id);
+        if(buyTicketApply.getPlanAuditOpinion()!=null){
+            throw new SerException("您已经审核过了,就不能再审核了");
+        }
         buyTicketApply.setPlanAuditOpinion(planAuditOpinion);
         buyTicketApply.setModifyTime(LocalDateTime.now());
         super.update(buyTicketApply);
         BuyTicketApplyBO buyTicketApplyBO = BeanTransform.copyProperties(buyTicketApply, BuyTicketApplyBO.class);
         String[] passenger = buyTicketApply.getPassenger().split(",");
-        if (buyTicketApply.getPlanAuditOpinion().equals(AuditType.ALLOWED) && buyTicketApply.getWelfAuditOpinion().equals(AuditType.ALLOWED)) {
+        if (buyTicketApply.getPlanAuditOpinion().equals(AuditType.ALLOWED) && buyTicketApply.getWelfAuditOpinion()!=null && buyTicketApply.getWelfAuditOpinion().equals(AuditType.ALLOWED)) {
             for (String pass : passenger) {
                 String position = positionDetailUserAPI.getPosition(pass);
                 List<PerBO> perBOS = staffRecordsAPI.getPerBO(pass);
@@ -506,12 +520,15 @@ public class BuyTicketApplySerImpl extends ServiceImpl<BuyTicketApply, BuyTicket
     public void welfAuditBuyTicketApply(String id, AuditType welfAuditOpinion) throws SerException {
         guidePosinIdentity();
         BuyTicketApply buyTicketApply = super.findById(id);
+        if(buyTicketApply.getWelfAuditOpinion()!=null){
+            throw new SerException("您已经审核过了,就不能再审核了");
+        }
         buyTicketApply.setWelfAuditOpinion(welfAuditOpinion);
         buyTicketApply.setModifyTime(LocalDateTime.now());
         super.update(buyTicketApply);
         BuyTicketApplyBO buyTicketApplyBO = BeanTransform.copyProperties(buyTicketApply, BuyTicketApplyBO.class);
         String[] passenger = buyTicketApply.getPassenger().split(",");
-        if (buyTicketApply.getPlanAuditOpinion().equals(AuditType.ALLOWED) && buyTicketApply.getWelfAuditOpinion().equals(AuditType.ALLOWED)) {
+        if (buyTicketApply.getPlanAuditOpinion()!=null && buyTicketApply.getPlanAuditOpinion().equals(AuditType.ALLOWED) && buyTicketApply.getWelfAuditOpinion().equals(AuditType.ALLOWED)) {
             for (String pass : passenger) {
                 String position = positionDetailUserAPI.getPosition(pass);
                 List<PerBO> perBOS = staffRecordsAPI.getPerBO(pass);

@@ -1,5 +1,6 @@
 package com.bjike.goddess.devicerepair.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -482,4 +483,137 @@ public class DeviceRepairSerImpl extends ServiceImpl<DeviceRepair, DeviceRepairD
         return new ArrayList<>(set);
     }
 
+    @Override
+    public List<MaterialState> findDeviceStatus(String[] intervalTime) throws SerException {
+        DeviceRepairDTO deviceRepairDTO = new DeviceRepairDTO();
+        deviceRepairDTO.getConditions().add(Restrict.between("planOverRepairTime",intervalTime));
+        List<DeviceRepair> deviceRepairs = super.findByCis(deviceRepairDTO);
+        if (CollectionUtils.isEmpty(deviceRepairs)) {
+            return Collections.emptyList();
+        }
+        Set<MaterialState> set = new HashSet<>();
+        for (DeviceRepair deviceRepair : deviceRepairs){
+            MaterialState status = deviceRepair.getMaterialState();
+            if (deviceRepair.getMaterialState()!=null) {
+                set.add(status);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> findAreaByStatus(String[] intervalTime,MaterialState materialState) throws SerException {
+        DeviceRepairDTO deviceRepairDTO = new DeviceRepairDTO();
+        deviceRepairDTO.getConditions().add(Restrict.between("planOverRepairTime", intervalTime));
+        deviceRepairDTO.getConditions().add(Restrict.eq("materialState", materialState));
+        List<DeviceRepair> deviceRepairs = super.findByCis(deviceRepairDTO);
+        if (CollectionUtils.isEmpty(deviceRepairs)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (DeviceRepair deviceRepair : deviceRepairs) {
+            String area = deviceRepair.getArea();
+            if (StringUtils.isNotBlank(deviceRepair.getArea())) {
+                set.add(area);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+    @Override
+    public List<String> findProjectByStaAnAr(String[] intervalTime,MaterialState materialState,String area) throws SerException {
+        DeviceRepairDTO deviceRepairDTO = new DeviceRepairDTO();
+        deviceRepairDTO.getConditions().add(Restrict.between("planOverRepairTime", intervalTime));
+        deviceRepairDTO.getConditions().add(Restrict.eq("materialState", materialState));
+        deviceRepairDTO.getConditions().add(Restrict.eq("area", area));
+        List<DeviceRepair> deviceRepairs = super.findByCis(deviceRepairDTO);
+        if (CollectionUtils.isEmpty(deviceRepairs)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (DeviceRepair deviceRepair : deviceRepairs) {
+            String projectGroup = deviceRepair.getProjectGroup();
+            if (StringUtils.isNotBlank(deviceRepair.getProjectGroup())) {
+                set.add(projectGroup);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+    @Override
+    public List<DeviceRepairBO> findByStaAnAr(String[] intervalTime, MaterialState materialState, String area,String projectGroup) throws SerException {
+        DeviceRepairDTO deviceRepairDTO = new DeviceRepairDTO();
+        deviceRepairDTO.getConditions().add(Restrict.between("planOverRepairTime", intervalTime));
+        deviceRepairDTO.getConditions().add(Restrict.eq("materialState", materialState));
+        deviceRepairDTO.getConditions().add(Restrict.eq("area",area));
+        deviceRepairDTO.getConditions().add(Restrict.eq("projectGroup",projectGroup));
+        List<DeviceRepair> deviceRepairs = super.findByCis(deviceRepairDTO);
+        return BeanTransform.copyProperties(deviceRepairs,DeviceRepairBO.class);
+    }
+
+    @Override
+    public List<Boolean> findBool(String[] intervalTime) throws SerException {
+        DeviceRepairDTO deviceRepairDTO = new DeviceRepairDTO();
+        deviceRepairDTO.getConditions().add(Restrict.between("planOverRepairTime",intervalTime));
+        List<DeviceRepair> deviceRepairs = super.findByCis(deviceRepairDTO);
+        if (CollectionUtils.isEmpty(deviceRepairs)) {
+            return Collections.emptyList();
+        }
+        Set<Boolean> set = new HashSet<>();
+        for (DeviceRepair deviceRepair : deviceRepairs){
+            Boolean whetherWarranty = deviceRepair.getWhetherWarranty();
+            if (deviceRepair.getWhetherWarranty()!=null) {
+                set.add(whetherWarranty);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> findAreaByBool(String[] intervalTime, Boolean whetherWarranty) throws SerException {
+        DeviceRepairDTO deviceRepairDTO = new DeviceRepairDTO();
+        deviceRepairDTO.getConditions().add(Restrict.between("planOverRepairTime",intervalTime));
+        deviceRepairDTO.getConditions().add(Restrict.eq("whetherWarranty",whetherWarranty));
+        List<DeviceRepair> deviceRepairs = super.findByCis(deviceRepairDTO);
+        if (CollectionUtils.isEmpty(deviceRepairs)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (DeviceRepair deviceRepair : deviceRepairs){
+            String area = deviceRepair.getArea();
+            if (StringUtils.isNotBlank(deviceRepair.getArea())) {
+                set.add(area);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> findProjByBoArea(String[] intervalTime, String area, Boolean whetherWarranty) throws SerException {
+        DeviceRepairDTO deviceRepairDTO = new DeviceRepairDTO();
+        deviceRepairDTO.getConditions().add(Restrict.between("planOverRepairTime",intervalTime));
+        deviceRepairDTO.getConditions().add(Restrict.eq("whetherWarranty",whetherWarranty));
+        deviceRepairDTO.getConditions().add(Restrict.eq("area",area));
+        List<DeviceRepair> deviceRepairs = super.findByCis(deviceRepairDTO);
+        if (CollectionUtils.isEmpty(deviceRepairs)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (DeviceRepair deviceRepair : deviceRepairs){
+            String projectGroup = deviceRepair.getProjectGroup();
+            if (StringUtils.isNotBlank(deviceRepair.getProjectGroup())) {
+                set.add(projectGroup);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<DeviceRepairBO> findByBoAnArDep(String[] intervalTime, String area, Boolean whetherWarranty, String projectGroup) throws SerException {
+        DeviceRepairDTO deviceRepairDTO = new DeviceRepairDTO();
+        deviceRepairDTO.getConditions().add(Restrict.between("planOverRepairTime", intervalTime));
+        deviceRepairDTO.getConditions().add(Restrict.eq("whetherWarranty", whetherWarranty));
+        deviceRepairDTO.getConditions().add(Restrict.eq("area",area));
+        deviceRepairDTO.getConditions().add(Restrict.eq("projectGroup",projectGroup));
+        List<DeviceRepair> deviceRepairs = super.findByCis(deviceRepairDTO);
+        return BeanTransform.copyProperties(deviceRepairs,DeviceRepairBO.class);
+    }
 }

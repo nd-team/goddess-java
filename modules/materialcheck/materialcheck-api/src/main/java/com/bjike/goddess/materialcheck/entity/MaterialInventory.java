@@ -28,7 +28,7 @@ public class MaterialInventory extends BaseEntity {
     private String area;
 
     /**
-     * 项目组/地区
+     * 项目组/部门
      */
     @Column(name = "projectGroup", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '项目组/地区'")
     private String projectGroup;

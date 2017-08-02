@@ -22,6 +22,8 @@
 	<dubbo:service   ref="sendEmailApiImpl" interface="com.bjike.goddess.materialsummary.api.SendEmailAPI" />
 
 	<dubbo:reference  id="materialBuyApiImpl" interface="com.bjike.goddess.materialbuy.api.MaterialBuyAPI" />
+	<dubbo:reference  id="materialInStockApiImpl" interface="com.bjike.goddess.materialinstock.api.MaterialInStockAPI" />
+	<dubbo:reference  id="deviceRepairApiImpl" interface="com.bjike.goddess.devicerepair.api.DeviceRepairAPI" />
 
 	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
 	否则不需要配置-->

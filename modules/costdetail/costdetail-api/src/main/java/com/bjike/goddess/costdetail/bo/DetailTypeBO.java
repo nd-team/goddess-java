@@ -14,12 +14,12 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 public class DetailTypeBO extends BaseBO {
 
     /**
-     * 父节点
+     * 主科目
      */
     private String parNode;
 
     /**
-     * 分类名
+     * 二级科目
      */
     private String typeName;
 

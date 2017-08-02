@@ -107,4 +107,22 @@ public interface MaterialInventorySer extends Ser<MaterialInventory, MaterialInv
      */
     List<MaterialInventoryBO> materialInventory(InventoryType inventoryType) throws SerException;
 
+    /**
+     * 物质汇总所需接口
+     * 查找所有地区
+     *
+     * @return
+     * @throws SerException
+     */
+    List<String> findArea(String[] intervalTime) throws SerException;
+
+    /**
+     * 物质汇总所需接口
+     * 根据地区查找所有信息
+     *
+     * @return
+     * @throws SerException
+     */
+    List<MaterialInventoryBO> findByArea(String[] intervalTime,String area) throws SerException;
+
 }
