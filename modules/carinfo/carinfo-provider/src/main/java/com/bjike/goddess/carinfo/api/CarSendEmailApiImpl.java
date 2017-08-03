@@ -1,6 +1,7 @@
 package com.bjike.goddess.carinfo.api;
 
 import com.bjike.goddess.carinfo.bo.CarSendEmailBO;
+import com.bjike.goddess.carinfo.dto.CarSendEmailDTO;
 import com.bjike.goddess.carinfo.service.CarSendEmailSer;
 import com.bjike.goddess.carinfo.to.CarSendEmailTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -53,5 +54,10 @@ public class CarSendEmailApiImpl implements CarSendEmailAPI {
     @Override
     public CarSendEmailBO edit(CarSendEmailTO to) throws SerException {
         return carSendEmailSer.edit(to);
+    }
+
+    @Override
+    public Long counts(CarSendEmailDTO dto) throws SerException {
+        return carSendEmailSer.counts(dto);
     }
 }
