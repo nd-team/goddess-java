@@ -7,15 +7,16 @@ import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.salarymanage.bo.SalaryBasicBO;
 import com.bjike.goddess.salarymanage.dto.SalaryBasicDTO;
+import com.bjike.goddess.salarymanage.to.ExportSalaryBasicTO;
 import com.bjike.goddess.salarymanage.to.SalaryBasicTO;
 
 import java.util.List;
 
 /**
-* 薪资管理业务接口
+* 基本信息
 * @Author:			[ jiangzaixuan ]
 * @Date:			[  2017-07-31 09:50 ]
-* @Description:	[ 薪资管理业务接口 ]
+* @Description:	[ 薪资管理基本信息业务接口 ]
 * @Version:		[ v1.0.0 ]
 * @Copy:   		[ com.bjike ]
 */
@@ -102,4 +103,21 @@ public interface SalaryBasicAPI  {
      * @throws SerException
      */
     default void delete(String id) throws SerException{return;};
+
+    /**
+     * 导入
+     * @param toList
+     * @throws SerException
+     */
+    default void leadExcel(List<SalaryBasicTO> toList) throws SerException{
+        return;
+    };
+
+    /**
+     * 导出
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    byte[] exportExcel(ExportSalaryBasicTO to) throws SerException;
 }

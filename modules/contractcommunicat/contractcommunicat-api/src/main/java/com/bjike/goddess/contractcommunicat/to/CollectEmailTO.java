@@ -32,8 +32,7 @@ public class CollectEmailTO extends BaseTO {
     /**
      * 汇总条件
      */
-    @NotNull(groups = {CollectEmailTO.TestAdd.class}, message = "汇总条件不能为空")
-    private String[] condis;
+//    private String[] condis;
 
     /**
      * 备注
@@ -113,14 +112,14 @@ public class CollectEmailTO extends BaseTO {
     public void setType(String type) {
         this.type = type;
     }
-
-    public String[] getCondis() {
-        return condis;
-    }
-
-    public void setCondis(String[] condis) {
-        this.condis = condis;
-    }
+//
+//    public String[] getCondis() {
+//        return condis;
+//    }
+//
+//    public void setCondis(String[] condis) {
+//        this.condis = condis;
+//    }
 
     public String getRemark() {
         return remark;

@@ -52,8 +52,11 @@ public class ExamWaySetSerImpl extends ServiceImpl<ExamWaySet, ExamWaySetDTO> im
 
     @Override
     public ExamWaySetBO getOneById(String id) throws SerException {
-
-        return null;
+        if(StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空");
+        }
+        ExamWaySet examWaySet = super.findById(id);
+        return BeanTransform.copyProperties(examWaySet,ExamWaySetBO.class);
     }
 
     @Override

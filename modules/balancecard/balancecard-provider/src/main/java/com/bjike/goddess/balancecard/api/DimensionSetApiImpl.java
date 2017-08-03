@@ -4,6 +4,7 @@ import com.bjike.goddess.balancecard.bo.DimensionSetBO;
 import com.bjike.goddess.balancecard.dto.DimensionSetDTO;
 import com.bjike.goddess.balancecard.service.DimensionSetSer;
 import com.bjike.goddess.balancecard.to.DimensionSetTO;
+import com.bjike.goddess.balancecard.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,5 +59,15 @@ public class DimensionSetApiImpl implements DimensionSetAPI {
     @Override
     public List<String> listName( ) throws SerException {
         return dimensionSetSer.listName();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return dimensionSetSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return dimensionSetSer.guidePermission(guidePermissionTO);
     }
 }

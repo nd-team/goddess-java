@@ -4,6 +4,7 @@ import com.bjike.goddess.balancecard.bo.ExamWaySetBO;
 import com.bjike.goddess.balancecard.dto.ExamWaySetDTO;
 import com.bjike.goddess.balancecard.service.ExamWaySetSer;
 import com.bjike.goddess.balancecard.to.ExamWaySetTO;
+import com.bjike.goddess.balancecard.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,6 +63,13 @@ public class ExamWaySetApiImpl implements ExamWaySetAPI {
         return examWaySetSer.listName();
     }
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return examWaySetSer.sonPermission();
+    }
 
-
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return examWaySetSer.guidePermission(guidePermissionTO);
+    }
 }

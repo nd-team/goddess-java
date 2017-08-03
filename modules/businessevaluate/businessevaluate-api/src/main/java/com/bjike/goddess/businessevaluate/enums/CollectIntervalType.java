@@ -12,15 +12,15 @@ package com.bjike.goddess.businessevaluate.enums;
 public enum CollectIntervalType {
 
     /**
-     * 天
+     * 每天
      */
     DAY(0),
     /**
-     * 周
+     * 每周
      */
     WEEK(1),
     /**
-     * 月
+     * 每月
      */
     MONTH(2);
 

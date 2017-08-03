@@ -3,6 +3,7 @@ package com.bjike.goddess.balancecard.api;
 import com.bjike.goddess.balancecard.bo.IndexNameSetBO;
 import com.bjike.goddess.balancecard.dto.IndexNameSetDTO;
 import com.bjike.goddess.balancecard.service.IndexNameSetSer;
+import com.bjike.goddess.balancecard.to.GuidePermissionTO;
 import com.bjike.goddess.balancecard.to.IndexNameSetTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,4 +63,13 @@ public class IndexNameSetApiImpl implements IndexNameSetAPI {
         return indexNameSetSer.listName();
     }
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return indexNameSetSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return indexNameSetSer.guidePermission(guidePermissionTO);
+    }
 }

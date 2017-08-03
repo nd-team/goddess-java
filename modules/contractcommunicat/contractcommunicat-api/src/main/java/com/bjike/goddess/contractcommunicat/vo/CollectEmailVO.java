@@ -30,7 +30,7 @@ public class CollectEmailVO {
     /**
      * 汇总条件
      */
-    private String condi;
+//    private String condi;
     /**
      * 备注
      */
@@ -183,13 +183,13 @@ public class CollectEmailVO {
         this.type = type;
     }
 
-    public String getCondi() {
-        return condi;
-    }
-
-    public void setCondi(String condi) {
-        this.condi = condi;
-    }
+//    public String getCondi() {
+//        return condi;
+//    }
+//
+//    public void setCondi(String condi) {
+//        this.condi = condi;
+//    }
 
     public String getRemark() {
         return remark;
