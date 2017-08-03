@@ -197,8 +197,14 @@ public class RecommendSchemeSerImpl extends ServiceImpl<RecommendScheme, Recomme
             case EDIT:
                 flag = guideAddIdentity();
                 break;
-            case AUDIT:
-                flag = guideAddIdentity();
+            case SYNTHESIZEAUDIT:
+                flag = guideSynthesize();
+                break;
+            case MANAGEADUIT:
+                flag = guideManager();
+                break;
+            case OPERATIONAUDIT:
+                flag = guideOperation();
                 break;
             case DELETE:
                 flag = guideAddIdentity();

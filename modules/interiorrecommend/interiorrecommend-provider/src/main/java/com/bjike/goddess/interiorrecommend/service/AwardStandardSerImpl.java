@@ -143,9 +143,6 @@ public class AwardStandardSerImpl extends ServiceImpl<AwardStandard, AwardStanda
             case EDIT:
                 flag = guideAddIdentity();
                 break;
-            case AUDIT:
-                flag = guideAddIdentity();
-                break;
             case DELETE:
                 flag = guideAddIdentity();
                 break;
