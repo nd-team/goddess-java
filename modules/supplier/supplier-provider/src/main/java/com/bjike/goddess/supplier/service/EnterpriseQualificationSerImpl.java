@@ -14,6 +14,7 @@ import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -95,10 +96,11 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
         enterpriseQualification.setInformation(supplierInformationSer.findById(to.getInformationId()));
         if (null == enterpriseQualification.getInformation())
             throw new SerException("供应商基本信息id错误,无法查询对应数据");
-        enterpriseQualification.setCreateTime(entity.getCreateTime());
-        enterpriseQualification.setModifyTime(LocalDateTime.now());
-        super.update(enterpriseQualification);
-        return this.transformBO(enterpriseQualification);
+        BeanUtils.copyProperties(enterpriseQualification,entity,"id","createTime");
+//        enterpriseQualification.setCreateTime(entity.getCreateTime());
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+        return this.transformBO(entity);
     }
 
     @Transactional(rollbackFor = SerException.class)

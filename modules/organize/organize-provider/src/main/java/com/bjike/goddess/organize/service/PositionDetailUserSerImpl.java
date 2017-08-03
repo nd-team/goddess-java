@@ -259,14 +259,16 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     @Override
     public String getPosition(String name) throws SerException {
         PositionDetailUserDTO positionDetailUserDTO = new PositionDetailUserDTO();
-        positionDetailUserDTO.getConditions().add(Restrict.eq("username", name));
-        if (null != maps(positionDetailUserDTO) && maps(positionDetailUserDTO).size() > 0) {
-            PositionDetailUserBO positionDetailUserBO = maps(positionDetailUserDTO).get(0);
-            if (null != positionDetailUserBO) {
-                return positionDetailUserBO.getPosition();
+        List<PositionDetailUserBO> positionDetailUserListBO = maps(positionDetailUserDTO);
+        String position = "";
+        if (null != positionDetailUserListBO && positionDetailUserListBO.size() > 0) {
+            for(PositionDetailUserBO bo : positionDetailUserListBO){
+                if(bo.getUsername().equals(name)){
+                    position = bo.getPosition();
+                }
             }
         }
-        return null;
+        return position;
     }
 
     @Override

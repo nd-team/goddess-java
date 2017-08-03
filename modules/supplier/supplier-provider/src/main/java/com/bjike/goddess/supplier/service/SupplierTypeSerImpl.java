@@ -15,6 +15,7 @@ import com.bjike.goddess.supplier.to.SupplierTypeTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -71,10 +72,11 @@ public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeD
             try {
                 SupplierType entity = super.findById(to.getId());
                 SupplierType supplierType = BeanTransform.copyProperties(to, SupplierType.class, true);
-                supplierType.setCreateTime(entity.getCreateTime());
-                supplierType.setModifyTime(LocalDateTime.now());
-                super.update(supplierType);
-                return BeanTransform.copyProperties(supplierType, SupplierTypeBO.class);
+                BeanUtils.copyProperties(supplierType,entity,"id","createTime");
+//                supplierType.setCreateTime(entity.getCreateTime());
+                entity.setModifyTime(LocalDateTime.now());
+                super.update(entity);
+                return BeanTransform.copyProperties(entity, SupplierTypeBO.class);
             } catch (Exception e) {
                 throw new SerException("数据对象不能为空");
             }

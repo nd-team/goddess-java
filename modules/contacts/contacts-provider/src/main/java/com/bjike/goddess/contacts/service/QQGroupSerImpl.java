@@ -154,7 +154,75 @@ public class QQGroupSerImpl extends ServiceImpl<QQGroup, QQGroupDTO> implements 
         entity.setModifyTime(LocalDateTime.now());
         entity.setStatus(true);
         super.update(entity);
+
+        //发送对象的邮箱地址
+        String email = null;
+        //是否发送邮件
+        if (to.isSend()) {
+            String sendObject = "综合资源部";
+            if (StringUtils.isNotBlank(sendObject)) {
+                List<OpinionBO> opinionBOList = departmentDetailAPI.findThawOpinion();
+                for (OpinionBO opinionBO : opinionBOList) {
+                    if (sendObject.equals(opinionBO.getValue())) {
+                        //根据组织结构中的部门名称查询部门id
+                        DepartmentDetailDTO departmentDetailDTO = new DepartmentDetailDTO();
+                        departmentDetailDTO.getConditions().add(Restrict.eq("department",sendObject));
+                        List<DepartmentDetailBO> departmentDetailBOList =departmentDetailAPI.view(departmentDetailDTO);
+                        String departmentId = departmentDetailBOList.get(0).getId();
+                        //从公邮中得到部门的邮箱
+                        CommonalityDTO dto = new CommonalityDTO();
+                        List<CommonalityBO> commonalityBOList = commonalityAPI.findAll();
+                        for (CommonalityBO commonalityBO : commonalityBOList) {
+                            if (departmentId.equals(commonalityBO.getDepartmentId())) {
+                                email = commonalityBO.getEmail();
+                                String content = html1(to);
+                                String[] email1 = new String[1];
+                                email1[0] = email;
+                                //调用发送邮箱接口
+                                MessageTO messageTO = new MessageTO();
+                                messageTO.setTitle("QQ群");
+                                messageTO.setMsgType(MsgType.SYS);
+                                messageTO.setContent(content);
+                                messageTO.setSendType(SendType.EMAIL);
+                                messageTO.setRangeType(RangeType.SPECIFIED);
+                                messageTO.setReceivers(email1);
+                                messageAPI.send(messageTO);
+                            }
+                        }
+                    }
+                }
+            } else {
+                throw new SerException("发送对象不能为空");
+            }
+        }
         return BeanTransform.copyProperties(entity, QQGroupBO.class);
+    }
+
+    private String html1(QQGroupTO to) throws SerException {
+        StringBuffer sb = new StringBuffer("");
+        sb = new StringBuffer("<h4>QQ群更新</h4>");
+        sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
+        //拼表头
+        sb.append("<tr>");
+        sb.append("<td>Q群号</td>");
+        sb.append("<td>Q群名称</td>");
+        sb.append("<td>Q群对象</td>");
+        sb.append("<td>Q群管理人</td>");
+        sb.append("<td>Q群状态</td>");
+        sb.append("<tr>");
+
+        //拼body部分
+        sb.append("<tr>");
+        sb.append("<td>" + to.getNumber() + "</td>");
+        sb.append("<td>" + to.getName() + "</td>");
+        sb.append("<td>" + to.getObject() + "</td>");
+        sb.append("<td>" + to.getManager() + "</td>");
+        sb.append("<td>" + to.getStatus() + "</td>");
+        sb.append("<tr>");
+
+        //结束
+        sb.append("</table>");
+        return sb.toString();
     }
 
     @Transactional(rollbackFor = SerException.class)
