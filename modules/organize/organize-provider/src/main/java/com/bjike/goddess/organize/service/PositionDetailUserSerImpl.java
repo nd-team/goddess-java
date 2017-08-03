@@ -21,10 +21,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * 用户职位业务实现
@@ -257,16 +254,24 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     }
 
     @Override
-    public String getPosition(String name) throws SerException {
+    public List<String> getPosition(String name) throws SerException {
+        //根据名字获取用户ｉｄ
+        UserBO userBO = userAPI.findByUsername(name);
+        String userId = "";
+        if (null != userBO) {
+            userId = userBO.getId();
+        }
         PositionDetailUserDTO positionDetailUserDTO = new PositionDetailUserDTO();
-        positionDetailUserDTO.getConditions().add(Restrict.eq("username", name));
-        if (null != maps(positionDetailUserDTO) && maps(positionDetailUserDTO).size() > 0) {
-            PositionDetailUserBO positionDetailUserBO = maps(positionDetailUserDTO).get(0);
-            if (null != positionDetailUserBO) {
-                return positionDetailUserBO.getPosition();
+        positionDetailUserDTO.getConditions().add(Restrict.eq("userId", userId));
+        List<PositionDetailUser> positionDetailUserList = super.findByCis(positionDetailUserDTO);
+        List<String> positionList = new ArrayList<>(0);
+        if (null != positionDetailUserList && positionDetailUserList.size() > 0) {
+            PositionDetailUser positionDetailUser = positionDetailUserList.get(0);
+            for (PositionDetail positionDetail : positionDetailUser.getPositionSet()) {
+                positionList.add(positionDetail.getPosition());
             }
         }
-        return null;
+        return positionList;
     }
 
     @Override
@@ -311,4 +316,39 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         }
         return list;
     }
+
+    @Override
+    public List<PositionDetailBO> getPositionDetail(String name) throws SerException {
+        //根据名字获取用户ｉｄ
+        UserBO userBO = userAPI.findByUsername(name);
+        String userId = "";
+        if (null != userBO) {
+            userId = userBO.getId();
+        }
+        PositionDetailUserDTO positionDetailUserDTO = new PositionDetailUserDTO();
+        positionDetailUserDTO.getConditions().add(Restrict.eq("userId", userId));
+        List<PositionDetailUser> positionDetailUserList = super.findByCis(positionDetailUserDTO);
+        List<PositionDetail> positionList = new ArrayList<>(0);
+        List<PositionDetailBO> positionDetailBOs1 = new ArrayList<>(0);
+        if (null != positionDetailUserList && positionDetailUserList.size() > 0) {
+            PositionDetailUser positionDetailUser = positionDetailUserList.get(0);
+            Set<PositionDetail> positionDetailSet = positionDetailUser.getPositionSet();
+            Iterator it=positionDetailSet.iterator();
+            while(it.hasNext()){
+                positionList.add((PositionDetail) it.next());
+            }
+            List<PositionDetailBO> positionBOList = BeanTransform.copyProperties(positionList,PositionDetailBO.class);
+            //查询未冻结数据
+            if(null != positionBOList && positionBOList.size() > 0){
+                for(PositionDetailBO bo : positionBOList){
+                    if(Status.THAW.equals(bo.getStatus())){
+                        positionDetailBOs1.add(BeanTransform.copyProperties(bo,PositionDetailBO.class));
+                    }
+                }
+            }
+        }
+        return positionDetailBOs1;
+    }
+
+
 }

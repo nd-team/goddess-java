@@ -94,4 +94,6 @@ public class ContractCollectEmailApiImpl implements ContractCollectEmailAPI {
     public void checkSendEmail() throws SerException {
         contractCollectEmailSer.checkSendEmail();
     }
+
+
 }

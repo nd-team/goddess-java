@@ -2,6 +2,7 @@ package com.bjike.goddess.balancecard.service;
 
 import com.bjike.goddess.balancecard.bo.DimensionSetBO;
 import com.bjike.goddess.balancecard.to.DimensionSetTO;
+import com.bjike.goddess.balancecard.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.balancecard.entity.DimensionSet;
@@ -19,6 +20,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface DimensionSetSer extends Ser<DimensionSet, DimensionSetDTO> {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
 
     /**

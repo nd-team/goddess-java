@@ -1,51 +1,49 @@
-package com.bjike.goddess.salarymanage.vo;
+package com.bjike.goddess.salarymanage.excel;
+
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
 /**
-* 薪资管理表现层对象
-* @Author:			[ jiangzaixuan ]
-* @Date:			[  2017-07-31 09:50 ]
-* @Description:	[ 薪资管理表现层对象 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
-*/
-public class SalaryBasicVO {
-    /**
-     * id
-     */
-    private String  id;
+ * 薪资管理基本资料
+ *
+ * @Author: [jiangzaixuan]
+ * @Date: [2017-08-02 10:30]
+ * @Description: [ ]
+ * @Version: [1.0.0]
+ * @Copy: [com.bjike]
+ */
+public class SalaryBasicSetExcel {
     /**
      * 地区
      */
+    @ExcelHeader(name = "地区",notNull = true)
     private String  area;
 
     /**
      * 体系
      */
+    @ExcelHeader(name = "体系",notNull = true)
     private String  system;
 
     /**
      * 部门/项目组
      */
+    @ExcelHeader(name = "部门/项目组",notNull = true)
     private String  department;
 
     /**
      * 岗位
      */
+    @ExcelHeader(name = "岗位",notNull = true)
     private String  position;
 
     /**
      * 基本工资
      */
+    @ExcelHeader(name = "基本工资",notNull = true)
     private String  basePay;
 
 
 
-    public String getId () {
-        return id;
-    }
-    public void setId (String id ) {
-        this.id = id ;
-    }
     public String getArea () {
         return area;
     }

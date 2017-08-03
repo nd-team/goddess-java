@@ -143,6 +143,9 @@ public class OtherExpensesSerImpl extends ServiceImpl<OtherExpenses, OtherExpens
 
     @Override
     public List<AreaCollectBO> areaCollect(CollectTO to) throws SerException {
+        to.setType("");
+        to.setName("");
+        to.setProject("");
         List<OtherExpenses> list = this.findCollect(to).stream()
                 .sorted(Comparator.comparing(OtherExpenses::getArea)
                         .thenComparing(OtherExpenses::getYear)
@@ -176,6 +179,9 @@ public class OtherExpensesSerImpl extends ServiceImpl<OtherExpenses, OtherExpens
 
     @Override
     public List<NameCollectBO> nameCollect(CollectTO to) throws SerException {
+        to.setType("");
+        to.setProject("");
+        to.setArea("");
         List<OtherExpenses> list = this.findCollect(to).stream()
                 .sorted(Comparator.comparing(OtherExpenses::getName)
                         .thenComparing(OtherExpenses::getYear)
@@ -209,6 +215,9 @@ public class OtherExpensesSerImpl extends ServiceImpl<OtherExpenses, OtherExpens
 
     @Override
     public List<TypeCollectBO> typeCollect(CollectTO to) throws SerException {
+        to.setProject("");
+        to.setArea("");
+        to.setName("");
         List<OtherExpenses> list = this.findCollect(to).stream()
                 .sorted(Comparator.comparing(OtherExpenses::getType)
                         .thenComparing(OtherExpenses::getYear)
@@ -242,6 +251,9 @@ public class OtherExpensesSerImpl extends ServiceImpl<OtherExpenses, OtherExpens
 
     @Override
     public List<ProjectCollectBO> projectCollect(CollectTO to) throws SerException {
+        to.setArea("");
+        to.setName("");
+        to.setType("");
         List<OtherExpenses> list = this.findCollect(to).stream()
                 .sorted(Comparator.comparing(OtherExpenses::getProject)
                         .thenComparing(OtherExpenses::getYear)

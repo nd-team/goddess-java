@@ -76,7 +76,7 @@ public interface ProjectOutsourcingSer extends Ser<ProjectOutsourcing, ProjectOu
 
     List<ProjectOutsourcingBO> prjects() throws SerException;
 
-    List<SonPermissionObject> sonPermission() throws SerException;
+    Boolean sonPermission() throws SerException;
 
     Boolean guidePermission(GuidePermissionTO to) throws SerException;
 

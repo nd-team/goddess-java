@@ -4,6 +4,7 @@ import com.bjike.goddess.balancecard.api.DimensionSetAPI;
 import com.bjike.goddess.balancecard.bo.DimensionSetBO;
 import com.bjike.goddess.balancecard.dto.DimensionSetDTO;
 import com.bjike.goddess.balancecard.to.DimensionSetTO;
+import com.bjike.goddess.balancecard.to.GuidePermissionTO;
 import com.bjike.goddess.balancecard.vo.DimensionSetVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -35,6 +36,30 @@ public class DimensionSetAction {
 
     @Autowired
     private DimensionSetAPI dimensionSetAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = dimensionSetAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
 
     /**
      *  列表总条数

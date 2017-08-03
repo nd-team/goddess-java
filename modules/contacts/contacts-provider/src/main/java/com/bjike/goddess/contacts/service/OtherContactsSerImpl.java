@@ -160,7 +160,7 @@ public class OtherContactsSerImpl extends ServiceImpl<OtherContacts, OtherContac
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
-        return BeanTransform.copyProperties(entity, OtherContactsBO.class, true);
+        return BeanTransform.copyProperties(entity, OtherContactsBO.class, false);
     }
 
     @Transactional(rollbackFor = SerException.class)

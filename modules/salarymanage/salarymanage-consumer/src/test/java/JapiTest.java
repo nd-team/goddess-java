@@ -15,13 +15,13 @@ public class JapiTest {
 
     public static void main(String[] args) {
 //                JapiClient.delete(true);
-        JapiClient.setPrefixPath("/home/ike/github/goddess-java/");//路径前缀
+        JapiClient.setPrefixPath("/media/data4/jzx/goddess-java/");//路径前缀
         JapiClient.setpostfixPath("/src/main/java");
 
-        JapiClient.setProjectJavaPath("modules/salaryconfirm/salaryconfirm-consumer");//主项目位置
-        JapiClient.setActionReletivePath("com/bjike/goddess/salaryconfirm/action");//主项目action位置
+        JapiClient.setProjectJavaPath("modules/salarymanage/salarymanage-consumer");//主项目位置
+        JapiClient.setActionReletivePath("com/bjike/goddess/salarymanage/action");//主项目action位置
         JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
-                "modules/salaryconfirm/salaryconfirm-api",
+                "modules/salarymanage/salarymanage-api",
                 "modules/user/user-api",
                 "modules/organize/organize-api",
                 "modules/storage/storage-api",

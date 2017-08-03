@@ -208,4 +208,20 @@ public class PositionDetailUserAct {
         }
     }
 
+//    /**
+//     * 获取用户列表
+//     *
+//     * @version v1
+//     */
+//    @GetMapping("v1/name")
+//    public Result getPosition(String name ) throws ActException {
+//        try {
+//            return ActResult.initialize(positionDetailUserAPI.getPositionDetail(name));
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+
+
+
 }

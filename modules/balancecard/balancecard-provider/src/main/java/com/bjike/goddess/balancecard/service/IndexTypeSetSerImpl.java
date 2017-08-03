@@ -51,8 +51,8 @@ public class IndexTypeSetSerImpl extends ServiceImpl<IndexTypeSet, IndexTypeSetD
 
     @Override
     public IndexTypeSetBO getOneById(String id) throws SerException {
-
-        return null;
+        IndexTypeSet indexTypeSet = super.findById(id);
+        return BeanTransform.copyProperties(indexTypeSet,IndexTypeSetBO.class);
     }
 
     @Override
