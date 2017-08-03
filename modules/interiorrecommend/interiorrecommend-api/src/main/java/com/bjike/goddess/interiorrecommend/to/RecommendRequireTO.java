@@ -66,6 +66,12 @@ public class RecommendRequireTO extends BaseTO {
      */
     private String recommendSponsor;
 
+    /**
+     * 推荐考核内容
+     */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "部门项目组分解数据不能为空")
+    private List<RecommendAssessDetailTO> detailList;
+
 
     public String getRecommendSchemeId() {
         return recommendSchemeId;
@@ -129,5 +135,13 @@ public class RecommendRequireTO extends BaseTO {
 
     public void setRecommendSponsor(String recommendSponsor) {
         this.recommendSponsor = recommendSponsor;
+    }
+
+    public List<RecommendAssessDetailTO> getDetailList() {
+        return detailList;
+    }
+
+    public void setDetailList(List<RecommendAssessDetailTO> detailList) {
+        this.detailList = detailList;
     }
 }

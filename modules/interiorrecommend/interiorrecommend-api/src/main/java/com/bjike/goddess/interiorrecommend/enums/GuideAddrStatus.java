@@ -76,7 +76,11 @@ public enum GuideAddrStatus {
     /**
      * 总经办审核
      */
-    MANAGEADUIT(15);
+    MANAGEADUIT(15),
+    /**
+     * 审核
+     */
+    AUDIT(16),;
 
     private int code;
 
