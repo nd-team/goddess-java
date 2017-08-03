@@ -116,7 +116,7 @@ public class AwardInfoSerImpl extends ServiceImpl<AwardInfo, AwardInfoDTO> imple
     }
 
     /**
-     * 导航栏核对添加修改删除审核权限（岗位级别）
+     * 导航栏核对添加修改删除权限（岗位级别）
      */
     private Boolean guideAddIdentity() throws SerException {
         Boolean flag = false;
@@ -230,9 +230,6 @@ public class AwardInfoSerImpl extends ServiceImpl<AwardInfo, AwardInfoDTO> imple
                 flag = guideAddIdentity();
                 break;
             case EDIT:
-                flag = guideAddIdentity();
-                break;
-            case AUDIT:
                 flag = guideAddIdentity();
                 break;
             case DELETE:

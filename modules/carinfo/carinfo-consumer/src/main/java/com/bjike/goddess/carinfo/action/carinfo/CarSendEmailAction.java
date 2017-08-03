@@ -1,6 +1,7 @@
 package com.bjike.goddess.carinfo.action.carinfo;
 
 import com.bjike.goddess.carinfo.api.CarSendEmailAPI;
+import com.bjike.goddess.carinfo.dto.CarSendEmailDTO;
 import com.bjike.goddess.carinfo.entity.CarSendEmail;
 import com.bjike.goddess.carinfo.to.CarSendEmailTO;
 import com.bjike.goddess.carinfo.vo.CarSendEmailVO;
@@ -70,6 +71,23 @@ public class CarSendEmailAction {
             return ActResult.initialize(vo);
         }catch (SerException e){
             throw new ActException((e.getMessage()));
+        }
+    }
+
+    /**
+     * 列表总条数
+     *
+     * @param dto 车辆信息邮件信息dto
+     * @des 获取所有车辆信息邮件信息总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(CarSendEmailDTO dto) throws ActException {
+        try {
+            Long count = carSendEmailAPI.counts(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
         }
     }
 

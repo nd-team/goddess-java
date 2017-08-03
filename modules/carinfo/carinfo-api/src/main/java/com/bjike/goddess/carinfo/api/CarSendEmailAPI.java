@@ -1,6 +1,7 @@
 package com.bjike.goddess.carinfo.api;
 
 import com.bjike.goddess.carinfo.bo.CarSendEmailBO;
+import com.bjike.goddess.carinfo.dto.CarSendEmailDTO;
 import com.bjike.goddess.carinfo.entity.CarSendEmail;
 import com.bjike.goddess.carinfo.to.CarSendEmailTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -73,6 +74,13 @@ public interface CarSendEmailAPI {
      * @throws SerException
      */
     default CarSendEmailBO edit(CarSendEmailTO to) throws SerException{
+        return null;
+    }
+
+    /**
+     * 总条数
+     */
+    default Long counts(CarSendEmailDTO dto) throws SerException {
         return null;
     }
 

@@ -24,6 +24,11 @@ public class DriverRecruitBO extends BaseBO {
     private String area;
 
     /**
+     * 审核结果
+     */
+    private Boolean aduit;
+
+    /**
      * 司机名称
      */
     private String driver;
@@ -118,6 +123,14 @@ public class DriverRecruitBO extends BaseBO {
      */
     private String remark;
 
+
+    public Boolean getAduit() {
+        return aduit;
+    }
+
+    public void setAduit(Boolean aduit) {
+        this.aduit = aduit;
+    }
 
     public String getSuggest() {
         return suggest;

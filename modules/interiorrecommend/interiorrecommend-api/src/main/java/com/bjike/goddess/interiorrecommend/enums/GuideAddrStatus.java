@@ -24,9 +24,9 @@ public enum GuideAddrStatus {
      */
     EDIT(2),
     /**
-     * 审核
+     * 综合资源部负责人审核
      */
-    AUDIT(3),
+    SYNTHESIZEAUDIT(3),
     /**
      * 删除
      */
@@ -66,7 +66,17 @@ public enum GuideAddrStatus {
     /**
      * 查看附件
      */
-    SEEFILE(13);
+    SEEFILE(13),
+
+    /**
+     * 运营商务部负责人审核
+     */
+    OPERATIONAUDIT(14),
+
+    /**
+     * 总经办审核
+     */
+    MANAGEADUIT(15);
 
     private int code;
 

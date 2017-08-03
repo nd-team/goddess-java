@@ -46,6 +46,7 @@ public class RecommendSchemeSerImpl extends ServiceImpl<RecommendScheme, Recomme
 
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
+
     /**
      * 核对查看权限（部门级别）
      */
@@ -83,9 +84,6 @@ public class RecommendSchemeSerImpl extends ServiceImpl<RecommendScheme, Recomme
     }
 
 
-
-
-
     /**
      * 核对查看权限（部门级别）
      */
@@ -104,7 +102,7 @@ public class RecommendSchemeSerImpl extends ServiceImpl<RecommendScheme, Recomme
     }
 
     /**
-     * 核对添加修改删除审核权限（岗位级别）
+     * 核对添加修改删除权限（岗位级别）
      */
     private Boolean guideAddIdentity() throws SerException {
         Boolean flag = false;
@@ -114,6 +112,57 @@ public class RecommendSchemeSerImpl extends ServiceImpl<RecommendScheme, Recomme
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 综合资源部负责人审核权限
+     */
+    private Boolean guideSynthesize() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("3");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 运营商务部负责人审核权限
+     */
+    private Boolean guideOperation() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("4");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 总经办审核权限
+     */
+    private Boolean guideManager() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("5");
         } else {
             flag = true;
         }
@@ -148,8 +197,14 @@ public class RecommendSchemeSerImpl extends ServiceImpl<RecommendScheme, Recomme
             case EDIT:
                 flag = guideAddIdentity();
                 break;
-            case AUDIT:
-                flag = guideAddIdentity();
+            case SYNTHESIZEAUDIT:
+                flag = guideSynthesize();
+                break;
+            case MANAGEADUIT:
+                flag = guideManager();
+                break;
+            case OPERATIONAUDIT:
+                flag = guideOperation();
                 break;
             case DELETE:
                 flag = guideAddIdentity();
@@ -214,37 +269,32 @@ public class RecommendSchemeSerImpl extends ServiceImpl<RecommendScheme, Recomme
     @Override
     public void resourcesAudit(String id, String resourcesSuggest, Boolean resourcesAudit) throws SerException {
         //判断是否为综合部负责人
-        if(guideAddIdentity() == true) {
+        if (guideSynthesize() == true) {
             String userBO = RpcTransmit.getUserToken();
             String userId = userAPI.currentUser().getId();
-            if (positionDetailUserAPI.findById(userId).getPosition().equals("综合部资源部负责人")) {
-                RecommendScheme model = super.findById(id);
-                if (model != null) {
-                    //todo 尚未明确组织结构,需要判断当前用户是否为综合资源部负责人
-                    model.setResourcesSuggest(resourcesSuggest);
-                    model.setResourcesAudit(resourcesAudit);
-                    super.update(model);
-                } else {
-                    throw new SerException("非法Id,推荐方案对象不能为空!");
-                }
+            RecommendScheme model = super.findById(id);
+            if (model != null) {
+                //todo 尚未明确组织结构,需要判断当前用户是否为综合资源部负责人
+                model.setResourcesSuggest(resourcesSuggest);
+                model.setResourcesAudit(resourcesAudit);
+                super.update(model);
             } else {
-                throw new SerException("你没有审核权限");
+                throw new SerException("非法Id,推荐方案对象不能为空!");
             }
-        }else {
+        } else {
             throw new SerException("你没有审核权限");
         }
     }
 
     @Override
     public void operateAudit(String id, String operateSuggest, Boolean operateAudit) throws SerException {
-        //判断是否为运营部
-        if(guideAddIdentity() == true) {
+        //判断是否为运营部负责人
+        if (guideOperation() == true) {
             String userBO = RpcTransmit.getUserToken();
             String userId = userAPI.currentUser().getId();
-            if (positionDetailUserAPI.findById(userId).getPosition().equals("运营部商务部负责人")) {
                 RecommendScheme model = super.findById(id);
                 if (model != null) {
-                    //todo 尚未明确组织结构，需要判断当前用户是否为运营商务部负责人
+                    //todo 尚未明确组织结构，需要判断当前用户是否为运营商务部负责人zzzzzz
                     model.setOperateSuggest(operateSuggest);
                     model.setOperateAudit(operateAudit);
                     super.update(model);
@@ -254,18 +304,14 @@ public class RecommendSchemeSerImpl extends ServiceImpl<RecommendScheme, Recomme
             } else {
                 throw new SerException("你没有审核权限");
             }
-        }else{
-            throw new SerException("你没有审核权限");
-        }
     }
 
     @Override
     public void generalAudit(String id, String generalSuggest, Boolean generalAudit) throws SerException {
         //判断为是否为总经办
-        if(guideAddIdentity() == true) {
+        if (guideManager() == true) {
             String userBO = RpcTransmit.getUserToken();
             String userId = userAPI.currentUser().getId();
-            if (positionDetailUserAPI.findById(userId).getPosition().equals("总经办")) {
                 RecommendScheme model = super.findById(id);
                 if (model != null) {
                     //todo 尚未明确组织结构，需要判断当前用户是否为总经办
@@ -278,9 +324,6 @@ public class RecommendSchemeSerImpl extends ServiceImpl<RecommendScheme, Recomme
             } else {
                 throw new SerException("你没有审核权限");
             }
-        }else{
-            throw new SerException("你没有审核权限");
-        }
     }
 
 
