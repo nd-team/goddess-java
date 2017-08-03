@@ -180,11 +180,11 @@ public class ApplyAndExaminationAction {
 
 
     /**
-     * 添加项目申请和审批
+     * 申请项目
      *
      * @param applyAndExaminationTO 项目申请和审批基本信息数据to
      * @return class ApplyAndExaminationVO
-     * @des 添加项目申请和审批
+     * @des 申请项目
      * @version v1
      */
     @LoginAuth

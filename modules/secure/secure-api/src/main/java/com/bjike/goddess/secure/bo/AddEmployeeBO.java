@@ -2,8 +2,6 @@ package com.bjike.goddess.secure.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import javax.persistence.Column;
-
 /**
  * 社保增员信息名单业务传输对象
  *
@@ -53,7 +51,7 @@ public class AddEmployeeBO extends BaseBO {
     /**
      * 身份证籍贯
      */
-    private String arrival;
+    private String born;
 
     /**
      * 联系方式
@@ -176,12 +174,12 @@ public class AddEmployeeBO extends BaseBO {
         this.idCart = idCart;
     }
 
-    public String getArrival() {
-        return arrival;
+    public String getBorn() {
+        return born;
     }
 
-    public void setArrival(String arrival) {
-        this.arrival = arrival;
+    public void setBorn(String born) {
+        this.born = born;
     }
 
     public String getTel() {

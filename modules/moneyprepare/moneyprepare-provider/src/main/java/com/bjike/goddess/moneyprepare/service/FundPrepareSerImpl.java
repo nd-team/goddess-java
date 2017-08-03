@@ -76,7 +76,8 @@ public class FundPrepareSerImpl extends ServiceImpl<FundPrepare, FundPrepareDTO>
         if (null != proportionBOs && proportionBOs.size() > 0) {
             for (ProportionBO bo : proportionBOs) {
                 bo.setEachFund(fundPrepare.getFund() * bo.getRatio());
-                bo.setId(fundPrepare.getId());
+                bo.setId(bo.getId());
+                bo.setFundId(id);
                 boList.add(bo);
             }
         } else {

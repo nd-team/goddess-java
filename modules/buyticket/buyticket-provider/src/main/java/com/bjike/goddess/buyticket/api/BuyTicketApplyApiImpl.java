@@ -6,7 +6,7 @@ import com.bjike.goddess.buyticket.enums.AuditType;
 import com.bjike.goddess.buyticket.excel.SonPermissionObject;
 import com.bjike.goddess.buyticket.service.BuyTicketApplySer;
 import com.bjike.goddess.buyticket.to.BuyTicketApplyTO;
-import com.bjike.goddess.buyticket.to.BuyGuidePermissionTO;
+import com.bjike.goddess.buyticket.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ public class BuyTicketApplyApiImpl implements BuyTicketApplyAPI {
     }
 
     @Override
-    public Boolean guidePermission(BuyGuidePermissionTO guidePermissionTO) throws SerException {
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return buyTicketApplySer.guidePermission(guidePermissionTO);
     }
 

@@ -285,6 +285,7 @@ public class AnnouncementSerImpl extends ServiceImpl<Announcement, AnnouncementD
             }
         }
         entity.setRecipient(sb.toString());
+        entity.setId(to.getUuid());
         super.save(entity);
         if (recipients != null) {
             saveUser(entity, recipients);
@@ -428,6 +429,28 @@ public class AnnouncementSerImpl extends ServiceImpl<Announcement, AnnouncementD
     @Override
     public List<AnnouncementBO> list(AnnouncementDTO dto) throws SerException {
         dto.getSorts().add("createTime=desc");
+        String[] numbers = dto.getNumbers();
+        String[] classifys = dto.getClassifys();
+        String[] authors = dto.getAuthors();
+        String publishDate = dto.getPublishDate();
+        if (numbers != null) {
+            dto.getConditions().add(Restrict.in("number", numbers));
+        }
+        if (classifys != null) {
+            dto.getConditions().add(Restrict.in("classify", classifys));
+        }
+        if (authors != null) {
+            dto.getConditions().add(Restrict.in("author", authors));
+        }
+        if (publishDate != null) {
+            LocalDate time = null;
+            try {
+                time = DateUtil.parseDate(publishDate);
+            } catch (Exception e) {
+                throw new SerException("日期格式错误");
+            }
+            dto.getConditions().add(Restrict.eq("publishDate", time));
+        }
         List<Announcement> list = super.findByCis(dto, true);
         return BeanTransform.copyProperties(list, AnnouncementBO.class);
     }
@@ -457,6 +480,28 @@ public class AnnouncementSerImpl extends ServiceImpl<Announcement, AnnouncementD
         String classify = dto.getClassify();
         if (classify != null) {
             dto.getConditions().add(Restrict.eq("classify", classify));
+        }
+        String[] numbers = dto.getNumbers();
+        String[] classifys = dto.getClassifys();
+        String[] authors = dto.getAuthors();
+        String publishDate = dto.getPublishDate();
+        if (numbers != null) {
+            dto.getConditions().add(Restrict.in("number", numbers));
+        }
+        if (classifys != null) {
+            dto.getConditions().add(Restrict.in("classify", classifys));
+        }
+        if (authors != null) {
+            dto.getConditions().add(Restrict.in("author", authors));
+        }
+        if (publishDate != null) {
+            LocalDate time = null;
+            try {
+                time = DateUtil.parseDate(publishDate);
+            } catch (Exception e) {
+                throw new SerException("日期格式错误");
+            }
+            dto.getConditions().add(Restrict.eq("publishDate", time));
         }
         return super.count(dto);
     }

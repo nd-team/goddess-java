@@ -448,8 +448,6 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
     //zhuangkaiiqn
     private String getSql(String file, String fileValue, SubjectCollectDTO subjectCollectDTO) throws SerException {
         StringBuffer sql = new StringBuffer("");
-        String start = LocalDate.parse(subjectCollectDTO.getStartTime()).getMonthValue() + "";
-        String end = LocalDate.parse(subjectCollectDTO.getEndTime()).getMonthValue() + "";
         sql.append(" select " + file + ", months,");
         sql.append(" sum(beginningDebitAmount) as beginningDebitAmounts, ");
         sql.append(" sum(beginningCreditAmount) as beginningCreditAmounts, ");
@@ -463,8 +461,8 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
         } else {
             sql.append(" where " + file + " = '" + fileValue + "'");
         }
-        if (StringUtils.isNotBlank(start) && StringUtils.isNotBlank(end)) {
-            sql.append(" and months between " + start + " and " + end + " ");
+        if (StringUtils.isNotBlank(subjectCollectDTO.getStartTime()) && StringUtils.isNotBlank(subjectCollectDTO.getEndTime())) {
+            sql.append(" and months between " + subjectCollectDTO.getStartTime() + " and " + subjectCollectDTO.getEndTime() + " ");
         }
         sql.append(" group by " + file + " ,months");
         return sql.toString();

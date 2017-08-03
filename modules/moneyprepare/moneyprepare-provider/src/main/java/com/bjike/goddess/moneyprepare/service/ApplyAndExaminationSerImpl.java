@@ -270,11 +270,18 @@ public class ApplyAndExaminationSerImpl extends ServiceImpl<ApplyAndExamination,
 //        checkAddIdentity();
         //DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         //LocalDate date = LocalDate.parse(applyAndExaminationTO.getStartProjectTime(),format);
-        try {
-            DateUtil.parseDate(applyAndExaminationTO.getTableName());
-        } catch (Exception e) {
-            throw new SerException("输入的日期格式不对,格式为yyyy-MM-dd");
+
+
+        String string = applyAndExaminationTO.getTableName();
+        String time = getFirstDay(string);
+        if (null == time || "".equals(time)) {
+            throw new SerException("资金准备表的名称应包含有日期，格式为yyyy年MM月");
         }
+//        try {
+//            DateUtil.parseDate(applyAndExaminationTO.getTableName());
+//        } catch (Exception e) {
+//            throw new SerException("输入的日期格式不对,格式为yyyy-MM-dd");
+//        }
         ApplyAndExamination applyAndExamination = new ApplyAndExamination();
         applyAndExamination.setTableName(applyAndExaminationTO.getTableName());
         applyAndExamination.setApply(userAPI.currentUser().getUsername());
@@ -294,10 +301,10 @@ public class ApplyAndExaminationSerImpl extends ServiceImpl<ApplyAndExamination,
 
         ApplyAndExamination temp = super.findById(applyAndExaminationTO.getId());
 
-        try {
-            DateUtil.parseDate(applyAndExaminationTO.getTableName());
-        } catch (Exception e) {
-            throw new SerException("输入的日期格式不对,格式为yyyy-MM-dd");
+        String string = applyAndExaminationTO.getTableName();
+        String time = getFirstDay(string);
+        if (null == time || "".equals(time)) {
+            throw new SerException("资金准备表的名称应包含有日期，格式为yyyy-MM-dd");
         }
 
         ApplyAndExamination applyAndExamination = BeanTransform.copyProperties(applyAndExaminationTO, ApplyAndExamination.class, true);
@@ -349,24 +356,19 @@ public class ApplyAndExaminationSerImpl extends ServiceImpl<ApplyAndExamination,
         }
 
         ApplyAndExamination applyAndExamination = super.findById(id);
-        String nameTime = applyAndExamination.getTableName();
-        LocalDate tableNameTime = LocalDate.parse(nameTime);
-        StringBuilder sb = new StringBuilder();
-        sb.append(tableNameTime.getYear());
-        sb.append("-");
-        if (tableNameTime.getMonthValue() < 10) {
-            sb.append("0" + tableNameTime.getMonth().getValue() + "-01");
-        } else {
-            sb.append(tableNameTime.getMonth().getValue() + "-01");
+        String string = applyAndExamination.getTableName();
+        String times = getFirstDay(string);
+        if (null == times || "".equals(times)) {
+            throw new SerException("资金准备表的名称应包含有日期，格式为yyyy-MM-dd");
         }
 
-        LocalDate time = LocalDate.parse(sb.toString());
+        LocalDate time = LocalDate.parse(times);
         //前一个月
-        LocalDate time1 = LocalDate.parse(sb.toString()).minusMonths(1);
+        LocalDate time1 = LocalDate.parse(times).minusMonths(1);
         //前两个月
-        LocalDate time2 = LocalDate.parse(sb.toString()).minusMonths(2);
+        LocalDate time2 = LocalDate.parse(times).minusMonths(2);
         //前三个月
-        LocalDate time3 = LocalDate.parse(sb.toString()).minusMonths(3);
+        LocalDate time3 = LocalDate.parse(times).minusMonths(3);
 
         //根据月份查询当月的资金准备表
         FundPrepareDTO fundPrepareDTO = new FundPrepareDTO();
@@ -429,10 +431,9 @@ public class ApplyAndExaminationSerImpl extends ServiceImpl<ApplyAndExamination,
     }
 
 
-
     public static void main(String[] args) {
-        String bb= "2017-05-10";
-        LocalDate xx =LocalDate.parse(bb, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String bb = "2017-05-10";
+        LocalDate xx = LocalDate.parse(bb, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         LocalDate d = LocalDate.now();
         d.getMonth();
         System.out.println(d.getMonth().getValue());
@@ -451,20 +452,20 @@ public class ApplyAndExaminationSerImpl extends ServiceImpl<ApplyAndExamination,
             sb.append(d.getMonth().getValue() + "-01");
         }
         System.out.println(sb);
-        System.out.println(xx.getMonthValue()+"------------");
+        System.out.println(xx.getMonthValue() + "------------");
 
         String a = "2017-04-13";
         System.out.println(a.lastIndexOf("-"));
-        System.out.println(a.subSequence(0, a.lastIndexOf("-")+1));
+        System.out.println(a.subSequence(0, a.lastIndexOf("-") + 1));
         int count = LocalDate.parse(a).getMonthValue();
 
         LocalDate aa = LocalDate.now().minusMonths(-1);
-        System.out.println(LocalDate.parse(a).getMonthValue()+"");
+        System.out.println(LocalDate.parse(a).getMonthValue() + "");
 
         LocalDate localDate = LocalDate.now();
         Period period = Period.between(localDate, localDate.plus(2, ChronoUnit.DAYS));
         System.out.println(period.getDays());
-        for(int i = count; i>0 ;i--){
+        for (int i = count; i > 0; i--) {
             System.out.println();
         }
         System.out.println(LocalDate.parse(a).getDayOfYear());
@@ -513,7 +514,61 @@ public class ApplyAndExaminationSerImpl extends ServiceImpl<ApplyAndExamination,
         if (StringUtils.isNotBlank(applyAndExaminationDTO.getRemark())) {
             applyAndExaminationDTO.getConditions().add(Restrict.eq("remark", applyAndExaminationDTO.getRemark()));
         }
-
-
     }
+
+    private String transformation(int first, int last, String string, String tag) throws SerException {
+        String newString = "";
+        String time = "";
+        if (!"-".equals(tag)) {
+            tag = "-";
+        }
+        if (first != last && 3 == (last - first)) {
+            //直接获取
+            newString = string.substring(first - 4, first) + tag + string.substring(first + 1, last);
+            //time=2017-07-01
+            time = newString + "-01";
+        }
+        if (first != last && 2 == (last - first)) {
+            newString = string.substring(first - 4, first);
+            String month = "-0" + string.substring(first + 1, first + 2);
+            time = newString + month + "-01";
+        }
+        return time;
+    }
+
+    private String transformation1(String string) throws SerException {
+        String time = "";
+        int first = string.indexOf("年");
+        int last = string.indexOf("月");
+        String tag = "-";
+        if (-1 != first && -1 != last && last > first) {
+            string.replaceAll("年", "-");
+            string.replaceAll("月", "-");
+            time = transformation(first, last, string, tag);
+        }
+        return time;
+    }
+
+    //将字符串中包含的日期转换为当月1号
+    private String getFirstDay(String string) throws SerException {
+        String time = "";
+        String tag = "-";
+        int first = string.indexOf("-");
+        int last = string.lastIndexOf("-");
+        if (-1 == first && -1 == last) {
+            first = string.indexOf("/");
+            last = string.lastIndexOf("/");
+            if (-1 == first && -1 == last) {
+                //判断中文日期：2017年8月
+                time = transformation1(string);
+                return time;
+            }
+            tag = "/";
+            time = transformation(first, last, string, tag);
+            return time;
+        }
+        time = transformation(first, last, string, tag);
+        return time;
+    }
+
 }

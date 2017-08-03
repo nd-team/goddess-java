@@ -14,6 +14,7 @@ import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -91,10 +92,12 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
         EnterpriseQualification entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据对象不能为空");
-        BeanTransform.copyProperties(to, entity, true);
-        entity.setInformation(supplierInformationSer.findById(to.getInformationId()));
-        if (null == entity.getInformation())
+        EnterpriseQualification enterpriseQualification = BeanTransform.copyProperties(to, EnterpriseQualification.class, true);
+        enterpriseQualification.setInformation(supplierInformationSer.findById(to.getInformationId()));
+        if (null == enterpriseQualification.getInformation())
             throw new SerException("供应商基本信息id错误,无法查询对应数据");
+        BeanUtils.copyProperties(enterpriseQualification,entity,"id","createTime");
+//        enterpriseQualification.setCreateTime(entity.getCreateTime());
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         return this.transformBO(entity);

@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.supplier.bo.ContactSituationBO;
 import com.bjike.goddess.supplier.dto.ContactSituationDTO;
 import com.bjike.goddess.supplier.entity.ContactSituation;
@@ -13,6 +14,8 @@ import com.bjike.goddess.supplier.to.ContactSituationTO;
 import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -73,6 +76,11 @@ public class ContactSituationSerImpl extends ServiceImpl<ContactSituation, Conta
     public ContactSituationBO save(ContactSituationTO to) throws SerException {
 //        if (!supPermissionSer.getSupPermission(idFlag))
 //            throw new SerException("您的帐号没有权限");
+        if (StringUtils.isNotBlank(to.getEmail())) {
+            if (!Validator.isEmail(to.getEmail())) {
+                throw new SerException("邮箱的格式不正确");
+            }
+        }
         ContactSituation entity = BeanTransform.copyProperties(to, ContactSituation.class);
         entity.setInformation(supplierInformationSer.findById(to.getInformationId()));
         if (null == entity.getInformation())
@@ -86,13 +94,19 @@ public class ContactSituationSerImpl extends ServiceImpl<ContactSituation, Conta
     public ContactSituationBO update(ContactSituationTO to) throws SerException {
 //        if (!supPermissionSer.getSupPermission(idFlag))
 //            throw new SerException("您的帐号没有权限");
+        if (StringUtils.isNotBlank(to.getEmail())) {
+            if (!Validator.isEmail(to.getEmail())) {
+                throw new SerException("邮箱的格式不正确");
+            }
+        }
         ContactSituation entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据对象不能为空");
-        BeanTransform.copyProperties(to, entity, true);
-        entity.setInformation(supplierInformationSer.findById(to.getInformationId()));
+        ContactSituation contactSituation = BeanTransform.copyProperties(to, ContactSituation.class, true);
+        contactSituation.setInformation(supplierInformationSer.findById(to.getInformationId()));
         if (null == entity.getInformation())
             throw new SerException("供应商基本信息id错误,无法查询对应数据");
+        BeanUtils.copyProperties(contactSituation,entity,"id","createTime");
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         return this.transformBO(entity);

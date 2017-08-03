@@ -222,7 +222,11 @@ public class MoneyReadyAct {
     public Result count(@PathVariable Integer month, HttpServletRequest request) throws ActException {
         try {
             List<MoneyReadyCountBO> list = moneyReadyAPI.count(month);
-            return ActResult.initialize(BeanTransform.copyProperties(list, MoneyReadyCountVO.class, request));
+            if (null != list && list.size() > 0) {
+                return ActResult.initialize(BeanTransform.copyProperties(list, MoneyReadyCountVO.class, request));
+            } else {
+                return ActResult.initialize(list);
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

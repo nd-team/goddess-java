@@ -58,7 +58,7 @@ public class AnnualArrangementStandardAct {
     }
 
     /**
-     * 更新年假层级标准实体数据
+     * 层级放假天数管理
      *
      * @param to 年假层级标准传输对象
      * @return class AnnualArrangementStandardVO

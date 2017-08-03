@@ -4,7 +4,7 @@ import com.bjike.goddess.buyticket.api.BuyTicketStandardAPI;
 import com.bjike.goddess.buyticket.bo.BuyTicketStandardBO;
 import com.bjike.goddess.buyticket.dto.BuyTicketStandardDTO;
 import com.bjike.goddess.buyticket.to.BuyTicketStandardTO;
-import com.bjike.goddess.buyticket.to.BuyGuidePermissionTO;
+import com.bjike.goddess.buyticket.to.GuidePermissionTO;
 import com.bjike.goddess.buyticket.vo.BuyTicketStandardVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -45,7 +45,7 @@ public class BuyTicketStandardAction {
      * @version v1
      */
     @GetMapping("v1/guidePermission")
-    public Result guidePermission(@Validated(BuyGuidePermissionTO.TestAdd.class) BuyGuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
 
             Boolean isHasPermission = buyTicketStandardAPI.guidePermission(guidePermissionTO);

@@ -61,7 +61,7 @@ public class AnnualApplyAct {
     }
 
     /**
-     * 保存年假申请实体数据
+     * 年假申请
      *
      * @param to 年假申请传输对象
      * @return class AnnualApplyVO
@@ -95,7 +95,7 @@ public class AnnualApplyAct {
     }
 
     /**
-     * 审核年假申请
+     * 审核
      *
      * @param to 年假申请审核传输对象
      * @return class AnnualApplyVO
@@ -128,7 +128,7 @@ public class AnnualApplyAct {
     }
 
     /**
-     * 根据年假信息查询年假申请记录
+     * 查看年假申请记录
      *
      * @param id 年假信息ID
      * @return class AnnualApplyVO
@@ -144,7 +144,7 @@ public class AnnualApplyAct {
     }
 
     /**
-     * 查询列表
+     * 年假申请记录
      *
      * @param dto 年假申请数据传输对象
      * @return class AnnualApplyVO

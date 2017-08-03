@@ -1,8 +1,8 @@
 package com.bjike.goddess.buyticket.config;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.buyticket.api.BuyCusPermissionAPI;
-import com.bjike.goddess.buyticket.to.BuyCusPermissionTO;
+import com.bjike.goddess.buyticket.api.CusPermissionAPI;
+import com.bjike.goddess.buyticket.to.CusPermissionTO;
 import com.bjike.goddess.buyticket.enums.CusPermissionType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class PermissionConfig {
     }
 
     @Autowired
-    private BuyCusPermissionAPI buyCusPermissionAPI;
+    private CusPermissionAPI buyCusPermissionAPI;
     @Autowired
     private Environment env;
 
@@ -83,7 +83,7 @@ public class PermissionConfig {
 //        createDeails(lines);
 
         //插入数据库
-        List<BuyCusPermissionTO> listTO = new ArrayList<>();
+        List<CusPermissionTO> listTO = new ArrayList<>();
         if (descList.size() != idList.size() && descList.size() != typeList.size()) {
             return;
         }
@@ -91,7 +91,7 @@ public class PermissionConfig {
             String desc = descList.get(i);
             String id = idList.get(i);
             String type = typeList.get(i);
-            BuyCusPermissionTO to = new BuyCusPermissionTO();
+            CusPermissionTO to = new CusPermissionTO();
             to.setIdFlag(id);
             to.setDescription(desc);
             if (CusPermissionType.LEVEL.name().equals(type.trim())) {

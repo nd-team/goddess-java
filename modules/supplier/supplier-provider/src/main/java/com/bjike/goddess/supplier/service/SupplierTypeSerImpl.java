@@ -15,6 +15,7 @@ import com.bjike.goddess.supplier.to.SupplierTypeTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -70,7 +71,9 @@ public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeD
         if (StringUtils.isNotBlank(to.getId())) {
             try {
                 SupplierType entity = super.findById(to.getId());
-                BeanTransform.copyProperties(to, entity, true);
+                SupplierType supplierType = BeanTransform.copyProperties(to, SupplierType.class, true);
+                BeanUtils.copyProperties(supplierType,entity,"id","createTime");
+//                supplierType.setCreateTime(entity.getCreateTime());
                 entity.setModifyTime(LocalDateTime.now());
                 super.update(entity);
                 return BeanTransform.copyProperties(entity, SupplierTypeBO.class);

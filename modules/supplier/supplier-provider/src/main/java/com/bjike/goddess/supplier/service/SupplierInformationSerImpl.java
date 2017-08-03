@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.supplier.bo.*;
 import com.bjike.goddess.supplier.dto.*;
 import com.bjike.goddess.supplier.entity.*;
@@ -16,6 +17,7 @@ import com.bjike.goddess.supplier.vo.SonPermissionObject;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -69,6 +71,11 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
     public SupplierInformationBO save(SupplierInformationTO to) throws SerException {
 //        if (!supPermissionSer.getSupPermission(idFlag))
 //            throw new SerException("您的帐号没有权限");
+        if (StringUtils.isNotBlank(to.getEmail())) {
+            if (!Validator.isEmail(to.getEmail())) {
+                throw new SerException("邮箱的格式不正确");
+            }
+        }
         SupplierInformation entity = BeanTransform.copyProperties(to, SupplierInformation.class);
         entity.setExecution(this.countExecution(entity));
         entity.setSerialNumber(this.createNumber());
@@ -123,15 +130,33 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SupplierInformationBO update(SupplierInformationTO to) throws SerException {
+        if (StringUtils.isNotBlank(to.getEmail())) {
+            if (!Validator.isEmail(to.getEmail())) {
+                throw new SerException("邮箱的格式不正确");
+            }
+        }
 //        if (!supPermissionSer.getSupPermission(idFlag))
 //            throw new SerException("您的帐号没有权限");
         if (StringUtils.isNotBlank(to.getId())) {
             try {
+//                SupplierInformation entity = super.findById(to.getId());
+//                BeanTransform.copyProperties(to, entity, true);
+//                entity.setExecution(this.countExecution(entity));
+//                entity.setId(to.getId());
+////                entity.setCreateTime(entity.getCreateTime());
+//                entity.setModifyTime(LocalDateTime.now());
+//                super.update(entity);
+//                return BeanTransform.copyProperties(entity, SupplierInformationBO.class);
+
+
                 SupplierInformation entity = super.findById(to.getId());
-                BeanTransform.copyProperties(to, entity, true);
-                entity.setExecution(this.countExecution(entity));
-                entity.setId(to.getId());
+                SupplierInformation supplierInformation = BeanTransform.copyProperties(to, SupplierInformation.class, true);
+                supplierInformation.setExecution(this.countExecution(entity));
+                BeanUtils.copyProperties(supplierInformation, entity, "createTime", "serialNumber");
+//                supplierInformation.setId(to.getId());
+//                supplierInformation.setCreateTime(entity.getCreateTime());
                 entity.setModifyTime(LocalDateTime.now());
+//                supplierInformation.setSerialNumber(entity.getSerialNumber());
                 super.update(entity);
                 return BeanTransform.copyProperties(entity, SupplierInformationBO.class);
             } catch (Exception e) {
@@ -425,7 +450,7 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
     public List<String> listType() throws SerException {
         List<SupplierTypeBO> supplierTypeBOs = supplierTypeSer.findStatus();
         List<String> list = new ArrayList<>();
-        if (null != supplierTypeBOs && supplierTypeBOs.size() > 0 ){
+        if (null != supplierTypeBOs && supplierTypeBOs.size() > 0) {
             for (SupplierTypeBO bo : supplierTypeBOs) {
                 list.add(bo.getName());
             }
@@ -525,8 +550,6 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
 //        return flag;
 //    }
 //
-
-
 
 
     /**

@@ -104,7 +104,7 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     }
 
     @Override
-    public String getPosition(String name) throws SerException {
+    public List<String> getPosition(String name) throws SerException {
         return positionDetailUserSer.getPosition(name);
     }
 
@@ -121,5 +121,10 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     @Override
     public List<String> getAllDepartment() throws SerException {
         return positionDetailUserSer.getAllDepartment();
+    }
+
+    @Override
+    public List<PositionDetailBO> getPositionDetail(String name) throws SerException {
+        return positionDetailUserSer.getPositionDetail(name);
     }
 }

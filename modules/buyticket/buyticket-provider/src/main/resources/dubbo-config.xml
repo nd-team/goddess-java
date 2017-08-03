@@ -25,8 +25,8 @@
 	<dubbo:service interface="com.bjike.goddess.buyticket.api.BuyTicketRecordAPI" ref="buyTicketRecordApiImpl" />
 	<dubbo:service interface="com.bjike.goddess.buyticket.api.BuyTicketCollectAPI" ref="buyTicketCollectApiImpl" />
 	<dubbo:service interface="com.bjike.goddess.buyticket.api.BuyTicketStandardAPI" ref="buyTicketStandardApiImpl" />
-	<dubbo:service interface="com.bjike.goddess.buyticket.api.BuyCusPermissionAPI" ref="buyCusPermissionApiImpl" />
-	<dubbo:service interface="com.bjike.goddess.buyticket.api.BuyCusPermissionOperateAPI" ref="buyCusPermissionOperateApiImpl" />
+	<dubbo:service interface="com.bjike.goddess.buyticket.api.CusPermissionAPI" ref="cusPermissionApiImpl" />
+	<dubbo:service interface="com.bjike.goddess.buyticket.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl" />
 
 	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
 	否则不需要配置-->

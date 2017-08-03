@@ -14,6 +14,7 @@ import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -89,10 +90,12 @@ public class CooperationSituationSerImpl extends ServiceImpl<CooperationSituatio
         CooperationSituation entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据对象不能为空");
-        BeanTransform.copyProperties(to, entity, true);
-        entity.setInformation(supplierInformationSer.findById(to.getInformationId()));
-        if (null == entity.getInformation())
+        CooperationSituation cooperationSituation = BeanTransform.copyProperties(to, CooperationSituation.class, true);
+        cooperationSituation.setInformation(supplierInformationSer.findById(to.getInformationId()));
+        if (null == cooperationSituation.getInformation())
             throw new SerException("供应商基本信息id错误,无法查询对应数据");
+        BeanUtils.copyProperties(cooperationSituation,entity,"id","createTime");
+//        cooperationSituation.setCreateTime(entity.getCreateTime());
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         return this.transformBO(entity);

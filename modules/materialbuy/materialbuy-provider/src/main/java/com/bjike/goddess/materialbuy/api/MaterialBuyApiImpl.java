@@ -13,6 +13,7 @@ import com.bjike.goddess.materialbuy.vo.SonPermissionObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -159,5 +160,45 @@ public class MaterialBuyApiImpl implements MaterialBuyAPI {
     @Override
     public Long count(MaterialBuyDTO dto) throws SerException {
         return materialBuySer.count(dto);
+    }
+
+    @Override
+    public List<String> findDevType(String[] intervalTime) throws SerException {
+        return materialBuySer.findDevType(intervalTime);
+    }
+
+    @Override
+    public List<String> findAreaByType(String devType,String[] intervalTime) throws SerException {
+        return materialBuySer.findAreaByType(devType,intervalTime);
+    }
+
+    @Override
+    public List<MaterialBuyBO> findByTyAndAr(String devType, String area,String[] intervalTime) throws SerException {
+        return materialBuySer.findByTyAndAr(devType,area,intervalTime);
+    }
+
+    @Override
+    public List<String> findArea(String[] intervalTime) throws SerException {
+        return materialBuySer.findArea(intervalTime);
+    }
+
+    @Override
+    public List<String> findDepByArea(String area, String[] intervalTime) throws SerException {
+        return materialBuySer.findDepByArea(area,intervalTime);
+    }
+
+    @Override
+    public List<MaterialBuyBO> findByTeamAnArea(String area, String projectTeam, String[] intervalTime) throws SerException {
+        return materialBuySer.findByTeamAnArea(area,projectTeam,intervalTime);
+    }
+
+    @Override
+    public List<String> findRequis(String[] intervalTime) throws SerException {
+        return materialBuySer.findRequis(intervalTime);
+    }
+
+    @Override
+    public List<MaterialBuyBO> findByRequis(String requisitioner, String[] intervalTime) throws SerException {
+        return materialBuySer.findByRequis(requisitioner,intervalTime);
     }
 }

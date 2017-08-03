@@ -18,7 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 报道地址信息
@@ -286,4 +288,13 @@ public class ReportAddressInforSerImpl extends ServiceImpl<ReportAddressInfor, R
         super.remove(entity);
     }
 
+    @Override
+    public Set<String> allAddress() throws SerException {
+        List<ReportAddressInfor> list = super.findAll();
+        Set<String> set = new HashSet<>();
+        for (ReportAddressInfor r : list) {
+            set.add(r.getReportAddress());
+        }
+        return set;
+    }
 }

@@ -150,6 +150,9 @@ public class ProportionSerImpl extends ServiceImpl<Proportion, ProportionDTO> im
 //        checkAddIdentity();
 
         Proportion temp = super.findById(proportionTO.getId());
+        if(StringUtils.isBlank(proportionTO.getTime())){
+            proportionTO.setTime( temp.getTime() );
+        }
 
         try {
             DateUtil.parseDate(proportionTO.getTime());
