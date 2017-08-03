@@ -73,10 +73,10 @@ public class HostApplyVO {
      */
     private Double totalAmount;
 
-    /**
-     * 模块责任人审核
-     */
-    private String headAudit;
+//    /**
+//     * 模块责任人审核
+//     */
+//    private String headAudit;
 
     /**
      * 备注
@@ -200,13 +200,13 @@ public class HostApplyVO {
         this.totalAmount = totalAmount;
     }
 
-    public String getHeadAudit() {
-        return headAudit;
-    }
-
-    public void setHeadAudit(String headAudit) {
-        this.headAudit = headAudit;
-    }
+//    public String getHeadAudit() {
+//        return headAudit;
+//    }
+//
+//    public void setHeadAudit(String headAudit) {
+//        this.headAudit = headAudit;
+//    }
 
     public String getRemark() {
         return remark;

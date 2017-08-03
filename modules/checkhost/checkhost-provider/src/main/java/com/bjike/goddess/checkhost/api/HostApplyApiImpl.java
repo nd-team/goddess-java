@@ -60,8 +60,8 @@ public class HostApplyApiImpl implements HostApplyAPI {
     }
 
     @Override
-    public HostApplyBO auditHostApply(String id, CheckStatus checkStatus) throws SerException {
-        return hostApplySer.auditHostApply(id,checkStatus);
+    public HostApplyBO auditHostApply(String id, HostApplyDTO dto) throws SerException {
+        return hostApplySer.auditHostApply(id,dto);
     }
 
     @Override

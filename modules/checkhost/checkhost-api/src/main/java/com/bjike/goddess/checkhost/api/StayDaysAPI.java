@@ -3,7 +3,6 @@ package com.bjike.goddess.checkhost.api;
 import com.bjike.goddess.checkhost.bo.CollectNameBO;
 import com.bjike.goddess.checkhost.bo.StayDaysBO;
 import com.bjike.goddess.checkhost.dto.StayDaysDTO;
-import com.bjike.goddess.checkhost.enums.CheckStatus;
 import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.to.StayDaysTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -96,11 +95,11 @@ public interface StayDaysAPI {
     /**
      * 审核
      *
-     * @param id          id
-     * @param checkStatus 审核状态
+     * @param id  id
+     * @param dto dto
      * @return class StayDaysBO
      */
-    StayDaysBO auditStayDays(String id, CheckStatus checkStatus) throws SerException;
+    StayDaysBO auditStayDays(String id, StayDaysDTO dto) throws SerException;
 
     /**
      * 汇总
