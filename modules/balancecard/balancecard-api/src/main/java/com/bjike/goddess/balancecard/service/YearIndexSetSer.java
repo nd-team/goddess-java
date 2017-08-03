@@ -153,5 +153,10 @@ public interface YearIndexSetSer extends Ser<YearIndexSet, YearIndexSetDTO> {
         return null;
     }
 
+    /**
+     * 导出Excel导入模板
+     * @throws SerException
+     */
+    byte[] templateExport(  ) throws SerException;
 
 }
