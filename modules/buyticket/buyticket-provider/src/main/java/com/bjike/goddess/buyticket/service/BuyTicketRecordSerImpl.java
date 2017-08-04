@@ -257,7 +257,7 @@ public class BuyTicketRecordSerImpl extends ServiceImpl<BuyTicketRecord, BuyTick
     @Override
     public BuyTicketRecordBO getOne(String id) throws SerException {
         BuyTicketRecord buyTicketRecord = super.findById(id);
-        return BeanTransform.copyProperties(buyTicketRecord,BuyTicketRecordBO.class,true);
+        return BeanTransform.copyProperties(buyTicketRecord,BuyTicketRecordBO.class);
     }
 
 
@@ -278,7 +278,7 @@ public class BuyTicketRecordSerImpl extends ServiceImpl<BuyTicketRecord, BuyTick
             buyTicketRecordDTO.getConditions().add(Restrict.eq("passenger",userName));
         }
         List<BuyTicketRecord> basicInfos = super.findByCis(buyTicketRecordDTO, true);
-        List<BuyTicketRecordBO> buyTicketRecordBOS = BeanTransform.copyProperties(basicInfos, BuyTicketRecordBO.class, true);
+        List<BuyTicketRecordBO> buyTicketRecordBOS = BeanTransform.copyProperties(basicInfos, BuyTicketRecordBO.class);
         return buyTicketRecordBOS;
     }
 

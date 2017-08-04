@@ -12,19 +12,19 @@ package com.bjike.goddess.materialsummary.type;
 public enum CollectUnit {
 
     /**
-     * 每天
+     * 本天
      */
     EVERYDAY(0),
     /**
-     * 每周
+     * 本周
      */
     EVERYWEEK(1),
     /**
-     * 每月
+     * 本月
      */
     EVERYMONTH(2),
     /**
-     * 每年
+     * 本年
      */
     EVERYYEAR(3),;
 

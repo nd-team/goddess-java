@@ -173,11 +173,6 @@ public class MaterialBuyApiImpl implements MaterialBuyAPI {
     }
 
     @Override
-    public List<MaterialBuyBO> findByTyAndAr(String devType, String area,String[] intervalTime) throws SerException {
-        return materialBuySer.findByTyAndAr(devType,area,intervalTime);
-    }
-
-    @Override
     public List<String> findArea(String[] intervalTime) throws SerException {
         return materialBuySer.findArea(intervalTime);
     }
@@ -187,10 +182,6 @@ public class MaterialBuyApiImpl implements MaterialBuyAPI {
         return materialBuySer.findDepByArea(area,intervalTime);
     }
 
-    @Override
-    public List<MaterialBuyBO> findByTeamAnArea(String area, String projectTeam, String[] intervalTime) throws SerException {
-        return materialBuySer.findByTeamAnArea(area,projectTeam,intervalTime);
-    }
 
     @Override
     public List<String> findRequis(String[] intervalTime) throws SerException {
@@ -198,7 +189,32 @@ public class MaterialBuyApiImpl implements MaterialBuyAPI {
     }
 
     @Override
-    public List<MaterialBuyBO> findByRequis(String requisitioner, String[] intervalTime) throws SerException {
+    public List<String> findDeparByTyAre(String devType, String area, String[] intervalTime) throws SerException {
+        return materialBuySer.findDeparByTyAre(devType,area,intervalTime);
+    }
+
+    @Override
+    public List<MaterialBuyBO> findByTyAndAr(String devType, String area, String department, String[] intervalTime) throws SerException {
+        return materialBuySer.findByTyAndAr(devType,area,department,intervalTime);
+    }
+
+    @Override
+    public List<String> findDevByAreaDev(String area, String projectTeam, String[] intervalTime) throws SerException {
+        return materialBuySer.findDevByAreaDev(area,projectTeam,intervalTime);
+    }
+
+    @Override
+    public List<MaterialBuyBO> findByTeamAnArea(String area, String projectTeam, String devType, String[] intervalTime) throws SerException {
+        return materialBuySer.findByTeamAnArea(area,projectTeam,devType,intervalTime);
+    }
+
+    @Override
+    public List<String> findByRequis(String requisitioner, String[] intervalTime) throws SerException {
         return materialBuySer.findByRequis(requisitioner,intervalTime);
+    }
+
+    @Override
+    public List<MaterialBuyBO> findByRequisType(String requisitioner, String devType, String[] intervalTime) throws SerException {
+        return materialBuySer.findByRequisType(requisitioner,devType,intervalTime);
     }
 }

@@ -126,7 +126,7 @@ public class BuyTicketRecordAction {
     public Result edit(@Validated(EDIT.class) BuyTicketRecordTO buyTicketRecordTO, BindingResult bindingResult) throws ActException {
         try {
             BuyTicketRecordBO buyTicketRecordBO = buyTicketRecordAPI.editBuyTicketRecord(buyTicketRecordTO);
-            return ActResult.initialize(buyTicketRecordBO);
+            return ActResult.initialize(BeanTransform.copyProperties(buyTicketRecordBO,BuyTicketRecordVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

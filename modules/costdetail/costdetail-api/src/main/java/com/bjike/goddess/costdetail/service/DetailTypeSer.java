@@ -53,6 +53,14 @@ public interface DetailTypeSer extends Ser<DetailType, DetailTypeDTO> {
     }
 
     /**
+     * 明细分类列表
+     *
+     * @return class CostDetailsBO
+     */
+    default List<DetailTypeBO> list(DetailTypeDTO detailTypeDTO) throws SerException {
+        return null;
+    }
+    /**
      * 父节点查询获取所有明细分类名
      *
      * @return
@@ -80,6 +88,14 @@ public interface DetailTypeSer extends Ser<DetailType, DetailTypeDTO> {
      */
     default DetailTypeBO edit(DetailTypeTO detailTypeTO) throws SerException {
         return null;
+    }
+
+    /**
+     * 删除
+     *
+     */
+    default void delete(String id) throws SerException {
+        return;
     }
 
     /**

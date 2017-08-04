@@ -2310,7 +2310,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         costDetailsAddReturnBO7.setFifMoney(0d);
         costDetailsAddReturnBO7.setThityMoney(0d);
         costDetailsAddReturnBO7.setTwethMoney(0d);
-        List<String> lenTypeNameList = detailTypeSer.findTypeName("实收资本");
+        List<String> lenTypeNameList = detailTypeSer.findTypeName("公司借出");
         for (String typeName : lenTypeNameList) {
             CostDetailsAddReturnBO lenAddReturnBO = new CostDetailsAddReturnBO();
             lenAddReturnBO.setCategoryName(typeName);

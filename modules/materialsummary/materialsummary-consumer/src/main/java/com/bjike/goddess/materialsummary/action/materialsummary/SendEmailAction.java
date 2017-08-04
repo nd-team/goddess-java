@@ -9,16 +9,16 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialsummary.api.SendEmailAPI;
-import com.bjike.goddess.materialsummary.bo.PersonalBuySummBO;
-import com.bjike.goddess.materialsummary.bo.SendEmailBO;
-import com.bjike.goddess.materialsummary.bo.TypeBuySummBO;
+import com.bjike.goddess.materialsummary.bo.*;
 import com.bjike.goddess.materialsummary.dto.SendEmailDTO;
+import com.bjike.goddess.materialsummary.excel.SonPermissionObject;
+import com.bjike.goddess.materialsummary.to.GuidePermissionTO;
 import com.bjike.goddess.materialsummary.to.PersonalBuySummVO;
 import com.bjike.goddess.materialsummary.to.SendEmailTO;
 import com.bjike.goddess.materialsummary.type.ModuleType;
 import com.bjike.goddess.materialsummary.type.SummaryType;
-import com.bjike.goddess.materialsummary.vo.SendEmailVO;
-import com.bjike.goddess.materialsummary.vo.TypeBuySummVO;
+import com.bjike.goddess.materialsummary.vo.*;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -43,6 +43,78 @@ public class SendEmailAction {
     @Autowired
     private SendEmailAPI sendEmailAPI;
 
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result setButtonPermission() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = sendEmailAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = sendEmailAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 列表总条数
      *
@@ -366,7 +438,7 @@ public class SendEmailAction {
      * 个人物资购买情况日汇总
      *
      * @param summTime 时间
-     * @return class PersonalBuySummBO
+     * @return class PersonalBuySummVO
      * @version v1
      */
     @LoginAuth
@@ -386,7 +458,7 @@ public class SendEmailAction {
      * @param year 年份
      * @param month 月份
      * @param week 周期数
-     * @return class PersonalBuySummBO
+     * @return class PersonalBuySummVO
      * @version v1
      */
     @LoginAuth
@@ -405,7 +477,7 @@ public class SendEmailAction {
      *
      * @param year 年份
      * @param month 月份
-     * @return class PersonalBuySummBO
+     * @return class PersonalBuySummVO
      * @version v1
      */
     @LoginAuth
@@ -423,7 +495,7 @@ public class SendEmailAction {
      * 个人物资购买情况年汇总
      *
      * @param year 年份
-     * @return class PersonalBuySummBO
+     * @return class PersonalBuySummVO
      * @version v1
      */
     @LoginAuth
@@ -433,6 +505,325 @@ public class SendEmailAction {
             List<PersonalBuySummBO> boList = sendEmailAPI.personBuySummYear(year);
             List<PersonalBuySummVO> voList = BeanTransform.copyProperties(boList, PersonalBuySummVO.class, request);
             return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 整体针对入库来源的物资日汇总
+     *
+     * @param summTime 时间
+     * @return class ResouceStockSummVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/stockSummary/source/day")
+    public Result stockSummBySourceDay(String summTime, HttpServletRequest request) throws ActException {
+        try {
+            List<ResouceStockSummBO> boList = sendEmailAPI.sourStockSummDay(summTime);
+            List<ResouceStockSummVO> voList = BeanTransform.copyProperties(boList, ResouceStockSummVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 整体针对入库来源的物资周汇总
+     *
+     * @param year 年份
+     * @param month 月份
+     * @param week 周期数
+     * @return class ResouceStockSummVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/stockSummary/source/week")
+    public Result stockSummBySourceWeek(Integer year,Integer month,Integer week, HttpServletRequest request) throws ActException {
+        try {
+            List<ResouceStockSummBO> boList = sendEmailAPI.sourStockSummWeek(year,month,week);
+            List<ResouceStockSummVO> voList = BeanTransform.copyProperties(boList, ResouceStockSummVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 整体针对入库来源的物资月汇总
+     *
+     * @param year 年份
+     * @param month 月份
+     * @return class ResouceStockSummVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/stockSummary/source/month")
+    public Result stockSummBySourceMonth(Integer year,Integer month, HttpServletRequest request) throws ActException {
+        try {
+            List<ResouceStockSummBO> boList = sendEmailAPI.sourStockSummMonth(year,month);
+            List<ResouceStockSummVO> voList = BeanTransform.copyProperties(boList, ResouceStockSummVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 整体针对入库来源的物资年汇总
+     *
+     * @param year 年份
+     * @return class ResouceStockSummVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/stockSummary/source/year")
+    public Result stockSummBySourceYear(Integer year, HttpServletRequest request) throws ActException {
+        try {
+            List<ResouceStockSummBO> boList = sendEmailAPI.sourStockSummYear(year);
+            List<ResouceStockSummVO> voList = BeanTransform.copyProperties(boList, ResouceStockSummVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 各地区入库情况日汇总
+     *
+     * @param summTime 时间
+     * @return class AreaStockSummVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/stockSummary/area/day")
+    public Result stockSummByAreaDay(String summTime, HttpServletRequest request) throws ActException {
+        try {
+            List<AreaStockSummBO> boList = sendEmailAPI.areaStockSummDay(summTime);
+            List<AreaStockSummVO> voList = BeanTransform.copyProperties(boList, AreaStockSummVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 各地区入库情况周汇总
+     *
+     * @param year 年份
+     * @param month 月份
+     * @param week 周期数
+     * @return class AreaStockSummVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/stockSummary/area/week")
+    public Result stockSummByAreaWeek(Integer year,Integer month,Integer week, HttpServletRequest request) throws ActException {
+        try {
+            List<AreaStockSummBO> boList = sendEmailAPI.areaStockSummWeek(year,month,week);
+            List<AreaStockSummVO> voList = BeanTransform.copyProperties(boList, AreaStockSummVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 各地区入库情况月汇总
+     *
+     * @param year 年份
+     * @param month 月份
+     * @return class AreaStockSummVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/stockSummary/area/month")
+    public Result stockSummByAreaMonth(Integer year,Integer month, HttpServletRequest request) throws ActException {
+        try {
+            List<AreaStockSummBO> boList = sendEmailAPI.areaStockSummMonth(year,month);
+            List<AreaStockSummVO> voList = BeanTransform.copyProperties(boList, AreaStockSummVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 各地区入库情况年汇总
+     *
+     * @param year 年份
+     * @return class AreaStockSummVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/stockSummary/area/year")
+    public Result stockSummByAreaYear(Integer year, HttpServletRequest request) throws ActException {
+        try {
+            List<AreaStockSummBO> boList = sendEmailAPI.areaStockSummYear(year);
+            List<AreaStockSummVO> voList = BeanTransform.copyProperties(boList, AreaStockSummVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 针对维修状态分类情况日汇总
+     *
+     * @param summTime 时间
+     * @return class StatusDeviceSummVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/deviceSummary/status/day")
+    public Result deviceSummByStatusDay(String summTime, HttpServletRequest request) throws ActException {
+        try {
+            List<StatusDeviceSummBO> boList = sendEmailAPI.statusDeviceSummDay(summTime);
+            List<StatusDeviceSummVO> voList = BeanTransform.copyProperties(boList, StatusDeviceSummVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 针对维修状态分类情况周汇总
+     *
+     * @param year 年份
+     * @param month 月份
+     * @param week 周期数
+     * @return class StatusDeviceSummVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/deviceSummary/status/week")
+    public Result deviceSummByAreaWeek(Integer year,Integer month,Integer week, HttpServletRequest request) throws ActException {
+        try {
+            List<StatusDeviceSummBO> boList = sendEmailAPI.statusDeviceSummWeek(year,month,week);
+            List<StatusDeviceSummVO> voList = BeanTransform.copyProperties(boList, StatusDeviceSummVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 针对维修状态分类情况月汇总
+     *
+     * @param year 年份
+     * @param month 月份
+     * @return class StatusDeviceSummVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/deviceSummary/status/month")
+    public Result deviceSummByAreaMonth(Integer year,Integer month, HttpServletRequest request) throws ActException {
+        try {
+            List<StatusDeviceSummBO> boList = sendEmailAPI.statusDeviceSummMonth(year,month);
+            List<StatusDeviceSummVO> voList = BeanTransform.copyProperties(boList, StatusDeviceSummVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 针对维修状态分类情况年汇总
+     *
+     * @param year 年份
+     * @return class StatusDeviceSummVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/deviceSummary/status/year")
+    public Result deviceSummByAreaYear(Integer year, HttpServletRequest request) throws ActException {
+        try {
+            List<StatusDeviceSummBO> boList = sendEmailAPI.statusDeviceSummYear(year);
+            List<StatusDeviceSummVO> voList = BeanTransform.copyProperties(boList, StatusDeviceSummVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 针对保修状态分类情况日汇总
+     *
+     * @param summTime 时间
+     * @return class WarrantyDeviceSummVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/deviceSummary/warranty/day")
+    public Result deviceSummByWarrDay(String summTime, HttpServletRequest request) throws ActException {
+        try {
+            List<WarrantyDeviceSummBO> boList = sendEmailAPI.warranDeviceSummDay(summTime);
+            List<WarrantyDeviceSummVO> voList = BeanTransform.copyProperties(boList, WarrantyDeviceSummVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 针对保修状态分类情况周汇总
+     *
+     * @param year 年份
+     * @param month 月份
+     * @param week 周期数
+     * @return class WarrantyDeviceSummVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/deviceSummary/warranty/week")
+    public Result deviceSummByWarrWeek(Integer year,Integer month,Integer week, HttpServletRequest request) throws ActException {
+        try {
+            List<WarrantyDeviceSummBO> boList = sendEmailAPI.warranDeviceSummWeek(year,month,week);
+            List<WarrantyDeviceSummVO> voList = BeanTransform.copyProperties(boList, WarrantyDeviceSummVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 针对保修状态分类情况月汇总
+     *
+     * @param year 年份
+     * @param month 月份
+     * @return class WarrantyDeviceSummVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/deviceSummary/warranty/month")
+    public Result deviceSummByWarrMonth(Integer year,Integer month, HttpServletRequest request) throws ActException {
+        try {
+            List<WarrantyDeviceSummBO> boList = sendEmailAPI.warranDeviceSummMonth(year,month);
+            List<WarrantyDeviceSummVO> voList = BeanTransform.copyProperties(boList, WarrantyDeviceSummVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 针对保修状态分类情况年汇总
+     *
+     * @param year 年份
+     * @return class WarrantyDeviceSummVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/deviceSummary/warranty/year")
+    public Result deviceSummByWarrYear(Integer year, HttpServletRequest request) throws ActException {
+        try {
+            List<WarrantyDeviceSummBO> boList = sendEmailAPI.warranDeviceSummYear(year);
+            List<WarrantyDeviceSummVO> voList = BeanTransform.copyProperties(boList, WarrantyDeviceSummVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 检测
+     *
+     * @des 商务邮件汇总汇总派工合同
+     * @version v1
+     */
+    @GetMapping("v1/checkEmail")
+    public Result checkEmail(   ) throws ActException {
+        try {
+            sendEmailAPI.checkSendEmail( );
+            return ActResult.initialize("发送成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
