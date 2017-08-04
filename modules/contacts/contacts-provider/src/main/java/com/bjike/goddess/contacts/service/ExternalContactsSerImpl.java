@@ -11,7 +11,6 @@ import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.contacts.api.CommonalityAPI;
 import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.contacts.bo.ExternalContactsBO;
-import com.bjike.goddess.contacts.dto.CommonalityDTO;
 import com.bjike.goddess.contacts.dto.ExternalContactsDTO;
 import com.bjike.goddess.contacts.entity.ExternalContacts;
 import com.bjike.goddess.contacts.enums.GuideAddrStatus;
@@ -419,8 +418,11 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
         DepartmentDetailDTO departmentDetailDTO = new DepartmentDetailDTO();
         departmentDetailDTO.getConditions().add(Restrict.eq("department", department));
         List<DepartmentDetailBO> departmentDetailBOList = departmentDetailAPI.view(departmentDetailDTO);
-        String departmentId = departmentDetailBOList.get(0).getId();
-        return departmentId;
+        if (null != departmentDetailBOList && departmentDetailBOList.size() > 0) {
+            String departmentId = departmentDetailBOList.get(0).getId();
+            return departmentId;
+        }
+        return null;
     }
 
 }

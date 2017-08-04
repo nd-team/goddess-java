@@ -65,6 +65,7 @@ public class RecommendInfoAct {
      * 新增
      *
      * @param to 推荐信息
+     * @return class RecommendInfoVO
      * @version v1
      */
     @LoginAuth
@@ -82,6 +83,7 @@ public class RecommendInfoAct {
      * 编辑
      *
      * @param to 推荐信息
+     * @return class RecommendInfoVO
      * @version v1
      */
     @LoginAuth
@@ -118,7 +120,6 @@ public class RecommendInfoAct {
      * 奖励审核
      *
      * @param id 推荐信息id
-     * @param id 推荐信息id
      * @version v1
      */
     @LoginAuth
@@ -153,6 +154,7 @@ public class RecommendInfoAct {
      * 列表
      *
      * @param dto 分页条件
+     * @return class RecommendInfoVO
      * @version v1
      */
     @LoginAuth

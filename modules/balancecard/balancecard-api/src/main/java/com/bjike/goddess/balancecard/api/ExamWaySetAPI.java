@@ -3,6 +3,7 @@ package com.bjike.goddess.balancecard.api;
 import com.bjike.goddess.balancecard.bo.ExamWaySetBO;
 import com.bjike.goddess.balancecard.dto.ExamWaySetDTO;
 import com.bjike.goddess.balancecard.to.ExamWaySetTO;
+import com.bjike.goddess.balancecard.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -17,6 +18,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ExamWaySetAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
 
     /**

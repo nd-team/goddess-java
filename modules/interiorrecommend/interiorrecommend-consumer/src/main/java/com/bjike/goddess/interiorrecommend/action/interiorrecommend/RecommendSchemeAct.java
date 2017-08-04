@@ -64,6 +64,7 @@ public class RecommendSchemeAct {
      * 新增
      *
      * @param to 推荐方案
+     * @return class RecommendSchemeVO
      * @version v1
      */
     @LoginAuth
@@ -81,6 +82,7 @@ public class RecommendSchemeAct {
      * 编辑
      *
      * @param to 推荐方案
+     * @return class RecommendSchemeVO
      * @version v1
      */
     @LoginAuth
@@ -172,6 +174,7 @@ public class RecommendSchemeAct {
      * 列表
      *
      * @param dto 分页条件
+     * @return class RecommendSchemeVO
      * @version v1
      */
     @GetMapping("v1/list")

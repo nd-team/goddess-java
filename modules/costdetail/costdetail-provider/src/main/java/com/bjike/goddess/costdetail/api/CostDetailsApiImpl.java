@@ -102,4 +102,9 @@ public class CostDetailsApiImpl implements CostDetailsAPI {
     public List<String> findAddAllDetails() throws SerException {
         return costDetailsSer.findAddAllDetails();
     }
+
+    @Override
+    public CostDetailsAddEditBO listDetail(CostDetailsDTO costDetailsDTO) throws SerException {
+        return costDetailsSer.listDetail(costDetailsDTO);
+    }
 }

@@ -198,7 +198,7 @@ public class YearIndexSet extends BaseEntity {
         this.separateStatus = separateStatus;
     }
 
-    public Integer getIndexNumber() {
+    public Integer  getIndexNumber() {
         return indexNumber;
     }
 

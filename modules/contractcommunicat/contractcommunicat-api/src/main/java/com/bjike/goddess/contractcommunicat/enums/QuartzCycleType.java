@@ -1,7 +1,7 @@
 package com.bjike.goddess.contractcommunicat.enums;
 
 /**
- * 汇总发送定时器时间
+ * 汇总间隔
  *
  * @Author: [Jason]
  * @Date: [17-3-20 上午10:01]
@@ -12,25 +12,25 @@ package com.bjike.goddess.contractcommunicat.enums;
 public enum QuartzCycleType {
 
     /**
-     * 年
+     * 本年
      */
     YEAR(0),
 
     /**
-     * 季度
+     * 本季度
      */
     QUARTER(1),
 
     /**
-     * 月
+     * 本月
      */
     MONTH(2),
     /**
-     * 周
+     * 本周
      */
     WEEK(3),
     /**
-     * 日
+     * 本日
      */
     DAY(4);
 

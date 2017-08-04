@@ -94,10 +94,10 @@ public interface HostApplyAPI {
      * 审核
      *
      * @param id          id
-     * @param checkStatus
+     * @param dto
      * @return class HostApplyBO
      * @paramcheckStatus
      */
-    HostApplyBO auditHostApply(String id, CheckStatus checkStatus) throws SerException;
+    HostApplyBO auditHostApply(String id, HostApplyDTO dto) throws SerException;
 
 }

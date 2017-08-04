@@ -109,6 +109,15 @@ public interface CostDetailsSer extends Ser<CostDetails, CostDetailsDTO> {
     default CostDetailsAddEditBO seeDetail(String id) throws SerException {
         return null;
     }
+    /**
+     * 列表进入详情
+     * @param costDetailsDTO
+     * @return
+     * @throws SerException
+     */
+    default CostDetailsAddEditBO listDetail(CostDetailsDTO costDetailsDTO) throws SerException {
+        return null;
+    }
 
     /**
      * 月汇总

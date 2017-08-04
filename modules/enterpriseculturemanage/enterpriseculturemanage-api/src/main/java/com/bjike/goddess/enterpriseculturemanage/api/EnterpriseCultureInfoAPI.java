@@ -98,5 +98,10 @@ public interface EnterpriseCultureInfoAPI {
      */
     Long count(EnterpriseCultureInfoDTO dto) throws SerException;
 
+    /**
+     * 查询所有解冻状态的企业文化信息
+     * @return
+     * @throws SerException
+     */
     List<EnterpriseCultureInfoBO> infos() throws SerException;
 }

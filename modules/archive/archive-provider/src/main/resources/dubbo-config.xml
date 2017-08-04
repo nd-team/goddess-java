@@ -49,8 +49,6 @@
 
     <dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
 
-    <dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
-
     <dubbo:service  ref="rotainCusPermissionApiImpl" interface="com.bjike.goddess.archive.api.RotainCusPermissionAPI" />
     <dubbo:service  ref="rotainPermissionOperateApiImpl" interface="com.bjike.goddess.archive.api.RotainPermissionOperateAPI" />
 

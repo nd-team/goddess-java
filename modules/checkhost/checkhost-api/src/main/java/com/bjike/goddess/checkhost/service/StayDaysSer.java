@@ -99,10 +99,10 @@ public interface StayDaysSer extends Ser<StayDays, StayDaysDTO> {
      * 审核
      *
      * @param id          id
-     * @param checkStatus 审核状态
+     * @param dto dto
      * @return class StayDaysBO
      */
-    StayDaysBO auditStayDays(String id, CheckStatus checkStatus) throws SerException;
+    StayDaysBO auditStayDays(String id, StayDaysDTO dto) throws SerException;
 
     /**
      * 汇总

@@ -31,7 +31,7 @@ public class WaitPayVO {
     /**
      * 单号
      */
-    private Acctype acctype;
+    private String number;
     /**
      * 地区
      */
@@ -45,7 +45,7 @@ public class WaitPayVO {
     /**
      * 科目
      */
-    private String project;
+    private Acctype acctype;
 
     /**
      * 租车单价
@@ -92,7 +92,6 @@ public class WaitPayVO {
      */
     private boolean isPay;
 
-
     public String getId() {
         return id;
     }
@@ -117,12 +116,12 @@ public class WaitPayVO {
         this.carDate = carDate;
     }
 
-    public Acctype getAcctype() {
-        return acctype;
+    public String getNumber() {
+        return number;
     }
 
-    public void setAcctype(Acctype acctype) {
-        this.acctype = acctype;
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public String getArrival() {
@@ -141,12 +140,12 @@ public class WaitPayVO {
         this.carUser = carUser;
     }
 
-    public String getProject() {
-        return project;
+    public Acctype getAcctype() {
+        return acctype;
     }
 
-    public void setProject(String project) {
-        this.project = project;
+    public void setAcctype(Acctype acctype) {
+        this.acctype = acctype;
     }
 
     public Double getCarPrice() {
@@ -213,11 +212,11 @@ public class WaitPayVO {
         this.single = single;
     }
 
-    public boolean getIsPay() {
+    public boolean isPay() {
         return isPay;
     }
 
-    public void setIsPay(boolean isPay) {
-        this.isPay = isPay;
+    public void setPay(boolean pay) {
+        isPay = pay;
     }
 }

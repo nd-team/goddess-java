@@ -177,17 +177,17 @@ public class CostDetailsAction {
     }
 
     /**
-     * 查看成本明细详情
+     * 列表详情
      *
-     * @param id 成本明细id
+     * @param costDetailsDTO 成本明细dto
      * @return class CostDetailsAddEditVO
      * @des 根据id成本明细
      * @version v1
      */
-    @GetMapping("v1/seeDetail/{id}")
-    public Result seeDetail(@PathVariable String id) throws ActException {
+    @GetMapping("v1/listDetail")
+    public Result seeDetail(CostDetailsDTO costDetailsDTO) throws ActException {
         try {
-            CostDetailsAddEditBO costDetailsAddEditBO = costDetailsAPI.seeDetail(id);
+            CostDetailsAddEditBO costDetailsAddEditBO = costDetailsAPI.listDetail(costDetailsDTO);
             CostDetailsAddEditVO costDetailsAddEditVO = new CostDetailsAddEditVO();
             List<LaborCostDetailBO> laborCostDetailBOList = costDetailsAddEditBO.getLaborCostDetailList();
             List<CompanyBorrowedDetailBO> companyBorrowedDetailBOList = costDetailsAddEditBO.getCompanyBorrowedDetailList();

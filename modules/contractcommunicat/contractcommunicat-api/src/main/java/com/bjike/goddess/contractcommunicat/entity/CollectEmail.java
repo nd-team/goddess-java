@@ -35,8 +35,8 @@ public class CollectEmail extends BaseEntity {
     /**
      * 汇总条件
      */
-    @Column(name = "condi", nullable = false, columnDefinition = "TEXT   COMMENT '汇总条件'")
-    private String condi;
+//    @Column(name = "condi", nullable = false, columnDefinition = "TEXT   COMMENT '汇总条件'")
+//    private String condi;
 
     /**
      * 备注
@@ -104,13 +104,13 @@ public class CollectEmail extends BaseEntity {
         this.type = type;
     }
 
-    public String getCondi() {
-        return condi;
-    }
-
-    public void setCondi(String condi) {
-        this.condi = condi;
-    }
+//    public String getCondi() {
+//        return condi;
+//    }
+//
+//    public void setCondi(String condi) {
+//        this.condi = condi;
+//    }
 
 
     public String getRemark() {

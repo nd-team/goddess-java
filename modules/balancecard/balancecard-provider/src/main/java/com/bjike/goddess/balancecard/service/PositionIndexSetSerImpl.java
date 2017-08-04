@@ -711,4 +711,41 @@ public class PositionIndexSetSerImpl extends ServiceImpl<PositionIndexSet, Posit
         return boList;
     }
 
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<PositionIndexSetExcel> yearIndexExports = new ArrayList<>();
+
+        PositionIndexSetExcel excel = new PositionIndexSetExcel();
+        excel.setIndexName("指标名称");
+        excel.setYear( "年份" );
+        excel.setMonth("月份");
+        excel.setIndexType("指标类型");
+        excel.setDimension("维度");
+        excel.setDepartment("责任部门");
+        excel.setDescribtion(12d);
+        excel.setDepartYearWeight(13d);
+        excel.setDepartYearWager(12d);
+        excel.setPosition("责任岗位");
+        excel.setPositioner("责任人");
+        excel.setPositionerNumber("责任人工号");
+        excel.setWeight(11d);
+        excel.setWeightSum(10d);
+        excel.setTarget(10d);
+        excel.setWager(10d);
+        excel.setComplete(10d);
+        excel.setExamWay("考核方式");
+        excel.setWhetherStandar("是否达标");
+        excel.setStandardRate(0.1d);
+        excel.setExamScore(19d);
+        excel.setWritePerson("填报人员");
+        excel.setExamDepart("考核部门");
+        excel.setDataOrigin("数据来源");
+        excel.setExamDuring("考核周期" );
+        yearIndexExports.add( excel );
+
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(yearIndexExports, exce);
+        return bytes;
+    }
 }

@@ -64,6 +64,7 @@ public class AwardStandardAct {
      * 新增
      *
      * @param to 推荐奖励要求标准
+     * @return class AwardStandardVO
      * @version v1
      */
     @LoginAuth
@@ -81,6 +82,7 @@ public class AwardStandardAct {
      * 编辑
      *
      * @param to 推荐奖励要求标准
+     * @return class AwardStandardVO
      * @version v1
      */
     @LoginAuth
@@ -115,6 +117,7 @@ public class AwardStandardAct {
      * 列表
      *
      * @param dto 分页条件
+     * @return class AwardStandardVO
      * @version v1
      */
     @LoginAuth

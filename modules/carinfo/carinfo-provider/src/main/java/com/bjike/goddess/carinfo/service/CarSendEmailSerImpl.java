@@ -140,4 +140,11 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
             throw new SerException("非法Id,发送对象不能为空！");
         }
     }
+
+    @Override
+    public Long counts(CarSendEmailDTO dto) throws SerException {
+        Long count = super.count(dto);
+        return count;
+    }
+
 }

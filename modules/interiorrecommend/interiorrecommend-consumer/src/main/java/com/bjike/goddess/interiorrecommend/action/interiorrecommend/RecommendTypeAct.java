@@ -64,6 +64,7 @@ public class RecommendTypeAct {
      * 新增
      *
      * @param to 推荐类型设定
+     * @return class RecommendTypeVO
      * @version v1
      */
     @LoginAuth
@@ -81,6 +82,7 @@ public class RecommendTypeAct {
      * 编辑
      *
      * @param to 推荐类型设定
+     * @return class RecommendTypeVO
      * @version v1
      */
     @LoginAuth
@@ -116,6 +118,7 @@ public class RecommendTypeAct {
      * 列表
      *
      * @param dto 分页条件
+     * @return class RecommendTypeVO
      * @version v1
      */
     @LoginAuth

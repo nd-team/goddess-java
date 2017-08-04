@@ -32,8 +32,7 @@ public class YearIndexSetTO extends BaseTO {
     /**
      * 年度指标编号
      */
-    @NotBlank(groups = {YearIndexSetTO.TestAdd.class}, message = "年度指标编号不能为空")
-    private String indexNumber;
+    private Integer indexNumber;
 
 
     /**
@@ -233,11 +232,11 @@ public class YearIndexSetTO extends BaseTO {
         this.departSerperateTOS = departSerperateTOS;
     }
 
-    public String getIndexNumber() {
+    public Integer getIndexNumber() {
         return indexNumber;
     }
 
-    public void setIndexNumber(String indexNumber) {
+    public void setIndexNumber(Integer indexNumber) {
         this.indexNumber = indexNumber;
     }
 }

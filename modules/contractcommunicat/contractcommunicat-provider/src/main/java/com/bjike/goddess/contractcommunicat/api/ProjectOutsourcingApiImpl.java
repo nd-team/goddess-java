@@ -87,7 +87,7 @@ public class ProjectOutsourcingApiImpl implements ProjectOutsourcingAPI {
     }
 
     @Override
-    public List<SonPermissionObject> sonPermission() throws SerException {
+    public Boolean sonPermission() throws SerException {
         return projectOutsourcingSer.sonPermission();
     }
 

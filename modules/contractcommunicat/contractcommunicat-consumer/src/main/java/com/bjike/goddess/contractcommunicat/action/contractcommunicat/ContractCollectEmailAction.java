@@ -129,7 +129,7 @@ public class ContractCollectEmailAction {
      */
     @LoginAuth
     @PostMapping("v1/edit")
-    public Result editCollectEmail(@Validated(CollectEmailTO.TestAdd.class) CollectEmailTO collectEmailTO,BindingResult bindingResult) throws ActException {
+    public Result editCollectEmail(@Validated(CollectEmailTO.TestAdd.class) CollectEmailTO collectEmailTO, BindingResult bindingResult) throws ActException {
         try {
             CollectEmailBO collectEmailBO1 = collectEmailAPI.editCollectEmail(collectEmailTO);
             return ActResult.initialize(BeanTransform.copyProperties(collectEmailBO1, CollectEmailVO.class, true));
@@ -147,7 +147,7 @@ public class ContractCollectEmailAction {
      */
     @LoginAuth
     @DeleteMapping("v1/delete/{id}")
-    public Result deleteCollectEmail(@PathVariable String id ) throws ActException {
+    public Result deleteCollectEmail(@PathVariable String id) throws ActException {
         try {
             collectEmailAPI.deleteCollectEmail(id);
             return new ActResult("delete success!");
@@ -185,7 +185,7 @@ public class ContractCollectEmailAction {
      */
     @LoginAuth
     @DeleteMapping("v1/thaw/{id}")
-    public Result thaw(@PathVariable String id ) throws ActException {
+    public Result thaw(@PathVariable String id) throws ActException {
         try {
             collectEmailAPI.thawCollectEmail(id);
             return new ActResult("thaw success!");
@@ -228,7 +228,7 @@ public class ContractCollectEmailAction {
     @GetMapping("v1/collect/outsourcing")
     public Result collectOutsourcing(@Validated(CollectEmailDTO.TestFirstCompany.class) CollectEmailTO collectEmailTO, BindingResult bindingResult) throws ActException {
         List<CollectEmailVO> collectEmailVOList = new ArrayList<>();
-        CollectEmail collectEmail = BeanTransform.copyProperties(collectEmailTO,CollectEmail.class);
+        CollectEmail collectEmail = BeanTransform.copyProperties(collectEmailTO, CollectEmail.class);
         try {
             collectEmailVOList = BeanTransform.copyProperties(
                     collectEmailAPI.gatherPc(collectEmail), CollectEmailVO.class);
@@ -239,7 +239,6 @@ public class ContractCollectEmailAction {
     }
 
 
-
     /**
      * 检测
      *
@@ -247,14 +246,30 @@ public class ContractCollectEmailAction {
      * @version v1
      */
     @GetMapping("v1/checkSendEmail")
-    public Result checkSendEmail(   ) throws ActException {
+    public Result checkSendEmail() throws ActException {
         try {
-            collectEmailAPI.checkSendEmail( );
+            collectEmailAPI.checkSendEmail();
             return ActResult.initialize("发送成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
+    /**
+     * 一个个邮件
+     * @param id
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/getOne/{id}")
+    public Result getOne(String id) throws ActException {
+        try {
+            CollectEmailBO collectEmailBO = collectEmailAPI.getOne(id);
+            CollectEmailVO collectEmailVO = BeanTransform.copyProperties(collectEmailBO, CollectEmailVO.class);
+            return ActResult.initialize(collectEmailVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
 
+    }
 }

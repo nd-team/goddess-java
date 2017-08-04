@@ -103,7 +103,7 @@ public interface ProjectOutsourcingAPI {
 
     List<ProjectOutsourcingBO> projects() throws SerException;
 
-    List<SonPermissionObject> sonPermission() throws SerException;
+    Boolean sonPermission() throws SerException;
 
     Boolean guidePermission(GuidePermissionTO to) throws SerException;
 

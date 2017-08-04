@@ -190,7 +190,7 @@ public interface PositionDetailUserAPI {
     /**
      * 根据名字获取所在岗位
      */
-    default String getPosition(String name) throws SerException {
+    default List<String> getPosition(String name) throws SerException {
         return null;
     }
 
@@ -212,6 +212,13 @@ public interface PositionDetailUserAPI {
      * 获取全部的部门
      */
     default List<String> getAllDepartment() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据名字获取岗位详细(地区，部门，模块，层级，岗位)
+     */
+    default List<PositionDetailBO> getPositionDetail(String name) throws SerException {
         return null;
     }
 }

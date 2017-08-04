@@ -53,6 +53,9 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     @Autowired
     private ProjectOutsourcingSer projectOutsourcingSer;
 
+    @Autowired
+    private ContractCollectEmailSer contractCollectEmailSer;
+
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectContractBO saveProjectContract(ProjectContractTO to) throws SerException {
@@ -260,14 +263,39 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         List<SonPermissionObject> list = new ArrayList<>();
-
+        String userToken = RpcTransmit.getUserToken();
         Boolean flagAddSign = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
         SonPermissionObject obj = new SonPermissionObject();
 
         obj = new SonPermissionObject();
         obj.setName("contract");
         obj.setDescribesion("项目承包洽谈");
         if (flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeEmail = contractCollectEmailSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("collectemail");
+        obj.setDescribesion("邮件发送");
+        if (flagSeeEmail) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagOutsourcing = projectOutsourcingSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("collectemail");
+        obj.setDescribesion("项目外包洽谈");
+        if (flagOutsourcing) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -401,11 +429,21 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     }
 
     public void getCusPermission() throws SerException {
-
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-
-        if (!permission) {
-            throw new SerException("该模块只有商务部可操作，您的帐号尚无权限");
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
         }
+//        Boolean permission = cusPermissionSer.getCusPermission("1");
+//
+//        if (!permission) {
+//            throw new SerException("该模块只有商务部可操作，您的帐号尚无权限");
+//        }
     }
 }

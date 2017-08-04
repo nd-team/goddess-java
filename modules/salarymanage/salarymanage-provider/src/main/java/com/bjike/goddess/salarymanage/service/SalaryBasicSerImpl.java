@@ -4,6 +4,8 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.HierarchyAPI;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
@@ -15,13 +17,19 @@ import com.bjike.goddess.salarymanage.api.SalaryBasicAPI;
 import com.bjike.goddess.salarymanage.bo.SalaryBasicBO;
 import com.bjike.goddess.salarymanage.dto.SalaryBasicDTO;
 import com.bjike.goddess.salarymanage.entity.SalaryBasic;
+import com.bjike.goddess.salarymanage.excel.SalaryBasicSetExcel;
+import com.bjike.goddess.salarymanage.to.ExportSalaryBasicTO;
 import com.bjike.goddess.salarymanage.to.SalaryBasicTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,13 +44,14 @@ import java.util.List;
 @Service
 public class SalaryBasicSerImpl extends ServiceImpl<SalaryBasic, SalaryBasicDTO> implements SalaryBasicSer {
     @Autowired
-    private SalaryBasicSer salaryBasicSer;
-    @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private HierarchyAPI hierarchyAPI;
     @Autowired
     private PositionDetailAPI positionDetailAPI;
+
+    @Autowired
+    private UserAPI userAPI;
 
     @Override
     public List<AreaBO> findArea() throws SerException {
@@ -112,12 +121,70 @@ public class SalaryBasicSerImpl extends ServiceImpl<SalaryBasic, SalaryBasicDTO>
         salaryBasic.setSystem(to.getSystem());
         salaryBasic.setPosition(to.getPosition());
         salaryBasic.setModifyTime(LocalDateTime.now());
+        super.update(salaryBasic);
         SalaryBasicBO salaryBasicBO = BeanTransform.copyProperties(salaryBasic,SalaryBasicBO.class);
         return salaryBasicBO;
     }
 
     @Override
     public void delete(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
         super.remove(id);
     }
+    //校验字段是否存在
+    private void isExist(SalaryBasicTO to, Integer row) throws SerException {
+        if(StringUtils.isBlank( to.getArea() )){
+            throw new SerException("第" + row + "行的地区不能为空" );
+        }
+        if(StringUtils.isBlank( to.getBasePay() )){
+            throw new SerException("第" + row + "行的基本工资不能为空" );
+        }
+        if(null== to.getDepartment()){
+            throw new SerException("第" + row + "行的部门/项目组不能为空" );
+        }
+        if ( null== to.getPosition()) {
+            throw new SerException("第" + row + "行的本月目标值不能为空");
+        }
+        if(null == to.getSystem()){
+            throw new SerException("第" + row + "行的体系不能为空");
+        }
+    }
+
+    @Override
+    public void leadExcel(List<SalaryBasicTO> toList) throws SerException {
+        UserBO userBO = userAPI.currentUser();
+        for(int i = 1; i<= toList.size();i++){
+            isExist(toList.get(i-1),i);
+        }
+        List<SalaryBasic> list = BeanTransform.copyProperties(toList,SalaryBasic.class,true);
+        list.stream().forEach(str->{
+            str.setModifyTime(LocalDateTime.now());
+            str.setCreateTime(LocalDateTime.now());
+        });
+        super.save(list);
+    }
+
+    @Override
+    public byte[] exportExcel(ExportSalaryBasicTO to) throws SerException {
+        SalaryBasicDTO dto = new SalaryBasicDTO();
+        if(StringUtils.isNotBlank(to.getArea())){
+            dto.getConditions().add(Restrict.eq("area",to.getArea()));
+        }
+        if(StringUtils.isNotBlank(to.getDepartment())){
+            dto.getConditions().add(Restrict.eq("department",to.getDepartment()));
+        }
+        List<SalaryBasic> list = super.findByCis(dto);
+        List<SalaryBasicSetExcel> toList = new ArrayList<SalaryBasicSetExcel>();
+        for(SalaryBasic model : list) {
+            SalaryBasicSetExcel excel = new SalaryBasicSetExcel();
+            BeanUtils.copyProperties(model, excel);
+            toList.add(excel);
+        }
+        Excel excel = new Excel(0,2);
+        byte[] bytes = ExcelUtil.clazzToExcel(toList,excel);
+        return bytes;
+    }
+
 }

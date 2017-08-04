@@ -272,4 +272,7 @@ public class CommonalityAct extends BaseFileAction{
             throw new ActException(e1.getMessage());
         }
     }
+
+
+
 }

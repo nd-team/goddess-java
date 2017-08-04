@@ -20,6 +20,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.user.api.UserAPI;
@@ -60,6 +61,17 @@ public class YearIndexSetSerImpl extends ServiceImpl<YearIndexSet, YearIndexSetD
     @Autowired
     private BalancecardPermissionSer cusPermissionSer;
 
+    @Autowired
+    private IndexTypeSetSer indexTypeSetSer;
+    @Autowired
+    private IndexNameSetSer indexNameSetSer;
+
+    @Autowired
+    private ExamWaySetSer examWaySetSer;
+
+    @Autowired
+    private DimensionSetSer dimensionSetSer;
+
     //下拉导航权限
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
@@ -77,30 +89,90 @@ public class YearIndexSetSerImpl extends ServiceImpl<YearIndexSet, YearIndexSetD
 
 
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeeDis = departYearIndexSetSer.sonPermission();
+        Boolean flagDepartYear = departYearIndexSetSer.sonPermission();
         RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("departYearIndex");
         obj.setDescribesion("部门年度指标");
-        obj.setFlag(true);
+        if (flagDepartYear) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
         list.add(obj);
 
-        Boolean flagSeeCate = departMonIndexSetSer.sonPermission();
+
+        Boolean flagDepartMonth = departMonIndexSetSer.sonPermission();
         RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("contractcategory");
+        obj.setName("departMonthIndex");
         obj.setDescribesion("部门月度指标");
-        obj.setFlag(true);
+        if (flagDepartMonth) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
         list.add(obj);
 
-        Boolean flagSeeEmail = positionIndexSetSer.sonPermission();
+        Boolean flagPosition = positionIndexSetSer.sonPermission();
         RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("collectemail");
+        obj.setName("positionIndex");
         obj.setDescribesion("岗位指标");
-        obj.setFlag(true);
+        if (flagPosition) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
         list.add(obj);
 
+        Boolean flagIndexType = indexTypeSetSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("indexType");
+        obj.setDescribesion("指标类型");
+        if (flagIndexType) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagIndexName = indexNameSetSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("indexName");
+        obj.setDescribesion("指标名称");
+        if (flagIndexName) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagExamWay = examWaySetSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("indexName");
+        obj.setDescribesion("考核方式");
+        if (flagExamWay) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagDimension = dimensionSetSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("indexName");
+        obj.setDescribesion("维度");
+        if (flagDimension) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
         return list;
     }
     //功能导航权限
@@ -192,7 +264,8 @@ public class YearIndexSetSerImpl extends ServiceImpl<YearIndexSet, YearIndexSetD
     @Override
     public YearIndexSetBO addYearIndexSet(YearIndexSetTO yearIndexSetTO) throws SerException {
         UserBO userBO = userAPI.currentUser();
-        YearIndexSet yearIndexSets = BeanTransform.copyProperties(yearIndexSetTO, YearIndexSet.class, true);
+        yearIndexSetTO.setSeparateStatus(SeparateStatus.NONE);
+        YearIndexSet yearIndexSets = BeanTransform.copyProperties(yearIndexSetTO, YearIndexSet.class);
         yearIndexSets.setYearPersion(userBO.getUsername());
         //查询所有的指标编号之中最大的指标编号
         String indexNumber = super.findByMaxField("indexNumber", YearIndexSet.class);
@@ -204,7 +277,6 @@ public class YearIndexSetSerImpl extends ServiceImpl<YearIndexSet, YearIndexSetD
             yearIndexSets.setIndexNumber(1);
         }
         yearIndexSets.setYearIndexTime(LocalDate.now());
-        yearIndexSets.setSeparateStatus(SeparateStatus.NONE);
 
         yearIndexSets.setComplete(null == yearIndexSetTO.getComplete() ? 0d : yearIndexSetTO.getComplete());
 
@@ -622,5 +694,30 @@ public class YearIndexSetSerImpl extends ServiceImpl<YearIndexSet, YearIndexSetD
         List<YearIndexSet> list = super.findByCis(yearIndexSetDTO, true);
         List<YearIndexSetBO> listBO = BeanTransform.copyProperties(list, YearIndexSetBO.class);
         return listBO;
+    }
+
+
+    @Override
+    public byte[] templateExport() throws SerException {
+//        getCusPermission();
+
+        List<YearIndexSetExcel> yearIndexExports = new ArrayList<>();
+
+        YearIndexSetExcel excel = new YearIndexSetExcel();
+        excel.setIndexName("指标名称");
+        excel.setYear( "年份" );
+        excel.setIndexType("指标类型");
+        excel.setDimension("维度");
+        excel.setDescribtion(12d);
+        excel.setYearTarget(11d);
+        excel.setComplete(10d);
+        excel.setDataOrigin("数据来源");
+        excel.setExamDuring("考核周期" );
+        excel.setYearPersion( "年度指标添加人");
+        yearIndexExports.add( excel );
+
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(yearIndexExports, exce);
+        return bytes;
     }
 }

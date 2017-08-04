@@ -97,4 +97,9 @@ public class DepartMonIndexSetApiImpl implements DepartMonIndexSetAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return departMonIndexSetSer.guidePermission(guidePermissionTO);
     }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return departMonIndexSetSer.templateExport();
+    }
 }
