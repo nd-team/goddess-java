@@ -168,5 +168,14 @@ public interface CostDetailsSer extends Ser<CostDetails, CostDetailsDTO> {
     default List<String> findAddAllDetails() throws SerException {
         return null;
     }
+    /**
+     * 获取所有日期
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findDate() throws SerException {
+        return null;
+    }
 
 }

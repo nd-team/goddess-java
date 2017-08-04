@@ -316,16 +316,30 @@ public class CostDetailsAction {
     /**
      * 添加中所有的部门
      *
-     * @return class CostDetailsAddReturnVO
      * @version v1
      */
-    @LoginAuth
     @GetMapping("v1/allOrageDepartment")
     public Result allOrageDepartment() throws ActException {
         try {
             List<String> detail = new ArrayList<>();
             detail = costDetailsAPI.findAddAllDetails();
             return ActResult.initialize(detail);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 所有时间接口
+     *
+     * @version v1
+     */
+    @GetMapping("v1/allDate")
+    public Result allDate() throws ActException {
+        try {
+            List<String> date = new ArrayList<>();
+            date = costDetailsAPI.findDate();
+            return ActResult.initialize(date);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

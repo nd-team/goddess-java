@@ -107,4 +107,9 @@ public class CostDetailsApiImpl implements CostDetailsAPI {
     public CostDetailsAddEditBO listDetail(CostDetailsDTO costDetailsDTO) throws SerException {
         return costDetailsSer.listDetail(costDetailsDTO);
     }
+
+    @Override
+    public List<String> findDate() throws SerException {
+        return costDetailsSer.findDate();
+    }
 }

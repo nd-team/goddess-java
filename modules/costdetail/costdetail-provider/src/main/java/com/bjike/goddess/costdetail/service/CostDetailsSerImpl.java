@@ -1024,10 +1024,16 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
     public CostDetailsAddEditBO listDetail(CostDetailsDTO costDetailsDTO) throws SerException {
         checkPermission();
         CostDetails costDetails = new CostDetails();
-        if(StringUtils.isBlank(costDetailsDTO.getCostTime())){
+        if(StringUtils.isBlank(costDetailsDTO.getCostTime()) && StringUtils.isBlank(costDetailsDTO.getDepartment())){
             costDetailsDTO.getSorts().add("createTime=desc");
             costDetails = super.findByCis(costDetailsDTO).get(0);
         }else{
+            if(StringUtils.isBlank(costDetailsDTO.getCostTime())){
+                throw new SerException("日期不能为空");
+            }
+            if(StringUtils.isBlank(costDetailsDTO.getDepartment())){
+                throw new SerException("部门不能为空");
+            }
             searchCondition(costDetailsDTO);
             costDetails = super.findByCis(costDetailsDTO).get(0);
         }
@@ -2440,6 +2446,22 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
             String details = departmentDetailBO.getDepartment();
             if (StringUtils.isNotBlank(departmentDetailBO.getDepartment())) {
                 set.add(details);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> findDate() throws SerException {
+        List<CostDetails> costDetailsList = super.findAll();
+        if (CollectionUtils.isEmpty(costDetailsList)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (CostDetails costDetails : costDetailsList) {
+            String costTime = costDetails.getCostTime().toString();
+            if (StringUtils.isNotBlank(costTime)) {
+                set.add(costTime);
             }
         }
         return new ArrayList<>(set);
