@@ -11,11 +11,14 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialsummary.api.SendEmailAPI;
 import com.bjike.goddess.materialsummary.bo.*;
 import com.bjike.goddess.materialsummary.dto.SendEmailDTO;
+import com.bjike.goddess.materialsummary.excel.SonPermissionObject;
+import com.bjike.goddess.materialsummary.to.GuidePermissionTO;
 import com.bjike.goddess.materialsummary.to.PersonalBuySummVO;
 import com.bjike.goddess.materialsummary.to.SendEmailTO;
 import com.bjike.goddess.materialsummary.type.ModuleType;
 import com.bjike.goddess.materialsummary.type.SummaryType;
 import com.bjike.goddess.materialsummary.vo.*;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -40,6 +43,78 @@ public class SendEmailAction {
     @Autowired
     private SendEmailAPI sendEmailAPI;
 
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result setButtonPermission() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = sendEmailAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = sendEmailAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 列表总条数
      *
@@ -733,6 +808,22 @@ public class SendEmailAction {
             List<WarrantyDeviceSummBO> boList = sendEmailAPI.warranDeviceSummYear(year);
             List<WarrantyDeviceSummVO> voList = BeanTransform.copyProperties(boList, WarrantyDeviceSummVO.class, request);
             return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 检测
+     *
+     * @des 商务邮件汇总汇总派工合同
+     * @version v1
+     */
+    @GetMapping("v1/checkEmail")
+    public Result checkEmail(   ) throws ActException {
+        try {
+            sendEmailAPI.checkSendEmail( );
+            return ActResult.initialize("发送成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

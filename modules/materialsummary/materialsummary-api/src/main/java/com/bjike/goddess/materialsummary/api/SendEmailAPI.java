@@ -3,6 +3,8 @@ package com.bjike.goddess.materialsummary.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.materialsummary.bo.*;
 import com.bjike.goddess.materialsummary.dto.SendEmailDTO;
+import com.bjike.goddess.materialsummary.excel.SonPermissionObject;
+import com.bjike.goddess.materialsummary.to.GuidePermissionTO;
 import com.bjike.goddess.materialsummary.to.SendEmailTO;
 import com.bjike.goddess.materialsummary.type.ModuleType;
 import com.bjike.goddess.materialsummary.type.SummaryType;
@@ -19,6 +21,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SendEmailAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 总条数
      */
@@ -349,5 +366,13 @@ public interface SendEmailAPI {
      */
     default List<WarrantyDeviceSummBO> warranDeviceSummYear(Integer year) throws SerException {
         return null;
+    }
+
+    /**
+     * 定时器检测要发送的邮件
+     *
+     */
+    default void checkSendEmail( ) throws SerException {
+        return ;
     }
 }

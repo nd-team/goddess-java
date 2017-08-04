@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.materialsummary.bo.*;
 import com.bjike.goddess.materialsummary.dto.SendEmailDTO;
 import com.bjike.goddess.materialsummary.entity.SendEmail;
+import com.bjike.goddess.materialsummary.excel.SonPermissionObject;
+import com.bjike.goddess.materialsummary.to.GuidePermissionTO;
 import com.bjike.goddess.materialsummary.to.SendEmailTO;
 import com.bjike.goddess.materialsummary.type.ModuleType;
 import com.bjike.goddess.materialsummary.type.SummaryType;
@@ -21,6 +23,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SendEmailSer extends Ser<SendEmail, SendEmailDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 总条数
      */
@@ -112,8 +129,7 @@ public interface SendEmailSer extends Ser<SendEmail, SendEmailDTO> {
      */
     default List<TypeBuySummBO> typeBuySummDay(String summTime) throws SerException {
         return null;
-    }
-    /**
+    }/**
      * 针对各物资分类购买情况周汇总
      *
      * @param year
@@ -122,8 +138,7 @@ public interface SendEmailSer extends Ser<SendEmail, SendEmailDTO> {
      */
     default List<TypeBuySummBO> typeBuySummWeek(Integer year,Integer month,Integer week) throws SerException {
         return null;
-    }
-    /**
+    }/**
      * 针对各物资分类购买情况月汇总
      *
      * @param year
@@ -131,8 +146,7 @@ public interface SendEmailSer extends Ser<SendEmail, SendEmailDTO> {
      */
     default List<TypeBuySummBO> typeBuySummMonth(Integer year,Integer month) throws SerException {
         return null;
-    }
-    /**
+    }/**
      * 针对各物资分类购买情况年汇总
      *
      * @param year
@@ -140,6 +154,7 @@ public interface SendEmailSer extends Ser<SendEmail, SendEmailDTO> {
     default List<TypeBuySummBO> typeBuySummYear(Integer year) throws SerException {
         return null;
     }
+
     /**
      * 针对各部门地区物资购买情况日汇总
      *
@@ -354,6 +369,14 @@ public interface SendEmailSer extends Ser<SendEmail, SendEmailDTO> {
      */
     default List<WarrantyDeviceSummBO> warranDeviceSummYear(Integer year) throws SerException {
         return null;
+    }
+
+    /**
+     * 定时器检测要发送的邮件
+     *
+     */
+    default void checkSendEmail( ) throws SerException {
+        return ;
     }
 
 }

@@ -446,7 +446,7 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
     public List<String> findAreaByType(InstockType instockType,String[] intervalTime) throws SerException {
         MaterialInStockDTO materialInStockDTO = new MaterialInStockDTO();
         materialInStockDTO.getConditions().add(Restrict.between("instockDate",intervalTime));
-        materialInStockDTO.getConditions().add(Restrict.eq("instockType",instockType));
+        materialInStockDTO.getConditions().add(Restrict.eq("instockType",instockType.getCode()));
         List<MaterialInStock> materialInStocks =  super.findByCis(materialInStockDTO);
         if (CollectionUtils.isEmpty(materialInStocks)) {
             return Collections.emptyList();
@@ -465,7 +465,7 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
     public List<String> findDepartByTyAnAr(InstockType instockType, String storageArea, String[] intervalTime) throws SerException {
         MaterialInStockDTO materialInStockDTO = new MaterialInStockDTO();
         materialInStockDTO.getConditions().add(Restrict.between("instockDate",intervalTime));
-        materialInStockDTO.getConditions().add(Restrict.eq("instockType",instockType));
+        materialInStockDTO.getConditions().add(Restrict.eq("instockType",instockType.getCode()));
         materialInStockDTO.getConditions().add(Restrict.eq("storageArea",storageArea));
         List<MaterialInStock> materialInStocks =  super.findByCis(materialInStockDTO);
         if (CollectionUtils.isEmpty(materialInStocks)) {
@@ -485,7 +485,7 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
     public List<MaterialInStockBO> findByTyAnAr(InstockType instockType, String storageArea,String projectGroup, String[] intervalTime) throws SerException {
         MaterialInStockDTO materialInStockDTO = new MaterialInStockDTO();
         materialInStockDTO.getConditions().add(Restrict.between("instockDate",intervalTime));
-        materialInStockDTO.getConditions().add(Restrict.eq("instockType",instockType));
+        materialInStockDTO.getConditions().add(Restrict.eq("instockType",instockType.getCode()));
         materialInStockDTO.getConditions().add(Restrict.eq("storageArea",storageArea));
         materialInStockDTO.getConditions().add(Restrict.eq("projectGroup",projectGroup));
         List<MaterialInStock> materialInStocks =  super.findByCis(materialInStockDTO);
@@ -555,7 +555,7 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
         materialInStockDTO.getConditions().add(Restrict.between("instockDate",intervalTime));
         materialInStockDTO.getConditions().add(Restrict.eq("projectGroup",projectGroup));
         materialInStockDTO.getConditions().add(Restrict.eq("storageArea",area));
-        materialInStockDTO.getConditions().add(Restrict.eq("materialState",materialState));
+        materialInStockDTO.getConditions().add(Restrict.eq("materialState",materialState.getCode()));
         List<MaterialInStock> materialInStocks =  super.findByCis(materialInStockDTO);
         return BeanTransform.copyProperties(materialInStocks,MaterialInStockBO.class);
     }

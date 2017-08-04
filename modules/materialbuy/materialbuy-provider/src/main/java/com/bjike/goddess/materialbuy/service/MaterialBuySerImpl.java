@@ -551,6 +551,7 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
         return BeanTransform.copyProperties(materialBuys,MaterialBuyBO.class);
     }
 
+
     @Override
     public List<String> findArea(String[] intervalTime) throws SerException {
         MaterialBuyDTO dto = new MaterialBuyDTO();
@@ -610,13 +611,14 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
 
     @Override
     public List<MaterialBuyBO> findByTeamAnArea(String area, String projectTeam,String devType, String[] intervalTime) throws SerException {
-        MaterialBuyDTO dto = new MaterialBuyDTO();
-        dto.getConditions().add(Restrict.eq("projectTeam", projectTeam));
-        dto.getConditions().add(Restrict.eq("area", area));
-        dto.getConditions().add(Restrict.eq("devType", devType));
-        dto.getConditions().add(Restrict.between("subscribeDate",intervalTime));
-        List<MaterialBuy> materialBuys = super.findByCis(dto);
-        return BeanTransform.copyProperties(materialBuys,MaterialBuyBO.class);
+//        MaterialBuyDTO dto = new MaterialBuyDTO();
+//        dto.getConditions().add(Restrict.eq("projectTeam", projectTeam));
+//        dto.getConditions().add(Restrict.eq("area", area));
+//        dto.getConditions().add(Restrict.eq("deviceType", devType));
+//        dto.getConditions().add(Restrict.between("subscribeDate",intervalTime));
+//        List<MaterialBuy> materialBuys = super.findByCis(dto);
+//        return BeanTransform.copyProperties(materialBuys,MaterialBuyBO.class);
+        return null;
     }
 
     @Override

@@ -504,8 +504,9 @@ public class DeviceRepairSerImpl extends ServiceImpl<DeviceRepair, DeviceRepairD
     @Override
     public List<String> findAreaByStatus(String[] intervalTime,MaterialState materialState) throws SerException {
         DeviceRepairDTO deviceRepairDTO = new DeviceRepairDTO();
+
         deviceRepairDTO.getConditions().add(Restrict.between("planOverRepairTime", intervalTime));
-        deviceRepairDTO.getConditions().add(Restrict.eq("materialState", materialState));
+        deviceRepairDTO.getConditions().add(Restrict.eq("materialState", materialState.getValue()));
         List<DeviceRepair> deviceRepairs = super.findByCis(deviceRepairDTO);
         if (CollectionUtils.isEmpty(deviceRepairs)) {
             return Collections.emptyList();
@@ -523,7 +524,7 @@ public class DeviceRepairSerImpl extends ServiceImpl<DeviceRepair, DeviceRepairD
     public List<String> findProjectByStaAnAr(String[] intervalTime,MaterialState materialState,String area) throws SerException {
         DeviceRepairDTO deviceRepairDTO = new DeviceRepairDTO();
         deviceRepairDTO.getConditions().add(Restrict.between("planOverRepairTime", intervalTime));
-        deviceRepairDTO.getConditions().add(Restrict.eq("materialState", materialState));
+        deviceRepairDTO.getConditions().add(Restrict.eq("materialState", materialState.getValue()));
         deviceRepairDTO.getConditions().add(Restrict.eq("area", area));
         List<DeviceRepair> deviceRepairs = super.findByCis(deviceRepairDTO);
         if (CollectionUtils.isEmpty(deviceRepairs)) {
@@ -542,7 +543,7 @@ public class DeviceRepairSerImpl extends ServiceImpl<DeviceRepair, DeviceRepairD
     public List<DeviceRepairBO> findByStaAnAr(String[] intervalTime, MaterialState materialState, String area,String projectGroup) throws SerException {
         DeviceRepairDTO deviceRepairDTO = new DeviceRepairDTO();
         deviceRepairDTO.getConditions().add(Restrict.between("planOverRepairTime", intervalTime));
-        deviceRepairDTO.getConditions().add(Restrict.eq("materialState", materialState));
+        deviceRepairDTO.getConditions().add(Restrict.eq("materialState", materialState.getValue()));
         deviceRepairDTO.getConditions().add(Restrict.eq("area",area));
         deviceRepairDTO.getConditions().add(Restrict.eq("projectGroup",projectGroup));
         List<DeviceRepair> deviceRepairs = super.findByCis(deviceRepairDTO);
@@ -571,7 +572,7 @@ public class DeviceRepairSerImpl extends ServiceImpl<DeviceRepair, DeviceRepairD
     public List<String> findAreaByBool(String[] intervalTime, Boolean whetherWarranty) throws SerException {
         DeviceRepairDTO deviceRepairDTO = new DeviceRepairDTO();
         deviceRepairDTO.getConditions().add(Restrict.between("planOverRepairTime",intervalTime));
-        deviceRepairDTO.getConditions().add(Restrict.eq("whetherWarranty",whetherWarranty));
+        deviceRepairDTO.getConditions().add(Restrict.eq("whetherWarranty",whetherWarranty?1:0));
         List<DeviceRepair> deviceRepairs = super.findByCis(deviceRepairDTO);
         if (CollectionUtils.isEmpty(deviceRepairs)) {
             return Collections.emptyList();
@@ -590,7 +591,7 @@ public class DeviceRepairSerImpl extends ServiceImpl<DeviceRepair, DeviceRepairD
     public List<String> findProjByBoArea(String[] intervalTime, String area, Boolean whetherWarranty) throws SerException {
         DeviceRepairDTO deviceRepairDTO = new DeviceRepairDTO();
         deviceRepairDTO.getConditions().add(Restrict.between("planOverRepairTime",intervalTime));
-        deviceRepairDTO.getConditions().add(Restrict.eq("whetherWarranty",whetherWarranty));
+        deviceRepairDTO.getConditions().add(Restrict.eq("whetherWarranty",whetherWarranty?1:0));
         deviceRepairDTO.getConditions().add(Restrict.eq("area",area));
         List<DeviceRepair> deviceRepairs = super.findByCis(deviceRepairDTO);
         if (CollectionUtils.isEmpty(deviceRepairs)) {
@@ -610,7 +611,7 @@ public class DeviceRepairSerImpl extends ServiceImpl<DeviceRepair, DeviceRepairD
     public List<DeviceRepairBO> findByBoAnArDep(String[] intervalTime, String area, Boolean whetherWarranty, String projectGroup) throws SerException {
         DeviceRepairDTO deviceRepairDTO = new DeviceRepairDTO();
         deviceRepairDTO.getConditions().add(Restrict.between("planOverRepairTime", intervalTime));
-        deviceRepairDTO.getConditions().add(Restrict.eq("whetherWarranty", whetherWarranty));
+        deviceRepairDTO.getConditions().add(Restrict.eq("whetherWarranty", whetherWarranty?1:0));
         deviceRepairDTO.getConditions().add(Restrict.eq("area",area));
         deviceRepairDTO.getConditions().add(Restrict.eq("projectGroup",projectGroup));
         List<DeviceRepair> deviceRepairs = super.findByCis(deviceRepairDTO);
