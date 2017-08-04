@@ -215,12 +215,12 @@ public class StayDaysSerImpl extends ServiceImpl<StayDays, StayDaysDTO> implemen
     }
 
     @Override
-    public StayDaysBO auditStayDays(String id, CheckStatus checkStatus) throws SerException {
+    public StayDaysBO auditStayDays(String id, StayDaysDTO dto) throws SerException {
         checkAddIdentity();
 //        stayDaysTO.setComprehensiveVerify(userAPI.currentUser().getUsername());
 //        StayDays stayDays = BeanTransform.copyProperties(stayDaysTO, StayDays.class, true);
         StayDays stayDays=super.findById(id);
-        stayDays.setCheckStatus(checkStatus);
+        stayDays.setCheckStatus(dto.getCheckStatus());
         stayDays.setModifyTime(LocalDateTime.now());
         super.update(stayDays);
 

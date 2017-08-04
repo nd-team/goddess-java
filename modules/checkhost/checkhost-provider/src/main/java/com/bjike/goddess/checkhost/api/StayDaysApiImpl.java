@@ -3,7 +3,6 @@ package com.bjike.goddess.checkhost.api;
 import com.bjike.goddess.checkhost.bo.CollectNameBO;
 import com.bjike.goddess.checkhost.bo.StayDaysBO;
 import com.bjike.goddess.checkhost.dto.StayDaysDTO;
-import com.bjike.goddess.checkhost.enums.CheckStatus;
 import com.bjike.goddess.checkhost.service.StayDaysSer;
 import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.to.StayDaysTO;
@@ -58,8 +57,8 @@ public class StayDaysApiImpl implements StayDaysAPI {
     }
 
     @Override
-    public StayDaysBO auditStayDays(String id, CheckStatus checkStatus) throws SerException {
-        return stayDaysSer.auditStayDays(id, checkStatus);
+    public StayDaysBO auditStayDays(String id, StayDaysDTO dto) throws SerException {
+        return stayDaysSer.auditStayDays(id, dto);
     }
 
     @Override

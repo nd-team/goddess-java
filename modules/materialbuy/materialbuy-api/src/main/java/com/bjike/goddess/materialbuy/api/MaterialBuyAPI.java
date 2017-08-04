@@ -149,12 +149,21 @@ public interface MaterialBuyAPI {
 
     /**
      * 物质汇总所需接口
-     * 根据设备类型和地区查找所有信息
+     * 根据设备类型和地区查找所有部门
      *
      * @return
      * @throws SerException
      */
-    List<MaterialBuyBO> findByTyAndAr(String devType, String area, String[] intervalTime) throws SerException;
+    List<String> findDeparByTyAre(String devType,String area, String[] intervalTime) throws SerException;
+
+    /**
+     * 物质汇总所需接口
+     * 根据设备类型和地区和部门查找所有信息
+     *
+     * @return
+     * @throws SerException
+     */
+    List<MaterialBuyBO> findByTyAndAr(String devType, String area,String department, String[] intervalTime) throws SerException;
 
     /**
      * 物质汇总所需接口
@@ -167,7 +176,7 @@ public interface MaterialBuyAPI {
 
     /**
      * 物质汇总所需接口
-     * 根据地区查找所有设备类型
+     * 根据地区查找所有部门
      *
      * @return
      * @throws SerException
@@ -176,12 +185,22 @@ public interface MaterialBuyAPI {
 
     /**
      * 物质汇总所需接口
+     * 根据地区,部门查找所有类型
+     *
+     * @return
+     * @throws SerException
+     */
+    List<String> findDevByAreaDev(String area,String projectTeam,String[] intervalTime) throws SerException;
+
+    /**
+     * 物质汇总所需接口
      * 根据地区,部门查找所有信息
      *
      * @return
      * @throws SerException
      */
-    List<MaterialBuyBO> findByTeamAnArea(String area,String projectTeam,String[] intervalTime) throws SerException;
+    List<MaterialBuyBO> findByTeamAnArea(String area,String projectTeam,String devType,String[] intervalTime) throws SerException;
+
     /**
      * 物质汇总所需接口
      * 查找所有申购人
@@ -193,10 +212,18 @@ public interface MaterialBuyAPI {
 
     /**
      * 物质汇总所需接口
-     * 根据申购人查找所有信息
+     * 根据申购人查找类型
      *
      * @return
      * @throws SerException
      */
-    List<MaterialBuyBO> findByRequis(String requisitioner, String[] intervalTime) throws SerException;
+    List<String> findByRequis(String requisitioner, String[] intervalTime) throws SerException;
+    /**
+     * 物质汇总所需接口
+     * 根据申购人和类型查找所有信息
+     *
+     * @return
+     * @throws SerException
+     */
+    List<MaterialBuyBO> findByRequisType(String requisitioner,String devType, String[] intervalTime) throws SerException;
 }

@@ -235,7 +235,7 @@ public class BuyTicketApplyAction {
      */
     @LoginAuth
     @PutMapping("v1/planAuditOpinion/{id}")
-    public Result planAuditOpinion(@PathVariable String id, @RequestParam(value = "planAuditOpinion") AuditType planAuditOpinion) throws ActException {
+    public Result planAuditOpinion(@PathVariable String id, @RequestParam AuditType planAuditOpinion) throws ActException {
         try {
             buyTicketApplyAPI.planAuditBuyTicketApply(id, planAuditOpinion);
             return new ActResult("planAuditOpinion success!");
@@ -254,7 +254,7 @@ public class BuyTicketApplyAction {
      */
     @LoginAuth
     @PutMapping("v1/welfAuditOpinion/{id}")
-    public Result welfAuditOpinion(@PathVariable String id, @RequestParam(value = "welfAuditOpinion") AuditType welfAuditOpinion) throws ActException {
+    public Result welfAuditOpinion(@PathVariable String id, @RequestParam AuditType welfAuditOpinion) throws ActException {
         try {
             buyTicketApplyAPI.welfAuditBuyTicketApply(id, welfAuditOpinion);
             return new ActResult("welfAuditOpinion success!");

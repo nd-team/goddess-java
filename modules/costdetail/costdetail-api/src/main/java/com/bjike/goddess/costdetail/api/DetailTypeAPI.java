@@ -61,6 +61,14 @@ public interface DetailTypeAPI {
     }
 
     /**
+     * 明细分类列表
+     *
+     * @return class CostDetailsBO
+     */
+    default List<DetailTypeBO> list(DetailTypeDTO detailTypeDTO) throws SerException {
+        return null;
+    }
+    /**
      * 添加
      *
      * @param detailTypeTO 明细分类
@@ -87,5 +95,12 @@ public interface DetailTypeAPI {
      */
     default List<DetailTypeBO> findByNode(String parNode) throws SerException{
         return null;
+    }
+    /**
+     * 删除
+     *
+     */
+    default void delete(String id) throws SerException {
+        return;
     }
 }

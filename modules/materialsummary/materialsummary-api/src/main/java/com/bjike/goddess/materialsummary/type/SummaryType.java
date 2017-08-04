@@ -32,21 +32,13 @@ public enum SummaryType {
      */
     AREASTOCK(4),
     /**
-     * 地区物质盘点情况汇总
-     */
-    AREAMATCHECK(5),
-    /**
-     * 部门物质盘点情况汇总
-     */
-    DEPARMATCHECK(6),
-    /**
      * 维修状态分类情况汇总
      */
-    MAINTENSTATUS(7),
+    MAINTENSTATUS(5),
     /**
      * 保修状态分类情况汇总
      */
-    WARRANTYSTATUS(8);
+    WARRANTYSTATUS(6);
 
     private int code;
 

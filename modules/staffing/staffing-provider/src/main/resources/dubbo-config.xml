@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://code.alibabatech.com/schema/dubbo 
+		  http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<context:property-placeholder location="classpath:dubbo.properties"/>
+
+	<dubbo:application name="${dubbo.application.name}" />
+	<dubbo:provider filter="userFilter" timeout="${dubbo.provider.timeout}" />
+	<dubbo:consumer check="false" timeout="15000" />
+	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
+	<dubbo:registry address="${dubbo.registry.address}" />
+
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.staffing.api.ConfigurationPlanAPI" ref="configurationPlanApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.staffing.api.ExpendPlanAPI" ref="expendPlanApiImpl"/>
+	<dubbo:service validation="true" interface="com.bjike.goddess.staffing.api.DetailAPI" ref="detailApiImpl"/>
+	<dubbo:service validation="true" interface="com.bjike.goddess.staffing.api.SonAPI" ref="sonApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.staffing.api.ExpendPlanSonDetailAPI" ref="expendPlanSonDetailApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.staffing.api.PlanSonAPI" ref="planSonApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.staffing.api.SalaryAPI" ref="salaryApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.staffing.api.ActualSonAPI" ref="actualSonApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.staffing.api.ConfigurationActualAPI" ref="configurationActualApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.staffing.api.CusPermissionAPI" ref="cusPermissionApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.staffing.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"/>
+
+
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.ArrangementAPI" id="arrangementApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.HierarchyAPI" id="hierarchyApiImpl"/>
+</beans>

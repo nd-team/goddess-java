@@ -180,7 +180,7 @@ public class CostDetailsAction {
      * 查看成本明细详情
      *
      * @param id 成本明细id
-     * @return class CostDetailsVO
+     * @return class CostDetailsAddEditVO
      * @des 根据id成本明细
      * @version v1
      */

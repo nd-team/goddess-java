@@ -236,10 +236,11 @@ public class HostApplySerImpl extends ServiceImpl<HostApply, HostApplyDTO> imple
             BeanTransform.copyProperties(hostApplyTO, hostApply, true);
             hostApply.setModifyTime(LocalDateTime.now());
             super.update(hostApply);
+            return BeanTransform.copyProperties(hostApply, HostApplyBO.class);
         } else {
             throw new SerException("更新ID不能为空");
         }
-        return BeanTransform.copyProperties(hostApplyTO, HostApply.class);
+
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -253,12 +254,12 @@ public class HostApplySerImpl extends ServiceImpl<HostApply, HostApplyDTO> imple
     }
 
     @Override
-    public HostApplyBO auditHostApply(String id, CheckStatus checkStatus) throws SerException {
+    public HostApplyBO auditHostApply(String id, HostApplyDTO dto) throws SerException {
         checkAduitIdentity();
 //        hostApplyTO.setHeadAudit(userAPI.currentUser().getUsername());
 //        HostApply hostApply = BeanTransform.copyProperties(hostApplyTO, HostApply.class, true);
         HostApply hostApply=super.findById(id);
-        hostApply.setCheckStatus(checkStatus);
+        hostApply.setCheckStatus(dto.getCheckStatus());
         hostApply.setModifyTime(LocalDateTime.now());
         super.update(hostApply);
 

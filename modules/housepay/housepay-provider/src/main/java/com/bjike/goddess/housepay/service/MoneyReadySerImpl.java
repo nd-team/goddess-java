@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -313,10 +314,19 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
         }
     }
 
+    public static void main(String[] args) {
+        String date = "2017-05";
+//        LocalDate xx = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDate d = LocalDate.now();
+        d.getMonth();
+        Integer month = Integer.parseInt(date.substring(date.indexOf("-") +1),date.length());
+        Integer year =  Integer.parseInt(date.substring(0,date.indexOf("-")));
+        System.out.println(month);
+    }
     @Override
     public List<CollectCompareBO> readyCollect(String date) throws SerException {
-        Integer year = LocalDate.parse(date).getYear();
-        Integer month = LocalDate.parse(date).getMonthValue();
+        Integer year =  Integer.parseInt(date.substring(0,date.indexOf("-")));
+        Integer month = Integer.parseInt(date.substring(date.indexOf("-") +1),date.length());
         Set<String> projectGroups = findAllProjectGroup();
         MoneyReadyDTO dto = new MoneyReadyDTO();
         List<MoneyReady> list = super.findByCis(dto);
