@@ -101,4 +101,9 @@ public class YearIndexSetApiImpl implements YearIndexSetAPI {
     public List<YearIndexSetBO> dendrogram(YearIndexSetDTO yearIndexSetDTO) throws SerException {
         return yearIndexSetSer.dendrogram(yearIndexSetDTO);
     }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return yearIndexSetSer.templateExport();
+    }
 }

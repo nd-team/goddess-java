@@ -122,4 +122,9 @@ public class PositionIndexSetApiImpl implements PositionIndexSetAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return positionIndexSetSer.guidePermission(guidePermissionTO);
     }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return positionIndexSetSer.templateExport();
+    }
 }

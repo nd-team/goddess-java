@@ -153,6 +153,12 @@ public interface DepartMonIndexSetSer extends Ser<DepartMonIndexSet, DepartMonIn
         return null;
     }
 
+    /**
+     * 导出Excel导入模板
+     * @throws SerException
+     */
+    byte[] templateExport(  ) throws SerException;
+
 
 
 

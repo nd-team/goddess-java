@@ -194,4 +194,10 @@ public interface PositionIndexSetAPI {
     default List<PositionIndexSetBO> dendrogram(String id ) throws SerException{
         return null;
     }
+
+    /**
+     * 导出Excel导入模板
+     * @throws SerException
+     */
+    byte[] templateExport(  ) throws SerException;
 }
