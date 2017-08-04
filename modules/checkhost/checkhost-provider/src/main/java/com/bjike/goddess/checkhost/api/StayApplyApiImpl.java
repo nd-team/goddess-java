@@ -60,8 +60,8 @@ public class StayApplyApiImpl implements StayApplyAPI {
     }
 
     @Override
-    public StayApplyBO manageAudit(String id, CheckStatus checkStatus) throws SerException {
-        return stayApplySer.manageAudit(id,checkStatus);
+    public StayApplyBO manageAudit(StayApplyTO to) throws SerException {
+        return stayApplySer.manageAudit(to);
     }
 
     @Override

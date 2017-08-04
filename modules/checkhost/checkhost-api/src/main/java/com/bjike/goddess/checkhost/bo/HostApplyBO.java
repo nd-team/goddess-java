@@ -33,11 +33,10 @@ public class HostApplyBO extends BaseBO {
      * 员工姓名
      */
     private String name;
-
     /**
      * 员工编号
      */
-    private String id;
+    private String num;
 
     /**
      * 离宿原因
@@ -125,12 +124,12 @@ public class HostApplyBO extends BaseBO {
         this.name = name;
     }
 
-    public String getId() {
-        return id;
+    public String getNum() {
+        return num;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setNum(String num) {
+        this.num = num;
     }
 
     public String getHostCause() {

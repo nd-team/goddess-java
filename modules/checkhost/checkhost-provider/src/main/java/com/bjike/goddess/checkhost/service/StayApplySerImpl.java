@@ -1,15 +1,13 @@
 package com.bjike.goddess.checkhost.service;
 
 import com.bjike.goddess.checkhost.bo.StayApplyBO;
-import com.bjike.goddess.checkhost.enums.CheckStatus;
+import com.bjike.goddess.checkhost.dto.StayApplyDTO;
+import com.bjike.goddess.checkhost.entity.StayApply;
 import com.bjike.goddess.checkhost.enums.GuideAddrStatus;
-import com.bjike.goddess.checkhost.enums.PassStatus;
 import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.to.StayApplyTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.checkhost.dto.StayApplyDTO;
-import com.bjike.goddess.checkhost.entity.StayApply;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
@@ -17,7 +15,6 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,7 +75,7 @@ public class StayApplySerImpl extends ServiceImpl<StayApply, StayApplyDTO> imple
     }
 
     /**
-     *  模块责任人审核
+     * 模块责任人审核
      */
     private void checkAduitIdentity() throws SerException {
         Boolean flag = false;
@@ -130,7 +127,7 @@ public class StayApplySerImpl extends ServiceImpl<StayApply, StayApplyDTO> imple
     }
 
     /**
-     *  模块责任人审核
+     * 模块责任人审核
      */
     private Boolean guideAduitIdentity() throws SerException {
         Boolean flag = false;
@@ -202,44 +199,46 @@ public class StayApplySerImpl extends ServiceImpl<StayApply, StayApplyDTO> imple
         Long count = super.count(stayApplyDTO);
         return count;
     }
+
     @Override
     public StayApplyBO getOne(String id) throws SerException {
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
         StayApply stayApply = super.findById(id);
-        return BeanTransform.copyProperties(stayApply,StayApplyBO.class);
+        return BeanTransform.copyProperties(stayApply, StayApplyBO.class);
     }
+
     @Override
     public List<StayApplyBO> findListStayApply(StayApplyDTO stayApplyDTO) throws SerException {
         checkSeeIdentity();
-        List<StayApply> stayApplies = super.findByCis(stayApplyDTO,true);
-        return BeanTransform.copyProperties(stayApplies,StayApplyBO.class);
+        List<StayApply> stayApplies = super.findByCis(stayApplyDTO, true);
+        return BeanTransform.copyProperties(stayApplies, StayApplyBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public StayApplyBO insertStayApply(StayApplyTO stayApplyTO) throws SerException {
         checkAddIdentity();
-        StayApply stayApply = BeanTransform.copyProperties(stayApplyTO,StayApply.class,true);
+        StayApply stayApply = BeanTransform.copyProperties(stayApplyTO, StayApply.class, true);
         stayApply.setCreateTime(LocalDateTime.now());
         super.save(stayApply);
-        return BeanTransform.copyProperties(stayApply,StayApplyBO.class);
+        return BeanTransform.copyProperties(stayApply, StayApplyBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public StayApplyBO editStayApply(StayApplyTO stayApplyTO) throws SerException {
         checkAddIdentity();
-        if(!StringUtils.isEmpty(stayApplyTO.getId())){
+        if (!StringUtils.isEmpty(stayApplyTO.getId())) {
             StayApply stayApply = super.findById(stayApplyTO.getId());
-            BeanTransform.copyProperties(stayApplyTO,stayApply,true);
+            BeanTransform.copyProperties(stayApplyTO, stayApply, true);
             stayApply.setModifyTime(LocalDateTime.now());
             super.update(stayApply);
-        }else{
+        } else {
             throw new SerException("更新ID不能为空");
         }
-        return BeanTransform.copyProperties(stayApplyTO,StayApplyBO.class);
+        return BeanTransform.copyProperties(stayApplyTO, StayApplyBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -251,15 +250,17 @@ public class StayApplySerImpl extends ServiceImpl<StayApply, StayApplyDTO> imple
         }
         super.remove(id);
     }
+
     @Override
-    public StayApplyBO manageAudit(String id, CheckStatus checkStatus) throws SerException {
+    public StayApplyBO manageAudit(StayApplyTO to) throws SerException {
         checkAduitIdentity();
 //        UserBO userBO = userAPI.currentUser();
-        StayApply apply = super.findById(id);
-        apply.setCheckStatus(checkStatus);
+        StayApply apply = super.findById(to.getId());
+        apply.setHeadAudit(to.getHeadAudit());
+        apply.setCheckStatus(to.getCheckStatus());
         apply.setModifyTime(LocalDateTime.now());
         super.update(apply);
-        StayApplyBO bo = BeanTransform.copyProperties(apply,StayApplyBO.class);
+        StayApplyBO bo = BeanTransform.copyProperties(apply, StayApplyBO.class);
         return bo;
     }
 

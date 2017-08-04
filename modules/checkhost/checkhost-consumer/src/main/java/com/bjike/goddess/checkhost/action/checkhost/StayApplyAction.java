@@ -123,7 +123,7 @@ public class StayApplyAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class) StayApplyTO stayApplyTO, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(StayApplyTO.TestAdd.class) StayApplyTO stayApplyTO, BindingResult bindingResult) throws ActException {
         try {
             StayApplyBO stayApplyBO = stayApplyAPI.insertStayApply(stayApplyTO);
             return ActResult.initialize(stayApplyBO);
@@ -141,7 +141,7 @@ public class StayApplyAction {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class) StayApplyTO stayApplyTO, BindingResult bindingResult) throws ActException {
+    public Result edit(@Validated(StayApplyTO.TestEdit.class) StayApplyTO stayApplyTO, BindingResult bindingResult) throws ActException {
         try {
             StayApplyBO stayApplyBO = stayApplyAPI.editStayApply(stayApplyTO);
             return ActResult.initialize(stayApplyBO);
@@ -170,16 +170,14 @@ public class StayApplyAction {
     /**
      * 审核
      *
-     * @param id          id
-     * @param checkStatus 审核状态
      * @return class StayApplyVO
      * @des 福利模块负责人审核
      * @version v1
      */
-    @PostMapping("v1/audit/{id}/{checkStatus}")
-    public Result audit(@PathVariable String id, @PathVariable CheckStatus checkStatus) throws ActException {
+    @PostMapping("v1/audit")
+    public Result audit(@Validated(StayApplyTO.TestAudit.class) StayApplyTO to,BindingResult bindingResult) throws ActException {
         try {
-            StayApplyBO stayApplyBO = stayApplyAPI.manageAudit(id, checkStatus);
+            StayApplyBO stayApplyBO = stayApplyAPI.manageAudit(to);
             return ActResult.initialize(BeanTransform.copyProperties(stayApplyBO, StayApplyVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
