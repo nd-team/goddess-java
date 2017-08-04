@@ -99,7 +99,7 @@ public class DepartMonIndexSetAction extends BaseFileAction {
     public Result findListDepartMonIndexSet(DepartMonIndexSetDTO departMonIndexSetDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<DepartMonIndexSetVO> departMonIndexSetVOList = BeanTransform.copyProperties(
-                    departMonIndexSetAPI.listDepartMonIndexSet(departMonIndexSetDTO), DepartMonIndexSetVO.class, request);
+                    departMonIndexSetAPI.listDepartMonIndexSet(departMonIndexSetDTO), DepartMonIndexSetVO.class);
             return ActResult.initialize(departMonIndexSetVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
