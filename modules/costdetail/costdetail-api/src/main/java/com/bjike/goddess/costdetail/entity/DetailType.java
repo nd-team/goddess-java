@@ -21,13 +21,13 @@ import javax.persistence.Table;
 public class DetailType extends BaseEntity {
 
     /**
-     * 父节点
+     * 主科目
      */
     @Column(name = "parNode", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '父节点'")
     private String parNode;
 
     /**
-     * 分类名
+     * 二级科目
      */
     @Column(name = "typeName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '分类名'")
     private String typeName;

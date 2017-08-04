@@ -521,14 +521,36 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
     }
 
     @Override
-    public List<MaterialBuyBO> findByTyAndAr(String devType, String area,String[] intervalTime) throws SerException {
+    public List<String> findDeparByTyAre(String devType, String area, String[] intervalTime) throws SerException {
+        MaterialBuyDTO dto = new MaterialBuyDTO();
+        dto.getConditions().add(Restrict.eq("deviceType",devType));
+        dto.getConditions().add(Restrict.eq("area",area));
+        dto.getConditions().add(Restrict.between("subscribeDate",intervalTime));
+        List<MaterialBuy> materialBuys = super.findByCis(dto);
+        if(CollectionUtils.isEmpty(materialBuys)){
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (MaterialBuy model : materialBuys) {
+            String projectTeam = model.getProjectTeam();
+            if (StringUtils.isNotBlank(model.getProjectTeam())) {
+                set.add(projectTeam);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<MaterialBuyBO> findByTyAndAr(String devType, String area,String department,String[] intervalTime) throws SerException {
         MaterialBuyDTO dto = new MaterialBuyDTO();
         dto.getConditions().add(Restrict.eq("deviceType", devType));
         dto.getConditions().add(Restrict.eq("area", area));
+        dto.getConditions().add(Restrict.eq("projectTeam", department));
         dto.getConditions().add(Restrict.between("subscribeDate",intervalTime));
         List<MaterialBuy> materialBuys = super.findByCis(dto);
         return BeanTransform.copyProperties(materialBuys,MaterialBuyBO.class);
     }
+
 
     @Override
     public List<String> findArea(String[] intervalTime) throws SerException {
@@ -568,13 +590,35 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
     }
 
     @Override
-    public List<MaterialBuyBO> findByTeamAnArea(String area, String projectTeam, String[] intervalTime) throws SerException {
+    public List<String> findDevByAreaDev(String area, String projectTeam, String[] intervalTime) throws SerException {
         MaterialBuyDTO dto = new MaterialBuyDTO();
-        dto.getConditions().add(Restrict.eq("projectTeam", projectTeam));
-        dto.getConditions().add(Restrict.eq("area", area));
+        dto.getConditions().add(Restrict.eq("area",area));
+        dto.getConditions().add(Restrict.eq("projectTeam",projectTeam));
         dto.getConditions().add(Restrict.between("subscribeDate",intervalTime));
         List<MaterialBuy> materialBuys = super.findByCis(dto);
-        return BeanTransform.copyProperties(materialBuys,MaterialBuyBO.class);
+        if(CollectionUtils.isEmpty(materialBuys)){
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (MaterialBuy model : materialBuys) {
+            String devType = model.getDeviceType();
+            if (StringUtils.isNotBlank(model.getDeviceType())) {
+                set.add(devType);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<MaterialBuyBO> findByTeamAnArea(String area, String projectTeam,String devType, String[] intervalTime) throws SerException {
+//        MaterialBuyDTO dto = new MaterialBuyDTO();
+//        dto.getConditions().add(Restrict.eq("projectTeam", projectTeam));
+//        dto.getConditions().add(Restrict.eq("area", area));
+//        dto.getConditions().add(Restrict.eq("deviceType", devType));
+//        dto.getConditions().add(Restrict.between("subscribeDate",intervalTime));
+//        List<MaterialBuy> materialBuys = super.findByCis(dto);
+//        return BeanTransform.copyProperties(materialBuys,MaterialBuyBO.class);
+        return null;
     }
 
     @Override
@@ -596,9 +640,29 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
     }
 
     @Override
-    public List<MaterialBuyBO> findByRequis(String requisitioner, String[] intervalTime) throws SerException {
+    public List<String> findByRequis(String requisitioner, String[] intervalTime) throws SerException {
         MaterialBuyDTO dto = new MaterialBuyDTO();
         dto.getConditions().add(Restrict.eq("requisitioner", requisitioner));
+        dto.getConditions().add(Restrict.between("subscribeDate",intervalTime));
+        List<MaterialBuy> materialBuys = super.findByCis(dto);
+        if(CollectionUtils.isEmpty(materialBuys)){
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (MaterialBuy model : materialBuys) {
+            String devType = model.getDeviceType();
+            if (StringUtils.isNotBlank(model.getDeviceType())) {
+                set.add(devType);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<MaterialBuyBO> findByRequisType(String requisitioner,String devType, String[] intervalTime) throws SerException {
+        MaterialBuyDTO dto = new MaterialBuyDTO();
+        dto.getConditions().add(Restrict.eq("requisitioner", requisitioner));
+        dto.getConditions().add(Restrict.eq("deviceType", devType));
         dto.getConditions().add(Restrict.between("subscribeDate",intervalTime));
         List<MaterialBuy> materialBuys = super.findByCis(dto);
         return BeanTransform.copyProperties(materialBuys,MaterialBuyBO.class);

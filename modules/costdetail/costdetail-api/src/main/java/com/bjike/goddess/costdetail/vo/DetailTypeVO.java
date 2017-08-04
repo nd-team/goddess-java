@@ -16,12 +16,12 @@ public class DetailTypeVO {
      */
     private String id;
     /**
-     * 父节点
+     * 主科目
      */
     private String parNode;
 
     /**
-     * 分类名
+     * 二级科目
      */
     private String typeName;
 

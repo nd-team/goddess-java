@@ -34,19 +34,16 @@ public class DepartMonIndexSetTO extends BaseTO {
     /**
      * 年度指标编号
      */
-    @NotBlank(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "年度指标编号不能为空")
     private Integer indexNumber;
 
     /**
      * 部门年度指标编号
      */
-    @NotBlank(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "部门年度指标编号不能为空")
     private Integer yearIndexNumber;
 
     /**
      * 部门月度指标编号
      */
-    @NotBlank(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "部门月度指标编号不能为空")
     private Integer monthIndexNumber;
 
 

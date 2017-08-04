@@ -1,10 +1,11 @@
 package com.bjike.goddess.buyticket.to;
 
 import com.bjike.goddess.buyticket.enums.TripType;
-import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 车票购买记录
@@ -56,7 +57,7 @@ public class BuyTicketRecordTO extends BaseTO {
     /**
      * 联系电话
      */
-    @NotBlank(groups = { EDIT.class}, message = "联系电话不能为空")
+    @NotBlank(groups = {EDIT.class}, message = "联系电话不能为空")
     private String relationTel;
 
     /**
@@ -68,25 +69,25 @@ public class BuyTicketRecordTO extends BaseTO {
     /**
      * 交通工具
      */
-    @NotBlank(groups = { EDIT.class}, message = "交通工具不能为空")
+    @NotBlank(groups = {EDIT.class}, message = "交通工具不能为空")
     private String vehicle;
 
     /**
      * 车票类型
      */
-    @NotBlank(groups = { EDIT.class}, message = "车票类型不能为空")
+    @NotBlank(groups = {EDIT.class}, message = "车票类型不能为空")
     private String ticketType;
 
     /**
      * 购买方式
      */
-    @NotBlank(groups = { EDIT.class}, message = "购买方式不能为空")
+    @NotBlank(groups = {EDIT.class}, message = "购买方式不能为空")
     private String buyPattern;
 
     /**
      * 行程类型
      */
-    @NotBlank(groups = {EDIT.class}, message = "规划模块负责人不能为空")
+    @NotNull(groups = {EDIT.class}, message = "规划模块负责人不能为空")
     private TripType tripType;
 
     /**
@@ -98,31 +99,31 @@ public class BuyTicketRecordTO extends BaseTO {
     /**
      * 计划到达时间
      */
-    @NotBlank(groups = { EDIT.class}, message = "计划到达时间不能为空")
+    @NotBlank(groups = {EDIT.class}, message = "计划到达时间不能为空")
     private String planArrivalTime;
 
     /**
      * 车票价格
      */
-    @NotBlank(groups = { EDIT.class}, message = "车票价格不能为空")
+    @NotBlank(groups = {EDIT.class}, message = "车票价格不能为空")
     private String ticketPrice;
 
     /**
      * 购买时间
      */
-    @NotBlank(groups = { EDIT.class}, message = "购买时间不能为空")
+    @NotBlank(groups = {EDIT.class}, message = "购买时间不能为空")
     private String buyTime;
 
     /**
      * 出发地
      */
-    @NotBlank(groups = { EDIT.class}, message = "出发地不能为空")
+    @NotBlank(groups = {EDIT.class}, message = "出发地不能为空")
     private String origin;
 
     /**
      * 目的地
      */
-    @NotBlank(groups = { EDIT.class}, message = "目的地不能为空")
+    @NotBlank(groups = {EDIT.class}, message = "目的地不能为空")
     private String destination;
 
     /**
@@ -134,7 +135,7 @@ public class BuyTicketRecordTO extends BaseTO {
     /**
      * 是否可选座
      */
-    @NotBlank(groups = {EDIT.class}, message = "是否可选座不能为空")
+    @NotNull(groups = {EDIT.class}, message = "是否可选座不能为空")
     private Boolean optionalSeat;
 
     /**
@@ -146,19 +147,19 @@ public class BuyTicketRecordTO extends BaseTO {
     /**
      * 出发时间
      */
-    @NotBlank(groups = { EDIT.class}, message = "出发时间不能为空")
+    @NotBlank(groups = {EDIT.class}, message = "出发时间不能为空")
     private String departureTime;
 
     /**
      * 到达时间
      */
-    @NotBlank(groups = { EDIT.class}, message = "规划模块负责人不能为空")
+    @NotBlank(groups = {EDIT.class}, message = "规划模块负责人不能为空")
     private String arrivalTime;
 
     /**
      * 订单号
      */
-    @NotBlank(groups = { EDIT.class}, message = "订单号不能为空")
+    @NotBlank(groups = {EDIT.class}, message = "订单号不能为空")
     private String orderNum;
 
     /**
@@ -170,13 +171,13 @@ public class BuyTicketRecordTO extends BaseTO {
     /**
      * 乘车人是否有确认乘车信息
      */
-    @NotBlank(groups = {EDIT.class}, message = "乘车人是否有确认乘车信息不能为空")
+    @NotNull(groups = {EDIT.class}, message = "乘车人是否有确认乘车信息不能为空")
     private Boolean confirmPassengerInfo;
 
     /**
      * 确认信息时间
      */
-    @NotBlank(groups = { EDIT.class}, message = "确认信息时间不能为空")
+    @NotBlank(groups = {EDIT.class}, message = "确认信息时间不能为空")
     private String confirmInfoTime;
 
 

@@ -111,4 +111,9 @@ public class DepartYearIndexSetApiImpl implements DepartYearIndexSetAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return departYearIndexSetSer.guidePermission(guidePermissionTO);
     }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return departYearIndexSetSer.templateExport();
+    }
 }

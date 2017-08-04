@@ -181,6 +181,14 @@ public class DetailTypeSerImpl extends ServiceImpl<DetailType, DetailTypeDTO> im
     }
 
     @Override
+    public List<DetailTypeBO> list(DetailTypeDTO detailTypeDTO) throws SerException {
+        checkPermission();
+        List<DetailType> list = super.findByPage(detailTypeDTO);
+        List<DetailTypeBO> detailTypeBOList = BeanTransform.copyProperties(list, DetailTypeBO.class);
+        return detailTypeBOList;
+    }
+
+    @Override
     public List<String> findTypeName(String parNode) throws SerException {
         DetailTypeDTO detailTypeDTO = new DetailTypeDTO();
         detailTypeDTO.getConditions().add(Restrict.eq("parNode", parNode));
@@ -200,6 +208,7 @@ public class DetailTypeSerImpl extends ServiceImpl<DetailType, DetailTypeDTO> im
 
     @Override
     public DetailTypeBO add(DetailTypeTO detailTypeTO) throws SerException {
+        checkPermission();
         DetailType detailType = BeanTransform.copyProperties(detailTypeTO, DetailType.class, "true");
         detailType.setCreateTime(LocalDateTime.now());
         super.save(detailType);
@@ -208,6 +217,7 @@ public class DetailTypeSerImpl extends ServiceImpl<DetailType, DetailTypeDTO> im
 
     @Override
     public DetailTypeBO edit(DetailTypeTO detailTypeTO) throws SerException {
+        checkPermission();
         DetailType type = super.findById(detailTypeTO.getId());
         String typeName = type.getTypeName();
         DetailType detailType = super.findById(detailTypeTO.getId());
@@ -261,6 +271,49 @@ public class DetailTypeSerImpl extends ServiceImpl<DetailType, DetailTypeDTO> im
         }
         super.update(detailType);
         return BeanTransform.copyProperties(detailType, DetailTypeBO.class);
+    }
+
+    @Override
+    public void delete(String id) throws SerException {
+        checkPermission();
+        DetailType type = super.findById(id);
+        if(type.getParNode().equals("劳务成本")){
+            LaborCostDetailDTO laborCostDetailDTO = new LaborCostDetailDTO();
+            laborCostDetailDTO.getConditions().add(Restrict.eq("typeName",type.getTypeName()));
+            List<LaborCostDetail> laborCostDetails = laborCostDetailSer.findByCis(laborCostDetailDTO);
+            if (laborCostDetails!= null && laborCostDetails.size()>0){
+                throw new SerException("该明细已被使用,不能被删除");
+            }
+        }else if(type.getParNode().equals("公司借入")){
+            CompanyBorrowedDetailDTO companyBorrowedDetailDTO = new CompanyBorrowedDetailDTO();
+            companyBorrowedDetailDTO.getConditions().add(Restrict.eq("typeName",type.getTypeName()));
+            List<CompanyBorrowedDetail> companyBorrowedDetails = companyBorrowedDetailSer.findByCis(companyBorrowedDetailDTO);
+            if (companyBorrowedDetails!= null && companyBorrowedDetails.size()>0){
+                throw new SerException("该明细已被使用,不能被删除");
+            }
+        }else if(type.getParNode().equals("实收资本")) {
+            PaidCapitalDetailDTO paidCapitalDetailDTO = new PaidCapitalDetailDTO();
+            paidCapitalDetailDTO.getConditions().add(Restrict.eq("typeName", type.getTypeName()));
+            List<PaidCapitalDetail> paidCapitalDetails = paidCapitalDetailSer.findByCis(paidCapitalDetailDTO);
+            if (paidCapitalDetails!= null && paidCapitalDetails.size() > 0) {
+                throw new SerException("该明细已被使用,不能被删除");
+            }
+        }else if(type.getParNode().equals("公司借出")) {
+            CompanyLendDetailDTO companyLendDetailDTO = new CompanyLendDetailDTO();
+            companyLendDetailDTO.getConditions().add(Restrict.eq("typeName", type.getTypeName()));
+            List<CompanyLendDetail> companyLendDetails = companyLendDetailSer.findByCis(companyLendDetailDTO);
+            if (companyLendDetails!= null && companyLendDetails.size() > 0) {
+                throw new SerException("该明细已被使用,不能被删除");
+            }
+        }else if(type.getParNode().equals("主营业务收入")) {
+            BusinessIncomeDetailDTO businessIncomeDetailDTO = new BusinessIncomeDetailDTO();
+            businessIncomeDetailDTO.getConditions().add(Restrict.eq("typeName", type.getTypeName()));
+            List<BusinessIncomeDetail> businessIncomeDetails = businessIncomeDetailSer.findByCis(businessIncomeDetailDTO);
+            if (businessIncomeDetails!= null && businessIncomeDetails.size() > 0) {
+                throw new SerException("该明细已被使用,不能被删除");
+            }
+        }
+        super.remove(id);
     }
 
     @Override

@@ -12,6 +12,7 @@ import com.bjike.goddess.devicerepair.to.FetchDeviceTO;
 import com.bjike.goddess.devicerepair.to.GuidePermissionTO;
 import com.bjike.goddess.devicerepair.to.WelfareAuditTO;
 import com.bjike.goddess.devicerepair.type.AuditState;
+import com.bjike.goddess.devicerepair.type.MaterialState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -167,5 +168,45 @@ public class DeviceRepairApiImpl implements DeviceRepairAPI {
     @Override
     public List<String> findallMonUser() throws SerException {
         return deviceRepairSer.findallMonUser();
+    }
+
+    @Override
+    public List<MaterialState> findDeviceStatus(String[] intervalTime) throws SerException {
+        return deviceRepairSer.findDeviceStatus(intervalTime);
+    }
+
+    @Override
+    public List<String> findAreaByStatus(String[] intervalTime, MaterialState materialState) throws SerException {
+        return deviceRepairSer.findAreaByStatus(intervalTime,materialState);
+    }
+
+    @Override
+    public List<String> findProjectByStaAnAr(String[] intervalTime, MaterialState materialState, String area) throws SerException {
+        return deviceRepairSer.findProjectByStaAnAr(intervalTime,materialState,area);
+    }
+
+    @Override
+    public List<DeviceRepairBO> findByStaAnAr(String[] intervalTime, MaterialState materialState, String area, String projectGroup) throws SerException {
+        return deviceRepairSer.findByStaAnAr(intervalTime,materialState,area,projectGroup);
+    }
+
+    @Override
+    public List<Boolean> findBool(String[] intervalTime) throws SerException {
+        return deviceRepairSer.findBool(intervalTime);
+    }
+
+    @Override
+    public List<String> findAreaByBool(String[] intervalTime, Boolean whetherWarranty) throws SerException {
+        return deviceRepairSer.findAreaByBool(intervalTime,whetherWarranty);
+    }
+
+    @Override
+    public List<String> findProjByBoArea(String[] intervalTime, String area, Boolean whetherWarranty) throws SerException {
+        return deviceRepairSer.findProjByBoArea(intervalTime,area,whetherWarranty);
+    }
+
+    @Override
+    public List<DeviceRepairBO> findByBoAnArDep(String[] intervalTime, String area, Boolean whetherWarranty, String projectGroup) throws SerException {
+        return deviceRepairSer.findByBoAnArDep(intervalTime,area,whetherWarranty,projectGroup);
     }
 }

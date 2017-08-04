@@ -1,6 +1,7 @@
 package com.bjike.goddess.salarymanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.salaryconfirm.bo.SalaryconfirmBO;
 import com.bjike.goddess.salarymanage.bo.SalaryBasicBO;
 import com.bjike.goddess.salarymanage.bo.SalaryInformationBO;
 import com.bjike.goddess.salarymanage.dto.SalaryBasicDTO;
@@ -73,4 +74,12 @@ public interface SalaryInformationAPI  {
      * @throws SerException
      */
     byte[] exportExcel(ExportSalaryInformationTO to) throws SerException;
+
+    /**
+     * 获取所有的计薪周期开始时间和计薪周期结束时间
+     * @throws SerException
+     */
+    default List<String> findTime() throws SerException{
+        return null;
+    }
  }

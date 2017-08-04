@@ -74,4 +74,12 @@ public interface SalaryInformationSer extends Ser<SalaryInformation, SalaryInfor
      * @throws SerException
      */
     byte[] exportExcel(ExportSalaryInformationTO to) throws SerException;
+
+    /**
+     * 获取所有的计薪周期开始时间和计薪周期结束时间
+     * @throws SerException
+     */
+    default List<String> findTime() throws SerException{
+        return null;
+    }
  }

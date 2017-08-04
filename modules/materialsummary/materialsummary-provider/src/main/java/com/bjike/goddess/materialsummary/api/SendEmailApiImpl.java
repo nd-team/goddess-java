@@ -1,11 +1,11 @@
 package com.bjike.goddess.materialsummary.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.materialsummary.bo.PersonalBuySummBO;
-import com.bjike.goddess.materialsummary.bo.SendEmailBO;
-import com.bjike.goddess.materialsummary.bo.TypeBuySummBO;
+import com.bjike.goddess.materialsummary.bo.*;
 import com.bjike.goddess.materialsummary.dto.SendEmailDTO;
+import com.bjike.goddess.materialsummary.excel.SonPermissionObject;
 import com.bjike.goddess.materialsummary.service.SendEmailSer;
+import com.bjike.goddess.materialsummary.to.GuidePermissionTO;
 import com.bjike.goddess.materialsummary.to.SendEmailTO;
 import com.bjike.goddess.materialsummary.type.ModuleType;
 import com.bjike.goddess.materialsummary.type.SummaryType;
@@ -27,6 +27,17 @@ import java.util.List;
 public class SendEmailApiImpl implements SendEmailAPI {
     @Autowired
     private SendEmailSer SendEmailSer;
+
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return SendEmailSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return SendEmailSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long counts(SendEmailDTO SendEmailDTO) throws SerException {
@@ -131,5 +142,90 @@ public class SendEmailApiImpl implements SendEmailAPI {
     @Override
     public List<PersonalBuySummBO> personBuySummYear(Integer year) throws SerException {
         return SendEmailSer.personBuySummYear(year);
+    }
+
+    @Override
+    public List<ResouceStockSummBO> sourStockSummDay(String summTime) throws SerException {
+        return SendEmailSer.sourStockSummDay(summTime);
+    }
+
+    @Override
+    public List<ResouceStockSummBO> sourStockSummWeek(Integer year, Integer month, Integer week) throws SerException {
+        return SendEmailSer.sourStockSummWeek(year,month,week);
+    }
+
+    @Override
+    public List<ResouceStockSummBO> sourStockSummMonth(Integer year, Integer month) throws SerException {
+        return SendEmailSer.sourStockSummMonth(year,month);
+    }
+
+    @Override
+    public List<ResouceStockSummBO> sourStockSummYear(Integer year) throws SerException {
+        return SendEmailSer.sourStockSummYear(year);
+    }
+
+    @Override
+    public List<AreaStockSummBO> areaStockSummDay(String summTime) throws SerException {
+        return SendEmailSer.areaStockSummDay(summTime);
+    }
+
+    @Override
+    public List<AreaStockSummBO> areaStockSummWeek(Integer year, Integer month, Integer week) throws SerException {
+        return SendEmailSer.areaStockSummWeek(year,month,week);
+    }
+
+    @Override
+    public List<AreaStockSummBO> areaStockSummMonth(Integer year, Integer month) throws SerException {
+        return SendEmailSer.areaStockSummMonth(year,month);
+    }
+
+    @Override
+    public List<AreaStockSummBO> areaStockSummYear(Integer year) throws SerException {
+        return SendEmailSer.areaStockSummYear(year);
+    }
+
+    @Override
+    public List<StatusDeviceSummBO> statusDeviceSummDay(String summTime) throws SerException {
+        return SendEmailSer.statusDeviceSummDay(summTime);
+    }
+
+    @Override
+    public List<StatusDeviceSummBO> statusDeviceSummWeek(Integer year, Integer month, Integer week) throws SerException {
+        return SendEmailSer.statusDeviceSummWeek(year,month,week);
+    }
+
+    @Override
+    public List<StatusDeviceSummBO> statusDeviceSummMonth(Integer year, Integer month) throws SerException {
+        return SendEmailSer.statusDeviceSummMonth(year,month);
+    }
+
+    @Override
+    public List<StatusDeviceSummBO> statusDeviceSummYear(Integer year) throws SerException {
+        return SendEmailSer.statusDeviceSummYear(year);
+    }
+
+    @Override
+    public List<WarrantyDeviceSummBO> warranDeviceSummDay(String summTime) throws SerException {
+        return SendEmailSer.warranDeviceSummDay(summTime);
+    }
+
+    @Override
+    public List<WarrantyDeviceSummBO> warranDeviceSummWeek(Integer year, Integer month, Integer week) throws SerException {
+        return SendEmailSer.warranDeviceSummWeek(year,month,week);
+    }
+
+    @Override
+    public List<WarrantyDeviceSummBO> warranDeviceSummMonth(Integer year, Integer month) throws SerException {
+        return SendEmailSer.warranDeviceSummMonth(year,month);
+    }
+
+    @Override
+    public List<WarrantyDeviceSummBO> warranDeviceSummYear(Integer year) throws SerException {
+        return SendEmailSer.warranDeviceSummYear(year);
+    }
+
+    @Override
+    public void checkSendEmail() throws SerException {
+        SendEmailSer.checkSendEmail();
     }
 }

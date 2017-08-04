@@ -614,4 +614,37 @@ public class DepartMonIndexSetSerImpl extends ServiceImpl<DepartMonIndexSet, Dep
         return boList;
     }
 
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<DepartMonIndexSetExcel> yearIndexExports = new ArrayList<>();
+
+        DepartMonIndexSetExcel excel = new DepartMonIndexSetExcel();
+        excel.setIndexName("指标名称");
+        excel.setYear( "年份" );
+        excel.setMonth("月份");
+        excel.setIndexType("指标类型");
+        excel.setDimension("维度");
+        excel.setDepartment("责任部门");
+        excel.setDescribtion(12d);
+        excel.setTarget(10d);
+        excel.setWager(10d);
+        excel.setDepartYearWeight(10d);
+        excel.setDepartYearWager(11d);
+        excel.setWeight(11d);
+        excel.setWager(10d);
+        excel.setComplete(10d);
+        excel.setExamWay("考核方式");
+        excel.setWhetherStandar("是否达标");
+        excel.setStandardRate(0.1d);
+        excel.setExamScore(19d);
+        excel.setWritePerson("填报人员");
+        excel.setExamDepart("考核部门");
+        excel.setDataOrigin("数据来源");
+        excel.setExamDuring("考核周期" );
+        yearIndexExports.add( excel );
+
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(yearIndexExports, exce);
+        return bytes;
+    }
 }

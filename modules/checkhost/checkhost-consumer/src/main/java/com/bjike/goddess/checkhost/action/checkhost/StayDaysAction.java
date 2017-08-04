@@ -172,15 +172,15 @@ public class StayDaysAction {
      * 审核
      *
      * @param id          id
-     * @param checkStatus 审核状态
+     * @param dto dto dto
      * @return class StayDaysVO
      * @des 审核员工住宿天数汇总
      * @version v1
      */
-    @PostMapping("v1/audit/{id}/{checkStatus}")
-    public Result audit(@PathVariable String id, @PathVariable CheckStatus checkStatus) throws ActException {
+    @PostMapping("v1/audit/{id}")
+    public Result audit(@PathVariable String id, @Validated(StayDaysDTO.AUDIT.class) StayDaysDTO dto,BindingResult result) throws ActException {
         try {
-            StayDaysBO stayDaysBO = stayDaysAPI.auditStayDays(id, checkStatus);
+            StayDaysBO stayDaysBO = stayDaysAPI.auditStayDays(id, dto);
             return ActResult.initialize(BeanTransform.copyProperties(stayDaysBO, StayDaysVO.class, true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

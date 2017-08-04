@@ -93,11 +93,9 @@ public interface StayApplyAPI {
     /**
      * 福利模块负责人审核
      *
-     * @param id          id
-     * @param checkStatus 审核状态
      * @return class StayApplyBO
      * @throws SerException
      */
-    StayApplyBO manageAudit(String id, CheckStatus checkStatus) throws SerException;
+    StayApplyBO manageAudit(StayApplyTO to) throws SerException;
 
 }

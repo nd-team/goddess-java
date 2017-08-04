@@ -4,6 +4,8 @@ import com.bjike.goddess.checkhost.enums.CheckStatus;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 住宿申请
  *
@@ -57,6 +59,7 @@ public class StayApplyTO extends BaseTO {
     /**
      * 福利模块负责人
      */
+    @NotBlank(message = "福利模块负责人不能为空",groups = {StayApplyTO.TestAudit.class})
     private String headAudit;
 //    /**
 //     * 福利模块负责人审核(通过/不通过)
@@ -77,6 +80,7 @@ public class StayApplyTO extends BaseTO {
     /**
      * 审核状态
      */
+    @NotNull(message = "审核状态不能为空",groups = {StayApplyTO.TestAudit.class})
     private CheckStatus checkStatus;
 
     public CheckStatus getCheckStatus() {

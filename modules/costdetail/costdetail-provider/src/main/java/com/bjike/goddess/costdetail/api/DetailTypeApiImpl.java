@@ -43,6 +43,11 @@ public class DetailTypeApiImpl implements DetailTypeAPI {
     }
 
     @Override
+    public List<DetailTypeBO> list(DetailTypeDTO detailTypeDTO) throws SerException {
+        return detailTypeSer.list(detailTypeDTO);
+    }
+
+    @Override
     public Long countDetailType(DetailTypeDTO detailTypeDTO) throws SerException {
         return detailTypeSer.countDetailType(detailTypeDTO);
     }
@@ -65,5 +70,10 @@ public class DetailTypeApiImpl implements DetailTypeAPI {
     @Override
     public List<DetailTypeBO> findByNode(String parNode) throws SerException {
         return detailTypeSer.findByNode(parNode);
+    }
+
+    @Override
+    public void delete(String id) throws SerException {
+        detailTypeSer.delete(id);
     }
 }
