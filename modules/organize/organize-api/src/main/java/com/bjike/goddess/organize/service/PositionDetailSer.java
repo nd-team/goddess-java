@@ -218,4 +218,12 @@ public interface PositionDetailSer extends Ser<PositionDetail, PositionDetailDTO
     }
 
 
+    /**
+     * 根据层级ｉｄ查询所有的岗位
+     *
+     * @return
+     */
+    default List<String> getPositions(String id) throws SerException {
+        return null;
+    }
 }
