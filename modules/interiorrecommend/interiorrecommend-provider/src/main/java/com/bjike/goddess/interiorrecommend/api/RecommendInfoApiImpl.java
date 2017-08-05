@@ -3,6 +3,7 @@ package com.bjike.goddess.interiorrecommend.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.interiorrecommend.bo.RecommendContentBO;
 import com.bjike.goddess.interiorrecommend.bo.RecommendInfoBO;
+import com.bjike.goddess.interiorrecommend.bo.RecommendRequireBO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendInfoDTO;
 import com.bjike.goddess.interiorrecommend.service.RecommendInfoSer;
 import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
@@ -70,5 +71,10 @@ public class RecommendInfoApiImpl implements RecommendInfoAPI {
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return recommendInfoSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public List<RecommendRequireBO> findRequire() throws SerException {
+        return recommendInfoSer.findRequire();
     }
 }

@@ -9,6 +9,7 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.interiorrecommend.api.RecommendRequireAPI;
+import com.bjike.goddess.interiorrecommend.bo.RecommendAssessDetailBO;
 import com.bjike.goddess.interiorrecommend.bo.RecommendRequireBO;
 import com.bjike.goddess.interiorrecommend.bo.RecommendSchemeBO;
 import com.bjike.goddess.interiorrecommend.bo.RecommendTypeBO;
@@ -215,6 +216,23 @@ public class RecommendRequireAct {
             List<RecommendTypeBO> recommendTypeBOS = recommendRequireAPI.findType();
             List<RecommendTypeVO> typeVOS = BeanTransform.copyProperties(recommendTypeBOS,RecommendTypeVO.class);
             return ActResult.initialize(typeVOS);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有推荐内容
+     * @return class RecommendAssessDetailVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/assess")
+    public Result findAssess() throws ActException{
+        try {
+            List<RecommendAssessDetailBO> boList = recommendRequireAPI.findAssess();
+            List<RecommendAssessDetailVO> voList = BeanTransform.copyProperties(boList,RecommendAssessDetailVO.class);
+            return ActResult.initialize(voList);
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }
