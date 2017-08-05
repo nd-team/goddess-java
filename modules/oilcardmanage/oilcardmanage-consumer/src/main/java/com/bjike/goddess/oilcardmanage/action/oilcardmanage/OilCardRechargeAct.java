@@ -10,10 +10,12 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.oilcardmanage.api.OilCardRechargeAPI;
+import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardRechargeDTO;
 import com.bjike.goddess.oilcardmanage.to.CompetitorDeleteFileTO;
 import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardRechargeTO;
+import com.bjike.goddess.oilcardmanage.vo.OilCardBasicVO;
 import com.bjike.goddess.oilcardmanage.vo.OilCardRechargeVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
@@ -266,5 +268,7 @@ public class OilCardRechargeAct extends BaseFileAction {
         }
         return new ActResult("删除成功");
     }
+
+
 
 }

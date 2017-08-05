@@ -131,4 +131,9 @@ public class OilCardBasicApiImpl implements OilCardBasicAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return oilCardBasicSer.guidePermission(guidePermissionTO);
     }
+
+    @Override
+    public List<OilCardBasicBO> findOilCard() throws SerException {
+        return oilCardBasicSer.findOilCard();
+    }
 }

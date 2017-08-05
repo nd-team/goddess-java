@@ -3,6 +3,7 @@ package com.bjike.goddess.oilcardmanage.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.oilcardmanage.bo.AnalyzeBO;
+import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardRechargeBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardRechargeDTO;
 import com.bjike.goddess.oilcardmanage.entity.OilCardRecharge;
@@ -77,4 +78,12 @@ public interface OilCardRechargeSer extends Ser<OilCardRecharge, OilCardRecharge
     List<OilCardRechargeBO> findByBasicId(String id) throws SerException;
 
     AnalyzeBO analyze(String oilCardCode, Integer year, Integer month) throws SerException;
+
+    /**
+     * 删除
+     * @param id
+     * @throws SerException
+     */
+    void delete(String id) throws SerException;
+
 }

@@ -15,6 +15,7 @@ import com.bjike.goddess.oilcardmanage.entity.OilCardRecharge;
 import com.bjike.goddess.oilcardmanage.enums.GuideAddrStatus;
 import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardRechargeTO;
+import com.bjike.goddess.oilcardmanage.vo.OilCardBasicVO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -196,12 +197,16 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
     @Transactional(rollbackFor = SerException.class)
     public OilCardRechargeBO saveOilCardRecharge(OilCardRechargeTO to) throws SerException {
         checkAddIdentity();
+        RpcTransmit.getUserToken();
+        UserBO user = userAPI.currentUser();
+        String userName = user.getUsername();
         OilCardBasic oilCardBasic = oilCardBasicSer.findById(to.getOilCardBasicId());
-
+        to.setRechargeUser(userName);
         if (oilCardBasic != null) {
             OilCardRecharge model = BeanTransform.copyProperties(to, OilCardRecharge.class, true);
 
             to.setId(model.getId());
+
 
             //充值：修改油卡期初金额及余额
             oilCardBasic.setCycleEarlyMoney(oilCardBasic.getBalance() + to.getRechargeMoney()); //油卡期初金额 = 余额 + 充值金额
@@ -281,6 +286,16 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
     }
 
     @Override
+    public void delete(String id) throws SerException {
+        if(null != id){
+            super.remove(id);
+
+        }else{
+            throw new SerException("id不能为空!");
+        }
+    }
+
+    @Override
     @Transactional(rollbackFor = SerException.class)
     public List<OilCardRechargeBO> collect(String oilCardBasicId, String startTime, String endTime) throws SerException {
         OilCardRechargeDTO dto = new OilCardRechargeDTO();
@@ -353,6 +368,7 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
                 OilCardRechargeBO bo = BeanTransform.copyProperties(model, OilCardRechargeBO.class);
                 bo.setOilCardNumber(model.getOilCardBasic().getOilCardNumber());
                 bo.setOilCardCode(model.getOilCardBasic().getOilCardCode());
+                bo.setMainOrDeputy(model.getOilCardBasic().getMainOrDeputy());
                 boList.add(bo);
             }
             return boList;

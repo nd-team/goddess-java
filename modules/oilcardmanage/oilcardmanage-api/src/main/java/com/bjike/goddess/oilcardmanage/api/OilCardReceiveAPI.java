@@ -107,7 +107,7 @@ public interface OilCardReceiveAPI {
      * 查询所有未冻结的油卡
      * @throws SerException
      */
-    List<OilCardBasicBO> findOilCard() throws SerException;
+    List<String> findOilCard() throws SerException;
 
     /**
      * 查询所有地区
@@ -118,8 +118,9 @@ public interface OilCardReceiveAPI {
 
     /**
      * 查询所有审核人
-     * @return
      * @throws SerException
      */
-    List<CusPermissionOperateBO> findOperate() throws SerException;
+    List<String> findOperate() throws SerException;
+
+
 }

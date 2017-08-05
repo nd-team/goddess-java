@@ -26,13 +26,19 @@ import com.bjike.goddess.oilcardmanage.enums.OilCardStatus;
 import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardReceiveTO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.dto.PositionDetailDTO;
+import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.poi.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -68,6 +74,12 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
 
     @Autowired
     private CusPermissionOperateSer cusPermissionOperateSer;
+
+    @Autowired
+    private PositionDetailAPI positionDetailAPI;
+
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     /**
      * 核对查看权限（层级别）
@@ -336,11 +348,14 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
     }
 
     @Override
-    public List<OilCardBasicBO> findOilCard() throws SerException {
+    public List<String> findOilCard() throws SerException {
         OilCardBasicDTO dto = new OilCardBasicDTO();
         dto.getConditions().add(Restrict.eq("cardStatus",OilCardStatus.IDLE));
         List<OilCardBasic> oilCardBasicBOS = oilCardBasicSer.findByCis(dto);
-        List<OilCardBasicBO> list = BeanTransform.copyProperties(oilCardBasicBOS,OilCardBasicBO.class);
+        List<String> list = new ArrayList<>();
+        for(OilCardBasic oilCardBasic : oilCardBasicBOS){
+            list.add(oilCardBasic.getOilCardCode());
+        }
         return list;
     }
 
@@ -351,14 +366,20 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
     }
 
     @Override
-    public List<CusPermissionOperateBO> findOperate() throws SerException {
-        CusPermissionDTO dto = new CusPermissionDTO();
-        dto.getConditions().add(Restrict.eq("idFlag","2"));
-        CusPermission cusPermissions = cusPermissionSer.findOne(dto);
-        CusPermissionOperateDTO dto2 = new CusPermissionOperateDTO();
-        dto2.getConditions().add(Restrict.eq("cuspermissionId",cusPermissions.getId()));
-        List<CusPermissionOperate> cusPermissionOperates = cusPermissionOperateSer.findByCis(dto2);
-        List<CusPermissionOperateBO> boList = BeanTransform.copyProperties(cusPermissionOperates,CusPermissionOperateBO.class);
-        return boList;
+    public List<String> findOperate() throws SerException {
+//        CusPermissionDTO dto = new CusPermissionDTO();
+//        dto.getConditions().add(Restrict.eq("idFlag","2"));
+//        CusPermission cusPermissions = cusPermissionSer.findOne(dto);
+//        CusPermissionOperateDTO dto2 = new CusPermissionOperateDTO();
+//        dto2.getConditions().add(Restrict.eq("cuspermissionId",cusPermissions.getId()));
+//        List<CusPermissionOperate> cusPermissionOperates = cusPermissionOperateSer.findByCis(dto2);
+//        List<String> list = new ArrayList<>();
+//        for(CusPermissionOperate operate : cusPermissionOperates){
+//            PositionDetailDTO detailDTO = new PositionDetailDTO();
+//            detailDTO.getConditions().add(Restrict.eq("arrangement",operate.getOperator()));
+//            list.add();
+//        }
+        return null;
     }
+
 }

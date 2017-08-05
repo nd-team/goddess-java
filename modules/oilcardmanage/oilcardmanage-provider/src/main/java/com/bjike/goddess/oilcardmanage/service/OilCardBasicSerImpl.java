@@ -334,4 +334,13 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicD
     public void updateOliCardBasic(OilCardBasic oilCardBasic) throws SerException {
         super.update(oilCardBasic);
     }
+
+    @Override
+    public List<OilCardBasicBO> findOilCard() throws SerException {
+        OilCardBasicDTO dto = new OilCardBasicDTO();
+        dto.getConditions().add(Restrict.eq("status",Status.THAW));
+        List<OilCardBasic> list = super.findByCis(dto);
+        List<OilCardBasicBO> boList = BeanTransform.copyProperties(list,OilCardBasicBO.class);
+        return boList;
+    }
 }
