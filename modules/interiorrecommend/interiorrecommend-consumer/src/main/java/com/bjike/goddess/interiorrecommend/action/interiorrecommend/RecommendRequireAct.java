@@ -10,11 +10,17 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.interiorrecommend.api.RecommendRequireAPI;
 import com.bjike.goddess.interiorrecommend.bo.RecommendRequireBO;
+import com.bjike.goddess.interiorrecommend.bo.RecommendSchemeBO;
+import com.bjike.goddess.interiorrecommend.bo.RecommendTypeBO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendRequireDTO;
+import com.bjike.goddess.interiorrecommend.entity.RecommendScheme;
+import com.bjike.goddess.interiorrecommend.service.RecommendTypeSer;
 import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.RecommendRequireTO;
 import com.bjike.goddess.interiorrecommend.vo.RecommendAssessDetailVO;
 import com.bjike.goddess.interiorrecommend.vo.RecommendRequireVO;
+import com.bjike.goddess.interiorrecommend.vo.RecommendSchemeVO;
+import com.bjike.goddess.interiorrecommend.vo.RecommendTypeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
@@ -176,6 +182,40 @@ public class RecommendRequireAct {
             vo.setDetailList(BeanTransform.copyProperties(bo.getDetailList(), RecommendAssessDetailVO.class));
             return ActResult.initialize(vo);
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有推荐方案
+     * @return class RecommendSchemeVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/recommendScheme")
+    public Result findRecommend() throws ActException{
+        try{
+            List<RecommendSchemeBO> schemes = recommendRequireAPI.findRecommend();
+            List<RecommendSchemeVO> schemeVOS = BeanTransform.copyProperties(schemes,RecommendSchemeVO.class);
+            return ActResult.initialize(schemeVOS);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有推荐类型
+     * @return class RecommendTypeVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/recommendType")
+    public Result findType() throws ActException{
+        try {
+            List<RecommendTypeBO> recommendTypeBOS = recommendRequireAPI.findType();
+            List<RecommendTypeVO> typeVOS = BeanTransform.copyProperties(recommendTypeBOS,RecommendTypeVO.class);
+            return ActResult.initialize(typeVOS);
+        }catch (SerException e){
             throw new ActException(e.getMessage());
         }
     }

@@ -42,8 +42,7 @@ public class RecommendRequireTO extends BaseTO {
     /**
      * 推荐考核内容
      */
-    @NotNull(message = "推荐考核内容不能为空", groups = {ADD.class, EDIT.class})
-    private List<RecommendAssessDetailTO> assessDetailList;
+    private List<RecommendAssessDetailTO> detailList;
 
     /**
      * 指标来源
@@ -65,12 +64,6 @@ public class RecommendRequireTO extends BaseTO {
      * 推荐发起人
      */
     private String recommendSponsor;
-
-    /**
-     * 推荐考核内容
-     */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "部门项目组分解数据不能为空")
-    private List<RecommendAssessDetailTO> detailList;
 
 
     public String getRecommendSchemeId() {
@@ -97,12 +90,12 @@ public class RecommendRequireTO extends BaseTO {
         this.recommendTypeId = recommendTypeId;
     }
 
-    public List<RecommendAssessDetailTO> getAssessDetailList() {
-        return assessDetailList;
+    public List<RecommendAssessDetailTO> getDetailList() {
+        return detailList;
     }
 
-    public void setAssessDetailList(List<RecommendAssessDetailTO> assessDetailList) {
-        this.assessDetailList = assessDetailList;
+    public void setDetailList(List<RecommendAssessDetailTO> detailList) {
+        this.detailList = detailList;
     }
 
     public String getIndicatorResource() {
@@ -137,11 +130,4 @@ public class RecommendRequireTO extends BaseTO {
         this.recommendSponsor = recommendSponsor;
     }
 
-    public List<RecommendAssessDetailTO> getDetailList() {
-        return detailList;
-    }
-
-    public void setDetailList(List<RecommendAssessDetailTO> detailList) {
-        this.detailList = detailList;
-    }
 }

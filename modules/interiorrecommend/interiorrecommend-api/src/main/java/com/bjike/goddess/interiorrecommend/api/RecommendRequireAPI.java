@@ -2,7 +2,11 @@ package com.bjike.goddess.interiorrecommend.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.interiorrecommend.bo.RecommendRequireBO;
+import com.bjike.goddess.interiorrecommend.bo.RecommendSchemeBO;
+import com.bjike.goddess.interiorrecommend.bo.RecommendTypeBO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendRequireDTO;
+import com.bjike.goddess.interiorrecommend.entity.RecommendScheme;
+import com.bjike.goddess.interiorrecommend.entity.RecommendType;
 import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.RecommendRequireTO;
 
@@ -76,4 +80,16 @@ public interface RecommendRequireAPI {
      * @param id id
      */
     RecommendRequireBO findById(String id) throws SerException;
+
+    /**
+     * 查询所有正常状态的推荐方案
+     * @throws SerException
+     */
+    List<RecommendSchemeBO> findRecommend() throws SerException;
+
+    /**
+     * 查询所有推荐类型
+     * @throws SerException
+     */
+    List<RecommendTypeBO> findType() throws SerException;
 }

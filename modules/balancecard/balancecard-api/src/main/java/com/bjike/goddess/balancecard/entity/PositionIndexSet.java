@@ -113,7 +113,7 @@ public class PositionIndexSet extends BaseEntity {
     /**
      * 责任人工号
      */
-    @Column(name = "positionerNumber", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '责任人工号'")
+    @Column(name = "positionerNumber",  columnDefinition = "VARCHAR(255)   COMMENT '责任人工号'")
     private String positionerNumber;
 
     /**

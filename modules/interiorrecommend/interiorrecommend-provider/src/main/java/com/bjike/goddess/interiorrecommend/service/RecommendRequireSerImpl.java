@@ -7,6 +7,8 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.interiorrecommend.bo.RecommendAssessDetailBO;
 import com.bjike.goddess.interiorrecommend.bo.RecommendRequireBO;
+import com.bjike.goddess.interiorrecommend.bo.RecommendSchemeBO;
+import com.bjike.goddess.interiorrecommend.bo.RecommendTypeBO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendRequireDTO;
 import com.bjike.goddess.interiorrecommend.entity.RecommendAssessDetail;
 import com.bjike.goddess.interiorrecommend.entity.RecommendRequire;
@@ -205,9 +207,9 @@ public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, Recom
             if (recommendType != null) {
                 RecommendRequire model = BeanTransform.copyProperties(to, RecommendRequire.class, true);
                 //保存推荐考核内容
-                if (!CollectionUtils.isEmpty(to.getAssessDetailList())) {
+                if (!CollectionUtils.isEmpty(to.getDetailList())) {
                     Set<RecommendAssessDetail> detailSet = new HashSet<RecommendAssessDetail>();
-                    List<RecommendAssessDetail> detailList = BeanTransform.copyProperties(to.getAssessDetailList(), RecommendAssessDetail.class);
+                    List<RecommendAssessDetail> detailList = BeanTransform.copyProperties(to.getDetailList(), RecommendAssessDetail.class);
                     detailSet.addAll(detailList);
                     for (RecommendAssessDetail detail : detailSet) {
                         detail.setRecommendRequire(model);
@@ -243,9 +245,9 @@ public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, Recom
                     model.setModifyTime(LocalDateTime.now());
 
                     //保存推荐考核内容
-                    if (!CollectionUtils.isEmpty(to.getAssessDetailList())) {
+                    if (!CollectionUtils.isEmpty(to.getDetailList())) {
                         Set<RecommendAssessDetail> detailSet = new HashSet<RecommendAssessDetail>();
-                        List<RecommendAssessDetail> detailList = BeanTransform.copyProperties(to.getAssessDetailList(), RecommendAssessDetail.class);
+                        List<RecommendAssessDetail> detailList = BeanTransform.copyProperties(to.getDetailList(), RecommendAssessDetail.class);
                         detailSet.addAll(detailList);
                         for (RecommendAssessDetail detail : detailSet) {
                             if (!StringUtils.isEmpty(detail.getId())) {
@@ -305,5 +307,19 @@ public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, Recom
         } else {
             throw new SerException("非法Id,推荐要求对象不能为空!");
         }
+    }
+
+    @Override
+    public List<RecommendSchemeBO> findRecommend() throws SerException {
+        List<RecommendScheme> recommendSchemes = recommendSchemeSer.findAll();
+        List<RecommendSchemeBO> recommendSchemeBOS = BeanTransform.copyProperties(recommendSchemes,RecommendSchemeBO.class);
+        return recommendSchemeBOS;
+    }
+
+    @Override
+    public List<RecommendTypeBO> findType() throws SerException {
+        List<RecommendType> recommendTypes = recommendTypeSer.findAll();
+        List<RecommendTypeBO> recommendTypeBOS = BeanTransform.copyProperties(recommendTypes,RecommendTypeBO.class);
+        return recommendTypeBOS;
     }
 }

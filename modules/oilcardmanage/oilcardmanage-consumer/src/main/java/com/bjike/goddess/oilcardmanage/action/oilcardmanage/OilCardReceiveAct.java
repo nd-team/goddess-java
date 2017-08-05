@@ -8,12 +8,18 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.dispatchcar.vo.CusPermissionOperateVO;
 import com.bjike.goddess.oilcardmanage.api.OilCardReceiveAPI;
+import com.bjike.goddess.oilcardmanage.bo.CusPermissionOperateBO;
+import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardReceiveDTO;
 import com.bjike.goddess.oilcardmanage.enums.OilCardReceiveResult;
 import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardReceiveTO;
+import com.bjike.goddess.oilcardmanage.vo.OilCardBasicVO;
 import com.bjike.goddess.oilcardmanage.vo.OilCardReceiveVO;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.vo.AreaVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -164,6 +170,11 @@ public class OilCardReceiveAct {
 
         try {
             List<OilCardReceiveVO> vo = BeanTransform.copyProperties(oilCardReceiveAPI.pageList(dto), OilCardReceiveVO.class);
+            if(vo != null && vo.size()> 0 ){
+                vo.stream().forEach(str -> {
+                    str.setOilCardBasicVO( BeanTransform.copyProperties( str.getOilCardBasicVO() , OilCardBasicVO.class ));
+                });
+            }
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -202,4 +213,56 @@ public class OilCardReceiveAct {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 查询所有未冻结的油卡
+     * @return class OilCardBasicVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/oilcard")
+    public Result findOilcard() throws ActException{
+        try {
+            List<OilCardBasicBO> boList = oilCardReceiveAPI.findOilCard();
+            List<OilCardBasicVO> voList = BeanTransform.copyProperties(boList,OilCardBasicVO.class);
+            return ActResult.initialize(voList);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有地区
+     * @return class AreaVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/area")
+    public Result findArea() throws ActException{
+        try {
+           List<AreaBO> areaBOS =  oilCardReceiveAPI.findArea();
+           List<AreaVO> areaVOS = BeanTransform.copyProperties(areaBOS,AreaVO.class);
+           return ActResult.initialize(areaVOS);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有审核人
+     * @return class CusPermissionOperateVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/operate")
+    public Result findOperate() throws ActException{
+        try {
+            List<CusPermissionOperateBO> boList = oilCardReceiveAPI.findOperate();
+            List<CusPermissionOperateVO> voList = BeanTransform.copyProperties(boList,CusPermissionOperateVO.class);
+            return ActResult.initialize(voList);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

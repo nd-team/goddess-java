@@ -134,7 +134,7 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicD
         SonPermissionObject obj = new SonPermissionObject();
 
         obj = new SonPermissionObject();
-        obj.setName("siginmanage");
+        obj.setName("oilCardBasic");
         obj.setDescribesion("油卡基础信息");
         if (flagSeeSign || flagAddSign) {
             obj.setFlag(true);
@@ -148,7 +148,7 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicD
         Boolean flagReceive = oilCardReceiveSer.sonPermission();
         RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("dispatchsheet");
+        obj.setName("oilCardReceiver");
         obj.setDescribesion("油卡领用信息");
         if (flagReceive) {
             obj.setFlag(true);
@@ -160,7 +160,7 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicD
         Boolean flagRecharge = oilCardRechargeSer.sonPermission();
         RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("contractcategory");
+        obj.setName("oilCardRecharge");
         obj.setDescribesion("油卡充值信息");
         if (flagRecharge) {
             obj.setFlag(true);
@@ -171,6 +171,63 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicD
 
 
         return list;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
     }
 
     @Override
@@ -267,9 +324,10 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicD
     }
 
     @Override
-    public OilCardBasic find(String id) throws SerException {
+    public OilCardBasicBO find(String id) throws SerException {
         OilCardBasic oilCardBasic = super.findById(id);
-        return oilCardBasic;
+        OilCardBasicBO oilCardBasicBO = BeanTransform.copyProperties(oilCardBasic,OilCardBasicBO.class);
+        return oilCardBasicBO;
     }
 
     @Override
