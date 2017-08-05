@@ -232,9 +232,9 @@ public class OilCardBasicAct {
      * @version v1
      */
     @GetMapping("v1/find/{id}")
-    public Result pageList(String id) throws ActException {
+    public Result pageList(@PathVariable  String id) throws ActException {
         try {
-            OilCardBasicVO vo = BeanTransform.copyProperties(oilCardBasicAPI.findById(id), OilCardBasicVO.class);
+            OilCardBasicVO vo = BeanTransform.copyProperties(oilCardBasicAPI.find(id), OilCardBasicVO.class);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

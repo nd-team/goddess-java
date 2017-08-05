@@ -107,8 +107,8 @@ public class OilCardBasicApiImpl implements OilCardBasicAPI {
     }
 
     @Override
-    public OilCardBasicBO findById(String id) throws SerException {
-        return BeanTransform.copyProperties(oilCardBasicSer.findById(id), OilCardBasicBO.class);
+    public OilCardBasicBO find(String id) throws SerException {
+        return oilCardBasicSer.find(id);
     }
 
     @Override
@@ -116,10 +116,6 @@ public class OilCardBasicApiImpl implements OilCardBasicAPI {
         return oilCardBasicSer.count(dto);
     }
 
-    @Override
-    public OilCardBasic find(String id) throws SerException {
-        return oilCardBasicSer.find(id);
-    }
 
     @Override
     public void updateOliCardBasic(OilCardBasic oilCardBasic) throws SerException {
