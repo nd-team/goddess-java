@@ -108,4 +108,33 @@ public interface StaffRecordsSer extends Ser<StaffRecords, StaffRecordsDTO> {
     default List<PerBO> getPerBO(String name) throws SerException {
         return null;
     }
+
+    /**
+     * 在职员工基本信息
+     * @return
+     * @throws SerException
+     */
+    default List<StaffRecordsBO> listEmployee() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出模板excel
+     *
+     * @return
+     * @throws SerException
+     */
+    byte[] templateExcel() throws SerException;
+
+    /**
+     * 离职人员信息导入
+     * @param toList
+     * @throws SerException
+     */
+    void dimissionUpload(List<StaffRecordsExcelTO> toList) throws SerException;
+
+    /**
+     * 离职人员列表
+     */
+    List<StaffRecordsBO> dimissionMaps(StaffRecordsDTO dto) throws SerException;
 }
