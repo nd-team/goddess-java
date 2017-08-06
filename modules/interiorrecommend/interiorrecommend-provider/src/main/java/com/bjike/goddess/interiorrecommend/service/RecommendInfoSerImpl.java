@@ -319,9 +319,15 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
     }
 
     @Override
-    public List<RecommendRequireBO> findRequire() throws SerException {
-        List<RecommendRequire> list = recommendRequireSer.findAll();
-        List<RecommendRequireBO> boList = BeanTransform.copyProperties(list,RecommendRequireBO.class);
-        return boList;
+    public List<String> findRequire() throws SerException {
+        List<RecommendRequire> requireList = recommendRequireSer.findAll();
+        List<String> list = new ArrayList<>();
+        for(RecommendRequire recommendRequire : requireList){
+            List<String> require = new ArrayList<>();
+            require.add(recommendRequire.getRecommendType().getTypeName());
+            require.add(recommendRequire.getId());
+            list.addAll(require);
+        }
+        return list;
     }
 }

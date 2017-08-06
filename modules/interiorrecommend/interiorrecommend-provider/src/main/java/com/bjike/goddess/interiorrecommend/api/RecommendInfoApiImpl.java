@@ -5,6 +5,7 @@ import com.bjike.goddess.interiorrecommend.bo.RecommendContentBO;
 import com.bjike.goddess.interiorrecommend.bo.RecommendInfoBO;
 import com.bjike.goddess.interiorrecommend.bo.RecommendRequireBO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendInfoDTO;
+import com.bjike.goddess.interiorrecommend.entity.RecommendRequire;
 import com.bjike.goddess.interiorrecommend.service.RecommendInfoSer;
 import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.RecommendInfoTO;
@@ -74,7 +75,7 @@ public class RecommendInfoApiImpl implements RecommendInfoAPI {
     }
 
     @Override
-    public List<RecommendRequireBO> findRequire() throws SerException {
+    public List<String> findRequire() throws SerException {
         return recommendInfoSer.findRequire();
     }
 }

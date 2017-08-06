@@ -11,6 +11,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.interiorrecommend.api.RecommendInfoAPI;
 import com.bjike.goddess.interiorrecommend.bo.RecommendRequireBO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendInfoDTO;
+import com.bjike.goddess.interiorrecommend.entity.RecommendRequire;
 import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.RecommendInfoTO;
 import com.bjike.goddess.interiorrecommend.vo.RecommendContentVO;
@@ -172,16 +173,14 @@ public class RecommendInfoAct {
 
     /**
      * 查询所有推荐要求
-     * @return class RecommendRequireVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/find/require")
     public Result findRequire() throws ActException{
         try {
-            List<RecommendRequireBO> boList = recommendInfoAPI.findRequire();
-            List<RecommendRequireVO> voList = BeanTransform.copyProperties(boList,RecommendRequireVO.class);
-            return ActResult.initialize(voList);
+            List<String> list = recommendInfoAPI.findRequire();
+            return ActResult.initialize(list);
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }
