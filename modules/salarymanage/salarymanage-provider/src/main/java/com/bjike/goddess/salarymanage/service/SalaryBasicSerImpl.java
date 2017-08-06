@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -184,6 +185,24 @@ public class SalaryBasicSerImpl extends ServiceImpl<SalaryBasic, SalaryBasicDTO>
         }
         Excel excel = new Excel(0,2);
         byte[] bytes = ExcelUtil.clazzToExcel(toList,excel);
+        return bytes;
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<SalaryBasicSetExcel> salaryBasicSetExcels = new ArrayList<>();
+
+        SalaryBasicSetExcel excel = new SalaryBasicSetExcel();
+
+        excel.setArea("地区");
+        excel.setSystem("体系");
+        excel.setDepartment("部门/项目组");
+        excel.setPosition("岗位");
+        excel.setBasePay("基本工资");
+        salaryBasicSetExcels.add(excel);
+
+        Excel exce = new Excel(0,2);
+        byte[] bytes = ExcelUtil.clazzToExcel(salaryBasicSetExcels,exce);
         return bytes;
     }
 

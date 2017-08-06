@@ -125,24 +125,6 @@ public class SalaryInformation extends BaseEntity {
     private Double  postSalary;
 
     /**
-     * 部门/项目组
-     */
-    @Column(name = "department",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '部门/项目组'"  )
-    private String  department;
-
-    /**
-     * 岗位
-     */
-    @Column(name = "position",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '岗位'"  )
-    private String  position;
-
-    /**
-     * 基本工资
-     */
-    @Column(name = "basePay",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '基本工资'"  )
-    private Double  basePay;
-
-    /**
      * 技能工资
      */
     @Column(name = "skillPay",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '技能工资'"  )
@@ -461,24 +443,6 @@ public class SalaryInformation extends BaseEntity {
     }
     public void setPostSalary (Double postSalary ) {
         this.postSalary = postSalary ;
-    }
-    public String getDepartment () {
-        return department;
-    }
-    public void setDepartment (String department ) {
-        this.department = department ;
-    }
-    public String getPosition () {
-        return position;
-    }
-    public void setPosition (String position ) {
-        this.position = position ;
-    }
-    public Double getBasePay () {
-        return basePay;
-    }
-    public void setBasePay (Double basePay ) {
-        this.basePay = basePay ;
     }
     public Double getSkillPay () {
         return skillPay;

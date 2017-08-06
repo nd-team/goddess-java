@@ -120,4 +120,12 @@ public interface SalaryBasicAPI  {
      * @throws SerException
      */
     byte[] exportExcel(ExportSalaryBasicTO to) throws SerException;
+
+
+    /**
+     * 导出Excel
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
+
 }

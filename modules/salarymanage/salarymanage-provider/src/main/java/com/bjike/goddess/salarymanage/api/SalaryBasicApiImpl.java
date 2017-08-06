@@ -81,4 +81,9 @@ public class SalaryBasicApiImpl implements SalaryBasicAPI  {
     public byte[] exportExcel(ExportSalaryBasicTO to) throws SerException {
         return salaryBasicSer.exportExcel(to);
     }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return salaryBasicSer.templateExport();
+    }
 }

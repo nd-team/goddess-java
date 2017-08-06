@@ -122,4 +122,11 @@ public interface SalaryBasicSer extends Ser<SalaryBasic, SalaryBasicDTO> {
      * @throws SerException
      */
     byte[] exportExcel(ExportSalaryBasicTO to) throws SerException;
+
+
+    /**
+     * 导出Excel
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
  }

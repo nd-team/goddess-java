@@ -62,4 +62,9 @@ public class SalaryInformationApiImpl implements SalaryInformationAPI  {
     public List<String> findTime() throws SerException {
         return salaryInformationSer.findTime();
     }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return salaryInformationSer.templateExport();
+    }
 }
