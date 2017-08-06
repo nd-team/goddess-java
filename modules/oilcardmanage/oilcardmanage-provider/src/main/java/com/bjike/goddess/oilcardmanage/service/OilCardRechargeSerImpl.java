@@ -2,6 +2,7 @@ package com.bjike.goddess.oilcardmanage.service;
 
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -246,7 +247,7 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
             model.setCycleEarlyMoney(exCycleEarlyMoney - exRechargeMoney + currentRecharge);
             super.update(model);
             //修改了本次充值记录，在本次充值记录之后的数据的期初金额都要 - 修改前的充值金额 + 本次充值金额
-            updateAfterList(model.getCreateTime(), exRechargeMoney, currentRecharge);
+            updateAfterList(model.getOilCardBasic().getId(), exRechargeMoney, currentRecharge);
 
             return BeanTransform.copyProperties(to, OilCardRechargeBO.class);
         } else {
@@ -269,10 +270,10 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
     }
 
     // 修改了本次充值记录，在本次充值记录之后的数据的期初金额都要 - 修改前的充值金额 + 本次充值金额
-    public void updateAfterList(LocalDateTime time, Double exRechargeMoney, Double currentRecharge) throws SerException {
+    public void updateAfterList(String oilCardId, Double exRechargeMoney, Double currentRecharge) throws SerException {
 
         OilCardRechargeDTO dto = new OilCardRechargeDTO();
-        dto.getConditions().add(Restrict.gt("createTime", time));
+        dto.getConditions().add(Restrict.eq("oilCardBasic", oilCardId));
         List<OilCardRecharge> list = super.findByCis(dto);
         if (list != null && list.size() > 0) {
             for (OilCardRecharge model : list) {
@@ -285,11 +286,37 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
 
     }
 
+    //删除了本次充值记录,在本次充值之后的数据的期初金额都要 - 删除前的充值金额
+
+    private void updateAfterList(String oilCardId,Double exRecargeMoney) throws SerException{
+        OilCardRechargeDTO dto = new OilCardRechargeDTO();
+        dto.getConditions().add(Restrict.eq("oilCardBasic",oilCardId));
+        List<OilCardRecharge> list = super.findByCis(dto);
+        if(list != null && list.size() >0 ){
+            for(OilCardRecharge model : list){
+                //期初金额 = 删除钱期初金额 - 删除掉的充值记录的充值金额
+                model.setCycleEarlyMoney(model.getCycleEarlyMoney() - exRecargeMoney);
+                model.setModifyTime(LocalDateTime.now());
+            }
+            super.update(list);
+        }
+    }
+
     @Override
     public void delete(String id) throws SerException {
+        checkAddIdentity();
+        //删除修改要改变原先充值好的数据
         if(null != id){
+            OilCardRecharge model = super.findById(id);
+            if(model != null){
+                //获取被充值的油卡id
+                String oilCardId = model.getOilCardBasic().getId();
+                Double exRecargeMoney = model.getRechargeMoney();
+                updateAfterList(oilCardId,exRecargeMoney);
+            }else{
+                throw new SerException("不能传入非法id啊,亲爱的");
+            }
             super.remove(id);
-
         }else{
             throw new SerException("id不能为空!");
         }
@@ -375,5 +402,12 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
         } else {
             return null;
         }
+    }
+
+    @Override
+    public OilCardRechargeBO findBy(String id) throws SerException {
+        OilCardRecharge oilCardRecharge = super.findById(id);
+        OilCardRechargeBO bo = BeanTransform.copyProperties(oilCardRecharge,OilCardRechargeBO.class);
+        return bo;
     }
 }

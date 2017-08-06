@@ -80,7 +80,7 @@ public interface OilCardRechargeAPI {
      *
      * @param id
      */
-    OilCardRechargeBO findById(String id) throws SerException;
+    OilCardRechargeBO findBy(String id) throws SerException;
 
     /**
      * 查询总记录数

@@ -86,4 +86,11 @@ public interface OilCardRechargeSer extends Ser<OilCardRecharge, OilCardRecharge
      */
     void delete(String id) throws SerException;
 
+    /**
+     * 根据Id查询油卡充值记录
+     *
+     * @param id
+     */
+    OilCardRechargeBO findBy(String id) throws SerException;
+
 }

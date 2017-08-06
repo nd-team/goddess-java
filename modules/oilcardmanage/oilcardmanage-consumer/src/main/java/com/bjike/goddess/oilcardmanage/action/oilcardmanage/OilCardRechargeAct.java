@@ -158,9 +158,9 @@ public class OilCardRechargeAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/find/{id}")
-    public Result pageList(String id) throws ActException {
+    public Result pageList(@PathVariable String id) throws ActException {
         try {
-            OilCardRechargeVO vo = BeanTransform.copyProperties(oilCardRechargeAPI.findById(id), OilCardRechargeVO.class);
+            OilCardRechargeVO vo = BeanTransform.copyProperties(oilCardRechargeAPI.findBy(id), OilCardRechargeVO.class);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -268,6 +268,7 @@ public class OilCardRechargeAct extends BaseFileAction {
         }
         return new ActResult("删除成功");
     }
+
 
 
 

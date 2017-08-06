@@ -56,8 +56,8 @@ public class OilCardRechargeApiImpl implements OilCardRechargeAPI {
     }
 
     @Override
-    public OilCardRechargeBO findById(String id) throws SerException {
-        return BeanTransform.copyProperties(oilCardRechargeSer.findById(id), OilCardRechargeBO.class);
+    public OilCardRechargeBO findBy(String id) throws SerException {
+        return oilCardRechargeSer.findBy(id);
     }
 
     @Override

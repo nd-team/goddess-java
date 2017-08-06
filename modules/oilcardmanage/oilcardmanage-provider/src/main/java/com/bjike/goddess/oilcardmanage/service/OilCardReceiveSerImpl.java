@@ -359,6 +359,7 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
         return list;
     }
 
+
     @Override
     public List<AreaBO> findArea() throws SerException {
         List<AreaBO> areaBOS = departmentDetailAPI.findArea();
@@ -367,19 +368,24 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
 
     @Override
     public List<String> findOperate() throws SerException {
-//        CusPermissionDTO dto = new CusPermissionDTO();
-//        dto.getConditions().add(Restrict.eq("idFlag","2"));
-//        CusPermission cusPermissions = cusPermissionSer.findOne(dto);
-//        CusPermissionOperateDTO dto2 = new CusPermissionOperateDTO();
-//        dto2.getConditions().add(Restrict.eq("cuspermissionId",cusPermissions.getId()));
-//        List<CusPermissionOperate> cusPermissionOperates = cusPermissionOperateSer.findByCis(dto2);
-//        List<String> list = new ArrayList<>();
-//        for(CusPermissionOperate operate : cusPermissionOperates){
-//            PositionDetailDTO detailDTO = new PositionDetailDTO();
-//            detailDTO.getConditions().add(Restrict.eq("arrangement",operate.getOperator()));
-//            list.add();
-//        }
-        return null;
+        CusPermissionDTO dto = new CusPermissionDTO();
+        dto.getConditions().add(Restrict.eq("idFlag","2"));
+        CusPermission cusPermissions = cusPermissionSer.findOne(dto);
+        CusPermissionOperateDTO dto2 = new CusPermissionOperateDTO();
+        dto2.getConditions().add(Restrict.eq("cuspermissionId",cusPermissions.getId()));
+        List<CusPermissionOperate> cusPermissionOperates = cusPermissionOperateSer.findByCis(dto2);
+        List<String> list = new ArrayList<>();
+        for(CusPermissionOperate operate : cusPermissionOperates){
+            PositionDetailDTO detailDTO = new PositionDetailDTO();
+            List<String> positionId = positionDetailAPI.getPositions(operate.getOperator());
+            List<UserBO> userBOList = new ArrayList<>();
+            for(String id : positionId){
+              userBOList = positionDetailUserAPI.findByPosition(id);
+            }
+            for(UserBO userBO : userBOList){
+                list.add(userBO.getUsername());
+            }
+        }
+        return list;
     }
-
 }
