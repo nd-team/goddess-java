@@ -270,6 +270,24 @@ public class OilCardRechargeAct extends BaseFileAction {
     }
 
 
+    /**
+     * 删除充值记录
+     * @param id
+     * @throws ActException、
+     * @version v1
+     */
+    @LoginAuth
+    @DeleteMapping("v1/delete/{id}")
+    public Result delete(@PathVariable String id) throws ActException{
+        try {
+            oilCardRechargeAPI.delete(id);
+            return new ActResult();
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
 
 
 }
