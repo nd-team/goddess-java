@@ -8,7 +8,9 @@ import com.bjike.goddess.materialsummary.type.CollectSendUnit;
 import com.bjike.goddess.materialsummary.type.CollectUnit;
 import com.bjike.goddess.materialsummary.type.ModuleType;
 import com.bjike.goddess.materialsummary.type.SummaryType;
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -44,6 +46,7 @@ public class SendEmailTO extends BaseTO {
     /**
      * 发送间隔
      */
+    @Range(min = 0,max = 10000)
     @NotNull(groups = {ADD.class, EDIT.class}, message = "发送间隔不能为空")
     private Double sendNum;
 

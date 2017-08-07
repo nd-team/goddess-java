@@ -57,4 +57,9 @@ public class SalaryInformationApiImpl implements SalaryInformationAPI  {
     public byte[] exportExcel(ExportSalaryInformationTO to) throws SerException {
         return salaryInformationSer.exportExcel(to);
     }
+
+    @Override
+    public List<String> findTime() throws SerException {
+        return salaryInformationSer.findTime();
+    }
 }

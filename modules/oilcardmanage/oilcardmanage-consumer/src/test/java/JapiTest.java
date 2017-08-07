@@ -25,6 +25,7 @@ public class JapiTest {
                 "modules/oilcardmanage/oilcardmanage-api",
                 "modules/dispatchcar/dispatchcar-api",
                 "modules/storage/storage-api",
+                "modules/organize/organize-api",
                 "common/common-api"
         });
         JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索

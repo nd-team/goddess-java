@@ -15,6 +15,7 @@ import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.organize.entity.ModuleType;
 import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.organize.to.PositionDetailTO;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -295,5 +296,20 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
             return this.transformationToBO(entity);
     }
 
-
+    @Override
+    public List<String> getPositions(String id) throws SerException {
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空");
+        }
+        String[] field = new String[]{"id"};
+        String sql = "select id from organize_position_detail where arrangement_id = '" + id + "'";
+        List<String> stringList = new ArrayList<>(0);
+        List<PositionDetail> positionDetailList = super.findBySql(sql, PositionDetail.class, field);
+        if (null != positionDetailList && positionDetailList.size() > 0) {
+            for (PositionDetail entity : positionDetailList) {
+                stringList.add(entity.getId());
+            }
+        }
+        return stringList;
+    }
 }

@@ -101,10 +101,10 @@ public class StayDaysVO {
      */
     private Boolean employeeVerify;
 
-    /**
-     * 综合资源部核实
-     */
-    private String comprehensiveVerify;
+//    /**
+//     * 综合资源部核实
+//     */
+//    private String comprehensiveVerify;
 
     /**
      * 备注
@@ -268,13 +268,13 @@ public class StayDaysVO {
         this.employeeVerify = employeeVerify;
     }
 
-    public String getComprehensiveVerify() {
-        return comprehensiveVerify;
-    }
-
-    public void setComprehensiveVerify(String comprehensiveVerify) {
-        this.comprehensiveVerify = comprehensiveVerify;
-    }
+//    public String getComprehensiveVerify() {
+//        return comprehensiveVerify;
+//    }
+//
+//    public void setComprehensiveVerify(String comprehensiveVerify) {
+//        this.comprehensiveVerify = comprehensiveVerify;
+//    }
 
     public String getRemark() {
         return remark;

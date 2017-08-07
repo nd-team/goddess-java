@@ -1,10 +1,10 @@
 package com.bjike.goddess.materialsummary.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.materialsummary.bo.PersonalBuySummBO;
-import com.bjike.goddess.materialsummary.bo.SendEmailBO;
-import com.bjike.goddess.materialsummary.bo.TypeBuySummBO;
+import com.bjike.goddess.materialsummary.bo.*;
 import com.bjike.goddess.materialsummary.dto.SendEmailDTO;
+import com.bjike.goddess.materialsummary.excel.SonPermissionObject;
+import com.bjike.goddess.materialsummary.to.GuidePermissionTO;
 import com.bjike.goddess.materialsummary.to.SendEmailTO;
 import com.bjike.goddess.materialsummary.type.ModuleType;
 import com.bjike.goddess.materialsummary.type.SummaryType;
@@ -21,6 +21,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SendEmailAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 总条数
      */
@@ -209,5 +224,155 @@ public interface SendEmailAPI {
      */
     default List<PersonalBuySummBO> personBuySummYear(Integer year) throws SerException {
         return null;
+    }
+    /**
+     * 整体针对入库来源的物资日汇总
+     *
+     * @param summTime
+     */
+    default List<ResouceStockSummBO> sourStockSummDay(String summTime) throws SerException {
+        return null;
+    }
+    /**
+     * 整体针对入库来源的物资周汇总
+     *
+     * @param year
+     * @param month
+     * @param week
+     */
+    default List<ResouceStockSummBO> sourStockSummWeek(Integer year,Integer month,Integer week) throws SerException {
+        return null;
+    }
+    /**
+     * 整体针对入库来源的物资月汇总
+     *
+     * @param year
+     * @param month
+     */
+    default List<ResouceStockSummBO> sourStockSummMonth(Integer year,Integer month) throws SerException {
+        return null;
+    }
+    /**
+     * 整体针对入库来源的物资年汇总
+     *
+     * @param year
+     */
+    default List<ResouceStockSummBO> sourStockSummYear(Integer year) throws SerException {
+        return null;
+    }
+
+    /**
+     * 各地区入库情况日汇总
+     *
+     * @param summTime
+     */
+    default List<AreaStockSummBO> areaStockSummDay(String summTime) throws SerException {
+        return null;
+    }
+    /**
+     * 各地区入库情况周汇总
+     *
+     * @param year
+     * @param month
+     * @param week
+     */
+    default List<AreaStockSummBO> areaStockSummWeek(Integer year,Integer month,Integer week) throws SerException {
+        return null;
+    }
+    /**
+     * 各地区入库情况月汇总
+     *
+     * @param year
+     * @param month
+     */
+    default List<AreaStockSummBO> areaStockSummMonth(Integer year,Integer month) throws SerException {
+        return null;
+    }
+    /**
+     * 各地区入库情况年汇总
+     *
+     * @param year
+     */
+    default List<AreaStockSummBO> areaStockSummYear(Integer year) throws SerException {
+        return null;
+    }
+    /**
+     * 针对维修状态分类情况日汇总
+     *
+     * @param summTime
+     */
+    default List<StatusDeviceSummBO> statusDeviceSummDay(String summTime) throws SerException {
+        return null;
+    }
+    /**
+     * 针对维修状态分类情况周汇总
+     *
+     * @param year
+     * @param month
+     * @param week
+     */
+    default List<StatusDeviceSummBO> statusDeviceSummWeek(Integer year,Integer month,Integer week) throws SerException {
+        return null;
+    }
+    /**
+     * 针对维修状态分类情况月汇总
+     *
+     * @param year
+     * @param month
+     */
+    default List<StatusDeviceSummBO> statusDeviceSummMonth(Integer year,Integer month) throws SerException {
+        return null;
+    }
+    /**
+     * 针对维修状态分类情况年汇总
+     *
+     * @param year
+     */
+    default List<StatusDeviceSummBO> statusDeviceSummYear(Integer year) throws SerException {
+        return null;
+    }
+
+    /**
+     * 针对保修状态分类情况日汇总
+     *
+     * @param summTime
+     */
+    default List<WarrantyDeviceSummBO> warranDeviceSummDay(String summTime) throws SerException {
+        return null;
+    }
+    /**
+     * 针对保修状态分类情况周汇总
+     *
+     * @param year
+     * @param month
+     * @param week
+     */
+    default List<WarrantyDeviceSummBO> warranDeviceSummWeek(Integer year,Integer month,Integer week) throws SerException {
+        return null;
+    }
+    /**
+     * 针对保修状态分类情况月汇总
+     *
+     * @param year
+     * @param month
+     */
+    default List<WarrantyDeviceSummBO> warranDeviceSummMonth(Integer year,Integer month) throws SerException {
+        return null;
+    }
+    /**
+     * 针对保修状态分类情况年汇总
+     *
+     * @param year
+     */
+    default List<WarrantyDeviceSummBO> warranDeviceSummYear(Integer year) throws SerException {
+        return null;
+    }
+
+    /**
+     * 定时器检测要发送的邮件
+     *
+     */
+    default void checkSendEmail( ) throws SerException {
+        return ;
     }
 }

@@ -3,7 +3,6 @@ package com.bjike.goddess.checkhost.action.checkhost;
 import com.bjike.goddess.checkhost.api.HostApplyAPI;
 import com.bjike.goddess.checkhost.bo.HostApplyBO;
 import com.bjike.goddess.checkhost.dto.HostApplyDTO;
-import com.bjike.goddess.checkhost.enums.CheckStatus;
 import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.to.HostApplyTO;
 import com.bjike.goddess.checkhost.vo.HostApplyVO;
@@ -170,16 +169,16 @@ public class HostApplyAction {
     /**
      * 审核
      *
-     * @param id          id
-     * @param checkStatus 审核状态
+     * @param id  id
+     * @param dto dto dto
      * @return class HostApplyVO
      * @des 审核离宿申请
      * @version v1
      */
-    @PostMapping("v1/audit/{id}/{checkStatus}")
-    public Result auditHostApply(@PathVariable String id, @PathVariable CheckStatus checkStatus) throws ActException {
+    @PostMapping("v1/audit/{id}")
+    public Result auditHostApply(@PathVariable String id, @Validated(HostApplyDTO.ADUIT.class) HostApplyDTO dto, BindingResult result) throws ActException {
         try {
-            HostApplyBO hostApplyBO = hostApplyAPI.auditHostApply(id, checkStatus);
+            HostApplyBO hostApplyBO = hostApplyAPI.auditHostApply(id, dto);
             return ActResult.initialize(BeanTransform.copyProperties(hostApplyBO, HostApplyVO.class, true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

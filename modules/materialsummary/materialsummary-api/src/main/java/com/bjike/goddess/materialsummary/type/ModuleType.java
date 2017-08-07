@@ -20,13 +20,9 @@ public enum ModuleType {
      */
     MATERIALSTOR(1),
     /**
-     * 物质盘点
-     */
-    MATERIALCHECK(2),
-    /**
      * 物质维修
      */
-    MATERIALMAINTEN(3);
+    MATERIALMAINTEN(2);
 
     private int code;
 

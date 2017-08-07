@@ -42,8 +42,7 @@ public class RecommendRequireTO extends BaseTO {
     /**
      * 推荐考核内容
      */
-    @NotNull(message = "推荐考核内容不能为空", groups = {ADD.class, EDIT.class})
-    private List<RecommendAssessDetailTO> assessDetailList;
+    private List<RecommendAssessDetailTO> detailList;
 
     /**
      * 指标来源
@@ -91,12 +90,12 @@ public class RecommendRequireTO extends BaseTO {
         this.recommendTypeId = recommendTypeId;
     }
 
-    public List<RecommendAssessDetailTO> getAssessDetailList() {
-        return assessDetailList;
+    public List<RecommendAssessDetailTO> getDetailList() {
+        return detailList;
     }
 
-    public void setAssessDetailList(List<RecommendAssessDetailTO> assessDetailList) {
-        this.assessDetailList = assessDetailList;
+    public void setDetailList(List<RecommendAssessDetailTO> detailList) {
+        this.detailList = detailList;
     }
 
     public String getIndicatorResource() {
@@ -130,4 +129,5 @@ public class RecommendRequireTO extends BaseTO {
     public void setRecommendSponsor(String recommendSponsor) {
         this.recommendSponsor = recommendSponsor;
     }
+
 }

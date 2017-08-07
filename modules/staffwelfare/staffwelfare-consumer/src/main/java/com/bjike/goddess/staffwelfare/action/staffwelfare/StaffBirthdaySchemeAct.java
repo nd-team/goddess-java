@@ -76,7 +76,6 @@ public class StaffBirthdaySchemeAct {
      * 查询所有部门
      *
      * @version v1
-     * @return class
      */
     @GetMapping("v1/findDepartments")
     public Result findDepartments() {

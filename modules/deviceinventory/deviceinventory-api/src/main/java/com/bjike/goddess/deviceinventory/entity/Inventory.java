@@ -71,7 +71,7 @@ public class Inventory extends BaseEntity {
     /**
      * 保修期(月)
      */
-    @Column(name = "warrantyExpire", nullable = false, columnDefinition = "INT(11)   COMMENT '保修期(月)'")
+    @Column(name = "warrantyExpire",columnDefinition = "INT(11)   COMMENT '保修期(月)'")
     private Integer warrantyExpire;
 
     /**

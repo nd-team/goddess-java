@@ -99,7 +99,7 @@ public class DepartMonIndexSetAction extends BaseFileAction {
     public Result findListDepartMonIndexSet(DepartMonIndexSetDTO departMonIndexSetDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<DepartMonIndexSetVO> departMonIndexSetVOList = BeanTransform.copyProperties(
-                    departMonIndexSetAPI.listDepartMonIndexSet(departMonIndexSetDTO), DepartMonIndexSetVO.class, request);
+                    departMonIndexSetAPI.listDepartMonIndexSet(departMonIndexSetDTO), DepartMonIndexSetVO.class);
             return ActResult.initialize(departMonIndexSetVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -275,6 +275,25 @@ public class DepartMonIndexSetAction extends BaseFileAction {
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         } catch (IOException e1){
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板部门月度指标
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "部门月度指标导入模板.xlsx";
+            super.writeOutFile(response, departMonIndexSetAPI.templateExport( ), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
             throw new ActException(e1.getMessage());
         }
     }

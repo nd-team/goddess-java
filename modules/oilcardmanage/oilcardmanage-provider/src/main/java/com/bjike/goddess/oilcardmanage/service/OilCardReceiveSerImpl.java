@@ -1,5 +1,6 @@
 package com.bjike.goddess.oilcardmanage.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -8,8 +9,15 @@ import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.oilcardmanage.bo.CusPermissionOperateBO;
+import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardReceiveBO;
+import com.bjike.goddess.oilcardmanage.dto.CusPermissionDTO;
+import com.bjike.goddess.oilcardmanage.dto.CusPermissionOperateDTO;
+import com.bjike.goddess.oilcardmanage.dto.OilCardBasicDTO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardReceiveDTO;
+import com.bjike.goddess.oilcardmanage.entity.CusPermission;
+import com.bjike.goddess.oilcardmanage.entity.CusPermissionOperate;
 import com.bjike.goddess.oilcardmanage.entity.OilCardBasic;
 import com.bjike.goddess.oilcardmanage.entity.OilCardReceive;
 import com.bjike.goddess.oilcardmanage.enums.GuideAddrStatus;
@@ -17,6 +25,8 @@ import com.bjike.goddess.oilcardmanage.enums.OilCardReceiveResult;
 import com.bjike.goddess.oilcardmanage.enums.OilCardStatus;
 import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardReceiveTO;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +62,12 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
+
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+
+    @Autowired
+    private CusPermissionOperateSer cusPermissionOperateSer;
 
     /**
      * 核对查看权限（层级别）
@@ -259,6 +275,7 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
             OilCardBasic oilCardBasic = model.getOilCardBasic();
             //设置油卡状态-闲置
             oilCardBasic.setCardStatus(OilCardStatus.IDLE);
+            oilCardBasic.setArea("");
             oilCardBasic.setModifyTime(LocalDateTime.now());
             oilCardBasicSer.update(oilCardBasic);
         } else {
@@ -280,6 +297,7 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
                 bo.setOilCardCode(model.getOilCardBasic().getOilCardCode());
                 bo.setMainOrDeputy(model.getOilCardBasic().getMainOrDeputy());
                 bo.setBelongMainCard(model.getOilCardBasic().getBelongMainCard());
+                bo.setOilCardBasicBO( BeanTransform.copyProperties(model.getOilCardBasic(), OilCardBasic.class));
                 boList.add(bo);
             }
             return boList;
@@ -317,4 +335,30 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
         }
     }
 
+    @Override
+    public List<OilCardBasicBO> findOilCard() throws SerException {
+        OilCardBasicDTO dto = new OilCardBasicDTO();
+        dto.getConditions().add(Restrict.eq("cardStatus",OilCardStatus.IDLE));
+        List<OilCardBasic> oilCardBasicBOS = oilCardBasicSer.findByCis(dto);
+        List<OilCardBasicBO> list = BeanTransform.copyProperties(oilCardBasicBOS,OilCardBasicBO.class);
+        return list;
+    }
+
+    @Override
+    public List<AreaBO> findArea() throws SerException {
+        List<AreaBO> areaBOS = departmentDetailAPI.findArea();
+        return areaBOS;
+    }
+
+    @Override
+    public List<CusPermissionOperateBO> findOperate() throws SerException {
+        CusPermissionDTO dto = new CusPermissionDTO();
+        dto.getConditions().add(Restrict.eq("idFlag","2"));
+        CusPermission cusPermissions = cusPermissionSer.findOne(dto);
+        CusPermissionOperateDTO dto2 = new CusPermissionOperateDTO();
+        dto2.getConditions().add(Restrict.eq("cuspermissionId",cusPermissions.getId()));
+        List<CusPermissionOperate> cusPermissionOperates = cusPermissionOperateSer.findByCis(dto2);
+        List<CusPermissionOperateBO> boList = BeanTransform.copyProperties(cusPermissionOperates,CusPermissionOperateBO.class);
+        return boList;
+    }
 }

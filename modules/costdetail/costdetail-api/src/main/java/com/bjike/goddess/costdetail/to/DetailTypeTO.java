@@ -17,13 +17,13 @@ import org.hibernate.validator.constraints.NotBlank;
 public class DetailTypeTO extends BaseTO {
 
     /**
-     * 父节点
+     * 主科目
      */
     @NotBlank(groups = {ADD.class, EDIT.class}, message = "父节点不能为空")
     private String parNode;
 
     /**
-     * 分类名
+     * 二级科目
      */
     @NotBlank(groups = {ADD.class, EDIT.class}, message = "分类名不能为空")
     private String typeName;

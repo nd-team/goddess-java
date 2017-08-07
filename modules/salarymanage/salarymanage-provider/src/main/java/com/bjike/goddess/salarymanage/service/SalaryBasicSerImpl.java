@@ -121,6 +121,7 @@ public class SalaryBasicSerImpl extends ServiceImpl<SalaryBasic, SalaryBasicDTO>
         salaryBasic.setSystem(to.getSystem());
         salaryBasic.setPosition(to.getPosition());
         salaryBasic.setModifyTime(LocalDateTime.now());
+        super.update(salaryBasic);
         SalaryBasicBO salaryBasicBO = BeanTransform.copyProperties(salaryBasic,SalaryBasicBO.class);
         return salaryBasicBO;
     }

@@ -81,7 +81,8 @@ public interface OilCardBasicSer extends Ser<OilCardBasic, OilCardBasicDTO> {
 
     OilCardBasicBO findByCode(String oilCardCode) throws SerException;
 
-    OilCardBasic find(String id) throws SerException;
+
+    OilCardBasicBO find(String id) throws SerException;
 
     void updateOliCardBasic(OilCardBasic oilCardBasic) throws SerException;
 }
