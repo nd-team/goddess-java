@@ -1,6 +1,11 @@
 package com.bjike.goddess.interiorrecommend.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 推荐内容
@@ -16,16 +21,19 @@ public class RecommendContentTO extends BaseTO {
     /**
      * 推荐信息id
      */
+    @NotBlank(message = "推荐信息设定id不能为空", groups = {ADD.class, EDIT.class})
     private String infoId;
 
     /**
      * 推荐内容
      */
+    @NotBlank(message = "推荐内容不能为空", groups = {ADD.class, EDIT.class})
     private String content;
 
     /**
      * 内容明细
      */
+    @NotBlank(message = "内容明细不能为空", groups = {ADD.class, EDIT.class})
     private String detail;
 
     /**

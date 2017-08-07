@@ -99,5 +99,5 @@ public interface RecommendInfoSer extends Ser<RecommendInfo, RecommendInfoDTO> {
      * 查询所有推荐要求
      * @throws SerException
      */
-    List<String> findRequire() throws SerException;
+    List<String[]> findRequire() throws SerException;
 }

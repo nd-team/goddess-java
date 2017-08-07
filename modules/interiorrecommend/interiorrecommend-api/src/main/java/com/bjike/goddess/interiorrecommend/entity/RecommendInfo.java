@@ -20,7 +20,7 @@ import java.util.Set;
 public class RecommendInfo extends BaseEntity {
 
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "recommendRequire_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '推荐要求'")
     private RecommendRequire recommendRequire;
 
