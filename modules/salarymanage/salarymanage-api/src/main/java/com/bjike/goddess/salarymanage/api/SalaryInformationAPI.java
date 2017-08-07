@@ -79,7 +79,7 @@ public interface SalaryInformationAPI  {
     }
 
     /**
-     * 导出Excel
+     * 导出Excel模板
      * @throws SerException
      */
     byte[] templateExport() throws SerException;

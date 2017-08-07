@@ -86,6 +86,13 @@ public class SalaryBasicSerImpl extends ServiceImpl<SalaryBasic, SalaryBasicDTO>
     }
 
     @Override
+    public List<SalaryBasicBO> pageList(SalaryBasicDTO dto) throws SerException {
+        List<SalaryBasic> list = super.findByCis(dto);
+        List<SalaryBasicBO> boList = BeanTransform.copyProperties(list,SalaryBasicBO.class,true);
+        return boList;
+    }
+
+    @Override
     public SalaryBasicBO findSalary(SalaryBasicDTO dto) throws SerException {
         if(StringUtils.isNotBlank(dto.getArea())){
             dto.getConditions().add(Restrict.eq("area",dto.getArea()));
@@ -134,31 +141,10 @@ public class SalaryBasicSerImpl extends ServiceImpl<SalaryBasic, SalaryBasicDTO>
         }
         super.remove(id);
     }
-    //校验字段是否存在
-    private void isExist(SalaryBasicTO to, Integer row) throws SerException {
-        if(StringUtils.isBlank( to.getArea() )){
-            throw new SerException("第" + row + "行的地区不能为空" );
-        }
-        if(StringUtils.isBlank( to.getBasePay() )){
-            throw new SerException("第" + row + "行的基本工资不能为空" );
-        }
-        if(null== to.getDepartment()){
-            throw new SerException("第" + row + "行的部门/项目组不能为空" );
-        }
-        if ( null== to.getPosition()) {
-            throw new SerException("第" + row + "行的本月目标值不能为空");
-        }
-        if(null == to.getSystem()){
-            throw new SerException("第" + row + "行的体系不能为空");
-        }
-    }
 
     @Override
     public void leadExcel(List<SalaryBasicTO> toList) throws SerException {
         UserBO userBO = userAPI.currentUser();
-        for(int i = 1; i<= toList.size();i++){
-            isExist(toList.get(i-1),i);
-        }
         List<SalaryBasic> list = BeanTransform.copyProperties(toList,SalaryBasic.class,true);
         list.stream().forEach(str->{
             str.setModifyTime(LocalDateTime.now());

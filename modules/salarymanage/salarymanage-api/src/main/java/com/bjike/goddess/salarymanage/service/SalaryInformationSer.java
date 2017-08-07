@@ -84,7 +84,7 @@ public interface SalaryInformationSer extends Ser<SalaryInformation, SalaryInfor
     }
 
     /**
-     * 导出Excel
+     * 导出Excel模板
      * @throws SerException
      */
     byte[] templateExport() throws SerException;
