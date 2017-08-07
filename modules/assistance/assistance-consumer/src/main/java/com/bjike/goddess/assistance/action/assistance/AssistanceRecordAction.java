@@ -61,7 +61,7 @@ public class AssistanceRecordAction {
     }
 
     /**
-     * 补助信息记录总条数
+     * 总条数
      *
      * @param assistanceRecordDTO 公司员工补助信息记录信息dto
      * @des 获取所有公司员工补助信息记录信息总条数
@@ -78,14 +78,34 @@ public class AssistanceRecordAction {
     }
 
     /**
-     * 公司员工补助信息记录列表
+     *  一个
+     *
+     * @param id  公司员工补助信息id
+     * @des 一个公司员工补助信息
+     * @version v1
+     * @return class AssistanceRecordVO
+     */
+    @GetMapping("v1/one/{id}")
+    public Result getOneById(@PathVariable String id ) throws ActException {
+        try {
+            AssistanceRecordVO ageAssistVO = BeanTransform.copyProperties(
+                    assistanceRecordAPI.getOneById(id), AssistanceRecordVO.class);
+            return ActResult.initialize(ageAssistVO );
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 列表
      *
      * @param assistanceRecordDTO 公司员工补助信息记录信息dto
      * @return class AssistanceRecordVO
      * @des 获取所有公司员工补助信息记录信息
      * @version v1
      */
-    @GetMapping("v1/listAssistanceRecord")
+    @GetMapping("v1/list")
     public Result findListAssistanceRecord(AssistanceRecordDTO assistanceRecordDTO, BindingResult bindingResult) throws ActException {
         try {
             List<AssistanceRecordVO> assistanceRecordVOList = BeanTransform.copyProperties(
@@ -97,7 +117,7 @@ public class AssistanceRecordAction {
     }
 
     /**
-     * 添加公司员工补助信息记录
+     * 添加
      *
      * @param assistanceRecordTO 公司员工补助信息记录基本信息数据to
      * @return class AssistanceRecordVO
@@ -117,7 +137,7 @@ public class AssistanceRecordAction {
 
 
     /**
-     * 编辑公司员工补助信息记录
+     * 编辑
      *
      * @param assistanceRecordTO 公司员工补助信息记录基本信息数据bo
      * @return class AssistanceRecordVO

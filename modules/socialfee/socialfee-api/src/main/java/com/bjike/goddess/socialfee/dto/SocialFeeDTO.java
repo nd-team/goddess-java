@@ -19,7 +19,7 @@ public class SocialFeeDTO extends BaseDTO {
     private String payTime;
 
     /**
-     * 纳税人名称
+     * 纳税人名称/缴费公司
      */
     private String payFeer;
 
@@ -29,7 +29,7 @@ public class SocialFeeDTO extends BaseDTO {
     private String workSocalNum;
 
     /**
-     * 姓名
+     * 姓名/缴费个人
      */
     private String empName;
 

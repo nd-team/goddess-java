@@ -5,23 +5,34 @@ import com.bjike.goddess.archive.bo.StaffNameBO;
 import com.bjike.goddess.archive.bo.StaffRecordsBO;
 import com.bjike.goddess.archive.dto.StaffRecordsDTO;
 import com.bjike.goddess.archive.entity.StaffRecords;
+import com.bjike.goddess.archive.entity.StaffRecordsExcel;
 import com.bjike.goddess.archive.enums.GuideAddrStatus;
 import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.archive.to.StaffRecordsExcelTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.entity.EntryRegister;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.hibernate.engine.spi.EntityUniqueKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -43,6 +54,8 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
     private RotainCusPermissionSer cusPermissionSer;
     @Autowired
     private EntryBasicInfoAPI entryBasicInfoAPI;
+    @Autowired
+    private EntryRegisterAPI entryRegisterAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -186,6 +199,7 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void upload(List<StaffRecordsExcelTO> toList) throws SerException {
         for (int i = 1; i <= toList.size(); i++) {
             this.isExist(toList.get(i - 1), i);
@@ -227,6 +241,7 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
     @Override
     public List<StaffRecordsBO> maps(StaffRecordsDTO dto) throws SerException {
         dto.getSorts().add("serialNumber=desc");
+        dto.getConditions().add(Restrict.eq("status",Status.THAW));
         return BeanTransform.copyProperties(super.findByPage(dto), StaffRecordsBO.class);
     }
 
@@ -277,4 +292,92 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
         }
         return list;
     }
+
+    @Override
+    public List<StaffRecordsBO> listEmployee() throws SerException {
+        List<EntryBasicInfoBO> entryBasicInfoBOList = entryBasicInfoAPI.listEntryBasicInfo();
+        if (null != entryBasicInfoBOList && entryBasicInfoBOList.size() > 0) {
+            for (EntryBasicInfoBO entryBasicInfoBO : entryBasicInfoBOList) {
+                StaffRecordsBO staffRecordsBO = new StaffRecordsBO();
+                staffRecordsBO.setUsername(entryBasicInfoBO.getName());
+                staffRecordsBO.setSerialNumber(entryBasicInfoBO.getEmployeeID());
+                staffRecordsBO.setProject(entryBasicInfoBO.getProjectGroup());
+                staffRecordsBO.setPosition(entryBasicInfoBO.getPosition());
+
+                EntryRegister entryRegister = entryRegisterAPI.getByNumber(entryBasicInfoBO.getEmployeeID());
+
+                staffRecordsBO.setEducation(entryRegister.getEducation());
+                staffRecordsBO.setMajor(entryBasicInfoBO.getProfession());
+                staffRecordsBO.setSchool(entryRegister.getSchoolTag());
+                staffRecordsBO.setGraduate(entryRegister.getGraduationDate().toString());
+                staffRecordsBO.setEntryTime(entryBasicInfoBO.getEntryTime());
+                staffRecordsBO.setSeniority(getMonthSpace(entryBasicInfoBO.getEntryTime(), LocalDateTime.now().toString()));
+                staffRecordsBO.setTelephone(entryBasicInfoBO.getPhone());
+                staffRecordsBO.setBirth(entryRegister.getBirthday().toString());
+                staffRecordsBO.setAddress(entryRegister.getRegisteredAddress());
+                staffRecordsBO.setIdentityCard(entryRegister.getIdCard());
+                staffRecordsBO.setBankCard(entryBasicInfoBO.getBankCardID());
+                staffRecordsBO.setBank(entryBasicInfoBO.getBankOfDeposit());
+                staffRecordsBO.setEmail(entryBasicInfoBO.getEmail());
+//                staffRecordsBO.setStatus();
+            }
+        }
+        return null;
+    }
+
+    public int getMonthSpace(String date1, String date2) throws SerException {
+        int result = 0;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        Calendar c1 = Calendar.getInstance();
+        Calendar c2 = Calendar.getInstance();
+        try {
+            c1.setTime(sdf.parse(date1));
+            c2.setTime(sdf.parse(date2));
+            result = c2.get(Calendar.MONTH) - c1.get(Calendar.MONTH);
+
+        } catch (Exception e) {
+            throw new SerException("");
+        }
+        return result == 0 ? 1 : Math.abs(result);
+    }
+
+    @Override
+    public byte[] templateExcel() throws SerException {
+        List<StaffRecordsExcel> toList = new ArrayList<StaffRecordsExcel>();
+        StaffRecordsExcel staffRecordsExcel = new StaffRecordsExcel();
+        toList.add(staffRecordsExcel);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        return bytes;
+    }
+
+    @Override
+    public void dimissionUpload(List<StaffRecordsExcelTO> toList) throws SerException {
+        for (int i = 1; i <= toList.size(); i++) {
+            this.isExist(toList.get(i - 1), i);
+        }
+        List<StaffRecords> list = BeanTransform.copyProperties(toList, StaffRecords.class, true);
+        if(null != list && list.size() > 0){
+            for(StaffRecords entity : list){
+                entity.setStatus(Status.CONGEAL);
+            }
+        }
+        super.save(list);
+    }
+
+    @Override
+    public List<StaffRecordsBO> dimissionMaps(StaffRecordsDTO dto) throws SerException {
+        dto.getSorts().add("serialNumber=desc");
+        dto.getConditions().add(Restrict.eq("status",Status.CONGEAL));
+        return BeanTransform.copyProperties(super.findByPage(dto), StaffRecordsBO.class);
+    }
+
+//    private void isExist(StaffRecordsExcelTO to, Integer row) throws SerException {
+//        if (this.findByName(to.getUsername()) != null)
+//            throw new SerException(String.format("第%d行的姓名已存在", row));
+//        if (this.findByNumber(to.getSerialNumber()) != null)
+//            throw new SerException(String.format("第%d行的员工编号已存在", row));
+//
+//    }
 }

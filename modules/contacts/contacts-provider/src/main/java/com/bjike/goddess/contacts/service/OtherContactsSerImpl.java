@@ -170,7 +170,7 @@ public class OtherContactsSerImpl extends ServiceImpl<OtherContacts, OtherContac
         if (null == entity)
             throw new SerException("该数据不存在");
         super.remove(entity);
-        return BeanTransform.copyProperties(entity, OtherContactsBO.class, true);
+        return null;
     }
 
     @Override

@@ -259,6 +259,16 @@ public class ProjectTaxSerImpl extends ServiceImpl<ProjectTax, ProjectTaxDTO> im
         }
         List<ProjectTax> list = super.findBySql(sql , ProjectTax.class, field);
         List<ProjectTaxBO> listBO = BeanTransform.copyProperties(list,ProjectTaxBO.class);
+        if( listBO!= null && listBO.size()>0 ){
+            listBO.stream().forEach(str->{
+                if( StringUtils.isNotBlank(projectTaxDTO.getStartTime()) && StringUtils.isNotBlank(projectTaxDTO.getEndTime()) ) {
+                    str.setTaxDate(projectTaxDTO.getStartTime() + "至" + projectTaxDTO.getEndTime());
+                }else{
+                    str.setTaxDate(  "--" );
+                }
+            });
+        }
+
         return listBO;
     }
 
@@ -283,6 +293,16 @@ public class ProjectTaxSerImpl extends ServiceImpl<ProjectTax, ProjectTaxDTO> im
         }
         List<ProjectTax> list = super.findBySql(sql , ProjectTax.class, field);
         List<ProjectTaxBO> listBO = BeanTransform.copyProperties(list,ProjectTaxBO.class);
+        if( listBO!= null && listBO.size()>0 ){
+            listBO.stream().forEach(str->{
+                if( StringUtils.isNotBlank(projectTaxDTO.getStartTime()) && StringUtils.isNotBlank(projectTaxDTO.getEndTime()) ) {
+                    str.setTaxDate(projectTaxDTO.getStartTime() + "至" + projectTaxDTO.getEndTime());
+                }else{
+                    str.setTaxDate(  "--" );
+                }
+            });
+        }
+
         return listBO;
     }
 

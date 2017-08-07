@@ -16,6 +16,8 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -47,6 +50,8 @@ public class StaffRecordsAct extends BaseFileAction {
     private StaffRecordsAPI staffRecordsAPI;
     @Autowired
     private FileAPI fileAPI;
+    @Autowired
+    private EntryBasicInfoAPI entryBasicInfoAPI;
 
 
     /**
@@ -73,7 +78,7 @@ public class StaffRecordsAct extends BaseFileAction {
     }
 
     /**
-     * 上传数据
+     * 导入
      *
      * @version v1
      */
@@ -86,7 +91,7 @@ public class StaffRecordsAct extends BaseFileAction {
             List<StaffRecordsExcel> tos = ExcelUtil.excelToClazz(is, StaffRecordsExcel.class, excel);
             List<StaffRecordsExcelTO> toList = BeanTransform.copyProperties(tos, StaffRecordsExcelTO.class);
             staffRecordsAPI.upload(toList);
-            return new ActResult();
+            return new ActResult("导入成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -235,4 +240,77 @@ public class StaffRecordsAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 在职员工基本信息
+     *
+     * @return class StaffRecordsBO
+     * @version v1
+     */
+    @GetMapping("v1/employee/list")
+    public Result listEmployee() throws ActException {
+        try {
+            staffRecordsAPI.listEmployee();
+            List<EntryBasicInfoBO> entryBasicInfoBOList = entryBasicInfoAPI.listEntryBasicInfo();
+            return ActResult.initialize(entryBasicInfoBOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 导出导入的excel模板
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/templateExcel")
+    public Result templateExcel(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "excel模板下载.xlsx";
+            super.writeOutFile(response, staffRecordsAPI.templateExcel(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * 离职人员信息导入
+     *
+     * @version v1
+     */
+    @PostMapping("v1/dimission/upload")
+    public Result dimissionUpload(HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<StaffRecordsExcel> tos = ExcelUtil.excelToClazz(is, StaffRecordsExcel.class, excel);
+            List<StaffRecordsExcelTO> toList = BeanTransform.copyProperties(tos, StaffRecordsExcelTO.class);
+            staffRecordsAPI.dimissionUpload(toList);
+            return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 离职人员信息列表
+     *
+     * @param dto 员工档案数据传输对象
+     * @return class StaffRecordsVO
+     * @version v1
+     */
+    @GetMapping("v1/dimission/maps")
+    public Result dimissionMaps(StaffRecordsDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(staffRecordsAPI.dimissionMaps(dto), StaffRecordsVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

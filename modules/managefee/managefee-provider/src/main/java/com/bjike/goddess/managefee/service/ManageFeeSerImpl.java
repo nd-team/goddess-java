@@ -7,8 +7,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.managefee.bo.ManageFeeBO;
 import com.bjike.goddess.managefee.dto.ManageFeeDTO;
 import com.bjike.goddess.managefee.entity.ManageFee;
-import com.bjike.goddess.managefee.to.GuidePermissionTO;
-import com.bjike.goddess.managefee.to.ManageFeeTO;
+import com.bjike.goddess.managefee.to.*;
 import com.bjike.goddess.managefee.type.GuideAddrStatus;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -227,193 +226,441 @@ public class ManageFeeSerImpl extends ServiceImpl<ManageFee, ManageFeeDTO> imple
         super.remove(id);
     }
 
+
     @Override
-    public List<ManageFeeBO> collectArea(ManageFeeDTO manageFeeDTO) throws SerException {
+    public List<ManageFeeBO> collectAreaDetial(CollectAreaTO collectAreaTO) throws SerException {
         checkPermission();
-        String startTime = manageFeeDTO.getStartTime();
-        String endTime = manageFeeDTO.getEndTime();
+        List<ManageFeeBO> returnList = new ArrayList<>();
 
-        LocalDate start = LocalDate.now();
-        LocalDate end = LocalDate.now();
-        if (StringUtils.isNotBlank(startTime)) {
-            start = LocalDate.parse(startTime);
-        }
-        if (StringUtils.isNotBlank(endTime)) {
-            end = LocalDate.parse(endTime);
-        }
+        String startTime = collectAreaTO.getStartTime();
+        String endTime = collectAreaTO.getEndTime();
 
-        //如果没有选地区，汇总表头：（地区/日期/目标管理费/实际管理费/比例/差额）
+        //全部填，一进入汇总页面合计所有
+        //汇总表头：（地区/日期/目标管理费/实际管理费/比例/差额）
+        String[] field = new String[]{"area", "year", "month", "targetFee", "actualFee", "rate", "balance"};
+        StringBuffer sql = new StringBuffer("");
+        List<ManageFeeBO> list = new ArrayList<>();
+        if (StringUtils.isBlank(startTime) || StringUtils.isBlank(endTime)
+                || collectAreaTO.getAreas() == null || collectAreaTO.getAreas().length <= 0) {
+            list.add(new ManageFeeBO());
+            return list;
+        }
+        String condition = "'".concat(String.join("','", collectAreaTO.getAreas())).concat("'");
+        sql.append("select a.area , a.year as year , a.month as month , a.targetFee as targetFee , a.actualFee as actualFee ,")
+                .append("  (a.actualFee/a.targetFee) as rate , (a.actualFee-a.targetFee) as balance  from   ")
+                .append(" (select CONCAT(a.year,'-',if(a.month<=9,CONCAT('0',a.month),a.month))as date,a.*  from managefee_managefee as a)a ")
+                .append(" where a.area in (" + condition + ") and a.date BETWEEN '" + startTime + "' AND '" + endTime + "'")
+                .append("  order by a.area desc , a.year desc , a.month desc ");
+        list = super.findBySql(sql.toString(), ManageFeeBO.class, field);
+        if (list != null && list.size() > 0) {
+            String area = list.get(0).getArea();
+            Double targetFee = 0d;
+            Double actualFee = 0d;
+            int index = -1;
+            ManageFeeBO manageFeeBO = new ManageFeeBO();
+            for (ManageFeeBO str : list) {
+                index = index + 1;
+                if (!area.equals(str.getArea())) {
+                    String temp_area = str.getArea();
+                    Double temp_target = str.getTargetFee();
+                    Double temp_actual = str.getActualFee();
+
+                    manageFeeBO = new ManageFeeBO();
+                    manageFeeBO.setYear("");
+                    manageFeeBO.setMonth("");
+                    manageFeeBO.setArea("合计");
+                    manageFeeBO.setActualFee(actualFee);
+                    manageFeeBO.setTargetFee(targetFee);
+                    manageFeeBO.setRate(actualFee / targetFee);
+                    manageFeeBO.setBalance(actualFee - targetFee);
+                    returnList.add(manageFeeBO);
+
+                    //重置
+                    area = temp_area;
+                    targetFee = temp_target;
+                    actualFee = temp_actual;
+
+                    returnList.add(str);
+
+                } else {
+                    targetFee = targetFee + str.getTargetFee();
+                    actualFee = actualFee + str.getActualFee();
+
+                    returnList.add(str);
+                }
+                if (list.size() - 1 == index) {
+
+                    manageFeeBO = new ManageFeeBO();
+                    manageFeeBO.setYear("");
+                    manageFeeBO.setMonth("");
+                    manageFeeBO.setArea("合计");
+                    manageFeeBO.setActualFee(actualFee);
+                    manageFeeBO.setTargetFee(targetFee);
+                    manageFeeBO.setRate(actualFee / targetFee);
+                    manageFeeBO.setBalance(actualFee - targetFee);
+                    returnList.add(manageFeeBO);
+                }
+            }
+        }
+        return returnList;
+    }
+
+    @Override
+    public List<ManageFeeBO> collectProjectDetail(CollectProjectTO collectProjectTO) throws SerException {
+        checkPermission();
+        List<ManageFeeBO> returnList = new ArrayList<>();
+        String startTime = collectProjectTO.getStartTime();
+        String endTime = collectProjectTO.getEndTime();
+
+        //全部填，一进入汇总页面合计所有
+        //汇总表头：（地区/日期/目标管理费/实际管理费/比例/差额）
+        String[] field = new String[]{"project", "year", "month", "targetFee", "actualFee", "rate", "balance"};
+        StringBuffer sql = new StringBuffer("");
+        List<ManageFeeBO> list = new ArrayList<>();
+        if (StringUtils.isBlank(startTime) || StringUtils.isBlank(endTime)
+                || collectProjectTO.getProjectNames() != null || collectProjectTO.getProjectNames().length > 0) {
+            list.add(new ManageFeeBO());
+            return list;
+        }
+        String condition = "'".concat(String.join("','", collectProjectTO.getProjectNames())).concat("'");
+        sql.append("select a.project , a.year as year , a.month as month , a.targetFee as targetFee , a.actualFee as actualFee ,")
+                .append("  (a.actualFee/a.targetFee) as rate , (a.actualFee-a.targetFee) as balance  from   ")
+                .append(" (select CONCAT(a.year,'-',if(a.month<=9,CONCAT('0',a.month),a.month))as date,a.*  from managefee_managefee as a)a ")
+                .append(" where a.project in (" + condition + ") and a.date BETWEEN '" + startTime + "' AND '" + endTime + "'")
+                .append("  order by a.project desc , a.year desc , a.month desc ");
+        list = super.findBySql(sql.toString(), ManageFeeBO.class, field);
+        if (list != null && list.size() > 0) {
+            String area = list.get(0).getProject();
+            Double targetFee = 0d;
+            Double actualFee = 0d;
+            int index = -1;
+            ManageFeeBO manageFeeBO = new ManageFeeBO();
+            for (ManageFeeBO str : list) {
+                index = index + 1;
+                if (!area.equals(str.getProject())) {
+                    String temp_area = str.getProject();
+                    Double temp_target = str.getTargetFee();
+                    Double temp_actual = str.getActualFee();
+
+                    manageFeeBO = new ManageFeeBO();
+                    manageFeeBO.setYear("");
+                    manageFeeBO.setMonth("");
+                    manageFeeBO.setProject("合计");
+                    manageFeeBO.setActualFee(actualFee);
+                    manageFeeBO.setTargetFee(targetFee);
+                    manageFeeBO.setRate(actualFee / targetFee);
+                    manageFeeBO.setBalance(actualFee - targetFee);
+                    returnList.add(manageFeeBO);
+
+                    //重置
+                    area = temp_area;
+                    targetFee = temp_target;
+                    actualFee = temp_actual;
+
+                    returnList.add(str);
+                } else {
+                    targetFee = targetFee + str.getTargetFee();
+                    actualFee = actualFee + str.getActualFee();
+
+                    returnList.add(str);
+                }
+                if (list.size() - 1 == index) {
+                    manageFeeBO = new ManageFeeBO();
+                    manageFeeBO.setYear("");
+                    manageFeeBO.setMonth("");
+                    manageFeeBO.setProject("合计");
+                    manageFeeBO.setActualFee(actualFee);
+                    manageFeeBO.setTargetFee(targetFee);
+                    manageFeeBO.setRate(actualFee / targetFee);
+                    manageFeeBO.setBalance(actualFee - targetFee);
+                    returnList.add(manageFeeBO);
+                }
+            }
+        }
+        return returnList;
+    }
+
+    @Override
+    public List<ManageFeeBO> collectGroupDetail(CollectGroupTO collectGroupTO) throws SerException {
+        checkPermission();
+        List<ManageFeeBO> returnList = new ArrayList<>();
+        String startTime = collectGroupTO.getStartTime();
+        String endTime = collectGroupTO.getEndTime();
+
+        //全部填，一进入汇总页面合计所有
+        //汇总表头：（地区/日期/目标管理费/实际管理费/比例/差额）
+        String[] field = new String[]{"projectGroup", "year", "month", "targetFee", "actualFee", "rate", "balance"};
+        StringBuffer sql = new StringBuffer("");
+        List<ManageFeeBO> list = new ArrayList<>();
+        if (StringUtils.isBlank(startTime) || StringUtils.isBlank(endTime)
+                || collectGroupTO.getProjectGroups() == null || collectGroupTO.getProjectGroups().length <= 0) {
+            list.add(new ManageFeeBO());
+            return list;
+        }
+        String condition = "'".concat(String.join("','", collectGroupTO.getProjectGroups())).concat("'");
+        sql.append("select a.projectGroup , a.year as year , a.month as month , a.targetFee as targetFee , a.actualFee as actualFee ,")
+                .append("  (a.actualFee/a.targetFee) as rate , (a.actualFee-a.targetFee) as balance  from   ")
+                .append(" (select CONCAT(a.year,'-',if(a.month<=9,CONCAT('0',a.month),a.month))as date,a.*  from managefee_managefee as a)a ")
+                .append(" where a.projectGroup in (" + condition + ") and a.date BETWEEN '" + startTime + "' AND '" + endTime + "'")
+                .append("  order by a.projectGroup desc , a.year desc , a.month desc ");
+        list = super.findBySql(sql.toString(), ManageFeeBO.class, field);
+        if (list != null && list.size() > 0) {
+            String area = list.get(0).getProjectGroup();
+            Double targetFee = 0d;
+            Double actualFee = 0d;
+            int index = -1;
+            ManageFeeBO manageFeeBO = new ManageFeeBO();
+            for (ManageFeeBO str : list) {
+                index = index + 1;
+                if (!area.equals(str.getProjectGroup())) {
+                    String temp_area = str.getProjectGroup();
+                    Double temp_target = str.getTargetFee();
+                    Double temp_actual = str.getActualFee();
+
+                    manageFeeBO = new ManageFeeBO();
+                    manageFeeBO.setYear("");
+                    manageFeeBO.setMonth("");
+                    manageFeeBO.setProjectGroup("合计");
+                    manageFeeBO.setActualFee(actualFee);
+                    manageFeeBO.setTargetFee(targetFee);
+                    manageFeeBO.setRate(actualFee / targetFee);
+                    manageFeeBO.setBalance(actualFee - targetFee);
+                    returnList.add(manageFeeBO);
+
+                    //重置
+                    area = temp_area;
+                    targetFee = temp_target;
+                    actualFee = temp_actual;
+
+                    returnList.add(str);
+                } else {
+                    targetFee = targetFee + str.getTargetFee();
+                    actualFee = actualFee + str.getActualFee();
+                    returnList.add(str);
+                }
+                if (list.size() - 1 == index) {
+                    manageFeeBO = new ManageFeeBO();
+                    manageFeeBO.setYear("");
+                    manageFeeBO.setMonth("");
+                    manageFeeBO.setProjectGroup("合计");
+                    manageFeeBO.setActualFee(actualFee);
+                    manageFeeBO.setTargetFee(targetFee);
+                    manageFeeBO.setRate(actualFee / targetFee);
+                    manageFeeBO.setBalance(actualFee - targetFee);
+                    returnList.add(manageFeeBO);
+                }
+            }
+        }
+        return returnList;
+    }
+
+    @Override
+    public List<ManageFeeBO> collectTypeDetail(CollectCategoryTO collectCategoryTO) throws SerException {
+        checkPermission();
+        List<ManageFeeBO> returnList = new ArrayList<>();
+        String startTime = collectCategoryTO.getStartTime();
+        String endTime = collectCategoryTO.getEndTime();
+
+        //全部填，一进入汇总页面合计所有
+        //汇总表头：（地区/日期/目标管理费/实际管理费/比例/差额）
+        String[] field = new String[]{"type", "year", "month", "targetFee", "actualFee", "rate", "balance"};
+        StringBuffer sql = new StringBuffer("");
+        List<ManageFeeBO> list = new ArrayList<>();
+        if (StringUtils.isBlank(startTime) || StringUtils.isBlank(endTime)
+                || collectCategoryTO.getTypes() == null || collectCategoryTO.getTypes().length <= 0) {
+            list.add(new ManageFeeBO());
+            return list;
+        }
+        String condition = "'".concat(String.join("','", collectCategoryTO.getTypes())).concat("'");
+        sql.append("select a.type , a.year as year , a.month as month , a.targetFee as targetFee , a.actualFee as actualFee ,")
+                .append("  (a.actualFee/a.targetFee) as rate , (a.actualFee-a.targetFee) as balance  from  ")
+                .append(" (select CONCAT(a.year,'-',if(a.month<=9,CONCAT('0',a.month),a.month))as date,a.*  from managefee_managefee as a)a ")
+                .append(" where a.type in (" + condition + ") and a.date BETWEEN '" + startTime + "' AND '" + endTime + "'")
+                .append("  order by a.type desc , a.year desc , a.month desc ");
+        list = super.findBySql(sql.toString(), ManageFeeBO.class, field);
+        if (list != null && list.size() > 0) {
+            String area = list.get(0).getType();
+            Double targetFee = 0d;
+            Double actualFee = 0d;
+            int index = -1;
+            ManageFeeBO manageFeeBO = new ManageFeeBO();
+            for (ManageFeeBO str : list) {
+                index = index + 1;
+                if (!area.equals(str.getType())) {
+                    String temp_area = str.getType();
+                    Double temp_target = str.getTargetFee();
+                    Double temp_actual = str.getActualFee();
+
+                    manageFeeBO = new ManageFeeBO();
+                    manageFeeBO.setYear("");
+                    manageFeeBO.setMonth("");
+                    manageFeeBO.setType("合计");
+                    manageFeeBO.setActualFee(actualFee);
+                    manageFeeBO.setTargetFee(targetFee);
+                    manageFeeBO.setRate(actualFee / targetFee);
+                    manageFeeBO.setBalance(actualFee - targetFee);
+                    returnList.add(manageFeeBO);
+
+                    //重置
+                    area = temp_area;
+                    targetFee = temp_target;
+                    actualFee = temp_actual;
+
+                    returnList.add(str);
+
+                } else {
+                    targetFee = targetFee + str.getTargetFee();
+                    actualFee = actualFee + str.getActualFee();
+                    returnList.add(str);
+                }
+                if (list.size() - 1 == index) {
+
+                    manageFeeBO = new ManageFeeBO();
+                    manageFeeBO.setYear("");
+                    manageFeeBO.setMonth("");
+                    manageFeeBO.setType("合计");
+                    manageFeeBO.setActualFee(actualFee);
+                    manageFeeBO.setTargetFee(targetFee);
+                    manageFeeBO.setRate(actualFee / targetFee);
+                    manageFeeBO.setBalance(actualFee - targetFee);
+                    returnList.add(manageFeeBO);
+                }
+            }
+        }
+        return returnList;
+    }
+
+    @Override
+    public List<ManageFeeBO> collectArea(CollectAreaTO collectAreaTO) throws SerException {
+        checkPermission();
+        String startTime = collectAreaTO.getStartTime();
+        String endTime = collectAreaTO.getEndTime();
+
+        //全部填，一进入汇总页面合计所有
+        //汇总表头：（地区/日期/目标管理费/实际管理费/比例/差额）
         String[] field = new String[]{"area", "targetFee", "actualFee", "rate", "balance"};
-        String sql = "";
+        StringBuffer sql = new StringBuffer("");
         List<ManageFeeBO> list = new ArrayList<>();
-        int yearBegin = start.getYear();
-        int yearEnd = end.getYear();
-        if (StringUtils.isBlank(manageFeeDTO.getArea())) {
-            sql = "select area , sum(targetFee) as targetFee , sum(actualFee) as actualFee ," +
-                    "  (sum(actualFee)/sum(targetFee)) as rate , (sum(actualFee)-sum(targetFee)) as balance from managefee_managefee where 1= 1";
-            if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
-                sql = sql + " and year between '" + yearBegin + "' and '" + yearEnd + "' and month between '" + start.getMonthValue() + "' and '" + end.getMonthValue() + "' ";
-            }
-            sql = sql + " group by area  order by area desc ";
-            list = super.findBySql(sql, ManageFeeBO.class, field);
+        if (StringUtils.isBlank(startTime) && StringUtils.isBlank(endTime)
+                && collectAreaTO.getAreas() == null && collectAreaTO.getAreas().length <= 0) {
+            list.add(new ManageFeeBO());
+            return list;
+        }
+        String condition = "'".concat(String.join("','", collectAreaTO.getAreas())).concat("'");
+        sql.append("select a.area , sum(a.targetFee) as targetFee , sum(a.actualFee) as actualFee ,")
+                .append("  (sum(a.actualFee)/sum(a.targetFee)) as rate , (sum(a.actualFee)-sum(a.targetFee)) as balance from   ")
+                .append(" (select CONCAT(a.year,'-',if(a.month<=9,CONCAT('0',a.month),a.month))as date,a.*  from managefee_managefee as a)a ")
+                .append(" where a.area in (" + condition + ") and a.date BETWEEN '" + startTime + "' AND '" + endTime + "'")
+                .append(" GROUP BY a.area order by a.area desc");
+        list = super.findBySql(sql.toString(), ManageFeeBO.class, field);
+        if (list != null && list.size() > 0) {
             list.stream().forEach(str -> {
-                str.setYear(yearBegin + "-" + yearEnd);
+                str.setYear( startTime + " 至 " + endTime );
             });
-        } else {
-            //如果有选地区，汇总表头：(地区/年份/月份/项目组/项目名称/类别/目标管理费/实际管理费/比例/差额)
-            field = new String[]{"area", "year", "month", "projectGroup", "project", "type", "targetFee", "actualFee", "rate", "balance"};
-            sql = "select area , year , month ,projectGroup , project,type, targetFee , actualFee ," +
-                    "  (actualFee/targetFee) as rate , (actualFee-targetFee) as balance from managefee_managefee where 1=1 ";
-            if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
-                sql = sql + " and year between '" + start.getYear() + "' and '" + end.getYear() + "' and month between '" + start.getMonthValue() + "' and '" + end.getMonthValue() + "' ";
-            }
-
-            sql = sql + " and area = '" + manageFeeDTO.getArea() + "' order by area desc ";
-            list = super.findBySql(sql, ManageFeeBO.class, field);
-
         }
 
         return list;
     }
 
     @Override
-    public List<ManageFeeBO> collectGroup(ManageFeeDTO manageFeeDTO) throws SerException {
+    public List<ManageFeeBO> collectGroup(CollectGroupTO collectGroupTO) throws SerException {
         checkPermission();
-        String startTime = manageFeeDTO.getStartTime();
-        String endTime = manageFeeDTO.getEndTime();
-        LocalDate start = LocalDate.now();
-        LocalDate end = LocalDate.now();
-        if (StringUtils.isNotBlank(startTime)) {
-            start = LocalDate.parse(startTime);
-        }
-        if (StringUtils.isNotBlank(endTime)) {
-            end = LocalDate.parse(endTime);
-        }
-        //如果没有选地区，汇总表头：（地区/日期/目标管理费/实际管理费/比例/差额）
+
+        String startTime = collectGroupTO.getStartTime();
+        String endTime = collectGroupTO.getEndTime();
+
+        //全部填，一进入汇总页面合计所有
+        //汇总表头：（地区/日期/目标管理费/实际管理费/比例/差额）
         String[] field = new String[]{"projectGroup", "targetFee", "actualFee", "rate", "balance"};
-        String sql = "";
+        StringBuffer sql = new StringBuffer("");
         List<ManageFeeBO> list = new ArrayList<>();
-        int yearBegin = start.getYear();
-        int yearEnd = end.getYear();
-        if (StringUtils.isBlank(manageFeeDTO.getProjectGroup())) {
-            sql = "select projectGroup ,  sum(targetFee) as targetFee , sum(actualFee) as actualFee ," +
-                    "  (sum(actualFee)/sum(targetFee)) as rate , (sum(actualFee)-sum(targetFee)) as balance from managefee_managefee where 1= 1";
-            if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
-                sql = sql + " and year between '" + yearBegin + "' and '" + yearEnd + "' and month between '" + start.getMonthValue() + "' and '" + end.getMonthValue() + "' ";
-            }
-            sql = sql + " group by projectGroup  order by projectGroup desc ";
-            list = super.findBySql(sql, ManageFeeBO.class, field);
-            list.stream().forEach(str -> {
-                str.setYear(yearBegin + "-" + yearEnd);
-            });
-        } else {
-            //如果有选地区，汇总表头：(地区/年份/月份/项目组/项目名称/类别/目标管理费/实际管理费/比例/差额)
-            field = new String[]{"area", "year", "month", "projectGroup", "project", "type", "targetFee", "actualFee", "rate", "balance"};
-            sql = "select area , year , month ,projectGroup , project,type, targetFee , actualFee ," +
-                    "  (actualFee/targetFee) as rate , (actualFee-targetFee) as balance from managefee_managefee where 1=1 ";
-            if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
-                sql = sql + " and year between '" + start.getYear() + "' and '" + end.getYear() + "' and month between '" + start.getMonthValue() + "' and '" + end.getMonthValue() + "' ";
-            }
-            sql = sql + " and projectGroup = '" + manageFeeDTO.getProjectGroup() + "' order by projectGroup desc ";
-            list = super.findBySql(sql, ManageFeeBO.class, field);
+        if (StringUtils.isBlank(startTime) || StringUtils.isBlank(endTime)
+                || collectGroupTO.getProjectGroups() == null || collectGroupTO.getProjectGroups().length <= 0) {
+            list.add(new ManageFeeBO());
+            return list;
         }
-
+        String condition = "'".concat(String.join("','", collectGroupTO.getProjectGroups())).concat("'");
+        sql.append("select a.projectGroup , sum(a.targetFee) as targetFee , sum(a.actualFee) as actualFee ,")
+                .append("  (sum(a.actualFee)/sum(a.targetFee)) as rate , (sum(a.actualFee)-sum(a.targetFee)) as balance from  ")
+                .append(" (select CONCAT(a.year,'-',if(a.month<=9,CONCAT('0',a.month),a.month))as date,a.*  from managefee_managefee as a)a ")
+                .append(" where a.projectGroup in (" + condition + ") and a.date BETWEEN '" + startTime + "' AND '" + endTime + "'")
+                .append(" GROUP BY a.projectGroup order by a.projectGroup desc");
+        list = super.findBySql(sql.toString(), ManageFeeBO.class, field);
+        if (list != null && list.size() > 0) {
+            list.stream().forEach(str -> {
+                str.setYear(startTime + " 至 " + endTime);
+            });
+        }
 
         return list;
 
 
     }
 
+
     @Override
-    public List<ManageFeeBO> collectProject(ManageFeeDTO manageFeeDTO) throws SerException {
+    public List<ManageFeeBO> collectProject(CollectProjectTO collectProjectTO) throws SerException {
         checkPermission();
-        String startTime = manageFeeDTO.getStartTime();
-        String endTime = manageFeeDTO.getEndTime();
-        LocalDate start = LocalDate.now();
-        LocalDate end = LocalDate.now();
-        if (StringUtils.isNotBlank(startTime)) {
-            start = LocalDate.parse(startTime);
-        }
-        if (StringUtils.isNotBlank(endTime)) {
-            end = LocalDate.parse(endTime);
-        }
-        //如果没有选地区，汇总表头：（地区/日期/目标管理费/实际管理费/比例/差额）
+        String startTime = collectProjectTO.getStartTime();
+        String endTime = collectProjectTO.getEndTime();
+
+        //全部填，一进入汇总页面合计所有
+        //汇总表头：（地区/日期/目标管理费/实际管理费/比例/差额）
         String[] field = new String[]{"project", "targetFee", "actualFee", "rate", "balance"};
-        String sql = "";
+        StringBuffer sql = new StringBuffer("");
         List<ManageFeeBO> list = new ArrayList<>();
-        int yearBegin = start.getYear();
-        int yearEnd = end.getYear();
-        if (StringUtils.isBlank(manageFeeDTO.getProject())) {
-            sql = "select project ,  sum(targetFee) as targetFee , sum(actualFee) as actualFee ," +
-                    "  (sum(actualFee)/sum(targetFee)) as rate , (sum(actualFee)-sum(targetFee)) as balance from managefee_managefee where 1= 1";
-            if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
-                sql = sql + " and year between '" + yearBegin + "' and '" + yearEnd + "' and month between '" + start.getMonthValue() + "' and '" + end.getMonthValue() + "' ";
-            }
-            sql = sql + " group by project  order by project desc ";
-            list = super.findBySql(sql, ManageFeeBO.class, field);
-            list.stream().forEach(str -> {
-                str.setYear(yearBegin + "-" + yearEnd);
-            });
-        } else {
-            //如果有选地区，汇总表头：(地区/年份/月份/项目组/项目名称/类别/目标管理费/实际管理费/比例/差额)
-            field = new String[]{"area", "year", "month", "projectGroup", "project", "type", "targetFee", "actualFee", "rate", "balance"};
-            sql = "select area , year , month ,projectGroup , project,type, targetFee , actualFee ," +
-                    "  (actualFee/targetFee) as rate , (actualFee-targetFee) as balance from managefee_managefee where 1=1 ";
-            if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
-                sql = sql + " and year between '" + start.getYear() + "' and '" + end.getYear() + "' and month between '" + start.getMonthValue() + "' and '" + end.getMonthValue() + "' ";
-            }
-            sql = sql + " and project = '" + manageFeeDTO.getProject() + "' order by project desc ";
-            list = super.findBySql(sql, ManageFeeBO.class, field);
+        if (StringUtils.isBlank(startTime) || StringUtils.isBlank(endTime)
+                || collectProjectTO.getProjectNames() == null || collectProjectTO.getProjectNames().length <= 0) {
+            list.add(new ManageFeeBO());
+            return list;
         }
-
-
+        String condition = "'".concat(String.join("','", collectProjectTO.getProjectNames())).concat("'");
+        sql.append("select a.project , sum(a.targetFee) as targetFee , sum(a.actualFee) as actualFee ,")
+                .append("  (sum(a.actualFee)/sum(a.targetFee)) as rate , (sum(a.actualFee)-sum(a.targetFee)) as balance from  ")
+                .append(" (select CONCAT(a.year,'-',if(a.month<=9,CONCAT('0',a.month),a.month))as date,a.*  from managefee_managefee as a)a ")
+                .append(" where a.project in (" + condition + ") and a.date BETWEEN '" + startTime + "' AND '" + endTime + "'")
+                .append(" GROUP BY a.project order by a.project desc");
+        list = super.findBySql(sql.toString(), ManageFeeBO.class, field);
+        if (list != null && list.size() > 0) {
+            list.stream().forEach(str -> {
+                str.setYear(startTime + " 至 " + endTime);
+            });
+        }
         return list;
+
 
     }
 
 
     @Override
-    public List<ManageFeeBO> collectType(ManageFeeDTO manageFeeDTO) throws SerException {
+    public List<ManageFeeBO> collectType(CollectCategoryTO collectCategoryTO) throws SerException {
         checkPermission();
-        String startTime = manageFeeDTO.getStartTime();
-        String endTime = manageFeeDTO.getEndTime();
-        LocalDate start = LocalDate.now();
-        LocalDate end = LocalDate.now();
-        if (StringUtils.isNotBlank(startTime)) {
-            start = LocalDate.parse(startTime);
-        }
-        if (StringUtils.isNotBlank(endTime)) {
-            end = LocalDate.parse(endTime);
-        }
-        //如果没有选地区，汇总表头：（地区/日期/目标管理费/实际管理费/比例/差额）
-        String[] field = new String[]{"type", "targetFee", "actualFee", "rate", "balance"};
-        String sql = "";
-        List<ManageFeeBO> list = new ArrayList<>();
-        int yearBegin = start.getYear();
-        int yearEnd = end.getYear();
-        if (StringUtils.isBlank(manageFeeDTO.getType())) {
-            sql = "select type ,  sum(targetFee) as targetFee , sum(actualFee) as actualFee ," +
-                    "  (sum(actualFee)/sum(targetFee)) as rate , (sum(actualFee)-sum(targetFee)) as balance from managefee_managefee where 1= 1";
-            if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
-                sql = sql + " and year between '" + yearBegin + "' and '" + yearEnd + "' and month between '" + start.getMonthValue() + "' and '" + end.getMonthValue() + "' ";
-            }
-            sql = sql + " group by type  order by type desc ";
-            list = super.findBySql(sql, ManageFeeBO.class, field);
-            list.stream().forEach(str -> {
-                str.setYear(yearBegin + "-" + yearEnd);
-            });
-        } else {
-            //如果有选地区，汇总表头：(地区/年份/月份/项目组/项目名称/类别/目标管理费/实际管理费/比例/差额)
-            field = new String[]{"area", "year", "month", "projectGroup", "project", "type", "targetFee", "actualFee", "rate", "balance"};
-            sql = "select area , year , month ,projectGroup , project,type, targetFee , actualFee ," +
-                    "  (actualFee/targetFee) as rate , (actualFee-targetFee) as balance from managefee_managefee where 1=1 ";
-            if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
-                sql = sql + " and year between '" + start.getYear() + "' and '" + end.getYear() + "' and month between '" + start.getMonthValue() + "' and '" + end.getMonthValue() + "' ";
-            }
-            sql = sql + " and type = '" + manageFeeDTO.getType() + "' order by type desc ";
-            list = super.findBySql(sql, ManageFeeBO.class, field);
-        }
 
+        String startTime = collectCategoryTO.getStartTime();
+        String endTime = collectCategoryTO.getEndTime();
+
+        //全部填，一进入汇总页面合计所有
+        //汇总表头：（地区/日期/目标管理费/实际管理费/比例/差额）
+        String[] field = new String[]{"type", "targetFee", "actualFee", "rate", "balance"};
+        StringBuffer sql = new StringBuffer("");
+        List<ManageFeeBO> list = new ArrayList<>();
+        if (StringUtils.isBlank(startTime) || StringUtils.isBlank(endTime)
+                || collectCategoryTO.getTypes() == null || collectCategoryTO.getTypes().length <= 0) {
+            list.add(new ManageFeeBO());
+            return list;
+        }
+        String condition = "'".concat(String.join("','", collectCategoryTO.getTypes())).concat("'");
+        sql.append("select a.type , sum(a.targetFee) as targetFee , sum(a.actualFee) as actualFee ,")
+                .append("  (sum(a.actualFee)/sum(a.targetFee)) as rate , (sum(a.actualFee)-sum(a.targetFee)) as balance from   ")
+                .append(" (select CONCAT(a.year,'-',if(a.month<=9,CONCAT('0',a.month),a.month))as date,a.*  from managefee_managefee as a)a ")
+                .append(" where a.type in (" + condition + ") and a.date BETWEEN '" + startTime + "' AND '" + endTime + "'")
+                .append(" GROUP BY a.type order by a.type desc");
+        list = super.findBySql(sql.toString(), ManageFeeBO.class, field);
+        if (list != null && list.size() > 0) {
+            list.stream().forEach(str -> {
+                str.setYear(startTime + " 至 " + endTime);
+            });
+        }
 
         return list;
 

@@ -77,4 +77,24 @@ public class StaffRecordsApiImpl implements StaffRecordsAPI {
     public List<PerBO> getPerBO(String name) throws SerException {
         return staffRecordsSer.getPerBO(name);
     }
+
+    @Override
+    public List<StaffRecordsBO> listEmployee() throws SerException {
+        return staffRecordsSer.listEmployee();
+    }
+
+    @Override
+    public byte[] templateExcel() throws SerException {
+        return staffRecordsSer.templateExcel();
+    }
+
+    @Override
+    public void dimissionUpload(List<StaffRecordsExcelTO> toList) throws SerException {
+        staffRecordsSer.dimissionUpload(toList);
+    }
+
+    @Override
+    public List<StaffRecordsBO> dimissionMaps(StaffRecordsDTO dto) throws SerException {
+        return staffRecordsSer.dimissionMaps(dto);
+    }
 }
