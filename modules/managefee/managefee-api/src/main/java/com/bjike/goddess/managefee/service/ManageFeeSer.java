@@ -5,8 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.managefee.bo.ManageFeeBO;
 import com.bjike.goddess.managefee.entity.ManageFee;
 import com.bjike.goddess.managefee.dto.ManageFeeDTO;
-import com.bjike.goddess.managefee.to.GuidePermissionTO;
-import com.bjike.goddess.managefee.to.ManageFeeTO;
+import com.bjike.goddess.managefee.to.*;
 
 import java.util.List;
 
@@ -91,41 +90,85 @@ public interface ManageFeeSer extends Ser<ManageFee, ManageFeeDTO> {
 
 
     /**
+     * 根据地区汇总详细
+     *
+     * @param  collectAreaTO
+     */
+    default List<ManageFeeBO> collectAreaDetial(CollectAreaTO collectAreaTO) throws SerException {
+
+        return null;
+    }
+
+    ;
+
+    /**
      * 根据地区汇总
      *
-     * @param manageFeeDTO manageFeeDTO
+     * @param collectAreaTO
      */
-    default List<ManageFeeBO> collectArea(ManageFeeDTO manageFeeDTO) throws SerException {
+    default List<ManageFeeBO> collectArea(CollectAreaTO collectAreaTO) throws SerException {
 
         return null;
     }
 
-    ;/**
+    ;
+    /**
      * 根据项目组汇总
      *
-     * @param manageFeeDTO manageFeeDTO
+     * @param collectGroupTO
      */
-    default List<ManageFeeBO> collectGroup(ManageFeeDTO manageFeeDTO) throws SerException {
+    default List<ManageFeeBO> collectGroup(CollectGroupTO collectGroupTO) throws SerException {
 
         return null;
     }
 
     ;/**
+     * 根据项目组汇总详细
+     *
+     * @param collectGroupTO
+     */
+    default List<ManageFeeBO> collectGroupDetail(CollectGroupTO collectGroupTO) throws SerException {
+
+        return null;
+    }
+
+    ;
+    /**
      * 根据项目汇总
      *
-     * @param manageFeeDTO manageFeeDTO
+     * @param collectProjectTO
      */
-    default List<ManageFeeBO> collectProject(ManageFeeDTO manageFeeDTO) throws SerException {
+    default List<ManageFeeBO> collectProject(CollectProjectTO collectProjectTO) throws SerException {
+
+        return null;
+    }
+    /**
+     * 根据项目汇总详细
+     *
+     * @param collectProjectTO
+     */
+    default List<ManageFeeBO> collectProjectDetail(CollectProjectTO collectProjectTO) throws SerException {
+
+        return null;
+    }
+
+    ;
+    /**
+     * 根据类别汇总
+     *
+     * @param collectCategoryTO
+     */
+    default List<ManageFeeBO> collectType(CollectCategoryTO collectCategoryTO) throws SerException {
 
         return null;
     }
 
     ;/**
-     * 根据类别汇总
+     * 根据类别汇总详细
      *
-     * @param manageFeeDTO manageFeeDTO
+     * @param collectCategoryTO
      */
-    default List<ManageFeeBO> collectType(ManageFeeDTO manageFeeDTO) throws SerException {
+    default List<ManageFeeBO> collectTypeDetail(CollectCategoryTO collectCategoryTO) throws SerException {
 
         return null;
     }

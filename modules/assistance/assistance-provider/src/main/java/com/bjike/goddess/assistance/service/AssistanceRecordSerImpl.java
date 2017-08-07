@@ -158,6 +158,15 @@ public class AssistanceRecordSerImpl extends ServiceImpl<AssistanceRecord, Assis
     }
 
     @Override
+    public AssistanceRecordBO getOneById(String id) throws SerException {
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空");
+        }
+        AssistanceRecordBO rightSetBO = BeanTransform.copyProperties(super.findById( id ),AssistanceRecordBO.class);
+        return null;
+    }
+
+    @Override
     public Long countAssistanceRecord(AssistanceRecordDTO assistanceRecordDTO) throws SerException {
 
         assistanceRecordDTO.getSorts().add("createTime=desc");

@@ -802,7 +802,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
 
                 MessageTO messageTO = new MessageTO();
                 messageTO.setContent(content);
-                messageTO.setTitle("定时发送汇总");
+                messageTO.setTitle("商业能力互动定时发送汇总");
                 messageTO.setMsgType(MsgType.SYS);
                 messageTO.setSendType(SendType.EMAIL);
                 messageTO.setRangeType(RangeType.SPECIFIED);

@@ -9,8 +9,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.managefee.api.ManageFeeAPI;
 import com.bjike.goddess.managefee.bo.ManageFeeBO;
 import com.bjike.goddess.managefee.dto.ManageFeeDTO;
-import com.bjike.goddess.managefee.to.GuidePermissionTO;
-import com.bjike.goddess.managefee.to.ManageFeeTO;
+import com.bjike.goddess.managefee.to.*;
 import com.bjike.goddess.managefee.vo.ManageFeeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -144,7 +143,7 @@ public class ManageFeeAction {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result editManageFee(@Validated(ManageFeeTO.TestAdd.class) ManageFeeTO manageFeeTO) throws ActException {
+    public Result editManageFee(@Validated(ManageFeeTO.TestAdd.class) ManageFeeTO manageFeeTO , BindingResult bindingResult ) throws ActException {
         try {
             ManageFeeBO manageFeeBO1 = manageFeeAPI.editManageFee(manageFeeTO);
             return ActResult.initialize(BeanTransform.copyProperties(manageFeeBO1, ManageFeeVO.class));
@@ -172,18 +171,18 @@ public class ManageFeeAction {
     }
 
     /**
-     * 根据地区汇总
+     * 根据地区汇总合计
      *
-     * @param manageFeeDTO 管理费信息dto
+     * @param collectAreaTO 地区汇总to
      * @return class ManageFeeVO
      * @des 根据地区汇总
      * @version v1
      */
     @GetMapping("v1/ctArea")
-    public Result collectCom(ManageFeeDTO manageFeeDTO) throws ActException {
+    public Result collectCom(@Validated(CollectAreaTO.TestAdd.class) CollectAreaTO collectAreaTO , BindingResult bindingResult) throws ActException {
         try {
             List<ManageFeeVO> manageFeeVOList = BeanTransform.copyProperties(
-                    manageFeeAPI.collectArea(manageFeeDTO), ManageFeeVO.class);
+                    manageFeeAPI.collectArea(collectAreaTO), ManageFeeVO.class);
             return ActResult.initialize(manageFeeVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -191,18 +190,18 @@ public class ManageFeeAction {
     }
 
     /**
-     * 根据项目组汇总
+     * 根据项目组汇总合计
      *
-     * @param manageFeeDTO 管理费信息dto
+     * @param collectGroupTO 管理费信息to
      * @return class ManageFeeVO
      * @des 根据项目组汇总
      * @version v1
      */
     @GetMapping("v1/ctGroup")
-    public Result ctGroup(ManageFeeDTO manageFeeDTO) throws ActException {
+    public Result ctGroup(@Validated(CollectGroupTO.TestAdd.class) CollectGroupTO collectGroupTO , BindingResult bindingResult) throws ActException {
         try {
             List<ManageFeeVO> manageFeeVOList = BeanTransform.copyProperties(
-                    manageFeeAPI.collectGroup(manageFeeDTO), ManageFeeVO.class);
+                    manageFeeAPI.collectGroup(collectGroupTO), ManageFeeVO.class);
             return ActResult.initialize(manageFeeVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -210,18 +209,18 @@ public class ManageFeeAction {
     }
 
     /**
-     * 根据项目汇总
+     * 根据项目汇总合计
      *
-     * @param manageFeeDTO 管理费信息dto
+     * @param collectProjectTO 管理费信息to
      * @return class ManageFeeVO
      * @des 根据项目汇总
      * @version v1
      */
     @GetMapping("v1/ctProject")
-    public Result collectPro(ManageFeeDTO manageFeeDTO) throws ActException {
+    public Result collectPro(@Validated(CollectProjectTO.TestAdd.class) CollectProjectTO collectProjectTO , BindingResult bindingResult) throws ActException {
         try {
             List<ManageFeeVO> manageFeeVOList = BeanTransform.copyProperties(
-                    manageFeeAPI.collectProject(manageFeeDTO), ManageFeeVO.class);
+                    manageFeeAPI.collectProject(collectProjectTO), ManageFeeVO.class);
             return ActResult.initialize(manageFeeVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -229,23 +228,101 @@ public class ManageFeeAction {
     }
 
     /**
-     * 根据类别汇总
+     * 根据类别汇总合计
      *
-     * @param manageFeeDTO 管理费信息dto
+     * @param collectCategoryTO 管理费信息to
      * @return class ManageFeeVO
      * @des 根据类别汇总
      * @version v1
      */
     @GetMapping("v1/ctType")
-    public Result ctType(ManageFeeDTO manageFeeDTO) throws ActException {
+    public Result ctType(@Validated(CollectCategoryTO.TestAdd.class) CollectCategoryTO collectCategoryTO , BindingResult bindingResult) throws ActException {
         try {
             List<ManageFeeVO> manageFeeVOList = BeanTransform.copyProperties(
-                    manageFeeAPI.collectType(manageFeeDTO), ManageFeeVO.class);
+                    manageFeeAPI.collectType(collectCategoryTO), ManageFeeVO.class);
             return ActResult.initialize(manageFeeVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
+
+    /**
+     * 根据地区汇总详情
+     *
+     * @param collectAreaTO 地区汇总to
+     * @return class ManageFeeVO
+     * @des 根据地区汇总
+     * @version v1
+     */
+    @GetMapping("v1/collectArea/detail")
+    public Result collectAreaDetial(@Validated(CollectAreaTO.TestAdd.class) CollectAreaTO collectAreaTO , BindingResult bindingResult) throws ActException {
+        try {
+            List<ManageFeeVO> manageFeeVOList = BeanTransform.copyProperties(
+                    manageFeeAPI.collectAreaDetial(collectAreaTO), ManageFeeVO.class);
+            return ActResult.initialize(manageFeeVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据项目组汇总详情
+     *
+     * @param collectGroupTO 管理费信息to
+     * @return class ManageFeeVO
+     * @des 根据项目组汇总
+     * @version v1
+     */
+    @GetMapping("v1/collectGroup/detail")
+    public Result ctGroupDetial(@Validated(CollectGroupTO.TestAdd.class) CollectGroupTO collectGroupTO , BindingResult bindingResult) throws ActException {
+        try {
+            List<ManageFeeVO> manageFeeVOList = BeanTransform.copyProperties(
+                    manageFeeAPI.collectGroupDetail(collectGroupTO), ManageFeeVO.class);
+            return ActResult.initialize(manageFeeVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据项目汇总详情
+     *
+     * @param collectProjectTO 管理费信息to
+     * @return class ManageFeeVO
+     * @des 根据项目汇总
+     * @version v1
+     */
+    @GetMapping("v1/collectProject/detail")
+    public Result collectProDetial(@Validated(CollectProjectTO.TestAdd.class) CollectProjectTO collectProjectTO , BindingResult bindingResult) throws ActException {
+        try {
+            List<ManageFeeVO> manageFeeVOList = BeanTransform.copyProperties(
+                    manageFeeAPI.collectProjectDetail(collectProjectTO), ManageFeeVO.class);
+            return ActResult.initialize(manageFeeVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据类别汇总详情
+     *
+     * @param collectCategoryTO 管理费信息to
+     * @return class ManageFeeVO
+     * @des 根据类别汇总
+     * @version v1
+     */
+    @GetMapping("v1/collectType/detail")
+    public Result ctTypeDetial(@Validated(CollectCategoryTO.TestAdd.class) CollectCategoryTO collectCategoryTO , BindingResult bindingResult) throws ActException {
+        try {
+            List<ManageFeeVO> manageFeeVOList = BeanTransform.copyProperties(
+                    manageFeeAPI.collectTypeDetail(collectCategoryTO), ManageFeeVO.class);
+            return ActResult.initialize(manageFeeVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 获取所有年份

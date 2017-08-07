@@ -26,6 +26,12 @@ public class AssistanceEmpApiImpl implements AssistanceEmpAPI {
     @Autowired
     private AssistanceEmpSer assistanceEmpSer;
 
+
+    @Override
+    public AssistanceEmpBO getOneById(String id) throws SerException {
+        return assistanceEmpSer.getOneById(id);
+    }
+
     @Override
     public Long countAssistanceEmp(AssistanceEmpDTO assistanceEmpDTO) throws SerException {
         return assistanceEmpSer.count( assistanceEmpDTO);

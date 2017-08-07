@@ -62,7 +62,7 @@ public class AssistanceStandardAction {
     }
 
     /**
-     *  补助标准列表总条数
+     *  总条数
      *
      * @param assistanceStandardDTO  补助标准信息dto
      * @des 获取所有补助标准信息总条数
@@ -80,7 +80,7 @@ public class AssistanceStandardAction {
 
 
     /**
-     *  一个补助标准
+     *  一个
      *
      * @param id  补助标准id
      * @des 一个补助标准
@@ -98,7 +98,7 @@ public class AssistanceStandardAction {
     }
 
     /**
-     * 补助标准列表
+     * 列表
      *
      * @param assistanceStandardDTO 补助标准信息dto
      * @des 获取所有补助标准信息
@@ -117,7 +117,7 @@ public class AssistanceStandardAction {
     }
 
     /**
-     * 添加补助标准
+     * 添加
      *
      * @param assistanceStandardTO 补助标准基本信息数据to
      * @des 添加补助标准
@@ -137,7 +137,7 @@ public class AssistanceStandardAction {
 
 
     /**
-     * 编辑补助标准
+     * 编辑
      *
      * @param assistanceStandardTO 补助标准基本信息数据bo
      * @des 添加补助标准
@@ -180,7 +180,6 @@ public class AssistanceStandardAction {
      * @des 获取工龄补助标准
      * @version v1
      */
-    @LoginAuth
     @GetMapping("v1/getAgeStands")
     public Result getAgeStands( HttpServletRequest request) throws ActException {
         try {

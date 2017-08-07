@@ -61,7 +61,7 @@ public class AssistancePlanAction {
         }
     }
     /**
-     *  补助方案列表总条数
+     *  总条数
      *
      * @param assistancePlanDTO  补助方案信息dto
      * @des 获取所有补助方案信息总条数
@@ -79,13 +79,13 @@ public class AssistancePlanAction {
 
 
     /**
-     *  一个补助方案
+     *  一个
      *
      * @param id  补助方案id
      * @des 一个补助方案
      * @version v1
      */
-    @GetMapping("v1/getOneById/{id}")
+    @GetMapping("v1/one/{id}")
     public Result getOneById(@PathVariable String id ) throws ActException {
         try {
             AssistancePlanVO assistancePlanVO = BeanTransform.copyProperties(
@@ -97,7 +97,8 @@ public class AssistancePlanAction {
     }
 
     /**
-     * 补助方案列表
+     *
+     * 列表
      *
      * @param assistancePlanDTO 补助方案信息dto
      * @des 获取所有补助方案信息
@@ -116,7 +117,7 @@ public class AssistancePlanAction {
     }
 
     /**
-     * 添加补助方案
+     * 添加
      *
      * @param assistancePlanTO 补助方案基本信息数据to
      * @des 添加补助方案
@@ -136,7 +137,7 @@ public class AssistancePlanAction {
 
 
     /**
-     * 编辑补助方案
+     * 编辑
      *
      * @param assistancePlanTO 补助方案基本信息数据bo
      * @des 添加补助方案
@@ -210,10 +211,10 @@ public class AssistancePlanAction {
         }
     }
     /**
-     * 获取补助方案根据
+     * 获取补助方案
      *
      * @param assistancePlanDTO 补助方案信息dto
-     * @des 获取所有补助方案序号
+     * @des 获取所有补助方案根据序号
      * @return  class AssistancePlanVO
      * @version v1
      */

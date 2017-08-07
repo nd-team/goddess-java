@@ -192,7 +192,7 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
     @Override
     public List<SocialFeeBO> listSocialFee(SocialFeeDTO socialFeeDTO) throws SerException {
         checkPermission();
-        socialFeeDTO.getSorts().add("payTime=asc");
+        socialFeeDTO.getSorts().add("modifyTime=desc");
         if (StringUtils.isNotBlank(socialFeeDTO.getPayTime())) {
             socialFeeDTO.getConditions().add(Restrict.eq("payTime", socialFeeDTO.getPayTime()));
         }
@@ -222,7 +222,7 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
         }
         sumMoney(socialFeeTO);
         SocialFee socialFee = BeanTransform.copyProperties(socialFeeTO, SocialFee.class, true);
-        socialFee.setPayTime(socialFeeTO.getPayTimeYear() + socialFeeTO.getPayTimeMonth());
+        socialFee.setPayTime(socialFeeTO.getPayTimeYear() + "-" + socialFeeTO.getPayTimeMonth());
         socialFee.setCreateTime(LocalDateTime.now());
 
         socialFee.setTotalMoney(socialFee.getWorkMoney() + socialFee.getEmpMoney());
@@ -245,7 +245,7 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
         SocialFee temp = super.findById(socialFeeTO.getId());
 
         BeanUtils.copyProperties(socialFee, temp, "id", "createTime");
-        temp.setPayTime(socialFeeTO.getPayTimeYear() + socialFeeTO.getPayTimeMonth());
+        temp.setPayTime(socialFeeTO.getPayTimeYear() + "-" + socialFeeTO.getPayTimeMonth());
 
         temp.setModifyTime(LocalDateTime.now());
         temp.setTotalMoney(temp.getWorkMoney() + temp.getEmpMoney());
@@ -294,6 +294,7 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
     public List<SocialFeeBO> collect(SocialFeeDTO socialFeeDTO) throws SerException {
 //        汇总表头：（缴费所属时期/纳税人名称/姓名/应缴金额）
         checkPermission();
+
         List<SocialFeeBO> list = new ArrayList<>();
         String start = socialFeeDTO.getStartTime();
         String end = socialFeeDTO.getEndTime();
@@ -306,35 +307,44 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
         String sqlAppend = "";
         String startYearMonth = "";
         String endYearMonth = "";
+        if ((StringUtils.isBlank(start) || StringUtils.isBlank(end)) && StringUtils.isNotBlank(company)) {
+            throw new SerException("时间必须全部要填");
+        } else if ((StringUtils.isBlank(start) || StringUtils.isBlank(end)) && StringUtils.isNotBlank(emp)) {
+            throw new SerException("时间必须全部要填");
+        }
+
         if (StringUtils.isNotBlank(start) && StringUtils.isNotBlank(end)) {
             String startYear = LocalDate.parse(start).getYear() + "";
             int startMonthValue = LocalDate.parse(start).getMonthValue();
             String startMonth = startMonthValue < 10 ? "0" + startMonthValue : startMonthValue + "";
-            startYearMonth = startYear + startMonth;
+            startYearMonth = startYear +"-"+ startMonth;
 
             String endYear = LocalDate.parse(end).getYear() + "";
             int endMonthValue = LocalDate.parse(end).getMonthValue();
             String endMonth = endMonthValue < 10 ? "0" + endMonthValue : endMonthValue + "";
-            endYearMonth = endYear + endMonth;
+            endYearMonth = endYear +"-"+ endMonth;
             sqlAppend = " and payTime between '" + startYearMonth + "' and '" + endYearMonth + "' ";
             timeFlag = true;
         }
-        String payTimeDur = startYearMonth + "-" + endYearMonth;
+        String payTimeDur = startYearMonth + " 至 " + endYearMonth;
         if (StringUtils.isBlank(company) && StringUtils.isBlank(emp)) {
+
+            //所有条件全部为空
+            sql.append(" select sum(totalMoney) as totalMoney  from socialfee_socialfee where 1=1 ");
             if (timeFlag) {
-                sql.append(" select sum(totalMoney) as totalMoney  from socialfee_socialfee where 1=1 ");
                 sql.append(sqlAppend);
-                list = super.findBySql(sql.toString(), SocialFeeBO.class, field);
-                list.stream().forEach(str -> {
-                    str.setPayTime(payTimeDur);
-                    str.setEmpName("");
-                    str.setPayFeer("");
-                });
             }
-        } else if (StringUtils.isBlank(company) && StringUtils.isNotBlank(emp)) {
+            list = super.findBySql(sql.toString(), SocialFeeBO.class, field);
+            list.stream().forEach(str -> {
+                str.setPayTime(payTimeDur);
+                str.setEmpName("");
+                str.setPayFeer("");
+            });
+
+        } else if (StringUtils.isNotBlank(company) && StringUtils.isBlank(emp)) {
             //根据时间段和公司查数据
             list = ctCom(socialFeeDTO, timeFlag, list, sqlAppend, payTimeDur);
-        } else if (StringUtils.isNotBlank(company) && StringUtils.isBlank(emp)) {
+        } else if (StringUtils.isBlank(company) && StringUtils.isNotBlank(emp)) {
             //根据时间段和个人查数据
             list = ctEmp(socialFeeDTO, timeFlag, list, sqlAppend, payTimeDur);
         } else if (StringUtils.isNotBlank(company) && StringUtils.isNotBlank(emp)) {
@@ -347,70 +357,85 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
 
     //根据时间段和公司查数据
     private List<SocialFeeBO> ctCom(SocialFeeDTO socialFeeDTO, Boolean timeFlag, List<SocialFeeBO> list, String sqlAppend, String payTimeDur) throws SerException {
+        List<SocialFeeBO> returnList = new ArrayList<>();
         String company = socialFeeDTO.getPayFeer();
         String emp = socialFeeDTO.getEmpName();
 
         String[] field = new String[]{"totalMoney"};
         StringBuffer sql = new StringBuffer("");
-        sql.append(" select sum(totalMoney) as totalMoney  from socialfee_socialfee where 1=1 ");
-        sql.append(" and empName = '" + emp + "' ");
+        sql.append(" select totalMoney as totalMoney  from socialfee_socialfee where 1=1 ");
+        sql.append(" and  payFeer = '" + company + "' ");
+        System.out.println(sql.toString());
         if (timeFlag) {
             sql.append(sqlAppend);
             list = super.findBySql(sql.toString(), SocialFeeBO.class, field);
             list.stream().forEach(str -> {
                 str.setPayTime(payTimeDur);
-                str.setEmpName(emp);
-                str.setPayFeer("");
+                str.setEmpName("");
+                str.setPayFeer(company);
+                returnList.add(str);
             });
         } else {
-            list = super.findBySql(sql.toString(), SocialFeeBO.class, field);
-            list.stream().forEach(str -> {
-                str.setPayTime("");
-                str.setEmpName(emp);
-                str.setPayFeer("");
-            });
+            throw new SerException("时间必须全部要填");
         }
+        if (list != null && list.size() > 0) {
+            SocialFeeBO temp = new SocialFeeBO();
+            Double totalMoney = list.stream().mapToDouble(SocialFeeBO::getTotalMoney).sum();
+            temp.setPayTime("合计");
+            temp.setEmpName("");
+            temp.setPayFeer("");
+            temp.setTotalMoney(totalMoney);
+            returnList.add(temp);
 
-        return list;
+        }
+        return returnList;
     }
 
     //根据时间段和个人查数据
     private List<SocialFeeBO> ctEmp(SocialFeeDTO socialFeeDTO, Boolean timeFlag, List<SocialFeeBO> list, String sqlAppend, String payTimeDur) throws SerException {
+        List<SocialFeeBO> returnList = new ArrayList<>();
         String company = socialFeeDTO.getPayFeer();
         String emp = socialFeeDTO.getEmpName();
 
         String[] field = new String[]{"totalMoney"};
         StringBuffer sql = new StringBuffer("");
-        sql.append(" select sum(totalMoney) as totalMoney  from socialfee_socialfee where 1=1 ");
-        sql.append(" and payFeer = '" + company + "' ");
+        sql.append(" select totalMoney as totalMoney  from socialfee_socialfee where 1=1 ");
+        sql.append(" and empName = '" + emp + "' ");
         if (timeFlag) {
             sql.append(sqlAppend);
             list = super.findBySql(sql.toString(), SocialFeeBO.class, field);
             list.stream().forEach(str -> {
                 str.setPayTime(payTimeDur);
-                str.setEmpName("");
-                str.setPayFeer(company);
+                str.setEmpName(emp);
+                str.setPayFeer("");
+                returnList.add(str);
             });
         } else {
-            list = super.findBySql(sql.toString(), SocialFeeBO.class, field);
-            list.stream().forEach(str -> {
-                str.setPayTime("");
-                str.setEmpName("");
-                str.setPayFeer(company);
-            });
+            throw new SerException("时间必须全部要填");
         }
 
-        return list;
+        if (list != null && list.size() > 0) {
+            SocialFeeBO temp = new SocialFeeBO();
+            Double totalMoney = list.stream().mapToDouble(SocialFeeBO::getTotalMoney).sum();
+            temp.setPayTime("合计");
+            temp.setEmpName("");
+            temp.setPayFeer("");
+            temp.setTotalMoney(totalMoney);
+            returnList.add(temp);
+
+        }
+        return returnList;
     }
 
     //根据时间段和公司和个人查数据
     private List<SocialFeeBO> ctComAndEmp(SocialFeeDTO socialFeeDTO, Boolean timeFlag, List<SocialFeeBO> list, String sqlAppend, String payTimeDur) throws SerException {
+        List<SocialFeeBO> returnList = new ArrayList<>();
         String company = socialFeeDTO.getPayFeer();
         String emp = socialFeeDTO.getEmpName();
 
         String[] field = new String[]{"totalMoney"};
         StringBuffer sql = new StringBuffer("");
-        sql.append(" select sum(totalMoney) as totalMoney  from socialfee_socialfee where 1=1 ");
+        sql.append(" select totalMoney as totalMoney  from socialfee_socialfee where 1=1 ");
         sql.append(" and payFeer = '" + company + "' ");
         sql.append(" and empName = '" + emp + "' ");
         if (timeFlag) {
@@ -420,16 +445,23 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
                 str.setPayTime(payTimeDur);
                 str.setEmpName(emp);
                 str.setPayFeer(company);
+                returnList.add(str);
             });
         } else {
-            list = super.findBySql(sql.toString(), SocialFeeBO.class, field);
-            list.stream().forEach(str -> {
-                str.setPayTime("");
-                str.setEmpName(emp);
-                str.setPayFeer(company);
-            });
+            throw new SerException("时间必须全部要填");
         }
-        return list;
+
+        if (list != null && list.size() > 0) {
+            SocialFeeBO temp = new SocialFeeBO();
+            Double totalMoney = list.stream().mapToDouble(SocialFeeBO::getTotalMoney).sum();
+            temp.setPayTime("合计");
+            temp.setEmpName("");
+            temp.setPayFeer("");
+            temp.setTotalMoney(totalMoney);
+            returnList.add(temp);
+
+        }
+        return returnList;
     }
 
     private void sumMoney(SocialFeeTO socialFeeTO) throws SerException {
@@ -441,7 +473,7 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
                 + socialFeeTO.getPregnantEmp() + socialFeeTO.getUnemployEmp();
         socialFeeTO.setWorkMoney(sumWork);
         socialFeeTO.setEmpMoney(sumEmp);
-        socialFeeTO.setEmpMoney(sumWork + sumEmp);
+        socialFeeTO.setTotalMoney(sumWork + sumEmp);
 
     }
 
@@ -577,6 +609,9 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
         vgTO.setProjectName(projects);
         vgTO.setProjectGroup(groups);
         vgTO.setTicketNum(0d);
+        RpcTransmit.transmitUserToken(userToken);
+        vgTO.setTicketer(userAPI.currentUser().getUsername());
+
         for (int i = 0; i < borrows.size(); i++) {
 
             vgTO.setFirstSubjects(firstSub);
@@ -712,8 +747,12 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
 
     @Override
     public byte[] exportExcel(SocialFeeDTO socialFeeDTO) throws SerException {
+
+        if ((StringUtils.isNotBlank(socialFeeDTO.getPayFeer()) || StringUtils.isNotBlank(socialFeeDTO.getEmpName()))
+                && (StringUtils.isBlank(socialFeeDTO.getStartTime()) || StringUtils.isBlank(socialFeeDTO.getEndTime()))) {
+            throw new SerException("时间必需全部填写");
+        }
         //查询
-        checkPermission();
         if (StringUtils.isNotBlank(socialFeeDTO.getPayFeer())) {
             socialFeeDTO.getConditions().add(Restrict.eq("payFeer", socialFeeDTO.getPayFeer()));
         }
@@ -724,37 +763,73 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
             String startYear = LocalDate.parse(socialFeeDTO.getStartTime()).getYear() + "";
             int startMonthValue = LocalDate.parse(socialFeeDTO.getStartTime()).getMonthValue();
             String startMonth = startMonthValue < 10 ? "0" + startMonthValue : startMonthValue + "";
-            String startYearMonth = startYear + startMonth;
+            String startYearMonth = startYear + "-" + startMonth;
 
             String endYear = LocalDate.parse(socialFeeDTO.getEndTime()).getYear() + "";
             int endMonthValue = LocalDate.parse(socialFeeDTO.getEndTime()).getMonthValue();
             String endMonth = endMonthValue < 10 ? "0" + endMonthValue : endMonthValue + "";
-            String endYearMonth = endYear + endMonth;
-            socialFeeDTO.getConditions().add(Restrict.between("payTime", Arrays.asList("'" + startYearMonth + "'", "'" + endYearMonth + "'")));
+            String endYearMonth = endYear + "-" + endMonth;
+//            List<String> condition = Arrays.asList("'" + startYearMonth + "'", "'" + endYearMonth + "'");
+            socialFeeDTO.getConditions().add(Restrict.between("payTime", new String[]{startYearMonth, endYearMonth}));
         }
         List<SocialFee> list = super.findByCis(socialFeeDTO);
         List<SocialFeeExcel> socialFeeExcels = new ArrayList<>();
-        list.stream().forEach(str -> {
-            SocialFeeExcel excel = BeanTransform.copyProperties(str, SocialFeeExcel.class);
+        if (list != null && list.size() > 0) {
+            list.stream().forEach(str -> {
+                SocialFeeExcel excel = BeanTransform.copyProperties(str, SocialFeeExcel.class);
+                socialFeeExcels.add(excel);
+            });
+        } else {
+            SocialFeeExcel excel = new SocialFeeExcel();
             socialFeeExcels.add(excel);
-        });
+        }
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(socialFeeExcels, excel);
         return bytes;
     }
 
+
     @Override
     public SocialFeeBO importExcel(List<SocialFeeTO> socialFeeTOS) throws SerException {
-        checkPermission();
         List<SocialFee> socialFees = BeanTransform.copyProperties(socialFeeTOS, SocialFee.class, true);
-        socialFees.stream().forEach(str -> {
+        for(SocialFee str : socialFees) {
             str.setCreateTime(LocalDateTime.now());
             str.setModifyTime(LocalDateTime.now());
-        });
+            if ( Integer.parseInt(str.getPayTimeMonth()) >12 || Integer.parseInt(str.getPayTimeMonth())<=0 ){
+                throw new SerException("导入失败，月份输入错误，请检查");
+            }
+            str.setPayTime(  str.getPayTimeYear() +"-"+(Integer.parseInt(str.getPayTimeMonth()) <10 ? "0"+Integer.parseInt(str.getPayTimeMonth()) : str.getPayTimeMonth()) );
+            str = sumTotalMoney( str );
+        }
         super.save(socialFees);
 
         SocialFeeBO socialFeeBO = BeanTransform.copyProperties(new SocialFee(), SocialFeeBO.class);
         return socialFeeBO;
+    }
+
+    /**
+     * 导入的时候后台计算金额
+     * @param socialFee
+     * @return
+     */
+    private SocialFee sumTotalMoney ( SocialFee socialFee ){
+
+        Double sumWork = socialFee.getBaseWork() + socialFee.getInjuryWork()
+                + socialFee.getSocialMediWork() + socialFee.getIllWork()
+                + socialFee.getPregnantWork() + socialFee.getUnemployWork();
+        socialFee.setBaseWork( socialFee.getBaseWork()==null ? 0d : socialFee.getBaseWork() );
+        socialFee.setInjuryWork( socialFee.getInjuryWork()==null ? 0d : socialFee.getInjuryWork() );
+        socialFee.setSocialMediWork( socialFee.getSocialMediWork()==null ? 0d : socialFee.getSocialMediWork() );
+        socialFee.setIllWork( socialFee.getIllWork()==null ? 0d : socialFee.getIllWork() );
+        socialFee.setPregnantWork( socialFee.getPregnantWork()==null ? 0d : socialFee.getPregnantWork() );
+        socialFee.setUnemployWork( socialFee.getUnemployWork()==null ? 0d : socialFee.getUnemployWork() );
+        Double sumEmp = socialFee.getBaseEmp() + socialFee.getInjuryEmp()
+                + socialFee.getSocialMediEmp() + socialFee.getIllEmp()
+                + socialFee.getPregnantEmp() + socialFee.getUnemployEmp();
+        socialFee.setWorkMoney(sumWork);
+        socialFee.setEmpMoney(sumEmp);
+        socialFee.setTotalMoney(sumWork + sumEmp);
+        return  socialFee ;
     }
 
     @Override
@@ -764,7 +839,7 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
         SocialFeeExcel excel = new SocialFeeExcel();
         excel.setPayTimeYear("2017");
         excel.setPayTimeMonth("08");
-        excel.setPayTime("201708");
+//        excel.setPayTime("201708");
         excel.setPayFeer("李峰");
         excel.setWorkSocalNum("2324232");
         excel.setEmpName("李芬");
@@ -789,9 +864,9 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
         excel.setPregnantSalary(112d);
         excel.setPregnantWork(112d);
         excel.setPregnantEmp(112d);
-        excel.setWorkMoney(112d);
-        excel.setEmpMoney(112d);
-        excel.setTotalMoney(112d);
+//        excel.setWorkMoney(112d);
+//        excel.setEmpMoney(112d);
+//        excel.setTotalMoney(112d);
 
         socialFeeExcels.add(excel);
 
