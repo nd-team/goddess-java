@@ -32,6 +32,11 @@ public class RightSetApiImpl implements RightSetAPI {
     }
 
     @Override
+    public RightSetBO getOneById(String id) throws SerException {
+        return rightSetSer.getOneById(id);
+    }
+
+    @Override
     public List<RightSetBO> listRightSet(RightSetDTO rightSetDTO) throws SerException {
         return rightSetSer.listRightSet(rightSetDTO);
     }

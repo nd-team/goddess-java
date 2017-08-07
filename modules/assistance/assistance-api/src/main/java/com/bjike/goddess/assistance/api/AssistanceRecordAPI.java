@@ -31,6 +31,15 @@ public interface AssistanceRecordAPI {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
+
+    /**
+     * 一个公司员工补助
+     * @return class AssistanceRecordBO
+     */
+    default AssistanceRecordBO getOneById(String id) throws SerException {return null;}
+
+
     /**
      * 公司员工补助列表总条数
      *

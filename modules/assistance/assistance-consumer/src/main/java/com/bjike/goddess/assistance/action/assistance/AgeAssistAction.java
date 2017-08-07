@@ -115,7 +115,7 @@ public class AgeAssistAction {
     }
 
     /**
-     *  工龄补助列表总条数
+     *  总条数
      *
      * @param ageAssistDTO  工龄补助信息dto
      * @des 获取所有工龄补助信息总条数
@@ -133,13 +133,14 @@ public class AgeAssistAction {
 
 
     /**
-     *  一个工龄补助
+     *  一个
      *
      * @param id  工龄补助id
      * @des 一个工龄补助
      * @version v1
+     * @return class AgeAssistVO
      */
-    @GetMapping("v1/getOneById/{id}")
+    @GetMapping("v1/one/{id}")
     public Result getOneById(@PathVariable String id ) throws ActException {
         try {
             AgeAssistVO ageAssistVO = BeanTransform.copyProperties(
@@ -151,14 +152,14 @@ public class AgeAssistAction {
     }
 
     /**
-     * 工龄补助列表
+     * 列表
      *
      * @param ageAssistDTO 工龄补助信息dto
      * @des 获取所有工龄补助信息
      * @return  class AgeAssistVO
      * @version v1
      */
-    @GetMapping("v1/listAgeAssist")
+    @GetMapping("v1/list")
     public Result findListAgeAssist(AgeAssistDTO ageAssistDTO, BindingResult bindingResult) throws ActException {
         try {
             List<AgeAssistVO> ageAssistVOList = BeanTransform.copyProperties(
@@ -170,7 +171,7 @@ public class AgeAssistAction {
     }
 
     /**
-     * 添加工龄补助
+     * 添加
      *
      * @param ageAssistTO 工龄补助基本信息数据to
      * @des 添加工龄补助
@@ -190,7 +191,7 @@ public class AgeAssistAction {
 
 
     /**
-     * 编辑工龄补助
+     * 编辑
      *
      * @param ageAssistTO 工龄补助基本信息数据bo
      * @des 添加工龄补助

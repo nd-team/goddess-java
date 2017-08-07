@@ -61,8 +61,30 @@ public class AssistanceEmpAction {
             throw new ActException(e.getMessage());
         }
     }
+
+
     /**
-     *  补助员工名单总条数
+     *  一个
+     *
+     * @param id  补助员工名单id
+     * @des 一个补助员工名单
+     * @version v1
+     * @return  class AssistanceEmpVO
+     */
+    @GetMapping("v1/one/{id}")
+    public Result getOneById(@PathVariable String id ) throws ActException {
+        try {
+            AssistanceEmpVO ageAssistVO = BeanTransform.copyProperties(
+                    assistanceEmpAPI.getOneById(id), AssistanceEmpVO.class);
+            return ActResult.initialize(ageAssistVO );
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     *  总条数
      *
      * @param assistanceEmpDTO  补助员工名单信息dto
      * @des 获取所有补助员工名单信息总条数
@@ -79,14 +101,14 @@ public class AssistanceEmpAction {
     }
 
     /**
-     * 补助员工名单列表
+     * 列表
      *
      * @param assistanceEmpDTO 补助员工名单信息dto
      * @des 获取所有补助员工名单信息
      * @return  class AssistanceEmpVO
      * @version v1
      */
-    @GetMapping("v1/listAssistanceEmp")
+    @GetMapping("v1/list")
     public Result findListAssistanceEmp(AssistanceEmpDTO assistanceEmpDTO, BindingResult bindingResult) throws ActException {
         try {
             List<AssistanceEmpVO> assistanceEmpVOList = BeanTransform.copyProperties(
@@ -98,7 +120,7 @@ public class AssistanceEmpAction {
     }
 
     /**
-     * 添加补助员工名单
+     * 添加
      *
      * @param assistanceEmpTO 补助员工名单基本信息数据to
      * @des 添加补助员工名单
@@ -118,7 +140,7 @@ public class AssistanceEmpAction {
 
 
     /**
-     * 编辑补助员工名单
+     * 编辑
      *
      * @param assistanceEmpTO 补助员工名单基本信息数据bo
      * @des 添加补助员工名单

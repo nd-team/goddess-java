@@ -337,7 +337,11 @@ public class PayTaxSerImpl extends ServiceImpl<PayTax, PayTaxDTO> implements Pay
         List<PayTaxBO> list = super.findBySql(sql , PayTaxBO.class, field);
         if( StringUtils.isBlank(company)){
             list.stream().forEach(str->{
-                str.setTaxDate("");
+                if( StringUtils.isNotBlank(payTaxDTO.getStartTime()) && StringUtils.isNotBlank(payTaxDTO.getEndTime()) ) {
+                    str.setTaxDate(payTaxDTO.getStartTime() + "至" + payTaxDTO.getEndTime());
+                }else{
+                    str.setTaxDate(  "--" );
+                }
             });
         }
         return list;
@@ -366,7 +370,11 @@ public class PayTaxSerImpl extends ServiceImpl<PayTax, PayTaxDTO> implements Pay
         List<PayTaxBO> list = super.findBySql(sql , PayTaxBO.class, field);
         if( StringUtils.isBlank(taxType)){
             list.stream().forEach(str->{
-                str.setTaxDate("");
+                if( StringUtils.isNotBlank(payTaxDTO.getStartTime()) && StringUtils.isNotBlank(payTaxDTO.getEndTime()) ) {
+                    str.setTaxDate(payTaxDTO.getStartTime() + "至" + payTaxDTO.getEndTime());
+                }else{
+                    str.setTaxDate(  "--" );
+                }
             });
         }
         return list;

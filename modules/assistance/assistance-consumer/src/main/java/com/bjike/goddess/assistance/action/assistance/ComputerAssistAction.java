@@ -64,7 +64,7 @@ public class ComputerAssistAction {
     }
 
     /**
-     * 电脑补助列表总条数
+     * 总条数
      *
      * @param computerAssistDTO 电脑补助信息dto
      * @des 获取所有电脑补助信息总条数
@@ -82,7 +82,7 @@ public class ComputerAssistAction {
 
 
     /**
-     *  一个电脑补助
+     *  一个
      *
      * @param id  电脑补助id
      * @des 一个电脑补助
@@ -101,7 +101,7 @@ public class ComputerAssistAction {
 
 
     /**
-     * 电脑补助列表
+     * 列表
      *
      * @param computerAssistDTO 电脑补助信息dto
      * @return class ComputerAssistVO
@@ -120,7 +120,7 @@ public class ComputerAssistAction {
     }
 
     /**
-     * 添加电脑补助
+     * 添加
      *
      * @param computerAssistTO 电脑补助基本信息数据to
      * @return class ComputerAssistVO
@@ -140,7 +140,7 @@ public class ComputerAssistAction {
 
 
     /**
-     * 编辑电脑补助
+     * 编辑
      *
      * @param computerAssistTO 电脑补助基本信息数据bo
      * @return class ComputerAssistVO

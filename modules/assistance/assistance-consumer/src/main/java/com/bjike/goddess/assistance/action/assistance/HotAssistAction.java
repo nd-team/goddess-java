@@ -63,7 +63,7 @@ public class HotAssistAction {
     }
 
     /**
-     *  高温补助列表总条数
+     *  总条数
      *
      * @param hotAssistDTO  高温补助信息dto
      * @des 获取所有高温补助信息总条数
@@ -80,7 +80,7 @@ public class HotAssistAction {
     }
 
     /**
-     *  一个高温补助
+     *  一个
      *
      * @param id  高温补助id
      * @des 一个高温补助
@@ -98,7 +98,7 @@ public class HotAssistAction {
     }
 
     /**
-     * 高温补助列表
+     * 列表
      *
      * @param hotAssistDTO 高温补助信息dto
      * @des 获取所有高温补助信息
@@ -117,7 +117,7 @@ public class HotAssistAction {
     }
 
     /**
-     * 添加高温补助
+     * 添加
      *
      * @param hotAssistTO 高温补助基本信息数据to
      * @des 添加高温补助
@@ -137,7 +137,7 @@ public class HotAssistAction {
 
 
     /**
-     * 编辑高温补助
+     * 编辑
      *
      * @param hotAssistTO 高温补助基本信息数据bo
      * @des 添加高温补助

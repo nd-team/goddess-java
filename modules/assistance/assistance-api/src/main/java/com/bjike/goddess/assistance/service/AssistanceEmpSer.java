@@ -33,6 +33,14 @@ public interface AssistanceEmpSer extends Ser<AssistanceEmp, AssistanceEmpDTO> {
         default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
                 return null;
         }
+
+
+        /**
+         * 一个补助员工名单
+         * @return class AssistanceEmpBO
+         */
+        default AssistanceEmpBO getOneById(String id) throws SerException {return null;}
+
         /**
          * 补助员工名单列表总条数
          *

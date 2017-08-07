@@ -352,30 +352,46 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
         Category tranCategory = BeanTransform.copyProperties(categoryTO, Category.class, true);
         Category category = super.findById(categoryTO.getId());
 
-        CategoryDTO dto = new CategoryDTO();
-        if (!firstSubjectBO.getId().equals(categoryTO.getId())) {
-            dto.getConditions().add(Restrict.eq("firstSubject.id", firstSubjectBO.getId()));
-            dto.getConditions().add(Restrict.eq("secondSubject", secondSubjectName));
-            dto.getConditions().add(Restrict.eq("thirdSubject", thirdSubjectName));
-            List<Category> otherList = super.findByCis(dto);
-            if (otherList != null && otherList.size() > 0) {
-                throw new SerException("该一级科目,二级科目，三级科目已经存在，不可以修改，请重新选择一级科目，二级科目，三级科目");
+        if( category.getFirstSubject().getName().equals( categoryTO.getFirstSubjectName())
+                &&  category.getSecondSubject().equals( categoryTO.getSecondSubject())
+                &&  category.getThirdSubject().equals( categoryTO.getThirdSubject()) ){
+            category.setRemark( tranCategory.getRemark() );
+            super.update(category);
+            return BeanTransform.copyProperties(category, CategoryBO.class);
+        }else {
+            CategoryDTO dto = new CategoryDTO();
+            if (!firstSubjectBO.getId().equals(category.getFirstSubject().getId())) {
+                dto.getConditions().add(Restrict.eq("firstSubject.id", firstSubjectBO.getId()));
+                dto.getConditions().add(Restrict.eq("secondSubject", secondSubjectName));
+                if (null == thirdSubjectName) {
+                    dto.getConditions().add(Restrict.isNull("thirdSubject"));
+                } else {
+                    dto.getConditions().add(Restrict.eq("thirdSubject", thirdSubjectName));
+                }
+                List<Category> otherList = super.findByCis(dto);
+                if (otherList != null && otherList.size() > 0) {
+                    throw new SerException("该一级科目,二级科目，三级科目已经存在，不可以修改，请重新选择一级科目，二级科目，三级科目");
+                }
             }
+
+            dto = new CategoryDTO();
+            String code = generateCode(categoryTO, firstSubjectBO, dto);
+
+
+//            BeanUtils.copyProperties(tranCategory, category, "id", "firstSubject_id", "createTime", "firstCode", "secondCode");
+            category.setFirstSubject(BeanTransform.copyProperties(firstSubjectBO, FirstSubject.class, true));
+            category.setCode(code);
+            category.setFirstCode( category.getFirstSubject().getCode());
+            category.setSecondCode(categoryTO.getSecondCode());
+            category.setThirdCode(categoryTO.getThirdCode());
+            category.setSecondSubject( tranCategory.getSecondSubject());
+            category.setThirdSubject( tranCategory.getThirdSubject() );
+            category.setRemark( tranCategory.getRemark() );
+
+            category.setModifyTime(LocalDateTime.now());
+            super.update(category);
+            return BeanTransform.copyProperties(category, CategoryBO.class);
         }
-
-        dto = new CategoryDTO();
-        String code = generateCode(categoryTO, firstSubjectBO, dto);
-
-
-        BeanUtils.copyProperties(tranCategory, category, "id", "firstSubject_id", "createTime", "firstCode", "secondCode");
-        category.setFirstSubject(BeanTransform.copyProperties(firstSubjectBO, FirstSubject.class, true));
-        category.setCode( code );
-        category.setSecondCode( categoryTO.getSecondCode() );
-        category.setThirdCode( categoryTO.getThirdCode() );
-
-        category.setModifyTime(LocalDateTime.now());
-        super.update(category);
-        return BeanTransform.copyProperties(category, CategoryBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
