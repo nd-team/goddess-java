@@ -47,7 +47,7 @@ public class OilCardUseAct {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/guidePermission")
+    @GetMapping("v1/guide/permission")
     public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
 
@@ -107,7 +107,7 @@ public class OilCardUseAct {
     public Result analyze(@PathVariable String oilCardCode, @RequestParam Integer year, @RequestParam Integer month) throws ActException {
 
         try {
-            AnalyzeVO vo = BeanTransform.copyProperties(oilCardRechargeAPI.analyze(oilCardCode, year, month), InfoForOilCardVO.class);
+            AnalyzeVO vo = BeanTransform.copyProperties(oilCardRechargeAPI.analyze(oilCardCode, year, month), AnalyzeVO.class);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -118,5 +118,11 @@ public interface OilCardBasicAPI {
 
     void updateOliCardBasic(OilCardBasic oilCardBasic) throws SerException;
 
+    /**
+     * 查询未冻结的油卡
+     * @throws SerException
+     */
+    List<OilCardBasicBO> findOilCard() throws SerException;
+
 
 }

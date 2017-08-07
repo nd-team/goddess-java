@@ -11,7 +11,7 @@ import com.bjike.goddess.common.utils.excel.ExcelHeader;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class SalaryInformaiionSetExcel {
+public class SalaryInformationSetExcel {
     /**
      * 指标名称
      */

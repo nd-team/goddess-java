@@ -228,7 +228,7 @@ public class PositionIndexSetAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/countSelf")
-    public Result countSelf(PositionIndexSetDTO positionIndexSetDTO) throws ActException {
+    public Result countSelf(PositionIndexSetDTO positionIndexSetDTO,BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             Long count = positionIndexSetAPI.countSelf(positionIndexSetDTO);
             return ActResult.initialize(count);

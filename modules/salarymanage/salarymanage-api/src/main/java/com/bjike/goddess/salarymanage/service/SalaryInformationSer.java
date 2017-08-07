@@ -82,4 +82,10 @@ public interface SalaryInformationSer extends Ser<SalaryInformation, SalaryInfor
     default List<String> findTime() throws SerException{
         return null;
     }
+
+    /**
+     * 导出Excel
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
  }

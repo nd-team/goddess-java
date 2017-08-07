@@ -9,11 +9,14 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.interiorrecommend.api.RecommendInfoAPI;
+import com.bjike.goddess.interiorrecommend.bo.RecommendRequireBO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendInfoDTO;
+import com.bjike.goddess.interiorrecommend.entity.RecommendRequire;
 import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.RecommendInfoTO;
 import com.bjike.goddess.interiorrecommend.vo.RecommendContentVO;
 import com.bjike.goddess.interiorrecommend.vo.RecommendInfoVO;
+import com.bjike.goddess.interiorrecommend.vo.RecommendRequireVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -164,6 +167,21 @@ public class RecommendInfoAct {
             List<RecommendInfoVO> voList = BeanTransform.copyProperties(recommendInfoAPI.pageList(dto), RecommendInfoVO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有推荐要求
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/require")
+    public Result findRequire() throws ActException{
+        try {
+            List<String> list = recommendInfoAPI.findRequire();
+            return ActResult.initialize(list);
+        }catch (SerException e){
             throw new ActException(e.getMessage());
         }
     }

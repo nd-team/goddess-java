@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.enterprise.inject.spi.Bean;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -315,5 +316,18 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
     public List<RecommendInfoBO> awardlist() throws SerException {
         checkSeeIdentity();
         return null;
+    }
+
+    @Override
+    public List<String> findRequire() throws SerException {
+        List<RecommendRequire> requireList = recommendRequireSer.findAll();
+        List<String> list = new ArrayList<>();
+        for(RecommendRequire recommendRequire : requireList){
+            List<String> require = new ArrayList<>();
+            require.add(recommendRequire.getRecommendType().getTypeName());
+            require.add(recommendRequire.getId());
+            list.addAll(require);
+        }
+        return list;
     }
 }

@@ -80,4 +80,11 @@ public interface RecommendRequireSer extends Ser<RecommendRequire, RecommendRequ
      * @throws SerException
      */
     List<RecommendTypeBO> findType() throws SerException;
+
+    /**
+     * 查询所有推荐内容
+     * @return
+     * @throws SerException
+     */
+    List<RecommendAssessDetailBO> findAssess() throws SerException;
 }

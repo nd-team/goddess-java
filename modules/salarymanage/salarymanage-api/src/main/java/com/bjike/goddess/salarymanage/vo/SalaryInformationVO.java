@@ -106,21 +106,6 @@ public class SalaryInformationVO {
     private Double  postSalary;
 
     /**
-     * 部门/项目组
-     */
-    private String  department;
-
-    /**
-     * 岗位
-     */
-    private String  position;
-
-    /**
-     * 基本工资
-     */
-    private Double  basePay;
-
-    /**
      * 技能工资
      */
     private Double  skillPay;
@@ -344,15 +329,6 @@ public class SalaryInformationVO {
     public void setSystem (String system ) {
         this.system = system ;
     }
-    public String getDepartment () {
-        return department;
-    }
-    public void setDepartment (String department ) {
-        this.department = department ;
-    }
-    public String getStation () {
-        return station;
-    }
     public void setStation (String station ) {
         this.station = station ;
     }
@@ -430,18 +406,6 @@ public class SalaryInformationVO {
         this.section = section;
     }
 
-    public String getPosition () {
-        return position;
-    }
-    public void setPosition (String position ) {
-        this.position = position ;
-    }
-    public Double getBasePay () {
-        return basePay;
-    }
-    public void setBasePay (Double basePay ) {
-        this.basePay = basePay ;
-    }
     public Double getSkillPay () {
         return skillPay;
     }
