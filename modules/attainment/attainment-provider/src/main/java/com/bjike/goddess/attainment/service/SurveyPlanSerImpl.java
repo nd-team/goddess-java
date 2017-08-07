@@ -190,7 +190,9 @@ public class SurveyPlanSerImpl extends ServiceImpl<SurveyPlan, SurveyPlanDTO> im
                         for (SurveyQuestionnaireOptionTO surveyQuestionnaireOptionTO : surveyQuestionnaireOptionTOs) {
                             String questionnaireId = surveyQuestionnaire.getId();
                             surveyQuestionnaireOptionTO.setQuestionnaireId(questionnaireId);
-                            surveyQuestionnaireOptionSer.save(surveyQuestionnaireOptionTO);
+                            if (StringUtils.isNotBlank(surveyQuestionnaireOptionTO.getContent())) {
+                                surveyQuestionnaireOptionSer.save(surveyQuestionnaireOptionTO);
+                            }
                         }
                     }
                 }
@@ -274,7 +276,7 @@ public class SurveyPlanSerImpl extends ServiceImpl<SurveyPlan, SurveyPlanDTO> im
                                     List<SurveyQuestionnaireOptionBO> surveyQuestionnaireOptionBOList = surveyQuestionnairesBO.getSurveyQuestionnaireOptionBOs();
                                     if (null != surveyQuestionnaireOptionBOList && surveyQuestionnaireOptionBOList.size() > 0) {
                                         for (SurveyQuestionnaireOptionBO surveyQuestionnaireOptionBO : surveyQuestionnaireOptionBOList) {
-                                            if(StringUtils.isBlank(surveyQuestionnaireOptionTO.getId())){
+                                            if (StringUtils.isBlank(surveyQuestionnaireOptionTO.getId())) {
                                                 throw new SerException("问题选型id不能为空");
                                             }
                                             if (surveyQuestionnaireOptionBO.getId().equals(surveyQuestionnaireOptionTO.getId())) {

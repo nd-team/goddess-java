@@ -1,8 +1,9 @@
 package com.bjike.goddess.staffentry.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.staffentry.bo.*;
+import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
+import com.bjike.goddess.staffentry.entity.EntryRegister;
 import com.bjike.goddess.staffentry.to.*;
 
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface EntryRegisterAPI  {
+public interface EntryRegisterAPI {
 
     /**
      * 入职登记列表总条数
@@ -30,12 +31,13 @@ public interface EntryRegisterAPI  {
      *
      * @return class EntryRegisterBO
      */
-    default EntryRegisterBO getOne(String id ) throws SerException {
+    default EntryRegisterBO getOne(String id) throws SerException {
         return null;
     }
-    
+
     /**
      * 获取所有入职登记
+     *
      * @param entryRegisterDTO 入职登记dto
      * @return class entryRegisterBO
      * @throws SerException
@@ -47,11 +49,11 @@ public interface EntryRegisterAPI  {
     /**
      * 添加员工入职
      *
-     * @param entryRegisterTO 员工入职数据to
-     * @param familyMemberTO 家庭成员数据to
+     * @param entryRegisterTO   员工入职数据to
+     * @param familyMemberTO    家庭成员数据to
      * @param studyExperienceTO 学习经历数据to
-     * @param workExperienceTO 工作经历数据to
-     * @param credentialTO 证书情况数据to
+     * @param workExperienceTO  工作经历数据to
+     * @param credentialTO      证书情况数据to
      * @return class entryRegisterBO
      * @throws SerException
      */
@@ -66,11 +68,11 @@ public interface EntryRegisterAPI  {
     /**
      * 编辑员工入职
      *
-     * @param entryRegisterTO 员工入职数据to
-     * @param familyMemberTO 家庭成员数据to
+     * @param entryRegisterTO   员工入职数据to
+     * @param familyMemberTO    家庭成员数据to
      * @param studyExperienceTO 学习经历数据to
-     * @param workExperienceTO 工作经历数据to
-     * @param credentialTO 证书情况数据to
+     * @param workExperienceTO  工作经历数据to
+     * @param credentialTO      证书情况数据to
      * @return class entryRegisterBO
      * @throws SerException
      */
@@ -100,6 +102,14 @@ public interface EntryRegisterAPI  {
      * @throws SerException
      */
     default EntryRegisterBO getEntryRegisterDetail(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据员工编号查找员工入职登记
+     * zhuangkaiqin
+     */
+    default EntryRegister getByNumber(String number) throws SerException {
         return null;
     }
 
