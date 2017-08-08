@@ -18,6 +18,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface AssistanceEmpAPI {
+
     /**
      * 下拉导航权限
      */
@@ -31,6 +32,15 @@ public interface AssistanceEmpAPI {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
+
+    /**
+     * 一个补助员工名单
+     * @return class AssistanceEmpBO
+     */
+    default AssistanceEmpBO getOneById(String id) throws SerException {return null;}
+
+
     /**
      * 补助员工名单列表总条数
      *

@@ -115,5 +115,10 @@ public class PositionDetailApiImpl implements PositionDetailAPI {
         return positionDetailSer.findAllOpinion();
     }
 
+    @Override
+    public List<String> getPositions(String id) throws SerException {
+        return positionDetailSer.getPositions(id);
+    }
+
 
 }

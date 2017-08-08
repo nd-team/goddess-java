@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 /**
@@ -20,73 +21,85 @@ public class SalaryInformationTO extends BaseTO {
     /**
      * 计薪周期开始时间
      */
-    @NotBlank(message = "计薪周期开始时间!", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "计薪周期开始时间不能为空!", groups = {ADD.class, EDIT.class})
     private String payStarTime;
 
     /**
      * 计薪周期结束时间
      */
-    @NotBlank(message = "计薪周期结束时间!", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "计薪周期结束时间不能为空!", groups = {ADD.class, EDIT.class})
     private String  payEndTime;
 
     /**
      * 地区
      */
+    @NotBlank(message = "地区不能为空!", groups = {ADD.class, EDIT.class})
     private String  area;
 
     /**
      * 员工编号
      */
+    @NotBlank(message = "员工编号不能为空!", groups = {ADD.class, EDIT.class})
     private String  employeeId;
 
     /**
      * 姓名
      */
+    @NotBlank(message = "姓名不能为空!", groups = {ADD.class, EDIT.class})
     private String  employeeName;
 
     /**
      * 体系
      */
+    @NotBlank(message = "体系不能为空!", groups = {ADD.class, EDIT.class})
     private String  system;
 
     /**
      * 部门/项目组
      */
+    @NotBlank(message = "部门/项目组不能为空!", groups = {ADD.class, EDIT.class})
     private String  section;
 
     /**
      * 岗位
      */
+    @NotBlank(message = "岗位不能为空!", groups = {ADD.class, EDIT.class})
     private String  station;
 
     /**
      * 岗位层级
      */
+    @NotBlank(message = "岗位层级不能为空!", groups = {ADD.class, EDIT.class})
     private String  stationLevel;
 
     /**
      * 管理层级
      */
+    @NotBlank(message = "管理层级不能为空!", groups = {ADD.class, EDIT.class})
     private String  manageLevel;
 
     /**
      * 技能项
      */
+    @NotBlank(message = "技能项不能为空!", groups = {ADD.class, EDIT.class})
     private String  skill;
 
     /**
      * 技能专业
      */
+    @NotBlank(message = "技能专业不能为空!", groups = {ADD.class, EDIT.class})
     private String  proSkills;
 
     /**
      * 技能级别
      */
+    @NotBlank(message = "技能级别不能为空!", groups = {ADD.class, EDIT.class})
     private String  skillLevel;
 
     /**
      * 入职时间
      */
+    @NotBlank(message = "入职时间不能为空!", groups = {ADD.class, EDIT.class})
     private String  hiredate;
 
     /**
@@ -97,201 +110,223 @@ public class SalaryInformationTO extends BaseTO {
     /**
      * 在职时间
      */
+    @NotBlank(message = "在职时间不能为空!", groups = {ADD.class, EDIT.class})
     private String  workingTime;
 
     /**
      * 基本工资
      */
+    @NotBlank(message = "基本工资不能为空!", groups = {ADD.class, EDIT.class})
     private Double  basicSalary;
 
     /**
      * 岗位工资
      */
+    @NotBlank(message = "岗位工资不能为空!", groups = {ADD.class, EDIT.class})
     private Double  postSalary;
-
-    /**
-     * 部门/项目组
-     */
-    private String  department;
-
-    /**
-     * 岗位
-     */
-    private String  position;
-
-    /**
-     * 基本工资
-     */
-    private Double  basePay;
 
     /**
      * 技能工资
      */
+    @NotNull(message = "技能工资不能为空!", groups = {ADD.class, EDIT.class})
     private Double  skillPay;
 
     /**
      * 管理工资
      */
+    @NotNull(message = "管理工资不能为空!", groups = {ADD.class, EDIT.class})
     private Double  managePay;
 
     /**
      * 技能职衔补助
      */
+    @NotNull(message = "技能职衔补助不能为空!", groups = {ADD.class, EDIT.class})
     private Double  skillSubsidies;
 
     /**
      * 管理等级职衔补助
      */
+    @NotNull(message = "管理等级职衔补助不能为空!", groups = {ADD.class, EDIT.class})
     private Double  manageSubsidies;
 
     /**
      * 工龄职衔补助
      */
+    @NotNull(message = "工龄职衔补助不能为空!", groups = {ADD.class, EDIT.class})
     private Double  seniorityLevSubsidies;
 
     /**
      * 职衔补助总额
      */
+    @NotNull(message = "职衔补助总额不能为空!", groups = {ADD.class, EDIT.class})
     private Double  allSubsidies;
 
     /**
      * 项目津贴
      */
+    @NotNull(message = "项目津贴不能为空!", groups = {ADD.class, EDIT.class})
     private Double  projectBenefits;
 
     /**
      * 定薪
      */
+    @NotNull(message = "定薪不能为空!", groups = {ADD.class, EDIT.class})
     private Double  wage;
 
     /**
      * 工资
      */
+    @NotNull(message = "工资不能为空!", groups = {ADD.class, EDIT.class})
     private Double  salary;
 
     /**
      * 电脑补助
      */
+    @NotNull(message = "电脑补助不能为空!", groups = {ADD.class, EDIT.class})
     private Double  computerSubsidies;
 
     /**
      * 住宿补助
      */
+    @NotNull(message = "住宿补助不能为空!", groups = {ADD.class, EDIT.class})
     private Double  accommodationSubsidies;
 
     /**
      * 工龄补助
      */
+    @NotNull(message = "工龄补助不能为空!", groups = {ADD.class, EDIT.class})
     private Double  senioritySubsidies;
 
     /**
      * 高温补助
      */
+    @NotNull(message = "高温补助不能为空!", groups = {ADD.class, EDIT.class})
     private Double  hyperthermiaSubsidies;
 
     /**
      * 工资总额
      */
+    @NotNull(message = "工资总额不能为空!", groups = {ADD.class, EDIT.class})
     private Double  allSalary;
 
     /**
      * 扣社保
      */
+    @NotNull(message = "扣社保不能为空!", groups = {ADD.class, EDIT.class})
     private Double  jinpoCost;
 
     /**
      * 社保补助
      */
+    @NotNull(message = "社保补助不能为空!", groups = {ADD.class, EDIT.class})
     private Double  jinpoSubsidies;
 
     /**
      * 水电费
      */
+    @NotNull(message = "水电费不能为空!", groups = {ADD.class, EDIT.class})
     private Double  utilities;
 
     /**
      * 个税
      */
+    @NotNull(message = "个税不能为空!", groups = {ADD.class, EDIT.class})
     private Double  personTax;
 
     /**
      * 奖励处罚得分汇总
      */
+    @NotNull(message = "奖励处罚得分汇总不能为空!", groups = {ADD.class, EDIT.class})
     private Double  allRewardScore;
 
     /**
      * 奖励处罚费用汇总
      */
+    @NotNull(message = "奖励处罚费用汇总不能为空!", groups = {ADD.class, EDIT.class})
     private Double  allRewardCost;
 
     /**
      * 出勤天数
      */
+    @NotNull(message = "出勤天数不能为空!", groups = {ADD.class, EDIT.class})
     private Double  attendanceDay;
 
     /**
      * 请假天数
      */
+    @NotNull(message = "请假天数不能为空!", groups = {ADD.class, EDIT.class})
     private Double  vacateDay;
 
     /**
      * 旷工天数
      */
+    @NotNull(message = "旷工天数不能为空!", groups = {ADD.class, EDIT.class})
     private Double  absenteeismDay;
 
     /**
      * 未完成任务工时
      */
+    @NotNull(message = "未完成任务工时不能为空!", groups = {ADD.class, EDIT.class})
     private Double  unfinishedTime;
 
     /**
      * 正常工作日加班天数
      */
+    @NotNull(message = "正常工作日加班天数不能为空!", groups = {ADD.class, EDIT.class})
     private Double  normalOvertimeDay;
 
     /**
      * 法定节假日实际休息天数
      */
+    @NotNull(message = "法定节假日实际休息天数不能为空!", groups = {ADD.class, EDIT.class})
     private Double  legalRestDay;
 
     /**
      * 法定节假日加班天数
      */
+    @NotNull(message = "法定节假日加班天数不能为空!", groups = {ADD.class, EDIT.class})
     private Double  legalOvertimeDay;
 
     /**
      * 正常休息天数实际休息天数
      */
+    @NotNull(message = "正常休息天数实际休息天数不能为空!", groups = {ADD.class, EDIT.class})
     private Double  normalRestDay;
 
     /**
      * 正常休息天数加班天数
      */
+    @NotNull(message = "正常休息天数加班天数不能为空!", groups = {ADD.class, EDIT.class})
     private Double  RestOvertimeDay;
 
     /**
      * 剩余加班天数
      */
+    @NotNull(message = "剩余加班天数不能为空!", groups = {ADD.class, EDIT.class})
     private Double  surplusOvertimeDay;
 
     /**
      * 加班抵事假和其他假的天数
      */
+    @NotNull(message = "加班抵事假和其他假的天数不能为空!", groups = {ADD.class, EDIT.class})
     private Double  offsetOvertime;
 
     /**
      * 抵扣事假和其他假后剩余加班天数
      */
+    @NotNull(message = "抵扣事假和其他假后剩余加班天数不能为空!", groups = {ADD.class, EDIT.class})
     private Double  effectiveOvertime;
 
     /**
      * 月工作日
      */
+    @NotNull(message = "月工作日不能为空!", groups = {ADD.class, EDIT.class})
     private Double  weekDays;
 
     /**
      * 可享受带薪天数
      */
+    @NotNull(message = "可享受带薪天数不能为空!", groups = {ADD.class, EDIT.class})
     private Double  paidDay;
 
     /**
@@ -416,24 +451,6 @@ public class SalaryInformationTO extends BaseTO {
     }
     public void setPostSalary (Double postSalary ) {
         this.postSalary = postSalary ;
-    }
-    public String getDepartment () {
-        return department;
-    }
-    public void setDepartment (String department ) {
-        this.department = department ;
-    }
-    public String getPosition () {
-        return position;
-    }
-    public void setPosition (String position ) {
-        this.position = position ;
-    }
-    public Double getBasePay () {
-        return basePay;
-    }
-    public void setBasePay (Double basePay ) {
-        this.basePay = basePay ;
     }
     public Double getSkillPay () {
         return skillPay;

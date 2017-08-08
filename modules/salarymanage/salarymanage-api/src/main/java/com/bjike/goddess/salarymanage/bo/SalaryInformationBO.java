@@ -105,21 +105,6 @@ public class SalaryInformationBO extends BaseBO {
     private Double  postSalary;
 
     /**
-     * 部门/项目组
-     */
-    private String  department;
-
-    /**
-     * 岗位
-     */
-    private String  position;
-
-    /**
-     * 基本工资
-     */
-    private Double  basePay;
-
-    /**
      * 技能工资
      */
     private Double  skillPay;
@@ -335,12 +320,15 @@ public class SalaryInformationBO extends BaseBO {
     public void setSystem (String system ) {
         this.system = system ;
     }
-    public String getSection () {
+
+    public String getSection() {
         return section;
     }
-    public void setSection (String section ) {
-        this.department = section ;
+
+    public void setSection(String section) {
+        this.section = section;
     }
+
     public String getStation () {
         return station;
     }
@@ -411,24 +399,6 @@ public class SalaryInformationBO extends BaseBO {
     }
     public void setPostSalary (Double postSalary ) {
         this.postSalary = postSalary ;
-    }
-    public String getDepartment () {
-        return department;
-    }
-    public void setDepartment (String department ) {
-        this.department = department ;
-    }
-    public String getPosition () {
-        return position;
-    }
-    public void setPosition (String position ) {
-        this.position = position ;
-    }
-    public Double getBasePay () {
-        return basePay;
-    }
-    public void setBasePay (Double basePay ) {
-        this.basePay = basePay ;
     }
     public Double getSkillPay () {
         return skillPay;

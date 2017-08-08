@@ -212,5 +212,12 @@ public interface PositionDetailAPI {
         return null;
     }
 
+    /**
+     * 根据层级ｉｄ查询岗位id
+     */
+    default List<String> getPositions(String id) throws SerException {
+        return null;
+    }
+
     ;
 }

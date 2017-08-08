@@ -10,10 +10,12 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.oilcardmanage.api.OilCardRechargeAPI;
+import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardRechargeDTO;
 import com.bjike.goddess.oilcardmanage.to.CompetitorDeleteFileTO;
 import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardRechargeTO;
+import com.bjike.goddess.oilcardmanage.vo.OilCardBasicVO;
 import com.bjike.goddess.oilcardmanage.vo.OilCardRechargeVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
@@ -156,9 +158,9 @@ public class OilCardRechargeAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/find/{id}")
-    public Result pageList(String id) throws ActException {
+    public Result pageList(@PathVariable String id) throws ActException {
         try {
-            OilCardRechargeVO vo = BeanTransform.copyProperties(oilCardRechargeAPI.findById(id), OilCardRechargeVO.class);
+            OilCardRechargeVO vo = BeanTransform.copyProperties(oilCardRechargeAPI.findBy(id), OilCardRechargeVO.class);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -266,5 +268,8 @@ public class OilCardRechargeAct extends BaseFileAction {
         }
         return new ActResult("删除成功");
     }
+
+
+
 
 }

@@ -87,7 +87,8 @@ public class OtherContactsAct extends BaseFileAction{
     @DeleteMapping("v1/delete/{id}")
     public Result delete(OtherContactsTO to) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(otherContactsAPI.delete(to), OtherContactsVO.class));
+            otherContactsAPI.delete(to);
+            return ActResult.initialize("delete seccess");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

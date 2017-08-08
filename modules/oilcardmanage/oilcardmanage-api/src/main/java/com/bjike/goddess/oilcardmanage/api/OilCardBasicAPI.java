@@ -101,7 +101,7 @@ public interface OilCardBasicAPI {
      *
      * @param id id
      */
-    OilCardBasicBO findById(String id) throws SerException;
+    OilCardBasicBO find(String id) throws SerException;
 
     /**
      * 查询总记录数
@@ -115,9 +115,14 @@ public interface OilCardBasicAPI {
      *
      */
 
-    OilCardBasic find(String id) throws SerException;
 
     void updateOliCardBasic(OilCardBasic oilCardBasic) throws SerException;
+
+    /**
+     * 查询未冻结的油卡
+     * @throws SerException
+     */
+    List<OilCardBasicBO> findOilCard() throws SerException;
 
 
 }

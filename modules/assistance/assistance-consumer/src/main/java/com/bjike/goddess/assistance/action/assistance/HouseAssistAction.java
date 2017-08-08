@@ -61,7 +61,7 @@ public class HouseAssistAction {
     }
 
     /**
-     *  住宿补助列表总条数
+     *  总条数
      *
      * @param houseAssistDTO  住宿补助信息dto
      * @des 获取所有住宿补助信息总条数
@@ -79,7 +79,7 @@ public class HouseAssistAction {
 
 
     /**
-     *  一个住宿补助
+     *  一个
      *
      * @param id  住宿补助id
      * @des 一个住宿补助
@@ -98,7 +98,7 @@ public class HouseAssistAction {
 
 
     /**
-     * 住宿补助列表
+     * 列表
      *
      * @param houseAssistDTO 住宿补助信息dto
      * @des 获取所有住宿补助信息
@@ -117,7 +117,7 @@ public class HouseAssistAction {
     }
 
     /**
-     * 添加住宿补助
+     * 添加
      *
      * @param houseAssistTO 住宿补助基本信息数据to
      * @des 添加住宿补助
@@ -137,7 +137,7 @@ public class HouseAssistAction {
 
 
     /**
-     * 编辑住宿补助
+     * 编辑
      *
      * @param houseAssistTO 住宿补助基本信息数据bo
      * @des 添加住宿补助

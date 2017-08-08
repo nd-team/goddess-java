@@ -28,11 +28,7 @@ public class SocialFeeExcel extends BaseTO {
     @ExcelHeader(name = "缴费所属月")
     private String payTimeMonth;
 
-    /**
-     * 缴费所属时期
-     */
-    @ExcelHeader(name = "缴费所属时期", notNull = true)
-    private String payTime;
+
 
     /**
      * 纳税人名称
@@ -178,23 +174,6 @@ public class SocialFeeExcel extends BaseTO {
     @ExcelHeader(name = "生育保险个人")
     private Double pregnantEmp;
 
-    /**
-     * 单位合计
-     */
-    @ExcelHeader(name = "单位合计")
-    private Double workMoney;
-
-    /**
-     * 个人合计
-     */
-    @ExcelHeader(name = "个人合计")
-    private Double empMoney;
-
-    /**
-     * 应缴金额
-     */
-    @ExcelHeader(name = "应缴金额")
-    private Double totalMoney;
 
 
     public String getPayTimeYear() {
@@ -213,13 +192,6 @@ public class SocialFeeExcel extends BaseTO {
         this.payTimeMonth = payTimeMonth;
     }
 
-    public String getPayTime() {
-        return payTime;
-    }
-
-    public void setPayTime(String payTime) {
-        this.payTime = payTime;
-    }
 
     public String getPayFeer() {
         return payFeer;
@@ -413,29 +385,6 @@ public class SocialFeeExcel extends BaseTO {
         this.pregnantEmp = pregnantEmp;
     }
 
-    public Double getWorkMoney() {
-        return workMoney;
-    }
-
-    public void setWorkMoney(Double workMoney) {
-        this.workMoney = workMoney;
-    }
-
-    public Double getEmpMoney() {
-        return empMoney;
-    }
-
-    public void setEmpMoney(Double empMoney) {
-        this.empMoney = empMoney;
-    }
-
-    public Double getTotalMoney() {
-        return totalMoney;
-    }
-
-    public void setTotalMoney(Double totalMoney) {
-        this.totalMoney = totalMoney;
-    }
 
 
 }

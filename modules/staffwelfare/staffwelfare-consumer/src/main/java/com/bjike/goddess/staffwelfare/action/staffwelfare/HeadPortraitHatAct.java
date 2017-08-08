@@ -184,6 +184,7 @@ public class HeadPortraitHatAct {
      * 祝福语分页查询
      *
      * @param dto 分页条件
+     * @return class HeadPortraitHatVO
      * @version v1
      */
     @GetMapping("v1/pageList")

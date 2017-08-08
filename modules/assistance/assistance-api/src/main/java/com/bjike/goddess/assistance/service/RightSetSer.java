@@ -33,6 +33,15 @@ public interface RightSetSer extends Ser<RightSet, RightSetDTO> {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
+
+    /**
+     * 一个权限设置
+     * @return class RightSetBO
+     */
+    default RightSetBO getOneById(String id) throws SerException {return null;}
+
+    
     /**
      * 权限设置列表总条数
      *

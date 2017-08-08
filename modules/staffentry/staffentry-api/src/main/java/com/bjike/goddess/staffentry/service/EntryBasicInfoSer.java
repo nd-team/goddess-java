@@ -139,7 +139,7 @@ public interface EntryBasicInfoSer extends Ser<EntryBasicInfo, EntryBasicInfoDTO
      * @return class entryBasicInfoBO
      * @throws SerException
      */
-    default List<EntryBasicInfoVO> getByEmpNumber(String empNumber) throws SerException {
+    default List<EntryBasicInfoBO> getByEmpNumber(String empNumber) throws SerException {
         return null;
     }
 
