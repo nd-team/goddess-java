@@ -28,6 +28,12 @@ public class CostDetails extends BaseEntity {
     private LocalDate costTime;
 
     /**
+     * 日期
+     */
+    @Column(name = "testTime", nullable = false, columnDefinition = "DATE   COMMENT '日期'")
+    private LocalDate testTime;
+
+    /**
      * 部门
      */
     @Column(name = "department", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '部门'")
@@ -670,6 +676,14 @@ public class CostDetails extends BaseEntity {
 
     public Double getBusinessIncomeTen() {
         return businessIncomeTen;
+    }
+
+    public LocalDate getTestTime() {
+        return testTime;
+    }
+
+    public void setTestTime(LocalDate testTime) {
+        this.testTime = testTime;
     }
 
     public void setBusinessIncomeTen(Double businessIncomeTen) {

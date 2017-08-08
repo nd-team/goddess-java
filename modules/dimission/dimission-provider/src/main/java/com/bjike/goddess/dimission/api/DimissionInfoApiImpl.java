@@ -40,17 +40,22 @@ public class DimissionInfoApiImpl implements DimissionInfoAPI {
     }
 
     @Override
-    public DimissionInfoBO apply(DimissionInfoTO to) throws SerException {
+    public DimissionInfoBO apply(DimissionInfoAddEditTO to) throws SerException {
         return dimissionInfoSer.apply(to);
     }
 
     @Override
-    public DimissionInfoBO update(DimissionInfoTO to) throws SerException {
-        return dimissionInfoSer.update(to);
+    public DimissionInfoBO applyUpdate(DimissionInfoAddEditTO to) throws SerException {
+        return dimissionInfoSer.applyUpdate(to);
     }
 
     @Override
-    public DimissionInfoBO presume(DimissionInfoTO to) throws SerException {
+    public DimissionInfoBO preUpdate(FromInfoTO to) throws SerException {
+        return dimissionInfoSer.preUpdate(to);
+    }
+
+    @Override
+    public DimissionInfoBO presume(FromInfoTO to) throws SerException {
         return dimissionInfoSer.presume(to);
     }
 

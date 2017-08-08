@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -182,6 +183,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
                 laborCostDetail.setLaborCostFift(0d);
                 laborCostDetail.setLaborCostTwtenty(0d);
                 laborCostDetail.setLaborCostThirty(0d);
+                laborCostDetail.setLaborCostSum(0d);
                 laborCostDetailList.add(laborCostDetail);
             });
         }
@@ -199,6 +201,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
                 companyBorrowedDetail.setCompanyBorrowedFift(0d);
                 companyBorrowedDetail.setCompanyBorrowedTwtenty(0d);
                 companyBorrowedDetail.setCompanyBorrowedThirty(0d);
+                companyBorrowedDetail.setCompanyBorrowedSum(0d);
                 companyBorrowedDetailList.add(companyBorrowedDetail);
             });
         }
@@ -216,6 +219,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
                 paidCapitalDetail.setPaidCapitalFift(0d);
                 paidCapitalDetail.setPaidCapitalTwtenty(0d);
                 paidCapitalDetail.setPaidCapitalThirty(0d);
+                paidCapitalDetail.setPaidCapitalSum(0d);
                 paidCapitalDetailList.add(paidCapitalDetail);
             });
         }
@@ -232,6 +236,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
                 companyLendDetail.setCompanyLendTen(0d);
                 companyLendDetail.setCompanyLendFift(0d);
                 companyLendDetail.setCompanyLendTwtenty(0d);
+                companyLendDetail.setCompanyLendThirty(0d);
                 companyLendDetail.setCompanyLendSum(0d);
                 companyLendDetailList.add(companyLendDetail);
             });
@@ -250,6 +255,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
                 businessIncomeDetail.setBusinessIncomeFift(0d);
                 businessIncomeDetail.setBusinessIncomeTwtenty(0d);
                 businessIncomeDetail.setBusinessIncomeThirty(0d);
+                businessIncomeDetail.setBusinessIncomeSum(0d);
                 businessIncomeDetailList.add(businessIncomeDetail);
             });
         }
@@ -486,9 +492,10 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         BeanTransform.copyProperties(paidMoneyTO, costDetails);
         BeanTransform.copyProperties(costPayeMoneyTO, costDetails);
 
-        String date = StringUtils.substring(costDetailsAddEditTO.getCostTime(), 0, -2) + "02";
+        String date = StringUtils.substring(costDetailsAddEditTO.getCostTime(), 0, -2) + "01";
         costDetails.setCreateTime(LocalDateTime.now());
         costDetails.setCostTime(DateUtil.parseDate(date));
+        costDetails.setTestTime(LocalDate.now());
         costDetails.setDepartment(costDetailsAddEditTO.getDepartment());
         costDetails = super.save(costDetails);
         //添加劳务成本明细
@@ -1026,7 +1033,12 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         CostDetails costDetails = new CostDetails();
         if(StringUtils.isBlank(costDetailsDTO.getCostTime()) && StringUtils.isBlank(costDetailsDTO.getDepartment())){
             costDetailsDTO.getSorts().add("createTime=desc");
-            costDetails = super.findByCis(costDetailsDTO).get(0);
+            List<CostDetails> costDetailsList = super.findByCis(costDetailsDTO);
+            if(costDetailsList != null && costDetailsList.size()>0){
+                costDetails = costDetailsList.get(0);
+            }else{
+                return new CostDetailsAddEditBO();
+            }
         }else{
             if(StringUtils.isBlank(costDetailsDTO.getCostTime())){
                 throw new SerException("日期不能为空");
@@ -1035,7 +1047,12 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
                 throw new SerException("部门不能为空");
             }
             searchCondition(costDetailsDTO);
-            costDetails = super.findByCis(costDetailsDTO).get(0);
+            List<CostDetails> costDetailsList = super.findByCis(costDetailsDTO);
+            if(costDetailsList != null && costDetailsList.size()>0){
+                costDetails = costDetailsList.get(0);
+            }else{
+                return new CostDetailsAddEditBO();
+            }
         }
 
         List<LaborCostDetailBO> laborCostDetailBOList = new ArrayList<>();
