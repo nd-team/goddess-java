@@ -5,15 +5,9 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
-import com.bjike.goddess.interiorrecommend.bo.RecommendAssessDetailBO;
-import com.bjike.goddess.interiorrecommend.bo.RecommendRequireBO;
-import com.bjike.goddess.interiorrecommend.bo.RecommendSchemeBO;
-import com.bjike.goddess.interiorrecommend.bo.RecommendTypeBO;
+import com.bjike.goddess.interiorrecommend.bo.*;
 import com.bjike.goddess.interiorrecommend.dto.RecommendRequireDTO;
-import com.bjike.goddess.interiorrecommend.entity.RecommendAssessDetail;
-import com.bjike.goddess.interiorrecommend.entity.RecommendRequire;
-import com.bjike.goddess.interiorrecommend.entity.RecommendScheme;
-import com.bjike.goddess.interiorrecommend.entity.RecommendType;
+import com.bjike.goddess.interiorrecommend.entity.*;
 import com.bjike.goddess.interiorrecommend.enums.GuideAddrStatus;
 import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.RecommendRequireTO;
@@ -50,6 +44,9 @@ public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, Recom
     private RecommendTypeSer recommendTypeSer;
     @Autowired
     private RecommendAssessDetailSer recommendAssessDetailSer;
+
+    @Autowired
+    private RecommendContentSer recommendContentSer;
 
     @Autowired
     private UserAPI userAPI;
@@ -206,6 +203,10 @@ public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, Recom
         if (recommendScheme != null) {
             if (recommendType != null) {
                 RecommendRequire model = BeanTransform.copyProperties(to, RecommendRequire.class, true);
+                RecommendScheme scheme= recommendSchemeSer.findById(to.getRecommendSchemeId());
+                RecommendType type = recommendTypeSer.findById(to.getRecommendTypeId());
+                model.setRecommendScheme(scheme);
+                model.setRecommendType(type);
                 //保存推荐考核内容
                 if (!CollectionUtils.isEmpty(to.getDetailList())) {
                     Set<RecommendAssessDetail> detailSet = new HashSet<RecommendAssessDetail>();
@@ -219,7 +220,7 @@ public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, Recom
                     model.setRecommendScheme(recommendScheme);
                     super.save(model);
                     to.setId(model.getId());
-                    return BeanTransform.copyProperties(to, RecommendRequireBO.class);
+                    return BeanTransform.copyProperties(model, RecommendRequireBO.class);
                 } else {
                     throw new SerException("推荐考核内容不能为空!");
                 }
@@ -328,5 +329,12 @@ public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, Recom
         List<RecommendAssessDetail> list = recommendAssessDetailSer.findAll();
         List<RecommendAssessDetailBO> boList = BeanTransform.copyProperties(list,RecommendAssessDetailBO.class);
         return boList;
+    }
+
+    @Override
+    public List<RecommendContentBO> findContent() throws SerException {
+        List<RecommendContent> content = recommendContentSer.findAll();
+        List<RecommendContentBO> contentBOS = BeanTransform.copyProperties(content,RecommendContentBO.class);
+        return contentBOS;
     }
 }

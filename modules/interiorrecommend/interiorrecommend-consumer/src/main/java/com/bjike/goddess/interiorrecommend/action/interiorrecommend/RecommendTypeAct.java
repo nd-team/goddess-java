@@ -125,7 +125,7 @@ public class RecommendTypeAct {
     @GetMapping("v1/list")
     public Result pageList(RecommendTypeDTO dto) throws ActException {
         try {
-            List<RecommendTypeVO> voList = BeanTransform.copyProperties(recommendTypeAPI.pageList(dto), RecommendTypeVO.class);
+            List<RecommendTypeVO> voList = BeanTransform.copyProperties(recommendTypeAPI.pageList(dto), RecommendTypeVO.class,true);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -149,9 +149,9 @@ public class RecommendTypeAct {
     }
 
     /**
-     * 根据id查询竞争对手记录
+     * 根据id查询推荐类型
      *
-     * @param id 竞争对手Id
+     * @param id 推荐类型Id
      * @return class RecommendTypeVO
      * @version v1
      */

@@ -9,7 +9,9 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.interiorrecommend.api.AwardInfoAPI;
 import com.bjike.goddess.interiorrecommend.api.RecommendInfoAPI;
+import com.bjike.goddess.interiorrecommend.bo.AwardInfoBO;
 import com.bjike.goddess.interiorrecommend.dto.AwardInfoDTO;
+import com.bjike.goddess.interiorrecommend.entity.AwardInfo;
 import com.bjike.goddess.interiorrecommend.excel.SonPermissionObject;
 import com.bjike.goddess.interiorrecommend.to.AwardInfoTO;
 import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
@@ -20,10 +22,7 @@ import com.bjike.goddess.organize.entity.UserSetPermission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -131,7 +130,7 @@ public class AwardInfoAct {
     @GetMapping("v1/awardlist")
     public Result pageList() throws ActException {
         try {
-            List<AwardStandardVO> voList = BeanTransform.copyProperties(recommendInfoAPI.awardlist(), AwardStandardVO.class);
+            List<AwardStandardVO> voList = BeanTransform.copyProperties(recommendInfoAPI.awardlist(), AwardStandardVO.class,true);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -169,6 +168,40 @@ public class AwardInfoAct {
             List<AwardStandardVO> voList = BeanTransform.copyProperties(awardInfoAPI.pageList(dto), AwardStandardVO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id来查询推荐奖励信息
+     * @param id
+     * @return class AwardInfoVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/one/{id}")
+    public Result findOne(@PathVariable String id) throws ActException{
+        try {
+            AwardInfoBO bo = awardInfoAPI.findOne(id);
+            AwardInfoVO vo = BeanTransform.copyProperties(bo,AwardInfoVO.class);
+            return ActResult.initialize(vo);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 列表总条数
+     * @param dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(AwardInfoDTO dto) throws ActException{
+        try{
+            Long count = awardInfoAPI.count(dto);
+            return ActResult.initialize(count);
+        }catch (SerException e){
             throw new ActException(e.getMessage());
         }
     }

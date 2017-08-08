@@ -306,4 +306,15 @@ public class AwardInfoSerImpl extends ServiceImpl<AwardInfo, AwardInfoDTO> imple
         return BeanTransform.copyProperties(super.findByPage(dto), AwardInfoBO.class);
     }
 
+    @Override
+    public AwardInfoBO findOne(String id) throws SerException {
+        AwardInfo awardInfo = super.findById(id);
+        AwardInfoBO bo = BeanTransform.copyProperties(awardInfo,AwardInfoBO.class);
+        return bo;
+    }
+
+    @Override
+    public Long count(AwardInfoDTO dto) throws SerException {
+        return super.count(dto);
+    }
 }

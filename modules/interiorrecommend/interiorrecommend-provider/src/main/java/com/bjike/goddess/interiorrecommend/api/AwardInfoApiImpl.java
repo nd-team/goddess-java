@@ -48,4 +48,14 @@ public class AwardInfoApiImpl implements AwardInfoAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return awardInfoSer.guidePermission(guidePermissionTO);
     }
+
+    @Override
+    public AwardInfoBO findOne(String id) throws SerException {
+        return awardInfoSer.findOne(id);
+    }
+
+    @Override
+    public Long count(AwardInfoDTO dto) throws SerException {
+        return awardInfoSer.count(dto);
+    }
 }

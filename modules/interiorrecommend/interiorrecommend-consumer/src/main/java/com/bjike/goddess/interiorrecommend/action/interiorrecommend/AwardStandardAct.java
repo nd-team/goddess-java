@@ -9,6 +9,7 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.interiorrecommend.api.AwardStandardAPI;
+import com.bjike.goddess.interiorrecommend.bo.AwardStandardBO;
 import com.bjike.goddess.interiorrecommend.dto.AwardStandardDTO;
 import com.bjike.goddess.interiorrecommend.to.AwardStandardTO;
 import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
@@ -124,9 +125,43 @@ public class AwardStandardAct {
     @GetMapping("v1/pageList")
     public Result pageList(AwardStandardDTO dto) throws ActException {
         try {
-            List<AwardStandardVO> voList = BeanTransform.copyProperties(awardStandardAPI.pageList(dto), AwardStandardVO.class);
+            List<AwardStandardVO> voList = BeanTransform.copyProperties(awardStandardAPI.pageList(dto), AwardStandardVO.class,true);
             return ActResult.initialize(voList);
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id来查询推荐奖励要求
+     * @param id
+     * @return class AwardStandardVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/one/{id}")
+    public Result findOne(@PathVariable String id) throws ActException{
+        try {
+            AwardStandardBO bo = awardStandardAPI.findOne(id);
+            AwardStandardVO vo = BeanTransform.copyProperties(bo,AwardStandardVO.class);
+            return ActResult.initialize(vo);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 列表总条数
+     * @param dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(AwardStandardDTO dto) throws ActException{
+        try {
+            Long count= awardStandardAPI.count(dto);
+            return ActResult.initialize(count);
+        }catch (SerException e){
             throw new ActException(e.getMessage());
         }
     }

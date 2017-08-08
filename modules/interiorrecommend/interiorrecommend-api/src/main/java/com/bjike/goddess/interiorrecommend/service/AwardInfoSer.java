@@ -50,5 +50,19 @@ public interface AwardInfoSer extends Ser<AwardInfo, AwardInfoDTO> {
      */
     List<AwardInfoBO> pageList(AwardInfoDTO dto) throws SerException;
 
+    /**
+     * 根据id来查询推荐奖励信息
+     * @param id
+     * @throws SerException
+     */
+    AwardInfoBO findOne(String id) throws SerException;
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     */
+    Long count(AwardInfoDTO dto) throws SerException;
+
 
 }

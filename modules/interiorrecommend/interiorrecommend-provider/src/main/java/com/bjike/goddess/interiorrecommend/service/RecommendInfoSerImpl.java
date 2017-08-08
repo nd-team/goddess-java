@@ -12,6 +12,7 @@ import com.bjike.goddess.interiorrecommend.entity.*;
 import com.bjike.goddess.interiorrecommend.enums.GuideAddrStatus;
 import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.RecommendInfoTO;
+import com.bjike.goddess.interiorrecommend.vo.RecommendInfoVO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,9 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
+
+    @Autowired
+    private RecommendContentSer recommendContentSer;
 
     /**
      * 核对查看权限（部门级别）
@@ -201,13 +205,14 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
             RecommendInfo model = BeanTransform.copyProperties(to, RecommendInfo.class, true);
             //保存推荐考核内容
             if (!CollectionUtils.isEmpty(to.getContentList())) {
-                Set<RecommendContent> contentSet = new HashSet<RecommendContent>();
                 List<RecommendContent> contentList = BeanTransform.copyProperties(to.getContentList(), RecommendContent.class);
-                contentSet.addAll(contentList);
-                model.setContentSet(contentSet);
                 model.setRecommendUser(userBO.getUsername());
                 model.setRecommendRequire(recommendRequire);
                 super.save(model);
+                contentList.forEach(entity->{
+                    entity.setRecommendInfo(model);
+                });
+                recommendContentSer.save(contentList);
                 to.setId(model.getId());
                 return BeanTransform.copyProperties(to, RecommendInfoBO.class);
             } else {
@@ -231,16 +236,16 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
                 detailSet.addAll(detailList);
                 for (RecommendContent detail : detailSet) {
                     if (!StringUtils.isEmpty(detail.getId())) {
-                        RecommendAssessDetail assessDetail = recommendAssessDetailSer.findById(detail.getId());
-                        detail.setCreateTime(assessDetail.getCreateTime());
-                        detail.setModifyTime(assessDetail.getModifyTime());
+                        RecommendContent content = recommendContentSer.findById(detail.getId());
+                        detail.setCreateTime(content.getCreateTime());
+                        detail.setModifyTime(content.getModifyTime());
                         detail.setRecommendInfo(model);
                     }
                 }
                 model.setContentSet(detailSet);
                 model.setRecommendRequire(recommendRequire);
                 super.update(model);
-                return BeanTransform.copyProperties(to, RecommendRequireBO.class);
+                return BeanTransform.copyProperties(to, RecommendInfoBO.class);
             } else {
                 throw new SerException("非法Id,推荐信息对象不能为空");
             }
@@ -327,5 +332,22 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
             list.add(require);
         }
         return list;
+    }
+
+    @Override
+    public RecommendInfoBO findOne(String id) throws SerException {
+        if(null != id){
+            RecommendInfo info = super.findById(id);
+            RecommendInfoBO bo = BeanTransform.copyProperties(info,RecommendInfoBO.class);
+            bo.setRequireId(info.getRecommendRequire().getId());
+            return bo;
+        }else{
+            throw new SerException("id不能为空");
+        }
+    }
+
+    @Override
+    public Long count(RecommendInfoDTO dto) throws SerException {
+        return super.count(dto);
     }
 }

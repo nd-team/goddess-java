@@ -78,4 +78,14 @@ public class RecommendInfoApiImpl implements RecommendInfoAPI {
     public List<String[]> findRequire() throws SerException {
         return recommendInfoSer.findRequire();
     }
+
+    @Override
+    public RecommendInfoBO findOne(String id) throws SerException {
+        return recommendInfoSer.findOne(id);
+    }
+
+    @Override
+    public Long count(RecommendInfoDTO dto) throws SerException {
+        return recommendInfoSer.count(dto);
+    }
 }
