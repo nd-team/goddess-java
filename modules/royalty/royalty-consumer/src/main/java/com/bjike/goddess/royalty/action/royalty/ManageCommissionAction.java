@@ -27,11 +27,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 指标库
+ * 总呈现
  *
  * @Author: [ xiazhili ]
  * @Date: [ 2017-07-10 11:23 ]
- * @Description: [ 指标库 ]
+ * @Description: [ 总呈现 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -67,6 +67,7 @@ public class ManageCommissionAction {
      * 对赌指标总呈现
      *
      * @param to to
+     * @return class ManageCommissionVO
      * @des 根据项目名称呈现
      * @version v1
      */

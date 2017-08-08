@@ -45,10 +45,10 @@ public class SystemBetBBO extends BaseBO {
      * 部门总得分（制约得分+基础得分）
      */
     private Double departmentTotalScore;
-    /**
-     * 体系间对赌表A
-     */
-    private SystemBetABO systemBetABO;
+//    /**
+//     * 体系间对赌表A
+//     */
+//    private SystemBetABO systemBetABO;
     /**
      * 体系间对赌C
      */
@@ -111,11 +111,11 @@ public class SystemBetBBO extends BaseBO {
         this.department = department;
     }
 
-    public SystemBetABO getSystemBetABO() {
-        return systemBetABO;
-    }
-
-    public void setSystemBetABO(SystemBetABO systemBetABO) {
-        this.systemBetABO = systemBetABO;
-    }
+//    public SystemBetABO getSystemBetABO() {
+//        return systemBetABO;
+//    }
+//
+//    public void setSystemBetABO(SystemBetABO systemBetABO) {
+//        this.systemBetABO = systemBetABO;
+//    }
 }

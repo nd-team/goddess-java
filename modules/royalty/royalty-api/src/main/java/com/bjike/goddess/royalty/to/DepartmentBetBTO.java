@@ -41,10 +41,6 @@ public class DepartmentBetBTO extends BaseTO {
      * 部门总得分（制约得分+基础得分）
      */
     private Double departmentTotalScore;
-    /**
-     * 部门间对赌表A
-     */
-    private String departmentBetAId;
 
     /**
      * 部门间对赌表C
@@ -91,13 +87,6 @@ public class DepartmentBetBTO extends BaseTO {
         this.departmentTotalScore = departmentTotalScore;
     }
 
-    public String getDepartmentBetAId() {
-        return departmentBetAId;
-    }
-
-    public void setDepartmentBetAId(String departmentBetAId) {
-        this.departmentBetAId = departmentBetAId;
-    }
 
     public List<DepartmentBetCTO> getDepartmentBetCTOS() {
         return departmentBetCTOS;

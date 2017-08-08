@@ -29,10 +29,10 @@ public class SystemBetDBO extends BaseBO {
      * 未达标分配
      */
     private Double unmetAllocation;
-    /**
-     * 体系间对赌表C
-     */
-    private SystemBetCBO systemBetCBO;
+//    /**
+//     * 体系间对赌表C
+//     */
+//    private SystemBetCBO systemBetCBO;
 
 
 
@@ -52,11 +52,11 @@ public class SystemBetDBO extends BaseBO {
         this.unmetAllocation = unmetAllocation;
     }
 
-    public SystemBetCBO getSystemBetCBO() {
-        return systemBetCBO;
-    }
-
-    public void setSystemBetCBO(SystemBetCBO systemBetCBO) {
-        this.systemBetCBO = systemBetCBO;
-    }
+//    public SystemBetCBO getSystemBetCBO() {
+//        return systemBetCBO;
+//    }
+//
+//    public void setSystemBetCBO(SystemBetCBO systemBetCBO) {
+//        this.systemBetCBO = systemBetCBO;
+//    }
 }

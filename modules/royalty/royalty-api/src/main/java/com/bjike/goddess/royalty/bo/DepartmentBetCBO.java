@@ -47,10 +47,10 @@ public class DepartmentBetCBO extends BaseBO {
      * 对赌得分（部门总得分*目标-部门分配对赌权重）
      */
     private Double betScore;
-    /**
-     * 体系间对赌表B
-     */
-    private DepartmentBetBBO departmentBetBBO;
+//    /**
+//     * 体系间对赌表B
+//     */
+//    private DepartmentBetBBO departmentBetBBO;
     /**
      * 体系间对赌表d
      */
@@ -112,13 +112,13 @@ public class DepartmentBetCBO extends BaseBO {
         this.betScore = betScore;
     }
 
-    public DepartmentBetBBO getDepartmentBetBBO() {
-        return departmentBetBBO;
-    }
-
-    public void setDepartmentBetBBO(DepartmentBetBBO departmentBetBBO) {
-        this.departmentBetBBO = departmentBetBBO;
-    }
+//    public DepartmentBetBBO getDepartmentBetBBO() {
+//        return departmentBetBBO;
+//    }
+//
+//    public void setDepartmentBetBBO(DepartmentBetBBO departmentBetBBO) {
+//        this.departmentBetBBO = departmentBetBBO;
+//    }
 
     public List<DepartmentBetDBO> getDepartmentBetDBOS() {
         return departmentBetDBOS;

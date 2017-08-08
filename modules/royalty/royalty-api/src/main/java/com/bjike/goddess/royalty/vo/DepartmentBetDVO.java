@@ -24,10 +24,6 @@ public class DepartmentBetDVO {
      * 未达标分配
      */
     private Double unmetAllocation;
-    /**
-     * 部门间对赌表B
-     */
-    private DepartmentBetCVO departmentBetCVO;
 
     public String getId() {
         return id;
@@ -53,11 +49,4 @@ public class DepartmentBetDVO {
         this.unmetAllocation = unmetAllocation;
     }
 
-    public DepartmentBetCVO getDepartmentBetCVO() {
-        return departmentBetCVO;
-    }
-
-    public void setDepartmentBetCVO(DepartmentBetCVO departmentBetCVO) {
-        this.departmentBetCVO = departmentBetCVO;
-    }
 }

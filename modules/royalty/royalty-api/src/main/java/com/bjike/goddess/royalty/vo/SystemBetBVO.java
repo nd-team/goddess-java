@@ -46,11 +46,13 @@ public class SystemBetBVO {
      * 部门总得分（制约得分+基础得分）
      */
     private Double departmentTotalScore;
+//    /**
+//     * 体系间对赌表A
+//     */
+//    private SystemBetAVO systemBetAVO;
     /**
-     * 体系间对赌表A
+     * 体系间对赌表C
      */
-    private SystemBetAVO systemBetAVO;
-
     private List<SystemBetCVO> systemBetCVOS;
 
     public String getId() {
@@ -110,13 +112,13 @@ public class SystemBetBVO {
         this.department = department;
     }
 
-    public SystemBetAVO getSystemBetAVO() {
-        return systemBetAVO;
-    }
-
-    public void setSystemBetAVO(SystemBetAVO systemBetAVO) {
-        this.systemBetAVO = systemBetAVO;
-    }
+//    public SystemBetAVO getSystemBetAVO() {
+//        return systemBetAVO;
+//    }
+//
+//    public void setSystemBetAVO(SystemBetAVO systemBetAVO) {
+//        this.systemBetAVO = systemBetAVO;
+//    }
 
     public List<SystemBetCVO> getSystemBetCVOS() {
         return systemBetCVOS;

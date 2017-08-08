@@ -12,6 +12,7 @@ import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.vo.AreaVO;
 import com.bjike.goddess.receivable.api.ReceivableSubsidiaryAPI;
+import com.bjike.goddess.receivable.bo.ContractorBO;
 import com.bjike.goddess.receivable.bo.ReceivableSubsidiaryBO;
 import com.bjike.goddess.receivable.dto.ReceivableSubsidiaryDTO;
 import com.bjike.goddess.receivable.excel.ReceivableSubsidiaryExcel;
@@ -103,6 +104,8 @@ public class ReceivableSubsidiaryAction extends BaseFileAction {
     public Result receivable(@PathVariable String id) throws ActException {
         try {
             ReceivableSubsidiaryBO receivableSubsidiaryBO = receivableSubsidiaryAPI.getOne(id);
+            ContractorBO contractorBO = receivableSubsidiaryBO.getContractorBO();
+            receivableSubsidiaryBO.setContractorBO(contractorBO);
             return ActResult.initialize(BeanTransform.copyProperties(receivableSubsidiaryBO, ReceivableSubsidiaryVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -169,7 +172,8 @@ public class ReceivableSubsidiaryAction extends BaseFileAction {
     public Result edit(@Validated(ReceivableSubsidiaryTO.TestEdit.class) ReceivableSubsidiaryTO receivableSubsidiaryTO, BindingResult bindingResult) throws ActException {
         try {
             ReceivableSubsidiaryBO receivableSubsidiaryBO = receivableSubsidiaryAPI.editReceivableSubsidiary(receivableSubsidiaryTO);
-            return ActResult.initialize(BeanTransform.copyProperties(receivableSubsidiaryBO, ReceivableSubsidiaryVO.class));
+
+            return ActResult.initialize(BeanTransform.copyProperties(receivableSubsidiaryBO,ReceivableSubsidiaryVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

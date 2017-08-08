@@ -57,7 +57,7 @@ public class SkillPromotionApplyTO extends BaseTO {
     /**
      * 主项/小项(是否为主项)
      */
-    @NotBlank(message = "主项/小项(是否为主项)不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "主项/小项(是否为主项)不能为空",groups = {ADD.class, EDIT.class})
     private Boolean subject;
 
     /**

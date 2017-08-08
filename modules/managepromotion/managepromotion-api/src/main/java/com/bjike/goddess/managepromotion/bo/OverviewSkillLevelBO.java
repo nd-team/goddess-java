@@ -2,8 +2,6 @@ package com.bjike.goddess.managepromotion.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import java.time.LocalDate;
-
 /**
  * 技能等级情况概览业务传输对象
  *
@@ -58,12 +56,12 @@ public class OverviewSkillLevelBO extends BaseBO {
     /**
      * 转正时间
      */
-    private LocalDate positiveTime;
+    private String positiveTime;
 
     /**
      * 获取时间
      */
-    private LocalDate acquisitionTime;
+    private String acquisitionTime;
 
     /**
      * 已晋升次数
@@ -145,19 +143,19 @@ public class OverviewSkillLevelBO extends BaseBO {
         this.transferSkillLevel = transferSkillLevel;
     }
 
-    public LocalDate getPositiveTime() {
+    public String getPositiveTime() {
         return positiveTime;
     }
 
-    public void setPositiveTime(LocalDate positiveTime) {
+    public void setPositiveTime(String positiveTime) {
         this.positiveTime = positiveTime;
     }
 
-    public LocalDate getAcquisitionTime() {
+    public String getAcquisitionTime() {
         return acquisitionTime;
     }
 
-    public void setAcquisitionTime(LocalDate acquisitionTime) {
+    public void setAcquisitionTime(String acquisitionTime) {
         this.acquisitionTime = acquisitionTime;
     }
 

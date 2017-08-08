@@ -28,7 +28,9 @@ public class SystemBetAVO {
      * 分值
      */
     private Integer score;
-
+    /**
+     * 体系间对赌表B
+     */
     private List<SystemBetBVO> systemBetBVOS;
 
     public String getId() {

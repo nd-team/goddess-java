@@ -24,15 +24,13 @@ public class JobsBetBVO {
      */
     private String department;
     /**
-     * 岗位间对赌表A
+     * 岗位间对赌表C
      */
-    private JobsBetAVO jobsBetAVO;
-
     private List<JobsBetCVO> jobsBetCVOS;
-
     public String getId() {
         return id;
     }
+
 
     public void setId(String id) {
         this.id = id;
@@ -46,13 +44,6 @@ public class JobsBetBVO {
         this.department = department;
     }
 
-    public JobsBetAVO getJobsBetAVO() {
-        return jobsBetAVO;
-    }
-
-    public void setJobsBetAVO(JobsBetAVO jobsBetAVO) {
-        this.jobsBetAVO = jobsBetAVO;
-    }
 
     public List<JobsBetCVO> getJobsBetCVOS() {
         return jobsBetCVOS;

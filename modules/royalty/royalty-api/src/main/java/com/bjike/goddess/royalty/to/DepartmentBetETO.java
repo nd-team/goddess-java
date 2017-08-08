@@ -21,10 +21,6 @@ public class DepartmentBetETO extends BaseTO {
      * 未达标分配
      */
     private Double unmetAllocation;
-    /**
-     * 部门间对赌表C
-     */
-    private String departmentBetCId;
 
     public String getUnmetAllocationDepartment() {
         return unmetAllocationDepartment;
@@ -42,11 +38,4 @@ public class DepartmentBetETO extends BaseTO {
         this.unmetAllocation = unmetAllocation;
     }
 
-    public String getDepartmentBetCId() {
-        return departmentBetCId;
-    }
-
-    public void setDepartmentBetCId(String departmentBetCId) {
-        this.departmentBetCId = departmentBetCId;
-    }
 }

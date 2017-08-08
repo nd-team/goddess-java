@@ -51,12 +51,9 @@ public class DepartmentBetCVO {
      */
     private Double betScore;
     /*
-     * 部门间对赌表B
-     */
-    private DepartmentBetBVO departmentBetBVO;
-
+      * 部门间对赌表D
+      */
     private List<DepartmentBetDVO> departmentBetDVOS;
-
 
 
     public String getId() {
@@ -123,13 +120,6 @@ public class DepartmentBetCVO {
         this.betScore = betScore;
     }
 
-    public DepartmentBetBVO getDepartmentBetBVO() {
-        return departmentBetBVO;
-    }
-
-    public void setDepartmentBetBVO(DepartmentBetBVO departmentBetBVO) {
-        this.departmentBetBVO = departmentBetBVO;
-    }
 
     public List<DepartmentBetDVO> getDepartmentBetDVOS() {
         return departmentBetDVOS;

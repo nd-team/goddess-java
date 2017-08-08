@@ -2,14 +2,10 @@ package com.bjike.goddess.royalty.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.royalty.bo.SystemBetABO;
-import com.bjike.goddess.royalty.bo.SystemBetBO;
-import com.bjike.goddess.royalty.dto.SystemBetCDTO;
+import com.bjike.goddess.royalty.dto.SystemBetADTO;
 import com.bjike.goddess.royalty.dto.SystemBetDDTO;
-import com.bjike.goddess.royalty.dto.SystemBetDTO;
-import com.bjike.goddess.royalty.excel.SonPermissionObject;
 import com.bjike.goddess.royalty.to.GuidePermissionTO;
 import com.bjike.goddess.royalty.to.SystemBetATO;
-import com.bjike.goddess.royalty.to.SystemBetTO;
 
 import java.util.List;
 
@@ -43,6 +39,7 @@ public interface SystemBetAPI {
     default Long count(SystemBetDDTO dto) throws SerException {
         return null;
     }
+
     /**
      * 一个体系间对赌表
      *
@@ -51,14 +48,15 @@ public interface SystemBetAPI {
     default SystemBetABO getOne(String id) throws SerException {
         return null;
     }
+
     /**
      * 体系间对赌表
      *
      * @param dto 体系间对赌表数据dto
-     * @return class SystemBetBO
+     * @return class SystemBetABO
      * @throws SerException
      */
-    default List<SystemBetBO> list(SystemBetDTO dto) throws SerException {
+    default List<SystemBetABO> list(SystemBetADTO dto) throws SerException {
         return null;
     }
 
@@ -90,6 +88,7 @@ public interface SystemBetAPI {
     default void delete(String id) throws SerException {
 
     }
+
     /**
      * 获取所有项目名称
      *
@@ -98,6 +97,7 @@ public interface SystemBetAPI {
     default List<String> getProjectName() throws SerException {
         return null;
     }
+
     /**
      * 获取所有部门
      *

@@ -2,9 +2,8 @@ package com.bjike.goddess.royalty.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.royalty.bo.SystemBetABO;
-import com.bjike.goddess.royalty.bo.SystemBetBO;
+import com.bjike.goddess.royalty.dto.SystemBetADTO;
 import com.bjike.goddess.royalty.dto.SystemBetDDTO;
-import com.bjike.goddess.royalty.dto.SystemBetDTO;
 import com.bjike.goddess.royalty.service.SystemBetSer;
 import com.bjike.goddess.royalty.to.GuidePermissionTO;
 import com.bjike.goddess.royalty.to.SystemBetATO;
@@ -48,7 +47,7 @@ public class SystemBetApiImpl implements SystemBetAPI {
     }
 
     @Override
-    public List<SystemBetBO> list(SystemBetDTO dto) throws SerException {
+    public List<SystemBetABO> list(SystemBetADTO dto) throws SerException {
         return systemBetSer.list(dto);
     }
 

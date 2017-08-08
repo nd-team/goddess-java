@@ -10,8 +10,8 @@ import com.bjike.goddess.organize.api.HierarchyAPI;
 import com.bjike.goddess.organize.vo.HierarchyVO;
 import com.bjike.goddess.royalty.api.SystemBetAPI;
 import com.bjike.goddess.royalty.bo.SystemBetABO;
+import com.bjike.goddess.royalty.dto.SystemBetADTO;
 import com.bjike.goddess.royalty.dto.SystemBetDDTO;
-import com.bjike.goddess.royalty.dto.SystemBetDTO;
 import com.bjike.goddess.royalty.to.GuidePermissionTO;
 import com.bjike.goddess.royalty.to.SystemBetATO;
 import com.bjike.goddess.royalty.vo.SystemBetAVO;
@@ -80,11 +80,10 @@ public class SystemBetAction {
             throw new ActException(e.getMessage());
         }
     }
-
     /**
      * 一个体系间对赌表
      *
-     * @param id
+     * @param id id
      * @return class SystemBetAVO
      * @des 获取一个体系间对赌表
      * @version v1
@@ -98,23 +97,22 @@ public class SystemBetAction {
             throw new ActException(e.getMessage());
         }
     }
-
     /**
      * 体系间对赌表列表
      *
      * @param dto 体系间对赌表dto
+     * @return class SystemBetAVO
      * @des 获取所有体系间对赌表
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(SystemBetDTO dto, HttpServletRequest request) throws ActException {
+    public Result list(SystemBetADTO dto, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(systemBetAPI.list(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
-
     /**
      * 添加体系间对赌表
      *
@@ -170,6 +168,7 @@ public class SystemBetAction {
         }
     }
 
+
     /**
      * 获取项目名称
      *
@@ -217,5 +216,8 @@ public class SystemBetAction {
             throw new ActException(e.getMessage());
         }
     }
+
+
+
 
 }

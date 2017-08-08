@@ -49,10 +49,10 @@ public class SystemBetCBO extends BaseBO {
      */
     private Double betScore;
 
-    /**
-     * 体系间对赌表B
-     */
-    private SystemBetBBO systemBetBBO;
+//    /**
+//     * 体系间对赌表B
+//     */
+//    private SystemBetBBO systemBetBBO;
     /**
      * 体系间对赌表d
      */
@@ -115,13 +115,13 @@ public class SystemBetCBO extends BaseBO {
         this.betScore = betScore;
     }
 
-    public SystemBetBBO getSystemBetBBO() {
-        return systemBetBBO;
-    }
-
-    public void setSystemBetBBO(SystemBetBBO systemBetBBO) {
-        this.systemBetBBO = systemBetBBO;
-    }
+//    public SystemBetBBO getSystemBetBBO() {
+//        return systemBetBBO;
+//    }
+//
+//    public void setSystemBetBBO(SystemBetBBO systemBetBBO) {
+//        this.systemBetBBO = systemBetBBO;
+//    }
 
     public List<SystemBetDBO> getSystemBetDBOS() {
         return systemBetDBOS;

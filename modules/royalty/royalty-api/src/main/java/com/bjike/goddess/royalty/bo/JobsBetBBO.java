@@ -19,10 +19,10 @@ public class JobsBetBBO extends BaseBO {
      * 部门
      */
     private String department;
-    /**
-     * 部门间对赌表A
-     */
-    private JobsBetABO jobsBetABO;
+//    /**
+//     * 部门间对赌表A
+//     */
+//    private JobsBetABO jobsBetABO;
     /**
      * 部门间对赌表C
      */
@@ -36,13 +36,13 @@ public class JobsBetBBO extends BaseBO {
         this.department = department;
     }
 
-    public JobsBetABO getJobsBetABO() {
-        return jobsBetABO;
-    }
-
-    public void setJobsBetABO(JobsBetABO jobsBetABO) {
-        this.jobsBetABO = jobsBetABO;
-    }
+//    public JobsBetABO getJobsBetABO() {
+//        return jobsBetABO;
+//    }
+//
+//    public void setJobsBetABO(JobsBetABO jobsBetABO) {
+//        this.jobsBetABO = jobsBetABO;
+//    }
 
     public List<JobsBetCBO> getJobsBetCBOS() {
         return jobsBetCBOS;

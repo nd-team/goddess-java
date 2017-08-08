@@ -16,11 +16,6 @@ public class SystemBetETO extends BaseTO{
      */
     private Double unmetAllocation;
 
-    /**
-     * 体系间对赌表C
-     */
-    private String systemBetCId;
-
     public String getUnmetAllocationSystem() {
         return unmetAllocationSystem;
     }
@@ -35,13 +30,5 @@ public class SystemBetETO extends BaseTO{
 
     public void setUnmetAllocation(Double unmetAllocation) {
         this.unmetAllocation = unmetAllocation;
-    }
-
-    public String getSystemBetCId() {
-        return systemBetCId;
-    }
-
-    public void setSystemBetCId(String systemBetCId) {
-        this.systemBetCId = systemBetCId;
     }
 }

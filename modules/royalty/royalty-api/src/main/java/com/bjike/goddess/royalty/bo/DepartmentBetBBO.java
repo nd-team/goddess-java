@@ -40,10 +40,10 @@ public class DepartmentBetBBO extends BaseBO {
      * 部门总得分（制约得分+基础得分）
      */
     private Double departmentTotalScore;
-    /**
-     * 部门间对赌表A
-     */
-    private DepartmentBetABO departmentBetABO;
+//    /**
+//     * 部门间对赌表A
+//     */
+//    private DepartmentBetABO departmentBetABO;
     /**
      * 部门间对赌表C
      */
@@ -89,13 +89,13 @@ public class DepartmentBetBBO extends BaseBO {
         this.departmentTotalScore = departmentTotalScore;
     }
 
-    public DepartmentBetABO getDepartmentBetABO() {
-        return departmentBetABO;
-    }
-
-    public void setDepartmentBetABO(DepartmentBetABO departmentBetABO) {
-        this.departmentBetABO = departmentBetABO;
-    }
+//    public DepartmentBetABO getDepartmentBetABO() {
+//        return departmentBetABO;
+//    }
+//
+//    public void setDepartmentBetABO(DepartmentBetABO departmentBetABO) {
+//        this.departmentBetABO = departmentBetABO;
+//    }
 
     public List<DepartmentBetCBO> getDepartmentBetCBOS() {
         return departmentBetCBOS;

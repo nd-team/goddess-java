@@ -7,7 +7,6 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.managepromotion.bo.SkillGradingABO;
 import com.bjike.goddess.managepromotion.bo.SkillGradingBBO;
-import com.bjike.goddess.managepromotion.bo.SkillGradingBO;
 import com.bjike.goddess.managepromotion.bo.SkillGradingCBO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingADTO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingBDTO;
@@ -255,29 +254,33 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
     }
 
     @Override
-    public List<SkillGradingBO> findListSkillGrading(SkillGradingDTO skillGradingDTO) throws SerException {
+    public List<SkillGradingABO> findListSkillGrading(SkillGradingADTO skillGradingADTO) throws SerException {
         checkSeeIdentity();
         SkillGradingADTO dtoA = new SkillGradingADTO();
         List<SkillGradingA> listA = skillGradingASer.findByCis(dtoA);
-        List<SkillGradingBO> skillGradingBOS = new ArrayList<>(listA.size());
-        for (SkillGradingA skillGradingA : listA) {
-            SkillGradingBO skillBO = new SkillGradingBO();
-            skillBO.setSkillGradingABO(BeanTransform.copyProperties(skillGradingA, SkillGradingABO.class));
-            SkillGradingBDTO dtoB = new SkillGradingBDTO();
-            List<SkillGradingB> listB = skillGradingBSer.findByCis(dtoB);
-            List<SkillGradingBBO> bboList = BeanTransform.copyProperties(listB, SkillGradingBBO.class);
-            skillBO.getSkillGradingABO().setSkillGradingBBOS(bboList);
+        List<SkillGradingABO> listABO = BeanTransform.copyProperties(listA, SkillGradingABO.class);
 
-            for (SkillGradingBBO skillGradingBBO : bboList) {
-                SkillGradingCDTO dtoC = new SkillGradingCDTO();
-                List<SkillGradingC> listC = skillGradingCSer.findByCis(dtoC);
-                List<SkillGradingCBO> cboList = BeanTransform.copyProperties(listC, SkillGradingCBO.class);
-                skillGradingBBO.setSkillGradingCBOS(cboList);
+        if (listABO != null) {
+            for (SkillGradingABO aBo : listABO) {
+                SkillGradingBDTO dtoB = new SkillGradingBDTO();
+                dtoB.getConditions().add(Restrict.eq("skillGradingA.id", aBo.getId()));
+                List<SkillGradingB> listB = skillGradingBSer.findByCis(dtoB);
+                List<SkillGradingBBO> bboList = BeanTransform.copyProperties(listB, SkillGradingBBO.class);
+                aBo.setSkillGradingBBOS(bboList);
+                if (bboList != null) {
+                    for (SkillGradingBBO skillGradingBBO : bboList) {
+                        SkillGradingCDTO dtoC = new SkillGradingCDTO();
+                        dtoC.getConditions().add(Restrict.eq("skillGradingB.id", skillGradingBBO.getId()));
+                        List<SkillGradingC> listC = skillGradingCSer.findByCis(dtoC);
+                        List<SkillGradingCBO> cboList = BeanTransform.copyProperties(listC, SkillGradingCBO.class);
+                        skillGradingBBO.setSkillGradingCBOS(cboList);
+                    }
+                }
 
             }
-            skillGradingBOS.add(skillBO);
         }
-        return skillGradingBOS;
+        return listABO;
+
     }
 
     @Override
@@ -383,6 +386,35 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
     @Transactional(rollbackFor = SerException.class)
     public void removeSkillGrading(String id) throws SerException {
         checkAddIdentity();
+       SkillGradingC c= skillGradingCSer.findById(id);
+       if (c==null){
+           throw new SerException("该对象不存在");
+       }
+//       String b_id=c.getSkillGradingB().getId();
+        skillGradingCSer.remove(id);
+        List<SkillGradingB> bList = skillGradingBSer.findAll();
+        List<SkillGradingA> aList = skillGradingASer.findAll();
+        Set<String> bids = new HashSet<>();
+        Set<String> aids = new HashSet<>();
+        for (SkillGradingC c1 : skillGradingCSer.findAll()) {
+            bids.add(c1.getSkillGradingB().getId());
+        }
+        for (SkillGradingB b : bList) {
+            if (!bids.contains(b.getId())) {
+                skillGradingBSer.remove(b.getId());
+
+            }
+        }
+        for (SkillGradingB b1 : skillGradingBSer.findAll()) {
+            aids.add(b1.getSkillGradingA().getId());
+        }
+        for (SkillGradingA a : aList) {
+            if (!aids.contains(a.getId())) {
+                skillGradingASer.remove(a.getId());
+            }
+        }
+
+    }
 //        SkillGradingADTO skillGradingADTO = new SkillGradingADTO();
 //        skillGradingADTO.getConditions().add(Restrict.eq("id", id));
 //        List<SkillGradingA> aList = skillGradingASer.findByCis(skillGradingADTO);
@@ -411,33 +443,36 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
 //            skillGradingASer.remove(id);
 //
 //        }
-        skillGradingCSer.remove(id);
 
-        SkillGradingCDTO skillGradingCDTO = new SkillGradingCDTO();
-//        skillGradingCDTO.getConditions().add(Restrict.eq("id", id));
-        List<SkillGradingC> cList = skillGradingCSer.findByCis(skillGradingCDTO);
-        List<SkillGradingB> bList = skillGradingBSer.findAll();
-        List<SkillGradingA> aList = skillGradingASer.findAll();
-        Set<String> bids=new HashSet<>();
-        Set<String> aids = new HashSet<>();
-        for (SkillGradingC c: cList){
-            bids.add(c.getSkillGradingB().getId());
-        }
-        for (SkillGradingB b:bList){
-            if (!bids.contains(b.getId())){
-                skillGradingBSer.remove(b.getId());
-                for (SkillGradingB b1:skillGradingBSer.findAll()){
-                    aids.add(b1.getSkillGradingA().getId());
-                }
-            }
-        }
-        for(SkillGradingA a:aList){
-            if(!aids.contains(a.getId())){
-                skillGradingASer.remove(a.getId());
-            }
-        }
 
-    }
+//   if ("c".equals(type)) {
+//            String b_id=skillGradingCSer.findById(id).getSkillGradingB().getId();
+//            skillGradingCSer.remove(id);
+//            Set<String> b_ids=new HashSet<>();
+//            for (SkillGradingC c:skillGradingCSer.findAll()){
+//                b_ids.add(c.getSkillGradingB().getId());
+//            }
+//            if (!b_ids.contains(b_id)){
+//                skillGradingBSer.remove(b_id);
+//            }
+//        }
+//        if ("b".equals(type)) {
+////            String[] fields = new String[]{"skillGradingB_id"};
+////            String sql = "select skillGradingB_id from managepromotion_skillgradingc where id  = "+id;
+////            List<SkillGradingC> cList = skillGradingCSer.findBySql(sql,SkillGradingC.class,fields);
+//            SkillGradingC c=skillGradingCSer.findById(id);
+//            if (c!=null) {
+//                skillGradingBSer.remove(c.getSkillGradingB().getId());
+//            }
+//        }
+//        if ("a".equals(type)) {
+//            SkillGradingBDTO skillGradingBDTO = new SkillGradingBDTO();
+//            List<SkillGradingB> bList = skillGradingBSer.findByCis(skillGradingBDTO);
+//            if (bList.size() == 0) {
+//                skillGradingASer.remove(id);
+//            }
+//        }
+//    }
 
     private SkillGrading findBySql(String system, String industry, String subject, Integer technicalRank) throws SerException {
         Integer[] technicals = new Integer[]{technicalRank};

@@ -162,9 +162,10 @@ public class RentalPreceptAct {
     }
 
     /**
-     * 获取租房方案信息
+     * 租房方案列表
      *
      * @param rentalPreceptDTO 租房方案dto
+     * @return class RentalPreceptVO
      * @version v1
      */
     @GetMapping("v1/list")
