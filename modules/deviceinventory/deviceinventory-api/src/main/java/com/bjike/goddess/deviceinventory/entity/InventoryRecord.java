@@ -72,7 +72,7 @@ public class InventoryRecord extends BaseEntity {
     /**
      * 保修期(月)
      */
-    @Column(name = "warrantyExpire", nullable = false, columnDefinition = "INT(11)   COMMENT '保修期(月)'")
+    @Column(name = "warrantyExpire", columnDefinition = "INT(11)   COMMENT '保修期(月)'")
     private Integer warrantyExpire;
 
     /**
@@ -90,7 +90,7 @@ public class InventoryRecord extends BaseEntity {
     /**
      * 差异说明
      */
-    @Column(name = "differThat", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '差异说明'")
+    @Column(name = "differThat", columnDefinition = "VARCHAR(255)   COMMENT '差异说明'")
     private String differThat;
 
     /**
@@ -114,7 +114,7 @@ public class InventoryRecord extends BaseEntity {
     /**
      * 备注
      */
-    @Column(name = "note", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @Column(name = "note",columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String note;
 
     /**

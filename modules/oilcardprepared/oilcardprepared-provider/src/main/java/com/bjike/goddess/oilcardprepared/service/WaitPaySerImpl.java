@@ -273,7 +273,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
                 } else {
                     boolean b1 = true;
                     for (WaitPay p : waitPays) {
-                        if (p.getWaitId().equals(v.getId())) {
+                        if (null!=p.getWaitId()&&p.getWaitId().equals(v.getId())) {
                             b1 = false;
                         }
                     }
