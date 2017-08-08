@@ -202,14 +202,14 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
             //保存推荐考核内容
             if (!CollectionUtils.isEmpty(to.getContentList())) {
                 Set<RecommendContent> contentSet = new HashSet<RecommendContent>();
-                List<RecommendContent> contentList = BeanTransform.copyProperties(to.getContentList(), RecommendAssessDetail.class);
+                List<RecommendContent> contentList = BeanTransform.copyProperties(to.getContentList(), RecommendContent.class);
                 contentSet.addAll(contentList);
                 model.setContentSet(contentSet);
                 model.setRecommendUser(userBO.getUsername());
                 model.setRecommendRequire(recommendRequire);
                 super.save(model);
                 to.setId(model.getId());
-                return BeanTransform.copyProperties(to, RecommendRequireBO.class);
+                return BeanTransform.copyProperties(to, RecommendInfoBO.class);
             } else {
                 throw new SerException("推荐考核内容不能为空!");
             }
@@ -319,14 +319,12 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
     }
 
     @Override
-    public List<String> findRequire() throws SerException {
+    public List<String[]> findRequire() throws SerException {
         List<RecommendRequire> requireList = recommendRequireSer.findAll();
-        List<String> list = new ArrayList<>();
+        List<String[]> list = new ArrayList<>();
         for(RecommendRequire recommendRequire : requireList){
-            List<String> require = new ArrayList<>();
-            require.add(recommendRequire.getRecommendType().getTypeName());
-            require.add(recommendRequire.getId());
-            list.addAll(require);
+            String[] require = {recommendRequire.getRecommendType().getTypeName(),recommendRequire.getId()};
+            list.add(require);
         }
         return list;
     }

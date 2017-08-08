@@ -103,7 +103,7 @@ public class SalaryInformation extends BaseEntity {
     /**
      * 转正时间
      */
-    @Column(name = "positiveTime",nullable = false,columnDefinition = "DATE   COMMENT '转正时间'"  )
+    @Column(name = "positiveTime",columnDefinition = "DATE   COMMENT '转正时间'"  )
     private LocalDate  positiveTime;
 
     /**

@@ -97,178 +97,11 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
         super.remove(id);
     }
 
-    //校验字段是否存在
-    private void isExist(SalaryInformationTO to, Integer row) throws SerException {
-        if(StringUtils.isBlank( to.getPayStarTime() )){
-            throw new SerException("第" + row + "行的计薪周期开始时间不能为空" );
-        }
-        if(StringUtils.isBlank( to.getPayEndTime() )){
-            throw new SerException("第" + row + "行的计薪周期结束时间不能为空" );
-        }
-        if(null== to.getArea()){
-            throw new SerException("第" + row + "行的地区不能为空" );
-        }
-        if ( null== to.getEmployeeId()) {
-            throw new SerException("第" + row + "行的员工编号不能为空");
-        }
-        if(null == to.getEmployeeName()){
-            throw new SerException("第" + row + "行的姓名不能为空");
-        }
-        if(null== to.getSystem()){
-            throw new SerException("第" + row + "行的体系不能为空" );
-        }
-        if ( null== to.getSection()) {
-            throw new SerException("第" + row + "行的部门项目组不能为空");
-        }
-        if(null == to.getStation()){
-            throw new SerException("第" + row + "行的岗位不能为空");
-        }
-        if(null== to.getStationLevel()){
-            throw new SerException("第" + row + "行的岗位层级不能为空" );
-        }
-        if ( null== to.getManageLevel()) {
-            throw new SerException("第" + row + "行的管理层级不能为空");
-        }
-        if(null == to.getSkill()){
-            throw new SerException("第" + row + "行的技能项不能为空");
-        }
-        if(null== to.getProSkills()){
-            throw new SerException("第" + row + "行的技能专业不能为空" );
-        }
-        if ( null== to.getSkillLevel()) {
-            throw new SerException("第" + row + "行的技能级别不能为空");
-        }
-        if(null == to.getHiredate()){
-            throw new SerException("第" + row + "行的入职时间不能为空");
-        }
-
-        if(null == to.getWorkingTime()){
-            throw new SerException("第" + row + "行的在职时间不能为空");
-        }
-        if(null== to.getBasicSalary()){
-            throw new SerException("第" + row + "行的基本工资不能为空" );
-        }
-        if ( null== to.getPostSalary()) {
-            throw new SerException("第" + row + "行的岗位工资不能为空");
-        }
-        if(null == to.getSkillPay()){
-            throw new SerException("第" + row + "行的技能工资不能为空");
-        }
-        if(null== to.getManagePay()){
-            throw new SerException("第" + row + "行的管理工资不能为空" );
-        }
-        if ( null== to.getSkillSubsidies()) {
-            throw new SerException("第" + row + "行的技能职衔补助不能为空");
-        }
-        if(null == to.getManageSubsidies()){
-            throw new SerException("第" + row + "行的管理等级职衔补助不能为空");
-        }
-        if(null== to.getSeniorityLevSubsidies()){
-            throw new SerException("第" + row + "行的工龄职衔补助不能为空" );
-        }
-        if ( null== to.getAllSubsidies()) {
-            throw new SerException("第" + row + "行的职衔补助总额不能为空");
-        }
-        if(null == to.getProjectBenefits()){
-            throw new SerException("第" + row + "行的项目津贴不能为空");
-        }
-
-        if ( null== to.getWage()) {
-            throw new SerException("第" + row + "行的定薪不能为空");
-        }
-        if(null == to.getSalary()){
-            throw new SerException("第" + row + "行的岗位不能为空");
-        }
-        if(null== to.getStationLevel()){
-            throw new SerException("第" + row + "行的工资不能为空" );
-        }
-        if ( null== to.getComputerSubsidies()) {
-            throw new SerException("第" + row + "行的电脑补助不能为空");
-        }
-        if(null == to.getAccommodationSubsidies()){
-            throw new SerException("第" + row + "行的住宿补助不能为空");
-        }
-        if(null== to.getSenioritySubsidies()){
-            throw new SerException("第" + row + "行的工龄补助不能为空" );
-        }
-        if ( null== to.getHyperthermiaSubsidies()) {
-            throw new SerException("第" + row + "行的高温补助不能为空");
-        }
-        if(null == to.getAllSalary()){
-            throw new SerException("第" + row + "行的工资总额不能为空");
-        }
-
-        if(null == to.getJinpoCost()){
-            throw new SerException("第" + row + "行的扣社保不能为空");
-        }
-        if(null== to.getJinpoSubsidies()){
-            throw new SerException("第" + row + "行的社保补助不能为空" );
-        }
-        if ( null== to.getUtilities()) {
-            throw new SerException("第" + row + "行的水电费不能为空");
-        }
-        if(null == to.getPersonTax()){
-            throw new SerException("第" + row + "行的个税不能为空");
-        }
-        if(null== to.getAllRewardScore()){
-            throw new SerException("第" + row + "行的奖励处罚得分汇总不能为空" );
-        }
-        if ( null== to.getAllRewardCost()) {
-            throw new SerException("第" + row + "行的奖励处罚费用汇总不能为空");
-        }
-        if(null == to.getAttendanceDay()){
-            throw new SerException("第" + row + "行的出勤天数不能为空");
-        }
-        if(null == to.getVacateDay()){
-            throw new SerException("第" + row + "行的请假天数不能为空");
-        }
-        if(null== to.getAbsenteeismDay()){
-            throw new SerException("第" + row + "行的旷工天数不能为空" );
-        }
-        if ( null== to.getUnfinishedTime()) {
-            throw new SerException("第" + row + "行的未完成任务工时不能为空");
-        }
-        if(null == to.getNormalOvertimeDay()){
-            throw new SerException("第" + row + "行的正常工作日加班天数不能为空");
-        }
-        if(null== to.getLegalRestDay()){
-            throw new SerException("第" + row + "行的法定节假日实际休息天数不能为空" );
-        }
-        if ( null== to.getLegalOvertimeDay()) {
-            throw new SerException("第" + row + "行的法定节假日加班天数不能为空");
-        }
-        if(null == to.getNormalRestDay()){
-            throw new SerException("第" + row + "行正常休息天数实际休息天数不能为空");
-        }
-
-        if(null == to.getNormalOvertimeDay()){
-            throw new SerException("第" + row + "行的正常休息天数加班天数不能为空");
-        }
-        if(null == to.getSurplusOvertimeDay()){
-            throw new SerException("第" + row + "行的剩余加班天数不能为空");
-        }
-        if(null== to.getOffsetOvertime()){
-            throw new SerException("第" + row + "行的加班抵事假和其他假的天数不能为空" );
-        }
-        if ( null== to.getEffectiveOvertime()) {
-            throw new SerException("第" + row + "行的抵扣事假和其他假后剩余加班天数不能为空");
-        }
-        if(null == to.getWeekDays()){
-            throw new SerException("第" + row + "行的月工作日不能为空");
-        }
-        if(null== to.getPaidDay()){
-            throw new SerException("第" + row + "行的可享受带薪天数不能为空" );
-        }
-
-    }
 
     @Override
     public void leadExcel(List<SalaryInformationTO> toList) throws SerException {
         //todo 要加上导出权限
         UserBO userBO = userAPI.currentUser();
-        for(int i = 1; i<= toList.size();i++){
-            isExist(toList.get(i-1),i);
-        }
         List<SalaryInformation> list = BeanTransform.copyProperties(toList,SalaryInformation.class,true);
         list.stream().forEach(str->{
             str.setModifyTime(LocalDateTime.now());
@@ -280,7 +113,6 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
 
     @Override
     public byte[] exportExcel(ExportSalaryInformationTO to) throws SerException {
-        //todo 暂时不知道是否一定要输入导出条件
         SalaryInformationDTO dto = new SalaryInformationDTO();
         //根据计薪开始时间和计薪结束时间来导出excel
         if(StringUtils.isNotBlank(to.getPayStarTime()) && StringUtils.isNotBlank(to.getPayEndTime())){
@@ -329,22 +161,52 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
         excel.setStation("岗位");
         excel.setStationLevel("岗位层级");
         excel.setManageLevel("管理层级");
-
         excel.setSkill("技能项");
         excel.setPayEndTime("技能专业");
-        excel.setArea("地区");
-        excel.setEmployeeId("员工编号");
-        excel.setEmployeeName("姓名");
-        excel.setSystem("体系");
-        excel.setSection("部门/项目组");
-        excel.setStation("岗位");
-        excel.setStationLevel("岗位层级");
-        excel.setManageLevel("管理层级");
-        salaryBasicSetExcels.add(excel);
+        excel.setSkillLevel("技能级别");
+        excel.setHiredate("入职时间");
+        excel.setPositiveTime("转正时间");
+        excel.setWorkingTime("在职时间");
+        excel.setBasicSalary(10d);
+        excel.setPostSalary(10d);
+        excel.setManagePay(10d);
+        excel.setSkillSubsidies(10d);
+        excel.setManageSubsidies(10d);
+        excel.setSeniorityLevSubsidies(10d);
+        excel.setAllSubsidies(10d);
+        excel.setProjectBenefits(10d);
+        excel.setWage(10d);
+        excel.setSalary(10d);
+        excel.setComputerSubsidies(10d);
+        excel.setAccommodationSubsidies(10d);
+        excel.setSenioritySubsidies(10d);
+        excel.setHyperthermiaSubsidies(10d);
+        excel.setAllSalary(10d);
+        excel.setJinpoCost(10d);
+        excel.setJinpoSubsidies(10d);
+        excel.setUtilities(10d);
+        excel.setPersonTax(10d);
+        excel.setAllRewardScore(10d);
+        excel.setAllRewardCost(10d);
+        excel.setAttendanceDay(10d);
+        excel.setVacateDay(10d);
+        excel.setAbsenteeismDay(10d);
+        excel.setUnfinishedTime(10d);
+        excel.setNormalOvertimeDay(10d);
+        excel.setLegalRestDay(10d);
+        excel.setLegalOvertimeDay(10d);
+        excel.setNormalRestDay(10d);
+        excel.setNormalOvertimeDay(10d);
+        excel.setSurplusOvertimeDay(10d);
+        excel.setOffsetOvertime(10d);
+        excel.setEffectiveOvertime(10d);
+        excel.setWeekDays(10d);
+        excel.setPaidDay(10d);
+        excel.setRemark("备注");
+        salaryInformationSetExcels.add(excel);
 
         Excel exce = new Excel(0,2);
-        byte[] bytes = ExcelUtil.clazzToExcel(salaryBasicSetExcels,exce);
+        byte[] bytes = ExcelUtil.clazzToExcel(salaryInformationSetExcels,exce);
         return bytes;
-        return new byte[0];
     }
 }

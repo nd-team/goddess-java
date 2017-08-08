@@ -86,4 +86,9 @@ public class SalaryBasicApiImpl implements SalaryBasicAPI  {
     public byte[] templateExport() throws SerException {
         return salaryBasicSer.templateExport();
     }
+
+    @Override
+    public List<SalaryBasicBO> pageList(SalaryBasicDTO dto) throws SerException {
+        return salaryBasicSer.pageList(dto);
+    }
 }

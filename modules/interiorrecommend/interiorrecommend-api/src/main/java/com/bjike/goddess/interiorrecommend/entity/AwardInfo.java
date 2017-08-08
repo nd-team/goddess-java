@@ -22,7 +22,7 @@ public class AwardInfo extends BaseEntity {
     /**
      * 推荐信息
      */
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "recommendInfo_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '推荐信息'")
     private RecommendInfo recommendInfo;
 
