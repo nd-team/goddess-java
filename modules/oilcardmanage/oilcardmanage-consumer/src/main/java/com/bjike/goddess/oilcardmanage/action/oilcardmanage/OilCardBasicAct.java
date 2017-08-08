@@ -10,6 +10,7 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.oilcardmanage.api.OilCardBasicAPI;
+import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardBasicDTO;
 import com.bjike.goddess.oilcardmanage.excel.SonPermissionObject;
 import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
@@ -232,9 +233,9 @@ public class OilCardBasicAct {
      * @version v1
      */
     @GetMapping("v1/find/{id}")
-    public Result pageList(String id) throws ActException {
+    public Result pageList(@PathVariable  String id) throws ActException {
         try {
-            OilCardBasicVO vo = BeanTransform.copyProperties(oilCardBasicAPI.findById(id), OilCardBasicVO.class);
+            OilCardBasicVO vo = BeanTransform.copyProperties(oilCardBasicAPI.find(id), OilCardBasicVO.class);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -256,6 +257,23 @@ public class OilCardBasicAct {
             Long count = oilCardBasicAPI.count(dto);
             return ActResult.initialize(count);
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有未冻结的油卡
+     * @return class OilCardBasicVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/oilcard")
+    public Result findOilCard() throws ActException{
+        try {
+            List<OilCardBasicBO> list = oilCardBasicAPI.findOilCard();
+            List<OilCardBasicVO> voList = BeanTransform.copyProperties(list,OilCardBasicVO.class);
+            return ActResult.initialize(voList);
+        }catch (SerException e){
             throw new ActException(e.getMessage());
         }
     }

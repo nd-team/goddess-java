@@ -22,7 +22,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * 权限设置
+ * 补助方案审核权限设置
  *
  * @Author: [ tanghaixiang ]
  * @Date: [ 2017-04-14 10:14 ]
@@ -78,6 +78,26 @@ public class RightSetAction {
     }
 
     /**
+     *  一个权限设置
+     *
+     * @param id  权限设置id
+     * @des 一个权限设置
+     * @version v1
+     * @return class RightSetVO
+     */
+    @GetMapping("v1/one/{id}")
+    public Result getOneById(@PathVariable String id ) throws ActException {
+        try {
+            RightSetVO ageAssistVO = BeanTransform.copyProperties(
+                    rightSetAPI.getOneById(id), RightSetVO.class);
+            return ActResult.initialize(ageAssistVO );
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
      * 权限设置列表
      *
      * @param rightSetDTO 权限设置信息dto
@@ -85,7 +105,7 @@ public class RightSetAction {
      * @return  class RightSetVO
      * @version v1
      */
-    @GetMapping("v1/listRightSet")
+    @GetMapping("v1/list")
     public Result findListRightSet(RightSetDTO rightSetDTO, BindingResult bindingResult) throws ActException {
         try {
             List<RightSetVO> rightSetVOList = BeanTransform.copyProperties(

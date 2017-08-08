@@ -221,7 +221,8 @@ public class AwardStandardSerImpl extends ServiceImpl<AwardStandard, AwardStanda
     public List<AwardStandardBO> pageList(AwardStandardDTO dto) throws SerException {
         checkSeeIdentity();
         dto.getSorts().add("createTime=desc");
-        List<AwardStandard> list = super.findByPage(dto);
+//        List<AwardStandard> list = super.findByPage(dto);
+        List<AwardStandard> list = super.findByCis(dto);
         if (!CollectionUtils.isEmpty(list)) {
             List<AwardStandardBO> boList = new ArrayList<AwardStandardBO>();
             for (AwardStandard model : list) {

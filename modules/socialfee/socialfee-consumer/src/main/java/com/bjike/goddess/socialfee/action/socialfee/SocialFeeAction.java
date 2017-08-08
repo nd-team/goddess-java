@@ -291,7 +291,6 @@ public class SocialFeeAction extends BaseFileAction {
      * @param request 注入HttpServletRequest对象
      * @version v1
      */
-    //@LoginAuth
     @PostMapping("v1/importExcel")
     public Result importExcel(HttpServletRequest request) throws ActException {
         try {
@@ -312,23 +311,7 @@ public class SocialFeeAction extends BaseFileAction {
         }
     }
 
-    /**
-     * 导出
-     *
-     * @param socialFeeDTO 社会缴费信息dto
-     * @return class SocialFeeVO
-     * @des 汇总获取所有社会缴费信息
-     * @version v1
-     */
-//    @GetMapping("v1/export")
-//    public Result export(SocialFeeDTO socialFeeDTO, BindingResult bindingResult) throws ActException {
-//        try {
-//            String exportAddr = socialFeeAPI.export(socialFeeDTO);
-//            return ActResult.initialize(exportAddr);
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-//    }
+
 
 
     /**
@@ -376,7 +359,6 @@ public class SocialFeeAction extends BaseFileAction {
      * @des 导出社会缴费记录
      * @version v1
      */
-    //@LoginAuth
     @GetMapping("v1/export")
     public Result exportReport(SocialFeeDTO dto, HttpServletResponse response) throws ActException {
         try {

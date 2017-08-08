@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,6 +86,13 @@ public class SalaryBasicSerImpl extends ServiceImpl<SalaryBasic, SalaryBasicDTO>
     }
 
     @Override
+    public List<SalaryBasicBO> pageList(SalaryBasicDTO dto) throws SerException {
+        List<SalaryBasic> list = super.findByCis(dto);
+        List<SalaryBasicBO> boList = BeanTransform.copyProperties(list,SalaryBasicBO.class,true);
+        return boList;
+    }
+
+    @Override
     public SalaryBasicBO findSalary(SalaryBasicDTO dto) throws SerException {
         if(StringUtils.isNotBlank(dto.getArea())){
             dto.getConditions().add(Restrict.eq("area",dto.getArea()));
@@ -133,31 +141,11 @@ public class SalaryBasicSerImpl extends ServiceImpl<SalaryBasic, SalaryBasicDTO>
         }
         super.remove(id);
     }
-    //校验字段是否存在
-    private void isExist(SalaryBasicTO to, Integer row) throws SerException {
-        if(StringUtils.isBlank( to.getArea() )){
-            throw new SerException("第" + row + "行的地区不能为空" );
-        }
-        if(StringUtils.isBlank( to.getBasePay() )){
-            throw new SerException("第" + row + "行的基本工资不能为空" );
-        }
-        if(null== to.getDepartment()){
-            throw new SerException("第" + row + "行的部门/项目组不能为空" );
-        }
-        if ( null== to.getPosition()) {
-            throw new SerException("第" + row + "行的本月目标值不能为空");
-        }
-        if(null == to.getSystem()){
-            throw new SerException("第" + row + "行的体系不能为空");
-        }
-    }
+
 
     @Override
     public void leadExcel(List<SalaryBasicTO> toList) throws SerException {
         UserBO userBO = userAPI.currentUser();
-        for(int i = 1; i<= toList.size();i++){
-            isExist(toList.get(i-1),i);
-        }
         List<SalaryBasic> list = BeanTransform.copyProperties(toList,SalaryBasic.class,true);
         list.stream().forEach(str->{
             str.setModifyTime(LocalDateTime.now());
@@ -186,5 +174,21 @@ public class SalaryBasicSerImpl extends ServiceImpl<SalaryBasic, SalaryBasicDTO>
         byte[] bytes = ExcelUtil.clazzToExcel(toList,excel);
         return bytes;
     }
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<SalaryBasicSetExcel> salaryBasicSetExcels = new ArrayList<>();
 
+        SalaryBasicSetExcel excel = new SalaryBasicSetExcel();
+
+        excel.setArea("地区");
+        excel.setSystem("体系");
+        excel.setDepartment("部门/项目组");
+        excel.setPosition("岗位");
+        excel.setBasePay("基本工资");
+        salaryBasicSetExcels.add(excel);
+
+        Excel exce = new Excel(0,2);
+        byte[] bytes = ExcelUtil.clazzToExcel(salaryBasicSetExcels,exce);
+        return bytes;
+    }
 }

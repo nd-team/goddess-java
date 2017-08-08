@@ -82,6 +82,12 @@ public class OilCardReceiveVO {
      */
     private String remark;
 
+    /**
+     * 油卡基本信息
+     *
+     */
+    private OilCardBasicVO oilCardBasicVO;
+
     public String getId() {
         return id;
     }
@@ -194,4 +200,11 @@ public class OilCardReceiveVO {
         this.remark = remark;
     }
 
+    public OilCardBasicVO getOilCardBasicVO() {
+        return oilCardBasicVO;
+    }
+
+    public void setOilCardBasicVO(OilCardBasicVO oilCardBasicVO) {
+        this.oilCardBasicVO = oilCardBasicVO;
+    }
 }

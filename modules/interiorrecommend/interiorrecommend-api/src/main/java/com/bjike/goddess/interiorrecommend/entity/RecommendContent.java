@@ -22,7 +22,7 @@ public class RecommendContent extends BaseEntity {
      * 推荐信息
      */
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
-    @JoinColumn(name = "recommendInfo_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '推荐信息'")
+    @JoinColumn(name = "recommendInfo_id", columnDefinition = "VARCHAR(36)   COMMENT '推荐信息'")
     private RecommendInfo recommendInfo;
 
     /**

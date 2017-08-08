@@ -25,6 +25,11 @@ public class CarSendEmailVO {
      */
     private String positionNameId;
 
+    /**
+     * 备注
+     */
+    private String remark;
+
 
     public String getId() {
         return id;
@@ -48,5 +53,13 @@ public class CarSendEmailVO {
 
     public void setPositionNameId(String positionNameId) {
         this.positionNameId = positionNameId;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

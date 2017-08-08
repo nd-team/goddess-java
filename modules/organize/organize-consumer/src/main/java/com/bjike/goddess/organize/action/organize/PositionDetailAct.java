@@ -261,4 +261,19 @@ public class PositionDetailAct {
         }
     }
 
+//    /**
+//     * 获取所有的岗位
+//     *
+//     * @version v1
+//     */
+//    @GetMapping("v1/id")
+//    public Result findAllOpinion(String id) throws ActException {
+//        try {
+//            List<String> getOpinion = positionDetailAPI.getPositions(id);
+//            return ActResult.initialize(getOpinion);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+
 }

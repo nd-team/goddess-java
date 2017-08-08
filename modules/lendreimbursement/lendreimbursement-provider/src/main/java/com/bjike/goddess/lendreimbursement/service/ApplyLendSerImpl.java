@@ -486,6 +486,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     public ApplyLendBO editWaitAudit(ApplyLendTO applyLendTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken( userToken );
 
         if ("否".equals(applyLendTO.getInvoice()) && StringUtils.isBlank(applyLendTO.getNoInvoiceRemark())) {
             throw new SerException("编辑失败，未填无发票备注");

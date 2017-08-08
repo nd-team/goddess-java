@@ -17,9 +17,11 @@
 	<!-- 注册接口-->
 
     <!-- 薪资确认API -->
+<<<<<<< HEAD
 	<dubbo:reference interface="com.bjike.goddess.salaryconfirm.api.Sala" id="salaryconfirmApiImpl" />
+=======
+>>>>>>> upstream/develop
   	<!-- 上交发票API -->
-	<dubbo:reference interface="com.bjike.goddess.salaryconfirm.api.InvoiceSubmitAPI" id="invoiceSubmitApiImpl" />
 	<!-- userAPI -->
 	<dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl" />
 
@@ -36,7 +38,7 @@
 	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
 
 	<!-- 权限 -->
-	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.salaryconfirm.api.CusPermissionAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.salarymanage.api.CusPermissionAPI" />
 
 	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
 

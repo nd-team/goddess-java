@@ -79,6 +79,12 @@ public class OilCardReceiveBO extends BaseBO {
      */
     private String remark;
 
+    /**
+     * 油卡基本信息
+     *
+     */
+    private OilCardBasicBO oilCardBasicBO;
+
 
     public String getOilCardCode() {
         return oilCardCode;
@@ -184,4 +190,11 @@ public class OilCardReceiveBO extends BaseBO {
         this.remark = remark;
     }
 
+    public OilCardBasicBO getOilCardBasicBO() {
+        return oilCardBasicBO;
+    }
+
+    public void setOilCardBasicBO(OilCardBasicBO oilCardBasicBO) {
+        this.oilCardBasicBO = oilCardBasicBO;
+    }
 }

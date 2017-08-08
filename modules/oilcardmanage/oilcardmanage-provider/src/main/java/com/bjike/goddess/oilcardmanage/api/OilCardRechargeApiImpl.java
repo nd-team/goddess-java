@@ -3,6 +3,7 @@ package com.bjike.goddess.oilcardmanage.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.oilcardmanage.bo.AnalyzeBO;
+import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardRechargeBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardRechargeDTO;
 import com.bjike.goddess.oilcardmanage.service.OilCardRechargeSer;
@@ -55,8 +56,8 @@ public class OilCardRechargeApiImpl implements OilCardRechargeAPI {
     }
 
     @Override
-    public OilCardRechargeBO findById(String id) throws SerException {
-        return BeanTransform.copyProperties(oilCardRechargeSer.findById(id), OilCardRechargeBO.class);
+    public OilCardRechargeBO findBy(String id) throws SerException {
+        return oilCardRechargeSer.findBy(id);
     }
 
     @Override
@@ -78,4 +79,11 @@ public class OilCardRechargeApiImpl implements OilCardRechargeAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return oilCardRechargeSer.guidePermission(guidePermissionTO);
     }
+
+    @Override
+    public void delete(String id) throws SerException {
+        oilCardRechargeSer.delete(id);
+    }
+
+
 }

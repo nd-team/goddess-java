@@ -49,7 +49,7 @@ public class RightSetSerImpl extends ServiceImpl<RightSet, RightSetDTO> implemen
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("planAuditPermission");
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -67,7 +67,7 @@ public class RightSetSerImpl extends ServiceImpl<RightSet, RightSetDTO> implemen
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.busCusPermission("planAuditPermission");
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -85,7 +85,7 @@ public class RightSetSerImpl extends ServiceImpl<RightSet, RightSetDTO> implemen
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("planAuditPermission");
         } else {
             flag = true;
         }
@@ -102,7 +102,7 @@ public class RightSetSerImpl extends ServiceImpl<RightSet, RightSetDTO> implemen
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.busCusPermission("planAuditPermission");
         } else {
             flag = true;
         }
@@ -137,17 +137,8 @@ public class RightSetSerImpl extends ServiceImpl<RightSet, RightSetDTO> implemen
             case EDIT:
                 flag = guideAddIdentity();
                 break;
-            case AUDIT:
-                flag = guideAddIdentity();
-                break;
             case DELETE:
                 flag = guideAddIdentity();
-                break;
-            case COLLECT:
-                flag = guideSeeIdentity();
-                break;
-            case SEE:
-                flag = guideSeeIdentity();
                 break;
             default:
                 flag = true;
@@ -156,6 +147,15 @@ public class RightSetSerImpl extends ServiceImpl<RightSet, RightSetDTO> implemen
 
         RpcTransmit.transmitUserToken(userToken);
         return flag;
+    }
+
+    @Override
+    public RightSetBO getOneById(String id) throws SerException {
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空");
+        }
+        RightSetBO rightSetBO = BeanTransform.copyProperties(super.findById( id ),RightSetBO.class);
+        return null;
     }
 
     @Override
@@ -194,6 +194,9 @@ public class RightSetSerImpl extends ServiceImpl<RightSet, RightSetDTO> implemen
     @Override
     public RightSetBO editRightSet(RightSetTO rightSetTO) throws SerException {
         checkAddIdentity();
+        if (StringUtils.isBlank( rightSetTO.getId())) {
+            throw new SerException("id不能为空");
+        }
         RightSet rightSet = BeanTransform.copyProperties(rightSetTO, RightSet.class, true);
         RightSet rs = super.findById(rightSetTO.getId());
 

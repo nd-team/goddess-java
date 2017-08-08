@@ -28,6 +28,13 @@ public class AssistanceRecordApiImpl implements AssistanceRecordAPI {
     @Autowired
     private AssistanceRecordSer assistanceRecordSer;
 
+
+    @Override
+    public AssistanceRecordBO getOneById(String id) throws SerException {
+        return assistanceRecordSer.getOneById(id);
+    }
+
+
     @Override
     public Long countAssistanceRecord(AssistanceRecordDTO assistanceRecordDTO) throws SerException {
         return assistanceRecordSer.count( assistanceRecordDTO);

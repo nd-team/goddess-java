@@ -6,8 +6,7 @@ import com.bjike.goddess.managefee.bo.OutFeeBO;
 import com.bjike.goddess.managefee.dto.OutFeeDTO;
 import com.bjike.goddess.managefee.dto.OutFeeDTO;
 import com.bjike.goddess.managefee.excel.SonPermissionObject;
-import com.bjike.goddess.managefee.to.GuidePermissionTO;
-import com.bjike.goddess.managefee.to.OutFeeTO;
+import com.bjike.goddess.managefee.to.*;
 
 import java.util.List;
 
@@ -98,9 +97,9 @@ public interface OutFeeAPI {
     /**
      * 根据地区汇总
      *
-     * @param outFeeDTO outFeeDTO
+     * @param collectAreaTO
      */
-    default List<OutFeeBO> collectArea(OutFeeDTO outFeeDTO) throws SerException {
+    default List<OutFeeBO> collectArea(CollectAreaTO collectAreaTO) throws SerException {
 
         return null;
     }
@@ -108,9 +107,9 @@ public interface OutFeeAPI {
     ;/**
      * 根据项目组汇总
      *
-     * @param outFeeDTO outFeeDTO
+     * @param collectGroupTO
      */
-    default List<OutFeeBO> collectGroup(OutFeeDTO outFeeDTO) throws SerException {
+    default List<OutFeeBO> collectGroup(CollectGroupTO collectGroupTO) throws SerException {
 
         return null;
     }
@@ -118,9 +117,9 @@ public interface OutFeeAPI {
     ;/**
      * 根据项目汇总
      *
-     * @param outFeeDTO outFeeDTO
+     * @param collectProjectTO
      */
-    default List<OutFeeBO> collectProject(OutFeeDTO outFeeDTO) throws SerException {
+    default List<OutFeeBO> collectProject(CollectProjectTO collectProjectTO) throws SerException {
 
         return null;
     }
@@ -128,14 +127,60 @@ public interface OutFeeAPI {
     ;/**
      * 根据类别汇总
      *
-     * @param outFeeDTO outFeeDTO
+     * @param collectCategoryTO
      */
-    default List<OutFeeBO> collectType(OutFeeDTO outFeeDTO) throws SerException {
+    default List<OutFeeBO> collectType(CollectCategoryTO collectCategoryTO) throws SerException {
 
         return null;
     }
 
     ;
+
+    /**
+     * 根据地区汇总详细
+     *
+     * @param  collectAreaTO
+     */
+    default List<OutFeeBO> collectAreaDetial(CollectAreaTO collectAreaTO) throws SerException {
+
+        return null;
+    }
+
+    ;
+
+    /**
+     * 根据项目组汇总详细
+     *
+     * @param collectGroupTO
+     */
+    default List<OutFeeBO> collectGroupDetail(CollectGroupTO collectGroupTO) throws SerException {
+
+        return null;
+    }
+
+    ;
+
+    /**
+     * 根据项目汇总详细
+     *
+     * @param collectProjectTO
+     */
+    default List<OutFeeBO> collectProjectDetail(CollectProjectTO collectProjectTO) throws SerException {
+
+        return null;
+    }
+
+    ;
+
+    /**
+     * 根据类别汇总详细
+     *
+     * @param collectCategoryTO
+     */
+    default List<OutFeeBO> collectTypeDetail(CollectCategoryTO collectCategoryTO) throws SerException {
+
+        return null;
+    }
 
     /**
      * 获取所有年份

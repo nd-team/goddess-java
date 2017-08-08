@@ -19,6 +19,22 @@ public class RecommendInfoVO {
      * id
      */
     private String id;
+
+    /**
+     * 推荐时间
+     */
+    private String createTime;
+
+    /**
+     * 推荐目的
+     */
+    private String purpose;
+
+    /**
+     * 推荐类型
+     */
+    private String typeName;
+
     /**
      * 推荐要求设定id
      */
@@ -71,6 +87,30 @@ public class RecommendInfoVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getPurpose() {
+        return purpose;
+    }
+
+    public void setPurpose(String purpose) {
+        this.purpose = purpose;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 
     public String getRequireId() {
