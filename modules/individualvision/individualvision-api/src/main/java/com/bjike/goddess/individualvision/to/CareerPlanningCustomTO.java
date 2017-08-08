@@ -104,38 +104,38 @@ public class CareerPlanningCustomTO extends BaseTO {
     /**
      * 期望周收益（元）
      */
-    @NotBlank(message = "期望周收益（元）不能为空",groups = {ADD.class, EDIT.class})
-    private String expectWeeksEarnings;
+    @NotNull(message = "期望周收益（元）不能为空",groups = {ADD.class, EDIT.class})
+    private Integer expectWeeksEarnings;
 
     /**
      * 期望月收益（元）
      */
-    @NotBlank(message = "期望月收益（元）不能为空",groups = {ADD.class, EDIT.class})
-    private String expectMonthsEarnings;
+    @NotNull(message = "期望月收益（元）不能为空",groups = {ADD.class, EDIT.class})
+    private Integer expectMonthsEarnings;
 
     /**
      * 期望年收益（元）
      */
-    @NotBlank(message = "期望年收益（元）不能为空",groups = {ADD.class, EDIT.class})
-    private String expectYearsEarnings;
+    @NotNull(message = "期望年收益（元）不能为空",groups = {ADD.class, EDIT.class})
+    private Integer expectYearsEarnings;
 
     /**
      * 实际周收益（元）
      */
-    @NotBlank(message = "实际周收益（元）不能为空",groups = {ADD.class, EDIT.class})
-    private String actualWeeksEarnings;
+    @NotNull(message = "实际周收益（元）不能为空",groups = {ADD.class, EDIT.class})
+    private Integer actualWeeksEarnings;
 
     /**
      * 实际月收益（元）
      */
-    @NotBlank(message = "实际月收益（元）不能为空",groups = {ADD.class, EDIT.class})
-    private String actualMonthsEarnings;
+    @NotNull(message = "实际月收益（元）不能为空",groups = {ADD.class, EDIT.class})
+    private Integer actualMonthsEarnings;
 
     /**
      * 实际年收益（元）
      */
-    @NotBlank(message = "实际年收益（元）不能为空",groups = {ADD.class, EDIT.class})
-    private String actualYearsEarnings;
+    @NotNull(message = "实际年收益（元）不能为空",groups = {ADD.class, EDIT.class})
+    private Integer actualYearsEarnings;
 
 
     public String getAvailableBenefitPackage() {
@@ -251,52 +251,51 @@ public class CareerPlanningCustomTO extends BaseTO {
         this.finish = finish;
     }
 
-    public String getExpectWeeksEarnings() {
+    public Integer getExpectWeeksEarnings() {
         return expectWeeksEarnings;
     }
 
-    public void setExpectWeeksEarnings(String expectWeeksEarnings) {
+    public void setExpectWeeksEarnings(Integer expectWeeksEarnings) {
         this.expectWeeksEarnings = expectWeeksEarnings;
     }
 
-    public String getExpectMonthsEarnings() {
+    public Integer getExpectMonthsEarnings() {
         return expectMonthsEarnings;
     }
 
-    public void setExpectMonthsEarnings(String expectMonthsEarnings) {
+    public void setExpectMonthsEarnings(Integer expectMonthsEarnings) {
         this.expectMonthsEarnings = expectMonthsEarnings;
     }
 
-    public String getExpectYearsEarnings() {
+    public Integer getExpectYearsEarnings() {
         return expectYearsEarnings;
     }
 
-    public void setExpectYearsEarnings(String expectYearsEarnings) {
+    public void setExpectYearsEarnings(Integer expectYearsEarnings) {
         this.expectYearsEarnings = expectYearsEarnings;
     }
 
-    public String getActualWeeksEarnings() {
+    public Integer getActualWeeksEarnings() {
         return actualWeeksEarnings;
     }
 
-    public void setActualWeeksEarnings(String actualWeeksEarnings) {
+    public void setActualWeeksEarnings(Integer actualWeeksEarnings) {
         this.actualWeeksEarnings = actualWeeksEarnings;
     }
 
-    public String getActualMonthsEarnings() {
+    public Integer getActualMonthsEarnings() {
         return actualMonthsEarnings;
     }
 
-    public void setActualMonthsEarnings(String actualMonthsEarnings) {
+    public void setActualMonthsEarnings(Integer actualMonthsEarnings) {
         this.actualMonthsEarnings = actualMonthsEarnings;
     }
 
-    public String getActualYearsEarnings() {
+    public Integer getActualYearsEarnings() {
         return actualYearsEarnings;
     }
 
-    public void setActualYearsEarnings(String actualYearsEarnings) {
+    public void setActualYearsEarnings(Integer actualYearsEarnings) {
         this.actualYearsEarnings = actualYearsEarnings;
     }
-
 }

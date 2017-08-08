@@ -270,6 +270,7 @@ public class InventorySerImpl extends ServiceImpl<Inventory, InventoryDTO> imple
                 super.remove(p.getId());
             }
         }
+        dto.getConditions().add(Restrict.in("stockEncoding", stockEncodings));
         List<Inventory> list1 = super.findByCis(dto, true);
         List<InventoryBO> boList = new ArrayList<InventoryBO>();
         for (Inventory i : list1) {
@@ -350,6 +351,8 @@ public class InventorySerImpl extends ServiceImpl<Inventory, InventoryDTO> imple
 
     @Override
     public Long count(InventoryDTO dto) throws SerException {
+        String[] stockEncodings=dto.getStockEncodings();
+        dto.getConditions().add(Restrict.in("stockEncoding",stockEncodings));
         return super.count(dto);
     }
 

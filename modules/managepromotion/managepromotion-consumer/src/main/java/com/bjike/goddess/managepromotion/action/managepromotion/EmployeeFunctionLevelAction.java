@@ -15,6 +15,7 @@ import com.bjike.goddess.managepromotion.dto.EmployeeFunctionLevelDTO;
 import com.bjike.goddess.managepromotion.to.EmployeeFunctionLevelTO;
 import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managepromotion.vo.EmployeeFunctionLevelVO;
+import com.bjike.goddess.managepromotion.vo.OverviewSkillLevelVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -184,7 +185,7 @@ public class EmployeeFunctionLevelAction {
     public Result skill(@Validated EmployeeFunctionLevelTO employeeFunctionLevelTO, BindingResult bindingResult) throws ActException {
         try {
             OverviewSkillLevelBO overviewSkillLevelBO = employeeFunctionLevelAPI.skill(employeeFunctionLevelTO);
-            return ActResult.initialize(overviewSkillLevelBO);
+            return ActResult.initialize(BeanTransform.copyProperties(overviewSkillLevelBO, OverviewSkillLevelVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
