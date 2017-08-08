@@ -10,6 +10,10 @@ import com.bjike.goddess.common.api.to.BaseTO;
 * @Copy:   		[ com.bjike ]
 */
 public class SalaryBasicTO extends BaseTO {
+
+    public interface TestAdd{
+
+    }
     /**
      * 地区
      */

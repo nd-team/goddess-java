@@ -18,6 +18,10 @@ import java.time.LocalDate;
 */
 public class SalaryInformationTO extends BaseTO {
 
+    public interface TestAdd{
+
+    }
+
     /**
      * 计薪周期开始时间
      */

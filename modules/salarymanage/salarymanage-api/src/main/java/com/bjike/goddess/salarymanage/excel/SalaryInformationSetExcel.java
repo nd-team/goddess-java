@@ -103,7 +103,7 @@ public class SalaryInformationSetExcel {
     /**
      * 转正时间
      */
-    @ExcelHeader(name = "转正时间",notNull = true)
+    @ExcelHeader(name = "转正时间")
     private String  positiveTime;
 
     /**
@@ -123,24 +123,6 @@ public class SalaryInformationSetExcel {
      */
     @ExcelHeader(name = "岗位工资",notNull = true)
     private Double  postSalary;
-
-    /**
-     * 部门/项目组
-     */
-    @ExcelHeader(name = "部门/项目组",notNull = true)
-    private String  department;
-
-    /**
-     * 岗位
-     */
-    @ExcelHeader(name = "岗位",notNull = true)
-    private String  position;
-
-    /**
-     * 基本工资
-     */
-    @ExcelHeader(name = "基本工资",notNull = true)
-    private Double  basePay;
 
     /**
      * 技能工资
@@ -349,7 +331,7 @@ public class SalaryInformationSetExcel {
     /**
      * 备注
      */
-    @ExcelHeader(name = "备注",notNull = true)
+    @ExcelHeader(name = "备注")
     private String  remark;
 
 
@@ -461,24 +443,6 @@ public class SalaryInformationSetExcel {
     }
     public void setPostSalary (Double postSalary ) {
         this.postSalary = postSalary ;
-    }
-    public String getDepartment () {
-        return department;
-    }
-    public void setDepartment (String department ) {
-        this.department = department ;
-    }
-    public String getPosition () {
-        return position;
-    }
-    public void setPosition (String position ) {
-        this.position = position ;
-    }
-    public Double getBasePay () {
-        return basePay;
-    }
-    public void setBasePay (Double basePay ) {
-        this.basePay = basePay ;
     }
     public Double getSkillPay () {
         return skillPay;

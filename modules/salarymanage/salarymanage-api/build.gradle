@@ -5,4 +5,6 @@ compile project(":common:common-utils")
 compile project(":modules:organize:organize-api")
 compile project(":modules:user:user-api")
 compile project(":modules:storage:storage-api")
+compile project(":modules:message:message-api")
+compile project(":modules:contacts:contacts-api")
 }

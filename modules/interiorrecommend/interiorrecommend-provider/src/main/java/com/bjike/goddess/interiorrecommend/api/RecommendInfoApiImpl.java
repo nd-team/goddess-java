@@ -75,7 +75,7 @@ public class RecommendInfoApiImpl implements RecommendInfoAPI {
     }
 
     @Override
-    public List<String> findRequire() throws SerException {
+    public List<String[]> findRequire() throws SerException {
         return recommendInfoSer.findRequire();
     }
 }

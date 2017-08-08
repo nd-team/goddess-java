@@ -176,10 +176,11 @@ public class RecommendInfoAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/find/require")
     public Result findRequire() throws ActException{
         try {
-            List<String> list = recommendInfoAPI.findRequire();
+            List<String[]> list = recommendInfoAPI.findRequire();
             return ActResult.initialize(list);
         }catch (SerException e){
             throw new ActException(e.getMessage());

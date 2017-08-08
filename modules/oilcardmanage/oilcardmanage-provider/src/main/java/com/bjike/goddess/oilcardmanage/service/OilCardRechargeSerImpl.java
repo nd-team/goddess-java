@@ -247,7 +247,7 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
             model.setCycleEarlyMoney(exCycleEarlyMoney - exRechargeMoney + currentRecharge);
             super.update(model);
             //修改了本次充值记录，在本次充值记录之后的数据的期初金额都要 - 修改前的充值金额 + 本次充值金额
-            updateAfterList(model.getOilCardBasic().getId(), exRechargeMoney, currentRecharge);
+            updateAfterList(model.getCreateTime(),model.getOilCardBasic().getId(), exRechargeMoney, currentRecharge);
 
             return BeanTransform.copyProperties(to, OilCardRechargeBO.class);
         } else {
@@ -270,10 +270,11 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
     }
 
     // 修改了本次充值记录，在本次充值记录之后的数据的期初金额都要 - 修改前的充值金额 + 本次充值金额
-    public void updateAfterList(String oilCardId, Double exRechargeMoney, Double currentRecharge) throws SerException {
+    public void updateAfterList(LocalDateTime createTime,String oilCardId, Double exRechargeMoney, Double currentRecharge) throws SerException {
 
         OilCardRechargeDTO dto = new OilCardRechargeDTO();
         dto.getConditions().add(Restrict.eq("oilCardBasic", oilCardId));
+        dto.getConditions().add(Restrict.gt("createTime",createTime));
         List<OilCardRecharge> list = super.findByCis(dto);
         if (list != null && list.size() > 0) {
             for (OilCardRecharge model : list) {
@@ -288,9 +289,10 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
 
     //删除了本次充值记录,在本次充值之后的数据的期初金额都要 - 删除前的充值金额
 
-    private void updateAfterList(String oilCardId,Double exRecargeMoney) throws SerException{
+    private void updateAfterList(LocalDateTime createTime,String oilCardId,Double exRecargeMoney) throws SerException{
         OilCardRechargeDTO dto = new OilCardRechargeDTO();
         dto.getConditions().add(Restrict.eq("oilCardBasic",oilCardId));
+        dto.getConditions().add(Restrict.gt("createTime",createTime));
         List<OilCardRecharge> list = super.findByCis(dto);
         if(list != null && list.size() >0 ){
             for(OilCardRecharge model : list){
@@ -312,7 +314,8 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
                 //获取被充值的油卡id
                 String oilCardId = model.getOilCardBasic().getId();
                 Double exRecargeMoney = model.getRechargeMoney();
-                updateAfterList(oilCardId,exRecargeMoney);
+                LocalDateTime createTime = model.getCreateTime();
+                updateAfterList(createTime,oilCardId,exRecargeMoney);
             }else{
                 throw new SerException("不能传入非法id啊,亲爱的");
             }
