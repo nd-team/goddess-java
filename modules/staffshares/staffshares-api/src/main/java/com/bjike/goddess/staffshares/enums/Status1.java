@@ -18,9 +18,9 @@ public enum Status1 {
     @ExcelValue(name = "已提交待审核")
     SUBMIT(0),
     /**
-     * 审核通过待发行
+     * 审核通过待支付流程
      */
-    @ExcelValue(name = "审核通过待发行")
+    @ExcelValue(name = "审核通过待支付流程")
     EXAMINE(1),
     /**
      * 删除
@@ -28,14 +28,14 @@ public enum Status1 {
     @ExcelValue(name = "删除")
     DELETE(2),
     /**
-     * 审核不通过
+     * 审核不通过购买失败
      */
-    @ExcelValue(name = "审核不通过")
+    @ExcelValue(name = "审核不通过购买失败")
     NOEXAMINE(3),
     /**
-     * 已发行
+     * 购买成功
      */
-    @ExcelValue(name = "已发行")
+    @ExcelValue(name = "购买成功")
     ISSUED(4)
     ;
 

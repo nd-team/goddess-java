@@ -274,7 +274,6 @@ public class CommissionQuotaAction extends BaseFileAction {
     }
 
 
-
     /**
      * 功能导航权限
      *
@@ -314,7 +313,6 @@ public class CommissionQuotaAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
-
 
 
     /**
@@ -365,4 +363,53 @@ public class CommissionQuotaAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 获得所有的地区
+     *
+     * @des 获得所有的地区
+     * @version v1
+     */
+    @GetMapping("v1/area")
+    public Result getArea() throws ActException {
+        try {
+            List<String> list = commissionQuotaAPI.getArea();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获得所有的项目名称
+     *
+     * @des 获得所有的项目名称
+     * @version v1
+     */
+    @GetMapping("v1/project/name")
+    public Result getName() throws ActException {
+        try {
+            List<String> list = commissionQuotaAPI.getName();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获得所有的实际业务提成总额
+     *
+     * @des 获得所有的实际业务提成总额
+     * @version v1
+     */
+    @GetMapping("v1/actualAmount")
+    public Result getActualAmount() throws ActException {
+        try {
+            List<Double> list = commissionQuotaAPI.getActualAmount();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

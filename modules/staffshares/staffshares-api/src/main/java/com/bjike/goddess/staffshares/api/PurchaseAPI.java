@@ -18,4 +18,26 @@ public interface PurchaseAPI {
      * 申请购买
      */
     void buy(PurchaseTO to) throws SerException;
+
+    /**
+     * 编辑
+     *
+     * @param to
+     * @throws SerException
+     */
+    void update(PurchaseTO to) throws SerException;
+
+    /**
+     * 删除
+     *
+     * @param id
+     */
+    void delete(String id) throws SerException;
+
+    /**
+     * 审核
+     *
+     * @param to
+     */
+    void examine(PurchaseTO to) throws SerException;
 }

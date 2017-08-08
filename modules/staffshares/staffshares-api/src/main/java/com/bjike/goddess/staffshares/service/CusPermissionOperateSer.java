@@ -1,8 +1,8 @@
 package com.bjike.goddess.staffshares.service;
 
-import com.bjike.goddess.businessproject.dto.CusPermissionOperateDTO;
-import com.bjike.goddess.businessproject.entity.CusPermissionOperate;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.staffshares.dto.CusPermissionOperateDTO;
+import com.bjike.goddess.staffshares.entity.CusPermissionOperate;
 
 /**
  * 客户权限配置操作对象业务接口

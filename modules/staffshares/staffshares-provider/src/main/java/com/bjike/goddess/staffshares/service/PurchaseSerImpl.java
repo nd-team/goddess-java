@@ -1,5 +1,6 @@
 package com.bjike.goddess.staffshares.service;
 
+import com.bjike.goddess.bonus.api.DisciplineRecordAPI;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -7,7 +8,6 @@ import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
-import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 import com.bjike.goddess.staffshares.api.SchemeAPI;
 import com.bjike.goddess.staffshares.bo.SchemeIssueBO;
 import com.bjike.goddess.staffshares.dto.PurchaseDTO;
@@ -20,8 +20,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -44,6 +48,8 @@ public class PurchaseSerImpl extends ServiceImpl<Purchase, PurchaseDTO> implemen
     private PositionDetailUserAPI positionDetailUserAPI;
     @Autowired
     private EntryBasicInfoAPI entryBasicInfoAPI;
+    @Autowired
+    private DisciplineRecordAPI disciplineRecordAPI;
 
     @Override
     public void buy(PurchaseTO to) throws SerException {
@@ -52,6 +58,9 @@ public class PurchaseSerImpl extends ServiceImpl<Purchase, PurchaseDTO> implemen
             throw new SerException("id不能为空");
         }
         SchemeIssueBO schemeIssueBO = schemeAPI.getOne(to.getId());
+        if (null == schemeIssueBO) {
+            throw new SerException("查无此条交易数据");
+        }
 
         Purchase entity = new Purchase();
         entity.setStatus(Status1.SUBMIT);
@@ -67,38 +76,108 @@ public class PurchaseSerImpl extends ServiceImpl<Purchase, PurchaseDTO> implemen
             entity.setArea(positionDetailBO.getArea());
             // TODO: 17-8-5 每个持股方案有一个对应的项目，目前该项目从哪里拿不清楚，以后有的话得加上去
             entity.setProject("");
-
             entity.setDepartment(positionDetailBO.getDepartmentName());
             entity.setPosition(positionDetailBO.getPosition());
-            List<EntryBasicInfoBO>  entryBasicInfoBOs = entryBasicInfoAPI.getByEmpNumber(positionDetailBO.getSerialNumber());
-            if(null != entryBasicInfoBOs && entryBasicInfoBOs.size() >0){
+
+            List<EntryBasicInfoBO> entryBasicInfoBOs = entryBasicInfoAPI.getByEmpNumber(positionDetailBO.getSerialNumber());
+            if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
                 //获取第一条数据
                 EntryBasicInfoBO entryBasicInfoBO = entryBasicInfoBOs.get(0);
                 String time = entryBasicInfoBO.getEntryTime();
-
-
-
+                int months = getMonthSpace(time, LocalDate.now().toString());
+                entity.setMonths(months);
+            } else {
+                entity.setMonths(0);
             }
-
-            for(EntryBasicInfoBO entryBasicInfoBO : entryBasicInfoBOs){}
-
+            entity.setSellName(schemeIssueBO.getPublisher());
+            entity.setPurchaseNum(to.getPurchaseNum());
+            entity.setMoney(to.getPurchaseNum() * schemeIssueBO.getPrice());
+            entity.setPenalty(disciplineRecordAPI.getPushNum(userBO.getUsername()));
+            entity.setReward(disciplineRecordAPI.getRewardNum(userBO.getUsername()));
+            // TODO: 17-8-7
+            //各项晋升的次数
+            entity.setPromotion(0);
+            entity.setRemark(to.getRemark());
+            super.save(entity);
         }
+    }
 
 
-        List<EntryBasicInfoBO>  entryBasicInfoVOs = entryBasicInfoAPI.getByEmpNumber();
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public void update(PurchaseTO to) throws SerException {
+//        checkAddIdentity();
+        if (StringUtils.isBlank(to.getId())) {
+            throw new SerException("id不能为空");
+        }
+        Purchase temp = super.findById(to.getId());
+        if(temp == null){
+            throw new SerException("查无该条数据");
+        }
+        temp.setPurchaseNum(to.getPurchaseNum());
 
-
-
-
-        if ()
-
-            Scheme scheme = BeanTransform.copyProperties(to, Scheme.class, true);
-        BeanUtils.copyProperties(scheme, temp, "id", "createTime");
         String userToken = RpcTransmit.getUserToken();
-        String name = userApi.currentUser().getUsername();
+        String name = userAPI.currentUser().getUsername();
         RpcTransmit.transmitUserToken(userToken);
-        temp.setSetters(name);
+        temp.setName(name);
         temp.setModifyTime(LocalDateTime.now());
         super.update(temp);
     }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public void delete(String id) throws SerException {
+//        checkAddIdentity();
+        Purchase temp = super.findById(id);
+        if(temp == null){
+            throw new SerException("查无该条数据");
+        }
+        if(StringUtils.isNotBlank(temp.getManager())){
+            throw new SerException("数据已提交最终审核，不可撤销");
+        }
+        super.remove(id);
+    }
+
+    @Override
+    public void examine(PurchaseTO to) throws SerException {
+//        checkAddIdentity();
+        Purchase temp = super.findById(to.getId());
+
+        String userToken = RpcTransmit.getUserToken();
+        String name = userAPI.currentUser().getUsername();
+        RpcTransmit.transmitUserToken(userToken);
+
+        Purchase purchase = new Purchase();
+        purchase.setStatus(to.getStatus());
+        purchase.setOpinion(to.getOpinion());
+
+        BeanUtils.copyProperties(purchase, temp, "id", "createTime");
+
+
+        temp.setManager(name);
+        temp.setModifyTime(LocalDateTime.now());
+        super.update(temp);
+    }
+
+    //计算两个日期之间的月数
+    public int getMonthSpace(String date1, String date2) throws SerException {
+
+        int result = 0;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        Calendar c1 = Calendar.getInstance();
+        Calendar c2 = Calendar.getInstance();
+        try {
+            c1.setTime(sdf.parse(date1));
+            c2.setTime(sdf.parse(date2));
+
+            result = c2.get(Calendar.MONTH) - c1.get(Calendar.MONTH);
+
+            return result == 0 ? 1 : Math.abs(result);
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+    }
+
 }

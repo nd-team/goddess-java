@@ -121,7 +121,7 @@ public class WeightAllocationAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@Validated String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(weightAllocationAPI.delete(id), WeightAllocationVO.class));
         } catch (SerException e) {
@@ -137,7 +137,7 @@ public class WeightAllocationAction {
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
-    public Result getById(@Validated String id) throws ActException {
+    public Result getById(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(weightAllocationAPI.getById(id), WeightAllocationVO.class));
         } catch (SerException e) {

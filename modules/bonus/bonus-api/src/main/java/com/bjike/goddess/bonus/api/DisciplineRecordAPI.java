@@ -209,4 +209,37 @@ public interface DisciplineRecordAPI {
         return null;
     }
 
+    List<String> getName() throws SerException;
+
+    /**
+     * 获取地区
+     *
+     * @return
+     */
+    List<String> getarea() throws SerException;
+
+    /**
+     * 获取项目组
+     *
+     * @return
+     * @throws SerException
+     */
+    List<String> getGroup() throws SerException;
+
+    /**
+     * 获得指标名称
+     *
+     * @return
+     */
+    List<String> getTarget() throws SerException;
+
+    /**
+     * 根据姓名获取处罚总次数
+     */
+    Integer getPushNum(String userName) throws SerException;
+
+    /**
+     * 根据姓名获取奖励总次数
+     */
+    Integer getRewardNum(String userName) throws SerException;
 }

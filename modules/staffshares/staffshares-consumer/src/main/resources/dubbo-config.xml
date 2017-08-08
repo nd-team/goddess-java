@@ -18,14 +18,17 @@
 
 	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
-	<dubbo:reference  validation="true" id="baseInfoManageApiImpl" interface="com.bjike.goddess.businessproject.api.BaseInfoManageAPI" />
-	<dubbo:reference  validation="true" id="collectEmailApiImpl" interface="com.bjike.goddess.businessproject.api.CollectEmailAPI" />
-	<dubbo:reference  validation="true" id="contractCategoryApiImpl" interface="com.bjike.goddess.businessproject.api.ContractCategoryAPI" />
-	<dubbo:reference  validation="true" id="dispatchSheetApiImpl" interface="com.bjike.goddess.businessproject.api.DispatchSheetAPI" />
-	<dubbo:reference  validation="true" id="siginManageApiImpl" interface="com.bjike.goddess.businessproject.api.SiginManageAPI" />
-	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.businessproject.api.CusPermissionAPI" />
-	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.businessproject.api.CusPermissionOperateAPI" />
 
+	<dubbo:reference  validation="true" id="applicationApiImpl" interface="com.bjike.goddess.staffshares.api.ApplicationAPI" />
+	<dubbo:reference  validation="true" id="buyscheduleApiImpl" interface="com.bjike.goddess.staffshares.api.BuyscheduleAPI" />
+	<dubbo:reference  validation="true" id="detailsApiImpl" interface="com.bjike.goddess.staffshares.api.DetailsAPI" />
+	<dubbo:reference  validation="true" id="dividendsApiImpl" interface="com.bjike.goddess.staffshares.api.DividendsAPI" />
+	<dubbo:reference  validation="true" id="purchaseApiImpl" interface="com.bjike.goddess.staffshares.api.PurchaseAPI" />
+	<dubbo:reference  validation="true" id="schemeApiImpl" interface="com.bjike.goddess.staffshares.api.SchemeAPI" />
+	<dubbo:reference  validation="true" id="sellscheduleApiImpl" interface="com.bjike.goddess.staffshares.api.SellscheduleAPI" />
+	<dubbo:reference  validation="true" id="tradingCenterApiImpl" interface="com.bjike.goddess.staffshares.api.TradingCenterAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.staffshares.api.CusPermissionAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.staffshares.api.CusPermissionOperateAPI" />
 
 
 	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
@@ -38,7 +41,7 @@
 
 	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
 	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
-	<dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
+	<!--<dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />-->
 
 
 </beans>

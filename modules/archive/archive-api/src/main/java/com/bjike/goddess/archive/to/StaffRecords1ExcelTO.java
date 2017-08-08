@@ -1,141 +1,124 @@
-package com.bjike.goddess.archive.entity;
+package com.bjike.goddess.archive.to;
 
-import com.bjike.goddess.common.api.entity.BaseEntity;
-import com.bjike.goddess.common.api.type.Status;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.time.LocalDate;
-
+import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
 /**
- * 员工档案
- *
- * @Author: [ dengjunren ]
- * @Date: [ 2017-04-12 10:32 ]
- * @Description: [ 员工档案 ]
- * @Version: [ v1.0.0 ]
- * @Copy: [ com.bjike ]
+ * @Author: [dengjunren]
+ * @Date: [2017-05-22 17:46]
+ * @Description: [ ]
+ * @Version: [1.0.0]
+ * @Copy: [com.bjike]
  */
-@Entity
-@Table(name = "archive_staff_records")
-public class StaffRecords extends BaseEntity {
+public class StaffRecords1ExcelTO extends BaseTO {
 
     /**
      * 姓名
      */
-    @Column(name = "username", unique = true, nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '姓名'")
+    @ExcelHeader(name = "姓名", notNull = true)
     private String username;
 
     /**
      * 员工编号
      */
-    @Column(name = "serialNumber", unique = true, nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '员工编号'")
+    @ExcelHeader(name = "员工编号", notNull = true)
     private String serialNumber;
 
     /**
      * 项目组
      */
-    @Column(name = "project", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目组'")
+    @ExcelHeader(name = "项目组", notNull = true)
     private String project;
 
     /**
      * 职位
      */
-    @Column(name = "position", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '职位'")
+    @ExcelHeader(name = "职位", notNull = true)
     private String position;
 
     /**
      * 学历
      */
-    @Column(name = "education", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '学历'")
+    @ExcelHeader(name = "学历", notNull = true)
     private String education;
 
     /**
      * 专业
      */
-    @Column(name = "major", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '专业'")
+    @ExcelHeader(name = "专业")
     private String major;
 
     /**
      * 毕业学校
      */
-    @Column(name = "school", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '毕业学校'")
+    @ExcelHeader(name = "毕业学校")
     private String school;
 
     /**
      * 毕业时间
      */
-    @Column(name = "graduate", nullable = false, columnDefinition = "DATE   COMMENT '毕业时间'")
-    private LocalDate graduate;
+    @ExcelHeader(name = "毕业时间")
+    private String graduate;
 
     /**
      * 入职时间
      */
-    @Column(name = "entryTime", nullable = false, columnDefinition = "DATE   COMMENT '入职时间'")
-    private LocalDate entryTime;
+    @ExcelHeader(name = "入职时间", notNull = true)
+    private String entryTime;
 
     /**
      * 在职时间(月)
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '在职时间(月)'")
+    @ExcelHeader(name = "在职时间", notNull = true)
     private Integer seniority;
 
     /**
      * 电话号码
      */
-    @Column(name = "telephone", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '电话号码'")
+    @ExcelHeader(name = "电话号码", notNull = true)
     private String telephone;
 
     /**
      * 出生日期
      */
-    @Column(name = "birth", nullable = false, columnDefinition = "DATE   COMMENT '出生日期'")
-    private LocalDate birth;
+    @ExcelHeader(name = "出生日期", notNull = true)
+    private String birth;
 
     /**
      * 户籍地址
      */
-    @Column(name = "address", columnDefinition = "VARCHAR(255)   COMMENT '户籍地址'")
+    @ExcelHeader(name = "户籍地址")
     private String address;
 
     /**
      * 身份证号码
      */
-    @Column(name = "identityCard", columnDefinition = "VARCHAR(255)   COMMENT '身份证号码'")
+    @ExcelHeader(name = "身份证号码", notNull = true)
     private String identityCard;
 
     /**
      * 银行卡号码
      */
-    @Column(name = "bankCard", columnDefinition = "VARCHAR(255)   COMMENT '银行卡号码'")
+    @ExcelHeader(name = "银行卡号码")
     private String bankCard;
-
-    /**
-     * 开户行
-     */
-    @Column(name = "bank", columnDefinition = "VARCHAR(255)   COMMENT '开户行'")
-    private String bank;
 
     /**
      * 离职时间
      */
-    @Column(name = "dimissionTime",  columnDefinition = "DATE   COMMENT '离职时间'")
-    private LocalDate dimissionTime;
+    @ExcelHeader(name = "离职时间")
+    private String dimissionTime;
+
+    /**
+     * 开户行
+     */
+    @ExcelHeader(name = "开户行")
+    private String bank;
 
     /**
      * 邮箱
      */
-    @Column(name = "email", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '邮箱'")
+    @ExcelHeader(name = "邮箱")
     private String email;
-
-    /**
-     * 状态
-     */
-    @Column(name = "status", nullable = false, columnDefinition = "TINYINT(2)  COMMENT '状态'")
-    private Status status;
-
 
     public String getUsername() {
         return username;
@@ -193,19 +176,19 @@ public class StaffRecords extends BaseEntity {
         this.school = school;
     }
 
-    public LocalDate getGraduate() {
+    public String getGraduate() {
         return graduate;
     }
 
-    public void setGraduate(LocalDate graduate) {
+    public void setGraduate(String graduate) {
         this.graduate = graduate;
     }
 
-    public LocalDate getEntryTime() {
+    public String getEntryTime() {
         return entryTime;
     }
 
-    public void setEntryTime(LocalDate entryTime) {
+    public void setEntryTime(String entryTime) {
         this.entryTime = entryTime;
     }
 
@@ -225,11 +208,11 @@ public class StaffRecords extends BaseEntity {
         this.telephone = telephone;
     }
 
-    public LocalDate getBirth() {
+    public String getBirth() {
         return birth;
     }
 
-    public void setBirth(LocalDate birth) {
+    public void setBirth(String birth) {
         this.birth = birth;
     }
 
@@ -273,19 +256,11 @@ public class StaffRecords extends BaseEntity {
         this.email = email;
     }
 
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public LocalDate getDimissionTime() {
+    public String getDimissionTime() {
         return dimissionTime;
     }
 
-    public void setDimissionTime(LocalDate dimissionTime) {
+    public void setDimissionTime(String dimissionTime) {
         this.dimissionTime = dimissionTime;
     }
 }

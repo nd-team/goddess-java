@@ -23,4 +23,27 @@ public interface PurchaseSer extends Ser<Purchase, PurchaseDTO> {
      * @param to
      */
     void buy(PurchaseTO to) throws SerException;
+
+    /**
+     * 编辑
+     *
+     * @param to
+     * @throws SerException
+     */
+    void update(PurchaseTO to) throws SerException;
+
+    /**
+     * 删除
+     *
+     * @param id
+     * @throws SerException
+     */
+    void delete(String id) throws SerException;
+
+    /**
+     * 审核
+     *
+     * @param to
+     */
+    void examine(PurchaseTO to) throws SerException;
 }

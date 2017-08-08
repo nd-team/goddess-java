@@ -19,11 +19,14 @@
 	<!--发布接口,供其他模块调用-->
 	<!--另外注意命名,UserAPI为例,UserAPI是业务接口,则userSer是实现类@Service("userSer") 里注解的名字-->
 
-	<dubbo:service  ref="baseInfoManageApiImpl" interface="com.bjike.goddess.businessproject.api.BaseInfoManageAPI" />
-	<dubbo:service  ref="collectEmailApiImpl" interface="com.bjike.goddess.businessproject.api.CollectEmailAPI" />
-	<dubbo:service  ref="contractCategoryApiImpl" interface="com.bjike.goddess.businessproject.api.ContractCategoryAPI" />
-	<dubbo:service  ref="dispatchSheetApiImpl" interface="com.bjike.goddess.businessproject.api.DispatchSheetAPI" />
-	<dubbo:service  ref="siginManageApiImpl" interface="com.bjike.goddess.businessproject.api.SiginManageAPI" />
+	<dubbo:service  ref="applicationApiImpl" interface="com.bjike.goddess.staffshares.api.ApplicationAPI" />
+	<dubbo:service  ref="buyscheduleApiImpl" interface="com.bjike.goddess.staffshares.api.BuyscheduleAPI" />
+	<dubbo:service  ref="detailsApiImpl" interface="com.bjike.goddess.staffshares.api.DetailsAPI" />
+	<dubbo:service  ref="dividendsApiImpl" interface="com.bjike.goddess.staffshares.api.DividendsAPI" />
+	<dubbo:service  ref="purchaseApiImpl" interface="com.bjike.goddess.staffshares.api.PurchaseAPI" />
+	<dubbo:service  ref="schemeApiImpl" interface="com.bjike.goddess.staffshares.api.SchemeAPI" />
+	<dubbo:service  ref="sellscheduleApiImpl" interface="com.bjike.goddess.staffshares.api.SellscheduleAPI" />
+	<dubbo:service  ref="tradingCenterApiImpl" interface="com.bjike.goddess.staffshares.api.TradingCenterAPI" />
 
 	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
 	否则不需要配置-->
@@ -32,7 +35,6 @@
 	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
 	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
 	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
-	<dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
 
 
 	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
@@ -41,8 +43,10 @@
 	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
 	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
 	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+	<dubbo:reference  validation="true" id="disciplineRecordApiImpl" interface="com.bjike.goddess.bonus.api.DisciplineRecordAPI" />
+	<dubbo:reference  validation="true" id="entryBasicInfoApiImpl" interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" />
 
-	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.businessproject.api.CusPermissionAPI" />
-	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.businessproject.api.CusPermissionOperateAPI" />
+	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.staffshares.api.CusPermissionAPI" />
+	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.staffshares.api.CusPermissionOperateAPI" />
 
 </beans>
