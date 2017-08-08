@@ -270,11 +270,13 @@ public class IndividualVisionPlanSerImpl extends ServiceImpl<IndividualVisionPla
         }
         super.remove(id);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public IndividualVisionPlanBO auditIndividualVisionPlan(IndividualVisionPlanTO individualVisionPlanTO) throws SerException {
         checkAddIdentity();
-        IndividualVisionPlan individualVisionPlan = BeanTransform.copyProperties(individualVisionPlanTO, IndividualVisionPlan.class, true);
+
+        IndividualVisionPlan individualVisionPlan = super.findById(individualVisionPlanTO.getId());
+                BeanTransform.copyProperties(individualVisionPlanTO, IndividualVisionPlan.class, true);
         individualVisionPlan.setAudit(individualVisionPlanTO.getAudit());
         individualVisionPlan.setAuditStatus(individualVisionPlanTO.getAuditStatus());
         super.update(individualVisionPlan);
