@@ -200,7 +200,7 @@ public class InventoryAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(InventoryDTO dto) throws ActException {
+    public Result count(@Validated(InventoryDTO.LIST.class) InventoryDTO dto,BindingResult result) throws ActException {
         try {
             return ActResult.initialize(inventoryAPI.count(dto));
         } catch (SerException e) {
