@@ -495,7 +495,6 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         String date = StringUtils.substring(costDetailsAddEditTO.getCostTime(), 0, -2) + "01";
         costDetails.setCreateTime(LocalDateTime.now());
         costDetails.setCostTime(DateUtil.parseDate(date));
-        costDetails.setTestTime(LocalDate.now());
         costDetails.setDepartment(costDetailsAddEditTO.getDepartment());
         costDetails = super.save(costDetails);
         //添加劳务成本明细

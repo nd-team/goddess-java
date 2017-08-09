@@ -35,11 +35,6 @@ public class AttainmentWayTO extends BaseTO {
     @NotNull(message = "是否使用问卷调查不能为空", groups = {ADD.class, EDIT.class})
     private Boolean employ;
 
-    /**
-     * 状态
-     */
-    private Status status;
-
 
     public String getType() {
         return type;
@@ -63,14 +58,6 @@ public class AttainmentWayTO extends BaseTO {
 
     public void isEmploy(Boolean employ) {
         this.employ = employ;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
     }
 
     public Boolean getEmploy() {
