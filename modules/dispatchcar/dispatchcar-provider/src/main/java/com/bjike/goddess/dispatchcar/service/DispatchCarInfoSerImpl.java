@@ -2,6 +2,8 @@ package com.bjike.goddess.dispatchcar.service;
 
 import com.bjike.goddess.carinfo.api.DriverInfoAPI;
 import com.bjike.goddess.carinfo.bo.DriverInfoBO;
+import com.bjike.goddess.carinfo.dto.DriverInfoDTO;
+import com.bjike.goddess.carinfo.entity.DriverInfo;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
@@ -31,6 +33,10 @@ import com.bjike.goddess.oilcardmanage.api.OilCardBasicAPI;
 import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardBasicDTO;
 import com.bjike.goddess.oilcardmanage.entity.OilCardBasic;
+import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
+import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -72,13 +78,17 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     @Autowired
     private LeaseCarCostSer leaseCarCostSer;
     @Autowired
-    private DriverInfoAPI driverInfoAPI;
-    @Autowired
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private OilCardBasicAPI oilCardBasicAPI;
     @Autowired
     private MessageAPI messageAPI;
+
+    @Autowired
+    private DriverInfoAPI driverInfoAPI;
+
+    @Autowired
+    private EntryBasicInfoAPI entryBasicInfoAPI;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
@@ -456,8 +466,9 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             //付款后代表所有审核均通过，修改油余额
             //TODO 这里应该考虑分布式事务，联系焕来或贵钦解决该问题。 TCC
             OilCardBasicBO basicBO = oilCardBasicAPI.findByCode(model.getOilCardNumber());
-            OilCardBasic oilCardBasic = oilCardBasicAPI.find(basicBO.getId());
-            oilCardBasic.setBalance(oilCardBasic.getBalance() - model.getOilPrice());
+            OilCardBasicBO bo = oilCardBasicAPI.find(basicBO.getId());
+            bo.setBalance(bo.getBalance() - model.getOilPrice());
+            OilCardBasic oilCardBasic = BeanTransform.copyProperties(bo,OilCardBasic.class);
             oilCardBasicAPI.updateOliCardBasic(oilCardBasic);
             if (oilCardBasic.getBalance() < 300) {
                 String content = "运营商务部的同事，你们好，" + oilCardBasic.getOilCardCode() + "号油卡余额" + oilCardBasic.getBalance() + "元，低于300元，请在一天内充值，请综合资源部同事跟进充值情况";
@@ -1161,5 +1172,28 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         } else {
             return 0.0;
         }
+    }
+
+    @Override
+    public List<DriverInfoBO> findDriver() throws SerException {
+        DriverInfoDTO dto = new DriverInfoDTO();
+        //查询所有未解约审核通过的司机
+        dto.getConditions().add(Restrict.eq("breakAgreement",false));
+        dto.getConditions().add(Restrict.eq("audit",true));
+        List<DriverInfoBO> boList =driverInfoAPI.pageList(dto);
+        return boList;
+    }
+
+    @Override
+    public List<EntryBasicInfoBO> findAllEntry() throws SerException {
+        EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
+        List<EntryBasicInfoBO> boList = entryBasicInfoAPI.listEntryBasicInfo(dto);
+        return boList;
+    }
+
+    @Override
+    public List<OilCardBasicBO> findAllOil() throws SerException {
+        List<OilCardBasicBO> boList = oilCardBasicAPI.findOilCard();
+        return boList;
     }
 }
