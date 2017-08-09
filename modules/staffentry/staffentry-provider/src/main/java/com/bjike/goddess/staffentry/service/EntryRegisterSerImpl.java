@@ -8,6 +8,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.bo.*;
 import com.bjike.goddess.staffentry.dto.*;
 import com.bjike.goddess.staffentry.entity.*;
+import com.bjike.goddess.staffentry.enums.GuideAddrStatus;
 import com.bjike.goddess.staffentry.to.*;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -62,7 +63,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
      * @param idFlag
      * @throws SerException
      */
-    private void checkDepartIdentity(String idFlag) throws SerException{
+    private Boolean checkDepartIdentity(String idFlag) throws SerException{
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
@@ -70,13 +71,58 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         Boolean flag = false;
         if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.busCusPermission(idFlag);
-            if( !flag){
-                throw new SerException("你不是相应部门的人员，不能进行操作");
-            }
+//            if( !flag){
+//                throw new SerException("你不是相应部门的人员，不能进行操作");
+//            }
         }
+        return flag;
     }
 
 
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = checkDepartIdentity("2");
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = checkDepartIdentity("7");
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee || flagAdd ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = checkDepartIdentity("2");
+                break;
+            case ADD:
+                flag = checkDepartIdentity("7");
+                break;
+            case EDIT:
+                flag = checkDepartIdentity("7");
+                break;
+            case DELETE:
+                flag = checkDepartIdentity("7");
+                break;
+            case COLLECT:
+                flag = checkDepartIdentity("2");
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
 
     @Override
     public Long countEntryRegister(EntryRegisterDTO entryRegisterDTO) throws SerException {
@@ -95,7 +141,6 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
 
     @Override
     public List<EntryRegister> listEntryRegister(EntryRegisterDTO entryRegisterDTO) throws SerException {
-        checkDepartIdentity("2");
         entryRegisterDTO.getSorts().add("createTime=desc");
         List<EntryRegister> entryRegisters = super.findByPage( entryRegisterDTO );
         return entryRegisters;
@@ -148,7 +193,6 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void removeEntryRegister(String id) throws SerException {
-        checkDepartIdentity("8");
 
         if(StringUtils.isBlank(id)){
             throw new SerException("Id不能为空哦");
@@ -171,7 +215,6 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     @Transactional(rollbackFor = SerException.class)
     public EntryRegisterBO editEntryRegister(EntryRegisterTO entryRegisterTO, FamilyMemberTO familyMemberTO, StudyExperienceTO studyExperienceTO,
                                              WorkExperienceTO workExperienceTO, CredentialTO credentialTO) throws SerException {
-        checkDepartIdentity("8");
 
         /**
          * 编辑主表中的数据
@@ -253,7 +296,6 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     @Transactional(rollbackFor = SerException.class)
     public EntryRegisterBO insertEntryRegister(EntryRegisterTO entryRegisterTO, FamilyMemberTO familyMemberTO, StudyExperienceTO studyExperienceTO,
                                                WorkExperienceTO workExperienceTO, CredentialTO credentialTO) throws SerException {
-        checkDepartIdentity("8");
 
         EntryRegister entryRegister = BeanTransform.copyProperties(entryRegisterTO, EntryRegister.class, true);
         if(StringUtils.isBlank(entryRegisterTO.getEmpNumber())){

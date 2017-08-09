@@ -7,6 +7,7 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.festival.api.NoticeThingAPI;
 import com.bjike.goddess.festival.dto.NoticeThingDTO;
+import com.bjike.goddess.festival.to.GuidePermissionTO;
 import com.bjike.goddess.festival.vo.NoticeThingVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -33,6 +34,7 @@ public class NoticeThingAction {
 
     @Autowired
     private NoticeThingAPI noticeThingAPI;
+
 
     /**
      *  注意事项列表总条数

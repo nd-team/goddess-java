@@ -6,6 +6,7 @@ import com.bjike.goddess.staffentry.bo.SalaryConfirmRecordBO;
 import com.bjike.goddess.staffentry.dto.SalaryConfirmRecordDTO;
 import com.bjike.goddess.staffentry.entity.SalaryConfirmRecord;
 import com.bjike.goddess.staffentry.service.SalaryConfirmRecordSer;
+import com.bjike.goddess.staffentry.to.GuidePermissionTO;
 import com.bjike.goddess.staffentry.to.SalaryConfirmRecordTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,18 @@ public class SalaryConfirmRecordApiImpl implements SalaryConfirmRecordAPI{
 
     @Autowired
     private SalaryConfirmRecordSer salaryConfirmRecordSer;
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return salaryConfirmRecordSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return salaryConfirmRecordSer.guidePermission( guidePermissionTO );
+    }
+
 
     @Override
     public Long countSalaryConfirmRecord(SalaryConfirmRecordDTO salaryConfirmRecordDTO) throws SerException {
