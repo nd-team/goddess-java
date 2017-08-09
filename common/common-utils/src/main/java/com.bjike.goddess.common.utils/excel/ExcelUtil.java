@@ -81,7 +81,7 @@ public class ExcelUtil {
                                     String cellVal = getCellValue(row.getCell(j), eh);
                                     Object val = convertValue(cellVal, eh, fields);
                                     if (eh.notNull() && null == val) {
-                                        throw new ActException(rowIndex + " 行,列[" + eh.name() + "]不能为空!");
+                                        throw new ActException(rowIndex+excel.getHeaderStartRow() + " 行,列[" + eh.name() + "]不能为空!");
                                     } else if (null != val) {
                                         setFieldValue(obj, eh.name(), val, fields);
                                     }

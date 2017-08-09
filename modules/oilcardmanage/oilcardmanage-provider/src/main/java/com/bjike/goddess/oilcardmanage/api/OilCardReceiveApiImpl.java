@@ -84,7 +84,7 @@ public class OilCardReceiveApiImpl implements OilCardReceiveAPI {
     }
 
     @Override
-    public List<OilCardBasicBO> findOilCard() throws SerException {
+    public List<String> findOilCard() throws SerException {
         return oilCardReceiveSer.findOilCard();
     }
 
@@ -94,7 +94,8 @@ public class OilCardReceiveApiImpl implements OilCardReceiveAPI {
     }
 
     @Override
-    public List<CusPermissionOperateBO> findOperate() throws SerException {
+    public List<String> findOperate() throws SerException {
         return oilCardReceiveSer.findOperate();
     }
+
 }

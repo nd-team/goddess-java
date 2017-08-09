@@ -1,6 +1,7 @@
 package com.bjike.goddess.interiorrecommend.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.interiorrecommend.bo.RecommendAssessDetailBO;
 import com.bjike.goddess.interiorrecommend.bo.RecommendRequireBO;
 import com.bjike.goddess.interiorrecommend.bo.RecommendSchemeBO;
 import com.bjike.goddess.interiorrecommend.bo.RecommendTypeBO;
@@ -92,4 +93,11 @@ public interface RecommendRequireAPI {
      * @throws SerException
      */
     List<RecommendTypeBO> findType() throws SerException;
+
+    /**
+     * 查询所有推荐内容
+     * @return
+     * @throws SerException
+     */
+    List<RecommendAssessDetailBO> findAssess() throws SerException;
 }

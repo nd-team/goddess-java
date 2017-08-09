@@ -2,7 +2,7 @@ package com.bjike.goddess.staffentry.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.staffentry.bo.*;
+import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
 import com.bjike.goddess.staffentry.entity.EntryRegister;
 import com.bjike.goddess.staffentry.to.*;
@@ -48,11 +48,13 @@ public interface EntryRegisterSer extends Ser<EntryRegister, EntryRegisterDTO> {
      *
      * @return class EntryRegisterBO
      */
-    default EntryRegisterBO getOne(String id ) throws SerException {
+    default EntryRegisterBO getOne(String id) throws SerException {
         return null;
     }
+
     /**
      * 获取所有入职登记
+     *
      * @param entryRegisterDTO 入职登记dto
      * @return class entryRegisterBO
      * @throws SerException
@@ -120,4 +122,13 @@ public interface EntryRegisterSer extends Ser<EntryRegister, EntryRegisterDTO> {
         return null;
     }
 
+    /**
+     * 根据员工编号获取员工入职信息
+     *
+     * @param number
+     * @return
+     */
+    default EntryRegister getByNumber(String number) throws SerException {
+        return null;
+    }
 }

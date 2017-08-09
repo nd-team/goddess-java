@@ -88,32 +88,32 @@ public class CareerPlanningCustomBO extends BaseBO {
     /**
      * 期望周收益（元）
      */
-    private String expectWeeksEarnings;
+    private Integer expectWeeksEarnings;
 
     /**
      * 期望月收益（元）
      */
-    private String expectMonthsEarnings;
+    private Integer expectMonthsEarnings;
 
     /**
      * 期望年收益（元）
      */
-    private String expectYearsEarnings;
+    private Integer expectYearsEarnings;
 
     /**
      * 实际周收益（元）
      */
-    private String actualWeeksEarnings;
+    private Integer actualWeeksEarnings;
 
     /**
      * 实际月收益（元）
      */
-    private String actualMonthsEarnings;
+    private Integer actualMonthsEarnings;
 
     /**
      * 实际年收益（元）
      */
-    private String actualYearsEarnings;
+    private Integer actualYearsEarnings;
 
     private String notUpStandard; //未达标项内容
     private String completeDegree;//此定制项完成程度
@@ -233,51 +233,51 @@ public class CareerPlanningCustomBO extends BaseBO {
         this.finish = finish;
     }
 
-    public String getExpectWeeksEarnings() {
+    public Integer getExpectWeeksEarnings() {
         return expectWeeksEarnings;
     }
 
-    public void setExpectWeeksEarnings(String expectWeeksEarnings) {
+    public void setExpectWeeksEarnings(Integer expectWeeksEarnings) {
         this.expectWeeksEarnings = expectWeeksEarnings;
     }
 
-    public String getExpectMonthsEarnings() {
+    public Integer getExpectMonthsEarnings() {
         return expectMonthsEarnings;
     }
 
-    public void setExpectMonthsEarnings(String expectMonthsEarnings) {
+    public void setExpectMonthsEarnings(Integer expectMonthsEarnings) {
         this.expectMonthsEarnings = expectMonthsEarnings;
     }
 
-    public String getExpectYearsEarnings() {
+    public Integer getExpectYearsEarnings() {
         return expectYearsEarnings;
     }
 
-    public void setExpectYearsEarnings(String expectYearsEarnings) {
+    public void setExpectYearsEarnings(Integer expectYearsEarnings) {
         this.expectYearsEarnings = expectYearsEarnings;
     }
 
-    public String getActualWeeksEarnings() {
+    public Integer getActualWeeksEarnings() {
         return actualWeeksEarnings;
     }
 
-    public void setActualWeeksEarnings(String actualWeeksEarnings) {
+    public void setActualWeeksEarnings(Integer actualWeeksEarnings) {
         this.actualWeeksEarnings = actualWeeksEarnings;
     }
 
-    public String getActualMonthsEarnings() {
+    public Integer getActualMonthsEarnings() {
         return actualMonthsEarnings;
     }
 
-    public void setActualMonthsEarnings(String actualMonthsEarnings) {
+    public void setActualMonthsEarnings(Integer actualMonthsEarnings) {
         this.actualMonthsEarnings = actualMonthsEarnings;
     }
 
-    public String getActualYearsEarnings() {
+    public Integer getActualYearsEarnings() {
         return actualYearsEarnings;
     }
 
-    public void setActualYearsEarnings(String actualYearsEarnings) {
+    public void setActualYearsEarnings(Integer actualYearsEarnings) {
         this.actualYearsEarnings = actualYearsEarnings;
     }
 

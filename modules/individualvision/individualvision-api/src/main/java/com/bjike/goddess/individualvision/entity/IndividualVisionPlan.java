@@ -108,20 +108,20 @@ public class IndividualVisionPlan extends BaseEntity {
     /**
      * 期望周收益（元）
      */
-    @Column(name = "expectWeeksEarnings", columnDefinition = "VARCHAR(255)   COMMENT '期望周收益（元）'")
-    private String expectWeeksEarnings;
+    @Column(name = "expectWeeksEarnings", columnDefinition = "INT(11)   COMMENT '期望周收益（元）'")
+    private Integer expectWeeksEarnings;
 
     /**
      * 期望月收益（元）
      */
-    @Column(name = "expectMonthsEarnings", columnDefinition = "VARCHAR(255)   COMMENT '期望月收益（元）'")
-    private String expectMonthsEarnings;
+    @Column(name = "expectMonthsEarnings", columnDefinition = "INT(11)   COMMENT '期望月收益（元）'")
+    private Integer expectMonthsEarnings;
 
     /**
      * 期望年收益（元）
      */
-    @Column(name = "expectYearsEarnings", columnDefinition = "VARCHAR(255)   COMMENT '期望年收益（元）'")
-    private String expectYearsEarnings;
+    @Column(name = "expectYearsEarnings", columnDefinition = "INT(11)  COMMENT '期望年收益（元）'")
+    private Integer expectYearsEarnings;
     /**
      * 审核人
      */
@@ -262,27 +262,27 @@ public class IndividualVisionPlan extends BaseEntity {
         this.positionsStatus = positionsStatus;
     }
 
-    public String getExpectWeeksEarnings() {
+    public Integer getExpectWeeksEarnings() {
         return expectWeeksEarnings;
     }
 
-    public void setExpectWeeksEarnings(String expectWeeksEarnings) {
+    public void setExpectWeeksEarnings(Integer expectWeeksEarnings) {
         this.expectWeeksEarnings = expectWeeksEarnings;
     }
 
-    public String getExpectMonthsEarnings() {
+    public Integer getExpectMonthsEarnings() {
         return expectMonthsEarnings;
     }
 
-    public void setExpectMonthsEarnings(String expectMonthsEarnings) {
+    public void setExpectMonthsEarnings(Integer expectMonthsEarnings) {
         this.expectMonthsEarnings = expectMonthsEarnings;
     }
 
-    public String getExpectYearsEarnings() {
+    public Integer getExpectYearsEarnings() {
         return expectYearsEarnings;
     }
 
-    public void setExpectYearsEarnings(String expectYearsEarnings) {
+    public void setExpectYearsEarnings(Integer expectYearsEarnings) {
         this.expectYearsEarnings = expectYearsEarnings;
     }
 }

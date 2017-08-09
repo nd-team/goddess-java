@@ -1,14 +1,9 @@
 package com.bjike.goddess.salarymanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.salaryconfirm.bo.SalaryconfirmBO;
-import com.bjike.goddess.salarymanage.bo.SalaryBasicBO;
 import com.bjike.goddess.salarymanage.bo.SalaryInformationBO;
-import com.bjike.goddess.salarymanage.dto.SalaryBasicDTO;
 import com.bjike.goddess.salarymanage.dto.SalaryInformationDTO;
-import com.bjike.goddess.salarymanage.excel.SalaryInformaiionSetExcel;
 import com.bjike.goddess.salarymanage.to.ExportSalaryInformationTO;
-import com.bjike.goddess.salarymanage.to.SalaryBasicTO;
 import com.bjike.goddess.salarymanage.to.SalaryInformationTO;
 
 import java.util.List;
@@ -82,4 +77,10 @@ public interface SalaryInformationAPI  {
     default List<String> findTime() throws SerException{
         return null;
     }
+
+    /**
+     * 导出Excel模板
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
  }

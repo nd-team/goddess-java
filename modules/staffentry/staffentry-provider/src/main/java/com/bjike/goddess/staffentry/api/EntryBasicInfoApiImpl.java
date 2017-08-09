@@ -95,7 +95,7 @@ public class EntryBasicInfoApiImpl implements EntryBasicInfoAPI{
     }
 
     @Override
-    public List<EntryBasicInfoVO> getByEmpNumber(String empNumber) throws SerException {
+    public List<EntryBasicInfoBO> getByEmpNumber(String empNumber) throws SerException {
         return entryBasicInfoSer.getByEmpNumber(empNumber);
     }
 
@@ -105,6 +105,11 @@ public class EntryBasicInfoApiImpl implements EntryBasicInfoAPI{
     }
     public List<EntryOptionBO> getEntryOptionByNameAndEmpNum(String name, String empNumer) throws SerException {
         return entryBasicInfoSer.getEntryOptionByNameAndEmpNum(name,empNumer);
+    }
+
+    @Override
+    public List<EntryBasicInfoBO> listEntryBasicInfo() throws SerException {
+        return BeanTransform.copyProperties(entryBasicInfoSer.findAll(),EntryBasicInfoBO.class,false);
     }
 
 

@@ -132,6 +132,7 @@ public class PositionIndexSetSerImpl extends ServiceImpl<PositionIndexSet, Posit
      */
     @Override
     public List<PositionIndexSetBO> listPositionIndexSet(PositionIndexSetDTO positionIndexSetDTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         if(checkManageIdentity()) {
             if (StringUtils.isNotBlank(positionIndexSetDTO.getIndexName())) {
                 positionIndexSetDTO.getConditions().add(Restrict.like("indexName", positionIndexSetDTO.getIndexName()));

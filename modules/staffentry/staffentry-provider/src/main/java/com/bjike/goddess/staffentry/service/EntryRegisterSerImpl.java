@@ -191,6 +191,18 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     }
 
     @Override
+    public EntryRegister getByNumber(String number) throws SerException {
+        EntryRegisterDTO entryRegisterDTO = new EntryRegisterDTO();
+        entryRegisterDTO.getConditions().add(Restrict.eq("empNumber",number));
+        List<EntryRegister> entryRegisters = super.findByCis(entryRegisterDTO);
+        if(null != entryRegisters && entryRegisters.size() >0){
+            EntryRegister entity = entryRegisters.get(0);
+            return entity;
+        }
+        return null;
+    }
+
+    @Override
     @Transactional(rollbackFor = SerException.class)
     public void removeEntryRegister(String id) throws SerException {
 

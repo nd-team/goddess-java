@@ -25,78 +25,78 @@ import java.util.List;
 public interface SalaryBasicSer extends Ser<SalaryBasic, SalaryBasicDTO> {
    /**
     * 查询所有地区
-    * @return
     * @throws SerException
     */
    default List<AreaBO> findArea() throws SerException {
-    return null;
+       return null;
    }
 
    /**
     * 查询未冻结部门选项
-    * @return
     * @throws SerException
     */
    default List<OpinionBO> findThawOpinion() throws SerException {
-    return null;
+       return null;
    }
 
    /**
     * 查询正常状态的体系
-    * @return
     * @throws SerException
     */
    default List<HierarchyBO> findStatus() throws SerException {
-    return null;
+       return null;
    }
 
    /**
     * 查询正常状态的岗位详细
     *
-    * @return
     * @throws SerException
     */
    default List<PositionDetailBO> findPosition() throws SerException {
-    return null;
+       return null;
    }
+    /**
+     * 列表
+     * @param dto
+     * @throws SerException
+     */
+    default List<SalaryBasicBO> pageList(SalaryBasicDTO dto) throws SerException{
+        return null;
+    }
 
    /**
     * 查询所有薪资基本资料
-    * @return
     * @throws SerException
     */
    default List<SalaryBasicBO> findSalaryBasic() throws SerException{
-    return null;
+       return null;
    }
 
    /**
     * 查询基本工资
     * @param dto
-    * @return
     * @throws SerException
     */
    default SalaryBasicBO findSalary(SalaryBasicDTO dto) throws SerException{
-    return null;
+       return null;
    }
 
    /**
     * 添加
     * @param to
-    * @return
     * @throws SerException
     */
    default SalaryBasicBO add(SalaryBasicTO to) throws SerException{
-    return null;
+       return null;
    }
 
    /**
     * 修改
     * @param to
-    * @return
     * @throws SerException
     */
    default SalaryBasicBO edit(SalaryBasicTO to) throws SerException{
-    return null;
+       return null;
    }
 
    /**
@@ -118,8 +118,14 @@ public interface SalaryBasicSer extends Ser<SalaryBasic, SalaryBasicDTO> {
     /**
      * 导出
      * @param to
-     * @return
      * @throws SerException
      */
     byte[] exportExcel(ExportSalaryBasicTO to) throws SerException;
+
+
+    /**
+     * 导出Excel模板
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
  }

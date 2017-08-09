@@ -223,9 +223,8 @@ public class OilCardReceiveAct {
     @GetMapping("v1/find/oilcard")
     public Result findOilcard() throws ActException{
         try {
-            List<OilCardBasicBO> boList = oilCardReceiveAPI.findOilCard();
-            List<OilCardBasicVO> voList = BeanTransform.copyProperties(boList,OilCardBasicVO.class);
-            return ActResult.initialize(voList);
+            List<String> boList = oilCardReceiveAPI.findOilCard();
+            return ActResult.initialize(boList);
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }
@@ -257,9 +256,8 @@ public class OilCardReceiveAct {
     @GetMapping("v1/find/operate")
     public Result findOperate() throws ActException{
         try {
-            List<CusPermissionOperateBO> boList = oilCardReceiveAPI.findOperate();
-            List<CusPermissionOperateVO> voList = BeanTransform.copyProperties(boList,CusPermissionOperateVO.class);
-            return ActResult.initialize(voList);
+            List<String> boList = oilCardReceiveAPI.findOperate();
+            return ActResult.initialize(boList);
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }

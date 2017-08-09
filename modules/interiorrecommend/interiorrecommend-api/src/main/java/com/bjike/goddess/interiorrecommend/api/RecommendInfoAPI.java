@@ -3,7 +3,9 @@ package com.bjike.goddess.interiorrecommend.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.interiorrecommend.bo.RecommendContentBO;
 import com.bjike.goddess.interiorrecommend.bo.RecommendInfoBO;
+import com.bjike.goddess.interiorrecommend.bo.RecommendRequireBO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendInfoDTO;
+import com.bjike.goddess.interiorrecommend.entity.RecommendRequire;
 import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.RecommendInfoTO;
 
@@ -85,8 +87,13 @@ public interface RecommendInfoAPI {
 
     /**
      * 审核通过的推荐信息列表
-     * @return
      * @throws SerException
      */
     List<RecommendInfoBO> awardlist() throws SerException;
+
+    /**
+     * 查询所有推荐要求
+     * @throws SerException
+     */
+    List<String[]> findRequire() throws SerException;
 }

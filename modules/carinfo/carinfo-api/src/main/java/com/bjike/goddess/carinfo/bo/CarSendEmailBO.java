@@ -15,9 +15,20 @@ import javax.persistence.Column;
  */
 public class CarSendEmailBO extends BaseBO {
 
+    /**
+     * 部门id
+     */
     private String positionNameId;
 
+    /**
+     * 岗位id
+     */
     private String projectManagerId;
+
+    /**
+     * 备注
+     */
+    private String remark;
 
     public String getPositionNameId() {
         return positionNameId;
@@ -43,5 +54,13 @@ public class CarSendEmailBO extends BaseBO {
     @Override
     public void setId(String id) {
         super.setId(id);
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

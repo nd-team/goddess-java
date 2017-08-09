@@ -319,7 +319,7 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
     }
 
     @Override
-    public List<EntryBasicInfoVO> getByEmpNumber(String empNumber) throws SerException {
+    public List<EntryBasicInfoBO> getByEmpNumber(String empNumber) throws SerException {
         EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
         dto.getConditions().add(Restrict.eq("employeeID", empNumber));
         List<EntryBasicInfo> list = super.findByCis(dto);

@@ -4,8 +4,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.interiorrecommend.bo.RecommendContentBO;
 import com.bjike.goddess.interiorrecommend.bo.RecommendInfoBO;
+import com.bjike.goddess.interiorrecommend.bo.RecommendRequireBO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendInfoDTO;
 import com.bjike.goddess.interiorrecommend.entity.RecommendInfo;
+import com.bjike.goddess.interiorrecommend.entity.RecommendRequire;
 import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.RecommendInfoTO;
 
@@ -92,4 +94,10 @@ public interface RecommendInfoSer extends Ser<RecommendInfo, RecommendInfoDTO> {
      * @throws SerException
      */
     List<RecommendInfoBO> awardlist() throws SerException;
+
+    /**
+     * 查询所有推荐要求
+     * @throws SerException
+     */
+    List<String[]> findRequire() throws SerException;
 }

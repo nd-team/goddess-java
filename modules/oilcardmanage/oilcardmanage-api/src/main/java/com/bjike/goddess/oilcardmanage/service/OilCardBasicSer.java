@@ -85,4 +85,10 @@ public interface OilCardBasicSer extends Ser<OilCardBasic, OilCardBasicDTO> {
     OilCardBasicBO find(String id) throws SerException;
 
     void updateOliCardBasic(OilCardBasic oilCardBasic) throws SerException;
+
+    /**
+     * 查询未冻结的油卡
+     * @throws SerException
+     */
+    List<OilCardBasicBO> findOilCard() throws SerException;
 }

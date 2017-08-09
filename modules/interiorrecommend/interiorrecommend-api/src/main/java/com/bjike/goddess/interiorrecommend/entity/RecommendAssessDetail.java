@@ -35,7 +35,7 @@ public class RecommendAssessDetail extends BaseEntity {
      * 推荐要求
      */
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "recommendRequire_id", referencedColumnName = "id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '推荐要求'")
+    @JoinColumn(name = "recommendRequire_id", referencedColumnName = "id", nullable = false ,columnDefinition = "VARCHAR(36)   COMMENT '推荐要求'")
     private RecommendRequire recommendRequire;
 
 

@@ -28,6 +28,11 @@ public class OilCardRechargeBO extends BaseBO {
     private String oilCardNumber;
 
     /**
+     * 所属主卡
+     */
+    private String mainOrDeputy;
+
+    /**
      * 充值日期
      */
     private String rechargeDate;
@@ -106,5 +111,13 @@ public class OilCardRechargeBO extends BaseBO {
 
     public void setOilCardNumber(String oilCardNumber) {
         this.oilCardNumber = oilCardNumber;
+    }
+
+    public String getMainOrDeputy() {
+        return mainOrDeputy;
+    }
+
+    public void setMainOrDeputy(String mainOrDeputy) {
+        this.mainOrDeputy = mainOrDeputy;
     }
 }

@@ -88,7 +88,7 @@ public interface OilCardReceiveSer extends Ser<OilCardReceive, OilCardReceiveDTO
      * 查询所有未冻结的油卡
      * @throws SerException
      */
-    List<OilCardBasicBO> findOilCard() throws SerException;
+    List<String> findOilCard() throws SerException;
 
     /**
      * 查询所有地区
@@ -101,5 +101,6 @@ public interface OilCardReceiveSer extends Ser<OilCardReceive, OilCardReceiveDTO
      * @return
      * @throws SerException
      */
-    List<CusPermissionOperateBO> findOperate() throws SerException;
+    List<String> findOperate() throws SerException;
+
 }

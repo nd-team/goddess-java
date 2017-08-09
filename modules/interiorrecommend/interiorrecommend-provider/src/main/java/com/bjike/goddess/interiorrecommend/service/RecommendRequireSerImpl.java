@@ -322,4 +322,11 @@ public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, Recom
         List<RecommendTypeBO> recommendTypeBOS = BeanTransform.copyProperties(recommendTypes,RecommendTypeBO.class);
         return recommendTypeBOS;
     }
+
+    @Override
+    public List<RecommendAssessDetailBO> findAssess() throws SerException {
+        List<RecommendAssessDetail> list = recommendAssessDetailSer.findAll();
+        List<RecommendAssessDetailBO> boList = BeanTransform.copyProperties(list,RecommendAssessDetailBO.class);
+        return boList;
+    }
 }

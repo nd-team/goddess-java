@@ -155,7 +155,7 @@ public interface EntryBasicInfoAPI {
      * @return class entryBasicInfoBO
      * @throws SerException
      */
-    default List<EntryBasicInfoVO> getByEmpNumber(String empNumber) throws SerException {
+    default List<EntryBasicInfoBO> getByEmpNumber(String empNumber) throws SerException {
         return null;
     }
 
@@ -180,6 +180,13 @@ public interface EntryBasicInfoAPI {
      * @throws SerException
      */
     default List<EntryOptionBO> getEntryOptionByNameAndEmpNum(String name, String empNumer) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有入职基本信息不分页
+     */
+    default List<EntryBasicInfoBO> listEntryBasicInfo() throws SerException {
         return null;
     }
 

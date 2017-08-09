@@ -36,6 +36,27 @@ public class RecommendInfoTO extends BaseTO {
     @NotNull(message = "推荐内容不能为空", groups = {ADD.class, EDIT.class})
     private List<RecommendContentTO> contentList;
 
+    /**
+     * 推荐人
+     */
+    private String recommendUser;
+
+    /**
+     * 原因
+     */
+    private String reason;
+
+    /**
+     * 是否采纳
+     */
+    private Boolean accept;
+
+    /**
+     * 是否符合奖励要求
+     */
+    private Boolean conform;
+
+
     public String getRequireId() {
         return requireId;
     }
@@ -60,4 +81,35 @@ public class RecommendInfoTO extends BaseTO {
         this.contentList = contentList;
     }
 
+    public String getRecommendUser() {
+        return recommendUser;
+    }
+
+    public void setRecommendUser(String recommendUser) {
+        this.recommendUser = recommendUser;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    public Boolean getAccept() {
+        return accept;
+    }
+
+    public void setAccept(Boolean accept) {
+        this.accept = accept;
+    }
+
+    public Boolean getConform() {
+        return conform;
+    }
+
+    public void setConform(Boolean conform) {
+        this.conform = conform;
+    }
 }
