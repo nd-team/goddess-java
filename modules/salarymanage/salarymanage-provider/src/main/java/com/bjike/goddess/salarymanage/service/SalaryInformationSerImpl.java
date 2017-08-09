@@ -8,12 +8,19 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.managementpromotion.api.LevelShowAPI;
+import com.bjike.goddess.managementpromotion.bo.LevelShowBO;
+import com.bjike.goddess.managementpromotion.entity.LevelShow;
 import com.bjike.goddess.salarymanage.bo.SalaryInformationBO;
 import com.bjike.goddess.salarymanage.dto.SalaryInformationDTO;
 import com.bjike.goddess.salarymanage.entity.SalaryInformation;
+import com.bjike.goddess.salarymanage.enums.GuideAddrStatus;
 import com.bjike.goddess.salarymanage.excel.SalaryInformationSetExcel;
 import com.bjike.goddess.salarymanage.to.ExportSalaryInformationTO;
+import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
 import com.bjike.goddess.salarymanage.to.SalaryInformationTO;
+import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -40,26 +47,179 @@ import java.util.List;
 public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, SalaryInformationDTO> implements SalaryInformationSer {
     @Autowired
     private UserAPI userAPI;
-    @Override
-    public List<SalaryInformationBO> pageList(SalaryInformationDTO dto) throws SerException {
-        //todo 还没有添加权限 规划人能查看所有的 还能根据名称来查找,默认是查找所有的
+
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    @Autowired
+    private LevelShowAPI levelShowAPI;
+
+    @Autowired
+    private EntryBasicInfoAPI entryBasicInfoAPI;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
-        if(dto.getPayStarTime() != null && dto.getPayEndTime() != null){
-            LocalDate[] localDates = new LocalDate[]{dto.getPayStarTime(),dto.getPayEndTime()};
-            dto.getConditions().add(Restrict.between("payStarTime",localDates));
-            dto.getConditions().add(Restrict.between("payEndTime",localDates));
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
         }
-        if(dto.getPayStarTime() != null && dto.getPayEndTime() == null){
-            LocalDate endTime = LocalDate.now();
-            LocalDate[] localDates = new LocalDate[]{dto.getPayStarTime(),endTime};
-            dto.getConditions().add(Restrict.between("payStarTime",localDates));
-            dto.getConditions().add(Restrict.between("payEndTime",localDates));
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException{
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
         }
-        if(dto.getPayStarTime() == null && dto.getPayEndTime() != null){
-            dto.getConditions().add(Restrict.lt_eq("payEndTime",dto.getPayEndTime()));
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
         }
-        dto.getConditions().add(Restrict.eq("employeeId",userBO.getEmployeeNumber()));
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if( flagSee || flagAdd ){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+    @Override
+    public List<SalaryInformationBO> pageList(SalaryInformationDTO dto) throws SerException {
+        //规划人能查看所有的 还能根据名称来查找,默认是查找所有的
+        if(guideAddIdentity() == true) {
+            if (dto.getPayStarTime() != null && dto.getPayEndTime() != null) {
+                LocalDate[] localDates = new LocalDate[]{dto.getPayStarTime(), dto.getPayEndTime()};
+                dto.getConditions().add(Restrict.between("payStarTime", localDates));
+                dto.getConditions().add(Restrict.between("payEndTime", localDates));
+            }
+            if (dto.getPayStarTime() != null && dto.getPayEndTime() == null) {
+                LocalDate endTime = LocalDate.now();
+                LocalDate[] localDates = new LocalDate[]{dto.getPayStarTime(), endTime};
+                dto.getConditions().add(Restrict.between("payStarTime", localDates));
+                dto.getConditions().add(Restrict.between("payEndTime", localDates));
+            }
+            if (dto.getPayStarTime() == null && dto.getPayEndTime() != null) {
+                dto.getConditions().add(Restrict.lt_eq("payEndTime", dto.getPayEndTime()));
+            }
+            if(dto.getEmployeeName() != null){
+                dto.getConditions().add(Restrict.eq("employeeName",dto.getEmployeeName()));
+            }
+        }else {
+            UserBO userBO = userAPI.currentUser();
+            dto.getConditions().add(Restrict.eq("employeeId", userBO.getEmployeeNumber()));
+        }
         List<SalaryInformation> list = super.findByCis(dto);
         List<SalaryInformationBO> salaryInformationBOS = BeanTransform.copyProperties(list,SalaryInformationBO.class);
         return salaryInformationBOS;
@@ -67,11 +227,38 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
 
     @Override
     public SalaryInformationBO addSalaryInformation(SalaryInformationTO to) throws SerException {
+        isExit(to);
         SalaryInformation salaryInformation = BeanTransform.copyProperties(to,SalaryInformation.class);
         salaryInformation.setCreateTime(LocalDateTime.now());
         super.save(salaryInformation);
         SalaryInformationBO salaryInformationBO = BeanTransform.copyProperties(salaryInformation,SalaryInformationBO.class);
         return salaryInformationBO;
+    }
+
+    //判断添加之前数据库是否已经存在该数据（判断规则是根据员工编号id和计薪周期)
+    private void isExit(SalaryInformationTO to) throws SerException{
+        String id = to.getEmployeeId();
+        SalaryInformationDTO dto = new SalaryInformationDTO();
+        dto.getConditions().add(Restrict.eq("id",id));
+        dto.getConditions().add(Restrict.eq("payStartTime",to.getPayStarTime()));
+        dto.getConditions().add(Restrict.eq("payEndTime",to.getPayStarTime()));
+        List<SalaryInformation> list = super.findByCis(dto);
+        if(list != null || list.size() >0){
+            throw new SerException("该数据已经存在,不可重复添加");
+        }
+    }
+
+    //判断修改之后的数据是否已经存在，如果存在两条以上相同的数据则修改失败
+    private void ifExit(SalaryInformationTO to) throws SerException{
+        String id = to.getEmployeeId();
+        SalaryInformationDTO dto = new SalaryInformationDTO();
+        dto.getConditions().add(Restrict.eq("id",id));
+        dto.getConditions().add(Restrict.eq("payStartTime",to.getPayStarTime()));
+        dto.getConditions().add(Restrict.eq("payEndTime",to.getPayStarTime()));
+        List<SalaryInformation> list = super.findByCis(dto);
+        if(list.size() >1){
+            throw new SerException("该数据已经存在,修改失败");
+        }
     }
 
     @Override
@@ -87,7 +274,7 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
         BeanUtils.copyProperties(salaryInformation,temp,"id","createTime");
         temp.setModifyTime(LocalDateTime.now());
         super.update(temp);
-
+        ifExit(to);
         SalaryInformationBO salaryInformationBO = BeanTransform.copyProperties(temp,SalaryInformationBO.class);
         return salaryInformationBO;
     }
@@ -100,7 +287,8 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
 
     @Override
     public void leadExcel(List<SalaryInformationTO> toList) throws SerException {
-        //todo 要加上导出权限
+        //只有模块规划负责人才有导入权限
+        checkAddIdentity();
         UserBO userBO = userAPI.currentUser();
         List<SalaryInformation> list = BeanTransform.copyProperties(toList,SalaryInformation.class,true);
         list.stream().forEach(str->{
@@ -113,6 +301,7 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
 
     @Override
     public byte[] exportExcel(ExportSalaryInformationTO to) throws SerException {
+        checkAddIdentity();
         SalaryInformationDTO dto = new SalaryInformationDTO();
         //根据计薪开始时间和计薪结束时间来导出excel
         if(StringUtils.isNotBlank(to.getPayStarTime()) && StringUtils.isNotBlank(to.getPayEndTime())){
@@ -208,5 +397,26 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
         Excel exce = new Excel(0,2);
         byte[] bytes = ExcelUtil.clazzToExcel(salaryInformationSetExcels,exce);
         return bytes;
+    }
+
+    @Override
+    public LevelShow findByEmployeeId(String employeeId) throws SerException {
+        if (null != employeeId) {
+            LevelShow levelShow = levelShowAPI.findByEmployeeId(employeeId);
+            return levelShow;
+        }else {
+            throw new SerException("员工编号不能为空");
+        }
+    }
+
+    @Override
+    public List<EntryBasicInfoBO> getByEmpNumber(String employeeId) throws SerException {
+        List<EntryBasicInfoBO> bo = entryBasicInfoAPI.getByEmpNumber(employeeId);
+        return bo;
+    }
+
+    @Override
+    public Long count(SalaryInformationDTO dto) throws SerException {
+        return super.count(dto);
     }
 }

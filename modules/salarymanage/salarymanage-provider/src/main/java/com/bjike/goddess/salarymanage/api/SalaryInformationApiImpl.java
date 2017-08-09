@@ -1,14 +1,17 @@
 package com.bjike.goddess.salarymanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.managementpromotion.entity.LevelShow;
 import com.bjike.goddess.salarymanage.bo.SalaryBasicBO;
 import com.bjike.goddess.salarymanage.bo.SalaryInformationBO;
 import com.bjike.goddess.salarymanage.dto.SalaryBasicDTO;
 import com.bjike.goddess.salarymanage.dto.SalaryInformationDTO;
 import com.bjike.goddess.salarymanage.service.SalaryInformationSer;
 import com.bjike.goddess.salarymanage.to.ExportSalaryInformationTO;
+import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
 import com.bjike.goddess.salarymanage.to.SalaryBasicTO;
 import com.bjike.goddess.salarymanage.to.SalaryInformationTO;
+import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,5 +69,30 @@ public class SalaryInformationApiImpl implements SalaryInformationAPI  {
     @Override
     public byte[] templateExport() throws SerException {
         return salaryInformationSer.templateExport();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return salaryInformationSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return salaryInformationSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public LevelShow findByEmployeeId(String employeeId) throws SerException {
+        return salaryInformationSer.findByEmployeeId(employeeId);
+    }
+
+    @Override
+    public List<EntryBasicInfoBO> getByEmpNumber(String employeeId) throws SerException {
+        return salaryInformationSer.getByEmpNumber(employeeId);
+    }
+
+    @Override
+    public Long count(SalaryInformationDTO dto) throws SerException {
+        return salaryInformationSer.count(dto);
     }
 }

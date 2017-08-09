@@ -14,10 +14,13 @@
 	<dubbo:consumer check="false" timeout="15000" />
 	<dubbo:registry address="${dubbo.registry.address}" />
 
-	<!-- 注册接口-->
+	<!-- 薪资基本资料-->
+	<dubbo:reference interface="com.bjike.goddess.salarymanage.api.SalaryInformationAPI" id="salaryInformationApiImpl" />
 
-    <!-- 薪资确认API -->
-  	<!-- 上交发票API -->
+
+	<!-- 基本资料 -->
+	<dubbo:reference interface="com.bjike.goddess.salarymanage.api.SalaryBasicAPI" id="salayBasicApiImpl" />
+
 	<!-- userAPI -->
 	<dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl" />
 

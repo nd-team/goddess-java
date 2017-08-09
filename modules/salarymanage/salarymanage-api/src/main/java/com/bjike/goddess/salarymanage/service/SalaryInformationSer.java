@@ -2,14 +2,17 @@ package com.bjike.goddess.salarymanage.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.managementpromotion.entity.LevelShow;
 import com.bjike.goddess.salarymanage.bo.SalaryBasicBO;
 import com.bjike.goddess.salarymanage.bo.SalaryInformationBO;
 import com.bjike.goddess.salarymanage.dto.SalaryBasicDTO;
 import com.bjike.goddess.salarymanage.entity.SalaryInformation;
 import com.bjike.goddess.salarymanage.dto.SalaryInformationDTO;
 import com.bjike.goddess.salarymanage.to.ExportSalaryInformationTO;
+import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
 import com.bjike.goddess.salarymanage.to.SalaryBasicTO;
 import com.bjike.goddess.salarymanage.to.SalaryInformationTO;
+import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 
 import java.util.List;
 
@@ -22,6 +25,20 @@ import java.util.List;
 * @Copy:   		[ com.bjike ]
 */
 public interface SalaryInformationSer extends Ser<SalaryInformation, SalaryInformationDTO> {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 查询列表
      * @param dto
@@ -88,4 +105,26 @@ public interface SalaryInformationSer extends Ser<SalaryInformation, SalaryInfor
      * @throws SerException
      */
     byte[] templateExport() throws SerException;
+
+    /**
+     * 通过员工编号来查询管理等级
+     * @param employeeId
+     * @throws SerException
+     */
+    LevelShow findByEmployeeId(String employeeId) throws SerException;
+
+    /**
+     * 根据id来查询入职基本信息
+     * @param employeeId
+     * @return
+     * @throws SerException
+     */
+    List<EntryBasicInfoBO> getByEmpNumber(String employeeId) throws SerException;
+
+    /**
+     * 查询总条数
+     * @param dto
+     * @throws SerException
+     */
+    Long count(SalaryInformationDTO dto) throws SerException;
  }

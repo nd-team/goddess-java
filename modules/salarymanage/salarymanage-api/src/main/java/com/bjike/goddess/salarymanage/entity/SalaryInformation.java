@@ -71,9 +71,9 @@ public class SalaryInformation extends BaseEntity {
     private String  stationLevel;
 
     /**
-     * 管理层级
+     * 管理等级
      */
-    @Column(name = "manageLevel",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '管理层级'"  )
+    @Column(name = "manageLevel",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '管理等级'"  )
     private String  manageLevel;
 
     /**

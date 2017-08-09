@@ -79,7 +79,7 @@ public class SalaryInformationTO extends BaseTO {
     /**
      * 管理层级
      */
-    @NotBlank(message = "管理层级不能为空!", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "管理等级不能为空!", groups = {ADD.class, EDIT.class})
     private String  manageLevel;
 
     /**
