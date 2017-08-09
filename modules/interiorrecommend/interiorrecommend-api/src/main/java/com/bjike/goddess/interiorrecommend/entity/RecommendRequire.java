@@ -29,9 +29,10 @@ public class RecommendRequire extends BaseEntity {
     private RecommendScheme recommendScheme;
 
     /**
+     *
      * 推荐类型
      */
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH,CascadeType.REMOVE})
     @JoinColumn(name = "recommendType_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '推荐类型'")
     private RecommendType recommendType;
 

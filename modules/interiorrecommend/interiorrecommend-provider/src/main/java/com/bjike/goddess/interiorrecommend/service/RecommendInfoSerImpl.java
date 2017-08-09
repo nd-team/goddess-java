@@ -1,5 +1,6 @@
 package com.bjike.goddess.interiorrecommend.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -7,6 +8,8 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.interiorrecommend.bo.RecommendInfoBO;
 import com.bjike.goddess.interiorrecommend.bo.RecommendRequireBO;
+import com.bjike.goddess.interiorrecommend.dto.AwardInfoDTO;
+import com.bjike.goddess.interiorrecommend.dto.RecommendContentDTO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendInfoDTO;
 import com.bjike.goddess.interiorrecommend.entity.*;
 import com.bjike.goddess.interiorrecommend.enums.GuideAddrStatus;
@@ -257,8 +260,31 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
     @Override
     public void delete(String id) throws SerException {
         checkSeeIdentity();
-        super.remove(id);
+        if(null != id){
+            RecommendContentDTO contentDTO = new RecommendContentDTO();
+            contentDTO.getConditions().add(Restrict.eq("recommendInfo.id",id));
+            List<RecommendContent> contents = recommendContentSer.findByCis(contentDTO);
+            if (contents != null && contents.size() > 0) {
+                for (RecommendContent recommendContent : contents) {
+                    StringBuilder sql = new StringBuilder("DELETE FROM");
+                    sql.append(" interiorrecommend_recommendcontent WHERE id = '" + recommendContent.getId() + "'");
+                    recommendContentSer.executeSql(sql.toString());
+                }
+            }
+            AwardInfoDTO awardInfoDTO = new AwardInfoDTO();
+            awardInfoDTO.getConditions().add(Restrict.eq("recommendInfo.id",id));
+            List<AwardInfo> awardInfos = awardInfoSer.findByCis(awardInfoDTO);
+            if (awardInfos != null && awardInfos.size() > 0) {
+                for (AwardInfo awardInfo : awardInfos) {
+                    StringBuilder sql = new StringBuilder("DELETE FROM");
+                    sql.append(" interiorrecommend_awardinfo WHERE id = '" + awardInfo.getId() + "'");
+                    awardInfoSer.executeSql(sql.toString());
+                }
+            }
+            super.remove(id);
+        }
     }
+
 
     @Override
     public List<RecommendInfoBO> pageList(RecommendInfoDTO dto) throws SerException {
@@ -307,6 +333,7 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
                 throw new SerException("已经审核不符合!");
             }
             model.setConform(conform);
+            super.update(model);
             if (conform) {
                 AwardInfo awardInfo = new AwardInfo();
                 awardInfo.setRecommendInfo(model);
@@ -320,7 +347,11 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
     @Override
     public List<RecommendInfoBO> awardlist() throws SerException {
         checkSeeIdentity();
-        return null;
+        RecommendInfoDTO dto = new RecommendInfoDTO();
+        dto.getConditions().add(Restrict.eq("accept",true));
+        List<RecommendInfo> list = super.findByCis(dto);
+        List<RecommendInfoBO> boList = BeanTransform.copyProperties(list,RecommendInfoBO.class);
+        return boList;
     }
 
     @Override

@@ -1,12 +1,15 @@
 package com.bjike.goddess.interiorrecommend.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.interiorrecommend.bo.AwardInfoBO;
 import com.bjike.goddess.interiorrecommend.bo.AwardStandardBO;
+import com.bjike.goddess.interiorrecommend.bo.RecommendInfoBO;
 import com.bjike.goddess.interiorrecommend.dto.AwardInfoDTO;
+import com.bjike.goddess.interiorrecommend.dto.RecommendInfoDTO;
 import com.bjike.goddess.interiorrecommend.entity.AwardInfo;
 import com.bjike.goddess.interiorrecommend.entity.RecommendInfo;
 import com.bjike.goddess.interiorrecommend.enums.GuideAddrStatus;
@@ -300,10 +303,12 @@ public class AwardInfoSerImpl extends ServiceImpl<AwardInfo, AwardInfoDTO> imple
     }
 
     @Override
-    public List<AwardInfoBO> pageList(AwardInfoDTO dto) throws SerException {
+    public List<RecommendInfoBO> pageList(RecommendInfoDTO dto) throws SerException {
         checkSeeIdentity();
         dto.getSorts().add("creatTime=desc");
-        return BeanTransform.copyProperties(super.findByPage(dto), AwardInfoBO.class);
+        dto.getConditions().add(Restrict.eq("accept",true));
+        dto.getConditions().add(Restrict.eq("confirm",false));
+        return BeanTransform.copyProperties(recommendInfoSer.findByPage(dto), RecommendInfoBO.class);
     }
 
     @Override

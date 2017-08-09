@@ -1,12 +1,13 @@
 package com.bjike.goddess.interiorrecommend.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.interiorrecommend.bo.*;
-import com.bjike.goddess.interiorrecommend.dto.RecommendRequireDTO;
+import com.bjike.goddess.interiorrecommend.dto.*;
 import com.bjike.goddess.interiorrecommend.entity.*;
 import com.bjike.goddess.interiorrecommend.enums.GuideAddrStatus;
 import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
@@ -53,6 +54,16 @@ public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, Recom
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
+
+    @Autowired
+    private RecommendInfoSer recommendInfoSer;
+
+    @Autowired
+    private AwardStandardSer awardStandardSer;
+
+    @Autowired
+    private AwardInfoSer awardInfoSer;
+
 
     /**
      * 核对查看权限（部门级别）
@@ -203,7 +214,7 @@ public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, Recom
         if (recommendScheme != null) {
             if (recommendType != null) {
                 RecommendRequire model = BeanTransform.copyProperties(to, RecommendRequire.class, true);
-                RecommendScheme scheme= recommendSchemeSer.findById(to.getRecommendSchemeId());
+                RecommendScheme scheme = recommendSchemeSer.findById(to.getRecommendSchemeId());
                 RecommendType type = recommendTypeSer.findById(to.getRecommendTypeId());
                 model.setRecommendScheme(scheme);
                 model.setRecommendType(type);
@@ -302,39 +313,85 @@ public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, Recom
     @Override
     public void delete(String id) throws SerException {
         checkAddIdentity();
-        RecommendRequire model = super.findById(id);
-        if (model != null) {
+        if (id != null) {
+            RecommendInfoDTO infoDTO = new RecommendInfoDTO();
+            infoDTO.getConditions().add(Restrict.eq("recommendRequire.id", id));
+            List<RecommendInfo> info = recommendInfoSer.findByCis(infoDTO);
+            if (info != null && info.size() > 0) {
+                for (RecommendInfo recommendInfo : info) {
+                    RecommendContentDTO contentDTO = new RecommendContentDTO();
+                    contentDTO.getConditions().add(Restrict.eq("recommendInfo.id", recommendInfo.getId()));
+                    List<RecommendContent> contents = recommendContentSer.findByCis(contentDTO);
+                    if (contents != null && contents.size() > 0) {
+                        for (RecommendContent recommendContent : contents) {
+                            StringBuilder sql = new StringBuilder("DELETE FROM");
+                            sql.append(" interiorrecommend_recommendcontent WHERE id = '" + recommendContent.getId() + "'");
+                            recommendContentSer.executeSql(sql.toString());
+                        }
+                    }
+                    AwardInfoDTO awardInfoDTO = new AwardInfoDTO();
+                    awardInfoDTO.getConditions().add(Restrict.eq("recommendInfo.id", recommendInfo.getId()));
+                    List<AwardInfo> awardInfos = awardInfoSer.findByCis(awardInfoDTO);
+                    if (awardInfos != null && awardInfos.size() > 0) {
+                        for (AwardInfo awardInfo : awardInfos) {
+                            StringBuilder sql = new StringBuilder("DELETE FROM");
+                            sql.append(" interiorrecommend_awardinfo WHERE id = '" + awardInfo.getId() + "'");
+                            awardInfoSer.executeSql(sql.toString());
+                        }
+                    }
+                    recommendInfoSer.remove(recommendInfo.getId());
+                }
+            }
+            RecommendAssessDetailDTO detailDTO = new RecommendAssessDetailDTO();
+            detailDTO.getConditions().add(Restrict.eq("recommendRequire.id", id));
+            List<RecommendAssessDetail> details = recommendAssessDetailSer.findByCis(detailDTO);
+            if (details != null && details.size() > 0) {
+                for (RecommendAssessDetail detail : details) {
+                    StringBuilder sql = new StringBuilder("DELETE FROM");
+                    sql.append(" interiorrecommend_recommendassessdetail WHERE id = '" + detail.getId() + "'");
+                    recommendAssessDetailSer.executeSql(sql.toString());
+                }
+            }
+            AwardStandardDTO standardDTO = new AwardStandardDTO();
+            standardDTO.getConditions().add(Restrict.eq("recommendRequire.id", id));
+            List<AwardStandard> standards = awardStandardSer.findByCis(standardDTO);
+            if (standards != null && standards.size() > 0) {
+                for (AwardStandard awardStandard : standards) {
+                    StringBuilder sql = new StringBuilder("DELETE FROM");
+                    sql.append(" interiorrecommend_awardstandard WHERE id = '" + awardStandard.getId() + "'");
+                    awardStandardSer.executeSql(sql.toString());
+                }
+            }
             super.remove(id);
-        } else {
-            throw new SerException("非法Id,推荐要求对象不能为空!");
         }
     }
+
 
     @Override
     public List<RecommendSchemeBO> findRecommend() throws SerException {
         List<RecommendScheme> recommendSchemes = recommendSchemeSer.findAll();
-        List<RecommendSchemeBO> recommendSchemeBOS = BeanTransform.copyProperties(recommendSchemes,RecommendSchemeBO.class);
+        List<RecommendSchemeBO> recommendSchemeBOS = BeanTransform.copyProperties(recommendSchemes, RecommendSchemeBO.class);
         return recommendSchemeBOS;
     }
 
     @Override
     public List<RecommendTypeBO> findType() throws SerException {
         List<RecommendType> recommendTypes = recommendTypeSer.findAll();
-        List<RecommendTypeBO> recommendTypeBOS = BeanTransform.copyProperties(recommendTypes,RecommendTypeBO.class);
+        List<RecommendTypeBO> recommendTypeBOS = BeanTransform.copyProperties(recommendTypes, RecommendTypeBO.class);
         return recommendTypeBOS;
     }
 
     @Override
     public List<RecommendAssessDetailBO> findAssess() throws SerException {
         List<RecommendAssessDetail> list = recommendAssessDetailSer.findAll();
-        List<RecommendAssessDetailBO> boList = BeanTransform.copyProperties(list,RecommendAssessDetailBO.class);
+        List<RecommendAssessDetailBO> boList = BeanTransform.copyProperties(list, RecommendAssessDetailBO.class);
         return boList;
     }
 
     @Override
     public List<RecommendContentBO> findContent() throws SerException {
         List<RecommendContent> content = recommendContentSer.findAll();
-        List<RecommendContentBO> contentBOS = BeanTransform.copyProperties(content,RecommendContentBO.class);
+        List<RecommendContentBO> contentBOS = BeanTransform.copyProperties(content, RecommendContentBO.class);
         return contentBOS;
     }
 }

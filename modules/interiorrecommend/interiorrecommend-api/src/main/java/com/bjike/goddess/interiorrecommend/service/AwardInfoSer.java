@@ -4,7 +4,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.interiorrecommend.bo.AwardInfoBO;
 import com.bjike.goddess.interiorrecommend.bo.AwardStandardBO;
+import com.bjike.goddess.interiorrecommend.bo.RecommendInfoBO;
 import com.bjike.goddess.interiorrecommend.dto.AwardInfoDTO;
+import com.bjike.goddess.interiorrecommend.dto.RecommendInfoDTO;
 import com.bjike.goddess.interiorrecommend.entity.AwardInfo;
 import com.bjike.goddess.interiorrecommend.excel.SonPermissionObject;
 import com.bjike.goddess.interiorrecommend.to.AwardInfoTO;
@@ -48,7 +50,7 @@ public interface AwardInfoSer extends Ser<AwardInfo, AwardInfoDTO> {
      * 分页查询
      * @param dto 分页条件
      */
-    List<AwardInfoBO> pageList(AwardInfoDTO dto) throws SerException;
+    List<RecommendInfoBO> pageList(RecommendInfoDTO dto) throws SerException;
 
     /**
      * 根据id来查询推荐奖励信息
