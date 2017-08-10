@@ -1,5 +1,6 @@
 package com.bjike.goddess.regularization.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -111,4 +112,11 @@ public class ManagementScoreSerImpl extends ServiceImpl<ManagementScore, Managem
         super.remove(id);
     }
 
+    @Override
+    public List<ManagementScoreBO> findByRegularId(String regularizationId) throws SerException {
+        ManagementScoreDTO managementScoreDTO = new ManagementScoreDTO();
+        managementScoreDTO.getConditions().add(Restrict.eq("regularizationId",regularizationId));
+        List<ManagementScore> managementScores = super.findByCis(managementScoreDTO);
+        return BeanTransform.copyProperties(managementScores,ManagementScoreBO.class);
+    }
 }

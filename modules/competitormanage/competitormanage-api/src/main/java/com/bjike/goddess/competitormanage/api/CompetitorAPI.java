@@ -107,4 +107,12 @@ public interface CompetitorAPI {
 
     //zhuangkaiqin
     OrganizationBO organizeList(String id) throws SerException;
+
+
+    /**
+     * 获取所有的竞争对手名称
+     * @return
+     * @throws SerException
+     */
+    List<String> findCompeName() throws SerException;
 }

@@ -66,5 +66,12 @@ public interface ManagementScoreSer extends Ser<ManagementScore, ManagementScore
      * @throws SerException
      */
     void update(ManagementScoreTO to) throws SerException;
+    /**
+     * 根据员工转正id查询所有管理层评分
+     *
+     * @param regularizationId 员工转正id
+     * @throws SerException
+     */
+    List<ManagementScoreBO> findByRegularId(String regularizationId) throws SerException;
 
 }

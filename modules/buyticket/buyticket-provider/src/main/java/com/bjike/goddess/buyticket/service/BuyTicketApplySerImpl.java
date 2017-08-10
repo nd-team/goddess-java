@@ -498,7 +498,7 @@ public class BuyTicketApplySerImpl extends ServiceImpl<BuyTicketApply, BuyTicket
         String[] passenger = buyTicketApply.getPassenger().split(",");
         if (buyTicketApply.getPlanAuditOpinion().equals(AuditType.ALLOWED) && buyTicketApply.getWelfAuditOpinion()!=null && buyTicketApply.getWelfAuditOpinion().equals(AuditType.ALLOWED)) {
             for (String pass : passenger) {
-                List<String> positions = positionDetailUserAPI.getPosition(pass);
+                List<String> positions = positionDetailUserAPI.getPosition(pass);//根据姓名获取岗位
                 StringBuffer position = new StringBuffer("");
                 positions.stream().forEach(str-> {position.append(str);position.append(",");});
                 List<PerBO> perBOS = staffRecordsAPI.getPerBO(pass);
