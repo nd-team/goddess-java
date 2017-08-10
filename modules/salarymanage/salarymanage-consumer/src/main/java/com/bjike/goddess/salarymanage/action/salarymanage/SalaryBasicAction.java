@@ -51,7 +51,6 @@ public class SalaryBasicAction extends BaseFileAction {
     @Autowired
     private SalaryBasicAPI salaryBasicAPI;
 
-
     /**
      * 查询所有地区
      * @return class AreaVO
@@ -298,7 +297,5 @@ public class SalaryBasicAction extends BaseFileAction {
             throw new ActException(e1.getMessage());
         }
     }
-
-
 
  }

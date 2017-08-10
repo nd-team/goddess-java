@@ -128,4 +128,5 @@ public interface SalaryBasicSer extends Ser<SalaryBasic, SalaryBasicDTO> {
      * @throws SerException
      */
     byte[] templateExport() throws SerException;
+
  }

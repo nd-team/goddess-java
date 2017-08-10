@@ -153,4 +153,22 @@ public interface CostDetailsAPI {
     default List<String> findAddAllDetails() throws SerException {
         return null;
     }
+    /**
+     * 列表进入详情
+     * @param costDetailsDTO
+     * @return
+     * @throws SerException
+     */
+    default CostDetailsAddEditBO listDetail(CostDetailsDTO costDetailsDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有日期
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findDate() throws SerException {
+        return null;
+    }
 }

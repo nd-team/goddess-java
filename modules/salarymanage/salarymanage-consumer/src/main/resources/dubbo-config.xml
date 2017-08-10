@@ -17,6 +17,10 @@
 	<!-- 注册接口-->
 
     <!-- 薪资确认API -->
+<<<<<<< HEAD
+	<dubbo:reference interface="com.bjike.goddess.salaryconfirm.api.Sala" id="salaryconfirmApiImpl" />
+=======
+>>>>>>> upstream/develop
   	<!-- 上交发票API -->
 	<!-- userAPI -->
 	<dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl" />

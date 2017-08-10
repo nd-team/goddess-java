@@ -19,13 +19,13 @@ public class DetailTypeTO extends BaseTO {
     /**
      * 主科目
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "父节点不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "主科目不能为空")
     private String parNode;
 
     /**
      * 二级科目
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "分类名不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "二级科目不能为空")
     private String typeName;
 
     /**

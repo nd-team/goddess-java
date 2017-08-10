@@ -1,9 +1,20 @@
 package com.bjike.goddess.salarymanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+//<<<<<<< HEAD
+//import com.bjike.goddess.salaryconfirm.bo.SalaryconfirmBO;
+//import com.bjike.goddess.salarymanage.bo.SalaryBasicBO;
+//import com.bjike.goddess.salarymanage.bo.SalaryInformationBO;
+//import com.bjike.goddess.salarymanage.dto.SalaryBasicDTO;
+//import com.bjike.goddess.salarymanage.dto.SalaryInformationDTO;
+//import com.bjike.goddess.salarymanage.excel.SalaryInformaiionSetExcel;
+//import com.bjike.goddess.salarymanage.to.ExportSalaryInformationTO;
+//import com.bjike.goddess.salarymanage.to.SalaryBasicTO;
+//=======
 import com.bjike.goddess.salarymanage.bo.SalaryInformationBO;
 import com.bjike.goddess.salarymanage.dto.SalaryInformationDTO;
 import com.bjike.goddess.salarymanage.to.ExportSalaryInformationTO;
+//>>>>>>> upstream/develop
 import com.bjike.goddess.salarymanage.to.SalaryInformationTO;
 
 import java.util.List;
@@ -69,6 +80,16 @@ public interface SalaryInformationAPI  {
      * @throws SerException
      */
     byte[] exportExcel(ExportSalaryInformationTO to) throws SerException;
+//<<<<<<< HEAD
+//
+//    /**
+//     * 获取所有的计薪周期开始时间和计薪周期结束时间
+//     * @throws SerException
+//     */
+//    default List<String> findTime() throws SerException{
+//        return null;
+//    }
+//=======
 
     /**
      * 获取所有的计薪周期开始时间和计薪周期结束时间
@@ -83,4 +104,5 @@ public interface SalaryInformationAPI  {
      * @throws SerException
      */
     byte[] templateExport() throws SerException;
+//>>>>>>> upstream/develop
  }

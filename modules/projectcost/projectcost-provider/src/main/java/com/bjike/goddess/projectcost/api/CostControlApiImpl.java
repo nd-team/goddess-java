@@ -77,4 +77,19 @@ public class CostControlApiImpl implements CostControlAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return costControlSer.guidePermission( guidePermissionTO );
     }
+
+    @Override
+    public List<String> findAllArea() throws SerException {
+        return costControlSer.findAllArea();
+    }
+
+    @Override
+    public List<String> findAllName() throws SerException {
+        return costControlSer.findAllName();
+    }
+
+    @Override
+    public List<String> findAllGroup() throws SerException {
+        return costControlSer.findAllGroup();
+    }
 }

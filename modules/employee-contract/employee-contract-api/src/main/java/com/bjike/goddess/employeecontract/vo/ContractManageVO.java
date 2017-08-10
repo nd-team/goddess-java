@@ -42,12 +42,12 @@ public class ContractManageVO {
     private String serialNumber;
 
     /**
-     * 用人单位(乙方)
+     * 用人单位(甲方)
      */
     private String employeeUnit;
 
     /**
-     * 职工姓名(甲方)
+     * 职工姓名(乙方)
      */
     private String username;
 

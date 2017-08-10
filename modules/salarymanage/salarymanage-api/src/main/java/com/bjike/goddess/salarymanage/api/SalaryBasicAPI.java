@@ -114,6 +114,13 @@ public interface SalaryBasicAPI  {
         return;
     };
 
+
+//<<<<<<< HEAD
+//     * @return
+//     * @throws SerException
+//     */
+//    byte[] exportExcel(ExportSalaryBasicTO to) throws SerException;
+//=======
     /**
      * 导出
      * @param to
@@ -128,4 +135,5 @@ public interface SalaryBasicAPI  {
      */
     byte[] templateExport() throws SerException;
 
+//>>>>>>> upstream/develop
 }

@@ -35,15 +35,15 @@ public class ContractInfoTO extends BaseTO {
     private String serialNumber;
 
     /**
-     * 用人单位(乙方)
+     * 用人单位(甲方)
      */
-    @NotBlank(message = "用人单位(乙方)不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "用人单位(甲方)不能为空", groups = {ADD.class, EDIT.class})
     private String employeeUnit;
 
     /**
-     * 职工姓名(甲方)
+     * 职工姓名(乙方)
      */
-    @NotBlank(message = "职工姓名(甲方)不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "职工姓名(乙方)不能为空", groups = {ADD.class, EDIT.class})
     private String username;
 
     /**

@@ -498,7 +498,9 @@ public class BuyTicketApplySerImpl extends ServiceImpl<BuyTicketApply, BuyTicket
         String[] passenger = buyTicketApply.getPassenger().split(",");
         if (buyTicketApply.getPlanAuditOpinion().equals(AuditType.ALLOWED) && buyTicketApply.getWelfAuditOpinion()!=null && buyTicketApply.getWelfAuditOpinion().equals(AuditType.ALLOWED)) {
             for (String pass : passenger) {
-                String position = positionDetailUserAPI.getPosition(pass);
+                List<String> positions = positionDetailUserAPI.getPosition(pass);
+                StringBuffer position = new StringBuffer("");
+                positions.stream().forEach(str-> {position.append(str);position.append(",");});
                 List<PerBO> perBOS = staffRecordsAPI.getPerBO(pass);
                 PerBO perBO = new PerBO();
                 if (perBOS != null && perBOS.size() > 0) {
@@ -506,7 +508,7 @@ public class BuyTicketApplySerImpl extends ServiceImpl<BuyTicketApply, BuyTicket
                 }
                 BuyTicketRecord buyTicketRecord = BeanTransform.copyProperties(buyTicketApplyBO, BuyTicketRecord.class, true, "passenger");
                 buyTicketRecord.setPassenger(pass);
-                buyTicketRecord.setPassengerPostName(position);
+                buyTicketRecord.setPassengerPostName(position.toString());
                 buyTicketRecord.setIdCardNumber(perBO.getPerid());
                 buyTicketRecord.setRelationTel(perBO.getPhone());
                 buyTicketRecord.setCreateTime(LocalDateTime.now());
@@ -530,7 +532,9 @@ public class BuyTicketApplySerImpl extends ServiceImpl<BuyTicketApply, BuyTicket
         String[] passenger = buyTicketApply.getPassenger().split(",");
         if (buyTicketApply.getPlanAuditOpinion()!=null && buyTicketApply.getPlanAuditOpinion().equals(AuditType.ALLOWED) && buyTicketApply.getWelfAuditOpinion().equals(AuditType.ALLOWED)) {
             for (String pass : passenger) {
-                String position = positionDetailUserAPI.getPosition(pass);
+                List<String> positions = positionDetailUserAPI.getPosition(pass);
+                StringBuffer position = new StringBuffer("");
+                positions.stream().forEach(str-> {position.append(str);position.append(",");});
                 List<PerBO> perBOS = staffRecordsAPI.getPerBO(pass);
                 PerBO perBO = new PerBO();
                 if (perBOS != null && perBOS.size() > 0) {
@@ -538,7 +542,7 @@ public class BuyTicketApplySerImpl extends ServiceImpl<BuyTicketApply, BuyTicket
                 }
                 BuyTicketRecord buyTicketRecord = BeanTransform.copyProperties(buyTicketApplyBO, BuyTicketRecord.class, true, "passenger");
                 buyTicketRecord.setPassenger(pass);
-                buyTicketRecord.setPassengerPostName(position);
+                buyTicketRecord.setPassengerPostName(position.toString());
                 buyTicketRecord.setIdCardNumber(perBO.getPerid());
                 buyTicketRecord.setRelationTel(perBO.getPhone());
                 buyTicketRecord.setCreateTime(LocalDateTime.now());
