@@ -1,9 +1,9 @@
 package com.bjike.goddess.staffshares.api;
 
-import com.bjike.goddess.businessproject.bo.CusPermissionBO;
-import com.bjike.goddess.businessproject.dto.CusPermissionDTO;
-import com.bjike.goddess.businessproject.service.CusPermissionSer;
-import com.bjike.goddess.businessproject.to.CusPermissionTO;
+import com.bjike.goddess.staffshares.bo.CusPermissionBO;
+import com.bjike.goddess.staffshares.dto.CusPermissionDTO;
+import com.bjike.goddess.staffshares.service.CusPermissionSer;
+import com.bjike.goddess.staffshares.to.CusPermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.OpinionBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ public class CusPermissionApiImpl implements CusPermissionAPI {
     }
 
     @Override
-    public List<OpinionBO>  listOperateById(String id) throws SerException {
+    public List<OpinionBO> listOperateById(String id) throws SerException {
         return cusPermissionSer.listOperateById(id);
     }
 

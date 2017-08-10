@@ -2,10 +2,12 @@ package com.bjike.goddess.archive.service;
 
 import com.bjike.goddess.archive.bo.PerBO;
 import com.bjike.goddess.archive.bo.StaffNameBO;
+import com.bjike.goddess.archive.bo.StaffRecords1BO;
 import com.bjike.goddess.archive.bo.StaffRecordsBO;
 import com.bjike.goddess.archive.dto.StaffRecordsDTO;
 import com.bjike.goddess.archive.entity.StaffRecords;
 import com.bjike.goddess.archive.to.GuidePermissionTO;
+import com.bjike.goddess.archive.to.StaffRecords1ExcelTO;
 import com.bjike.goddess.archive.to.StaffRecordsExcelTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -111,6 +113,7 @@ public interface StaffRecordsSer extends Ser<StaffRecords, StaffRecordsDTO> {
 
     /**
      * 在职员工基本信息
+     *
      * @return
      * @throws SerException
      */
@@ -128,13 +131,28 @@ public interface StaffRecordsSer extends Ser<StaffRecords, StaffRecordsDTO> {
 
     /**
      * 离职人员信息导入
+     *
      * @param toList
      * @throws SerException
      */
-    void dimissionUpload(List<StaffRecordsExcelTO> toList) throws SerException;
+    void dimissionUpload(List<StaffRecords1ExcelTO> toList) throws SerException;
 
     /**
      * 离职人员列表
      */
-    List<StaffRecordsBO> dimissionMaps(StaffRecordsDTO dto) throws SerException;
+    List<StaffRecords1BO> dimissionMaps(StaffRecordsDTO dto) throws SerException;
+
+    /**
+     * 离职人员总条数
+     *
+     * @return
+     */
+    Long count() throws SerException;
+
+    /**
+     * 离职人员模板导出
+     *
+     * @return
+     */
+    byte[] templateDimissionExcel() throws SerException;
 }

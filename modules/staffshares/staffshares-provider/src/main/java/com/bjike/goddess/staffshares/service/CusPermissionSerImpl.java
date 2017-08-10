@@ -1,13 +1,14 @@
 package com.bjike.goddess.staffshares.service;
 
-import com.bjike.goddess.businessproject.bo.CusOperateBO;
-import com.bjike.goddess.businessproject.bo.CusPermissionBO;
-import com.bjike.goddess.businessproject.dto.CusPermissionDTO;
-import com.bjike.goddess.businessproject.dto.CusPermissionOperateDTO;
-import com.bjike.goddess.businessproject.entity.CusPermission;
-import com.bjike.goddess.businessproject.entity.CusPermissionOperate;
-import com.bjike.goddess.businessproject.enums.CusPermissionType;
-import com.bjike.goddess.businessproject.to.CusPermissionTO;
+import com.bjike.goddess.organize.api.*;
+import com.bjike.goddess.staffshares.bo.CusOperateBO;
+import com.bjike.goddess.staffshares.bo.CusPermissionBO;
+import com.bjike.goddess.staffshares.dto.CusPermissionDTO;
+import com.bjike.goddess.staffshares.dto.CusPermissionOperateDTO;
+import com.bjike.goddess.staffshares.entity.CusPermission;
+import com.bjike.goddess.staffshares.entity.CusPermissionOperate;
+import com.bjike.goddess.staffshares.enums.CusPermissionType;
+import com.bjike.goddess.staffshares.to.CusPermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -36,7 +37,7 @@ import java.util.stream.Collectors;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@CacheConfig(cacheNames = "businessprojectSerCache")
+@CacheConfig(cacheNames = "staffsharesSerCache")
 @Service
 public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissionDTO> implements CusPermissionSer {
 

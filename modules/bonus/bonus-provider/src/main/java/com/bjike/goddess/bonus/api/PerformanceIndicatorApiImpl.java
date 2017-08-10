@@ -81,4 +81,9 @@ public class PerformanceIndicatorApiImpl implements PerformanceIndicatorAPI {
     public Long getTotal() throws SerException {
         return performanceIndicatorSer.getTotal();
     }
+
+    @Override
+    public List<String> getIndicatorName() throws SerException {
+        return performanceIndicatorSer.getIndicatorName();
+    }
 }

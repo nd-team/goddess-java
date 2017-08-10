@@ -1,6 +1,6 @@
 package com.bjike.goddess.staffshares.vo;
 
-import com.bjike.goddess.businessproject.enums.CusPermissionType;
+import com.bjike.goddess.staffshares.enums.CusPermissionType;
 
 import java.util.List;
 

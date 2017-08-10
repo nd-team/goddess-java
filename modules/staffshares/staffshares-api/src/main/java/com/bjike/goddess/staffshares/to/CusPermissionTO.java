@@ -1,7 +1,7 @@
 package com.bjike.goddess.staffshares.to;
 
-import com.bjike.goddess.businessproject.enums.CusPermissionType;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.staffshares.enums.CusPermissionType;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -13,7 +13,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class CusPermissionTO extends BaseTO{
+public class CusPermissionTO extends BaseTO {
 
 
     /**

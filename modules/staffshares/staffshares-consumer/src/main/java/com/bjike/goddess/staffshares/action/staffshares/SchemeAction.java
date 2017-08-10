@@ -8,12 +8,9 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffshares.api.SchemeAPI;
-import com.bjike.goddess.staffshares.bo.SchemeBO;
-import com.bjike.goddess.staffshares.bo.SchemeIssueBO;
 import com.bjike.goddess.staffshares.dto.SchemeDTO;
 import com.bjike.goddess.staffshares.to.SchemeApplyTO;
 import com.bjike.goddess.staffshares.vo.SchemeApplicationVO;
-import com.bjike.goddess.staffshares.vo.SchemeIssueVO;
 import com.bjike.goddess.staffshares.vo.SchemeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -21,7 +18,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * 员工持股管理
@@ -42,7 +38,6 @@ public class SchemeAction {
      * 申请
      *
      * @param to 员工持股管理传输对象
-     *
      * @version v1
      */
     @PostMapping("v1/save")
@@ -59,7 +54,6 @@ public class SchemeAction {
      * 编辑
      *
      * @param to 员工持股管理传输对象
-     *
      * @version v1
      */
     @PutMapping("v1/update/{id}")
@@ -140,7 +134,6 @@ public class SchemeAction {
      * 审核
      *
      * @param to 员工持股管理传输对象
-     *
      * @version v1
      */
     @PutMapping("v1/examine/{id}")

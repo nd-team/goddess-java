@@ -13,11 +13,14 @@ import javax.validation.constraints.NotNull;
  * @Copy: [com.bjike]
  */
 public class GuidePermissionTO extends BaseTO {
-    public interface TestAdd{}
+
+    public interface TestAdd {
+    }
+
     /**
      * 导航栏类型
      */
-    @NotNull(groups = {TestAdd.class} , message = "导航栏类型不能为空")
+    @NotNull(groups = {GuidePermissionTO.TestAdd.class}, message = "导航栏类型不能为空")
     private GuideAddrStatus guideAddrStatus;
 
 
