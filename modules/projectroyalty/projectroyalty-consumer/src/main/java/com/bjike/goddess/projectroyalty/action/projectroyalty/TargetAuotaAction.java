@@ -116,7 +116,7 @@ public class TargetAuotaAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@Validated String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(targetAuotaAPI.delete(id), TargetAuotaVO.class));
         } catch (SerException e) {
@@ -132,7 +132,7 @@ public class TargetAuotaAction {
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
-    public Result getById(@Validated String id) throws ActException {
+    public Result getById(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(targetAuotaAPI.getById(id), TargetAuotaVO.class));
         } catch (SerException e) {

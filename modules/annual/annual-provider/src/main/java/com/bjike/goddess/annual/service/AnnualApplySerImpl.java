@@ -15,12 +15,12 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.user.api.PositionAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
-import com.bjike.goddess.user.bo.PositionBO;
 import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.bo.UserDetailBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -57,6 +57,8 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
     private UserDetailAPI userDetailAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     /**
      * 检查权限(部门)
@@ -223,7 +225,7 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
      * @return
      */
     private AnnualApplyBO transformBO(AnnualApply entity) {
-        AnnualApplyBO bo = BeanTransform.copyProperties(entity, AnnualApplyBO.class, true);
+        AnnualApplyBO bo = BeanTransform.copyProperties(entity, AnnualApplyBO.class, false);
         AnnualInfo info = entity.getInfo();
         if (null != info) {
             bo.setInfoId(info.getId());
@@ -269,6 +271,7 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
             throw new SerException("请不要超出剩余年假数");
         if (!userBO.getUsername().equals(entity.getInfo().getUsername()))
             throw new SerException("请不要替他人提交年假申请");
+        entity.setApplyTime(LocalDateTime.now());
         super.save(entity);
         return this.transformBO(entity);
     }
@@ -295,28 +298,34 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
         if (null == entity)
             throw new SerException("数据不存在");
         UserBO user = userAPI.findByUsername(entity.getInfo().getUsername());
-        UserDetailBO auditorDetailBO = userDetailAPI.findByUserId(auditor.getId()), userDetailBO = userDetailAPI.findByUserId(user.getId());
-        List<PositionBO> positionBOs = positionAPI.findChild(auditorDetailBO.getPositionId());
-        boolean adopt = false;
-        for (PositionBO position : positionBOs)
-            if (position.getId().equals(userDetailBO.getPositionId())) {
+//        PositionDetailUserBO findOneByUser(String user_id)DepartmentDetailAPI
+        PositionDetailUserBO auditorDetailBO = positionDetailUserAPI.findOneByUser(auditor.getId());
+//        userDetailBO = userDetailAPI.findByUserId(user.getId());
+        PositionDetailUserBO userDetailBO = positionDetailUserAPI.findOneByUser(user.getId());
+        if (auditorDetailBO != null && userDetailBO != null) {
+//            List<PositionBO> positionBOs = positionAPI.findChild(auditorDetailBO.getPositionIds());
+            boolean adopt = false;
+//            for (PositionBO position : positionBOs)
+            if (auditorDetailBO.getId().equals(userDetailBO.getId())) {
                 adopt = true;
-                break;
+//                break;
             }
-        if (!adopt)
-            return null;
-        entity.setAuditTime(LocalDateTime.now());
-        entity.setAuditor(auditor.getUsername());
-        entity.setAudit(AuditType.DENIED);
-        if (to.isFruit()) {
-            entity.setAudit(AuditType.ALLOWED);
-            //通过则修改年假信息
-            entity.getInfo().setSurplus(entity.getInfo().getSurplus() - entity.getLeave());
-            entity.getInfo().isAlready(Boolean.TRUE);
-            annualInfoSer.update(entity.getInfo());
+            if (!adopt)
+                return null;
+            entity.setAuditTime(LocalDateTime.now());
+            entity.setAuditor(auditor.getUsername());
+            entity.setAudit(AuditType.DENIED);
+            if (to.getFruit()) {
+                entity.setAudit(AuditType.ALLOWED);
+                //通过则修改年假信息
+                entity.getInfo().setSurplus(entity.getInfo().getSurplus() - entity.getLeave());
+                entity.getInfo().isAlready(Boolean.TRUE);
+                annualInfoSer.update(entity.getInfo());
+            }
+            super.update(entity);
+            return this.transformBO(entity);
         }
-        super.update(entity);
-        return this.transformBO(entity);
+        return null;
     }
 
     @Override
@@ -324,7 +333,7 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
         if (StringUtils.isBlank(username))
             return new ArrayList<>(0);
         List<AnnualInfoBO> infoBOList = annualInfoSer.findByUsername(username);
-        if (null != infoBOList && infoBOList.size() > 0)
+        if (null == infoBOList || infoBOList.size() <= 0)
             return new ArrayList<>(0);
         AnnualApplyDTO dto = new AnnualApplyDTO();
         dto.getConditions().add(Restrict.in("info.id", infoBOList.stream().map(AnnualInfoBO::getId).collect(Collectors.toList()).toArray(new String[0])));

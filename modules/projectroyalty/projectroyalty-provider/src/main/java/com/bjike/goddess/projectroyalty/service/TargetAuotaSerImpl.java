@@ -17,6 +17,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -295,5 +296,17 @@ public class TargetAuotaSerImpl extends ServiceImpl<TargetAuota, TargetAuotaDTO>
         TargetAuotaDTO dto = new TargetAuotaDTO();
         dto.getConditions().add(Restrict.eq("plan", !Boolean.FALSE));
         return super.count(dto);
+    }
+
+    @Override
+    public Boolean isDependent(String id) throws SerException {
+        String[] files = new String[]{"allocation_id"};
+        String sql = "select allocation_id from projectroyalty_targetauota where allocation_id = '" + id + "'";
+        List<TargetAuota> targetAuotas = super.findBySql(sql,TargetAuota.class,files);
+        Boolean tar = false;
+        if(!CollectionUtils.isEmpty(targetAuotas)){
+            tar = true;
+        }
+        return tar;
     }
 }

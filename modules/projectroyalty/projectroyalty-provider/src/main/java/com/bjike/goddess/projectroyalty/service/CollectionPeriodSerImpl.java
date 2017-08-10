@@ -208,11 +208,35 @@ public class CollectionPeriodSerImpl extends ServiceImpl<CollectionPeriod, Colle
         }
         list.add(obj);
 
+        Boolean flagSeeBase3 = targetAuotaSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("targetauota1");
+        obj.setDescribesion("项目提成实际定额");
+        if (flagSeeBase1) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
         Boolean flagSeeBase2 = weightAllocationSer.sonPermission();
         RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("weightallocation");
-        obj.setDescribesion("项目提成权重分配");
+        obj.setDescribesion("项目提成目标权重分配");
+        if (flagSeeBase2) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeBase4 = weightAllocationSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("weightallocation1");
+        obj.setDescribesion("项目提成实际权重分配");
         if (flagSeeBase2) {
             obj.setFlag(true);
         } else {

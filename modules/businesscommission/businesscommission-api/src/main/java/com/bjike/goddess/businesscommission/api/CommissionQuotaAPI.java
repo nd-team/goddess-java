@@ -4,7 +4,6 @@ import com.bjike.goddess.businesscommission.bo.CommissionQuotaBO;
 import com.bjike.goddess.businesscommission.dto.CommissionQuotaDTO;
 import com.bjike.goddess.businesscommission.to.CommissionQuotaTO;
 import com.bjike.goddess.businesscommission.to.GuidePermissionTO;
-import com.bjike.goddess.businesscommission.vo.CommissionQuotaVO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -88,16 +87,18 @@ public interface CommissionQuotaAPI {
 
     /**
      * 导出Excel
+     *
      * @param dto
      * @throws SerException
      */
-    byte[] exportExcel(CommissionQuotaDTO dto ) throws SerException;
+    byte[] exportExcel(CommissionQuotaDTO dto) throws SerException;
 
     /**
      * 导出Excel导入模板
+     *
      * @throws SerException
      */
-    byte[] templateExport(  ) throws SerException;
+    byte[] templateExport() throws SerException;
 
     /**
      * 下拉导航权限
@@ -105,6 +106,7 @@ public interface CommissionQuotaAPI {
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
@@ -114,31 +116,57 @@ public interface CommissionQuotaAPI {
 
     /**
      * 获取信息提供人
+     *
      * @return class String
      */
     List<String> listInformationProvide() throws SerException;
 
     /**
      * 获取业务揽接人
+     *
      * @return class String
      */
     List<String> listBusinessContracting() throws SerException;
 
     /**
      * 获取业务洽谈人
+     *
      * @return class String
      */
     List<String> listBusinessNegotiation() throws SerException;
 
     /**
      * 获取业务维护人
+     *
      * @return class String
      */
     List<String> listMaintenance() throws SerException;
 
     /**
-     *  获得所有的地区,项目名称,实际业务提成总额
+     * 获得所有的地区,项目名称,实际业务提成总额
+     *
      * @return class CommissionQuotaVO
      */
     List<CommissionQuotaBO> listAreas() throws SerException;
+
+    /**
+     * 获取地区
+     *
+     * @return
+     */
+    List<String> getArea() throws SerException;
+
+    /**
+     * 获取项目名称
+     *
+     * @return
+     */
+    List<String> getName() throws SerException;
+
+    /**
+     * 获取实际业务提成总额
+     *
+     * @return
+     */
+    List<Double> getActualAmount() throws SerException;
 }

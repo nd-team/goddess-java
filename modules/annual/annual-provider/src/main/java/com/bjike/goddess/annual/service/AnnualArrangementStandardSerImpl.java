@@ -253,7 +253,7 @@ public class AnnualArrangementStandardSerImpl extends ServiceImpl<AnnualArrangem
         } else {
             entity = super.findById(bo.getId());
             BeanTransform.copyProperties(to, entity, true);
-            entity.setStandard(annualStandardSer.findById(to.getArrangementId()));
+            entity.setStandard(annualStandardSer.findById(to.getStandardId()));
             if (null == entity.getStandard())
                 throw new SerException("年假标准为空,无法保存");
             entity.setModifyTime(LocalDateTime.now());

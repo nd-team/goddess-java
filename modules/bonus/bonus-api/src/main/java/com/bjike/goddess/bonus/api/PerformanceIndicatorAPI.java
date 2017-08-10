@@ -34,6 +34,7 @@ public interface PerformanceIndicatorAPI {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 添加
      *
@@ -132,4 +133,12 @@ public interface PerformanceIndicatorAPI {
     default Long getTotal() throws SerException {
         return null;
     }
+
+    /**
+     * 获取指标名称
+     *
+     * @return
+     * @throws SerException
+     */
+    List<String> getIndicatorName() throws SerException;
 }

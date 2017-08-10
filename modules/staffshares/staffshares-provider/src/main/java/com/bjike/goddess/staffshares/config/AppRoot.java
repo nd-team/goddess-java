@@ -15,12 +15,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @Copy: [com.bjike]
  */
 @Configuration
-@EnableJpaRepositories(basePackages = {"com.bjike.goddess.businessproject.dao"})//jpa 所在包
+@EnableJpaRepositories(basePackages = {"com.bjike.goddess.staffshares.dao"})//jpa 所在包
 @EnableTransactionManagement(proxyTargetClass = true)
 @EnableCaching
 @PropertySource({"classpath:config.properties"})
 @ImportResource({"classpath:application.xml"})
-@ComponentScan(basePackages = {"com.bjike.goddess.businessproject"},
+@ComponentScan(basePackages = {"com.bjike.goddess.staffshares"},
         excludeFilters = {@ComponentScan.Filter(
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})
