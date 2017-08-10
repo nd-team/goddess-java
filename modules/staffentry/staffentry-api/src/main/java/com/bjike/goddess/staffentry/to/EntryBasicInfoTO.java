@@ -125,7 +125,7 @@ public class EntryBasicInfoTO extends BaseTO {
     /**
      * 邮件通知对象邮箱
      */
-    private String emails;
+    private String[] emails;
 
     /**
      * 入职人数
@@ -293,11 +293,11 @@ public class EntryBasicInfoTO extends BaseTO {
         this.emailInfo = emailInfo;
     }
 
-    public String getEmails() {
+    public String[] getEmails() {
         return emails;
     }
 
-    public void setEmails(String emails) {
+    public void setEmails(String[] emails) {
         this.emails = emails;
     }
 

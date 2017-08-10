@@ -6,7 +6,9 @@ import com.bjike.goddess.staffentry.bo.EntryOptionBO;
 import com.bjike.goddess.staffentry.bo.FindNameBO;
 import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.staffentry.to.EntryBasicInfoTO;
+import com.bjike.goddess.staffentry.to.GuidePermissionTO;
 import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
+import com.bjike.goddess.staffentry.vo.SonPermissionObject;
 
 import java.util.List;
 
@@ -20,6 +22,22 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface EntryBasicInfoAPI {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 入职基本信息列表总条数

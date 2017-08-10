@@ -28,6 +28,17 @@ public class EntryRegisterApiImpl implements EntryRegisterAPI {
     private EntryRegisterSer entryRegisterSer;
 
     @Override
+    public Boolean sonPermission() throws SerException {
+        return entryRegisterSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return entryRegisterSer.guidePermission( guidePermissionTO );
+    }
+
+
+    @Override
     public Long countEntryRegister(EntryRegisterDTO entryRegisterDTO) throws SerException {
         return entryRegisterSer.countEntryRegister(entryRegisterDTO);
     }

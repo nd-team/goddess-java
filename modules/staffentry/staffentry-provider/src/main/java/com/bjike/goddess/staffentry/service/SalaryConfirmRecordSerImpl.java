@@ -8,6 +8,8 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.staffentry.bo.SalaryConfirmRecordBO;
 import com.bjike.goddess.staffentry.dto.SalaryConfirmRecordDTO;
 import com.bjike.goddess.staffentry.entity.SalaryConfirmRecord;
+import com.bjike.goddess.staffentry.enums.GuideAddrStatus;
+import com.bjike.goddess.staffentry.to.GuidePermissionTO;
 import com.bjike.goddess.staffentry.to.SalaryConfirmRecordTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -43,7 +45,7 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
      * @param idFlag
      * @throws SerException
      */
-    private void checkMoudleIdentity(String idFlag) throws SerException{
+    private Boolean checkMoudleIdentity(String idFlag) throws SerException{
 
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
@@ -52,13 +54,57 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
         Boolean flag = false;
         if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.moudleCusPermission(idFlag);
-            if( !flag){
-                throw new SerException("你不是相应模块的人员，不能进行操作");
-            }
+//            if( !flag){
+//                throw new SerException("你不是相应模块的人员，不能进行操作");
+//            }
         }
+        return flag;
     }
 
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = checkMoudleIdentity("4");
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = checkMoudleIdentity("5");
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee || flagAdd ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = checkMoudleIdentity("4");
+                break;
+            case ADD:
+                flag = checkMoudleIdentity("5");
+                break;
+            case EDIT:
+                flag = checkMoudleIdentity("5");
+                break;
+            case DELETE:
+                flag = checkMoudleIdentity("5");
+                break;
+            case COLLECT:
+                flag = checkMoudleIdentity("4");
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
 
 
     @Override
@@ -81,7 +127,6 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
 
     @Override
     public List<SalaryConfirmRecord> listSalaryConfirmRecord(SalaryConfirmRecordDTO salaryConfirmRecordDTO) throws SerException {
-        checkMoudleIdentity("4");
 
         List<SalaryConfirmRecord> salaryConfirmRecords = super.findByPage( salaryConfirmRecordDTO );
         return salaryConfirmRecords;
@@ -90,7 +135,6 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SalaryConfirmRecordBO insertSalaryConfirmRecord(SalaryConfirmRecordTO salaryConfirmRecordTO) throws SerException {
-        checkMoudleIdentity("5");
 
         SalaryConfirmRecord salaryConfirmRecord = BeanTransform.copyProperties( salaryConfirmRecordTO , SalaryConfirmRecord.class ,true);
         salaryConfirmRecord.setCreateTime( LocalDateTime.now() );
@@ -105,7 +149,6 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SalaryConfirmRecordBO editSalaryConfirmRecord(SalaryConfirmRecordTO salaryConfirmRecordTO) throws SerException {
-        checkMoudleIdentity("5");
 
         if(StringUtils.isBlank(salaryConfirmRecordTO.getId())){
             throw new SerException("id不能为空");
@@ -123,7 +166,6 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeSalaryConfirmRecord(String id) throws SerException {
-        checkMoudleIdentity("5");
 
         if(StringUtils.isBlank(id)){
             throw new SerException("id不能为空");
