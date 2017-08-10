@@ -19,10 +19,18 @@ public class ModuleBO extends BaseBO {
      * 模块名称
      */
     private String name;
+
+    /**
+     * 模块英文名
+     */
+    private String moduleName;
+
+    private Integer seq;
+
     /**
      * 选中状态
      */
-    private CheckType checkType=CheckType.NONE;
+    private CheckType checkType = CheckType.NONE;
     /**
      * 包含的模块
      */
@@ -63,5 +71,21 @@ public class ModuleBO extends BaseBO {
 
     public void setRelationId(String relationId) {
         this.relationId = relationId;
+    }
+
+    public String getModuleName() {
+        return moduleName;
+    }
+
+    public void setModuleName(String moduleName) {
+        this.moduleName = moduleName;
+    }
+
+    public Integer getSeq() {
+        return seq;
+    }
+
+    public void setSeq(Integer seq) {
+        this.seq = seq;
     }
 }

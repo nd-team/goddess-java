@@ -6,16 +6,23 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.staffentry.api.StaffEntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.StaffEntryRegisterBO;
 import com.bjike.goddess.staffentry.dto.StaffEntryRegisterDTO;
+import com.bjike.goddess.staffentry.to.GuidePermissionTO;
+import com.bjike.goddess.staffentry.to.StaffEntryRegisterEmailTO;
 import com.bjike.goddess.staffentry.to.StaffEntryRegisterTO;
+import com.bjike.goddess.staffentry.vo.SonPermissionObject;
 import com.bjike.goddess.staffentry.vo.StaffEntryRegisterVO;
 import com.bjike.goddess.user.api.UserAPI;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,6 +42,79 @@ public class StaffEntryRegisterAction {
     private UserAPI userAPI;
     @Autowired
     private StaffEntryRegisterAPI staffEntryRegisterAPI;
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result setButtonPermission() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = staffEntryRegisterAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = staffEntryRegisterAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 注册用户列表总条数
@@ -73,7 +153,7 @@ public class StaffEntryRegisterAction {
     }
 
     /**
-     * 获取所有用户列表
+     * 列表
      *
      * @param staffEntryRegisterDTO 入职注册dto数据
      * @des 获取所有用户
@@ -176,18 +256,22 @@ public class StaffEntryRegisterAction {
 
 
     /**
-     * 发送邮件
+     * 发送邮件账号密码告知
      *
-     * @param id           用户id
-     * @param emailAccount 用户入职注册个人邮箱
+     * @param  staffEntryRegisterEmailTO 帐号密码告知
      * @des 发送邮件
      * @version v1
      */
     @LoginAuth
-    @PutMapping("v1/sendAccountToEmplore")
-    public Result sendAccountToEmp(@RequestParam String id, @RequestParam String emailAccount) throws ActException {
+    @PutMapping("v1/send/accountToEmplore")
+    public Result sendAccountToEmp(@Validated(StaffEntryRegisterEmailTO.TestAdd.class) StaffEntryRegisterEmailTO staffEntryRegisterEmailTO , BindingResult bindingResult ) throws ActException {
         //TODO: tanghaixiang 2017-03-09 未做邮件告知员工账号密码 记得抛异常
-        return new ActResult("send success!");
+        try {
+            staffEntryRegisterAPI.sendAccountToEmp(staffEntryRegisterEmailTO );
+            return new ActResult("send success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
     }
 
 

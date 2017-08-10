@@ -1,4 +1,4 @@
-package com.bjike.goddess.socialfee.excle;
+package com.bjike.goddess.staffentry.vo;
 
 import java.io.Serializable;
 

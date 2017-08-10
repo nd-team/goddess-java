@@ -7,6 +7,7 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.festival.api.HolidayWorkPlanAPI;
 import com.bjike.goddess.festival.dto.HolidayWorkPlanDTO;
+import com.bjike.goddess.festival.to.GuidePermissionTO;
 import com.bjike.goddess.festival.vo.HolidayWorkPlanVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -32,6 +33,9 @@ public class HolidayWorkPlanAction {
 
     @Autowired
     private HolidayWorkPlanAPI holidayWorkPlanAPI;
+
+
+
 
     /**
      *  节假日工作安排列表总条数

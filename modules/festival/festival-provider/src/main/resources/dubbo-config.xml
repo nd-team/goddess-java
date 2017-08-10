@@ -26,6 +26,8 @@
 	<dubbo:service  ref="holidayWorkPlanApiImpl" interface="com.bjike.goddess.festival.api.HolidayWorkPlanAPI" />
 	<dubbo:service  ref="noticeThingApiImpl" interface="com.bjike.goddess.festival.api.NoticeThingAPI" />
 	<dubbo:service  ref="welfareApiImpl" interface="com.bjike.goddess.festival.api.WelfareAPI" />
+	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.festival.api.CusPermissionAPI" />
+	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.festival.api.CusPermissionOperateAPI" />
 
 	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
 	否则不需要配置-->
