@@ -25,6 +25,15 @@ public class ModuleVO {
      */
     private String name;
     /**
+     * 模块英文名
+     */
+    private String moduleName;
+
+    /**
+     * 序列
+     */
+    private Integer seq;
+    /**
      * 选中状态
      */
     private CheckType checkType;
@@ -61,5 +70,21 @@ public class ModuleVO {
 
     public void setRelations(List<ModuleBO> relations) {
         this.relations = relations;
+    }
+
+    public String getModuleName() {
+        return moduleName;
+    }
+
+    public void setModuleName(String moduleName) {
+        this.moduleName = moduleName;
+    }
+
+    public Integer getSeq() {
+        return seq;
+    }
+
+    public void setSeq(Integer seq) {
+        this.seq = seq;
     }
 }
