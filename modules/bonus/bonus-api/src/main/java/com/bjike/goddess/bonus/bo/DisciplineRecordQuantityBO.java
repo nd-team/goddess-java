@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class DisciplineRecordQuantityBO  implements Serializable {
+public class DisciplineRecordQuantityBO implements Serializable {
 
     /**
      * 开始时间
@@ -47,6 +47,12 @@ public class DisciplineRecordQuantityBO  implements Serializable {
      * 最后得分
      */
     private Double total;
+
+    /**
+     * 指标名称
+     */
+    private String name;
+
 
     public String getStart() {
         return start;
@@ -102,5 +108,13 @@ public class DisciplineRecordQuantityBO  implements Serializable {
 
     public void setTotal(Double total) {
         this.total = total;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -5,11 +5,12 @@ import com.bjike.goddess.businesscommission.dto.CommissionQuotaDTO;
 import com.bjike.goddess.businesscommission.service.CommissionQuotaSer;
 import com.bjike.goddess.businesscommission.to.CommissionQuotaTO;
 import com.bjike.goddess.businesscommission.to.GuidePermissionTO;
-import com.bjike.goddess.businesscommission.vo.CommissionQuotaVO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,7 +27,6 @@ public class CommissionQuotaApiImpl implements CommissionQuotaAPI {
 
     @Autowired
     private CommissionQuotaSer commissionQuotaSer;
-
 
 
     @Override
@@ -61,16 +61,17 @@ public class CommissionQuotaApiImpl implements CommissionQuotaAPI {
 
     @Override
     public CommissionQuotaBO importExcel(List<CommissionQuotaTO> commissionQuotaTO) throws SerException {
-        return commissionQuotaSer.importExcel( commissionQuotaTO );
+        return commissionQuotaSer.importExcel(commissionQuotaTO);
     }
 
     @Override
     public byte[] exportExcel(CommissionQuotaDTO dto) throws SerException {
-        return commissionQuotaSer.exportExcel( dto );
+        return commissionQuotaSer.exportExcel(dto);
     }
+
     @Override
-    public byte[] templateExport( ) throws SerException {
-        return commissionQuotaSer.templateExport(   );
+    public byte[] templateExport() throws SerException {
+        return commissionQuotaSer.templateExport();
     }
 
     @Override
@@ -106,6 +107,42 @@ public class CommissionQuotaApiImpl implements CommissionQuotaAPI {
     @Override
     public List<CommissionQuotaBO> listAreas() throws SerException {
         return commissionQuotaSer.listAreas();
+    }
+
+    @Override
+    public List<String> getArea() throws SerException {
+        List<CommissionQuotaBO> commissionQuotaBOList = commissionQuotaSer.listAreas();
+        List<String> list = new ArrayList<>(0);
+        if (!CollectionUtils.isEmpty(commissionQuotaBOList)) {
+            for (CommissionQuotaBO bo : commissionQuotaBOList) {
+                list.add(bo.getArea());
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<String> getName() throws SerException {
+        List<CommissionQuotaBO> commissionQuotaBOList = commissionQuotaSer.listAreas();
+        List<String> list = new ArrayList<>(0);
+        if (!CollectionUtils.isEmpty(commissionQuotaBOList)) {
+            for (CommissionQuotaBO bo : commissionQuotaBOList) {
+                list.add(bo.getProjectName());
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<Double> getActualAmount() throws SerException {
+        List<CommissionQuotaBO> commissionQuotaBOList = commissionQuotaSer.listAreas();
+        List<Double> list = new ArrayList<>(0);
+        if (!CollectionUtils.isEmpty(commissionQuotaBOList)) {
+            for (CommissionQuotaBO bo : commissionQuotaBOList) {
+                list.add(bo.getActualAmount());
+            }
+        }
+        return list;
     }
 
 }

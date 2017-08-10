@@ -12,6 +12,7 @@ import com.bjike.goddess.firmreward.api.RewardPeopleNoStatAPI;
 import com.bjike.goddess.firmreward.bo.AwardDetailBO;
 import com.bjike.goddess.firmreward.bo.RewardPeopleNoStatBO;
 import com.bjike.goddess.firmreward.dto.RewardPeopleNoStatDTO;
+import com.bjike.goddess.firmreward.to.PeopleNoStatTO;
 import com.bjike.goddess.firmreward.to.RewardPeopleNoStatTO;
 import com.bjike.goddess.firmreward.vo.AwardDetailVO;
 import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
@@ -186,7 +187,7 @@ public class RewardPeopleNoStatAct {
      */
     @LoginAuth
     @PostMapping("v1/addAwardDetails")
-    public Result addAwardDetails(@Validated(value = {RewardPeopleNoStatTO.IAwardDetail.class}) RewardPeopleNoStatTO to, BindingResult result) throws ActException {
+    public Result addAwardDetails(@Validated(value = {PeopleNoStatTO.IAwardDetail.class}) PeopleNoStatTO to, BindingResult result) throws ActException {
         try {
             rewardPeopleNoStatAPI.addAwardDetails(to);
             return new ActResult("addAwardDetails success!");
@@ -204,7 +205,7 @@ public class RewardPeopleNoStatAct {
      */
     @LoginAuth
     @PostMapping("v1/updateAwardDetails")
-    public Result updateAwardDetails(@Validated(value = {RewardPeopleNoStatTO.IAwardDetail.class}) RewardPeopleNoStatTO to, BindingResult result) throws ActException {
+    public Result updateAwardDetails(@Validated(value = {PeopleNoStatTO.IAwardDetail.class}) PeopleNoStatTO to, BindingResult result) throws ActException {
         try {
             rewardPeopleNoStatAPI.updateAwardDetails(to);
             return new ActResult("updateAwardDetails success!");

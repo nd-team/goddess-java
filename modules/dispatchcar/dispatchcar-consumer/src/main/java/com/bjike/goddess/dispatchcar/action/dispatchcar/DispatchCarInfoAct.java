@@ -1,10 +1,13 @@
 package com.bjike.goddess.dispatchcar.action.dispatchcar;
 
+import com.bjike.goddess.carinfo.bo.DriverInfoBO;
+import com.bjike.goddess.carinfo.vo.DriverInfoVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -14,6 +17,12 @@ import com.bjike.goddess.dispatchcar.to.DispatchCarInfoEditTO;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
 import com.bjike.goddess.dispatchcar.vo.AuditDetailVO;
 import com.bjike.goddess.dispatchcar.vo.DispatchCarInfoVO;
+import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
+import com.bjike.goddess.oilcardmanage.entity.OilCardBasic;
+import com.bjike.goddess.oilcardmanage.vo.OilCardBasicVO;
+import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
+import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -206,5 +215,58 @@ public class DispatchCarInfoAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+
+    /**
+     * 查询所有司机信息,车牌号码,
+     * @return class DriverInfoVO
+     * @throws ActException
+     * @version v1+
+     */
+    @GetMapping("v1/find/driver")
+    public Result findDriver() throws ActException{
+        try {
+            List<DriverInfoBO> boList = dispatchCarInfoAPI.findDriver();
+            List<DriverInfoVO> voList = BeanTransform.copyProperties(boList,DriverInfoVO.class);
+            return ActResult.initialize(voList);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有用车陪同人员,用车人员,任务下达人员,所属地区,所属项目组,
+     * @return class EntryBasicInfoVO
+     * @throws ActException
+     * @version v1
+     */
+   @GetMapping("v1/find/entry")
+    public Result findAllEntry() throws ActException{
+        try {
+            List<EntryBasicInfoBO> boList = dispatchCarInfoAPI.findAllEntry();
+            List<EntryBasicInfoVO> voList = BeanTransform.copyProperties(boList,EntryBasicInfoVO.class);
+            return ActResult.initialize(voList);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+   }
+
+    /**
+     * 查询所有油卡信息
+     * @return class OilCardBasicVO
+     * @throws ActException
+     * @version v1
+     */
+   @GetMapping("v1/find/oil")
+    public Result findAllOil() throws ActException{
+       try {
+           List<OilCardBasicBO> boList = dispatchCarInfoAPI.findAllOil();
+           List<OilCardBasicVO> voList = BeanTransform.copyProperties(boList,OilCardBasicVO.class);
+           return ActResult.initialize(voList);
+       }catch (SerException e){
+           throw new ActException(e.getMessage());
+       }
+   }
+
 
 }

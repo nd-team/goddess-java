@@ -457,4 +457,16 @@ public class PerformanceIndicatorSerImpl extends ServiceImpl<PerformanceIndicato
         PerformanceIndicatorDTO dto = new PerformanceIndicatorDTO();
         return super.count(dto);
     }
+
+    @Override
+    public List<String> getIndicatorName() throws SerException {
+        List<PerformanceIndicator> performanceIndicatorList = super.findAll();
+        List<String> list = new ArrayList<>(0);
+        if (null != performanceIndicatorList && performanceIndicatorList.size() > 0) {
+            for (PerformanceIndicator entity : performanceIndicatorList) {
+                list.add(entity.getName());
+            }
+        }
+        return list;
+    }
 }

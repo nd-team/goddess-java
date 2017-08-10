@@ -134,4 +134,12 @@ public interface PerformanceIndicatorSer extends Ser<PerformanceIndicator, Perfo
     default Long getTotal() throws SerException {
         return null;
     }
+
+    /**
+     * 获取指标名称
+     *
+     * @return
+     * @throws SerException
+     */
+    List<String> getIndicatorName() throws SerException;
 }

@@ -7,6 +7,7 @@ import com.bjike.goddess.firmreward.dto.AwardDetailDTO;
 import com.bjike.goddess.firmreward.dto.PrizeApplyDTO;
 import com.bjike.goddess.firmreward.entity.PrizeApply;
 import com.bjike.goddess.firmreward.excel.SonPermissionObject;
+import com.bjike.goddess.firmreward.to.ApplyDetailTO;
 import com.bjike.goddess.firmreward.to.PrizeApplyTO;
 import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 
@@ -62,7 +63,7 @@ public interface PrizeApplySer extends Ser<PrizeApply, PrizeApplyDTO> {
      * @param to 奖品申请to
      * @throws SerException
      */
-    void addPrizeDetails(PrizeApplyTO to) throws SerException;
+    void addPrizeDetails(ApplyDetailTO to) throws SerException;
 
     /**
      * 更新奖品明细
@@ -70,7 +71,7 @@ public interface PrizeApplySer extends Ser<PrizeApply, PrizeApplyDTO> {
      * @param to 奖品申请to
      * @throws SerException
      */
-    void updatePrizeDetails(PrizeApplyTO to) throws SerException;
+    void updatePrizeDetails(ApplyDetailTO to) throws SerException;
 
     /**
      * 查看奖品明细

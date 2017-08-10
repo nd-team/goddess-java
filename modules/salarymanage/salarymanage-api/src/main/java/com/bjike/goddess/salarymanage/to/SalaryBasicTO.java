@@ -11,6 +11,7 @@ import com.bjike.goddess.common.api.to.BaseTO;
 */
 public class SalaryBasicTO extends BaseTO {
 
+
     public interface TestAdd{
 
     }

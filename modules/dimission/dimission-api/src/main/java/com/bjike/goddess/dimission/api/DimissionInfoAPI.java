@@ -43,18 +43,18 @@ public interface DimissionInfoAPI {
      * @return
      * @throws SerException
      */
-    default DimissionInfoBO apply(DimissionInfoTO to) throws SerException {
+    default DimissionInfoBO apply(DimissionInfoAddEditTO to) throws SerException {
         return null;
     }
 
     /**
-     * 编辑
+     * 编辑申请离职
      *
      * @param to 离职信息传输对象
      * @return
      * @throws SerException
      */
-    default DimissionInfoBO update(DimissionInfoTO to) throws SerException {
+    default DimissionInfoBO applyUpdate(DimissionInfoAddEditTO to) throws SerException {
         return null;
     }
 
@@ -65,7 +65,17 @@ public interface DimissionInfoAPI {
      * @return
      * @throws SerException
      */
-    default DimissionInfoBO presume(DimissionInfoTO to) throws SerException {
+    default DimissionInfoBO presume(FromInfoTO to) throws SerException {
+        return null;
+    }
+    /**
+     * 编辑自离信息
+     *
+     * @param to 离职信息传输对象
+     * @return
+     * @throws SerException
+     */
+    default DimissionInfoBO preUpdate(FromInfoTO to) throws SerException {
         return null;
     }
 

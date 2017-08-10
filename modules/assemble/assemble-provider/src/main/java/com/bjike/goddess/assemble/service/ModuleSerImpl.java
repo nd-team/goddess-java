@@ -11,13 +11,13 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -36,7 +36,7 @@ public class ModuleSerImpl extends ServiceImpl<Module, ModuleDTO> implements Mod
 
     @Override
     public List<ModuleBO> list(ModuleDTO moduleDTO) throws SerException {
-        moduleDTO.setSorts(Arrays.asList("createTime=asc"));
+        moduleDTO.getSorts().add("seq=asc");
         List<ModuleBO> modules = BeanTransform.copyProperties(super.findByCis(moduleDTO), ModuleBO.class);
         ModuleApplyDTO applyDTO = new ModuleApplyDTO();
         applyDTO.getConditions().add(Restrict.eq("company", "北京艾佳"));
@@ -57,8 +57,12 @@ public class ModuleSerImpl extends ServiceImpl<Module, ModuleDTO> implements Mod
     public void add(ModuleTO moduleTO) throws SerException {
         Module module = BeanTransform.copyProperties(moduleTO, Module.class, true);
         ModuleDTO dto = new ModuleDTO();
-        dto.getConditions().add(Restrict.eq("name", moduleTO.getName()));
+        dto.getConditions().add(Restrict.or("name", moduleTO.getName()));
+        dto.getConditions().add(Restrict.or("moduleName", moduleTO.getModuleName()));
         if (null == super.findOne(dto)) {
+            String result = super.findByMaxField("seq", Module.class);
+            Integer seq = Integer.parseInt(StringUtils.isNotBlank(result) ? result : "0");
+            module.setSeq(seq);
             super.save(module);
         } else {
             throw new SerException("[" + moduleTO.getName() + "]已存在");
@@ -98,7 +102,8 @@ public class ModuleSerImpl extends ServiceImpl<Module, ModuleDTO> implements Mod
     public Boolean isCheck(String name) throws SerException {
         ModuleApplyDTO dto = new ModuleApplyDTO();
         dto.getConditions().add(Restrict.eq("company", "北京艾佳"));
-        dto.getConditions().add(Restrict.eq("module.name", name));
+        dto.getConditions().add(Restrict.or("module.name", name));
+        dto.getConditions().add(Restrict.or("module.moduleName", name));
         return null != moduleApplySer.findOne(dto);
     }
 }

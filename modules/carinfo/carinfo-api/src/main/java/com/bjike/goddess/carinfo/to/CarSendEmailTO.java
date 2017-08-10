@@ -23,10 +23,20 @@ public class CarSendEmailTO extends BaseTO {
     @NotBlank(message = "岗位Id不能为空", groups = {ADD.class, EDIT.class})
     private String positionNameId;
     /**
-     * 项目组id
+     * 部门id
      */
-    @NotBlank(message = "岗位Id不能为空", groups = {ADD.class, EDIT.class})
-    private String projetManagerId;
+    @NotBlank(message = "部门Id不能为空", groups = {ADD.class, EDIT.class})
+    private String projectManageId;
+
+    /**
+     * 部门名称
+     */
+    private String projectManage;
+
+    /**
+     * 岗位名称
+     */
+    private String positionName;
 
     /**
      * 备注
@@ -40,15 +50,6 @@ public class CarSendEmailTO extends BaseTO {
     public void setPositionNameId(String positionNameId) {
         this.positionNameId = positionNameId;
     }
-
-    public String getProjetManagerId() {
-        return projetManagerId;
-    }
-
-    public void setProjetManagerId(String projetManagerId) {
-        this.projetManagerId = projetManagerId;
-    }
-
     @Override
     public String getId() {
         return super.getId();
@@ -65,5 +66,29 @@ public class CarSendEmailTO extends BaseTO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getProjectManageId() {
+        return projectManageId;
+    }
+
+    public void setProjectManageId(String projectManageId) {
+        this.projectManageId = projectManageId;
+    }
+
+    public String getProjectManage() {
+        return projectManage;
+    }
+
+    public void setProjectManage(String projectManage) {
+        this.projectManage = projectManage;
+    }
+
+    public String getPositionName() {
+        return positionName;
+    }
+
+    public void setPositionName(String positionName) {
+        this.positionName = positionName;
     }
 }

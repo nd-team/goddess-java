@@ -14,6 +14,7 @@ import com.bjike.goddess.projectcost.to.FindTO;
 import com.bjike.goddess.projectcost.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -23,8 +24,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -196,35 +196,94 @@ public class CostControlSerImpl extends ServiceImpl<CostControl, CostControlDTO>
         return collectList;
     }
 
+    @Override
+    public List<String> findAllArea() throws SerException {
+        List<CostControl> list = super.findAll();
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (CostControl model : list) {
+            String area = model.getArea();
+            if (StringUtils.isNotBlank(model.getArea())) {
+                set.add(area);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> findAllName() throws SerException {
+        List<CostControl> list = super.findAll();
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (CostControl model : list) {
+            String name = model.getName();
+            if (StringUtils.isNotBlank(model.getName())) {
+                set.add(name);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> findAllGroup() throws SerException {
+        List<CostControl> list = super.findAll();
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (CostControl model : list) {
+            String project = model.getProject();
+            if (StringUtils.isNotBlank(model.getProject())) {
+                set.add(project);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
     private List<CostControl> selectByTo(FindTO to) throws SerException {
         CostControlDTO dto = new CostControlDTO();
-        if (StringUtils.isNotBlank(to.getArea()))
+        if (to.getYear()!=null && to.getMonth() == null){
+            throw new SerException("月份不能为空");
+        }else if(to.getYear()==null && to.getMonth() != null) {
+            throw new SerException("年份不能为空");
+        }else if(to.getYear()!=null && to.getMonth()!=null){
+            dto.getConditions().add(Restrict.eq("year",to.getYear()));
+            dto.getConditions().add(Restrict.eq("month",to.getMonth()));
+        }
+        if (StringUtils.isNotBlank(to.getArea())) {
             dto.getConditions().add(Restrict.eq("area", to.getArea()));
-        if (StringUtils.isNotBlank(to.getProject()))
+        }
+        if (StringUtils.isNotBlank(to.getProject())) {
             dto.getConditions().add(Restrict.eq("project", to.getProject()));
-        if (StringUtils.isNotBlank(to.getName()))
+        }
+        if (StringUtils.isNotBlank(to.getName())) {
             dto.getConditions().add(Restrict.eq("name", to.getName()));
+        }
         dto.getSorts().add("area=desc");
         dto.getSorts().add("project=desc");
         dto.getSorts().add("name=desc");
         dto.getSorts().add("year=desc");
         dto.getSorts().add("month=desc");
         List<CostControl> list = super.findByCis(dto);
-        if (StringUtils.isNotBlank(to.getStart()) && StringUtils.isNotBlank(to.getEnd())) {
-            LocalDate start = LocalDate.parse(to.getStart()), end = LocalDate.parse(to.getEnd());
-            List<CostControl> temp = new ArrayList<>(0);
-            String format = "";
-            for (CostControl entity : list) {
-                if (entity.getMonth() >= 10)
-                    format = "%d-%d-01";
-                else
-                    format = "%d-0%d-01";
-                LocalDate time = LocalDate.parse(String.format(format, end.getYear(), end.getMonth()));
-                if (!start.isAfter(time) && !end.isBefore(time))
-                    temp.add(entity);
-            }
-            return temp;
-        }
+//        if (StringUtils.isNotBlank(to.getStart()) && StringUtils.isNotBlank(to.getEnd())) {
+//            LocalDate start = LocalDate.parse(to.getStart()), end = LocalDate.parse(to.getEnd());
+//            List<CostControl> temp = new ArrayList<>(0);
+//            String format = "";
+//            for (CostControl entity : list) {
+//                if (entity.getMonth() >= 10)
+//                    format = "%d-%d-01";
+//                else
+//                    format = "%d-0%d-01";
+//                LocalDate time = LocalDate.parse(String.format(format, end.getYear(), end.getMonth()));
+//                if (!start.isAfter(time) && !end.isBefore(time))
+//                    temp.add(entity);
+//            }
+//            return temp;
+//        }
         return list;
     }
 

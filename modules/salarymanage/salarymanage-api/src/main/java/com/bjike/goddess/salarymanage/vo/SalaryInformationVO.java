@@ -61,7 +61,7 @@ public class SalaryInformationVO {
     private String  stationLevel;
 
     /**
-     * 管理层级
+     * 管理等级
      */
     private String  manageLevel;
 
@@ -405,7 +405,6 @@ public class SalaryInformationVO {
     public void setSection(String section) {
         this.section = section;
     }
-
     public Double getSkillPay () {
         return skillPay;
     }

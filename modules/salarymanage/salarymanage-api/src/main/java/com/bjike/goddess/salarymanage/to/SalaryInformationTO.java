@@ -18,6 +18,7 @@ import java.time.LocalDate;
 */
 public class SalaryInformationTO extends BaseTO {
 
+
     public interface TestAdd{
 
     }
@@ -79,7 +80,7 @@ public class SalaryInformationTO extends BaseTO {
     /**
      * 管理层级
      */
-    @NotBlank(message = "管理层级不能为空!", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "管理等级不能为空!", groups = {ADD.class, EDIT.class})
     private String  manageLevel;
 
     /**
@@ -174,6 +175,7 @@ public class SalaryInformationTO extends BaseTO {
     /**
      * 定薪
      */
+
     @NotNull(message = "定薪不能为空!", groups = {ADD.class, EDIT.class})
     private Double  wage;
 

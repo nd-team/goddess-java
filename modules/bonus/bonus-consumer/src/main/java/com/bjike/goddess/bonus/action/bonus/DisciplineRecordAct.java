@@ -1,6 +1,7 @@
 package com.bjike.goddess.bonus.action.bonus;
 
 import com.bjike.goddess.bonus.api.DisciplineRecordAPI;
+import com.bjike.goddess.bonus.api.PerformanceIndicatorAPI;
 import com.bjike.goddess.bonus.dto.DisciplineRecordDTO;
 import com.bjike.goddess.bonus.to.CollectFilterTO;
 import com.bjike.goddess.bonus.to.DisciplineRecordTO;
@@ -20,6 +21,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 奖罚记录
@@ -36,6 +38,8 @@ public class DisciplineRecordAct {
 
     @Autowired
     private DisciplineRecordAPI disciplineRecordAPI;
+    @Autowired
+    private PerformanceIndicatorAPI performanceIndicatorAPI;
 
 
     /**
@@ -60,6 +64,7 @@ public class DisciplineRecordAct {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 保存
      *
@@ -350,4 +355,78 @@ public class DisciplineRecordAct {
         }
     }
 
+    /**
+     * 获取姓名
+     *
+     * @version v1
+     */
+    @GetMapping("v1/name")
+    public Result getName() throws ActException {
+        try {
+            List<String> list = disciplineRecordAPI.getName();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取指标名称
+     *
+     * @version v1
+     */
+    @GetMapping("v1/indicator/name")
+    public Result getIndicatorName() throws ActException {
+        try {
+            List<String> list = performanceIndicatorAPI.getIndicatorName();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取地区
+     *
+     * @version v1
+     */
+    @GetMapping("v1/area")
+    public Result getarea() throws ActException {
+        try {
+            List<String> list = disciplineRecordAPI.getarea();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取项目组
+     *
+     * @version v1
+     */
+    @GetMapping("v1/group")
+    public Result getGroup() throws ActException {
+        try {
+            List<String> list = disciplineRecordAPI.getGroup();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获得指标名称
+     *
+     * @version v1
+     */
+    @GetMapping("v1/target")
+    public Result getTarget() throws ActException {
+        try {
+            List<String> list = disciplineRecordAPI.getTarget();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

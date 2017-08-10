@@ -9,19 +9,13 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.interiorrecommend.api.RecommendRequireAPI;
-import com.bjike.goddess.interiorrecommend.bo.RecommendAssessDetailBO;
-import com.bjike.goddess.interiorrecommend.bo.RecommendRequireBO;
-import com.bjike.goddess.interiorrecommend.bo.RecommendSchemeBO;
-import com.bjike.goddess.interiorrecommend.bo.RecommendTypeBO;
+import com.bjike.goddess.interiorrecommend.bo.*;
 import com.bjike.goddess.interiorrecommend.dto.RecommendRequireDTO;
 import com.bjike.goddess.interiorrecommend.entity.RecommendScheme;
 import com.bjike.goddess.interiorrecommend.service.RecommendTypeSer;
 import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.RecommendRequireTO;
-import com.bjike.goddess.interiorrecommend.vo.RecommendAssessDetailVO;
-import com.bjike.goddess.interiorrecommend.vo.RecommendRequireVO;
-import com.bjike.goddess.interiorrecommend.vo.RecommendSchemeVO;
-import com.bjike.goddess.interiorrecommend.vo.RecommendTypeVO;
+import com.bjike.goddess.interiorrecommend.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
@@ -118,7 +112,7 @@ public class RecommendRequireAct {
     public Result delete(@PathVariable String id) throws ActException {
         try {
             recommendRequireAPI.delete(id);
-            return new ActResult();
+            return new ActResult("删除成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -139,7 +133,7 @@ public class RecommendRequireAct {
             if (!CollectionUtils.isEmpty(boList)) {
                 List<RecommendRequireVO> voList = new ArrayList<RecommendRequireVO>();
                 for (RecommendRequireBO bo : boList) {
-                    RecommendRequireVO vo = BeanTransform.copyProperties(bo, RecommendRequireVO.class);
+                    RecommendRequireVO vo = BeanTransform.copyProperties(bo, RecommendRequireVO.class,true);
                     vo.setDetailList(BeanTransform.copyProperties(bo.getDetailList(), RecommendAssessDetailVO.class));
                     voList.add(vo);
                 }
@@ -222,7 +216,7 @@ public class RecommendRequireAct {
     }
 
     /**
-     * 查询所有推荐内容
+     * 查询所有推荐考核内容
      * @return class RecommendAssessDetailVO
      * @throws ActException
      * @version v1
@@ -233,6 +227,23 @@ public class RecommendRequireAct {
             List<RecommendAssessDetailBO> boList = recommendRequireAPI.findAssess();
             List<RecommendAssessDetailVO> voList = BeanTransform.copyProperties(boList,RecommendAssessDetailVO.class);
             return ActResult.initialize(voList);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有推荐内容
+     * @return class RecommendContentVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/content")
+    public Result findContent() throws ActException{
+        try {
+            List<RecommendContentBO> bo = recommendRequireAPI.findContent();
+            List<RecommendContentVO> vo = BeanTransform.copyProperties(bo,RecommendContentVO.class);
+            return ActResult.initialize(vo);
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }

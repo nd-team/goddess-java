@@ -34,7 +34,7 @@ public class CollectFilterTO implements Serializable {
     private String project;
 
     /**
-     * 奖罚指标
+     * 指标名称
      */
     private String target;
 

@@ -1,5 +1,6 @@
 package com.bjike.goddess.attainment.service;
 
+import com.bjike.goddess.attainment.bo.QuestionCheckBO;
 import com.bjike.goddess.attainment.bo.SurveyQuestionnaireOptionBO;
 import com.bjike.goddess.attainment.dto.SurveyQuestionnaireOptionDTO;
 import com.bjike.goddess.attainment.entity.SurveyQuestionnaireOption;
@@ -76,6 +77,16 @@ public interface SurveyQuestionnaireOptionSer extends Ser<SurveyQuestionnaireOpt
      * @throws SerException
      */
     default List<SurveyQuestionnaireOptionBO> findByQuestion(String questionnaire_id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查询所有的选项
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<QuestionCheckBO> findQuesCheck() throws SerException {
         return null;
     }
 }

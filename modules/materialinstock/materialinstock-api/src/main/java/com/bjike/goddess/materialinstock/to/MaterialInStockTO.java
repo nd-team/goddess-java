@@ -8,6 +8,7 @@ import com.bjike.goddess.materialinstock.type.MaterialState;
 import com.bjike.goddess.materialinstock.type.UseState;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -69,6 +70,7 @@ public class MaterialInStockTO extends BaseTO {
     /**
      * 数量
      */
+    @Max(value = 1,groups = {ADD.class, EDIT.class}, message = "数量不能大于1")
     private Integer quantity;
 
     /**

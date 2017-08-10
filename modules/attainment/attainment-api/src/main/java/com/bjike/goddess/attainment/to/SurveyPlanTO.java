@@ -49,11 +49,6 @@ public class SurveyPlanTO extends BaseTO {
     private String finishTime;
 
     /**
-     * 审核状态
-     */
-    private AuditType audit;
-
-    /**
      * 备注
      */
     private String remark;
@@ -97,14 +92,6 @@ public class SurveyPlanTO extends BaseTO {
 
     public void setFinishTime(String finishTime) {
         this.finishTime = finishTime;
-    }
-
-    public AuditType getAudit() {
-        return audit;
-    }
-
-    public void setAudit(AuditType audit) {
-        this.audit = audit;
     }
 
     public String getRemark() {

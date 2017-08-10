@@ -2,10 +2,12 @@ package com.bjike.goddess.archive.api;
 
 import com.bjike.goddess.archive.bo.PerBO;
 import com.bjike.goddess.archive.bo.StaffNameBO;
+import com.bjike.goddess.archive.bo.StaffRecords1BO;
 import com.bjike.goddess.archive.bo.StaffRecordsBO;
 import com.bjike.goddess.archive.dto.StaffRecordsDTO;
 import com.bjike.goddess.archive.service.StaffRecordsSer;
 import com.bjike.goddess.archive.to.GuidePermissionTO;
+import com.bjike.goddess.archive.to.StaffRecords1ExcelTO;
 import com.bjike.goddess.archive.to.StaffRecordsExcelTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,12 +91,22 @@ public class StaffRecordsApiImpl implements StaffRecordsAPI {
     }
 
     @Override
-    public void dimissionUpload(List<StaffRecordsExcelTO> toList) throws SerException {
+    public void dimissionUpload(List<StaffRecords1ExcelTO> toList) throws SerException {
         staffRecordsSer.dimissionUpload(toList);
     }
 
     @Override
-    public List<StaffRecordsBO> dimissionMaps(StaffRecordsDTO dto) throws SerException {
+    public List<StaffRecords1BO> dimissionMaps(StaffRecordsDTO dto) throws SerException {
         return staffRecordsSer.dimissionMaps(dto);
+    }
+
+    @Override
+    public Long count() throws SerException {
+        return staffRecordsSer.count();
+    }
+
+    @Override
+    public byte[] templateDimissionExcel() throws SerException {
+        return staffRecordsSer.templateDimissionExcel();
     }
 }

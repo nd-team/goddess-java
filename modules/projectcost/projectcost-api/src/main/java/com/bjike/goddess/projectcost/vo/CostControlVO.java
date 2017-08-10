@@ -31,9 +31,14 @@ public class CostControlVO {
     private String name;
 
     /**
-     * 時間
+     * 年份
      */
-    private String time;
+    private Integer year;
+
+    /**
+     * 月份
+     */
+    private Integer month;
 
     /**
      * 目标收入
@@ -146,14 +151,6 @@ public class CostControlVO {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
     }
 
     public Double getTargetIncome() {

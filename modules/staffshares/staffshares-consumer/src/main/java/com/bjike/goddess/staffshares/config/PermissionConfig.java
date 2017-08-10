@@ -1,9 +1,9 @@
 package com.bjike.goddess.staffshares.config;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.coststandard.api.CusPermissionAPI;
-import com.bjike.goddess.coststandard.enums.CusPermissionType;
-import com.bjike.goddess.coststandard.to.CusPermissionTO;
+import com.bjike.goddess.staffshares.api.CusPermissionAPI;
+import com.bjike.goddess.staffshares.enums.CusPermissionType;
+import com.bjike.goddess.staffshares.to.CusPermissionTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;

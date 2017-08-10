@@ -57,4 +57,11 @@ public interface RecommendTypeSer extends Ser<RecommendType, RecommendTypeDTO> {
      * @return 推荐类型设定结果集
      */
     List<RecommendTypeBO> pageList(RecommendTypeDTO dto) throws SerException;
+
+    /**
+     * 删除推荐类型设定
+     *
+     * @param id 推荐类型设定id
+     */
+    void delete(String id) throws SerException;
 }
