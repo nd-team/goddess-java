@@ -185,7 +185,8 @@ public class SchemeSerImpl extends ServiceImpl<Scheme, SchemeDTO> implements Sch
          */
         if (null != schemeDTO.getStatus()) {
             schemeDTO.getConditions().add(Restrict.eq("status", schemeDTO.getStatus()));
-        }/**
+        }
+        /**
          * 股份种类
          */
         if (null != schemeDTO.getType()) {

@@ -21,6 +21,7 @@
     <!--另外注意命名,UserAPI为例,UserAPI是业务接口,则userSer是实现类@Service("userSer") 里注解的名字-->
     <dubbo:service interface="com.bjike.goddess.bonus.api.DisciplineRecordAPI" ref="disciplineRecordApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.bonus.api.PerformanceIndicatorAPI" ref="performanceIndicatorApiImpl"/>
+    <!--<dubbo:service interface="com.bjike.goddess.bonus.api.CusPermissionAPI" ref="cusPermissionApiImpl"/>-->
     <dubbo:service interface="com.bjike.goddess.bonus.api.CusPermissionAPI" ref="cusPermissionApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.bonus.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"/>
 
