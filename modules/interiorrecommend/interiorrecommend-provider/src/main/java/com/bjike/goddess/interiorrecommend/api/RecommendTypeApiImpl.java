@@ -39,7 +39,7 @@ public class RecommendTypeApiImpl implements RecommendTypeAPI {
 
     @Override
     public void delete(String id) throws SerException {
-        recommendTypeSer.remove(id);
+        recommendTypeSer.delete(id);
     }
 
     @Override
@@ -66,4 +66,6 @@ public class RecommendTypeApiImpl implements RecommendTypeAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return recommendTypeSer.guidePermission(guidePermissionTO);
     }
+
+
 }

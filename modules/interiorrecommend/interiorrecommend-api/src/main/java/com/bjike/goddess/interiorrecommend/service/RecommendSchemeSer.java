@@ -85,4 +85,11 @@ public interface RecommendSchemeSer extends Ser<RecommendScheme, RecommendScheme
      * @param generalAudit   结果
      */
     void generalAudit(String id, String generalSuggest, Boolean generalAudit) throws SerException;
+
+    /**
+     * 删除推荐方案
+     *
+     * @param id 推荐方案id
+     */
+    void delete(String id) throws SerException;
 }

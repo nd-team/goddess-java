@@ -71,9 +71,9 @@ public class SalaryInformation extends BaseEntity {
     private String  stationLevel;
 
     /**
-     * 管理层级
+     * 管理等级
      */
-    @Column(name = "manageLevel",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '管理层级'"  )
+    @Column(name = "manageLevel",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '管理等级'"  )
     private String  manageLevel;
 
     /**
@@ -103,11 +103,8 @@ public class SalaryInformation extends BaseEntity {
     /**
      * 转正时间
      */
-//<<<<<<< HEAD
-//    @Column(name = "positiveTime",nullable = false,columnDefinition = "DATE   COMMENT '转正时间'"  )
-//=======
+
     @Column(name = "positiveTime",columnDefinition = "DATE   COMMENT '转正时间'"  )
-//>>>>>>> upstream/develop
     private LocalDate  positiveTime;
 
     /**
@@ -129,27 +126,6 @@ public class SalaryInformation extends BaseEntity {
     private Double  postSalary;
 
     /**
-//<<<<<<< HEAD
-//     * 部门/项目组
-//     */
-//    @Column(name = "department",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '部门/项目组'"  )
-//    private String  department;
-//
-//    /**
-//     * 岗位
-//     */
-//    @Column(name = "position",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '岗位'"  )
-//    private String  position;
-//
-//    /**
-//     * 基本工资
-//     */
-//    @Column(name = "basePay",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '基本工资'"  )
-//    private Double  basePay;
-//
-//    /**
-//=======
-//>>>>>>> upstream/develop
      * 技能工资
      */
     @Column(name = "skillPay",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '技能工资'"  )

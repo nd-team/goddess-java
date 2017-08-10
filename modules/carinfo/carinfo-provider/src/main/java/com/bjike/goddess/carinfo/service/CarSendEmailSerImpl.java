@@ -1,13 +1,16 @@
 package com.bjike.goddess.carinfo.service;
 
 import com.bjike.goddess.carinfo.bo.CarSendEmailBO;
+import com.bjike.goddess.carinfo.enums.GuideAddrStatus;
 import com.bjike.goddess.carinfo.to.CarSendEmailTO;
+import com.bjike.goddess.carinfo.to.GuidePermissionTO;
 import com.bjike.goddess.carinfo.vo.CarSendEmailVO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.carinfo.dto.CarSendEmailDTO;
 import com.bjike.goddess.carinfo.entity.CarSendEmail;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.contacts.bo.InternalContactsBO;
@@ -68,6 +71,149 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
     @Autowired
     private MessageAPI messageAPI;
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
     // 定时器规则 "0 0 10 15 * ?" 每月15日上午10:00发送邮件
     @Override
     public void sendEmail() throws SerException {
@@ -76,11 +222,11 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
         if (carSendEmails.size() > 0 && carSendEmails != null) {
             List<UserBO> userBO = positionDetailUserAPI.findByPosition(carSendEmails.get(0).getPositionNameId());
             if (userBO.size() > 0 && userBO != null) {
-              List<User> users =   BeanTransform.copyProperties(userBO, User.class);
+                List<User> users =   BeanTransform.copyProperties(userBO, User.class);
                 for(User user : users){
                     InternalContactsBO contactsBO = internalContactsAPI.findByUser(user.getId());
                     if(contactsBO != null)
-                    receivers.add(contactsBO.getEmail());
+                        receivers.add(contactsBO.getEmail());
                 }
             }
             String[] sendUsers = (String[]) receivers.toArray(new String[receivers.size()]);
@@ -114,28 +260,32 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
     }
 
     @Override
-    public CarSendEmailBO add(CarSendEmailTO to) throws SerException {
+    public void add(CarSendEmailTO to) throws SerException {
+        DepartmentDetailBO departmentDetail = departmentDetailAPI.getById(to.getProjectManageId());
+        PositionDetailBO position = positionDetailAPI.findBOById(to.getPositionNameId());
+        to.setProjectManage(departmentDetail.getDepartment());
+        to.setPositionName(position.getPosition());
         CarSendEmail carSendEmail = BeanTransform.copyProperties(to, CarSendEmail.class);
         super.save(carSendEmail);
-        to.setId(carSendEmail.getId());
-        return BeanTransform.copyProperties(to, CarSendEmailBO.class);
     }
 
     @Override
     public List<CarSendEmailBO> list() throws SerException {
-        List<CarSendEmail> carSendEmailTOS = super.findAll();
-        return BeanTransform.copyProperties(carSendEmailTOS, CarSendEmailVO.class);
+        List<CarSendEmail> carSendEmail = super.findAll();
+        List<CarSendEmailBO> boList = BeanTransform.copyProperties(carSendEmail,CarSendEmailBO.class);
+        return boList;
     }
 
     @Override
-    public CarSendEmailBO edit(CarSendEmailTO to) throws SerException{
+    public void edit(CarSendEmailTO to) throws SerException{
         CarSendEmail model = super.findById(to.getId());
         if(model != null){
             model.setModifyTime(LocalDateTime.now());
             model.setPositionNameId(to.getPositionNameId());
-            model.setProjectManageId(to.getProjetManagerId());
+            model.setProjectManageId(to.getProjectManageId());
+            model.setProjectManage(to.getProjectManage());
+            model.setPositionName(to.getPositionName());
             super.update(model);
-            return BeanTransform.copyProperties(to,CarSendEmailBO.class);
         }else {
             throw new SerException("非法Id,发送对象不能为空！");
         }
@@ -147,4 +297,19 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
         return count;
     }
 
+    @Override
+    public void delete(String id) throws SerException {
+        if(null != id){
+            super.remove(id);
+        }else{
+            throw new SerException("id不能为空");
+        }
+    }
+
+    @Override
+    public CarSendEmailBO findOne(String id) throws SerException {
+        CarSendEmail carSendEmail = super.findById(id);
+        CarSendEmailBO bo = BeanTransform.copyProperties(carSendEmail,CarSendEmailBO.class);
+        return bo;
+    }
 }

@@ -260,6 +260,7 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
                     bo.setYear(year);
                     bo.setMonth(month);
                     bo.setBalance(list.get(0).getBalance());
+                    bo.setId(list.get(0).getId());
                 }
             }
             double debtorCost = boList.stream().filter(p -> p.getDebtorCost() != null).mapToDouble(BankRecordCollectBO::getDebtorCost).sum();
@@ -274,13 +275,13 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
     }
 
     public List<BankRecord> findBalance(Integer year, Integer month, String accountId) throws SerException {
-        StringBuilder sql = new StringBuilder("select balance from bankrecords_bankrecord bankrecord  where 0 = 0");
+        StringBuilder sql = new StringBuilder("select id,balance from bankrecords_bankrecord bankrecord  where 0 = 0");
         sql.append(" and bankrecord.recordYear = " + year);
         sql.append(" and bankrecord.recordMonth = " + month);
         sql.append(" and bankrecord.accountId = '" + accountId + "'");
         sql.append(" ORDER BY bankrecord.recordDate desc");
         sql.append(" limit 1");
-        String[] balanceField = new String[]{"balance"};
+        String[] balanceField = new String[]{"id","balance"};
         return super.findBySql(sql.toString(), BankRecord.class, balanceField);
     }
 

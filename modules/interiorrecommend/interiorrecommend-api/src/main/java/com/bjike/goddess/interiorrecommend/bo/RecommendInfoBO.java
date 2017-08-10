@@ -16,6 +16,11 @@ import java.util.List;
 public class RecommendInfoBO extends BaseBO {
 
     /**
+     * 推荐要求id
+     */
+    private String requireId;
+
+    /**
      * 推荐时间
      */
     private String createTime;
@@ -70,6 +75,14 @@ public class RecommendInfoBO extends BaseBO {
      */
     private String closeTime;
 
+
+    public String getRequireId() {
+        return requireId;
+    }
+
+    public void setRequireId(String requireId) {
+        this.requireId = requireId;
+    }
 
     public String getTypeName() {
         return typeName;

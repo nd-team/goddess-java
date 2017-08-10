@@ -20,7 +20,7 @@ public class CarSendEmail extends BaseEntity {
 
 
     /**
-     * 项目组id
+     * 部门id
      */
     @Column(name = "projectManageId", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目组Id'")
     private String projectManageId;
@@ -30,6 +30,16 @@ public class CarSendEmail extends BaseEntity {
      */
     @Column(name = "positionNameId", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '岗位Id'")
     private String positionNameId;
+
+    /**
+     * 部门名称
+     */
+    private String projectManage;
+
+    /**
+     * 岗位名称
+     */
+    private String positionName;
 
     /**
      * 备注
@@ -58,5 +68,21 @@ public class CarSendEmail extends BaseEntity {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getProjectManage() {
+        return projectManage;
+    }
+
+    public void setProjectManage(String projectManage) {
+        this.projectManage = projectManage;
+    }
+
+    public String getPositionName() {
+        return positionName;
+    }
+
+    public void setPositionName(String positionName) {
+        this.positionName = positionName;
     }
 }

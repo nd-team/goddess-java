@@ -12,6 +12,10 @@ package com.bjike.goddess.salarymanage.enums;
 public enum GuideAddrStatus {
 
     /**
+     * 列表
+     */
+    LIST(0),
+    /**
      * 添加
      */
     ADD(1),
@@ -19,35 +23,26 @@ public enum GuideAddrStatus {
      * 编辑
      */
     EDIT(2),
-
+    /**
+     * 组织结构
+     */
+    ORGANIZE(3),
     /**
      * 删除
      */
     DELETE(4),
     /**
-     * 部门汇总
+     * 冻结
      */
-    DEPARTCOLLECT(7),
+    CONGEL(5),
     /**
-     * 个人汇总
+     * 解冻
      */
-    PERSONALCOLLECT(7),
+    THAW(6),
     /**
-     * 地区汇总
+     * 汇总
      */
-    AREACOLLECT(7),
-    /**
-     * 部门分析
-     */
-    DEPARTANALYZE(7),
-    /**
-     * 个人分析
-     */
-    PERSONALANALYZE(7),
-    /**
-     * 地区分析
-     */
-    AREAANALYZE(7),
+    COLLECT(7),
     /**
      * 上传附件
      */
@@ -71,7 +66,15 @@ public enum GuideAddrStatus {
     /**
      * 查看附件
      */
-    SEEFILE(13);
+    SEEFILE(13),
+    /**
+     * 定性指标
+     */
+    QUALITATIVE(14),
+    /**
+     * 定量指标
+     */
+    QUANTIFY(15);
 
     private int code;
 

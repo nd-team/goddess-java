@@ -180,7 +180,7 @@ public class RecommendSchemeAct {
     @GetMapping("v1/list")
     public Result pageList(RecommendSchemeDTO dto) throws ActException {
         try {
-            List<RecommendSchemeVO> voList = BeanTransform.copyProperties(recommendSchemeAPI.pageList(dto), RecommendSchemeVO.class);
+            List<RecommendSchemeVO> voList = BeanTransform.copyProperties(recommendSchemeAPI.pageList(dto), RecommendSchemeVO.class,true);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

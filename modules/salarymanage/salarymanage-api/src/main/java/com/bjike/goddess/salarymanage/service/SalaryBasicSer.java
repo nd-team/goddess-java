@@ -9,7 +9,9 @@ import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.salarymanage.bo.SalaryBasicBO;
 import com.bjike.goddess.salarymanage.entity.SalaryBasic;
 import com.bjike.goddess.salarymanage.dto.SalaryBasicDTO;
+import com.bjike.goddess.salarymanage.excel.SonPermissionObject;
 import com.bjike.goddess.salarymanage.to.ExportSalaryBasicTO;
+import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
 import com.bjike.goddess.salarymanage.to.SalaryBasicTO;
 
 import java.util.List;
@@ -23,6 +25,20 @@ import java.util.List;
 * @Copy:   		[ com.bjike ]
 */
 public interface SalaryBasicSer extends Ser<SalaryBasic, SalaryBasicDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
    /**
     * 查询所有地区
     * @throws SerException
@@ -128,5 +144,14 @@ public interface SalaryBasicSer extends Ser<SalaryBasic, SalaryBasicDTO> {
      * @throws SerException
      */
     byte[] templateExport() throws SerException;
+
+
+    /**
+     * 列表总条数
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(SalaryBasicDTO dto) throws SerException;
 
  }

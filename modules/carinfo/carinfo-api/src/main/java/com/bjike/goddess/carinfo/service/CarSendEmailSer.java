@@ -2,6 +2,7 @@ package com.bjike.goddess.carinfo.service;
 
 import com.bjike.goddess.carinfo.bo.CarSendEmailBO;
 import com.bjike.goddess.carinfo.to.CarSendEmailTO;
+import com.bjike.goddess.carinfo.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.carinfo.entity.CarSendEmail;
@@ -23,6 +24,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CarSendEmailSer extends Ser<CarSendEmail, CarSendEmailDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 发送邮箱方法
      * @throws SerException
@@ -30,7 +44,7 @@ public interface CarSendEmailSer extends Ser<CarSendEmail, CarSendEmailDTO> {
     void sendEmail() throws SerException;
 
     /**
-     * 获取项目组信息
+     * 获取部门信息
      * @return
      * @throws SerException
      */
@@ -54,8 +68,8 @@ public interface CarSendEmailSer extends Ser<CarSendEmail, CarSendEmailDTO> {
      * @return
      * @throws SerException
      */
-    default CarSendEmailBO add(CarSendEmailTO to ) throws SerException{
-        return null;
+    default void add(CarSendEmailTO to ) throws SerException{
+        return;
     }
 
     /**
@@ -74,8 +88,8 @@ public interface CarSendEmailSer extends Ser<CarSendEmail, CarSendEmailDTO> {
      * @return
      * @throws SerException
      */
-    default CarSendEmailBO edit(CarSendEmailTO to) throws SerException{
-        return null;
+    default void edit(CarSendEmailTO to) throws SerException{
+        return ;
     }
 
     /**
@@ -84,4 +98,18 @@ public interface CarSendEmailSer extends Ser<CarSendEmail, CarSendEmailDTO> {
     default Long counts(CarSendEmailDTO dto) throws SerException {
         return null;
     }
+
+    /**
+     * 删除发送对象
+     * @param id
+     * @throws SerException
+     */
+    void delete(String id) throws SerException;
+
+    /**
+     * 根据id来查询单个发送对象所有信息
+     * @param id
+     * @throws SerException
+     */
+    CarSendEmailBO findOne(String id) throws SerException;
 }

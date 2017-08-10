@@ -236,4 +236,16 @@ public class AwardStandardSerImpl extends ServiceImpl<AwardStandard, AwardStanda
             return null;
         }
     }
+
+    @Override
+    public AwardStandardBO findOne(String id) throws SerException {
+        AwardStandard awardStandard = super.findById(id);
+        AwardStandardBO bo = BeanTransform.copyProperties(awardStandard,AwardStandardBO.class);
+        return bo;
+    }
+
+    @Override
+    public Long count(AwardStandardDTO dto) throws SerException {
+        return super.count(dto);
+    }
 }

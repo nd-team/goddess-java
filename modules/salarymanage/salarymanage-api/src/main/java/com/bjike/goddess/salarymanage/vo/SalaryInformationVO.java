@@ -61,7 +61,7 @@ public class SalaryInformationVO {
     private String  stationLevel;
 
     /**
-     * 管理层级
+     * 管理等级
      */
     private String  manageLevel;
 

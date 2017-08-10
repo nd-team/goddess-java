@@ -39,7 +39,7 @@ public class RecommendSchemeApiImpl implements RecommendSchemeAPI {
 
     @Override
     public void delete(String id) throws SerException {
-        recommendSchemeSer.remove(id);
+        recommendSchemeSer.delete(id);
     }
 
     @Override

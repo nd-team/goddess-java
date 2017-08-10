@@ -60,7 +60,7 @@ public class SalaryInformationBO extends BaseBO {
     private String  stationLevel;
 
     /**
-     * 管理层级
+     * 管理等级
      */
     private String  manageLevel;
 
@@ -104,25 +104,6 @@ public class SalaryInformationBO extends BaseBO {
      */
     private Double  postSalary;
 
-
-//<<<<<<< HEAD
-//     * 部门/项目组
-//     */
-//    private String  department;
-//
-//    /**
-//     * 岗位
-//     */
-//    private String  position;
-//
-//    /**
-//     * 基本工资
-//     */
-//    private Double  basePay;
-//
-//    /**
-//=======
-//>>>>>>> upstream/develop
     /**
      * 技能工资
      */

@@ -99,9 +99,9 @@ public class DispatchCarInfo extends BaseEntity {
     private LocalDateTime startTime;
 
     /**
-     * 出车开始时间
+     * 出车结束时间
      */
-    @Column(name = "endTime", nullable = false, columnDefinition = "DATETIME   COMMENT '出车开始时间'")
+    @Column(name = "endTime", nullable = false, columnDefinition = "DATETIME   COMMENT '出车结束时间'")
     private LocalDateTime endTime;
 
     /**
@@ -123,9 +123,9 @@ public class DispatchCarInfo extends BaseEntity {
     private String dispatchReason;
 
     /**
-     * 随同人员
+     * 用车随同人员
      */
-    @Column(name = "accompanyUser", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '随同人员'")
+    @Column(name = "accompanyUser", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '用车随同人员'")
     private String accompanyUser;
 
     /**

@@ -7,7 +7,9 @@ import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.salarymanage.bo.SalaryBasicBO;
 import com.bjike.goddess.salarymanage.dto.SalaryBasicDTO;
+import com.bjike.goddess.salarymanage.excel.SonPermissionObject;
 import com.bjike.goddess.salarymanage.to.ExportSalaryBasicTO;
+import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
 import com.bjike.goddess.salarymanage.to.SalaryBasicTO;
 
 import java.util.List;
@@ -21,6 +23,20 @@ import java.util.List;
 * @Copy:   		[ com.bjike ]
 */
 public interface SalaryBasicAPI  {
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 查询所有地区
      * @throws SerException
@@ -115,12 +131,6 @@ public interface SalaryBasicAPI  {
     };
 
 
-//<<<<<<< HEAD
-//     * @return
-//     * @throws SerException
-//     */
-//    byte[] exportExcel(ExportSalaryBasicTO to) throws SerException;
-//=======
     /**
      * 导出
      * @param to
@@ -135,5 +145,12 @@ public interface SalaryBasicAPI  {
      */
     byte[] templateExport() throws SerException;
 
-//>>>>>>> upstream/develop
+
+    /**
+     * 查询总条数
+     * @param dto
+     * @throws SerException
+     */
+    Long count(SalaryBasicDTO dto) throws SerException;
+
 }

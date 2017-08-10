@@ -81,7 +81,7 @@ public class DispatchCarInfoVO {
     private String startTime;
 
     /**
-     * 出车开始时间
+     * 出车结束时间
      */
     private String endTime;
 
@@ -101,7 +101,7 @@ public class DispatchCarInfoVO {
     private String dispatchReason;
 
     /**
-     * 随同人员
+     * 用车随同人员
      */
     private String accompanyUser;
 
