@@ -96,4 +96,6 @@ public interface StaffBirthdaySchemeAPI {
      * @return 头像帽结果集
      */
     List<HeadPortraitHatBO> findHeadPortraitHats() throws SerException;
+
+
 }
