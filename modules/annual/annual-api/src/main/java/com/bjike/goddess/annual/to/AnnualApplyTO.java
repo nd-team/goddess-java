@@ -24,11 +24,6 @@ public class AnnualApplyTO extends BaseTO {
     private String infoId;
 
     /**
-     * 请假人
-     */
-    private String infoUsername;
-
-    /**
      * 开始时间
      */
     @NotNull(message = "开始时间不能为空", groups = {EDIT.class, ADD.class})
@@ -40,35 +35,6 @@ public class AnnualApplyTO extends BaseTO {
     @NotNull(message = "结束时间不能为空", groups = {EDIT.class, ADD.class})
     private String endTime;
 
-    /**
-     * 请假时间
-     */
-    private String applyTime;
-
-    /**
-     * 请假天数
-     */
-    private Double leave;
-
-    /**
-     * 审核人
-     */
-    private String auditor;
-
-    /**
-     * 审核结果
-     */
-    private AuditType audit;
-
-    /**
-     * 审核意见
-     */
-    private String opinion;
-
-    /**
-     * 审核时间
-     */
-    private String auditTime;
 
     public String getInfoId() {
         return infoId;
@@ -76,14 +42,6 @@ public class AnnualApplyTO extends BaseTO {
 
     public void setInfoId(String infoId) {
         this.infoId = infoId;
-    }
-
-    public String getInfoUsername() {
-        return infoUsername;
-    }
-
-    public void setInfoUsername(String infoUsername) {
-        this.infoUsername = infoUsername;
     }
 
     public String getStartTime() {
@@ -100,54 +58,6 @@ public class AnnualApplyTO extends BaseTO {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
-    }
-
-    public String getApplyTime() {
-        return applyTime;
-    }
-
-    public void setApplyTime(String applyTime) {
-        this.applyTime = applyTime;
-    }
-
-    public String getAuditTime() {
-        return auditTime;
-    }
-
-    public void setAuditTime(String auditTime) {
-        this.auditTime = auditTime;
-    }
-
-    public Double getLeave() {
-        return leave;
-    }
-
-    public void setLeave(Double leave) {
-        this.leave = leave;
-    }
-
-    public String getAuditor() {
-        return auditor;
-    }
-
-    public void setAuditor(String auditor) {
-        this.auditor = auditor;
-    }
-
-    public AuditType getAudit() {
-        return audit;
-    }
-
-    public void setAudit(AuditType audit) {
-        this.audit = audit;
-    }
-
-    public String getOpinion() {
-        return opinion;
-    }
-
-    public void setOpinion(String opinion) {
-        this.opinion = opinion;
     }
 
 }

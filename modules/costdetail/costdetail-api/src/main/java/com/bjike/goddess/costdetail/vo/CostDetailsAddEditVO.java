@@ -12,7 +12,10 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public class CostDetailsAddEditVO {
-
+    /**
+     * id
+     */
+    private String id;
     /**
      * 日期
      */
@@ -323,6 +326,14 @@ public class CostDetailsAddEditVO {
      */
     private Double forecastBalanceMoThirty;
 
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getCostTime() {
         return costTime;

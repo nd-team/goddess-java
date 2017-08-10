@@ -21,6 +21,7 @@
 	<!-- 基本资料 -->
 	<dubbo:reference interface="com.bjike.goddess.salarymanage.api.SalaryBasicAPI" id="salayBasicApiImpl" />
 
+
 	<!-- userAPI -->
 	<dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl" />
 

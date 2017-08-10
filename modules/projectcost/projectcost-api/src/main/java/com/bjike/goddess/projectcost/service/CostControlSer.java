@@ -109,6 +109,34 @@ public interface CostControlSer extends Ser<CostControl, CostControlDTO> {
     default List<HistogramBO> histogramCollect(FindTO to) throws SerException {
         return null;
     }
+    /**
+     * 获取所有的地区
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAllArea() throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有的项目名称
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAllName() throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有的项目组
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAllGroup() throws SerException {
+        return null;
+    }
+
 
     /**
      * 根据查询条件查询成本控制数据

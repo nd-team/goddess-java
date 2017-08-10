@@ -8,6 +8,7 @@ import com.bjike.goddess.firmreward.dto.PrizeApplyDTO;
 import com.bjike.goddess.firmreward.dto.PrizeApplyDTO;
 import com.bjike.goddess.firmreward.entity.PrizeApply;
 import com.bjike.goddess.firmreward.service.PrizeApplySer;
+import com.bjike.goddess.firmreward.to.ApplyDetailTO;
 import com.bjike.goddess.firmreward.to.PrizeApplyTO;
 import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,7 +107,7 @@ public class PrizeApplyApiImpl implements PrizeApplyAPI {
      * @throws SerException
      */
     @Override
-    public void addPrizeDetails(PrizeApplyTO to) throws SerException {
+    public void addPrizeDetails(ApplyDetailTO to) throws SerException {
         prizeApplySer.addPrizeDetails(to);
     }
 
@@ -117,7 +118,7 @@ public class PrizeApplyApiImpl implements PrizeApplyAPI {
      * @throws SerException
      */
     @Override
-    public void updatePrizeDetails(PrizeApplyTO to) throws SerException {
+    public void updatePrizeDetails(ApplyDetailTO to) throws SerException {
         prizeApplySer.updatePrizeDetails(to);
     }
 

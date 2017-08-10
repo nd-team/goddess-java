@@ -41,20 +41,6 @@ public class WorkHandoverTO extends BaseTO {
     @NotNull(message = "交接情况不能为空", groups = {ADD.class, EDIT.class})
     private String situation;
 
-    /**
-     * 交接人确认
-     */
-    private String confirm;
-
-    /**
-     * 福利模块负责人
-     */
-    private String director;
-
-    /**
-     * 福利模块负责人确认
-     */
-    private String directorConfirm;
 
 
     public String getHandover() {
@@ -89,27 +75,4 @@ public class WorkHandoverTO extends BaseTO {
         this.situation = situation;
     }
 
-    public String getConfirm() {
-        return confirm;
-    }
-
-    public void setConfirm(String confirm) {
-        this.confirm = confirm;
-    }
-
-    public String getDirector() {
-        return director;
-    }
-
-    public void setDirector(String director) {
-        this.director = director;
-    }
-
-    public String getDirectorConfirm() {
-        return directorConfirm;
-    }
-
-    public void setDirectorConfirm(String directorConfirm) {
-        this.directorConfirm = directorConfirm;
-    }
 }

@@ -13,6 +13,7 @@ import com.bjike.goddess.firmreward.entity.AwardDetail;
 import com.bjike.goddess.firmreward.entity.CusPermission;
 import com.bjike.goddess.firmreward.entity.RewardPeopleNoStat;
 import com.bjike.goddess.firmreward.enums.GuideAddrStatus;
+import com.bjike.goddess.firmreward.to.PeopleNoStatTO;
 import com.bjike.goddess.firmreward.to.RewardPeopleNoStatTO;
 import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
@@ -264,7 +265,7 @@ public class RewardPeopleNoStatSerImpl extends ServiceImpl<RewardPeopleNoStat, R
      */
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public void addAwardDetails(RewardPeopleNoStatTO to) throws SerException {
+    public void addAwardDetails(PeopleNoStatTO to) throws SerException {
         String rewardPeopleNoStatId = to.getId();//奖励人数统计id
         String[] awardRankings = to.getAwardRankings();//获奖名次
         String[] prizewinners = to.getPrizewinners();//获奖人姓名
@@ -300,7 +301,7 @@ public class RewardPeopleNoStatSerImpl extends ServiceImpl<RewardPeopleNoStat, R
      */
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public void updateAwardDetails(RewardPeopleNoStatTO to) throws SerException {
+    public void updateAwardDetails(PeopleNoStatTO to) throws SerException {
         String rewardPeopleNoStatId = to.getId();
         List<AwardDetail> list = getAwardDetailsByStatId(rewardPeopleNoStatId);
         awardDetailSer.remove(list);//执行删除操作

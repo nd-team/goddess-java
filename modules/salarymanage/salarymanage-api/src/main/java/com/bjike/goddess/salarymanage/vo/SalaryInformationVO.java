@@ -405,7 +405,6 @@ public class SalaryInformationVO {
     public void setSection(String section) {
         this.section = section;
     }
-
     public Double getSkillPay () {
         return skillPay;
     }

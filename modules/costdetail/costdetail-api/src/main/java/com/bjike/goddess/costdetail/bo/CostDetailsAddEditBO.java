@@ -1,5 +1,6 @@
 package com.bjike.goddess.costdetail.bo;
 
+import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.to.BaseTO;
 
 import java.util.List;
@@ -13,7 +14,8 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class CostDetailsAddEditBO extends BaseTO {
+public class CostDetailsAddEditBO extends BaseBO{
+
 
     /**
      * 日期

@@ -145,6 +145,7 @@ public interface SalaryBasicSer extends Ser<SalaryBasic, SalaryBasicDTO> {
      */
     byte[] templateExport() throws SerException;
 
+
     /**
      * 列表总条数
      * @param dto
@@ -152,4 +153,5 @@ public interface SalaryBasicSer extends Ser<SalaryBasic, SalaryBasicDTO> {
      * @throws SerException
      */
     Long count(SalaryBasicDTO dto) throws SerException;
+
  }

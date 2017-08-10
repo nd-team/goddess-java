@@ -1,352 +1,369 @@
-package com.bjike.goddess.salarymanage.entity;
+package com.bjike.goddess.salarymanage.excel;
 
-import com.bjike.goddess.common.api.entity.BaseEntity;
-import javax.persistence.*;
-import java.time.LocalDate;
-
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
 /**
-* 薪资管理
-* @Author:			[ jiangzaixuan ]
-* @Date:			[  2017-07-31 01:45 ]
-* @Description:	[ 薪资管理 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
-*/
-@Entity
-@Table(name = "salarymanage_salaryinformation")
-public class SalaryInformation extends BaseEntity {
+ * 薪资资料
+ *
+ * @Author: [ jiangzaixuan ]
+ * @Date: [ 2017-08-2 09:11 ]
+ * @Description: [ 薪资资料 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+public class SalaryInformaiionSetExcel {
+    /**
+     * 指标名称
+     */
+    @ExcelHeader(name = "指标名称",notNull = true)
+    private String indexName;
     /**
      * 计薪周期开始时间
      */
-    @Column(name = "payStarTime",nullable = false,columnDefinition = "DATE   COMMENT '计薪周期开始时间'"  )
-    private LocalDate payStarTime;
+    @ExcelHeader(name = "计薪周期开始时间",notNull = true)
+    private String payStarTime;
 
     /**
      * 计薪周期结束时间
      */
-    @Column(name = "payEndTime",nullable = false,columnDefinition = "DATE   COMMENT '计薪周期结束时间'"  )
-    private LocalDate  payEndTime;
+    @ExcelHeader(name = "计薪周期结束时间",notNull = true)
+    private String  payEndTime;
 
     /**
      * 地区
      */
-    @Column(name = "area",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '地区'"  )
+    @ExcelHeader(name = "地区",notNull = true)
     private String  area;
 
     /**
      * 员工编号
      */
-    @Column(name = "employeeId",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '员工编号'"  )
+    @ExcelHeader(name = "员工编号",notNull = true)
     private String  employeeId;
 
     /**
      * 姓名
-     */
-    @Column(name = "employeeName",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '姓名'"  )
+     */@ExcelHeader(name = "姓名",notNull = true)
     private String  employeeName;
 
     /**
      * 体系
      */
-    @Column(name = "system",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '体系'"  )
+    @ExcelHeader(name = "体系",notNull = true)
     private String  system;
 
     /**
      * 部门/项目组
      */
-    @Column(name = "section",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '部门/项目组'"  )
+    @ExcelHeader(name = "部门/项目组",notNull = true)
     private String  section;
 
     /**
      * 岗位
      */
-    @Column(name = "station",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '岗位'"  )
+    @ExcelHeader(name = "岗位",notNull = true)
     private String  station;
 
     /**
      * 岗位层级
      */
-    @Column(name = "stationLevel",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '岗位层级'"  )
+    @ExcelHeader(name = "岗位层级",notNull = true)
     private String  stationLevel;
 
     /**
-     * 管理等级
+     * 管理层级
      */
-    @Column(name = "manageLevel",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '管理等级'"  )
+    @ExcelHeader(name = "管理层级",notNull = true)
     private String  manageLevel;
 
     /**
      * 技能项
      */
-    @Column(name = "skill",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '技能项'"  )
+    @ExcelHeader(name = "技能项",notNull = true)
     private String  skill;
 
     /**
      * 技能专业
      */
-    @Column(name = "proSkills",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '技能专业'"  )
+    @ExcelHeader(name = "技能专业",notNull = true)
     private String  proSkills;
 
     /**
      * 技能级别
      */
-    @Column(name = "skillLevel",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '技能级别'"  )
+    @ExcelHeader(name = "技能级别",notNull = true)
     private String  skillLevel;
 
     /**
      * 入职时间
      */
-    @Column(name = "hiredate",nullable = false,columnDefinition = "DATE   COMMENT '入职时间'"  )
-    private LocalDate  hiredate;
+    @ExcelHeader(name = "入职时间",notNull = true)
+    private String  hiredate;
 
     /**
      * 转正时间
      */
-
-    @Column(name = "positiveTime",columnDefinition = "DATE   COMMENT '转正时间'"  )
-    private LocalDate  positiveTime;
+    @ExcelHeader(name = "转正时间",notNull = true)
+    private String  positiveTime;
 
     /**
      * 在职时间
      */
-    @Column(name = "workingTime",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '在职时间'"  )
+    @ExcelHeader(name = "在职时间",notNull = true)
     private String  workingTime;
 
     /**
      * 基本工资
      */
-    @Column(name = "basicSalary",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '基本工资'"  )
+    @ExcelHeader(name = "基本工资",notNull = true)
     private Double  basicSalary;
 
     /**
      * 岗位工资
      */
-    @Column(name = "postSalary",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '岗位工资'"  )
+    @ExcelHeader(name = "岗位工资",notNull = true)
     private Double  postSalary;
+
+    /**
+     * 部门/项目组
+     */
+    @ExcelHeader(name = "部门/项目组",notNull = true)
+    private String  department;
+
+    /**
+     * 岗位
+     */
+    @ExcelHeader(name = "岗位",notNull = true)
+    private String  position;
+
+    /**
+     * 基本工资
+     */
+    @ExcelHeader(name = "基本工资",notNull = true)
+    private Double  basePay;
 
     /**
      * 技能工资
      */
-    @Column(name = "skillPay",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '技能工资'"  )
+    @ExcelHeader(name = "技能工资",notNull = true)
     private Double  skillPay;
 
     /**
      * 管理工资
      */
-    @Column(name = "managePay",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '管理工资'"  )
+    @ExcelHeader(name = "管理工资",notNull = true)
     private Double  managePay;
 
     /**
      * 技能职衔补助
      */
-    @Column(name = "skillSubsidies",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '技能职衔补助'"  )
+    @ExcelHeader(name = "技能职衔补助",notNull = true)
     private Double  skillSubsidies;
 
     /**
      * 管理等级职衔补助
      */
-    @Column(name = "manageSubsidies",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '管理等级职衔补助'"  )
+    @ExcelHeader(name = "管理等级职衔补助",notNull = true)
     private Double  manageSubsidies;
 
     /**
      * 工龄职衔补助
      */
-    @Column(name = "seniorityLevSubsidies",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '工龄职衔补助'"  )
+    @ExcelHeader(name = "工龄职衔补助",notNull = true)
     private Double  seniorityLevSubsidies;
 
     /**
      * 职衔补助总额
      */
-    @Column(name = "allSubsidies",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '职衔补助总额'"  )
+    @ExcelHeader(name = "职衔补助总额",notNull = true)
     private Double  allSubsidies;
 
     /**
      * 项目津贴
      */
-    @Column(name = "projectBenefits",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '项目津贴'"  )
+    @ExcelHeader(name = "项目津贴",notNull = true)
     private Double  projectBenefits;
 
     /**
      * 定薪
      */
-    @Column(name = "wage",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '定薪'"  )
+    @ExcelHeader(name = "定薪",notNull = true)
     private Double  wage;
 
     /**
      * 工资
      */
-    @Column(name = "salary",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '工资'"  )
+    @ExcelHeader(name = "工资",notNull = true)
     private Double  salary;
 
     /**
      * 电脑补助
      */
-    @Column(name = "computerSubsidies",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '电脑补助'"  )
+    @ExcelHeader(name = "电脑补助",notNull = true)
     private Double  computerSubsidies;
 
     /**
      * 住宿补助
      */
-    @Column(name = "accommodationSubsidies",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '住宿补助'"  )
+    @ExcelHeader(name = "住宿补助",notNull = true)
     private Double  accommodationSubsidies;
 
     /**
      * 工龄补助
      */
-    @Column(name = "senioritySubsidies",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '工龄补助'"  )
+    @ExcelHeader(name = "工龄补助",notNull = true)
     private Double  senioritySubsidies;
 
     /**
      * 高温补助
      */
-    @Column(name = "hyperthermiaSubsidies",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '高温补助'"  )
+    @ExcelHeader(name = "高温补助",notNull = true)
     private Double  hyperthermiaSubsidies;
 
     /**
      * 工资总额
      */
-    @Column(name = "allSalary",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '工资总额'"  )
+    @ExcelHeader(name = "工资总额",notNull = true)
     private Double  allSalary;
 
     /**
      * 扣社保
      */
-    @Column(name = "jinpoCost",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '扣社保'"  )
+    @ExcelHeader(name = "扣社保",notNull = true)
     private Double  jinpoCost;
 
     /**
      * 社保补助
      */
-    @Column(name = "jinpoSubsidies",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '社保补助'"  )
+    @ExcelHeader(name = "社保补助",notNull = true)
     private Double  jinpoSubsidies;
 
     /**
      * 水电费
      */
-    @Column(name = "utilities",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '水电费'"  )
+    @ExcelHeader(name = "水电费",notNull = true)
     private Double  utilities;
 
     /**
      * 个税
      */
-    @Column(name = "personTax",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '个税'"  )
+    @ExcelHeader(name = "个税",notNull = true)
     private Double  personTax;
 
     /**
      * 奖励处罚得分汇总
      */
-    @Column(name = "allRewardScore",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '奖励处罚得分汇总'"  )
+    @ExcelHeader(name = "奖励处罚得分汇总",notNull = true)
     private Double  allRewardScore;
 
     /**
      * 奖励处罚费用汇总
      */
-    @Column(name = "allRewardCost",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '奖励处罚费用汇总'"  )
+    @ExcelHeader(name = "奖励处罚费用汇总",notNull = true)
     private Double  allRewardCost;
 
     /**
      * 出勤天数
      */
-    @Column(name = "attendanceDay",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '出勤天数'"  )
+    @ExcelHeader(name = "出勤天数",notNull = true)
     private Double  attendanceDay;
 
     /**
      * 请假天数
      */
-    @Column(name = "vacateDay",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '请假天数'"  )
+    @ExcelHeader(name = "请假天数",notNull = true)
     private Double  vacateDay;
 
     /**
      * 旷工天数
      */
-    @Column(name = "absenteeismDay",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '旷工天数'"  )
+    @ExcelHeader(name = "旷工天数",notNull = true)
     private Double  absenteeismDay;
 
     /**
      * 未完成任务工时
      */
-    @Column(name = "unfinishedTime",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '未完成任务工时'"  )
+    @ExcelHeader(name = "未完成任务工时",notNull = true)
     private Double  unfinishedTime;
 
     /**
      * 正常工作日加班天数
      */
-    @Column(name = "normalOvertimeDay",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '正常工作日加班天数'"  )
+    @ExcelHeader(name = "正常工作日加班天数",notNull = true)
     private Double  normalOvertimeDay;
 
     /**
      * 法定节假日实际休息天数
      */
-    @Column(name = "legalRestDay",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '法定节假日实际休息天数'"  )
+    @ExcelHeader(name = "法定节假日实际休息天数",notNull = true)
     private Double  legalRestDay;
 
     /**
      * 法定节假日加班天数
      */
-    @Column(name = "legalOvertimeDay",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '法定节假日加班天数'"  )
+    @ExcelHeader(name = "法定节假日加班天数",notNull = true)
     private Double  legalOvertimeDay;
 
     /**
      * 正常休息天数实际休息天数
      */
-    @Column(name = "normalRestDay",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '正常休息天数实际休息天数'"  )
+    @ExcelHeader(name = "正常休息天数实际休息天数",notNull = true)
     private Double  normalRestDay;
 
     /**
      * 正常休息天数加班天数
      */
-    @Column(name = "RestOvertimeDay",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '正常休息天数加班天数'"  )
+    @ExcelHeader(name = "正常休息天数加班天数",notNull = true)
     private Double  RestOvertimeDay;
 
     /**
      * 剩余加班天数
      */
-    @Column(name = "surplusOvertimeDay",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '剩余加班天数'"  )
+    @ExcelHeader(name = "剩余加班天数",notNull = true)
     private Double  surplusOvertimeDay;
 
     /**
      * 加班抵事假和其他假的天数
      */
-    @Column(name = "offsetOvertime",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '加班抵事假和其他假的天数'"  )
+    @ExcelHeader(name = "加班抵事假和其他假的天数",notNull = true)
     private Double  offsetOvertime;
 
     /**
      * 抵扣事假和其他假后剩余加班天数
      */
-    @Column(name = "effectiveOvertime",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '抵扣事假和其他假后剩余加班天数'"  )
+    @ExcelHeader(name = "抵扣事假和其他假后剩余加班天数",notNull = true)
     private Double  effectiveOvertime;
 
     /**
      * 月工作日
      */
-    @Column(name = "weekDays",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '月工作日'"  )
+    @ExcelHeader(name = "月工作日",notNull = true)
     private Double  weekDays;
 
     /**
      * 可享受带薪天数
      */
-    @Column(name = "paidDay",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '可享受带薪天数'"  )
+    @ExcelHeader(name = "可享受带薪天数",notNull = true)
     private Double  paidDay;
 
     /**
      * 备注
      */
-    @Column(name = "remark",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '备注'"  )
+    @ExcelHeader(name = "备注",notNull = true)
     private String  remark;
 
 
 
-    public LocalDate getPayStarTime () {
+    public String getPayStarTime () {
         return payStarTime;
     }
-    public void setPayStarTime (LocalDate payStarTime ) {
+    public void setPayStarTime (String payStarTime ) {
         this.payStarTime = payStarTime ;
     }
-    public LocalDate getPayEndTime () {
+    public String getPayEndTime () {
         return payEndTime;
     }
-    public void setPayEndTime (LocalDate payEndTime ) {
+    public void setPayEndTime (String payEndTime ) {
         this.payEndTime = payEndTime ;
     }
     public String getArea () {
@@ -415,16 +432,16 @@ public class SalaryInformation extends BaseEntity {
     public void setSkillLevel (String skillLevel ) {
         this.skillLevel = skillLevel ;
     }
-    public LocalDate getHiredate () {
+    public String getHiredate () {
         return hiredate;
     }
-    public void setHiredate (LocalDate hiredate ) {
+    public void setHiredate (String hiredate ) {
         this.hiredate = hiredate ;
     }
-    public LocalDate getPositiveTime () {
+    public String getPositiveTime () {
         return positiveTime;
     }
-    public void setPositiveTime (LocalDate positiveTime ) {
+    public void setPositiveTime (String positiveTime ) {
         this.positiveTime = positiveTime ;
     }
     public String getWorkingTime () {
@@ -445,27 +462,24 @@ public class SalaryInformation extends BaseEntity {
     public void setPostSalary (Double postSalary ) {
         this.postSalary = postSalary ;
     }
-//<<<<<<< HEAD
-//    public String getDepartment () {
-//        return department;
-//    }
-//    public void setDepartment (String department ) {
-//        this.department = department ;
-//    }
-//    public String getPosition () {
-//        return position;
-//    }
-//    public void setPosition (String position ) {
-//        this.position = position ;
-//    }
-//    public Double getBasePay () {
-//        return basePay;
-//    }
-//    public void setBasePay (Double basePay ) {
-//        this.basePay = basePay ;
-//    }
-//=======
-//>>>>>>> upstream/develop
+    public String getDepartment () {
+        return department;
+    }
+    public void setDepartment (String department ) {
+        this.department = department ;
+    }
+    public String getPosition () {
+        return position;
+    }
+    public void setPosition (String position ) {
+        this.position = position ;
+    }
+    public Double getBasePay () {
+        return basePay;
+    }
+    public void setBasePay (Double basePay ) {
+        this.basePay = basePay ;
+    }
     public Double getSkillPay () {
         return skillPay;
     }
@@ -676,5 +690,4 @@ public class SalaryInformation extends BaseEntity {
     public void setRemark (String remark ) {
         this.remark = remark ;
     }
-
 }

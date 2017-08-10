@@ -317,6 +317,7 @@ public class SalaryBasicSerImpl extends ServiceImpl<SalaryBasic, SalaryBasicDTO>
         super.remove(id);
     }
 
+
     @Override
     public void leadExcel(List<SalaryBasicTO> toList) throws SerException {
         UserBO userBO = userAPI.currentUser();
@@ -348,7 +349,6 @@ public class SalaryBasicSerImpl extends ServiceImpl<SalaryBasic, SalaryBasicDTO>
         byte[] bytes = ExcelUtil.clazzToExcel(toList,excel);
         return bytes;
     }
-
     @Override
     public byte[] templateExport() throws SerException {
         List<SalaryBasicSetExcel> salaryBasicSetExcels = new ArrayList<>();
@@ -366,6 +366,7 @@ public class SalaryBasicSerImpl extends ServiceImpl<SalaryBasic, SalaryBasicDTO>
         byte[] bytes = ExcelUtil.clazzToExcel(salaryBasicSetExcels,exce);
         return bytes;
     }
+
 
     @Override
     public Long count(SalaryBasicDTO dto) throws SerException {

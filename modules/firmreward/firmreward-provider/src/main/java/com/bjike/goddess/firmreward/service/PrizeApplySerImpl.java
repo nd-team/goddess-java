@@ -16,6 +16,7 @@ import com.bjike.goddess.firmreward.entity.PrizeApply;
 import com.bjike.goddess.firmreward.entity.PrizeDetail;
 import com.bjike.goddess.firmreward.enums.GuideAddrStatus;
 import com.bjike.goddess.firmreward.excel.SonPermissionObject;
+import com.bjike.goddess.firmreward.to.ApplyDetailTO;
 import com.bjike.goddess.firmreward.to.PrizeApplyTO;
 import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
@@ -291,7 +292,7 @@ public class PrizeApplySerImpl extends ServiceImpl<PrizeApply, PrizeApplyDTO> im
      * @throws SerException
      */
     @Override
-    public void addPrizeDetails(PrizeApplyTO to) throws SerException {
+    public void addPrizeDetails(ApplyDetailTO to) throws SerException {
         String prizeApplyId = to.getId();//奖品申请id
         String[] prizeDetails = to.getPrizeDetails();//奖品明细
         String[] prizeBuyWays = to.getPrizeBuyWays();//奖品购置途径
@@ -322,7 +323,7 @@ public class PrizeApplySerImpl extends ServiceImpl<PrizeApply, PrizeApplyDTO> im
      * @throws SerException
      */
     @Override
-    public void updatePrizeDetails(PrizeApplyTO to) throws SerException {
+    public void updatePrizeDetails(ApplyDetailTO to) throws SerException {
         String prizeApplyId = to.getId();//奖品申请id
         List<PrizeDetail> list = getPrizeDetailsByApplyId(prizeApplyId);
         prizeDetailSer.remove(list);
