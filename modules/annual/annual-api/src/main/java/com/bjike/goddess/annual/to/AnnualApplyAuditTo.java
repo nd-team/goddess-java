@@ -18,6 +18,7 @@ import javax.validation.constraints.NotNull;
 public class AnnualApplyAuditTo extends BaseTO {
 
     /**
+
      * 请假人
      */
     @NotBlank(message = "请假人不能为空", groups = EDIT.class)
@@ -33,14 +34,6 @@ public class AnnualApplyAuditTo extends BaseTO {
      */
     @NotNull(message = "审核结果不能为空", groups = EDIT.class)
     private Boolean fruit;
-
-    public String getInfoUsername() {
-        return infoUsername;
-    }
-
-    public void setInfoUsername(String infoUsername) {
-        this.infoUsername = infoUsername;
-    }
 
     public String getOpinion() {
         return opinion;

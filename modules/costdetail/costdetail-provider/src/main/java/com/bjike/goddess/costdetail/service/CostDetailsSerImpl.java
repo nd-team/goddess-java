@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -182,6 +183,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
                 laborCostDetail.setLaborCostFift(0d);
                 laborCostDetail.setLaborCostTwtenty(0d);
                 laborCostDetail.setLaborCostThirty(0d);
+                laborCostDetail.setLaborCostSum(0d);
                 laborCostDetailList.add(laborCostDetail);
             });
         }
@@ -199,6 +201,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
                 companyBorrowedDetail.setCompanyBorrowedFift(0d);
                 companyBorrowedDetail.setCompanyBorrowedTwtenty(0d);
                 companyBorrowedDetail.setCompanyBorrowedThirty(0d);
+                companyBorrowedDetail.setCompanyBorrowedSum(0d);
                 companyBorrowedDetailList.add(companyBorrowedDetail);
             });
         }
@@ -216,6 +219,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
                 paidCapitalDetail.setPaidCapitalFift(0d);
                 paidCapitalDetail.setPaidCapitalTwtenty(0d);
                 paidCapitalDetail.setPaidCapitalThirty(0d);
+                paidCapitalDetail.setPaidCapitalSum(0d);
                 paidCapitalDetailList.add(paidCapitalDetail);
             });
         }
@@ -232,6 +236,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
                 companyLendDetail.setCompanyLendTen(0d);
                 companyLendDetail.setCompanyLendFift(0d);
                 companyLendDetail.setCompanyLendTwtenty(0d);
+                companyLendDetail.setCompanyLendThirty(0d);
                 companyLendDetail.setCompanyLendSum(0d);
                 companyLendDetailList.add(companyLendDetail);
             });
@@ -250,6 +255,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
                 businessIncomeDetail.setBusinessIncomeFift(0d);
                 businessIncomeDetail.setBusinessIncomeTwtenty(0d);
                 businessIncomeDetail.setBusinessIncomeThirty(0d);
+                businessIncomeDetail.setBusinessIncomeSum(0d);
                 businessIncomeDetailList.add(businessIncomeDetail);
             });
         }
@@ -486,7 +492,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         BeanTransform.copyProperties(paidMoneyTO, costDetails);
         BeanTransform.copyProperties(costPayeMoneyTO, costDetails);
 
-        String date = StringUtils.substring(costDetailsAddEditTO.getCostTime(), 0, -2) + "02";
+        String date = StringUtils.substring(costDetailsAddEditTO.getCostTime(), 0, -2) + "01";
         costDetails.setCreateTime(LocalDateTime.now());
         costDetails.setCostTime(DateUtil.parseDate(date));
         costDetails.setDepartment(costDetailsAddEditTO.getDepartment());
@@ -978,6 +984,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         checkPermission();
         CostDetails costDetails = super.findById(id);
 
+
         List<LaborCostDetailBO> laborCostDetailBOList = new ArrayList<>();
         List<CompanyBorrowedDetailBO> companyBorrowedDetailBOList = new ArrayList<>();
         List<PaidCapitalDetailBO> paidCapitalDetailBOList = new ArrayList<>();
@@ -1006,6 +1013,75 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
             companyLendDetailBOList.add(companyLendDetailBO);
         }
         List<BusinessIncomeDetail> businessIncomeDetails = businessIncomeDetailSer.findByCostId(id);
+        for (BusinessIncomeDetail businessIncomeDetail : businessIncomeDetails) {
+            BusinessIncomeDetailBO businessIncomeDetailBO = BeanTransform.copyProperties(businessIncomeDetail, BusinessIncomeDetailBO.class);
+            businessIncomeDetailBOList.add(businessIncomeDetailBO);
+        }
+        costDetailsAddEditBO.setLaborCostDetailList(laborCostDetailBOList);
+        costDetailsAddEditBO.setCompanyBorrowedDetailList(companyBorrowedDetailBOList);
+        costDetailsAddEditBO.setPaidCapitalDetailList(paidCapitalDetailBOList);
+        costDetailsAddEditBO.setCompanyLendDetailList(companyLendDetailBOList);
+        costDetailsAddEditBO.setBusinessIncomeDetailList(businessIncomeDetailBOList);
+
+        return costDetailsAddEditBO;
+    }
+
+    @Override
+    public CostDetailsAddEditBO listDetail(CostDetailsDTO costDetailsDTO) throws SerException {
+        checkPermission();
+        CostDetails costDetails = new CostDetails();
+        if(StringUtils.isBlank(costDetailsDTO.getCostTime()) && StringUtils.isBlank(costDetailsDTO.getDepartment())){
+            costDetailsDTO.getSorts().add("createTime=desc");
+            List<CostDetails> costDetailsList = super.findByCis(costDetailsDTO);
+            if(costDetailsList != null && costDetailsList.size()>0){
+                costDetails = costDetailsList.get(0);
+            }else{
+                return new CostDetailsAddEditBO();
+            }
+        }else{
+            if(StringUtils.isBlank(costDetailsDTO.getCostTime())){
+                throw new SerException("日期不能为空");
+            }
+            if(StringUtils.isBlank(costDetailsDTO.getDepartment())){
+                throw new SerException("部门不能为空");
+            }
+            searchCondition(costDetailsDTO);
+            List<CostDetails> costDetailsList = super.findByCis(costDetailsDTO);
+            if(costDetailsList != null && costDetailsList.size()>0){
+                costDetails = costDetailsList.get(0);
+            }else{
+                return new CostDetailsAddEditBO();
+            }
+        }
+
+        List<LaborCostDetailBO> laborCostDetailBOList = new ArrayList<>();
+        List<CompanyBorrowedDetailBO> companyBorrowedDetailBOList = new ArrayList<>();
+        List<PaidCapitalDetailBO> paidCapitalDetailBOList = new ArrayList<>();
+        List<CompanyLendDetailBO> companyLendDetailBOList = new ArrayList<>();
+        List<BusinessIncomeDetailBO> businessIncomeDetailBOList = new ArrayList<>();
+
+        CostDetailsAddEditBO costDetailsAddEditBO = BeanTransform.copyProperties(costDetails, CostDetailsAddEditBO.class);
+        List<LaborCostDetail> laborCostDetails = laborCostDetailSer.findByCostId(costDetails.getId());
+        for (LaborCostDetail laborCostDetail : laborCostDetails) {
+            LaborCostDetailBO laborCostDetailBO = BeanTransform.copyProperties(laborCostDetail, LaborCostDetailBO.class);
+            laborCostDetailBOList.add(laborCostDetailBO);
+        }
+        List<CompanyBorrowedDetail> companyBorrowedDetails = companyBorrowedDetailSer.findByCostId(costDetails.getId());
+        for (CompanyBorrowedDetail companyBorrowedDetail : companyBorrowedDetails) {
+            CompanyBorrowedDetailBO companyBorrowedDetailBO = BeanTransform.copyProperties(companyBorrowedDetail, CompanyBorrowedDetailBO.class);
+            companyBorrowedDetailBOList.add(companyBorrowedDetailBO);
+        }
+        List<PaidCapitalDetail> paidCapitalDetails = paidCapitalDetailSer.findByCostId(costDetails.getId());
+        for (PaidCapitalDetail paidCapitalDetail : paidCapitalDetails) {
+            PaidCapitalDetailBO paidCapitalDetailBO = BeanTransform.copyProperties(paidCapitalDetail, PaidCapitalDetailBO.class);
+            paidCapitalDetailBOList.add(paidCapitalDetailBO);
+        }
+        List<CompanyLendDetail> companyLendDetails = companyLendDetailSer.findByCostId(costDetails.getId());
+        for (CompanyLendDetail companyLendDetail : companyLendDetails) {
+            CompanyLendDetailBO companyLendDetailBO = BeanTransform.copyProperties(companyLendDetail, CompanyLendDetailBO.class);
+            companyLendDetailBOList.add(companyLendDetailBO);
+        }
+        List<BusinessIncomeDetail> businessIncomeDetails = businessIncomeDetailSer.findByCostId(costDetails.getId());
         for (BusinessIncomeDetail businessIncomeDetail : businessIncomeDetails) {
             BusinessIncomeDetailBO businessIncomeDetailBO = BeanTransform.copyProperties(businessIncomeDetail, BusinessIncomeDetailBO.class);
             businessIncomeDetailBOList.add(businessIncomeDetailBO);
@@ -2386,6 +2462,22 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
             String details = departmentDetailBO.getDepartment();
             if (StringUtils.isNotBlank(departmentDetailBO.getDepartment())) {
                 set.add(details);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> findDate() throws SerException {
+        List<CostDetails> costDetailsList = super.findAll();
+        if (CollectionUtils.isEmpty(costDetailsList)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (CostDetails costDetails : costDetailsList) {
+            String costTime = costDetails.getCostTime().toString();
+            if (StringUtils.isNotBlank(costTime)) {
+                set.add(costTime);
             }
         }
         return new ArrayList<>(set);

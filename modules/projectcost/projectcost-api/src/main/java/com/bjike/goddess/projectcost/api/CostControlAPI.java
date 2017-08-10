@@ -125,4 +125,31 @@ public interface CostControlAPI {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+    /**
+     * 获取所有的地区
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAllArea() throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有的项目名称
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAllName() throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有的项目组
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAllGroup() throws SerException {
+        return null;
+    }
 }

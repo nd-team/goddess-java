@@ -1,5 +1,6 @@
 package com.bjike.goddess.attainment.api;
 
+import com.bjike.goddess.attainment.bo.QuestionCheckBO;
 import com.bjike.goddess.attainment.bo.SurveyQuestionnaireOptionBO;
 import com.bjike.goddess.attainment.service.SurveyQuestionnaireOptionSer;
 import com.bjike.goddess.attainment.to.GuidePermissionTO;
@@ -53,5 +54,10 @@ public class SurveyQuestionnaireOptionApiImpl implements SurveyQuestionnaireOpti
     @Override
     public List<SurveyQuestionnaireOptionBO> findByQuestion(String questionnaire_id) throws SerException {
         return surveyQuestionnaireOptionSer.findByQuestion(questionnaire_id);
+    }
+
+    @Override
+    public List<QuestionCheckBO> findQuesCheck() throws SerException {
+        return surveyQuestionnaireOptionSer.findQuesCheck();
     }
 }

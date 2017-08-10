@@ -17,7 +17,7 @@ public class SurveyPlanAuditVO {
     private String id;
 
     /**
-     * 调研计划
+     * 调研计划id
      */
     private String planId;
 
@@ -30,11 +30,6 @@ public class SurveyPlanAuditVO {
      * 岗位
      */
     private String position;
-
-    /**
-     * 部门
-     */
-    private String department;
 
     /**
      * 是否通过
@@ -82,14 +77,6 @@ public class SurveyPlanAuditVO {
 
     public void setPosition(String position) {
         this.position = position;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
     }
 
     public Boolean isPass() {

@@ -1,6 +1,7 @@
 package com.bjike.goddess.attainment.service;
 
 import com.bjike.goddess.attainment.bo.SurveyAnalyseBO;
+import com.bjike.goddess.attainment.bo.SurveyPlanBO;
 import com.bjike.goddess.attainment.dto.SurveyAnalyseDTO;
 import com.bjike.goddess.attainment.entity.SurveyAnalyse;
 import com.bjike.goddess.attainment.enums.GuideAddrStatus;
@@ -44,7 +45,9 @@ public class SurveyAnalyseSerImpl extends ServiceImpl<SurveyAnalyse, SurveyAnaly
     private CusPermissionSer cusPermissionSer;
 
     private SurveyAnalyseBO transformBO(SurveyAnalyse entity) throws SerException {
-        SurveyAnalyseBO bo = BeanTransform.copyProperties(surveyPlanSer.findBOById(entity.getPlan().getId()), SurveyAnalyseBO.class);
+        SurveyPlanBO surveyPlanBO = surveyPlanSer.findBOById(entity.getPlan().getId());
+        SurveyAnalyseBO bo = BeanTransform.copyProperties(surveyPlanBO, SurveyAnalyseBO.class);
+
         bo.setPlanId(entity.getPlan().getId());
         BeanTransform.copyProperties(entity, bo, true);
         return bo;
@@ -60,8 +63,10 @@ public class SurveyAnalyseSerImpl extends ServiceImpl<SurveyAnalyse, SurveyAnaly
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyAnalyseBO save(SurveyAnalyseTO to) throws SerException {
+        UserBO userBO = userAPI.currentUser();
         SurveyAnalyse entity = BeanTransform.copyProperties(to, SurveyAnalyse.class);
         entity.setPlan(surveyPlanSer.findById(to.getPlanId()));
+        entity.setAssayer(userBO.getUsername());
         if (null == entity.getPlan())
             throw new SerException("调研计划不存在,无法保存");
         super.save(entity);

@@ -4,6 +4,7 @@ import com.bjike.goddess.attainment.enums.SurveyStatus;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -22,28 +23,14 @@ public class SurveyActualizesTO extends BaseTO {
     /**
      * 调研计划id
      */
-    @NotNull(message = "调研计划id不能为空", groups = {ADD.class})
+    @NotNull(message = "调研计划id不能为空", groups = {ADD.class,EDIT.class})
     private String planId;
-
-    /**
-     * 调研实际开始时间
-     */
-    private String startTime;
-
-    /**
-     * 调研实际结束时间
-     */
-    private String endTime;
 
     /**
      * 调研表制作实际完成时间
      */
+    @NotBlank(message = "调研表制作实际完成时间不能为空", groups = {ADD.class,EDIT.class})
     private String finishTime;
-
-    /**
-     * 调研状态
-     */
-    private SurveyStatus survey;
 
     /**
      * 调研表
@@ -69,36 +56,12 @@ public class SurveyActualizesTO extends BaseTO {
         this.planId = planId;
     }
 
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
-    }
-
     public String getFinishTime() {
         return finishTime;
     }
 
     public void setFinishTime(String finishTime) {
         this.finishTime = finishTime;
-    }
-
-    public SurveyStatus getSurvey() {
-        return survey;
-    }
-
-    public void setSurvey(SurveyStatus survey) {
-        this.survey = survey;
     }
 
     public String getQuestionnaire() {

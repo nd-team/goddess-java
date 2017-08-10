@@ -17,7 +17,6 @@ import com.bjike.goddess.salarymanage.to.SalaryInformationTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -42,7 +41,6 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
     private UserAPI userAPI;
     @Override
     public List<SalaryInformationBO> pageList(SalaryInformationDTO dto) throws SerException {
-        //todo 还没有添加权限 规划人能查看所有的 还能根据名称来查找,默认是查找所有的
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         if(dto.getPayStarTime() != null && dto.getPayEndTime() != null){
