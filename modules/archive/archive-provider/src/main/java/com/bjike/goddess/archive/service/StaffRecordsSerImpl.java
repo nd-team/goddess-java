@@ -2,12 +2,15 @@ package com.bjike.goddess.archive.service;
 
 import com.bjike.goddess.archive.bo.PerBO;
 import com.bjike.goddess.archive.bo.StaffNameBO;
+import com.bjike.goddess.archive.bo.StaffRecords1BO;
 import com.bjike.goddess.archive.bo.StaffRecordsBO;
 import com.bjike.goddess.archive.dto.StaffRecordsDTO;
 import com.bjike.goddess.archive.entity.StaffRecords;
+import com.bjike.goddess.archive.entity.StaffRecords1Excel;
 import com.bjike.goddess.archive.entity.StaffRecordsExcel;
 import com.bjike.goddess.archive.enums.GuideAddrStatus;
 import com.bjike.goddess.archive.to.GuidePermissionTO;
+import com.bjike.goddess.archive.to.StaffRecords1ExcelTO;
 import com.bjike.goddess.archive.to.StaffRecordsExcelTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -23,7 +26,6 @@ import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.entity.EntryRegister;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import org.hibernate.engine.spi.EntityUniqueKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -216,6 +218,14 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
 
     }
 
+    private void isExist(StaffRecords1ExcelTO to, Integer row) throws SerException {
+        if (this.findByName(to.getUsername()) != null)
+            throw new SerException(String.format("第%d行的姓名已存在", row));
+        if (this.findByNumber(to.getSerialNumber()) != null)
+            throw new SerException(String.format("第%d行的员工编号已存在", row));
+
+    }
+
     @Override
     public StaffRecordsBO findByName(String username) throws SerException {
         StaffRecordsDTO dto = new StaffRecordsDTO();
@@ -241,7 +251,7 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
     @Override
     public List<StaffRecordsBO> maps(StaffRecordsDTO dto) throws SerException {
         dto.getSorts().add("serialNumber=desc");
-        dto.getConditions().add(Restrict.eq("status",Status.THAW));
+        dto.getConditions().add(Restrict.eq("status", Status.THAW));
         return BeanTransform.copyProperties(super.findByPage(dto), StaffRecordsBO.class);
     }
 
@@ -256,6 +266,7 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
     @Override
     public Long getTotal() throws SerException {
         StaffRecordsDTO dto = new StaffRecordsDTO();
+        dto.getConditions().add(Restrict.eq("status", Status.THAW));
         return super.count(dto);
     }
 
@@ -353,13 +364,13 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
     }
 
     @Override
-    public void dimissionUpload(List<StaffRecordsExcelTO> toList) throws SerException {
+    public void dimissionUpload(List<StaffRecords1ExcelTO> toList) throws SerException {
         for (int i = 1; i <= toList.size(); i++) {
             this.isExist(toList.get(i - 1), i);
         }
         List<StaffRecords> list = BeanTransform.copyProperties(toList, StaffRecords.class, true);
-        if(null != list && list.size() > 0){
-            for(StaffRecords entity : list){
+        if (null != list && list.size() > 0) {
+            for (StaffRecords entity : list) {
                 entity.setStatus(Status.CONGEAL);
             }
         }
@@ -367,10 +378,27 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
     }
 
     @Override
-    public List<StaffRecordsBO> dimissionMaps(StaffRecordsDTO dto) throws SerException {
+    public List<StaffRecords1BO> dimissionMaps(StaffRecordsDTO dto) throws SerException {
         dto.getSorts().add("serialNumber=desc");
-        dto.getConditions().add(Restrict.eq("status",Status.CONGEAL));
-        return BeanTransform.copyProperties(super.findByPage(dto), StaffRecordsBO.class);
+        dto.getConditions().add(Restrict.eq("status", Status.CONGEAL));
+        return BeanTransform.copyProperties(super.findByPage(dto), StaffRecords1BO.class);
+    }
+
+    @Override
+    public Long count() throws SerException {
+        StaffRecordsDTO dto = new StaffRecordsDTO();
+        dto.getConditions().add(Restrict.eq("status", Status.CONGEAL));
+        return super.count(dto);
+    }
+
+    @Override
+    public byte[] templateDimissionExcel() throws SerException {
+        List<StaffRecords1Excel> toList = new ArrayList<>(0);
+        StaffRecords1Excel staffRecordsExcel = new StaffRecords1Excel();
+        toList.add(staffRecordsExcel);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        return bytes;
     }
 
 //    private void isExist(StaffRecordsExcelTO to, Integer row) throws SerException {

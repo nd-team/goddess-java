@@ -7,8 +7,10 @@ import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.salarymanage.bo.SalaryBasicBO;
 import com.bjike.goddess.salarymanage.dto.SalaryBasicDTO;
+import com.bjike.goddess.salarymanage.excel.SonPermissionObject;
 import com.bjike.goddess.salarymanage.service.SalaryBasicSer;
 import com.bjike.goddess.salarymanage.to.ExportSalaryBasicTO;
+import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
 import com.bjike.goddess.salarymanage.to.SalaryBasicTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -82,6 +84,7 @@ public class SalaryBasicApiImpl implements SalaryBasicAPI  {
         return salaryBasicSer.exportExcel(to);
     }
 
+
     @Override
     public byte[] templateExport() throws SerException {
         return salaryBasicSer.templateExport();
@@ -90,5 +93,20 @@ public class SalaryBasicApiImpl implements SalaryBasicAPI  {
     @Override
     public List<SalaryBasicBO> pageList(SalaryBasicDTO dto) throws SerException {
         return salaryBasicSer.pageList(dto);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return salaryBasicSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return salaryBasicSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public Long count(SalaryBasicDTO dto) throws SerException {
+        return salaryBasicSer.count(dto);
     }
 }

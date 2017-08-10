@@ -9,21 +9,22 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.interiorrecommend.api.AwardInfoAPI;
 import com.bjike.goddess.interiorrecommend.api.RecommendInfoAPI;
+import com.bjike.goddess.interiorrecommend.bo.AwardInfoBO;
 import com.bjike.goddess.interiorrecommend.dto.AwardInfoDTO;
+import com.bjike.goddess.interiorrecommend.dto.RecommendInfoDTO;
+import com.bjike.goddess.interiorrecommend.entity.AwardInfo;
 import com.bjike.goddess.interiorrecommend.excel.SonPermissionObject;
 import com.bjike.goddess.interiorrecommend.to.AwardInfoTO;
 import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.vo.AwardInfoVO;
 import com.bjike.goddess.interiorrecommend.vo.AwardStandardVO;
+import com.bjike.goddess.interiorrecommend.vo.RecommendInfoVO;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.organize.entity.UserSetPermission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -123,15 +124,15 @@ public class AwardInfoAct {
 
 
     /**
-     * 推荐信息列表
-     * @return class AwardStandardVO
+     * 审核通过的推荐信息列表
+     * @return class RecommendInfoVO
      * @version v1
      */
     @LoginAuth
     @GetMapping("v1/awardlist")
     public Result pageList() throws ActException {
         try {
-            List<AwardStandardVO> voList = BeanTransform.copyProperties(recommendInfoAPI.awardlist(), AwardStandardVO.class);
+            List<RecommendInfoVO> voList = BeanTransform.copyProperties(recommendInfoAPI.awardlist(), RecommendInfoVO.class,true);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -156,19 +157,53 @@ public class AwardInfoAct {
     }
 
     /**
-     * 列表
+     * 推荐信息列表为了给编辑时的下拉列表使用
      *
      * @param dto 分页条件
-     * @return class AwardStandardVO
+     * @return class RecommendInfoVO
      * @version v1
      */
     @LoginAuth
     @GetMapping("v1/list")
-    public Result pageList(AwardInfoDTO dto) throws ActException {
+    public Result pageList(RecommendInfoDTO dto) throws ActException {
         try {
-            List<AwardStandardVO> voList = BeanTransform.copyProperties(awardInfoAPI.pageList(dto), AwardStandardVO.class);
+            List<RecommendInfoVO> voList = BeanTransform.copyProperties(awardInfoAPI.pageList(dto), RecommendInfoVO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id来查询推荐奖励信息
+     * @param id
+     * @return class AwardInfoVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/one/{id}")
+    public Result findOne(@PathVariable String id) throws ActException{
+        try {
+            AwardInfoBO bo = awardInfoAPI.findOne(id);
+            AwardInfoVO vo = BeanTransform.copyProperties(bo,AwardInfoVO.class);
+            return ActResult.initialize(vo);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 列表总条数
+     * @param dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(AwardInfoDTO dto) throws ActException{
+        try{
+            Long count = awardInfoAPI.count(dto);
+            return ActResult.initialize(count);
+        }catch (SerException e){
             throw new ActException(e.getMessage());
         }
     }

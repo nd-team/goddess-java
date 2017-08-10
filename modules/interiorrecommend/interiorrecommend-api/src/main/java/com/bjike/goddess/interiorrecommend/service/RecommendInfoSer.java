@@ -100,4 +100,19 @@ public interface RecommendInfoSer extends Ser<RecommendInfo, RecommendInfoDTO> {
      * @throws SerException
      */
     List<String[]> findRequire() throws SerException;
+
+
+    /**
+     * 根据id来查询推荐信息
+     * @param id
+     * @throws SerException
+     */
+    RecommendInfoBO findOne(String id) throws SerException;
+
+    /**
+     * 查询列表总条数
+     *
+     * @param dto 查询条件
+     */
+    Long count(RecommendInfoDTO dto) throws SerException;
 }

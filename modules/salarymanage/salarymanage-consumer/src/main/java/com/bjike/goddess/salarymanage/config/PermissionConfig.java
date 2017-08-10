@@ -2,6 +2,9 @@ package com.bjike.goddess.salarymanage.config;
 
 import com.bjike.goddess.common.api.exception.SerException;
 
+import com.bjike.goddess.salarymanage.api.CusPermissionAPI;
+import com.bjike.goddess.salarymanage.enums.CusPermissionType;
+import com.bjike.goddess.salarymanage.to.CusPermissionTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;

@@ -29,9 +29,14 @@ public class CostControlBO extends BaseBO {
     private String name;
 
     /**
-     * 時間
+     * 年份
      */
-    private String time;
+    private Integer year;
+
+    /**
+     * 月份
+     */
+    private Integer month;
 
     /**
      * 目标收入
@@ -138,12 +143,20 @@ public class CostControlBO extends BaseBO {
         this.name = name;
     }
 
-    public String getTime() {
-        return time;
+    public Integer getYear() {
+        return year;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
     }
 
     public Double getTargetIncome() {

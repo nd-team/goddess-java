@@ -138,7 +138,7 @@ public class DimissionInfoAct extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/apply")
-    public Result apply(@Validated(ADD.class) DimissionInfoTO to, BindingResult result) throws ActException {
+    public Result apply(@Validated(ADD.class) DimissionInfoAddEditTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.apply(to), DimissionInfoVO.class));
         } catch (SerException e) {
@@ -147,16 +147,16 @@ public class DimissionInfoAct extends BaseFileAction {
     }
 
     /**
-     * 编辑
+     * 申请离职编辑
      *
      * @param to 离职信息传输对象
      * @return class DimissionInfoVO
      * @version v1
      */
-    @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) DimissionInfoTO to, BindingResult result) throws ActException {
+    @PutMapping("v1/applyUpdate/{id}")
+    public Result applyUpdate(@Validated(EDIT.class) DimissionInfoAddEditTO to, BindingResult result) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.update(to), DimissionInfoVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.applyUpdate(to), DimissionInfoVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -170,9 +170,25 @@ public class DimissionInfoAct extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/presume")
-    public Result presume(@Validated(ADD.class) DimissionInfoTO to, BindingResult result) throws ActException {
+    public Result presume(@Validated(ADD.class) FromInfoTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.presume(to), DimissionInfoVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 自离信息编辑
+     *
+     * @param to 离职信息传输对象
+     * @return class DimissionInfoVO
+     * @version v1
+     */
+    @PutMapping("v1/preUpdate/{id}")
+    public Result update(@Validated(EDIT.class) FromInfoTO to, BindingResult result) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.preUpdate(to), DimissionInfoVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

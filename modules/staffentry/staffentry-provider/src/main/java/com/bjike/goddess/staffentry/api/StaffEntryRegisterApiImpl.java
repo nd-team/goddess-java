@@ -4,7 +4,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffentry.bo.StaffEntryRegisterBO;
 import com.bjike.goddess.staffentry.dto.StaffEntryRegisterDTO;
 import com.bjike.goddess.staffentry.service.StaffEntryRegisterSer;
+import com.bjike.goddess.staffentry.to.GuidePermissionTO;
+import com.bjike.goddess.staffentry.to.StaffEntryRegisterEmailTO;
 import com.bjike.goddess.staffentry.to.StaffEntryRegisterTO;
+import com.bjike.goddess.staffentry.vo.SonPermissionObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +27,16 @@ public class StaffEntryRegisterApiImpl implements StaffEntryRegisterAPI {
 
     @Autowired
     private StaffEntryRegisterSer staffEntryRegisterSer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return staffEntryRegisterSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return staffEntryRegisterSer.guidePermission( guidePermissionTO );
+    }
 
     @Override
     public Long countStaffEntryRegister(StaffEntryRegisterDTO staffEntryRegisterDTO) throws SerException {
@@ -59,5 +72,10 @@ public class StaffEntryRegisterApiImpl implements StaffEntryRegisterAPI {
     @Override
     public String maxEmpNumber() throws SerException {
         return staffEntryRegisterSer.maxEmpNumber();
+    }
+
+    @Override
+    public void sendAccountToEmp(StaffEntryRegisterEmailTO staffEntryRegisterEmailTO) throws SerException {
+        staffEntryRegisterSer.sendAccountToEmp( staffEntryRegisterEmailTO );
     }
 }

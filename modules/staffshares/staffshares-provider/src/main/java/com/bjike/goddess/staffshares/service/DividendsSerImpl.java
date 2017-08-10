@@ -7,15 +7,16 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 /**
-* 干股分红表业务实现
-* @Author:			[ zhuangkaiqin ]
-* @Date:			[  2017-08-04 11:14 ]
-* @Description:	[ 干股分红表业务实现 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
-*/
-@CacheConfig(cacheNames ="staffsharesSerCache")
+ * 干股分红表业务实现
+ *
+ * @Author: [ zhuangkaiqin ]
+ * @Date: [ 2017-08-04 11:14 ]
+ * @Description: [ 干股分红表业务实现 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+@CacheConfig(cacheNames = "staffsharesSerCache")
 @Service
-public class DividendsSerImpl extends ServiceImpl<Dividends, DividendsDTO> implements DividendsSer { 
+public class DividendsSerImpl extends ServiceImpl<Dividends, DividendsDTO> implements DividendsSer {
 
- }
+}

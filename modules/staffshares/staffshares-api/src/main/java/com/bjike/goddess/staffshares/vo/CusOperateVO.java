@@ -17,7 +17,6 @@ public class CusOperateVO {
     private String id;
 
 
-
     /**
      * 操作对象
      */

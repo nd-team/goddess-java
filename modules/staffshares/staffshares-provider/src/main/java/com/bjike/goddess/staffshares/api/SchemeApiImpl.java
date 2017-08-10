@@ -7,22 +7,22 @@ import com.bjike.goddess.staffshares.bo.SchemeIssueBO;
 import com.bjike.goddess.staffshares.dto.SchemeDTO;
 import com.bjike.goddess.staffshares.service.SchemeSer;
 import com.bjike.goddess.staffshares.to.SchemeApplyTO;
-import com.bjike.goddess.staffshares.to.SchemeTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
-* 员工持股管理业务接口实现
-* @Author:			[ zhuangkaiqin ]
-* @Date:			[  2017-08-04 08:59 ]
-* @Description:	[ 员工持股管理业务接口实现 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
-*/
+ * 员工持股管理业务接口实现
+ *
+ * @Author: [ zhuangkaiqin ]
+ * @Date: [ 2017-08-04 08:59 ]
+ * @Description: [ 员工持股管理业务接口实现 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
 @Service("schemeApiImpl")
-public class SchemeApiImpl implements SchemeAPI  {
+public class SchemeApiImpl implements SchemeAPI {
     @Autowired
     private SchemeSer schemeSer;
 
@@ -62,14 +62,9 @@ public class SchemeApiImpl implements SchemeAPI  {
     }
 
     @Override
-    public void issue(String id ) throws SerException {
+    public void issue(String id) throws SerException {
         schemeSer.issue(id);
     }
-
-
-
-
-
 
 
     @Override

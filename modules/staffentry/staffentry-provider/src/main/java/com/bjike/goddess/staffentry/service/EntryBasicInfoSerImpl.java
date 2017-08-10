@@ -5,6 +5,12 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.regex.Validator;
+import com.bjike.goddess.message.api.MessageAPI;
+import com.bjike.goddess.message.enums.MsgType;
+import com.bjike.goddess.message.enums.RangeType;
+import com.bjike.goddess.message.enums.SendType;
+import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.bo.EntryOptionBO;
 import com.bjike.goddess.staffentry.bo.FindNameBO;
@@ -12,8 +18,11 @@ import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
 import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
 import com.bjike.goddess.staffentry.entity.EntryRegister;
+import com.bjike.goddess.staffentry.enums.GuideAddrStatus;
 import com.bjike.goddess.staffentry.to.EntryBasicInfoTO;
+import com.bjike.goddess.staffentry.to.GuidePermissionTO;
 import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
+import com.bjike.goddess.staffentry.vo.SonPermissionObject;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -49,8 +58,8 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
     private EntryRegisterSer entryRegisterSer;
     @Autowired
     private UserAPI userAPI;
-//    @Autowired
-//    private MessageAPI messageAPI;
+    @Autowired
+    private MessageAPI messageAPI;
 
 
     /**
@@ -59,20 +68,65 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
      * @param idFlag
      * @throws SerException
      */
-    private void checkDepartIdentity(String idFlag) throws SerException {
+    private Boolean checkDepartIdentity(String idFlag) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        Boolean flag = false;
+        Boolean flag = true;
         if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.busCusPermission(idFlag);
-            if( !flag){
-                throw new SerException("你不是相应部门的人员，不能进行操作");
-            }
+//            if( !flag){
+//                throw new SerException("你不是相应部门的人员，不能进行操作");
+//            }
+        }
+        return flag;
+    }
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = checkDepartIdentity("3");
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = checkDepartIdentity("6");
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
         }
     }
 
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = checkDepartIdentity("3");
+                break;
+            case ADD:
+                flag = checkDepartIdentity("6");
+                break;
+            case EDIT:
+                flag = checkDepartIdentity("6");
+                break;
+            case DELETE:
+                flag = checkDepartIdentity("6");
+                break;
+            case COLLECT:
+                flag = checkDepartIdentity("3");
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
 
     @Override
     public Long countEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
@@ -82,8 +136,6 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
 
     @Override
     public List<EntryBasicInfoBO> listEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
-        //checkDepartIdentity("3");
-
         List<EntryBasicInfo> entryBasicInfos = super.findByPage(entryBasicInfoDTO);
         List<EntryBasicInfoBO> boList = BeanTransform.copyProperties(entryBasicInfos, EntryBasicInfoBO.class);
         return boList;
@@ -103,8 +155,6 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
     @Override
     @Transactional(rollbackFor = SerException.class)
     public EntryBasicInfoBO insertEntryBasicInfo(EntryBasicInfoTO entryBasicInfoTO) throws SerException {
-        checkDepartIdentity("7");
-
         EntryBasicInfo entryBasicInfo = BeanTransform.copyProperties(entryBasicInfoTO, EntryBasicInfo.class, true);
         try {
             entryBasicInfo.setCreateTime(LocalDateTime.now());
@@ -118,7 +168,6 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
     @Transactional(rollbackFor = SerException.class)
     @Override
     public EntryBasicInfoBO editEntryBasicInfo(EntryBasicInfoTO entryBasicInfoTO) throws SerException {
-        checkDepartIdentity("7");
 
         if (StringUtils.isBlank(entryBasicInfoTO.getId())) {
             throw new SerException("id不能为空");
@@ -139,7 +188,6 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeEntryBasicInfo(String id) throws SerException {
-        checkDepartIdentity("7");
 
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
@@ -156,14 +204,14 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
     public EntryBasicInfoBO sendEntryBasicInfo(EntryBasicInfoTO entryBasicInfoTO) throws SerException {
         EntryBasicInfo entryBasicInfo = new EntryBasicInfo();
         if (entryBasicInfoTO != null) {
-            if (StringUtils.isNotBlank(entryBasicInfoTO.getId()) && StringUtils.isNotBlank(entryBasicInfoTO.getEmails())) {
+            if (StringUtils.isNotBlank(entryBasicInfoTO.getId()) && null != entryBasicInfoTO.getEmails() && entryBasicInfoTO.getEmails().length > 0) {
+                for (String email : entryBasicInfoTO.getEmails()) {
+                    if (!Validator.isEmail(email)) {
+                        throw new SerException("邮箱书写不正确");
+                    }
+                }
                 entryBasicInfo = super.findById(entryBasicInfoTO.getId());
 
-                List<String> emails = new ArrayList<>(0);
-                //TODO: tanghaixiang 2017-03-10 未做邮件发送邮箱
-//                MessageTO messageTO = new MessageTO();
-//                messageTO.setTitle("入职通告" );
-                //emails.add(internals.get(0).getEmail());
                 StringBuffer content = new StringBuffer("");
                 content.append(" 员工编号：" + entryBasicInfoTO.getEmployeeID())
                         .append(" 姓名:" + entryBasicInfoTO.getName())
@@ -176,15 +224,22 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
                         .append(" 入职项目组:" + entryBasicInfoTO.getProjectGroup())
                         .append(" 入职岗位:" + entryBasicInfoTO.getPosition())
                 ;
-//                messageTO.setContent( content.toString() );
-//                Email email = new Email("入职通告", content.toString());
-//                email.initEmailInfo("培训信息通知邮件内容", emails );
 
-                try {
-//                    messageAPI.send(messageTO);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                //发邮件
+                String messageContent = "培训信息通知邮件内容: " + content.toString();
+                MessageTO messageTO = new MessageTO();
+                messageTO.setContent(messageContent);
+                messageTO.setTitle("入职通告");
+                messageTO.setMsgType(MsgType.SYS);
+                messageTO.setSendType(SendType.EMAIL);
+                messageTO.setRangeType(RangeType.SPECIFIED);
+                //定时发送必须写
+                messageTO.setSenderId("SYSTEM");
+                messageTO.setSenderName("SYSTEM");
+
+                messageTO.setReceivers(entryBasicInfoTO.getEmails());
+                messageAPI.send(messageTO);
+
 
                 /**
                  * 修改邮件发送对象
@@ -205,8 +260,6 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
 
     @Override
     public List<EntryBasicInfoBO> collectEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
-        checkDepartIdentity("6");
-
         //多选职位
         if (entryBasicInfoDTO == null) {
             throw new SerException("您好!查询条件为空,无法进行查询!");

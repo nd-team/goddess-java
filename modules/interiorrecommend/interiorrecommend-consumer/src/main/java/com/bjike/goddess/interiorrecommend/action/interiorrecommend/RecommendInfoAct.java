@@ -9,6 +9,7 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.interiorrecommend.api.RecommendInfoAPI;
+import com.bjike.goddess.interiorrecommend.bo.RecommendInfoBO;
 import com.bjike.goddess.interiorrecommend.bo.RecommendRequireBO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendInfoDTO;
 import com.bjike.goddess.interiorrecommend.entity.RecommendRequire;
@@ -164,7 +165,7 @@ public class RecommendInfoAct {
     @GetMapping("v1/list")
     public Result pageList(RecommendInfoDTO dto) throws ActException {
         try {
-            List<RecommendInfoVO> voList = BeanTransform.copyProperties(recommendInfoAPI.pageList(dto), RecommendInfoVO.class);
+            List<RecommendInfoVO> voList = BeanTransform.copyProperties(recommendInfoAPI.pageList(dto), RecommendInfoVO.class,true);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -182,6 +183,40 @@ public class RecommendInfoAct {
         try {
             List<String[]> list = recommendInfoAPI.findRequire();
             return ActResult.initialize(list);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id来查询推荐类型
+     * @param id
+     * @return class RecommendInfoVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/one/{id}")
+    public Result findOne(@PathVariable String id) throws ActException{
+        try {
+            RecommendInfoBO bo = recommendInfoAPI.findOne(id);
+            RecommendInfoVO vo = BeanTransform.copyProperties(bo,RecommendInfoVO.class);
+            return ActResult.initialize(vo);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 列表总条数
+     * @param dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(RecommendInfoDTO dto) throws ActException{
+        try {
+            Long count= recommendInfoAPI.count(dto);
+            return ActResult.initialize(count);
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }

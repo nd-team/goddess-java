@@ -56,29 +56,9 @@ public class SurveyDemandTO extends BaseTO {
     private String[] scopeNames;
 
     /**
-     * 发起人
-     */
-    private String username;
-
-    /**
-     * 岗位
-     */
-    private String gradation;
-
-    /**
-     * 发起时间
-     */
-    private String launch;
-
-    /**
      * 备注
      */
     private String remark;
-
-    /**
-     * 调研状态
-     */
-    private SurveyStatus surveyStatus;
 
 
     public String[] getScopeNames() {
@@ -130,43 +110,11 @@ public class SurveyDemandTO extends BaseTO {
         this.scope = scope;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getGradation() {
-        return gradation;
-    }
-
-    public void setGradation(String gradation) {
-        this.gradation = gradation;
-    }
-
-    public String getLaunch() {
-        return launch;
-    }
-
-    public void setLaunch(String launch) {
-        this.launch = launch;
-    }
-
     public String getRemark() {
         return remark;
     }
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    public SurveyStatus getSurveyStatus() {
-        return surveyStatus;
-    }
-
-    public void setSurveyStatus(SurveyStatus surveyStatus) {
-        this.surveyStatus = surveyStatus;
     }
 }

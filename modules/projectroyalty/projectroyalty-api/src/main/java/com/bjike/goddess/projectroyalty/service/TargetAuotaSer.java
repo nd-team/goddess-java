@@ -133,4 +133,9 @@ public interface TargetAuotaSer extends Ser<TargetAuota, TargetAuotaDTO> {
         return null;
     }
 
+    /**
+     * 查询是否有权重依赖
+     */
+    Boolean isDependent(String id) throws SerException;
+
 }

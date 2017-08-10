@@ -24,6 +24,8 @@
 	<dubbo:reference  validation="true" id="holidayWorkPlanApiImpl" interface="com.bjike.goddess.festival.api.HolidayWorkPlanAPI" />
 	<dubbo:reference  validation="true" id="noticeThingApiImpl" interface="com.bjike.goddess.festival.api.NoticeThingAPI" />
 	<dubbo:reference  validation="true" id="welfareApiImpl" interface="com.bjike.goddess.festival.api.WelfareAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.festival.api.CusPermissionAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.festival.api.CusPermissionOperateAPI" />
 
 
 

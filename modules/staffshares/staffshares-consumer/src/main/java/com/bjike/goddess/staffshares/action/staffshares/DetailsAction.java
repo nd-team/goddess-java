@@ -6,14 +6,16 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.staffshares.api.DetailsAPI;
 import com.bjike.goddess.staffshares.api.PurchaseAPI;
 import com.bjike.goddess.staffshares.api.SchemeAPI;
+import com.bjike.goddess.staffshares.bo.DetailsBO;
 import com.bjike.goddess.staffshares.bo.SchemeIssueBO;
+import com.bjike.goddess.staffshares.dto.DetailsDTO;
 import com.bjike.goddess.staffshares.dto.SchemeDTO;
 import com.bjike.goddess.staffshares.to.PurchaseTO;
-import com.bjike.goddess.staffshares.to.SchemeApplyTO;
+import com.bjike.goddess.staffshares.vo.DetailsVO;
 import com.bjike.goddess.staffshares.vo.SchemeIssueVO;
-import com.bjike.goddess.staffshares.vo.SchemeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -39,6 +41,8 @@ public class DetailsAction {
     private SchemeAPI schemeAPI;
     @Autowired
     private PurchaseAPI purchaseAPI;
+    @Autowired
+    private DetailsAPI detailsAPI;
 
 
     /**
@@ -64,15 +68,29 @@ public class DetailsAction {
 
     /**
      * 获得一条交易中心数据
-     *　
+     *
      * @param id id
      * @return class SchemeIssueVO
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
-    public Result getById(@PathVariable String id) throws ActException {
+    public Result findById(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(schemeAPI.getOne(id), SchemeIssueVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal(SchemeDTO schemeDTO) throws ActException {
+        try {
+            return ActResult.initialize(schemeAPI.count(schemeDTO));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -82,11 +100,10 @@ public class DetailsAction {
      * 申请购买
      *
      * @param to 申请购买
-     *
      * @version v1
      */
     @PutMapping("v1/buy/{id}")
-    public Result update(@Validated(EDIT.class) PurchaseTO to, BindingResult result) throws ActException {
+    public Result buy(@Validated(EDIT.class) PurchaseTO to, BindingResult result) throws ActException {
         try {
             purchaseAPI.buy(to);
             return ActResult.initialize("已申请购买");
@@ -94,4 +111,87 @@ public class DetailsAction {
             throw new ActException(e.getMessage());
         }
     }
+
+
+    /**
+     * 交易详情列表
+     *
+     * @param dto 员工持股管理数据传输对象
+     * @return class DetailsVO
+     * @version v1
+     */
+    @GetMapping("v1/detail/list/{id}")
+    public Result listDetail(DetailsDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            List<DetailsBO> list = detailsAPI.listDetail(dto);
+            if (null != list && list.size() > 0) {
+                return ActResult.initialize(BeanTransform.copyProperties(list, DetailsVO.class, request));
+            } else {
+                return ActResult.initialize(list);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获得一条交易详情数据
+     *
+     * @param id id
+     * @return class DetailsVO
+     * @version v1
+     */
+    @GetMapping("v1/details/findById/{id}")
+    public Result getDetailById(@PathVariable String id) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(detailsAPI.getDetailById(id), DetailsVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取交易详情总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/details/getTotal")
+    public Result getTotal(DetailsDTO detailsDTO) throws ActException {
+        try {
+            return ActResult.initialize(detailsAPI.getTotal(detailsDTO));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 购买
+     *
+     * @version v1
+     */
+    @PutMapping("v1/detail/buy/{id}")
+    public Result detailBuy(@Validated(EDIT.class) PurchaseTO to, BindingResult result) throws ActException {
+        try {
+            detailsAPI.buy(to);
+            return ActResult.initialize("已申请购买");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 回收
+     *
+     * @version v1
+     */
+    @PutMapping("v1/recovery/{id}")
+    public Result recovery(@PathVariable String id) throws ActException {
+        try {
+            detailsAPI.recovery(id);
+            return ActResult.initialize("回收成功!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

@@ -2,10 +2,13 @@ package com.bjike.goddess.archive.action.archive;
 
 import com.bjike.goddess.archive.api.StaffRecordsAPI;
 import com.bjike.goddess.archive.dto.StaffRecordsDTO;
+import com.bjike.goddess.archive.entity.StaffRecords1Excel;
 import com.bjike.goddess.archive.entity.StaffRecordsExcel;
 import com.bjike.goddess.archive.to.GuidePermissionTO;
+import com.bjike.goddess.archive.to.StaffRecords1ExcelTO;
 import com.bjike.goddess.archive.to.StaffRecordsExcelTO;
 import com.bjike.goddess.archive.vo.StaffNameVO;
+import com.bjike.goddess.archive.vo.StaffRecords1VO;
 import com.bjike.goddess.archive.vo.StaffRecordsVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -213,7 +216,7 @@ public class StaffRecordsAct extends BaseFileAction {
     }
 
     /**
-     * 获取总条数
+     * 获取在职人员总条数
      *
      * @version v1
      */
@@ -244,7 +247,7 @@ public class StaffRecordsAct extends BaseFileAction {
     /**
      * 在职员工基本信息
      *
-     * @return class StaffRecordsBO
+     * @return class EntryBasicInfoBO
      * @version v1
      */
     @GetMapping("v1/employee/list")
@@ -288,8 +291,8 @@ public class StaffRecordsAct extends BaseFileAction {
             List<InputStream> inputStreams = super.getInputStreams(request);
             InputStream is = inputStreams.get(1);
             Excel excel = new Excel(0, 1);
-            List<StaffRecordsExcel> tos = ExcelUtil.excelToClazz(is, StaffRecordsExcel.class, excel);
-            List<StaffRecordsExcelTO> toList = BeanTransform.copyProperties(tos, StaffRecordsExcelTO.class);
+            List<StaffRecords1Excel> tos = ExcelUtil.excelToClazz(is, StaffRecords1Excel.class, excel);
+            List<StaffRecords1ExcelTO> toList = BeanTransform.copyProperties(tos, StaffRecords1ExcelTO.class);
             staffRecordsAPI.dimissionUpload(toList);
             return new ActResult("导入成功");
         } catch (SerException e) {
@@ -301,15 +304,48 @@ public class StaffRecordsAct extends BaseFileAction {
      * 离职人员信息列表
      *
      * @param dto 员工档案数据传输对象
-     * @return class StaffRecordsVO
+     * @return class StaffRecords1VO
      * @version v1
      */
     @GetMapping("v1/dimission/maps")
     public Result dimissionMaps(StaffRecordsDTO dto) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(staffRecordsAPI.dimissionMaps(dto), StaffRecordsVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(staffRecordsAPI.dimissionMaps(dto), StaffRecords1VO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取离职人员总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/dimission/count")
+    public Result count() throws ActException {
+        try {
+            return ActResult.initialize(staffRecordsAPI.count());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 导出导入的excel离职模板
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/dimission/templateExcel")
+    public Result templateDimissionExcel(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "excel离职模板下载.xlsx";
+            super.writeOutFile(response, staffRecordsAPI.templateDimissionExcel(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
         }
     }
 

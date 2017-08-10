@@ -3,7 +3,9 @@ package com.bjike.goddess.interiorrecommend.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.interiorrecommend.bo.AwardInfoBO;
 import com.bjike.goddess.interiorrecommend.bo.AwardStandardBO;
+import com.bjike.goddess.interiorrecommend.bo.RecommendInfoBO;
 import com.bjike.goddess.interiorrecommend.dto.AwardInfoDTO;
+import com.bjike.goddess.interiorrecommend.dto.RecommendInfoDTO;
 import com.bjike.goddess.interiorrecommend.excel.SonPermissionObject;
 import com.bjike.goddess.interiorrecommend.to.AwardInfoTO;
 import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
@@ -50,6 +52,20 @@ public interface AwardInfoAPI {
      * @return
      * @throws SerException
      */
-    List<AwardInfoBO> pageList(AwardInfoDTO dto) throws SerException;
+    List<RecommendInfoBO> pageList(RecommendInfoDTO dto) throws SerException;
+
+    /**
+     * 根据id来查询推荐奖励信息
+     * @param id
+     * @throws SerException
+     */
+    AwardInfoBO findOne(String id) throws SerException;
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     */
+    Long count(AwardInfoDTO dto) throws SerException;
 
 }

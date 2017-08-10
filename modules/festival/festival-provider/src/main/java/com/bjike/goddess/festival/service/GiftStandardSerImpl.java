@@ -142,9 +142,11 @@ public class GiftStandardSerImpl extends ServiceImpl<GiftStandard, GiftStandardD
 
     @Override
     public List<GiftStandardBO> listGiftStandard(GiftStandardDTO giftStandardDTO) throws SerException {
+       String userToken = RpcTransmit.getUserToken();
         checkPermission();
+        RpcTransmit.transmitUserToken( userToken );
         giftStandardDTO.getSorts().add("createTime=desc");
-        List<GiftStandard> list = super.findByCis(giftStandardDTO);
+        List<GiftStandard> list = super.findByCis(giftStandardDTO,true);
 
         return BeanTransform.copyProperties(list, GiftStandardBO.class );
     }
@@ -153,7 +155,9 @@ public class GiftStandardSerImpl extends ServiceImpl<GiftStandard, GiftStandardD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public GiftStandardBO addGiftStandard(GiftStandardTO giftStandardTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         checkPermission();
+        RpcTransmit.transmitUserToken( userToken );
         GiftStandard giftStandard = BeanTransform.copyProperties(giftStandardTO,GiftStandard.class,true);
         giftStandard.setCreateTime(LocalDateTime.now());
         super.save( giftStandard );
@@ -163,7 +167,9 @@ public class GiftStandardSerImpl extends ServiceImpl<GiftStandard, GiftStandardD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public GiftStandardBO editGiftStandard(GiftStandardTO giftStandardTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         checkPermission();
+        RpcTransmit.transmitUserToken( userToken );
         GiftStandard giftStandard = BeanTransform.copyProperties(giftStandardTO,GiftStandard.class,true);
         GiftStandard temp = super.findById( giftStandardTO.getId() );
 
@@ -177,7 +183,9 @@ public class GiftStandardSerImpl extends ServiceImpl<GiftStandard, GiftStandardD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteGiftStandard(String id) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         checkPermission();
+        RpcTransmit.transmitUserToken( userToken );
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }

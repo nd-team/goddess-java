@@ -1,5 +1,6 @@
 package com.bjike.goddess.dispatchcar.api;
 
+import com.bjike.goddess.carinfo.bo.DriverInfoBO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -15,6 +16,9 @@ import com.bjike.goddess.dispatchcar.to.ConditionTO;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
 import com.bjike.goddess.dispatchcar.to.FinanceCollectTO;
 import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
+import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
+import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -203,5 +207,20 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
     @Override
     public Double findOilAmount(String oilCardCode, Integer year, Integer month) throws SerException {
         return dispatchCarInfoSer.findOilAmount(oilCardCode, year, month);
+    }
+
+    @Override
+    public List<DriverInfoBO> findDriver() throws SerException {
+        return dispatchCarInfoSer.findDriver();
+    }
+
+    @Override
+    public List<EntryBasicInfoBO> findAllEntry() throws SerException {
+        return dispatchCarInfoSer.findAllEntry();
+    }
+
+    @Override
+    public List<OilCardBasicBO> findAllOil() throws SerException {
+        return dispatchCarInfoSer.findAllOil();
     }
 }

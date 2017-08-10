@@ -6,6 +6,7 @@ import com.bjike.goddess.firmreward.bo.AwardDetailBO;
 import com.bjike.goddess.firmreward.bo.RewardPeopleNoStatBO;
 import com.bjike.goddess.firmreward.dto.RewardPeopleNoStatDTO;
 import com.bjike.goddess.firmreward.entity.RewardPeopleNoStat;
+import com.bjike.goddess.firmreward.to.PeopleNoStatTO;
 import com.bjike.goddess.firmreward.to.RewardPeopleNoStatTO;
 import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 
@@ -61,7 +62,7 @@ public interface RewardPeopleNoStatSer extends Ser<RewardPeopleNoStat, RewardPeo
      * @param to 奖励人数统计to
      * @throws SerException
      */
-    void addAwardDetails(RewardPeopleNoStatTO to) throws SerException;
+    void addAwardDetails(PeopleNoStatTO to) throws SerException;
 
     /**
      * 更新获奖明细
@@ -69,7 +70,7 @@ public interface RewardPeopleNoStatSer extends Ser<RewardPeopleNoStat, RewardPeo
      * @param to 奖励人数统计to
      * @throws SerException
      */
-    void updateAwardDetails(RewardPeopleNoStatTO to) throws SerException;
+    void updateAwardDetails(PeopleNoStatTO to) throws SerException;
 
     /**
      * 查看获奖明细

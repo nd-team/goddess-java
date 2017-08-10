@@ -3,7 +3,9 @@ package com.bjike.goddess.interiorrecommend.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.interiorrecommend.bo.AwardInfoBO;
 import com.bjike.goddess.interiorrecommend.bo.AwardStandardBO;
+import com.bjike.goddess.interiorrecommend.bo.RecommendInfoBO;
 import com.bjike.goddess.interiorrecommend.dto.AwardInfoDTO;
+import com.bjike.goddess.interiorrecommend.dto.RecommendInfoDTO;
 import com.bjike.goddess.interiorrecommend.excel.SonPermissionObject;
 import com.bjike.goddess.interiorrecommend.service.AwardInfoSer;
 import com.bjike.goddess.interiorrecommend.to.AwardInfoTO;
@@ -34,7 +36,7 @@ public class AwardInfoApiImpl implements AwardInfoAPI {
     }
 
     @Override
-    public List<AwardInfoBO> pageList(AwardInfoDTO dto) throws SerException {
+    public List<RecommendInfoBO> pageList(RecommendInfoDTO dto) throws SerException {
         return awardInfoSer.pageList(dto);
     }
 
@@ -47,5 +49,15 @@ public class AwardInfoApiImpl implements AwardInfoAPI {
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return awardInfoSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public AwardInfoBO findOne(String id) throws SerException {
+        return awardInfoSer.findOne(id);
+    }
+
+    @Override
+    public Long count(AwardInfoDTO dto) throws SerException {
+        return awardInfoSer.count(dto);
     }
 }

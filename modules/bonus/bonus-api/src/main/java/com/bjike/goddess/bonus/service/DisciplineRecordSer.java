@@ -23,7 +23,6 @@ import java.util.List;
 public interface DisciplineRecordSer extends Ser<DisciplineRecord, DisciplineRecordDTO> {
 
 
-
     /**
      * 下拉导航权限
      */
@@ -37,6 +36,7 @@ public interface DisciplineRecordSer extends Ser<DisciplineRecord, DisciplineRec
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 保存
      *
@@ -190,4 +190,39 @@ public interface DisciplineRecordSer extends Ser<DisciplineRecord, DisciplineRec
     default Long getPushTotal() throws SerException {
         return null;
     }
+
+    /**
+     * 地区
+     *
+     * @return
+     */
+    List<String> getarea() throws SerException;
+
+    /**
+     * 获取项目组
+     *
+     * @return
+     */
+    List<String> getGroup() throws SerException;
+
+    /**
+     * 获得指标名称
+     *
+     * @return
+     */
+    List<String> getTarget() throws SerException;
+
+    /**
+     * 根据姓名获取处罚总次数
+     *
+     * @param userName
+     * @return
+     */
+    Integer getPushNum(String userName) throws SerException;
+
+
+    /**
+     * 根据姓名获取奖励总次数
+     */
+    Integer getRewardNum(String userName) throws SerException;
 }

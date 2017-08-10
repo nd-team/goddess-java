@@ -25,6 +25,7 @@ import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
@@ -325,7 +326,7 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
             AnnualInfo entity = new AnnualInfo();
             entity.setYear(now.getYear());
             entity.setUsername(userBO.getUsername());
-            List<EntryBasicInfoVO> entryBasicInfo = entryBasicInfoAPI.getByEmpNumber(userBO.getEmployeeNumber());
+            List<EntryBasicInfoBO> entryBasicInfo = entryBasicInfoAPI.getByEmpNumber(userBO.getEmployeeNumber());
             if (null != entryBasicInfo && entryBasicInfo.size() > 0) {//没有成功获取入职日期则发送邮件及结束此次循环
                 try {
                     entity.setEntryTime(LocalDate.parse(entryBasicInfo.get(0).getEntryTime()));

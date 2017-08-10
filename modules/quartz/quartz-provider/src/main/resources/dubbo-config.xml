@@ -22,26 +22,29 @@
 
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
-	<!-- 薪资确认-->
+	<!--&lt;!&ndash; 薪资确认&ndash;&gt;
 	<dubbo:reference validation="true" interface="com.bjike.goddess.salaryconfirm.api.SalaryconfirmAPI" id="salaryConfirmAPI"/>
-	<!-- 市场信息-->
+	&lt;!&ndash; 市场信息&ndash;&gt;
 	<dubbo:reference validation="true" interface="com.bjike.goddess.market.api.CollectEmailAPI" id="marketEmailAPI"/>
-	<!-- 项目中问题受理和处理-->
+	&lt;!&ndash; 项目中问题受理和处理&ndash;&gt;
 	<dubbo:reference validation="true" interface="com.bjike.goddess.projectissuehandle.api.CollectEmailAPI" id="projectEmailAPI"/>
-	<!-- 客户信息-->
+	&lt;!&ndash; 客户信息&ndash;&gt;
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.customer.api.CusEmailAPI" id="cusEmailApiImpl"/>
-	<!-- 商务合同-->
+	&lt;!&ndash; 商务合同&ndash;&gt;
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.businessproject.api.CollectEmailAPI" id="businessprojectEmail"/>
-	<!-- 招投标-->
+	&lt;!&ndash; 招投标&ndash;&gt;
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.bidding.api.CollectEmailAPI" id="collectEmailApiImpl"/>
-	<!-- 商业能力-->
+	&lt;!&ndash; 商业能力&ndash;&gt;
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.capability.api.CollectEmailAPI" id="capabilityEmailApiImpl"/>
-	<!-- 商务洽谈-->
+	&lt;!&ndash; 商务洽谈&ndash;&gt;
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.contractcommunicat.api.ContractCollectEmailAPI" id="contractCollectEmailApiImpl"/>
-	<!-- 社保管理-->
+	&lt;!&ndash; 社保管理&ndash;&gt;
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.secure.api.BeforeAddAPI" id="beforeAddApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.secure.api.BeforeRemoveEmployeeAPI" id="beforeRemoveEmployeeApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.secure.api.SecureCartAPI" id="secureCartApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.secure.api.AttachedEndAPI" id="attachedEndApiImpl"/>
+-->
+	<!--<dubbo:reference  validation="true"  interface="com.bjike.goddess.marketactivitymanage.api.MarketServeSummaryAPI" id="MarketServeSummaryAPI"/>-->
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.SendEmailAPI" id="sendEmailApiImpl"/>
 
 </beans>

@@ -14,6 +14,8 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -36,7 +38,6 @@ public class AnnualApplyAct {
 
     @Autowired
     private AnnualApplyAPI annualApplyAPI;
-
     /**
      * 功能导航权限
      *
@@ -112,9 +113,8 @@ public class AnnualApplyAct {
     }
 
     /**
-     * 根据用户名查询年假申请记录
+     * 获取指定用户的申请记录
      *
-     * @param username 用户名
      * @return class AnnualApplyVO
      * @version v1
      */

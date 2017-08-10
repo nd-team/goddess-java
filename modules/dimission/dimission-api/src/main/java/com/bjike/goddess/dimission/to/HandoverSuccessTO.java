@@ -26,6 +26,7 @@ public class HandoverSuccessTO extends BaseTO {
     /**
      * 权责
      */
+    @NotNull(message = "权责不能为空", groups = {ADD.class, EDIT.class})
     private Boolean authority;
 
     public String getOpinion() {
