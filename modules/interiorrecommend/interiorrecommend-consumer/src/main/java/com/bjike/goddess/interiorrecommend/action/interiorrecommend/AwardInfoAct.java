@@ -10,6 +10,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.interiorrecommend.api.AwardInfoAPI;
 import com.bjike.goddess.interiorrecommend.api.RecommendInfoAPI;
 import com.bjike.goddess.interiorrecommend.bo.AwardInfoBO;
+import com.bjike.goddess.interiorrecommend.bo.RecommendInfoBO;
 import com.bjike.goddess.interiorrecommend.dto.AwardInfoDTO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendInfoDTO;
 import com.bjike.goddess.interiorrecommend.entity.AwardInfo;
@@ -122,19 +123,20 @@ public class AwardInfoAct {
         }
     }
 
-
     /**
-     * 审核通过的推荐信息列表
+     * 根据id来查询单个数据
+     * @param id
      * @return class RecommendInfoVO
+     * @throws ActException
      * @version v1
      */
-    @LoginAuth
-    @GetMapping("v1/awardlist")
-    public Result pageList() throws ActException {
+    @GetMapping("v1/find/info/{id}")
+    public Result findRecommendInfo(@PathVariable  String id) throws ActException{
         try {
-            List<RecommendInfoVO> voList = BeanTransform.copyProperties(recommendInfoAPI.awardlist(), RecommendInfoVO.class,true);
-            return ActResult.initialize(voList);
-        } catch (SerException e) {
+            RecommendInfoBO bo = awardInfoAPI.finOne(id);
+            RecommendInfoVO vo = BeanTransform.copyProperties(bo,RecommendInfoVO.class);
+            return ActResult.initialize(vo);
+        }catch (SerException e){
             throw new ActException(e.getMessage());
         }
     }
@@ -157,7 +159,7 @@ public class AwardInfoAct {
     }
 
     /**
-     * 推荐信息列表为了给编辑时的下拉列表使用
+     * 审核通过的推荐信息列表
      *
      * @param dto 分页条件
      * @return class RecommendInfoVO

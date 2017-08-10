@@ -74,11 +74,11 @@ public interface RecommendRequireAPI {
     Long count(RecommendRequireDTO dto) throws SerException;
 
     /**
-     * 根据id查询
+     * 根据id查询单个数据
      *
      * @param id id
      */
-    RecommendRequireBO findById(String id) throws SerException;
+    RecommendRequireBO findOne(String id) throws SerException;
 
     /**
      * 查询所有正常状态的推荐方案

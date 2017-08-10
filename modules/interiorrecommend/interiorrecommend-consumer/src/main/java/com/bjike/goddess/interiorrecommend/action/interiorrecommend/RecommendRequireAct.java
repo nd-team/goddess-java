@@ -172,7 +172,7 @@ public class RecommendRequireAct {
     @GetMapping("v1/find/{id}")
     public Result findByid(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            RecommendRequireBO bo = recommendRequireAPI.findById(id);
+            RecommendRequireBO bo = recommendRequireAPI.findOne(id);
             RecommendRequireVO vo = BeanTransform.copyProperties(bo, RecommendRequireVO.class, request);
             vo.setDetailList(BeanTransform.copyProperties(bo.getDetailList(), RecommendAssessDetailVO.class));
             return ActResult.initialize(vo);

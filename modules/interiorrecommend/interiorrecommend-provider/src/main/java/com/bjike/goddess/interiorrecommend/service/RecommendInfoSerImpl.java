@@ -6,9 +6,11 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.interiorrecommend.bo.RecommendContentBO;
 import com.bjike.goddess.interiorrecommend.bo.RecommendInfoBO;
 import com.bjike.goddess.interiorrecommend.bo.RecommendRequireBO;
 import com.bjike.goddess.interiorrecommend.dto.AwardInfoDTO;
+import com.bjike.goddess.interiorrecommend.dto.AwardStandardDTO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendContentDTO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendInfoDTO;
 import com.bjike.goddess.interiorrecommend.entity.*;
@@ -25,6 +27,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.enterprise.inject.spi.Bean;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -57,6 +60,9 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
 
     @Autowired
     private RecommendContentSer recommendContentSer;
+
+    @Autowired
+    private AwardStandardSer awardStandardSer;
 
     /**
      * 核对查看权限（部门级别）
@@ -212,7 +218,7 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
                 model.setRecommendUser(userBO.getUsername());
                 model.setRecommendRequire(recommendRequire);
                 super.save(model);
-                contentList.forEach(entity->{
+                contentList.forEach(entity -> {
                     entity.setRecommendInfo(model);
                 });
                 recommendContentSer.save(contentList);
@@ -241,11 +247,19 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
                     if (!StringUtils.isEmpty(detail.getId())) {
                         RecommendContent content = recommendContentSer.findById(detail.getId());
                         detail.setCreateTime(content.getCreateTime());
-                        detail.setModifyTime(content.getModifyTime());
+                        detail.setModifyTime(LocalDateTime.now());
                         detail.setRecommendInfo(model);
+                    } else {
+                        detail.setRecommendInfo(model);
+                        recommendContentSer.save(detail);
                     }
                 }
-                model.setContentSet(detailSet);
+                RecommendContentDTO contentDTO = new RecommendContentDTO();
+                contentDTO.getConditions().add(Restrict.eq("recommendInfo.id", to.getId()));
+                List<RecommendContent> contents = recommendContentSer.findByCis(contentDTO);
+                Set<RecommendContent> contentSet = new HashSet<RecommendContent>();
+                contentSet.addAll(contents);
+                model.setContentSet(contentSet);
                 model.setRecommendRequire(recommendRequire);
                 super.update(model);
                 return BeanTransform.copyProperties(to, RecommendInfoBO.class);
@@ -260,9 +274,9 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
     @Override
     public void delete(String id) throws SerException {
         checkSeeIdentity();
-        if(null != id){
+        if (null != id) {
             RecommendContentDTO contentDTO = new RecommendContentDTO();
-            contentDTO.getConditions().add(Restrict.eq("recommendInfo.id",id));
+            contentDTO.getConditions().add(Restrict.eq("recommendInfo.id", id));
             List<RecommendContent> contents = recommendContentSer.findByCis(contentDTO);
             if (contents != null && contents.size() > 0) {
                 for (RecommendContent recommendContent : contents) {
@@ -272,7 +286,7 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
                 }
             }
             AwardInfoDTO awardInfoDTO = new AwardInfoDTO();
-            awardInfoDTO.getConditions().add(Restrict.eq("recommendInfo.id",id));
+            awardInfoDTO.getConditions().add(Restrict.eq("recommendInfo.id", id));
             List<AwardInfo> awardInfos = awardInfoSer.findByCis(awardInfoDTO);
             if (awardInfos != null && awardInfos.size() > 0) {
                 for (AwardInfo awardInfo : awardInfos) {
@@ -348,9 +362,34 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
     public List<RecommendInfoBO> awardlist() throws SerException {
         checkSeeIdentity();
         RecommendInfoDTO dto = new RecommendInfoDTO();
-        dto.getConditions().add(Restrict.eq("accept",true));
+        dto.getConditions().add(Restrict.eq("accept", 1));
+        dto.getConditions().add(Restrict.eq("conform",1));
         List<RecommendInfo> list = super.findByCis(dto);
-        List<RecommendInfoBO> boList = BeanTransform.copyProperties(list,RecommendInfoBO.class);
+        List<RecommendInfoBO> boList = BeanTransform.copyProperties(list, RecommendInfoBO.class);
+        if (boList != null && boList.size() > 0) {
+            for (RecommendInfoBO info : boList) {
+                RecommendRequire require = recommendRequireSer.findById(info.getRequireId());
+                AwardStandardDTO standardDTO = new AwardStandardDTO();
+                standardDTO.getConditions().add(Restrict.eq("recommendRequire.id", require.getId()));
+                List<AwardStandard> standards = awardStandardSer.findByCis(standardDTO);
+                info.setAwardType(standards.get(0).getAwardType());
+                info.setAwardAmount(standards.get(0).getAwardAmount());
+                info.setAwardContent(standards.get(0).getAwardContent());
+                info.setAwardSendWay(standards.get(0).getAwardSendWay());
+                AwardInfoDTO awardInfoDTO = new AwardInfoDTO();
+                awardInfoDTO.getConditions().add(Restrict.eq("recommendInfo.id", info.getId()));
+                List<AwardInfo> awardInfos = awardInfoSer.findByCis(awardInfoDTO);
+                awardInfos.forEach(award -> {
+                    if (award.getAwardTime() != null) {
+                        info.setAwardTime(award.getAwardTime().toString());
+                    }
+                    if (award.getGetAward() != null) {
+                        info.setGetAward(award.getGetAward());
+                    }
+                });
+
+            }
+        }
         return boList;
     }
 
@@ -358,8 +397,8 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
     public List<String[]> findRequire() throws SerException {
         List<RecommendRequire> requireList = recommendRequireSer.findAll();
         List<String[]> list = new ArrayList<>();
-        for(RecommendRequire recommendRequire : requireList){
-            String[] require = {recommendRequire.getRecommendType().getTypeName(),recommendRequire.getId()};
+        for (RecommendRequire recommendRequire : requireList) {
+            String[] require = {recommendRequire.getRecommendType().getTypeName(), recommendRequire.getId()};
             list.add(require);
         }
         return list;
@@ -367,12 +406,17 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
 
     @Override
     public RecommendInfoBO findOne(String id) throws SerException {
-        if(null != id){
+        if (null != id) {
             RecommendInfo info = super.findById(id);
-            RecommendInfoBO bo = BeanTransform.copyProperties(info,RecommendInfoBO.class);
+            RecommendInfoBO bo = BeanTransform.copyProperties(info, RecommendInfoBO.class);
             bo.setRequireId(info.getRecommendRequire().getId());
+            RecommendContentDTO dto = new RecommendContentDTO();
+            dto.getConditions().add(Restrict.eq("recommendInfo.id", id));
+            List<RecommendContent> content = recommendContentSer.findByCis(dto);
+            List<RecommendContentBO> contentBOS = BeanTransform.copyProperties(content, RecommendContentBO.class);
+            bo.setContentList(contentBOS);
             return bo;
-        }else{
+        } else {
             throw new SerException("id不能为空");
         }
     }

@@ -9,15 +9,19 @@ import com.bjike.goddess.interiorrecommend.bo.AwardInfoBO;
 import com.bjike.goddess.interiorrecommend.bo.AwardStandardBO;
 import com.bjike.goddess.interiorrecommend.bo.RecommendInfoBO;
 import com.bjike.goddess.interiorrecommend.dto.AwardInfoDTO;
+import com.bjike.goddess.interiorrecommend.dto.AwardStandardDTO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendInfoDTO;
 import com.bjike.goddess.interiorrecommend.entity.AwardInfo;
+import com.bjike.goddess.interiorrecommend.entity.AwardStandard;
 import com.bjike.goddess.interiorrecommend.entity.RecommendInfo;
+import com.bjike.goddess.interiorrecommend.entity.RecommendRequire;
 import com.bjike.goddess.interiorrecommend.enums.GuideAddrStatus;
 import com.bjike.goddess.interiorrecommend.excel.SonPermissionObject;
 import com.bjike.goddess.interiorrecommend.to.AwardInfoTO;
 import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -62,6 +66,9 @@ public class AwardInfoSerImpl extends ServiceImpl<AwardInfo, AwardInfoDTO> imple
 
     @Autowired
     private RecommendSchemeSer recommendSchemeSer;
+
+    @Autowired
+    private AwardInfoSer awardInfoSer;
 
     /**
      * 核对查看权限（部门级别）
@@ -275,7 +282,9 @@ public class AwardInfoSerImpl extends ServiceImpl<AwardInfo, AwardInfoDTO> imple
     @Override
     public AwardInfoBO updateModel(AwardInfoTO to) throws SerException {
         checkAddIdentity();
-        if (!StringUtils.isEmpty(to.getId())) {
+        if (!StringUtils.isEmpty(to.getInfoId())) {
+            AwardInfoDTO dto = new AwardInfoDTO();
+            dto.getConditions().add(Restrict.eq("recommendInfo.id", to.getInfoId()));
             AwardInfo model = super.findById(to.getId());
             if (model != null) {
 
@@ -305,21 +314,87 @@ public class AwardInfoSerImpl extends ServiceImpl<AwardInfo, AwardInfoDTO> imple
     @Override
     public List<RecommendInfoBO> pageList(RecommendInfoDTO dto) throws SerException {
         checkSeeIdentity();
-        dto.getSorts().add("creatTime=desc");
-        dto.getConditions().add(Restrict.eq("accept",true));
-        dto.getConditions().add(Restrict.eq("confirm",false));
-        return BeanTransform.copyProperties(recommendInfoSer.findByPage(dto), RecommendInfoBO.class);
+        dto.getSorts().add("createTime=desc");
+        dto.getConditions().add(Restrict.eq("accept", 1));
+        dto.getConditions().add(Restrict.eq("conform", 1));
+        List<RecommendInfo> list = recommendInfoSer.findByCis(dto);
+        List<RecommendInfoBO> boList = BeanTransform.copyProperties(list, RecommendInfoBO.class);
+        for (RecommendInfoBO bo : boList) {
+            for (RecommendInfo recommendInfo : list) {
+                bo.setRequireId(recommendInfo.getRecommendRequire().getId());
+            }
+        }
+        if (boList != null && boList.size() > 0) {
+            for (RecommendInfoBO info : boList) {
+                RecommendRequire require = recommendRequireSer.findById(info.getRequireId());
+                AwardStandardDTO standardDTO = new AwardStandardDTO();
+                standardDTO.getConditions().add(Restrict.eq("recommendRequire.id", require.getId()));
+                List<AwardStandard> standards = awardStandardSer.findByCis(standardDTO);
+                if (standards != null && standards.size() > 0) {
+                    info.setAwardType(standards.get(0).getAwardType());
+                    info.setAwardAmount(standards.get(0).getAwardAmount());
+                    info.setAwardContent(standards.get(0).getAwardContent());
+                    info.setAwardSendWay(standards.get(0).getAwardSendWay());
+                    AwardInfoDTO awardInfoDTO = new AwardInfoDTO();
+                    awardInfoDTO.getConditions().add(Restrict.eq("recommendInfo.id", info.getId()));
+                    List<AwardInfo> awardInfos = awardInfoSer.findByCis(awardInfoDTO);
+                    awardInfos.forEach(award -> {
+                        if (award.getAwardTime() != null) {
+                            info.setAwardTime(award.getAwardTime().toString());
+                        }
+                        if (award.getGetAward() != null) {
+                            info.setGetAward(award.getGetAward());
+                        }
+                    });
+
+                }
+            }
+        }
+        return boList;
     }
 
     @Override
     public AwardInfoBO findOne(String id) throws SerException {
         AwardInfo awardInfo = super.findById(id);
-        AwardInfoBO bo = BeanTransform.copyProperties(awardInfo,AwardInfoBO.class);
+        AwardInfoBO bo = BeanTransform.copyProperties(awardInfo, AwardInfoBO.class);
         return bo;
     }
 
     @Override
     public Long count(AwardInfoDTO dto) throws SerException {
         return super.count(dto);
+    }
+
+    @Override
+    public RecommendInfoBO finOne(String id) throws SerException {
+        RecommendInfo recommendInfo = recommendInfoSer.findById(id);
+        AwardInfoDTO infoDTO = new AwardInfoDTO();
+        infoDTO.getConditions().add(Restrict.eq("recommendInfo.id", id));
+        AwardInfo awardInfo = awardInfoSer.findOne(infoDTO);
+        RecommendInfoBO info = BeanTransform.copyProperties(recommendInfo, RecommendInfoBO.class);
+        RecommendRequire require = recommendRequireSer.findById(recommendInfo.getRecommendRequire().getId());
+        AwardStandardDTO standardDTO = new AwardStandardDTO();
+        standardDTO.getConditions().add(Restrict.eq("recommendRequire.id", require.getId()));
+        List<AwardStandard> standards = awardStandardSer.findByCis(standardDTO);
+        if (standards != null && standards.size() > 0) {
+            info.setAwardType(standards.get(0).getAwardType());
+            info.setAwardAmount(standards.get(0).getAwardAmount());
+            info.setAwardContent(standards.get(0).getAwardContent());
+            info.setAwardSendWay(standards.get(0).getAwardSendWay());
+            AwardInfoDTO awardInfoDTO = new AwardInfoDTO();
+            awardInfoDTO.getConditions().add(Restrict.eq("recommendInfo.id", info.getId()));
+            List<AwardInfo> awardInfos = awardInfoSer.findByCis(awardInfoDTO);
+            awardInfos.forEach(award -> {
+                if (award.getAwardTime() != null) {
+                    info.setAwardTime(award.getAwardTime().toString());
+                }
+                if (award.getGetAward() != null) {
+                    info.setGetAward(award.getGetAward());
+                }
+            });
+
+        }
+        info.setAwardInfoId(awardInfo.getId());
+        return info;
     }
 }

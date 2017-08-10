@@ -91,4 +91,11 @@ public interface RecommendRequireSer extends Ser<RecommendRequire, RecommendRequ
      * @throws SerException
      */
     List<RecommendContentBO> findContent() throws SerException;
+
+    /**
+     * 根据id查询单个数据
+     *
+     * @param id id
+     */
+    RecommendRequireBO findOne(String id) throws SerException;
 }
