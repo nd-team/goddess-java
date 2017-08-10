@@ -1,8 +1,7 @@
-package com.bjike.goddess.managefee.bo;
+package com.bjike.goddess.managefee.excel;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-
-import javax.persistence.Column;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
 /**
  * 管理费业务传输对象
@@ -13,72 +12,67 @@ import javax.persistence.Column;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class ManageFeeBO extends BaseBO {
+public class OutFeeAreaExportDetail extends BaseBO {
 
     /**
      * 地区
      */
+    @ExcelHeader(name = "地区",notNull = true)
     private String area;
 
     /**
      * 项目组
      */
+    @ExcelHeader(name = "项目组",notNull = true)
     private String projectGroup;
 
     /**
      * 项目名称
      */
+    @ExcelHeader(name = "项目名称",notNull = true)
     private String project;
 
     /**
      * 类别
      */
+    @ExcelHeader(name = "类别",notNull = true)
     private String type;
 
     /**
      * 年份
      */
+    @ExcelHeader(name = "年份",notNull = true)
     private String year;
 
     /**
      * 月份
      */
+    @ExcelHeader(name = "月份",notNull = true)
     private String month;
 
     /**
      * 目标管理费
      */
+    @ExcelHeader(name = "目标管理费",notNull = true)
     private Double targetFee;
 
     /**
      * 实际管理费
      */
+    @ExcelHeader(name = "实际管理费",notNull = true)
     private Double actualFee;
 
     /**
      * 比率
      */
-    private Double rate;
-
-    /**
-     * 比率百分比
-     */
+    @ExcelHeader(name = "比率",notNull = true)
     private String ratePersent;
 
     /**
      * 差额
      */
+    @ExcelHeader(name = "差额",notNull = true)
     private Double balance;
-
-    /**
-     * 创建时间
-     */
-    private String createTime;
-
-    /**
-     * 修改时间
-     */
-    private String modifyTime;
 
 
     public String getArea() {
@@ -145,14 +139,6 @@ public class ManageFeeBO extends BaseBO {
         this.actualFee = actualFee;
     }
 
-    public Double getRate() {
-        return rate;
-    }
-
-    public void setRate(Double rate) {
-        this.rate = rate;
-    }
-
     public String getRatePersent() {
         return ratePersent;
     }
@@ -169,19 +155,4 @@ public class ManageFeeBO extends BaseBO {
         this.balance = balance;
     }
 
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(String modifyTime) {
-        this.modifyTime = modifyTime;
-    }
 }

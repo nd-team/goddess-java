@@ -32,7 +32,15 @@ public enum GuideAddrStatus {
     /**
      * 查看
      */
-    SEE(5);
+    SEE(5),
+    /**
+     * 导入
+     */
+    IMPORT(6),
+    /**
+     * 导出
+     */
+    EXPORT(7);
 
     private int code;
 

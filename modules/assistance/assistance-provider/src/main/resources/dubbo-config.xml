@@ -26,7 +26,6 @@
 	<dubbo:service  ref="computerAssistApiImpl" interface="com.bjike.goddess.assistance.api.ComputerAssistAPI" />
 	<dubbo:service  ref="hotAssistApiImpl" interface="com.bjike.goddess.assistance.api.HotAssistAPI" />
 	<dubbo:service  ref="houseAssistApiImpl" interface="com.bjike.goddess.assistance.api.HouseAssistAPI" />
-	<dubbo:service  ref="rightSetApiImpl" interface="com.bjike.goddess.assistance.api.RightSetAPI" />
 	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.assistance.api.CusPermissionAPI" />
 	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.assistance.api.CusPermissionOperateAPI" />
 

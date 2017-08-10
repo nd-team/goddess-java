@@ -2,8 +2,7 @@ package com.bjike.goddess.assistance.api;
 
 import com.bjike.goddess.assistance.bo.AssistancePlanBO;
 import com.bjike.goddess.assistance.dto.AssistancePlanDTO;
-import com.bjike.goddess.assistance.to.AssistancePlanTO;
-import com.bjike.goddess.assistance.to.GuidePermissionTO;
+import com.bjike.goddess.assistance.to.*;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -93,7 +92,26 @@ public interface AssistancePlanAPI {
      * @param assistancePlanTO 补助方案信息
      * @return class AssistancePlanBO
      */
-    default AssistancePlanBO auditAssistancePlan(AssistancePlanTO assistancePlanTO) throws SerException {
+    default AssistancePlanBO auditAssistancePlan(ResourceAuditPlanTO assistancePlanTO) throws SerException {
+        return null;
+    }
+    /**
+     * 财务审核
+     *
+     * @param assistancePlanTO 补助方案信息
+     * @return class AssistancePlanBO
+     */
+    default AssistancePlanBO finaceAuditAssistancePlan(FinaceAuditPlanTO assistancePlanTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 总经办审核
+     *
+     * @param assistancePlanTO 补助方案信息
+     * @return class AssistancePlanBO
+     */
+    default AssistancePlanBO manageAuditAssistancePlan(ManageAuditPlanTO assistancePlanTO) throws SerException {
         return null;
     }
 

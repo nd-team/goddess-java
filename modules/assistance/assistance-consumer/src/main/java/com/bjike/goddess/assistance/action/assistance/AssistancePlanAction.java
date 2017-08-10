@@ -3,8 +3,7 @@ package com.bjike.goddess.assistance.action.assistance;
 import com.bjike.goddess.assistance.api.AssistancePlanAPI;
 import com.bjike.goddess.assistance.bo.AssistancePlanBO;
 import com.bjike.goddess.assistance.dto.AssistancePlanDTO;
-import com.bjike.goddess.assistance.to.AssistancePlanTO;
-import com.bjike.goddess.assistance.to.GuidePermissionTO;
+import com.bjike.goddess.assistance.to.*;
 import com.bjike.goddess.assistance.vo.AssistancePlanVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -175,18 +174,56 @@ public class AssistancePlanAction {
 
 
     /**
-     * 审核补助方案
+     * 综合资源部审核
      *
      * @param assistancePlanTO 补助方案基本信息数据bo
-     * @des 添加补助方案
+     * @des 编辑补助方案
      * @return  class AssistancePlanVO
      * @version v1
      */
     @LoginAuth
-    @PutMapping("v1/audit")
-    public Result auditAssistancePlan(@Validated AssistancePlanTO assistancePlanTO) throws ActException {
+    @PutMapping("v1/resource/audit")
+    public Result auditAssistancePlan(@Validated(ResourceAuditPlanTO.testAudit.class) ResourceAuditPlanTO assistancePlanTO) throws ActException {
         try {
             AssistancePlanBO assistancePlanBO1 = assistancePlanAPI.auditAssistancePlan(assistancePlanTO);
+            return ActResult.initialize(BeanTransform.copyProperties(assistancePlanBO1,AssistancePlanVO.class,true));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 运营财务部审核
+     *
+     * @param assistancePlanTO 补助方案基本信息数据bo
+     * @des 编辑补助方案
+     * @return  class AssistancePlanVO
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/finace/audit")
+    public Result finaceAuditAssistancePlan(@Validated(FinaceAuditPlanTO.testAudit.class) FinaceAuditPlanTO assistancePlanTO) throws ActException {
+        try {
+            AssistancePlanBO assistancePlanBO1 = assistancePlanAPI.finaceAuditAssistancePlan(assistancePlanTO);
+            return ActResult.initialize(BeanTransform.copyProperties(assistancePlanBO1,AssistancePlanVO.class,true));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 总经办审核
+     *
+     * @param assistancePlanTO 补助方案基本信息数据bo
+     * @des 编辑补助方案
+     * @return  class AssistancePlanVO
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/manage/audit")
+    public Result manageAuditAssistancePlan(@Validated(ManageAuditPlanTO.testAudit.class) ManageAuditPlanTO assistancePlanTO) throws ActException {
+        try {
+            AssistancePlanBO assistancePlanBO1 = assistancePlanAPI.manageAuditAssistancePlan(assistancePlanTO);
             return ActResult.initialize(BeanTransform.copyProperties(assistancePlanBO1,AssistancePlanVO.class,true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

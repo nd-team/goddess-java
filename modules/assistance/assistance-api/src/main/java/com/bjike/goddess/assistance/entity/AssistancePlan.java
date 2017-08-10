@@ -27,7 +27,7 @@ public class AssistancePlan extends BaseEntity {
     /**
      * 序号
      */
-    @Column(name = "seriNum", nullable = false, unique = true , columnDefinition = "INT   COMMENT '方案序号'")
+    @Column(name = "seriNum", nullable = false, unique = true , columnDefinition = "INT   COMMENT '序号'")
     private Integer seriNum;
 
     /**
