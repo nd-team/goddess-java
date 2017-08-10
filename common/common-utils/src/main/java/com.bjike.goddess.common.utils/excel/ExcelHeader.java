@@ -19,8 +19,8 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD})
 public @interface ExcelHeader {
 
-    public String name();
+    String name();
 
 
-    public boolean notNull() default false;
+    boolean notNull() default false;
 }

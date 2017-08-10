@@ -20,14 +20,17 @@ import java.util.Set;
 public class RecommendInfo extends BaseEntity {
 
 
+    /**
+     * 推荐要求id
+     */
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "recommendRequire_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '推荐要求'")
     private RecommendRequire recommendRequire;
 
     /**
-     * 推荐考核内容
+     * 推荐内容
      */
-    @OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, fetch = FetchType.EAGER, mappedBy = "recommendInfo")
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER, mappedBy = "recommendInfo")
     private Set<RecommendContent> contentSet;
 
     /**

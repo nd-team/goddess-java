@@ -1,12 +1,13 @@
 package com.bjike.goddess.interiorrecommend.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.interiorrecommend.bo.RecommendSchemeBO;
-import com.bjike.goddess.interiorrecommend.dto.RecommendSchemeDTO;
-import com.bjike.goddess.interiorrecommend.entity.RecommendScheme;
+import com.bjike.goddess.interiorrecommend.dto.*;
+import com.bjike.goddess.interiorrecommend.entity.*;
 import com.bjike.goddess.interiorrecommend.enums.GuideAddrStatus;
 import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.RecommendSchemeTO;
@@ -46,6 +47,24 @@ public class RecommendSchemeSerImpl extends ServiceImpl<RecommendScheme, Recomme
 
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
+
+    @Autowired
+    private RecommendRequireSer recommendRequireSer;
+
+    @Autowired
+    private RecommendInfoSer recommendInfoSer;
+
+    @Autowired
+    private RecommendAssessDetailSer recommendAssessDetailSer;
+
+    @Autowired
+    private AwardStandardSer awardStandardSer;
+
+    @Autowired
+    private RecommendContentSer recommendContentSer;
+
+    @Autowired
+    private AwardInfoSer awardInfoSer;
 
     /**
      * 核对查看权限（部门级别）
@@ -345,6 +364,73 @@ public class RecommendSchemeSerImpl extends ServiceImpl<RecommendScheme, Recomme
             }
         } else {
             throw new SerException("更新ID不能为空!");
+        }
+    }
+    //由于关联了很多的表,所以不能直接调用remove方法来删除,我之前试过了用remove的方法删除其他的表,发现报错,最后只能用sql语句这简单暴力的方法——————江载旋　2017-08-09 22:07
+    @Override
+    public void delete(String id) throws SerException {
+        if(null != id){
+            RecommendRequireDTO dto = new RecommendRequireDTO();
+            dto.getConditions().add(Restrict.eq("recommendScheme.id",id));
+            List<RecommendRequire> list = recommendRequireSer.findByCis(dto);
+            if(list != null && list.size() >0) {
+                for (RecommendRequire recommendRequire : list) {
+                    RecommendInfoDTO infoDTO = new RecommendInfoDTO();
+                    infoDTO.getConditions().add(Restrict.eq("recommendRequire.id", recommendRequire.getId()));
+                    List<RecommendInfo> info = recommendInfoSer.findByCis(infoDTO);
+                    if(info != null && info.size() > 0) {
+                        for (RecommendInfo recommendInfo : info) {
+                            RecommendContentDTO contentDTO = new RecommendContentDTO();
+                            contentDTO.getConditions().add(Restrict.eq("recommendInfo.id", recommendInfo.getId()));
+                            List<RecommendContent> contents = recommendContentSer.findByCis(contentDTO);
+                            if(contents != null && contents.size() > 0) {
+                                for (RecommendContent recommendContent : contents) {
+                                    StringBuilder sql = new StringBuilder("DELETE FROM");
+                                    sql.append(" interiorrecommend_recommendcontent WHERE id = '" + recommendContent.getId()+"'");
+                                    recommendContentSer.executeSql(sql.toString());
+                                }
+                            }
+                            AwardInfoDTO awardInfoDTO = new AwardInfoDTO();
+                            awardInfoDTO.getConditions().add(Restrict.eq("recommendInfo.id", recommendInfo.getId()));
+                            List<AwardInfo> awardInfos = awardInfoSer.findByCis(awardInfoDTO);
+                            if(awardInfos != null && awardInfos.size() >0 ) {
+                                for (AwardInfo awardInfo : awardInfos) {
+                                    StringBuilder sql = new StringBuilder("DELETE FROM");
+                                    sql.append(" interiorrecommend_awardinfo WHERE id = '" + awardInfo.getId()+"'");
+                                    awardInfoSer.executeSql(sql.toString());
+                                }
+                            }
+                            recommendInfoSer.remove(recommendInfo.getId());
+                        }
+                    }
+                    RecommendAssessDetailDTO detailDTO = new RecommendAssessDetailDTO();
+                    detailDTO.getConditions().add(Restrict.eq("recommendRequire.id", recommendRequire.getId()));
+                    List<RecommendAssessDetail> details = recommendAssessDetailSer.findByCis(detailDTO);
+                    if(details != null && details.size() > 0) {
+                        for (RecommendAssessDetail detail : details) {
+                            StringBuilder sql = new StringBuilder("DELETE FROM");
+                            sql.append(" interiorrecommend_recommendassessdetail WHERE id = '" + detail.getId()+"'");
+                            recommendAssessDetailSer.executeSql(sql.toString());
+                        }
+                    }
+                    AwardStandardDTO standardDTO = new AwardStandardDTO();
+                    standardDTO.getConditions().add(Restrict.eq("recommendRequire.id", recommendRequire.getId()));
+                    List<AwardStandard> standards = awardStandardSer.findByCis(standardDTO);
+                    if(standards != null && standards.size() > 0) {
+                        for (AwardStandard awardStandard : standards) {
+                            StringBuilder sql = new StringBuilder("DELETE FROM");
+                            sql.append(" interiorrecommend_awardstandard WHERE id = '" + awardStandard.getId()+"'");
+                            awardStandardSer.executeSql(sql.toString());
+                        }
+                    }
+                    StringBuilder sql = new StringBuilder("DELETE FROM");
+                    sql.append(" interiorrecommend_recommendrequire WHERE id = '" + recommendRequire.getId()+"'");
+                    recommendRequireSer.executeSql(sql.toString());
+                }
+            }
+            super.remove(id);
+        }else {
+            throw new SerException("id不能为空");
         }
     }
 }

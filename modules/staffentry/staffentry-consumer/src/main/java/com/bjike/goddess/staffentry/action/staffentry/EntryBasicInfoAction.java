@@ -12,6 +12,7 @@ import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.staffentry.to.EntryBasicInfoTO;
+import com.bjike.goddess.staffentry.to.GuidePermissionTO;
 import com.bjike.goddess.staffentry.to.SiginManageDeleteFileTO;
 import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 import com.bjike.goddess.storage.api.FileAPI;
@@ -19,6 +20,7 @@ import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,6 +48,28 @@ public class EntryBasicInfoAction extends BaseFileAction{
     @Autowired
     private FileAPI fileAPI;
 
+
+    /**
+     * 功能导航权限
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = entryBasicInfoAPI.guidePermission(guidePermissionTO);
+            if(! isHasPermission ){
+                //int code, String msg
+                return new ActResult(0,"没有权限",false );
+            }else{
+                return new ActResult(0,"有权限",true );
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 入职基本信息列表总条数
@@ -238,7 +262,7 @@ public class EntryBasicInfoAction extends BaseFileAction{
     /**
      * 上传附件
      *
-     * @des 审核项目签订与立项
+     * @des 上传附件
      * @version v1
      */
     @LoginAuth
@@ -247,7 +271,7 @@ public class EntryBasicInfoAction extends BaseFileAction{
         try {
             //跟前端约定好 ，文件路径是列表id
             // /id/....
-            String paths = "/businessproject/siginmanage/" + id;
+            String paths = "/staffentry/entrybasicinfo/" + id;
             List<InputStream> inputStreams = getInputStreams(request, paths);
             fileAPI.upload(inputStreams);
             return new ActResult("upload success");
@@ -268,7 +292,7 @@ public class EntryBasicInfoAction extends BaseFileAction{
         try {
             //跟前端约定好 ，文件路径是列表id
             // /businessproject/id/....
-            String path = "/businessproject/siginmanage/" + id;
+            String path = "/staffentry/entrybasicinfo/" + id;
             FileInfo fileInfo = new FileInfo();
             fileInfo.setPath(path);
             Object storageToken = request.getAttribute("storageToken");

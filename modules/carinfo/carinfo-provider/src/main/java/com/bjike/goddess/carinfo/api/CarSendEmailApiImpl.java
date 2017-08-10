@@ -4,6 +4,7 @@ import com.bjike.goddess.carinfo.bo.CarSendEmailBO;
 import com.bjike.goddess.carinfo.dto.CarSendEmailDTO;
 import com.bjike.goddess.carinfo.service.CarSendEmailSer;
 import com.bjike.goddess.carinfo.to.CarSendEmailTO;
+import com.bjike.goddess.carinfo.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
@@ -26,6 +27,17 @@ import java.util.List;
 public class CarSendEmailApiImpl implements CarSendEmailAPI {
     @Autowired
     private CarSendEmailSer carSendEmailSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return carSendEmailSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return carSendEmailSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public void sendEmail() throws SerException {
         carSendEmailSer.sendEmail();
@@ -42,8 +54,8 @@ public class CarSendEmailApiImpl implements CarSendEmailAPI {
     }
 
     @Override
-    public CarSendEmailBO add(CarSendEmailTO to) throws SerException {
-        return carSendEmailSer.add(to);
+    public void add(CarSendEmailTO to) throws SerException {
+        carSendEmailSer.add(to);
     }
 
     @Override
@@ -52,12 +64,22 @@ public class CarSendEmailApiImpl implements CarSendEmailAPI {
     }
 
     @Override
-    public CarSendEmailBO edit(CarSendEmailTO to) throws SerException {
-        return carSendEmailSer.edit(to);
+    public void edit(CarSendEmailTO to) throws SerException {
+         carSendEmailSer.edit(to);
     }
 
     @Override
     public Long counts(CarSendEmailDTO dto) throws SerException {
         return carSendEmailSer.counts(dto);
+    }
+
+    @Override
+    public void delete(String id) throws SerException {
+        carSendEmailSer.delete(id);
+    }
+
+    @Override
+    public CarSendEmailBO findOne(String id) throws SerException {
+        return carSendEmailSer.findOne(id);
     }
 }

@@ -46,7 +46,8 @@ public class SchemeSerImpl extends ServiceImpl<Scheme, SchemeDTO> implements Sch
 //        checkAddIdentity();
         Scheme entity = BeanTransform.copyProperties(to, Scheme.class, true, "status", "code", "programmeTime", "setters", "manager", "opinion", "sharesNum");
         entity.setStatus(Status.SUBMIT);
-        entity.setCode("BJIKE" + LocalDate.now().toString().replace("-", ""));
+        String time = LocalDateTime.now().toString();
+        entity.setCode("BJIKE" + LocalDate.now().toString().replace("-", "") + time.substring(time.indexOf(":")-2,time.lastIndexOf(":")+3).replace(":",""));
         entity.setProgrammeTime(LocalDateTime.now());
         String userToken = RpcTransmit.getUserToken();
         String name = userApi.currentUser().getUsername();
@@ -54,6 +55,10 @@ public class SchemeSerImpl extends ServiceImpl<Scheme, SchemeDTO> implements Sch
         entity.setSetters(name);
         entity.setSharesNum(to.getNumber());
         super.save(entity);
+    }
+    public static void main(String [] args) {
+        String time = LocalDateTime.now().toString();
+        System.out.print("BJIKE" + LocalDate.now().toString().replace("-", "") + time.substring(time.indexOf(":")-2,time.lastIndexOf(":")+3).replace(":",""));
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -146,8 +151,8 @@ public class SchemeSerImpl extends ServiceImpl<Scheme, SchemeDTO> implements Sch
         searchCondition(dto);
         List<Scheme> list = super.findByPage(dto);
         List<SchemeIssueBO> schemeBOList = BeanTransform.copyProperties(list, SchemeIssueBO.class);
-        if(null != schemeBOList && schemeBOList.size() >0){
-            for(SchemeIssueBO schemeIssueBO : schemeBOList){
+        if (null != schemeBOList && schemeBOList.size() > 0) {
+            for (SchemeIssueBO schemeIssueBO : schemeBOList) {
                 schemeIssueBO.setData(LocalDate.now().toString());
             }
         }
@@ -160,7 +165,7 @@ public class SchemeSerImpl extends ServiceImpl<Scheme, SchemeDTO> implements Sch
             throw new SerException("id不能为空");
         }
         Scheme scheme = super.findById(id);
-        SchemeIssueBO schemeIssueBO= BeanTransform.copyProperties(scheme, SchemeIssueBO.class, false ,"status", "type", "programmeTime");
+        SchemeIssueBO schemeIssueBO = BeanTransform.copyProperties(scheme, SchemeIssueBO.class, false, "status", "type", "programmeTime");
         schemeIssueBO.setData(LocalDate.now().toString());
         return schemeIssueBO;
     }

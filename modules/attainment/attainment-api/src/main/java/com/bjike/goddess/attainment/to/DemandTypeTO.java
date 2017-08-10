@@ -29,11 +29,6 @@ public class DemandTypeTO extends BaseTO {
      */
     private String description;
 
-    /**
-     * 状态
-     */
-    private Status status;
-
 
     public String getType() {
         return type;
@@ -51,11 +46,4 @@ public class DemandTypeTO extends BaseTO {
         this.description = description;
     }
 
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
 }

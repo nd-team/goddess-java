@@ -1,5 +1,6 @@
 package com.bjike.goddess.dispatchcar.service;
 
+import com.bjike.goddess.carinfo.bo.DriverInfoBO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.dispatchcar.bo.*;
@@ -11,6 +12,9 @@ import com.bjike.goddess.dispatchcar.excel.SonPermissionObject;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
 import com.bjike.goddess.dispatchcar.to.FinanceCollectTO;
 import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
+import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
+import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
 
 import java.util.List;
 
@@ -193,4 +197,25 @@ public interface DispatchCarInfoSer extends Ser<DispatchCarInfo, DispatchCarInfo
     List<DriverDispatchsBO> findDispatchs(Integer month) throws SerException;
 
     Double findOilAmount(String oilCardCode, Integer year, Integer month) throws SerException;
+
+    /**
+     * 查询所有司机信息
+     * @return
+     * @throws SerException
+     */
+    List<DriverInfoBO> findDriver() throws SerException;
+
+
+    /**
+     * 查询所有用车陪同人员,任务下达人,用车人
+     * @throws SerException
+     */
+    List<EntryBasicInfoBO> findAllEntry() throws SerException;
+
+
+    /**
+     * 查询所有油卡信息
+     * @throws SerException
+     */
+    List<OilCardBasicBO> findAllOil() throws SerException;
 }

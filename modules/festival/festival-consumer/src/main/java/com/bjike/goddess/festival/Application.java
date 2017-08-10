@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.context.annotation.*;
 
+import javax.servlet.MultipartConfigElement;
 import java.io.IOException;
 
 /**
@@ -19,13 +20,6 @@ import java.io.IOException;
 public class Application {
 
 
-    @Bean
-    public MultipartConfigElement multipartConfigElement() {
-        MultipartConfigFactory factory = new MultipartConfigFactory();
-        factory.setMaxFileSize("800MB");
-        factory.setMaxRequestSize("800MB");
-        return factory.createMultipartConfig();
-    }
 
     public static void main(String[] args) throws IOException {
 

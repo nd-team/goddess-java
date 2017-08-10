@@ -2,10 +2,7 @@ package com.bjike.goddess.interiorrecommend.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.interiorrecommend.bo.RecommendAssessDetailBO;
-import com.bjike.goddess.interiorrecommend.bo.RecommendRequireBO;
-import com.bjike.goddess.interiorrecommend.bo.RecommendSchemeBO;
-import com.bjike.goddess.interiorrecommend.bo.RecommendTypeBO;
+import com.bjike.goddess.interiorrecommend.bo.*;
 import com.bjike.goddess.interiorrecommend.dto.RecommendRequireDTO;
 import com.bjike.goddess.interiorrecommend.entity.RecommendScheme;
 import com.bjike.goddess.interiorrecommend.service.RecommendRequireSer;
@@ -85,4 +82,13 @@ public class RecommendRequireApiImpl implements RecommendRequireAPI {
     public List<RecommendAssessDetailBO> findAssess() throws SerException {
         return recommendRequireSer.findAssess();
     }
+
+    @Override
+    public List<RecommendContentBO> findContent() throws SerException {
+        return recommendRequireSer.findContent();
+    }
+
+
+
+
 }

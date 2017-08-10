@@ -61,7 +61,6 @@ public interface SchemeAPI {
     void issue(String id) throws SerException;
 
 
-
     /**
      * 交易中心列表
      */

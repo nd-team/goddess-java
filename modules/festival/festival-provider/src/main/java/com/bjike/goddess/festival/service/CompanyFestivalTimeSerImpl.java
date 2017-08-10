@@ -144,7 +144,9 @@ public class CompanyFestivalTimeSerImpl extends ServiceImpl<CompanyFestivalTime,
 
     @Override
     public List<CompanyFestivalTimeBO> listCompanyFestivalTime(CompanyFestivalTimeDTO companyFestivalTimeDTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         checkPermission();
+        RpcTransmit.transmitUserToken(userToken);
         companyFestivalTimeDTO.getSorts().add("createTime=desc");
         List<CompanyFestivalTime> list = super.findByCis(companyFestivalTimeDTO);
 
@@ -154,7 +156,10 @@ public class CompanyFestivalTimeSerImpl extends ServiceImpl<CompanyFestivalTime,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CompanyFestivalTimeBO addCompanyFestivalTime(CompanyFestivalTimeTO companyFestivalTimeTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         checkPermission();
+        RpcTransmit.transmitUserToken(userToken);
+
         CompanyFestivalTimeDTO dto = new CompanyFestivalTimeDTO();
         dto.getConditions().add(Restrict.eq("name", companyFestivalTimeTO.getName()));
         Long count = super.count(dto);
@@ -170,7 +175,10 @@ public class CompanyFestivalTimeSerImpl extends ServiceImpl<CompanyFestivalTime,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CompanyFestivalTimeBO editCompanyFestivalTime(CompanyFestivalTimeTO companyFestivalTimeTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         checkPermission();
+        RpcTransmit.transmitUserToken(userToken);
+
         CompanyFestivalTimeDTO dto = new CompanyFestivalTimeDTO();
         dto.getConditions().add(Restrict.eq("name", companyFestivalTimeTO.getName()));
         Long count = super.count(dto);
@@ -191,7 +199,10 @@ public class CompanyFestivalTimeSerImpl extends ServiceImpl<CompanyFestivalTime,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteCompanyFestivalTime(String id) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         checkPermission();
+        RpcTransmit.transmitUserToken(userToken);
+
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }

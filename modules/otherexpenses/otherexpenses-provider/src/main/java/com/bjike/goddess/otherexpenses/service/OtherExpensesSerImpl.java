@@ -192,7 +192,7 @@ public class OtherExpensesSerImpl extends ServiceImpl<OtherExpenses, OtherExpens
         Integer year = 0, month = 0;
         for (OtherExpenses entity : list)
             if (!name.equals(entity.getName()) || year != entity.getYear() || month != entity.getMonth()) {
-                name = entity.getArea();
+                name = entity.getName();
                 year = entity.getYear();
                 month = entity.getMonth();
                 List<OtherExpenses> temp = list.stream()

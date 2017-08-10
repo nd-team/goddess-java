@@ -11,7 +11,7 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class CusPermissionDTO extends BaseDTO{
+public class CusPermissionDTO extends BaseDTO {
     /**
      * 描述
      */

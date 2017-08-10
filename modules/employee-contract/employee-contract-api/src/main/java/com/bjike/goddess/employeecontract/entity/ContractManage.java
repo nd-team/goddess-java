@@ -40,13 +40,13 @@ public class ContractManage extends BaseEntity {
     private String serialNumber;
 
     /**
-     * 用人单位(乙方)
+     * 用人单位(甲方)
      */
     @Column(name = "employeeUnit", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '用人单位(乙方)'")
     private String employeeUnit;
 
     /**
-     * 职工姓名(甲方)
+     * 职工姓名(乙方)
      */
     @Column(name = "username", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '职工姓名(甲方)'")
     private String username;

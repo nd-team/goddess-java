@@ -119,6 +119,12 @@ public class StaffRecords extends BaseEntity {
     private String bank;
 
     /**
+     * 离职时间
+     */
+    @Column(name = "dimissionTime",  columnDefinition = "DATE   COMMENT '离职时间'")
+    private LocalDate dimissionTime;
+
+    /**
      * 邮箱
      */
     @Column(name = "email", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '邮箱'")
@@ -127,7 +133,7 @@ public class StaffRecords extends BaseEntity {
     /**
      * 状态
      */
-    @Column(name = "status", nullable = false, columnDefinition = "TINYINT(2)  DEFAULT 0  COMMENT '状态'", insertable = false)
+    @Column(name = "status", nullable = false, columnDefinition = "TINYINT(2)  COMMENT '状态'")
     private Status status;
 
 
@@ -273,5 +279,13 @@ public class StaffRecords extends BaseEntity {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public LocalDate getDimissionTime() {
+        return dimissionTime;
+    }
+
+    public void setDimissionTime(LocalDate dimissionTime) {
+        this.dimissionTime = dimissionTime;
     }
 }

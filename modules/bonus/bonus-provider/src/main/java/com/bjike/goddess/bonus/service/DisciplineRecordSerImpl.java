@@ -22,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -541,16 +542,18 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
         dto.getSorts().add("project=asc");
         List<DisciplineRecord> list = this.getListByFilter(to, dto);
         List<DisciplineRecordQuantityBO> quantityBOs = new ArrayList<>(0);
-        String area = "", project = "";
+        String area = "", project = "", name = "";
         for (DisciplineRecord entity : list)
-            if (!entity.getArea().equals(area) || !entity.getProject().equals(project)) {
+            if (!entity.getArea().equals(area) || !entity.getProject().equals(project) || !entity.getName().equals(name)) {
                 project = entity.getProject();
                 area = entity.getArea();
+                name = entity.getName();
                 DisciplineRecordQuantityBO quantity = new DisciplineRecordQuantityBO();
                 quantity.setStart(to.getStart());
                 quantity.setEnd(to.getEnd());
                 quantity.setDepartment(entity.getProject());
                 quantity.setArea(entity.getArea());
+                quantity.setName(entity.getName());
                 quantity.setReward(list.stream()
                         .filter(d -> d.getProject().equals(entity.getProject()) && d.getStatus() == Boolean.TRUE)
                         .collect(Collectors.toList()).size());
@@ -676,5 +679,67 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
         DisciplineRecordDTO dto = new DisciplineRecordDTO();
         dto.getConditions().add(Restrict.eq("status", !Boolean.FALSE));
         return super.count(dto);
+    }
+
+    @Override
+    public List<String> getarea() throws SerException {
+        List<DisciplineRecord> disciplineRecords = super.findAll();
+        List<String> list = new ArrayList<>(0);
+        if (!CollectionUtils.isEmpty(disciplineRecords)) {
+            for (DisciplineRecord entity : disciplineRecords) {
+                list.add(entity.getArea());
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<String> getGroup() throws SerException {
+        List<DisciplineRecord> disciplineRecords = super.findAll();
+        List<String> list = new ArrayList<>(0);
+        if (!CollectionUtils.isEmpty(disciplineRecords)) {
+            for (DisciplineRecord entity : disciplineRecords) {
+                list.add(entity.getProject());
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<String> getTarget() throws SerException {
+        List<DisciplineRecord> disciplineRecords = super.findAll();
+        List<String> list = new ArrayList<>(0);
+        if (!CollectionUtils.isEmpty(disciplineRecords)) {
+            for (DisciplineRecord entity : disciplineRecords) {
+                list.add(entity.getName());
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public Integer getPushNum(String userName) throws SerException {
+        CollectFilterTO to = new CollectFilterTO();
+        List<DisciplineRecordRankBO> disciplineRecordRankBOList = personalRank(to, false);
+        if (!CollectionUtils.isEmpty(disciplineRecordRankBOList)) {
+            List<DisciplineRecordRankBO> disciplineRecordRankBOs = disciplineRecordRankBOList.stream().filter(str -> str.getUsername().equals(userName)).collect(Collectors.toList());
+            if (!CollectionUtils.isEmpty(disciplineRecordRankBOs)) {
+                return disciplineRecordRankBOs.get(0).getFrequency();
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public Integer getRewardNum(String userName) throws SerException {
+        CollectFilterTO to = new CollectFilterTO();
+        List<DisciplineRecordRankBO> disciplineRecordRankBOList = personalRank(to, true);
+        if (!CollectionUtils.isEmpty(disciplineRecordRankBOList)) {
+            List<DisciplineRecordRankBO> disciplineRecordRankBOs = disciplineRecordRankBOList.stream().filter(str -> str.getUsername().equals(userName)).collect(Collectors.toList());
+            if (!CollectionUtils.isEmpty(disciplineRecordRankBOs)) {
+                return disciplineRecordRankBOs.get(0).getFrequency();
+            }
+        }
+        return 0;
     }
 }

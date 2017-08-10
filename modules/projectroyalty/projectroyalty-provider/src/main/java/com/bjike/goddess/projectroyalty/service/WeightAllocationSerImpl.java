@@ -47,6 +47,8 @@ public class WeightAllocationSerImpl extends ServiceImpl<WeightAllocation, Weigh
     private FacilitySer facilitySer;
     @Autowired
     private RatioSer ratioSer;
+    @Autowired
+    private TargetAuotaSer targetAuotaSer;
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
@@ -267,6 +269,10 @@ public class WeightAllocationSerImpl extends ServiceImpl<WeightAllocation, Weigh
         WeightAllocation entity = super.findById(id);
         if (null == entity)
             throw new SerException("数据不存在");
+        //查询是否存在依赖
+        if (targetAuotaSer.isDependent(id)) {
+            throw new SerException("存在依赖关系,无法删除");
+        }
         super.remove(entity);
         return BeanTransform.copyProperties(entity, WeightAllocationBO.class);
     }

@@ -217,7 +217,7 @@ public class JpaSpecification<BE extends BaseEntity, BD extends BaseDTO> impleme
                         join = root.join(entityName, JoinType.LEFT);
                     }
                 } else {
-                    if ("Set".equals(last)) {
+                    if (last.equals("Set")) {
                         join = join.joinSet(entityName, JoinType.LEFT);
                     } else if ("List".equals(last)) {
                         join = join.joinList(entityName, JoinType.LEFT);

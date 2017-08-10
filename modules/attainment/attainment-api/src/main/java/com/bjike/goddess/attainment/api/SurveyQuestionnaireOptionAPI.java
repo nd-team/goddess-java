@@ -1,5 +1,6 @@
 package com.bjike.goddess.attainment.api;
 
+import com.bjike.goddess.attainment.bo.QuestionCheckBO;
 import com.bjike.goddess.attainment.bo.SurveyQuestionnaireOptionBO;
 import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.attainment.to.SurveyQuestionnaireOptionTO;
@@ -76,4 +77,13 @@ public interface SurveyQuestionnaireOptionAPI {
         return null;
     }
 
+    /**
+     * 查询所有的选项
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<QuestionCheckBO> findQuesCheck() throws SerException {
+        return null;
+    }
 }

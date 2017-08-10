@@ -55,4 +55,14 @@ public class AwardStandardApiImpl implements AwardStandardAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return awardStandardSer.guidePermission(guidePermissionTO);
     }
+
+    @Override
+    public AwardStandardBO findOne(String id) throws SerException {
+        return awardStandardSer.findOne(id);
+    }
+
+    @Override
+    public Long count(AwardStandardDTO dto) throws SerException {
+        return awardStandardSer.count(dto);
+    }
 }

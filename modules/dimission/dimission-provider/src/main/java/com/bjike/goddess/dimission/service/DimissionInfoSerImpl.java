@@ -296,7 +296,7 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
     }
 
     @Override
-    public DimissionInfoBO apply(DimissionInfoTO to) throws SerException {
+    public DimissionInfoBO apply(DimissionInfoAddEditTO to) throws SerException {
         UserBO user = userAPI.currentUser();
         DimissionInfo entity = BeanTransform.copyProperties(to, DimissionInfo.class, true);
         entity.setUsername(user.getUsername());
@@ -315,7 +315,7 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
     }
 
     @Override
-    public DimissionInfoBO update(DimissionInfoTO to) throws SerException {
+    public DimissionInfoBO applyUpdate(DimissionInfoAddEditTO to) throws SerException {
         if (StringUtils.isBlank(to.getId()))
             throw new SerException("数据id不能为空");
         DimissionInfo entity = super.findById(to.getId());
@@ -330,7 +330,7 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
     }
 
     @Override
-    public DimissionInfoBO presume(DimissionInfoTO to) throws SerException {
+    public DimissionInfoBO presume(FromInfoTO to) throws SerException {
         DimissionInfo entity = BeanTransform.copyProperties(to, DimissionInfo.class, true);
         entity.setType(DimissionType.PRESUME);
         entity.setDimission(DimissionStatus.SUCCESS);
@@ -344,6 +344,21 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
         }
 
         super.save(entity);
+        return this.transformBO(entity);
+    }
+
+    @Override
+    public DimissionInfoBO preUpdate(FromInfoTO to) throws SerException {
+        if (StringUtils.isBlank(to.getId()))
+            throw new SerException("数据id不能为空");
+        DimissionInfo entity = super.findById(to.getId());
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        BeanTransform.copyProperties(to, entity, true);
+        if (null == userAPI.findByUsername(entity.getUsername()))
+            throw new SerException("该用户不存在");
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
         return this.transformBO(entity);
     }
 

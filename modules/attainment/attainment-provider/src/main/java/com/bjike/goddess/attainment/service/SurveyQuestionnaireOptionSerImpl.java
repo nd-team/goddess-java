@@ -1,5 +1,6 @@
 package com.bjike.goddess.attainment.service;
 
+import com.bjike.goddess.attainment.bo.QuestionCheckBO;
 import com.bjike.goddess.attainment.bo.SurveyQuestionnaireOptionBO;
 import com.bjike.goddess.attainment.dto.SurveyQuestionnaireOptionDTO;
 import com.bjike.goddess.attainment.entity.SurveyQuestionnaireOption;
@@ -246,5 +247,11 @@ public class SurveyQuestionnaireOptionSerImpl extends ServiceImpl<SurveyQuestion
 
         RpcTransmit.transmitUserToken(userToken);
         return flag;
+    }
+
+    @Override
+    public List<QuestionCheckBO> findQuesCheck() throws SerException {
+        List<SurveyQuestionnaireOption> surveyQuestionnaireOptions = super.findAll();
+        return BeanTransform.copyProperties(surveyQuestionnaireOptions,QuestionCheckBO.class);
     }
 }

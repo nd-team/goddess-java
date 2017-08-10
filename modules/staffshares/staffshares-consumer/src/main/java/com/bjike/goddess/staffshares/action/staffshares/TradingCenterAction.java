@@ -1,20 +1,7 @@
 package com.bjike.goddess.staffshares.action.staffshares;
 
-import com.bjike.goddess.common.api.exception.ActException;
-import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.restful.ActResult;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.staffshares.api.PurchaseAPI;
-import com.bjike.goddess.staffshares.api.SchemeAPI;
-import com.bjike.goddess.staffshares.bo.SchemeIssueBO;
-import com.bjike.goddess.staffshares.dto.SchemeDTO;
-import com.bjike.goddess.staffshares.vo.SchemeIssueVO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 交易中心

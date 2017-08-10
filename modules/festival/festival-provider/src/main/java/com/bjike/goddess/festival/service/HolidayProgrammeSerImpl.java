@@ -224,7 +224,10 @@ public class HolidayProgrammeSerImpl extends ServiceImpl<HolidayProgramme, Holid
 
     @Override
     public List<HolidayProgrammeBO> listHolidayProgramme(HolidayProgrammeDTO holidayProgrammeDTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         checkPermission();
+        RpcTransmit.transmitUserToken(userToken);
+
         holidayProgrammeDTO.getSorts().add("createTime=desc");
         List<HolidayProgramme> list = super.findByCis(holidayProgrammeDTO,true);
 
@@ -234,7 +237,10 @@ public class HolidayProgrammeSerImpl extends ServiceImpl<HolidayProgramme, Holid
     @Transactional(rollbackFor = SerException.class)
     @Override
     public HolidayProgrammeBO addHolidayProgramme(HolidayProgrammeTO holidayProgrammeTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         checkPermission();
+        RpcTransmit.transmitUserToken(userToken);
+
         HolidayProgramme holidayProgramme = BeanTransform.copyProperties(holidayProgrammeTO,HolidayProgramme.class,true);
         holidayProgramme.setCreateTime(LocalDateTime.now());
         if( holidayProgrammeTO.getHolidayWorkPlanTOList() != null && holidayProgrammeTO.getHolidayWorkPlanTOList().size()>0){
@@ -363,7 +369,10 @@ public class HolidayProgrammeSerImpl extends ServiceImpl<HolidayProgramme, Holid
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteHolidayProgramme(String id) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         checkPermission();
+        RpcTransmit.transmitUserToken(userToken);
+
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }

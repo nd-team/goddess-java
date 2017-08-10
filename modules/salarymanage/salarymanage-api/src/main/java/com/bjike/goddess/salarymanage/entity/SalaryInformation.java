@@ -71,9 +71,9 @@ public class SalaryInformation extends BaseEntity {
     private String  stationLevel;
 
     /**
-     * 管理层级
+     * 管理等级
      */
-    @Column(name = "manageLevel",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '管理层级'"  )
+    @Column(name = "manageLevel",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '管理等级'"  )
     private String  manageLevel;
 
     /**
@@ -103,6 +103,7 @@ public class SalaryInformation extends BaseEntity {
     /**
      * 转正时间
      */
+
     @Column(name = "positiveTime",columnDefinition = "DATE   COMMENT '转正时间'"  )
     private LocalDate  positiveTime;
 
@@ -444,6 +445,27 @@ public class SalaryInformation extends BaseEntity {
     public void setPostSalary (Double postSalary ) {
         this.postSalary = postSalary ;
     }
+//<<<<<<< HEAD
+//    public String getDepartment () {
+//        return department;
+//    }
+//    public void setDepartment (String department ) {
+//        this.department = department ;
+//    }
+//    public String getPosition () {
+//        return position;
+//    }
+//    public void setPosition (String position ) {
+//        this.position = position ;
+//    }
+//    public Double getBasePay () {
+//        return basePay;
+//    }
+//    public void setBasePay (Double basePay ) {
+//        this.basePay = basePay ;
+//    }
+//=======
+//>>>>>>> upstream/develop
     public Double getSkillPay () {
         return skillPay;
     }

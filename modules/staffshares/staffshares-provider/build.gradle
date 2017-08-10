@@ -32,5 +32,6 @@ dependencies {
     compile project(":common:common-utils")
     compile project(":modules:organize:organize-api")
     compile project(":modules:staffentry:staffentry-api")
+    compile project(":modules:bonus:bonus-api")
 }
 

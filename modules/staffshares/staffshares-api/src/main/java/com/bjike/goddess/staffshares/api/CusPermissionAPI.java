@@ -1,10 +1,10 @@
 package com.bjike.goddess.staffshares.api;
 
-import com.bjike.goddess.businessproject.bo.CusPermissionBO;
-import com.bjike.goddess.businessproject.dto.CusPermissionDTO;
-import com.bjike.goddess.businessproject.to.CusPermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.OpinionBO;
+import com.bjike.goddess.staffshares.bo.CusPermissionBO;
+import com.bjike.goddess.staffshares.dto.CusPermissionDTO;
+import com.bjike.goddess.staffshares.to.CusPermissionTO;
 
 import java.util.List;
 
@@ -55,7 +55,7 @@ public interface CusPermissionAPI {
      *
      * @throws SerException
      */
-    default List<OpinionBO>  listOperateById(String id) throws SerException {
+    default List<OpinionBO> listOperateById(String id) throws SerException {
         return null;
     }
 

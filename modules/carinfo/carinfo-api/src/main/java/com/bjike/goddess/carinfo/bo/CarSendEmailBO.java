@@ -16,14 +16,24 @@ import javax.persistence.Column;
 public class CarSendEmailBO extends BaseBO {
 
     /**
-     * 部门id
+     * 岗位id
      */
     private String positionNameId;
 
     /**
-     * 岗位id
+     * 部门id
      */
-    private String projectManagerId;
+    private String projectManageId;
+
+    /**
+     * 部门名称
+     */
+    private String positionName;
+
+    /**
+     * 岗位名称
+     */
+    private String projectManage;
 
     /**
      * 备注
@@ -38,12 +48,12 @@ public class CarSendEmailBO extends BaseBO {
         this.positionNameId = positionNameId;
     }
 
-    public String getProjectManagerId() {
-        return projectManagerId;
+    public String getProjectManageId() {
+        return projectManageId;
     }
 
-    public void setProjectManagerId(String projectManagerId) {
-        this.projectManagerId = projectManagerId;
+    public void setProjectManageId(String projectManageId) {
+        this.projectManageId = projectManageId;
     }
 
     @Override
@@ -62,5 +72,21 @@ public class CarSendEmailBO extends BaseBO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getPositionName() {
+        return positionName;
+    }
+
+    public void setPositionName(String positionName) {
+        this.positionName = positionName;
+    }
+
+    public String getProjectManage() {
+        return projectManage;
+    }
+
+    public void setProjectManage(String projectManage) {
+        this.projectManage = projectManage;
     }
 }

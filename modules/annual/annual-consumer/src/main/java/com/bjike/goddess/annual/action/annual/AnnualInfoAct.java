@@ -19,8 +19,12 @@ import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.bo.OpinionBO;
+import com.bjike.goddess.organize.vo.AreaVO;
+import com.bjike.goddess.organize.vo.DepartmentDetailVO;
+import com.bjike.goddess.organize.vo.OpinionVO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -78,7 +82,7 @@ public class AnnualInfoAct {
         }
     }
     /**
-     * 我的年假申请记录
+     * 我的年假记录
      *
      * @return class AnnualInfoVO
      * @version v1
@@ -176,14 +180,14 @@ public class AnnualInfoAct {
 
     /**
      * 所有部门下拉值
-     *
+     *@return class DepartmentDetailVO
      * @version v1
      */
     @GetMapping("v1/allOrageDepartment")
     public Result allOrageDepartment() throws ActException {
         try {
             List<DepartmentDetailBO> depart = departmentDetailAPI.findStatus();
-            return ActResult.initialize(depart);
+            return ActResult.initialize(BeanTransform.copyProperties(depart, DepartmentDetailVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -191,14 +195,14 @@ public class AnnualInfoAct {
 
     /**
      * 添加中所有的地区
-     *
+     * @return class AreaVO
      * @version v1
      */
     @GetMapping("v1/allArea")
     public Result allArea() throws ActException {
         try {
             List<AreaBO> area = departmentDetailAPI.findArea();
-            return ActResult.initialize(area);
+            return ActResult.initialize(BeanTransform.copyProperties(area, AreaVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -206,14 +210,14 @@ public class AnnualInfoAct {
 
     /**
      * 获取所有用户
-     *
+     * @return class UserVO
      * @version v1
      */
     @GetMapping("v1/allGetPerson")
     public Result allGetPerson() throws ActException {
         try {
             List<UserBO> getPerson = positionDetailUserAPI.findUserList();
-            return ActResult.initialize(getPerson);
+            return ActResult.initialize(BeanTransform.copyProperties(getPerson,UserVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -221,14 +225,14 @@ public class AnnualInfoAct {
 
     /**
      * 获取所有的岗位层级
-     *
+     * @return class OpinionVO
      * @version v1
      */
     @GetMapping("v1/findThaw")
     public Result findThaw() throws ActException {
         try {
             List<OpinionBO> getThawPerson = arrangementAPI.findThawOpinion();
-            return ActResult.initialize(getThawPerson);
+            return ActResult.initialize(BeanTransform.copyProperties(getThawPerson, OpinionVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -236,14 +240,14 @@ public class AnnualInfoAct {
 
     /**
      * 获取所有的岗位
-     *
+     * @return class OpinionVO
      * @version v1
      */
     @GetMapping("v1/findAllOpinion")
     public Result findAllOpinion() throws ActException {
         try {
             List<OpinionBO> getOpinion = positionDetailAPI.findAllOpinion();
-            return ActResult.initialize(getOpinion);
+            return ActResult.initialize(BeanTransform.copyProperties(getOpinion,OpinionVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

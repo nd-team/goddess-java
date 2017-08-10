@@ -3,7 +3,7 @@ package com.bjike.goddess.socialfee.excle;
 import java.io.Serializable;
 
 /**
- * 市场活动下拉导航权限控制
+ * 下拉导航权限控制
  *
  * @Author: [tanghaixiang]
  * @Date: [2017-06-08 10:30]
