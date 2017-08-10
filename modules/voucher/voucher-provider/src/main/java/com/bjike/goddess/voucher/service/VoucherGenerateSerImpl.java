@@ -1,6 +1,7 @@
 package com.bjike.goddess.voucher.service;
 
 import com.alibaba.fastjson.JSON;
+import com.bjike.goddess.analysis.bo.IncomeCostAnalysisBO;
 import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -45,9 +46,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -1697,6 +1696,123 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             }
         }
         return list;
+    }
+
+    private Set<Integer> allYear() throws SerException {
+        List<VoucherGenerate> list = super.findAll();
+        Set<Integer> set = new HashSet<>();
+        for (VoucherGenerate v : list) {
+            set.add(v.getVoucherDate().getYear());
+        }
+        return set;
+    }
+
+    private Set<Integer> allMonth() throws SerException {
+        List<VoucherGenerate> list = super.findAll();
+        Set<Integer> set = new HashSet<>();
+        for (VoucherGenerate v : list) {
+            set.add(v.getVoucherDate().getMonthValue());
+        }
+        return set;
+    }
+
+    @Override
+    public List<IncomeCostAnalysisBO> findByMoney(VoucherGenerateDTO dto) throws SerException {
+        String area = dto.getArea();
+        String projectGroup = dto.getProjectGroup();
+        VoucherGenerateDTO DTO=new VoucherGenerateDTO();
+        DTO.getConditions().add(Restrict.eq("area", area));
+        DTO.getConditions().add(Restrict.eq("projectGroup", projectGroup));
+//        Integer year = StringUtils.substringBefore(dto.getYear(), "-");
+//        Integer month = StringUtils.substringAfterLast(dto.getMonth(), "-");
+        Integer year = dto.getYear();
+        Integer month = dto.getMonth();
+        List<VoucherGenerate> voucherGenerates = super.findByCis(DTO);
+        for (VoucherGenerate voucherGenerate : voucherGenerates) {
+            if (year.equals(voucherGenerate.getVoucherDate().getYear()) && month.equals(voucherGenerate.getVoucherDate().getMonthValue())) {
+                List<IncomeCostAnalysisBO> incomeCostAnalysisBOS = new ArrayList<>();
+
+                double oilmoney = 0;//油卡充值
+                double rent = 0;//房租
+                double socialSecurity = 0;//社保
+                double staffWage = 0;//员工工资
+                double office = 0;//办公费
+                double marketCost = 0;//市场费
+                double tax = 0;//税金
+                if (voucherGenerate.getSecondSubject().equals("油卡充值") || voucherGenerate.getThirdSubject().equals("油卡充值")) {
+                    if (null != voucherGenerate.getBorrowMoney()) {
+                        oilmoney = voucherGenerate.getBorrowMoney();
+                    } else if (null != voucherGenerate.getLoanMoney()) {
+                        oilmoney = voucherGenerate.getLoanMoney();
+                    }
+                }
+                if (voucherGenerate.getSecondSubject().equals("房租") || voucherGenerate.getThirdSubject().equals("房租")) {
+
+                    if (null != voucherGenerate.getBorrowMoney()) {
+                        rent = voucherGenerate.getBorrowMoney();
+                    } else if (null != voucherGenerate.getLoanMoney()) {
+                        rent = voucherGenerate.getLoanMoney();
+                    }
+                }
+                if (voucherGenerate.getSecondSubject().equals("社保") || voucherGenerate.getThirdSubject().equals("社保")) {
+
+                    if (null != voucherGenerate.getBorrowMoney()) {
+                        socialSecurity = voucherGenerate.getBorrowMoney();
+                    } else if (null != voucherGenerate.getLoanMoney()) {
+                        socialSecurity = voucherGenerate.getLoanMoney();
+                    }
+                }
+                if (voucherGenerate.getSecondSubject().equals("员工工资") || voucherGenerate.getThirdSubject().equals("员工工资")) {
+
+                    if (null != voucherGenerate.getBorrowMoney()) {
+                        staffWage = voucherGenerate.getBorrowMoney();
+                    } else if (null != voucherGenerate.getLoanMoney()) {
+                        staffWage = voucherGenerate.getLoanMoney();
+                    }
+                }
+                if (voucherGenerate.getSecondSubject().equals("办公费") || voucherGenerate.getThirdSubject().equals("办公费")) {
+
+                    if (null != voucherGenerate.getBorrowMoney()) {
+                        office = voucherGenerate.getBorrowMoney();
+                    } else if (null != voucherGenerate.getLoanMoney()) {
+                        office = voucherGenerate.getLoanMoney();
+                    }
+                }
+                if (voucherGenerate.getSecondSubject().equals("市场费") || voucherGenerate.getThirdSubject().equals("市场费")) {
+
+                    if (null != voucherGenerate.getBorrowMoney()) {
+                        marketCost = voucherGenerate.getBorrowMoney();
+                    } else if (null != voucherGenerate.getLoanMoney()) {
+                        marketCost = voucherGenerate.getLoanMoney();
+                    }
+                }
+                if (voucherGenerate.getSecondSubject().equals("税金") || voucherGenerate.getThirdSubject().equals("税金")) {
+
+                    if (null != voucherGenerate.getBorrowMoney()) {
+                        tax = voucherGenerate.getBorrowMoney();
+                    } else if (null != voucherGenerate.getLoanMoney()) {
+                        tax = voucherGenerate.getLoanMoney();
+                    }
+                }
+
+                IncomeCostAnalysisBO incomeCostAnalysisBO = new IncomeCostAnalysisBO();
+//                incomeCostAnalysisBO.setArea(area);
+//                incomeCostAnalysisBO.setDepartment(projectGroup);
+//                incomeCostAnalysisBO.setYear(year);
+//                incomeCostAnalysisBO.setMonth(month);
+                incomeCostAnalysisBO.setOilRecharge(oilmoney);
+                incomeCostAnalysisBO.setRent(rent);
+                incomeCostAnalysisBO.setSocialSecurity(socialSecurity);
+                incomeCostAnalysisBO.setStaffWage(staffWage);
+                incomeCostAnalysisBO.setOffice(office);
+                incomeCostAnalysisBO.setMarketCost(marketCost);
+                incomeCostAnalysisBO.setTax(tax);
+                incomeCostAnalysisBOS.add(incomeCostAnalysisBO);
+
+                return incomeCostAnalysisBOS;
+            }
+        }
+        return null;
     }
 
     @Override

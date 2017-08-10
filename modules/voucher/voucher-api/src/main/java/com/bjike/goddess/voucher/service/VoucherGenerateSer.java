@@ -1,5 +1,6 @@
 package com.bjike.goddess.voucher.service;
 
+import com.bjike.goddess.analysis.bo.IncomeCostAnalysisBO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.voucher.bo.PartBO;
@@ -494,6 +495,10 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
      * @throws SerException
      */
     default List<PartBO> findByCondition(String[] conditions) throws SerException {
+        return null;
+    }
+
+    default List<IncomeCostAnalysisBO> findByMoney(VoucherGenerateDTO dto) throws SerException {
         return null;
     }
 

@@ -1,5 +1,6 @@
 package com.bjike.goddess.voucher.action.voucher;
 
+import com.bjike.goddess.analysis.bo.IncomeCostAnalysisBO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -1289,6 +1290,15 @@ public class VoucherGenerateAction extends BaseFileAction{
     public Result listOrganUser() throws ActException {
         try {
             List<UserBO> userList = positionDetailUserAPI.findUserListInOrgan();
+            return ActResult.initialize(userList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    @GetMapping("v1/findByMoney")
+    public Result findByMoney(VoucherGenerateDTO dto) throws ActException {
+        try {
+            List<IncomeCostAnalysisBO> userList = voucherGenerateAPI.findByMoney(dto);
             return ActResult.initialize(userList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

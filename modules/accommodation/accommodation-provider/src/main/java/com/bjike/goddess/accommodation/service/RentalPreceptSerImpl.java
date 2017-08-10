@@ -2,6 +2,7 @@ package com.bjike.goddess.accommodation.service;
 
 import com.bjike.goddess.accommodation.bo.RentalPreceptBO;
 import com.bjike.goddess.accommodation.dto.RentalPreceptDTO;
+import com.bjike.goddess.accommodation.entity.Rental;
 import com.bjike.goddess.accommodation.entity.RentalPrecept;
 import com.bjike.goddess.accommodation.enums.GuideAddrStatus;
 import com.bjike.goddess.accommodation.enums.PassStatus;
@@ -470,10 +471,10 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
             rentalPrecept.setModifyTime(LocalDateTime.now());
             rentalPrecept.setProjectName(StringUtils.join(preceptTO.getProjectName(),","));
             super.update(rentalPrecept);
+            return BeanTransform.copyProperties(rentalPrecept, RentalPreceptBO.class);
         } else {
             throw new SerException("更新ID不能为空!");
         }
-        return BeanTransform.copyProperties(preceptTO, RentalPreceptBO.class);
     }
 
 
@@ -487,42 +488,45 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
             throw new SerException(e.getMessage());
         }
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public RentalPreceptBO businessAudit(RentalPreceptTO preceptTO) throws SerException {
         checkBusinessAuditIdentity();
         RentalPrecept precept = super.findById(preceptTO.getId());
+        BeanTransform.copyProperties(preceptTO, precept,true);
 
         precept.setCommerceRemark(preceptTO.getCommerceRemark());
         super.update(precept);
         return BeanTransform.copyProperties(precept, RentalPreceptBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public RentalPreceptBO financeAudit(RentalPreceptTO preceptTO) throws SerException {
         checkFinanceAuditIdentity();
         RentalPrecept precept = super.findById(preceptTO.getId());
+        BeanTransform.copyProperties(preceptTO, precept,true);
         precept.setMoneyOn(preceptTO.getMoneyOn());
         precept.setOperatingRemark(preceptTO.getOperatingRemark());
         super.update(precept);
         return BeanTransform.copyProperties(precept, RentalPreceptBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public RentalPreceptBO resourceAudit(RentalPreceptTO preceptTO) throws SerException {
         checkResourceAuditIdentity();
         RentalPrecept precept = super.findById(preceptTO.getId());
+        BeanTransform.copyProperties(precept,RentalPreceptBO.class);
         precept.setComprehensiveRemark(preceptTO.getComprehensiveRemark());
         super.update(precept);
         return BeanTransform.copyProperties(precept, RentalPreceptBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public RentalPreceptBO manageAudit(RentalPreceptTO preceptTO) throws SerException {
         checkManagerAuditIdentity();
         UserBO userBO = userAPI.currentUser();
         RentalPrecept precept = super.findById(preceptTO.getId());
-
+        BeanTransform.copyProperties(preceptTO, precept,true);
         precept.setManage(userBO.getUsername());
         precept.setManageOpinion(preceptTO.getManageOpinion());
         precept.setManagePass(preceptTO.getManagePass());
@@ -535,11 +539,12 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
         RentalPreceptBO bo = BeanTransform.copyProperties(precept, RentalPreceptBO.class);
         return bo;
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public RentalPreceptBO generalAudit(RentalPreceptTO preceptTO) throws SerException {
         checkGeneralAuditIdentity();
         RentalPrecept rentalPrecept = super.findById(preceptTO.getId());
+        BeanTransform.copyProperties(preceptTO, rentalPrecept,true);
         if (rentalPrecept.getPassStatus().getCode() == 0) {
             throw new SerException("总经办审核失败,项目经理还未审核");
         }

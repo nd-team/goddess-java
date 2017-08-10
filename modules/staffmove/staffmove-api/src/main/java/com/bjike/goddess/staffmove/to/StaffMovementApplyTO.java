@@ -143,7 +143,7 @@ public class StaffMovementApplyTO extends BaseTO {
     /**
      * 原决策层是否同意调动
      */
-    @NotBlank(message = "原决策层是否同意调动不能为空",groups = {StaffMovementApplyTO.transferAudit.class})
+    @NotBlank(message = "原决策层是否同意调动不能为空",groups = {StaffMovementApplyTO.originalAudit.class})
     private String originalMove;
     /**
      * 调往决策层审核人

@@ -260,7 +260,7 @@ public class RentalApplyAct extends BaseFileAction{
      * @version v1
      */
     @PostMapping("v1/rentInfo")
-    public Result rentInfo(RentalApplyTO to) throws ActException {
+    public Result rentInfo(@Validated(RentalApplyTO.TestManage.class) RentalApplyTO to) throws ActException {
         try {
             RentalBO rentalBO = rentalApplyAPI.rentInfo(to);
             return ActResult.initialize(BeanTransform.copyProperties(rentalBO, RentalVO.class));

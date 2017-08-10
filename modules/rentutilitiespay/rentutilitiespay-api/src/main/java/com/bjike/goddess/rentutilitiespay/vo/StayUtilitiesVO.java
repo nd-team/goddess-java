@@ -61,6 +61,10 @@ public class StayUtilitiesVO {
      * 住宿天数
      */
     private Double stayDay;
+    /**
+     * 房租
+     */
+    private Double rent;
 
     /**
      * 房租公司缴纳
@@ -189,6 +193,14 @@ public class StayUtilitiesVO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Double getRent() {
+        return rent;
+    }
+
+    public void setRent(Double rent) {
+        this.rent = rent;
     }
 
     public String getNum() {

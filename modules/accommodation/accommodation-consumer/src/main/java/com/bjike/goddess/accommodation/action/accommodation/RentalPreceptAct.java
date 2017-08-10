@@ -245,7 +245,7 @@ public class RentalPreceptAct {
     public Result businessAudit(@Validated(RentalPreceptTO.TestBusiness.class) RentalPreceptTO rentalPreceptTO) throws ActException {
         try {
             RentalPreceptBO bo = rentalPreceptAPI.businessAudit(rentalPreceptTO);
-            return ActResult.initialize(BeanTransform.copyProperties(bo, RentalPreceptVO.class, true));
+            return ActResult.initialize(BeanTransform.copyProperties(bo, RentalPreceptVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

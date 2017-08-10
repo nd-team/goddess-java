@@ -9,6 +9,7 @@ import com.bjike.goddess.analysis.to.CollectTO;
 import com.bjike.goddess.analysis.to.GuidePermissionTO;
 import com.bjike.goddess.analysis.to.IncomeCostAnalysisTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,18 +48,18 @@ public class IncomeCostAnalysisApiImpl implements IncomeCostAnalysisAPI {
     }
 
     @Override
-    public List<IncomeCostAnalysisBO> findListIncomeCostAnalysis(IncomeCostAnalysisDTO incomeCostAnalysisDTO) throws SerException {
-        return incomeCostAnalysisSer.findListIncomeCostAnalysis(incomeCostAnalysisDTO);
+    public List<IncomeCostAnalysisBO> findListIncomeCostAnalysis(IncomeCostAnalysisDTO dto) throws SerException {
+        return incomeCostAnalysisSer.findListIncomeCostAnalysis(dto);
     }
 
-    @Override
-    public IncomeCostAnalysisBO insertIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
-        return incomeCostAnalysisSer.insertIncomeCostAnalysis(incomeCostAnalysisTO);
-    }
+//    @Override
+//    public IncomeCostAnalysisBO insertIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
+//        return incomeCostAnalysisSer.insertIncomeCostAnalysis(incomeCostAnalysisTO);
+//    }
 
     @Override
-    public IncomeCostAnalysisBO editIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
-        return incomeCostAnalysisSer.editIncomeCostAnalysis(incomeCostAnalysisTO);
+    public void editIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
+         incomeCostAnalysisSer.editIncomeCostAnalysis(incomeCostAnalysisTO);
     }
 
     @Override

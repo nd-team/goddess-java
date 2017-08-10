@@ -10,6 +10,10 @@ package com.bjike.goddess.accommodation.vo;
  */
 public class RentalApplyVO {
     /**
+     * id
+     */
+    private String id;
+    /**
      * 租房编号
      */
     private String rentNum;
@@ -149,6 +153,14 @@ public class RentalApplyVO {
      * 备注
      */
     private String remark;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getRentNum() {
         return rentNum;

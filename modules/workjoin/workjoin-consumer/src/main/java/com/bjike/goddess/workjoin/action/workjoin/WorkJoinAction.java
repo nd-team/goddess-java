@@ -5,11 +5,14 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.ModuleTypeAPI;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.organize.vo.ModuleTypeVO;
 import com.bjike.goddess.organize.vo.PositionDetailVO;
 import com.bjike.goddess.workjoin.api.WorkJoinAPI;
 import com.bjike.goddess.workjoin.bo.WorkJoinBO;
@@ -46,6 +49,8 @@ public class WorkJoinAction {
     private PositionDetailAPI positionDetailAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private ModuleTypeAPI moduleTypeAPI;
     /**
      * 模块设置导航权限
      *
@@ -238,6 +243,20 @@ public class WorkJoinAction {
     public Result position(HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findStatus(), PositionDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 查询正常状态的模块类型数据
+     *
+     * @return class ModuleTypeVO
+     * @version v1
+     */
+    @GetMapping("v1/findThaw")
+    public Result findThaw(HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.findByStatus(Status.THAW), ModuleTypeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

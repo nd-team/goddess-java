@@ -132,23 +132,23 @@ public class CallInfoSerImpl extends ServiceImpl<CallInfo, CallInfoDTO> implemen
             Double accMoney = 0d;
             for (int i = 0; i < callInfos.size(); i++) {
                 CallInfo temp = callInfos.get(i);
-                String temp_aName = temp.getInvestor();
-                String temp_bName = temp.getInvestObject();
-                if(temp != null){
-                if (aName.equals(temp_aName) && bName.equals(temp_bName) && i == 0) {
-                    accMoney = temp.getThisInvestMoney() == null ? 0d : temp.getThisInvestMoney();
-                } else if (aName.equals(temp_aName) && bName.equals(temp_bName) && i != 0) {
-                    accMoney = accMoney + (temp.getThisInvestMoney() == null ? 0d : temp.getThisInvestMoney());
-                } else if (!aName.equals(temp_aName) && !bName.equals(temp_bName) && i != 0) {
-                    accMoney = 0d;
-                    aName = temp_aName;
-                    bName = temp_bName;
-                } else if (!aName.equals(temp_aName) && !bName.equals(temp_bName) && i == 0) {
-                    accMoney = (temp.getThisInvestMoney() == null ? 0d : temp.getThisInvestMoney());
-                    aName = temp_aName;
-                    bName = temp_bName;
-                }
-                temp.setAccumulativeInvestMoney(accMoney);
+                if (temp != null) {
+                    String temp_aName = temp.getInvestor();
+                    String temp_bName = temp.getInvestObject();
+                    if (aName.equals(temp_aName) && bName.equals(temp_bName) && i == 0) {
+                        accMoney = temp.getThisInvestMoney() == null ? 0d : temp.getThisInvestMoney();
+                    } else if (aName.equals(temp_aName) && bName.equals(temp_bName) && i != 0) {
+                        accMoney = accMoney + (temp.getThisInvestMoney() == null ? 0d : temp.getThisInvestMoney());
+                    } else if (!aName.equals(temp_aName) && !bName.equals(temp_bName) && i != 0) {
+                        accMoney = 0d;
+                        aName = temp_aName;
+                        bName = temp_bName;
+                    } else if (!aName.equals(temp_aName) && !bName.equals(temp_bName) && i == 0) {
+                        accMoney = (temp.getThisInvestMoney() == null ? 0d : temp.getThisInvestMoney());
+                        aName = temp_aName;
+                        bName = temp_bName;
+                    }
+                    temp.setAccumulativeInvestMoney(accMoney);
 
 
                     //累计投资比（累计投资额/投资总额）
@@ -156,8 +156,6 @@ public class CallInfoSerImpl extends ServiceImpl<CallInfo, CallInfoDTO> implemen
                     //提取风险控制保证金（等于本次投资额*提取风险控制保证金率）
                     temp.setExtractRiskControlMargin(temp.getThisInvestMoney() * temp.getExtractRiskRserveRatio());
                 }
-
-
 
                 final_callInfos.add(temp);
             }

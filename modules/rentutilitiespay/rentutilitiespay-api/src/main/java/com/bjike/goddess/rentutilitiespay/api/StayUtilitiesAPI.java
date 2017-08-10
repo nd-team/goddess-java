@@ -110,13 +110,13 @@ public interface StayUtilitiesAPI {
         return null;
     }
     /**
-     * 综合资源部
+     * 员工核实
      *
      * @param to to
      * @return class StayUtilitiesBO
      * @throws SerException
      */
-    default StayUtilitiesBO resourceAudit(StayUtilitiesTO to) throws SerException {
+    default StayUtilitiesBO employeeVerify(StayUtilitiesTO to) throws SerException {
         return null;
     }
     /**

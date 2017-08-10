@@ -179,7 +179,7 @@ public class FundEntryAction extends BaseFileAction{
      * @version v1
      */
     @PostMapping("v1/audit")
-    public Result audit(@Validated FundEntryTO fundEntryTO, BindingResult bindingResult) throws ActException {
+    public Result audit(@Validated(FundEntryTO.TestAudit.class) FundEntryTO fundEntryTO, BindingResult bindingResult) throws ActException {
         try {
             FundEntryBO fundEntryBO = fundEntryAPI.audit(fundEntryTO);
             return ActResult.initialize(BeanTransform.copyProperties(fundEntryBO,FundEntryVO.class));

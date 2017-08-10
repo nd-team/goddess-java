@@ -158,7 +158,7 @@ public class CallInfoAction {
     public Result apply(@Validated(CallInfoTO.TestApply.class) CallInfoTO callInfoTO, BindingResult bindingResult) throws ActException {
         try {
             CallInfoBO callInfoBO = callInfoAPI.applyInvest(callInfoTO);
-            return ActResult.initialize(callInfoBO);
+            return ActResult.initialize(BeanTransform.copyProperties(callInfoBO,CallInfoVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
