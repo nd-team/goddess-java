@@ -36,7 +36,7 @@ public class ModuleSerImpl extends ServiceImpl<Module, ModuleDTO> implements Mod
 
     @Override
     public List<ModuleBO> list(ModuleDTO moduleDTO) throws SerException {
-        moduleDTO.setSorts(Arrays.asList("createTime=asc"));
+        moduleDTO.getSorts().add("createTime=asc");
         List<ModuleBO> modules = BeanTransform.copyProperties(super.findByCis(moduleDTO), ModuleBO.class);
         ModuleApplyDTO applyDTO = new ModuleApplyDTO();
         applyDTO.getConditions().add(Restrict.eq("company", "北京艾佳"));
