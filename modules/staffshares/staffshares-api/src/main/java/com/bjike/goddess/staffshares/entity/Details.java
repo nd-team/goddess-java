@@ -22,6 +22,13 @@ import java.time.LocalDate;
 public class Details extends BaseEntity {
 
     /**
+     * 票面价值
+     */
+    @Column(name = "facevalue", columnDefinition = "DECIMAL(10,2)   COMMENT '票面价值'")
+    private Double facevalue;
+
+
+    /**
      * 方案代码
      */
     @Column(name = "code", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '方案代码'")
@@ -118,5 +125,13 @@ public class Details extends BaseEntity {
 
     public void setSharesNum(int sharesNum) {
         this.sharesNum = sharesNum;
+    }
+
+    public Double getFacevalue() {
+        return facevalue;
+    }
+
+    public void setFacevalue(Double facevalue) {
+        this.facevalue = facevalue;
     }
 }

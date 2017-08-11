@@ -17,7 +17,6 @@ import com.bjike.goddess.employeecontract.vo.ContractChangeVO;
 import com.bjike.goddess.employeecontract.vo.ContractInfoVO;
 import com.bjike.goddess.employeecontract.vo.ContractManageVO;
 import com.bjike.goddess.employeecontract.vo.ContractPersonalVO;
-import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
@@ -55,7 +54,6 @@ public class ContractManageAction extends BaseFileAction {
 
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
-
 
 
     /**
@@ -417,6 +415,21 @@ public class ContractManageAction extends BaseFileAction {
             fileAPI.delFile(storageToken.toString(), contractDeleteFileTO.getPaths());
         }
         return new ActResult("delFile success");
+    }
+
+    /**
+     * 获取姓名
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getName")
+    public Result getName() throws ActException {
+        try {
+            List<String> list = contractManageAPI.getName();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
     }
 
 }

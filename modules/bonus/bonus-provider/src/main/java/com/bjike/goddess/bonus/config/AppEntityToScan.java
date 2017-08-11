@@ -16,6 +16,6 @@ import org.springframework.stereotype.Component;
 public class AppEntityToScan extends EntityToScanImpl<AppRoot> {
     @Override
     public String[] entityScan() {
-        return new String[]{"com.bjike.goddess.bonus", "com.bjike.goddess.user", "com.bjike.goddess.organize.entity"};
+        return new String[]{"com.bjike.goddess.bonus"};
     }
 }
