@@ -49,10 +49,6 @@ public class DepartmentBetCTO extends BaseTO {
      */
     private Double betScore;
     /**
-     * 部门间对赌表B
-     */
-    private String departmentBetBId;
-    /**
      * 体系间对赌表D
      */
     private List<DepartmentBetETO> departmentBetETOS;
@@ -114,13 +110,6 @@ public class DepartmentBetCTO extends BaseTO {
         this.betScore = betScore;
     }
 
-    public String getDepartmentBetBId() {
-        return departmentBetBId;
-    }
-
-    public void setDepartmentBetBId(String departmentBetBId) {
-        this.departmentBetBId = departmentBetBId;
-    }
 
     public List<DepartmentBetETO> getDepartmentBetETOS() {
         return departmentBetETOS;

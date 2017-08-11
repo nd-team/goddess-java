@@ -76,7 +76,7 @@ public class CapitalInvestAction {
     }
 
     /**
-     * 资金投资
+     * 资金投资列表
      *
      * @param capitalInvestDTO 资金投资dto
      * @return class CapitalInvestVO

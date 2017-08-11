@@ -8,7 +8,6 @@ import com.bjike.goddess.rentutilitiespay.bo.CollectAreaBO;
 import com.bjike.goddess.rentutilitiespay.bo.RentPayBO;
 import com.bjike.goddess.rentutilitiespay.dto.RentPayDTO;
 import com.bjike.goddess.rentutilitiespay.entity.RentPay;
-import com.bjike.goddess.rentutilitiespay.entity.StayUtilities;
 import com.bjike.goddess.rentutilitiespay.enums.GuideAddrStatus;
 import com.bjike.goddess.rentutilitiespay.excel.SonPermissionObject;
 import com.bjike.goddess.rentutilitiespay.to.GuidePermissionTO;
@@ -16,18 +15,14 @@ import com.bjike.goddess.rentutilitiespay.to.RentPayTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -48,6 +43,7 @@ public class RentPaySerImpl extends ServiceImpl<RentPay, RentPayDTO> implements 
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private StayUtilitiesSer stayUtilitiesSer;
+
     /**
      * 核对查看权限（部门级别）
      */
@@ -85,6 +81,7 @@ public class RentPaySerImpl extends ServiceImpl<RentPay, RentPayDTO> implements 
         RpcTransmit.transmitUserToken(userToken);
 
     }
+
     /**
      * 审核权限（部门级别）
      */
@@ -153,6 +150,7 @@ public class RentPaySerImpl extends ServiceImpl<RentPay, RentPayDTO> implements 
         }
         return flag;
     }
+
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         List<SonPermissionObject> list = new ArrayList<>();
@@ -256,8 +254,9 @@ public class RentPaySerImpl extends ServiceImpl<RentPay, RentPayDTO> implements 
     @Override
     public RentPayBO getOne(String id) throws SerException {
         RentPay rentPay = super.findById(id);
-        return BeanTransform.copyProperties(rentPay,RentPayBO.class);
+        return BeanTransform.copyProperties(rentPay, RentPayBO.class);
     }
+
     @Override
     public List<RentPayBO> findListRentPay(RentPayDTO rentPayDTO) throws SerException {
         List<RentPay> rentPays = super.findByCis(rentPayDTO, true);
@@ -267,7 +266,7 @@ public class RentPaySerImpl extends ServiceImpl<RentPay, RentPayDTO> implements 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public RentPayBO insertRentPay(RentPayTO rentPayTO) throws SerException {
-        RentPay rentPay = BeanTransform.copyProperties(rentPayTO, RentPay.class, true,"projectName");
+        RentPay rentPay = BeanTransform.copyProperties(rentPayTO, RentPay.class, true, "projectName");
         rentPay.setCreateTime(LocalDateTime.now());
         //用水量（水费期末数目-水费初期数目）
         Double water = rentPay.getWaterEndNum() - rentPay.getWaterBeginNum();
@@ -284,7 +283,7 @@ public class RentPaySerImpl extends ServiceImpl<RentPay, RentPayDTO> implements 
         //缴纳金额汇总（房租（元/月）+管理费，卫生费+水费缴纳金额+电费缴纳金额+管道燃气费充值额度）
         Double payMoneyCollect = rentPay.getRent() + rentPay.getFee() + waterPayMoney + energyPayMoney + rentPay.getGasRechargeLines();
         rentPay.setPayMoneyCollect(payMoneyCollect);
-        rentPay.setProjectName(StringUtils.join(rentPayTO.getProjectName(),","));
+        rentPay.setProjectName(StringUtils.join(rentPayTO.getProjectName(), ","));
         super.save(rentPay);
         return BeanTransform.copyProperties(rentPay, RentPayBO.class);
     }
@@ -293,7 +292,7 @@ public class RentPaySerImpl extends ServiceImpl<RentPay, RentPayDTO> implements 
     @Override
     public RentPayBO editRentPay(RentPayTO rentPayTO) throws SerException {
         RentPay rentPay = super.findById(rentPayTO.getId());
-        BeanTransform.copyProperties(rentPayTO, rentPay, true,"projectName");
+        BeanTransform.copyProperties(rentPayTO, rentPay, true, "projectName");
         rentPay.setModifyTime(LocalDateTime.now());
         //用水量（水费期末数目-水费初期数目）
         Double water = rentPay.getWaterEndNum() - rentPay.getWaterBeginNum();
@@ -310,16 +309,16 @@ public class RentPaySerImpl extends ServiceImpl<RentPay, RentPayDTO> implements 
         //缴纳金额汇总（房租（元/月）+管理费，卫生费+水费缴纳金额+电费缴纳金额+管道燃气费充值额度）
         Double payMoneyCollect = rentPay.getRent() + rentPay.getFee() + waterPayMoney + energyPayMoney + rentPay.getGasRechargeLines();
         rentPay.setPayMoneyCollect(payMoneyCollect);
-        rentPay.setProjectName(StringUtils.join(rentPayTO.getProjectName(),","));
+        rentPay.setProjectName(StringUtils.join(rentPayTO.getProjectName(), ","));
         super.update(rentPay);
-        return BeanTransform.copyProperties(rentPayTO, RentPayBO.class);
+        return BeanTransform.copyProperties(rentPay, RentPayBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeRentPay(String id) throws SerException {
-        if (StringUtils.isBlank(id)){
-            throw  new SerException("id不能为空");
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空");
         }
         super.remove(id);
     }
@@ -327,8 +326,8 @@ public class RentPaySerImpl extends ServiceImpl<RentPay, RentPayDTO> implements 
     @Override
     public List<CollectAreaBO> collectArea(String[] areas) throws SerException {
         String[] areasTemp = new String[areas.length];
-        for(int i = 0;i<areas.length;i++){
-            areasTemp[i] = "'"+areas[i]+"'";
+        for (int i = 0; i < areas.length; i++) {
+            areasTemp[i] = "'" + areas[i] + "'";
         }
         String areaStr = StringUtils.join(areasTemp, ",");
 
@@ -352,10 +351,10 @@ public class RentPaySerImpl extends ServiceImpl<RentPay, RentPayDTO> implements 
         sb.append(" FROM rentutilitiespay_rentpay WHERE area IN (%s) GROUP BY area,projectGroup,projectName,address, ");
         sb.append(" area ORDER BY area)A ");
         String sql = sb.toString();
-        sql = String.format(sql, areaStr,areaStr);
-        String [] fields = new String[]{"area","projectGroup","projectName","address",
-            "rent","waterPayMoney","energyPayMoney","fee","remark"};
-        List<CollectAreaBO> collectAreaBOS = super.findBySql(sql,CollectAreaBO.class,fields);
+        sql = String.format(sql, areaStr, areaStr);
+        String[] fields = new String[]{"area", "projectGroup", "projectName", "address",
+                "rent", "waterPayMoney", "energyPayMoney", "fee", "remark"};
+        List<CollectAreaBO> collectAreaBOS = super.findBySql(sql, CollectAreaBO.class, fields);
         return collectAreaBOS;
     }
 
@@ -371,14 +370,19 @@ public class RentPaySerImpl extends ServiceImpl<RentPay, RentPayDTO> implements 
         return areaList;
 
     }
+
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public RentPayBO financeAudit(RentPayTO rentPayTO) throws SerException {
 
         checkAuditIdentity();
         RentPay rentPay = super.findById(rentPayTO.getId());
-        BeanTransform.copyProperties(rentPayTO, rentPay, true);
+//        LocalDateTime a = rentPay.getCreateTime();
+//        rentPay = BeanTransform.copyProperties(rentPayTO, RentPay.class, true);
+//        rentPay.setCreateTime(a);
         rentPay.setOperatingPay(rentPayTO.getOperatingPay());
+        rentPay.setModifyTime(LocalDateTime.now());
         super.update(rentPay);
-        return BeanTransform.copyProperties(rentPayTO, RentPayBO.class);
+        return BeanTransform.copyProperties(rentPay, RentPayBO.class);
     }
 }

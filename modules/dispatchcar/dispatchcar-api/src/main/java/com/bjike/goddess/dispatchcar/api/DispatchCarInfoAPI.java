@@ -234,14 +234,16 @@ public interface DispatchCarInfoAPI {
      *
      * @return
      */
-    List<DriverDispatchFeeBO> findDispatchFree(Integer month) throws SerException;
+    List<DriverDispatchFeeBO> findDispatchFree(String area,String projectGroup,Integer year,Integer month) throws SerException;
+
 
     /**
      * 按月份查询司机出车数
      *
      * @return
      */
-    List<DriverDispatchsBO> findDispatchs(Integer month) throws SerException;
+    List<DriverDispatchsBO> findDispatchs(String area,String projectGroup,Integer year,Integer month) throws SerException ;
+
 
     Double findOilAmount(String oilCardCode, Integer year, Integer month) throws SerException;
 

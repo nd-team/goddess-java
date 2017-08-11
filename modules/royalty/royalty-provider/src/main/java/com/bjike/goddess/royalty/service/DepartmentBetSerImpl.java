@@ -5,7 +5,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.royalty.bo.*;
+import com.bjike.goddess.royalty.bo.DepartmentBetABO;
+import com.bjike.goddess.royalty.bo.DepartmentBetBBO;
+import com.bjike.goddess.royalty.bo.DepartmentBetCBO;
 import com.bjike.goddess.royalty.dto.*;
 import com.bjike.goddess.royalty.entity.*;
 import com.bjike.goddess.royalty.enums.GuideAddrStatus;
@@ -202,37 +204,58 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
     }
 
     @Override
-    public List<DepartmentBetBO> list(DepartmentBetDTO dto) throws SerException {
+    public List<DepartmentBetABO> list(DepartmentBetADTO dto) throws SerException {
         checkSeeIdentity();
-        DepartmentBetADTO adto = new DepartmentBetADTO();
-        List<DepartmentBetA> listA = departmentBetASer.findByCis(adto);
-        List<DepartmentBetBO> departmentBetBOS = new ArrayList<>(listA.size());
-
-        for (DepartmentBetA departmentBetA : listA) {
-            DepartmentBetBO betBO = new DepartmentBetBO();
-            betBO.setDepartmentBetABO(BeanTransform.copyProperties(departmentBetA, DepartmentBetABO.class));
-            DepartmentBetBDTO bdto = new DepartmentBetBDTO();
-            List<DepartmentBetB> listB = departmentBetBSer.findByCis(bdto);
-            List<DepartmentBetBBO> bboList = BeanTransform.copyProperties(listB, DepartmentBetBBO.class);
-            betBO.getDepartmentBetABO().setDepartmentBetBBOS(bboList);
-
-            for (DepartmentBetBBO departmentBetBBO : bboList) {
-                DepartmentBetCDTO dtoC = new DepartmentBetCDTO();
-                List<DepartmentBetC> listC = departmentBetCSer.findByCis(dtoC);
-                List<DepartmentBetCBO> cboList = BeanTransform.copyProperties(listC, DepartmentBetCBO.class);
-                departmentBetBBO.setDepartmentBetCBOS(cboList);
-
-                for (DepartmentBetCBO departmentBetCBO : cboList) {
-                    DepartmentBetDDTO dtoD = new DepartmentBetDDTO();
-                    List<DepartmentBetD> listD = departmentBetDSer.findByCis(dtoD);
-                    List<DepartmentBetDBO> dboList = BeanTransform.copyProperties(listD, DepartmentBetDBO.class);
-                    departmentBetCBO.setDepartmentBetDBOS(dboList);
+        List<DepartmentBetA> listA = departmentBetASer.findByCis(dto);
+        List<DepartmentBetABO> listABO = BeanTransform.copyProperties(listA, DepartmentBetABO.class);
+        if (listABO != null) {
+            for (DepartmentBetABO departmentBetABO : listABO) {
+                DepartmentBetBDTO bdto = new DepartmentBetBDTO();
+                bdto.getConditions().add(Restrict.eq("departmentBetA.id",departmentBetABO.getId()));
+                List<DepartmentBetB> listB = departmentBetBSer.findByCis(bdto);
+                List<DepartmentBetBBO> listBBO = BeanTransform.copyProperties(listB,DepartmentBetBBO.class);
+                departmentBetABO.setDepartmentBetBBOS(listBBO);
+                if(listBBO!=null){
+                    for(DepartmentBetBBO departmentBetBBO:listBBO) {
+                        DepartmentBetCDTO cdto = new DepartmentBetCDTO();
+                        cdto.getConditions().add(Restrict.eq("departmentBetB.id",departmentBetBBO.getId()));
+                        List<DepartmentBetC> listC = departmentBetCSer.findByCis(cdto);
+                        List<DepartmentBetCBO> listCBO = BeanTransform.copyProperties(listC,DepartmentBetCBO.class);
+                        departmentBetBBO.setDepartmentBetCBOS(listCBO);
+                    }
                 }
             }
-            departmentBetBOS.add(betBO);
         }
-
-        return departmentBetBOS;
+        return listABO;
+//        DepartmentBetADTO adto = new DepartmentBetADTO();
+//        List<DepartmentBetA> listA = departmentBetASer.findByCis(adto);
+//        List<DepartmentBetBO> departmentBetBOS = new ArrayList<>(listA.size());
+//
+//        for (DepartmentBetA departmentBetA : listA) {
+//            DepartmentBetBO betBO = new DepartmentBetBO();
+//            betBO.setDepartmentBetABO(BeanTransform.copyProperties(departmentBetA, DepartmentBetABO.class));
+//            DepartmentBetBDTO bdto = new DepartmentBetBDTO();
+//            List<DepartmentBetB> listB = departmentBetBSer.findByCis(bdto);
+//            List<DepartmentBetBBO> bboList = BeanTransform.copyProperties(listB, DepartmentBetBBO.class);
+//            betBO.getDepartmentBetABO().setDepartmentBetBBOS(bboList);
+//
+//            for (DepartmentBetBBO departmentBetBBO : bboList) {
+//                DepartmentBetCDTO dtoC = new DepartmentBetCDTO();
+//                List<DepartmentBetC> listC = departmentBetCSer.findByCis(dtoC);
+//                List<DepartmentBetCBO> cboList = BeanTransform.copyProperties(listC, DepartmentBetCBO.class);
+//                departmentBetBBO.setDepartmentBetCBOS(cboList);
+//
+//                for (DepartmentBetCBO departmentBetCBO : cboList) {
+//                    DepartmentBetDDTO dtoD = new DepartmentBetDDTO();
+//                    List<DepartmentBetD> listD = departmentBetDSer.findByCis(dtoD);
+//                    List<DepartmentBetDBO> dboList = BeanTransform.copyProperties(listD, DepartmentBetDBO.class);
+//                    departmentBetCBO.setDepartmentBetDBOS(dboList);
+//                }
+//            }
+//            departmentBetBOS.add(betBO);
+//        }
+//
+//        return departmentBetBOS;
     }
 
     @Transactional(rollbackFor = SerException.class)

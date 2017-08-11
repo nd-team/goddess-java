@@ -1,7 +1,5 @@
 package com.bjike.goddess.royalty.vo;
 
-import com.bjike.goddess.royalty.bo.DepartmentBetBBO;
-
 import java.util.List;
 
 /**
@@ -28,7 +26,9 @@ public class DepartmentBetAVO {
      * 分值
      */
     private Integer score;
-
+    /**
+     * 部门间对赌表B
+     */
     private List<DepartmentBetBVO> departmentBetBVOS;
 
     public String getId() {

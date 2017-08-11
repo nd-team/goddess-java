@@ -51,9 +51,8 @@ public class SystemBetCVO {
     private Double betScore;
 
     /**
-     * 体系间对赌表B
+     * 体系间对赌表D
      */
-    private SystemBetBVO systemBetBVO;
     private List<SystemBetDVO> systemBetDVOS;
 
 
@@ -113,13 +112,6 @@ public class SystemBetCVO {
         this.standard = standard;
     }
 
-    public SystemBetBVO getSystemBetBVO() {
-        return systemBetBVO;
-    }
-
-    public void setSystemBetBVO(SystemBetBVO systemBetBVO) {
-        this.systemBetBVO = systemBetBVO;
-    }
 
     public Double getBetScore() {
         return betScore;

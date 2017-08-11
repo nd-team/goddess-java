@@ -43,10 +43,6 @@ public class SystemBetBTO extends BaseTO {
      * 部门总得分（制约得分+基础得分）
      */
     private Double departmentTotalScore;
-    /**
-     * 体系间对赌表A
-     */
-    private String systemBetAId;
 
     /**
      * 体系间对赌表C
@@ -96,13 +92,6 @@ public class SystemBetBTO extends BaseTO {
         this.restrictScore = restrictScore;
     }
 
-    public String getSystemBetAId() {
-        return systemBetAId;
-    }
-
-    public void setSystemBetAId(String systemBetAId) {
-        this.systemBetAId = systemBetAId;
-    }
 
     public String getDepartment() {
         return department;

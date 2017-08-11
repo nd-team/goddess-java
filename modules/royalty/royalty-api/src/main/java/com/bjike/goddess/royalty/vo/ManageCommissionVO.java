@@ -119,7 +119,7 @@ public class ManageCommissionVO {
     private Double departmentBetScore;
 
     /**
-     * 未达标分配体系
+     * 未达标分配部门
      */
     private String unmetAllocationDepartment;
 

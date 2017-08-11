@@ -3,6 +3,7 @@ package com.bjike.goddess.royalty.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.royalty.bo.DepartmentBetABO;
 import com.bjike.goddess.royalty.bo.DepartmentBetBO;
+import com.bjike.goddess.royalty.dto.DepartmentBetADTO;
 import com.bjike.goddess.royalty.dto.DepartmentBetBDTO;
 import com.bjike.goddess.royalty.dto.DepartmentBetDDTO;
 import com.bjike.goddess.royalty.dto.DepartmentBetDTO;
@@ -55,13 +56,12 @@ public interface DepartmentBetAPI {
      * 部门间对赌表
      *
      * @param dto 部门间对赌表数据dto
-     * @return class DepartmentBetBO
+     * @return class DepartmentBetABO
      * @throws SerException
      */
-    default List<DepartmentBetBO> list(DepartmentBetDTO dto) throws SerException {
+    default List<DepartmentBetABO> list(DepartmentBetADTO dto) throws SerException {
         return null;
     }
-
     /**
      * 添加部门间对赌表
      *

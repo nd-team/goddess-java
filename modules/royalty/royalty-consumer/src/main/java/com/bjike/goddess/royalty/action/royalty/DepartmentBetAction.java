@@ -10,8 +10,10 @@ import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.royalty.api.DepartmentBetAPI;
 import com.bjike.goddess.royalty.bo.DepartmentBetABO;
+import com.bjike.goddess.royalty.dto.DepartmentBetADTO;
 import com.bjike.goddess.royalty.dto.DepartmentBetDDTO;
 import com.bjike.goddess.royalty.dto.DepartmentBetDTO;
+import com.bjike.goddess.royalty.entity.DepartmentBetA;
 import com.bjike.goddess.royalty.to.DepartmentBetATO;
 import com.bjike.goddess.royalty.to.GuidePermissionTO;
 import com.bjike.goddess.royalty.vo.DepartmentBetAVO;
@@ -102,11 +104,12 @@ public class DepartmentBetAction {
      * 部门间对赌表列表
      *
      * @param dto 部门间对赌表dto
+     * @return class DepartmentBetAVO
      * @des 获取所有部门间对赌表
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(DepartmentBetDTO dto, HttpServletRequest request) throws ActException {
+    public Result list(DepartmentBetADTO dto, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(departmentBetAPI.list(dto));
         } catch (SerException e) {

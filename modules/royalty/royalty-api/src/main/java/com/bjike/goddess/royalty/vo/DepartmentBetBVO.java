@@ -35,10 +35,8 @@ public class DepartmentBetBVO {
      */
     private Double departmentTotalScore;
     /**
-     * 部门间对赌表A
+     * 部门间对赌表C
      */
-    private DepartmentBetAVO departmentBetAVO;
-
     private List<DepartmentBetCVO> departmentBetCVOS;
 
 
@@ -82,13 +80,6 @@ public class DepartmentBetBVO {
         this.departmentTotalScore = departmentTotalScore;
     }
 
-    public DepartmentBetAVO getDepartmentBetAVO() {
-        return departmentBetAVO;
-    }
-
-    public void setDepartmentBetAVO(DepartmentBetAVO departmentBetAVO) {
-        this.departmentBetAVO = departmentBetAVO;
-    }
 
     public List<DepartmentBetCVO> getDepartmentBetCVOS() {
         return departmentBetCVOS;

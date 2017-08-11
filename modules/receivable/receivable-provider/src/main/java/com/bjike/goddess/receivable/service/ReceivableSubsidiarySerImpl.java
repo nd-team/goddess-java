@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import scala.util.parsing.combinator.testing.Str;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -203,6 +204,15 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
 
     @Override
     public Long countReceivableSubsidiary(ReceivableSubsidiaryDTO receivableSubsidiaryDTO) throws SerException {
+        if(StringUtils.isNotBlank(receivableSubsidiaryDTO.getTaskNum())){
+            receivableSubsidiaryDTO.getConditions().add(Restrict.like("taskNum",receivableSubsidiaryDTO.getTaskNum()));
+        }
+        if(StringUtils.isNotBlank(receivableSubsidiaryDTO.getContractNum())){
+            receivableSubsidiaryDTO.getConditions().add(Restrict.like("contractNum",receivableSubsidiaryDTO.getContractNum()));
+        }
+        if(StringUtils.isNotBlank(receivableSubsidiaryDTO.getOutsourcingNum())){
+            receivableSubsidiaryDTO.getConditions().add(Restrict.like("outsourcingNum",receivableSubsidiaryDTO.getOutsourcingNum()));
+        }
         Long count = super.count(receivableSubsidiaryDTO);
         return count;
     }
@@ -210,12 +220,18 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
     @Override
     public ReceivableSubsidiaryBO getOne(String id) throws SerException {
         ReceivableSubsidiary receivableSubsidiary = super.findById(id);
-        return BeanTransform.copyProperties(receivableSubsidiary, ReceivableSubsidiaryBO.class);
+        Contractor contractor = receivableSubsidiary.getContractor();
+        receivableSubsidiary.setContractor(contractor);
+        ContractorBO contractorBO = BeanTransform.copyProperties(contractor,ContractorBO.class);
+        ReceivableSubsidiaryBO bo = BeanTransform.copyProperties(receivableSubsidiary, ReceivableSubsidiaryBO.class);
+        bo.setContractorBO(contractorBO);
+        return bo;
     }
 
     @Override
     public List<ReceivableSubsidiaryBO> findListReceivableSubsidiary(ReceivableSubsidiaryDTO receivableSubsidiaryDTO) throws SerException {
         checkSeeIdentity();
+        search(receivableSubsidiaryDTO);
         receivableSubsidiaryDTO.getSorts().add("createTime=desc");
         List<ReceivableSubsidiary> receivableSubsidiaries = super.findByCis(receivableSubsidiaryDTO, true);
         List<ReceivableSubsidiaryBO> bo = BeanTransform.copyProperties(receivableSubsidiaries, ReceivableSubsidiaryBO.class);
@@ -225,6 +241,17 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
             bo.get(i).setContractorBO(cbo);
         }
         return bo;
+    }
+    private void search(ReceivableSubsidiaryDTO dto)throws SerException{
+        if(StringUtils.isNotBlank(dto.getTaskNum())){
+            dto.getConditions().add(Restrict.like("taskNum",dto.getTaskNum()));
+        }
+        if(StringUtils.isNotBlank(dto.getContractNum())){
+            dto.getConditions().add(Restrict.like("contractNum",dto.getContractNum()));
+        }
+        if(StringUtils.isNotBlank(dto.getOutsourcingNum())){
+            dto.getConditions().add(Restrict.like("outsourcingNum",dto.getOutsourcingNum()));
+        }
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -276,7 +303,9 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         checkAddIdentity();
         Contractor contractor = contractorSer.findById(receivableSubsidiaryTO.getContractorId());
         ReceivableSubsidiary receivableSubsidiary = super.findById(receivableSubsidiaryTO.getId());
-        BeanUtils.copyProperties(receivableSubsidiaryTO, receivableSubsidiary);
+        LocalDateTime localDateTime = receivableSubsidiary.getCreateTime();
+        receivableSubsidiary =  BeanTransform.copyProperties(receivableSubsidiaryTO, ReceivableSubsidiary.class,true);
+        receivableSubsidiary.setCreateTime(localDateTime);
         receivableSubsidiary.setContractor(contractor);
         receivableSubsidiary.setModifyTime(LocalDateTime.now());
 
@@ -310,7 +339,10 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         receivableSubsidiary.setMoreMoney(moreNum * receivableSubsidiary.getTaskPrice());
         //receivableSubsidiary = count(receivableSubsidiary);
         super.update(receivableSubsidiary);
-        return BeanTransform.copyProperties(receivableSubsidiary, ReceivableSubsidiaryBO.class);
+        ReceivableSubsidiaryBO bo = BeanTransform.copyProperties(receivableSubsidiary, ReceivableSubsidiaryBO.class);
+        ContractorBO contractorBO = BeanTransform.copyProperties(contractor,ContractorBO.class);
+        bo.setContractorBO(contractorBO);
+        return bo;
     }
 
 

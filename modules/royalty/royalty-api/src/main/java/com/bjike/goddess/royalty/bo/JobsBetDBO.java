@@ -50,10 +50,10 @@ public class JobsBetDBO extends BaseBO {
      * 对赌得分（部门总得分*目标-部门分配对赌权重）
      */
     private Double betScore;
-    /**
-     * 岗位间对赌表C
-     */
-    private JobsBetCBO jobsBetCBO;
+//    /**
+//     * 岗位间对赌表C
+//     */
+//    private JobsBetCBO jobsBetCBO;
     /**
      * 岗位间对赌表E
      */
@@ -116,13 +116,13 @@ public class JobsBetDBO extends BaseBO {
         this.betScore = betScore;
     }
 
-    public JobsBetCBO getJobsBetCBO() {
-        return jobsBetCBO;
-    }
-
-    public void setJobsBetCBO(JobsBetCBO jobsBetCBO) {
-        this.jobsBetCBO = jobsBetCBO;
-    }
+//    public JobsBetCBO getJobsBetCBO() {
+//        return jobsBetCBO;
+//    }
+//
+//    public void setJobsBetCBO(JobsBetCBO jobsBetCBO) {
+//        this.jobsBetCBO = jobsBetCBO;
+//    }
 
     public List<JobsBetEBO> getJobsBetEBOS() {
         return jobsBetEBOS;

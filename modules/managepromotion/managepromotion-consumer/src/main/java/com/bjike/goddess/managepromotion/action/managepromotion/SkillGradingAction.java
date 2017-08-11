@@ -10,8 +10,10 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.managepromotion.api.SkillGradingAPI;
 import com.bjike.goddess.managepromotion.bo.SkillGradingABO;
+import com.bjike.goddess.managepromotion.dto.SkillGradingADTO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingCDTO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingDTO;
+import com.bjike.goddess.managepromotion.entity.SkillGradingA;
 import com.bjike.goddess.managepromotion.excel.SonPermissionObject;
 import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managepromotion.to.SkillGradingATO;
@@ -154,14 +156,14 @@ public class SkillGradingAction {
     /**
      * 技能定级列表
      *
-     * @param skillGradingDTO 技能定级记录dto
+     * @param skillGradingADTO 技能定级记录dto
      * @des 获取所有技能定级
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(SkillGradingDTO skillGradingDTO, HttpServletRequest request) throws ActException {
+    public Result list(SkillGradingADTO skillGradingADTO, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(skillGradingAPI.findListSkillGrading(skillGradingDTO));
+            return ActResult.initialize(skillGradingAPI.findListSkillGrading(skillGradingADTO));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

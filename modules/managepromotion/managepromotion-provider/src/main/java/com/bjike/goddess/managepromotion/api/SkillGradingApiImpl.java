@@ -3,6 +3,7 @@ package com.bjike.goddess.managepromotion.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.managepromotion.bo.SkillGradingABO;
 import com.bjike.goddess.managepromotion.bo.SkillGradingBO;
+import com.bjike.goddess.managepromotion.dto.SkillGradingADTO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingCDTO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingDTO;
 import com.bjike.goddess.managepromotion.entity.SkillGradingA;
@@ -50,8 +51,8 @@ public class SkillGradingApiImpl implements SkillGradingAPI {
     }
 
     @Override
-    public List<SkillGradingBO> findListSkillGrading(SkillGradingDTO skillGradingDTO) throws SerException {
-        return skillGradingSer.findListSkillGrading(skillGradingDTO);
+    public List<SkillGradingABO> findListSkillGrading(SkillGradingADTO skillGradingADTO) throws SerException {
+        return skillGradingSer.findListSkillGrading(skillGradingADTO);
     }
 
     @Override

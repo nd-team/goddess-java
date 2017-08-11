@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
  */
 public class StayUtilitiesTO extends BaseTO {
     public interface financeAudit{}
-    public interface resourceAudit{}
+    public interface employeeVerify{}
 
     /**
      * 地区
@@ -74,6 +74,11 @@ public class StayUtilitiesTO extends BaseTO {
      */
     @NotNull(message = "住宿天数不能为空",groups = {ADD.class, EDIT.class})
     private Double stayDay;
+    /**
+     * 房租
+     */
+    @NotNull(message = "房租不能为空",groups = {ADD.class, EDIT.class})
+    private Double rent;
 
     /**
      * 房租公司缴纳
@@ -146,12 +151,12 @@ public class StayUtilitiesTO extends BaseTO {
     /**
      * 员工核实（确认/有误）
      */
+    @NotNull(message = "员工核实（确认/有误）不能为空",groups = {StayUtilitiesTO.employeeVerify.class})
     private StaffVerify staffVerify;
 
     /**
      * 综合资源部核实情况（是否需要修改）
      */
-    @NotNull(message = "综合资源部核实情况（是否需要修改）不能为空",groups = {StayUtilitiesTO.resourceAudit.class})
     private Boolean comprehensiveVerifySituation;
 
     /**
@@ -204,6 +209,14 @@ public class StayUtilitiesTO extends BaseTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Double getRent() {
+        return rent;
+    }
+
+    public void setRent(Double rent) {
+        this.rent = rent;
     }
 
     public String getNum() {

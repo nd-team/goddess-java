@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.royalty.bo.SystemBetABO;
 import com.bjike.goddess.royalty.bo.SystemBetBO;
+import com.bjike.goddess.royalty.dto.SystemBetADTO;
 import com.bjike.goddess.royalty.dto.SystemBetDDTO;
 import com.bjike.goddess.royalty.dto.SystemBetDTO;
 import com.bjike.goddess.royalty.entity.SystemBet;
@@ -57,10 +58,10 @@ public interface SystemBetSer extends Ser<SystemBet, SystemBetDTO> {
      * 体系间对赌表
      *
      * @param dto 体系间对赌表数据dto
-     * @return class SystemBetBO
+     * @return class SystemBetABO
      * @throws SerException
      */
-    default List<SystemBetBO> list(SystemBetDTO dto) throws SerException {
+    default List<SystemBetABO> list(SystemBetADTO dto) throws SerException{
         return null;
     }
 

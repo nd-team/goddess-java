@@ -205,23 +205,24 @@ public class StayUtilitiesAction {
         }
     }
     /**
-     * 综合资源部
+     * 员工核实
      *
      * @param to 房租缴费数据to
      * @return class StayUtilitiesVO
-     * @des 综合资源部
+     * @des 员工核实
      * @version v1
      */
-    @PostMapping("v1/resourceAudit")
-    public Result resourceAudit(@Validated(StayUtilitiesTO.resourceAudit.class) StayUtilitiesTO to, BindingResult bindingResult) throws ActException {
+    @PostMapping("v1/employeeVerify")
+    public Result employeeVerify(@Validated(StayUtilitiesTO.employeeVerify.class) StayUtilitiesTO to, BindingResult bindingResult) throws ActException {
         try {
 
-            StayUtilitiesBO bo = stayUtilitiesAPI.resourceAudit(to);
+            StayUtilitiesBO bo = stayUtilitiesAPI.employeeVerify(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo,StayUtilitiesVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
-    }/**
+    }
+    /**
      * 运营财务部
      *
      * @param to 房租缴费数据to

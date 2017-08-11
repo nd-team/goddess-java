@@ -89,17 +89,17 @@ public class RentalApply extends BaseEntity {
     /**
      * 中介费
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '中介费'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '中介费'")
     private Double agency;
     /**
      * 押金
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '押金'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '押金'")
     private Double deposit;
     /**
      * 房租
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '房租'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '房租'")
     private Double rent;
     /**
      * 房租缴费方
@@ -109,7 +109,7 @@ public class RentalApply extends BaseEntity {
     /**
      * 房租管理费
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '房租管理费'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '房租管理费'")
     private Double rentFee;
     /**
      * 房租管理费缴费方
@@ -119,7 +119,7 @@ public class RentalApply extends BaseEntity {
     /**
      * 卫生费
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '卫生费'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '卫生费'")
     private Double sanitation;
     /**
      * 卫生费缴费方
@@ -129,7 +129,7 @@ public class RentalApply extends BaseEntity {
     /**
      * 水费计价额
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '水费计价'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '水费计价'")
     private Double water;
     /**
      * 水费缴费方
@@ -139,7 +139,7 @@ public class RentalApply extends BaseEntity {
     /**
      * 电费计价额
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '电费计价'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '电费计价'")
     private Double energy;
     /**
      * 电费缴费方
@@ -149,7 +149,7 @@ public class RentalApply extends BaseEntity {
     /**
      * 网络套餐费用
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '网络套餐费用'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '网络套餐费用'")
     private Double network;
     /**
      * 网络套餐费用缴费方

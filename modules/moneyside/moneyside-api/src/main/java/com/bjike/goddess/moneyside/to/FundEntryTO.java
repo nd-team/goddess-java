@@ -21,6 +21,7 @@ public class FundEntryTO extends BaseTO {
 
     public interface TestEdit {
     }
+    public interface TestAudit{}
 
     /**
      * 投资人
@@ -61,16 +62,19 @@ public class FundEntryTO extends BaseTO {
     /**
      * 确认人
      */
+    @NotBlank(message = "确认人不能为空", groups = {FundEntryTO.TestAudit.class})
     private String confirmPeople;
 
     /**
      * 确认情况
      */
+    @NotBlank(message = "确认情况不能为空", groups = {FundEntryTO.TestAudit.class})
     private String confirmSituation;
 
     /**
      * 是否通过
      */
+    @NotNull(message = "是否通过不能为空", groups = {FundEntryTO.TestAudit.class})
     private PassStatus pass;
     /**
      * 创建时间

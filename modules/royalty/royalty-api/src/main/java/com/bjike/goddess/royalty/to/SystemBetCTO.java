@@ -46,11 +46,6 @@ public class SystemBetCTO extends BaseTO {
      * 对赌得分（分值*目标-部门分配对赌权重）
      */
     private Double betScore;
-
-    /**
-     * 体系间对赌表B
-     */
-    private String systemBetBId;
     /**
      * 体系间对赌表D
      */
@@ -112,14 +107,6 @@ public class SystemBetCTO extends BaseTO {
         this.betScore = betScore;
     }
 
-
-    public String getSystemBetBId() {
-        return systemBetBId;
-    }
-
-    public void setSystemBetBId(String systemBetBId) {
-        this.systemBetBId = systemBetBId;
-    }
 
     public List<SystemBetETO> getSystemBetETOS() {
         return systemBetETOS;

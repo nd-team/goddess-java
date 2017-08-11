@@ -79,7 +79,7 @@ public class IncomeDistributionAction {
      * 收益比例分配列表
      *
      * @param incomeDistributionDTO 收益比例分配dto
-     * @return class InvestTransferVO
+     * @return class IncomeDistributionVO
      * @des 获取所有收益比例分配
      * @version v1
      */

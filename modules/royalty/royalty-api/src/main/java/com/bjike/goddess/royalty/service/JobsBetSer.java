@@ -3,15 +3,14 @@ package com.bjike.goddess.royalty.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.royalty.bo.JobsBetABO;
-import com.bjike.goddess.royalty.bo.JobsBetBO;
 import com.bjike.goddess.royalty.bo.ManageCommissionBO;
-import com.bjike.goddess.royalty.dto.JobsBetBDTO;
+import com.bjike.goddess.royalty.dto.JobsBetADTO;
 import com.bjike.goddess.royalty.dto.JobsBetDTO;
 import com.bjike.goddess.royalty.dto.JobsBetEDTO;
 import com.bjike.goddess.royalty.entity.JobsBet;
-import com.bjike.goddess.royalty.entity.JobsBetA;
-import com.bjike.goddess.royalty.entity.JobsBetE;
-import com.bjike.goddess.royalty.to.*;
+import com.bjike.goddess.royalty.to.CollectTO;
+import com.bjike.goddess.royalty.to.GuidePermissionTO;
+import com.bjike.goddess.royalty.to.JobsBetATO;
 
 import java.util.List;
 
@@ -58,10 +57,10 @@ public interface JobsBetSer extends Ser<JobsBet, JobsBetDTO> {
      * 岗位间对赌表
      *
      * @param dto 岗位间对赌表数据dto
-     * @return class JobsBetBO
+     * @return class JobsBetABO
      * @throws SerException
      */
-    default List<JobsBetBO> list(JobsBetDTO dto) throws SerException {
+    default List<JobsBetABO> list(JobsBetADTO dto) throws SerException {
         return null;
     }
 

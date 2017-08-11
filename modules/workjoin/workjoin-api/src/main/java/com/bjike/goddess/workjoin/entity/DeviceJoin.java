@@ -22,7 +22,7 @@ public class DeviceJoin extends BaseEntity {
     /**
      * 工作交接编号
      */
-    @Column(name = "workJoinNum", columnDefinition = "VARCHAR(255)   COMMENT '工作交接编号'",unique = true)
+    @Column(name = "workJoinNum", columnDefinition = "VARCHAR(255)   COMMENT '工作交接编号'")
     private String workJoinNum;
 
     /**

@@ -162,9 +162,10 @@ public class RentalPreceptAct {
     }
 
     /**
-     * 获取租房方案信息
+     * 租房方案列表
      *
      * @param rentalPreceptDTO 租房方案dto
+     * @return class RentalPreceptVO
      * @version v1
      */
     @GetMapping("v1/list")
@@ -244,7 +245,7 @@ public class RentalPreceptAct {
     public Result businessAudit(@Validated(RentalPreceptTO.TestBusiness.class) RentalPreceptTO rentalPreceptTO) throws ActException {
         try {
             RentalPreceptBO bo = rentalPreceptAPI.businessAudit(rentalPreceptTO);
-            return ActResult.initialize(BeanTransform.copyProperties(bo, RentalPreceptVO.class, true));
+            return ActResult.initialize(BeanTransform.copyProperties(bo, RentalPreceptVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

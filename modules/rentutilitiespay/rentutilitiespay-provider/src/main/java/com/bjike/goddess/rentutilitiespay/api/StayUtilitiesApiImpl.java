@@ -76,8 +76,8 @@ public class StayUtilitiesApiImpl implements StayUtilitiesAPI {
         return stayUtilitiesSer.getName();
     }
     @Override
-    public StayUtilitiesBO resourceAudit(StayUtilitiesTO to) throws SerException {
-        return stayUtilitiesSer.resourceAudit(to);
+    public StayUtilitiesBO employeeVerify(StayUtilitiesTO to) throws SerException {
+        return stayUtilitiesSer.employeeVerify(to);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.managepromotion.bo.SkillGradingABO;
 import com.bjike.goddess.managepromotion.bo.SkillGradingBO;
+import com.bjike.goddess.managepromotion.dto.SkillGradingADTO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingCDTO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingDTO;
 import com.bjike.goddess.managepromotion.entity.SkillGrading;
@@ -56,11 +57,11 @@ public interface SkillGradingSer extends Ser<SkillGrading, SkillGradingDTO> {
     /**
      * 技能定级
      *
-     * @param skillGradingDTO 技能定级dto
-     * @return class SkillGradingBO
+     * @param skillGradingADTO 技能定级dto
+     * @return class SkillGradingABO
      * @throws SerException
      */
-    default List<SkillGradingBO> findListSkillGrading(SkillGradingDTO skillGradingDTO) throws SerException {
+    default List<SkillGradingABO> findListSkillGrading(SkillGradingADTO skillGradingADTO) throws SerException {
         return null;
     }
 
