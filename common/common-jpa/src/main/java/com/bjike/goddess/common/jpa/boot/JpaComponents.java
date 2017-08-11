@@ -2,6 +2,7 @@ package com.bjike.goddess.common.jpa.boot;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -15,7 +16,6 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.ArrayList;
@@ -43,6 +43,12 @@ public class JpaComponents {
         dds.setUrl(env.getProperty("db.url"));
         dds.setUsername(env.getProperty("db.username"));
         dds.setPassword(env.getProperty("db.password"));
+        String minIdle = env.getProperty("db.minIdle");
+        String maxActive = env.getProperty("db.maxActive");
+        String maxWait = env.getProperty("db.maxWait");
+        dds.setMinIdle(StringUtils.isNotBlank(minIdle) ? Integer.parseInt(minIdle) : DruidDataSource.DEFAULT_MIN_IDLE);
+        dds.setMaxActive(StringUtils.isNotBlank(maxActive) ? Integer.parseInt(maxActive) : DruidDataSource.DEFAULT_MAX_ACTIVE_SIZE);
+        dds.setMaxWait(StringUtils.isNotBlank(maxWait) ? Integer.parseInt(maxWait) : DruidDataSource.DEFAULT_MAX_WAIT);
         return dds;
     }
 
@@ -65,7 +71,7 @@ public class JpaComponents {
     }
 
     @Bean("jpaVendorAdapter")
-    public JpaVendorAdapter hibernateJpaVendorAdapter(){
+    public JpaVendorAdapter hibernateJpaVendorAdapter() {
         HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
         hibernateJpaVendorAdapter.setShowSql(false);
         hibernateJpaVendorAdapter.setGenerateDdl(true);
@@ -78,18 +84,17 @@ public class JpaComponents {
      * @return
      */
     @Bean
-    public LocalContainerEntityManagerFactoryBean getLCEMF(DataSource dataSource,JpaVendorAdapter jpaVendorAdapter) {
+    public LocalContainerEntityManagerFactoryBean getLCEMF(DataSource dataSource, JpaVendorAdapter jpaVendorAdapter) {
         LocalContainerEntityManagerFactoryBean lcemf = new LocalContainerEntityManagerFactoryBean();
         lcemf.setDataSource(dataSource);
         lcemf.setJpaVendorAdapter(jpaVendorAdapter);
         String[] packages = ArrayUtils.add(packagesToScan.entityScan(), Constant.SCAN_APP_PACKAGES);
         lcemf.setPackagesToScan(packages);
         Properties properties = new Properties();
-        properties.setProperty("hibernate.cache.region.factory_class","org.hibernate.cache.ehcache.EhCacheRegionFactory");
+        properties.setProperty("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
         lcemf.setJpaProperties(properties);
         return lcemf;
     }
-
 
 
     /**
@@ -102,9 +107,9 @@ public class JpaComponents {
         SimpleCacheManager cacheManager = new SimpleCacheManager();
         List<Cache> caches = new ArrayList<>();
         for (String cache_name : Constant.CACHE_NAME) {
-            Cache cache =new ConcurrentMapCache(cache_name);
-            cache.put("timeToLiveSeconds",60*60);//1小时过期
-            cache.put("timeToIdleSeconds",60*60*12);//闲置时间
+            Cache cache = new ConcurrentMapCache(cache_name);
+            cache.put("timeToLiveSeconds", 60 * 60);//1小时过期
+            cache.put("timeToIdleSeconds", 60 * 60 * 12);//闲置时间
             caches.add(cache);
         }
         caches.addAll(jpaCache.initCaches());
