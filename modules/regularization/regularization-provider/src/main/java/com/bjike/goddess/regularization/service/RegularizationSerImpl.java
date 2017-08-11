@@ -495,6 +495,16 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         String username = getCurUsername();
         ManagementScore model = setManagementScore(id, to, username);
         managementScoreSer.save(model);
+        List<ManagementScoreBO> managementScoreBOS =managementScoreSer.findByRegularId(id);
+        Integer managementSum = 0;
+        Double managementAverage = 0d;
+        if (managementScoreBOS != null && managementScoreBOS.size()>0){
+            managementSum =  managementScoreBOS.stream().mapToInt(ManagementScoreBO::getSpecificScore).sum();
+            managementAverage = Double.valueOf(managementSum/managementScoreBOS.size());
+        }
+        Regularization regularization = super.findById(id);
+        regularization.setManagementAverage(managementAverage);
+        super.update(regularization);
     }
 
     /**

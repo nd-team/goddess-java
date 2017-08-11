@@ -106,4 +106,9 @@ public class ManagementScoreApiImpl implements ManagementScoreAPI {
     public void update(ManagementScoreTO to) throws SerException {
         managementScoreSer.update(to);
     }
+
+    @Override
+    public List<ManagementScoreBO> findByRegularId(String regularizationId) throws SerException {
+        return managementScoreSer.findByRegularId(regularizationId);
+    }
 }

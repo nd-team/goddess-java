@@ -3,6 +3,7 @@ package com.bjike.goddess.market.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.customer.bo.CustomerNameNumBO;
 import com.bjike.goddess.market.bo.MarketInfoBO;
 import com.bjike.goddess.market.dto.MarketInfoDTO;
 import com.bjike.goddess.market.entity.MarketInfo;
@@ -90,4 +91,15 @@ public class MarketInfoApiImpl implements MarketInfoAPI {
     public List<MarketInfoBO> getCollecting(String area, String projectName) throws SerException {
         return marketInfoSer.getCollecting(area,projectName);
     }
+
+    @Override
+    public List<CustomerNameNumBO> getNameNum() throws SerException {
+        return marketInfoSer.getNameNum();
+    }
+
+    @Override
+    public List<String> getCompetName() throws SerException {
+        return marketInfoSer.getCompetName();
+    }
+
 }

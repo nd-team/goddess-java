@@ -101,7 +101,7 @@ public class WorkJoin extends BaseEntity {
     /**
      * 负责人
      */
-    @Column(name = "principal", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '负责人'")
+    @Column(name = "principal",  columnDefinition = "VARCHAR(255)   COMMENT '负责人'")
     private String principal;
 
     /**

@@ -126,7 +126,7 @@ public class SkillPromotionApplyAction {
     public Result add(@Validated(ADD.class) SkillPromotionApplyTO skillPromotionApplyTO, BindingResult bindingResult) throws ActException {
         try {
             SkillPromotionApplyBO skillPromotionApplyBO = skillPromotionApplyAPI.insertSkillPromotionApply(skillPromotionApplyTO);
-            return ActResult.initialize(skillPromotionApplyBO);
+            return ActResult.initialize(BeanTransform.copyProperties(skillPromotionApplyBO,SkillPromotionApplyVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

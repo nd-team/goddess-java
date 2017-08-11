@@ -22,11 +22,15 @@ import java.time.LocalDate;
 public class IncomeCostAnalysis extends BaseEntity{
 
     /**
-     * 时间
+     * 年份
      */
-    @Column(name = "date", columnDefinition = "DATE   COMMENT '验收交维时间'")
-    private LocalDate date;
-
+    @Column(columnDefinition = "INT(5)   COMMENT '年份'")
+    private Integer year;
+    /**
+     * 月份
+     */
+    @Column(columnDefinition = "INT(5)   COMMENT '月份'")
+    private Integer month;
     /**
      * 地区
      */
@@ -78,7 +82,7 @@ public class IncomeCostAnalysis extends BaseEntity{
     /**
      * 办公费
      */
-    @Column(name = "office", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '办公费'")
+    @Column(name = "office",  columnDefinition = "DECIMAL(10,2)   COMMENT '办公费'")
     private Double office;
 
     /**
@@ -114,7 +118,7 @@ public class IncomeCostAnalysis extends BaseEntity{
     /**
      * 税后余额收入
      */
-    @Column(name = "incomeAfterTax", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '税后余额收入'")
+    @Column(name = "incomeAfterTax", columnDefinition = "DECIMAL(10,2)   COMMENT '税后余额收入'")
     private Double incomeAfterTax;
 
     /**
@@ -124,12 +128,20 @@ public class IncomeCostAnalysis extends BaseEntity{
     private Double balance;
 
 
-    public LocalDate getDate() {
-        return date;
+    public Integer getYear() {
+        return year;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
     }
 
     public String getArea() {

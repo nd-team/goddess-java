@@ -11,8 +11,10 @@ import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.vo.PositionDetailVO;
 import com.bjike.goddess.royalty.api.JobsBetAPI;
 import com.bjike.goddess.royalty.bo.JobsBetABO;
+import com.bjike.goddess.royalty.dto.JobsBetADTO;
 import com.bjike.goddess.royalty.dto.JobsBetDTO;
 import com.bjike.goddess.royalty.dto.JobsBetEDTO;
+import com.bjike.goddess.royalty.entity.JobsBetA;
 import com.bjike.goddess.royalty.to.GuidePermissionTO;
 import com.bjike.goddess.royalty.to.JobsBetATO;
 import com.bjike.goddess.royalty.vo.JobsBetAVO;
@@ -104,11 +106,12 @@ public class JobsBetAction {
      * 岗位间对赌表列表
      *
      * @param dto 岗位间对赌表dto
+     * @return class JobsBetAVO
      * @des 获取所有岗位间对赌表
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(JobsBetDTO dto, HttpServletRequest request) throws ActException {
+    public Result list(JobsBetADTO dto, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(jobsBetAPI.list(dto));
         } catch (SerException e) {

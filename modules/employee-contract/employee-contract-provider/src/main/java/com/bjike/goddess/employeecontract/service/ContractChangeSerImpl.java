@@ -287,6 +287,12 @@ public class ContractChangeSerImpl extends ServiceImpl<ContractChange, ContractC
             case SEEFILE:
                 flag = guideIdentity();
                 break;
+            case CONGEL:
+                flag = guideIdentity();
+                break;
+            case THAW:
+                flag = guideIdentity();
+                break;
             default:
                 flag = true;
                 break;
@@ -295,7 +301,6 @@ public class ContractChangeSerImpl extends ServiceImpl<ContractChange, ContractC
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
-
     @Override
     public ContractChangeBO transformBO(ContractChange entity) throws SerException {
         ContractChangeBO bo = BeanTransform.copyProperties(entity, ContractChangeBO.class);

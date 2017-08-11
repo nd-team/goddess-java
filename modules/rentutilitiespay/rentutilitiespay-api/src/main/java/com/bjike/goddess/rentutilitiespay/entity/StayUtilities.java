@@ -75,7 +75,11 @@ public class StayUtilities extends BaseEntity {
      */
     @Column(name = "stayDay", columnDefinition = "DECIMAL(10,2)   COMMENT '住宿天数'")
     private Double stayDay;
-
+    /**
+     * 房租
+     */
+    @Column(name = "rent", columnDefinition = "DECIMAL(10,2)   COMMENT '房租'")
+    private Double rent;
     /**
      * 房租公司缴纳
      */
@@ -188,6 +192,14 @@ public class StayUtilities extends BaseEntity {
 
     public void setSumDays(Integer sumDays) {
         this.sumDays = sumDays;
+    }
+
+    public Double getRent() {
+        return rent;
+    }
+
+    public void setRent(Double rent) {
+        this.rent = rent;
     }
 
     public String getArea() {

@@ -288,6 +288,12 @@ public class ContractNatureSerImpl extends ServiceImpl<ContractNature, ContractN
             case SEEFILE:
                 flag = guideIdentity();
                 break;
+            case CONGEL:
+                flag = guideIdentity();
+                break;
+            case THAW:
+                flag = guideIdentity();
+                break;
             default:
                 flag = true;
                 break;

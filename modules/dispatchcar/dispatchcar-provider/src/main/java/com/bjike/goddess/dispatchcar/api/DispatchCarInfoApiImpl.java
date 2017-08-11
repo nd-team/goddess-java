@@ -193,16 +193,16 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
     public Boolean financeGuidePermission(GuidePermissionTO to) throws SerException {
         return dispatchCarInfoSer.financeGuidePermission(to);
     }
-
     @Override
-    public List<DriverDispatchFeeBO> findDispatchFree(Integer month) throws SerException {
-        return dispatchCarInfoSer.findDispatchFree(month);
+    public List<DriverDispatchFeeBO> findDispatchFree(String area, String projectGroup, Integer year, Integer month) throws SerException{
+        return dispatchCarInfoSer.findDispatchFree(area,projectGroup,year,month);
     }
 
     @Override
-    public List<DriverDispatchsBO> findDispatchs(Integer month) throws SerException {
-        return dispatchCarInfoSer.findDispatchs(month);
+    public List<DriverDispatchsBO> findDispatchs(String area, String projectGroup, Integer year, Integer month) throws SerException{
+        return dispatchCarInfoSer.findDispatchs(area,projectGroup,year,month);
     }
+
 
     @Override
     public Double findOilAmount(String oilCardCode, Integer year, Integer month) throws SerException {

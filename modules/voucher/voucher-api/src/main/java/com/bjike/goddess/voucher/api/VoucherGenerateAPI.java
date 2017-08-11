@@ -1,12 +1,12 @@
 package com.bjike.goddess.voucher.api;
 
+import com.bjike.goddess.analysis.bo.IncomeCostAnalysisBO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.voucher.bo.PartBO;
 import com.bjike.goddess.voucher.bo.PartOptionBO;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
-import com.bjike.goddess.voucher.entity.VoucherGenerate;
 import com.bjike.goddess.voucher.excel.SonPermissionObject;
 import com.bjike.goddess.voucher.to.GuidePermissionTO;
 import com.bjike.goddess.voucher.to.VoucherGenerateTO;
@@ -23,7 +23,6 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface VoucherGenerateAPI {
-
 
 
     /**
@@ -56,6 +55,7 @@ public interface VoucherGenerateAPI {
     default List<VoucherGenerateBO> listVoucherGenerate(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
         return null;
     }
+
     /**
      * 不分页记账凭证列表
      *
@@ -464,9 +464,8 @@ public interface VoucherGenerateAPI {
 
     /**
      * 根据日期、项目组、地区、项目统计记账凭证
-     *
      */
-    default List<VoucherGenerateBO> listStatistic(VoucherGenerateDTO voucherGenerateDTO,String condition) throws SerException {
+    default List<VoucherGenerateBO> listStatistic(VoucherGenerateDTO voucherGenerateDTO, String condition) throws SerException {
         return null;
     }
 
@@ -501,47 +500,55 @@ public interface VoucherGenerateAPI {
     /**
      * chenjunhao
      * 查询所有一级科目为销售费用的记录
+     *
      * @return class VoucherGenerateBO
      * @throws SerException
      */
-    default List<VoucherGenerateBO> allSales() throws SerException{
+    default List<VoucherGenerateBO> allSales() throws SerException {
         return null;
     }
 
     /**
      * xiazhili
      * 在已过账记录里面根据二级或三级统计金额
+     *
      * @return class PartBO
      * @throws SerException
      */
-    default List<PartBO> findByCondition(String[] conditions ) throws SerException{
+    default List<PartBO> findByCondition(String[] conditions) throws SerException {
+        return null;
+    }
+
+    default List<IncomeCostAnalysisBO> findByMoney(VoucherGenerateDTO dto) throws SerException {
         return null;
     }
 
     /**
      * xiazhili
      * 在资金和对里面根据一级和二级和三级统计借方金额和贷方金额
+     *
      * @return class PartOptionBO
      * @throws SerException
      */
-    default PartOptionBO findMoneyByCondition(String first, String second,String third ) throws SerException{
+    default PartOptionBO findMoneyByCondition(String first, String second, String third) throws SerException {
         return null;
     }
 
 
     /**
      * 导出Excel
+     *
      * @param dto
      * @throws SerException
      */
-    byte[] exportExcel(VoucherGenerateExportDTO dto ) throws SerException;
+    byte[] exportExcel(VoucherGenerateExportDTO dto) throws SerException;
 
     /**
      * 导出Excel导入模板
+     *
      * @throws SerException
      */
-    byte[] templateExport(  ) throws SerException;
-
+    byte[] templateExport() throws SerException;
 
 
     /**

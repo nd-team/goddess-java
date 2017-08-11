@@ -269,6 +269,7 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
         return nativeQuery.getResultList();
     }
 
+    @Transactional
     @Override
     public void executeSql(String sql) throws SerException {
         Query query = entityManager.createNativeQuery(sql);

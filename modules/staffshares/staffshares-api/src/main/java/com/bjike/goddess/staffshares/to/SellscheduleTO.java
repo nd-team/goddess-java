@@ -1,6 +1,10 @@
 package com.bjike.goddess.staffshares.to;
 
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 出售记录表
@@ -31,6 +35,7 @@ public class SellscheduleTO extends BaseTO {
     /**
      * 出售股数
      */
+    @NotBlank(message = "出售股数不能为空", groups = {EDIT.class})
     private int sellNum;
 
     /**
@@ -41,6 +46,7 @@ public class SellscheduleTO extends BaseTO {
     /**
      * 出售金额
      */
+    @NotNull(message = "出售金额不能为空", groups = {EDIT.class})
     private Double totalSellPrice;
 
     /**

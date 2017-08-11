@@ -3,10 +3,6 @@ package com.bjike.goddess.rentutilitiespay.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.rentutilitiespay.enums.StaffVerify;
 
-import javax.persistence.Column;
-import java.util.List;
-import java.util.Map;
-
 /**
  * 员工住宿水电费业务传输对象
  *
@@ -62,6 +58,10 @@ public class StayUtilitiesBO extends BaseBO {
      * 住宿天数
      */
     private Double stayDay;
+    /**
+     * 房租
+     */
+    private Double rent;
 
     /**
      * 房租公司缴纳
@@ -165,6 +165,14 @@ public class StayUtilitiesBO extends BaseBO {
 
     public void setProjectName(String projectName) {
         this.projectName = projectName;
+    }
+
+    public Double getRent() {
+        return rent;
+    }
+
+    public void setRent(Double rent) {
+        this.rent = rent;
     }
 
     public String getAddress() {

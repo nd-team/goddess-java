@@ -23,6 +23,31 @@ import java.time.LocalDateTime;
 public class Purchase extends BaseEntity {
 
     /**
+     * 方案代码
+     */
+    @Column(name = "code", columnDefinition = "VARCHAR(255)   COMMENT '方案代码'")
+    private String code;
+
+    /**
+     * 方案名称
+     */
+    @Column(name = "name", columnDefinition = "VARCHAR(255)   COMMENT '方案名称'")
+    private String issueName;
+
+    /**
+     * 发行金额
+     */
+    @Column(name = "facevalue", columnDefinition = "DECIMAL(10,2)   COMMENT '票面价值'")
+    private Double facevalue;
+
+    /**
+     * 发行价格
+     */
+    @Column(name = "price", columnDefinition = "DECIMAL(10,2)   COMMENT '发行价格'")
+    private Double price;
+
+
+    /**
      * 状态
      */
     @Column(name = "status", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '状态'")
@@ -315,5 +340,37 @@ public class Purchase extends BaseEntity {
 
     public void setOpinion2(String opinion2) {
         this.opinion2 = opinion2;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getIssueName() {
+        return issueName;
+    }
+
+    public void setIssueName(String issueName) {
+        this.issueName = issueName;
+    }
+
+    public Double getFacevalue() {
+        return facevalue;
+    }
+
+    public void setFacevalue(Double facevalue) {
+        this.facevalue = facevalue;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 }

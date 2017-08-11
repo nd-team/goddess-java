@@ -4,8 +4,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.royalty.bo.JobsBetABO;
 import com.bjike.goddess.royalty.bo.JobsBetBO;
 import com.bjike.goddess.royalty.bo.ManageCommissionBO;
+import com.bjike.goddess.royalty.dto.JobsBetADTO;
 import com.bjike.goddess.royalty.dto.JobsBetDTO;
 import com.bjike.goddess.royalty.dto.JobsBetEDTO;
+import com.bjike.goddess.royalty.entity.JobsBetA;
 import com.bjike.goddess.royalty.service.JobsBetSer;
 import com.bjike.goddess.royalty.to.CollectTO;
 import com.bjike.goddess.royalty.to.GuidePermissionTO;
@@ -49,7 +51,7 @@ public class JobsBetApiImpl implements JobsBetAPI {
     }
 
     @Override
-    public List<JobsBetBO> list(JobsBetDTO dto) throws SerException {
+    public List<JobsBetABO> list(JobsBetADTO dto) throws SerException {
         return jobsBetSer.list(dto);
     }
 

@@ -106,4 +106,15 @@ public class ModuleSerImpl extends ServiceImpl<Module, ModuleDTO> implements Mod
         dto.getConditions().add(Restrict.or("module.moduleName", name));
         return null != moduleApplySer.findOne(dto);
     }
+
+    @Override
+    public Module getIdByName(String name) throws SerException {
+        ModuleDTO dto = new ModuleDTO();
+        dto.getConditions().add(Restrict.eq("moduleName", name));
+        Module module = super.findOne(dto);
+        if (module==null){
+            throw new SerException("没有此模块数据");
+        }
+        return module;
+    }
 }

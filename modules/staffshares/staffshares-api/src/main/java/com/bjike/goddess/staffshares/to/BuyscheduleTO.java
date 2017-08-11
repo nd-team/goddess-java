@@ -1,6 +1,9 @@
 package com.bjike.goddess.staffshares.to;
 
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 买入记录表
@@ -31,6 +34,7 @@ public class BuyscheduleTO extends BaseTO {
     /**
      * 购入股数
      */
+    @NotNull(message = "购入股数不能为空", groups = {EDIT.class})
     private int purchaseNum;
 
     /**
@@ -46,6 +50,7 @@ public class BuyscheduleTO extends BaseTO {
     /**
      * 买入金额
      */
+    @NotNull(message = "买入金额不能为空", groups = {EDIT.class})
     private Double totalBuyPrice;
 
     /**

@@ -12,11 +12,15 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Copy: [ com.bjike ]
  */
 public class IncomeCostAnalysisBO extends BaseBO {
+    /**
+     * 年份
+     */
+    private Integer year;
 
     /**
-     * 时间
+     * 月份
      */
-    private String date;
+    private Integer month;
 
     /**
      * 地区
@@ -99,12 +103,20 @@ public class IncomeCostAnalysisBO extends BaseBO {
     private Double balance;
 
 
-    public String getDate() {
-        return date;
+    public Integer getYear() {
+        return year;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
     }
 
     public String getArea() {

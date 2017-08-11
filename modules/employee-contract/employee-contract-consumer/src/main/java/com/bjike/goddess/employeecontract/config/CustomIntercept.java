@@ -56,6 +56,6 @@ public class CustomIntercept implements Interceptor {
         /**
          * 顺序
          */
-        return Arrays.asList(smoothInfo, loginInfo);
+        return Arrays.asList(smoothInfo, storage,loginInfo);
     }
 }

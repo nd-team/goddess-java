@@ -2,6 +2,7 @@ package com.bjike.goddess.assemble.api;
 
 import com.bjike.goddess.assemble.bo.ModuleBO;
 import com.bjike.goddess.assemble.dto.ModuleDTO;
+import com.bjike.goddess.assemble.entity.Module;
 import com.bjike.goddess.assemble.service.ModuleSer;
 import com.bjike.goddess.assemble.to.ModuleTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -46,5 +47,10 @@ public class ModuleApiImpl implements ModuleAPI {
     @Override
     public Boolean isCheck(String name) throws SerException {
         return moduleSer.isCheck(name);
+    }
+
+    @Override
+    public Module getIdByName(String name) throws SerException {
+        return moduleSer.getIdByName(name);
     }
 }

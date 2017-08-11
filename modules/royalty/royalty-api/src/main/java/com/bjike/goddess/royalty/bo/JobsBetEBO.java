@@ -22,10 +22,10 @@ public class JobsBetEBO extends BaseBO {
      * 未达标分配
      */
     private Double unmetAllocation;
-    /**
-     * 岗位间对赌表D
-     */
-    private JobsBetDBO jobsBetDBO;
+//    /**
+//     * 岗位间对赌表D
+//     */
+//    private JobsBetDBO jobsBetDBO;
 
     public String getUnmetAllocationJobs() {
         return unmetAllocationJobs;
@@ -43,11 +43,11 @@ public class JobsBetEBO extends BaseBO {
         this.unmetAllocation = unmetAllocation;
     }
 
-    public JobsBetDBO getJobsBetDBO() {
-        return jobsBetDBO;
-    }
-
-    public void setJobsBetDBO(JobsBetDBO jobsBetDBO) {
-        this.jobsBetDBO = jobsBetDBO;
-    }
+//    public JobsBetDBO getJobsBetDBO() {
+//        return jobsBetDBO;
+//    }
+//
+//    public void setJobsBetDBO(JobsBetDBO jobsBetDBO) {
+//        this.jobsBetDBO = jobsBetDBO;
+//    }
 }

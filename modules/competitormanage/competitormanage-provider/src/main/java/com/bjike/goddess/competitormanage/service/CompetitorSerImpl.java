@@ -20,17 +20,16 @@ import com.bjike.goddess.competitormanage.to.CompetitorTO;
 import com.bjike.goddess.competitormanage.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 竞争对手信息业务实现
@@ -397,5 +396,21 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
         dto.getConditions().add(Restrict.eq("organization", organization));
         List<Competitor> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, CompetitorBO.class);
+    }
+
+    @Override
+    public List<String> findCompeName() throws SerException {
+        List<Competitor> competitors = super.findAll();
+        if (CollectionUtils.isEmpty(competitors)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (Competitor competitor : competitors){
+            String name = competitor.getCompetitor();
+            if (StringUtils.isNotBlank(competitor.getCompetitor())) {
+                set.add(name);
+            }
+        }
+        return new ArrayList<>(set);
     }
 }

@@ -9,6 +9,7 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.customer.bo.CustomerNameNumBO;
 import com.bjike.goddess.market.api.MarketInfoAPI;
 import com.bjike.goddess.market.bo.MarketInfoBO;
 import com.bjike.goddess.market.dto.MarketInfoDTO;
@@ -16,6 +17,7 @@ import com.bjike.goddess.market.excel.SonPermissionObject;
 import com.bjike.goddess.market.to.GuidePermissionTO;
 import com.bjike.goddess.market.to.MarketInfoTO;
 import com.bjike.goddess.market.vo.MarketInfoVO;
+import com.bjike.goddess.market.vo.MarketNameNumVO;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -257,6 +259,37 @@ public class MarketInfoAction extends BaseFileAction{
             throw new ActException(e1.getMessage());
         }
     }
-
+    /**
+     * 获取所有的客户名称和客户编号
+     *
+     * @des 获取所有的客户名称和客户编号
+     * @version v1
+     * @return MarketNameNumVO
+     */
+    @GetMapping("v1/customer/nameNum")
+    public Result findCustomerNameNum() throws ActException {
+        try {
+            List<CustomerNameNumBO> customerNameNumBOS = marketInfoAPI.getNameNum();
+            return ActResult.initialize(BeanTransform.copyProperties(customerNameNumBOS, MarketNameNumVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取所有的竞争对手名称
+     *
+     * @des 获取所有的竞争对手名称
+     * @version v1
+     * @return name
+     */
+    @GetMapping("v1/competitormanage/name")
+    public Result findCompetitorName() throws ActException {
+        try {
+            List<String> name = marketInfoAPI.getCompetName();
+            return ActResult.initialize(name);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

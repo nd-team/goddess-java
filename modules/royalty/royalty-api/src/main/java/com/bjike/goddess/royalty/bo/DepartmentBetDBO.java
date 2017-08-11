@@ -21,10 +21,10 @@ public class DepartmentBetDBO extends BaseBO {
      * 未达标分配
      */
     private Double unmetAllocation;
-    /**
-     * 部门间对赌表C
-     */
-    private DepartmentBetCBO departmentBetCBO;
+//    /**
+//     * 部门间对赌表C
+//     */
+//    private DepartmentBetCBO departmentBetCBO;
 
     public String getUnmetAllocationDepartment() {
         return unmetAllocationDepartment;
@@ -42,11 +42,11 @@ public class DepartmentBetDBO extends BaseBO {
         this.unmetAllocation = unmetAllocation;
     }
 
-    public DepartmentBetCBO getDepartmentBetCBO() {
-        return departmentBetCBO;
-    }
-
-    public void setDepartmentBetCBO(DepartmentBetCBO departmentBetCBO) {
-        this.departmentBetCBO = departmentBetCBO;
-    }
+//    public DepartmentBetCBO getDepartmentBetCBO() {
+//        return departmentBetCBO;
+//    }
+//
+//    public void setDepartmentBetCBO(DepartmentBetCBO departmentBetCBO) {
+//        this.departmentBetCBO = departmentBetCBO;
+//    }
 }

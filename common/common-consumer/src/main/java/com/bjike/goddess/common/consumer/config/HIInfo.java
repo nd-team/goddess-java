@@ -10,10 +10,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
  * @Copy: [com.bjike]
  */
 public class HIInfo {
-    public HIInfo() {
-
-    }
-
 
     public HIInfo(HandlerInterceptor handlerInterceptor, String path) {
         this.path = path;

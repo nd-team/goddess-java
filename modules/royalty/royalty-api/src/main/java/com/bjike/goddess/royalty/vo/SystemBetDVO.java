@@ -24,10 +24,6 @@ public class SystemBetDVO {
      * 未达标分配
      */
     private Double unmetAllocation;
-    /**
-     * 体系间对赌表B
-     */
-    private SystemBetCVO systemBetCVO;
 
 
     public String getId() {
@@ -54,11 +50,4 @@ public class SystemBetDVO {
         this.unmetAllocation = unmetAllocation;
     }
 
-    public SystemBetCVO getSystemBetCVO() {
-        return systemBetCVO;
-    }
-
-    public void setSystemBetCVO(SystemBetCVO systemBetCVO) {
-        this.systemBetCVO = systemBetCVO;
-    }
 }

@@ -457,7 +457,7 @@ public class StaffMovementApplySerImpl extends ServiceImpl<StaffMovementApply, S
         checkTraAuditIdentity();
         StaffMovementApply staffMovementApply = super.findById(to.getId());
         BeanTransform.copyProperties(to, staffMovementApply, true);
-        if("是".equals(to.getOriginalMove())){
+        if("是".equals(staffMovementApply.getOriginalMove())){
 
             staffMovementApply.setTransferAuditor(to.getTransferAuditor());
             staffMovementApply.setTransferAuditOpinion(to.getTransferAuditOpinion());
@@ -474,7 +474,7 @@ public class StaffMovementApplySerImpl extends ServiceImpl<StaffMovementApply, S
         checkGenAduditIdentity();
         StaffMovementApply staffMovementApply = super.findById(to.getId());
         BeanTransform.copyProperties(to, staffMovementApply, true);
-        if("是".equals(to.getTransferMove())){
+        if("是".equals(staffMovementApply.getTransferMove())){
 
             staffMovementApply.setGeneralAuditor(to.getGeneralAuditor());
             staffMovementApply.setGeneralAuditOpinion(to.getGeneralAuditOpinion());

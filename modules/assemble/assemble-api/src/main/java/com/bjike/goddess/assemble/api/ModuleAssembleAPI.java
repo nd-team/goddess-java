@@ -53,6 +53,15 @@ public interface ModuleAssembleAPI {
     default ModuleBO modulesByName(String name, CheckType checkType) throws SerException {
         return null;
     }
-
+    /**
+     * 通过模块名称判断改模块关联关系是否被选中lijuntao
+     *
+     * @param moduleNames
+     * @return
+     * @throws SerException
+     */
+    default Boolean checkByName(String[] moduleNames) throws SerException {
+        return null;
+    }
 
 }

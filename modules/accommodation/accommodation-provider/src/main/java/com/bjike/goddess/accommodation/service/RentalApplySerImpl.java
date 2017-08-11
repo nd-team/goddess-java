@@ -355,7 +355,7 @@ public class RentalApplySerImpl extends ServiceImpl<RentalApply, RentalApplyDTO>
     @Override
     public RentalApplyBO getOne(String id) throws SerException {
         RentalApply rentalApply = super.findById(id);
-        return BeanTransform.copyProperties(rentalApply, RentalPreceptBO.class);
+        return BeanTransform.copyProperties(rentalApply, RentalApplyBO.class);
     }
 
     @Override
@@ -403,42 +403,44 @@ public class RentalApplySerImpl extends ServiceImpl<RentalApply, RentalApplyDTO>
             throw new SerException(e.getMessage());
         }
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public RentalApplyBO businessAudit(RentalApplyTO applyTO) throws SerException {
         checkBusinessAuditIdentity();
         RentalApply apply = super.findById(applyTO.getId());
-
+        BeanTransform.copyProperties(applyTO,apply,true);
         apply.setCommerceRemark(applyTO.getCommerceRemark());
         super.update(apply);
         return BeanTransform.copyProperties(apply, RentalApplyBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public RentalApplyBO financeAudit(RentalApplyTO applyTO) throws SerException {
         checkFinanceAuditIdentity();
         RentalApply apply = super.findById(applyTO.getId());
+        BeanTransform.copyProperties(applyTO,apply,true);
         apply.setOperatingRemark(applyTO.getOperatingRemark());
         super.update(apply);
         return BeanTransform.copyProperties(apply, RentalApplyBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public RentalApplyBO resourceAudit(RentalApplyTO applyTO) throws SerException {
         checkResourceAuditIdentity();
         RentalApply apply = super.findById(applyTO.getId());
+        BeanTransform.copyProperties(applyTO,apply,true);
         apply.setComprehensiveRemark(applyTO.getComprehensiveRemark());
         super.update(apply);
         return BeanTransform.copyProperties(apply, RentalApplyBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public RentalApplyBO manageAudit(RentalApplyTO applyTO) throws SerException {
         checkManagerAuditIdentity();
         UserBO userBO = userAPI.currentUser();
 
         RentalApply apply = super.findById(applyTO.getId());
-
+        BeanTransform.copyProperties(applyTO,apply,true);
         apply.setManage(userBO.getUsername());
         apply.setManageOpinion(applyTO.getManageOpinion());
         apply.setManagePass(applyTO.getManagePass());
@@ -450,7 +452,8 @@ public class RentalApplySerImpl extends ServiceImpl<RentalApply, RentalApplyDTO>
     @Override
     public RentalBO rentInfo(RentalApplyTO to) throws SerException {
 
-        RentalApply rentalApply = BeanTransform.copyProperties(to, RentalApply.class, true);
+        RentalApply rentalApply = super.findById(to.getId());
+                BeanTransform.copyProperties(to, rentalApply, true);
         Rental rental = new Rental();
         if ("通过".equals(to.getManagePass()) && "通过".equals(to.getCommerceRemark())
                 && "通过".equals(to.getComprehensiveRemark()) && "通过".equals(to.getOperatingRemark())) {

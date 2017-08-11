@@ -126,6 +126,11 @@ public class DetailsSerImpl extends ServiceImpl<Details, DetailsDTO> implements 
             RpcTransmit.transmitUserToken(userToken);
             purchase.setName(userBO.getUsername());
             purchase.setTime(LocalDateTime.now());
+
+            purchase.setCode(entity.getCode());
+            purchase.setIssueName(entity.getName());
+            purchase.setFacevalue(entity.getFacevalue());
+            purchase.setPrice(entity.getPrice());
             //根据用户名得到用户数据
             List<PositionDetailBO> positionDetailBOList = positionDetailUserAPI.getPositionDetail(userBO.getUsername());
             if (null != positionDetailBOList && positionDetailBOList.size() > 0) {

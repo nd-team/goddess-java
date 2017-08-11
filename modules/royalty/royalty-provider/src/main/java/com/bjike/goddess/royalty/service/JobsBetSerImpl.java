@@ -12,6 +12,8 @@ import com.bjike.goddess.royalty.enums.GuideAddrStatus;
 import com.bjike.goddess.royalty.to.*;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.sun.xml.internal.fastinfoset.algorithm.BooleanEncodingAlgorithm;
+import jdk.nashorn.internal.scripts.JO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -218,43 +220,83 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
     }
 
     @Override
-    public List<JobsBetBO> list(JobsBetDTO dto) throws SerException {
+    public List<JobsBetABO> list(JobsBetADTO dto) throws SerException {
         checkSeeIdentity();
-        JobsBetADTO adto = new JobsBetADTO();
-        List<JobsBetA> listA = jobsBetASer.findByCis(adto);
-        List<JobsBetBO> jobsBetBOS = new ArrayList<>(listA.size());
-        for (JobsBetA jobsBetA : listA) {
-            JobsBetBO betBO = new JobsBetBO();
-            betBO.setJobsBetABO(BeanTransform.copyProperties(jobsBetA, JobsBetABO.class));
-            JobsBetBDTO bdto = new JobsBetBDTO();
-            List<JobsBetB> listB = jobsBetBSer.findByCis(bdto);
-            List<JobsBetBBO> bboList = BeanTransform.copyProperties(listB, JobsBetBBO.class);
-            betBO.getJobsBetABO().setJobsBetBBOS(bboList);
-
-            for (JobsBetBBO jobsBetBBO : bboList) {
-                JobsBetCDTO dtoC = new JobsBetCDTO();
-                List<JobsBetC> listC = jobsBetCSer.findByCis(dtoC);
-                List<JobsBetCBO> cboList = BeanTransform.copyProperties(listC, JobsBetCBO.class);
-                jobsBetBBO.setJobsBetCBOS(cboList);
-
-                for (JobsBetCBO jobsBetCBO : cboList) {
-                    JobsBetDDTO dtoD = new JobsBetDDTO();
-                    List<JobsBetD> listD = jobsBetDSer.findByCis(dtoD);
-                    List<JobsBetDBO> dboList = BeanTransform.copyProperties(listD, JobsBetDBO.class);
-                    jobsBetCBO.setJobsBetDBOS(dboList);
-
-                    for (JobsBetDBO jobsBetDBO : dboList) {
-                        JobsBetEDTO dtoE = new JobsBetEDTO();
-                        List<JobsBetE> listE = jobsBetESer.findByCis(dtoE);
-                        List<JobsBetEBO> eboList = BeanTransform.copyProperties(listE, JobsBetEBO.class);
-                        jobsBetDBO.setJobsBetEBOS(eboList);
+        List<JobsBetA> listA = jobsBetASer.findByCis(dto);
+        List<JobsBetABO> listABO = BeanTransform.copyProperties(listA, JobsBetABO.class);
+        if (listABO != null) {
+            for (JobsBetABO jobsBetABO :listABO) {
+                JobsBetBDTO bdto = new JobsBetBDTO();
+                bdto.getConditions().add(Restrict.eq("jobsBetA.id",jobsBetABO.getId()));
+                List<JobsBetB> listB = jobsBetBSer.findByCis(bdto);
+                List<JobsBetBBO> listBBO = BeanTransform.copyProperties(listB,JobsBetBBO.class);
+                jobsBetABO.setJobsBetBBOS(listBBO);
+                if(listBBO!=null){
+                    for(JobsBetBBO jobsBetBBO:listBBO){
+                        JobsBetCDTO cdto = new JobsBetCDTO();
+                        cdto.getConditions().add(Restrict.eq("jobsBetB.id",jobsBetBBO.getId()));
+                        List<JobsBetC> listC = jobsBetCSer.findByCis(cdto);
+                        List<JobsBetCBO> listCBO  = BeanTransform.copyProperties(listC,JobsBetCBO.class);
+                        jobsBetBBO.setJobsBetCBOS(listCBO);
+                        if(listCBO!=null){
+                            for(JobsBetCBO jobsBetCBO : listCBO){
+                                JobsBetDDTO ddto = new JobsBetDDTO();
+                                ddto.getConditions().add(Restrict.eq("jobsBetC.id",jobsBetCBO.getId()));
+                                List<JobsBetD> listD = jobsBetDSer.findByCis(ddto);
+                                List<JobsBetDBO> listDBO = BeanTransform.copyProperties(listD,JobsBetDBO.class);
+                                jobsBetCBO.setJobsBetDBOS(listDBO);
+                                if(listDBO!=null){
+                                    for(JobsBetDBO jobsBetDBO:listDBO){
+                                        JobsBetEDTO edto = new JobsBetEDTO();
+                                        edto.getConditions().add(Restrict.eq("jobsBetD.id",jobsBetDBO.getId()));
+                                        List<JobsBetE> listE = jobsBetESer.findByCis(edto);
+                                        List<JobsBetEBO> listEBO = BeanTransform.copyProperties(listE,JobsBetEBO.class);
+                                        jobsBetDBO.setJobsBetEBOS(listEBO);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
-                jobsBetBOS.add(betBO);
             }
         }
 
-        return jobsBetBOS;
+        return listABO;
+//        JobsBetADTO adto = new JobsBetADTO();
+//        List<JobsBetA> listA = jobsBetASer.findByCis(adto);
+//        List<JobsBetBO> jobsBetBOS = new ArrayList<>(listA.size());
+//        for (JobsBetA jobsBetA : listA) {
+//            JobsBetBO betBO = new JobsBetBO();
+//            betBO.setJobsBetABO(BeanTransform.copyProperties(jobsBetA, JobsBetABO.class));
+//            JobsBetBDTO bdto = new JobsBetBDTO();
+//            List<JobsBetB> listB = jobsBetBSer.findByCis(bdto);
+//            List<JobsBetBBO> bboList = BeanTransform.copyProperties(listB, JobsBetBBO.class);
+//            betBO.getJobsBetABO().setJobsBetBBOS(bboList);
+//
+//            for (JobsBetBBO jobsBetBBO : bboList) {
+//                JobsBetCDTO dtoC = new JobsBetCDTO();
+//                List<JobsBetC> listC = jobsBetCSer.findByCis(dtoC);
+//                List<JobsBetCBO> cboList = BeanTransform.copyProperties(listC, JobsBetCBO.class);
+//                jobsBetBBO.setJobsBetCBOS(cboList);
+//
+//                for (JobsBetCBO jobsBetCBO : cboList) {
+//                    JobsBetDDTO dtoD = new JobsBetDDTO();
+//                    List<JobsBetD> listD = jobsBetDSer.findByCis(dtoD);
+//                    List<JobsBetDBO> dboList = BeanTransform.copyProperties(listD, JobsBetDBO.class);
+//                    jobsBetCBO.setJobsBetDBOS(dboList);
+//
+//                    for (JobsBetDBO jobsBetDBO : dboList) {
+//                        JobsBetEDTO dtoE = new JobsBetEDTO();
+//                        List<JobsBetE> listE = jobsBetESer.findByCis(dtoE);
+//                        List<JobsBetEBO> eboList = BeanTransform.copyProperties(listE, JobsBetEBO.class);
+//                        jobsBetDBO.setJobsBetEBOS(eboList);
+//                    }
+//                }
+//                jobsBetBOS.add(betBO);
+//            }
+//        }
+
+//        return jobsBetBOS;
     }
 
     @Transactional(rollbackFor = SerException.class)

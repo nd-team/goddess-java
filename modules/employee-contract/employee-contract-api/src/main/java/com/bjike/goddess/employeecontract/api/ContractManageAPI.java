@@ -36,6 +36,7 @@ public interface ContractManageAPI {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 数据录入
      *
@@ -176,4 +177,13 @@ public interface ContractManageAPI {
         return null;
     }
 
+    /**
+     * 获取姓名
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> getName() throws SerException {
+        return null;
+    }
 }

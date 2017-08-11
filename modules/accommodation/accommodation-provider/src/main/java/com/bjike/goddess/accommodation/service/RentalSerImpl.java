@@ -223,7 +223,7 @@ public class RentalSerImpl extends ServiceImpl<Rental, RentalDTO> implements Ren
         rental.setModifyTime(LocalDateTime.now());
         rental.setProjectName(StringUtils.join(rentalTO.getProjectName(),","));
         super.update(rental);
-        return BeanTransform.copyProperties(rentalTO, RentalBO.class);
+        return BeanTransform.copyProperties(rental, RentalBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)

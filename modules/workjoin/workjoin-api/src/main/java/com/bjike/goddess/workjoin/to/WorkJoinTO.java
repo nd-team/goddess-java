@@ -21,7 +21,7 @@ public class WorkJoinTO extends BaseTO {
     /**
      * 工作交接编号
      */
-    @NotBlank(message = "工作交接编号不能为空",groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "工作交接编号不能为空",groups = {EDIT.class})
     private String workJoinNum;
 
     /**

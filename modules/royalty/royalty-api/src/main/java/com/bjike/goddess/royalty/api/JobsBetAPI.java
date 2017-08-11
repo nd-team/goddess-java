@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.royalty.bo.JobsBetABO;
 import com.bjike.goddess.royalty.bo.JobsBetBO;
 import com.bjike.goddess.royalty.bo.ManageCommissionBO;
+import com.bjike.goddess.royalty.dto.JobsBetADTO;
 import com.bjike.goddess.royalty.dto.JobsBetDTO;
 import com.bjike.goddess.royalty.dto.JobsBetEDTO;
 import com.bjike.goddess.royalty.to.CollectTO;
@@ -55,12 +56,13 @@ public interface JobsBetAPI {
      * 岗位间对赌表
      *
      * @param dto 岗位间对赌表数据dto
-     * @return class JobsBetBO
+     * @return class JobsBetABO
      * @throws SerException
      */
-    default List<JobsBetBO> list(JobsBetDTO dto) throws SerException {
+    default List<JobsBetABO> list(JobsBetADTO dto) throws SerException {
         return null;
     }
+
 
     /**
      * 添加岗位间对赌表

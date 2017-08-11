@@ -128,7 +128,7 @@ public class OverviewSkillLevelAction {
     public Result add(@Validated(ADD.class) OverviewSkillLevelTO overviewSkillLevelTO, BindingResult bindingResult) throws ActException {
         try {
             OverviewSkillLevelBO overviewSkillLevelBO = overviewSkillLevelAPI.insertOverviewSkillLevel(overviewSkillLevelTO);
-            return ActResult.initialize(overviewSkillLevelBO);
+            return ActResult.initialize(BeanTransform.copyProperties(overviewSkillLevelBO,OverviewSkillLevelVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

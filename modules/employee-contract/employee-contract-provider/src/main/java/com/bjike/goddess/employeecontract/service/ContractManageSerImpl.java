@@ -396,6 +396,12 @@ public class ContractManageSerImpl extends ServiceImpl<ContractManage, ContractM
             case SEEFILE:
                 flag = guideIdentity();
                 break;
+            case CONGEL:
+                flag = guideIdentity();
+                break;
+            case THAW:
+                flag = guideIdentity();
+                break;
             default:
                 flag = true;
                 break;

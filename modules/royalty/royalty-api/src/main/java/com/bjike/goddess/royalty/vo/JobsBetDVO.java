@@ -53,11 +53,10 @@ public class JobsBetDVO {
      * 对赌得分（部门总得分*目标-部门分配对赌权重）
      */
     private Double betScore;
-    /**
-     * 岗位间对赌表C
-     */
-    private JobsBetCBO jobsBetCBO;
 
+    /**
+     * 岗位间对赌表E
+     */
     private List<JobsBetEVO> jobsBetEVOS;
 
     public String getId() {
@@ -124,13 +123,6 @@ public class JobsBetDVO {
         this.betScore = betScore;
     }
 
-    public JobsBetCBO getJobsBetCBO() {
-        return jobsBetCBO;
-    }
-
-    public void setJobsBetCBO(JobsBetCBO jobsBetCBO) {
-        this.jobsBetCBO = jobsBetCBO;
-    }
 
     public List<JobsBetEVO> getJobsBetEVOS() {
         return jobsBetEVOS;

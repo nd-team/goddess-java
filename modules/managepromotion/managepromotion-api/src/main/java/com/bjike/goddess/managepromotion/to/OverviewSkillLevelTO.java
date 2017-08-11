@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 技能等级情况概览
  *
@@ -84,13 +86,13 @@ public class OverviewSkillLevelTO extends BaseTO {
     /**
      * 主项/小项（是否为主项）
      */
-    @NotBlank(message = "主项/小项（是否为主项）不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "主项/小项（是否为主项）不能为空",groups = {ADD.class, EDIT.class})
     private Boolean subject;
 
     /**
      * 小项顺序
      */
-    @NotBlank(message = "小项顺序不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "小项顺序不能为空",groups = {ADD.class, EDIT.class})
     private Integer orderEvent;
 
 

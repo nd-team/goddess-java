@@ -233,6 +233,7 @@ public class ContractorSerImpl extends ServiceImpl<Contractor, ContractorDTO> im
     public ContractorBO insertContractor(ContractorTO contractorTO) throws SerException {
         checkAddIdentity();
         Contractor contractor = BeanTransform.copyProperties(contractorTO,Contractor.class,true);
+        contractor.setCreationTime(LocalDateTime.now());
         contractor.setCreateTime(LocalDateTime.now());
         super.save(contractor);
         return BeanTransform.copyProperties(contractor,ContractorBO.class);
@@ -243,13 +244,17 @@ public class ContractorSerImpl extends ServiceImpl<Contractor, ContractorDTO> im
         checkAddIdentity();
         if (!StringUtils.isEmpty(contractorTO.getId())) {
             Contractor contractor = super.findById(contractorTO.getId());
-            BeanTransform.copyProperties(contractorTO, contractor, true);
+            LocalDateTime a=contractor.getCreateTime();
+            contractor=BeanTransform.copyProperties(contractorTO, Contractor.class, true);
+            contractor.setCreateTime(a);
             contractor.setModifyTime(LocalDateTime.now());
+            contractor.setCreationTime(LocalDateTime.now());
             super.update(contractor);
+            return BeanTransform.copyProperties(contractor, ContractorBO.class);
+
         } else {
             throw new SerException("更新ID不能为空!");
         }
-        return BeanTransform.copyProperties(contractorTO, ContractorBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)

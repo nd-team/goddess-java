@@ -41,11 +41,10 @@ public class JobsBetCVO {
      * 总得分（制约得分+基础得分）
      */
     private Double departmentTotalScore;
-    /**
-     * 岗位间对赌表B
-     */
-    private JobsBetBVO jobsBetBVO;
 
+    /**
+     * 岗位间对赌表D
+     */
     private List<JobsBetDVO> jobsBetDVOS;
 
     public String getId() {
@@ -96,13 +95,6 @@ public class JobsBetCVO {
         this.departmentTotalScore = departmentTotalScore;
     }
 
-    public JobsBetBVO getJobsBetBVO() {
-        return jobsBetBVO;
-    }
-
-    public void setJobsBetBVO(JobsBetBVO jobsBetBVO) {
-        this.jobsBetBVO = jobsBetBVO;
-    }
 
     public List<JobsBetDVO> getJobsBetDVOS() {
         return jobsBetDVOS;

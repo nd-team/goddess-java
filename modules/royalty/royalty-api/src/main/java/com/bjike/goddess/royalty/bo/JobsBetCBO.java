@@ -40,10 +40,10 @@ public class JobsBetCBO extends BaseBO {
      * 总得分（制约得分+基础得分）
      */
     private Double departmentTotalScore;
-    /**
-     * 岗位间对赌表B
-     */
-    private JobsBetBBO jobsBetBBO;
+//    /**
+//     * 岗位间对赌表B
+//     */
+//    private JobsBetBBO jobsBetBBO;
     /**
      * 岗位间对赌表D
      */
@@ -89,13 +89,13 @@ public class JobsBetCBO extends BaseBO {
         this.departmentTotalScore = departmentTotalScore;
     }
 
-    public JobsBetBBO getJobsBetBBO() {
-        return jobsBetBBO;
-    }
-
-    public void setJobsBetBBO(JobsBetBBO jobsBetBBO) {
-        this.jobsBetBBO = jobsBetBBO;
-    }
+//    public JobsBetBBO getJobsBetBBO() {
+//        return jobsBetBBO;
+//    }
+//
+//    public void setJobsBetBBO(JobsBetBBO jobsBetBBO) {
+//        this.jobsBetBBO = jobsBetBBO;
+//    }
 
     public List<JobsBetDBO> getJobsBetDBOS() {
         return jobsBetDBOS;

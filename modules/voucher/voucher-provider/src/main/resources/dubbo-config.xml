@@ -31,6 +31,7 @@
 	<dubbo:reference validation="true" id="categoryApiImpl" interface="com.bjike.goddess.financeinit.api.CategoryAPI" />
 	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
 	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
+	<dubbo:reference  validation="true" id="incomeCostAnalysisApiImpl" interface="com.bjike.goddess.analysis.api.IncomeCostAnalysisAPI" />
 
 
 

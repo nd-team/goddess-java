@@ -26,6 +26,9 @@ public class JobsBetAVO {
      * 分值
      */
     private Integer score;
+    /**
+     * 岗位间对赌表B
+     */
     private List<JobsBetBVO> jobsBetBVOS;
 
     public String getId() {

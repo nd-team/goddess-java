@@ -1123,15 +1123,13 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     }
 
     @Override
-    public List<DriverDispatchFeeBO> findDispatchFree(Integer month) throws SerException {
+    public List<DriverDispatchFeeBO> findDispatchFree(String area,String projectGroup,Integer year,Integer month) throws SerException {
         if (month != null) {
             if (month != null) {
                 //按月份查询已付款的出车数
-                StringBuilder sql = new StringBuilder("select car.driver , sum(*) as fee from dispatchcar_basicinfo car where 0 = 0");
-                sql.append(" and month(car.dispatchDate) = " + month);
-                sql.append(" and car.findType = " + FindType.PAYED.getCode());
-                sql.append(" GROUP BY car.driver ");
-                String[] fields = new String[]{"driver", "fee"};
+                StringBuilder sql = new StringBuilder("select sum(cost) as fee from dispatchcar_basicinfo car where ");
+                sql.append(" month(car.dispatchDate) = " + month+" and YEAR(car.dispatchDate)= "+year+" and area = '"+area+"' and project_group = '"+projectGroup+"' and car.findType = " + FindType.PAYED.getCode());
+                String[] fields = new String[]{"fee"};
                 return super.findBySql(sql.toString(), DriverDispatchFeeBO.class, fields);
             } else {
                 throw new SerException("查询月份不能为空!");
@@ -1142,14 +1140,12 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     }
 
     @Override
-    public List<DriverDispatchsBO> findDispatchs(Integer month) throws SerException {
+    public List<DriverDispatchsBO> findDispatchs(String area,String projectGroup,Integer year,Integer month) throws SerException {
         if (month != null) {
             //按月份查询已付款的出车数
-            StringBuilder sql = new StringBuilder("select car.driver , count(*) as sum from dispatchcar_basicinfo car where 0 = 0");
-            sql.append(" and month(car.dispatchDate) = " + month);
-            sql.append(" and car.findType = " + FindType.PAYED.getCode());
-            sql.append(" GROUP BY car.driver ");
-            String[] fields = new String[]{"driver", "sum"};
+            StringBuilder sql = new StringBuilder("select count(driver) as sum from dispatchcar_basicinfo car where ");
+            sql.append(" month(car.dispatchDate) = " + month+ " and YEAR(car.dispatchDate) = "+year+" and area = '"+area+"' and project_group = '"+projectGroup+"' and car.findType = " + FindType.PAYED.getCode() );
+            String[] fields = new String[]{"sum"};
             return super.findBySql(sql.toString(), DriverDispatchsBO.class, fields);
         } else {
             throw new SerException("查询月份不能为空!");

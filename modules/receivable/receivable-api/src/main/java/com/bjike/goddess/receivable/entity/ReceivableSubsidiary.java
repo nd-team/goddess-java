@@ -34,8 +34,18 @@ public class ReceivableSubsidiary extends BaseEntity {
     /**
      * 派工单编号
      */
-    @Column(name = "taskNum", columnDefinition = "VARCHAR(255)   COMMENT '派工单编号'")
+    @Column(name = "taskNum", columnDefinition = "VARCHAR(255)   COMMENT '派工单编号'",unique = true)
     private String taskNum;
+    /**
+     * 派工合同号
+     */
+    @Column(name = "contractNum", columnDefinition = "VARCHAR(255)   COMMENT '派工合同号'",unique = true)
+    private String contractNum;
+    /**
+     * 外包合同号
+     */
+    @Column(name = "outsourcingNum", columnDefinition = "VARCHAR(255)   COMMENT '外包合同号'",unique = true)
+    private String outsourcingNum;
 
     /**
      * 派工单价
@@ -227,7 +237,7 @@ public class ReceivableSubsidiary extends BaseEntity {
      * 承包商
      */
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
-    @JoinColumn(name = "contractor_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '承包商'")
+    @JoinColumn(name = "contractor_id", columnDefinition = "VARCHAR(36)   COMMENT '承包商'")
     private Contractor contractor;
     /*@Column(name = "contractor", columnDefinition = "VARCHAR(255)   COMMENT '承包商'")
     private String contractor;
@@ -313,6 +323,22 @@ public class ReceivableSubsidiary extends BaseEntity {
 
     public void setPactNum(Double pactNum) {
         this.pactNum = pactNum;
+    }
+
+    public String getContractNum() {
+        return contractNum;
+    }
+
+    public void setContractNum(String contractNum) {
+        this.contractNum = contractNum;
+    }
+
+    public String getOutsourcingNum() {
+        return outsourcingNum;
+    }
+
+    public void setOutsourcingNum(String outsourcingNum) {
+        this.outsourcingNum = outsourcingNum;
     }
 
     public Double getPactMoney() {

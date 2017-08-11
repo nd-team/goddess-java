@@ -107,7 +107,7 @@ public class RentalPreceptTO extends BaseTO {
     /**
      * 资金意见
      */
-    @NotBlank(message = "资金意见不能为空", groups = {RentalPreceptTO.TestBusiness.class})
+    @NotBlank(message = "资金意见不能为空", groups = {RentalPreceptTO.TestFinance.class})
     private String moneyOn;
 
     /**

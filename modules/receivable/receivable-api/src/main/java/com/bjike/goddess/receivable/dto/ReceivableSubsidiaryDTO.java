@@ -12,13 +12,20 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [ com.bjike ]
  */
 public class ReceivableSubsidiaryDTO extends BaseDTO {
+    /**
+     * 派工单编号
+     */
+    private String taskNum;
 
-//    public static final String[] AREACOLLECTDETAIL = {"地区","项目名称", "派工单价","已派工量","完工时间",
-//            "验收交维时间","签字审批时间","ERP结算审批时间","发票审核时间","预计支付时间","到帐时间","管理费","到帐金额",
-//            "税金","税后金额","是否已走结算流程","详细情况"};
-//
-//
-//    public static final String[] AREACOLLECT = {"地区","管理费","到账金额","税金","税后金额"};
+    /**
+     * 派工合同号
+     */
+    private String contractNum;
+    /**
+     * 外包合同号
+     */
+    private String outsourcingNum;
+
     /**
      * 地区
      */
@@ -54,6 +61,30 @@ public class ReceivableSubsidiaryDTO extends BaseDTO {
      * 到账结束时间
      */
     private String endTime;
+
+    public String getTaskNum() {
+        return taskNum;
+    }
+
+    public void setTaskNum(String taskNum) {
+        this.taskNum = taskNum;
+    }
+
+    public String getContractNum() {
+        return contractNum;
+    }
+
+    public void setContractNum(String contractNum) {
+        this.contractNum = contractNum;
+    }
+
+    public String getOutsourcingNum() {
+        return outsourcingNum;
+    }
+
+    public void setOutsourcingNum(String outsourcingNum) {
+        this.outsourcingNum = outsourcingNum;
+    }
 
     public String[] getArea() {
         return area;

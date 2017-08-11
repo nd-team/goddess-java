@@ -27,10 +27,6 @@ public class JobsBetEVO {
      * 未达标分配
      */
     private Double unmetAllocation;
-    /**
-     * 岗位间对赌表D
-     */
-    private JobsBetDVO jobsBetDVO;
 
     public String getId() {
         return id;
@@ -56,11 +52,4 @@ public class JobsBetEVO {
         this.unmetAllocation = unmetAllocation;
     }
 
-    public JobsBetDVO getJobsBetDVO() {
-        return jobsBetDVO;
-    }
-
-    public void setJobsBetDVO(JobsBetDVO jobsBetDVO) {
-        this.jobsBetDVO = jobsBetDVO;
-    }
 }

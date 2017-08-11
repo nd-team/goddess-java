@@ -1,6 +1,7 @@
 package com.bjike.goddess.market.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.customer.bo.CustomerNameNumBO;
 import com.bjike.goddess.market.bo.MarketInfoBO;
 import com.bjike.goddess.market.dto.MarketInfoDTO;
 import com.bjike.goddess.market.excel.SonPermissionObject;
@@ -119,6 +120,23 @@ public interface MarketInfoAPI {
      * @return class String
      */
     default List<MarketInfoBO> getCollecting(String area, String projectName) throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有的用户姓名和用户编号lijuntao
+     *
+     * @return class String
+     */
+    default List<CustomerNameNumBO> getNameNum() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有的竞争对手lijuntao
+     *
+     * @return class String
+     */
+    default List<String> getCompetName() throws SerException {
         return null;
     }
 }

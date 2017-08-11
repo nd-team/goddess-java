@@ -7,7 +7,6 @@ import com.bjike.goddess.analysis.excel.SonPermissionObject;
 import com.bjike.goddess.analysis.to.*;
 import com.bjike.goddess.analysis.vo.CollectVO;
 import com.bjike.goddess.analysis.vo.IncomeCostAnalysisVO;
-import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -151,40 +150,40 @@ public class IncomeCostAnalysisAction {
     /**
      * 收入成本分析列表
      *
-     * @param incomeCostAnalysisDTO 收入成本分析dto
+     * @param dto 收入成本分析dto
      * @return class IncomeCostAnalysisVO
      * @des 获取所有收入成本分析
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(IncomeCostAnalysisDTO incomeCostAnalysisDTO, HttpServletRequest request) throws ActException {
+    public Result list(IncomeCostAnalysisDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<IncomeCostAnalysisVO> incomeCostAnalysisVOS = BeanTransform.copyProperties(
-                    incomeCostAnalysisAPI.findListIncomeCostAnalysis(incomeCostAnalysisDTO), IncomeCostAnalysisVO.class, request);
+                    incomeCostAnalysisAPI.findListIncomeCostAnalysis(dto), IncomeCostAnalysisVO.class, request);
             return ActResult.initialize(incomeCostAnalysisVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
-    /**
-     * 添加收入成本分析
-     *
-     * @param incomeCostAnalysisTO 收入成本分析to
-     * @return class IncomeCostAnalysisVO
-     * @des 添加收入成本分析
-     * @version v1
-     */
-    @LoginAuth
-    @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class) IncomeCostAnalysisTO incomeCostAnalysisTO, BindingResult bindingResult) throws ActException {
-        try {
-            IncomeCostAnalysisBO incomeCostAnalysisBO = incomeCostAnalysisAPI.insertIncomeCostAnalysis(incomeCostAnalysisTO);
-            return ActResult.initialize(incomeCostAnalysisBO);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 添加收入成本分析
+//     *
+//     * @param incomeCostAnalysisTO 收入成本分析to
+//     * @return class IncomeCostAnalysisVO
+//     * @des 添加收入成本分析
+//     * @version v1
+//     */
+//    @LoginAuth
+//    @PostMapping("v1/add")
+//    public Result add(@Validated(ADD.class) IncomeCostAnalysisTO incomeCostAnalysisTO, BindingResult bindingResult) throws ActException {
+//        try {
+//            IncomeCostAnalysisBO incomeCostAnalysisBO = incomeCostAnalysisAPI.insertIncomeCostAnalysis(incomeCostAnalysisTO);
+//            return ActResult.initialize(incomeCostAnalysisBO);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
     /**
      * 编辑收入成本分析
@@ -198,8 +197,8 @@ public class IncomeCostAnalysisAction {
     @PostMapping("v1/edit")
     public Result edit(@Validated(EDIT.class) IncomeCostAnalysisTO incomeCostAnalysisTO, BindingResult bindingResult) throws ActException {
         try {
-            IncomeCostAnalysisBO incomeCostAnalysisBO = incomeCostAnalysisAPI.editIncomeCostAnalysis(incomeCostAnalysisTO);
-            return ActResult.initialize(incomeCostAnalysisBO);
+            incomeCostAnalysisAPI.editIncomeCostAnalysis(incomeCostAnalysisTO);
+            return ActResult.initialize("edit success");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

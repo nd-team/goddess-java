@@ -125,4 +125,17 @@ public class ModuleAssembleSerImpl extends ServiceImpl<ModuleAssemble, ModuleAss
         moduleBO.setRelations(relations);
         return moduleBO;
     }
+
+    @Override
+    public Boolean checkByName(String module ,String relation) throws SerException {
+        Boolean bool = false;
+        ModuleAssembleDTO moduleAssembleDTO = new ModuleAssembleDTO();
+        moduleAssembleDTO.getConditions().add(Restrict.eq("module.name",module));
+        moduleAssembleDTO.getConditions().add(Restrict.eq("relation.name", relation));
+        ModuleAssemble moduleAssemble = super.findOne(moduleAssembleDTO);
+        if(moduleAssemble != null && moduleAssemble.getCheckType()==CheckType.CHECK){
+            bool = true;
+        }
+        return bool;
+    }
 }

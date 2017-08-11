@@ -3,10 +3,12 @@ package com.bjike.goddess.royalty.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.royalty.bo.DepartmentBetABO;
 import com.bjike.goddess.royalty.bo.DepartmentBetBO;
+import com.bjike.goddess.royalty.dto.DepartmentBetADTO;
 import com.bjike.goddess.royalty.dto.DepartmentBetBDTO;
 import com.bjike.goddess.royalty.dto.DepartmentBetDDTO;
 import com.bjike.goddess.royalty.dto.DepartmentBetDTO;
 import com.bjike.goddess.royalty.entity.DepartmentBet;
+import com.bjike.goddess.royalty.entity.DepartmentBetA;
 import com.bjike.goddess.royalty.service.DepartmentBetSer;
 import com.bjike.goddess.royalty.to.DepartmentBetATO;
 import com.bjike.goddess.royalty.to.DepartmentBetTO;
@@ -51,7 +53,7 @@ public class DepartmentBetApiImpl implements DepartmentBetAPI {
     }
 
     @Override
-    public List<DepartmentBetBO> list(DepartmentBetDTO dto) throws SerException {
+    public List<DepartmentBetABO> list(DepartmentBetADTO dto) throws SerException {
         return departmentBetSer.list(dto);
     }
 

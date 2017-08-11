@@ -120,27 +120,27 @@ public class Rental extends BaseEntity {
     /**
      * 中介费
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '中介费'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '中介费'")
     private Double agency;
     /**
      * 押金
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '押金'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '押金'")
     private Double deposit;
     /**
      * 房租
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '房租'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '房租'")
     private Double rent;
     /**
      * 管理费
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '管理费'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '管理费'")
     private Double managementFee;
     /**
      * 卫生费
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '卫生费'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '卫生费'")
     private Double healthFee;
     /**
      * 房租缴费方
@@ -150,12 +150,12 @@ public class Rental extends BaseEntity {
     /**
      * 水费期初数目
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '水费期初数目'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '水费期初数目'")
     private Double water;
     /**
      * 水费计价金额(元/吨)
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '水费计价金额(元/吨)'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '水费计价金额(元/吨)'")
     private Double waterMoney;
 
     /**
@@ -166,12 +166,12 @@ public class Rental extends BaseEntity {
     /**
      * 电费期初数目
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '电费期初数目'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '电费期初数目'")
     private Double energy;
     /**
      * 电费计价金额(元/吨)
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '电费计价金额(元/吨)'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '电费计价金额(元/吨)'")
     private Double energyMoney;
     /**
      * 电费缴费方
@@ -186,7 +186,7 @@ public class Rental extends BaseEntity {
     /**
      * 网络套餐费用缴纳金额
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '网络套餐费用缴纳金额'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '网络套餐费用缴纳金额'")
     private Double networkMoney;
     /**
      * 网络套餐费用缴费方
@@ -196,7 +196,7 @@ public class Rental extends BaseEntity {
     /**
      * 管道燃气费充值额度
      */
-    @Column(columnDefinition = "DECIMAL(5,2) COMMENT '管道燃气费充值额度'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '管道燃气费充值额度'")
     private Double gas;
     /**
      * 燃气费缴费方
