@@ -64,10 +64,10 @@ public interface ModuleAPI {
     /**
      * 模块是否选中
      *
-     * @param id
+     * @param name
      * @throws SerException
      */
-    default Boolean isCheck(String id) throws SerException {
+    default Boolean isCheck(String name) throws SerException {
         return null;
     }
     /**
