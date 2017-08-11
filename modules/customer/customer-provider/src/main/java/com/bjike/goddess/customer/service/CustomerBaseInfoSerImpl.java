@@ -8,6 +8,7 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.bo.CustomerLevelBO;
+import com.bjike.goddess.customer.bo.CustomerNameNumBO;
 import com.bjike.goddess.customer.dto.CusFamilyMemberDTO;
 import com.bjike.goddess.customer.dto.CustomerBaseInfoDTO;
 import com.bjike.goddess.customer.entity.CusFamilyMember;
@@ -598,5 +599,11 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         CustomerBaseInfoDTO dto = new CustomerBaseInfoDTO();
         dto.getConditions().add(Restrict.eq("origanizion", origanizion));
         return BeanTransform.copyProperties(super.findByCis(dto), CustomerBaseInfoBO.class);
+    }
+
+    @Override
+    public List<CustomerNameNumBO> findNameNum() throws SerException {
+        List<CustomerBaseInfo> customerBaseInfos = super.findAll();
+        return BeanTransform.copyProperties(customerBaseInfos,CustomerNameNumBO.class);
     }
 }

@@ -107,4 +107,9 @@ public class CompetitorApiImpl implements CompetitorAPI {
     public OrganizationBO organizeList(String id) throws SerException {
         return competitorSer.organizeList(id);
     }
+
+    @Override
+    public List<String> findCompeName() throws SerException {
+        return competitorSer.findCompeName();
+    }
 }

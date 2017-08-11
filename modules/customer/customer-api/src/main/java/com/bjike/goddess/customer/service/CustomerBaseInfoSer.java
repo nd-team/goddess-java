@@ -3,6 +3,7 @@ package com.bjike.goddess.customer.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
+import com.bjike.goddess.customer.bo.CustomerNameNumBO;
 import com.bjike.goddess.customer.dto.CustomerBaseInfoDTO;
 import com.bjike.goddess.customer.entity.CustomerBaseInfo;
 import com.bjike.goddess.customer.to.CustomerBaseInfoTO;
@@ -182,4 +183,13 @@ public interface CustomerBaseInfoSer extends Ser<CustomerBaseInfo, CustomerBaseI
      * @throws SerException
      */
     List<CustomerBaseInfoBO> findByOriganizion(String origanizion) throws SerException;
+
+    /**
+     * lijuntao
+     * 获取用户名和用户编号
+     *
+     * @return
+     * @throws SerException
+     */
+    List<CustomerNameNumBO> findNameNum() throws SerException;
 }

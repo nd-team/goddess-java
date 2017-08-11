@@ -2,6 +2,7 @@ package com.bjike.goddess.assemble.api;
 
 import com.bjike.goddess.assemble.bo.ModuleBO;
 import com.bjike.goddess.assemble.dto.ModuleDTO;
+import com.bjike.goddess.assemble.entity.Module;
 import com.bjike.goddess.assemble.to.ModuleTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -69,6 +70,14 @@ public interface ModuleAPI {
     default Boolean isCheck(String id) throws SerException {
         return null;
     }
-
+    /**
+     * 根据模块名查询模块id
+     *
+     * @param name
+     * @throws SerException
+     */
+    default Module getIdByName(String name) throws SerException {
+        return null;
+    }
 
 }

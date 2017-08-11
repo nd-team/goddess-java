@@ -1,5 +1,7 @@
 package com.bjike.goddess.market.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.assemble.api.ModuleAssembleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -8,6 +10,9 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.competitormanage.api.CompetitorAPI;
+import com.bjike.goddess.customer.api.CustomerBaseInfoAPI;
+import com.bjike.goddess.customer.bo.CustomerNameNumBO;
 import com.bjike.goddess.market.bo.MarketInfoBO;
 import com.bjike.goddess.market.dto.MarketInfoDTO;
 import com.bjike.goddess.market.entity.MarketInfo;
@@ -51,6 +56,12 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
     private UserAPI userAPI;
     @Autowired
     private CollectEmailSer collectEmailSer;
+    @Autowired
+    private CustomerBaseInfoAPI customerBaseInfoAPI;
+    @Autowired
+    private ModuleAssembleAPI moduleAssembleAPI;
+    @Autowired
+    private CompetitorAPI competitorAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -368,5 +379,25 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
         dto.getConditions().add(Restrict.eq("projectName",projectName));
 
         return BeanTransform.copyProperties(super.findByCis(dto),MarketInfoBO.class);
+    }
+
+    @Override
+    public List<CustomerNameNumBO> getNameNum() throws SerException {
+        String[] moduleNames = new String[]{"market","customer"};
+        List<CustomerNameNumBO> customerNameNumBOS = new ArrayList<>(0);
+        if(moduleAssembleAPI.checkByName(moduleNames)){  //判断关联模块该模块是否被勾选
+            customerNameNumBOS = customerBaseInfoAPI.findNameNum();
+        }
+        return customerNameNumBOS;
+    }
+
+    @Override
+    public List<String> getCompetName() throws SerException {
+        String[] moduleNames = new String[]{"market","competitormanage"};
+        List<String> competName = new ArrayList<>(0);
+        if(moduleAssembleAPI.checkByName(moduleNames)){  //判断关联模块该模块是否被勾选
+            competName = competitorAPI.findCompeName();
+        }
+        return competName;
     }
 }

@@ -21,7 +21,7 @@ public class IndividualDisplayUser extends BaseEntity {
     /**
      * 用户姓名集合
      */
-    @Column(name = "usernames", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '用户姓名集合'")
+    @Column(name = "usernames", nullable = false, columnDefinition = "TEXT COMMENT '用户姓名集合'")
     private String usernames;
 
     /**

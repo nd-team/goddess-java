@@ -30,7 +30,8 @@ dependencies {
     compile project(":common:common-provider")
     compile project(":modules:market:market-api")
     compile project(":common:common-utils")
-    /*导入其他模块api*/
-    //compile project(":modules:customer:customer-api")
+    compile project(":modules:customer:customer-api")
+    compile project(":modules:assemble:assemble-api")
+    compile project(":modules:competitormanage:competitormanage-api")
 }
 
