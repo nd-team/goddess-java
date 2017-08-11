@@ -111,6 +111,18 @@ public class Application extends BaseEntity {
     @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '投票数'")
     private int votes;
 
+    /**
+     * 状态
+     */
+    @Column(name = "is_situation", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '状态' ")
+    private Boolean situation;
+
+    /**
+     * 标记
+     */
+    @Column(name = "tar", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '状态' ")
+    private Boolean tar;
+
 
     public String getShareholder() {
         return shareholder;
@@ -230,5 +242,21 @@ public class Application extends BaseEntity {
 
     public void setVotes(int votes) {
         this.votes = votes;
+    }
+
+    public Boolean getSituation() {
+        return situation;
+    }
+
+    public void setSituation(Boolean situation) {
+        this.situation = situation;
+    }
+
+    public Boolean getTar() {
+        return tar;
+    }
+
+    public void setTar(Boolean tar) {
+        this.tar = tar;
     }
 }

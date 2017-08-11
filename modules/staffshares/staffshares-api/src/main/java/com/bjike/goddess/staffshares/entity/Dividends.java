@@ -23,6 +23,12 @@ import java.time.LocalDateTime;
 public class Dividends extends BaseEntity {
 
     /**
+     * 持股人
+     */
+    @Column(name = "shareholder", columnDefinition = "VARCHAR(255)   COMMENT '持股人'")
+    private String shareholder;
+
+    /**
      * 方案代码
      */
     @Column(name = "code", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '方案代码'")
@@ -43,7 +49,7 @@ public class Dividends extends BaseEntity {
     /**
      * 持股数
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '持股数'")
+    @Column(name = "num", columnDefinition = "VARCHAR(255)   COMMENT '持股数'")
     private int num;
 
     /**
@@ -67,13 +73,13 @@ public class Dividends extends BaseEntity {
     /**
      * 购入时间
      */
-    @Column(name = "buyTime", nullable = false, columnDefinition = "DATETIME   COMMENT '购入时间'")
+    @Column(name = "buyTime", nullable = true, columnDefinition = "DATETIME   COMMENT '购入时间'")
     private LocalDateTime buyTime;
 
     /**
      * 持股时长
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '持股时长'")
+    @Column(name = "duration", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '持股时长'")
     private int duration;
 
     /**
@@ -97,7 +103,7 @@ public class Dividends extends BaseEntity {
     /**
      * 持股人确认情况
      */
-    @Column(name = "is_situation", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '持股人确认情况'", insertable = false)
+    @Column(name = "is_situation", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '持股人确认情况'")
     private Boolean situation;
 
 
@@ -203,5 +209,13 @@ public class Dividends extends BaseEntity {
 
     public void setSituation(Boolean situation) {
         this.situation = situation;
+    }
+
+    public String getShareholder() {
+        return shareholder;
+    }
+
+    public void setShareholder(String shareholder) {
+        this.shareholder = shareholder;
     }
 }

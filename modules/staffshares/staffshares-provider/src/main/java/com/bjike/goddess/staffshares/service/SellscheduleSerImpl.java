@@ -9,6 +9,7 @@ import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.staffshares.bo.SellscheduleBO;
 import com.bjike.goddess.staffshares.bo.SellscheduleCollectBO;
+import com.bjike.goddess.staffshares.bo.TransactionBO;
 import com.bjike.goddess.staffshares.dto.SellscheduleDTO;
 import com.bjike.goddess.staffshares.entity.Buyschedule;
 import com.bjike.goddess.staffshares.entity.Sellschedule;
@@ -130,6 +131,15 @@ public class SellscheduleSerImpl extends ServiceImpl<Sellschedule, SellscheduleD
         List<Buyschedule> list = super.findBySql(sql, Buyschedule.class, file);
         BeanTransform.copyProperties(list, buyscheduleCollectBOs);
         return buyscheduleCollectBOs;
+    }
+    public static void main(String[] args){
+        LocalDateTime time = LocalDateTime.now();
+        System.out.print(time.toString());
+    }
+
+    @Override
+    public List<TransactionBO> transaction() throws SerException {
+        return null;
     }
 
     private String getSql(Boolean tar, UserBO userBO) throws SerException {

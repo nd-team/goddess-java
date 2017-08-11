@@ -3,6 +3,7 @@ package com.bjike.goddess.staffshares.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffshares.bo.SellscheduleBO;
 import com.bjike.goddess.staffshares.bo.SellscheduleCollectBO;
+import com.bjike.goddess.staffshares.bo.TransactionBO;
 import com.bjike.goddess.staffshares.dto.SellscheduleDTO;
 import com.bjike.goddess.staffshares.service.SellscheduleSer;
 import com.bjike.goddess.staffshares.to.SellscheduleTO;
@@ -48,5 +49,10 @@ public class SellscheduleApiImpl implements SellscheduleAPI {
     @Override
     public List<SellscheduleCollectBO> collect() throws SerException {
         return sellscheduleSer.collect();
+    }
+
+    @Override
+    public List<TransactionBO> transaction() throws SerException {
+        return sellscheduleSer.transaction();
     }
 }

@@ -3,6 +3,7 @@ package com.bjike.goddess.staffshares.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffshares.bo.SellscheduleBO;
 import com.bjike.goddess.staffshares.bo.SellscheduleCollectBO;
+import com.bjike.goddess.staffshares.bo.TransactionBO;
 import com.bjike.goddess.staffshares.dto.SellscheduleDTO;
 import com.bjike.goddess.staffshares.to.SellscheduleTO;
 
@@ -68,6 +69,16 @@ public interface SellscheduleAPI {
      * @throws SerException
      */
     default List<SellscheduleCollectBO> collect() throws SerException {
+        return null;
+    }
+
+    /**
+     * 交易汇总表
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<TransactionBO> transaction() throws SerException {
         return null;
     }
 }

@@ -7,9 +7,11 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffshares.api.SellscheduleAPI;
 import com.bjike.goddess.staffshares.bo.SellscheduleCollectBO;
+import com.bjike.goddess.staffshares.bo.TransactionBO;
 import com.bjike.goddess.staffshares.dto.SellscheduleDTO;
 import com.bjike.goddess.staffshares.vo.SellscheduleCollectVO;
 import com.bjike.goddess.staffshares.vo.SellscheduleVO;
+import com.bjike.goddess.staffshares.vo.TransactionVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -90,6 +92,21 @@ public class SellscheduleAction {
         try {
             List<SellscheduleCollectBO> buyscheduleBOList = sellscheduleAPI.collect();
             return ActResult.initialize(BeanTransform.copyProperties(buyscheduleBOList, SellscheduleCollectVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 交易汇总表
+     *
+     * @version v1
+     */
+    @GetMapping("v1/transaction/collect")
+    public Result transaction() throws ActException {
+        try {
+            List<TransactionBO> transactionBOs = sellscheduleAPI.transaction();
+            return ActResult.initialize(BeanTransform.copyProperties(transactionBOs, TransactionVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

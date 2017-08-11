@@ -12,6 +12,11 @@ package com.bjike.goddess.staffshares.vo;
 public class DividendsVO {
 
     /**
+     * 持股人
+     */
+    private String shareholder;
+
+    /**
      * id
      */
     private String id;
@@ -191,5 +196,13 @@ public class DividendsVO {
 
     public void setSituation(Boolean situation) {
         this.situation = situation;
+    }
+
+    public String getShareholder() {
+        return shareholder;
+    }
+
+    public void setShareholder(String shareholder) {
+        this.shareholder = shareholder;
     }
 }

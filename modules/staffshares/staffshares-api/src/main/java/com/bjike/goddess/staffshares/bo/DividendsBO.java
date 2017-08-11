@@ -14,6 +14,11 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 public class DividendsBO extends BaseBO {
 
     /**
+     * 持股人
+     */
+    private String shareholder;
+
+    /**
      * 方案代码
      */
     private String code;
@@ -181,5 +186,13 @@ public class DividendsBO extends BaseBO {
 
     public void setSituation(Boolean situation) {
         this.situation = situation;
+    }
+
+    public String getShareholder() {
+        return shareholder;
+    }
+
+    public void setShareholder(String shareholder) {
+        this.shareholder = shareholder;
     }
 }

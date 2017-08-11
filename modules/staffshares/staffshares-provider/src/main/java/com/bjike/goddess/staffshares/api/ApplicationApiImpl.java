@@ -1,6 +1,14 @@
 package com.bjike.goddess.staffshares.api;
 
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.staffshares.bo.ApplicationBO;
+import com.bjike.goddess.staffshares.dto.ApplicationDTO;
+import com.bjike.goddess.staffshares.service.ApplicationSer;
+import com.bjike.goddess.staffshares.to.ApplicationTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 干股代表申请业务接口实现
@@ -13,5 +21,31 @@ import org.springframework.stereotype.Service;
  */
 @Service("applicationApiImpl")
 public class ApplicationApiImpl implements ApplicationAPI {
+    @Autowired
+    private ApplicationSer applicationSer;
 
+    @Override
+    public void save(ApplicationTO to) throws SerException {
+        applicationSer.save(to);
+    }
+
+    @Override
+    public List<ApplicationBO> maps(ApplicationDTO dto) throws SerException {
+        return applicationSer.maps(dto);
+    }
+
+    @Override
+    public ApplicationBO getById(String id) throws SerException {
+        return applicationSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal(ApplicationDTO applicationDTO) throws SerException {
+        return applicationSer.getTotal(applicationDTO);
+    }
+
+    @Override
+    public void examine(ApplicationTO to) throws SerException {
+        applicationSer.examine(to);
+    }
 }
