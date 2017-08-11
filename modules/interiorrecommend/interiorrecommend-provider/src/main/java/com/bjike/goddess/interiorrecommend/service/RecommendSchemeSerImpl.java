@@ -18,6 +18,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -368,6 +369,7 @@ public class RecommendSchemeSerImpl extends ServiceImpl<RecommendScheme, Recomme
     }
     //由于关联了很多的表,所以不能直接调用remove方法来删除,我之前试过了用remove的方法删除其他的表,发现报错,最后只能用sql语句这简单暴力的方法——————江载旋　2017-08-09 22:07
     @Override
+    @Transactional
     public void delete(String id) throws SerException {
         if(null != id){
             RecommendRequireDTO dto = new RecommendRequireDTO();

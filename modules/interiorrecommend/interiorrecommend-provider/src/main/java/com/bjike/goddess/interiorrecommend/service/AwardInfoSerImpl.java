@@ -5,16 +5,12 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.interiorrecommend.bo.AwardInfoBO;
 import com.bjike.goddess.interiorrecommend.bo.AwardStandardBO;
 import com.bjike.goddess.interiorrecommend.bo.RecommendInfoBO;
-import com.bjike.goddess.interiorrecommend.dto.AwardInfoDTO;
-import com.bjike.goddess.interiorrecommend.dto.AwardStandardDTO;
-import com.bjike.goddess.interiorrecommend.dto.RecommendInfoDTO;
-import com.bjike.goddess.interiorrecommend.entity.AwardInfo;
-import com.bjike.goddess.interiorrecommend.entity.AwardStandard;
-import com.bjike.goddess.interiorrecommend.entity.RecommendInfo;
-import com.bjike.goddess.interiorrecommend.entity.RecommendRequire;
+import com.bjike.goddess.interiorrecommend.dto.*;
+import com.bjike.goddess.interiorrecommend.entity.*;
 import com.bjike.goddess.interiorrecommend.enums.GuideAddrStatus;
 import com.bjike.goddess.interiorrecommend.excel.SonPermissionObject;
 import com.bjike.goddess.interiorrecommend.to.AwardInfoTO;
@@ -29,6 +25,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -300,6 +297,12 @@ public class AwardInfoSerImpl extends ServiceImpl<AwardInfo, AwardInfoDTO> imple
                     }
                 }
                 BeanTransform.copyProperties(to, model, true);
+                Integer length = model.getAwardTime().toString().length();
+                if(length == 16){
+                    String awardTime = model.getAwardTime().toString()+":00";
+                    String time = awardTime.replace("T"," ");
+                    model.setAwardTime(DateUtil.parseDateTime(time));
+                }
                 model.setModifyTime(LocalDateTime.now());
                 super.update(model);
             } else {
@@ -329,6 +332,19 @@ public class AwardInfoSerImpl extends ServiceImpl<AwardInfo, AwardInfoDTO> imple
                 RecommendRequire require = recommendRequireSer.findById(info.getRequireId());
                 AwardStandardDTO standardDTO = new AwardStandardDTO();
                 standardDTO.getConditions().add(Restrict.eq("recommendRequire.id", require.getId()));
+                RecommendSchemeDTO schemeDTO = new RecommendSchemeDTO();
+                schemeDTO.getConditions().add(Restrict.eq("id",require.getRecommendScheme().getId()));
+                RecommendTypeDTO typeDTO = new RecommendTypeDTO();
+                typeDTO.getConditions().add(Restrict.eq("id",require.getRecommendType().getId()));
+                List<RecommendType> types = recommendTypeSer.findByCis(typeDTO);
+                if(types != null && !types.isEmpty()){
+                    info.setAwardType(types.get(0).getTypeName());
+                }
+                List<RecommendScheme> schemes = recommendSchemeSer.findByCis(schemeDTO);
+                if(schemes != null && !schemes.isEmpty()){
+                    info.setOpenTime(schemes.get(0).getOpenTime().toString().replace("T"," "));
+                    info.setCloseTime(schemes.get(0).getCloseTime().toString().replace("T"," "));
+                }
                 List<AwardStandard> standards = awardStandardSer.findByCis(standardDTO);
                 if (standards != null && standards.size() > 0) {
                     info.setAwardType(standards.get(0).getAwardType());
@@ -340,7 +356,14 @@ public class AwardInfoSerImpl extends ServiceImpl<AwardInfo, AwardInfoDTO> imple
                     List<AwardInfo> awardInfos = awardInfoSer.findByCis(awardInfoDTO);
                     awardInfos.forEach(award -> {
                         if (award.getAwardTime() != null) {
-                            info.setAwardTime(award.getAwardTime().toString());
+                            String awardTime = award.getAwardTime().toString();
+                            Integer length = awardTime.length();
+                            if(length == 16){
+                                String time = awardTime+":00";
+                                info.setAwardTime(time.replace("T"," "));
+                            }else {
+                                info.setAwardTime(awardTime.replace("T", " "));
+                            }
                         }
                         if (award.getGetAward() != null) {
                             info.setGetAward(award.getGetAward());
@@ -386,7 +409,14 @@ public class AwardInfoSerImpl extends ServiceImpl<AwardInfo, AwardInfoDTO> imple
             List<AwardInfo> awardInfos = awardInfoSer.findByCis(awardInfoDTO);
             awardInfos.forEach(award -> {
                 if (award.getAwardTime() != null) {
-                    info.setAwardTime(award.getAwardTime().toString());
+                    String awardTime = award.getAwardTime().toString();
+                    Integer length = awardTime.length();
+                    if(length == 16){
+                        String time = awardTime+":00";
+                        info.setAwardTime(time.replace("T"," "));
+                    }else {
+                        info.setAwardTime(awardTime.replace("T", " "));
+                    }
                 }
                 if (award.getGetAward() != null) {
                     info.setGetAward(award.getGetAward());

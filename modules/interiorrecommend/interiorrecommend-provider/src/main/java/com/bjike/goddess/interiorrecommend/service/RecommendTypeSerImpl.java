@@ -264,6 +264,7 @@ public class RecommendTypeSerImpl extends ServiceImpl<RecommendType, RecommendTy
 
     //由于关联了很多的表,所以不能直接调用remove方法来删除,我之前试过了用remove的方法删除其他的表,发现报错,最后只能用sql语句这简单暴力的方法——————江载旋　2017-08-09 22:10
     @Override
+    @Transactional
     public void delete(String id) throws SerException {
         if(null != id){
             RecommendRequireDTO dto = new RecommendRequireDTO();
