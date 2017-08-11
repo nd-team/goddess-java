@@ -1,6 +1,8 @@
 package com.bjike.goddess.staffwelfare.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
 import com.bjike.goddess.staffwelfare.bo.HeadPortraitHatBO;
 import com.bjike.goddess.staffwelfare.bo.StaffBirthdaySchemeBO;
 import com.bjike.goddess.staffwelfare.bo.WishesStatementBO;
@@ -97,5 +99,10 @@ public interface StaffBirthdaySchemeAPI {
      */
     List<HeadPortraitHatBO> findHeadPortraitHats() throws SerException;
 
-
+    /**
+     * 查询员工所属部门和所属地区
+     * @return
+     * @throws SerException
+     */
+    List<EntryBasicInfoBO> findEntry() throws SerException;
 }

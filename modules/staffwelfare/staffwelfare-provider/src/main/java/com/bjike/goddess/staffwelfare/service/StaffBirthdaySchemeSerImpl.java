@@ -6,6 +6,9 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
 import com.bjike.goddess.staffwelfare.bo.StaffBirthdaySchemeBO;
 import com.bjike.goddess.staffwelfare.dto.StaffBirthdaySchemeDTO;
 import com.bjike.goddess.staffwelfare.entity.StaffBirthDayWelfare;
@@ -49,6 +52,9 @@ public class StaffBirthdaySchemeSerImpl extends ServiceImpl<StaffBirthdayScheme,
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
+
+    @Autowired
+    private EntryBasicInfoAPI entryBasicInfoAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -330,5 +336,9 @@ public class StaffBirthdaySchemeSerImpl extends ServiceImpl<StaffBirthdayScheme,
         }
     }
 
-
+    @Override
+    public List<EntryBasicInfoBO> findEntry() throws SerException {
+        List<EntryBasicInfoBO> boList = entryBasicInfoAPI.listEntryBasicInfo();
+        return boList;
+    }
 }

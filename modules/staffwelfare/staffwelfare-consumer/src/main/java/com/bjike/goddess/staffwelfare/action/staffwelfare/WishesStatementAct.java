@@ -1,5 +1,7 @@
 package com.bjike.goddess.staffwelfare.action.staffwelfare;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -61,10 +63,11 @@ public class WishesStatementAct {
      * 新增祝福语
      *
      * @param to 祝福语
+     * @return class WishesStatementVO
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(WishesStatementTO to, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(ADD.class)WishesStatementTO to, BindingResult bindingResult) throws ActException {
         try {
             WishesStatementVO vo = BeanTransform.copyProperties(wishesStatementAPI.addModel(to), WishesStatementVO.class);
             return ActResult.initialize(vo);
@@ -77,10 +80,11 @@ public class WishesStatementAct {
      * 编辑祝福语
      *
      * @param to 祝福语
+     * @return class WishesStatementVO
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result edit(WishesStatementTO to, BindingResult bindingResult) throws ActException {
+    public Result edit(@Validated(EDIT.class)WishesStatementTO to, BindingResult bindingResult) throws ActException {
         try {
             WishesStatementVO vo = BeanTransform.copyProperties(wishesStatementAPI.editModel(to), WishesStatementVO.class);
             return ActResult.initialize(vo);
@@ -109,6 +113,7 @@ public class WishesStatementAct {
      * 祝福语分页查询
      *
      * @param dto 分页条件
+     * @return class WishesStatementVO
      * @version v1
      */
     @GetMapping("v1/pageList")

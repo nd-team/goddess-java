@@ -2,6 +2,7 @@ package com.bjike.goddess.staffwelfare.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffwelfare.bo.StaffBirthdaySchemeBO;
 import com.bjike.goddess.staffwelfare.dto.StaffBirthdaySchemeDTO;
 import com.bjike.goddess.staffwelfare.entity.StaffBirthdayScheme;
@@ -79,6 +80,14 @@ public interface StaffBirthdaySchemeSer extends Ser<StaffBirthdayScheme, StaffBi
      * @param remark 备注
      */
     void receive(String id, String remark) throws SerException;
+
+
+    /**
+     * 查询员工所属部门和所属地区
+     * @return
+     * @throws SerException
+     */
+    List<EntryBasicInfoBO> findEntry() throws SerException;
 
 
 }
