@@ -214,10 +214,8 @@ public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, Recom
         if (recommendScheme != null) {
             if (recommendType != null) {
                 RecommendRequire model = BeanTransform.copyProperties(to, RecommendRequire.class, true);
-                RecommendScheme scheme = recommendSchemeSer.findById(to.getRecommendSchemeId());
-                RecommendType type = recommendTypeSer.findById(to.getRecommendTypeId());
-                model.setRecommendScheme(scheme);
-                model.setRecommendType(type);
+                model.setRecommendScheme(recommendScheme);
+                model.setRecommendType(recommendType);
                 //保存推荐考核内容
                 if (!CollectionUtils.isEmpty(to.getDetailList())) {
                     Set<RecommendAssessDetail> detailSet = new HashSet<RecommendAssessDetail>();
@@ -265,12 +263,19 @@ public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, Recom
                             if (!StringUtils.isEmpty(detail.getId())) {
                                 RecommendAssessDetail assessDetail = recommendAssessDetailSer.findById(detail.getId());
                                 detail.setCreateTime(assessDetail.getCreateTime());
-                                detail.setModifyTime(assessDetail.getModifyTime());
+                                detail.setModifyTime(LocalDateTime.now());
                                 detail.setRecommendRequire(model);
+                            }else{
+                                detail.setRecommendRequire(model);
+                                recommendAssessDetailSer.save(detail);
                             }
                         }
-
-                        model.setDetailSet(detailSet);
+                        RecommendAssessDetailDTO detailDTO = new RecommendAssessDetailDTO();
+                        detailDTO.getConditions().add(Restrict.eq("recommendRequire.id",to.getId()));
+                        List<RecommendAssessDetail> details = recommendAssessDetailSer.findByCis(detailDTO);
+                        Set<RecommendAssessDetail> assessDetailSet = new HashSet<RecommendAssessDetail>();
+                        assessDetailSet.addAll(details);
+                        model.setDetailSet(assessDetailSet);
                         model.setRecommendType(recommendType);
                         model.setRecommendScheme(recommendScheme);
                         super.update(model);
@@ -393,5 +398,17 @@ public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, Recom
         List<RecommendContent> content = recommendContentSer.findAll();
         List<RecommendContentBO> contentBOS = BeanTransform.copyProperties(content, RecommendContentBO.class);
         return contentBOS;
+    }
+
+    @Override
+    public RecommendRequireBO findOne(String id) throws SerException {
+        RecommendRequire require = super.findById(id);
+        RecommendAssessDetailDTO dto = new RecommendAssessDetailDTO();
+        dto.getConditions().add(Restrict.eq("recommendRequire.id",require.getId()));
+        List<RecommendAssessDetail> detail = recommendAssessDetailSer.findByCis(dto);
+        List<RecommendAssessDetailBO> detailBO = BeanTransform.copyProperties(detail,RecommendAssessDetailBO.class);
+        RecommendRequireBO recommendRequireBO = BeanTransform.copyProperties(require,RecommendRequireBO.class);
+        recommendRequireBO.setDetailList(detailBO);
+        return recommendRequireBO;
     }
 }

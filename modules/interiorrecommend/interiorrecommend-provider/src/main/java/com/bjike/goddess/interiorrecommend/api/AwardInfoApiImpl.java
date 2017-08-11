@@ -60,4 +60,9 @@ public class AwardInfoApiImpl implements AwardInfoAPI {
     public Long count(AwardInfoDTO dto) throws SerException {
         return awardInfoSer.count(dto);
     }
+
+    @Override
+    public RecommendInfoBO finOne(String id) throws SerException {
+        return awardInfoSer.finOne(id);
+    }
 }

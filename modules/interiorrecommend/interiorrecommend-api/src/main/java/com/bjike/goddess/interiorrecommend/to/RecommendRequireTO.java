@@ -42,7 +42,7 @@ public class RecommendRequireTO extends BaseTO {
     /**
      * 推荐考核内容
      */
-    private List<RecommendAssessDetailTO> detailList;
+    private List<RecommendAssessDetailTO> detail;
 
     /**
      * 指标来源
@@ -136,4 +136,11 @@ public class RecommendRequireTO extends BaseTO {
         this.recommendSponsor = recommendSponsor;
     }
 
+    public List<RecommendAssessDetailTO> getDetail() {
+        return detail;
+    }
+
+    public void setDetail(List<RecommendAssessDetailTO> detail) {
+        this.detail = detail;
+    }
 }

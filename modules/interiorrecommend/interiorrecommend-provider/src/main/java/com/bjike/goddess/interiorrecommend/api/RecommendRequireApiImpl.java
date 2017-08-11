@@ -53,10 +53,6 @@ public class RecommendRequireApiImpl implements RecommendRequireAPI {
         return recommendRequireSer.count(dto);
     }
 
-    @Override
-    public RecommendRequireBO findById(String id) throws SerException {
-        return BeanTransform.copyProperties(recommendRequireSer.findById(id), RecommendRequireBO.class);
-    }
 
     @Override
     public Boolean sonPermission() throws SerException {
@@ -89,6 +85,8 @@ public class RecommendRequireApiImpl implements RecommendRequireAPI {
     }
 
 
-
-
+    @Override
+    public RecommendRequireBO findOne(String id) throws SerException {
+        return recommendRequireSer.findOne(id);
+    }
 }

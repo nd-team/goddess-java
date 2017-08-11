@@ -8,6 +8,7 @@ import com.bjike.goddess.interiorrecommend.bo.RecommendInfoBO;
 import com.bjike.goddess.interiorrecommend.dto.AwardInfoDTO;
 import com.bjike.goddess.interiorrecommend.dto.RecommendInfoDTO;
 import com.bjike.goddess.interiorrecommend.entity.AwardInfo;
+import com.bjike.goddess.interiorrecommend.entity.RecommendInfo;
 import com.bjike.goddess.interiorrecommend.excel.SonPermissionObject;
 import com.bjike.goddess.interiorrecommend.to.AwardInfoTO;
 import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
@@ -65,6 +66,14 @@ public interface AwardInfoSer extends Ser<AwardInfo, AwardInfoDTO> {
      * @param dto 查询条件
      */
     Long count(AwardInfoDTO dto) throws SerException;
+
+
+    /**
+     * 根据id来查询单条数据
+     * @param id
+     * @throws SerException
+     */
+    RecommendInfoBO finOne(String id) throws SerException;
 
 
 }

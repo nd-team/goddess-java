@@ -75,6 +75,40 @@ public class RecommendInfoBO extends BaseBO {
      */
     private String closeTime;
 
+    /**
+     * 奖励类型
+     */
+    private String awardType;
+
+    /**
+     * 奖励内容
+     */
+    private String awardContent;
+
+    /**
+     * 奖励数量
+     */
+    private Integer awardAmount;
+
+    /**
+     * 奖励发放方式
+     */
+    private String awardSendWay;
+
+    /**
+     * 奖励时间
+     */
+    private String awardTime;
+
+    /**
+     * 是否获得奖励
+     */
+    private Boolean getAward;
+
+    /**
+     * 奖励信息id
+     */
+    private String awardInfoId;
 
     public String getRequireId() {
         return requireId;
@@ -170,5 +204,61 @@ public class RecommendInfoBO extends BaseBO {
 
     public void setCloseTime(String closeTime) {
         this.closeTime = closeTime;
+    }
+
+    public String getAwardType() {
+        return awardType;
+    }
+
+    public void setAwardType(String awardType) {
+        this.awardType = awardType;
+    }
+
+    public String getAwardContent() {
+        return awardContent;
+    }
+
+    public void setAwardContent(String awardContent) {
+        this.awardContent = awardContent;
+    }
+
+    public Integer getAwardAmount() {
+        return awardAmount;
+    }
+
+    public void setAwardAmount(Integer awardAmount) {
+        this.awardAmount = awardAmount;
+    }
+
+    public String getAwardSendWay() {
+        return awardSendWay;
+    }
+
+    public void setAwardSendWay(String awardSendWay) {
+        this.awardSendWay = awardSendWay;
+    }
+
+    public String getAwardTime() {
+        return awardTime;
+    }
+
+    public void setAwardTime(String awardTime) {
+        this.awardTime = awardTime;
+    }
+
+    public Boolean getGetAward() {
+        return getAward;
+    }
+
+    public void setGetAward(Boolean getAward) {
+        this.getAward = getAward;
+    }
+
+    public String getAwardInfoId() {
+        return awardInfoId;
+    }
+
+    public void setAwardInfoId(String awardInfoId) {
+        this.awardInfoId = awardInfoId;
     }
 }
