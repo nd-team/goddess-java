@@ -23,6 +23,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -272,6 +273,7 @@ public class RecommendInfoSerImpl extends ServiceImpl<RecommendInfo, RecommendIn
     }
 
     @Override
+    @Transactional
     public void delete(String id) throws SerException {
         checkSeeIdentity();
         if (null != id) {

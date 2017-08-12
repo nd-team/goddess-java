@@ -42,6 +42,7 @@ public class StaffBirthdayAct {
      *
      * @param dto   分页信息
      * @param month 生日月份
+     * @return class UserDetailVO
      * @version v1
      */
     @GetMapping("v1/findStaffBirthInfo")

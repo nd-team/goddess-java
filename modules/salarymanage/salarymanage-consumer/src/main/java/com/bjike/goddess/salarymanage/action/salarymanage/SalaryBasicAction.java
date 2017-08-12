@@ -1,5 +1,7 @@
 package com.bjike.goddess.salarymanage.action.salarymanage;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -223,8 +225,9 @@ public class SalaryBasicAction extends BaseFileAction {
 
     /**
      * 查询所有薪资基本资料
-     * @return
+     * @return class SalaryBasicVO
      * @throws ActException
+     * @version v1
      */
     @LoginAuth
     @GetMapping("v1/find/salaryBasic")
@@ -262,10 +265,11 @@ public class SalaryBasicAction extends BaseFileAction {
      * @param to
      * @return class SalaryBasicVO
      * @throws ActException
+     * @version v1
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated(SalaryBasicTO.TestAdd.class)SalaryBasicTO to) throws ActException{
+    public Result add(@Validated(ADD.class) SalaryBasicTO to) throws ActException{
         try {
             SalaryBasicBO bo = salaryBasicAPI.add(to);
             SalaryBasicVO vo = BeanTransform.copyProperties(bo,SalaryBasicVO.class);
@@ -284,7 +288,7 @@ public class SalaryBasicAction extends BaseFileAction {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(@Validated(SalaryBasicTO.TestAdd.class)SalaryBasicTO to) throws ActException{
+    public Result edit(@Validated(EDIT.class) SalaryBasicTO to) throws ActException{
         try {
             SalaryBasicBO bo = salaryBasicAPI.edit(to);
             SalaryBasicVO vo = BeanTransform.copyProperties(bo,SalaryBasicVO.class);

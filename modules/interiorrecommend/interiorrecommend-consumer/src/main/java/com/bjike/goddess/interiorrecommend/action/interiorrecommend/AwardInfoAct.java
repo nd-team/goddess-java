@@ -176,23 +176,23 @@ public class AwardInfoAct {
         }
     }
 
-    /**
-     * 根据id来查询推荐奖励信息
-     * @param id
-     * @return class AwardInfoVO
-     * @throws ActException
-     * @version v1
-     */
-    @GetMapping("v1/find/one/{id}")
-    public Result findOne(@PathVariable String id) throws ActException{
-        try {
-            AwardInfoBO bo = awardInfoAPI.findOne(id);
-            AwardInfoVO vo = BeanTransform.copyProperties(bo,AwardInfoVO.class);
-            return ActResult.initialize(vo);
-        }catch (SerException e){
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 根据id来查询推荐奖励信息
+//     * @param id
+//     * @return class AwardInfoVO
+//     * @throws ActException
+//     * @version v1
+//     */
+//    @GetMapping("v1/find/one/{id}")
+//    public Result findOne(@PathVariable String id) throws ActException{
+//        try {
+//            AwardInfoBO bo = awardInfoAPI.findOne(id);
+//            AwardInfoVO vo = BeanTransform.copyProperties(bo,AwardInfoVO.class);
+//            return ActResult.initialize(vo);
+//        }catch (SerException e){
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
     /**
      * 列表总条数

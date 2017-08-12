@@ -62,6 +62,7 @@ public class StaffBirthDayWelfareAct {
      * 分页查询员工生日福利记录
      *
      * @param dto 分页条件
+     * @return class StaffBirthDayWelfareVO
      * @version v1
      */
     @GetMapping("v1/pageList")
@@ -78,6 +79,7 @@ public class StaffBirthDayWelfareAct {
      * 查询生日祝福语答谢语
      *
      * @param userID 生日员工id
+     * @return class StaffBirthDayWelfareVO
      * @version v1
      */
     @GetMapping("v1/birthdayDetail")

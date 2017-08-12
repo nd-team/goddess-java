@@ -44,4 +44,12 @@
 
 	<dubbo:reference id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
 
+	<dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
+
+    <dubbo:reference interface="com.bjike.goddess.organize.api.HierarchyAPI" id="hierarchyApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.managementpromotion.api.LevelShowAPI" id="levslShowApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" id="entryBasicInfoApiImpl"/>
+
+
+
 </beans>

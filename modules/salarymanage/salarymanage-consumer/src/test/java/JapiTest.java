@@ -14,7 +14,7 @@ import com.dounine.japi.core.impl.ProjectImpl;
 public class JapiTest {
 
     public static void main(String[] args) {
-//                JapiClient.delete(true);
+//        JapiClient.delete(true);
         JapiClient.setPrefixPath("/media/data4/jzx/goddess-java/");//路径前缀
         JapiClient.setpostfixPath("/src/main/java");
 
@@ -25,6 +25,9 @@ public class JapiTest {
                 "modules/user/user-api",
                 "modules/organize/organize-api",
                 "modules/storage/storage-api",
+                "modules/managementpromotion/managementpromotion-api",
+                "modules/managepromotion/managepromotion-api",
+                "modules/staffentry/staffentry-api",
                 "common/common-api"
         });
 //                JapiClient.saveHistory(false);

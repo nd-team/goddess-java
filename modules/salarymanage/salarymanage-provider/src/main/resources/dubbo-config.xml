@@ -22,10 +22,10 @@
 
 
     <!-- 基本信息设置 -->
-    <dubbo:reference interface="com.bjike.goddess.salarymanage.api.SalaryBasicAPI" id="salaryBasicApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.salarymanage.api.SalaryBasicAPI" ref="salaryBasicApiImpl"/>
 
     <!--薪资资料-->
-    <dubbo:reference interface="com.bjike.goddess.salarymanage.api.SalaryInformationAPI" id="salaryInformationApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.salarymanage.api.SalaryInformationAPI" ref="salaryInformationApiImpl"/>
 
     <!-- userAPI -->
     <dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
@@ -42,6 +42,9 @@
     <dubbo:reference interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
 
     <dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.organize.api.HierarchyAPI" id="hierarchyApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.managementpromotion.api.LevelShowAPI" id="levslShowApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" id="entryBasicInfoApiImpl"/>
 
     <dubbo:reference interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
 

@@ -23,6 +23,7 @@ public class JapiTest {
         JapiClient.setActionReletivePath("com/bjike/goddess/staffwelfare/action");//主项目action位置
         JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
                 "modules/staffwelfare/staffwelfare-api",
+                "modules/staffentry/staffentry-api",
                 "modules/user/user-api",
                 "common/common-api"
         });

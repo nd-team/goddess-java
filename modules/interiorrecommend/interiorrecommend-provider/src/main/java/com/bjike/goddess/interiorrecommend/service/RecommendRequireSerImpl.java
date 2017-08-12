@@ -17,6 +17,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -316,6 +317,7 @@ public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, Recom
     }
 
     @Override
+    @Transactional
     public void delete(String id) throws SerException {
         checkAddIdentity();
         if (id != null) {
@@ -367,7 +369,9 @@ public class RecommendRequireSerImpl extends ServiceImpl<RecommendRequire, Recom
                     awardStandardSer.executeSql(sql.toString());
                 }
             }
-            super.remove(id);
+            StringBuilder sql = new StringBuilder("DELETE FROM");
+            sql.append(" interiorrecommend_recommendrequire WHERE id = '" + id + "'");
+            super.executeSql(sql.toString());
         }
     }
 

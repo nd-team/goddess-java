@@ -62,6 +62,7 @@ public class PersonalFestivalWishAct {
      * 分页查询个人节日祝福语
      *
      * @param dto 分页条件
+     * @return class PersonalFestivalWishVO
      * @version v1
      */
     @GetMapping("v1/pageList")
