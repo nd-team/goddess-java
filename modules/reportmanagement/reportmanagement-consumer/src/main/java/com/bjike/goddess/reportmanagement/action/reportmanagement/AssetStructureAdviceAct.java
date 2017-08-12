@@ -11,6 +11,7 @@ import com.bjike.goddess.reportmanagement.api.AssetStructureAdviceAPI;
 import com.bjike.goddess.reportmanagement.bo.AssetStructureAdviceBO;
 import com.bjike.goddess.reportmanagement.dto.AssetStructureAdviceDTO;
 import com.bjike.goddess.reportmanagement.to.AssetStructureAdviceTO;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import com.bjike.goddess.reportmanagement.vo.AssetStructureAdviceVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -34,6 +35,28 @@ import java.util.List;
 public class AssetStructureAdviceAct {
     @Autowired
     private AssetStructureAdviceAPI assetStructureAdviceAPI;
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = assetStructureAdviceAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 列表

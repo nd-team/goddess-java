@@ -1461,6 +1461,35 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     }
 
     @Override
+    public Long countWaitPayCJH(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+
+
+        ReimburseRecordDTO dto = reimburseRecordDTO;
+        dto.getConditions().add(Restrict.ne("payCondition", "是"));
+        dto.getConditions().add(Restrict.eq("receiveTicketCheck", "是"));
+//        dto.getConditions().add(Restrict.in("reimStatus", new Integer[]{3, 4}));
+        dto.getConditions().add(Restrict.eq("reimStatus", 1));
+        dto.getSorts().add("modifyTime=desc");
+
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
+            dto.getConditions().add(Restrict.eq("reimer", reimburseRecordDTO.getReimer()));
+        }
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
+            dto.getConditions().add(Restrict.eq("reimNumber", reimburseRecordDTO.getReimNumber()));
+        }
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())) {
+            dto.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getStartTime()));
+        }
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime())) {
+            dto.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getEndTime()));
+        }
+
+        Long count = super.count(dto);
+        return count;
+
+    }
+
+    @Override
     public List<ReimburseRecordBO> listWaitPay(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
 
         ReimburseRecordDTO dto = reimburseRecordDTO;

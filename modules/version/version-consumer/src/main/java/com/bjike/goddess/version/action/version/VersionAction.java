@@ -9,9 +9,12 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
+import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.vo.UserVO;
 import com.bjike.goddess.version.api.VersionAPI;
 import com.bjike.goddess.version.bo.VersionBO;
 import com.bjike.goddess.version.dto.VersionDTO;
@@ -47,6 +50,8 @@ public class VersionAction extends BaseFileAction {
     private VersionAPI versionAPI;
     @Autowired
     private FileAPI fileAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     /**
      * 上传附件
@@ -296,6 +301,23 @@ public class VersionAction extends BaseFileAction {
             list.add("需求文档（word、PDF）");
             return ActResult.initialize(list);
         } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有用户
+     *
+     * @return class UserVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/users")
+    public Result users(HttpServletRequest request) throws ActException {
+        try {
+            List<UserBO> list = positionDetailUserAPI.findUserListInOrgan();
+            return ActResult.initialize(BeanTransform.copyProperties(list, UserVO.class, request));
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }

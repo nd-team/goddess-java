@@ -10,6 +10,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.reportmanagement.api.RepayAnalyzeAdviceAPI;
 import com.bjike.goddess.reportmanagement.bo.RepayAnalyzeAdviceBO;
 import com.bjike.goddess.reportmanagement.dto.RepayAnalyzeAdviceDTO;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import com.bjike.goddess.reportmanagement.to.RepayAnalyzeAdviceTO;
 import com.bjike.goddess.reportmanagement.vo.RepayAnalyzeAdviceVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,29 @@ import java.util.List;
 public class RepayAnalyzeAdviceAct {
     @Autowired
     private RepayAnalyzeAdviceAPI repayAnalyzeAdviceAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = repayAnalyzeAdviceAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 列表

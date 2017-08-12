@@ -265,7 +265,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
 
     @Override
     public byte[] waitPayExport(WaitPayDTO dto) throws SerException {
-        checkSeeIdentity();
+//        checkSeeIdentity();
         ApplyLendDTO applyLendDTO = new ApplyLendDTO();
         BeanUtils.copyProperties(dto, applyLendDTO);
         ReimburseRecordDTO reimburseRecordDTO = new ReimburseRecordDTO();
@@ -285,7 +285,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
 
     @Override
     public byte[] payExport(WaitPayDTO dto) throws SerException {
-        checkSeeIdentity();
+//        checkSeeIdentity();
         LocalDate start = LocalDate.now();
         LocalDate end = LocalDate.now();
         if (StringUtils.isNotBlank(dto.getStartTime())) {
@@ -301,9 +301,9 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
         }
         List<WaitPay> list = super.findByCis(dto);
         List<ExportExcel> toList = new ArrayList<>();
-        if (list == null || list.isEmpty()) {
-            throw new SerException("该时间段没有数据可导出");
-        }
+//        if (list == null || list.isEmpty()) {
+//            throw new SerException("该时间段没有数据可导出");
+//        }
         for (WaitPay pay : list) {
             ExportExcel exportExcel = BeanTransform.copyProperties(pay, ExportExcel.class, true);
             exportExcel.setPayStatus(PayStatus.HAVEPAY);
@@ -481,6 +481,6 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
         BeanUtils.copyProperties(dto, applyLendDTO);
         ReimburseRecordDTO reimburseRecordDTO = new ReimburseRecordDTO();
         BeanUtils.copyProperties(dto, reimburseRecordDTO);
-        return applyLendAPI.countWaitPay(applyLendDTO) + reimburseRecordAPI.countWaitPay(reimburseRecordDTO);
+        return applyLendAPI.countWaitPayCJH(applyLendDTO) + reimburseRecordAPI.countWaitPayCJH(reimburseRecordDTO);
     }
 }

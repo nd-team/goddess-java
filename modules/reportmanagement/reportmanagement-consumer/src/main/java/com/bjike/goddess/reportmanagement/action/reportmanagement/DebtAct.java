@@ -16,6 +16,7 @@ import com.bjike.goddess.reportmanagement.bo.StructureBO;
 import com.bjike.goddess.reportmanagement.dto.DebtDTO;
 import com.bjike.goddess.reportmanagement.dto.FormulaDTO;
 import com.bjike.goddess.reportmanagement.to.DebtTO;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import com.bjike.goddess.reportmanagement.vo.DebtVO;
 import com.bjike.goddess.reportmanagement.vo.DetailVO;
 import com.bjike.goddess.reportmanagement.vo.FormulaVO;
@@ -27,6 +28,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,6 +49,29 @@ public class DebtAct {
     private FormulaAPI formulaAPI;
 
     /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = debtAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 列表
      *
      * @param dto 负债数据传输
@@ -58,7 +83,13 @@ public class DebtAct {
     public Result list(@Validated(DebtDTO.A.class) DebtDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             List<DebtBO> list = debtAPI.list(dto);
-            return ActResult.initialize(BeanTransform.copyProperties(list, DebtVO.class, request));
+            List<DebtVO> vos=new ArrayList<>();
+            for (DebtBO bo:list){
+                DebtVO vo=BeanTransform.copyProperties(bo, DebtVO.class, request);
+                vo.setDebtId(bo.getId());
+                vos.add(vo);
+            }
+            return ActResult.initialize(vos);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -76,7 +107,9 @@ public class DebtAct {
     public Result save(@Validated(ADD.class) DebtTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             DebtBO bo = debtAPI.save(to);
-            return ActResult.initialize(BeanTransform.copyProperties(bo, DebtVO.class, request));
+            DebtVO vo=BeanTransform.copyProperties(bo, DebtVO.class, request);
+            vo.setDebtId(bo.getId());
+            return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -153,7 +186,9 @@ public class DebtAct {
     public Result debt(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             DebtBO bo = debtAPI.findByID(id);
-            return ActResult.initialize(BeanTransform.copyProperties(bo, DebtVO.class, request));
+            DebtVO vo=BeanTransform.copyProperties(bo, DebtVO.class, request);
+            vo.setDebtId(bo.getId());
+            return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

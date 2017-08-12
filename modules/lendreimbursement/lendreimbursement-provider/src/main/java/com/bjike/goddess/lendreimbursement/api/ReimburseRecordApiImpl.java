@@ -262,4 +262,9 @@ public class ReimburseRecordApiImpl implements ReimburseRecordAPI {
     public ReimburseRecordBO waitPayCJH(ReimburseRecordTO reimburseRecordTO) throws SerException {
         return reimburseRecordSer.waitPayCJH(reimburseRecordTO);
     }
+
+    @Override
+    public Long countWaitPayCJH(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        return reimburseRecordSer.countWaitPayCJH(reimburseRecordDTO);
+    }
 }

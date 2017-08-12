@@ -211,6 +211,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         boolean b7 = true;
         double incomeMonth = 0;
         double incomeYear = 0;
+        int num=1;
         if ((list != null) && (!list.isEmpty())) {
             for (Profit profit : list) {
                 List<FormulaBO> formulaBOs = formulaSer.findByFid(profit.getId(), formulaDTO);
@@ -247,6 +248,8 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                             twoBO.setProject("二、营业利润");
                             twoBO.setCurrentMonthAmount(incomeMonth);
                             twoBO.setCurrentYearAmount(incomeYear);
+                            twoBO.setNum(num);
+                            num++;
                             boList.add(twoBO);
                             b2 = false;
                         }
@@ -271,6 +274,8 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                             twoBO.setProject("三、利润总额");
                             twoBO.setCurrentMonthAmount(incomeMonth);
                             twoBO.setCurrentYearAmount(incomeYear);
+                            twoBO.setNum(num);
+                            num++;
                             boList.add(twoBO);
                             b5 = false;
                         }
@@ -290,6 +295,8 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                             }
                         }
                     }
+                    bo.setNum(num);
+                    num++;
                     boList.add(bo);
                 }
             }
@@ -297,6 +304,8 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
             lastBO.setProject("四、净利润");
             lastBO.setCurrentMonthAmount(incomeMonth);
             lastBO.setCurrentYearAmount(incomeYear);
+            lastBO.setNum(num);
+            num++;
             boList.add(lastBO);
         }
         return boList;
@@ -307,7 +316,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         checkSeeIdentity();
         String startTime = dto.getStartTime();
         String endTime = dto.getEndTime();
-        String[] projectNames = dto.getProjectNames();
+//        String[] projectNames = dto.getProjectNames();
         FormulaDTO formulaDTO = new FormulaDTO();
         BeanUtils.copyProperties(dto, formulaDTO);
         dto.getSorts().add("profitType=ASC");
@@ -325,8 +334,8 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         double endSum = 0;
         if ((list != null) && (!list.isEmpty())) {
             for (Profit p : list) {
-                List<FormulaBO> starts = formulaSer.profitAnalyze(p.getId(), startTime, projectNames);
-                List<FormulaBO> ends = formulaSer.profitAnalyze(p.getId(), endTime, projectNames);
+                List<FormulaBO> starts = formulaSer.profitAnalyze(p.getId(), startTime, dto);
+                List<FormulaBO> ends = formulaSer.profitAnalyze(p.getId(), endTime, dto);
                 double start = 0;
                 double end = 0;
                 if ((starts != null) && (!starts.isEmpty())) {

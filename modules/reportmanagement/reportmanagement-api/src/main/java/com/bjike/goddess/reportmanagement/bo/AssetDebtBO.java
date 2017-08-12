@@ -14,42 +14,132 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 public class AssetDebtBO extends BaseBO {
 
     /**
-     * 起始时间
+     * 资产id
      */
-    private String startTime;
+    private String assetId;
 
     /**
-     * 结束时间
+     * 资产
      */
-    private String endTime;
+    private String asset;
 
     /**
-     * 对应的行次
+     * 资产行次
      */
-    private Integer num;
+    private Integer assetNum;
 
+    /**
+     * 资产年初数
+     */
+    private Double beginAsset;
 
-    public String getStartTime() {
-        return startTime;
+    /**
+     * 资产期末数
+     */
+    private Double endAsset;
+
+    /**
+     * 负债和所有者权益(或股东权益)id
+     */
+    private String debtId;
+
+    /**
+     * 负债和所有者权益(或股东权益)
+     */
+    private String debt;
+
+    /**
+     * 负债和所有者权益(或股东权益)行次
+     */
+    private Integer debtNum;
+
+    /**
+     * 负债年初数
+     */
+    private Double beginDebt;
+
+    /**
+     * 负债期末数
+     */
+    private Double endDebt;
+
+    public String getAssetId() {
+        return assetId;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
+    public void setAssetId(String assetId) {
+        this.assetId = assetId;
     }
 
-    public String getEndTime() {
-        return endTime;
+    public String getDebtId() {
+        return debtId;
     }
 
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
+    public void setDebtId(String debtId) {
+        this.debtId = debtId;
     }
 
-    public Integer getNum() {
-        return num;
+    public String getAsset() {
+        return asset;
     }
 
-    public void setNum(Integer num) {
-        this.num = num;
+    public void setAsset(String asset) {
+        this.asset = asset;
+    }
+
+    public Integer getAssetNum() {
+        return assetNum;
+    }
+
+    public void setAssetNum(Integer assetNum) {
+        this.assetNum = assetNum;
+    }
+
+    public Double getBeginAsset() {
+        return beginAsset;
+    }
+
+    public void setBeginAsset(Double beginAsset) {
+        this.beginAsset = beginAsset;
+    }
+
+    public Double getEndAsset() {
+        return endAsset;
+    }
+
+    public void setEndAsset(Double endAsset) {
+        this.endAsset = endAsset;
+    }
+
+    public String getDebt() {
+        return debt;
+    }
+
+    public void setDebt(String debt) {
+        this.debt = debt;
+    }
+
+    public Integer getDebtNum() {
+        return debtNum;
+    }
+
+    public void setDebtNum(Integer debtNum) {
+        this.debtNum = debtNum;
+    }
+
+    public Double getBeginDebt() {
+        return beginDebt;
+    }
+
+    public void setBeginDebt(Double beginDebt) {
+        this.beginDebt = beginDebt;
+    }
+
+    public Double getEndDebt() {
+        return endDebt;
+    }
+
+    public void setEndDebt(Double endDebt) {
+        this.endDebt = endDebt;
     }
 }

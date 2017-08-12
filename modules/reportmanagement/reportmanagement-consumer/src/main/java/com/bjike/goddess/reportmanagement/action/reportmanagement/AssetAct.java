@@ -5,14 +5,22 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.vo.AreaVO;
+import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.reportmanagement.api.AssetAPI;
 import com.bjike.goddess.reportmanagement.api.FormulaAPI;
 import com.bjike.goddess.reportmanagement.bo.*;
 import com.bjike.goddess.reportmanagement.dto.AssetDTO;
 import com.bjike.goddess.reportmanagement.dto.FormulaDTO;
 import com.bjike.goddess.reportmanagement.to.AssetTO;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import com.bjike.goddess.reportmanagement.vo.*;
 import com.bjike.goddess.subjectcollect.api.SubjectCollectAPI;
 import org.springframework.beans.BeanUtils;
@@ -22,6 +30,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,6 +51,82 @@ public class AssetAct {
     private FormulaAPI formulaAPI;
     @Autowired
     private SubjectCollectAPI subjectCollectAPI;
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result setButtonPermission() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = assetAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = assetAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 列表
@@ -55,7 +140,13 @@ public class AssetAct {
     public Result list(@Validated(AssetDTO.A.class) AssetDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             List<AssetBO> list = assetAPI.list(dto);
-            return ActResult.initialize(BeanTransform.copyProperties(list, AssetVO.class, request));
+            List<AssetVO> vos = new ArrayList<>();
+            for (AssetBO bo : list) {
+                AssetVO vo = BeanTransform.copyProperties(bo, AssetVO.class, request);
+                vo.setAssetId(bo.getId());
+                vos.add(vo);
+            }
+            return ActResult.initialize(vos);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -73,7 +164,9 @@ public class AssetAct {
     public Result save(@Validated(ADD.class) AssetTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             AssetBO bo = assetAPI.save(to);
-            return ActResult.initialize(BeanTransform.copyProperties(bo, AssetVO.class, request));
+            AssetVO vo=BeanTransform.copyProperties(bo, AssetVO.class, request);
+            vo.setAssetId(bo.getId());
+            return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -145,11 +238,11 @@ public class AssetAct {
      */
     @GetMapping("v1/lookFormula/{id}")
     public Result lookFormula(@PathVariable String id, @Validated(AssetDTO.A.class) AssetDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
-        FormulaDTO formulaDTO=new FormulaDTO();
-        BeanUtils.copyProperties(dto,formulaDTO);
+        FormulaDTO formulaDTO = new FormulaDTO();
+        BeanUtils.copyProperties(dto, formulaDTO);
         request.getSession().setAttribute("id", id);
         try {
-            List<FormulaBO> list = formulaAPI.findByFid(id,formulaDTO);
+            List<FormulaBO> list = formulaAPI.findByFid(id, formulaDTO);
             return ActResult.initialize(BeanTransform.copyProperties(list, FormulaVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -168,7 +261,9 @@ public class AssetAct {
     public Result asset(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             AssetBO bo = assetAPI.findByID(id);
-            return ActResult.initialize(BeanTransform.copyProperties(bo, AssetVO.class, request));
+            AssetVO vo=BeanTransform.copyProperties(bo, AssetVO.class, request);
+            vo.setAssetId(bo.getId());
+            return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -249,6 +344,40 @@ public class AssetAct {
     public Result allProjectNames() throws ActException {
         try {
             return ActResult.initialize(subjectCollectAPI.allProjectNames());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有项目组，部门
+     *
+     * @return class DepartmentDetailVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/allDepart")
+    public Result allDepart(HttpServletRequest request) throws ActException {
+        try {
+            List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
+            return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有地区
+     *
+     * @return class AreaVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/allArea")
+    public Result allArea(HttpServletRequest request) throws ActException {
+        try {
+            List<AreaBO> list = departmentDetailAPI.findArea();
+            return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -182,6 +182,7 @@ public class SalarySerImpl extends ServiceImpl<Salary, SalaryDTO> implements Sal
         List<SalaryBO> boList = new ArrayList<>();
         for (Salary s : list) {
             SalaryBO salaryBO = new SalaryBO();
+            salaryBO.setId(s.getId());
             salaryBO.setSal(s.getMin() + "-" + s.getMax());
             if (null != s.getRate()) {
                 salaryBO.setRate(s.getRate());

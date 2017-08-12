@@ -243,6 +243,17 @@ public class ExpendPlanSerImpl extends ServiceImpl<ExpendPlan, ExpendPlanDTO> im
             entity = super.save(expendPlan);
         }
         SonTO expendPlanSonTO = to.getSonTO();
+        String sal=expendPlanSonTO.getSal();
+        SonDTO sonDTO = new SonDTO();
+        sonDTO.getConditions().add(Restrict.eq("expendPlan.id", entity.getId()));
+        List<Son> sons = sonSer.findByCis(sonDTO);
+        Set<String> set=new HashSet<>();
+        for (Son son:sons){
+            set.add(son.getSal());
+        }
+        if (set.contains(sal)){
+            throw new SerException("该时间和计划人工成本已存在该薪资区间");
+        }
         List<ExpendPlanSonDetailTO> sonDetailTOs = expendPlanSonTO.getSonDetailTOs();
         for (ExpendPlanSonDetailTO expendPlanSonDetailTO:sonDetailTOs){
             if (expendPlanSonDetailTO.getTitleIndex()%4==0){
@@ -269,6 +280,29 @@ public class ExpendPlanSerImpl extends ServiceImpl<ExpendPlan, ExpendPlanDTO> im
     public void edit(ExpendPlanTO to) throws SerException {
         checkAddIdentity();
         ExpendPlan entity = super.findById(to.getId());
+        SonTO expendPlanSonTO = to.getSonTO();
+        String sal=expendPlanSonTO.getSal();
+        SonDTO sonDTO = new SonDTO();
+        sonDTO.getConditions().add(Restrict.eq("expendPlan.id", entity.getId()));
+        sonDTO.getConditions().add(Restrict.ne("id", to.getSonTO().getId()));
+        List<Son> sons = sonSer.findByCis(sonDTO);
+        Set<String> set=new HashSet<>();
+        for (Son son:sons){
+            set.add(son.getSal());
+        }
+        if (set.contains(sal)){
+            throw new SerException("该时间和计划人工成本已存在该薪资区间");
+        }
+        List<ExpendPlanSonDetailTO> sonDetailTOs = expendPlanSonTO.getSonDetailTOs();
+        for (ExpendPlanSonDetailTO expendPlanSonDetailTO:sonDetailTOs){
+            if (expendPlanSonDetailTO.getTitleIndex()%4==0){
+                try {
+                    Integer.valueOf(expendPlanSonDetailTO.getContent());
+                }catch (Exception e){
+                    throw new SerException("计划人数必须为数字");
+                }
+            }
+        }
         LocalDateTime a = entity.getCreateTime();
         entity = BeanTransform.copyProperties(to, ExpendPlan.class, true);
         entity.setCreateTime(a);
@@ -276,21 +310,28 @@ public class ExpendPlanSerImpl extends ServiceImpl<ExpendPlan, ExpendPlanDTO> im
         super.update(entity);
         Son expendPlanSon = sonSer.findById(to.getSonTO().getId());
         LocalDateTime b = expendPlanSon.getCreateTime();
-        SonTO expendPlanSonTO = to.getSonTO();
-        List<ExpendPlanSonDetailTO> sonDetailTOs = expendPlanSonTO.getSonDetailTOs();
         expendPlanSon = BeanTransform.copyProperties(expendPlanSonTO, Son.class, true);
         expendPlanSon.setCreateTime(b);
         expendPlanSon.setModifyTime(LocalDateTime.now());
         expendPlanSon.setExpendPlan(entity);
         sonSer.update(expendPlanSon);
+        ExpendPlanSonDetailDTO expendPlanSonDetailDTO = new ExpendPlanSonDetailDTO();
+        expendPlanSonDetailDTO.getSorts().add("titleIndex=asc");
+        expendPlanSonDetailDTO.getConditions().add(Restrict.eq("son.id", expendPlanSon.getId()));
+        List<ExpendPlanSonDetail> sonDetails = expendPlanSonDetailSer.findByCis(expendPlanSonDetailDTO);
+        expendPlanSonDetailSer.remove(sonDetails);
         for (ExpendPlanSonDetailTO expendPlanSonDetailTO : sonDetailTOs) {
-            ExpendPlanSonDetail expendPlanSonDetail = expendPlanSonDetailSer.findById(expendPlanSonDetailTO.getId());
-            expendPlanSonDetail = BeanTransform.copyProperties(expendPlanSonDetailTO, ExpendPlanSonDetail.class, true);
+            ExpendPlanSonDetail expendPlanSonDetail = BeanTransform.copyProperties(expendPlanSonDetailTO, ExpendPlanSonDetail.class, true);
             expendPlanSonDetail.setSon(expendPlanSon);
-            expendPlanSonDetail.setCreateTime(b);
-            expendPlanSonDetail.setModifyTime(LocalDateTime.now());
-            expendPlanSonDetailSer.update(expendPlanSonDetail);
+            expendPlanSonDetailSer.save(expendPlanSonDetail);
         }
+//        sonDetails= BeanTransform.copyProperties(sonDetailTOs,ExpendPlanSonDetail.class,true);
+//        for (ExpendPlanSonDetail sonDetail:sonDetails){
+//            sonDetail.setCreateTime(b);
+//            sonDetail.setSon(expendPlanSon);
+//            sonDetail.setModifyTime(LocalDateTime.now());
+//        }
+//        expendPlanSonDetailSer.update(sonDetails);
     }
 
     @Override
@@ -311,6 +352,7 @@ public class ExpendPlanSerImpl extends ServiceImpl<ExpendPlan, ExpendPlanDTO> im
             List<SonBO> sonBOs = new ArrayList<>();
             for (Son son : sons) {
                 ExpendPlanSonDetailDTO expendPlanSonDetailDTO = new ExpendPlanSonDetailDTO();
+                expendPlanSonDetailDTO.getSorts().add("titleIndex=asc");
                 expendPlanSonDetailDTO.getConditions().add(Restrict.eq("son.id", son.getId()));
                 List<ExpendPlanSonDetail> sonDetails = expendPlanSonDetailSer.findByCis(expendPlanSonDetailDTO);
                 for (ExpendPlanSonDetail sonDetail : sonDetails) {
@@ -381,16 +423,22 @@ public class ExpendPlanSerImpl extends ServiceImpl<ExpendPlan, ExpendPlanDTO> im
 
     @Override
     public ExpendPlanBO findByID(String id) throws SerException {
-        ExpendPlan entity = super.findById(id);
-        if (entity == null) {
+        Son son = sonSer.findById(id);
+        if (son == null) {
             throw new SerException("该对象不存在");
         }
-        SonDTO sonDTO = new SonDTO();
-        sonDTO.getConditions().add(Restrict.eq("expendPlan.id", entity.getId()));
-        List<Son> sons = sonSer.findByCis(sonDTO);
-        List<SonBO> sonBOs = BeanTransform.copyProperties(sons, SonBO.class, true);
-        ExpendPlanBO bo = BeanTransform.copyProperties(entity, ExpendPlanBO.class);
-        bo.setPlanSons(sonBOs);
+        SonBO sonBO=BeanTransform.copyProperties(son,SonBO.class);
+        ExpendPlanSonDetailDTO expendPlanSonDetailDTO = new ExpendPlanSonDetailDTO();
+        expendPlanSonDetailDTO.getSorts().add("titleIndex=asc");
+        expendPlanSonDetailDTO.getConditions().add(Restrict.eq("son.id", son.getId()));
+        List<ExpendPlanSonDetail> sonDetails = expendPlanSonDetailSer.findByCis(expendPlanSonDetailDTO);
+        List<ExpendPlanSonDetailBO> sonDetailBOs = BeanTransform.copyProperties(sonDetails, ExpendPlanSonDetailBO.class);
+        sonBO.setDetails(sonDetailBOs);
+        ExpendPlan entity=super.findById(son.getExpendPlan().getId());
+        ExpendPlanBO bo= BeanTransform.copyProperties(entity,ExpendPlanBO.class);
+        List<SonBO> planSons=new ArrayList<>();
+        planSons.add(sonBO);
+        bo.setPlanSons(planSons);
         return bo;
     }
 
