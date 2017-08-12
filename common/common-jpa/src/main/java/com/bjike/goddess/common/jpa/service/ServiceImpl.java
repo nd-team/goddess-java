@@ -271,7 +271,6 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
 
     @Transactional
     @Override
-    @Transactional
     public void executeSql(String sql) throws SerException {
         Query query = entityManager.createNativeQuery(sql);
         query.executeUpdate();

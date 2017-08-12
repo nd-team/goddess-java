@@ -72,6 +72,8 @@ public class JpaSpecification<BE extends BaseEntity, BD extends BaseDTO> impleme
                 for (Condition model : conditions) {
                     Boolean isOrPre = false; //是否为or查询
                     Predicate predicate = null;
+                    RestrictionType type = model.getRestrict();//查询条件类型
+                    String field = model.getField(); //字段
                     if (null != model.getValue()) {
                         if (model.getValue() instanceof Boolean) {
                             model.setValue(Boolean.TRUE == model.getValue() ? "0" : "1");
@@ -79,11 +81,14 @@ public class JpaSpecification<BE extends BaseEntity, BD extends BaseDTO> impleme
                         clazz = PrimitiveUtil.switchType(model.getValue()); //得到数据类型
 
                     } else {
-                        clazz = String.class;
-                    }
-                    String field = model.getField(); //字段
+                        if(type.equals(RestrictionType.ISNULL) || //该查询为value可为空
+                                type.equals(RestrictionType.ISNOTNULL)){
+                            clazz = String.class;
+                        }else {
+                            throw  new RepException(type.name()+"查询:列【"+field+"】值不能为空");
+                        }
 
-                    RestrictionType type = model.getRestrict();
+                    }
                     String[] fields = model.getField().split("\\.");
                     join = handlerJoinTable(root, fields);  //是否有连接查询
                     Method method = handlerMethod(cb, model);//获得反射调用方法
