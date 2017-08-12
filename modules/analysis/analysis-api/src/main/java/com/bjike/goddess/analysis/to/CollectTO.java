@@ -18,11 +18,11 @@ public class CollectTO extends BaseTO{
     /**
      * 地区
      */
-    private String[] area;
+    private String area;
     /**
      * 项目组
      */
-    private String[] department;
+    private String department;
 
     public String getStartTime() {
         return startTime;
@@ -40,19 +40,19 @@ public class CollectTO extends BaseTO{
         this.endTime = endTime;
     }
 
-    public String[] getArea() {
+    public String getArea() {
         return area;
     }
 
-    public void setArea(String[] area) {
+    public void setArea(String area) {
         this.area = area;
     }
 
-    public String[] getDepartment() {
+    public String getDepartment() {
         return department;
     }
 
-    public void setDepartment(String[] department) {
+    public void setDepartment(String department) {
         this.department = department;
     }
 }

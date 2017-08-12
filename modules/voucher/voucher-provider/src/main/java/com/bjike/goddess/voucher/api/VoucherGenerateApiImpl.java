@@ -1,6 +1,5 @@
 package com.bjike.goddess.voucher.api;
 
-import com.bjike.goddess.analysis.bo.IncomeCostAnalysisBO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.voucher.bo.PartBO;
 import com.bjike.goddess.voucher.bo.PartOptionBO;
@@ -298,11 +297,7 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
-    public List<PartBO> findByCondition(String[] conditions) throws SerException {
-        return voucherGenerateSer.findByCondition(conditions);
-    }
-    @Override
-    public List<IncomeCostAnalysisBO> findByMoney(VoucherGenerateDTO dto) throws SerException {
+    public List<PartBO> findByMoney(VoucherGenerateDTO dto) throws SerException {
         return voucherGenerateSer.findByMoney(dto);
     }
 

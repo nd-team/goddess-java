@@ -8,7 +8,6 @@ import com.bjike.goddess.analysis.to.CollectTO;
 import com.bjike.goddess.analysis.to.GuidePermissionTO;
 import com.bjike.goddess.analysis.to.IncomeCostAnalysisTO;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 
 import java.util.List;
 

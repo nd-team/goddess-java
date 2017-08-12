@@ -11,14 +11,14 @@ public class AreaTO extends BaseTO{
     /**
      * 地区
      */
-    private String[] area;
+    private String area;
 
 
-    public String[] getArea() {
+    public String getArea() {
         return area;
     }
 
-    public void setArea(String[] area) {
+    public void setArea(String area) {
         this.area = area;
     }
 
