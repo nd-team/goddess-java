@@ -1,6 +1,8 @@
 package com.bjike.goddess.staffwelfare.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
 import com.bjike.goddess.staffwelfare.bo.HeadPortraitHatBO;
 import com.bjike.goddess.staffwelfare.bo.StaffBirthdaySchemeBO;
 import com.bjike.goddess.staffwelfare.bo.WishesStatementBO;
@@ -82,5 +84,10 @@ public class StaffBirthdaySchemeApiImpl implements StaffBirthdaySchemeAPI {
     @Override
     public List<HeadPortraitHatBO> findHeadPortraitHats() throws SerException {
         return headPortraitHatSer.findHeadPortraitHats();
+    }
+
+    @Override
+    public List<EntryBasicInfoBO> findEntry() throws SerException {
+        return staffBirthdaySchemeSer.findEntry();
     }
 }

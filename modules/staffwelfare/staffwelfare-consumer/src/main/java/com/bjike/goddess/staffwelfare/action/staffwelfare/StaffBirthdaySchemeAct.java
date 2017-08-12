@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 import com.bjike.goddess.staffwelfare.api.StaffBirthdaySchemeAPI;
 import com.bjike.goddess.staffwelfare.dto.StaffBirthdaySchemeDTO;
 import com.bjike.goddess.staffwelfare.to.GuidePermissionTO;
@@ -13,6 +15,7 @@ import com.bjike.goddess.staffwelfare.vo.StaffBirthdaySchemeVO;
 import com.bjike.goddess.staffwelfare.vo.WishesStatementVO;
 import com.bjike.goddess.user.api.DepartmentAPI;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -60,34 +63,35 @@ public class StaffBirthdaySchemeAct {
             throw new ActException(e.getMessage());
         }
     }
-
-    /**
-     * 查询所有地区
-     *
-     * @version v1
-     */
-    @GetMapping("v1/findAreas")
-    public Result findAreas() {
-        // TODO: 17-4-7 查询所有地区,可以于组织结构查询地区列表
-        return ActResult.initialize("success!");
-    }
-
-    /**
-     * 查询所有部门
-     *
-     * @version v1
-     */
-    @GetMapping("v1/findDepartments")
-    public Result findDepartments() {
-        // TODO: 17-4-7 查询所有部门，可以于组织结构查询部门列表 DepartmentDetailAPI -> findAllOpinion
-
-        return ActResult.initialize("success!");
-    }
+//
+//    /**
+//     * 查询所有地区
+//     *
+//     * @version v1
+//     */
+//    @GetMapping("v1/findAreas")
+//    public Result findAreas() {
+//        // TODO: 17-4-7 查询所有地区,可以于组织结构查询地区列表
+//        return ActResult.initialize("success!");
+//    }
+//
+//    /**
+//     * 查询所有部门
+//     *
+//     * @version v1
+//     */
+//    @GetMapping("v1/findDepartments")
+//    public Result findDepartments() {
+//        // TODO: 17-4-7 查询所有部门，可以于组织结构查询部门列表 DepartmentDetailAPI -> findAllOpinion
+//
+//        return ActResult.initialize("success!");
+//    }
 
 
     /**
      * 查询祝福语
-     *
+     * @return class WishesStatementVO
+     * @throws ActException
      * @version v1
      */
     @GetMapping("v1/findWishStatements")
@@ -102,7 +106,7 @@ public class StaffBirthdaySchemeAct {
 
     /**
      * 查询头像帽
-     *
+     * @return class WishesStatementVO
      * @version v1
      */
     @GetMapping("v1/findHeadPortraitHats")
@@ -119,6 +123,7 @@ public class StaffBirthdaySchemeAct {
      * 新增员工生日福利方案
      *
      * @param to 员工生日福利方案
+     * @return class StaffBirthdaySchemeVO
      * @version v1
      */
     @PostMapping("v1/add")
@@ -184,6 +189,7 @@ public class StaffBirthdaySchemeAct {
      * 员工生日福利方案分页查询
      *
      * @param dto 分页条件
+     * @return class StaffBirthdaySchemeVO
      * @version v1
      */
     @GetMapping("v1/pageList")
@@ -209,6 +215,23 @@ public class StaffBirthdaySchemeAct {
             staffBirthdaySchemeAPI.receive(id, remark);
             return new ActResult();
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有地区和所属部门
+     * @return class EntryBasicInfoVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/entry")
+    public Result findEntry() throws ActException{
+        try {
+            List<EntryBasicInfoBO> boList = staffBirthdaySchemeAPI.findEntry();
+            List<EntryBasicInfoVO> voList = BeanTransform.copyProperties(boList,EntryBasicInfoVO.class);
+            return ActResult.initialize(voList);
+        }catch (SerException e){
             throw new ActException(e.getMessage());
         }
     }

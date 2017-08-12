@@ -77,7 +77,7 @@ public class SchemeApplyTO extends BaseTO {
     /**
      * 发行比例
      */
-    @NotBlank(message = "发行比例不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "发行比例不能为空", groups = {ADD.class, EDIT.class})
     private Double proportion;
 
     /**

@@ -24,6 +24,7 @@ import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -139,19 +140,6 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
         }
         return flag;
     }
-    public List<SalaryInformationBO> pageList(SalaryInformationDTO dto) throws SerException {
-
-        String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser();
-        RpcTransmit.transmitUserToken(userToken);
-        String userName = userBO.getUsername();
-        if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
-        } else {
-            flag = true;
-        }
-        return flag;
-    }
 
 
     @Override
@@ -207,6 +195,7 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
+
     @Override
     public List<SalaryInformationBO> pageList(SalaryInformationDTO dto) throws SerException {
         //规划人能查看所有的 还能根据名称来查找,默认是查找所有的

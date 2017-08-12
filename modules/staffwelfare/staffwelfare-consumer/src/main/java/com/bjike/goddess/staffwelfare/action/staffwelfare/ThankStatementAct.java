@@ -1,5 +1,7 @@
 package com.bjike.goddess.staffwelfare.action.staffwelfare;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -61,10 +63,11 @@ public class ThankStatementAct {
      * 新增感谢语
      *
      * @param to 感谢语
+     * @return class ThankStatementVO
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(ThankStatementTO to, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(ADD.class)ThankStatementTO to, BindingResult bindingResult) throws ActException {
         try {
             ThankStatementVO vo = BeanTransform.copyProperties(thankStatementAPI.addModel(to), ThankStatementVO.class);
             return ActResult.initialize(vo);
@@ -77,10 +80,11 @@ public class ThankStatementAct {
      * 编辑感谢语
      *
      * @param to 感谢语
+     * @return class ThankStatementVO
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result edit(ThankStatementTO to, BindingResult bindingResult) throws ActException {
+    public Result edit(@Validated(EDIT.class)ThankStatementTO to, BindingResult bindingResult) throws ActException {
         try {
             ThankStatementVO vo = BeanTransform.copyProperties(thankStatementAPI.editModel(to), ThankStatementVO.class);
             return ActResult.initialize(vo);
@@ -141,6 +145,7 @@ public class ThankStatementAct {
      * 感谢语分页查询
      *
      * @param dto 分页条件
+     * @return class ThankStatementVO
      * @version v1
      */
     @GetMapping("v1/pageList")

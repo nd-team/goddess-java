@@ -1,6 +1,7 @@
 package com.bjike.goddess.staffshares.to;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -88,6 +89,7 @@ public class DividendsTO extends BaseTO {
     /**
      * 持股人确认情况
      */
+    @NotNull(message = "持股人确认情况不能为空", groups = {EDIT.class})
     private Boolean situation;
 
 

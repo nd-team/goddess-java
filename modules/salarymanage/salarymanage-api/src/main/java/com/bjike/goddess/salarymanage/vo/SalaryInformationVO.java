@@ -248,7 +248,7 @@ public class SalaryInformationVO {
     /**
      * 正常休息天数加班天数
      */
-    private Double  RestOvertimeDay;
+    private Double  restOvertimeDay;
 
     /**
      * 剩余加班天数
@@ -573,11 +573,11 @@ public class SalaryInformationVO {
     public void setNormalRestDay (Double normalRestDay ) {
         this.normalRestDay = normalRestDay ;
     }
-    public Double getRestOvertimeDay () {
-        return RestOvertimeDay;
+    public Double getrestOvertimeDay () {
+        return restOvertimeDay;
     }
-    public void setRestOvertimeDay (Double RestOvertimeDay ) {
-        this.RestOvertimeDay = RestOvertimeDay ;
+    public void setrestOvertimeDay (Double restOvertimeDay ) {
+        this.restOvertimeDay = restOvertimeDay ;
     }
     public Double getSurplusOvertimeDay () {
         return surplusOvertimeDay;

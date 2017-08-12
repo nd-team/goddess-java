@@ -2,6 +2,7 @@ package com.bjike.goddess.staffshares.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.staffshares.bo.DividendsConditionsBO;
 import com.bjike.goddess.staffshares.bo.SchemeApplicationBO;
 import com.bjike.goddess.staffshares.bo.SchemeBO;
 import com.bjike.goddess.staffshares.bo.SchemeIssueBO;
@@ -61,11 +62,6 @@ public interface SchemeSer extends Ser<Scheme, SchemeDTO> {
      * 发行
      */
     void issue(String id) throws SerException;
-
-
-
-
-
 
 
     /**

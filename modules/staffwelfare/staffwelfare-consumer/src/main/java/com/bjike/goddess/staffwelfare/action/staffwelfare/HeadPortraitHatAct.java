@@ -1,6 +1,8 @@
 package com.bjike.goddess.staffwelfare.action.staffwelfare;
 
 import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -124,10 +126,11 @@ public class HeadPortraitHatAct {
      * 新增祝福语
      *
      * @param to 祝福语
+     * @return class HeadPortraitHatVO
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(HeadPortraitHatTO to, HttpServletRequest request, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(ADD.class) HeadPortraitHatTO to, HttpServletRequest request, BindingResult bindingResult) throws ActException {
         try {
             //文件上传
             try {
@@ -152,10 +155,11 @@ public class HeadPortraitHatAct {
      * 编辑祝福语
      *
      * @param to 祝福语
+     * @return class HeadPortraitHatVO
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result edit(HeadPortraitHatTO to, BindingResult bindingResult) throws ActException {
+    public Result edit(@Validated(EDIT.class)HeadPortraitHatTO to, BindingResult bindingResult) throws ActException {
         try {
             HeadPortraitHatVO vo = BeanTransform.copyProperties(headPortraitHatAPI.editModel(to), HeadPortraitHatVO.class);
             return ActResult.initialize(vo);

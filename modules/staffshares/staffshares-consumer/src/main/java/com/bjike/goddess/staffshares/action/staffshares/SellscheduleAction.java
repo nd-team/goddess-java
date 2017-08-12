@@ -40,7 +40,7 @@ public class SellscheduleAction {
      * 出售记录表列表
      *
      * @param dto 出售记录表数据传输对象
-     * @return class SellscheduleApplicationVO
+     * @return class SellscheduleVO
      * @version v1
      */
     @GetMapping("v1/maps")

@@ -1,5 +1,7 @@
 package com.bjike.goddess.staffwelfare.action.staffwelfare;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -62,10 +64,11 @@ public class PersonalFestivalAct {
      * 新增个人节日
      *
      * @param to 个人节日
+     * @return class PersonalFestivalVO
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(PersonalFestivalTO to, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(ADD.class)PersonalFestivalTO to, BindingResult bindingResult) throws ActException {
         try {
             PersonalFestivalVO vo = BeanTransform.copyProperties(personalFestivalAPI.addModel(to), PersonalFestivalVO.class);
             return ActResult.initialize(vo);
@@ -78,10 +81,11 @@ public class PersonalFestivalAct {
      * 编辑个人节日
      *
      * @param to 个人节日
+     * @return class PersonalFestivalVO
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result edit(PersonalFestivalTO to, BindingResult bindingResult) throws ActException {
+    public Result edit(@Validated(EDIT.class)PersonalFestivalTO to, BindingResult bindingResult) throws ActException {
         try {
             PersonalFestivalVO vo = BeanTransform.copyProperties(personalFestivalAPI.editModel(to), PersonalFestivalVO.class);
             return ActResult.initialize(vo);
@@ -110,6 +114,7 @@ public class PersonalFestivalAct {
      * 个人节日分页查询
      *
      * @param dto 分页条件
+     * @return class PersonalFestivalVO
      * @version v1
      */
     @GetMapping("v1/pageList")

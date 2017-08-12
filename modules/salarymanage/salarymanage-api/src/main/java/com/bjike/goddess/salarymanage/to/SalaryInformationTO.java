@@ -303,7 +303,7 @@ public class SalaryInformationTO extends BaseTO {
      * 正常休息天数加班天数
      */
     @NotNull(message = "正常休息天数加班天数不能为空!", groups = {ADD.class, EDIT.class})
-    private Double  RestOvertimeDay;
+    private Double  restOvertimeDay;
 
     /**
      * 剩余加班天数
@@ -626,11 +626,11 @@ public class SalaryInformationTO extends BaseTO {
     public void setNormalRestDay (Double normalRestDay ) {
         this.normalRestDay = normalRestDay ;
     }
-    public Double getRestOvertimeDay () {
-        return RestOvertimeDay;
+    public Double getrestOvertimeDay () {
+        return restOvertimeDay;
     }
-    public void setRestOvertimeDay (Double RestOvertimeDay ) {
-        this.RestOvertimeDay = RestOvertimeDay ;
+    public void setrestOvertimeDay (Double restOvertimeDay ) {
+        this.restOvertimeDay = restOvertimeDay ;
     }
     public Double getSurplusOvertimeDay () {
         return surplusOvertimeDay;

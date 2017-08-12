@@ -31,7 +31,7 @@ public class Purchase extends BaseEntity {
     /**
      * 方案名称
      */
-    @Column(name = "name", columnDefinition = "VARCHAR(255)   COMMENT '方案名称'")
+    @Column(name = "issueName", columnDefinition = "VARCHAR(255)   COMMENT '方案名称'")
     private String issueName;
 
     /**

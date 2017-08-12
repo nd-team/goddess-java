@@ -3,6 +3,8 @@ package com.bjike.goddess.staffshares.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffshares.bo.CompanySchemeBO;
 import com.bjike.goddess.staffshares.bo.DividendsBO;
+import com.bjike.goddess.staffshares.bo.DividendsConditionsBO;
+import com.bjike.goddess.staffshares.bo.DividendsDetailBO;
 import com.bjike.goddess.staffshares.dto.DividendsDTO;
 import com.bjike.goddess.staffshares.to.DividendsTO;
 
@@ -68,6 +70,69 @@ public interface DividendsAPI {
      * @throws SerException
      */
     default Long getTotal(DividendsDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 确认分红
+     *
+     * @param to
+     * @throws SerException
+     */
+    default void confirm(DividendsTO to) throws SerException {
+        return;
+    }
+
+    /**
+     * 交易持股明细列表
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<DividendsDetailBO> list(DividendsDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取交易持股明细
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    default DividendsDetailBO find(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取交易持股明细总条数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default Long getCount(DividendsDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 交易持股明细汇总
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<DividendsDetailBO> collect() throws SerException {
+        return null;
+    }
+
+    /**
+     * 公司干股情况汇总
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<DividendsConditionsBO> detailList() throws SerException {
         return null;
     }
 }
