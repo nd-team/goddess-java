@@ -14,19 +14,14 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 public class DebtBO extends BaseBO {
 
     /**
-     * 起始时间
-     */
-    private String startTime;
-
-    /**
-     * 结束时间
-     */
-    private String endTime;
-
-    /**
      * 负债和所有者权益(或股东权益)
      */
     private String debt;
+
+    /**
+     * 负债和所有者权益(或股东权益)行次
+     */
+    private Integer debtNum;
 
     /**
      * 负债年初数
@@ -43,28 +38,20 @@ public class DebtBO extends BaseBO {
      */
     private Double endDebt;
 
+    public Integer getDebtNum() {
+        return debtNum;
+    }
+
+    public void setDebtNum(Integer debtNum) {
+        this.debtNum = debtNum;
+    }
+
     public Double getCurrent() {
         return current;
     }
 
     public void setCurrent(Double current) {
         this.current = current;
-    }
-
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
     }
 
     public String getDebt() {

@@ -618,4 +618,12 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
      * @throws SerException
      */
     ApplyLendBO editPayMoneyCJH(ApplyLendTO applyLendTO) throws SerException;
+
+    /**
+     * chenjunhao
+     * @param applyLendDTO
+     * @return
+     * @throws SerException
+     */
+    Long countWaitPayCJH(ApplyLendDTO applyLendDTO) throws SerException;
 }

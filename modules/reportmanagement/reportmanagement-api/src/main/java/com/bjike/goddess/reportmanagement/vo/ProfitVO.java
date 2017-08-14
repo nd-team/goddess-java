@@ -21,6 +21,11 @@ public class ProfitVO {
     private String project;
 
     /**
+     * 行次
+     */
+    private Integer num;
+
+    /**
      * 本月数
      */
     private Double currentMonthAmount;
@@ -82,6 +87,14 @@ public class ProfitVO {
 //        this.fourthSeason = fourthSeason;
 //    }
 
+
+    public Integer getNum() {
+        return num;
+    }
+
+    public void setNum(Integer num) {
+        this.num = num;
+    }
 
     public String getId() {
         return id;

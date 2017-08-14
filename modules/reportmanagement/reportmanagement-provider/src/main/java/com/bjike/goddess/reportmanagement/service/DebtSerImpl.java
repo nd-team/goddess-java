@@ -8,7 +8,6 @@ import com.bjike.goddess.reportmanagement.bo.*;
 import com.bjike.goddess.reportmanagement.dto.DebtDTO;
 import com.bjike.goddess.reportmanagement.dto.DebtStructureAdviceDTO;
 import com.bjike.goddess.reportmanagement.dto.FormulaDTO;
-import com.bjike.goddess.reportmanagement.entity.Asset;
 import com.bjike.goddess.reportmanagement.entity.Debt;
 import com.bjike.goddess.reportmanagement.enums.DebtType;
 import com.bjike.goddess.reportmanagement.enums.Form;
@@ -16,6 +15,7 @@ import com.bjike.goddess.reportmanagement.enums.GuideAddrStatus;
 import com.bjike.goddess.reportmanagement.enums.Type;
 import com.bjike.goddess.reportmanagement.to.DebtTO;
 import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
+import com.bjike.goddess.reportmanagement.utils.Static;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.BeanUtils;
@@ -215,59 +215,66 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
         double debtEnd = 0;    //负债合计
         double countBegin = 0;
         double countEnd = 0;       //负债和所有权益合计
+        int num = Static.getNum();
         for (Debt debt : list) {
             List<FormulaBO> formulaBOs = formulaSer.findByFid(debt.getId(), formulaDTO);
+            if (DebtType.AFLOW.equals(debt.getDebtType()) && b1) {
+                DebtBO debtBO = new DebtBO();
+                debtBO.setDebt("流动负债：");
+                boList.add(debtBO);
+                b1 = false;
+            } else if (DebtType.BLONG.equals(debt.getDebtType()) && b2) {
+                DebtBO sumBO = new DebtBO();
+                sumBO.setDebt("流动负债合计");
+                sumBO.setBeginDebt(beginSum);
+                sumBO.setEndDebt(endSum);
+                sumBO.setDebtNum(num);
+                num++;
+                boList.add(sumBO);
+                debtBegin += beginSum;
+                debtEnd += endSum;
+                beginSum = 0;
+                endSum = 0;    //置为0
+                DebtBO debtBO = new DebtBO();
+                debtBO.setDebt("长期负债：");
+                boList.add(debtBO);
+                b2 = false;
+            } else if (DebtType.CTAX.equals(debt.getDebtType()) && b3) {
+                DebtBO sumBO = new DebtBO();
+                sumBO.setDebt("长期负债合计");
+                sumBO.setBeginDebt(beginSum);
+                sumBO.setEndDebt(endSum);
+                sumBO.setDebtNum(num);
+                num++;
+                boList.add(sumBO);
+                debtBegin += beginSum;
+                debtEnd += endSum;
+                beginSum = 0;
+                endSum = 0;    //置为0
+                DebtBO debtBO = new DebtBO();
+                debtBO.setDebt("递延税项：");
+                boList.add(debtBO);
+                b3 = false;
+            } else if (DebtType.DALL.equals(debt.getDebtType()) && b4) {
+                DebtBO sumBO = new DebtBO();
+                sumBO.setDebt("负债合计");
+                debtBegin += beginSum;
+                debtEnd += endSum;
+                sumBO.setBeginDebt(debtBegin);
+                sumBO.setEndDebt(debtEnd);
+                sumBO.setDebtNum(num);
+                num++;
+                boList.add(sumBO);
+                beginSum = 0;
+                endSum = 0;    //置为0
+                DebtBO debtBO = new DebtBO();
+                debtBO.setDebt("所有者权益(或股东权益)：");
+                boList.add(debtBO);
+                b4 = false;
+            }
+            DebtBO bo = BeanTransform.copyProperties(debt, DebtBO.class);
             if (formulaBOs != null) {
-                if (DebtType.AFLOW.equals(debt.getDebtType()) && b1) {
-                    DebtBO debtBO = new DebtBO();
-                    debtBO.setDebt("流动负债：");
-                    boList.add(debtBO);
-                    b1 = false;
-                } else if (DebtType.BLONG.equals(debt.getDebtType()) && b2) {
-                    DebtBO sumBO = new DebtBO();
-                    sumBO.setDebt("流动负债合计");
-                    sumBO.setBeginDebt(beginSum);
-                    sumBO.setEndDebt(endSum);
-                    boList.add(sumBO);
-                    debtBegin += beginSum;
-                    debtEnd += endSum;
-                    beginSum = 0;
-                    endSum = 0;    //置为0
-                    DebtBO debtBO = new DebtBO();
-                    debtBO.setDebt("长期负债：");
-                    boList.add(debtBO);
-                    b2 = false;
-                } else if (DebtType.CTAX.equals(debt.getDebtType()) && b3) {
-                    DebtBO sumBO = new DebtBO();
-                    sumBO.setDebt("长期负债合计");
-                    sumBO.setBeginDebt(beginSum);
-                    sumBO.setEndDebt(endSum);
-                    boList.add(sumBO);
-                    debtBegin += beginSum;
-                    debtEnd += endSum;
-                    beginSum = 0;
-                    endSum = 0;    //置为0
-                    DebtBO debtBO = new DebtBO();
-                    debtBO.setDebt("递延税项：");
-                    boList.add(debtBO);
-                    b3 = false;
-                } else if (DebtType.DALL.equals(debt.getDebtType()) && b4) {
-                    DebtBO sumBO = new DebtBO();
-                    sumBO.setDebt("负债合计");
-                    debtBegin += beginSum;
-                    debtEnd += endSum;
-                    sumBO.setBeginDebt(debtBegin);
-                    sumBO.setEndDebt(debtEnd);
-                    boList.add(sumBO);
-                    beginSum = 0;
-                    endSum = 0;    //置为0
-                    DebtBO debtBO = new DebtBO();
-                    debtBO.setDebt("所有者权益(或股东权益)：");
-                    boList.add(debtBO);
-                    b4 = false;
-                }
                 FormulaBO formulaBO = formulaBOs.get(formulaBOs.size() - 1);
-                DebtBO bo = BeanTransform.copyProperties(debt, DebtBO.class);
                 bo.setBeginDebt(formulaBO.getBegin());
                 bo.setEndDebt(formulaBO.getEnd());
                 if (Type.ADD.equals(debt.getType())) {
@@ -281,18 +288,25 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
                     countBegin -= bo.getBeginDebt();
                     countEnd -= bo.getEndDebt();
                 }
-                boList.add(bo);
             }
+            bo.setDebtNum(num);
+            num++;
+            boList.add(bo);
+
         }
         DebtBO lastTwo = new DebtBO();
         lastTwo.setDebt("所有者权益(或股东权益)合计");
         lastTwo.setBeginDebt(beginSum);
         lastTwo.setEndDebt(endSum);
+        lastTwo.setDebtNum(num);
+        num++;
         boList.add(lastTwo);
         DebtBO lastBO = new DebtBO();
         lastBO.setDebt("负债和所有者权益(或股东权益)总计");
         lastBO.setBeginDebt(countBegin);
         lastBO.setEndDebt(countEnd);
+        lastBO.setDebtNum(num);
+        num++;
         boList.add(lastBO);
         return boList;
     }

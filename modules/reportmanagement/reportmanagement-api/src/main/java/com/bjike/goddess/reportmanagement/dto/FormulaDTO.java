@@ -1,7 +1,6 @@
 package com.bjike.goddess.reportmanagement.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
-import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 对应的公式数据传输对象
@@ -27,6 +26,32 @@ public class FormulaDTO extends BaseDTO {
      * 项目名称数组
      */
     private String[] projectNames;
+
+    /**
+     * 项目组/部门数组
+     */
+    private String[] departs;
+
+    /**
+     * 地区数组
+     */
+    private String[] areas;
+
+    public String[] getDeparts() {
+        return departs;
+    }
+
+    public void setDeparts(String[] departs) {
+        this.departs = departs;
+    }
+
+    public String[] getAreas() {
+        return areas;
+    }
+
+    public void setAreas(String[] areas) {
+        this.areas = areas;
+    }
 
     public String[] getProjectNames() {
         return projectNames;

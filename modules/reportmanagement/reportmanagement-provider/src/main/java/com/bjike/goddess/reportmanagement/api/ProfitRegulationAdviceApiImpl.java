@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.reportmanagement.bo.ProfitRegulationAdviceBO;
 import com.bjike.goddess.reportmanagement.dto.ProfitRegulationAdviceDTO;
 import com.bjike.goddess.reportmanagement.service.ProfitRegulationAdviceSer;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import com.bjike.goddess.reportmanagement.to.ProfitRegulationAdviceTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,5 +53,15 @@ public class ProfitRegulationAdviceApiImpl implements ProfitRegulationAdviceAPI 
     @Override
     public Long count(ProfitRegulationAdviceDTO dto) throws SerException {
         return profitRegulationAdviceSer.count(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return profitRegulationAdviceSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return profitRegulationAdviceSer.guidePermission(guidePermissionTO);
     }
 }

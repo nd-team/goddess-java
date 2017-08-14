@@ -20,6 +20,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contacts.api.CommonalityAPI;
 import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.contacts.vo.CommonalityVO;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
@@ -61,6 +62,8 @@ public class AnnouncementAct extends BaseFileAction {
     private CommonalityAPI commonalityAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     /**
      * 模块设置导航权限
@@ -538,7 +541,7 @@ public class AnnouncementAct extends BaseFileAction {
     @GetMapping("v1/allUsers")
     public Result allUsers(HttpServletRequest request) throws ActException {
         try {
-            List<UserBO> list = announcementAPI.allUsers();
+            List<UserBO> list = positionDetailUserAPI.findUserListInOrgan();
             return ActResult.initialize(BeanTransform.copyProperties(list, UserVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

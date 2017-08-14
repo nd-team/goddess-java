@@ -219,6 +219,9 @@ public class ExpendPlanAction {
             List<FieldVO> fieldVOs = new ArrayList<>();
             List<HierarchyBO> hierarchyBOs = hierarchyAPI.findStatus();
             int a = 0;
+            FieldVO fieldVO2 = new FieldVO();
+            fieldVO2.setTitle("总经办");
+            List<FieldVO> voss=fieldVO2.getFieldVOs();
             FieldVO fieldVO1 = new FieldVO();
             List<FieldVO> fieldVOs1 = fieldVO1.getFieldVOs();
             fieldVO1.setTitle("总经办");
@@ -242,7 +245,8 @@ public class ExpendPlanAction {
             vo44.setTitleIndex(a);
             fieldVOs1.add(vo44);
             a++;
-            fieldVOs.add(fieldVO1);
+            voss.add(fieldVO1);
+            fieldVOs.add(fieldVO2);
             for (HierarchyBO h : hierarchyBOs) {
                 List<DepartmentDetailBO> detailBOs = departmentDetailAPI.findByHierarchy(h.getId());
                 FieldVO fieldVO = new FieldVO();
@@ -335,22 +339,22 @@ public class ExpendPlanAction {
         }
     }
 
-//    /**
-//     * 编辑
-//     *
-//     * @param to 人工成本计划传输对象
-//     * @throws ActException
-//     * @version v1
-//     */
-//    @PutMapping("v1/edit")
-//    public Result edit(@Validated(EDIT.class) ExpendPlanTO to, BindingResult result) throws ActException {
-//        try {
-//            expendPlanAPI.edit(to);
-//            return new ActResult("编辑成功");
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-//    }
+    /**
+     * 编辑
+     *
+     * @param to 人工成本计划传输对象
+     * @throws ActException
+     * @version v1
+     */
+    @PutMapping("v1/edit")
+    public Result edit(@Validated(EDIT.class) ExpendPlanTO to, BindingResult result) throws ActException {
+        try {
+            expendPlanAPI.edit(to);
+            return new ActResult("编辑成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 删除

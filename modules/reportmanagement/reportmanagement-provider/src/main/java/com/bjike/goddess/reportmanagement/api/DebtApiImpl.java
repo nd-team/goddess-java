@@ -8,6 +8,7 @@ import com.bjike.goddess.reportmanagement.dto.AssetDTO;
 import com.bjike.goddess.reportmanagement.dto.DebtDTO;
 import com.bjike.goddess.reportmanagement.service.DebtSer;
 import com.bjike.goddess.reportmanagement.to.DebtTO;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,5 +66,15 @@ public class DebtApiImpl implements DebtAPI {
     @Override
     public void delete(String id) throws SerException {
         debtSer.delete(id);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return debtSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return debtSer.guidePermission(guidePermissionTO);
     }
 }

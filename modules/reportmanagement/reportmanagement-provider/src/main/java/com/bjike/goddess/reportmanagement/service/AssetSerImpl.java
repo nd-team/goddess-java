@@ -13,6 +13,7 @@ import com.bjike.goddess.reportmanagement.enums.GuideAddrStatus;
 import com.bjike.goddess.reportmanagement.enums.Type;
 import com.bjike.goddess.reportmanagement.to.AssetTO;
 import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
+import com.bjike.goddess.reportmanagement.utils.Static;
 import com.bjike.goddess.reportmanagement.vo.SonPermissionObject;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -366,6 +367,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         double countBegin = 0;
         double countCurrent = 0;
         double countEnd = 0;       //总资产
+        int num = 1;
         for (Asset asset : list) {
             List<FormulaBO> formulaBOs = formulaSer.findByFid(asset.getId(), formulaDTO);
             if ((formulaBOs != null) && (!formulaBOs.isEmpty())) {
@@ -380,6 +382,8 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
                     sumBO.setBeginAsset(beginSum);
                     sumBO.setCurrent(currentSum);
                     sumBO.setEndAsset(endSum);
+                    sumBO.setAssetNum(num);
+                    num++;
                     boList.add(sumBO);
                     beginSum = 0;
                     currentSum = 0;
@@ -394,6 +398,8 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
                     sumBO.setBeginAsset(beginSum);
                     sumBO.setCurrent(currentSum);
                     sumBO.setEndAsset(endSum);
+                    sumBO.setAssetNum(num);
+                    num++;
                     boList.add(sumBO);
                     beginSum = 0;
                     currentSum = 0;
@@ -408,6 +414,8 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
                     sumBO.setBeginAsset(beginSum);
                     sumBO.setCurrent(currentSum);
                     sumBO.setEndAsset(endSum);
+                    sumBO.setAssetNum(num);
+                    num++;
                     boList.add(sumBO);
                     beginSum = 0;
                     currentSum = 0;
@@ -422,6 +430,8 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
                     sumBO.setBeginAsset(beginSum);
                     sumBO.setCurrent(currentSum);
                     sumBO.setEndAsset(endSum);
+                    sumBO.setAssetNum(num);
+                    num++;
                     boList.add(sumBO);
                     beginSum = 0;
                     currentSum = 0;
@@ -452,9 +462,14 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
                     countCurrent -= bo.getCurrent();
                     countEnd = countEnd - bo.getEndAsset();
                 }
+                bo.setAssetNum(num);
+                num++;
                 boList.add(bo);
             } else {
-                boList.add(BeanTransform.copyProperties(asset, AssetBO.class));
+                AssetBO bo = BeanTransform.copyProperties(asset, AssetBO.class);
+                bo.setAssetNum(num);
+                num++;
+                boList.add(bo);
             }
         }
         AssetBO lastBO = new AssetBO();
@@ -462,6 +477,9 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         lastBO.setBeginAsset(countBegin);
         lastBO.setCurrent(countCurrent);
         lastBO.setEndAsset(countEnd);
+        lastBO.setAssetNum(num);
+        num++;
+        Static.setNum(num);
         boList.add(lastBO);
         return boList;
     }
@@ -469,7 +487,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
     @Override
     public List<StructureBO> assetStructure(AssetDTO dto) throws SerException {
         checkSeeIdentity();
-        String userToken=RpcTransmit.getUserToken();
+        String userToken = RpcTransmit.getUserToken();
         FormulaDTO formulaDTO = new FormulaDTO();
         BeanUtils.copyProperties(dto, formulaDTO);
         dto.getSorts().add("assetType=ASC");
@@ -556,7 +574,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
     @Override
     public List<RepayAnalyzeBO> repayAnalyze(AssetDTO dto) throws SerException {
 //        checkSeeIdentity();
-        String userToken=RpcTransmit.getUserToken();
+        String userToken = RpcTransmit.getUserToken();
         double flowAsset = assetStructure(dto).get(0).getFee();
         RpcTransmit.transmitUserToken(userToken);
         double flowDebt = finds(dto).get(0);
@@ -567,9 +585,17 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         RpcTransmit.transmitUserToken(userToken);
         double all = finds(dto).get(2);
         RpcTransmit.transmitUserToken(userToken);
-        double fund = list(dto).get(1).getCurrent();   //货币资金
+        double fund = 0;
+        double stock=0;
+        for (AssetBO bo : list(dto)) {
+            if ("货币资金".equals(bo.getAsset())) {
+                fund = bo.getCurrent();   //货币资金
+            }
+            if ("存货".equals(bo.getAsset())) {
+                stock = bo.getCurrent();   //存货净额
+            }
+        }
         RpcTransmit.transmitUserToken(userToken);
-        double stock = list(dto).get(10).getCurrent();  //存货净额
         List<RepayAnalyzeBO> list = new ArrayList<>();
         RepayAnalyzeBO firstBO = new RepayAnalyzeBO();
         firstBO.setProject("一、短期偿债能力分析");

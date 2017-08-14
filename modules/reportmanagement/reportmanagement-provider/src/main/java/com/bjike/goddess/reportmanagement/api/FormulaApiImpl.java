@@ -3,8 +3,10 @@ package com.bjike.goddess.reportmanagement.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.reportmanagement.bo.FormulaBO;
 import com.bjike.goddess.reportmanagement.dto.FormulaDTO;
+import com.bjike.goddess.reportmanagement.dto.ProfitDTO;
 import com.bjike.goddess.reportmanagement.service.FormulaSer;
 import com.bjike.goddess.reportmanagement.to.FormulaTO;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +32,8 @@ public class FormulaApiImpl implements FormulaAPI {
     }
 
     @Override
-    public List<FormulaBO> profitAnalyze(String foreignId, String time, String[] projectNames) throws SerException {
-        return formulaSer.profitAnalyze(foreignId, time, projectNames);
+    public List<FormulaBO> profitAnalyze(String foreignId, String time, ProfitDTO dto) throws SerException {
+        return formulaSer.profitAnalyze(foreignId, time, dto);
     }
 
     @Override
@@ -52,5 +54,15 @@ public class FormulaApiImpl implements FormulaAPI {
     @Override
     public FormulaBO save(FormulaTO to) throws SerException {
         return formulaSer.save(to);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return formulaSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return formulaSer.guidePermission(guidePermissionTO);
     }
 }

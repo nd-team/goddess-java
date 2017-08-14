@@ -14,21 +14,17 @@ public class DebtVO {
     /**
      * id
      */
-    private String id;
-    /**
-     * 起始时间
-     */
-    private String startTime;
-
-    /**
-     * 结束时间
-     */
-    private String endTime;
+    private String debtId;
 
     /**
      * 负债和所有者权益(或股东权益)
      */
     private String debt;
+
+    /**
+     * 负债和所有者权益(或股东权益)行次
+     */
+    private Integer debtNum;
 
     /**
      * 负债年初数
@@ -45,12 +41,12 @@ public class DebtVO {
      */
     private Double endDebt;
 
-    public String getId() {
-        return id;
+    public String getDebtId() {
+        return debtId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setDebtId(String debtId) {
+        this.debtId = debtId;
     }
 
     public Double getCurrent() {
@@ -61,20 +57,12 @@ public class DebtVO {
         this.current = current;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public Integer getDebtNum() {
+        return debtNum;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
+    public void setDebtNum(Integer debtNum) {
+        this.debtNum = debtNum;
     }
 
     public String getDebt() {

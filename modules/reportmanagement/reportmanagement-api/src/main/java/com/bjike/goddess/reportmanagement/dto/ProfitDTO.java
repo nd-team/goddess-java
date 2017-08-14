@@ -33,6 +33,32 @@ public class ProfitDTO extends BaseDTO {
      */
     private String[] projectNames;
 
+    /**
+     * 项目组/部门数组
+     */
+    private String[] departs;
+
+    /**
+     * 地区数组
+     */
+    private String[] areas;
+
+    public String[] getDeparts() {
+        return departs;
+    }
+
+    public void setDeparts(String[] departs) {
+        this.departs = departs;
+    }
+
+    public String[] getAreas() {
+        return areas;
+    }
+
+    public void setAreas(String[] areas) {
+        this.areas = areas;
+    }
+
     public String[] getProjectNames() {
         return projectNames;
     }

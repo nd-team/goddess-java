@@ -293,8 +293,8 @@ public class InventorySerImpl extends ServiceImpl<Inventory, InventoryDTO> imple
         if (inventory == null) {
             throw new SerException("该对象不存在");
         }
-        Boolean isInventory=inventory.getIsInventory();
-        if (isInventory!=null&&isInventory){
+        Boolean isInventory = inventory.getIsInventory();
+        if (isInventory != null && isInventory) {
             throw new SerException("您已盘点过该记录");
         }
         inventory.setInventoryTime(DateUtil.parseDate(to.getInventoryTime()));
@@ -351,8 +351,10 @@ public class InventorySerImpl extends ServiceImpl<Inventory, InventoryDTO> imple
 
     @Override
     public Long count(InventoryDTO dto) throws SerException {
-        String[] stockEncodings=dto.getStockEncodings();
-        dto.getConditions().add(Restrict.in("stockEncoding",stockEncodings));
+        String[] stockEncodings = dto.getStockEncodings();
+        if (null != stockEncodings) {
+            dto.getConditions().add(Restrict.in("stockEncoding", stockEncodings));
+        }
         return super.count(dto);
     }
 

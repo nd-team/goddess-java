@@ -5,6 +5,7 @@ import com.bjike.goddess.staffing.bo.ConfigurationPlanBO;
 import com.bjike.goddess.staffing.dto.ConfigurationPlanDTO;
 import com.bjike.goddess.staffing.service.ConfigurationPlanSer;
 import com.bjike.goddess.staffing.to.ConfigurationPlanTO;
+import com.bjike.goddess.staffing.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,5 +53,15 @@ public class ConfigurationPlanApiImpl implements ConfigurationPlanAPI {
     @Override
     public Long count(ConfigurationPlanDTO dto) throws SerException {
         return configurationPlanSer.count(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return configurationPlanSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return configurationPlanSer.guidePermission(guidePermissionTO);
     }
 }

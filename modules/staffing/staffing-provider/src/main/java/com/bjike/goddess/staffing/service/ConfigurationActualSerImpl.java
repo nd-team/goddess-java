@@ -5,7 +5,6 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.staffing.bo.ActualSonBO;
 import com.bjike.goddess.staffing.bo.ConfigurationActualBO;
 import com.bjike.goddess.staffing.dto.ActualSonDTO;
@@ -16,7 +15,6 @@ import com.bjike.goddess.staffing.enums.GuideAddrStatus;
 import com.bjike.goddess.staffing.to.ActualSonTO;
 import com.bjike.goddess.staffing.to.ConfigurationActualTO;
 import com.bjike.goddess.staffing.to.GuidePermissionTO;
-import com.bjike.goddess.staffing.vo.SonPermissionObject;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -259,7 +257,9 @@ public class ConfigurationActualSerImpl extends ServiceImpl<ConfigurationActual,
                 manNumSum += son.getManNum();
                 executeNumSum += son.getExecuteNum();
                 compileCountSum += son.getCompileCount();
-                deployNumSum += son.getDeployNum();
+                if (null != son.getDeployNum()) {
+                    deployNumSum += son.getDeployNum();
+                }
                 actualNumSum += son.getActualNum();
             }
             long proportion = Math.round(Double.valueOf(configurationPlan.getTotal()) / Double.valueOf(total) * 100);
@@ -313,15 +313,14 @@ public class ConfigurationActualSerImpl extends ServiceImpl<ConfigurationActual,
 
     @Override
     public ConfigurationActualBO findByID(String id) throws SerException {
-        ConfigurationActual entity = super.findById(id);
-        if (entity == null) {
+        ActualSon son = planSonSer.findById(id);
+        if (son == null) {
             throw new SerException("该对象不存在");
         }
-        ActualSonDTO sonDTO = new ActualSonDTO();
-        sonDTO.getConditions().add(Restrict.eq("configurationActual.id", entity.getId()));
-        List<ActualSon> sons = planSonSer.findByCis(sonDTO);
-        List<ActualSonBO> sonBOs = BeanTransform.copyProperties(sons, ActualSonBO.class);
-        ConfigurationActualBO bo = BeanTransform.copyProperties(entity, ConfigurationActualBO.class, "sons");
+        ConfigurationActual entity = super.findById(son.getConfigurationActual().getId());
+        ConfigurationActualBO bo = BeanTransform.copyProperties(entity, ConfigurationActualBO.class);
+        List<ActualSonBO> sonBOs = new ArrayList<>();
+        sonBOs.add(BeanTransform.copyProperties(son, ActualSonBO.class));
         bo.setSons(sonBOs);
         return bo;
     }
