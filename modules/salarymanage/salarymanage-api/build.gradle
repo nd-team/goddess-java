@@ -9,4 +9,5 @@ dependencies {
     compile project(":modules:contacts:contacts-api")
     compile project(":modules:managementpromotion:managementpromotion-api")
     compile project(":modules:managepromotion:managepromotion-api")
+    compile project(":modules:assistance:assistance-api")
 }

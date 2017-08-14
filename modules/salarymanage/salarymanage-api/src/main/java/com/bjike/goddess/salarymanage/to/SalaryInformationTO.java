@@ -19,15 +19,11 @@ import java.time.LocalDate;
 public class SalaryInformationTO extends BaseTO {
 
 
-    public interface TestAdd{
-
-    }
-
     /**
      * 计薪周期开始时间
      */
     @NotBlank(message = "计薪周期开始时间不能为空!", groups = {ADD.class, EDIT.class})
-    private String payStarTime;
+    private String payStartTime;
 
     /**
      * 计薪周期结束时间
@@ -121,13 +117,13 @@ public class SalaryInformationTO extends BaseTO {
     /**
      * 基本工资
      */
-    @NotBlank(message = "基本工资不能为空!", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "基本工资不能为空!", groups = {ADD.class, EDIT.class})
     private Double  basicSalary;
 
     /**
      * 岗位工资
      */
-    @NotBlank(message = "岗位工资不能为空!", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "岗位工资不能为空!", groups = {ADD.class, EDIT.class})
     private Double  postSalary;
 
     /**
@@ -341,12 +337,20 @@ public class SalaryInformationTO extends BaseTO {
     private String  remark;
 
 
-    public String getPayStarTime() {
-        return payStarTime;
+    public String getPayStartTime() {
+        return payStartTime;
     }
 
-    public void setPayStarTime(String payStarTime) {
-        this.payStarTime = payStarTime;
+    public void setPayStartTime(String payStartTime) {
+        this.payStartTime = payStartTime;
+    }
+
+    public Double getRestOvertimeDay() {
+        return restOvertimeDay;
+    }
+
+    public void setRestOvertimeDay(Double restOvertimeDay) {
+        this.restOvertimeDay = restOvertimeDay;
     }
 
     public String getPayEndTime() {

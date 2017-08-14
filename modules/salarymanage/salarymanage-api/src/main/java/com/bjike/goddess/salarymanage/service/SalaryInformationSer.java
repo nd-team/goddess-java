@@ -1,5 +1,13 @@
 package com.bjike.goddess.salarymanage.service;
 
+import com.bjike.goddess.assistance.bo.AgeAssistBO;
+import com.bjike.goddess.assistance.bo.ComputerAssistBO;
+import com.bjike.goddess.assistance.bo.HotAssistBO;
+import com.bjike.goddess.assistance.bo.HouseAssistBO;
+import com.bjike.goddess.assistance.dto.AgeAssistDTO;
+import com.bjike.goddess.assistance.dto.ComputerAssistDTO;
+import com.bjike.goddess.assistance.dto.HotAssistDTO;
+import com.bjike.goddess.assistance.dto.HouseAssistDTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.managementpromotion.entity.LevelShow;
@@ -127,4 +135,28 @@ public interface SalaryInformationSer extends Ser<SalaryInformation, SalaryInfor
      * @throws SerException
      */
     Long count(SalaryInformationDTO dto) throws SerException;
+
+//    /**
+//     * 查询高温补助
+//     *
+//     * @throws SerException
+//     */
+//    List<HotAssistBO> findHotAssist(SalaryInformationDTO dto) throws SerException;
+//
+//    /**
+//     * 查询住宿补助
+//     *
+//     * @throws SerException
+//     */
+//    List<HouseAssistBO> findHouseAssist(SalaryInformationDTO dto) throws SerException;
+//
+//    /**
+//     * 查看电脑补助
+//     */
+//    List<ComputerAssistBO> findComputerAssist(SalaryInformationDTO dto) throws SerException;
+//
+//    /**
+//     * 查看工龄补助
+//     */
+//    List<AgeAssistBO> findAgeAssist(SalaryInformationDTO dto) throws SerException;
  }
