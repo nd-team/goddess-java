@@ -130,8 +130,8 @@ public class ModuleAssembleSerImpl extends ServiceImpl<ModuleAssemble, ModuleAss
     public Boolean checkByName(String module ,String relation) throws SerException {
         Boolean bool = false;
         ModuleAssembleDTO moduleAssembleDTO = new ModuleAssembleDTO();
-        moduleAssembleDTO.getConditions().add(Restrict.eq("module.name",module));
-        moduleAssembleDTO.getConditions().add(Restrict.eq("relation.name", relation));
+        moduleAssembleDTO.getConditions().add(Restrict.eq("module.moduleName",module));
+        moduleAssembleDTO.getConditions().add(Restrict.eq("relation.moduleName", relation));
         ModuleAssemble moduleAssemble = super.findOne(moduleAssembleDTO);
         if(moduleAssemble != null && moduleAssemble.getCheckType()==CheckType.CHECK){
             bool = true;
