@@ -230,6 +230,7 @@ public class InventoryRecordSerImpl extends ServiceImpl<InventoryRecord, Invento
             }
             if (quantitySum != 0) {
                 InventoryRecordBO bo = new InventoryRecordBO();
+                bo.setInventoryTime("合计");
                 bo.setQuantity(quantitySum);
                 bo.setInventoryNum(inventoryNumSum);
                 bo.setProfitLoss(profitLossSum);
@@ -266,6 +267,7 @@ public class InventoryRecordSerImpl extends ServiceImpl<InventoryRecord, Invento
             }
             if (quantitySum != 0) {
                 InventoryRecordBO bo = new InventoryRecordBO();
+                bo.setInventoryTime("合计");
                 bo.setQuantity(quantitySum);
                 bo.setInventoryNum(inventoryNumSum);
                 bo.setProfitLoss(profitLossSum);
@@ -302,6 +304,7 @@ public class InventoryRecordSerImpl extends ServiceImpl<InventoryRecord, Invento
             }
             if (quantitySum != 0) {
                 InventoryRecordBO bo = new InventoryRecordBO();
+                bo.setInventoryTime("合计");
                 bo.setQuantity(quantitySum);
                 bo.setInventoryNum(inventoryNumSum);
                 bo.setProfitLoss(profitLossSum);
@@ -338,6 +341,7 @@ public class InventoryRecordSerImpl extends ServiceImpl<InventoryRecord, Invento
             }
             if (quantitySum != 0) {
                 InventoryRecordBO bo = new InventoryRecordBO();
+                bo.setInventoryTime("合计");
                 bo.setQuantity(quantitySum);
                 bo.setInventoryNum(inventoryNumSum);
                 bo.setProfitLoss(profitLossSum);

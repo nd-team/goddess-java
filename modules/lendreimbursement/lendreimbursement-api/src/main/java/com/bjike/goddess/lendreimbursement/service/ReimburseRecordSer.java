@@ -432,4 +432,12 @@ public interface ReimburseRecordSer extends Ser<ReimburseRecord, ReimburseRecord
      * @throws SerException
      */
     ReimburseRecordBO waitPayCJH(ReimburseRecordTO reimburseRecordTO) throws SerException;
+
+    /**
+     * chenjunhao
+     * @param reimburseRecordDTO
+     * @return
+     * @throws SerException
+     */
+    Long countWaitPayCJH(ReimburseRecordDTO reimburseRecordDTO) throws SerException;
 }

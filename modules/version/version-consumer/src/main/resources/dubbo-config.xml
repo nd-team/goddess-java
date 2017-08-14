@@ -22,5 +22,5 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.storage.api.StorageUserAPI" id="storageUserApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
-
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
 </beans>

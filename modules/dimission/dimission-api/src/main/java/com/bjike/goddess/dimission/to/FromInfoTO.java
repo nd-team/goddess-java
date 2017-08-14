@@ -25,10 +25,16 @@ public class FromInfoTO extends BaseTO {
     @NotBlank(message = "离职人员姓名", groups = {ADD.class, EDIT.class})
     private String username;
 
+
+    /**
+     * 私人邮箱
+     */
+    @NotBlank(message = "私人邮箱姓名", groups = {ADD.class, EDIT.class})
+    private String email;
     /**
      * 离职原因
      */
-    @NotBlank(message = "离职原因不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "私人邮箱不能为空", groups = {ADD.class, EDIT.class})
     private String reason;
 
     /**
@@ -70,6 +76,13 @@ public class FromInfoTO extends BaseTO {
     @NotNull(message = "离职确认情况不能为空", groups = {ADD.class, EDIT.class})
     private ConfirmationType dimissionConfirmation;
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public String getUsername() {
         return username;

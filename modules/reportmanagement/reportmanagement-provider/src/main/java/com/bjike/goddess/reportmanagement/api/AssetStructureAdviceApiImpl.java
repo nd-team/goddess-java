@@ -5,6 +5,7 @@ import com.bjike.goddess.reportmanagement.bo.AssetStructureAdviceBO;
 import com.bjike.goddess.reportmanagement.dto.AssetStructureAdviceDTO;
 import com.bjike.goddess.reportmanagement.service.AssetStructureAdviceSer;
 import com.bjike.goddess.reportmanagement.to.AssetStructureAdviceTO;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,5 +53,15 @@ public class AssetStructureAdviceApiImpl implements AssetStructureAdviceAPI {
     @Override
     public Long count(AssetStructureAdviceDTO dto) throws SerException {
         return assetStructureAdviceSer.count(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return assetStructureAdviceSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return assetStructureAdviceSer.guidePermission(guidePermissionTO);
     }
 }

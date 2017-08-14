@@ -100,7 +100,7 @@ public class PersonalFestivalAct {
      * @param id 个人节日id
      * @version v1
      */
-    @GetMapping("v1/delete/{id}")
+    @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
             personalFestivalAPI.delete(id);

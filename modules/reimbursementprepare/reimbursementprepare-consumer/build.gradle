@@ -41,6 +41,7 @@ dependencies {
     compile project(":modules:lendreimbursement:lendreimbursement-api")
     compile project(":modules:user:user-api")
     compile project(":modules:organize:organize-api")
+    compile project(":modules:financeinit:financeinit-api")
     compile("org.springframework.boot:spring-boot-starter-web")
 }
 

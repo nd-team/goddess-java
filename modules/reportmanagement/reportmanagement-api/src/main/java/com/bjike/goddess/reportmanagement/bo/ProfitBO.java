@@ -19,6 +19,11 @@ public class ProfitBO extends BaseBO {
     private String project;
 
     /**
+     * 行次
+     */
+    private Integer num;
+
+    /**
      * 本月数
      */
     private Double currentMonthAmount;
@@ -28,7 +33,14 @@ public class ProfitBO extends BaseBO {
      */
     private Double currentYearAmount;
 
-//    /**
+    public Integer getNum() {
+        return num;
+    }
+
+    public void setNum(Integer num) {
+        this.num = num;
+    }
+    //    /**
 //     * 1季度
 //     */
 //    private Double firstSeason;

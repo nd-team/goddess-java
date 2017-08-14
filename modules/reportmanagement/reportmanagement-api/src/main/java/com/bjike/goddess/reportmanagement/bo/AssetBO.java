@@ -13,20 +13,25 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  */
 public class AssetBO extends BaseBO {
 
-    /**
-     * 起始时间
-     */
-    private String startTime;
-
-    /**
-     * 结束时间
-     */
-    private String endTime;
+//    /**
+//     * 起始时间
+//     */
+//    private String startTime;
+//
+//    /**
+//     * 结束时间
+//     */
+//    private String endTime;
 
     /**
      * 资产
      */
     private String asset;
+
+    /**
+     * 资产行次
+     */
+    private Integer assetNum;
 
     /**
      * 资产年初数
@@ -43,6 +48,14 @@ public class AssetBO extends BaseBO {
      */
     private Double endAsset;
 
+    public Integer getAssetNum() {
+        return assetNum;
+    }
+
+    public void setAssetNum(Integer assetNum) {
+        this.assetNum = assetNum;
+    }
+
     public Double getCurrent() {
         return current;
     }
@@ -51,21 +64,21 @@ public class AssetBO extends BaseBO {
         this.current = current;
     }
 
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
-    }
+//    public String getStartTime() {
+//        return startTime;
+//    }
+//
+//    public void setStartTime(String startTime) {
+//        this.startTime = startTime;
+//    }
+//
+//    public String getEndTime() {
+//        return endTime;
+//    }
+//
+//    public void setEndTime(String endTime) {
+//        this.endTime = endTime;
+//    }
 
     public String getAsset() {
         return asset;

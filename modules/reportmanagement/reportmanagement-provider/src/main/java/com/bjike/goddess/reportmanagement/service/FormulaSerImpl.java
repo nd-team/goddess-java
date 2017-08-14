@@ -7,6 +7,7 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.reportmanagement.bo.FormulaBO;
 import com.bjike.goddess.reportmanagement.dto.FormulaDTO;
+import com.bjike.goddess.reportmanagement.dto.ProfitDTO;
 import com.bjike.goddess.reportmanagement.entity.Formula;
 import com.bjike.goddess.reportmanagement.enums.Form;
 import com.bjike.goddess.reportmanagement.enums.GuideAddrStatus;
@@ -191,6 +192,8 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
         LocalDate e = Utils.tranTime(dto.getEndTime());
         endMonth = e.getMonthValue();
         String[] projectNames = dto.getProjectNames();
+        String[] departs = dto.getDeparts();
+        String[] areas = dto.getAreas();
         List<FormulaBO> boList = new ArrayList<FormulaBO>();
         if ((list != null) && (!list.isEmpty())) {
             double beginSum = 0;
@@ -203,11 +206,19 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
                 subjectCollectDTO.getConditions().add(Restrict.eq("firstSubject", f.getProject()));
                 if (projectNames != null) {
                     subjectCollectDTO.getConditions().add(Restrict.in("projectName", projectNames));
+                }if (departs != null) {
+                    subjectCollectDTO.getConditions().add(Restrict.in("projectGroup", departs));
+                }if (areas != null) {
+                    subjectCollectDTO.getConditions().add(Restrict.in("area", areas));
                 }
                 SubjectCollectDTO beginDTO = new SubjectCollectDTO();
                 beginDTO.getConditions().add(Restrict.eq("firstSubject", f.getProject()));
                 if (projectNames != null) {
                     beginDTO.getConditions().add(Restrict.in("projectName", projectNames));
+                }if (departs != null) {
+                    beginDTO.getConditions().add(Restrict.in("projectGroup", departs));
+                }if (areas != null) {
+                    beginDTO.getConditions().add(Restrict.in("area", areas));
                 }
                 if (LocalDate.now().getYear() == e.getYear()) {
                     double year = 0;
@@ -334,7 +345,7 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
     }
 
     @Override
-    public List<FormulaBO> profitAnalyze(String foreignId, String time, String[] projectNames) throws SerException {
+    public List<FormulaBO> profitAnalyze(String foreignId, String time, ProfitDTO dto) throws SerException {
         String[] strings = new String[]{foreignId};
         List<Formula> list = null;
         for (String s : strings) {
@@ -347,6 +358,9 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
         LocalDate t = Utils.tranTime(time);
         month = t.getMonthValue();
         List<FormulaBO> boList = new ArrayList<FormulaBO>();
+        String[] projectNames=dto.getProjectNames();
+        String[] departs=dto.getDeparts();
+        String[] areas=dto.getAreas();
         if ((list != null) && (!list.isEmpty())) {
             double currentSum = 0;
             FormulaBO addBO = new FormulaBO();
@@ -364,6 +378,10 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
                 subjectCollectDTO.getConditions().add(Restrict.eq("firstSubject", f.getProject()));
                 if (projectNames != null) {
                     subjectCollectDTO.getConditions().add(Restrict.in("projectName", projectNames));
+                }if (departs != null) {
+                    subjectCollectDTO.getConditions().add(Restrict.in("projectGroup", departs));
+                }if (areas != null) {
+                    subjectCollectDTO.getConditions().add(Restrict.in("area", areas));
                 }
                 if (LocalDate.now().getYear() == t.getYear()) {
                     subjectCollectDTO.getConditions().add(Restrict.eq("months", month));

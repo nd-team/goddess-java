@@ -27,7 +27,7 @@ public class Son extends BaseEntity {
     /**
      * 人工成本计划信息
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "expendPlan_id", columnDefinition = "VARCHAR(36)   COMMENT '人工成本计划信息'")
     private ExpendPlan expendPlan;
 

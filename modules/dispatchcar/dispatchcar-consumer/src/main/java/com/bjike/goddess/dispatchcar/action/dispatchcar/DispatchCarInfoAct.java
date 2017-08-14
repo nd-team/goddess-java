@@ -9,6 +9,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.consumer.action.BaseFileAction;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
@@ -92,6 +93,7 @@ public class DispatchCarInfoAct extends BaseFileAction {
      * @return class DispatchCarInfoVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated({ADD.class}) DispatchCarInfoEditTO editTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
@@ -161,7 +163,7 @@ public class DispatchCarInfoAct extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/upload/{id}")
-    public Result fileUpload(HttpServletRequest request, BindingResult bindingResult, @PathVariable String id) throws ActException {
+    public Result fileUpload(@PathVariable String id ,HttpServletRequest request) throws ActException {
         try {
             String path = "dispatchCar";
             fileAPI.upload(this.getInputStreams(request, path.toString()));

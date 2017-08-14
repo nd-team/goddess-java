@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.reportmanagement.bo.RepayAnalyzeAdviceBO;
 import com.bjike.goddess.reportmanagement.dto.RepayAnalyzeAdviceDTO;
 import com.bjike.goddess.reportmanagement.service.RepayAnalyzeAdviceSer;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import com.bjike.goddess.reportmanagement.to.RepayAnalyzeAdviceTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,5 +53,15 @@ public class RepayAnalyzeAdviceApiImpl implements RepayAnalyzeAdviceAPI {
     @Override
     public Long count(RepayAnalyzeAdviceDTO dto) throws SerException {
         return repayAnalyzeAdviceSer.count(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return repayAnalyzeAdviceSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return repayAnalyzeAdviceSer.guidePermission(guidePermissionTO);
     }
 }

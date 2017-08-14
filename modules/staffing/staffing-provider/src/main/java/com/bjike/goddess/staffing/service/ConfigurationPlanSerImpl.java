@@ -261,7 +261,9 @@ public class ConfigurationPlanSerImpl extends ServiceImpl<ConfigurationPlan, Con
                 manNumSum += son.getManNum();
                 executeNumSum += son.getExecuteNum();
                 compileCountSum += son.getCompileCount();
-                deployNumSum += son.getDeployNum();
+                if (null != son.getDeployNum()) {
+                    deployNumSum += son.getDeployNum();
+                }
                 actualNumSum += son.getActualNum();
             }
             long proportion = Math.round(Double.valueOf(configurationPlan.getTotal()) / Double.valueOf(total) * 100);
@@ -315,15 +317,14 @@ public class ConfigurationPlanSerImpl extends ServiceImpl<ConfigurationPlan, Con
 
     @Override
     public ConfigurationPlanBO findByID(String id) throws SerException {
-        ConfigurationPlan entity = super.findById(id);
-        if (entity == null) {
+        PlanSon son = planSonSer.findById(id);
+        if (son == null) {
             throw new SerException("该对象不存在");
         }
-        PlanSonDTO sonDTO = new PlanSonDTO();
-        sonDTO.getConditions().add(Restrict.eq("configurationPlan.id", entity.getId()));
-        List<PlanSon> sons = planSonSer.findByCis(sonDTO);
-        List<PlanSonBO> sonBOs = BeanTransform.copyProperties(sons, PlanSonBO.class);
-        ConfigurationPlanBO bo = BeanTransform.copyProperties(entity, ConfigurationPlanBO.class, "sons");
+        ConfigurationPlan entity = super.findById(son.getConfigurationPlan().getId());
+        ConfigurationPlanBO bo = BeanTransform.copyProperties(entity, ConfigurationPlanBO.class);
+        List<PlanSonBO> sonBOs = new ArrayList<>();
+        sonBOs.add(BeanTransform.copyProperties(son, PlanSonBO.class));
         bo.setSons(sonBOs);
         return bo;
     }

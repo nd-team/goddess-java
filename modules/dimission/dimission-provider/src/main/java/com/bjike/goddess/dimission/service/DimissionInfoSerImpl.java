@@ -337,12 +337,12 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
         entity.setHandle(HandleStatus.AFFIRM);
         entity.setDimissionConfirmation(ConfirmationType.NONE);
         entity.setSalaryConfirmation(ConfirmationType.NONE);
-
+        if (null == userAPI.findByUsername(to.getUsername()))
+            throw new SerException("该用户不存在");
         if (entity.getApplyDate() != null) {
             entity.setStatus(EmployeeStatus.FORMAL);
             entity.setDimissionDate(entity.getApplyDate().plusDays(30));
         }
-
         super.save(entity);
         return this.transformBO(entity);
     }

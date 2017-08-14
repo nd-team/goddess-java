@@ -30,7 +30,7 @@ public class FieldVO {
     /**
      * 详细字段信息
      */
-    private List<FieldVO> fieldVOs;
+    private List<FieldVO> fieldVOs=new ArrayList<>();
 
     public Integer getListTitleIndex() {
         return listTitleIndex;

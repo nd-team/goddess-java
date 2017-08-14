@@ -9,7 +9,6 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.financeinit.api.AccountAPI;
-import com.bjike.goddess.financeinit.entity.Account;
 import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
 import com.bjike.goddess.lendreimbursement.bo.ApplyLendBO;
 import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
@@ -45,7 +44,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -210,7 +208,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         Boolean listpermission = cusPermissionSer.getCusPermission("apply-ListAll");
         RpcTransmit.transmitUserToken(userToken);
         String userName = userAPI.currentUser().getUsername();
-        if (!listpermission && !"admin".equals( userName.toLowerCase())) {
+        if (!listpermission && !"admin".equals(userName.toLowerCase())) {
             //没有查看所有数据的权限，则只能查看自己的数据
             if (StringUtils.isNotBlank(applyLendDTO.getLender())) {
                 applyLendDTO.getConditions().add(Restrict.eq("lender", applyLendDTO.getLender()));
@@ -245,7 +243,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
      */
     private void checkAddAndEditPermission(String userToken, UserBO userBO, ApplyLend lend) throws SerException {
         Boolean listpermission = cusPermissionSer.getCusPermission("applyLend-EditAndDelete");
-        if (!listpermission && !"admin".equals( userBO.getUsername().toLowerCase()) ) {
+        if (!listpermission && !"admin".equals(userBO.getUsername().toLowerCase())) {
             //没有特殊权限的话,就只能自己或填单人修改自己的
             if (!userBO.getUsername().equals(lend.getLender()) && !userBO.getUsername().equals(lend.getFillSingler())) {
                 throw new SerException("您没有权限");
@@ -380,7 +378,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         }
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
-        RpcTransmit.transmitUserToken( userToken );
+        RpcTransmit.transmitUserToken(userToken);
         ApplyLend lend = super.findById(id);
 
         if (lend == null) {
@@ -486,7 +484,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     public ApplyLendBO editWaitAudit(ApplyLendTO applyLendTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
-        RpcTransmit.transmitUserToken( userToken );
+        RpcTransmit.transmitUserToken(userToken);
 
         if ("否".equals(applyLendTO.getInvoice()) && StringUtils.isBlank(applyLendTO.getNoInvoiceRemark())) {
             throw new SerException("编辑失败，未填无发票备注");
@@ -895,8 +893,8 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         }
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
-        ApplyLend lend = super.findById( id );
-        if( lend == null ){
+        ApplyLend lend = super.findById(id);
+        if (lend == null) {
             throw new SerException("该条数据已经不存在，请刷新数据");
         }
         checkAddAndEditPermission(userToken, userBO, lend);
@@ -990,6 +988,19 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 //        dto.getConditions().add(Restrict.or("lendStatus", 7));
 
         dto = addCondition(dto);
+
+        Long counts = super.count(dto);
+        return counts;
+    }
+
+    @Override
+    public Long countWaitPayCJH(ApplyLendDTO applyLendDTO) throws SerException {
+        ApplyLendDTO dto = applyLendDTO;
+        dto.getConditions().add(Restrict.eq("payCondition", "否"));
+        //LendStatus.FINACEPASS
+        dto.getConditions().add(Restrict.in("lendStatus", new Integer[]{3, 7}));
+        //LendStatus.MANAGEPASS
+//        dto.getConditions().add(Restrict.or("lendStatus", 7));
 
         Long counts = super.count(dto);
         return counts;
@@ -1568,7 +1579,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Override
     public List<String> listAccountCom() throws SerException {
         // 账户来源
-        List<String> list= accountAPI.listAccountOrigin();
+        List<String> list = accountAPI.listAccountOrigin();
         return list;
     }
 

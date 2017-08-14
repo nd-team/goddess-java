@@ -47,4 +47,7 @@
 	<!--<dubbo:reference  validation="true"  interface="com.bjike.goddess.marketactivitymanage.api.MarketServeSummaryAPI" id="MarketServeSummaryAPI"/>-->
 	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.SendEmailAPI" id="sendEmailApiImpl"/>
 
+	<!--待办事件-->
+	<dubbo:reference validation="true" interface="com.bjike.goddess.event.api.EventAPI" id="eventApiImpl"/>
+
 </beans>

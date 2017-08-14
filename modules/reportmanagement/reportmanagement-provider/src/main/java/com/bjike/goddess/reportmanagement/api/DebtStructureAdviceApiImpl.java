@@ -5,6 +5,7 @@ import com.bjike.goddess.reportmanagement.bo.DebtStructureAdviceBO;
 import com.bjike.goddess.reportmanagement.dto.DebtStructureAdviceDTO;
 import com.bjike.goddess.reportmanagement.service.DebtStructureAdviceSer;
 import com.bjike.goddess.reportmanagement.to.DebtStructureAdviceTO;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,5 +53,15 @@ public class DebtStructureAdviceApiImpl implements DebtStructureAdviceAPI {
     @Override
     public Long count(DebtStructureAdviceDTO dto) throws SerException {
         return debtStructureAdviceSer.count(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return debtStructureAdviceSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return debtStructureAdviceSer.guidePermission(guidePermissionTO);
     }
 }
