@@ -29,7 +29,7 @@ public class JobsBetAVO {
     /**
      * 岗位间对赌表B
      */
-    private List<JobsBetBVO> jobsBetBVOS;
+    private List<JobsBetBVO> jobsBetBBOS;
 
     public String getId() {
         return id;
@@ -55,11 +55,11 @@ public class JobsBetAVO {
         this.score = score;
     }
 
-    public List<JobsBetBVO> getJobsBetBVOS() {
-        return jobsBetBVOS;
+    public List<JobsBetBVO> getJobsBetBBOS() {
+        return jobsBetBBOS;
     }
 
-    public void setJobsBetBVOS(List<JobsBetBVO> jobsBetBVOS) {
-        this.jobsBetBVOS = jobsBetBVOS;
+    public void setJobsBetBBOS(List<JobsBetBVO> jobsBetBBOS) {
+        this.jobsBetBBOS = jobsBetBBOS;
     }
 }

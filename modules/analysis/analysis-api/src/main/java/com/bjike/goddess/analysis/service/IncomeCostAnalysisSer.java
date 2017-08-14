@@ -64,16 +64,15 @@ public interface IncomeCostAnalysisSer extends Ser<IncomeCostAnalysis, IncomeCos
         return null;
     }
 
-//    /**
-//     * 添加收入成本分析
-//     *
-//     * @param incomeCostAnalysisTO 收入成本分析数据to
-//     * @return class IncomeCostAnalysisBO
-//     * @throws SerException
-//     */
-//    default IncomeCostAnalysisBO insertIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
-//        return null;
-//    }
+    /**
+     * 添加收入成本分析
+     *
+     * @param incomeCostAnalysisTO 收入成本分析数据to
+     * @return class IncomeCostAnalysisBO
+     * @throws SerException
+     */
+    default void insertIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
+    }
 
     /**
      * 编辑收入成本分析

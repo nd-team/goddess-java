@@ -22,6 +22,10 @@ public class QuestionBO extends BaseBO {
      * 问题描述
      */
     private String rate;
+    /**
+     * 参考答案条数
+     */
+    private Long answerCount;
 
 
     public String getName() {
@@ -38,5 +42,13 @@ public class QuestionBO extends BaseBO {
 
     public void setRate(String rate) {
         this.rate = rate;
+    }
+
+    public Long getAnswerCount() {
+        return answerCount;
+    }
+
+    public void setAnswerCount(Long answerCount) {
+        this.answerCount = answerCount;
     }
 }

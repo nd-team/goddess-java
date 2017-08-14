@@ -1,5 +1,6 @@
 package com.bjike.goddess.analysis.to;
 
+import com.bjike.goddess.analysis.entity.IncomeCostAnalysis;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
@@ -17,69 +18,84 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class IncomeCostAnalysisTO extends BaseTO {
+    public interface TestAdd{}
+    public interface TestEdit{}
 
     /**
      * 年份
      */
+    @NotNull(message = "年份不能为空",groups = {IncomeCostAnalysisTO.TestAdd.class,IncomeCostAnalysisTO.TestEdit.class})
     private Integer year;
     /**
      * 月份
      */
+    @NotNull(message = "月份不能为空",groups = {IncomeCostAnalysisTO.TestAdd.class,IncomeCostAnalysisTO.TestEdit.class})
     private Integer month;
 
     /**
      * 地区
      */
+    @NotBlank(message = "地区不能为空",groups = {IncomeCostAnalysisTO.TestAdd.class,IncomeCostAnalysisTO.TestEdit.class})
     private String area;
 
     /**
      * 项目组/部门
      */
+    @NotBlank(message = "项目组/部门不能为空",groups = {IncomeCostAnalysisTO.TestAdd.class,IncomeCostAnalysisTO.TestEdit.class})
     private String department;
 
     /**
      * 出车司机数
      */
+    @NotNull(message = "出车司机数不能为空",groups = {IncomeCostAnalysisTO.TestAdd.class,IncomeCostAnalysisTO.TestEdit.class})
     private Integer carNum;
 
     /**
      * 司机出车费
      */
+    @NotNull(message = "司机出车费不能为空",groups = {IncomeCostAnalysisTO.TestAdd.class,IncomeCostAnalysisTO.TestEdit.class})
     private Double driverFee;
 
     /**
      * 油卡充值
      */
+    @NotNull(message = "油卡充值不能为空",groups = {IncomeCostAnalysisTO.TestAdd.class,IncomeCostAnalysisTO.TestEdit.class})
     private Double oilRecharge;
 
     /**
      * 房租
      */
+    @NotNull(message = "房租不能为空",groups = {IncomeCostAnalysisTO.TestAdd.class,IncomeCostAnalysisTO.TestEdit.class})
     private Double rent;
 
     /**
      * 社保
      */
+    @NotNull(message = "社保不能为空",groups = {IncomeCostAnalysisTO.TestAdd.class,IncomeCostAnalysisTO.TestEdit.class})
     private Double socialSecurity;
 
     /**
      * 员工工资
      */
+    @NotNull(message = "员工工资不能为空",groups = {IncomeCostAnalysisTO.TestAdd.class,IncomeCostAnalysisTO.TestEdit.class})
     private Double staffWage;
 
     /**
      * 办公费
      */
+    @NotNull(message = "办公费不能为空",groups = {IncomeCostAnalysisTO.TestAdd.class,IncomeCostAnalysisTO.TestEdit.class})
     private Double office;
 
     /**
      * 市场费
      */
+    @NotNull(message = "市场费不能为空",groups = {IncomeCostAnalysisTO.TestAdd.class,IncomeCostAnalysisTO.TestEdit.class})
     private Double marketCost;
 
     /**
      * 税金
      */
+    @NotNull(message = "税金不能为空",groups = {IncomeCostAnalysisTO.TestAdd.class,IncomeCostAnalysisTO.TestEdit.class})
     private Double tax;
 
     /**
@@ -90,17 +106,19 @@ public class IncomeCostAnalysisTO extends BaseTO {
     /**
      * 员工人数
      */
+    @NotNull(message = "员工人数不能为空",groups = {IncomeCostAnalysisTO.TestAdd.class,IncomeCostAnalysisTO.TestEdit.class})
     private Integer staffNum;
 
     /**
      * 人均工资
      */
+    @NotNull(message = "人均工资不能为空",groups = {IncomeCostAnalysisTO.TestAdd.class,IncomeCostAnalysisTO.TestEdit.class})
     private Double perCapitaWage;
 
     /**
      * 税后余额收入
      */
-    @NotNull(message = "税后余额收入不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "税后余额收入不能为空",groups = {IncomeCostAnalysisTO.TestAdd.class,IncomeCostAnalysisTO.TestEdit.class})
     private Double incomeAfterTax;
 
     /**

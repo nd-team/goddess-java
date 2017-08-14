@@ -1,33 +1,21 @@
 package com.bjike.goddess.system.action.system;
 
-import com.bjike.goddess.common.api.entity.ADD;
-import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
-import com.bjike.goddess.organize.api.DepartmentDetailAPI;
-import com.bjike.goddess.organize.api.ModuleTypeAPI;
-import com.bjike.goddess.organize.vo.DepartmentDetailVO;
-import com.bjike.goddess.organize.vo.ModuleTypeVO;
 import com.bjike.goddess.system.api.FieldDockAPI;
 import com.bjike.goddess.system.bo.FieldDockBO;
-import com.bjike.goddess.system.bo.PlatformClassifyBO;
 import com.bjike.goddess.system.dto.FieldDockDTO;
-import com.bjike.goddess.system.dto.PlatformClassifyDTO;
 import com.bjike.goddess.system.excel.FieldDockExcel;
-import com.bjike.goddess.system.excel.PlatformClassifyExcel;
 import com.bjike.goddess.system.to.FieldDockTO;
-import com.bjike.goddess.system.to.PlatformClassifyTO;
+import com.bjike.goddess.system.to.GuidePermissionTO;
 import com.bjike.goddess.system.vo.FieldDockVO;
-import com.bjike.goddess.system.vo.PlatformClassifyVO;
-import com.bjike.goddess.user.entity.Department;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -51,9 +39,33 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("fielddock")
-public class FieldDockAction extends BaseFileAction{
+public class FieldDockAction extends BaseFileAction {
     @Autowired
     private FieldDockAPI fieldDockAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = fieldDockAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
     /**
      * 字段对接列表总条数
      *
@@ -122,7 +134,7 @@ public class FieldDockAction extends BaseFileAction{
     public Result add(FieldDockTO to, BindingResult bindingResult) throws ActException {
         try {
             FieldDockBO fieldDockBO = fieldDockAPI.insert(to);
-            return ActResult.initialize(BeanTransform.copyProperties(fieldDockBO,FieldDockVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(fieldDockBO, FieldDockVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -141,7 +153,7 @@ public class FieldDockAction extends BaseFileAction{
     public Result edit(FieldDockTO to, BindingResult bindingResult) throws ActException {
         try {
             FieldDockBO fieldDockBO = fieldDockAPI.edit(to);
-            return ActResult.initialize(BeanTransform.copyProperties(fieldDockBO,FieldDockVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(fieldDockBO, FieldDockVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -181,7 +193,7 @@ public class FieldDockAction extends BaseFileAction{
             List<FieldDockExcel> tos = ExcelUtil.excelToClazz(is, FieldDockExcel.class, excel);
             List<FieldDockTO> tocs = new ArrayList<>();
             for (FieldDockExcel str : tos) {
-                FieldDockTO fieldDockTO = BeanTransform.copyProperties(str, FieldDockTO.class,"nodeUpdateTime","newNodeUpdateTime","fieldUpdateTime");
+                FieldDockTO fieldDockTO = BeanTransform.copyProperties(str, FieldDockTO.class, "nodeUpdateTime", "newNodeUpdateTime", "fieldUpdateTime");
                 fieldDockTO.setNodeUpdateTime(String.valueOf(str.getNodeUpdateTime()));
                 fieldDockTO.setNewNodeUpdateTime(String.valueOf(str.getNewNodeUpdateTime()));
                 fieldDockTO.setFieldUpdateTime(String.valueOf(str.getFieldUpdateTime()));

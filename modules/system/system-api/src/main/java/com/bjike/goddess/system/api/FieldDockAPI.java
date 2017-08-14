@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.system.bo.FieldDockBO;
 import com.bjike.goddess.system.dto.FieldDockDTO;
 import com.bjike.goddess.system.to.FieldDockTO;
+import com.bjike.goddess.system.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -17,6 +18,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface FieldDockAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 字段对接列表总条数
      */

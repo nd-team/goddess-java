@@ -31,7 +31,7 @@ public class SystemBetAVO {
     /**
      * 体系间对赌表B
      */
-    private List<SystemBetBVO> systemBetBVOS;
+    private List<SystemBetBVO> systemBetBBOS;
 
     public String getId() {
         return id;
@@ -57,11 +57,11 @@ public class SystemBetAVO {
         this.score = score;
     }
 
-    public List<SystemBetBVO> getSystemBetBVOS() {
-        return systemBetBVOS;
+    public List<SystemBetBVO> getSystemBetBBOS() {
+        return systemBetBBOS;
     }
 
-    public void setSystemBetBVOS(List<SystemBetBVO> systemBetBVOS) {
-        this.systemBetBVOS = systemBetBVOS;
+    public void setSystemBetBBOS(List<SystemBetBVO> systemBetBBOS) {
+        this.systemBetBBOS = systemBetBBOS;
     }
 }

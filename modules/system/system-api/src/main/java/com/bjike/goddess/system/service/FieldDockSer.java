@@ -8,6 +8,7 @@ import com.bjike.goddess.system.dto.FieldDockDTO;
 import com.bjike.goddess.system.dto.PlatformClassifyDTO;
 import com.bjike.goddess.system.entity.FieldDock;
 import com.bjike.goddess.system.to.FieldDockTO;
+import com.bjike.goddess.system.to.GuidePermissionTO;
 import com.bjike.goddess.system.to.PlatformClassifyTO;
 
 import java.util.List;
@@ -22,6 +23,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface FieldDockSer extends Ser<FieldDock, FieldDockDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 字段对接列表总条数
      */

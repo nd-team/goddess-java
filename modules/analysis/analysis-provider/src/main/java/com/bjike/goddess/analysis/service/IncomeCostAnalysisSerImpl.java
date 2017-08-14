@@ -9,26 +9,19 @@ import com.bjike.goddess.analysis.excel.SonPermissionObject;
 import com.bjike.goddess.analysis.to.CollectTO;
 import com.bjike.goddess.analysis.to.GuidePermissionTO;
 import com.bjike.goddess.analysis.to.IncomeCostAnalysisTO;
-import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
-import com.bjike.goddess.dispatchcar.bo.DriverDispatchFeeBO;
-import com.bjike.goddess.dispatchcar.bo.DriverDispatchsBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
-import com.bjike.goddess.voucher.bo.PartBO;
-import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,13 +39,14 @@ import java.util.stream.Collectors;
 @Service
 public class IncomeCostAnalysisSerImpl extends ServiceImpl<IncomeCostAnalysis, IncomeCostAnalysisDTO> implements IncomeCostAnalysisSer {
     @Autowired
-    private VoucherGenerateAPI voucherGenerateAPI;
-    @Autowired
-    private CusPermissionSer cusPermissionSer;
-    @Autowired
     private UserAPI userAPI;
     @Autowired
-    private DispatchCarInfoAPI dispatchCarInfoAPI;
+    private CusPermissionSer cusPermissionSer;
+//    @Autowired
+//    private DispatchCarInfoAPI dispatchCarInfoAPI;
+//       @Autowired
+//    private VoucherGenerateAPI voucherGenerateAPI;
+
 
     /**
      * 核对查看权限（部门级别）
@@ -221,94 +215,95 @@ public class IncomeCostAnalysisSerImpl extends ServiceImpl<IncomeCostAnalysis, I
 
     @Override
     public List<IncomeCostAnalysisBO> findListIncomeCostAnalysis(IncomeCostAnalysisDTO dto) throws SerException {
-        Integer year = dto.getYear();
-        Integer month = dto.getMonth();
-        String area = dto.getArea();
-        String projectGroup = dto.getProjectGroup();
-        if (year != null) {
-            dto.getConditions().add(Restrict.eq("year", year));
-        }
-        if (month != null) {
-            dto.getConditions().add(Restrict.eq("month", month));
-        }
-        if (area != null) {
-            dto.getConditions().add(Restrict.eq("area", area));
-        }
-        if (projectGroup != null) {
-            dto.getConditions().add(Restrict.eq("department", projectGroup));
-        }
-        List<IncomeCostAnalysis> incomeCostAnalysis = super.findByCis(dto);
-        if (incomeCostAnalysis == null) {
-            IncomeCostAnalysis entity = new IncomeCostAnalysis();
-            entity.setArea(area);
-            entity.setDepartment(projectGroup);
-            entity.setYear(year);
-            entity.setMonth(month);
-            super.save(entity);
-        }
-        VoucherGenerateDTO voucherGenerateDTO = new VoucherGenerateDTO();
-        BeanUtils.copyProperties(dto, voucherGenerateDTO);
-        List<IncomeCostAnalysis> incomeCostAnalysisS = super.findByCis(dto);
-        List<PartBO> partBOS = voucherGenerateAPI.findByMoney(voucherGenerateDTO);
-        List<IncomeCostAnalysisBO> incomeCostAnalysisBOS = BeanTransform.copyProperties(partBOS, IncomeCostAnalysisBO.class);
-        //出车司机数
-        List<DriverDispatchsBO> driver = dispatchCarInfoAPI.findDispatchs(voucherGenerateDTO.getArea(), voucherGenerateDTO.getProjectGroup(), voucherGenerateDTO.getYear(), voucherGenerateDTO.getMonth());
-        //司机出车费
-        List<DriverDispatchFeeBO> driverFee = dispatchCarInfoAPI.findDispatchFree(voucherGenerateDTO.getArea(), voucherGenerateDTO.getProjectGroup(), voucherGenerateDTO.getYear(), voucherGenerateDTO.getMonth());
-        List<IncomeCostAnalysisBO> boList = new ArrayList<>();
-//        for (IncomeCostAnalysisBO incomeCostAnalysisBO : incomeCostAnalysisBOS) {
-        if (incomeCostAnalysisBOS != null && !incomeCostAnalysisBOS.isEmpty()) {
-            IncomeCostAnalysisBO incomeCostAnalysisBO = BeanTransform.copyProperties(incomeCostAnalysisS.get(0), IncomeCostAnalysisBO.class);
-            if (!driver.isEmpty()) {
-                incomeCostAnalysisBO.setCarNum(driver.get(0).getSum());
-            } else {
-                incomeCostAnalysisBO.setCarNum(0);
-            }
-            if (!driverFee.isEmpty()) {
-                incomeCostAnalysisBO.setDriverFee(driverFee.get(0).getFee());
-            } else {
-                incomeCostAnalysisBO.setDriverFee(0.0);
-            }
-            IncomeCostAnalysisBO bo = incomeCostAnalysisBOS.get(0);
-            incomeCostAnalysisBO.setOilRecharge(bo.getOilRecharge());
-            incomeCostAnalysisBO.setRent(bo.getRent());
-            incomeCostAnalysisBO.setSocialSecurity(bo.getSocialSecurity());
-            incomeCostAnalysisBO.setStaffWage(bo.getStaffWage());
-            incomeCostAnalysisBO.setOffice(bo.getOffice());
-            incomeCostAnalysisBO.setMarketCost(bo.getMarketCost());
-            incomeCostAnalysisBO.setTax(bo.getTax());
-            double total = incomeCostAnalysisBO.getDriverFee() + bo.getOilRecharge()
-                    + bo.getRent() + bo.getSocialSecurity() + bo.getStaffWage()
-                    + bo.getOffice() + bo.getMarketCost() + bo.getTax();
-            incomeCostAnalysisBO.setTotal(total);
-
-            if (null != incomeCostAnalysisBO.getIncomeAfterTax()) {
-                incomeCostAnalysisBO.setBalance(incomeCostAnalysisBO.getIncomeAfterTax() - total);
-            }
-            boList.add(incomeCostAnalysisBO);
-        }
-        return boList;
+        List<IncomeCostAnalysis> incomeCostAnalyses = super.findByCis(dto);
+        List<IncomeCostAnalysisBO> incomeCostAnalysisBOS = BeanTransform.copyProperties(incomeCostAnalyses, IncomeCostAnalysisBO.class);
+        return incomeCostAnalysisBOS;
+//        Integer year = dto.getYear();
+//        Integer month = dto.getMonth();
+//        String area = dto.getArea();
+//        String projectGroup = dto.getProjectGroup();
+//        if (year != null) {
+//            dto.getConditions().add(Restrict.eq("year", year));
+//        }
+//        if (month != null) {
+//            dto.getConditions().add(Restrict.eq("month", month));
+//        }
+//        if (area != null) {
+//            dto.getConditions().add(Restrict.eq("area", area));
+//        }
+//        if (projectGroup != null) {
+//            dto.getConditions().add(Restrict.eq("department", projectGroup));
+//        }
+//        List<IncomeCostAnalysis> incomeCostAnalysis = super.findByCis(dto);
+//        if (incomeCostAnalysis == null) {
+//            IncomeCostAnalysis entity = new IncomeCostAnalysis();
+//            entity.setArea(area);
+//            entity.setDepartment(projectGroup);
+//            entity.setYear(year);
+//            entity.setMonth(month);
+//            super.save(entity);
+//        }
+//        VoucherGenerateDTO voucherGenerateDTO = new VoucherGenerateDTO();
+//        BeanUtils.copyProperties(dto, voucherGenerateDTO);
+//        List<IncomeCostAnalysis> incomeCostAnalysisS = super.findByCis(dto);
+//        List<PartBO> partBOS = voucherGenerateAPI.findByMoney(voucherGenerateDTO);
+//        List<IncomeCostAnalysisBO> incomeCostAnalysisBOS = BeanTransform.copyProperties(partBOS, IncomeCostAnalysisBO.class);
+//        //出车司机数
+//        List<DriverDispatchsBO> driver = dispatchCarInfoAPI.findDispatchs(voucherGenerateDTO.getArea(), voucherGenerateDTO.getProjectGroup(), voucherGenerateDTO.getYear(), voucherGenerateDTO.getMonth());
+//        //司机出车费
+//        List<DriverDispatchFeeBO> driverFee = dispatchCarInfoAPI.findDispatchFree(voucherGenerateDTO.getArea(), voucherGenerateDTO.getProjectGroup(), voucherGenerateDTO.getYear(), voucherGenerateDTO.getMonth());
+//        List<IncomeCostAnalysisBO> boList = new ArrayList<>();
+////        for (IncomeCostAnalysisBO incomeCostAnalysisBO : incomeCostAnalysisBOS) {
+//        if (incomeCostAnalysisBOS != null && !incomeCostAnalysisBOS.isEmpty()) {
+//            IncomeCostAnalysisBO incomeCostAnalysisBO = BeanTransform.copyProperties(incomeCostAnalysisS.get(0), IncomeCostAnalysisBO.class);
+//            if (!driver.isEmpty()) {
+//                incomeCostAnalysisBO.setCarNum(driver.get(0).getSum());
+//            } else {
+//                incomeCostAnalysisBO.setCarNum(0);
+//            }
+//            if (!driverFee.isEmpty()) {
+//                incomeCostAnalysisBO.setDriverFee(driverFee.get(0).getFee());
+//            } else {
+//                incomeCostAnalysisBO.setDriverFee(0.0);
+//            }
+//            IncomeCostAnalysisBO bo = incomeCostAnalysisBOS.get(0);
+//            incomeCostAnalysisBO.setOilRecharge(bo.getOilRecharge());
+//            incomeCostAnalysisBO.setRent(bo.getRent());
+//            incomeCostAnalysisBO.setSocialSecurity(bo.getSocialSecurity());
+//            incomeCostAnalysisBO.setStaffWage(bo.getStaffWage());
+//            incomeCostAnalysisBO.setOffice(bo.getOffice());
+//            incomeCostAnalysisBO.setMarketCost(bo.getMarketCost());
+//            incomeCostAnalysisBO.setTax(bo.getTax());
+//            double total = incomeCostAnalysisBO.getDriverFee() + bo.getOilRecharge()
+//                    + bo.getRent() + bo.getSocialSecurity() + bo.getStaffWage()
+//                    + bo.getOffice() + bo.getMarketCost() + bo.getTax();
+//            incomeCostAnalysisBO.setTotal(total);
+//
+//            if (null != incomeCostAnalysisBO.getIncomeAfterTax()) {
+//                incomeCostAnalysisBO.setBalance(incomeCostAnalysisBO.getIncomeAfterTax() - total);
+//            }
+//            boList.add(incomeCostAnalysisBO);
+//        }
+//        return boList;
     }
 
-//    @Transactional(rollbackFor = SerException.class)
-//    @Override
-//    public IncomeCostAnalysisBO insertIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
-//        IncomeCostAnalysis incomeCostAnalysis =
-//                BeanTransform.copyProperties(incomeCostAnalysisTO, IncomeCostAnalysis.class, true);
-//
-//        //合计（司机出车费+油卡充值+房租+社保+员工工资+办公费+市场费+税金）
-//        Double total = incomeCostAnalysisTO.getDriverFee() + incomeCostAnalysisTO.getOilRecharge() +
-//                incomeCostAnalysisTO.getRent() + incomeCostAnalysisTO.getSocialSecurity() +
-//                incomeCostAnalysisTO.getStaffWage() + incomeCostAnalysisTO.getOffice() +
-//                incomeCostAnalysisTO.getMarketCost() + incomeCostAnalysisTO.getTax();
-//        incomeCostAnalysis.setTotal(total);
-//        //差额（税后余额收入-合计）
-//        Double balance = incomeCostAnalysisTO.getIncomeAfterTax() - total;
-//        incomeCostAnalysis.setBalance(balance);
-//        incomeCostAnalysis.setCreateTime(LocalDateTime.now());
-//        super.save(incomeCostAnalysis);
-//        return BeanTransform.copyProperties(incomeCostAnalysis, IncomeCostAnalysisBO.class);
-//    }
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public void insertIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
+        IncomeCostAnalysis incomeCostAnalysis =
+                BeanTransform.copyProperties(incomeCostAnalysisTO, IncomeCostAnalysis.class, true);
+        //合计（司机出车费+油卡充值+房租+社保+员工工资+办公费+市场费+税金）
+        Double total = incomeCostAnalysis.getDriverFee() + incomeCostAnalysis.getOilRecharge() +
+                incomeCostAnalysis.getRent() + incomeCostAnalysis.getSocialSecurity() +
+                incomeCostAnalysis.getStaffWage() + incomeCostAnalysis.getOffice() +
+                incomeCostAnalysis.getMarketCost() + incomeCostAnalysis.getTax();
+        incomeCostAnalysis.setTotal(total);
+        //差额（税后余额收入-合计）
+        Double balance = incomeCostAnalysis.getIncomeAfterTax() - total;
+        incomeCostAnalysis.setBalance(balance);
+        incomeCostAnalysis.setCreateTime(LocalDateTime.now());
+        super.save(incomeCostAnalysis);
+    }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
@@ -318,13 +313,16 @@ public class IncomeCostAnalysisSerImpl extends ServiceImpl<IncomeCostAnalysis, I
         }
         IncomeCostAnalysis incomeCostAnalysis = super.findById(incomeCostAnalysisTO.getId());
         BeanTransform.copyProperties(incomeCostAnalysisTO, incomeCostAnalysis, true);
-
-//        //差额（税后余额收入-合计）
-//        Double balance = incomeCostAnalysisTO.getIncomeAfterTax() - total;
-//        incomeCostAnalysis.setBalance(balance);
-//        incomeCostAnalysis.setModifyTime(LocalDateTime.now());
+    //合计（司机出车费+油卡充值+房租+社保+员工工资+办公费+市场费+税金）
+        Double total = incomeCostAnalysis.getDriverFee() + incomeCostAnalysis.getOilRecharge() +
+                incomeCostAnalysis.getRent() + incomeCostAnalysis.getSocialSecurity() +
+                incomeCostAnalysis.getStaffWage() + incomeCostAnalysis.getOffice() +
+                incomeCostAnalysis.getMarketCost() + incomeCostAnalysis.getTax();
+        incomeCostAnalysis.setTotal(total);
+        //差额（税后余额收入-合计）
+        Double balance = incomeCostAnalysis.getIncomeAfterTax() - total;
+        incomeCostAnalysis.setBalance(balance);
         super.update(incomeCostAnalysis);
-//        return BeanTransform.copyProperties(incomeCostAnalysis, IncomeCostAnalysisBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -336,55 +334,10 @@ public class IncomeCostAnalysisSerImpl extends ServiceImpl<IncomeCostAnalysis, I
         super.remove(id);
     }
 
-//    public List<CollectAreaBO> collectArea(String[] areas) throws SerException {
-//        String[] areasTemp = new String[areas.length];
-//        for (int i = 0; i < areas.length; i++) {
-//            areasTemp[i] = "'" + areas[i] + "'";
-//        }
-//        String areaStr = StringUtils.join(areasTemp, ",");
-//        StringBuilder sb = new StringBuilder();
-//        sb.append(" SELECT * FROM ");
-//        sb.append(" (SELECT area,year AS year,month as month,department as department,sum(carNum)AS carNum, ");
-//        sb.append(" sum(driverFee)AS driverFee,sum(oilRecharge) AS oilRecharge, ");
-//        sb.append(" sum(rent)AS rent,sum(socialSecurity) AS socialSecurity, ");
-//        sb.append(" sum(staffWage)AS staffWage,sum(office)AS office,sum(marketCost)AS marketCost, ");
-//        sb.append(" sum(tax) AS tax,sum(total)AS total,sum(staffNum)AS staffNum, ");
-//        sb.append(" sum(perCapitaWage)AS perCapitaWage,sum(incomeAfterTax)AS incomeAfterTax ");
-//        sb.append(" FROM analysis_incomecostanalysis ");
-//        sb.append(" WHERE area IN (%s) GROUP BY year,month,department,area ORDER BY area)A ");
-//        sb.append(" UNION ");
-//        sb.append(" SELECT '合计' as area,NULL as year,NULL AS month,NULL AS department,sum(carNum)AS carNum, ");
-//        sb.append(" sum(driverFee)AS driverFee,sum(oilRecharge) AS oilRecharge, ");
-//        sb.append(" sum(rent)AS rent,sum(socialSecurity) AS socialSecurity, ");
-//        sb.append(" sum(staffWage)AS staffWage,sum(office)AS office,sum(marketCost)AS marketCost, ");
-//        sb.append(" sum(tax) AS tax,sum(total)AS total,sum(staffNum)AS staffNum, ");
-//        sb.append(" sum(perCapitaWage)AS perCapitaWage,sum(incomeAfterTax)AS incomeAfterTax FROM ");
-//        sb.append(" (SELECT area,year AS year,month as month,department as department,sum(carNum)AS carNum, ");
-//        sb.append(" sum(driverFee)AS driverFee,sum(oilRecharge) AS oilRecharge, ");
-//        sb.append(" sum(rent)AS rent,sum(socialSecurity) AS socialSecurity, ");
-//        sb.append(" sum(staffWage)AS staffWage,sum(office)AS office,sum(marketCost)AS marketCost, ");
-//        sb.append(" sum(tax) AS tax,sum(total)AS total,sum(staffNum)AS staffNum, ");
-//        sb.append(" sum(perCapitaWage)AS perCapitaWage,sum(incomeAfterTax)AS incomeAfterTax ");
-//        sb.append(" FROM analysis_incomecostanalysis ");
-//        sb.append(" WHERE area IN (%s) GROUP BY year,month,department,area ORDER BY area)A ");
-//        String sql = sb.toString();
-//        sql = String.format(sql, areaStr, areaStr);
-//        String[] fields = new String[]{"area", "year", "month", "department", "carNum", "driverFee", "oilRecharge",
-//                "rent", "socialSecurity", "staffWage", "office", "marketCost", "tax", "total", "staffNum", "perCapitaWage",
-//                "incomeAfterTax"};
-//        List<CollectAreaBO> collectAreaBOS = super.findBySql(sql, CollectAreaBO.class, fields);
-//        return collectAreaBOS;
-//    }
 
     @Override
     public List<CollectBO> collect(CollectTO to) throws SerException {
-//        String startTime = to.getStartTime();
-//        String endTime = to.getEndTime();
         IncomeCostAnalysisDTO dto = new IncomeCostAnalysisDTO();
-//        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
-//            String[] condi = new String[]{startTime, endTime};
-//            dto.getConditions().add(Restrict.between("date", condi));
-//        }
         if (null != to.getArea()) {
             dto.setArea(to.getArea());
         }
@@ -395,9 +348,9 @@ public class IncomeCostAnalysisSerImpl extends ServiceImpl<IncomeCostAnalysis, I
     }
 
     public List<CollectBO> collectAnalysis(IncomeCostAnalysisDTO dto) throws SerException {
-        List<IncomeCostAnalysisBO> incomeCostAnalysisBOS = findListIncomeCostAnalysis(dto);
+        List<IncomeCostAnalysis> list = super.findByCis(dto);
         List<CollectBO> collectBOS = new ArrayList<>();
-        for (IncomeCostAnalysisBO model : incomeCostAnalysisBOS) {
+        for (IncomeCostAnalysis model : list) {
             CollectBO bo = new CollectBO();
             bo.setArea(model.getArea());
             bo.setDepartment(model.getDepartment());
@@ -425,20 +378,20 @@ public class IncomeCostAnalysisSerImpl extends ServiceImpl<IncomeCostAnalysis, I
         Integer staffNum = 0;//员工人数
         Double perCapitaWage = 0.0;//人均工资
         Double incomeAfterTax = 0.0;//税后余额收入
-        if (incomeCostAnalysisBOS != null) {
-            carNum = incomeCostAnalysisBOS.stream().filter(p -> p.getCarNum() != null).mapToInt(p -> p.getCarNum()).sum();
-            driverFee = incomeCostAnalysisBOS.stream().filter(p -> p.getDriverFee() != null).mapToDouble(p -> p.getDriverFee()).sum();
-            oilRecharge = incomeCostAnalysisBOS.stream().filter(p -> p.getOilRecharge() != null).mapToDouble(p -> p.getOilRecharge()).sum();
-            rent = incomeCostAnalysisBOS.stream().filter(p -> p.getRent() != null).mapToDouble(p -> p.getRent()).sum();
-            socialSecurity = incomeCostAnalysisBOS.stream().filter(p -> p.getSocialSecurity() != null).mapToDouble(p -> p.getSocialSecurity()).sum();
-            staffWage = incomeCostAnalysisBOS.stream().filter(p -> p.getStaffWage() != null).mapToDouble(p -> p.getStaffWage()).sum();
-            office = incomeCostAnalysisBOS.stream().filter(p -> p.getDriverFee() != null).mapToDouble(p -> p.getOffice()).sum();
-            marketCost = incomeCostAnalysisBOS.stream().filter(p -> p.getMarketCost() != null).mapToDouble(p -> p.getMarketCost()).sum();
-            tax = incomeCostAnalysisBOS.stream().filter(p -> p.getTax() != null).mapToDouble(p -> p.getTax()).sum();
+        if (list != null) {
+            carNum = list.stream().filter(p -> p.getCarNum() != null).mapToInt(p -> p.getCarNum()).sum();
+            driverFee = list.stream().filter(p -> p.getDriverFee() != null).mapToDouble(p -> p.getDriverFee()).sum();
+            oilRecharge = list.stream().filter(p -> p.getOilRecharge() != null).mapToDouble(p -> p.getOilRecharge()).sum();
+            rent = list.stream().filter(p -> p.getRent() != null).mapToDouble(p -> p.getRent()).sum();
+            socialSecurity = list.stream().filter(p -> p.getSocialSecurity() != null).mapToDouble(p -> p.getSocialSecurity()).sum();
+            staffWage = list.stream().filter(p -> p.getStaffWage() != null).mapToDouble(p -> p.getStaffWage()).sum();
+            office = list.stream().filter(p -> p.getDriverFee() != null).mapToDouble(p -> p.getOffice()).sum();
+            marketCost = list.stream().filter(p -> p.getMarketCost() != null).mapToDouble(p -> p.getMarketCost()).sum();
+            tax = list.stream().filter(p -> p.getTax() != null).mapToDouble(p -> p.getTax()).sum();
             total = driverFee + oilRecharge + rent + socialSecurity + staffWage + office + marketCost + tax;
-            staffNum = incomeCostAnalysisBOS.stream().filter(p -> p.getStaffNum() != null).mapToInt(p -> p.getStaffNum()).sum();
-            perCapitaWage = incomeCostAnalysisBOS.stream().filter(p -> p.getPerCapitaWage() != null).mapToDouble(p -> p.getPerCapitaWage()).sum();
-            incomeAfterTax = incomeCostAnalysisBOS.stream().filter(p -> p.getIncomeAfterTax() != null).mapToDouble(p -> p.getIncomeAfterTax()).sum();
+            staffNum = list.stream().filter(p -> p.getStaffNum() != null).mapToInt(p -> p.getStaffNum()).sum();
+            perCapitaWage = list.stream().filter(p -> p.getPerCapitaWage() != null).mapToDouble(p -> p.getPerCapitaWage()).sum();
+            incomeAfterTax = list.stream().filter(p -> p.getIncomeAfterTax() != null).mapToDouble(p -> p.getIncomeAfterTax()).sum();
 
             CollectBO totalBO = new CollectBO("合计", "", "", carNum, driverFee, oilRecharge, rent, socialSecurity,
                     staffWage, office, marketCost, tax, total, staffNum, perCapitaWage, incomeAfterTax);

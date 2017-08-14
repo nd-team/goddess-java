@@ -3,16 +3,23 @@ package com.bjike.goddess.system.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.system.bo.FieldDockBO;
 import com.bjike.goddess.system.dto.FieldDockDTO;
+import com.bjike.goddess.system.entity.CusPermission;
 import com.bjike.goddess.system.entity.FieldDock;
+import com.bjike.goddess.system.enums.GuideAddrStatus;
 import com.bjike.goddess.system.excel.FieldDockExport;
 import com.bjike.goddess.system.excel.FieldDockTemplateExcel;
 import com.bjike.goddess.system.to.FieldDockTO;
+import com.bjike.goddess.system.to.GuidePermissionTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,8 +41,150 @@ import java.util.List;
 @CacheConfig(cacheNames = "systemSerCache")
 @Service
 public class FieldDockSerImpl extends ServiceImpl<FieldDock, FieldDockDTO> implements FieldDockSer {
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
     @Override
     public Long count(FieldDockDTO dto) throws SerException {
+        search(dto);
         Long count = super.count(dto);
         return count;
     }
@@ -49,11 +198,11 @@ public class FieldDockSerImpl extends ServiceImpl<FieldDock, FieldDockDTO> imple
     @Override
     public List<FieldDockBO> list(FieldDockDTO dto) throws SerException {
         dto.getSorts().add("createTime=desc");
+        search(dto);
         List<FieldDock> fieldDocks = super.findByCis(dto);
         List<FieldDockBO> fieldDockBOS = BeanTransform.copyProperties(fieldDocks, FieldDockBO.class);
         return fieldDockBOS;
     }
-
 
 
     @Transactional(rollbackFor = SerException.class)
@@ -71,11 +220,11 @@ public class FieldDockSerImpl extends ServiceImpl<FieldDock, FieldDockDTO> imple
     public FieldDockBO edit(FieldDockTO to) throws SerException {
         if (StringUtils.isNotBlank(to.getId())) {
             FieldDock fieldDock = super.findById(to.getId());
-            BeanTransform.copyProperties(to,fieldDock,true);
+            BeanTransform.copyProperties(to, fieldDock, true);
             fieldDock.setModifyTime(LocalDateTime.now());
             verify(to);
             super.update(fieldDock);
-            return BeanTransform.copyProperties(fieldDock,FieldDockBO.class);
+            return BeanTransform.copyProperties(fieldDock, FieldDockBO.class);
         } else {
             throw new SerException("id不能为空");
         }
@@ -91,31 +240,32 @@ public class FieldDockSerImpl extends ServiceImpl<FieldDock, FieldDockDTO> imple
         }
     }
 
+
     @Override
     public FieldDockBO importExcel(List<FieldDockTO> fieldDockTOS) throws SerException {
         List<FieldDock> fieldDocks = new ArrayList<>(fieldDockTOS.size());
-        for(FieldDockTO fieldDockTO :fieldDockTOS){
-            FieldDock fieldDock = BeanTransform.copyProperties(fieldDockTO,FieldDock.class,true);
+        for (FieldDockTO fieldDockTO : fieldDockTOS) {
+            FieldDock fieldDock = BeanTransform.copyProperties(fieldDockTO, FieldDock.class, true);
             fieldDocks.add(fieldDock);
         }
         super.save(fieldDocks);
-        FieldDockBO fieldDockBO = BeanTransform.copyProperties(new FieldDock(),FieldDockBO.class);
+        FieldDockBO fieldDockBO = BeanTransform.copyProperties(new FieldDock(), FieldDockBO.class);
         return fieldDockBO;
     }
 
     @Override
     public byte[] exportExcel(FieldDockDTO dto) throws SerException {
-        if(null != dto.getProjectName()){
-            dto.getConditions().add(Restrict.in("projectName",dto.getProjectName()));
+        if (null != dto.getProjectName()) {
+            dto.getConditions().add(Restrict.in("projectName", dto.getProjectName()));
         }
         List<FieldDock> list = super.findByCis(dto);
         List<FieldDockExport> fieldDockExports = new ArrayList<>();
-        list.stream().forEach(str->{
-            FieldDockExport export = BeanTransform.copyProperties(str,FieldDockExport.class);
+        list.stream().forEach(str -> {
+            FieldDockExport export = BeanTransform.copyProperties(str, FieldDockExport.class);
             fieldDockExports.add(export);
         });
-        Excel excel = new Excel(0,2);
-        byte[] bytes = ExcelUtil.clazzToExcel(fieldDockExports,excel);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(fieldDockExports, excel);
         return bytes;
     }
 
@@ -191,9 +341,59 @@ public class FieldDockSerImpl extends ServiceImpl<FieldDock, FieldDockDTO> imple
         fieldDockTemplateExcel.setProgressField("test");
         fieldDockTemplateExcel.setProgressFieldNum("test");
         fieldDockTemplateExcels.add(fieldDockTemplateExcel);
-        Excel excel = new Excel(0,2);
-        byte[] bytes = ExcelUtil.clazzToExcel(fieldDockTemplateExcels,excel);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(fieldDockTemplateExcels, excel);
         return bytes;
+    }
+    private void search(FieldDockDTO dto) throws SerException {
+        if (null != dto.getBusinessMarketPlatform()) {
+            dto.getConditions().add(Restrict.eq("businessMarketPlatform", dto.getBusinessMarketPlatform()));
+        }
+        if (null != dto.getCapitalMarketPlatform()) {
+            dto.getConditions().add(Restrict.eq("capitalMarketPlatform",dto.getCapitalMarketPlatform()));
+        }
+        if (null != dto.getProjectMarketPlatform()) {
+            dto.getConditions().add(Restrict.eq("projectMarketPlatform",dto.getProjectMarketPlatform()));
+        }
+        if (null != dto.getEmployeeMarketPlatform()) {
+            dto.getConditions().add(Restrict.eq("employeeMarketPlatform",dto.getEmployeeMarketPlatform()));
+        }
+        if (null != dto.getLifeValuePlatform()) {
+            dto.getConditions().add(Restrict.eq("lifeValuePlatform",dto.getLifeValuePlatform()));
+        }
+        if (null != dto.getCreativePlatform()) {
+            dto.getConditions().add(Restrict.eq("creativePlatform",dto.getCreativePlatform()));
+        }
+        if (null != dto.getSkillPlatform()) {
+            dto.getConditions().add(Restrict.eq("skillPlatform",dto.getSkillPlatform()));
+        }
+        if (null != dto.getPlan()) {
+            dto.getConditions().add(Restrict.eq("plan",dto.getPlan()));
+        }
+        if (null != dto.getWelfare()) {
+            dto.getConditions().add(Restrict.eq("welfare",dto.getWelfare()));
+        }
+        if (null != dto.getLiteracy()) {
+            dto.getConditions().add(Restrict.eq("literacy",dto.getLiteracy()));
+        }
+        if (null != dto.getAccount()) {
+            dto.getConditions().add(Restrict.eq("account",dto.getAccount()));
+        }
+        if (null != dto.getMoney()) {
+            dto.getConditions().add(Restrict.eq("money",dto.getMoney()));
+        }
+        if (null != dto.getBudget()) {
+            dto.getConditions().add(Restrict.eq("budget",dto.getBudget()));
+        }
+        if (null != dto.getCustomer()) {
+            dto.getConditions().add(Restrict.eq("custome",dto.getCustomer()));
+        }
+        if (null != dto.getBusiness()) {
+            dto.getConditions().add(Restrict.eq("business",dto.getBusiness()));
+        }
+        if (null != dto.getProgress()) {
+            dto.getConditions().add(Restrict.eq("progress",dto.getProgress()));
+        }
     }
     private FieldDockBO verify(FieldDockTO to) throws SerException {
         FieldDock fieldDock = BeanTransform.copyProperties(to, FieldDock.class, true);

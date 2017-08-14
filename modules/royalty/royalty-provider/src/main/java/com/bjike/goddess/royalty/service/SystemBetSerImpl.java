@@ -22,7 +22,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -199,9 +201,39 @@ public class SystemBetSerImpl extends ServiceImpl<SystemBet, SystemBetDTO> imple
     @Override
     public SystemBetABO getOne(String id) throws SerException {
         SystemBetA systemBetA = systemBetASer.findById(id);
-        return BeanTransform.copyProperties(systemBetA, SystemBetABO.class);
-    }
+        SystemBetABO listABO = BeanTransform.copyProperties(systemBetA, SystemBetABO.class);
+        if (listABO != null) {
+            SystemBetBDTO dtoB = new SystemBetBDTO();
+            dtoB.getConditions().add(Restrict.eq("systemBetA.id", listABO.getId()));
+            List<SystemBetB> listB = systemBetBSer.findByCis(dtoB);
+            List<SystemBetBBO> listBBO = BeanTransform.copyProperties(listB, SystemBetBBO.class);
+            listABO.setSystemBetBBOS(listBBO);
+            if (listBBO != null) {
+                for (SystemBetBBO systemBetBBO : listBBO) {
+                    SystemBetCDTO dtoC = new SystemBetCDTO();
+                    dtoC.getConditions().add(Restrict.eq("systemBetB.id", systemBetBBO.getId()));
+                    List<SystemBetC> listC = systemBetCSer.findByCis(dtoC);
+                    List<SystemBetCBO> listCBO = BeanTransform.copyProperties(listC, SystemBetCBO.class);
+                    systemBetBBO.setSystemBetCBOS(listCBO);
+                    if (listCBO != null) {
+                        for (SystemBetCBO systemBetCBO : listCBO) {
+                            SystemBetDDTO dtoD = new SystemBetDDTO();
+                            dtoD.getConditions().add(Restrict.eq("systemBetC.id", systemBetCBO.getId()));
+                            List<SystemBetD> listD = systemBetDSer.findByCis(dtoD);
+                            List<SystemBetDBO> listDBO = BeanTransform.copyProperties(listD, SystemBetDBO.class);
+                            systemBetCBO.setSystemBetDBOS(listDBO);
+                        }
+                    }
+                }
 
+            }
+        }
+//        List<SystemBetABO> systemBetABOList=new ArrayList<>();
+//        systemBetABOList.add(listABO);
+        return listABO;
+
+
+    }
 
     @Override
     public List<SystemBetABO> list(SystemBetADTO dto) throws SerException {
@@ -242,33 +274,6 @@ public class SystemBetSerImpl extends ServiceImpl<SystemBet, SystemBetDTO> imple
         }
 
         return listABO;
-//        SystemBetADTO dtoA = new SystemBetADTO();
-//        List<SystemBetA> listA = systemBetASer.findByCis(dtoA);
-//        List<SystemBetBO> systemBetBOS = new ArrayList<>(listA.size());
-//        for (SystemBetA systemBetA : listA) {
-//            SystemBetBO betBO = new SystemBetBO();
-//            betBO.setSystemBetABO(BeanTransform.copyProperties(systemBetA, SystemBetABO.class));
-//            SystemBetBDTO dtoB = new SystemBetBDTO();
-//            List<SystemBetB> listB = systemBetBSer.findByCis(dtoB);
-//            List<SystemBetBBO> bboList = BeanTransform.copyProperties(listB, SystemBetBBO.class);
-//            betBO.getSystemBetABO().setSystemBetBBOS(bboList);
-//
-//            for (SystemBetBBO systemBetBBO : bboList) {
-//                SystemBetCDTO dtoC = new SystemBetCDTO();
-//                List<SystemBetC> listC = systemBetCSer.findByCis(dtoC);
-//                List<SystemBetCBO> cboList = BeanTransform.copyProperties(listC, SystemBetCBO.class);
-//                systemBetBBO.setSystemBetCBOS(cboList);
-//
-//                for (SystemBetCBO systemBetCBO : cboList) {
-//                    SystemBetDDTO dtoD = new SystemBetDDTO();
-//                    List<SystemBetD> listD = systemBetDSer.findByCis(dtoD);
-//                    List<SystemBetDBO> dboList = BeanTransform.copyProperties(listD, SystemBetDBO.class);
-//                    systemBetCBO.setSystemBetDBOS(dboList);
-//                }
-//            }
-//            systemBetBOS.add(betBO);
-//        }
-//        return systemBetBOS;
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -389,7 +394,7 @@ public class SystemBetSerImpl extends ServiceImpl<SystemBet, SystemBetDTO> imple
                 //基础得分（分值*目标-部门分配基础权重）
                 Double basesScore = systemBetATO.getScore() * systemBetBTO.getBaseWeight();
                 systemBetB.setBasesScore(basesScore);
-
+                systemBetB.setId(null);
                 systemBetBSer.update(systemBetB);
                 systemBetBS.add(systemBetB);
 
@@ -427,7 +432,43 @@ public class SystemBetSerImpl extends ServiceImpl<SystemBet, SystemBetDTO> imple
     @Override
     public void delete(String id) throws SerException {
         checkAddIdentity();
+
+        SystemBetD systemBetD = systemBetDSer.findById(id);
+        if (systemBetD == null) {
+            throw new SerException("该对象不存在");
+        }
         systemBetDSer.remove(id);
+        List<SystemBetC> cList = systemBetCSer.findAll();
+        List<SystemBetB> bList = systemBetBSer.findAll();
+        List<SystemBetA> aList = systemBetASer.findAll();
+        Set<String> cids = new HashSet<>();
+        Set<String> bids = new HashSet<>();
+        Set<String> aids = new HashSet<>();
+
+        for (SystemBetD systemBetD1 : systemBetDSer.findAll()) {
+            cids.add(systemBetD1.getSystemBetC().getId());
+        }
+        for (SystemBetC c : cList) {
+            if (!cids.contains(c.getId())) {
+                systemBetCSer.remove(c.getId());
+            }
+        }
+        for (SystemBetC c1 : systemBetCSer.findAll()) {
+            bids.add(c1.getSystemBetB().getId());
+        }
+        for (SystemBetB b : bList) {
+            if (!bids.contains(b.getId())) {
+                systemBetBSer.remove(b.getId());
+            }
+        }
+        for(SystemBetB b1 : systemBetBSer.findAll()){
+            aids.add(b1.getSystemBetA().getId());
+        }
+        for(SystemBetA a:aList){
+            if(!aids.contains(a.getId())){
+                systemBetASer.remove(a.getId());
+            }
+        }
 //        SystemBetADTO systemBetADTO = new SystemBetADTO();
 //        systemBetADTO.getConditions().add(Restrict.eq("id", id));
 //        List<SystemBetA> aList = systemBetASer.findByCis(systemBetADTO);

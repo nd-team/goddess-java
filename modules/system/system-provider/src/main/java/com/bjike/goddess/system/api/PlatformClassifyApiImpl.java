@@ -3,7 +3,9 @@ package com.bjike.goddess.system.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.system.bo.PlatformClassifyBO;
 import com.bjike.goddess.system.dto.PlatformClassifyDTO;
+import com.bjike.goddess.system.excel.SonPermissionObject;
 import com.bjike.goddess.system.service.PlatformClassifySer;
+import com.bjike.goddess.system.to.GuidePermissionTO;
 import com.bjike.goddess.system.to.PlatformClassifyTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,15 @@ import java.util.List;
 public class PlatformClassifyApiImpl implements PlatformClassifyAPI {
     @Autowired
     private PlatformClassifySer platformClassifySer;
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return platformClassifySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return platformClassifySer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long count(PlatformClassifyDTO dto) throws SerException {
         return platformClassifySer.count(dto);

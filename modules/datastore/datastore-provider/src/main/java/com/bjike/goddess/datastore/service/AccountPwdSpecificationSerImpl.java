@@ -214,7 +214,9 @@ public class AccountPwdSpecificationSerImpl extends ServiceImpl<AccountPwdSpecif
     public AccountPwdSpecificationBO editAccountPwdSpecification(AccountPwdSpecificationTO accountPwdSpecificationTO) throws SerException {
         checkAddIdentity();
         AccountPwdSpecification accountPwdSpecification = super.findById(accountPwdSpecificationTO.getId());
-        BeanTransform.copyProperties(accountPwdSpecificationTO, accountPwdSpecification, true);
+        LocalDateTime createTime = accountPwdSpecification.getCreateTime();
+        accountPwdSpecification = BeanTransform.copyProperties(accountPwdSpecificationTO, AccountPwdSpecification.class, true);
+        accountPwdSpecification.setCreateTime(createTime);
         accountPwdSpecification.setModifyTime(LocalDateTime.now());
         super.update(accountPwdSpecification);
         return BeanTransform.copyProperties(accountPwdSpecificationTO, AccountPwdSpecificationBO.class);

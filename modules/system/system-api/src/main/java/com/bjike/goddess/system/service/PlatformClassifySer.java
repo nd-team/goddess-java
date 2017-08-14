@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.system.bo.PlatformClassifyBO;
 import com.bjike.goddess.system.dto.PlatformClassifyDTO;
 import com.bjike.goddess.system.entity.PlatformClassify;
+import com.bjike.goddess.system.excel.SonPermissionObject;
+import com.bjike.goddess.system.to.GuidePermissionTO;
 import com.bjike.goddess.system.to.PlatformClassifyTO;
 
 import java.util.List;
@@ -19,6 +21,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface PlatformClassifySer extends Ser<PlatformClassify, PlatformClassifyDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 平台分类列表总条数
      */

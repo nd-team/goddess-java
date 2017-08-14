@@ -9,7 +9,6 @@ import com.bjike.goddess.analysis.to.CollectTO;
 import com.bjike.goddess.analysis.to.GuidePermissionTO;
 import com.bjike.goddess.analysis.to.IncomeCostAnalysisTO;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +27,7 @@ import java.util.List;
 public class IncomeCostAnalysisApiImpl implements IncomeCostAnalysisAPI {
     @Autowired
     private IncomeCostAnalysisSer incomeCostAnalysisSer;
+
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         return incomeCostAnalysisSer.sonPermission();
@@ -37,6 +37,7 @@ public class IncomeCostAnalysisApiImpl implements IncomeCostAnalysisAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return incomeCostAnalysisSer.guidePermission(guidePermissionTO);
     }
+
     @Override
     public Long countIncomeCostAnalysis(IncomeCostAnalysisDTO incomeCostAnalysisDTO) throws SerException {
         return incomeCostAnalysisSer.countIncomeCostAnalysis(incomeCostAnalysisDTO);
@@ -52,14 +53,14 @@ public class IncomeCostAnalysisApiImpl implements IncomeCostAnalysisAPI {
         return incomeCostAnalysisSer.findListIncomeCostAnalysis(dto);
     }
 
-//    @Override
-//    public IncomeCostAnalysisBO insertIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
-//        return incomeCostAnalysisSer.insertIncomeCostAnalysis(incomeCostAnalysisTO);
-//    }
+    @Override
+    public void insertIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
+        incomeCostAnalysisSer.insertIncomeCostAnalysis(incomeCostAnalysisTO);
+    }
 
     @Override
     public void editIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
-         incomeCostAnalysisSer.editIncomeCostAnalysis(incomeCostAnalysisTO);
+        incomeCostAnalysisSer.editIncomeCostAnalysis(incomeCostAnalysisTO);
     }
 
     @Override

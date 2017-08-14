@@ -5,6 +5,7 @@ import com.bjike.goddess.system.bo.FieldDockBO;
 import com.bjike.goddess.system.dto.FieldDockDTO;
 import com.bjike.goddess.system.service.FieldDockSer;
 import com.bjike.goddess.system.to.FieldDockTO;
+import com.bjike.goddess.system.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,15 @@ import java.util.List;
 public class FieldDockApiImpl implements FieldDockAPI {
     @Autowired
     private FieldDockSer fieldDockSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return fieldDockSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return fieldDockSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long count(FieldDockDTO dto) throws SerException {
         return fieldDockSer.count(dto);

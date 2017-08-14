@@ -20,7 +20,7 @@ public class Rental extends BaseEntity {
     /**
      * 租房编号
      */
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '租房编号'",unique = true)
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '租房编号'")
     private String rentNum;
     /**
      * 地区
