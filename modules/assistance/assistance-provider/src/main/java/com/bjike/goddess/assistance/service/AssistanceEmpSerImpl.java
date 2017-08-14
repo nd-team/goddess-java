@@ -48,7 +48,7 @@ public class AssistanceEmpSerImpl extends ServiceImpl<AssistanceEmp, AssistanceE
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.busCusPermission("1");
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -84,7 +84,7 @@ public class AssistanceEmpSerImpl extends ServiceImpl<AssistanceEmp, AssistanceE
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.busCusPermission("1");
         } else {
             flag = true;
         }
@@ -136,9 +136,6 @@ public class AssistanceEmpSerImpl extends ServiceImpl<AssistanceEmp, AssistanceE
             case EDIT:
                 flag = guideAddIdentity();
                 break;
-            case AUDIT:
-                flag = guideAddIdentity();
-                break;
             case DELETE:
                 flag = guideAddIdentity();
                 break;
@@ -162,8 +159,9 @@ public class AssistanceEmpSerImpl extends ServiceImpl<AssistanceEmp, AssistanceE
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
-        AssistanceEmpBO rightSetBO = BeanTransform.copyProperties(super.findById( id ),AssistanceEmpBO.class);
-        return null;
+        AssistanceEmpBO assistanceEmpBO = BeanTransform.copyProperties(super.findById( id ),AssistanceEmpBO.class);
+
+        return BeanTransform.copyProperties(assistanceEmpBO, AssistanceEmpBO.class);
     }
 
     @Override

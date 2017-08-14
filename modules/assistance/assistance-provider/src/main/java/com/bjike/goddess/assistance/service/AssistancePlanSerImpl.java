@@ -2,13 +2,9 @@ package com.bjike.goddess.assistance.service;
 
 import com.bjike.goddess.assistance.bo.AssistancePlanBO;
 import com.bjike.goddess.assistance.dto.AssistancePlanDTO;
-import com.bjike.goddess.assistance.dto.RightSetDTO;
 import com.bjike.goddess.assistance.entity.AssistancePlan;
-import com.bjike.goddess.assistance.entity.RightSet;
-import com.bjike.goddess.assistance.enums.EmpRight;
 import com.bjike.goddess.assistance.enums.GuideAddrStatus;
-import com.bjike.goddess.assistance.to.AssistancePlanTO;
-import com.bjike.goddess.assistance.to.GuidePermissionTO;
+import com.bjike.goddess.assistance.to.*;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -39,8 +35,6 @@ import java.util.stream.Collectors;
 @Service
 public class AssistancePlanSerImpl extends ServiceImpl<AssistancePlan, AssistancePlanDTO> implements AssistancePlanSer {
 
-    @Autowired
-    private RightSetSer rightSetSer;
     @Autowired
     private UserAPI userAPI;
     @Autowired
@@ -83,16 +77,35 @@ public class AssistancePlanSerImpl extends ServiceImpl<AssistancePlan, Assistanc
     }
 
     /**
-     * 核对查看权限（部门级别）
+     * 模块审核
+     * 核对添加修改删除审核权限（岗位级别）
      */
-    private Boolean guideSeeIdentity() throws SerException {
+    private void checkAuditIdentity(String idFlag) throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission(idFlag);
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity(String idFlag) throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission(idFlag);
         } else {
             flag = true;
         }
@@ -100,16 +113,16 @@ public class AssistancePlanSerImpl extends ServiceImpl<AssistancePlan, Assistanc
     }
 
     /**
-     * 核对添加修改删除审核权限（岗位级别）
+     * 审核核对查看权限（部门级别）
      */
-    private Boolean guideAddIdentity() throws SerException {
+    private Boolean guideAuditIdentity(String idFlag) throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission(idFlag);
         } else {
             flag = true;
         }
@@ -119,10 +132,16 @@ public class AssistancePlanSerImpl extends ServiceImpl<AssistancePlan, Assistanc
     @Override
     public Boolean sonPermission() throws SerException {
         String userToken = RpcTransmit.getUserToken();
-        Boolean flagSee = guideSeeIdentity();
+        Boolean flagSee = guideSeeIdentity("1");
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAdd = guideAddIdentity();
-        if (flagSee || flagAdd) {
+        Boolean flagAdd = guideSeeIdentity("2");
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAudit = guideAuditIdentity("zhzyb-Audit");
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagFiance = guideAuditIdentity("finace-Audit");
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagManage = guideAuditIdentity("manage-Audit");
+        if (flagSee || flagAdd || flagAudit || flagFiance || flagManage) {
             return true;
         } else {
             return false;
@@ -136,25 +155,31 @@ public class AssistancePlanSerImpl extends ServiceImpl<AssistancePlan, Assistanc
         Boolean flag = true;
         switch (guideAddrStatus) {
             case LIST:
-                flag = guideSeeIdentity();
+                flag = guideSeeIdentity("1");
                 break;
             case ADD:
-                flag = guideAddIdentity();
+                flag = guideSeeIdentity("2");
                 break;
             case EDIT:
-                flag = guideAddIdentity();
+                flag = guideSeeIdentity("2");
                 break;
-            case AUDIT:
-                flag = guideAddIdentity();
+            case RESOURCEAUDIT:
+                flag = guideAuditIdentity("zhzyb-Audit");
+                break;
+            case FINACEAUDIT:
+                flag = guideAuditIdentity("finace-Audit");
+                break;
+            case MANAGEAUDIT:
+                flag = guideAuditIdentity("manage-Audit");
                 break;
             case DELETE:
-                flag = guideAddIdentity();
+                flag = guideSeeIdentity("2");
                 break;
             case COLLECT:
-                flag = guideSeeIdentity();
+                flag = guideSeeIdentity("1");
                 break;
             case SEE:
-                flag = guideSeeIdentity();
+                flag = guideSeeIdentity("1");
                 break;
             default:
                 flag = true;
@@ -184,16 +209,16 @@ public class AssistancePlanSerImpl extends ServiceImpl<AssistancePlan, Assistanc
 
     @Override
     public AssistancePlanBO getOneById(String id) throws SerException {
-        if (StringUtils.isBlank(id)){
+        if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
         AssistancePlan assistancePlan = super.findById(id);
 
         return BeanTransform.copyProperties(assistancePlan, AssistancePlanBO.class);
     }
+
     @Override
     public List<AssistancePlanBO> listAssistancePlan(AssistancePlanDTO assistancePlanDTO) throws SerException {
-        checkSeeIdentity();
         if (StringUtils.isNotBlank(assistancePlanDTO.getPlanNum())) {
             assistancePlanDTO.getConditions().add(Restrict.like("planNum", assistancePlanDTO.getPlanNum()));
         }
@@ -212,7 +237,6 @@ public class AssistancePlanSerImpl extends ServiceImpl<AssistancePlan, Assistanc
     @Transactional(rollbackFor = SerException.class)
     @Override
     public AssistancePlanBO addAssistancePlan(AssistancePlanTO assistancePlanTO) throws SerException {
-        checkAddIdentity();
         AssistancePlan assistancePlan = BeanTransform.copyProperties(assistancePlanTO, AssistancePlan.class, true);
         assistancePlan.setCreateTime(LocalDateTime.now());
 
@@ -227,7 +251,6 @@ public class AssistancePlanSerImpl extends ServiceImpl<AssistancePlan, Assistanc
     @Transactional(rollbackFor = SerException.class)
     @Override
     public AssistancePlanBO editAssistancePlan(AssistancePlanTO assistancePlanTO) throws SerException {
-        checkAddIdentity();
         AssistancePlan assistancePlan = BeanTransform.copyProperties(assistancePlanTO, AssistancePlan.class, true);
         AssistancePlan rs = super.findById(assistancePlanTO.getId());
 
@@ -240,7 +263,6 @@ public class AssistancePlanSerImpl extends ServiceImpl<AssistancePlan, Assistanc
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteAssistancePlan(String id) throws SerException {
-        checkAddIdentity();
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
@@ -249,31 +271,49 @@ public class AssistancePlanSerImpl extends ServiceImpl<AssistancePlan, Assistanc
 
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public AssistancePlanBO auditAssistancePlan(AssistancePlanTO assistancePlanTO) throws SerException {
-        checkAddIdentity();
-        String userName = userAPI.currentUser().getUsername();
-        RightSetDTO rightSetDTO = new RightSetDTO();
-        rightSetDTO.getConditions().add(Restrict.eq("empName", userName));
-        List<RightSet> rsList = rightSetSer.findByCis(rightSetDTO);
-        List<EmpRight> empRightList = rsList.stream().map(RightSet::getEmpRight).collect(Collectors.toList());
+    public AssistancePlanBO auditAssistancePlan(ResourceAuditPlanTO assistancePlanTO) throws SerException {
 
-//        AssistancePlan assistancePlan = BeanTransform.copyProperties(assistancePlanTO, AssistancePlan.class, true);
-        AssistancePlan rs = super.findById(assistancePlanTO.getId());
-        //总经办审核
-        if (empRightList.contains(EmpRight.MANAGE)) {
-            rs.setManageAdvice(assistancePlanTO.getManageAdvice());
-        } else if (empRightList.contains(EmpRight.WAREFARE)) {
-            rs.setManageAdvice(assistancePlanTO.getWarefaleAdvice());
-        } else if (empRightList.contains(EmpRight.FINANCE)) {
-            rs.setManageAdvice(assistancePlanTO.getFiniceAdvice());
-        } else {
-            throw new SerException("您没有审核权限,请去权限设置去设置后再来");
+        if (StringUtils.isBlank(assistancePlanTO.getId())) {
+            throw new SerException("id不能为空");
         }
-
+        AssistancePlan rs = super.findById(assistancePlanTO.getId());
+        //综合资源审核
+        rs.setWarefaleAdvice(assistancePlanTO.getWarefaleAdvice());
         rs.setModifyTime(LocalDateTime.now());
         super.update(rs);
         return BeanTransform.copyProperties(rs, AssistancePlanBO.class);
     }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public AssistancePlanBO finaceAuditAssistancePlan(FinaceAuditPlanTO assistancePlanTO) throws SerException {
+
+        if (StringUtils.isBlank(assistancePlanTO.getId())) {
+            throw new SerException("id不能为空");
+        }
+        AssistancePlan rs = super.findById(assistancePlanTO.getId());
+        //财务审核
+        rs.setFiniceAdvice(assistancePlanTO.getFiniceAdvice());
+        rs.setModifyTime(LocalDateTime.now());
+        super.update(rs);
+        return BeanTransform.copyProperties(rs, AssistancePlanBO.class);
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public AssistancePlanBO manageAuditAssistancePlan(ManageAuditPlanTO assistancePlanTO) throws SerException {
+
+        if (StringUtils.isBlank(assistancePlanTO.getId())) {
+            throw new SerException("id不能为空");
+        }
+        AssistancePlan rs = super.findById(assistancePlanTO.getId());
+        //总经办审核
+        rs.setManageAdvice(assistancePlanTO.getManageAdvice());
+        rs.setModifyTime(LocalDateTime.now());
+        super.update(rs);
+        return BeanTransform.copyProperties(rs, AssistancePlanBO.class);
+    }
+
 
     private Integer generatePlanNum() throws SerException {
         String result = super.findByMaxField("seriNum", AssistancePlan.class);
@@ -286,7 +326,7 @@ public class AssistancePlanSerImpl extends ServiceImpl<AssistancePlan, Assistanc
 
 
     @Override
-    public List<AssistancePlanBO>  listPlanNum() throws SerException {
+    public List<AssistancePlanBO> listPlanNum() throws SerException {
         AssistancePlanDTO dto = new AssistancePlanDTO();
         List<AssistancePlan> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, AssistancePlanBO.class);

@@ -128,4 +128,42 @@ public class OutFeeApiImpl implements OutFeeAPI {
     public List<String> projectList() throws SerException {
         return outFeeSer.projectList();
     }
+
+
+    @Override
+    public List<String> typeList() throws SerException {
+        return outFeeSer.typeList();
+    }
+
+    @Override
+    public byte[] areaExportReport(CollectAreaTO collectAreaTO) throws SerException {
+        return outFeeSer.areaExportReport( collectAreaTO );
+    }
+
+    @Override
+    public byte[] projectExportReport(CollectProjectTO collectProjectTO) throws SerException {
+        return outFeeSer.projectExportReport( collectProjectTO );
+    }
+
+    @Override
+    public byte[] groupExportReport(CollectGroupTO collectProjectTO) throws SerException {
+        return outFeeSer.groupExportReport( collectProjectTO );
+    }
+
+    @Override
+    public byte[] typeExportReport(CollectCategoryTO collectCategoryTO) throws SerException {
+        return outFeeSer.typeExportReport( collectCategoryTO );
+    }
+
+    @Override
+    public OutFeeBO importExcel(List<OutFeeTO> manageFeeTOS) throws SerException {
+        return outFeeSer.importExcel( manageFeeTOS );
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return outFeeSer.templateExport();
+    }
+
+
 }

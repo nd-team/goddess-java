@@ -61,6 +61,10 @@ public class OutFeeVO {
     private Double rate;
 
     /**
+     * 比率百分比
+     */
+    private String ratePersent;
+    /**
      * 差额
      */
     private Double balance;
@@ -154,6 +158,14 @@ public class OutFeeVO {
 
     public void setRate(Double rate) {
         this.rate = rate;
+    }
+
+    public String getRatePersent() {
+        return ratePersent;
+    }
+
+    public void setRatePersent(String ratePersent) {
+        this.ratePersent = ratePersent;
     }
 
     public Double getBalance() {
