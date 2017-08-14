@@ -16,6 +16,7 @@ import com.bjike.goddess.staffwelfare.excel.SonPermissionObject;
 import com.bjike.goddess.staffwelfare.to.GuidePermissionTO;
 import com.bjike.goddess.staffwelfare.to.HeadPortraitHatTO;
 import com.bjike.goddess.staffwelfare.vo.HeadPortraitHatVO;
+import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.io.IOUtils;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,9 +130,12 @@ public class HeadPortraitHatAct {
      * @return class HeadPortraitHatVO
      * @version v1
      */
+//    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated(ADD.class) HeadPortraitHatTO to, HttpServletRequest request, BindingResult bindingResult) throws ActException {
         try {
+            String token = RpcContext.getContext().getAttachment("userToken");
+
             //文件上传
             try {
                 List<MultipartFile> multipartFiles = this.getMultipartFile(request);
@@ -144,6 +148,7 @@ public class HeadPortraitHatAct {
             }catch (IOException e){
                 throw new ActException(e.getMessage());
             }
+
             HeadPortraitHatVO vo = BeanTransform.copyProperties(headPortraitHatAPI.addModel(to), HeadPortraitHatVO.class);
             return ActResult.initialize(vo);
         } catch (SerException e) {
