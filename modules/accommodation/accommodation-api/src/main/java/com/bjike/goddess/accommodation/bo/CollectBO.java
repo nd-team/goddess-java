@@ -46,6 +46,14 @@ public class CollectBO extends BaseBO {
      * 卫生费
      */
     private Double healthFee;
+    /**
+     * 水量初始额
+     */
+    private Double water;
+    /**
+     * 电量初始额
+     */
+    private Double energy;
 
     /**
      * 网络套餐费用
@@ -86,6 +94,22 @@ public class CollectBO extends BaseBO {
 
     public String getAddress() {
         return address;
+    }
+
+    public Double getWater() {
+        return water;
+    }
+
+    public void setWater(Double water) {
+        this.water = water;
+    }
+
+    public Double getEnergy() {
+        return energy;
+    }
+
+    public void setEnergy(Double energy) {
+        this.energy = energy;
     }
 
     public void setAddress(String address) {

@@ -466,7 +466,7 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
                 JobsBetB jobsBetB = BeanTransform.copyProperties(jobsBetBTO, JobsBetB.class, true);
                 jobsBetB.setJobsBetA(jobsBetA);
 
-
+                jobsBetB.setId(null);
                 jobsBetBSer.update(jobsBetB);
                 jobsBetBS.add(jobsBetB);
 
@@ -548,35 +548,35 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
         Set<String> bids = new HashSet<>();
         Set<String> aids = new HashSet<>();
 
-        for(JobsBetE e : jobsBetESer.findAll()){
+        for (JobsBetE e : jobsBetESer.findAll()) {
             dids.add(e.getJobsBetD().getId());
         }
-        for(JobsBetD d : dList){
-            if(!dids.contains(d.getId())){
+        for (JobsBetD d : dList) {
+            if (!dids.contains(d.getId())) {
                 jobsBetDSer.remove(d.getId());
             }
         }
-        for(JobsBetD d1 : jobsBetDSer.findAll()){
+        for (JobsBetD d1 : jobsBetDSer.findAll()) {
             cids.add(d1.getJobsBetC().getId());
         }
-        for(JobsBetC c: cList){
-            if(!cids.contains(c.getId())){
+        for (JobsBetC c : cList) {
+            if (!cids.contains(c.getId())) {
                 jobsBetCSer.remove(id);
             }
         }
-        for(JobsBetC c1 : jobsBetCSer.findAll()){
+        for (JobsBetC c1 : jobsBetCSer.findAll()) {
             bids.add(c1.getJobsBetB().getId());
         }
-        for(JobsBetB b: bList){
-            if(!bids.contains(b.getId())){
+        for (JobsBetB b : bList) {
+            if (!bids.contains(b.getId())) {
                 jobsBetBSer.remove(id);
             }
         }
-        for(JobsBetB b1: jobsBetBSer.findAll()){
+        for (JobsBetB b1 : jobsBetBSer.findAll()) {
             aids.add(b1.getJobsBetA().getId());
         }
-        for(JobsBetA a: aList){
-            if(!aids.contains(a.getId())){
+        for (JobsBetA a : aList) {
+            if (!aids.contains(a.getId())) {
                 jobsBetASer.remove(id);
             }
         }
