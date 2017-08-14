@@ -303,24 +303,24 @@ private RentalApplySer rentalApplySer;
         sb.append(" SELECT * FROM ");
         sb.append(" (SELECT area ,projectGroup AS projectGroup,projectName AS projectName,address AS address, ");
         sb.append(" sum(rent) AS rent,sum(agency) AS agency,sum(deposit) AS deposit,sum(managementFee) AS managementFee, ");
-        sb.append(" sum(healthFee) AS healthFee,sum(network) AS network,sum(gas) AS gas, ");
+        sb.append(" sum(healthFee) AS healthFee,sum(water) as water,sum(energy) as energy ,sum(network) AS network,sum(gas) AS gas, ");
         sb.append(" (sum(rent)+sum(agency)+sum(deposit)+sum(managementFee)+sum(healthFee)+sum(network)+sum(gas)) AS remark ");
         sb.append(" FROM accommodation_rental a WHERE area IN (%s) GROUP BY area,projectGroup,projectName,address ORDER BY area)A ");
         sb.append(" UNION ");
         sb.append(" SELECT '合计' AS area,NULL AS projectGroup ,NULL AS projectName,NULL AS address, ");
         sb.append(" sum(rent) AS rent ,sum(agency) AS agency,sum(deposit) AS deposit,sum(managementFee) AS managementFee, ");
-        sb.append(" sum(healthFee) AS healthFee,sum(network) AS network,sum(gas) AS gas, ");
+        sb.append(" sum(water) as water,sum(energy) as energy ,sum(healthFee) AS healthFee,sum(network) AS network,sum(gas) AS gas, ");
         sb.append(" (sum(rent)+sum(agency)+sum(deposit)+sum(managementFee)+sum(healthFee)+sum(network)+sum(gas)) AS remark ");
         sb.append(" from ");
         sb.append(" (SELECT area ,projectGroup AS projectGroup,projectName AS projectName,address AS address, ");
         sb.append(" sum(rent) AS rent,sum(agency) AS agency,sum(deposit) AS deposit,sum(managementFee) AS managementFee, ");
-        sb.append(" sum(healthFee) AS healthFee,sum(network) AS network,sum(gas) AS gas, ");
+        sb.append(" sum(healthFee) AS healthFee,sum(water) as water,sum(energy) as energy ,sum(network) AS network,sum(gas) AS gas, ");
         sb.append(" (sum(rent)+sum(agency)+sum(deposit)+sum(managementFee)+sum(healthFee)+sum(network)+sum(gas)) AS remark ");
         sb.append(" FROM accommodation_rental a WHERE area IN (%s) GROUP BY area,projectGroup,projectName,address ORDER BY area)A ");
         String sql = sb.toString();
         sql = String.format(sql, areasStr,areasStr);
         String[] fields = new String[]{"area","projectGroup","projectName","address","rent","agency","deposit","managementFee",
-        "healthFee","network","gas","remark"};
+        "water","energy","healthFee","network","gas","remark"};
         List<CollectBO> collectBOS = super.findBySql(sql,CollectBO.class,fields);
         return collectBOS;
     }
