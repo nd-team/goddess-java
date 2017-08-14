@@ -15,6 +15,7 @@ import com.bjike.goddess.firmreward.enums.GuideAddrStatus;
 import com.bjike.goddess.firmreward.excel.SonPermissionObject;
 import com.bjike.goddess.firmreward.to.BonusBudgetTO;
 import com.bjike.goddess.firmreward.to.RewardProgramRatiosTO;
+import com.bjike.goddess.firmreward.to.RewardProgramTO;
 import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -321,7 +322,7 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
     /**
      * 更新奖金预算
      *
-     * @param to 奖金预算to
+     * @param to    奖金预算to
      * @param model 奖金预算
      */
     private void updateBonusBudget(BonusBudgetTO to, BonusBudget model) throws SerException {
@@ -334,41 +335,32 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
     /**
      * 添加奖励项目比例
      *
-     * @param to 奖金预算to
+     * @param rewardProgramTO 奖金预算to
      * @throws SerException
      */
     @Override
-    public void addRewardProgramRatios(RewardProgramRatiosTO to) throws SerException {
+    public void addRewardProgramRatios(RewardProgramTO rewardProgramTO) throws SerException {
         checkAddIdentity();
-        String bonusBudgetId = to.getId();//奖金预算额度
-        List<String> rewardPrograms = to.getRewardPrograms();//奖励项目
-        List<String> focusingDegrees = to.getFocusingDegrees();//当月侧重程度
-        List<Double> budgetRanges = to.getBudgetRanges();//当月预算范围
-        List<String> bonusWeights = to.getBonusWeights();//奖金权重
-        List<Double> bonusLimits = to.getBonusLimits();//奖金额度
-        List<String> honorWeights = to.getHonorWeights();//荣誉衍生奖品权重
-        List<Double> honorLimits = to.getHonorLimits();//荣誉衍生奖品额度
-        List<String> empiricalValues = to.getEmpiricalValues();//经验值
-        List<Double> empiricalValueLimits = to.getEmpiricalValueLimits();//经验值额度
-
-        boolean rewardProgramsNotEmpty = (rewardPrograms != null) && (rewardPrograms.size() > 0);
-        if (StringUtils.isNotEmpty(bonusBudgetId) && rewardProgramsNotEmpty) {
+        List<RewardProgramRatiosTO> rewardProgramRatiosTOS = rewardProgramTO.getRewardProgramRatiosTOS();
+        if (rewardProgramRatiosTOS != null && rewardProgramRatiosTOS.size() > 0) {
             List<RewardProgramRatio> list = new ArrayList<>(0);
-            int len = rewardPrograms.size();
-            for (int i = 0; i < len; i ++) {
-                RewardProgramRatio model = new RewardProgramRatio();
-                model.setRewardProgram(rewardPrograms.get(i));
-                model.setFocusingDegree(focusingDegrees.get(i));
-                model.setBudgetRange(budgetRanges.get(i));
-                model.setBonusWeight(bonusWeights.get(i));
-                model.setBonusLimit(bonusLimits.get(i));
-                model.setHonorWeight(honorWeights.get(i));
-                model.setHonorLimit(honorLimits.get(i));
-                model.setEmpiricalValue(empiricalValues.get(i));
-                model.setEmpiricalValueLimit(empiricalValueLimits.get(i));
-                model.setEmpiricalValueToMoney(empiricalValueLimits.get(i) * 10);
-                model.setBonusBudgetId(bonusBudgetId);
-                list.add(model);
+            for (RewardProgramRatiosTO to : rewardProgramRatiosTOS) {
+                String bonusBudgetId = to.getId();//奖金预算额度
+                if (StringUtils.isNotEmpty(bonusBudgetId)) {
+                    RewardProgramRatio model = new RewardProgramRatio();
+                    model.setRewardProgram(to.getRewardPrograms());//奖励项目
+                    model.setFocusingDegree(to.getFocusingDegrees());//当月侧重程度
+                    model.setBudgetRange(to.getBudgetRanges());//当月预算范围
+                    model.setBonusWeight(to.getBonusWeights());//奖金权重
+                    model.setBonusLimit(to.getBonusLimits());//奖金额度
+                    model.setHonorWeight(to.getHonorWeights());//荣誉衍生奖品权重
+                    model.setHonorLimit(to.getHonorLimits());//荣誉衍生奖品额度
+                    model.setEmpiricalValue(to.getEmpiricalValues());//经验值
+                    model.setEmpiricalValueLimit(to.getEmpiricalValueLimits());//经验值额度
+                    model.setEmpiricalValueToMoney(to.getEmpiricalValueLimits() * 10);
+                    model.setBonusBudgetId(bonusBudgetId);
+                    list.add(model);
+                }
             }
             rewardProgramRatioSer.save(list);//执行批量保存操作
         }
@@ -377,27 +369,27 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
     /**
      * 更新奖励项目比例
      *
-     * @param to 奖金预算to
+     * @param rewardProgramTO 奖金预算to
      * @throws SerException
      */
     @Override
-    public void updateRewardProgramRatios(RewardProgramRatiosTO to) throws SerException {
+    public void updateRewardProgramRatios(RewardProgramTO rewardProgramTO) throws SerException {
         checkAddIdentity();
-        List<RewardProgramRatio> list = getRatioByBudgetTo(to);
+        List<RewardProgramRatio> list = getRatioByBudgetTo(rewardProgramTO);
         rewardProgramRatioSer.remove(list);//删除奖励项目比例
-        addRewardProgramRatios(to);//重新执行插入操作
+        addRewardProgramRatios(rewardProgramTO);//重新执行插入操作
     }
 
     /**
      * 根据奖金预算TO查询奖金项目比例
      *
-     * @param to
+     * @param rewardProgramTO
      * @return
      * @throws SerException
      */
-    private List<RewardProgramRatio> getRatioByBudgetTo(RewardProgramRatiosTO to) throws SerException {
+    private List<RewardProgramRatio> getRatioByBudgetTo(RewardProgramTO rewardProgramTO) throws SerException {
         checkSeeIdentity();
-        String bonusBudgetId = to.getId();//奖金预算id
+        String bonusBudgetId = rewardProgramTO.getId();//奖金预算id
         if (StringUtils.isBlank(bonusBudgetId)) {
             throw new SerException("奖金预算唯一标识为空,无法执行查询");
         }

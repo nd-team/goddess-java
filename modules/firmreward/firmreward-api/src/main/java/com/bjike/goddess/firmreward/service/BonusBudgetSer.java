@@ -9,6 +9,7 @@ import com.bjike.goddess.firmreward.entity.BonusBudget;
 import com.bjike.goddess.firmreward.excel.SonPermissionObject;
 import com.bjike.goddess.firmreward.to.BonusBudgetTO;
 import com.bjike.goddess.firmreward.to.RewardProgramRatiosTO;
+import com.bjike.goddess.firmreward.to.RewardProgramTO;
 import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 
 import java.util.List;
@@ -60,18 +61,18 @@ public interface BonusBudgetSer extends Ser<BonusBudget, BonusBudgetDTO> {
     /**
      * 添加奖励项目比例
      *
-     * @param to 奖励项目比例to
+     * @param rewardProgramTO 奖励项目比例to
      * @throws SerException
      */
-    void addRewardProgramRatios(RewardProgramRatiosTO to) throws SerException;
+    void addRewardProgramRatios(RewardProgramTO rewardProgramTO) throws SerException;
 
     /**
      * 更新奖励项目比例
      *
-     * @param to 奖励项目比例to
+     * @param rewardProgramTO 奖励项目比例to
      * @throws SerException
      */
-    void updateRewardProgramRatios(RewardProgramRatiosTO to) throws SerException;
+    void updateRewardProgramRatios(RewardProgramTO rewardProgramTO) throws SerException;
 
     /**
      * 查看奖励项目比例

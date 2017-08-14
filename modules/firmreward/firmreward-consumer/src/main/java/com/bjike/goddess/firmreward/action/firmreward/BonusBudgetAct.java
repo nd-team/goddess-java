@@ -15,6 +15,7 @@ import com.bjike.goddess.firmreward.dto.BonusBudgetDTO;
 import com.bjike.goddess.firmreward.excel.SonPermissionObject;
 import com.bjike.goddess.firmreward.to.BonusBudgetTO;
 import com.bjike.goddess.firmreward.to.RewardProgramRatiosTO;
+import com.bjike.goddess.firmreward.to.RewardProgramTO;
 import com.bjike.goddess.firmreward.vo.BonusBudgetVO;
 import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 import com.bjike.goddess.firmreward.vo.RewardProgramRatioVO;
@@ -236,14 +237,14 @@ public class BonusBudgetAct {
     /**
      * 添加奖励项目比例
      *
-     * @param to 奖励项目比例to
+     * @param rewardProgramTO 奖励项目比例to
      * @throws ActException
      * @version v1
      */
     @PostMapping("v1/addRewardProgramRatios")
-    public Result addRewardProgramRatios(@Validated(value = {RewardProgramRatiosTO.IRewardProgramRatio.class}) RewardProgramRatiosTO to, BindingResult result) throws ActException {
+    public Result addRewardProgramRatios(@Validated(value = {RewardProgramRatiosTO.IRewardProgramRatio.class}) RewardProgramTO rewardProgramTO, BindingResult result) throws ActException {
         try {
-            bonusBudgetAPI.addRewardProgramRatios(to);
+            bonusBudgetAPI.addRewardProgramRatios(rewardProgramTO);
             return new ActResult("addRewardProgramRatios success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -253,15 +254,15 @@ public class BonusBudgetAct {
     /**
      * 更新奖励项目比例
      *
-     * @param to 奖励项目比例to
+     * @param rewardProgramTO 奖励项目比例to
      * @throws ActException
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/updateRewardProgramRatios")
-    public Result updateRewardProgramRatios(@Validated(RewardProgramRatiosTO.IRewardProgramRatio.class) RewardProgramRatiosTO to, BindingResult result) throws ActException {
+    public Result updateRewardProgramRatios(@Validated(RewardProgramRatiosTO.IRewardProgramRatio.class) RewardProgramTO rewardProgramTO, BindingResult result) throws ActException {
         try {
-            bonusBudgetAPI.updateRewardProgramRatios(to);
+            bonusBudgetAPI.updateRewardProgramRatios(rewardProgramTO);
             return new ActResult("updateRewardProgramRatios success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

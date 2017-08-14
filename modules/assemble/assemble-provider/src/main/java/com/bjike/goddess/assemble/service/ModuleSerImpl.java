@@ -102,8 +102,7 @@ public class ModuleSerImpl extends ServiceImpl<Module, ModuleDTO> implements Mod
     public Boolean isCheck(String name) throws SerException {
         ModuleApplyDTO dto = new ModuleApplyDTO();
         dto.getConditions().add(Restrict.eq("company", "北京艾佳"));
-        dto.getConditions().add(Restrict.or("module.name", name));
-        dto.getConditions().add(Restrict.or("module.moduleName", name));
+        dto.getConditions().add(Restrict.eq("module.moduleName", name));
         return null != moduleApplySer.findOne(dto);
     }
 
