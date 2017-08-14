@@ -397,7 +397,90 @@ public class RecruitPlanSerImpl extends ServiceImpl<RecruitPlan, RecruitPlanDTO>
         } else if (StringUtils.isNotBlank(position)) {
             return positionCount(dto.getTime(), area, position, interviewInfors, firstPhoneRecords, recruitPlans);
         }
-        return null;
+        SituationTBO situationTBO = new SituationTBO();
+        situationTBO.setDate(dto.getTime());
+        situationTBO.setRecruitArea(area);
+        situationTBO.setId("2");
+        for (String fi : fInviteReason()) {
+            for (String fd : fDenyFirViewReason()) {
+                for (FirstPhoneRecord f : firstPhoneRecords) {
+                    actualDayResumeNo++;
+                    if ((f.getWhetherFirstInviteSuccess() != null) && f.getWhetherFirstInviteSuccess()) {
+                        actualDayInviteNo++;
+                    }
+                    if ((f.getWhetherFirstInviteSuccess() != null) && (!f.getWhetherFirstInviteSuccess()) && fi.equals(f.getFailureInviteReason())) {
+                        failInterReasonNum++;
+                        failInterNum++;
+                        situationTBO.setFailInterReason(fi);
+                        situationTBO.setFailInterReasonNum(failInterReasonNum);
+                        list.add(situationTBO);
+                        failInterReasonNum = 0;
+                    }
+                    if ((f.getWhetherFirstInterview() != null) && (!f.getWhetherFirstInterview()) && fd.equals(f.getDenyFirViewReason())) {
+                        denyFirViewReasonNum++;
+                        denyFirViewNum++;
+                        situationTBO.setDenyFirViewReason(fd);
+                        situationTBO.setDenyFirViewReasonNum(denyFirViewReasonNum);
+                        list.add(situationTBO);
+                        denyFirViewReasonNum = 0;
+                    }
+                }
+            }
+        }
+        for (String id : iDenyAdmitReason()) {
+            for (InterviewInfor i : interviewInfors) {
+                actualDayInterviewNo++;
+                if ((i.getWhetherFirstTestPass() != null) && i.getWhetherFirstTestPass()) {
+                    actualDayPassInterviewNo++;
+                }
+                if ((i.getWhetherAcceptAdmit() != null) && (!i.getWhetherAcceptAdmit()) && id.equals(i.getDenyAdmitReason())) {
+                    denyAdmitNum++;
+                    denyAdmitReasonNum++;
+                    situationTBO.setDenyAdmitReason(id);
+                    situationTBO.setDenyAdmitReasonNum(denyAdmitReasonNum);
+                    list.add(situationTBO);
+                    denyAdmitReasonNum = 0;
+                }
+            }
+        }
+        situationTBO.setFailInterNum(failInterNum);
+        situationTBO.setDenyFirViewNum(denyFirViewNum);
+        situationTBO.setDenyAdmitNum(denyAdmitNum);
+        list.add(situationTBO);
+        Set<String> set = allFirmPrincipal();
+        for (String s : set) {
+            for (RecruitPlan r : recruitPlans) {
+                if (s.equals(r.getFirmPrincipal())) {
+                    planDayResumeNo += r.getPlanDayResumeNo();
+                    planDayInviteNo += r.getPlanDayInviteNo();
+                    planDayInterviewNo += r.getPlanDayInterviewNo();
+                    planDayPassInterviewNo += r.getPlanDayPassInterviewNo();
+                    SituationBO situationBO = new SituationBO();
+                    situationBO.setDate(dto.getTime());
+                    situationBO.setRecruitArea(area);
+                    situationBO.setPlanFilterCount(planDayResumeNo);
+                    situationBO.setActualFilterCount(actualDayResumeNo);
+                    situationBO.setDayFilterCountDiff(actualDayResumeNo - planDayResumeNo);
+                    situationBO.setPlanInviteCount(planDayInviteNo);
+                    situationBO.setActualInviteCount(actualDayInviteNo);
+                    situationBO.setDayInviteCountDiff(actualDayInviteNo - planDayInviteNo);
+                    situationBO.setPlanInterviewCount(planDayInterviewNo);
+                    situationBO.setActualInterviewCount(actualDayInterviewNo);
+                    situationBO.setDayInviteCountDiff(actualDayInterviewNo - planDayInterviewNo);
+                    situationBO.setPlanPassInterviewCount(planDayPassInterviewNo);
+                    situationBO.setActualPassInterviewCount(actualDayPassInterviewNo);
+                    situationBO.setDayPassInterviewCount(actualDayPassInterviewNo - planDayPassInterviewNo);
+                    situationBO.setPrincipalStaff(s);
+                    situationBO.setId("1");
+                    list.add(situationBO);
+                    planDayResumeNo = 0;
+                    planDayInviteNo = 0;
+                    planDayInterviewNo = 0;
+                    planDayPassInterviewNo = 0;   //置为0
+                }
+            }
+        }
+        return list;
     }
 
     private List<Object> departCount(String time, String area, String depart, List<InterviewInfor> interviewInfors, List<FirstPhoneRecord> firstPhoneRecords, List<RecruitPlan> recruitPlans) throws SerException {

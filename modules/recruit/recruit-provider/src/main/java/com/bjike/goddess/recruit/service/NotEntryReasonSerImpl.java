@@ -292,7 +292,7 @@ public class NotEntryReasonSerImpl extends ServiceImpl<NotEntryReason, NotEntryR
 
     @Override
     public Set<String> allReason() throws SerException {
-        List<NotEntryReason> list = new ArrayList<>();
+        List<NotEntryReason> list = super.findAll();
         Set<String> set = new HashSet<>();
         for (NotEntryReason f : list) {
             set.add(f.getNotEntryReasonType());

@@ -429,10 +429,10 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
         RemainAdjustBO firstBO = list.get(0);
         Double bankBalance = firstBO.getBankWaterSum();
         Double fundBalance = firstBO.getMoneyWaterSum();
-        Double addBank = 0.00;
-        Double addFund = 0.00;
-        Double removeBank = 0.00;
-        Double removeFund = 0.00;
+        double addBank = 0;
+        double addFund = 0;
+        double removeBank = 0;
+        double removeFund = 0;
         boolean b1 = true;
         boolean b2 = true;
         boolean b3 = true;
@@ -529,9 +529,9 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
     private BankReconciliationBO showBO(BankReconciliationBO bo) throws SerException {
         String account = findAccountByName(bo.getName());
         List<BankRecordCollectBO> boList = bankRecordAPI.collectByCondition(bo.getYear(), bo.getMonth(), account);
-        Double bankDebtor = 0.00;
-        Double bankCreditor = 0.00;
-        Double bankBalance = 0.00;
+        double bankDebtor = 0;
+        double bankCreditor = 0;
+        double bankBalance = 0;
         if ((boList != null) && (!boList.isEmpty())) {
             BankRecordCollectBO bankRecordCollectBO = boList.get(boList.size() - 1);
             bankDebtor = bankRecordCollectBO.getDebtorCost();

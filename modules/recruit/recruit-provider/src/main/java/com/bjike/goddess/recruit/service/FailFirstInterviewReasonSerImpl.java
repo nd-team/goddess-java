@@ -481,7 +481,7 @@ public class FailFirstInterviewReasonSerImpl extends ServiceImpl<FailFirstInterv
 
     @Override
     public Set<String> allReason() throws SerException {
-        List<FailFirstInterviewReason> list = new ArrayList<>();
+        List<FailFirstInterviewReason> list = super.findAll();
         Set<String> set = new HashSet<>();
         for (FailFirstInterviewReason f : list) {
             set.add(f.getFailFirstInterviewReasonType());
