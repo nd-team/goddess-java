@@ -28,6 +28,5 @@
 	<dubbo:reference  validation="true" id="computerAssistApiImpl" interface="com.bjike.goddess.assistance.api.ComputerAssistAPI" />
 	<dubbo:reference  validation="true" id="hotAssistApiImpl" interface="com.bjike.goddess.assistance.api.HotAssistAPI" />
 	<dubbo:reference  validation="true" id="houseAssistApiImpl" interface="com.bjike.goddess.assistance.api.HouseAssistAPI" />
-	<dubbo:reference  validation="true" id="rightSetApiImpl" interface="com.bjike.goddess.assistance.api.RightSetAPI" />
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl"/>
 </beans>

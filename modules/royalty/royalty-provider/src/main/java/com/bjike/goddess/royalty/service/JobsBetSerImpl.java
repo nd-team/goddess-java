@@ -12,8 +12,6 @@ import com.bjike.goddess.royalty.enums.GuideAddrStatus;
 import com.bjike.goddess.royalty.to.*;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import com.sun.xml.internal.fastinfoset.algorithm.BooleanEncodingAlgorithm;
-import jdk.nashorn.internal.scripts.JO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -216,7 +214,42 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
     @Override
     public JobsBetABO getOne(String id) throws SerException {
         JobsBetA jobsBetA = jobsBetASer.findById(id);
-        return BeanTransform.copyProperties(jobsBetA, JobsBetABO.class);
+        JobsBetABO listABO = BeanTransform.copyProperties(jobsBetA, JobsBetABO.class);
+        if (listABO != null) {
+            JobsBetBDTO bdto = new JobsBetBDTO();
+            bdto.getConditions().add(Restrict.eq("jobsBetA.id", listABO.getId()));
+            List<JobsBetB> listB = jobsBetBSer.findByCis(bdto);
+            List<JobsBetBBO> listBBO = BeanTransform.copyProperties(listB, JobsBetBBO.class);
+            listABO.setJobsBetBBOS(listBBO);
+            if (listBBO != null) {
+                for (JobsBetBBO jobsBetBBO : listBBO) {
+                    JobsBetCDTO cdto = new JobsBetCDTO();
+                    cdto.getConditions().add(Restrict.eq("jobsBetB.id", jobsBetBBO.getId()));
+                    List<JobsBetC> listC = jobsBetCSer.findByCis(cdto);
+                    List<JobsBetCBO> listCBO = BeanTransform.copyProperties(listC, JobsBetCBO.class);
+                    jobsBetBBO.setJobsBetCBOS(listCBO);
+                    if (listCBO != null) {
+                        for (JobsBetCBO jobsBetCBO : listCBO) {
+                            JobsBetDDTO ddto = new JobsBetDDTO();
+                            ddto.getConditions().add(Restrict.eq("jobsBetC.id", jobsBetCBO.getId()));
+                            List<JobsBetD> listD = jobsBetDSer.findByCis(ddto);
+                            List<JobsBetDBO> listDBO = BeanTransform.copyProperties(listD, JobsBetDBO.class);
+                            jobsBetCBO.setJobsBetDBOS(listDBO);
+                            if (listDBO != null) {
+                                for (JobsBetDBO jobsBetDBO : listDBO) {
+                                    JobsBetEDTO edto = new JobsBetEDTO();
+                                    edto.getConditions().add(Restrict.eq("jobsBetD.id", jobsBetDBO.getId()));
+                                    List<JobsBetE> listE = jobsBetESer.findByCis(edto);
+                                    List<JobsBetEBO> listEBO = BeanTransform.copyProperties(listE, JobsBetEBO.class);
+                                    jobsBetDBO.setJobsBetEBOS(listEBO);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return listABO;
     }
 
     @Override
@@ -225,32 +258,32 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
         List<JobsBetA> listA = jobsBetASer.findByCis(dto);
         List<JobsBetABO> listABO = BeanTransform.copyProperties(listA, JobsBetABO.class);
         if (listABO != null) {
-            for (JobsBetABO jobsBetABO :listABO) {
+            for (JobsBetABO jobsBetABO : listABO) {
                 JobsBetBDTO bdto = new JobsBetBDTO();
-                bdto.getConditions().add(Restrict.eq("jobsBetA.id",jobsBetABO.getId()));
+                bdto.getConditions().add(Restrict.eq("jobsBetA.id", jobsBetABO.getId()));
                 List<JobsBetB> listB = jobsBetBSer.findByCis(bdto);
-                List<JobsBetBBO> listBBO = BeanTransform.copyProperties(listB,JobsBetBBO.class);
+                List<JobsBetBBO> listBBO = BeanTransform.copyProperties(listB, JobsBetBBO.class);
                 jobsBetABO.setJobsBetBBOS(listBBO);
-                if(listBBO!=null){
-                    for(JobsBetBBO jobsBetBBO:listBBO){
+                if (listBBO != null) {
+                    for (JobsBetBBO jobsBetBBO : listBBO) {
                         JobsBetCDTO cdto = new JobsBetCDTO();
-                        cdto.getConditions().add(Restrict.eq("jobsBetB.id",jobsBetBBO.getId()));
+                        cdto.getConditions().add(Restrict.eq("jobsBetB.id", jobsBetBBO.getId()));
                         List<JobsBetC> listC = jobsBetCSer.findByCis(cdto);
-                        List<JobsBetCBO> listCBO  = BeanTransform.copyProperties(listC,JobsBetCBO.class);
+                        List<JobsBetCBO> listCBO = BeanTransform.copyProperties(listC, JobsBetCBO.class);
                         jobsBetBBO.setJobsBetCBOS(listCBO);
-                        if(listCBO!=null){
-                            for(JobsBetCBO jobsBetCBO : listCBO){
+                        if (listCBO != null) {
+                            for (JobsBetCBO jobsBetCBO : listCBO) {
                                 JobsBetDDTO ddto = new JobsBetDDTO();
-                                ddto.getConditions().add(Restrict.eq("jobsBetC.id",jobsBetCBO.getId()));
+                                ddto.getConditions().add(Restrict.eq("jobsBetC.id", jobsBetCBO.getId()));
                                 List<JobsBetD> listD = jobsBetDSer.findByCis(ddto);
-                                List<JobsBetDBO> listDBO = BeanTransform.copyProperties(listD,JobsBetDBO.class);
+                                List<JobsBetDBO> listDBO = BeanTransform.copyProperties(listD, JobsBetDBO.class);
                                 jobsBetCBO.setJobsBetDBOS(listDBO);
-                                if(listDBO!=null){
-                                    for(JobsBetDBO jobsBetDBO:listDBO){
+                                if (listDBO != null) {
+                                    for (JobsBetDBO jobsBetDBO : listDBO) {
                                         JobsBetEDTO edto = new JobsBetEDTO();
-                                        edto.getConditions().add(Restrict.eq("jobsBetD.id",jobsBetDBO.getId()));
+                                        edto.getConditions().add(Restrict.eq("jobsBetD.id", jobsBetDBO.getId()));
                                         List<JobsBetE> listE = jobsBetESer.findByCis(edto);
-                                        List<JobsBetEBO> listEBO = BeanTransform.copyProperties(listE,JobsBetEBO.class);
+                                        List<JobsBetEBO> listEBO = BeanTransform.copyProperties(listE, JobsBetEBO.class);
                                         jobsBetDBO.setJobsBetEBOS(listEBO);
                                     }
                                 }
@@ -433,7 +466,7 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
                 JobsBetB jobsBetB = BeanTransform.copyProperties(jobsBetBTO, JobsBetB.class, true);
                 jobsBetB.setJobsBetA(jobsBetA);
 
-
+                jobsBetB.setId(null);
                 jobsBetBSer.update(jobsBetB);
                 jobsBetBS.add(jobsBetB);
 
@@ -500,53 +533,54 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
     @Override
     public void delete(String id) throws SerException {
         checkAddIdentity();
-        JobsBetADTO jobsBetADTO = new JobsBetADTO();
-        jobsBetADTO.getConditions().add(Restrict.eq("id", id));
-        List<JobsBetA> aList = jobsBetASer.findByCis(jobsBetADTO);
-        if (aList != null && aList.size() > 0) {
-
-            List<String> aIdList = aList.stream().map(JobsBetA::getId).collect(Collectors.toList());
-            String[] aids = new String[aIdList.size()];
-            aids = aIdList.toArray(aids);
-            //先删掉B表对应数据
-            JobsBetBDTO jobsBetBDTO = new JobsBetBDTO();
-            jobsBetBDTO.getConditions().add(Restrict.eq("jobsBetA.id", aids));
-            List<JobsBetB> bList = jobsBetBSer.findByCis(jobsBetBDTO);
-            if (bList != null && bList.size() > 0) {
-                //查询对应C表的数据，先删除
-                List<String> bIdList = bList.stream().map(JobsBetB::getId).collect(Collectors.toList());
-                String[] bids = new String[bIdList.size()];
-                bids = bIdList.toArray(bids);
-                JobsBetCDTO jobsBetCDTO = new JobsBetCDTO();
-                jobsBetCDTO.getConditions().add(Restrict.eq("jobsBetB.id", bids));
-                List<JobsBetC> cList = jobsBetCSer.findByCis(jobsBetCDTO);
-                if (cList != null && cList.size() > 0) {
-                    //查询对应D表的数据，先删除
-                    List<String> cIdList = cList.stream().map(JobsBetC::getId).collect(Collectors.toList());
-                    String[] cids = new String[cIdList.size()];
-                    cids = cIdList.toArray(cids);
-                    JobsBetDDTO jobsBetDDTO = new JobsBetDDTO();
-                    jobsBetDDTO.getConditions().add(Restrict.in("jobsBetC.id", cids));
-                    List<JobsBetD> dList = jobsBetDSer.findByCis(jobsBetDDTO);
-                    if (dList != null && dList.size() > 0) {
-                        //查询对应E表的数据，先删除
-                        List<String> dIdList = dList.stream().map(JobsBetD::getId).collect(Collectors.toList());
-                        String[] dids = new String[dIdList.size()];
-                        dids = dIdList.toArray(dids);
-                        JobsBetEDTO jobsBetEDTO = new JobsBetEDTO();
-                        jobsBetEDTO.getConditions().add(Restrict.in("jobsBetD.id", dids));
-                        List<JobsBetE> eList = jobsBetESer.findByCis(jobsBetEDTO);
-                        if (eList != null && eList.size() > 0) {
-                            jobsBetESer.remove(eList);
-                        }
-                        jobsBetDSer.remove(dList);
-                    }
-                    jobsBetCSer.remove(cList);
-                }
-                jobsBetBSer.remove(bList);
-            }
-            jobsBetASer.remove(aList);
+        JobsBetE jobsBetE = jobsBetESer.findById(id);
+        if (jobsBetE == null) {
+            throw new SerException("该对象不存在");
         }
+        jobsBetESer.remove(id);
+        List<JobsBetD> dList = jobsBetDSer.findAll();
+        List<JobsBetC> cList = jobsBetCSer.findAll();
+        List<JobsBetB> bList = jobsBetBSer.findAll();
+        List<JobsBetA> aList = jobsBetASer.findAll();
+
+        Set<String> dids = new HashSet<>();
+        Set<String> cids = new HashSet<>();
+        Set<String> bids = new HashSet<>();
+        Set<String> aids = new HashSet<>();
+
+        for (JobsBetE e : jobsBetESer.findAll()) {
+            dids.add(e.getJobsBetD().getId());
+        }
+        for (JobsBetD d : dList) {
+            if (!dids.contains(d.getId())) {
+                jobsBetDSer.remove(d.getId());
+            }
+        }
+        for (JobsBetD d1 : jobsBetDSer.findAll()) {
+            cids.add(d1.getJobsBetC().getId());
+        }
+        for (JobsBetC c : cList) {
+            if (!cids.contains(c.getId())) {
+                jobsBetCSer.remove(id);
+            }
+        }
+        for (JobsBetC c1 : jobsBetCSer.findAll()) {
+            bids.add(c1.getJobsBetB().getId());
+        }
+        for (JobsBetB b : bList) {
+            if (!bids.contains(b.getId())) {
+                jobsBetBSer.remove(id);
+            }
+        }
+        for (JobsBetB b1 : jobsBetBSer.findAll()) {
+            aids.add(b1.getJobsBetA().getId());
+        }
+        for (JobsBetA a : aList) {
+            if (!aids.contains(a.getId())) {
+                jobsBetASer.remove(id);
+            }
+        }
+
 
     }
 

@@ -27,6 +27,7 @@ import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -82,7 +83,7 @@ public class SalaryInformationAction extends BaseFileAction{
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class) SalaryInformationTO to) throws ActException{
+    public Result add(@Validated(ADD.class) SalaryInformationTO to,BindingResult bindingResult) throws ActException{
         try {
             SalaryInformationBO bo = salaryInformationAPI.addSalaryInformation(to);
             SalaryInformationVO vo = BeanTransform.copyProperties(bo,SalaryInformationVO.class);

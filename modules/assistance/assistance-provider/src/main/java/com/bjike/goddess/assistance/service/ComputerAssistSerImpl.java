@@ -56,7 +56,7 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.busCusPermission("1");
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -92,7 +92,7 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.busCusPermission("1");
         } else {
             flag = true;
         }
@@ -142,9 +142,6 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
                 flag = guideAddIdentity();
                 break;
             case EDIT:
-                flag = guideAddIdentity();
-                break;
-            case AUDIT:
                 flag = guideAddIdentity();
                 break;
             case DELETE:

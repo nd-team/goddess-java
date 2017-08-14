@@ -18,7 +18,7 @@ public class DividendsConditionsVO {
     /**
      * 发行总股数
      */
-    private int totalNum;
+    private Long totalNum;
 
     /**
      * 发行总额
@@ -39,7 +39,7 @@ public class DividendsConditionsVO {
     /**
      * 持股数/总持股数
      */
-    private int num;
+    private Long num;
 
     /**
      * 总股本/持有总额
@@ -115,11 +115,11 @@ public class DividendsConditionsVO {
 //    private Boolean situation;
 
 
-    public int getTotalNum() {
+    public Long getTotalNum() {
         return totalNum;
     }
 
-    public void setTotalNum(int totalNum) {
+    public void setTotalNum(Long totalNum) {
         this.totalNum = totalNum;
     }
 
@@ -139,11 +139,11 @@ public class DividendsConditionsVO {
         this.shareholderNum = shareholderNum;
     }
 
-    public int getNum() {
+    public Long getNum() {
         return num;
     }
 
-    public void setNum(int num) {
+    public void setNum(Long num) {
         this.num = num;
     }
 

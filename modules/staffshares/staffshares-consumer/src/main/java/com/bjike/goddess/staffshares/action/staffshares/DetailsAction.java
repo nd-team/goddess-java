@@ -9,11 +9,14 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffshares.api.DetailsAPI;
 import com.bjike.goddess.staffshares.api.PurchaseAPI;
 import com.bjike.goddess.staffshares.api.SchemeAPI;
+import com.bjike.goddess.staffshares.api.SellscheduleAPI;
 import com.bjike.goddess.staffshares.bo.DetailsBO;
 import com.bjike.goddess.staffshares.bo.SchemeIssueBO;
 import com.bjike.goddess.staffshares.dto.DetailsDTO;
 import com.bjike.goddess.staffshares.dto.SchemeDTO;
+import com.bjike.goddess.staffshares.to.GuidePermissionTO;
 import com.bjike.goddess.staffshares.to.PurchaseTO;
+import com.bjike.goddess.staffshares.to.SellscheduleTO;
 import com.bjike.goddess.staffshares.vo.DetailsVO;
 import com.bjike.goddess.staffshares.vo.SchemeIssueVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +46,31 @@ public class DetailsAction {
     private PurchaseAPI purchaseAPI;
     @Autowired
     private DetailsAPI detailsAPI;
+    @Autowired
+    private SellscheduleAPI sellscheduleAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = detailsAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
     /**
@@ -193,5 +221,21 @@ public class DetailsAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 出售
+     *
+     * @version v1
+     */
+    @PutMapping("v1/sell/{id}")
+    public Result sell(@Validated(EDIT.class) SellscheduleTO to,BindingResult bindingResult) throws ActException {
+        try {
+            detailsAPI.sell(to);
+            return ActResult.initialize("出售成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }

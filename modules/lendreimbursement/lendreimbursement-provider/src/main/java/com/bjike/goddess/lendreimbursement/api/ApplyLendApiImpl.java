@@ -352,4 +352,8 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
         return applyLendSer.editPayMoneyCJH(applyLendTO);
     }
 
+    @Override
+    public Long countWaitPayCJH(ApplyLendDTO applyLendDTO) throws SerException {
+        return applyLendSer.countWaitPayCJH(applyLendDTO);
+    }
 }

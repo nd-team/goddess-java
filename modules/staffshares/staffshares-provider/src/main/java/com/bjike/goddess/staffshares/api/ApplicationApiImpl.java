@@ -3,8 +3,10 @@ package com.bjike.goddess.staffshares.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffshares.bo.ApplicationBO;
 import com.bjike.goddess.staffshares.dto.ApplicationDTO;
+import com.bjike.goddess.staffshares.excel.SonPermissionObject;
 import com.bjike.goddess.staffshares.service.ApplicationSer;
 import com.bjike.goddess.staffshares.to.ApplicationTO;
+import com.bjike.goddess.staffshares.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,16 @@ import java.util.List;
 public class ApplicationApiImpl implements ApplicationAPI {
     @Autowired
     private ApplicationSer applicationSer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return applicationSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return applicationSer.guidePermission( guidePermissionTO );
+    }
 
     @Override
     public void save(ApplicationTO to) throws SerException {

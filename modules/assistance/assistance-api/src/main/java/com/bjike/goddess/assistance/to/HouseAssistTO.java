@@ -66,25 +66,12 @@ public class HouseAssistTO extends BaseTO {
     @NotNull(message = "外宿天数不能为空,且是数字")
     private Double outDays;
 
-    /**
-     * 住宿补助额度
-     */
-    private Double money;
 
     /**
      * 备注
      */
     private String remark;
 
-    /**
-     * 创建时间
-     */
-    private String createTime;
-
-    /**
-     * 修改时间
-     */
-    private String modifyTime;
 
 
     public String getArea() {
@@ -159,35 +146,11 @@ public class HouseAssistTO extends BaseTO {
         this.outDays = outDays;
     }
 
-    public Double getMoney() {
-        return money;
-    }
-
-    public void setMoney(Double money) {
-        this.money = money;
-    }
-
     public String getRemark() {
         return remark;
     }
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(String modifyTime) {
-        this.modifyTime = modifyTime;
     }
 }

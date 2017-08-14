@@ -133,16 +133,16 @@ public interface RentalApplyAPI {
     default RentalApplyBO manageAudit(RentalApplyTO applyTO) throws SerException {
         return null;
     }
-    /**
-     * 租房信息
-     *
-     * @param to
-     * @return class RentalBO
-     * @throws SerException
-     */
-    default RentalBO rentInfo(RentalApplyTO to) throws SerException {
-        return null;
-    }
+//    /**
+//     * 租房信息
+//     *
+//     * @param to
+//     * @return class RentalBO
+//     * @throws SerException
+//     */
+//    default RentalBO rentInfo(RentalApplyTO to) throws SerException {
+//        return null;
+//    }
     /**
      * 导出Excel
      *

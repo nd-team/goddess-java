@@ -7,6 +7,7 @@ import com.bjike.goddess.staffshares.bo.DividendsConditionsBO;
 import com.bjike.goddess.staffshares.bo.DividendsDetailBO;
 import com.bjike.goddess.staffshares.dto.DividendsDTO;
 import com.bjike.goddess.staffshares.to.DividendsTO;
+import com.bjike.goddess.staffshares.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -20,6 +21,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface DividendsAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 公司干股交易情况

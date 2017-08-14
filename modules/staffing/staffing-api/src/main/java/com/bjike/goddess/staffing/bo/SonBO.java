@@ -17,6 +17,10 @@ import java.util.List;
 public class SonBO extends BaseBO {
 
     /**
+     * 人工成本计划信息
+     */
+    private ExpendPlanBO expendPlanBO;
+    /**
      * 薪资区间
      */
     private String sal;
@@ -44,7 +48,15 @@ public class SonBO extends BaseBO {
     /**
      * 人工成本计划子表详细信息
      */
-    private List<ExpendPlanSonDetailBO> details=new ArrayList<>();
+    private List<ExpendPlanSonDetailBO> details = new ArrayList<>();
+
+    public ExpendPlanBO getExpendPlanBO() {
+        return expendPlanBO;
+    }
+
+    public void setExpendPlanBO(ExpendPlanBO expendPlanBO) {
+        this.expendPlanBO = expendPlanBO;
+    }
 
     public List<ExpendPlanSonDetailBO> getDetails() {
         return details;

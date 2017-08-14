@@ -99,8 +99,8 @@ public class Scheme extends BaseEntity {
     /**
      * 发行数量
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '发行数量'")
-    private int number;
+    @Column(name = "", nullable = false, columnDefinition = "BIGINT(20)  COMMENT '发行数量'")
+    private Long number;
 
     /**
      * 发行价格
@@ -177,8 +177,8 @@ public class Scheme extends BaseEntity {
     /**
      * 剩余出售股数
      */
-    @Column(name = "sharesNum", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '剩余出售股数'")
-    private int sharesNum;
+    @Column(name = "sharesNum", nullable = true, columnDefinition = "BIGINT(20)   COMMENT '剩余出售股数'")
+    private Long sharesNum;
 
 
     public Status getStatus() {
@@ -277,11 +277,11 @@ public class Scheme extends BaseEntity {
         this.proportion = proportion;
     }
 
-    public int getNumber() {
+    public Long getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(Long number) {
         this.number = number;
     }
 
@@ -381,11 +381,11 @@ public class Scheme extends BaseEntity {
         this.opinion = opinion;
     }
 
-    public int getSharesNum() {
+    public Long getSharesNum() {
         return sharesNum;
     }
 
-    public void setSharesNum(int sharesNum) {
+    public void setSharesNum(Long sharesNum) {
         this.sharesNum = sharesNum;
     }
 }

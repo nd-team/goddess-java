@@ -6,6 +6,7 @@ import com.bjike.goddess.staffshares.bo.BuyscheduleCollectBO;
 import com.bjike.goddess.staffshares.dto.BuyscheduleDTO;
 import com.bjike.goddess.staffshares.service.BuyscheduleSer;
 import com.bjike.goddess.staffshares.to.BuyscheduleTO;
+import com.bjike.goddess.staffshares.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,16 @@ public class BuyscheduleApiImpl implements BuyscheduleAPI {
     @Autowired
     private BuyscheduleSer buyscheduleSer;
 
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return buyscheduleSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return buyscheduleSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public List<BuyscheduleBO> maps(BuyscheduleDTO dto) throws SerException {
         return buyscheduleSer.maps(dto);

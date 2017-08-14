@@ -26,7 +26,7 @@ import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.regularization.api.RegularizationAPI;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
-import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
+import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.BeanUtils;
@@ -467,7 +467,7 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
     public PromotionApplyBO save(PromotionApplyTO to) throws SerException {
         checkAddIdentity();
         PromotionApply entity = BeanTransform.copyProperties(to, PromotionApply.class, true);
-        List<EntryBasicInfoVO> list = entryBasicInfoAPI.getByEmpNumber(to.getEmployeeId());
+        List<EntryBasicInfoBO> list = entryBasicInfoAPI.getByEmpNumber(to.getEmployeeId());
         if ((list != null) && (list.size() != 0)) {
             LocalDate time = DateUtil.parseDate(list.get(0).getEntryTime());
             int entryYear = time.getYear();
@@ -543,6 +543,10 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
     public List<PromotionApplyBO> find(PromotionApplyDTO dto) throws SerException {
         UserBO userBO = userAPI.currentUser();
         List<PositionDetailBO> list1 = positionDetailUserAPI.findPositionByUser(userBO.getId());
+        if(("admin".equals(userBO.getUsername().toLowerCase()))){
+            List<PromotionApply> list = super.findByCis(dto, true);
+            return BeanTransform.copyProperties(list, PromotionApplyBO.class);
+        }
         for (PositionDetailBO p1 : list1) {
             String depart = p1.getDepartmentName();
             String module = p1.getModuleName();

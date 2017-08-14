@@ -38,7 +38,7 @@ public class TransactionVO {
     /**
      * 持股数
      */
-    private int sharesNum;
+    private Long sharesNum;
 
     /**
      * 持仓状态
@@ -90,11 +90,11 @@ public class TransactionVO {
         this.equity = equity;
     }
 
-    public int getSharesNum() {
+    public Long getSharesNum() {
         return sharesNum;
     }
 
-    public void setSharesNum(int sharesNum) {
+    public void setSharesNum(Long sharesNum) {
         this.sharesNum = sharesNum;
     }
 

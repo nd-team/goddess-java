@@ -5,7 +5,9 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.staffshares.bo.ApplicationBO;
 import com.bjike.goddess.staffshares.dto.ApplicationDTO;
 import com.bjike.goddess.staffshares.entity.Application;
+import com.bjike.goddess.staffshares.excel.SonPermissionObject;
 import com.bjike.goddess.staffshares.to.ApplicationTO;
+import com.bjike.goddess.staffshares.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +21,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ApplicationSer extends Ser<Application, ApplicationDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 工能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 申请

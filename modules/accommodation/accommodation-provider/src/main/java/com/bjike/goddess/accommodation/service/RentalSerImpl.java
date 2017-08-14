@@ -2,12 +2,15 @@ package com.bjike.goddess.accommodation.service;
 
 import com.bjike.goddess.accommodation.bo.CollectBO;
 import com.bjike.goddess.accommodation.bo.RentalBO;
+import com.bjike.goddess.accommodation.dto.RentalApplyDTO;
 import com.bjike.goddess.accommodation.dto.RentalDTO;
 import com.bjike.goddess.accommodation.entity.CusPermission;
 import com.bjike.goddess.accommodation.entity.Rental;
+import com.bjike.goddess.accommodation.entity.RentalApply;
 import com.bjike.goddess.accommodation.enums.GuideAddrStatus;
 import com.bjike.goddess.accommodation.excel.RentalExport;
 import com.bjike.goddess.accommodation.to.GuidePermissionTO;
+import com.bjike.goddess.accommodation.to.RentalApplyTO;
 import com.bjike.goddess.accommodation.to.RentalTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -182,7 +185,8 @@ public class RentalSerImpl extends ServiceImpl<Rental, RentalDTO> implements Ren
         }
         return flag;
     }
-
+@Autowired
+private RentalApplySer rentalApplySer;
     @Override
     public Long count(RentalDTO rentalDTO) throws SerException {
         Long count = super.count(rentalDTO);
@@ -197,21 +201,55 @@ public class RentalSerImpl extends ServiceImpl<Rental, RentalDTO> implements Ren
 
     @Override
     public List<RentalBO> findListRental(RentalDTO rentalDTO) throws SerException {
+        RentalApplyDTO applyDTO = new RentalApplyDTO();
+        List<RentalApply> rentalApplies = rentalApplySer.findByCis(applyDTO);
 
+        Rental rental = new Rental();
+        for(RentalApply rentalApply:rentalApplies){
+            if ("通过".equals(rentalApply.getManagePass()) && "通过".equals(rentalApply.getCommerceRemark())
+                    && "通过".equals(rentalApply.getComprehensiveRemark()) && "通过".equals(rentalApply.getOperatingRemark())&&(rentalApply.getStatus())==null) {
+                rental.setRentNum(rentalApply.getRentNum());//租房编号
+                rental.setArea(rentalApply.getArea());//地区
+                rental.setProjectGroup(rentalApply.getProjectGroup());//项目组
+                rental.setProjectName(rentalApply.getProjectName());//项目名称
+                rental.setLessee(rentalApply.getLessee());//租赁人
+                rental.setAddress(rentalApply.getAddress());//租房地址
+                rental.setLandlord(rentalApply.getLandlord());//房东姓名
+                rental.setContact(rentalApply.getContact());//联系方式
+                rental.setPurpose(rentalApply.getPurpose());//租房用途
+                rental.setAgency(rentalApply.getAgency());//中介费
+                rental.setDeposit(rentalApply.getDeposit());//押金
+                rental.setRent(rentalApply.getRent());//房租
+                rental.setManagementFee(rentalApply.getRentFee());//管理费
+                rental.setHealthFee(rentalApply.getSanitation());//卫生费
+                rental.setRentPay(rentalApply.getRentPay());//房租缴费方
+                rental.setWaterMoney(rentalApply.getWater());//水费计价金额(元/吨)
+                rental.setWaterPay(rentalApply.getWaterPay());//水费缴费方
+                rental.setEnergyPay(rentalApply.getEnergyPay());//电费缴费方
+                rental.setEnergyMoney(rentalApply.getEnergy()); //电费计价额
+                rental.setNetworkMoney(rentalApply.getNetwork());// 网络套餐费用缴纳金额
+                rental.setNetworkPay(rentalApply.getNetworkPay());  //网络套餐费用缴费方
+                rental.setCreateTime(LocalDateTime.now());
+                rental.setModifyTime(LocalDateTime.now());
+                rentalApply.setStatus(true);
+                rentalApplySer.update(rentalApply);
+                super.save(rental);
+            }
+        }
         List<Rental> rentals = super.findByCis(rentalDTO, true);
         List<RentalBO> rentalBOS = BeanTransform.copyProperties(rentals, RentalBO.class);
         return rentalBOS;
     }
 
-    @Transactional(rollbackFor = SerException.class)
-    @Override
-    public RentalBO insertRental(RentalTO rentalTO) throws SerException {
-        Rental rental = BeanTransform.copyProperties(rentalTO, Rental.class, true,"projectName");
-        rental.setCreateTime(LocalDateTime.now());
-        rental.setProjectName(StringUtils.join(rentalTO.getProjectName(),","));
-        super.save(rental);
-        return BeanTransform.copyProperties(rental, RentalBO.class);
-    }
+//    @Transactional(rollbackFor = SerException.class)
+//    @Override
+//    public RentalBO insertRental(RentalTO rentalTO) throws SerException {
+//        Rental rental = BeanTransform.copyProperties(rentalTO, Rental.class, true,"projectName");
+//        rental.setCreateTime(LocalDateTime.now());
+//        rental.setProjectName(StringUtils.join(rentalTO.getProjectName(),","));
+//        super.save(rental);
+//        return BeanTransform.copyProperties(rental, RentalBO.class);
+//    }
 
 
     @Transactional(rollbackFor = SerException.class)
@@ -265,24 +303,24 @@ public class RentalSerImpl extends ServiceImpl<Rental, RentalDTO> implements Ren
         sb.append(" SELECT * FROM ");
         sb.append(" (SELECT area ,projectGroup AS projectGroup,projectName AS projectName,address AS address, ");
         sb.append(" sum(rent) AS rent,sum(agency) AS agency,sum(deposit) AS deposit,sum(managementFee) AS managementFee, ");
-        sb.append(" sum(healthFee) AS healthFee,sum(network) AS network,sum(gas) AS gas, ");
+        sb.append(" sum(healthFee) AS healthFee,sum(water) as water,sum(energy) as energy ,sum(network) AS network,sum(gas) AS gas, ");
         sb.append(" (sum(rent)+sum(agency)+sum(deposit)+sum(managementFee)+sum(healthFee)+sum(network)+sum(gas)) AS remark ");
         sb.append(" FROM accommodation_rental a WHERE area IN (%s) GROUP BY area,projectGroup,projectName,address ORDER BY area)A ");
         sb.append(" UNION ");
         sb.append(" SELECT '合计' AS area,NULL AS projectGroup ,NULL AS projectName,NULL AS address, ");
         sb.append(" sum(rent) AS rent ,sum(agency) AS agency,sum(deposit) AS deposit,sum(managementFee) AS managementFee, ");
-        sb.append(" sum(healthFee) AS healthFee,sum(network) AS network,sum(gas) AS gas, ");
+        sb.append(" sum(water) as water,sum(energy) as energy ,sum(healthFee) AS healthFee,sum(network) AS network,sum(gas) AS gas, ");
         sb.append(" (sum(rent)+sum(agency)+sum(deposit)+sum(managementFee)+sum(healthFee)+sum(network)+sum(gas)) AS remark ");
         sb.append(" from ");
         sb.append(" (SELECT area ,projectGroup AS projectGroup,projectName AS projectName,address AS address, ");
         sb.append(" sum(rent) AS rent,sum(agency) AS agency,sum(deposit) AS deposit,sum(managementFee) AS managementFee, ");
-        sb.append(" sum(healthFee) AS healthFee,sum(network) AS network,sum(gas) AS gas, ");
+        sb.append(" sum(healthFee) AS healthFee,sum(water) as water,sum(energy) as energy ,sum(network) AS network,sum(gas) AS gas, ");
         sb.append(" (sum(rent)+sum(agency)+sum(deposit)+sum(managementFee)+sum(healthFee)+sum(network)+sum(gas)) AS remark ");
         sb.append(" FROM accommodation_rental a WHERE area IN (%s) GROUP BY area,projectGroup,projectName,address ORDER BY area)A ");
         String sql = sb.toString();
         sql = String.format(sql, areasStr,areasStr);
         String[] fields = new String[]{"area","projectGroup","projectName","address","rent","agency","deposit","managementFee",
-        "healthFee","network","gas","remark"};
+        "water","energy","healthFee","network","gas","remark"};
         List<CollectBO> collectBOS = super.findBySql(sql,CollectBO.class,fields);
         return collectBOS;
     }

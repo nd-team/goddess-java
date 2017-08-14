@@ -77,37 +77,15 @@ public class AssistancePlanTO extends BaseTO {
     /**
      * 补助发放时间
      */
+    @NotBlank(groups = {ADD.class, EDIT.class},message = "补助发放时间不能为空")
     private String helpGiveTime;
 
-    /**
-     * 综合资源部福利模块意见
-     */
-    private String warefaleAdvice;
-
-    /**
-     * 运营财务部意见
-     */
-    private String finiceAdvice;
-
-    /**
-     * 总经办意见
-     */
-    private String manageAdvice;
 
     /**
      * 备注
      */
     private String remark;
 
-    /**
-     * 创建时间
-     */
-    private String createTime;
-
-    /**
-     * 修改时间
-     */
-    private String modifyTime;
 
 
     public String getTypeName() {
@@ -206,51 +184,11 @@ public class AssistancePlanTO extends BaseTO {
         this.helpGiveTime = helpGiveTime;
     }
 
-    public String getWarefaleAdvice() {
-        return warefaleAdvice;
-    }
-
-    public void setWarefaleAdvice(String warefaleAdvice) {
-        this.warefaleAdvice = warefaleAdvice;
-    }
-
-    public String getFiniceAdvice() {
-        return finiceAdvice;
-    }
-
-    public void setFiniceAdvice(String finiceAdvice) {
-        this.finiceAdvice = finiceAdvice;
-    }
-
-    public String getManageAdvice() {
-        return manageAdvice;
-    }
-
-    public void setManageAdvice(String manageAdvice) {
-        this.manageAdvice = manageAdvice;
-    }
-
     public String getRemark() {
         return remark;
     }
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(String modifyTime) {
-        this.modifyTime = modifyTime;
     }
 }

@@ -16,7 +16,7 @@ public class DividendsConditionsBO extends BaseBO {
     /**
      * 发行总股数
      */
-    private int totalNum;
+    private Long totalNum;
 
     /**
      * 发行总额
@@ -26,7 +26,7 @@ public class DividendsConditionsBO extends BaseBO {
     /**
      * 持股人数
      */
-    private int shareholderNum;
+    private Long shareholderNum;
 
     /**
      * 占总发行数量比
@@ -37,7 +37,7 @@ public class DividendsConditionsBO extends BaseBO {
     /**
      * 持股数/总持股数
      */
-    private int num;
+    private Long num;
 
     /**
      * 总股本/持有总额
@@ -114,11 +114,11 @@ public class DividendsConditionsBO extends BaseBO {
 //    private Boolean situation;
 
 
-    public int getTotalNum() {
+    public Long getTotalNum() {
         return totalNum;
     }
 
-    public void setTotalNum(int totalNum) {
+    public void setTotalNum(Long totalNum) {
         this.totalNum = totalNum;
     }
 
@@ -130,19 +130,19 @@ public class DividendsConditionsBO extends BaseBO {
         this.issuance = issuance;
     }
 
-    public int getShareholderNum() {
+    public Long getShareholderNum() {
         return shareholderNum;
     }
 
-    public void setShareholderNum(int shareholderNum) {
+    public void setShareholderNum(Long shareholderNum) {
         this.shareholderNum = shareholderNum;
     }
 
-    public int getNum() {
+    public Long getNum() {
         return num;
     }
 
-    public void setNum(int num) {
+    public void setNum(Long num) {
         this.num = num;
     }
 

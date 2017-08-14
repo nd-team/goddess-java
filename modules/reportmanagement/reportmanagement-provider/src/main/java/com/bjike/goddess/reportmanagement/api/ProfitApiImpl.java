@@ -6,6 +6,7 @@ import com.bjike.goddess.reportmanagement.dto.AssetDTO;
 import com.bjike.goddess.reportmanagement.dto.ProfitDTO;
 import com.bjike.goddess.reportmanagement.service.ProfitSer;
 import com.bjike.goddess.reportmanagement.to.DebtTO;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import com.bjike.goddess.reportmanagement.to.ProfitTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -74,5 +75,15 @@ public class ProfitApiImpl implements ProfitAPI {
     @Override
     public Long count(ProfitDTO dto) throws SerException {
         return profitSer.count(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return profitSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return profitSer.guidePermission(guidePermissionTO);
     }
 }

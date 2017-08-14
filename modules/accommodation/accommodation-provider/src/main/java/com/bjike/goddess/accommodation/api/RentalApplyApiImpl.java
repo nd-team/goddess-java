@@ -78,10 +78,10 @@ public class RentalApplyApiImpl implements RentalApplyAPI{
     public RentalApplyBO manageAudit(RentalApplyTO applyTO) throws SerException {
         return rentalApplySer.manageAudit(applyTO);
     }
-    @Override
-    public RentalBO rentInfo(RentalApplyTO to) throws SerException {
-        return rentalApplySer.rentInfo(to);
-    }
+//    @Override
+//    public RentalBO rentInfo(RentalApplyTO to) throws SerException {
+//        return rentalApplySer.rentInfo(to);
+//    }
 
     @Override
     public byte[] exportExcel(RentalApplyDTO dto) throws SerException{

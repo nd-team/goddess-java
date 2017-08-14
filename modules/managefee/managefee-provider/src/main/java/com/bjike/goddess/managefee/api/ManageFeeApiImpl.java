@@ -124,4 +124,39 @@ public class ManageFeeApiImpl implements ManageFeeAPI {
     public List<String> projectList() throws SerException {
         return manageFeeSer.projectList();
     }
+
+    @Override
+    public List<String> typeList() throws SerException {
+        return manageFeeSer.typeList();
+    }
+
+    @Override
+    public byte[] areaExportReport(CollectAreaTO collectAreaTO) throws SerException {
+        return manageFeeSer.areaExportReport( collectAreaTO );
+    }
+
+    @Override
+    public byte[] projectExportReport(CollectProjectTO collectProjectTO) throws SerException {
+        return manageFeeSer.projectExportReport( collectProjectTO );
+    }
+
+    @Override
+    public byte[] groupExportReport(CollectGroupTO collectProjectTO) throws SerException {
+        return manageFeeSer.groupExportReport( collectProjectTO );
+    }
+
+    @Override
+    public byte[] typeExportReport(CollectCategoryTO collectCategoryTO) throws SerException {
+        return manageFeeSer.typeExportReport( collectCategoryTO );
+    }
+
+    @Override
+    public ManageFeeBO importExcel(List<ManageFeeTO> manageFeeTOS) throws SerException {
+        return manageFeeSer.importExcel( manageFeeTOS );
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return manageFeeSer.templateExport();
+    }
 }

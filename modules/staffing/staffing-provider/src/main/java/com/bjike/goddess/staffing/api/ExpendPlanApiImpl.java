@@ -5,6 +5,8 @@ import com.bjike.goddess.staffing.bo.ExpendPlanBO;
 import com.bjike.goddess.staffing.dto.ExpendPlanDTO;
 import com.bjike.goddess.staffing.service.ExpendPlanSer;
 import com.bjike.goddess.staffing.to.ExpendPlanTO;
+import com.bjike.goddess.staffing.to.GuidePermissionTO;
+import com.bjike.goddess.staffing.vo.SonPermissionObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,5 +54,15 @@ public class ExpendPlanApiImpl implements ExpendPlanAPI {
     @Override
     public Long count(ExpendPlanDTO dto) throws SerException {
         return expendPlanSer.count(dto);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return expendPlanSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return expendPlanSer.guidePermission(guidePermissionTO);
     }
 }

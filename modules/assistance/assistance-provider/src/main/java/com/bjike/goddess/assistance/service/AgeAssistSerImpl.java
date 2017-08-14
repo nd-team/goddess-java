@@ -54,8 +54,6 @@ public class AgeAssistSerImpl extends ServiceImpl<AgeAssist, AgeAssistDTO> imple
     private HotAssistSer hotAssistSer;
     @Autowired
     private HouseAssistSer houseAssistSer;
-    @Autowired
-    private RightSetSer rightSetSer;
 
     /**
      * 核对查看权限（部门级别）
@@ -67,7 +65,7 @@ public class AgeAssistSerImpl extends ServiceImpl<AgeAssist, AgeAssistDTO> imple
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.busCusPermission("1");
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以查看");
             }
@@ -104,7 +102,7 @@ public class AgeAssistSerImpl extends ServiceImpl<AgeAssist, AgeAssistDTO> imple
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.busCusPermission("1");
         } else {
             flag = true;
         }
@@ -239,18 +237,6 @@ public class AgeAssistSerImpl extends ServiceImpl<AgeAssist, AgeAssistDTO> imple
         }
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeeDis7 = rightSetSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        obj = new SonPermissionObject();
-        obj.setName("rightset");
-        obj.setDescribesion("权限设置");
-        if (flagSeeDis7) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
 
         return list;
     }
@@ -268,9 +254,6 @@ public class AgeAssistSerImpl extends ServiceImpl<AgeAssist, AgeAssistDTO> imple
                 flag = guideAddIdentity();
                 break;
             case EDIT:
-                flag = guideAddIdentity();
-                break;
-            case AUDIT:
                 flag = guideAddIdentity();
                 break;
             case DELETE:

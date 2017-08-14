@@ -29,6 +29,7 @@
 	<dubbo:reference  validation="true" id="manageFeeApiImpl" interface="com.bjike.goddess.managefee.api.ManageFeeAPI" />
 	<dubbo:reference  validation="true" id="outFeeApiImpl" interface="com.bjike.goddess.managefee.api.OutFeeAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.managefee.api.CusPermissionAPI" />
+	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
 
 
 

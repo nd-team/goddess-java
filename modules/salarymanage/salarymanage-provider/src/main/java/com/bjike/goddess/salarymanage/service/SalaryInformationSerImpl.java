@@ -1,5 +1,17 @@
 package com.bjike.goddess.salarymanage.service;
 
+import com.bjike.goddess.assistance.api.AgeAssistAPI;
+import com.bjike.goddess.assistance.api.ComputerAssistAPI;
+import com.bjike.goddess.assistance.api.HotAssistAPI;
+import com.bjike.goddess.assistance.api.HouseAssistAPI;
+import com.bjike.goddess.assistance.bo.AgeAssistBO;
+import com.bjike.goddess.assistance.bo.ComputerAssistBO;
+import com.bjike.goddess.assistance.bo.HotAssistBO;
+import com.bjike.goddess.assistance.bo.HouseAssistBO;
+import com.bjike.goddess.assistance.dto.AgeAssistDTO;
+import com.bjike.goddess.assistance.dto.ComputerAssistDTO;
+import com.bjike.goddess.assistance.dto.HotAssistDTO;
+import com.bjike.goddess.assistance.dto.HouseAssistDTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -56,6 +68,18 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
 
     @Autowired
     private EntryBasicInfoAPI entryBasicInfoAPI;
+
+    @Autowired
+    private HotAssistAPI hotAssistAPI;
+
+    @Autowired
+    private HouseAssistAPI houseAssistAPI;
+
+    @Autowired
+    private ComputerAssistAPI computerAssistAPI;
+
+    @Autowired
+    private AgeAssistAPI ageAssistAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -229,7 +253,7 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
     @Override
     public SalaryInformationBO addSalaryInformation(SalaryInformationTO to) throws SerException {
         isExit(to);
-        SalaryInformation salaryInformation = BeanTransform.copyProperties(to,SalaryInformation.class);
+        SalaryInformation salaryInformation = BeanTransform.copyProperties(to,SalaryInformation.class,true);
         salaryInformation.setCreateTime(LocalDateTime.now());
         super.save(salaryInformation);
         SalaryInformationBO salaryInformationBO = BeanTransform.copyProperties(salaryInformation,SalaryInformationBO.class);
@@ -241,10 +265,10 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
         String id = to.getEmployeeId();
         SalaryInformationDTO dto = new SalaryInformationDTO();
         dto.getConditions().add(Restrict.eq("id",id));
-        dto.getConditions().add(Restrict.eq("payStartTime",to.getPayStarTime()));
-        dto.getConditions().add(Restrict.eq("payEndTime",to.getPayStarTime()));
+        dto.getConditions().add(Restrict.eq("payStartTime",to.getPayStartTime()));
+        dto.getConditions().add(Restrict.eq("payEndTime",to.getPayEndTime()));
         List<SalaryInformation> list = super.findByCis(dto);
-        if(list != null || list.size() >0){
+        if(list.size() >0){
             throw new SerException("该数据已经存在,不可重复添加");
         }
     }
@@ -254,8 +278,8 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
         String id = to.getEmployeeId();
         SalaryInformationDTO dto = new SalaryInformationDTO();
         dto.getConditions().add(Restrict.eq("id",id));
-        dto.getConditions().add(Restrict.eq("payStartTime",to.getPayStarTime()));
-        dto.getConditions().add(Restrict.eq("payEndTime",to.getPayStarTime()));
+        dto.getConditions().add(Restrict.eq("payStartTime",to.getPayStartTime()));
+        dto.getConditions().add(Restrict.eq("payEndTime",to.getPayEndTime()));
         List<SalaryInformation> list = super.findByCis(dto);
         if(list.size() >1){
             throw new SerException("该数据已经存在,修改失败");
@@ -266,7 +290,7 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
     public SalaryInformationBO editSalaryInformation(SalaryInformationTO to) throws SerException {
         SalaryInformation temp = super.findById(to.getId());
         try {
-            DateUtil.parseDate(to.getPayStarTime());
+            DateUtil.parseDate(to.getPayStartTime());
             DateUtil.parseDate(to.getPayEndTime());
         } catch (Exception e) {
             throw new SerException("输入的日期格式不对");
@@ -329,7 +353,7 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
         List<SalaryInformationBO> list = this.pageList(dto);
         List<String> timeList = new ArrayList<>();
         for(SalaryInformationBO salaryInformationBO : list){
-            timeList.add(salaryInformationBO.getPayStarTime());
+            timeList.add(salaryInformationBO.getPayStartTime());
             timeList.add(salaryInformationBO.getPayEndTime());
         }
         return timeList;
@@ -420,4 +444,27 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
     public Long count(SalaryInformationDTO dto) throws SerException {
         return super.count(dto);
     }
+//
+//    @Override
+//    public List<HotAssistBO> findHotAssist(SalaryInformationDTO dto) throws SerException {
+//        HotAssistDTO hotAssistDTO = new HotAssistDTO();
+//        hotAssistDTO.getConditions().add(Restrict.eq("salaryStartTime",dto.getPayStarTime()));
+//        hotAssistDTO.getConditions().add(Restrict.eq("salaryStartTime",dto.getPayEndTime()));
+//        return null;
+//    }
+//
+//    @Override
+//    public List<HouseAssistBO> findHouseAssist(SalaryInformationDTO dto) throws SerException {
+//        return null;
+//    }
+//
+//    @Override
+//    public List<ComputerAssistBO> findComputerAssist(SalaryInformationDTO dto) throws SerException {
+//        return null;
+//    }
+//
+//    @Override
+//    public List<AgeAssistBO> findAgeAssist(SalaryInformationDTO dto) throws SerException {
+//        return null;
+//    }
 }

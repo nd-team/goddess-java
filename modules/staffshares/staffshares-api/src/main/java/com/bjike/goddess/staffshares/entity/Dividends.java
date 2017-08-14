@@ -49,8 +49,8 @@ public class Dividends extends BaseEntity {
     /**
      * 持股数
      */
-    @Column(name = "num", columnDefinition = "VARCHAR(255)   COMMENT '持股数'")
-    private int num;
+    @Column(name = "num", columnDefinition = "BIGINT(20)   COMMENT '持股数'")
+    private Long num;
 
     /**
      * 总股本
@@ -131,11 +131,11 @@ public class Dividends extends BaseEntity {
         this.taxProfit = taxProfit;
     }
 
-    public int getNum() {
+    public Long getNum() {
         return num;
     }
 
-    public void setNum(int num) {
+    public void setNum(Long num) {
         this.num = num;
     }
 

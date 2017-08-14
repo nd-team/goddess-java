@@ -28,10 +28,10 @@ public class BuyscheduleCollectBO extends BaseBO {
 //     */
 //    private String name;
 
-//    /**
-//     * 购入股数
-//     */
-//    private int purchaseNum;
+    /**
+     * 购入股数
+     */
+    private Long purchaseNum;
 
     /**
      * 买入价格
@@ -94,5 +94,13 @@ public class BuyscheduleCollectBO extends BaseBO {
 
     public void setTotalPrice(Double totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public Long getPurchaseNum() {
+        return purchaseNum;
+    }
+
+    public void setPurchaseNum(Long purchaseNum) {
+        this.purchaseNum = purchaseNum;
     }
 }

@@ -6,6 +6,7 @@ import com.bjike.goddess.staffshares.bo.SellscheduleCollectBO;
 import com.bjike.goddess.staffshares.bo.TransactionBO;
 import com.bjike.goddess.staffshares.dto.SellscheduleDTO;
 import com.bjike.goddess.staffshares.service.SellscheduleSer;
+import com.bjike.goddess.staffshares.to.GuidePermissionTO;
 import com.bjike.goddess.staffshares.to.SellscheduleTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,17 @@ import java.util.List;
 @Service("sellscheduleApiImpl")
 public class SellscheduleApiImpl implements SellscheduleAPI {
     @Autowired
-    private SellscheduleSer sellscheduleSer;
+        private SellscheduleSer sellscheduleSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return sellscheduleSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return sellscheduleSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public void sell(SellscheduleTO to) throws SerException {

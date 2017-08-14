@@ -11,7 +11,9 @@ import com.bjike.goddess.staffshares.bo.BuyscheduleBO;
 import com.bjike.goddess.staffshares.bo.BuyscheduleCollectBO;
 import com.bjike.goddess.staffshares.dto.BuyscheduleDTO;
 import com.bjike.goddess.staffshares.entity.Buyschedule;
+import com.bjike.goddess.staffshares.enums.GuideAddrStatus;
 import com.bjike.goddess.staffshares.to.BuyscheduleTO;
+import com.bjike.goddess.staffshares.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -40,6 +42,148 @@ public class BuyscheduleSerImpl extends ServiceImpl<Buyschedule, BuyscheduleDTO>
     private UserAPI userAPI;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
 
     @Override
     public List<BuyscheduleBO> maps(BuyscheduleDTO dto) throws SerException {
@@ -56,8 +200,8 @@ public class BuyscheduleSerImpl extends ServiceImpl<Buyschedule, BuyscheduleDTO>
             if (tar) {
                 buyscheduleBOList = BeanTransform.copyProperties(list, BuyscheduleBO.class, false);
             } else {
-                list.stream().filter(str -> str.getShareholder().equals(userBO.getUsername())).collect(Collectors.toList());
-                buyscheduleBOList = BeanTransform.copyProperties(list, BuyscheduleBO.class, false);
+                List<Buyschedule> list1 = list.stream().filter(str -> str.getShareholder().equals(userBO.getUsername())).collect(Collectors.toList());
+                buyscheduleBOList = BeanTransform.copyProperties(list1, BuyscheduleBO.class, false);
             }
         }
         return buyscheduleBOList;
@@ -75,7 +219,17 @@ public class BuyscheduleSerImpl extends ServiceImpl<Buyschedule, BuyscheduleDTO>
     @Override
     public Long getTotal(BuyscheduleDTO buyscheduleDTO) throws SerException {
         searchCondition(buyscheduleDTO);
-        Long count = super.count(buyscheduleDTO);
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        Long count = 0l;
+        Boolean tar = authority(userBO);
+        if (tar) {
+            count = super.count(buyscheduleDTO);
+        } else {
+            buyscheduleDTO.getConditions().add(Restrict.eq("shareholder", userBO.getUsername()));
+            count = super.count(buyscheduleDTO);
+        }
         return count;
     }
 
@@ -114,12 +268,11 @@ public class BuyscheduleSerImpl extends ServiceImpl<Buyschedule, BuyscheduleDTO>
         UserBO userBO = userAPI.currentUser();
         String name = userBO.getUsername();
 
-        List<BuyscheduleCollectBO> buyscheduleCollectBOs = new ArrayList<>(0);
         Boolean tar = authority(userBO);
         String file[] = new String[]{"shareholder", "purchaseNum", "totalBuyPrice", "totalPrice"};
         String sql = getSql(tar, userBO);
         List<Buyschedule> list = super.findBySql(sql, Buyschedule.class, file);
-        BeanTransform.copyProperties(list, buyscheduleCollectBOs);
+        List<BuyscheduleCollectBO> buyscheduleCollectBOs = BeanTransform.copyProperties(list, BuyscheduleCollectBO.class);
         return buyscheduleCollectBOs;
     }
 
@@ -134,6 +287,9 @@ public class BuyscheduleSerImpl extends ServiceImpl<Buyschedule, BuyscheduleDTO>
                     tar = true;
                 }
             }
+        }
+        if ("admin".equals(userBO.getUsername())) {
+            tar = true;
         }
         return tar;
     }
@@ -174,7 +330,7 @@ public class BuyscheduleSerImpl extends ServiceImpl<Buyschedule, BuyscheduleDTO>
         /**
          * 购入股数
          */
-        if (0 <= buyscheduleDTO.getPurchaseNum()) {
+        if (null != buyscheduleDTO.getPurchaseNum()) {
             buyscheduleDTO.getConditions().add(Restrict.eq("purchaseNum", buyscheduleDTO.getPurchaseNum()));
         }
         /**

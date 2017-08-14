@@ -37,7 +37,7 @@ public class DividendsDetailBO extends BaseBO {
     /**
      * 持股数
      */
-    private int num;
+    private Long num;
 
     /**
      * 总股本
@@ -115,11 +115,11 @@ public class DividendsDetailBO extends BaseBO {
         this.shareholder = shareholder;
     }
 
-    public int getNum() {
+    public Long getNum() {
         return num;
     }
 
-    public void setNum(int num) {
+    public void setNum(Long num) {
         this.num = num;
     }
 

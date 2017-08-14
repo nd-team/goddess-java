@@ -35,7 +35,7 @@ public class CompanySchemeVO {
     /**
      * 出售/发行数量
      */
-    private int number;
+    private Long number;
 
     /**
      * 出售/发行价格
@@ -50,12 +50,12 @@ public class CompanySchemeVO {
     /**
      * 已交易数量
      */
-    private int quantityNum;
+    private Long quantityNum;
 
     /**
      * 未交易数量
      */
-    private int sharesNum;
+    private Long sharesNum;
 
     /**
      * 交易收入额
@@ -91,11 +91,11 @@ public class CompanySchemeVO {
         this.publisher = publisher;
     }
 
-    public int getNumber() {
+    public Long getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(Long number) {
         this.number = number;
     }
 
@@ -115,19 +115,19 @@ public class CompanySchemeVO {
         this.time = time;
     }
 
-    public int getQuantityNum() {
+    public Long getQuantityNum() {
         return quantityNum;
     }
 
-    public void setQuantityNum(int quantityNum) {
+    public void setQuantityNum(Long quantityNum) {
         this.quantityNum = quantityNum;
     }
 
-    public int getSharesNum() {
+    public Long getSharesNum() {
         return sharesNum;
     }
 
-    public void setSharesNum(int sharesNum) {
+    public void setSharesNum(Long sharesNum) {
         this.sharesNum = sharesNum;
     }
 

@@ -424,4 +424,12 @@ public interface ReimburseRecordAPI {
      * @throws SerException
      */
     ReimburseRecordBO waitPayCJH(ReimburseRecordTO reimburseRecordTO) throws SerException;
+
+    /**
+     * chenjunhao
+     * @param reimburseRecordDTO
+     * @return
+     * @throws SerException
+     */
+    Long countWaitPayCJH(ReimburseRecordDTO reimburseRecordDTO) throws SerException;
 }

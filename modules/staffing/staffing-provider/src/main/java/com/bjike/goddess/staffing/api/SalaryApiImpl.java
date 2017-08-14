@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffing.bo.SalaryBO;
 import com.bjike.goddess.staffing.dto.SalaryDTO;
 import com.bjike.goddess.staffing.service.SalarySer;
+import com.bjike.goddess.staffing.to.GuidePermissionTO;
 import com.bjike.goddess.staffing.to.SalaryTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,5 +59,15 @@ public class SalaryApiImpl implements SalaryAPI {
     @Override
     public Set<String> sal() throws SerException {
         return salarySer.sal();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return salarySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return salarySer.guidePermission(guidePermissionTO);
     }
 }

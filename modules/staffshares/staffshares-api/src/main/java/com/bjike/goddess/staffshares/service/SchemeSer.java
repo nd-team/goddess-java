@@ -8,6 +8,7 @@ import com.bjike.goddess.staffshares.bo.SchemeBO;
 import com.bjike.goddess.staffshares.bo.SchemeIssueBO;
 import com.bjike.goddess.staffshares.dto.SchemeDTO;
 import com.bjike.goddess.staffshares.entity.Scheme;
+import com.bjike.goddess.staffshares.to.GuidePermissionTO;
 import com.bjike.goddess.staffshares.to.SchemeApplyTO;
 
 import java.util.List;
@@ -22,6 +23,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SchemeSer extends Ser<Scheme, SchemeDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 申请

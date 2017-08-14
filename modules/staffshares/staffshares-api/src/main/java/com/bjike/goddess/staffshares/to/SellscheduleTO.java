@@ -3,6 +3,7 @@ package com.bjike.goddess.staffshares.to;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 
@@ -35,8 +36,8 @@ public class SellscheduleTO extends BaseTO {
     /**
      * 出售股数
      */
-    @NotBlank(message = "出售股数不能为空", groups = {EDIT.class})
-    private int sellNum;
+    @NotNull(message = "出售股数不能为空", groups = {EDIT.class})
+    private Long sellNum;
 
     /**
      * 出售价格
@@ -57,7 +58,7 @@ public class SellscheduleTO extends BaseTO {
     /**
      * 剩余出售量
      */
-    private int number;
+    private Long number;
 
     /**
      * 购买人
@@ -67,7 +68,7 @@ public class SellscheduleTO extends BaseTO {
     /**
      * 购买股数
      */
-    private int purchaseNum;
+    private Long purchaseNum;
 
     /**
      * 购买时间
@@ -99,11 +100,11 @@ public class SellscheduleTO extends BaseTO {
         this.name = name;
     }
 
-    public int getSellNum() {
+    public Long getSellNum() {
         return sellNum;
     }
 
-    public void setSellNum(int sellNum) {
+    public void setSellNum(Long sellNum) {
         this.sellNum = sellNum;
     }
 
@@ -131,11 +132,11 @@ public class SellscheduleTO extends BaseTO {
         this.sellTime = sellTime;
     }
 
-    public int getNumber() {
+    public Long getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(Long number) {
         this.number = number;
     }
 
@@ -147,11 +148,11 @@ public class SellscheduleTO extends BaseTO {
         this.buyName = buyName;
     }
 
-    public int getPurchaseNum() {
+    public Long getPurchaseNum() {
         return purchaseNum;
     }
 
-    public void setPurchaseNum(int purchaseNum) {
+    public void setPurchaseNum(Long purchaseNum) {
         this.purchaseNum = purchaseNum;
     }
 

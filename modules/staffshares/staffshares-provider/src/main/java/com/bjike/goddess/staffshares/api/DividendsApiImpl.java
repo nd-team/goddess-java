@@ -8,6 +8,7 @@ import com.bjike.goddess.staffshares.bo.DividendsDetailBO;
 import com.bjike.goddess.staffshares.dto.DividendsDTO;
 import com.bjike.goddess.staffshares.service.DividendsSer;
 import com.bjike.goddess.staffshares.to.DividendsTO;
+import com.bjike.goddess.staffshares.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,16 @@ import java.util.List;
 public class DividendsApiImpl implements DividendsAPI {
     @Autowired
     private DividendsSer dividendsSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return dividendsSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return dividendsSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public List<CompanySchemeBO> detail() throws SerException {

@@ -49,8 +49,8 @@ public class Details extends BaseEntity {
     /**
      * 出售/发行数量
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '出售/发行数量'")
-    private int number;
+    @Column(name = "", nullable = false, columnDefinition = "BIGINT(20)   COMMENT '出售/发行数量'")
+    private Long number;
 
     /**
      * 出售/发行价格
@@ -67,8 +67,8 @@ public class Details extends BaseEntity {
     /**
      * 剩余出售量
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '剩余出售量'")
-    private int sharesNum;
+    @Column(name = "", nullable = false, columnDefinition = "BIGINT(20)   COMMENT '剩余出售量'")
+    private Long sharesNum;
 
 
     public String getCode() {
@@ -95,11 +95,11 @@ public class Details extends BaseEntity {
         this.publisher = publisher;
     }
 
-    public int getNumber() {
+    public Long getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(Long number) {
         this.number = number;
     }
 
@@ -119,11 +119,11 @@ public class Details extends BaseEntity {
         this.time = time;
     }
 
-    public int getSharesNum() {
+    public Long getSharesNum() {
         return sharesNum;
     }
 
-    public void setSharesNum(int sharesNum) {
+    public void setSharesNum(Long sharesNum) {
         this.sharesNum = sharesNum;
     }
 

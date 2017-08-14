@@ -7,6 +7,7 @@ import com.bjike.goddess.staffshares.bo.BuyscheduleCollectBO;
 import com.bjike.goddess.staffshares.dto.BuyscheduleDTO;
 import com.bjike.goddess.staffshares.entity.Buyschedule;
 import com.bjike.goddess.staffshares.to.BuyscheduleTO;
+import com.bjike.goddess.staffshares.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -20,6 +21,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface BuyscheduleSer extends Ser<Buyschedule, BuyscheduleDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 买入记录表列表

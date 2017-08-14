@@ -59,7 +59,7 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
     @Autowired
     private CustomerBaseInfoAPI customerBaseInfoAPI;
     @Autowired
-    private ModuleAssembleAPI moduleAssembleAPI;
+    private ModuleAPI moduleAPI;
     @Autowired
     private CompetitorAPI competitorAPI;
 
@@ -383,9 +383,8 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
 
     @Override
     public List<CustomerNameNumBO> getNameNum() throws SerException {
-        String[] moduleNames = new String[]{"market","customer"};
         List<CustomerNameNumBO> customerNameNumBOS = new ArrayList<>(0);
-        if(moduleAssembleAPI.checkByName(moduleNames)){  //判断关联模块该模块是否被勾选
+        if(moduleAPI.isCheck("customer")){  //判断关联模块该模块是否被勾选
             customerNameNumBOS = customerBaseInfoAPI.findNameNum();
         }
         return customerNameNumBOS;
@@ -393,9 +392,8 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
 
     @Override
     public List<String> getCompetName() throws SerException {
-        String[] moduleNames = new String[]{"market","competitormanage"};
         List<String> competName = new ArrayList<>(0);
-        if(moduleAssembleAPI.checkByName(moduleNames)){  //判断关联模块该模块是否被勾选
+        if(moduleAPI.isCheck("competitormanage")){  //判断关联模块该模块是否被勾选
             competName = competitorAPI.findCompeName();
         }
         return competName;

@@ -13,7 +13,9 @@ import com.bjike.goddess.staffshares.bo.SchemeBO;
 import com.bjike.goddess.staffshares.bo.SchemeIssueBO;
 import com.bjike.goddess.staffshares.dto.SchemeDTO;
 import com.bjike.goddess.staffshares.entity.Scheme;
+import com.bjike.goddess.staffshares.enums.GuideAddrStatus;
 import com.bjike.goddess.staffshares.enums.Status;
+import com.bjike.goddess.staffshares.to.GuidePermissionTO;
 import com.bjike.goddess.staffshares.to.SchemeApplyTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -45,6 +47,149 @@ public class SchemeSerImpl extends ServiceImpl<Scheme, SchemeDTO> implements Sch
     private UserAPI userApi;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userApi.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userApi.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userApi.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userApi.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
@@ -124,21 +269,29 @@ public class SchemeSerImpl extends ServiceImpl<Scheme, SchemeDTO> implements Sch
     @Override
     public void examine(SchemeApplyTO to) throws SerException {
 //        checkAddIdentity();
+        if (null == to.getStatus()) {
+            throw new SerException("审核状态不能空");
+        }
         Scheme temp = super.findById(to.getId());
 
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userApi.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.findPositionByUser(userBO.getId());
+
+        Boolean tar = false;
         if (!CollectionUtils.isEmpty(positionDetailBOs)) {
             for (PositionDetailBO positionDetailBO : positionDetailBOs) {
                 if ("协调管理中心（总经办）".equals(positionDetailBO.getDepartmentName())) {
-                    temp.setStatus(to.getStatus());
-                    temp.setOpinion(to.getOpinion());
-                    temp.setManager(userBO.getUsername());
+                    tar = true;
                 }
             }
-        }else{
+        }
+        if (tar || "admin".equals(userBO.getUsername())) {
+            temp.setStatus(to.getStatus());
+            temp.setOpinion(to.getOpinion());
+            temp.setManager(userBO.getUsername());
+        } else {
             throw new SerException("当前用户没有权限审核");
         }
         temp.setModifyTime(LocalDateTime.now());
@@ -150,10 +303,27 @@ public class SchemeSerImpl extends ServiceImpl<Scheme, SchemeDTO> implements Sch
     @Override
     public void issue(String id) throws SerException {
         Scheme scheme = super.findById(id);
-        if (null != scheme) {
+        if(null == scheme){
+            throw new SerException("目标对象不能为空");
+        }
+
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userApi.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.findPositionByUser(userBO.getId());
+
+        Boolean tar = false;
+        if (!CollectionUtils.isEmpty(positionDetailBOs)) {
+            for (PositionDetailBO positionDetailBO : positionDetailBOs) {
+                if ("协调管理中心（总经办）".equals(positionDetailBO.getDepartmentName())) {
+                    tar = true;
+                }
+            }
+        }
+        if (tar || "admin".equals(userBO.getUsername())) {
             scheme.setStatus(Status.ISSUED);
         } else {
-            throw new SerException("发行失败");
+            throw new SerException("当前用户没有权限发行");
         }
     }
 

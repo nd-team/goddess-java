@@ -14,21 +14,26 @@ public class AssetVO {
     /**
      * id
      */
-    private String id;
-    /**
-     * 起始时间
-     */
-    private String startTime;
-
-    /**
-     * 结束时间
-     */
-    private String endTime;
+    private String assetId;
+//    /**
+//     * 起始时间
+//     */
+//    private String startTime;
+//
+//    /**
+//     * 结束时间
+//     */
+//    private String endTime;
 
     /**
      * 资产
      */
     private String asset;
+
+    /**
+     * 资产行次
+     */
+    private Integer assetNum;
 
     /**
      * 资产年初数
@@ -45,12 +50,12 @@ public class AssetVO {
      */
     private Double endAsset;
 
-    public String getId() {
-        return id;
+    public String getAssetId() {
+        return assetId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setAssetId(String assetId) {
+        this.assetId = assetId;
     }
 
     public Double getCurrent() {
@@ -61,20 +66,12 @@ public class AssetVO {
         this.current = current;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public Integer getAssetNum() {
+        return assetNum;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
+    public void setAssetNum(Integer assetNum) {
+        this.assetNum = assetNum;
     }
 
     public String getAsset() {

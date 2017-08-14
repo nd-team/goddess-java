@@ -42,7 +42,7 @@ public class DividendsTO extends BaseTO {
     /**
      * 持股数
      */
-    private int num;
+    private Long num;
 
     /**
      * 总股本
@@ -117,11 +117,11 @@ public class DividendsTO extends BaseTO {
         this.taxProfit = taxProfit;
     }
 
-    public int getNum() {
+    public Long getNum() {
         return num;
     }
 
-    public void setNum(int num) {
+    public void setNum(Long num) {
         this.num = num;
     }
 

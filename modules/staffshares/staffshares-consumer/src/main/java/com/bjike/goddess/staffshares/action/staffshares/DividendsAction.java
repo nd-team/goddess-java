@@ -13,11 +13,13 @@ import com.bjike.goddess.staffshares.bo.DividendsConditionsBO;
 import com.bjike.goddess.staffshares.bo.DividendsDetailBO;
 import com.bjike.goddess.staffshares.dto.DividendsDTO;
 import com.bjike.goddess.staffshares.to.DividendsTO;
+import com.bjike.goddess.staffshares.to.GuidePermissionTO;
 import com.bjike.goddess.staffshares.vo.CompanySchemeVO;
 import com.bjike.goddess.staffshares.vo.DividendsConditionsVO;
 import com.bjike.goddess.staffshares.vo.DividendsDetailVO;
 import com.bjike.goddess.staffshares.vo.DividendsVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +40,29 @@ import java.util.List;
 public class DividendsAction {
     @Autowired
     private DividendsAPI dividendsAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = dividendsAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 公司干股交易情况

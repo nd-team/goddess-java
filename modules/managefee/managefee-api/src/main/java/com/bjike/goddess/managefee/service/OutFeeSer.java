@@ -224,4 +224,67 @@ public interface OutFeeSer extends Ser<OutFee, OutFeeDTO> {
 
     ;
 
+
+    /**
+     * 获取所有类别
+     */
+    default List<String> typeList() throws SerException {
+
+        return null;
+    }
+
+    ;
+
+
+    /**
+     * 地区汇总导出Excel
+     * @param collectAreaTO
+     * @throws SerException
+     */
+    byte[] areaExportReport(CollectAreaTO collectAreaTO ) throws SerException;
+
+
+
+    /**
+     * 项目名称汇总导出Excel
+     * @param collectProjectTO
+     * @throws SerException
+     */
+    byte[] projectExportReport(CollectProjectTO collectProjectTO ) throws SerException;
+
+
+
+    /**
+     * 项目组汇总导出Excel
+     * @param collectProjectTO
+     * @throws SerException
+     */
+    byte[] groupExportReport( CollectGroupTO collectProjectTO ) throws SerException;
+
+
+
+    /**
+     * 类别汇总导出Excel
+     * @param collectCategoryTO
+     * @throws SerException
+     */
+    byte[] typeExportReport(CollectCategoryTO collectCategoryTO ) throws SerException;
+
+    /**
+     * 导入
+     *
+     * @param manageFeeTOS 管理费导入数据
+     * @return class OutFeeBO
+     */
+    default OutFeeBO importExcel(List<OutFeeTO> manageFeeTOS) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出Excel导入模板
+     * @throws SerException
+     */
+    byte[] templateExport(  ) throws SerException;
+
+
 }

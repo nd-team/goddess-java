@@ -6,6 +6,7 @@ import com.bjike.goddess.staffshares.bo.SchemeBO;
 import com.bjike.goddess.staffshares.bo.SchemeIssueBO;
 import com.bjike.goddess.staffshares.dto.SchemeDTO;
 import com.bjike.goddess.staffshares.service.SchemeSer;
+import com.bjike.goddess.staffshares.to.GuidePermissionTO;
 import com.bjike.goddess.staffshares.to.SchemeApplyTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,16 @@ import java.util.List;
 public class SchemeApiImpl implements SchemeAPI {
     @Autowired
     private SchemeSer schemeSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return schemeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return schemeSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public void save(SchemeApplyTO to) throws SerException {

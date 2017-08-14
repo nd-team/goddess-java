@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.reportmanagement.bo.FormulaBO;
 import com.bjike.goddess.reportmanagement.dto.FormulaDTO;
+import com.bjike.goddess.reportmanagement.dto.ProfitDTO;
 import com.bjike.goddess.reportmanagement.entity.Formula;
 import com.bjike.goddess.reportmanagement.to.FormulaTO;
 import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
@@ -49,11 +50,11 @@ public interface FormulaSer extends Ser<Formula, FormulaDTO> {
      *
      * @param foreignId
      * @param time
-     * @param projectNames
+     * @param dto
      * @return
      * @throws SerException
      */
-    List<FormulaBO> profitAnalyze(String foreignId, String time, String[] projectNames) throws SerException;
+    List<FormulaBO> profitAnalyze(String foreignId, String time, ProfitDTO dto) throws SerException;
 
     /**
      * 加公式科目

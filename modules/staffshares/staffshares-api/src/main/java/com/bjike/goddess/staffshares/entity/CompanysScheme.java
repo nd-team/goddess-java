@@ -42,8 +42,8 @@ public class CompanysScheme extends BaseEntity {
     /**
      * 出售/发行数量
      */
-    @Column(name = "", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '出售/发行数量'")
-    private int number;
+    @Column(name = "", nullable = true, columnDefinition = "BIGINT(20)   COMMENT '出售/发行数量'")
+    private Long number;
 
     /**
      * 出售/发行价格
@@ -60,14 +60,14 @@ public class CompanysScheme extends BaseEntity {
     /**
      * 已交易数量
      */
-    @Column(name = "", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '已交易数量'")
-    private int quantityNum;
+    @Column(name = "", nullable = true, columnDefinition = "BIGINT(20)   COMMENT '已交易数量'")
+    private Long quantityNum;
 
     /**
      * 未交易数量
      */
-    @Column(name = "", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '未交易数量'")
-    private int sharesNum;
+    @Column(name = "", nullable = true, columnDefinition = "BIGINT(20)   COMMENT '未交易数量'")
+    private Long sharesNum;
 
     /**
      * 交易收入额
@@ -106,11 +106,11 @@ public class CompanysScheme extends BaseEntity {
         this.publisher = publisher;
     }
 
-    public int getNumber() {
+    public Long getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(Long number) {
         this.number = number;
     }
 
@@ -130,19 +130,19 @@ public class CompanysScheme extends BaseEntity {
         this.time = time;
     }
 
-    public int getQuantityNum() {
+    public Long getQuantityNum() {
         return quantityNum;
     }
 
-    public void setQuantityNum(int quantityNum) {
+    public void setQuantityNum(Long quantityNum) {
         this.quantityNum = quantityNum;
     }
 
-    public int getSharesNum() {
+    public Long getSharesNum() {
         return sharesNum;
     }
 
-    public void setSharesNum(int sharesNum) {
+    public void setSharesNum(Long sharesNum) {
         this.sharesNum = sharesNum;
     }
 
