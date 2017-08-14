@@ -18,6 +18,10 @@ public class DepartmentBetBVO {
      */
     private String id;
     /**
+     * 部门
+     */
+    private String department;
+    /**
      * 目标-部门分配基础权重（%）
      */
     private Double baseWeight;
@@ -46,6 +50,14 @@ public class DepartmentBetBVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
     public Double getBaseWeight() {

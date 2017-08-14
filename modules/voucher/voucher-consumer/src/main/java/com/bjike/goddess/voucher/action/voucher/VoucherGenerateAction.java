@@ -1,6 +1,5 @@
 package com.bjike.goddess.voucher.action.voucher;
 
-import com.bjike.goddess.analysis.bo.IncomeCostAnalysisBO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -20,12 +19,12 @@ import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
+import com.bjike.goddess.voucher.bo.PartBO;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
 import com.bjike.goddess.voucher.enums.ExportStatus;
 import com.bjike.goddess.voucher.excel.SonPermissionObject;
-import com.bjike.goddess.voucher.excel.VoucherTemplateExportExcel;
 import com.bjike.goddess.voucher.excel.VoucherTemplateImportExcel;
 import com.bjike.goddess.voucher.to.GuidePermissionTO;
 import com.bjike.goddess.voucher.to.VoucherFileTO;
@@ -39,7 +38,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -56,7 +54,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("vouchergenerate")
-public class VoucherGenerateAction extends BaseFileAction{
+public class VoucherGenerateAction extends BaseFileAction {
 
     @Autowired
     private VoucherGenerateAPI voucherGenerateAPI;
@@ -957,7 +955,6 @@ public class VoucherGenerateAction extends BaseFileAction{
     }
 
 
-
     /**
      * 上传附件
      *
@@ -1036,13 +1033,12 @@ public class VoucherGenerateAction extends BaseFileAction{
     @LoginAuth
     @PostMapping("v1/deleteFile")
     public Result delFile(@Validated(VoucherFileTO.TestDEL.class) VoucherFileTO siginManageDeleteFileTO, HttpServletRequest request) throws SerException {
-        if(null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length>=0 ){
+        if (null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length >= 0) {
             Object storageToken = request.getAttribute("storageToken");
-            fileAPI.delFile(storageToken.toString(),siginManageDeleteFileTO.getPaths());
+            fileAPI.delFile(storageToken.toString(), siginManageDeleteFileTO.getPaths());
         }
         return new ActResult("delFile success");
     }
-
 
 
     /**
@@ -1087,7 +1083,6 @@ public class VoucherGenerateAction extends BaseFileAction{
     }
 
 
-
     /**
      * excel模板下载
      *
@@ -1098,7 +1093,7 @@ public class VoucherGenerateAction extends BaseFileAction{
     public Result templateExport(HttpServletResponse response) throws ActException {
         try {
             String fileName = "记账凭证数据导入模板.xlsx";
-            super.writeOutFile(response, voucherGenerateAPI.templateExport( ), fileName);
+            super.writeOutFile(response, voucherGenerateAPI.templateExport(), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -1137,7 +1132,7 @@ public class VoucherGenerateAction extends BaseFileAction{
 //            //注意序列化
 //            voucherGenerateAPI.importExcel(tocs);
 
-            tocs = convertVoucherGenerateTO( tos );
+            tocs = convertVoucherGenerateTO(tos);
             voucherGenerateAPI.importExcel(tocs);
             return new ActResult("导入成功");
         } catch (SerException e) {
@@ -1145,9 +1140,9 @@ public class VoucherGenerateAction extends BaseFileAction{
         }
     }
 
-    private List<VoucherGenerateTO> convertVoucherGenerateTO(List<VoucherTemplateImportExcel> tos ) throws ActException {
+    private List<VoucherGenerateTO> convertVoucherGenerateTO(List<VoucherTemplateImportExcel> tos) throws ActException {
         List<VoucherGenerateTO> voucherGenerateTOS = new ArrayList<>();
-        if( tos != null && tos.size()>0 ){
+        if (tos != null && tos.size() > 0) {
             List<String> firstSubjects = new ArrayList<>();
             List<String> secondSubjects = new ArrayList<>();
             List<String> thirdSubjects = new ArrayList<>();
@@ -1156,26 +1151,26 @@ public class VoucherGenerateAction extends BaseFileAction{
 
             String num = tos.get(0).getNum();
             int index = 0;
-            VoucherGenerateTO voucherGenerateTO =  new VoucherGenerateTO();
+            VoucherGenerateTO voucherGenerateTO = new VoucherGenerateTO();
             for (VoucherTemplateImportExcel str : tos) {
-                checkVoucherWord( str );
-                if( num.equals( str.getNum() ) ){
-                    firstSubjects.add(str.getFirstSubject() );
-                    secondSubjects.add(str.getSecondSubject() );
-                    thirdSubjects.add(str.getThirdSubject() );
-                    borrowMoneys.add(str.getBorrowMoney() );
-                    loanMoneys.add(str.getLoanMoney() );
-                }else{
-                    if( index < tos.size()-1 ){
-                        voucherGenerateTO = BeanTransform.copyProperties( tos.get(index-1), VoucherGenerateTO.class,"firstSubject",
-                                "secondSubject","thirdSubject","borrowMoney","loanMoney");
-                        voucherGenerateTO.setFirstSubjects( firstSubjects );
-                        voucherGenerateTO.setSecondSubjects( secondSubjects );
-                        voucherGenerateTO.setThirdSubjects( thirdSubjects );
-                        voucherGenerateTO.setBorrowMoneys( borrowMoneys );
-                        voucherGenerateTO.setLoanMoneys( loanMoneys );
+                checkVoucherWord(str);
+                if (num.equals(str.getNum())) {
+                    firstSubjects.add(str.getFirstSubject());
+                    secondSubjects.add(str.getSecondSubject());
+                    thirdSubjects.add(str.getThirdSubject());
+                    borrowMoneys.add(str.getBorrowMoney());
+                    loanMoneys.add(str.getLoanMoney());
+                } else {
+                    if (index < tos.size() - 1) {
+                        voucherGenerateTO = BeanTransform.copyProperties(tos.get(index - 1), VoucherGenerateTO.class, "firstSubject",
+                                "secondSubject", "thirdSubject", "borrowMoney", "loanMoney");
+                        voucherGenerateTO.setFirstSubjects(firstSubjects);
+                        voucherGenerateTO.setSecondSubjects(secondSubjects);
+                        voucherGenerateTO.setThirdSubjects(thirdSubjects);
+                        voucherGenerateTO.setBorrowMoneys(borrowMoneys);
+                        voucherGenerateTO.setLoanMoneys(loanMoneys);
 
-                        voucherGenerateTOS.add( voucherGenerateTO );
+                        voucherGenerateTOS.add(voucherGenerateTO);
                     }
                     firstSubjects = new ArrayList<>();
                     secondSubjects = new ArrayList<>();
@@ -1189,8 +1184,8 @@ public class VoucherGenerateAction extends BaseFileAction{
                 index++;
             }
 
-            String temp = tos.get(index-1).getNum();
-            if( index == tos.size() && !num.equals( tos.get(index-2).getNum()) ){
+            String temp = tos.get(index - 1).getNum();
+            if (index == tos.size() && !num.equals(tos.get(index - 2).getNum())) {
                 firstSubjects = new ArrayList<>();
                 secondSubjects = new ArrayList<>();
                 thirdSubjects = new ArrayList<>();
@@ -1199,24 +1194,24 @@ public class VoucherGenerateAction extends BaseFileAction{
 
 
             }
-            firstSubjects.add(tos.get(index-2).getFirstSubject());
-            secondSubjects.add(tos.get(index-2).getSecondSubject());
-            thirdSubjects.add(tos.get(index-2).getThirdSubject());
-            borrowMoneys.add(tos.get(index-2).getBorrowMoney());
-            loanMoneys.add(tos.get(index-2).getLoanMoney());
+            firstSubjects.add(tos.get(index - 2).getFirstSubject());
+            secondSubjects.add(tos.get(index - 2).getSecondSubject());
+            thirdSubjects.add(tos.get(index - 2).getThirdSubject());
+            borrowMoneys.add(tos.get(index - 2).getBorrowMoney());
+            loanMoneys.add(tos.get(index - 2).getLoanMoney());
 
-            voucherGenerateTO = BeanTransform.copyProperties( tos.get(index-2), VoucherGenerateTO.class,"firstSubject",
-                    "secondSubject","thirdSubject","borrowMoney","loanMoney");
+            voucherGenerateTO = BeanTransform.copyProperties(tos.get(index - 2), VoucherGenerateTO.class, "firstSubject",
+                    "secondSubject", "thirdSubject", "borrowMoney", "loanMoney");
 
-            voucherGenerateTO.setFirstSubjects( firstSubjects );
-            voucherGenerateTO.setSecondSubjects( secondSubjects );
-            voucherGenerateTO.setThirdSubjects( thirdSubjects );
-            voucherGenerateTO.setBorrowMoneys( borrowMoneys );
-            voucherGenerateTO.setLoanMoneys( loanMoneys );
+            voucherGenerateTO.setFirstSubjects(firstSubjects);
+            voucherGenerateTO.setSecondSubjects(secondSubjects);
+            voucherGenerateTO.setThirdSubjects(thirdSubjects);
+            voucherGenerateTO.setBorrowMoneys(borrowMoneys);
+            voucherGenerateTO.setLoanMoneys(loanMoneys);
 
-            voucherGenerateTOS.add( voucherGenerateTO );
+            voucherGenerateTOS.add(voucherGenerateTO);
         }
-        return  voucherGenerateTOS;
+        return voucherGenerateTOS;
     }
 
     private String checkVoucherWord(VoucherTemplateImportExcel voucherTemplateImportExcel) throws ActException {
@@ -1247,8 +1242,8 @@ public class VoucherGenerateAction extends BaseFileAction{
     /**
      * 获取组织结构所有地区
      *
-     * @des 获取组织结构所有地区
      * @return class AreaBO
+     * @des 获取组织结构所有地区
      * @version v1
      */
     @GetMapping("v1/listOrganArea")
@@ -1282,8 +1277,8 @@ public class VoucherGenerateAction extends BaseFileAction{
     /**
      * 获取组织结构所有用户
      *
-     * @des 获取组织结构所有用户
      * @return class UserBO
+     * @des 获取组织结构所有用户
      * @version v1
      */
     @GetMapping("v1/listOrganUser")
@@ -1295,18 +1290,16 @@ public class VoucherGenerateAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     @GetMapping("v1/findByMoney")
     public Result findByMoney(VoucherGenerateDTO dto) throws ActException {
         try {
-            List<IncomeCostAnalysisBO> userList = voucherGenerateAPI.findByMoney(dto);
+            List<PartBO> userList = voucherGenerateAPI.findByMoney(dto);
             return ActResult.initialize(userList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
-
-
-
 
 
 }

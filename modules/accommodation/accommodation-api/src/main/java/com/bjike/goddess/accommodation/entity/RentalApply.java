@@ -19,7 +19,7 @@ public class RentalApply extends BaseEntity {
     /**
      * 租房编号
      */
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '租房编号'",unique = true)
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '租房编号'")
     private String rentNum;
     /**
      * 姓名（用户名称）
@@ -191,6 +191,20 @@ public class RentalApply extends BaseEntity {
      */
     @Column(columnDefinition = "VARCHAR(255) COMMENT '备注'")
     private String remark;
+
+    /**
+     * 状态
+     */
+    @Column(columnDefinition = "TINYINT(1) COMMENT '状态'")
+    private Boolean status;
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
 
     public String getRentNum() {
         return rentNum;

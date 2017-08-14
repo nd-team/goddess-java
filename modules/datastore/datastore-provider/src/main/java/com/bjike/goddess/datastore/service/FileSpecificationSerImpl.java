@@ -258,7 +258,9 @@ public class FileSpecificationSerImpl extends ServiceImpl<FileSpecification, Fil
     public FileSpecificationBO editFileSpecification(FileSpecificationTO fileSpecificationTO) throws SerException {
         checkAddIdentity();
         FileSpecification fileSpecification = super.findById(fileSpecificationTO.getId());
-        BeanTransform.copyProperties(fileSpecificationTO, fileSpecification, true);
+        LocalDateTime createTime = fileSpecification.getCreateTime();
+        fileSpecification = BeanTransform.copyProperties(fileSpecificationTO, FileSpecification.class, true);
+        fileSpecification.setCreateTime(createTime);
         fileSpecification.setModifyTime(LocalDateTime.now());
         super.update(fileSpecification);
         return BeanTransform.copyProperties(fileSpecification, FileSpecificationBO.class);

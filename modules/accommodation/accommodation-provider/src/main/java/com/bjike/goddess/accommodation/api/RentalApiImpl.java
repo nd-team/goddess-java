@@ -44,10 +44,10 @@ public class RentalApiImpl implements RentalAPI{
     public RentalBO getOne(String id) throws SerException {
         return rentalSer.getOne(id);
     }
-    @Override
-    public RentalBO insertRental(RentalTO rentalTO) throws SerException {
-        return rentalSer.insertRental(rentalTO);
-    }
+//    @Override
+//    public RentalBO insertRental(RentalTO rentalTO) throws SerException {
+//        return rentalSer.insertRental(rentalTO);
+//    }
     @Override
     public RentalBO editRental(RentalTO rentalTO) throws SerException {
         return rentalSer.editRental(rentalTO);
