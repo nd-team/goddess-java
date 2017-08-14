@@ -264,7 +264,7 @@ public class MarketInfoAction extends BaseFileAction{
      *
      * @des 获取所有的客户名称和客户编号
      * @version v1
-     * @return MarketNameNumVO
+     * @return class MarketNameNumVO
      */
     @GetMapping("v1/customer/nameNum")
     public Result findCustomerNameNum() throws ActException {
@@ -280,7 +280,6 @@ public class MarketInfoAction extends BaseFileAction{
      *
      * @des 获取所有的竞争对手名称
      * @version v1
-     * @return name
      */
     @GetMapping("v1/competitormanage/name")
     public Result findCompetitorName() throws ActException {
@@ -291,5 +290,6 @@ public class MarketInfoAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
 
 }

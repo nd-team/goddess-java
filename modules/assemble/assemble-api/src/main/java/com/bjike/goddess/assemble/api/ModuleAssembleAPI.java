@@ -56,11 +56,12 @@ public interface ModuleAssembleAPI {
     /**
      * 通过模块名称判断改模块关联关系是否被选中lijuntao
      *
-     * @param moduleNames
+     * @param module
+     * @param relation
      * @return
      * @throws SerException
      */
-    default Boolean checkByName(String[] moduleNames) throws SerException {
+    default Boolean checkByName(String module ,String relation) throws SerException {
         return null;
     }
 

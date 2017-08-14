@@ -49,7 +49,7 @@ public class DimissionInfo extends BaseEntity {
     /**
      * 员工状态
      */
-    @Column(name = "status", nullable = false, columnDefinition = "TINYINT(2)  DEFAULT 0  COMMENT '员工状态'")
+    @Column(name = "status", nullable = false, columnDefinition = "TINYINT(2)  DEFAULT 0  COMMENT '员工状态'",insertable = false)
     private EmployeeStatus status;
 
     /**

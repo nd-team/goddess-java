@@ -1,7 +1,5 @@
 package com.bjike.goddess.market.vo;
 
-import com.bjike.goddess.common.api.bo.BaseBO;
-
 
 /**
  * 客户姓名和客户编号
@@ -12,7 +10,7 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class MarketNameNumVO{
+public class MarketNameNumVO {
     /**
      * 客户信息id
      */

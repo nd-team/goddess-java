@@ -341,32 +341,32 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
     public void addRewardProgramRatios(RewardProgramRatiosTO to) throws SerException {
         checkAddIdentity();
         String bonusBudgetId = to.getId();//奖金预算额度
-        String[] rewardPrograms = to.getRewardPrograms();//奖励项目
-        String[] focusingDegrees = to.getFocusingDegrees();//当月侧重程度
-        Double[] budgetRanges = to.getBudgetRanges();//当月预算范围
-        String[] bonusWeights = to.getBonusWeights();//奖金权重
-        Double[] bonusLimits = to.getBonusLimits();//奖金额度
-        String[] honorWeights = to.getHonorWeights();//荣誉衍生奖品权重
-        Double[] honorLimits = to.getHonorLimits();//荣誉衍生奖品额度
-        String[] empiricalValues = to.getEmpiricalValues();//经验值
-        Double[] empiricalValueLimits = to.getEmpiricalValueLimits();//经验值额度
+        List<String> rewardPrograms = to.getRewardPrograms();//奖励项目
+        List<String> focusingDegrees = to.getFocusingDegrees();//当月侧重程度
+        List<Double> budgetRanges = to.getBudgetRanges();//当月预算范围
+        List<String> bonusWeights = to.getBonusWeights();//奖金权重
+        List<Double> bonusLimits = to.getBonusLimits();//奖金额度
+        List<String> honorWeights = to.getHonorWeights();//荣誉衍生奖品权重
+        List<Double> honorLimits = to.getHonorLimits();//荣誉衍生奖品额度
+        List<String> empiricalValues = to.getEmpiricalValues();//经验值
+        List<Double> empiricalValueLimits = to.getEmpiricalValueLimits();//经验值额度
 
-        boolean rewardProgramsNotEmpty = (rewardPrograms != null) && (rewardPrograms.length > 0);
+        boolean rewardProgramsNotEmpty = (rewardPrograms != null) && (rewardPrograms.size() > 0);
         if (StringUtils.isNotEmpty(bonusBudgetId) && rewardProgramsNotEmpty) {
             List<RewardProgramRatio> list = new ArrayList<>(0);
-            int len = rewardPrograms.length;
+            int len = rewardPrograms.size();
             for (int i = 0; i < len; i ++) {
                 RewardProgramRatio model = new RewardProgramRatio();
-                model.setRewardProgram(rewardPrograms[i]);
-                model.setFocusingDegree(focusingDegrees[i]);
-                model.setBudgetRange(budgetRanges[i]);
-                model.setBonusWeight(bonusWeights[i]);
-                model.setBonusLimit(bonusLimits[i]);
-                model.setHonorWeight(honorWeights[i]);
-                model.setHonorLimit(honorLimits[i]);
-                model.setEmpiricalValue(empiricalValues[i]);
-                model.setEmpiricalValueLimit(empiricalValueLimits[i]);
-                model.setEmpiricalValueToMoney(empiricalValueLimits[i] * 10);
+                model.setRewardProgram(rewardPrograms.get(i));
+                model.setFocusingDegree(focusingDegrees.get(i));
+                model.setBudgetRange(budgetRanges.get(i));
+                model.setBonusWeight(bonusWeights.get(i));
+                model.setBonusLimit(bonusLimits.get(i));
+                model.setHonorWeight(honorWeights.get(i));
+                model.setHonorLimit(honorLimits.get(i));
+                model.setEmpiricalValue(empiricalValues.get(i));
+                model.setEmpiricalValueLimit(empiricalValueLimits.get(i));
+                model.setEmpiricalValueToMoney(empiricalValueLimits.get(i) * 10);
                 model.setBonusBudgetId(bonusBudgetId);
                 list.add(model);
             }

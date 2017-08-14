@@ -3,6 +3,7 @@ package com.bjike.goddess.firmreward.to;
 import com.bjike.goddess.common.api.to.BaseTO;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 奖励项目比例
@@ -21,139 +22,149 @@ public class RewardProgramRatiosTO extends BaseTO {
      * 奖励项目
      */
     @NotNull(groups = {RewardProgramRatiosTO.IRewardProgramRatio.class}, message = "奖励项目不能为空")
-    private String[] rewardPrograms;
+    private List<String> rewardPrograms;
 
     /**
      * 当月侧重程度
      */
     @NotNull(groups = {RewardProgramRatiosTO.IRewardProgramRatio.class}, message = "当月侧重程度不能为空")
-    private String[] focusingDegrees;
+    private List<String> focusingDegrees;
 
     /**
      * 当月预算范围
      */
     @NotNull(groups = {RewardProgramRatiosTO.IRewardProgramRatio.class}, message = "当月预算范围不能为空")
-    private Double[] budgetRanges;
+    private List<Double> budgetRanges;
 
     /**
      * 奖金权重
      */
     @NotNull(groups = {RewardProgramRatiosTO.IRewardProgramRatio.class}, message = "奖金权重不能为空")
-    private String[] bonusWeights;
+    private List<String> bonusWeights;
 
     /**
      * 奖金额度
      */
     @NotNull(groups = {RewardProgramRatiosTO.IRewardProgramRatio.class}, message = "奖金额度不能为空")
-    private Double[] bonusLimits;
+    private List<Double> bonusLimits;
 
     /**
      * 荣誉衍生奖品权重
      */
     @NotNull(groups = {RewardProgramRatiosTO.IRewardProgramRatio.class}, message = "荣誉衍生奖品权重不能为空")
-    private String[] honorWeights;
+    private List<String> honorWeights;
 
     /**
      * 荣誉衍生奖品额度
      */
     @NotNull(groups = {RewardProgramRatiosTO.IRewardProgramRatio.class}, message = "荣誉衍生奖品额度不能为空")
-    private Double[] honorLimits;
+    private List<Double> honorLimits;
 
     /**
      * 经验值
      */
     @NotNull(groups = {RewardProgramRatiosTO.IRewardProgramRatio.class}, message = "经验值不能为空")
-    private String[] empiricalValues;
+    private List<String> empiricalValues;
 
     /**
      * 经验值额度
      */
     @NotNull(groups = {RewardProgramRatiosTO.IRewardProgramRatio.class}, message = "经验值额度不能为空")
-    private Double[] empiricalValueLimits;
+    private List<Double> empiricalValueLimits;
 
     /**
      * 经验值换成金额
      */
     @NotNull(groups = {RewardProgramRatiosTO.IRewardProgramRatio.class}, message = "经验值换成金额不能为空")
-    private Double[] empiricalValueToMoneys;
+    private List<Double> empiricalValueToMoneys;
 
-    public String[] getRewardPrograms() {
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<String> getRewardPrograms() {
         return rewardPrograms;
     }
 
-    public void setRewardPrograms(String[] rewardPrograms) {
+    public void setRewardPrograms(List<String> rewardPrograms) {
         this.rewardPrograms = rewardPrograms;
     }
 
-    public String[] getFocusingDegrees() {
+    public List<String> getFocusingDegrees() {
         return focusingDegrees;
     }
 
-    public void setFocusingDegrees(String[] focusingDegrees) {
+    public void setFocusingDegrees(List<String> focusingDegrees) {
         this.focusingDegrees = focusingDegrees;
     }
 
-    public Double[] getBudgetRanges() {
+    public List<Double> getBudgetRanges() {
         return budgetRanges;
     }
 
-    public void setBudgetRanges(Double[] budgetRanges) {
+    public void setBudgetRanges(List<Double> budgetRanges) {
         this.budgetRanges = budgetRanges;
     }
 
-    public String[] getBonusWeights() {
+    public List<String> getBonusWeights() {
         return bonusWeights;
     }
 
-    public void setBonusWeights(String[] bonusWeights) {
+    public void setBonusWeights(List<String> bonusWeights) {
         this.bonusWeights = bonusWeights;
     }
 
-    public Double[] getBonusLimits() {
+    public List<Double> getBonusLimits() {
         return bonusLimits;
     }
 
-    public void setBonusLimits(Double[] bonusLimits) {
+    public void setBonusLimits(List<Double> bonusLimits) {
         this.bonusLimits = bonusLimits;
     }
 
-    public String[] getHonorWeights() {
+    public List<String> getHonorWeights() {
         return honorWeights;
     }
 
-    public void setHonorWeights(String[] honorWeights) {
+    public void setHonorWeights(List<String> honorWeights) {
         this.honorWeights = honorWeights;
     }
 
-    public Double[] getHonorLimits() {
+    public List<Double> getHonorLimits() {
         return honorLimits;
     }
 
-    public void setHonorLimits(Double[] honorLimits) {
+    public void setHonorLimits(List<Double> honorLimits) {
         this.honorLimits = honorLimits;
     }
 
-    public String[] getEmpiricalValues() {
+    public List<String> getEmpiricalValues() {
         return empiricalValues;
     }
 
-    public void setEmpiricalValues(String[] empiricalValues) {
+    public void setEmpiricalValues(List<String> empiricalValues) {
         this.empiricalValues = empiricalValues;
     }
 
-    public Double[] getEmpiricalValueLimits() {
+    public List<Double> getEmpiricalValueLimits() {
         return empiricalValueLimits;
     }
 
-    public void setEmpiricalValueLimits(Double[] empiricalValueLimits) {
+    public void setEmpiricalValueLimits(List<Double> empiricalValueLimits) {
         this.empiricalValueLimits = empiricalValueLimits;
     }
 
-    public Double[] getEmpiricalValueToMoneys() {
+    public List<Double> getEmpiricalValueToMoneys() {
         return empiricalValueToMoneys;
     }
 
-    public void setEmpiricalValueToMoneys(Double[] empiricalValueToMoneys) {
+    public void setEmpiricalValueToMoneys(List<Double> empiricalValueToMoneys) {
         this.empiricalValueToMoneys = empiricalValueToMoneys;
     }
 }
