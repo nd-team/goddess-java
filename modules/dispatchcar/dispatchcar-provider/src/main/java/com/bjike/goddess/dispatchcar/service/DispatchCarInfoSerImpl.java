@@ -41,6 +41,7 @@ import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.bo.UserDetailBO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -93,6 +94,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     @Override
     @Transactional(rollbackFor = SerException.class)
     public DispatchCarInfoBO insertModel(DispatchCarInfoTO to) throws SerException {
+        RpcTransmit.getUserToken();
         UserBO userBO = userAPI.findByUsername(to.getCarUser());
         to.setUserNumber(userBO.getEmployeeNumber());
         //加油费 = 加油量 * 当天油价 ，加油量 = 总油耗 * 总里程数 ， 总油耗 = 本车耗油 + 是否开空调 + 是否市内
@@ -279,8 +281,10 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             throw new SerException("审核对象不存在!");
         }
 
-        DispatchInfo info = BeanTransform.copyProperties(model, DispatchInfo.class);
-
+        //因为model里面有个枚举所以不能直接转换成String,要单独拿出来.
+        DispatchInfo info = new DispatchInfo();
+        BeanUtils.copyProperties(model,info,"evaluatedriver");
+        info.setEvaluatedriver(info.getEvaluatedriver());
         AuditDetailBO returnBO = new AuditDetailBO();
         returnBO.setInfo(info);
 
