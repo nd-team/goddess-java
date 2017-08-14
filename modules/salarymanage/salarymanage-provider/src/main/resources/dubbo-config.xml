@@ -45,12 +45,18 @@
     <dubbo:reference interface="com.bjike.goddess.organize.api.HierarchyAPI" id="hierarchyApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.managementpromotion.api.LevelShowAPI" id="levslShowApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" id="entryBasicInfoApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.assistance.api.HouseAssistAPI" id="houseAssistApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.assistance.api.HotAssistAPI" id="hotAssistApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.assistance.api.AgeAssistAPI" id="ageAssistApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.assistance.api.ComputerAssistAPI" id="computerAssistApiImpl"/>
 
     <dubbo:reference interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
 
     <dubbo:service ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.salarymanage.api.CusPermissionOperateAPI" />
 
     <dubbo:service ref="cusPermissionApiImpl" interface="com.bjike.goddess.salarymanage.api.CusPermissionAPI" />
+
+
 
 
 </beans>

@@ -17,7 +17,7 @@ public class SalaryInformationBO extends BaseBO {
     /**
      * 计薪周期开始时间
      */
-    private String payStarTime;
+    private String payStartTime;
 
     /**
      * 计薪周期结束时间
@@ -280,12 +280,20 @@ public class SalaryInformationBO extends BaseBO {
     private String  remark;
 
 
-    public String getPayStarTime() {
-        return payStarTime;
+    public String getPayStartTime() {
+        return payStartTime;
     }
 
-    public void setPayStarTime(String payStarTime) {
-        this.payStarTime = payStarTime;
+    public void setPayStartTime(String payStartTime) {
+        this.payStartTime = payStartTime;
+    }
+
+    public String getSection() {
+        return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
     }
 
     public String getPayEndTime() {

@@ -269,7 +269,7 @@ public class SalaryBasicAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class) SalaryBasicTO to) throws ActException{
+    public Result add(@Validated(ADD.class) SalaryBasicTO to,BindingResult bindingResult) throws ActException{
         try {
             SalaryBasicBO bo = salaryBasicAPI.add(to);
             SalaryBasicVO vo = BeanTransform.copyProperties(bo,SalaryBasicVO.class);
@@ -288,7 +288,7 @@ public class SalaryBasicAction extends BaseFileAction {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class) SalaryBasicTO to) throws ActException{
+    public Result edit(@Validated(EDIT.class) SalaryBasicTO to,BindingResult bindingResult) throws ActException{
         try {
             SalaryBasicBO bo = salaryBasicAPI.edit(to);
             SalaryBasicVO vo = BeanTransform.copyProperties(bo,SalaryBasicVO.class);

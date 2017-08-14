@@ -20,7 +20,7 @@ public class SalaryInformation extends BaseEntity {
      * 计薪周期开始时间
      */
     @Column(name = "payStarTime",nullable = false,columnDefinition = "DATE   COMMENT '计薪周期开始时间'"  )
-    private LocalDate payStarTime;
+    private LocalDate payStartTime;
 
     /**
      * 计薪周期结束时间
@@ -297,7 +297,7 @@ public class SalaryInformation extends BaseEntity {
      * 正常休息天数加班天数
      */
     @Column(name = "RestOvertimeDay",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '正常休息天数加班天数'"  )
-    private Double  RestOvertimeDay;
+    private Double  restOvertimeDay;
 
     /**
      * 剩余加班天数
@@ -332,17 +332,18 @@ public class SalaryInformation extends BaseEntity {
     /**
      * 备注
      */
-    @Column(name = "remark",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '备注'"  )
+    @Column(name = "remark",columnDefinition = "VARCHAR(255)   COMMENT '备注'"  )
     private String  remark;
 
 
+    public LocalDate getPayStartTime() {
+        return payStartTime;
+    }
 
-    public LocalDate getPayStarTime () {
-        return payStarTime;
+    public void setPayStartTime(LocalDate payStartTime) {
+        this.payStartTime = payStartTime;
     }
-    public void setPayStarTime (LocalDate payStarTime ) {
-        this.payStarTime = payStarTime ;
-    }
+
     public LocalDate getPayEndTime () {
         return payEndTime;
     }
@@ -634,12 +635,15 @@ public class SalaryInformation extends BaseEntity {
     public void setNormalRestDay (Double normalRestDay ) {
         this.normalRestDay = normalRestDay ;
     }
-    public Double getRestOvertimeDay () {
-        return RestOvertimeDay;
+
+    public Double getRestOvertimeDay() {
+        return restOvertimeDay;
     }
-    public void setRestOvertimeDay (Double RestOvertimeDay ) {
-        this.RestOvertimeDay = RestOvertimeDay ;
+
+    public void setRestOvertimeDay(Double restOvertimeDay) {
+        this.restOvertimeDay = restOvertimeDay;
     }
+
     public Double getSurplusOvertimeDay () {
         return surplusOvertimeDay;
     }
