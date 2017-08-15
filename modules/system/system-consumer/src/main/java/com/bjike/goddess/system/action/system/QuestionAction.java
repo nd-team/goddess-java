@@ -7,17 +7,14 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.system.api.QuestionAPI;
-import com.bjike.goddess.system.bo.AuswerBO;
 import com.bjike.goddess.system.bo.QuestionBO;
-import com.bjike.goddess.system.dto.AuswerDTO;
 import com.bjike.goddess.system.dto.QuestionDTO;
-import com.bjike.goddess.system.entity.Question;
 import com.bjike.goddess.system.to.AuswerTO;
 import com.bjike.goddess.system.to.QuestionTO;
-import com.bjike.goddess.system.vo.AuswerVO;
 import com.bjike.goddess.system.vo.QuestionVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +34,7 @@ import java.util.List;
 public class QuestionAction {
     @Autowired
     private QuestionAPI questionAPI;
+
     /**
      * 问题列表总条数
      *
@@ -92,24 +90,24 @@ public class QuestionAction {
         }
     }
 
-    /**
-     * 添加问题
-     *
-     * @param to 问题to
-     * @return class QuestionVO
-     * @des 添加问题
-     * @version v1
-     */
-    @LoginAuth
-    @PostMapping("v1/add")
-    public Result add(QuestionTO to, BindingResult bindingResult) throws ActException {
-        try {
-            QuestionBO questionBO = questionAPI.insert(to);
-            return ActResult.initialize(BeanTransform.copyProperties(questionBO,QuestionVO.class));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 添加问题
+//     *
+//     * @param to 问题to
+//     * @return class QuestionVO
+//     * @des 添加问题
+//     * @version v1
+//     */
+//    @LoginAuth
+//    @PostMapping("v1/add")
+//    public Result add(QuestionTO to, BindingResult bindingResult) throws ActException {
+//        try {
+//            QuestionBO questionBO = questionAPI.insert(to);
+//            return ActResult.initialize(BeanTransform.copyProperties(questionBO,QuestionVO.class));
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
     /**
      * 编辑问题
@@ -124,25 +122,60 @@ public class QuestionAction {
     public Result edit(QuestionTO to, BindingResult bindingResult) throws ActException {
         try {
             QuestionBO questionBO = questionAPI.edit(to);
-            return ActResult.initialize(BeanTransform.copyProperties(questionBO,QuestionVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(questionBO, QuestionVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+//    /**
+//     * 删除问题
+//     *
+//     * @param id 用户id
+//     * @des 根据用户id删除问题
+//     * @version v1
+//     */
+//    @LoginAuth
+//    @DeleteMapping("v1/delete/{id}")
+//    public Result delete(@PathVariable String id) throws ActException {
+//        try {
+//            questionAPI.remove(id);
+//            return new ActResult("delete success!");
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+
+    /**
+     * 详情
+     *
+     * @param id id
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/detail/{id}")
+    public Result detail(@PathVariable String id) throws ActException {
+        try {
+            return ActResult.initialize(questionAPI.detail(id));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
     /**
-     * 删除问题
+     * 解答
      *
-     * @param id 用户id
-     * @des 根据用户id删除问题
+     * @param id       id
+     * @param answerTO answerTO
+     * @throws ActException
      * @version v1
      */
     @LoginAuth
-    @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id) throws ActException {
+    @PostMapping("v1/answer/{id}")
+    public Result answer(@PathVariable String id, @Validated(AuswerTO.TestAdd.class) AuswerTO answerTO, BindingResult result) throws ActException {
         try {
-            questionAPI.remove(id);
-            return new ActResult("delete success!");
+            questionAPI.answer(id, answerTO);
+            return new ActResult("解答成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

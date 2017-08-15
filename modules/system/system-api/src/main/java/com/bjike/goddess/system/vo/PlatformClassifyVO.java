@@ -43,7 +43,7 @@ public class PlatformClassifyVO {
     /**
      * 包含（实现需求）功能
      */
-    private String ContainsFunction;
+    private String containsFunction;
 
     /**
      * 最新更新时间
@@ -190,11 +190,11 @@ public class PlatformClassifyVO {
     }
 
     public String getContainsFunction() {
-        return ContainsFunction;
+        return containsFunction;
     }
 
-    public void setContainsFunction(String ContainsFunction) {
-        this.ContainsFunction = ContainsFunction;
+    public void setContainsFunction(String containsFunction) {
+        this.containsFunction = containsFunction;
     }
 
     public String getUpdateTime() {

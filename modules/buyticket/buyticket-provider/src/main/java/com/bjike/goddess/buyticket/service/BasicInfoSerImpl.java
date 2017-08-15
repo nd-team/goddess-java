@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -161,6 +162,7 @@ public class BasicInfoSerImpl extends ServiceImpl<BasicInfo, BasicInfoDTO> imple
         }
         return flag;
     }
+
     /**
      * 权限
      */
@@ -233,6 +235,7 @@ public class BasicInfoSerImpl extends ServiceImpl<BasicInfo, BasicInfoDTO> imple
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
+
     @Override
     public Long countBasicInfo(BasicInfoDTO basicInfoDTO) throws SerException {
         basicInfoDTO.getSorts().add("createTime=desc");
@@ -255,6 +258,7 @@ public class BasicInfoSerImpl extends ServiceImpl<BasicInfo, BasicInfoDTO> imple
         return basicInfoBOS;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public BasicInfoBO insertBasicInfo(BasicInfoTO basicInfoTO) throws SerException {
         checkModPermission();
@@ -264,6 +268,7 @@ public class BasicInfoSerImpl extends ServiceImpl<BasicInfo, BasicInfoDTO> imple
         return BeanTransform.copyProperties(basicInfo, BasicInfoBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public BasicInfoBO editBasicInfo(BasicInfoTO basicInfoTO) throws SerException {
         checkModPermission();
@@ -274,6 +279,7 @@ public class BasicInfoSerImpl extends ServiceImpl<BasicInfo, BasicInfoDTO> imple
         return BeanTransform.copyProperties(basicInfoTO, BasicInfoBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeBasicInfo(String id) throws SerException {
         checkModPermission();
