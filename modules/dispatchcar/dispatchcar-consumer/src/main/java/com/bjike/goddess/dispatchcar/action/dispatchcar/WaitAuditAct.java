@@ -10,6 +10,9 @@ import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.enums.FindType;
 import com.bjike.goddess.dispatchcar.vo.DispatchCarInfoVO;
+import com.bjike.goddess.storage.api.FileAPI;
+import com.bjike.goddess.storage.to.FileInfo;
+import com.bjike.goddess.storage.vo.FileVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +34,9 @@ public class WaitAuditAct {
 
     @Autowired
     private DispatchCarInfoAPI dispatchCarInfoAPI;
+
+    @Autowired
+    private FileAPI fileAPI;
 
     /**
      * 列表分页查询
@@ -57,9 +63,21 @@ public class WaitAuditAct {
      * @version v1
      */
     @GetMapping("v1/findfiles/{id}")
-    public Result findFiles(@PathVariable String id) throws ActException {
-        //// TODO: 17-4-14 查看附件
-        return ActResult.initialize("success!");
+    public Result findFiles(@PathVariable String id,HttpServletRequest request) throws ActException {
+        // 17-4-14 查看附件
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            // /businessproject/id/....
+            String path = "/businessproject/siginmanage/" + id;
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
+            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
+            return ActResult.initialize(files);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
     }
 
     /**
