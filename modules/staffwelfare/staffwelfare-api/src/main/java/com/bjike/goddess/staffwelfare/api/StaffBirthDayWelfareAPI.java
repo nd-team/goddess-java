@@ -30,7 +30,20 @@ public interface StaffBirthDayWelfareAPI  {
         return null;
     }
 
+    /**
+     * 分页查询列表
+     * @param dto
+     * @throws SerException
+     */
     List<StaffBirthDayWelfareBO> pageList(StaffBirthDayWelfareDTO dto) throws SerException;
+
+
+    /**
+     * 查询列表总条数
+     * @param dayWelfareDTO
+     * @throws SerException
+     */
+    Long count(StaffBirthDayWelfareDTO dayWelfareDTO) throws SerException;
 
 //    List<> birthdayDetail(String userID) throws SerException;
 }

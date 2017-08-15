@@ -421,7 +421,7 @@ public class StaffMovementApplySerImpl extends ServiceImpl<StaffMovementApply, S
         checkAddIdentity();
         super.remove(id);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public StaffMovementApplyBO planAudit(StaffMovementApplyTO to) throws SerException {
         checkPlanAuditIdentity();
@@ -432,6 +432,7 @@ public class StaffMovementApplySerImpl extends ServiceImpl<StaffMovementApply, S
         super.update(staffMovementApply);
         return BeanTransform.copyProperties(staffMovementApply,StaffMovementApplyBO.class);
     }
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public StaffMovementApplyBO budgetAudit(StaffMovementApplyTO to) throws SerException {
         checkBudgetAuditIdentity();
@@ -441,6 +442,7 @@ public class StaffMovementApplySerImpl extends ServiceImpl<StaffMovementApply, S
         staffMovementApply.setBudgetAuditOpinion(to.getBudgetAuditOpinion());
         return BeanTransform.copyProperties(staffMovementApply,StaffMovementApplyBO.class);
     }
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public StaffMovementApplyBO originalAudit(StaffMovementApplyTO to) throws SerException {
         checkOraAuditIdentity();
@@ -452,6 +454,7 @@ public class StaffMovementApplySerImpl extends ServiceImpl<StaffMovementApply, S
         super.update(staffMovementApply);
         return BeanTransform.copyProperties(staffMovementApply,StaffMovementApplyBO.class);
     }
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public StaffMovementApplyBO transferAudit(StaffMovementApplyTO to) throws SerException {
         checkTraAuditIdentity();
@@ -469,6 +472,7 @@ public class StaffMovementApplySerImpl extends ServiceImpl<StaffMovementApply, S
 
         return BeanTransform.copyProperties(staffMovementApply,StaffMovementApplyBO.class);
     }
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public StaffMovementApplyBO generalAudit(StaffMovementApplyTO to) throws SerException {
         checkGenAduditIdentity();

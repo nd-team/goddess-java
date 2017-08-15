@@ -78,4 +78,19 @@ public interface ThankStatementSer extends Ser<ThankStatement, ThankStatementDTO
      * @return 感谢语结果集
      */
     List<ThankStatementBO> findAllStatement() throws SerException;
+
+    /**
+     * 列表总条数
+     * @param dto
+     * @throws SerException
+     */
+    Long count(ThankStatementDTO dto) throws SerException;
+
+
+    /**
+     * 根据id来查询单个数据
+     * @param id
+     * @throws SerException
+     */
+    ThankStatementBO findOne(String id) throws SerException;
 }

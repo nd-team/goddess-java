@@ -57,4 +57,14 @@ public class HeadPortraitHatApiImpl implements HeadPortraitHatAPI {
     public List<HeadPortraitHatBO> pageList(HeadPortraitHatDTO dto) throws SerException {
         return headPortraitHatSer.pageList(dto);
     }
+
+    @Override
+    public HeadPortraitHatBO findOne(String id) throws SerException {
+        return headPortraitHatSer.findOne(id);
+    }
+
+    @Override
+    public Long count(HeadPortraitHatDTO dto) throws SerException {
+        return headPortraitHatSer.count(dto);
+    }
 }

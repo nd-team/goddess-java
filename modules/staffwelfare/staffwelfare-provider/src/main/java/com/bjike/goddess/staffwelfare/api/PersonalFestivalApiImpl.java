@@ -60,4 +60,14 @@ public class PersonalFestivalApiImpl implements PersonalFestivalAPI {
     public void wish(String id, String wishStatement) throws SerException {
         personalFestivalSer.wish(id,wishStatement);
     }
+
+    @Override
+    public Long count(PersonalFestivalDTO dto) throws SerException {
+        return personalFestivalSer.count(dto);
+    }
+
+    @Override
+    public PersonalFestivalBO findOne(String id) throws SerException {
+        return personalFestivalSer.findOne(id);
+    }
 }

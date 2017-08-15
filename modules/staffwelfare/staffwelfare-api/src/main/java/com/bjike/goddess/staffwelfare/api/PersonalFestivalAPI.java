@@ -72,4 +72,18 @@ public interface PersonalFestivalAPI {
      * @throws SerException
      */
     void wish(String id, String wishStatement) throws SerException;
+
+    /**
+     * 查询总条数
+     * @throws SerException
+     */
+    Long count(PersonalFestivalDTO dto) throws SerException;
+
+    /**
+     * 根据id来查询个人节日数据
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    PersonalFestivalBO findOne(String id) throws SerException;
 }

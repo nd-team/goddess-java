@@ -47,7 +47,7 @@ public class PublicizeProgramInfoTO extends BaseTO {
     /**
      * 执行费用
      */
-    @NotBlank(message = "执行费用不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "执行费用不能为空",groups = {ADD.class, EDIT.class})
     private Double executeCost;
 
     /**

@@ -3,12 +3,6 @@ import com.dounine.japi.JapiClientStorage;
 import com.dounine.japi.JapiClientTransfer;
 import com.dounine.japi.core.IProject;
 import com.dounine.japi.core.impl.ProjectImpl;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.context.annotation.ImportResource;
 
 import java.io.IOException;
 

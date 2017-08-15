@@ -90,4 +90,14 @@ public class StaffBirthdaySchemeApiImpl implements StaffBirthdaySchemeAPI {
     public List<EntryBasicInfoBO> findEntry() throws SerException {
         return staffBirthdaySchemeSer.findEntry();
     }
+
+    @Override
+    public Long count(StaffBirthdaySchemeDTO dto) throws SerException {
+        return staffBirthdaySchemeSer.count(dto);
+    }
+
+    @Override
+    public StaffBirthdaySchemeBO findOne(String id) throws SerException {
+        return staffBirthdaySchemeSer.findOne(id);
+    }
 }

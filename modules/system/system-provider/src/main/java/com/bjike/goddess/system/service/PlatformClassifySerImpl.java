@@ -246,7 +246,9 @@ public class PlatformClassifySerImpl extends ServiceImpl<PlatformClassify, Platf
     public PlatformClassifyBO edit(PlatformClassifyTO to) throws SerException {
         if (StringUtils.isNotBlank(to.getId())) {
             PlatformClassify entity = super.findById(to.getId());
-            BeanTransform.copyProperties(to, entity, true);
+            LocalDateTime createTime = entity.getCreateTime();
+            entity = BeanTransform.copyProperties(to, PlatformClassify.class, true);
+            entity.setCreateTime(createTime);
             entity.setModifyTime(LocalDateTime.now());
             verify(to);
             super.update(entity);

@@ -6,6 +6,10 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.organize.entity.PositionDetail;
+import com.bjike.goddess.organize.entity.PositionDetailUser;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
@@ -55,6 +59,9 @@ public class StaffBirthdaySchemeSerImpl extends ServiceImpl<StaffBirthdayScheme,
 
     @Autowired
     private EntryBasicInfoAPI entryBasicInfoAPI;
+
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -265,15 +272,15 @@ public class StaffBirthdaySchemeSerImpl extends ServiceImpl<StaffBirthdayScheme,
         if (model != null) {
             UserBO userBO = userAPI.currentUser();
             if (userBO != null) {
-                UserDetailBO userDetailBO = userDetailAPI.findByUserId(userBO.getId());
-                if (userDetailBO != null) {
-                    if (userDetailBO.getPositionName().equals("总经办")) {
+                List<PositionDetailBO> detailBOS = positionDetailUserAPI.findPositionByUser(userBO.getId());
+                if (detailBOS != null) {
+                    if (detailBOS.get(0).getPosition().equals("总经办")) {
                         model.setGeneralManageUser(userBO.getUsername());
                         model.setGeneralManageSug("通过");
-                    } else if (userDetailBO.getPositionName().equals("项目经理")) {
+                    } else if (detailBOS.get(0).getPosition().equals("项目经理")) {
                         model.setGeneralManageUser(userBO.getUsername());
                         model.setGeneralManageSug("通过");
-                    } else if (userDetailBO.getDepartmentName().equals("运营商务部")) {
+                    } else if (detailBOS.get(0).getPosition().equals("运营商务部")) {
                         model.setGeneralManageUser(userBO.getUsername());
                         model.setGeneralManageSug("通过");
                     } else {
@@ -340,5 +347,12 @@ public class StaffBirthdaySchemeSerImpl extends ServiceImpl<StaffBirthdayScheme,
     public List<EntryBasicInfoBO> findEntry() throws SerException {
         List<EntryBasicInfoBO> boList = entryBasicInfoAPI.listEntryBasicInfo();
         return boList;
+    }
+
+    @Override
+    public StaffBirthdaySchemeBO findOne(String id) throws SerException {
+        StaffBirthdayScheme staffBirthdayScheme = super.findById(id);
+        StaffBirthdaySchemeBO bo = BeanTransform.copyProperties(staffBirthdayScheme,StaffBirthdaySchemeBO.class,true);
+        return bo;
     }
 }

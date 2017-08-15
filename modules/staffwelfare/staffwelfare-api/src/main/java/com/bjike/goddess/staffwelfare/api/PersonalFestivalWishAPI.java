@@ -38,4 +38,10 @@ public interface PersonalFestivalWishAPI {
      * @return 个人节日祝福结果集
      */
     List<PersonalFestivalWishBO> pageList(PersonalFestivalWishDTO dto) throws SerException;
+
+    /**
+     * 查询总条数
+     * @throws SerException
+     */
+    Long count(PersonalFestivalWishDTO dto) throws SerException;
 }

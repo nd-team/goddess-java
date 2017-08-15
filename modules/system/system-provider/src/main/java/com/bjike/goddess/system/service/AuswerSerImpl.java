@@ -60,7 +60,9 @@ public class AuswerSerImpl extends ServiceImpl<Auswer, AuswerDTO> implements Aus
     public AuswerBO edit(AuswerTO to) throws SerException {
         if (StringUtils.isNotBlank(to.getId())) {
             Auswer auswer = super.findById(to.getId());
-            BeanTransform.copyProperties(to,auswer,true);
+            LocalDateTime createTime = auswer.getCreateTime();
+            auswer = BeanTransform.copyProperties(to,Auswer.class,true);
+            auswer.setCreateTime(createTime);
             auswer.setModifyTime(LocalDateTime.now());
             super.update(auswer);
             return BeanTransform.copyProperties(auswer,AuswerBO.class);

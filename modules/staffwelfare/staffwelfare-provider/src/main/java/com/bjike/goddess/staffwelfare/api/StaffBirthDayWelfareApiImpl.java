@@ -40,4 +40,9 @@ public class StaffBirthDayWelfareApiImpl implements StaffBirthDayWelfareAPI {
     public List<StaffBirthDayWelfareBO> pageList(StaffBirthDayWelfareDTO dto) throws SerException {
         return staffBirthDayWelfareSer.pageList(dto);
     }
+
+    @Override
+    public Long count(StaffBirthDayWelfareDTO dayWelfareDTO) throws SerException {
+        return staffBirthDayWelfareSer.count(dayWelfareDTO);
+    }
 }

@@ -460,8 +460,10 @@ public class BuyTicketApplySerImpl extends ServiceImpl<BuyTicketApply, BuyTicket
     @Transactional(rollbackFor = SerException.class)
     public BuyTicketApplyBO editBuyTicketApply(BuyTicketApplyTO buyTicketApplyTO) throws SerException {
         BuyTicketApply buyTicketApply = super.findById(buyTicketApplyTO.getId());
-        BeanTransform.copyProperties(buyTicketApplyTO, buyTicketApply, true, "passenger");
+        LocalDateTime createTime = buyTicketApply.getCreateTime();
+        buyTicketApply = BeanTransform.copyProperties(buyTicketApplyTO, BuyTicketApply.class, true, "passenger");
         buyTicketApply.setPassenger(StringUtils.join(buyTicketApplyTO.getPassenger(), ","));
+        buyTicketApply.setCreateTime(createTime);
         buyTicketApply.setModifyTime(LocalDateTime.now());
         super.update(buyTicketApply);
         return BeanTransform.copyProperties(buyTicketApply, BuyTicketApplyBO.class);

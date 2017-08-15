@@ -246,4 +246,11 @@ public class WishesStatementSerImpl extends ServiceImpl<WishesStatement, WishesS
             throw new SerException("用户未登录或已超时!");
         }
     }
+
+    @Override
+    public WishesStatementBO findOne(String id) throws SerException {
+        WishesStatement wishesStatement = super.findById(id);
+        WishesStatementBO bo = BeanTransform.copyProperties(wishesStatement,WishesStatementBO.class);
+        return bo;
+    }
 }

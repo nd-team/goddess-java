@@ -1,5 +1,6 @@
 package com.bjike.goddess.staffshares.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.staffshares.enums.Status1;
@@ -21,6 +22,7 @@ public class PurchaseTO extends BaseTO {
     /**
      * 状态
      */
+    @NotNull(message = "状态不能为空", groups = {ADD.class})
     private Status1 status;
 
     /**
@@ -66,8 +68,8 @@ public class PurchaseTO extends BaseTO {
     /**
      * 购入股数
      */
-    @NotNull(message = "购入股数",groups = {EDIT.class})
-    private int purchaseNum;
+    @NotNull(message = "购入股数", groups = {EDIT.class})
+    private Long purchaseNum;
 
     /**
      * 应付额
@@ -197,11 +199,11 @@ public class PurchaseTO extends BaseTO {
         this.sellName = sellName;
     }
 
-    public int getPurchaseNum() {
+    public Long getPurchaseNum() {
         return purchaseNum;
     }
 
-    public void setPurchaseNum(int purchaseNum) {
+    public void setPurchaseNum(Long purchaseNum) {
         this.purchaseNum = purchaseNum;
     }
 

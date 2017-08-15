@@ -42,74 +42,86 @@ public class Application extends BaseEntity {
     /**
      * 项目组/部门
      */
-    @Column(name = "department", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目组/部门'")
+    @Column(name = "department", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '项目组/部门'")
     private String department;
 
     /**
      * 岗位
      */
-    @Column(name = "position", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '岗位'")
+    @Column(name = "position", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '岗位'")
     private String position;
 
     /**
      * 在职时间（月数）
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '在职时间（月数）'")
+    @Column(name = "", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '在职时间（月数）'")
     private int months;
 
     /**
      * 申请原因
      */
-    @Column(name = "reason", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '申请原因'")
+    @Column(name = "reason", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '申请原因'")
     private String reason;
 
     /**
      * 备注
      */
-    @Column(name = "remark", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @Column(name = "remark", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
     /**
      * 财务运营部负责人
      */
-    @Column(name = "financial", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '财务运营部负责人'")
+    @Column(name = "financial", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '财务运营部负责人'")
     private String financial;
 
     /**
      * 财务运营部审核意见
      */
-    @Column(name = "opinion", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '财务运营部审核意见'")
+    @Column(name = "opinion", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '财务运营部审核意见'")
     private String opinion;
 
     /**
      * 规划模块
      */
-    @Column(name = "planModule", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '规划模块'")
+    @Column(name = "planModule", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '规划模块'")
     private String planModule;
 
     /**
      * 规划模块审核意见
      */
-    @Column(name = "opinion1", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '规划模块审核意见'")
+    @Column(name = "opinion1", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '规划模块审核意见'")
     private String opinion1;
 
     /**
      * 总经办
      */
-    @Column(name = "manager", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '总经办'")
+    @Column(name = "manager", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '总经办'")
     private String manager;
 
     /**
      * 总经办审核意见
      */
-    @Column(name = "opinion2", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '总经办审核意见'")
+    @Column(name = "opinion2", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '总经办审核意见'")
     private String opinion2;
 
     /**
      * 投票数
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '投票数'")
+    @Column(name = "", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '投票数'")
     private int votes;
+
+    /**
+     * 状态
+     */
+    @Column(name = "is_situation", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '状态' ")
+    private Boolean situation;
+
+    /**
+     * 标记
+     */
+    @Column(name = "tar", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '状态' ")
+    private Boolean tar;
 
 
     public String getShareholder() {
@@ -230,5 +242,21 @@ public class Application extends BaseEntity {
 
     public void setVotes(int votes) {
         this.votes = votes;
+    }
+
+    public Boolean getSituation() {
+        return situation;
+    }
+
+    public void setSituation(Boolean situation) {
+        this.situation = situation;
+    }
+
+    public Boolean getTar() {
+        return tar;
+    }
+
+    public void setTar(Boolean tar) {
+        this.tar = tar;
     }
 }

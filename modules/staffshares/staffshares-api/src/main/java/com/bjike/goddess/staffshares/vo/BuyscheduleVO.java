@@ -33,7 +33,7 @@ public class BuyscheduleVO {
     /**
      * 购入股数
      */
-    private int purchaseNum;
+    private Long purchaseNum;
 
     /**
      * 买入价格
@@ -98,11 +98,11 @@ public class BuyscheduleVO {
         this.name = name;
     }
 
-    public int getPurchaseNum() {
+    public Long getPurchaseNum() {
         return purchaseNum;
     }
 
-    public void setPurchaseNum(int purchaseNum) {
+    public void setPurchaseNum(Long purchaseNum) {
         this.purchaseNum = purchaseNum;
     }
 

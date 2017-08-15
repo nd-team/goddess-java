@@ -220,7 +220,9 @@ public class FieldDockSerImpl extends ServiceImpl<FieldDock, FieldDockDTO> imple
     public FieldDockBO edit(FieldDockTO to) throws SerException {
         if (StringUtils.isNotBlank(to.getId())) {
             FieldDock fieldDock = super.findById(to.getId());
-            BeanTransform.copyProperties(to, fieldDock, true);
+            LocalDateTime createTime = fieldDock.getCreateTime();
+            fieldDock = BeanTransform.copyProperties(to, FieldDock.class, true);
+            fieldDock.setCreateTime(createTime);
             fieldDock.setModifyTime(LocalDateTime.now());
             verify(to);
             super.update(fieldDock);

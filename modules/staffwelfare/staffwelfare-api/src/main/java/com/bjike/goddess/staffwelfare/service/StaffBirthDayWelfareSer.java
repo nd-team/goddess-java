@@ -39,4 +39,12 @@ public interface StaffBirthDayWelfareSer extends Ser<StaffBirthDayWelfare, Staff
      * @throws SerException
      */
     List<StaffBirthDayWelfareBO> pageList(StaffBirthDayWelfareDTO dto) throws SerException;
+
+
+    /**
+     * 查询列表总条数
+     * @param dayWelfareDTO
+     * @throws SerException
+     */
+    Long count(StaffBirthDayWelfareDTO dayWelfareDTO) throws SerException;
 }

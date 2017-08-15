@@ -16,6 +16,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,6 +38,7 @@ public class TicketInfoRecordSerImpl extends ServiceImpl<TicketInfoRecord, Ticke
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private UserAPI userAPI;
+
     /**
      * 设置权限表中岗位权限
      *
@@ -182,6 +184,7 @@ public class TicketInfoRecordSerImpl extends ServiceImpl<TicketInfoRecord, Ticke
 
         return true;
     }
+
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
@@ -232,53 +235,61 @@ public class TicketInfoRecordSerImpl extends ServiceImpl<TicketInfoRecord, Ticke
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
+
     @Override
     public Long countTicketInfoRecord(TicketInfoRecordDTO ticketInfoRecordDTO) throws SerException {
         ticketInfoRecordDTO.getSorts().add("createTime=desc");
         Long count = super.count(ticketInfoRecordDTO);
         return count;
     }
+
     @Override
     public TicketInfoRecordBO getOne(String id) throws SerException {
         TicketInfoRecord ticketInfoRecord = super.findById(id);
-        return BeanTransform.copyProperties(ticketInfoRecord,TicketInfoRecordBO.class,true);
+        return BeanTransform.copyProperties(ticketInfoRecord, TicketInfoRecordBO.class, true);
     }
 
 
     @Override
     public List<TicketInfoRecordBO> findListTicketInfoRecord(TicketInfoRecordDTO ticketInfoRecordDTO) throws SerException {
         checkModPermission();
-        List<TicketInfoRecord> ticketInfoRecords = super.findByCis(ticketInfoRecordDTO,true);
-        List<TicketInfoRecordBO> ticketInfoRecordBOS = BeanTransform.copyProperties(ticketInfoRecords,TicketInfoRecordBO.class,true);
+        List<TicketInfoRecord> ticketInfoRecords = super.findByCis(ticketInfoRecordDTO, true);
+        List<TicketInfoRecordBO> ticketInfoRecordBOS = BeanTransform.copyProperties(ticketInfoRecords, TicketInfoRecordBO.class, true);
         return ticketInfoRecordBOS;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public TicketInfoRecordBO insertTicketInfoRecord(TicketInfoRecordTO ticketInfoRecordTO) throws SerException {
         checkModPermission();
-        TicketInfoRecord ticketInfoRecord = BeanTransform.copyProperties(ticketInfoRecordTO,TicketInfoRecord.class,true);
+        TicketInfoRecord ticketInfoRecord = BeanTransform.copyProperties(ticketInfoRecordTO, TicketInfoRecord.class, true);
         ticketInfoRecord.setCreateTime(LocalDateTime.now());
         super.save(ticketInfoRecord);
-        return BeanTransform.copyProperties(ticketInfoRecord,TicketInfoRecordBO.class);
+        return BeanTransform.copyProperties(ticketInfoRecord, TicketInfoRecordBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public TicketInfoRecordBO editTicketInfoRecord(TicketInfoRecordTO ticketInfoRecordTO) throws SerException {
         checkModPermission();
         TicketInfoRecord ticketInfoRecord = super.findById(ticketInfoRecordTO.getId());
-        BeanTransform.copyProperties(ticketInfoRecordTO,ticketInfoRecord,true);
+        LocalDateTime createTime = ticketInfoRecord.getCreateTime();
+        ticketInfoRecord = BeanTransform.copyProperties(ticketInfoRecordTO, TicketInfoRecord.class, true);
+        ticketInfoRecord.setCreateTime(createTime);
         ticketInfoRecord.setModifyTime(LocalDateTime.now());
         super.update(ticketInfoRecord);
-        return BeanTransform.copyProperties(ticketInfoRecord,TicketInfoRecordBO.class);
+        return BeanTransform.copyProperties(ticketInfoRecord, TicketInfoRecordBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeTicketInfoRecord(String id) throws SerException {
         checkModPermission();
         super.remove(id);
     }
+
     @Override
-    public void congealTicketInfoRecord(String id) throws SerException{
+    public void congealTicketInfoRecord(String id) throws SerException {
         checkModPermission();
         try {
             TicketInfoRecord ticketInfoRecord = super.findById(id);
@@ -287,12 +298,12 @@ public class TicketInfoRecordSerImpl extends ServiceImpl<TicketInfoRecord, Ticke
 
             super.update(ticketInfoRecord);
         } catch (SerException e) {
-            throw new SerException("冻结出现错误，冻结失败"+e.getMessage());
+            throw new SerException("冻结出现错误，冻结失败" + e.getMessage());
         }
     }
 
     @Override
-    public void thawTicketInfoRecord(String id) throws SerException{
+    public void thawTicketInfoRecord(String id) throws SerException {
         checkModPermission();
         try {
             TicketInfoRecord ticketInfoRecord = super.findById(id);
@@ -301,7 +312,7 @@ public class TicketInfoRecordSerImpl extends ServiceImpl<TicketInfoRecord, Ticke
 
             super.update(ticketInfoRecord);
         } catch (SerException e) {
-            throw new SerException("解冻出现错误，解冻失败"+e.getMessage());
+            throw new SerException("解冻出现错误，解冻失败" + e.getMessage());
         }
     }
 }

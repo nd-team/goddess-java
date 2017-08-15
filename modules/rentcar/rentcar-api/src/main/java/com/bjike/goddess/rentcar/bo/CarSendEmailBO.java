@@ -13,28 +13,54 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  */
 public class CarSendEmailBO extends BaseBO {
     /**
-     * 商务人员和项目经理的id
+     * 岗位的id
      */
-    private String[] positionNameId;
+    private String positionNameId;
     /**
      * 部门id
      */
-    private String projectManagerId;
+    private String projectManageId;
 
-    public String[] getPositionNameId() {
+    /**
+     * 岗位名称
+     */
+    private String positionName;
+
+    /**
+     * 部门名称
+     */
+    private String projectName;
+
+    public String getPositionName() {
+        return positionName;
+    }
+
+    public void setPositionName(String positionName) {
+        this.positionName = positionName;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public String getPositionNameId() {
         return positionNameId;
     }
 
-    public void setPositionNameId(String[] positionNameId) {
+    public void setPositionNameId(String positionNameId) {
         this.positionNameId = positionNameId;
     }
 
-    public String getProjectManagerId() {
-        return projectManagerId;
+    public String getProjectManageId() {
+        return projectManageId;
     }
 
-    public void setProjectManagerId(String projectManagerId) {
-        this.projectManagerId = projectManagerId;
+    public void setProjectManageId(String projectManageId) {
+        this.projectManageId = projectManageId;
     }
 
     @Override

@@ -3,7 +3,9 @@ package com.bjike.goddess.staffshares.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffshares.bo.SellscheduleBO;
 import com.bjike.goddess.staffshares.bo.SellscheduleCollectBO;
+import com.bjike.goddess.staffshares.bo.TransactionBO;
 import com.bjike.goddess.staffshares.dto.SellscheduleDTO;
+import com.bjike.goddess.staffshares.to.GuidePermissionTO;
 import com.bjike.goddess.staffshares.to.SellscheduleTO;
 
 import java.util.List;
@@ -18,6 +20,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SellscheduleAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 出售
@@ -68,6 +83,16 @@ public interface SellscheduleAPI {
      * @throws SerException
      */
     default List<SellscheduleCollectBO> collect() throws SerException {
+        return null;
+    }
+
+    /**
+     * 交易汇总表
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<TransactionBO> transaction() throws SerException {
         return null;
     }
 }

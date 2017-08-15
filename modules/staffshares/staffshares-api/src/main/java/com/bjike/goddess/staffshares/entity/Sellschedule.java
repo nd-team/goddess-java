@@ -42,8 +42,8 @@ public class Sellschedule extends BaseEntity {
     /**
      * 出售股数
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '出售股数'")
-    private int sellNum;
+    @Column(name = "", nullable = false, columnDefinition = "BIGINT(20)   COMMENT '出售股数'")
+    private Long sellNum;
 
     /**
      * 出售价格
@@ -66,8 +66,8 @@ public class Sellschedule extends BaseEntity {
     /**
      * 剩余出售量
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '剩余出售量'")
-    private int number;
+    @Column(name = "", nullable = false, columnDefinition = "BIGINT(20)   COMMENT '剩余出售量'")
+    private Long number;
 
     /**
      * 购买人
@@ -78,8 +78,8 @@ public class Sellschedule extends BaseEntity {
     /**
      * 购买股数
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '购买股数'")
-    private int purchaseNum;
+    @Column(name = "", nullable = false, columnDefinition = "BIGINT(20)   COMMENT '购买股数'")
+    private Long purchaseNum;
 
     /**
      * 购买时间
@@ -112,11 +112,11 @@ public class Sellschedule extends BaseEntity {
         this.name = name;
     }
 
-    public int getSellNum() {
+    public Long getSellNum() {
         return sellNum;
     }
 
-    public void setSellNum(int sellNum) {
+    public void setSellNum(Long sellNum) {
         this.sellNum = sellNum;
     }
 
@@ -144,11 +144,11 @@ public class Sellschedule extends BaseEntity {
         this.sellTime = sellTime;
     }
 
-    public int getNumber() {
+    public Long getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(Long number) {
         this.number = number;
     }
 
@@ -160,11 +160,11 @@ public class Sellschedule extends BaseEntity {
         this.buyName = buyName;
     }
 
-    public int getPurchaseNum() {
+    public Long getPurchaseNum() {
         return purchaseNum;
     }
 
-    public void setPurchaseNum(int purchaseNum) {
+    public void setPurchaseNum(Long purchaseNum) {
         this.purchaseNum = purchaseNum;
     }
 
