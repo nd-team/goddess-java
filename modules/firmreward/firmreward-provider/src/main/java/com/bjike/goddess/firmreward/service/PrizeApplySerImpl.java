@@ -8,15 +8,13 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.firmreward.api.AwardDetailAPI;
 import com.bjike.goddess.firmreward.bo.*;
-import com.bjike.goddess.firmreward.dto.AwardDetailDTO;
 import com.bjike.goddess.firmreward.dto.PrizeApplyDTO;
 import com.bjike.goddess.firmreward.dto.PrizeDetailDTO;
-import com.bjike.goddess.firmreward.entity.AwardDetail;
 import com.bjike.goddess.firmreward.entity.PrizeApply;
 import com.bjike.goddess.firmreward.entity.PrizeDetail;
 import com.bjike.goddess.firmreward.enums.GuideAddrStatus;
-import com.bjike.goddess.firmreward.excel.SonPermissionObject;
 import com.bjike.goddess.firmreward.to.ApplyDetailTO;
+import com.bjike.goddess.firmreward.to.DetailTO;
 import com.bjike.goddess.firmreward.to.PrizeApplyTO;
 import com.bjike.goddess.firmreward.vo.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
@@ -53,7 +51,6 @@ public class PrizeApplySerImpl extends ServiceImpl<PrizeApply, PrizeApplyDTO> im
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
-
 
 
     /**
@@ -116,7 +113,7 @@ public class PrizeApplySerImpl extends ServiceImpl<PrizeApply, PrizeApplyDTO> im
         Boolean flagSee = guideSeeIdentity();
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagAdd = guideAddIdentity();
-        if( flagSee || flagAdd ){
+        if (flagSee || flagAdd) {
             return true;
         } else {
             return false;
@@ -276,7 +273,7 @@ public class PrizeApplySerImpl extends ServiceImpl<PrizeApply, PrizeApplyDTO> im
     /**
      * 更新奖品申请
      *
-     * @param to 奖品申请to
+     * @param to    奖品申请to
      * @param model 奖品申请
      */
     private void updatePrizeApply(PrizeApplyTO to, PrizeApply model) throws SerException {
@@ -294,21 +291,15 @@ public class PrizeApplySerImpl extends ServiceImpl<PrizeApply, PrizeApplyDTO> im
     @Override
     public void addPrizeDetails(ApplyDetailTO to) throws SerException {
         String prizeApplyId = to.getId();//奖品申请id
-        String[] prizeDetails = to.getPrizeDetails();//奖品明细
-        String[] prizeBuyWays = to.getPrizeBuyWays();//奖品购置途径
-        String[] prizeIssueForms = to.getPrizeIssueForms();//奖品发放形式
-        String[] awardTimes = to.getAwardTimes();//颁奖时间
-
-        boolean prizeDetailNotEmpty = (prizeDetails != null) && (prizeDetails.length > 0);
-        if (StringUtils.isNotEmpty(prizeApplyId) && (prizeDetailNotEmpty)) {
+        List<DetailTO> detailTOS = to.getDetailTOS();
+        if (detailTOS != null && detailTOS.size() > 0 && StringUtils.isNotEmpty(prizeApplyId)) {
             List<PrizeDetail> list = new ArrayList<>(0);
-            int len = prizeBuyWays.length;
-            for (int i = 0; i < len; i ++) {
+            for (DetailTO detailTO : detailTOS) {
                 PrizeDetail model = new PrizeDetail();
-                model.setPrizeDetail(prizeDetails[i]);
-                model.setPrizeBuyWay(prizeBuyWays[i]);
-                model.setPrizeIssueForm(prizeIssueForms[i]);
-                model.setAwardTime(DateUtil.parseDate(awardTimes[i]));
+                model.setPrizeDetail(detailTO.getPrizeDetails());//奖品明细
+                model.setPrizeBuyWay(detailTO.getPrizeBuyWays());//奖品购置途径
+                model.setPrizeIssueForm(detailTO.getPrizeIssueForms());//奖品发放形式
+                model.setAwardTime(DateUtil.parseDate(detailTO.getAwardTimes()));//颁奖时间
                 model.setPrizeApplyId(prizeApplyId);
                 list.add(model);
             }
