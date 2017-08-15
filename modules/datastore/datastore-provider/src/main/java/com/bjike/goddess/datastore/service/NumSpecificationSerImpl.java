@@ -215,7 +215,9 @@ public class NumSpecificationSerImpl extends ServiceImpl<NumSpecification, NumSp
     public NumSpecificationBO editNumSpecification(NumSpecificationTO numSpecificationTO) throws SerException {
         checkAddIdentity();
         NumSpecification numSpecification = super.findById(numSpecificationTO.getId());
-        BeanTransform.copyProperties(numSpecificationTO, numSpecification, true);
+        LocalDateTime creatTime = numSpecification.getCreateTime();
+        numSpecification = BeanTransform.copyProperties(numSpecificationTO, NumSpecification.class, true);
+        numSpecification.setCreateTime(creatTime);
         numSpecification.setModifyTime(LocalDateTime.now());
         super.update(numSpecification);
         return BeanTransform.copyProperties(numSpecificationTO, NumSpecificationBO.class);

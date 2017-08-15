@@ -51,8 +51,8 @@ public class DepartmentBetCVO {
      */
     private Double betScore;
     /*
-      * 部门间对赌表D
-      */
+     * 部门间对赌表D
+     */
     private List<DepartmentBetDVO> departmentBetDVOS;
 
 

@@ -1,7 +1,6 @@
 package com.bjike.goddess.analysis.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
-import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -16,26 +15,27 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class IncomeCostAnalysisDTO extends BaseDTO {
+    public interface TestList{}
     /**
      * 年份
      */
-    @NotNull(message = "年份不能为空", groups = {VoucherGenerateDTO.TestList.class})
+    @NotNull(message = "年份不能为空", groups = {IncomeCostAnalysisDTO.TestList.class})
     private Integer year;
     /**
      * 月份
      */
-    @NotNull(message = "月份不能为空", groups = {VoucherGenerateDTO.TestList.class})
+    @NotNull(message = "月份不能为空", groups = {IncomeCostAnalysisDTO.TestList.class})
     private Integer month;
     /**
      * 地区
      */
-    @NotBlank(message = "地区不能为空", groups = {VoucherGenerateDTO.TestList.class})
+    @NotBlank(message = "地区不能为空", groups = {IncomeCostAnalysisDTO.TestList.class})
     private String area;
 
     /**
      * 项目组
      */
-    @NotBlank(message = "项目组不能为空", groups = {VoucherGenerateDTO.TestList.class})
+    @NotBlank(message = "项目组不能为空", groups = {IncomeCostAnalysisDTO.TestList.class})
     private String projectGroup;
 
     public String getArea() {

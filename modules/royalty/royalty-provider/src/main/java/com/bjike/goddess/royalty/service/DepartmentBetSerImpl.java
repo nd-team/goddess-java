@@ -8,6 +8,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.royalty.bo.DepartmentBetABO;
 import com.bjike.goddess.royalty.bo.DepartmentBetBBO;
 import com.bjike.goddess.royalty.bo.DepartmentBetCBO;
+import com.bjike.goddess.royalty.bo.DepartmentBetDBO;
 import com.bjike.goddess.royalty.dto.*;
 import com.bjike.goddess.royalty.entity.*;
 import com.bjike.goddess.royalty.enums.GuideAddrStatus;
@@ -20,7 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -200,7 +203,34 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
     @Override
     public DepartmentBetABO getOne(String id) throws SerException {
         DepartmentBetA departmentBetA = departmentBetASer.findById(id);
-        return BeanTransform.copyProperties(departmentBetA, DepartmentBetABO.class);
+        DepartmentBetABO listABO = BeanTransform.copyProperties(departmentBetA, DepartmentBetABO.class);
+
+        if (listABO != null) {
+            DepartmentBetBDTO bdto = new DepartmentBetBDTO();
+            bdto.getConditions().add(Restrict.eq("departmentBetA.id", listABO.getId()));
+            List<DepartmentBetB> listB = departmentBetBSer.findByCis(bdto);
+            List<DepartmentBetBBO> listBBO = BeanTransform.copyProperties(listB, DepartmentBetBBO.class);
+            listABO.setDepartmentBetBBOS(listBBO);
+            if (listBBO != null) {
+                for (DepartmentBetBBO departmentBetBBO : listBBO) {
+                    DepartmentBetCDTO cdto = new DepartmentBetCDTO();
+                    cdto.getConditions().add(Restrict.eq("departmentBetB.id", departmentBetBBO.getId()));
+                    List<DepartmentBetC> listC = departmentBetCSer.findByCis(cdto);
+                    List<DepartmentBetCBO> listCBO = BeanTransform.copyProperties(listC, DepartmentBetCBO.class);
+                    departmentBetBBO.setDepartmentBetCBOS(listCBO);
+                    if (listCBO != null) {
+                        for (DepartmentBetCBO departmentBetCBO : listCBO) {
+                            DepartmentBetDDTO ddto = new DepartmentBetDDTO();
+                            ddto.getConditions().add(Restrict.eq("departmentBetC.id", departmentBetCBO.getId()));
+                            List<DepartmentBetD> listD = departmentBetDSer.findByCis(ddto);
+                            List<DepartmentBetDBO> listDBO = BeanTransform.copyProperties(listD, DepartmentBetDBO.class);
+                            departmentBetCBO.setDepartmentBetDBOS(listDBO);
+                        }
+                    }
+                }
+            }
+        }
+            return listABO;
     }
 
     @Override
@@ -211,51 +241,31 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
         if (listABO != null) {
             for (DepartmentBetABO departmentBetABO : listABO) {
                 DepartmentBetBDTO bdto = new DepartmentBetBDTO();
-                bdto.getConditions().add(Restrict.eq("departmentBetA.id",departmentBetABO.getId()));
+                bdto.getConditions().add(Restrict.eq("departmentBetA.id", departmentBetABO.getId()));
                 List<DepartmentBetB> listB = departmentBetBSer.findByCis(bdto);
-                List<DepartmentBetBBO> listBBO = BeanTransform.copyProperties(listB,DepartmentBetBBO.class);
+                List<DepartmentBetBBO> listBBO = BeanTransform.copyProperties(listB, DepartmentBetBBO.class);
                 departmentBetABO.setDepartmentBetBBOS(listBBO);
-                if(listBBO!=null){
-                    for(DepartmentBetBBO departmentBetBBO:listBBO) {
+                if (listBBO != null) {
+                    for (DepartmentBetBBO departmentBetBBO : listBBO) {
                         DepartmentBetCDTO cdto = new DepartmentBetCDTO();
-                        cdto.getConditions().add(Restrict.eq("departmentBetB.id",departmentBetBBO.getId()));
+                        cdto.getConditions().add(Restrict.eq("departmentBetB.id", departmentBetBBO.getId()));
                         List<DepartmentBetC> listC = departmentBetCSer.findByCis(cdto);
-                        List<DepartmentBetCBO> listCBO = BeanTransform.copyProperties(listC,DepartmentBetCBO.class);
+                        List<DepartmentBetCBO> listCBO = BeanTransform.copyProperties(listC, DepartmentBetCBO.class);
                         departmentBetBBO.setDepartmentBetCBOS(listCBO);
+                        if (listCBO != null) {
+                            for (DepartmentBetCBO departmentBetCBO : listCBO) {
+                                DepartmentBetDDTO ddto = new DepartmentBetDDTO();
+                                ddto.getConditions().add(Restrict.eq("departmentBetC.id", departmentBetCBO.getId()));
+                                List<DepartmentBetD> listD = departmentBetDSer.findByCis(ddto);
+                                List<DepartmentBetDBO> listDBO = BeanTransform.copyProperties(listD, DepartmentBetDBO.class);
+                                departmentBetCBO.setDepartmentBetDBOS(listDBO);
+                            }
+                        }
                     }
                 }
             }
         }
         return listABO;
-//        DepartmentBetADTO adto = new DepartmentBetADTO();
-//        List<DepartmentBetA> listA = departmentBetASer.findByCis(adto);
-//        List<DepartmentBetBO> departmentBetBOS = new ArrayList<>(listA.size());
-//
-//        for (DepartmentBetA departmentBetA : listA) {
-//            DepartmentBetBO betBO = new DepartmentBetBO();
-//            betBO.setDepartmentBetABO(BeanTransform.copyProperties(departmentBetA, DepartmentBetABO.class));
-//            DepartmentBetBDTO bdto = new DepartmentBetBDTO();
-//            List<DepartmentBetB> listB = departmentBetBSer.findByCis(bdto);
-//            List<DepartmentBetBBO> bboList = BeanTransform.copyProperties(listB, DepartmentBetBBO.class);
-//            betBO.getDepartmentBetABO().setDepartmentBetBBOS(bboList);
-//
-//            for (DepartmentBetBBO departmentBetBBO : bboList) {
-//                DepartmentBetCDTO dtoC = new DepartmentBetCDTO();
-//                List<DepartmentBetC> listC = departmentBetCSer.findByCis(dtoC);
-//                List<DepartmentBetCBO> cboList = BeanTransform.copyProperties(listC, DepartmentBetCBO.class);
-//                departmentBetBBO.setDepartmentBetCBOS(cboList);
-//
-//                for (DepartmentBetCBO departmentBetCBO : cboList) {
-//                    DepartmentBetDDTO dtoD = new DepartmentBetDDTO();
-//                    List<DepartmentBetD> listD = departmentBetDSer.findByCis(dtoD);
-//                    List<DepartmentBetDBO> dboList = BeanTransform.copyProperties(listD, DepartmentBetDBO.class);
-//                    departmentBetCBO.setDepartmentBetDBOS(dboList);
-//                }
-//            }
-//            departmentBetBOS.add(betBO);
-//        }
-//
-//        return departmentBetBOS;
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -426,44 +436,46 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
     @Override
     public void delete(String id) throws SerException {
         checkAddIdentity();
-        DepartmentBetADTO departmentBetADTO = new DepartmentBetADTO();
-        departmentBetADTO.getConditions().add(Restrict.eq("id", id));
-        List<DepartmentBetA> aList = departmentBetASer.findByCis(departmentBetADTO);
-        if (aList != null && aList.size() > 0) {
+        DepartmentBetD departmentBetD = departmentBetDSer.findById(id);
+        if (departmentBetD == null) {
+            throw new SerException("该对象不存在");
+        }
+        departmentBetDSer.remove(id);
+        List<DepartmentBetC> cList = departmentBetCSer.findAll();
+        List<DepartmentBetB> bList = departmentBetBSer.findAll();
+        List<DepartmentBetA> aList = departmentBetASer.findAll();
 
-            List<String> aIdList = aList.stream().map(DepartmentBetA::getId).collect(Collectors.toList());
-            String[] aids = new String[aIdList.size()];
-            aids = aIdList.toArray(aids);
-            //查询B表对应的数据
-            DepartmentBetBDTO departmentBetBDTO = new DepartmentBetBDTO();
-            departmentBetBDTO.getConditions().add(Restrict.eq("departmentBetA.id", aids));
-            List<DepartmentBetB> bList = departmentBetBSer.findByCis(departmentBetBDTO);
-            if (bList != null && bList.size() > 0) {
-                //查询对应C表的数据，先删除
-                List<String> bIdList = bList.stream().map(DepartmentBetB::getId).collect(Collectors.toList());
-                String[] bids = new String[bIdList.size()];
-                bids = bIdList.toArray(bids);
-                DepartmentBetCDTO departmentBetCDTO = new DepartmentBetCDTO();
-                departmentBetCDTO.getConditions().add(Restrict.in("departmentBetB.id", bids));
-                List<DepartmentBetC> cList = departmentBetCSer.findByCis(departmentBetCDTO);
-                if (cList != null && cList.size() > 0) {
-                    //查询对应D表的数据，先删除
-                    List<String> cIdList = cList.stream().map(DepartmentBetC::getId).collect(Collectors.toList());
-                    String[] cids = new String[cIdList.size()];
-                    cids = cIdList.toArray(cids);
-                    DepartmentBetDDTO departmentBetDDTO = new DepartmentBetDDTO();
-                    departmentBetDDTO.getConditions().add(Restrict.in("departmentBetC.id", cids));
-                    List<DepartmentBetD> dList = departmentBetDSer.findByCis(departmentBetDDTO);
-                    if (dList != null && dList.size() > 0) {
-                        departmentBetDSer.remove(dList);
-                    }
-                    departmentBetCSer.remove(cList);
-                }
+        Set<String> cids = new HashSet<>();
+        Set<String> bids = new HashSet<>();
+        Set<String> aids = new HashSet<>();
 
-                departmentBetBSer.remove(bList);
+        for (DepartmentBetD d : departmentBetDSer.findAll()) {
+            cids.add(d.getDepartmentBetC().getId());
+        }
+        for (DepartmentBetC c : cList) {
+            if (!cids.contains(c.getId())) {
+                departmentBetCSer.remove(c.getId());
             }
         }
+        for (DepartmentBetC c1 : departmentBetCSer.findAll()) {
+            bids.add(c1.getDepartmentBetB().getId());
+        }
+        for (DepartmentBetB b : bList) {
+            if (!bids.contains(b.getId())) {
+                departmentBetBSer.remove(b.getId());
+            }
+        }
+        for (DepartmentBetB b1 : departmentBetBSer.findAll()) {
+            aids.add(b1.getDepartmentBetA().getId());
+        }
+        for (DepartmentBetA a : aList) {
+            if (!aids.contains(a.getId())) {
+                departmentBetASer.remove(a.getId());
+            }
+        }
+
     }
+
     //基础得分（部门总得分*目标-部门分配基础权重）
 //            SystemBetBDTO dto = new SystemBetBDTO();
 //            dto.getConditions().add(Restrict.eq("departmentTotalScore",dto.getDepartmentTotalScore()));

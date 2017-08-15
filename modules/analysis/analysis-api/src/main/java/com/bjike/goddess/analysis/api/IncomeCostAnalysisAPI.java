@@ -8,7 +8,6 @@ import com.bjike.goddess.analysis.to.CollectTO;
 import com.bjike.goddess.analysis.to.GuidePermissionTO;
 import com.bjike.goddess.analysis.to.IncomeCostAnalysisTO;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 
 import java.util.List;
 
@@ -63,16 +62,14 @@ public interface IncomeCostAnalysisAPI {
         return null;
     }
 
-//    /**
-//     * 添加收入成本分析
-//     *
-//     * @param incomeCostAnalysisTO 收入成本分析数据to
-//     * @return class IncomeCostAnalysisBO
-//     * @throws SerException
-//     */
-//    default IncomeCostAnalysisBO insertIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
-//        return null;
-//    }
+    /**
+     * 添加收入成本分析
+     *
+     * @param incomeCostAnalysisTO 收入成本分析数据to
+     * @throws SerException
+     */
+    default void insertIncomeCostAnalysis(IncomeCostAnalysisTO incomeCostAnalysisTO) throws SerException {
+    }
 
     /**
      * 编辑收入成本分析

@@ -251,23 +251,23 @@ public class RentalApplyAct extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
-    /**
-     * 租房信息
-     *
-     * @param to 租房申请数据to
-     * @return class RentalVO
-     * @des 租房信息
-     * @version v1
-     */
-    @PostMapping("v1/rentInfo")
-    public Result rentInfo(@Validated(RentalApplyTO.TestManage.class) RentalApplyTO to) throws ActException {
-        try {
-            RentalBO rentalBO = rentalApplyAPI.rentInfo(to);
-            return ActResult.initialize(BeanTransform.copyProperties(rentalBO, RentalVO.class));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 租房信息
+//     *
+//     * @param to 租房申请数据to
+//     * @return class RentalVO
+//     * @des 租房信息
+//     * @version v1
+//     */
+//    @PostMapping("v1/rentInfo")
+//    public Result rentInfo(@Validated(RentalApplyTO.TestManage.class) RentalApplyTO to) throws ActException {
+//        try {
+//            RentalBO rentalBO = rentalApplyAPI.rentInfo(to);
+//            return ActResult.initialize(BeanTransform.copyProperties(rentalBO, RentalVO.class));
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
     /**
      * 导出excel

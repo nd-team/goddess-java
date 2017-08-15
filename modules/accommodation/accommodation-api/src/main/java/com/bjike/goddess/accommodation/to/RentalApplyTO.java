@@ -179,12 +179,12 @@ public class RentalApplyTO extends BaseTO {
     /**
      * 综合资源部意见(通过/不通过)
      */
-    @NotBlank(message = "综合资源部意见不能为空",groups = {RentalApplyTO.TestFinance.class})
+    @NotBlank(message = "综合资源部意见不能为空",groups = {RentalApplyTO.TestResource.class})
     private String comprehensiveRemark;
     /**
      * 运营财务部意见(通过/不通过)
      */
-    @NotBlank(message = "运营财务部意见不能为空",groups = {RentalApplyTO.TestResource.class})
+    @NotBlank(message = "运营财务部意见不能为空",groups = {RentalApplyTO.TestFinance.class})
     private String operatingRemark;
     /**
      * 备注

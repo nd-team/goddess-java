@@ -408,7 +408,7 @@ public class RentalApplySerImpl extends ServiceImpl<RentalApply, RentalApplyDTO>
     public RentalApplyBO businessAudit(RentalApplyTO applyTO) throws SerException {
         checkBusinessAuditIdentity();
         RentalApply apply = super.findById(applyTO.getId());
-        BeanTransform.copyProperties(applyTO,apply,true);
+        BeanTransform.copyProperties(applyTO,apply,true,"projectName");
         apply.setCommerceRemark(applyTO.getCommerceRemark());
         super.update(apply);
         return BeanTransform.copyProperties(apply, RentalApplyBO.class);
@@ -418,7 +418,7 @@ public class RentalApplySerImpl extends ServiceImpl<RentalApply, RentalApplyDTO>
     public RentalApplyBO financeAudit(RentalApplyTO applyTO) throws SerException {
         checkFinanceAuditIdentity();
         RentalApply apply = super.findById(applyTO.getId());
-        BeanTransform.copyProperties(applyTO,apply,true);
+        BeanTransform.copyProperties(applyTO,apply,true,"projectName");
         apply.setOperatingRemark(applyTO.getOperatingRemark());
         super.update(apply);
         return BeanTransform.copyProperties(apply, RentalApplyBO.class);
@@ -428,7 +428,7 @@ public class RentalApplySerImpl extends ServiceImpl<RentalApply, RentalApplyDTO>
     public RentalApplyBO resourceAudit(RentalApplyTO applyTO) throws SerException {
         checkResourceAuditIdentity();
         RentalApply apply = super.findById(applyTO.getId());
-        BeanTransform.copyProperties(applyTO,apply,true);
+        BeanTransform.copyProperties(applyTO,apply,true,"projectName");
         apply.setComprehensiveRemark(applyTO.getComprehensiveRemark());
         super.update(apply);
         return BeanTransform.copyProperties(apply, RentalApplyBO.class);
@@ -440,7 +440,7 @@ public class RentalApplySerImpl extends ServiceImpl<RentalApply, RentalApplyDTO>
         UserBO userBO = userAPI.currentUser();
 
         RentalApply apply = super.findById(applyTO.getId());
-        BeanTransform.copyProperties(applyTO,apply,true);
+        BeanTransform.copyProperties(applyTO,apply,true,"projectName");
         apply.setManage(userBO.getUsername());
         apply.setManageOpinion(applyTO.getManageOpinion());
         apply.setManagePass(applyTO.getManagePass());
@@ -449,39 +449,39 @@ public class RentalApplySerImpl extends ServiceImpl<RentalApply, RentalApplyDTO>
         return bo;
     }
 
-    @Override
-    public RentalBO rentInfo(RentalApplyTO to) throws SerException {
-
-        RentalApply rentalApply = super.findById(to.getId());
-                BeanTransform.copyProperties(to, rentalApply, true);
-        Rental rental = new Rental();
-        if ("通过".equals(to.getManagePass()) && "通过".equals(to.getCommerceRemark())
-                && "通过".equals(to.getComprehensiveRemark()) && "通过".equals(to.getOperatingRemark())) {
-            rental.setRentNum(rentalApply.getRentNum());//租房编号
-            rental.setArea(rentalApply.getArea());//地区
-            rental.setProjectGroup(rentalApply.getProjectGroup());//项目组
-            rental.setProjectName(rentalApply.getProjectName());//项目名称
-            rental.setLessee(rentalApply.getLessee());//租赁人
-            rental.setAddress(rentalApply.getAddress());//租房地址
-            rental.setLandlord(rentalApply.getLandlord());//房东姓名
-            rental.setContact(rentalApply.getContact());//联系方式
-            rental.setPurpose(rentalApply.getPurpose());//租房用途
-            rental.setAgency(rentalApply.getAgency());//中介费
-            rental.setDeposit(rentalApply.getDeposit());//押金
-            rental.setRent(rentalApply.getRent());//房租
-            rental.setManagementFee(rentalApply.getRentFee());//管理费
-            rental.setHealthFee(rentalApply.getSanitation());//卫生费
-            rental.setRentPay(rentalApply.getRentPay());//房租缴费方
-            rental.setWaterMoney(rentalApply.getWater());//水费计价金额(元/吨)
-            rental.setWaterPay(rentalApply.getWaterPay());//水费缴费方
-            rental.setEnergyPay(rentalApply.getEnergyPay());//电费缴费方
-            rental.setEnergyMoney(rentalApply.getEnergy()); //电费计价额
-            rental.setNetworkMoney(rentalApply.getNetwork());// 网络套餐费用缴纳金额
-            rental.setNetworkPay(rentalApply.getNetworkPay());  //网络套餐费用缴费方
-            rentalSer.save(rental);
-        }
-        return BeanTransform.copyProperties(rental,RentalBO.class);
-    }
+//    @Override
+//    public RentalBO rentInfo(RentalApplyTO to) throws SerException {
+//
+//        RentalApply rentalApply = super.findById(to.getId());
+//                BeanTransform.copyProperties(to, rentalApply, true);
+//        Rental rental = new Rental();
+//        if ("通过".equals(to.getManagePass()) && "通过".equals(to.getCommerceRemark())
+//                && "通过".equals(to.getComprehensiveRemark()) && "通过".equals(to.getOperatingRemark())) {
+//            rental.setRentNum(rentalApply.getRentNum());//租房编号
+//            rental.setArea(rentalApply.getArea());//地区
+//            rental.setProjectGroup(rentalApply.getProjectGroup());//项目组
+//            rental.setProjectName(rentalApply.getProjectName());//项目名称
+//            rental.setLessee(rentalApply.getLessee());//租赁人
+//            rental.setAddress(rentalApply.getAddress());//租房地址
+//            rental.setLandlord(rentalApply.getLandlord());//房东姓名
+//            rental.setContact(rentalApply.getContact());//联系方式
+//            rental.setPurpose(rentalApply.getPurpose());//租房用途
+//            rental.setAgency(rentalApply.getAgency());//中介费
+//            rental.setDeposit(rentalApply.getDeposit());//押金
+//            rental.setRent(rentalApply.getRent());//房租
+//            rental.setManagementFee(rentalApply.getRentFee());//管理费
+//            rental.setHealthFee(rentalApply.getSanitation());//卫生费
+//            rental.setRentPay(rentalApply.getRentPay());//房租缴费方
+//            rental.setWaterMoney(rentalApply.getWater());//水费计价金额(元/吨)
+//            rental.setWaterPay(rentalApply.getWaterPay());//水费缴费方
+//            rental.setEnergyPay(rentalApply.getEnergyPay());//电费缴费方
+//            rental.setEnergyMoney(rentalApply.getEnergy()); //电费计价额
+//            rental.setNetworkMoney(rentalApply.getNetwork());// 网络套餐费用缴纳金额
+//            rental.setNetworkPay(rentalApply.getNetworkPay());  //网络套餐费用缴费方
+//            rentalSer.save(rental);
+//        }
+//        return BeanTransform.copyProperties(rental,RentalBO.class);
+//    }
 
     @Override
     public byte[] exportExcel(RentalApplyDTO dto) throws SerException {

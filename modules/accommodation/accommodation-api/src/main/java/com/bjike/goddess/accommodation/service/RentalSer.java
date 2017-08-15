@@ -60,16 +60,16 @@ public interface RentalSer extends Ser<Rental, RentalDTO> {
         return null;
     }
 
-    /**
-     * 添加租房信息
-     *
-     * @param rentalTO 租房信息数据集合
-     * @return class RentalBO
-     * @throws SerException
-     */
-    default RentalBO insertRental(RentalTO rentalTO) throws SerException {
-        return null;
-    }
+//    /**
+//     * 添加租房信息
+//     *
+//     * @param rentalTO 租房信息数据集合
+//     * @return class RentalBO
+//     * @throws SerException
+//     */
+//    default RentalBO insertRental(RentalTO rentalTO) throws SerException {
+//        return null;
+//    }
 
     /**
      * 编辑租房信息

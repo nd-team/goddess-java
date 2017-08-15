@@ -130,23 +130,23 @@ public class RentalAct extends BaseFileAction {
         }
     }
 
-    /**
-     * 添加租房信息
-     *
-     * @param rentalTO 租房信息to
-     * @return class RentalVO
-     * @des 添加租房信息
-     * @version v1
-     */
-    @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class) RentalTO rentalTO, BindingResult bindingResult) throws ActException {
-        try {
-            RentalBO rentalBO = rentalAPI.insertRental(rentalTO);
-            return ActResult.initialize(rentalBO);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 添加租房信息
+//     *
+//     * @param rentalTO 租房信息to
+//     * @return class RentalVO
+//     * @des 添加租房信息
+//     * @version v1
+//     */
+//    @PostMapping("v1/add")
+//    public Result add(@Validated(ADD.class) RentalTO rentalTO, BindingResult bindingResult) throws ActException {
+//        try {
+//            RentalBO rentalBO = rentalAPI.insertRental(rentalTO);
+//            return ActResult.initialize(rentalBO);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
     /**
      * 编辑租房信息

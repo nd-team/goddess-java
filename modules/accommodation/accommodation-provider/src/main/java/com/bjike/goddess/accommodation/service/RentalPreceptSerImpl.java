@@ -493,7 +493,7 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
     public RentalPreceptBO businessAudit(RentalPreceptTO preceptTO) throws SerException {
         checkBusinessAuditIdentity();
         RentalPrecept precept = super.findById(preceptTO.getId());
-        BeanTransform.copyProperties(preceptTO, precept,true);
+        BeanTransform.copyProperties(preceptTO, precept,true,"projectName");
 
         precept.setCommerceRemark(preceptTO.getCommerceRemark());
         super.update(precept);
@@ -504,7 +504,7 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
     public RentalPreceptBO financeAudit(RentalPreceptTO preceptTO) throws SerException {
         checkFinanceAuditIdentity();
         RentalPrecept precept = super.findById(preceptTO.getId());
-        BeanTransform.copyProperties(preceptTO, precept,true);
+        BeanTransform.copyProperties(preceptTO, precept,true,"projectName");
         precept.setMoneyOn(preceptTO.getMoneyOn());
         precept.setOperatingRemark(preceptTO.getOperatingRemark());
         super.update(precept);
@@ -515,7 +515,7 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
     public RentalPreceptBO resourceAudit(RentalPreceptTO preceptTO) throws SerException {
         checkResourceAuditIdentity();
         RentalPrecept precept = super.findById(preceptTO.getId());
-        BeanTransform.copyProperties(precept,RentalPreceptBO.class);
+        BeanTransform.copyProperties(preceptTO,precept,true,"projectName");
         precept.setComprehensiveRemark(preceptTO.getComprehensiveRemark());
         super.update(precept);
         return BeanTransform.copyProperties(precept, RentalPreceptBO.class);
@@ -526,7 +526,7 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
         checkManagerAuditIdentity();
         UserBO userBO = userAPI.currentUser();
         RentalPrecept precept = super.findById(preceptTO.getId());
-        BeanTransform.copyProperties(preceptTO, precept,true);
+        BeanTransform.copyProperties(preceptTO, precept,true,"projectName");
         precept.setManage(userBO.getUsername());
         precept.setManageOpinion(preceptTO.getManageOpinion());
         precept.setManagePass(preceptTO.getManagePass());
@@ -544,7 +544,7 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
     public RentalPreceptBO generalAudit(RentalPreceptTO preceptTO) throws SerException {
         checkGeneralAuditIdentity();
         RentalPrecept rentalPrecept = super.findById(preceptTO.getId());
-        BeanTransform.copyProperties(preceptTO, rentalPrecept,true);
+        BeanTransform.copyProperties(preceptTO, rentalPrecept,true,"projectName");
         if (rentalPrecept.getPassStatus().getCode() == 0) {
             throw new SerException("总经办审核失败,项目经理还未审核");
         }

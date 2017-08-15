@@ -384,6 +384,7 @@ public class ActivityApplyInforSerImpl extends ServiceImpl<ActivityApplyInfor, A
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void joinActivity(String id, String area) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         String currentUsername = userAPI.currentUser().getUsername();
         if (StringUtils.isBlank(area) || StringUtils.isBlank(id))
             throw new SerException("地区或者活动信息id为空,无法参与该活动.");
@@ -393,6 +394,7 @@ public class ActivityApplyInforSerImpl extends ServiceImpl<ActivityApplyInfor, A
         staff.setIfAttend(Boolean.TRUE);
         staff.setApplyInforId(id);//设置逻辑外键关联
         ActivityStaffListTO staffTo = BeanTransform.copyProperties(staff, ActivityStaffListTO.class);
+        RpcTransmit.transmitUserToken(userToken);
         activityStaffListAPI.save(staffTo);
     }
 
