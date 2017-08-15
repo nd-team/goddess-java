@@ -288,4 +288,11 @@ public class ThankStatementSerImpl extends ServiceImpl<ThankStatement, ThankStat
             throw new SerException("用户未登录或已超时!");
         }
     }
+
+    @Override
+    public ThankStatementBO findOne(String id) throws SerException {
+        ThankStatement thankStatement = super.findById(id);
+        ThankStatementBO bo = BeanTransform.copyProperties(thankStatement,ThankStatementBO.class);
+        return bo;
+    }
 }

@@ -365,4 +365,10 @@ public class HeadPortraitHatSerImpl extends ServiceImpl<HeadPortraitHat, HeadPor
         }
     }
 
+    @Override
+    public HeadPortraitHatBO findOne(String id) throws SerException {
+        HeadPortraitHat headPortraitHat = super.findById(id);
+        HeadPortraitHatBO headPortraitHatBO = BeanTransform.copyProperties(headPortraitHat,HeadPortraitHatBO.class);
+        return headPortraitHatBO;
+    }
 }

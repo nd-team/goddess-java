@@ -94,4 +94,21 @@ public class StaffBirthDayWelfareAct {
         }*/
     }
 
+
+    /**
+     * 列表总条数
+     * @param dayWelfareDTO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(StaffBirthDayWelfareDTO dayWelfareDTO) throws ActException{
+        try {
+            Long count = staffBirthDayWelfareAPI.count(dayWelfareDTO);
+            return ActResult.initialize(count);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

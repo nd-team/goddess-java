@@ -55,4 +55,14 @@ public class WishesStatementApiImpl implements WishesStatementAPI {
     public List<WishesStatementBO> pageList(WishesStatementDTO dto) throws SerException {
         return wishesStatementSer.pageList(dto);
     }
+
+    @Override
+    public Long count(WishesStatementDTO dto) throws SerException {
+        return wishesStatementSer.count(dto);
+    }
+
+    @Override
+    public WishesStatementBO findOne(String id) throws SerException {
+        return wishesStatementSer.findOne(id);
+    }
 }

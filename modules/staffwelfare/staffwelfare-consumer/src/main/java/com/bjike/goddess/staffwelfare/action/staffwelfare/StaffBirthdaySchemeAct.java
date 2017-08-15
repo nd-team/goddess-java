@@ -8,6 +8,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 import com.bjike.goddess.staffwelfare.api.StaffBirthdaySchemeAPI;
+import com.bjike.goddess.staffwelfare.bo.StaffBirthdaySchemeBO;
 import com.bjike.goddess.staffwelfare.dto.StaffBirthdaySchemeDTO;
 import com.bjike.goddess.staffwelfare.to.GuidePermissionTO;
 import com.bjike.goddess.staffwelfare.to.StaffBirthdaySchemeTO;
@@ -235,4 +236,39 @@ public class StaffBirthdaySchemeAct {
             throw new ActException(e.getMessage());
         }
     }
+
+
+    /**
+     * 查询列表总条数
+     * @param dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(StaffBirthdaySchemeDTO dto) throws ActException{
+        try {
+            Long count = staffBirthdaySchemeAPI.count(dto);
+            return ActResult.initialize(count);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id来查询单个数据
+     * @param id
+     * @return class StaffBirthdaySchemeVO
+     * @throws ActException
+     * @version v1
+     */
+    public Result findOne(String id) throws ActException{
+        try {
+            StaffBirthdaySchemeBO bo = staffBirthdaySchemeAPI.findOne(id);
+            StaffBirthdaySchemeVO vo = BeanTransform.copyProperties(bo,StaffBirthdaySchemeVO.class);
+            return ActResult.initialize(vo);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

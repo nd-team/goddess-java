@@ -11,6 +11,7 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.staffwelfare.api.HeadPortraitHatAPI;
+import com.bjike.goddess.staffwelfare.bo.HeadPortraitHatBO;
 import com.bjike.goddess.staffwelfare.dto.HeadPortraitHatDTO;
 import com.bjike.goddess.staffwelfare.excel.SonPermissionObject;
 import com.bjike.goddess.staffwelfare.to.GuidePermissionTO;
@@ -213,5 +214,40 @@ public class HeadPortraitHatAct {
         }
         MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request; // 转换成多部分request
         return multiRequest.getFiles("file");
+    }
+
+    /**
+     * 获取列表总条数
+     * @param dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(HeadPortraitHatDTO dto) throws ActException{
+        try {
+            Long count = headPortraitHatAPI.count(dto);
+            return ActResult.initialize(count);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 根据id来查询单条数据
+     * @param id
+     * @return class HeadPortraitHatVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/one/{id}")
+    public Result findOne(String id) throws ActException{
+        try {
+            HeadPortraitHatBO bo = headPortraitHatAPI.findOne(id);
+            HeadPortraitHatVO vo = BeanTransform.copyProperties(bo,HeadPortraitHatVO.class);
+            return ActResult.initialize(vo);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
     }
 }

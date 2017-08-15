@@ -1,6 +1,9 @@
 package com.bjike.goddess.staffwelfare.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 个人节日
@@ -16,26 +19,31 @@ public class PersonalFestivalTO extends BaseTO {
     /**
      * 节日名称
      */
+    @NotBlank(message = "节日名称不能为空!", groups = {ADD.class, EDIT.class})
     private String festivalName;
 
     /**
      * 节日时间
      */
+    @NotBlank(message = "节日时间不能为空!", groups = {ADD.class, EDIT.class})
     private String festivalDate;
 
     /**
      * 可见人员
      */
+    @NotBlank(message = "可见人员不能为空!", groups = {ADD.class, EDIT.class})
     private String visibleUsers;
 
     /**
      * 提醒时间
      */
+    @NotBlank(message = "提醒时间不能为空!", groups = {ADD.class, EDIT.class})
     private String remindTime;
 
     /**
      * 提示语
      */
+    @NotBlank(message = "运营商务部意见不能为空!", groups = {ADD.class, EDIT.class})
     private String remindInfo;
 
     /**

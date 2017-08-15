@@ -1,6 +1,7 @@
 package com.bjike.goddess.staffwelfare.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.staffwelfare.bo.ThankStatementBO;
 import com.bjike.goddess.staffwelfare.dto.ThankStatementDTO;
 import com.bjike.goddess.staffwelfare.to.GuidePermissionTO;
@@ -75,4 +76,20 @@ public interface ThankStatementAPI {
      * @param id 感谢语id
      */
     void breakFreeze(String id) throws SerException;
+
+    /**
+     * 列表总条数
+     * @param dto
+     * @throws SerException
+     */
+    Long count(ThankStatementDTO dto) throws SerException;
+
+
+    /**
+     * 根据id来查询单个数据
+     * @param id
+     * @throws SerException
+     */
+    ThankStatementBO findOne(String id) throws SerException;
+
 }

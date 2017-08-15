@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffwelfare.api.ThankStatementAPI;
+import com.bjike.goddess.staffwelfare.bo.ThankStatementBO;
 import com.bjike.goddess.staffwelfare.dto.ThankStatementDTO;
 import com.bjike.goddess.staffwelfare.to.GuidePermissionTO;
 import com.bjike.goddess.staffwelfare.to.ThankStatementTO;
@@ -154,6 +155,39 @@ public class ThankStatementAct {
             List<ThankStatementVO> voList = BeanTransform.copyProperties(thankStatementAPI.pageList(dto), ThankStatementVO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 列表总条数
+     * @param dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(ThankStatementDTO dto) throws ActException{
+        try {
+            Long count = thankStatementAPI.count(dto);
+            return ActResult.initialize(count);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id来查询单个数据
+     * @param id
+     * @return class ThankStatementVO
+     * @throws ActException
+     * @version v1
+     */
+    public Result findOne(String id) throws ActException{
+        try {
+            ThankStatementBO bo = thankStatementAPI.findOne(id);
+            ThankStatementVO vo = BeanTransform.copyProperties(bo,ThankStatementVO.class);
+            return ActResult.initialize(vo);
+        }catch (SerException e){
             throw new ActException(e.getMessage());
         }
     }
