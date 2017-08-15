@@ -14,23 +14,11 @@ import com.bjike.goddess.common.api.to.BaseTO;
 public class QuestionTO extends BaseTO {
 
     /**
-     * 问题提出人
-     */
-    private String name;
-
-    /**
      * 问题描述
      */
     private String rate;
 
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getRate() {
         return rate;

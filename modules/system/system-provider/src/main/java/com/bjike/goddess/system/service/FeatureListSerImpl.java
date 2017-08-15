@@ -76,7 +76,9 @@ public class FeatureListSerImpl extends ServiceImpl<FeatureList, FeatureListDTO>
     public FeatureListBO edit(FeatureListTO to) throws SerException {
         if (StringUtils.isNotBlank(to.getId())) {
             FeatureList featureList = super.findById(to.getId());
-            BeanTransform.copyProperties(to, featureList, true);
+            LocalDateTime createTime = featureList.getCreateTime();
+            featureList = BeanTransform.copyProperties(to, FeatureList.class, true);
+            featureList.setCreateTime(createTime);
             featureList.setModifyTime(LocalDateTime.now());
             super.update(featureList);
             return BeanTransform.copyProperties(featureList, FeatureListBO.class);
@@ -123,6 +125,19 @@ public class FeatureListSerImpl extends ServiceImpl<FeatureList, FeatureListDTO>
 
     @Override
     public String findDetail(String id) throws SerException {
-        return null;
+        FeatureList entity = super.findById(id);
+        if (entity == null) {
+            throw new SerException("该对象不存在");
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("<div><div align=\"center\"><strong>制度制定/修订序言模板</strong></div>");
+        sb.append("<strong>制度名：</strong>" + entity.getName() + "</br>");
+        sb.append("<strong>版本号：</strong>" + entity.getVersion() + "</br>");
+        sb.append("<strong>采纳意见：</strong>" + entity.getAdvice() + "</br>");
+        sb.append("<strong>制定/修订人：</strong>" + entity.getDesigner() + "</br>");
+        sb.append("<strong>责任审核：</strong>" + entity.getAudit() + "</br>");
+        sb.append("<strong>制定/修订背景：</strong>" + entity.getBackground() + "</br>");
+        sb.append("<strong>制作/修订内容：</strong>" + entity.getContent() + "</div>");
+        return sb.toString();
     }
 }

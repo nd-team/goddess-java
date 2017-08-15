@@ -1,6 +1,9 @@
 package com.bjike.goddess.system.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 字段对接数据传输对象
@@ -12,9 +15,11 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [ com.bjike ]
  */
 public class FieldDockDTO extends BaseDTO {
+    public interface TestExport{}
     /**
      * 项目名称
      */
+    @NotNull(message = "项目名称不能为空",groups = {FieldDockDTO.TestExport.class})
     private String[] projectName;
 
     /**

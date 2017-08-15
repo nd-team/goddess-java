@@ -1,6 +1,8 @@
 package com.bjike.goddess.system.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.sun.deploy.security.MozillaJSSNONEwithRSASignature;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 答案
@@ -12,15 +14,18 @@ import com.bjike.goddess.common.api.to.BaseTO;
  * @Copy: [ com.bjike ]
  */
 public class AuswerTO extends BaseTO {
+    public interface TestAdd{}
 
     /**
      * 参考答案
      */
+    @NotBlank(message = "参考答案不能为空",groups = {AuswerTO.TestAdd.class})
     private String answer;
 
     /**
      * 提供人
      */
+    @NotBlank(message = "提供人不能为空",groups = {AuswerTO.TestAdd.class})
     private String provider;
 
 

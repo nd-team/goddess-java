@@ -54,8 +54,8 @@ public class PlatformClassify extends BaseEntity {
     /**
      * 包含（实现需求）功能
      */
-    @Column(name = "ContainsFunction",  columnDefinition = "VARCHAR(255)   COMMENT '包含（实现需求）功能'")
-    private String ContainsFunction;
+    @Column(name = "containsFunction",  columnDefinition = "VARCHAR(255)   COMMENT '包含（实现需求）功能'")
+    private String containsFunction;
 
     /**
      * 最新更新时间
@@ -213,11 +213,11 @@ public class PlatformClassify extends BaseEntity {
     }
 
     public String getContainsFunction() {
-        return ContainsFunction;
+        return containsFunction;
     }
 
-    public void setContainsFunction(String ContainsFunction) {
-        this.ContainsFunction = ContainsFunction;
+    public void setContainsFunction(String containsFunction) {
+        this.containsFunction = containsFunction;
     }
 
     public LocalDate getUpdateTime() {
