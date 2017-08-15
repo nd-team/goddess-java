@@ -2,6 +2,7 @@ package com.bjike.goddess.version.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.version.bo.HelpBO;
+import com.bjike.goddess.version.bo.HelpBO1;
 import com.bjike.goddess.version.dto.HelpDTO;
 import com.bjike.goddess.version.service.HelpSer;
 import com.bjike.goddess.version.to.AnswerTO;
@@ -56,7 +57,7 @@ public class HelpApiImpl implements HelpAPI {
     }
 
     @Override
-    public String findDetail(String id) throws SerException {
+    public HelpBO1 findDetail(String id) throws SerException {
         return helpSer.findDetail(id);
     }
 

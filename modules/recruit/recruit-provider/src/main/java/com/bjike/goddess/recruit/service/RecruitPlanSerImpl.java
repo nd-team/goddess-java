@@ -874,7 +874,22 @@ public class RecruitPlanSerImpl extends ServiceImpl<RecruitPlan, RecruitPlanDTO>
         } else if (StringUtils.isNotBlank(position)) {
             return positionCount1(dto.getTime(), area, position, interviewInfors, firstPhoneRecords, recruitPlans);
         }
-        return null;
+        CountBO countBO = new CountBO();
+        countBO.setDate(dto.getTime());
+        countBO.setArea(area);
+        countBO.setPlanRecruitNo(planRecruitNo);
+        countBO.setActualSel(actualSel);
+        countBO.setActualInterview(actualInterview);
+        countBO.setActualFace(actualFace);
+        countBO.setActualSuccess(actualSuccess);
+        countBO.setEmploy(employ);
+        countBO.setEntry(entry);
+        countBO.setSuccess(Double.valueOf(actualInterview) / Double.valueOf(actualSel));
+        countBO.setComeFace(Double.valueOf(actualFace) / Double.valueOf(actualInterview));
+        countBO.setEmployLV(Double.valueOf(employ) / Double.valueOf(actualFace));
+        countBO.setStaffLV(Double.valueOf(employ) / Double.valueOf(entry));
+        list.add(countBO);
+        return list;
     }
 
 //    @Override
@@ -1047,7 +1062,22 @@ public class RecruitPlanSerImpl extends ServiceImpl<RecruitPlan, RecruitPlanDTO>
         } else if (StringUtils.isNotBlank(position)) {
             return positionCount1(time1, area, position, interviewInfors, firstPhoneRecords, recruitPlans);
         }
-        return null;
+        CountBO countBO = new CountBO();
+        countBO.setDate(time1);
+        countBO.setArea(area);
+        countBO.setPlanRecruitNo(planRecruitNo);
+        countBO.setActualSel(actualSel);
+        countBO.setActualInterview(actualInterview);
+        countBO.setActualFace(actualFace);
+        countBO.setActualSuccess(actualSuccess);
+        countBO.setEmploy(employ);
+        countBO.setEntry(entry);
+        countBO.setSuccess(Double.valueOf(actualInterview) / Double.valueOf(actualSel));
+        countBO.setComeFace(Double.valueOf(actualFace) / Double.valueOf(actualInterview));
+        countBO.setEmployLV(Double.valueOf(employ) / Double.valueOf(actualFace));
+        countBO.setStaffLV(Double.valueOf(employ) / Double.valueOf(entry));
+        list.add(countBO);
+        return list;
     }
 
     @Override
@@ -1158,7 +1188,22 @@ public class RecruitPlanSerImpl extends ServiceImpl<RecruitPlan, RecruitPlanDTO>
         } else if (StringUtils.isNotBlank(position)) {
             return positionCount1(time1, area, position, interviewInfors, firstPhoneRecords, recruitPlans);
         }
-        return null;
+        CountBO countBO = new CountBO();
+        countBO.setDate(time1);
+        countBO.setArea(area);
+        countBO.setPlanRecruitNo(planRecruitNo);
+        countBO.setActualSel(actualSel);
+        countBO.setActualInterview(actualInterview);
+        countBO.setActualFace(actualFace);
+        countBO.setActualSuccess(actualSuccess);
+        countBO.setEmploy(employ);
+        countBO.setEntry(entry);
+        countBO.setSuccess(Double.valueOf(actualInterview) / Double.valueOf(actualSel));
+        countBO.setComeFace(Double.valueOf(actualFace) / Double.valueOf(actualInterview));
+        countBO.setEmployLV(Double.valueOf(employ) / Double.valueOf(actualFace));
+        countBO.setStaffLV(Double.valueOf(employ) / Double.valueOf(entry));
+        list.add(countBO);
+        return list;
     }
 
     private LocalDate[] getTimes(int year, int month, int week) throws SerException {

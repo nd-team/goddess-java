@@ -1,20 +1,22 @@
-package com.bjike.goddess.version.bo;
-
-import com.bjike.goddess.common.api.bo.BaseBO;
+package com.bjike.goddess.version.vo;
 
 import java.util.List;
 
 /**
- * 帮助与解答业务传输对象
+ * 帮助与解答表现层对象
  *
  * @Author: [ chenjunhao ]
  * @Date: [ 2017-08-04 03:07 ]
- * @Description: [ 帮助与解答业务传输对象 ]
+ * @Description: [ 帮助与解答表现层对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class HelpBO extends BaseBO {
+public class HelpVO1 {
 
+    /**
+     * id
+     */
+    private String id;
     /**
      * 问题提出人
      */
@@ -30,18 +32,26 @@ public class HelpBO extends BaseBO {
      */
     private Long answerCount;
 
-//    /**
-//     * 答案集合
-//     */
-//    private List<AnswerBO> answers;
-//
-//    public List<AnswerBO> getAnswers() {
-//        return answers;
-//    }
-//
-//    public void setAnswers(List<AnswerBO> answers) {
-//        this.answers = answers;
-//    }
+    /**
+     * 答案集合
+     */
+    private List<AnswerVO> answers;
+
+    public List<AnswerVO> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<AnswerVO> answers) {
+        this.answers = answers;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
