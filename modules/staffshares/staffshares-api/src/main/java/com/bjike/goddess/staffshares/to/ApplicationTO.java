@@ -1,6 +1,11 @@
 package com.bjike.goddess.staffshares.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 干股代表申请
@@ -46,11 +51,13 @@ public class ApplicationTO extends BaseTO {
     /**
      * 申请原因
      */
+    @NotBlank(message = "申请原因不能为空", groups = {ADD.class})
     private String reason;
 
     /**
      * 备注
      */
+    @NotBlank(message = "备注不能为空", groups = {ADD.class})
     private String remark;
 
     /**
@@ -61,6 +68,7 @@ public class ApplicationTO extends BaseTO {
     /**
      * 财务运营部审核意见
      */
+    @NotBlank(message = "审核意见不能为空",groups = {EDIT.class})
     private String opinion;
 
     /**
@@ -87,6 +95,17 @@ public class ApplicationTO extends BaseTO {
      * 投票数
      */
     private int votes;
+
+    /**
+     * 审核状态
+     */
+    @NotNull(message = "审核状态不能为空",groups = {EDIT.class})
+    private Boolean situation;
+
+    /**
+     * 标记
+     */
+    private Boolean tar;
 
 
     public String getShareholder() {
@@ -207,5 +226,21 @@ public class ApplicationTO extends BaseTO {
 
     public void setVotes(int votes) {
         this.votes = votes;
+    }
+
+    public Boolean getSituation() {
+        return situation;
+    }
+
+    public void setSituation(Boolean situation) {
+        this.situation = situation;
+    }
+
+    public Boolean getTar() {
+        return tar;
+    }
+
+    public void setTar(Boolean tar) {
+        this.tar = tar;
     }
 }

@@ -3,8 +3,10 @@ package com.bjike.goddess.staffshares.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffshares.bo.SellscheduleBO;
 import com.bjike.goddess.staffshares.bo.SellscheduleCollectBO;
+import com.bjike.goddess.staffshares.bo.TransactionBO;
 import com.bjike.goddess.staffshares.dto.SellscheduleDTO;
 import com.bjike.goddess.staffshares.service.SellscheduleSer;
+import com.bjike.goddess.staffshares.to.GuidePermissionTO;
 import com.bjike.goddess.staffshares.to.SellscheduleTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,17 @@ import java.util.List;
 @Service("sellscheduleApiImpl")
 public class SellscheduleApiImpl implements SellscheduleAPI {
     @Autowired
-    private SellscheduleSer sellscheduleSer;
+        private SellscheduleSer sellscheduleSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return sellscheduleSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return sellscheduleSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public void sell(SellscheduleTO to) throws SerException {
@@ -48,5 +60,10 @@ public class SellscheduleApiImpl implements SellscheduleAPI {
     @Override
     public List<SellscheduleCollectBO> collect() throws SerException {
         return sellscheduleSer.collect();
+    }
+
+    @Override
+    public List<TransactionBO> transaction() throws SerException {
+        return sellscheduleSer.transaction();
     }
 }

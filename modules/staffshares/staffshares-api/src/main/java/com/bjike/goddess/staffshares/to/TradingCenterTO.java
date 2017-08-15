@@ -78,7 +78,7 @@ public class TradingCenterTO extends BaseTO {
     /**
      * 发行数量
      */
-    private int number;
+    private Long number;
 
     /**
      * 发行价格
@@ -143,7 +143,7 @@ public class TradingCenterTO extends BaseTO {
     /**
      * 剩余出售股数
      */
-    private int sharesNum;
+    private Long sharesNum;
 
 
     public Status getStatus() {
@@ -242,11 +242,11 @@ public class TradingCenterTO extends BaseTO {
         this.proportion = proportion;
     }
 
-    public int getNumber() {
+    public Long getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(Long number) {
         this.number = number;
     }
 
@@ -346,11 +346,11 @@ public class TradingCenterTO extends BaseTO {
         this.opinion = opinion;
     }
 
-    public int getSharesNum() {
+    public Long getSharesNum() {
         return sharesNum;
     }
 
-    public void setSharesNum(int sharesNum) {
+    public void setSharesNum(Long sharesNum) {
         this.sharesNum = sharesNum;
     }
 }

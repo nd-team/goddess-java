@@ -31,7 +31,7 @@ public class SellscheduleCollectBO extends BaseBO {
     /**
      * 出售股数
      */
-    private int sellNum;
+    private Long sellNum;
 
 //    /**
 //     * 出售价格
@@ -77,11 +77,11 @@ public class SellscheduleCollectBO extends BaseBO {
         this.sellName = sellName;
     }
 
-    public int getSellNum() {
+    public Long getSellNum() {
         return sellNum;
     }
 
-    public void setSellNum(int sellNum) {
+    public void setSellNum(Long sellNum) {
         this.sellNum = sellNum;
     }
 

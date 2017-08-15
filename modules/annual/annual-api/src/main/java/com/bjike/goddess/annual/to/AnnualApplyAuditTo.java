@@ -21,7 +21,6 @@ public class AnnualApplyAuditTo extends BaseTO {
 
      * 请假人
      */
-    @NotBlank(message = "请假人不能为空", groups = EDIT.class)
     private String infoUsername;
 
     /**
@@ -49,5 +48,13 @@ public class AnnualApplyAuditTo extends BaseTO {
 
     public void setFruit(Boolean fruit) {
         this.fruit = fruit;
+    }
+
+    public String getInfoUsername() {
+        return infoUsername;
+    }
+
+    public void setInfoUsername(String infoUsername) {
+        this.infoUsername = infoUsername;
     }
 }

@@ -31,7 +31,7 @@ public class Purchase extends BaseEntity {
     /**
      * 方案名称
      */
-    @Column(name = "name", columnDefinition = "VARCHAR(255)   COMMENT '方案名称'")
+    @Column(name = "issueName", columnDefinition = "VARCHAR(255)   COMMENT '方案名称'")
     private String issueName;
 
     /**
@@ -104,8 +104,8 @@ public class Purchase extends BaseEntity {
     /**
      * 购入股数
      */
-    @Column(name = "purchaseNum", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '购入股数'")
-    private int purchaseNum;
+    @Column(name = "purchaseNum", nullable = true, columnDefinition = "BIGINT(20)   COMMENT '购入股数'")
+    private Long purchaseNum;
 
     /**
      * 应付额
@@ -246,11 +246,11 @@ public class Purchase extends BaseEntity {
         this.sellName = sellName;
     }
 
-    public int getPurchaseNum() {
+    public Long getPurchaseNum() {
         return purchaseNum;
     }
 
-    public void setPurchaseNum(int purchaseNum) {
+    public void setPurchaseNum(Long purchaseNum) {
         this.purchaseNum = purchaseNum;
     }
 

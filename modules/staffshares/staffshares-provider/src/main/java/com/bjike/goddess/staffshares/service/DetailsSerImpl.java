@@ -13,11 +13,18 @@ import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffshares.api.SchemeAPI;
 import com.bjike.goddess.staffshares.bo.DetailsBO;
 import com.bjike.goddess.staffshares.bo.SchemeIssueBO;
+import com.bjike.goddess.staffshares.dto.BuyscheduleDTO;
 import com.bjike.goddess.staffshares.dto.DetailsDTO;
+import com.bjike.goddess.staffshares.dto.SellscheduleDTO;
+import com.bjike.goddess.staffshares.entity.Buyschedule;
 import com.bjike.goddess.staffshares.entity.Details;
 import com.bjike.goddess.staffshares.entity.Purchase;
+import com.bjike.goddess.staffshares.entity.Sellschedule;
+import com.bjike.goddess.staffshares.enums.GuideAddrStatus;
 import com.bjike.goddess.staffshares.enums.Status1;
+import com.bjike.goddess.staffshares.to.GuidePermissionTO;
 import com.bjike.goddess.staffshares.to.PurchaseTO;
+import com.bjike.goddess.staffshares.to.SellscheduleTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -59,6 +66,153 @@ public class DetailsSerImpl extends ServiceImpl<Details, DetailsDTO> implements 
 
     @Autowired
     private PurchaseSer purchaseSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private BuyscheduleSer buyscheduleSer;
+    @Autowired
+    private SellscheduleSer sellscheduleSer;
+
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
 
 
     @Override
@@ -82,6 +236,7 @@ public class DetailsSerImpl extends ServiceImpl<Details, DetailsDTO> implements 
                 details.setPrice(schemeIssueBO.getPrice());
                 details.setTime(LocalDate.parse(schemeIssueBO.getTime()));
                 details.setSharesNum(schemeIssueBO.getSharesNum());
+                super.save(details);
                 detailsBOs.add(BeanTransform.copyProperties(details, DetailsBO.class, false));
             } else {
                 //根据ｉｄ查询该条记录的详情
@@ -116,9 +271,15 @@ public class DetailsSerImpl extends ServiceImpl<Details, DetailsDTO> implements 
         if (StringUtils.isBlank(to.getId())) {
             throw new SerException("交易详情id不能为空");
         }
+        if (to.getPurchaseNum() <= 0) {
+            throw new SerException("购入股数不能为0");
+        }
         //根据ｉｄ查询交易详情
         Details entity = super.findById(to.getId());
         if (null != entity) {
+            if (to.getPurchaseNum() > entity.getSharesNum()) {
+                throw new SerException("购买股数不能超过出售的剩余股数");
+            }
             Purchase purchase = new Purchase();
             purchase.setStatus(Status1.SUBMIT);
             String userToken = RpcTransmit.getUserToken();
@@ -161,7 +322,25 @@ public class DetailsSerImpl extends ServiceImpl<Details, DetailsDTO> implements 
                 purchase.setPromotion(0);
                 purchase.setRemark(to.getRemark());
                 purchaseSer.save(purchase);
+            } else if ("admin".equals(userBO.getUsername())) {
+                purchase.setArea("admin");
+                purchase.setProject("admin");
+                purchase.setDepartment("admin");
+                purchase.setPosition("admin");
+                purchase.setMonths(0);
+                purchase.setSellName(entity.getPublisher());
+                purchase.setPurchaseNum(to.getPurchaseNum());
+                purchase.setMoney(to.getPurchaseNum() * entity.getPrice());
+                purchase.setPenalty(0);
+                purchase.setReward(0);
+                purchase.setPromotion(0);
+                purchase.setRemark(to.getRemark());
+                purchaseSer.save(purchase);
+            } else {
+                throw new SerException("当前用户不是内部员工，无法购买");
             }
+        } else {
+            throw new SerException("目标数据对象为空");
         }
     }
 
@@ -181,9 +360,77 @@ public class DetailsSerImpl extends ServiceImpl<Details, DetailsDTO> implements 
 //        }
 
         Details entity = super.findById(id);
-        entity.setSharesNum(0);
+        entity.setSharesNum(0l);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
+    }
+
+    @Override
+    public void sell(SellscheduleTO to) throws SerException {
+        if (StringUtils.isBlank(to.getId())) {
+            throw new SerException("id不能为空");
+        }
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        Details entity = super.findById(to.getId());
+        if (null == entity) {
+            throw new SerException("目标数据为空");
+        }
+//        if (entity.getPublisher().equals(userBO.getUsername())) {
+//            throw new SerException("当前所选的数据中出售人不是当前用户");
+//        }
+        BuyscheduleDTO buyscheduleDTO = new BuyscheduleDTO();
+        buyscheduleDTO.getConditions().add(Restrict.eq("shareholder", userBO.getUsername()));
+        buyscheduleDTO.getConditions().add(Restrict.eq("code", entity.getCode()));
+        List<Buyschedule> buyschedules = buyscheduleSer.findByCis(buyscheduleDTO);
+        //当期用户的购买总股数；
+        Long totalBuynum = 0l;
+        //当前用户的出售总股数
+        Long totalSellNum = 0l;
+        if (CollectionUtils.isEmpty(buyschedules)) {
+            throw new SerException("当前用户无购买记录");
+        } else {
+            //得到当前用户的所有购买股数
+            for (Buyschedule buyschedule : buyschedules) {
+                totalBuynum += buyschedule.getPurchaseNum();
+            }
+            SellscheduleDTO sellscheduleDTO = new SellscheduleDTO();
+            sellscheduleDTO.getConditions().add(Restrict.eq("sellName", userBO.getUsername()));
+            sellscheduleDTO.getConditions().add(Restrict.eq("code", entity.getCode()));
+            List<Sellschedule> sellschedules = sellscheduleSer.findByCis(sellscheduleDTO);
+            if (!CollectionUtils.isEmpty(sellschedules)) {
+                for (Sellschedule sellschedule : sellschedules) {
+                    totalSellNum += sellschedule.getSellNum();
+                }
+                totalBuynum = totalBuynum - totalSellNum;
+            }
+        }
+        if (to.getSellNum() > totalBuynum) {
+            throw new SerException("出售股数不能大于当前用户的购入股数");
+        }
+
+//        //增加当前用户的出售记录表
+//        Sellschedule sellschedule = new Sellschedule();
+//        sellschedule.setSellName(userBO.getUsername());
+//        sellschedule.setCode(entity.getCode());
+//        sellschedule.setName(entity.getCode());
+//        sellschedule.setSellNum(to.getSellNum());
+//        sellschedule.setSellPrice(to.getTotalSellPrice() / to.getSellNum());
+//        sellschedule.setTotalSellPrice(to.getTotalSellPrice());
+//        sellschedule.setSellTime(LocalDateTime.now());
+//        sellschedule.setNumber(entity.getNumber() - to.getSellNum());
+//        sellscheduleSer.save(sellschedule);
+        //新增一条交易详情
+        Details details = new Details();
+        details.setCode(entity.getCode());
+        details.setName(entity.getName());
+        details.setPublisher(userBO.getUsername());
+        details.setNumber(to.getSellNum());
+        details.setPrice(to.getTotalSellPrice() / to.getSellNum());
+        details.setTime(LocalDate.now());
+        details.setSharesNum(to.getSellNum());
+        super.save(details);
     }
 
     //计算两个日期之间的月数
@@ -228,7 +475,7 @@ public class DetailsSerImpl extends ServiceImpl<Details, DetailsDTO> implements 
         /**
          * 出售/发行数量
          */
-        if (0 > detailsDTO.getNumber()) {
+        if (null != detailsDTO.getNumber()) {
             detailsDTO.getConditions().add(Restrict.like("number", detailsDTO.getNumber()));
         }
         /**
@@ -246,7 +493,7 @@ public class DetailsSerImpl extends ServiceImpl<Details, DetailsDTO> implements 
         /**
          * 剩余出售量
          */
-        if (0 > detailsDTO.getSharesNum()) {
+        if (null != detailsDTO.getSharesNum()) {
             detailsDTO.getConditions().add(Restrict.like("sharesNum", detailsDTO.getSharesNum()));
         }
     }

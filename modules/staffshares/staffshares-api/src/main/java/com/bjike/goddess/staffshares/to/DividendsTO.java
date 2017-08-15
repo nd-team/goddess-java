@@ -1,6 +1,11 @@
 package com.bjike.goddess.staffshares.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 干股分红表
@@ -12,6 +17,11 @@ import com.bjike.goddess.common.api.to.BaseTO;
  * @Copy: [ com.bjike ]
  */
 public class DividendsTO extends BaseTO {
+
+    /**
+     * 持股人
+     */
+    private String shareholder;
 
     /**
      * 方案代码
@@ -26,12 +36,13 @@ public class DividendsTO extends BaseTO {
     /**
      * 税后利润
      */
+    @NotNull(message = "税后利润不能为空", groups = {ADD.class})
     private Double taxProfit;
 
     /**
      * 持股数
      */
-    private int num;
+    private Long num;
 
     /**
      * 总股本
@@ -61,11 +72,13 @@ public class DividendsTO extends BaseTO {
     /**
      * 分红发放时间
      */
+    @NotBlank(message = "分红发放时间不能为空", groups = {ADD.class})
     private String dividendTime;
 
     /**
      * 本次红利收益时间段
      */
+    @NotBlank(message = "本次红利收益时间段不能为空", groups = {ADD.class})
     private String time;
 
     /**
@@ -76,6 +89,7 @@ public class DividendsTO extends BaseTO {
     /**
      * 持股人确认情况
      */
+    @NotNull(message = "持股人确认情况不能为空", groups = {EDIT.class})
     private Boolean situation;
 
 
@@ -103,11 +117,11 @@ public class DividendsTO extends BaseTO {
         this.taxProfit = taxProfit;
     }
 
-    public int getNum() {
+    public Long getNum() {
         return num;
     }
 
-    public void setNum(int num) {
+    public void setNum(Long num) {
         this.num = num;
     }
 
@@ -181,5 +195,13 @@ public class DividendsTO extends BaseTO {
 
     public void setSituation(Boolean situation) {
         this.situation = situation;
+    }
+
+    public String getShareholder() {
+        return shareholder;
+    }
+
+    public void setShareholder(String shareholder) {
+        this.shareholder = shareholder;
     }
 }
