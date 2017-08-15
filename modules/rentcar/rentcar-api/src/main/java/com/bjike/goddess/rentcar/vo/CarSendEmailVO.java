@@ -19,12 +19,37 @@ public class CarSendEmailVO {
     /**
      * 项目组Id
      */
-    private String projectManagerId;
+    private String projectManageId;
     /**
      * 岗位Id
      */
-    private String[] positionNameId;
+    private String positionNameId;
 
+    /**
+     * 项目组名称
+     */
+    private String projectName;
+
+    /**
+     * 岗位名称
+     */
+    private String positionName;
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public String getPositionName() {
+        return positionName;
+    }
+
+    public void setPositionName(String positionName) {
+        this.positionName = positionName;
+    }
 
     public String getId() {
         return id;
@@ -34,19 +59,19 @@ public class CarSendEmailVO {
         this.id = id;
     }
 
-    public String getProjectManagerId() {
-        return projectManagerId;
+    public String getProjectManageId() {
+        return projectManageId;
     }
 
-    public void setProjectManagerId(String projectManagerId) {
-        this.projectManagerId = projectManagerId;
+    public void setProjectManageId(String projectManageId) {
+        this.projectManageId = projectManageId;
     }
 
-    public String[] getPositionNameId() {
+    public String getPositionNameId() {
         return positionNameId;
     }
 
-    public void setPositionNameId(String[] positionNameId) {
+    public void setPositionNameId(String positionNameId) {
         this.positionNameId = positionNameId;
     }
 }

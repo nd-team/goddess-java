@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 邮箱发送
  *
@@ -20,28 +22,28 @@ public class CarSendEmailTO extends BaseTO {
     /**
      * 岗位Id
      */
-    @NotBlank(message = "岗位Id不能为空", groups = {ADD.class, EDIT.class})
-    private String[] positionNameId;
+    @NotNull(message = "岗位Id不能为空", groups = {ADD.class, EDIT.class})
+    private String positionNameId;
     /**
      * 项目组id
      */
     @NotBlank(message = "项目组id", groups = {ADD.class, EDIT.class})
-    private String projetManagerId;
+    private String projectManageId;
 
-    public String[] getPositionNameId() {
+    public String getPositionNameId() {
         return positionNameId;
     }
 
-    public void setPositionNameId(String[] positionNameId) {
+    public void setPositionNameId(String positionNameId) {
         this.positionNameId = positionNameId;
     }
 
-    public String getProjetManagerId() {
-        return projetManagerId;
+    public String getProjectManageId() {
+        return projectManageId;
     }
 
-    public void setProjetManagerId(String projetManagerId) {
-        this.projetManagerId = projetManagerId;
+    public void setProjectManageId(String projectManageId) {
+        this.projectManageId = projectManageId;
     }
 
     @Override

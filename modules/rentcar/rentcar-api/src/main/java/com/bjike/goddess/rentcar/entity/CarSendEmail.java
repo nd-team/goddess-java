@@ -28,10 +28,13 @@ public class CarSendEmail extends BaseEntity {
     private String projectManageId;
 
     /**
-     * 商务人员和项目的id
+     * 岗位id
      */
-    @Column(name = "positionNameId", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '岗位Id'")
+    @Column(name = "positionNameId", nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '岗位Id'")
     private String positionNameId;
+
+
+
 
     public String getPositionNameId() {
         return positionNameId;
