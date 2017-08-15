@@ -75,4 +75,20 @@ public class PersonalFestivalWishAct {
         }
 
     }
+
+    /**
+     * 查询列表总条数
+     * @param dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(PersonalFestivalWishDTO dto) throws ActException{
+        try {
+            Long count = personalFestivalWishAPI.count(dto);
+            return ActResult.initialize(count);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
 }

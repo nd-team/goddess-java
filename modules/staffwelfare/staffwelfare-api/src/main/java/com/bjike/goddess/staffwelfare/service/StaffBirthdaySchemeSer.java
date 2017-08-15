@@ -89,5 +89,20 @@ public interface StaffBirthdaySchemeSer extends Ser<StaffBirthdayScheme, StaffBi
      */
     List<EntryBasicInfoBO> findEntry() throws SerException;
 
+    /**
+     * 查询总条数
+     * @param dto
+     * @throws SerException
+     */
+    Long count(StaffBirthdaySchemeDTO dto) throws SerException;
+
+
+    /**
+     * 根据id查询单个数据
+     * @param id
+     * @throws SerException
+     */
+    StaffBirthdaySchemeBO findOne(String id) throws SerException;
+
 
 }

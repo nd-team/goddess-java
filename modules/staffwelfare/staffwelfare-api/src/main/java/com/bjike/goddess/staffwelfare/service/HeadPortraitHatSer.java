@@ -68,5 +68,19 @@ public interface HeadPortraitHatSer extends Ser<HeadPortraitHat, HeadPortraitHat
      */
     List<HeadPortraitHatBO> findHeadPortraitHats() throws SerException;
 
+    /**
+     * 查询总条数
+     * @throws SerException
+     */
+    Long count(HeadPortraitHatDTO dto) throws SerException;
+
+
+    /**
+     * 根据id来查询单条数据
+     * @param id
+     * @throws SerException
+     */
+    HeadPortraitHatBO findOne(String id) throws SerException;
+
 
 }

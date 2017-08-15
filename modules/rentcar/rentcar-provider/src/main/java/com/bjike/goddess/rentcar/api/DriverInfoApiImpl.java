@@ -55,7 +55,7 @@ public class DriverInfoApiImpl implements DriverInfoAPI {
 
     @Override
     public Long count(DriverInfoDTO dto) throws SerException {
-        return null;
+        return driverInfoSer.count(dto);
     }
 
     @Override

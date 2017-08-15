@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffwelfare.api.WishesStatementAPI;
+import com.bjike.goddess.staffwelfare.bo.WishesStatementBO;
 import com.bjike.goddess.staffwelfare.dto.WishesStatementDTO;
 import com.bjike.goddess.staffwelfare.to.GuidePermissionTO;
 import com.bjike.goddess.staffwelfare.to.WishesStatementTO;
@@ -125,4 +126,39 @@ public class WishesStatementAct {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 列表总条数
+     * @param dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(WishesStatementDTO dto) throws ActException{
+        try {
+            Long count = wishesStatementAPI.count(dto);
+            return ActResult.initialize(count);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id来查询单个数据
+     * @param id
+     * @return class WishesStatementVO
+     * @throws ActException
+     * @version v1
+     */
+    public Result findOne(String id) throws ActException{
+        try {
+            WishesStatementBO bo = wishesStatementAPI.findOne(id);
+            WishesStatementVO vo = BeanTransform.copyProperties(bo,WishesStatementVO.class);
+            return ActResult.initialize(vo);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
 }

@@ -1178,8 +1178,8 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     public List<DriverInfoBO> findDriver() throws SerException {
         DriverInfoDTO dto = new DriverInfoDTO();
         //查询所有未解约审核通过的司机
-        dto.getConditions().add(Restrict.eq("breakAgreement",false));
-        dto.getConditions().add(Restrict.eq("audit",true));
+        dto.getConditions().add(Restrict.eq("breakAgreement",0));
+        dto.getConditions().add(Restrict.eq("audit",1));
         List<DriverInfoBO> boList =driverInfoAPI.pageList(dto);
         return boList;
     }

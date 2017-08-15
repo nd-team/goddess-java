@@ -258,4 +258,11 @@ public class PersonalFestivalSerImpl extends ServiceImpl<PersonalFestival, Perso
         }
 
     }
+
+    @Override
+    public PersonalFestivalBO findOne(String id) throws SerException {
+        PersonalFestival personalFestival =super.findById(id);
+        PersonalFestivalBO bo = BeanTransform.copyProperties(personalFestival,PersonalFestivalBO.class);
+        return bo;
+    }
 }

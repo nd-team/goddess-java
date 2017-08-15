@@ -214,13 +214,13 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
         List<CarSendEmail> carSendEmails = super.findAll();
         List<String> receivers = new ArrayList<>();
         if (carSendEmails.size() > 0 && carSendEmails != null) {
-            List<UserBO> userBO = positionDetailUserAPI.findByPosition(carSendEmails.get(0).getPositionNameId());
-            if (userBO.size() > 0 && userBO != null) {
-              List<User> users =   BeanTransform.copyProperties(userBO, User.class);
-                for(User user : users){
-                    InternalContactsBO contactsBO = internalContactsAPI.findByUser(user.getId());
-                    if(contactsBO != null)
-                    receivers.add(contactsBO.getEmail());
+            for(CarSendEmail carSendEmail : carSendEmails) {
+                List<UserBO> userBO = positionDetailUserAPI.findByPosition(carSendEmail.getPositionNameId());
+                if (userBO.size() > 0 && userBO != null) {
+                    List<User> users = BeanTransform.copyProperties(userBO, User.class,true);
+                    for (User user : users) {
+                        receivers.add(user.getEmail());
+                    }
                 }
             }
             String[] sendUsers = (String[]) receivers.toArray(new String[receivers.size()]);
@@ -231,8 +231,8 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
             messageTO.setRangeType( RangeType.SPECIFIED);//根据自己业务写
             messageTO.setSenderId("SYSTEM");
             messageTO.setSenderName("SYSTEM");
-            messageTO.setReceivers(sendUsers);
-            //本地测试方法，记得要开message模块的provider和consumer方法
+//            messageTO.setReceivers(sendUsers);
+//            本地测试方法，记得要开message模块的provider和consumer方法
 //            String [] sendU = new String[1];
 //            sendU[0] = "jiangzaixuan_aj@163.com";
 //            messageTO.setReceivers(sendU);
@@ -255,16 +255,31 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
 
     @Override
     public CarSendEmailBO add(CarSendEmailTO to) throws SerException {
-        CarSendEmail carSendEmail = BeanTransform.copyProperties(to, CarSendEmail.class);
+        CarSendEmail carSendEmail = BeanTransform.copyProperties(to, CarSendEmail.class,true);
         super.save(carSendEmail);
-        to.setId(carSendEmail.getId());
-        return BeanTransform.copyProperties(to, CarSendEmailBO.class);
+        DepartmentDetailBO detailB = departmentDetailAPI.findBOById(to.getProjectManageId());
+        PositionDetailBO positionDetailBO = positionDetailAPI.findBOById(to.getPositionNameId());
+        CarSendEmailBO carSendEmailBO = BeanTransform.copyProperties(to,CarSendEmailBO.class);
+        carSendEmailBO.setPositionName(detailB.getDepartment());
+        carSendEmailBO.setProjectName(positionDetailBO.getPosition());
+        return carSendEmailBO;
     }
 
     @Override
     public List<CarSendEmailBO> list() throws SerException {
-        List<CarSendEmail> carSendEmailTOS = super.findAll();
-        return BeanTransform.copyProperties(carSendEmailTOS, CarSendEmailVO.class);
+        List<CarSendEmail> carSendEmailList = super.findAll();
+        List<CarSendEmailBO> boList = BeanTransform.copyProperties(carSendEmailList,CarSendEmailBO.class);
+        if(carSendEmailList != null && !carSendEmailList.isEmpty()) {
+            for (CarSendEmail carSendEmail : carSendEmailList) {
+                for (CarSendEmailBO carSendEmailBO : boList) {
+                    DepartmentDetailBO detailBO = departmentDetailAPI.findBOById(carSendEmail.getProjectManageId());
+                    PositionDetailBO positionDetailBO = positionDetailAPI.findBOById(carSendEmail.getPositionNameId());
+                    carSendEmailBO.setProjectName(detailBO.getDepartment());
+                    carSendEmailBO.setPositionName(positionDetailBO.getPosition());
+                }
+            }
+        }
+        return boList;
     }
 
     @Override
@@ -272,12 +287,19 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
         CarSendEmail model = super.findById(to.getId());
         if(model != null){
             model.setModifyTime(LocalDateTime.now());
-            model.setPositionNameId(to.getProjetManagerId());
-            model.setProjectManageId(to.getProjetManagerId());
+            model.setPositionNameId(to.getPositionNameId());
+            model.setProjectManageId(to.getProjectManageId());
             super.update(model);
-            return BeanTransform.copyProperties(to,CarSendEmailBO.class);
+            return BeanTransform.copyProperties(model,CarSendEmailBO.class);
         }else {
             throw new SerException("非法Id,发送对象不能为空！");
         }
+    }
+
+    @Override
+    public CarSendEmailBO findOne(String id) throws SerException {
+        CarSendEmail carSendEmail = super.findById(id);
+        CarSendEmailBO bo = BeanTransform.copyProperties(carSendEmail,CarSendEmailBO.class);
+        return bo;
     }
 }

@@ -12,6 +12,8 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.organize.vo.PositionDetailVO;
 import com.bjike.goddess.rentcar.api.CarSendEmailAPI;
+import com.bjike.goddess.rentcar.bo.CarSendEmailBO;
+import com.bjike.goddess.rentcar.dto.CarSendEmailDTO;
 import com.bjike.goddess.rentcar.entity.CarSendEmail;
 import com.bjike.goddess.rentcar.service.CarSendEmailSer;
 import com.bjike.goddess.rentcar.to.CarSendEmailTO;
@@ -66,7 +68,7 @@ public class CarSendEmailAction {
     @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) CarSendEmailTO to,BindingResult bindingResult,HttpServletRequest request) throws ActException{
         try {
-            CarSendEmailVO vo = BeanTransform.copyProperties(carSendEmailAPI.edit(to),CarSendEmail.class,request);
+            CarSendEmailVO vo = BeanTransform.copyProperties(carSendEmailAPI.edit(to),CarSendEmailVO.class,request);
             return ActResult.initialize(vo);
         }catch (SerException e){
             throw new ActException((e.getMessage()));
@@ -112,7 +114,7 @@ public class CarSendEmailAction {
     @GetMapping("v1/list")
     public Result list() throws ActException{
         try {
-            List<CarSendEmailVO> vo = BeanTransform.copyProperties(carSendEmailAPI.list(),CarSendEmailVO.class);
+            List<CarSendEmailVO> vo = BeanTransform.copyProperties(carSendEmailAPI.list(),CarSendEmailVO.class,true);
             return ActResult.initialize(vo);
         }catch (SerException e){
             throw new ActException(e.getMessage());
@@ -128,6 +130,38 @@ public class CarSendEmailAction {
         try {
             carSendEmailAPI.sendEmail();
             return new ActResult();
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获得总条数
+     * @param dto
+     * @throws ActException
+     * @version v1
+     */
+    public Result count(CarSendEmailDTO dto) throws ActException{
+        try {
+            Long count = carSendEmailAPI.count(dto);
+            return ActResult.initialize(count);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id来获取单条数据
+     * @param id
+     * @return class CarSendEmailVO
+     * @throws ActException
+     * @version v1
+     */
+    public Result findOne(String id) throws ActException{
+        try {
+            CarSendEmailBO bo = carSendEmailAPI.findOne(id);
+            CarSendEmailVO vo = BeanTransform.copyProperties(bo,CarSendEmailVO.class);
+            return ActResult.initialize(vo);
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }

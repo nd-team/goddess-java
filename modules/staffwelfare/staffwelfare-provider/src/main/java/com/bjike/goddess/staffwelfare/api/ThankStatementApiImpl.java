@@ -65,4 +65,14 @@ public class ThankStatementApiImpl implements ThankStatementAPI {
     public void breakFreeze(String id) throws SerException {
         thankStatementSer.breakFreeze(id);
     }
+
+    @Override
+    public Long count(ThankStatementDTO dto) throws SerException {
+        return thankStatementSer.count(dto);
+    }
+
+    @Override
+    public ThankStatementBO findOne(String id) throws SerException {
+        return thankStatementSer.findOne(id);
+    }
 }

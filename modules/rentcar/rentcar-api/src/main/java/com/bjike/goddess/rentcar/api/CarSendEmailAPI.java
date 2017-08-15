@@ -6,6 +6,7 @@ import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.rentcar.bo.CarSendEmailBO;
+import com.bjike.goddess.rentcar.dto.CarSendEmailDTO;
 import com.bjike.goddess.rentcar.to.CarSendEmailTO;
 import com.bjike.goddess.rentcar.to.GuidePermissionTO;
 
@@ -87,5 +88,21 @@ public interface CarSendEmailAPI {
     default CarSendEmailBO edit(CarSendEmailTO to) throws SerException{
         return null;
     }
+
+
+    /**
+     * 总条数
+     * @param dto
+     * @throws SerException
+     */
+    Long count(CarSendEmailDTO dto) throws SerException;
+
+
+    /**
+     * 根据id来查询单条发送对象的数据
+     * @param id
+     * @throws SerException
+     */
+    CarSendEmailBO findOne(String id) throws SerException;
 
 }

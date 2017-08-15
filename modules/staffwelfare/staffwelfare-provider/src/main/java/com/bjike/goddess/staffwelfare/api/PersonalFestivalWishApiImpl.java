@@ -40,4 +40,9 @@ public class PersonalFestivalWishApiImpl implements PersonalFestivalWishAPI {
     public List<PersonalFestivalWishBO> pageList(PersonalFestivalWishDTO dto) throws SerException {
         return personalFestivalWishSer.pageList(dto);
     }
+
+    @Override
+    public Long count(PersonalFestivalWishDTO dto) throws SerException {
+        return personalFestivalWishSer.count(dto);
+    }
 }

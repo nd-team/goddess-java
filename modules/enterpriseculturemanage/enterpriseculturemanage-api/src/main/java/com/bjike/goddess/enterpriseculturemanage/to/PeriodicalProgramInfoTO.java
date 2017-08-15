@@ -36,25 +36,25 @@ public class PeriodicalProgramInfoTO extends BaseTO {
     /**
      * 发刊形式
      */
-    @NotBlank(message = "刊物理念不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "发刊形式不能为空", groups = {ADD.class, EDIT.class})
     private PublicizeWay way;
 
     /**
      * 发刊规格
      */
-    @NotBlank(message = "刊物理念不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "发刊规格不能为空", groups = {ADD.class, EDIT.class})
     private String standard;
 
     /**
      * 执笔人
      */
-    @NotBlank(message = "刊物理念不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "执笔人不能为空", groups = {ADD.class, EDIT.class})
     private String executer;
 
     /**
      * 刊物名称
      */
-    @NotBlank(message = "刊物理念不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "刊物名称不能为空", groups = {ADD.class, EDIT.class})
     private String periodicalName;
 
     /**

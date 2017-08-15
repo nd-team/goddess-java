@@ -1,6 +1,9 @@
 package com.bjike.goddess.staffwelfare.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 import java.util.Map;
 
@@ -23,6 +26,7 @@ public class HeadPortraitHatTO extends BaseTO {
     /**
      * 头像帽名称
      */
+    @NotBlank(message = "头像帽名称不能为空!", groups = {ADD.class, EDIT.class})
     private String name;
 
     /**

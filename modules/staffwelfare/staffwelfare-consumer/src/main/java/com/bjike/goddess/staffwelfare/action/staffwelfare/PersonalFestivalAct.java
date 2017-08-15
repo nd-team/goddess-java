@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffwelfare.api.PersonalFestivalAPI;
+import com.bjike.goddess.staffwelfare.bo.PersonalFestivalBO;
 import com.bjike.goddess.staffwelfare.dto.PersonalFestivalDTO;
 import com.bjike.goddess.staffwelfare.to.GuidePermissionTO;
 import com.bjike.goddess.staffwelfare.to.PersonalFestivalTO;
@@ -140,6 +141,41 @@ public class PersonalFestivalAct {
             personalFestivalAPI.wish(id,wishStatement);
             return new ActResult();
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取列表总条数
+     * @param dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(PersonalFestivalDTO dto) throws ActException{
+        try {
+            Long count = personalFestivalAPI.count(dto);
+            return ActResult.initialize(count);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 根据id来查询单条数据
+     * @param id
+     * @return class PersonalFestivalVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/one/{id}")
+    public Result findOne(String id) throws ActException{
+        try {
+            PersonalFestivalBO bo = personalFestivalAPI.findOne(id);
+            PersonalFestivalVO vo = BeanTransform.copyProperties(bo,PersonalFestivalVO.class);
+            return ActResult.initialize(vo);
+        }catch (SerException e){
             throw new ActException(e.getMessage());
         }
     }

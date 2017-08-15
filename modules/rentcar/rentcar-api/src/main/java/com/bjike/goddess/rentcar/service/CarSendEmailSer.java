@@ -91,4 +91,20 @@ public interface CarSendEmailSer extends Ser<CarSendEmail, CarSendEmailDTO> {
     default CarSendEmailBO edit(CarSendEmailTO to) throws SerException{
         return null;
     }
+
+
+    /**
+     * 总条数
+     * @param dto
+     * @throws SerException
+     */
+    Long count(CarSendEmailDTO dto) throws SerException;
+
+
+    /**
+     * 根据id来查询单条发送对象的数据
+     * @param id
+     * @throws SerException
+     */
+    CarSendEmailBO findOne(String id) throws SerException;
 }

@@ -64,4 +64,18 @@ public interface WishesStatementSer extends Ser<WishesStatement, WishesStatement
      * @return 祝福语结果集
      */
     List<WishesStatementBO> findAllStatement() throws SerException;
+
+    /**
+     * 列表总条数
+     * @param dto
+     * @throws SerException
+     */
+    Long count(WishesStatementDTO dto) throws SerException;
+
+    /**
+     * 根据id来查询单条数据
+     * @param id
+     * @throws SerException
+     */
+    WishesStatementBO findOne(String id) throws SerException;
 }

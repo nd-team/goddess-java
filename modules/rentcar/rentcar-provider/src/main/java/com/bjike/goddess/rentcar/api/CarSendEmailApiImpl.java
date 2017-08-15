@@ -7,6 +7,7 @@ import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.rentcar.bo.CarSendEmailBO;
+import com.bjike.goddess.rentcar.dto.CarSendEmailDTO;
 import com.bjike.goddess.rentcar.service.CarSendEmailSer;
 import com.bjike.goddess.rentcar.to.CarSendEmailTO;
 import com.bjike.goddess.rentcar.to.GuidePermissionTO;
@@ -75,5 +76,16 @@ public class CarSendEmailApiImpl implements CarSendEmailAPI {
     @Override
     public CarSendEmailBO edit(CarSendEmailTO to) throws SerException {
         return carSendEmailSer.edit(to);
+    }
+
+
+    @Override
+    public Long count(CarSendEmailDTO dto) throws SerException {
+        return carSendEmailSer.count(dto);
+    }
+
+    @Override
+    public CarSendEmailBO findOne(String id) throws SerException {
+        return carSendEmailSer.findOne(id);
     }
 }

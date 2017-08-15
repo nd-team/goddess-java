@@ -27,6 +27,8 @@ import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
 import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 import com.bjike.goddess.storage.api.FileAPI;
+import com.bjike.goddess.storage.to.FileInfo;
+import com.bjike.goddess.storage.vo.FileVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -181,9 +183,21 @@ public class DispatchCarInfoAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/files/{id}")
-    public Result findFiles(@PathVariable String id) throws ActException {
-        //// TODO: 17-4-14 查看附件
-        return ActResult.initialize("success!");
+    public Result findFiles(@PathVariable String id,HttpServletRequest request) throws ActException {
+        // 17-4-14 查看附件
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            // /businessproject/id/....
+            String path = "/businessproject/siginmanage/" + id;
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
+            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
+            return ActResult.initialize(files);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
     }
 
     /**
@@ -221,10 +235,10 @@ public class DispatchCarInfoAct extends BaseFileAction {
     }
 
     /**
-     * 查询所有司机信息,车牌号码,
+     * 查询所有司机信息和车牌号码
      * @return class DriverInfoVO
      * @throws ActException
-     * @version v1+
+     * @version v1
      */
     @GetMapping("v1/find/driver")
     public Result findDriver() throws ActException{
@@ -238,7 +252,7 @@ public class DispatchCarInfoAct extends BaseFileAction {
     }
 
     /**
-     * 查询所有用车陪同人员,用车人员,任务下达人员,所属地区,所属项目组,
+     * 查询所有用车陪同人员和用车人员和任务下达人员和所属地区和所属项目组
      * @return class EntryBasicInfoVO
      * @throws ActException
      * @version v1
