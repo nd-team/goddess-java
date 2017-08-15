@@ -389,6 +389,14 @@ public class ApplicationSerImpl extends ServiceImpl<Application, ApplicationDTO>
                     }
                 }
             }
+        }else if("admin".equals(userBO.getUsername())){
+            entity.setFinancial(userBO.getUsername());
+            entity.setOpinion(to.getOpinion());
+            entity.setPlanModule(userBO.getUsername());
+            entity.setOpinion1(to.getOpinion());
+            entity.setManager(userBO.getUsername());
+            entity.setOpinion2(to.getOpinion());
+            entity.setSituation(to.getSituation());
         }
         super.update(entity);
     }

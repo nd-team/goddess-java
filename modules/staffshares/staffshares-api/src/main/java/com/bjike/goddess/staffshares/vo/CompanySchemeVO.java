@@ -1,6 +1,5 @@
 package com.bjike.goddess.staffshares.vo;
 
-import java.time.LocalDate;
 
 /**
  * 公司干股交易情况业务传输对象
@@ -45,7 +44,7 @@ public class CompanySchemeVO {
     /**
      * 出售/发行时间
      */
-    private LocalDate time;
+    private String time;
 
     /**
      * 已交易数量
@@ -107,11 +106,11 @@ public class CompanySchemeVO {
         this.price = price;
     }
 
-    public LocalDate getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(LocalDate time) {
+    public void setTime(String time) {
         this.time = time;
     }
 

@@ -85,25 +85,25 @@ public class Dividends extends BaseEntity {
     /**
      * 分红发放时间
      */
-    @Column(name = "dividendTime", nullable = false, columnDefinition = "DATE   COMMENT '分红发放时间'")
+    @Column(name = "dividendTime", nullable = true, columnDefinition = "DATE   COMMENT '分红发放时间'")
     private LocalDate dividendTime;
 
     /**
      * 本次红利收益时间段
      */
-    @Column(name = "time", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '本次红利收益时间段'")
+    @Column(name = "time", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '本次红利收益时间段'")
     private String time;
 
     /**
      * 备注
      */
-    @Column(name = "remark", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @Column(name = "remark", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
     /**
      * 持股人确认情况
      */
-    @Column(name = "is_situation", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '持股人确认情况'")
+    @Column(name = "is_situation", nullable = true, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '持股人确认情况'")
     private Boolean situation;
 
 

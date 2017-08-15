@@ -28,7 +28,7 @@ public class DividendsConditionsVO {
     /**
      * 持股人数
      */
-    private int shareholderNum;
+    private Long shareholderNum;
 
     /**
      * 占总发行数量比
@@ -131,11 +131,11 @@ public class DividendsConditionsVO {
         this.issuance = issuance;
     }
 
-    public int getShareholderNum() {
+    public Long getShareholderNum() {
         return shareholderNum;
     }
 
-    public void setShareholderNum(int shareholderNum) {
+    public void setShareholderNum(Long shareholderNum) {
         this.shareholderNum = shareholderNum;
     }
 

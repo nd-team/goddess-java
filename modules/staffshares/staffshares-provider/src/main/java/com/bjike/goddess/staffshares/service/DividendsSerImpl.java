@@ -206,7 +206,6 @@ public class DividendsSerImpl extends ServiceImpl<Dividends, DividendsDTO> imple
     @Override
     public List<CompanySchemeBO> detail() throws SerException {
         List<Scheme> schemeList = schemeSer.findAll().stream().filter(obj -> obj.getStatus().equals(Status.ISSUED)).collect(Collectors.toList());
-        List<CompanySchemeBO> companySchemeBOs = new ArrayList<>(0);
         if (!CollectionUtils.isEmpty(schemeList)) {
             for (Scheme scheme : schemeList) {
                 CompanysScheme companySchemeBO = new CompanysScheme();
@@ -227,7 +226,7 @@ public class DividendsSerImpl extends ServiceImpl<Dividends, DividendsDTO> imple
                 companysSchemeSer.save(companySchemeBO);
             }
         }
-        BeanTransform.copyProperties(companysSchemeSer.findAll(), companySchemeBOs);
+        List<CompanySchemeBO> companySchemeBOs = BeanTransform.copyProperties(companysSchemeSer.findAll(), CompanySchemeBO.class, false);
         return companySchemeBOs;
     }
 
@@ -243,7 +242,7 @@ public class DividendsSerImpl extends ServiceImpl<Dividends, DividendsDTO> imple
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
-        if (!cheakFinance(userBO)) {
+        if (!cheakFinance(userBO) && !"admin".equals(userBO.getUsername())) {
             throw new SerException("当前用户不是财务部人员，没有权限");
         }
         Dividends entity = company(to, companysScheme);
@@ -255,12 +254,12 @@ public class DividendsSerImpl extends ServiceImpl<Dividends, DividendsDTO> imple
         List<Buyschedule> buyschedules = buyscheduleSer.findAll();
         if (!CollectionUtils.isEmpty(buyschedules)) {
             //得到方案代码一样的购买记录
-            buyschedules.stream().filter(obj -> obj.getCode().equals(entity.getCode())).collect(Collectors.toList());
+            buyschedules = buyschedules.stream().filter(obj -> obj.getCode().equals(entity.getCode())).collect(Collectors.toList());
         }
         //查询所有的出售记录
         List<Sellschedule> sellschedules = sellscheduleSer.findAll();
         if (!CollectionUtils.isEmpty(sellschedules)) {
-            sellschedules.stream().filter(obj -> obj.getCode().equals(entity.getCode())).collect(Collectors.toList());
+            sellschedules = sellschedules.stream().filter(obj -> obj.getCode().equals(entity.getCode())).collect(Collectors.toList());
         }
 
         //有购买没卖
@@ -286,15 +285,13 @@ public class DividendsSerImpl extends ServiceImpl<Dividends, DividendsDTO> imple
     @Override
     public List<DividendsBO> maps(DividendsDTO dto) throws SerException {
 //        checkSeeIdentity();
-
-        searchCondition(dto);
-        List<DividendsBO> schemeBOList = new ArrayList<>(0);
         List<Dividends> list = super.findByPage(dto);
         if (!CollectionUtils.isEmpty(list)) {
-            list.stream().filter(obj -> !obj.getShareholder().equals("公司")).collect(Collectors.toList());
-            BeanTransform.copyProperties(list, schemeBOList, false);
+            list = list.stream().filter(obj -> !obj.getShareholder().equals("公司")).collect(Collectors.toList());
+            List<DividendsBO> schemeBOList = BeanTransform.copyProperties(list, DividendsBO.class, false);
+            return schemeBOList;
         }
-        return schemeBOList;
+        return null;
     }
 
     @Override
@@ -336,16 +333,16 @@ public class DividendsSerImpl extends ServiceImpl<Dividends, DividendsDTO> imple
 //        checkSeeIdentity();
 
         searchCondition(dto);
-        List<DividendsDetailBO> dividendsDetailBOs = new ArrayList<>(0);
         List<Dividends> list = super.findByPage(dto);
         if (!CollectionUtils.isEmpty(list)) {
-            BeanTransform.copyProperties(list.stream().filter(obj -> obj.getNum() > 0).collect(Collectors.toList()), dividendsDetailBOs, false, "taxProfit", "time", "remark", "status", "earnings");
+            List<DividendsDetailBO> dividendsDetailBOs = BeanTransform.copyProperties(list.stream().filter(obj -> obj.getNum() > 0 && !obj.getShareholder().equals("公司")).collect(Collectors.toList()), DividendsDetailBO.class, false, "taxProfit", "time", "remark", "status", "earnings");
             for (DividendsDetailBO dividendsDetailBO : dividendsDetailBOs) {
                 dividendsDetailBO.setEarnings(dividendsDetailBO.getTotalEarnings());
                 dividendsDetailBO.setStatus("持股中");
             }
+            return dividendsDetailBOs;
         }
-        return dividendsDetailBOs;
+        return null;
     }
 
     @Override
@@ -367,6 +364,7 @@ public class DividendsSerImpl extends ServiceImpl<Dividends, DividendsDTO> imple
         searchCondition(dto);
         Long count = super.count(dto);
         dto.getConditions().add(Restrict.eq("num", "0"));
+        dto.getConditions().add(Restrict.eq("shareholder", "公司"));
         Long count1 = super.count(dto);
         return count - count1;
     }
@@ -387,6 +385,9 @@ public class DividendsSerImpl extends ServiceImpl<Dividends, DividendsDTO> imple
                 dividendsDetailBO.setEarnings(dividendsDetailBO.getTotalEarnings());
             }
         }
+        if (!CollectionUtils.isEmpty(dividendsDetailBOs)) {
+            dividendsDetailBOs = dividendsDetailBOs.stream().filter(obj -> !obj.getShareholder().equals("公司")).collect(Collectors.toList());
+        }
         return dividendsDetailBOs;
     }
 
@@ -395,7 +396,7 @@ public class DividendsSerImpl extends ServiceImpl<Dividends, DividendsDTO> imple
         StringBuilder sql = new StringBuilder("select sum(number) as number, ");
         sql.append(" sum(totalEquity) as totalEquity ");
         sql.append(" from staffshares_scheme ");
-        sql.append(" where status = '" + Status.ISSUED + "'");
+        sql.append(" where status = '4' ");
         String[] fields = new String[]{"number", "totalEquity"};
         List<Scheme> schemeList = schemeSer.findBySql(sql.toString(), Scheme.class, fields);
         DividendsConditionsBO dividendsConditionsBO = new DividendsConditionsBO();
@@ -461,7 +462,7 @@ public class DividendsSerImpl extends ServiceImpl<Dividends, DividendsDTO> imple
         /**
          * 持股数
          */
-        if (null !=dto.getNum()) {
+        if (null != dto.getNum()) {
             dto.getConditions().add(Restrict.like("num", dto.getNum()));
         }
         /**
@@ -559,7 +560,7 @@ public class DividendsSerImpl extends ServiceImpl<Dividends, DividendsDTO> imple
             String start = time.substring(0, time.indexOf("~"));
             String end = time.substring(time.indexOf("~") + 1, time.length());
             checkDate(start, end);
-            if (!isOrder(start, end)) {
+            if (isOrder(start, end)) {
                 throw new SerException("时间段第一个日期要先于第二个日期");
             }
             return time;
@@ -666,7 +667,7 @@ public class DividendsSerImpl extends ServiceImpl<Dividends, DividendsDTO> imple
 
     //有购买有卖出，但卖出有剩股数
     private void buyAndSell(List<Sellschedule> sellschedules, DividendsTO to, CompanysScheme companysScheme, String time) throws SerException {
-        sellschedules.stream().filter(obj -> obj.getNumber() > 0).collect(Collectors.toList());
+        sellschedules = sellschedules.stream().filter(obj -> obj.getNumber() > 0).collect(Collectors.toList());
 
         if (!CollectionUtils.isEmpty(sellschedules)) {
             for (Sellschedule sellschedule : sellschedules) {

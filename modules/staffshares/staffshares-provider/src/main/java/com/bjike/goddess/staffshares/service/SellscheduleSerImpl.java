@@ -10,10 +10,9 @@ import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.staffshares.bo.SellscheduleBO;
 import com.bjike.goddess.staffshares.bo.SellscheduleCollectBO;
 import com.bjike.goddess.staffshares.bo.TransactionBO;
+import com.bjike.goddess.staffshares.dto.BuyscheduleDTO;
 import com.bjike.goddess.staffshares.dto.SellscheduleDTO;
-import com.bjike.goddess.staffshares.entity.Buyschedule;
-import com.bjike.goddess.staffshares.entity.Details;
-import com.bjike.goddess.staffshares.entity.Sellschedule;
+import com.bjike.goddess.staffshares.entity.*;
 import com.bjike.goddess.staffshares.enums.GuideAddrStatus;
 import com.bjike.goddess.staffshares.to.GuidePermissionTO;
 import com.bjike.goddess.staffshares.to.SellscheduleTO;
@@ -28,7 +27,9 @@ import org.springframework.util.CollectionUtils;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 出售记录表业务实现
@@ -54,6 +55,10 @@ public class SellscheduleSerImpl extends ServiceImpl<Sellschedule, SellscheduleD
     private DetailsSer detailsSer;
     @Autowired
     private SellscheduleSer sellscheduleSer;
+    @Autowired
+    private DividendsSer dividendsSer;
+    @Autowired
+    private ApplicationSer applicationSer;
 
     /**
      * 核对查看权限（部门级别）
@@ -322,27 +327,72 @@ public class SellscheduleSerImpl extends ServiceImpl<Sellschedule, SellscheduleD
 
     @Override
     public List<TransactionBO> transaction() throws SerException {
-        TransactionBO transactionBO = new TransactionBO();
+        List<TransactionBO> transactionBOs = new ArrayList<>(0);
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
-        List<String> stringList = new ArrayList<>(0);
-        List<String> stringList2 = new ArrayList<>(0);
-        if (authority(userBO)) {
-            List<Buyschedule> buyschedules = buyscheduleSer.findAll();
-            List<Sellschedule> sellschedules = sellscheduleSer.findAll();
-            if (!CollectionUtils.isEmpty(buyschedules)) {
-                for (Buyschedule buyschedule : buyschedules) {
-                    stringList.add(buyschedule.getShareholder());
-                }
 
-            }
-            if (!CollectionUtils.isEmpty(sellschedules)) {
-                for
+        StringBuilder sql = new StringBuilder("select shareholder, ");
+        sql.append(" sum(totalBuyPrice) as totalBuyPrice, ");
+        sql.append(" sum(purchaseNum) as sharesNum ");
+        sql.append(" from staffshares_buyschedule ");
+        sql.append(" group by shareholder; ");
+        String[] fields = new String[]{"shareholder", "totalBuyPrice", "sharesNum"};
+        transactionBOs = buyscheduleSer.findBySql(sql.toString(), TransactionBO.class, fields);
+
+        StringBuilder sql1 = new StringBuilder("select shareholder, ");
+        sql1.append(" sum(totalEarnings) as totalEarnings ");
+        sql1.append(" from staffshares_dividends ");
+        sql1.append(" group by shareholder; ");
+        String[] fields1 = new String[]{"shareholder", "totalEarnings"};
+        List<Dividends> dividendses = dividendsSer.findBySql(sql1.toString(), Dividends.class, fields1);
+
+        StringBuilder sql2 = new StringBuilder("select sellName, ");
+        sql2.append(" sum(sellNum) as sellNum ");
+        sql2.append(" from staffshares_sellschedule ");
+        sql2.append(" group by sellName; ");
+        String[] fields2 = new String[]{"sellName", "sellNum"};
+        List<Sellschedule> sellschedules = sellscheduleSer.findBySql(sql2.toString(), Sellschedule.class, fields2);
+        List<Application> applications = applicationSer.findAll();
+
+        applications=applications.stream().filter(obj -> obj.getSituation() == Boolean.TRUE ).collect(Collectors.toList());
+        List<String> stringList = new ArrayList<>(0);
+        for (Application application : applications) {
+            stringList.add(application.getShareholder());
+        }
+        List<String> list = new ArrayList<>(new HashSet<>(stringList));
+
+        if (!CollectionUtils.isEmpty(transactionBOs)) {
+            for (TransactionBO transactionBO : transactionBOs) {
+                for (Dividends dividends : dividendses) {
+                    if (transactionBO.getShareholder().equals(dividends.getShareholder())) {
+                        transactionBO.setTotalEquity(dividends.getTotalEarnings());
+                        transactionBO.setEquity(transactionBO.getTotalEquity());
+                    }
+                }
+                for (Sellschedule sellschedule : sellschedules) {
+                    if (transactionBO.getShareholder().equals(sellschedule.getSellName())) {
+                        transactionBO.setSharesNum(transactionBO.getSharesNum() - sellschedule.getSellNum());
+                        if (transactionBO.getSharesNum() != 0l) {
+                            transactionBO.setStatus("持仓中");
+                        } else {
+                            transactionBO.setStatus("无持仓");
+                        }
+                    }
+                }
+                if (list.contains(transactionBO.getShareholder())) {
+                    transactionBO.setDeputy(true);
+                } else {
+                    transactionBO.setDeputy(false);
+                }
             }
         }
-
-        return null;
+        if (authority(userBO)) {
+            return transactionBOs;
+        } else {
+            transactionBOs = transactionBOs.stream().filter(obj -> obj.getShareholder().equals(userBO.getUsername())).collect(Collectors.toList());
+            return transactionBOs;
+        }
     }
 
     private String getSql(Boolean tar, UserBO userBO) throws SerException {
@@ -443,5 +493,34 @@ public class SellscheduleSerImpl extends ServiceImpl<Sellschedule, SellscheduleD
         if (StringUtils.isNotBlank(sellscheduleDTO.getBuyTime())) {
             sellscheduleDTO.getConditions().add(Restrict.eq("buyTime", sellscheduleDTO.getBuyTime()));
         }
+    }
+
+    //得到持股数
+    private Long getNumber(UserBO userBO) throws SerException {
+        BuyscheduleDTO buyscheduleDTO = new BuyscheduleDTO();
+        buyscheduleDTO.getConditions().add(Restrict.eq("shareholder", userBO.getUsername()));
+        List<Buyschedule> buyschedules = buyscheduleSer.findByCis(buyscheduleDTO);
+        //当期用户的购买总股数；
+        Long totalBuynum = 0l;
+        //当前用户的出售总股数
+        Long totalSellNum = 0l;
+        if (CollectionUtils.isEmpty(buyschedules)) {
+            throw new SerException("当前用户无购买记录");
+        } else {
+            //得到当前用户的所有购买股数
+            for (Buyschedule buyschedule : buyschedules) {
+                totalBuynum += buyschedule.getPurchaseNum();
+            }
+            SellscheduleDTO sellscheduleDTO = new SellscheduleDTO();
+            sellscheduleDTO.getConditions().add(Restrict.eq("sellName", userBO.getUsername()));
+            List<Sellschedule> sellschedules = sellscheduleSer.findByCis(sellscheduleDTO);
+            if (!CollectionUtils.isEmpty(sellschedules)) {
+                for (Sellschedule sellschedule : sellschedules) {
+                    totalSellNum += sellschedule.getSellNum();
+                }
+                totalBuynum = totalBuynum - totalSellNum;
+            }
+        }
+        return totalBuynum;
     }
 }

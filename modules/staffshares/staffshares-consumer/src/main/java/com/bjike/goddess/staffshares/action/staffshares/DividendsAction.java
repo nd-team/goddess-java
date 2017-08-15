@@ -87,7 +87,7 @@ public class DividendsAction {
      * @version v1
      */
     @GetMapping("v1/dividends/{id}")
-    public Result dividends(@Validated(ADD.class) DividendsTO to) throws ActException {
+    public Result dividends(@Validated(ADD.class) DividendsTO to,BindingResult result) throws ActException {
         try {
             dividendsAPI.dividends(to);
             return ActResult.initialize("分红成功");
@@ -148,7 +148,7 @@ public class DividendsAction {
      * @version v1
      */
     @PostMapping("v1/confirm/{id}")
-    public Result confirm(@Validated(EDIT.class) DividendsTO to) throws ActException {
+    public Result confirm(@Validated(EDIT.class) DividendsTO to,BindingResult result) throws ActException {
         try {
             dividendsAPI.confirm(to);
             return ActResult.initialize("确认成功");

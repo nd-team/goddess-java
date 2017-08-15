@@ -2,7 +2,6 @@ package com.bjike.goddess.staffshares.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import java.time.LocalDate;
 
 /**
  * 公司干股交易情况业务传输对象
@@ -43,7 +42,7 @@ public class CompanySchemeBO extends BaseBO {
     /**
      * 出售/发行时间
      */
-    private LocalDate time;
+    private String time;
 
     /**
      * 已交易数量
@@ -105,11 +104,11 @@ public class CompanySchemeBO extends BaseBO {
         this.price = price;
     }
 
-    public LocalDate getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(LocalDate time) {
+    public void setTime(String time) {
         this.time = time;
     }
 

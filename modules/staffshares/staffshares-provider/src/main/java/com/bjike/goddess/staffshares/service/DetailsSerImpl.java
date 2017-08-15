@@ -385,9 +385,9 @@ public class DetailsSerImpl extends ServiceImpl<Details, DetailsDTO> implements 
         buyscheduleDTO.getConditions().add(Restrict.eq("code", entity.getCode()));
         List<Buyschedule> buyschedules = buyscheduleSer.findByCis(buyscheduleDTO);
         //当期用户的购买总股数；
-        int totalBuynum = 0;
+        Long totalBuynum = 0l;
         //当前用户的出售总股数
-        int totalSellNum = 0;
+        Long totalSellNum = 0l;
         if (CollectionUtils.isEmpty(buyschedules)) {
             throw new SerException("当前用户无购买记录");
         } else {
