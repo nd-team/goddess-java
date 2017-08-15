@@ -1,6 +1,5 @@
 package com.bjike.goddess.version.action.version;
 
-import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -10,10 +9,12 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.version.api.HelpAPI;
 import com.bjike.goddess.version.bo.HelpBO;
+import com.bjike.goddess.version.bo.HelpBO1;
 import com.bjike.goddess.version.dto.HelpDTO;
 import com.bjike.goddess.version.to.AnswerTO;
 import com.bjike.goddess.version.to.HelpTO;
 import com.bjike.goddess.version.vo.HelpVO;
+import com.bjike.goddess.version.vo.HelpVO1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -147,13 +148,15 @@ public class HelpAction {
      * 详情
      *
      * @param id id
+     * @return class HelpVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/findDetail/{id}")
-    public Result findDetail(@PathVariable String id) throws ActException {
+    public Result findDetail(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(helpAPI.findDetail(id));
+            HelpBO1 helpBO = helpAPI.findDetail(id);
+            return ActResult.initialize(BeanTransform.copyProperties(helpBO, HelpVO1.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

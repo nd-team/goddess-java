@@ -536,6 +536,8 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         boList.add(sumBO);
         StructureBO rate = new StructureBO();
         rate.setProject("比例说明");
+        rate.setFee(-1.00);
+        rate.setScale("随便");
         rate.setBestScale("流动资产比重较高会占用大量资金，降低流动资产周转率，从而影响企业的资金利用效率。" +
                 "非流动资产比例过低会影响企业的获利能力，从而影响企业未来的发展。");
         boList.add(rate);
@@ -543,6 +545,8 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         String advice = assetStructureAdvice(flow, other);
         StructureBO adviceBO = new StructureBO();
         adviceBO.setProject("管理建议");
+        adviceBO.setFee(-1.00);
+        adviceBO.setScale("随便");
         adviceBO.setBestScale(advice);
         boList.add(adviceBO);
         return boList;
@@ -648,6 +652,8 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         RepayAnalyzeBO adviceBO = new RepayAnalyzeBO();
         adviceBO.setProject("三、管理建议");
         adviceBO.setExplain(advice);
+        adviceBO.setScale("随便");
+        adviceBO.setBestScale("随便");
         list.add(adviceBO);
         return list;
     }

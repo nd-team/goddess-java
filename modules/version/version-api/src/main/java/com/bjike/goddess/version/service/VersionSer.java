@@ -88,5 +88,5 @@ public interface VersionSer extends Ser<Version, VersionDTO> {
      * @return
      * @throws SerException
      */
-    String findDetail(String id) throws SerException;
+    VersionBO findDetail(String id) throws SerException;
 }

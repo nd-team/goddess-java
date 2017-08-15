@@ -249,7 +249,7 @@ public class FailPhoneReasonSerImpl extends ServiceImpl<FailPhoneReason, FailPho
 
     @Override
     public Set<String> allReason() throws SerException {
-        List<FailPhoneReason> list = new ArrayList<>();
+        List<FailPhoneReason> list = super.findAll();
         Set<String> set = new HashSet<>();
         for (FailPhoneReason f : list) {
             set.add(f.getFailPhoneReasonType());

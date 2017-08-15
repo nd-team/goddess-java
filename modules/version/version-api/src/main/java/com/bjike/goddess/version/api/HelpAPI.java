@@ -2,6 +2,7 @@ package com.bjike.goddess.version.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.version.bo.HelpBO;
+import com.bjike.goddess.version.bo.HelpBO1;
 import com.bjike.goddess.version.dto.HelpDTO;
 import com.bjike.goddess.version.to.AnswerTO;
 import com.bjike.goddess.version.to.HelpTO;
@@ -77,7 +78,7 @@ public interface HelpAPI {
      * @return
      * @throws SerException
      */
-    String findDetail(String id) throws SerException;
+    HelpBO1 findDetail(String id) throws SerException;
 
     /**
      * 解答

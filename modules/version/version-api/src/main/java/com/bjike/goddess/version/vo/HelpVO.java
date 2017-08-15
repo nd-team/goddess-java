@@ -1,5 +1,9 @@
 package com.bjike.goddess.version.vo;
 
+import com.bjike.goddess.version.bo.AnswerBO;
+
+import java.util.List;
+
 /**
  * 帮助与解答表现层对象
  *
@@ -30,6 +34,18 @@ public class HelpVO {
      */
     private Long answerCount;
 
+//    /**
+//     * 答案集合
+//     */
+//    private List<AnswerVO> answers;
+//
+//    public List<AnswerVO> getAnswers() {
+//        return answers;
+//    }
+//
+//    public void setAnswers(List<AnswerVO> answers) {
+//        this.answers = answers;
+//    }
 
     public String getId() {
         return id;
