@@ -277,7 +277,6 @@ public class DriverInfoSerImpl extends ServiceImpl<DriverInfo, DriverInfoDTO> im
 
     @Override
     public DriverInfoBO findByDriver(String driver) throws SerException {
-        checkSeeIdentity();
         DriverInfoDTO dto = new DriverInfoDTO();
         dto.getConditions().add(Restrict.eq("driver", driver));
         List<DriverInfo> list = super.findByCis(dto);
