@@ -49,6 +49,7 @@
     <dubbo:reference interface="com.bjike.goddess.assistance.api.HotAssistAPI" id="hotAssistApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.assistance.api.AgeAssistAPI" id="ageAssistApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.assistance.api.ComputerAssistAPI" id="computerAssistApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.storage.api.StorageUserAPI" id="storageUser"/>
 
     <dubbo:reference interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
 

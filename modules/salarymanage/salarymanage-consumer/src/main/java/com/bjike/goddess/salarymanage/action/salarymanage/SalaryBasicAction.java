@@ -19,6 +19,7 @@ import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.vo.*;
 import com.bjike.goddess.salarymanage.api.SalaryBasicAPI;
 import com.bjike.goddess.salarymanage.bo.SalaryBasicBO;
+import com.bjike.goddess.salarymanage.bo.SalaryInformationBO;
 import com.bjike.goddess.salarymanage.dto.SalaryBasicDTO;
 import com.bjike.goddess.salarymanage.entity.SalaryBasic;
 import com.bjike.goddess.salarymanage.excel.SalaryBasicSetExcel;
@@ -328,7 +329,7 @@ public class SalaryBasicAction extends BaseFileAction {
         try {
             List<InputStream> inputStreams = super.getInputStreams(request);
             InputStream is = inputStreams.get(1);
-            Excel excel = new Excel(0,2);
+            Excel excel = new Excel(0,1);
             List<SalaryBasicSetExcel> tos = ExcelUtil.excelToClazz(is, SalaryBasicSetExcel.class, excel);
             List<SalaryBasicTO> toList = BeanTransform.copyProperties(tos,SalaryBasicTO.class);
             salaryBasicAPI.leadExcel(toList);
@@ -365,7 +366,7 @@ public class SalaryBasicAction extends BaseFileAction {
      * @des 下载模板项目签订与立项
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @GetMapping("v1/templateExport")
     public Result templateExport(HttpServletResponse response) throws ActException {
         try {
@@ -391,6 +392,24 @@ public class SalaryBasicAction extends BaseFileAction {
         try{
             Long count = salaryBasicAPI.count(dto);
             return ActResult.initialize(count);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id来查询单个基本资料
+     * @param id
+     * @return class SalaryBasicVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/one/{id}")
+    public Result findOne(@PathVariable String id) throws ActException{
+        try {
+            SalaryBasicBO bo = salaryBasicAPI.findOne(id);
+            SalaryBasicVO vo = BeanTransform.copyProperties(bo,SalaryBasicVO.class);
+            return ActResult.initialize(vo);
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }

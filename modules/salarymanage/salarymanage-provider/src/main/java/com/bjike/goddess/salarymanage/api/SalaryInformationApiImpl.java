@@ -14,6 +14,7 @@ import com.bjike.goddess.salarymanage.bo.SalaryBasicBO;
 import com.bjike.goddess.salarymanage.bo.SalaryInformationBO;
 import com.bjike.goddess.salarymanage.dto.SalaryBasicDTO;
 import com.bjike.goddess.salarymanage.dto.SalaryInformationDTO;
+import com.bjike.goddess.salarymanage.entity.SalaryInformation;
 import com.bjike.goddess.salarymanage.service.SalaryInformationSer;
 import com.bjike.goddess.salarymanage.to.ExportSalaryInformationTO;
 import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
@@ -124,4 +125,10 @@ public class SalaryInformationApiImpl implements SalaryInformationAPI  {
 //    public List<AgeAssistBO> findAgeAssist(SalaryInformationDTO dto) throws SerException {
 //        return salaryInformationSer.findAgeAssist(dto);
 //    }
+
+
+    @Override
+    public SalaryInformationBO findOne(String id) throws SerException {
+        return salaryInformationSer.findOne(id);
+    }
 }

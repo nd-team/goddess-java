@@ -10,4 +10,5 @@ dependencies {
     compile project(":modules:managementpromotion:managementpromotion-api")
     compile project(":modules:managepromotion:managepromotion-api")
     compile project(":modules:assistance:assistance-api")
+    compile project(":modules:storage:storage-api")
 }
