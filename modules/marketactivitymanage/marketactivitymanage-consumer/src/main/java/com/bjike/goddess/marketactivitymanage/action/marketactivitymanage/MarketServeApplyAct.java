@@ -529,7 +529,7 @@ public class MarketServeApplyAct extends BaseFileAction {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/findMarket/Projectname")
+    @GetMapping("v1/findMarket/projectname")
     public Result findMarketPname() throws ActException {
         try {
             List<String> projectName = new ArrayList<>();
