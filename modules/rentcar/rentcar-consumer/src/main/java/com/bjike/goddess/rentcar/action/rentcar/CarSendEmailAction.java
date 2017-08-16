@@ -165,6 +165,7 @@ public class CarSendEmailAction {
      * @throws ActException
      * @version v1
      */
+    @GetMapping("v1/count")
     public Result count(CarSendEmailDTO dto) throws ActException{
         try {
             Long count = carSendEmailAPI.count(dto);
@@ -181,6 +182,7 @@ public class CarSendEmailAction {
      * @throws ActException
      * @version v1
      */
+    @GetMapping("v1/find/one/{id}")
     public Result findOne(String id) throws ActException{
         try {
             CarSendEmailBO bo = carSendEmailAPI.findOne(id);
