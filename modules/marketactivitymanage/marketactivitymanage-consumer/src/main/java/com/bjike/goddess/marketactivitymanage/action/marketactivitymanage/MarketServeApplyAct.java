@@ -542,7 +542,7 @@ public class MarketServeApplyAct extends BaseFileAction {
         }
     }
     /**
-     * 添加编辑中预计费用下拉值
+     * 添加编辑功能的预计费用下拉值
      *
      * @throws ActException
      * @version v1
