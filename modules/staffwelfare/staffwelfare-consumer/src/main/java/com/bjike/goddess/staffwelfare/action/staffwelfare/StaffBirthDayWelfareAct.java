@@ -84,7 +84,7 @@ public class StaffBirthDayWelfareAct {
      */
     @GetMapping("v1/birthdayDetail")
     public Result birthdayDetail(String userID) throws ActException {
-        // TODO: 17-4-8  
+        // TODO: 17-4-8
         return ActResult.initialize("success");
        /* try {
             List<StaffBirthDayWelfareVO> voList = BeanTransform.copyProperties(staffBirthDayWelfareAPI.birthdayDetail(userID), StaffBirthDayWelfareVO.class);
@@ -96,15 +96,16 @@ public class StaffBirthDayWelfareAct {
 
 
     /**
-     * 列表总条数
-     * @param dayWelfareDTO
+     * 查询列表总条数
+     *
+     * @param dto 条件
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(StaffBirthDayWelfareDTO dayWelfareDTO) throws ActException{
+    public Result count(StaffBirthDayWelfareDTO dto) throws ActException{
         try {
-            Long count = staffBirthDayWelfareAPI.count(dayWelfareDTO);
+            Long count = staffBirthDayWelfareAPI.count(dto);
             return ActResult.initialize(count);
         }catch (SerException e){
             throw new ActException(e.getMessage());

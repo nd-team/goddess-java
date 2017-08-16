@@ -17,6 +17,7 @@ import com.bjike.goddess.rentcar.dto.CarSendEmailDTO;
 import com.bjike.goddess.rentcar.entity.CarSendEmail;
 import com.bjike.goddess.rentcar.service.CarSendEmailSer;
 import com.bjike.goddess.rentcar.to.CarSendEmailTO;
+import com.bjike.goddess.rentcar.to.GuidePermissionTO;
 import com.bjike.goddess.rentcar.vo.CarSendEmailVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -40,6 +41,29 @@ public class CarSendEmailAction {
 
     @Autowired
     private CarSendEmailAPI carSendEmailAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = carSendEmailAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 新增邮件发送对象
      * @param to 邮件发送对象
@@ -137,7 +161,7 @@ public class CarSendEmailAction {
 
     /**
      * 获得总条数
-     * @param dto
+     * @param dto 发送邮件对象
      * @throws ActException
      * @version v1
      */
@@ -152,7 +176,7 @@ public class CarSendEmailAction {
 
     /**
      * 根据id来获取单条数据
-     * @param id
+     * @param id 发送对象id
      * @return class CarSendEmailVO
      * @throws ActException
      * @version v1

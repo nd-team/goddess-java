@@ -147,7 +147,7 @@ public class PersonalFestivalAct {
 
     /**
      * 获取列表总条数
-     * @param dto
+     * @param dto 条件
      * @throws ActException
      * @version v1
      */
@@ -164,7 +164,7 @@ public class PersonalFestivalAct {
 
     /**
      * 根据id来查询单条数据
-     * @param id
+     * @param id 查询条件id
      * @return class PersonalFestivalVO
      * @throws ActException
      * @version v1
