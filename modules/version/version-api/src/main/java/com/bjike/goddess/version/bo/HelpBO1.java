@@ -5,16 +5,13 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 import java.util.List;
 
 /**
- * 帮助与解答业务传输对象
- *
- * @Author: [ chenjunhao ]
- * @Date: [ 2017-08-04 03:07 ]
- * @Description: [ 帮助与解答业务传输对象 ]
- * @Version: [ v1.0.0 ]
- * @Copy: [ com.bjike ]
+ * @Author: [chenjunhao]
+ * @Date: [2017-08-15 11:24]
+ * @Description: [ ]
+ * @Version: [1.0.0]
+ * @Copy: [com.bjike]
  */
-public class HelpBO extends BaseBO {
-
+public class HelpBO1 extends BaseBO{
     /**
      * 问题提出人
      */
@@ -30,18 +27,18 @@ public class HelpBO extends BaseBO {
      */
     private Long answerCount;
 
-//    /**
-//     * 答案集合
-//     */
-//    private List<AnswerBO> answers;
-//
-//    public List<AnswerBO> getAnswers() {
-//        return answers;
-//    }
-//
-//    public void setAnswers(List<AnswerBO> answers) {
-//        this.answers = answers;
-//    }
+    /**
+     * 答案集合
+     */
+    private List<AnswerBO> answers;
+
+    public List<AnswerBO> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<AnswerBO> answers) {
+        this.answers = answers;
+    }
 
     public String getName() {
         return name;

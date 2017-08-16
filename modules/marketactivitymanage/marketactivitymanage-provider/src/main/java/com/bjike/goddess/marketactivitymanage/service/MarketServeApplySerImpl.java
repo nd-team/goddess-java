@@ -499,7 +499,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
     }
 
     /**
-     * 查看所有的项目名
+     * 查看所有本表的项目名
      *
      * @return list
      * @throws SerException
@@ -521,7 +521,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
     }
 
     /**
-     * 查看所有的地区
+     * 查看所有本表的地区
      *
      * @return list
      * @throws SerException
@@ -537,6 +537,22 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
             String area = model.getArea();
             if (StringUtils.isNotBlank(model.getArea())) {
                 set.add(area);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> findProjectCode() throws SerException {
+        List<MarketServeApply> list = super.findAll();
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (MarketServeApply model : list) {
+            String projectCode = model.getProjectCode();
+            if (StringUtils.isNotBlank(model.getProjectCode())) {
+                set.add(projectCode);
             }
         }
         return new ArrayList<>(set);
@@ -670,3 +686,4 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
         return bytes;
     }
 }
+

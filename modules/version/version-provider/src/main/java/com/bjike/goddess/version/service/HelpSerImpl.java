@@ -4,7 +4,9 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.version.bo.AnswerBO;
 import com.bjike.goddess.version.bo.HelpBO;
+import com.bjike.goddess.version.bo.HelpBO1;
 import com.bjike.goddess.version.dto.AnswerDTO;
 import com.bjike.goddess.version.dto.HelpDTO;
 import com.bjike.goddess.version.dto.VersionDTO;
@@ -142,7 +144,7 @@ public class HelpSerImpl extends ServiceImpl<Help, HelpDTO> implements HelpSer {
     }
 
     @Override
-    public String findDetail(String id) throws SerException {
+    public HelpBO1 findDetail(String id) throws SerException {
         Help help = super.findById(id);
         if (help == null) {
             throw new SerException("该对象不存在");
@@ -150,11 +152,9 @@ public class HelpSerImpl extends ServiceImpl<Help, HelpDTO> implements HelpSer {
         AnswerDTO answerDTO = new AnswerDTO();
         answerDTO.getConditions().add(Restrict.eq("help.id", id));
         List<Answer> answers = answerSer.findByCis(answerDTO);
-        StringBuilder sb = new StringBuilder();
-        sb.append("<strong>问题：" + help.getRate() + "</strong></br>");
-        for (Answer answer : answers) {
-            sb.append(answer.getProvider() + "：" + answer.getAnswer() + "</br>");
-        }
-        return sb.toString();
+        List<AnswerBO> answerBOs=BeanTransform.copyProperties(answers,AnswerBO.class);
+        HelpBO1 helpBO=BeanTransform.copyProperties(help,HelpBO1.class);
+        helpBO.setAnswers(answerBOs);
+        return helpBO;
     }
 }

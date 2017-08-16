@@ -159,4 +159,14 @@ public interface CostAnalysisAPI {
     default Set<Integer> allMonths() throws SerException {
         return null;
     }
+    /**
+     * 查所有的预计市场费
+     * lijuntao
+     *
+     * @return class Integer
+     * @throws SerException
+     */
+    default List<Double> allExMarketCost() throws SerException {
+        return null;
+    }
 }

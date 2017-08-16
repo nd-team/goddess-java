@@ -1,5 +1,6 @@
 package com.bjike.goddess.projectmeasure.action.projectmeasure;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -8,6 +9,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.market.api.MarketInfoAPI;
 import com.bjike.goddess.projectmeasure.api.ProjectBasicInfoAPI;
 import com.bjike.goddess.projectmeasure.bo.ProjectBasicInfoBO;
 import com.bjike.goddess.projectmeasure.dto.ProjectBasicInfoDTO;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,6 +42,10 @@ public class ProjectBasicInfoAct {
 
     @Autowired
     private ProjectBasicInfoAPI projectBasicInfoAPI;
+    @Autowired
+    private MarketInfoAPI marketInfoAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
 
     /**
@@ -170,6 +177,24 @@ public class ProjectBasicInfoAct {
         try {
             projectBasicInfoAPI.update(to);
             return new ActResult("edit success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 添加编辑中所有的项目名称
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findMarket/projectName")
+    public Result findMarketPname() throws ActException {
+        try {
+            List<String> projectName = new ArrayList<>();
+            if(moduleAPI.isCheck("market")){
+                projectName = marketInfoAPI.getProjectName();
+            }
+            return ActResult.initialize(projectName);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

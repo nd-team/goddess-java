@@ -62,7 +62,7 @@ public class VersionApiImpl implements VersionAPI {
     }
 
     @Override
-    public String findDetail(String id) throws SerException {
+    public VersionBO findDetail(String id) throws SerException {
         return versionSer.findDetail(id);
     }
 }

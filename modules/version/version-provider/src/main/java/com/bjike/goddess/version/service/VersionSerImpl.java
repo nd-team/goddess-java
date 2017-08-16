@@ -124,20 +124,11 @@ public class VersionSerImpl extends ServiceImpl<Version, VersionDTO> implements 
     }
 
     @Override
-    public String findDetail(String id) throws SerException {
+    public VersionBO findDetail(String id) throws SerException {
         Version version = super.findById(id);
         if (version == null) {
             throw new SerException("该对象不存在");
         }
-        StringBuilder sb = new StringBuilder();
-        sb.append("<div><div align=\"center\"><strong>制度制定/修订序言模板</strong></div>");
-        sb.append("<strong>制度名：</strong>" + version.getName() + "</br>");
-        sb.append("<strong>版本号：</strong>" + version.getVersion() + "</br>");
-        sb.append("<strong>采纳意见：</strong>" + version.getAdvice() + "</br>");
-        sb.append("<strong>制定/修订人：</strong>" + version.getDesigner() + "</br>");
-        sb.append("<strong>责任审核：</strong>" + version.getAudit() + "</br>");
-        sb.append("<strong>制定/修订背景：</strong>" + version.getBackground() + "</br>");
-        sb.append("<strong>制作/修订内容：</strong>" + version.getContent() + "</div>");
-        return sb.toString();
+        return BeanTransform.copyProperties(version,VersionBO.class);
     }
 }

@@ -86,5 +86,5 @@ public interface VersionAPI {
      * @return
      * @throws SerException
      */
-    String findDetail(String id) throws SerException;
+    VersionBO findDetail(String id) throws SerException;
 }

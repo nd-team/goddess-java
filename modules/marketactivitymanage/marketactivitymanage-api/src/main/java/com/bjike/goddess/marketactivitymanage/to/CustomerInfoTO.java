@@ -39,25 +39,25 @@ public class CustomerInfoTO extends BaseTO {
     /**
      * 市场招待唯一标识
      */
-    @NotBlank(groups = {ADD.class, EditCustomer.class}, message = "市场招待唯一标识不能为空")
+    @NotBlank(groups = {ADD.class, CustomerInfoTO.EditCustomer.class}, message = "市场招待唯一标识不能为空")
     private String marketServeId;
 
     /**
      * 客户信息编号
      */
-    @NotNull(groups = {ADD.class, EditCustomer.class}, message = "客户信息编号不能为空")
+    @NotNull(groups = {ADD.class, CustomerInfoTO.EditCustomer.class}, message = "客户信息编号不能为空")
     private List<String> clientInfoNos;
 
     /**
      * 客户姓名
      */
-    @NotNull(groups = {ADD.class, EditCustomer.class}, message = "客户姓名不能为空")
+    @NotNull(groups = {ADD.class, CustomerInfoTO.EditCustomer.class}, message = "客户姓名不能为空")
     private List<String> clientNames;
 
     /**
      * 客户重要性级别
      */
-    @NotNull(groups = {ADD.class, EditCustomer.class}, message = "客户重要性级别不能为空")
+    @NotNull(groups = {ADD.class, CustomerInfoTO.EditCustomer.class}, message = "客户重要性级别不能为空")
     private List<String> importanceLevels;
 
     public String getClientInfoNo() {
