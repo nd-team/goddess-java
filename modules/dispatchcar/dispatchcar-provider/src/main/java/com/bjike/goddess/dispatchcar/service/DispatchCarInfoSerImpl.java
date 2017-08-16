@@ -33,6 +33,8 @@ import com.bjike.goddess.oilcardmanage.api.OilCardBasicAPI;
 import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardBasicDTO;
 import com.bjike.goddess.oilcardmanage.entity.OilCardBasic;
+import com.bjike.goddess.organize.api.PositionDetailAPI;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
@@ -90,6 +92,11 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
 
     @Autowired
     private EntryBasicInfoAPI entryBasicInfoAPI;
+
+    @Autowired
+    private PositionDetailAPI positionDetailAPI;
+
+
 
     @Override
     @Transactional(rollbackFor = SerException.class)
@@ -262,8 +269,8 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<DispatchCarInfoBO> pageList(DispatchCarInfoDTO dto) throws SerException {
-        dto.getSorts().add("createTime");
-        List<DispatchCarInfo> list = super.findByPage(dto);
+        dto.getSorts().add("createTime=desc");
+        List<DispatchCarInfo> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, DispatchCarInfoBO.class);
     }
 
@@ -472,7 +479,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             OilCardBasicBO basicBO = oilCardBasicAPI.findByCode(model.getOilCardNumber());
             OilCardBasicBO bo = oilCardBasicAPI.find(basicBO.getId());
             bo.setBalance(bo.getBalance() - model.getOilPrice());
-            OilCardBasic oilCardBasic = BeanTransform.copyProperties(bo,OilCardBasic.class);
+            OilCardBasic oilCardBasic = BeanTransform.copyProperties(bo,OilCardBasic.class,true);
             oilCardBasicAPI.updateOliCardBasic(oilCardBasic);
             if (oilCardBasic.getBalance() < 300) {
                 String content = "运营商务部的同事，你们好，" + oilCardBasic.getOilCardCode() + "号油卡余额" + oilCardBasic.getBalance() + "元，低于300元，请在一天内充值，请综合资源部同事跟进充值情况";
