@@ -204,18 +204,22 @@ public class FirstPhoneRecordSerImpl extends ServiceImpl<FirstPhoneRecord, First
         String email = failFirstInterviewReason.getEmail();
         LocalDateTime time = failFirstInterviewReason.getFirstInterviewTime();
         String position = failFirstInterviewReason.getPosition();
-        String content = "" + name + "先生/小姐：\n" +
-                "您好！感谢您对本公司" + position + "一职的青睐。 \n" +
-                "     现诚邀您于" + time.getYear() + "年" + time.getMonthValue() + "月" + time.getDayOfMonth() + "日上午" + time.getHour() + "：" + time.getMinute() + "到北京艾佳 广州分公司 面试，届时请带齐简历、身份证、等相关资料参加。公司网址：http://www.bjike.com/  如不能按时参加请提前告知，谢谢！（收到邮件请回复）\n" +
-                "电话：23337353或29046363\n" +
-                "面试地址：广东省广州市天河区棠东毓南路13号冠达商务中心E栋1楼111-112房(在BRT天朗明居站下看到凯尔卡顿大酒店,直走即可看到冠达商务楼，往前直走100米后向左转直走即可看到我们公司111-112房)";
-        String title = "面试邀请函";
-        if ((null != failFirstInterviewReason.getWhetherFirstInviteSuccess()) && failFirstInterviewReason.getWhetherFirstInviteSuccess()) {
-            MessageTO messageTO = new MessageTO();
-            messageTO.setTitle(title);
-            messageTO.setContent(content);
-            messageTO.setReceivers(new String[]{email});
-            messageAPI.send(messageTO);
+        if (time != null) {
+            String content = "" + name + "先生/小姐：\n" +
+                    "您好！感谢您对本公司" + position + "一职的青睐。 \n" +
+                    "     现诚邀您于" + time.getYear() + "年" + time.getMonthValue() + "月" + time.getDayOfMonth() + "日上午" + time.getHour() + "：" + time.getMinute() + "到北京艾佳 广州分公司 面试，届时请带齐简历、身份证、等相关资料参加。公司网址：http://www.bjike.com/  如不能按时参加请提前告知，谢谢！（收到邮件请回复）\n" +
+                    "电话：23337353或29046363\n" +
+                    "面试地址：广东省广州市天河区棠东毓南路13号冠达商务中心E栋1楼111-112房(在BRT天朗明居站下看到凯尔卡顿大酒店,直走即可看到冠达商务楼，往前直走100米后向左转直走即可看到我们公司111-112房)";
+            String title = "面试邀请函";
+            if ((null != failFirstInterviewReason.getWhetherFirstInviteSuccess()) && failFirstInterviewReason.getWhetherFirstInviteSuccess()) {
+                if (email != null) {
+                    MessageTO messageTO = new MessageTO();
+                    messageTO.setTitle(title);
+                    messageTO.setContent(content);
+                    messageTO.setReceivers(new String[]{email});
+                    messageAPI.send(messageTO);
+                }
+            }
         }
         return bo;
     }

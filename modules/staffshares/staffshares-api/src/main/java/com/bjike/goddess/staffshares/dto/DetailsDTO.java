@@ -35,7 +35,7 @@ public class DetailsDTO extends BaseDTO {
     /**
      * 出售/发行数量
      */
-    private int number;
+    private Long number;
 
     /**
      * 出售/发行价格
@@ -50,7 +50,7 @@ public class DetailsDTO extends BaseDTO {
     /**
      * 剩余出售量
      */
-    private int sharesNum;
+    private Long sharesNum;
 
     public String getId() {
         return id;
@@ -84,11 +84,11 @@ public class DetailsDTO extends BaseDTO {
         this.publisher = publisher;
     }
 
-    public int getNumber() {
+    public Long getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(Long number) {
         this.number = number;
     }
 
@@ -108,11 +108,11 @@ public class DetailsDTO extends BaseDTO {
         this.time = time;
     }
 
-    public int getSharesNum() {
+    public Long getSharesNum() {
         return sharesNum;
     }
 
-    public void setSharesNum(int sharesNum) {
+    public void setSharesNum(Long sharesNum) {
         this.sharesNum = sharesNum;
     }
 }

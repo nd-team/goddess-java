@@ -12,6 +12,11 @@ package com.bjike.goddess.staffshares.vo;
 public class DividendsVO {
 
     /**
+     * 持股人
+     */
+    private String shareholder;
+
+    /**
      * id
      */
     private String id;
@@ -33,7 +38,7 @@ public class DividendsVO {
     /**
      * 持股数
      */
-    private int num;
+    private Long num;
 
     /**
      * 总股本
@@ -113,11 +118,11 @@ public class DividendsVO {
         this.taxProfit = taxProfit;
     }
 
-    public int getNum() {
+    public Long getNum() {
         return num;
     }
 
-    public void setNum(int num) {
+    public void setNum(Long num) {
         this.num = num;
     }
 
@@ -191,5 +196,13 @@ public class DividendsVO {
 
     public void setSituation(Boolean situation) {
         this.situation = situation;
+    }
+
+    public String getShareholder() {
+        return shareholder;
+    }
+
+    public void setShareholder(String shareholder) {
+        this.shareholder = shareholder;
     }
 }

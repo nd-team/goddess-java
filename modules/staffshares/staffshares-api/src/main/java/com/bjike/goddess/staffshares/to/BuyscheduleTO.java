@@ -35,7 +35,7 @@ public class BuyscheduleTO extends BaseTO {
      * 购入股数
      */
     @NotNull(message = "购入股数不能为空", groups = {EDIT.class})
-    private int purchaseNum;
+    private Long purchaseNum;
 
     /**
      * 买入价格
@@ -93,11 +93,11 @@ public class BuyscheduleTO extends BaseTO {
         this.name = name;
     }
 
-    public int getPurchaseNum() {
+    public Long getPurchaseNum() {
         return purchaseNum;
     }
 
-    public void setPurchaseNum(int purchaseNum) {
+    public void setPurchaseNum(Long purchaseNum) {
         this.purchaseNum = purchaseNum;
     }
 

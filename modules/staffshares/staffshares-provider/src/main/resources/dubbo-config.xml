@@ -27,6 +27,8 @@
 	<dubbo:service  ref="schemeApiImpl" interface="com.bjike.goddess.staffshares.api.SchemeAPI" />
 	<dubbo:service  ref="sellscheduleApiImpl" interface="com.bjike.goddess.staffshares.api.SellscheduleAPI" />
 	<dubbo:service  ref="tradingCenterApiImpl" interface="com.bjike.goddess.staffshares.api.TradingCenterAPI" />
+	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.staffshares.api.CusPermissionAPI" />
+	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.staffshares.api.CusPermissionOperateAPI" />
 
 	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
 	否则不需要配置-->
@@ -46,7 +48,5 @@
 	<dubbo:reference  validation="true" id="disciplineRecordApiImpl" interface="com.bjike.goddess.bonus.api.DisciplineRecordAPI" />
 	<dubbo:reference  validation="true" id="entryBasicInfoApiImpl" interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" />
 
-	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.staffshares.api.CusPermissionAPI" />
-	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.staffshares.api.CusPermissionOperateAPI" />
 
 </beans>

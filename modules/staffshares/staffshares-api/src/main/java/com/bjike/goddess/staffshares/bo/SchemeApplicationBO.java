@@ -78,7 +78,7 @@ public class SchemeApplicationBO extends BaseBO {
     /**
      * 发行数量
      */
-    private int number;
+    private Long number;
 
     /**
      * 发行价格
@@ -236,11 +236,11 @@ public class SchemeApplicationBO extends BaseBO {
         this.proportion = proportion;
     }
 
-    public int getNumber() {
+    public Long getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(Long number) {
         this.number = number;
     }
 

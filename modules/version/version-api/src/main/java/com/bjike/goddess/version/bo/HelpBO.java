@@ -2,6 +2,8 @@ package com.bjike.goddess.version.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
+import java.util.List;
+
 /**
  * 帮助与解答业务传输对象
  *
@@ -28,6 +30,18 @@ public class HelpBO extends BaseBO {
      */
     private Long answerCount;
 
+//    /**
+//     * 答案集合
+//     */
+//    private List<AnswerBO> answers;
+//
+//    public List<AnswerBO> getAnswers() {
+//        return answers;
+//    }
+//
+//    public void setAnswers(List<AnswerBO> answers) {
+//        this.answers = answers;
+//    }
 
     public String getName() {
         return name;

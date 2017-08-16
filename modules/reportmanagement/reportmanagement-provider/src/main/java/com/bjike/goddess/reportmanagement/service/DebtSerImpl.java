@@ -314,6 +314,7 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
     @Override
     public List<StructureBO> debtStructure(DebtDTO dto) throws SerException {
         checkSeeIdentity();
+        String userToken=RpcTransmit.getUserToken();
         FormulaDTO formulaDTO = new FormulaDTO();
         BeanUtils.copyProperties(dto, formulaDTO);
         dto.getSorts().add("debtType=ASC");
@@ -379,13 +380,18 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
         allBO.setScale("100%");
         boList.add(allBO);
         StructureBO rate = new StructureBO();
+        rate.setFee(-1.00);
+        rate.setScale("随便");
         rate.setProject("比例说明");
         rate.setBestScale("低负债资本、高权益资本可以降低企业财务风险，" +
                 "减少企业发生债务危机的比率，但是会增加企业资本成本，不能有效发挥债务资本的财务杠杆效益。");
         boList.add(rate);
+        RpcTransmit.transmitUserToken(userToken);
         String advice = debtStructureAdvice(flow, l, all);
         StructureBO adviceBO = new StructureBO();
         adviceBO.setProject("管理建议");
+        adviceBO.setFee(-1.00);
+        adviceBO.setScale("随便");
         adviceBO.setBestScale(advice);
         boList.add(adviceBO);
         return boList;

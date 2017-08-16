@@ -271,13 +271,15 @@ public class VersionAction extends BaseFileAction {
      * 详情
      *
      * @param id id
+     * @return class VersionVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/findDetail/{id}")
-    public Result findDetail(@PathVariable String id) throws ActException {
+    public Result findDetail(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(versionAPI.findDetail(id));
+            VersionBO versionBO = versionAPI.findDetail(id);
+            return ActResult.initialize(BeanTransform.copyProperties(versionBO, VersionVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

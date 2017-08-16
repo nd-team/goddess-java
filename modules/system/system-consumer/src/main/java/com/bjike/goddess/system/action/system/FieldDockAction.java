@@ -216,7 +216,7 @@ public class FieldDockAction extends BaseFileAction {
      */
     @LoginAuth
     @GetMapping("v1/export")
-    public Result exportReport(FieldDockDTO dto, HttpServletResponse response) throws ActException {
+    public Result exportReport(@Validated(FieldDockDTO.TestExport.class) FieldDockDTO dto, HttpServletResponse response) throws ActException {
         try {
             String fileName = "字段对接.xlsx";
             super.writeOutFile(response, fieldDockAPI.exportExcel(dto), fileName);

@@ -77,14 +77,14 @@ public class SchemeApplyTO extends BaseTO {
     /**
      * 发行比例
      */
-    @NotBlank(message = "发行比例不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "发行比例不能为空", groups = {ADD.class, EDIT.class})
     private Double proportion;
 
     /**
      * 发行数量
      */
     @NotNull(message = "发行数量不能为空", groups = {ADD.class, EDIT.class})
-    private int number;
+    private Long number;
 
     /**
      * 发行价格
@@ -166,7 +166,7 @@ public class SchemeApplyTO extends BaseTO {
     /**
      * 剩余出售股数
      */
-    private int sharesNum;
+    private Long sharesNum;
 
 
     public Type getType() {
@@ -249,11 +249,11 @@ public class SchemeApplyTO extends BaseTO {
         this.proportion = proportion;
     }
 
-    public int getNumber() {
+    public Long getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(Long number) {
         this.number = number;
     }
 
@@ -369,11 +369,11 @@ public class SchemeApplyTO extends BaseTO {
         this.opinion = opinion;
     }
 
-    public int getSharesNum() {
+    public Long getSharesNum() {
         return sharesNum;
     }
 
-    public void setSharesNum(int sharesNum) {
+    public void setSharesNum(Long sharesNum) {
         this.sharesNum = sharesNum;
     }
 }

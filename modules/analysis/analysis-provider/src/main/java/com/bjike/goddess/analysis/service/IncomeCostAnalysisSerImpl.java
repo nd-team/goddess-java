@@ -9,6 +9,7 @@ import com.bjike.goddess.analysis.excel.SonPermissionObject;
 import com.bjike.goddess.analysis.to.CollectTO;
 import com.bjike.goddess.analysis.to.GuidePermissionTO;
 import com.bjike.goddess.analysis.to.IncomeCostAnalysisTO;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -339,10 +340,10 @@ public class IncomeCostAnalysisSerImpl extends ServiceImpl<IncomeCostAnalysis, I
     public List<CollectBO> collect(CollectTO to) throws SerException {
         IncomeCostAnalysisDTO dto = new IncomeCostAnalysisDTO();
         if (null != to.getArea()) {
-            dto.setArea(to.getArea());
+            dto.getConditions().add(Restrict.in("area",to.getArea()));
         }
         if (null != to.getDepartment()) {
-            dto.setProjectGroup(to.getDepartment());
+            dto.getConditions().add(Restrict.in("department",to.getDepartment()));
         }
         return collectAnalysis(dto);
     }

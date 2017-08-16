@@ -252,7 +252,7 @@ public class FailInviteReasonSerImpl extends ServiceImpl<FailInviteReason, FailI
 
     @Override
     public Set<String> allReason() throws SerException {
-        List<FailInviteReason> list = new ArrayList<>();
+        List<FailInviteReason> list = super.findAll();
         Set<String> set = new HashSet<>();
         for (FailInviteReason f : list) {
             set.add(f.getFailInviteReasonType());

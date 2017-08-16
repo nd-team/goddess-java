@@ -270,9 +270,9 @@ public class PlatformClassifyAction extends BaseFileAction{
      * @des 导出平台分类
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @GetMapping("v1/export")
-    public Result exportReport(PlatformClassifyDTO dto, HttpServletResponse response) throws ActException {
+    public Result exportReport(@Validated(PlatformClassifyDTO.TestExport.class) PlatformClassifyDTO dto, HttpServletResponse response) throws ActException {
         try {
             String fileName = "平台分类.xlsx";
             super.writeOutFile(response, platformClassifyAPI.exportExcel(dto), fileName);

@@ -1,19 +1,29 @@
 package com.bjike.goddess.staffshares.service;
 
 import com.bjike.goddess.bonus.api.DisciplineRecordAPI;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffshares.api.SchemeAPI;
+import com.bjike.goddess.staffshares.bo.PurchaseBO;
 import com.bjike.goddess.staffshares.bo.SchemeIssueBO;
+import com.bjike.goddess.staffshares.dto.BuyscheduleDTO;
+import com.bjike.goddess.staffshares.dto.DetailsDTO;
 import com.bjike.goddess.staffshares.dto.PurchaseDTO;
+import com.bjike.goddess.staffshares.dto.SellscheduleDTO;
 import com.bjike.goddess.staffshares.entity.Buyschedule;
+import com.bjike.goddess.staffshares.entity.Details;
 import com.bjike.goddess.staffshares.entity.Purchase;
+import com.bjike.goddess.staffshares.entity.Sellschedule;
+import com.bjike.goddess.staffshares.enums.GuideAddrStatus;
 import com.bjike.goddess.staffshares.enums.Status1;
+import com.bjike.goddess.staffshares.to.GuidePermissionTO;
 import com.bjike.goddess.staffshares.to.PurchaseTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -54,16 +64,168 @@ public class PurchaseSerImpl extends ServiceImpl<Purchase, PurchaseDTO> implemen
     private DisciplineRecordAPI disciplineRecordAPI;
     @Autowired
     private BuyscheduleSer buyscheduleSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private DetailsSer detailsSer;
+    @Autowired
+    private SellscheduleSer sellscheduleSer;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
 
     @Override
     public void buy(PurchaseTO to) throws SerException {
 //        checkAddIdentity();
+        if (to.getPurchaseNum() <= 0) {
+            throw new SerException("购买股数不能为0");
+        }
         if (StringUtils.isBlank(to.getId())) {
             throw new SerException("id不能为空");
         }
         SchemeIssueBO schemeIssueBO = schemeAPI.getOne(to.getId());
         if (null == schemeIssueBO) {
             throw new SerException("查无此条交易数据");
+        }
+        if (to.getPurchaseNum() > schemeIssueBO.getSharesNum()) {
+            throw new SerException("购买股数不能超过出售剩余的股数");
         }
 
         Purchase entity = new Purchase();
@@ -96,6 +258,7 @@ public class PurchaseSerImpl extends ServiceImpl<Purchase, PurchaseDTO> implemen
                 entity.setMonths(months);
             } else {
                 entity.setMonths(0);
+                throw new SerException("查无当前用户的入职信息");
             }
             entity.setSellName(schemeIssueBO.getPublisher());
             entity.setPurchaseNum(to.getPurchaseNum());
@@ -107,6 +270,24 @@ public class PurchaseSerImpl extends ServiceImpl<Purchase, PurchaseDTO> implemen
             entity.setPromotion(0);
             entity.setRemark(to.getRemark());
             super.save(entity);
+        } else if ("admin".equals(userBO.getUsername())) {
+            entity.setArea("admin");
+            entity.setProject("admin");
+            entity.setDepartment("admin");
+            entity.setPosition("admin");
+            entity.setMonths(0);
+            entity.setSellName(schemeIssueBO.getPublisher());
+            entity.setPurchaseNum(to.getPurchaseNum());
+            entity.setMoney(to.getPurchaseNum() * schemeIssueBO.getPrice());
+            entity.setPenalty(0);
+            entity.setReward(0);
+            // TODO: 17-8-7
+            //各项晋升的次数
+            entity.setPromotion(0);
+            entity.setRemark(to.getRemark());
+            super.save(entity);
+        } else {
+            throw new SerException("当前用户不是内部员工，无权购买");
         }
     }
 
@@ -146,6 +327,7 @@ public class PurchaseSerImpl extends ServiceImpl<Purchase, PurchaseDTO> implemen
         super.remove(id);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void examine(PurchaseTO to) throws SerException {
 //        checkAddIdentity();
@@ -157,7 +339,7 @@ public class PurchaseSerImpl extends ServiceImpl<Purchase, PurchaseDTO> implemen
         RpcTransmit.transmitUserToken(userToken);
 
         List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.findPositionByUser(userBO.getId());
-        if (!CollectionUtils.isEmpty(positionDetailBOs)) {
+        if (!CollectionUtils.isEmpty(positionDetailBOs) || "admin".equals(userBO.getUsername())) {
             for (PositionDetailBO positionDetailBO : positionDetailBOs) {
                 if ("财务运营部".equals(positionDetailBO.getDepartmentName()) && StringUtils.isBlank(temp.getFinancial())) {
                     temp.setFinancial(name);
@@ -172,6 +354,16 @@ public class PurchaseSerImpl extends ServiceImpl<Purchase, PurchaseDTO> implemen
                     temp.setOpinion2(to.getOpinion2());
                 }
             }
+            if ("admin".equals(userBO.getUsername())) {
+                temp.setFinancial(name);
+                temp.setOpinion(to.getOpinion());
+                temp.setPlanModule(name);
+                temp.setOpinion1(to.getOpinion());
+                temp.setManager(name);
+                temp.setOpinion2(to.getOpinion());
+            }
+        } else {
+            throw new SerException("当前用户不是内部员工");
         }
         if (to.getStatus().equals(Status1.ISSUED) && StringUtils.isNotBlank(temp.getManager())) {
             temp.setStatus(to.getStatus());
@@ -196,7 +388,90 @@ public class PurchaseSerImpl extends ServiceImpl<Purchase, PurchaseDTO> implemen
             buyschedule.setTime(LocalDateTime.now());
 
             buyscheduleSer.save(buyschedule);
+            //修改交易详情的数据
+            DetailsDTO detailsDTO = new DetailsDTO();
+            detailsDTO.getConditions().add(Restrict.eq("code", temp.getCode()));
+            detailsDTO.getConditions().add(Restrict.eq("name", temp.getIssueName()));
+            detailsDTO.getConditions().add(Restrict.eq("publisher", temp.getSellName()));
+            List<Details> detailses = detailsSer.findByCis(detailsDTO);
+            if (!CollectionUtils.isEmpty(detailses)) {
+                Details details = detailses.get(0);
+                if (details.getSharesNum() - to.getPurchaseNum() < 0) {
+                    throw new SerException("购买股数不能超过出售的股数，审核无效");
+                }
+                //交易详情的出售剩余数量＝原交易详情出售剩余数量　－　购买数量
+                details.setSharesNum(details.getSharesNum() - to.getPurchaseNum());
+            } else {
+                throw new SerException("交易数据不存在");
+            }
+            //增加出售记录
+            Sellschedule sellschedule = new Sellschedule();
+            sellschedule.setSellName(temp.getSellName());
+            sellschedule.setCode(temp.getCode());
+            sellschedule.setName(temp.getIssueName());
+            sellschedule.setSellNum(temp.getPurchaseNum());
+            sellschedule.setSellPrice(temp.getMoney() / temp.getPurchaseNum());
+            sellschedule.setTotalSellPrice(temp.getMoney());
+            sellschedule.setSellTime(LocalDateTime.now());
+
+            //出售剩余数量　＝　出售人的所有购买数量　－　已出售的数量
+            Long totalBuyNum = 0l;
+            Long totalSellNum = 0l;
+            BuyscheduleDTO buyscheduleDTO = new BuyscheduleDTO();
+            buyscheduleDTO.getConditions().add(Restrict.eq("shareholder", temp.getSellName()));
+            buyscheduleDTO.getConditions().add(Restrict.eq("code", temp.getCode()));
+            List<Buyschedule> buyschedules = buyscheduleSer.findByCis(buyscheduleDTO);
+            if (!CollectionUtils.isEmpty(buyschedules)) {
+                for (Buyschedule buyschedule1 : buyschedules) {
+                    totalBuyNum += buyschedule1.getPurchaseNum();
+                }
+                SellscheduleDTO sellscheduleDTO = new SellscheduleDTO();
+                sellscheduleDTO.getConditions().add(Restrict.eq("sellName", temp.getSellName()));
+                sellscheduleDTO.getConditions().add(Restrict.eq("code", temp.getCode()));
+                List<Sellschedule> sellschedules = sellscheduleSer.findByCis(sellscheduleDTO);
+                if (!CollectionUtils.isEmpty(sellschedules)) {
+                    for (Sellschedule sellschedule1 : sellschedules) {
+                        totalSellNum += sellschedule1.getSellNum();
+                    }
+                }
+            }
+            sellschedule.setNumber(totalBuyNum - totalSellNum);
+            sellschedule.setBuyName(temp.getName());
+            sellschedule.setPurchaseNum(temp.getPurchaseNum());
+            sellschedule.setBuyTime(LocalDateTime.now());
+            sellscheduleSer.save(sellschedule);
         }
+    }
+
+    @Override
+    public List<PurchaseBO> list(PurchaseDTO dto) throws SerException {
+//        checkSeeIdentity();
+        searchCondition(dto);
+        List<Purchase> list = super.findByPage(dto);
+        List<PurchaseBO> purchaseBOList = BeanTransform.copyProperties(list, PurchaseBO.class, false);
+//        if (null != purchaseBOList && purchaseBOList.size() > 0) {
+//            for (PurchaseBO PurchaseBO : purchaseBOList) {
+//                PurchaseBO.setData(LocalDate.now().toString());
+//            }
+//        }
+        return purchaseBOList;
+    }
+
+    @Override
+    public PurchaseBO getById(String id) throws SerException {
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空");
+        }
+        Purchase purchase = super.findById(id);
+        PurchaseBO purchaseBO = BeanTransform.copyProperties(purchase, PurchaseBO.class, false);
+        return purchaseBO;
+    }
+
+    @Override
+    public Long getTotal(PurchaseDTO dto) throws SerException {
+        searchCondition(dto);
+        Long count = super.count(dto);
+        return count;
     }
 
     //计算两个日期之间的月数
@@ -219,5 +494,96 @@ public class PurchaseSerImpl extends ServiceImpl<Purchase, PurchaseDTO> implemen
             throw new SerException(e.getMessage());
         }
     }
+
+    public void searchCondition(PurchaseDTO dto) throws SerException {
+        /**
+         * 状态
+         */
+        if (null != dto.getStatus()) {
+            dto.getConditions().add(Restrict.eq("status", dto.getStatus()));
+        }
+        /**
+         * 申购人
+         */
+        if (StringUtils.isNotBlank(dto.getName())) {
+            dto.getConditions().add(Restrict.eq("name", dto.getName()));
+        }/**
+         * 申购时间
+         */
+        if (StringUtils.isNotBlank(dto.getTime())) {
+            dto.getConditions().add(Restrict.like("time", dto.getTime()));
+        }
+        /**
+         * 地区
+         */
+        if (StringUtils.isNotBlank(dto.getArea())) {
+            dto.getConditions().add(Restrict.like("area", dto.getArea()));
+        }
+        /**
+         * 项目
+         */
+        if (StringUtils.isNotBlank(dto.getProject())) {
+            dto.getConditions().add(Restrict.eq("project", dto.getProject()));
+        }
+        /**
+         * 部门
+         */
+        if (StringUtils.isNotBlank(dto.getDepartment())) {
+            dto.getConditions().add(Restrict.eq("department", dto.getDepartment()));
+        }
+        /**
+         * 岗位
+         */
+        if (StringUtils.isNotBlank(dto.getPosition())) {
+            dto.getConditions().add(Restrict.like("position", dto.getPosition()));
+        }
+        /**
+         * 在职时间（月数)
+         */
+        if (0 < dto.getMonths()) {
+            dto.getConditions().add(Restrict.like("months", dto.getMonths()));
+        }
+        /**
+         * 出售人
+         */
+        if (StringUtils.isNotBlank(dto.getSellName())) {
+            dto.getConditions().add(Restrict.eq("sellName", dto.getSellName()));
+        }
+        /**
+         * 购入股数
+         */
+        if (null != dto.getPurchaseNum()) {
+            dto.getConditions().add(Restrict.eq("purchaseNum", dto.getPurchaseNum()));
+        }/**
+         * 应付额
+         */
+        if (null != dto.getMoney()) {
+            dto.getConditions().add(Restrict.like("money", dto.getMoney()));
+        }
+        /**
+         * 目前处罚记录次数
+         */
+        if (0 < dto.getPenalty()) {
+            dto.getConditions().add(Restrict.like("penalty", dto.getPenalty()));
+        }
+        /**
+         * 目前获得奖励次数
+         */
+        if (0 < dto.getReward()) {
+            dto.getConditions().add(Restrict.eq("reward", dto.getReward()));
+        }
+        /**
+         * 各项晋升的次数
+         */
+        if (0 < dto.getPromotion()) {
+            dto.getConditions().add(Restrict.eq("promotion", dto.getPromotion()));
+        }/**
+         * 备注
+         */
+        if (StringUtils.isNotBlank(dto.getRemark())) {
+            dto.getConditions().add(Restrict.like("remark", dto.getRemark()));
+        }
+    }
+
 
 }

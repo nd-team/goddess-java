@@ -33,7 +33,7 @@ public class SellscheduleCollectVO {
     /**
      * 出售股数
      */
-    private int sellNum;
+    private Long sellNum;
 
 //    /**
 //     * 出售价格
@@ -53,7 +53,7 @@ public class SellscheduleCollectVO {
 //    /**
 //     * 剩余出售量
 //     */
-//    private int number;
+//    private Long number;
 //
 //    /**
 //     * 购买人
@@ -63,7 +63,7 @@ public class SellscheduleCollectVO {
 //    /**
 //     * 购买股数
 //     */
-//    private int purchaseNum;
+//    private Long purchaseNum;
 //
 //    /**
 //     * 购买时间
@@ -88,11 +88,11 @@ public class SellscheduleCollectVO {
         this.sellName = sellName;
     }
 
-    public int getSellNum() {
+    public Long getSellNum() {
         return sellNum;
     }
 
-    public void setSellNum(int sellNum) {
+    public void setSellNum(Long sellNum) {
         this.sellNum = sellNum;
     }
 

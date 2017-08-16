@@ -83,7 +83,7 @@ public class SchemeIssueVO {
     /**
      * 发行数量
      */
-    private int number;
+    private Long number;
 
     /**
      * 发行价格
@@ -123,7 +123,7 @@ public class SchemeIssueVO {
     /**
      * 剩余出售股数
      */
-    private int sharesNum;
+    private Long sharesNum;
 
     /**
      * 备注
@@ -210,11 +210,11 @@ public class SchemeIssueVO {
         this.proportion = proportion;
     }
 
-    public int getNumber() {
+    public Long getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(Long number) {
         this.number = number;
     }
 
@@ -274,11 +274,11 @@ public class SchemeIssueVO {
         this.accountingTime = accountingTime;
     }
 
-    public int getSharesNum() {
+    public Long getSharesNum() {
         return sharesNum;
     }
 
-    public void setSharesNum(int sharesNum) {
+    public void setSharesNum(Long sharesNum) {
         this.sharesNum = sharesNum;
     }
 
