@@ -1,5 +1,7 @@
 package com.bjike.goddess.contractcommunicat.action.contractcommunicat;
 
+import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
+import com.bjike.goddess.businessproject.vo.BaseInfoManageVO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -22,6 +24,8 @@ import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
 import com.bjike.goddess.contractcommunicat.vo.InProjectsVO;
 import com.bjike.goddess.contractcommunicat.vo.ProjectOutsourcingCollectVO;
 import com.bjike.goddess.contractcommunicat.vo.ProjectOutsourcingVO;
+import com.bjike.goddess.market.bo.MarketInfoBO;
+import com.bjike.goddess.market.vo.MarketInfoVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
@@ -53,6 +57,7 @@ public class ProjectOutsourcingAct extends BaseFileAction {
     private ProjectOutsourcingAPI projectOutsourcingAPI;
     @Autowired
     private FileAPI fileAPI;
+
 
     /**
      * 功能导航权限
@@ -371,6 +376,40 @@ public class ProjectOutsourcingAct extends BaseFileAction {
             List<ProjectOutsourcingCollectVO> vo = BeanTransform.copyProperties(projectOutsourcingAPI.collect(to), ProjectOutsourcingCollectVO.class);
             return ActResult.initialize(vo);
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有的内部项目名称
+     * @return class MarketInfoVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/project")
+    public Result findProject() throws ActException{
+        try {
+            List<MarketInfoBO> boList = projectOutsourcingAPI.findProject();
+            List<MarketInfoVO> voList = BeanTransform.copyProperties(boList,MarketInfoVO.class);
+            return ActResult.initialize(voList);
+        }catch(SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有合同外部项目名称和合同项目外部编号
+     * @return class BaseInfoManageVO
+     * @throws SerException
+     * @version v1
+     */
+    @GetMapping("v1/list/baseInfoManage")
+    public Result listBaseInfoManage() throws ActException{
+        try {
+            List<BaseInfoManageBO> boList = projectOutsourcingAPI.listBaseInfoManage();
+            List<BaseInfoManageVO> voList = BeanTransform.copyProperties(boList,BaseInfoManageVO.class);
+            return ActResult.initialize(voList);
+        }catch(SerException e){
             throw new ActException(e.getMessage());
         }
     }

@@ -1,5 +1,6 @@
 package com.bjike.goddess.contractcommunicat.api;
 
+import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingBO;
@@ -11,6 +12,7 @@ import com.bjike.goddess.contractcommunicat.service.ProjectOutsourcingSer;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
+import com.bjike.goddess.market.bo.MarketInfoBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -99,5 +101,15 @@ public class ProjectOutsourcingApiImpl implements ProjectOutsourcingAPI {
     @Override
     public byte[] exportExcelModule() throws SerException {
         return projectOutsourcingSer.exportExcelModule();
+    }
+
+    @Override
+    public List<BaseInfoManageBO> listBaseInfoManage() throws SerException {
+        return projectOutsourcingSer.listBaseInfoManage();
+    }
+
+    @Override
+    public List<MarketInfoBO> findProject() throws SerException {
+        return projectOutsourcingSer.findProject();
     }
 }

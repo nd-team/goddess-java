@@ -1,5 +1,9 @@
 package com.bjike.goddess.contractcommunicat.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.businessproject.api.BaseInfoManageAPI;
+import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
+import com.bjike.goddess.businessproject.dto.BaseInfoManageDTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -20,6 +24,9 @@ import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.ExportExcelTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
+import com.bjike.goddess.market.api.MarketInfoAPI;
+import com.bjike.goddess.market.bo.MarketInfoBO;
+import com.bjike.goddess.market.dto.MarketInfoDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.BeanUtils;
@@ -51,6 +58,15 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private UserAPI userAPI;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
+
+    @Autowired
+    private BaseInfoManageAPI baseInfoManageAPI;
+
+    @Autowired
+    private MarketInfoAPI marketInfoAPI;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
@@ -462,6 +478,26 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
         } else {
             return false;
         }
+    }
+
+    @Override
+    public List<BaseInfoManageBO> listBaseInfoManage() throws SerException {
+        List<BaseInfoManageBO> list = new ArrayList<>(0);
+        if(moduleAPI.isCheck("businessproject")) {
+            BaseInfoManageDTO dto = new BaseInfoManageDTO();
+            list = baseInfoManageAPI.listBaseInfoManage(dto);
+        }
+        return list;
+    }
+
+    @Override
+    public List<MarketInfoBO> findProject() throws SerException {
+        List<MarketInfoBO> list = new ArrayList<>(0);
+        if(moduleAPI.isCheck("market")){
+            MarketInfoDTO dto = new MarketInfoDTO();
+            list = marketInfoAPI.findListMarketInfo(dto);
+        }
+        return list;
     }
 
 }
