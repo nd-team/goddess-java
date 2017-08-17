@@ -218,7 +218,7 @@ public class HeadPortraitHatAct {
 
     /**
      * 获取列表总条数
-     * @param dto
+     * @param dto 列表查询条件
      * @throws ActException
      * @version v1
      */
@@ -235,7 +235,7 @@ public class HeadPortraitHatAct {
 
     /**
      * 根据id来查询单条数据
-     * @param id
+     * @param id 查询条件id
      * @return class HeadPortraitHatVO
      * @throws ActException
      * @version v1

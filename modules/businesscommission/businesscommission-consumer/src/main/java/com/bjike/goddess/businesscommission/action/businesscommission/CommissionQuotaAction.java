@@ -1,5 +1,6 @@
 package com.bjike.goddess.businesscommission.action.businesscommission;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.businesscommission.api.CommissionQuotaAPI;
 import com.bjike.goddess.businesscommission.bo.CommissionQuotaBO;
 import com.bjike.goddess.businesscommission.dto.CommissionQuotaDTO;
@@ -7,6 +8,7 @@ import com.bjike.goddess.businesscommission.to.CommissionQuotaDeleteFileTO;
 import com.bjike.goddess.businesscommission.to.CommissionQuotaTO;
 import com.bjike.goddess.businesscommission.to.GuidePermissionTO;
 import com.bjike.goddess.businesscommission.vo.CommissionQuotaVO;
+import com.bjike.goddess.businessproject.api.BaseInfoManageAPI;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -14,6 +16,12 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.contractcommunicat.api.ProjectContractAPI;
+import com.bjike.goddess.market.api.MarketInfoAPI;
+import com.bjike.goddess.marketactivitymanage.api.MarketServeApplyAPI;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.projectissuehandle.api.ProblemHandlingResultAPI;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
@@ -29,6 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 业务提成定额表
@@ -46,6 +55,20 @@ public class CommissionQuotaAction extends BaseFileAction {
     private CommissionQuotaAPI commissionQuotaAPI;
     @Autowired
     private FileAPI fileAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private BaseInfoManageAPI baseInfoManageAPI;
+    @Autowired
+    private MarketInfoAPI marketInfoAPI;
+    @Autowired
+    private ProjectContractAPI projectContractAPI;
+    @Autowired
+    private ProblemHandlingResultAPI problemHandlingResultAPI;
+    @Autowired
+    private MarketServeApplyAPI marketServeApplyAPI;
 
     /**
      * 列表总条数
@@ -297,6 +320,23 @@ public class CommissionQuotaAction extends BaseFileAction {
         }
     }
 
+//    /**
+//     * 获得所有的信息提供人
+//     *
+//     * @des 获得所有的信息提供人
+//     * @version v1
+//     */
+//    @GetMapping("v1/listInformationProvide")
+//    public Result listInformationProvide() throws ActException {
+//        try {
+//            List<String> list = commissionQuotaAPI.listInformationProvide();
+//
+//            return ActResult.initialize(list);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+
     /**
      * 获得所有的信息提供人
      *
@@ -306,9 +346,31 @@ public class CommissionQuotaAction extends BaseFileAction {
     @GetMapping("v1/listInformationProvide")
     public Result listInformationProvide() throws ActException {
         try {
-            List<String> list = commissionQuotaAPI.listInformationProvide();
+            if (moduleAPI.isCheck("market")) {
+                List<String> list = marketInfoAPI.getMarketInfoCollecting();
+                return ActResult.initialize(list);
+            } else {
+                return ActResult.initialize(null);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
-            return ActResult.initialize(list);
+    /**
+     * 获取所有的业务揽接人
+     *
+     * @version v1
+     */
+    @GetMapping("v1/listBusinessContracting")
+    public Result listBusinessContracting() throws ActException {
+        try {
+            if (moduleAPI.isCheck("marketactivitymanage")) {
+                List<String> list = marketServeApplyAPI.getServePrincipal();
+                return ActResult.initialize(list);
+            } else {
+                return ActResult.initialize(null);
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -324,8 +386,12 @@ public class CommissionQuotaAction extends BaseFileAction {
     @GetMapping("v1/listBusinessNegotiation")
     public Result listBusinessNegotiation() throws ActException {
         try {
-            List<String> list = commissionQuotaAPI.listBusinessNegotiation();
-            return ActResult.initialize(list);
+            if (moduleAPI.isCheck("contractcommunicat")) {
+                List<String> list = projectContractAPI.getCommunicateUser();
+                return ActResult.initialize(list);
+            } else {
+                return ActResult.initialize(null);
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -340,8 +406,12 @@ public class CommissionQuotaAction extends BaseFileAction {
     @GetMapping("v1/listMaintenance")
     public Result listMaintenance() throws ActException {
         try {
-            List<String> list = commissionQuotaAPI.listMaintenance();
-            return ActResult.initialize(list);
+            if (moduleAPI.isCheck("projectissuehandle")) {
+                List<String> list = problemHandlingResultAPI.getProblemHandler();
+                return ActResult.initialize(list);
+            } else {
+                return ActResult.initialize(null);
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -364,6 +434,22 @@ public class CommissionQuotaAction extends BaseFileAction {
         }
     }
 
+//    /**
+//     * 获得所有的地区
+//     *
+//     * @des 获得所有的地区
+//     * @version v1
+//     */
+//    @GetMapping("v1/area")
+//    public Result getArea() throws ActException {
+//        try {
+//            List<String> list = commissionQuotaAPI.getArea();
+//            return ActResult.initialize(list);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+
     /**
      * 获得所有的地区
      *
@@ -373,12 +459,34 @@ public class CommissionQuotaAction extends BaseFileAction {
     @GetMapping("v1/area")
     public Result getArea() throws ActException {
         try {
-            List<String> list = commissionQuotaAPI.getArea();
-            return ActResult.initialize(list);
+            List<String> stringList = new ArrayList<>(0);
+            if (moduleAPI.isCheck("organize")) {
+                List<AreaBO> areaBOs = departmentDetailAPI.findArea();
+                for (AreaBO areaBO : areaBOs) {
+                    stringList.add(areaBO.getArea());
+                }
+            }
+            return ActResult.initialize(stringList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
+//    /**
+//     * 获得所有的项目名称
+//     *
+//     * @des 获得所有的项目名称
+//     * @version v1
+//     */
+//    @GetMapping("v1/project/name")
+//    public Result getName() throws ActException {
+//        try {
+//            List<String> list = commissionQuotaAPI.getName();
+//            return ActResult.initialize(list);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
     /**
      * 获得所有的项目名称
@@ -389,8 +497,12 @@ public class CommissionQuotaAction extends BaseFileAction {
     @GetMapping("v1/project/name")
     public Result getName() throws ActException {
         try {
-            List<String> list = commissionQuotaAPI.getName();
-            return ActResult.initialize(list);
+            if (moduleAPI.isCheck("businessproject")) {
+                Set<String> set = baseInfoManageAPI.allInnerProjects();
+                return ActResult.initialize(set);
+            } else {
+                return ActResult.initialize(null);
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

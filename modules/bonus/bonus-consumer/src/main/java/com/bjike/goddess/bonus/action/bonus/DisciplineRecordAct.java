@@ -1,5 +1,6 @@
 package com.bjike.goddess.bonus.action.bonus;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.bonus.api.DisciplineRecordAPI;
 import com.bjike.goddess.bonus.api.PerformanceIndicatorAPI;
 import com.bjike.goddess.bonus.dto.DisciplineRecordDTO;
@@ -15,6 +16,9 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 奖罚记录
@@ -40,6 +45,10 @@ public class DisciplineRecordAct {
     private DisciplineRecordAPI disciplineRecordAPI;
     @Autowired
     private PerformanceIndicatorAPI performanceIndicatorAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
 
     /**
@@ -385,6 +394,21 @@ public class DisciplineRecordAct {
         }
     }
 
+//    /**
+//     * 获取地区
+//     *
+//     * @version v1
+//     */
+//    @GetMapping("v1/area")
+//    public Result getarea() throws ActException {
+//        try {
+//            List<String> list = disciplineRecordAPI.getarea();
+//            return ActResult.initialize(list);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+
     /**
      * 获取地区
      *
@@ -393,8 +417,13 @@ public class DisciplineRecordAct {
     @GetMapping("v1/area")
     public Result getarea() throws ActException {
         try {
-            List<String> list = disciplineRecordAPI.getarea();
-            return ActResult.initialize(list);
+            if (moduleAPI.isCheck("organize")) {
+                List<String> list = departmentDetailAPI.findArea().stream().map(AreaBO::getArea).distinct().collect(Collectors.toList());
+                return ActResult.initialize(list);
+            } else {
+                return ActResult.initialize(null);
+
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -408,8 +437,12 @@ public class DisciplineRecordAct {
     @GetMapping("v1/group")
     public Result getGroup() throws ActException {
         try {
-            List<String> list = disciplineRecordAPI.getGroup();
-            return ActResult.initialize(list);
+            if (moduleAPI.isCheck("organize")) {
+                List<String> list = departmentDetailAPI.findStatus().stream().map(DepartmentDetailBO::getDepartment).distinct().collect(Collectors.toList());
+                return ActResult.initialize(list);
+            } else {
+                return ActResult.initialize(null);
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

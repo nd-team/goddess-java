@@ -136,6 +136,13 @@ public interface SalaryInformationSer extends Ser<SalaryInformation, SalaryInfor
      */
     Long count(SalaryInformationDTO dto) throws SerException;
 
+    /**
+     * 根据id来查询单个薪资资料
+     * @param id
+     * @throws SerException
+     */
+    SalaryInformationBO findOne(String id) throws SerException;
+
 //    /**
 //     * 查询高温补助
 //     *

@@ -20,6 +20,12 @@ public class DriverRecruitVO {
      */
     private String suggest;
 
+
+    /**
+     * 审核结果
+     */
+    private Boolean audit;
+
     /**
      * 地区
      */
@@ -135,6 +141,14 @@ public class DriverRecruitVO {
 
     public void setSuggest(String suggest) {
         this.suggest = suggest;
+    }
+
+    public Boolean getAudit() {
+        return audit;
+    }
+
+    public void setAudit(Boolean audit) {
+        this.audit = audit;
     }
 
     public String getArea() {

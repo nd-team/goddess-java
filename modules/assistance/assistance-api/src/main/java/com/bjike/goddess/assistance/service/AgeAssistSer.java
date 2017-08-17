@@ -1,13 +1,13 @@
 package com.bjike.goddess.assistance.service;
 
 import com.bjike.goddess.assistance.bo.AgeAssistBO;
+import com.bjike.goddess.assistance.dto.AgeAssistDTO;
+import com.bjike.goddess.assistance.entity.AgeAssist;
 import com.bjike.goddess.assistance.to.AgeAssistTO;
 import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.assistance.entity.AgeAssist;
-import com.bjike.goddess.assistance.dto.AgeAssistDTO;
 
 import java.util.List;
 
@@ -37,7 +37,6 @@ public interface AgeAssistSer extends Ser<AgeAssist, AgeAssistDTO> {
 
     /**
      * 工龄补助列表总条数
-     *
      */
     default Long countAgeAssist(AgeAssistDTO ageAssistDTO) throws SerException {
         return null;
@@ -45,34 +44,63 @@ public interface AgeAssistSer extends Ser<AgeAssist, AgeAssistDTO> {
 
     /**
      * 一个工龄补助
+     *
      * @return class AgeAssistBO
      */
-    default AgeAssistBO getOneById(String id ) throws SerException {return null;}
+    default AgeAssistBO getOneById(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 工龄补助列表
+     *
      * @return class AgeAssistBO
      */
-    default List<AgeAssistBO> listAgeAssist(AgeAssistDTO ageAssistDTO) throws SerException {return null;}
-    /**
-     *  添加
-     * @param ageAssistTO 工龄补助信息
-     * @return class AgeAssistBO
-     */
-    default AgeAssistBO addAgeAssist(AgeAssistTO ageAssistTO) throws SerException { return null;}
+    default List<AgeAssistBO> listAgeAssist(AgeAssistDTO ageAssistDTO) throws SerException {
+        return null;
+    }
 
     /**
-     *  编辑
+     * 添加
+     *
      * @param ageAssistTO 工龄补助信息
      * @return class AgeAssistBO
      */
-    default AgeAssistBO editAgeAssist(AgeAssistTO ageAssistTO) throws SerException { return null;}
+    default AgeAssistBO addAgeAssist(AgeAssistTO ageAssistTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 编辑
+     *
+     * @param ageAssistTO 工龄补助信息
+     * @return class AgeAssistBO
+     */
+    default AgeAssistBO editAgeAssist(AgeAssistTO ageAssistTO) throws SerException {
+        return null;
+    }
 
     /**
      * 删除级别
+     *
      * @param id id
      */
-    default void deleteAgeAssist(String id ) throws SerException {return;};
+    default void deleteAgeAssist(String id) throws SerException {
+        return;
+    }
+
+    ;
+
+    /**
+     * 根据员工姓名获取工龄
+     *
+     * @param userName
+     * @return
+     * @throws SerException
+     */
+    default Double getJobAge(String userName) throws SerException {
+        return null;
+    }
 
 
 }

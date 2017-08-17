@@ -18,6 +18,7 @@ import com.bjike.goddess.salarymanage.bo.SalaryInformationBO;
 import com.bjike.goddess.salarymanage.dto.SalaryInformationDTO;
 import com.bjike.goddess.salarymanage.excel.SalaryInformationSetExcel;
 import com.bjike.goddess.salarymanage.to.ExportSalaryInformationTO;
+import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
 import com.bjike.goddess.salarymanage.to.SalaryInformationDeleteFileTO;
 import com.bjike.goddess.salarymanage.to.SalaryInformationTO;
 import com.bjike.goddess.salarymanage.vo.SalaryInformationVO;
@@ -54,6 +55,29 @@ public class SalaryInformationAction extends BaseFileAction{
 
     @Autowired
     private FileAPI fileAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = salaryInformationAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 列表
@@ -141,7 +165,7 @@ public class SalaryInformationAction extends BaseFileAction{
         try {
             List<InputStream> inputStreams = super.getInputStreams(request);
             InputStream is = inputStreams.get(1);
-            Excel excel = new Excel(0,2);
+            Excel excel = new Excel(0,1);
             List<SalaryInformationSetExcel> tos = ExcelUtil.excelToClazz(is, SalaryInformationSetExcel.class, excel);
             List<SalaryInformationTO> toList = BeanTransform.copyProperties(tos,SalaryInformationTO.class);
             salaryInformationAPI.leadExcel(toList);
@@ -176,7 +200,6 @@ public class SalaryInformationAction extends BaseFileAction{
      * @des 下载模板项目签订与立项
      * @version v1
      */
-    @LoginAuth
     @GetMapping("v1/templateExport")
     public Result templateExport(HttpServletResponse response) throws ActException {
         try {
@@ -317,12 +340,31 @@ public class SalaryInformationAction extends BaseFileAction{
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/find/entryBasic")
-    public Result getByEmpNumber(String id) throws ActException{
+    @GetMapping("v1/find/entryBasic/{id}")
+    public Result getByEmpNumber(@PathVariable String id) throws ActException{
         try {
             List<EntryBasicInfoBO> boList = salaryInformationAPI.getByEmpNumber(id);
             List<EntryBasicInfoVO> voList = BeanTransform.copyProperties(boList,EntryBasicInfoVO.class);
             return ActResult.initialize(voList);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 根据id来查询单个薪资资料
+     * @param id
+     * @return class SalaryInformationVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/one/{id}")
+    public Result findOne(@PathVariable String id) throws ActException{
+        try {
+            SalaryInformationBO bo = salaryInformationAPI.findOne(id);
+            SalaryInformationVO vo = BeanTransform.copyProperties(bo,SalaryInformationVO.class);
+            return ActResult.initialize(vo);
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }

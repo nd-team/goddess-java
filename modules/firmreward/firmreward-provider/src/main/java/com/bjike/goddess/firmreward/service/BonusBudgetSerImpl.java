@@ -342,25 +342,23 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
     public void addRewardProgramRatios(RewardProgramTO rewardProgramTO) throws SerException {
         checkAddIdentity();
         List<RewardProgramRatiosTO> rewardProgramRatiosTOS = rewardProgramTO.getRewardProgramRatiosTOS();
-        if (rewardProgramRatiosTOS != null && rewardProgramRatiosTOS.size() > 0) {
+        String bonusBudgetId = rewardProgramTO.getId();//奖金预算额度
+        if (rewardProgramRatiosTOS != null && rewardProgramRatiosTOS.size() > 0 && StringUtils.isNotEmpty(bonusBudgetId)) {
             List<RewardProgramRatio> list = new ArrayList<>(0);
             for (RewardProgramRatiosTO to : rewardProgramRatiosTOS) {
-                String bonusBudgetId = to.getId();//奖金预算额度
-                if (StringUtils.isNotEmpty(bonusBudgetId)) {
-                    RewardProgramRatio model = new RewardProgramRatio();
-                    model.setRewardProgram(to.getRewardPrograms());//奖励项目
-                    model.setFocusingDegree(to.getFocusingDegrees());//当月侧重程度
-                    model.setBudgetRange(to.getBudgetRanges());//当月预算范围
-                    model.setBonusWeight(to.getBonusWeights());//奖金权重
-                    model.setBonusLimit(to.getBonusLimits());//奖金额度
-                    model.setHonorWeight(to.getHonorWeights());//荣誉衍生奖品权重
-                    model.setHonorLimit(to.getHonorLimits());//荣誉衍生奖品额度
-                    model.setEmpiricalValue(to.getEmpiricalValues());//经验值
-                    model.setEmpiricalValueLimit(to.getEmpiricalValueLimits());//经验值额度
-                    model.setEmpiricalValueToMoney(to.getEmpiricalValueLimits() * 10);
-                    model.setBonusBudgetId(bonusBudgetId);
-                    list.add(model);
-                }
+                RewardProgramRatio model = new RewardProgramRatio();
+                model.setRewardProgram(to.getRewardPrograms());//奖励项目
+                model.setFocusingDegree(to.getFocusingDegrees());//当月侧重程度
+                model.setBudgetRange(to.getBudgetRanges());//当月预算范围
+                model.setBonusWeight(to.getBonusWeights());//奖金权重
+                model.setBonusLimit(to.getBonusLimits());//奖金额度
+                model.setHonorWeight(to.getHonorWeights());//荣誉衍生奖品权重
+                model.setHonorLimit(to.getHonorLimits());//荣誉衍生奖品额度
+                model.setEmpiricalValue(to.getEmpiricalValues());//经验值
+                model.setEmpiricalValueLimit(to.getEmpiricalValueLimits());//经验值额度
+                model.setEmpiricalValueToMoney(to.getEmpiricalValueLimits() * 10);
+                model.setBonusBudgetId(bonusBudgetId);
+                list.add(model);
             }
             rewardProgramRatioSer.save(list);//执行批量保存操作
         }

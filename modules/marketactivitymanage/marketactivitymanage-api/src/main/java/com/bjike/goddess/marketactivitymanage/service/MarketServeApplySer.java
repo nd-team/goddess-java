@@ -143,6 +143,13 @@ public interface MarketServeApplySer extends Ser<MarketServeApply, MarketServeAp
     List<String> findAllAreas() throws SerException;
 
     /**
+     * 查看所有的项目代号
+     *
+     * @throws SerException
+     */
+    List<String> findProjectCode() throws SerException;
+
+    /**
      * 导出excel
      *
      * @param areas
@@ -165,4 +172,12 @@ public interface MarketServeApplySer extends Ser<MarketServeApply, MarketServeAp
      * @throws SerException
      */
     byte[] templateExport() throws SerException;
+
+    /**
+     * 获取全部的招待负责人
+     * zhuangkaiqin
+     */
+    default List<String> getServePrincipal() throws SerException {
+        return null;
+    }
 }

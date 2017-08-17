@@ -372,4 +372,11 @@ public class SalaryBasicSerImpl extends ServiceImpl<SalaryBasic, SalaryBasicDTO>
     public Long count(SalaryBasicDTO dto) throws SerException {
         return super.count(dto);
     }
+
+    @Override
+    public SalaryBasicBO findOne(String id) throws SerException {
+        SalaryBasic salaryBasic = super.findById(id);
+        SalaryBasicBO basicBO = BeanTransform.copyProperties(salaryBasic,SalaryBasicBO.class);
+        return basicBO;
+    }
 }

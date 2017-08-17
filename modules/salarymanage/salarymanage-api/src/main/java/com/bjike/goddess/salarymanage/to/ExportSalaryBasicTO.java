@@ -1,10 +1,12 @@
 package com.bjike.goddess.salarymanage.to;
 
+import java.io.Serializable;
+
 /**
  * 基本信息导出条件
  * Created by haikuang on 17-8-2.
  */
-public class ExportSalaryBasicTO {
+public class ExportSalaryBasicTO implements Serializable{
     /**
      * 地区
      */

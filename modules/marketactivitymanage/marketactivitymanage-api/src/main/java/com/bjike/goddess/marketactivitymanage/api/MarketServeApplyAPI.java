@@ -145,6 +145,15 @@ public interface MarketServeApplyAPI {
      * @throws SerException
      */
     List<String> findAllAreas() throws SerException;
+
+
+    /**
+     * 查看所有的项目代号
+     *
+     * @throws SerException
+     */
+    List<String> findProjectCode() throws SerException;
+
     /**
      * 导出excel
      *
@@ -170,4 +179,12 @@ public interface MarketServeApplyAPI {
      * @param marketServeApplyImprotTOS 市场活动申请记录
      */
     void importExcel(List<MarketServeApplyImprotTO> marketServeApplyImprotTOS) throws SerException;
+
+    /**
+     * 获取全部的招待负责人
+     * zhuangkaiqin
+     */
+    default List<String> getServePrincipal() throws SerException {
+        return null;
+    }
 }

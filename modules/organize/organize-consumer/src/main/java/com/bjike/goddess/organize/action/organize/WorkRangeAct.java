@@ -1,5 +1,6 @@
 package com.bjike.goddess.organize.action.organize;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -7,17 +8,26 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.market.api.MarketInfoAPI;
+import com.bjike.goddess.marketdevelopment.api.BusinessCourseAPI;
+import com.bjike.goddess.marketdevelopment.api.BusinessTypeAPI;
+import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
+import com.bjike.goddess.marketdevelopment.bo.BusinessTypeBO;
 import com.bjike.goddess.organize.api.WorkRangeAPI;
 import com.bjike.goddess.organize.dto.WorkRangeDTO;
 import com.bjike.goddess.organize.to.DepartmentWorkRangeTO;
 import com.bjike.goddess.organize.to.WorkRangeTO;
-import com.bjike.goddess.organize.vo.*;
+import com.bjike.goddess.organize.vo.DepartmentDetailVO;
+import com.bjike.goddess.organize.vo.OpinionVO;
+import com.bjike.goddess.organize.vo.WorkRangeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 工作范围信息设置操作
@@ -34,6 +44,14 @@ public class WorkRangeAct {
 
     @Autowired
     private WorkRangeAPI workRangeAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private BusinessTypeAPI businessTypeAPI;
+    @Autowired
+    private BusinessCourseAPI businessCourseAPI;
+    @Autowired
+    private MarketInfoAPI marketInfoAPI;
 
 
     /**
@@ -247,46 +265,123 @@ public class WorkRangeAct {
     }
 
 
+//    /**
+//     * 查询方向
+//     *
+//     * @return class DirectionVO
+//     * @version v1
+//     */
+//    @GetMapping("v1/findDirection")
+//    public Result findDirection(HttpServletRequest request) throws ActException {
+//        try {
+//            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findDirection(), DirectionVO.class, request));
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+
     /**
      * 查询方向
      *
-     * @return class DirectionVO
      * @version v1
      */
     @GetMapping("v1/findDirection")
-    public Result findDirection(HttpServletRequest request) throws ActException {
+    public Result findDirection() throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findDirection(), DirectionVO.class, request));
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("marketdevelopment")) {
+                List<BusinessTypeBO> businessTypeBOs = businessTypeAPI.findThaw();
+                for (BusinessTypeBO businessTypeBO : businessTypeBOs) {
+                    list.add(businessTypeBO.getType());
+                }
+            }
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
+
+//    /**
+//     * 查询科目
+//     *
+//     * @return class ProjectVO
+//     * @version v1
+//     */
+//    @GetMapping("v1/findProject")
+//    public Result findProject(HttpServletRequest request) throws ActException {
+//        try {
+//            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findProject(), ProjectVO.class, request));
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
     /**
      * 查询科目
      *
-     * @return class ProjectVO
      * @version v1
      */
     @GetMapping("v1/findProject")
-    public Result findProject(HttpServletRequest request) throws ActException {
+    public Result findProject() throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findProject(), ProjectVO.class, request));
+            List<String> stringList = new ArrayList<>(0);
+            if (moduleAPI.isCheck("marketdevelopment")) {
+                List<BusinessCourseBO> businessCourseBOList = businessCourseAPI.findThaw();
+                for (BusinessCourseBO businessCourseBO : businessCourseBOList) {
+                    stringList.add(businessCourseBO.getCourse());
+                }
+            }
+            if (moduleAPI.isCheck("market")) {
+                List<String> stringList1 = marketInfoAPI.getProjectName();
+                for (String str : stringList) {
+                    stringList.add(str);
+                }
+            }
+            return ActResult.initialize(stringList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
+//    /**
+//     * 查询分类
+//     *
+//     * @return class ClassifyVO
+//     * @version v1
+//     */
+//    @GetMapping("v1/findClassify")
+//    public Result findClassify(HttpServletRequest request) throws ActException {
+//        try {
+//            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findClassify(), ClassifyVO.class, request));
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+//
+
     /**
      * 查询分类
      *
-     * @return class ClassifyVO
      * @version v1
      */
     @GetMapping("v1/findClassify")
     public Result findClassify(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findClassify(), ClassifyVO.class, request));
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("marketdevelopment")) {
+                List<BusinessTypeBO> businessTypeBOs = businessTypeAPI.findThaw();
+                for (BusinessTypeBO businessTypeBO : businessTypeBOs) {
+                    list.add(businessTypeBO.getType());
+                }
+            }
+            if (moduleAPI.isCheck("market")) {
+                List<String> stringList = marketInfoAPI.getTechnologyCategory();
+                for (String str : stringList) {
+                    list.add(str);
+                }
+            }
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -1,5 +1,7 @@
 package com.bjike.goddess.staffshares.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.assistance.api.AgeAssistAPI;
 import com.bjike.goddess.bonus.api.DisciplineRecordAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -8,8 +10,6 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
-import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
-import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffshares.api.SchemeAPI;
 import com.bjike.goddess.staffshares.bo.PurchaseBO;
 import com.bjike.goddess.staffshares.bo.SchemeIssueBO;
@@ -35,7 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.List;
@@ -58,8 +57,8 @@ public class PurchaseSerImpl extends ServiceImpl<Purchase, PurchaseDTO> implemen
     private UserAPI userAPI;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
-    @Autowired
-    private EntryBasicInfoAPI entryBasicInfoAPI;
+    //    @Autowired
+//    private EntryBasicInfoAPI entryBasicInfoAPI;
     @Autowired
     private DisciplineRecordAPI disciplineRecordAPI;
     @Autowired
@@ -70,6 +69,10 @@ public class PurchaseSerImpl extends ServiceImpl<Purchase, PurchaseDTO> implemen
     private DetailsSer detailsSer;
     @Autowired
     private SellscheduleSer sellscheduleSer;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private AgeAssistAPI ageAssistAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -249,22 +252,32 @@ public class PurchaseSerImpl extends ServiceImpl<Purchase, PurchaseDTO> implemen
             entity.setDepartment(positionDetailBO.getDepartmentName());
             entity.setPosition(positionDetailBO.getPosition());
 
-            List<EntryBasicInfoBO> entryBasicInfoBOs = entryBasicInfoAPI.getByEmpNumber(positionDetailBO.getSerialNumber());
-            if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
-                //获取第一条数据
-                EntryBasicInfoBO entryBasicInfoBO = entryBasicInfoBOs.get(0);
-                String time = entryBasicInfoBO.getEntryTime();
-                int months = getMonthSpace(time, LocalDate.now().toString());
-                entity.setMonths(months);
-            } else {
-                entity.setMonths(0);
-                throw new SerException("查无当前用户的入职信息");
+//            List<EntryBasicInfoBO> entryBasicInfoBOs = entryBasicInfoAPI.getByEmpNumber(positionDetailBO.getSerialNumber());
+//            if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
+//                //获取第一条数据
+//                EntryBasicInfoBO entryBasicInfoBO = entryBasicInfoBOs.get(0);
+//                String time = entryBasicInfoBO.getEntryTime();
+//                int months = getMonthSpace(time, LocalDate.now().toString());
+//                entity.setMonths(months);
+//            } else {
+//                throw new SerException("查无当前用户的入职信息");
+//            }
+
+            int months = 0;
+            if (moduleAPI.isCheck("assistance")) {
+                months = ageAssistAPI.getJobAge(userBO.getUsername()).intValue();
             }
+            entity.setMonths(months);
             entity.setSellName(schemeIssueBO.getPublisher());
             entity.setPurchaseNum(to.getPurchaseNum());
             entity.setMoney(to.getPurchaseNum() * schemeIssueBO.getPrice());
-            entity.setPenalty(disciplineRecordAPI.getPushNum(userBO.getUsername()));
-            entity.setReward(disciplineRecordAPI.getRewardNum(userBO.getUsername()));
+            if (moduleAPI.isCheck("bonus")) {
+                entity.setPenalty(disciplineRecordAPI.getPushNum(userBO.getUsername()));
+                entity.setReward(disciplineRecordAPI.getRewardNum(userBO.getUsername()));
+            } else {
+                entity.setPenalty(0);
+                entity.setReward(0);
+            }
             // TODO: 17-8-7
             //各项晋升的次数
             entity.setPromotion(0);
