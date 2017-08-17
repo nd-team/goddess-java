@@ -1,5 +1,6 @@
 package com.bjike.goddess.secure.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -57,6 +58,8 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
     private CommonalityAPI commonalityAPI;
     @Autowired
     private MessageAPI messageAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -328,12 +331,16 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
 
     private String[] yyEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
-        for (DepartmentDetailBO departmentDetailBO : list) {
-            if ("运营商务部".equals(departmentDetailBO.getDepartment())) {
-                CommonalityBO commonality = commonalityAPI.findByDepartment(departmentDetailBO.getId());
-                if (commonality != null) {
-                    set.add(commonality.getEmail());
+        if (moduleAPI.isCheck("organize")) {
+            List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
+            for (DepartmentDetailBO departmentDetailBO : list) {
+                if ("运营商务部".equals(departmentDetailBO.getDepartment())) {
+                    if (moduleAPI.isCheck("contacts")) {
+                        CommonalityBO commonality = commonalityAPI.findByDepartment(departmentDetailBO.getId());
+                        if (commonality != null && commonality.getEmail() != null) {
+                            set.add(commonality.getEmail());
+                        }
+                    }
                 }
             }
         }
@@ -356,7 +363,9 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
         messageTO.setTitle("有员工确认社保减员成功");
         messageTO.setContent("员工编号为" + removeEmployee.getEmployeeId() + "的" + name + "确认社保减员成功");
         messageTO.setReceivers(yyEmails());
-        messageAPI.send(messageTO);
+        if (yyEmails() != null && yyEmails().length > 0) {
+            messageAPI.send(messageTO);
+        }
         EmployeeSecure entity = findByNumAndName(removeEmployee.getEmployeeId(), removeEmployee.getRemoveName());
         if (entity != null) {
 //            EmployeeSecure employeeSecure = new EmployeeSecure();

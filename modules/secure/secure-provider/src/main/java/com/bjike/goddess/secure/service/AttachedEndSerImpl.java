@@ -1,5 +1,6 @@
 package com.bjike.goddess.secure.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -60,6 +61,8 @@ public class AttachedEndSerImpl extends ServiceImpl<AttachedEnd, AttachedEndDTO>
     private CommonalityAPI commonalityAPI;
     @Autowired
     private MessageAPI messageAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -232,7 +235,7 @@ public class AttachedEndSerImpl extends ServiceImpl<AttachedEnd, AttachedEndDTO>
     @Transactional(rollbackFor = {SerException.class})
     public AttachedEndBO is_Again(AttachedEndTO to) throws SerException {
         checkAddIdentity();
-        String userToken=RpcTransmit.getUserToken();
+        String userToken = RpcTransmit.getUserToken();
         AttachedEnd attachedEnd = super.findById(to.getId());
         if (attachedEnd == null) {
             throw new SerException("该对象不存在");
@@ -294,12 +297,16 @@ public class AttachedEndSerImpl extends ServiceImpl<AttachedEnd, AttachedEndDTO>
 
     private Set<String> zhEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
-        for (DepartmentDetailBO departmentDetailBO : list) {
-            if ("综合资源部".equals(departmentDetailBO.getDepartment())) {
-                CommonalityBO commonality = commonalityAPI.findByDepartment(departmentDetailBO.getId());
-                if (commonality != null) {
-                    set.add(commonality.getEmail());
+        if (moduleAPI.isCheck("organize")) {
+            List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
+            for (DepartmentDetailBO departmentDetailBO : list) {
+                if ("综合资源部".equals(departmentDetailBO.getDepartment())) {
+                    if (moduleAPI.isCheck("contacts")) {
+                        CommonalityBO commonality = commonalityAPI.findByDepartment(departmentDetailBO.getId());
+                        if (commonality != null&&commonality.getEmail()!=null) {
+                            set.add(commonality.getEmail());
+                        }
+                    }
                 }
             }
         }
@@ -337,7 +344,9 @@ public class AttachedEndSerImpl extends ServiceImpl<AttachedEnd, AttachedEndDTO>
             messageTO.setReceivers(emails);
             messageTO.setSenderId("SYSTEM");
             messageTO.setSenderName("SYSTEM");
-            messageAPI.send(messageTO);
+            if (emails != null && emails.length > 0) {
+                messageAPI.send(messageTO);
+            }
         }
     }
 

@@ -1,5 +1,8 @@
 package com.bjike.goddess.secure.service;
 
+import com.bjike.goddess.archive.api.StaffRecordsAPI;
+import com.bjike.goddess.archive.bo.StaffRecordsBO;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -16,13 +19,16 @@ import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.regularization.api.RegularizationAPI;
 import com.bjike.goddess.secure.bo.AddEmployeeBO;
 import com.bjike.goddess.secure.bo.BeforeAddBO;
 import com.bjike.goddess.secure.bo.BuyBO;
 import com.bjike.goddess.secure.bo.EmployeeSecureBO;
 import com.bjike.goddess.secure.dto.AddEmployeeDTO;
 import com.bjike.goddess.secure.dto.BuyDTO;
-import com.bjike.goddess.secure.entity.*;
+import com.bjike.goddess.secure.entity.AddEmployee;
+import com.bjike.goddess.secure.entity.Attached;
+import com.bjike.goddess.secure.entity.BeforeAdd;
 import com.bjike.goddess.secure.enums.GuideAddrStatus;
 import com.bjike.goddess.secure.to.AddEmployeeTO;
 import com.bjike.goddess.secure.to.BuyTO;
@@ -95,6 +101,12 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
     private RemoveEmployeeSer removeEmployeeSer;
     @Autowired
     private SecureCartSer secureCartSer;
+    @Autowired
+    private StaffRecordsAPI staffRecordsAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private RegularizationAPI regularizationAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -315,7 +327,7 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
         obj = new SonPermissionObject();
         obj.setName("addemployee");
         obj.setDescribesion("社保增员信息名单");
-        if (flagSeeSign || flagAddSign||flagYYSign||flagMSign||flagSBSign) {
+        if (flagSeeSign || flagAddSign || flagYYSign || flagMSign || flagSBSign) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -517,23 +529,29 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
 
     private Set<String> emails() throws SerException {
         Set<String> set = new HashSet<>();
-        List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
-        List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
-        for (DepartmentDetailBO departmentDetailBO : list) {
-            if ("运营商务部".equals(departmentDetailBO.getDepartment())) {
-                CommonalityBO commonality = commonalityAPI.findByDepartment(departmentDetailBO.getId());
-                if (commonality != null) {
-                    set.add(commonality.getEmail());
+        if (moduleAPI.isCheck("organize")) {
+            List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
+            List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
+            for (DepartmentDetailBO departmentDetailBO : list) {
+                if ("运营商务部".equals(departmentDetailBO.getDepartment())) {
+                    if (moduleAPI.isCheck("contacts")) {
+                        CommonalityBO commonality = commonalityAPI.findByDepartment(departmentDetailBO.getId());
+                        if (commonality != null && commonality.getEmail() != null) {
+                            set.add(commonality.getEmail());
+                        }
+                    }
                 }
             }
-        }
-        for (PositionDetailBO positionDetailBO : list1) {
-            if ("总经理".equals(positionDetailBO.getPosition())) {
-                List<UserBO> users = positionDetailUserAPI.findByPosition(positionDetailBO.getId());
-                for (UserBO userBO : users) {
-                    String mail = internalContactsAPI.getEmail(userBO.getUsername());
-                    if (mail != null) {
-                        set.add(mail);
+            for (PositionDetailBO positionDetailBO : list1) {
+                if ("总经理".equals(positionDetailBO.getPosition())) {
+                    List<UserBO> users = positionDetailUserAPI.findByPosition(positionDetailBO.getId());
+                    for (UserBO userBO : users) {
+                        if (moduleAPI.isCheck("contacts")) {
+                            String mail = internalContactsAPI.getEmail(userBO.getUsername());
+                            if (mail != null) {
+                                set.add(mail);
+                            }
+                        }
                     }
                 }
             }
@@ -543,12 +561,16 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
 
     private Set<String> yyEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
-        for (DepartmentDetailBO departmentDetailBO : list) {
-            if ("运营商务部".equals(departmentDetailBO.getDepartment())) {
-                CommonalityBO commonality = commonalityAPI.findByDepartment(departmentDetailBO.getId());
-                if (commonality != null) {
-                    set.add(commonality.getEmail());
+        if (moduleAPI.isCheck("organize")) {
+            List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
+            for (DepartmentDetailBO departmentDetailBO : list) {
+                if ("运营商务部".equals(departmentDetailBO.getDepartment())) {
+                    if (moduleAPI.isCheck("contacts")) {
+                        CommonalityBO commonality = commonalityAPI.findByDepartment(departmentDetailBO.getId());
+                        if (commonality != null) {
+                            set.add(commonality.getEmail());
+                        }
+                    }
                 }
             }
         }
@@ -557,14 +579,18 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
 
     private Set<String> mEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
-        for (PositionDetailBO positionDetailBO : list1) {
-            if ("总经理".equals(positionDetailBO.getPosition())) {
-                List<UserBO> users = positionDetailUserAPI.findByPosition(positionDetailBO.getId());
-                for (UserBO userBO : users) {
-                    String mail = internalContactsAPI.getEmail(userBO.getUsername());
-                    if (mail != null) {
-                        set.add(mail);
+        if (moduleAPI.isCheck("organize")) {
+            List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
+            for (PositionDetailBO positionDetailBO : list1) {
+                if ("总经理".equals(positionDetailBO.getPosition())) {
+                    List<UserBO> users = positionDetailUserAPI.findByPosition(positionDetailBO.getId());
+                    for (UserBO userBO : users) {
+                        if (moduleAPI.isCheck("contacts")) {
+                            String mail = internalContactsAPI.getEmail(userBO.getUsername());
+                            if (mail != null) {
+                                set.add(mail);
+                            }
+                        }
                     }
                 }
             }
@@ -584,6 +610,21 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
         LocalDateTime a = addEmployee.getCreateTime();
         addEmployee = BeanTransform.copyProperties(to, AddEmployee.class, true);
         addEmployee.setCreateTime(a);
+        if (moduleAPI.isCheck("archive")) {
+            List<StaffRecordsBO> list = staffRecordsAPI.listEmployee();
+            for (StaffRecordsBO staffRecordsBO : list) {
+                if (addEmployee.getName().equals(staffRecordsBO.getUsername())) {
+                    addEmployee.setStartTime(DateUtil.parseDate(staffRecordsBO.getEntryTime()));
+                }
+            }
+        }
+        if (moduleAPI.isCheck("regularization")) {
+            String time = regularizationAPI.time(addEmployee.getEmployeeNum());
+            if (time != null) {
+                LocalDate officialTime = DateUtil.parseDate(time);
+                addEmployee.setOfficialTime(officialTime);
+            }
+        }
         LocalDate time = DateUtil.parseDate(to.getSecureTime());
         addEmployee.setSecureTime(time);
         addEmployee.setMonth(time.getMonthValue());
@@ -601,7 +642,9 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
             messageTO.setTitle("社保增员信息");
             messageTO.setContent(html(beforeAddBO, addEmployeeBO));
             messageTO.setReceivers(emalis);
-            messageAPI.send(messageTO);
+            if (emalis != null && emalis.length > 0) {
+                messageAPI.send(messageTO);
+            }
         }
     }
 
@@ -623,6 +666,21 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
         }
         addEmployee.setMonth(addEmployee.getSecureTime().getMonthValue());
         addEmployee.setYear(addEmployee.getSecureTime().getYear());
+        if (moduleAPI.isCheck("archive")) {
+            List<StaffRecordsBO> list = staffRecordsAPI.listEmployee();
+            for (StaffRecordsBO staffRecordsBO : list) {
+                if (addEmployee.getName().equals(staffRecordsBO.getUsername())) {
+                    addEmployee.setStartTime(DateUtil.parseDate(staffRecordsBO.getEntryTime()));
+                }
+            }
+        }
+        if (moduleAPI.isCheck("regularization")) {
+            String time = regularizationAPI.time(addEmployee.getEmployeeNum());
+            if (time != null) {
+                LocalDate officialTime = DateUtil.parseDate(time);
+                addEmployee.setOfficialTime(officialTime);
+            }
+        }
         super.save(addEmployee);
         BeforeAdd beforeAdd = findByName(addEmployee.getName());
         AddEmployeeBO addEmployeeBO = BeanTransform.copyProperties(addEmployee, AddEmployeeBO.class);
@@ -635,7 +693,9 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
             messageTO.setTitle("社保增员信息");
             messageTO.setContent(html(beforeAddBO, addEmployeeBO));
             messageTO.setReceivers(emalis);
-            messageAPI.send(messageTO);
+            if (emalis != null && emalis.length > 0) {
+                messageAPI.send(messageTO);
+            }
         }
         return addEmployeeBO;
     }
@@ -766,7 +826,9 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
         messageTO.setTitle("运营商务部审核社保增员");
         messageTO.setContent("运营商务部对员工编号为" + entity.getEmployeeNum() + "的" + entity.getName() + "的社保增员审核意见为：" + entity.getBusinessAdvice());
         messageTO.setReceivers(emails);
-        messageAPI.send(messageTO);
+        if (emails != null && emails.length > 0) {
+            messageAPI.send(messageTO);
+        }
     }
 
     @Override
@@ -787,11 +849,15 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
             messageTO.setContent(name + "可新增社保名单");
             String[] users = dto.getUsers();
             if (users != null) {
-                List<String> mails = internalContactsAPI.getEmails(users);
-                String[] emails = new String[mails.size()];
-                emails = mails.toArray(emails);
-                messageTO.setReceivers(emails);
-                messageAPI.send(messageTO);
+                if (moduleAPI.isCheck("contacts")) {
+                    List<String> mails = internalContactsAPI.getEmails(users);
+                    if (mails != null && !mails.isEmpty()) {
+                        String[] emails = new String[mails.size()];
+                        emails = mails.toArray(emails);
+                        messageTO.setReceivers(emails);
+                    }
+                    messageAPI.send(messageTO);
+                }
             }
         }
         EmployeeSecureTO employeeSecureTO = new EmployeeSecureTO();
@@ -869,7 +935,9 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
         messageTO.setTitle("本月社保所需表-购买社保人员名单");
         messageTO.setContent(buyHtml(boList));
         messageTO.setReceivers(emails);
-        messageAPI.send(messageTO);
+        if (emails != null && emails.length > 0) {
+            messageAPI.send(messageTO);
+        }
     }
 
     private String buyHtml(List<BuyBO> list) throws SerException {

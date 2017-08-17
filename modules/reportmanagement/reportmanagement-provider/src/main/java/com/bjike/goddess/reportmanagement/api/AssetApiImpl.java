@@ -83,4 +83,9 @@ public class AssetApiImpl implements AssetAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return assetSer.guidePermission(guidePermissionTO);
     }
+
+    @Override
+    public List<AssetBO> list1(AssetDTO dto) throws SerException {
+        return assetSer.list1(dto);
+    }
 }
