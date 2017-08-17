@@ -6,12 +6,17 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.staffwelfare.api.StaffBirthDayAPI;
+import com.bjike.goddess.staffwelfare.bo.StaffBirthDayBO;
+import com.bjike.goddess.staffwelfare.dto.StaffBirthDayDTO;
 import com.bjike.goddess.staffwelfare.dto.StaffBirthDayWelfareDTO;
 import com.bjike.goddess.staffwelfare.to.GuidePermissionTO;
+import com.bjike.goddess.staffwelfare.vo.StaffBirthDayVO;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.dto.UserDetailDTO;
 import com.bjike.goddess.user.vo.UserDetailVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,21 +42,23 @@ public class StaffBirthdayAct {
     @Autowired
     private UserDetailAPI userDetailAPI;
 
+    @Autowired
+    private StaffBirthDayAPI staffBirthDayAPI;
+
 
 
     /**
      * 查询员工生日信息
      *
      * @param dto 分页信息
-     * @param month 生日月份
      * @return class UserDetailVO
      * @version v1
      */
     @GetMapping("v1/findStaffBirthInfo")
-    public Result findStaffBirthInfo(UserDetailDTO dto, Integer month) throws ActException {
+    public Result findStaffBirthInfo(StaffBirthDayDTO dto) throws ActException {
         try {
-            //TODO 未明确查询来源，因为用户模块并没有离职信息。
-            List<UserDetailVO> voList = BeanTransform.copyProperties(userDetailAPI.findByMonth(dto, month), UserDetailVO.class);
+            List<StaffBirthDayBO> boList = staffBirthDayAPI.findBirthDay(dto);
+            List<StaffBirthDayVO> voList = BeanTransform.copyProperties(boList,StaffBirthDayVO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

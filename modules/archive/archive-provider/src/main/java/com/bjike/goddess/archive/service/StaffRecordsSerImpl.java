@@ -408,4 +408,14 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
 //            throw new SerException(String.format("第%d行的员工编号已存在", row));
 //
 //    }
+
+
+    @Override
+    public List<StaffRecordsBO> findByMonth(Integer month) throws SerException {
+        String[] staff = new String[]{"username","serialNumber","project","position","educationn","major","school","graduate","entryTime","seniority","telephone","birth","address","identityCard","bankCard","bank","email","status"};
+        String sql = "select * from archive_staff_records where month(birth) = '"+month+"'";
+        List<StaffRecords> list = super.findBySql(sql,StaffRecords.class,staff);
+        List<StaffRecordsBO> boList = BeanTransform.copyProperties(list,StaffRecordsBO.class,true);
+        return boList;
+    }
 }
