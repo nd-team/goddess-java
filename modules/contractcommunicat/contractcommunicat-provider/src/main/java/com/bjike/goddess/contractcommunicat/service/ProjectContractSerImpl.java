@@ -1,5 +1,9 @@
 package com.bjike.goddess.contractcommunicat.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.businessproject.api.BaseInfoManageAPI;
+import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
+import com.bjike.goddess.businessproject.dto.BaseInfoManageDTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -19,6 +23,9 @@ import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectContractTO;
+import com.bjike.goddess.market.api.MarketInfoAPI;
+import com.bjike.goddess.market.bo.MarketInfoBO;
+import com.bjike.goddess.market.dto.MarketInfoDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.BeanUtils;
@@ -55,6 +62,15 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
 
     @Autowired
     private ContractCollectEmailSer contractCollectEmailSer;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
+
+    @Autowired
+    private BaseInfoManageAPI baseInfoManageAPI;
+
+    @Autowired
+    private MarketInfoAPI marketInfoAPI;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
@@ -445,5 +461,25 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
 //        if (!permission) {
 //            throw new SerException("该模块只有商务部可操作，您的帐号尚无权限");
 //        }
+    }
+
+    @Override
+    public List<BaseInfoManageBO> listBaseInfoManage() throws SerException {
+        List<BaseInfoManageBO> list = new ArrayList<>(0);
+        if(moduleAPI.isCheck("businessproject")) {
+            BaseInfoManageDTO dto = new BaseInfoManageDTO();
+            list = baseInfoManageAPI.listBaseInfoManage(dto);
+        }
+        return list;
+    }
+
+    @Override
+    public List<MarketInfoBO> findProject() throws SerException {
+        List<MarketInfoBO> list = new ArrayList<>(0);
+        if(moduleAPI.isCheck("market")){
+            MarketInfoDTO dto = new MarketInfoDTO();
+            list = marketInfoAPI.findListMarketInfo(dto);
+        }
+        return list;
     }
 }

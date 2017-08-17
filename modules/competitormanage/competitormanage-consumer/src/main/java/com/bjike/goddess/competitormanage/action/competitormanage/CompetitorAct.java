@@ -21,6 +21,8 @@ import com.bjike.goddess.competitormanage.to.CompetitorTO;
 import com.bjike.goddess.competitormanage.to.GuidePermissionTO;
 import com.bjike.goddess.competitormanage.vo.CompetitorVO;
 import com.bjike.goddess.competitormanage.vo.OrganizationVO;
+import com.bjike.goddess.market.bo.MarketInfoBO;
+import com.bjike.goddess.market.vo.MarketInfoVO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.organize.bo.AreaBO;
@@ -430,6 +432,24 @@ public class CompetitorAct extends BaseFileAction {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(competitorAPI.organizeList(id), OrganizationVO.class));
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 查询所有项目名称竞争对手名称
+     * @return class MarketInfoVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/project")
+    public Result findProject() throws ActException{
+        try {
+            List<MarketInfoBO> boList = competitorAPI.findProject();
+            List<MarketInfoVO> voList = BeanTransform.copyProperties(boList,MarketInfoVO.class);
+            return ActResult.initialize(voList);
+        }catch (SerException e){
             throw new ActException(e.getMessage());
         }
     }

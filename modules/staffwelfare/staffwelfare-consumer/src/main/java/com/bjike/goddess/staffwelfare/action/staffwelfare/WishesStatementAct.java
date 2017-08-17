@@ -33,7 +33,7 @@ import java.util.List;
 @RestController
 @RequestMapping("wishesstatement")
 public class WishesStatementAct {
-    
+
     @Autowired
     private WishesStatementAPI wishesStatementAPI;
 
@@ -129,7 +129,7 @@ public class WishesStatementAct {
 
     /**
      * 列表总条数
-     * @param dto
+     * @param dto 条件
      * @throws ActException
      * @version v1
      */
@@ -150,6 +150,7 @@ public class WishesStatementAct {
      * @throws ActException
      * @version v1
      */
+    @GetMapping("v1/find/one")
     public Result findOne(String id) throws ActException{
         try {
             WishesStatementBO bo = wishesStatementAPI.findOne(id);

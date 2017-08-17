@@ -44,7 +44,7 @@ public class FinanceAuditAct {
     @GetMapping("v1/list")
     public Result pageList(DispatchCarInfoDTO dto, HttpServletRequest request) throws ActException {
         try {
-            dto.getConditions().add(Restrict.eq("findType", FindType.FINANCEAUDIT));
+            dto.getConditions().add(Restrict.eq("findType",FindType.FINANCEAUDIT));
             List<DispatchCarInfoVO> voList = BeanTransform.copyProperties(dispatchCarInfoAPI.pageList(dto), DispatchCarInfoVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {

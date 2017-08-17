@@ -264,7 +264,7 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
     private void isExit(SalaryInformationTO to) throws SerException{
         String id = to.getEmployeeId();
         SalaryInformationDTO dto = new SalaryInformationDTO();
-        dto.getConditions().add(Restrict.eq("id",id));
+        dto.getConditions().add(Restrict.eq("employeeId",id));
         dto.getConditions().add(Restrict.eq("payStartTime",to.getPayStartTime()));
         dto.getConditions().add(Restrict.eq("payEndTime",to.getPayEndTime()));
         List<SalaryInformation> list = super.findByCis(dto);
@@ -273,33 +273,24 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
         }
     }
 
-    //判断修改之后的数据是否已经存在，如果存在两条以上相同的数据则修改失败
-    private void ifExit(SalaryInformationTO to) throws SerException{
-        String id = to.getEmployeeId();
-        SalaryInformationDTO dto = new SalaryInformationDTO();
-        dto.getConditions().add(Restrict.eq("id",id));
-        dto.getConditions().add(Restrict.eq("payStartTime",to.getPayStartTime()));
-        dto.getConditions().add(Restrict.eq("payEndTime",to.getPayEndTime()));
-        List<SalaryInformation> list = super.findByCis(dto);
-        if(list.size() >1){
-            throw new SerException("该数据已经存在,修改失败");
-        }
-    }
 
     @Override
     public SalaryInformationBO editSalaryInformation(SalaryInformationTO to) throws SerException {
         SalaryInformation temp = super.findById(to.getId());
-        try {
-            DateUtil.parseDate(to.getPayStartTime());
-            DateUtil.parseDate(to.getPayEndTime());
-        } catch (Exception e) {
-            throw new SerException("输入的日期格式不对");
+        if(temp != null) {
+            try {
+                DateUtil.parseDate(to.getPayStartTime());
+                DateUtil.parseDate(to.getPayEndTime());
+            } catch (Exception e) {
+                throw new SerException("输入的日期格式不对");
+            }
+            SalaryInformation salaryInformation = BeanTransform.copyProperties(to, SalaryInformation.class, true);
+            BeanUtils.copyProperties(salaryInformation,temp,"id","createTime");
+            temp.setModifyTime(LocalDateTime.now());
+            super.update(temp);
+        }else{
+            throw new SerException("你要修改的数据不存在！");
         }
-        SalaryInformation salaryInformation = BeanTransform.copyProperties(to,SalaryInformation.class);
-        BeanUtils.copyProperties(salaryInformation,temp,"id","createTime");
-        temp.setModifyTime(LocalDateTime.now());
-        super.update(temp);
-        ifExit(to);
         SalaryInformationBO salaryInformationBO = BeanTransform.copyProperties(temp,SalaryInformationBO.class);
         return salaryInformationBO;
     }
@@ -326,7 +317,7 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
 
     @Override
     public byte[] exportExcel(ExportSalaryInformationTO to) throws SerException {
-        checkAddIdentity();
+//        checkAddIdentity();
         SalaryInformationDTO dto = new SalaryInformationDTO();
         //根据计薪开始时间和计薪结束时间来导出excel
         if(StringUtils.isNotBlank(to.getPayStarTime()) && StringUtils.isNotBlank(to.getPayEndTime())){
@@ -365,8 +356,8 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
 
         SalaryInformationSetExcel excel = new SalaryInformationSetExcel();
 
-        excel.setPayStarTime("计薪周期开始时间");
-        excel.setPayEndTime("计薪周期结束时间");
+        excel.setPayStartTime("2017-08-09");
+        excel.setPayEndTime("2017-08-09");
         excel.setArea("地区");
         excel.setEmployeeId("员工编号");
         excel.setEmployeeName("姓名");
@@ -376,11 +367,11 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
         excel.setStationLevel("岗位层级");
         excel.setManageLevel("管理层级");
         excel.setSkill("技能项");
-        excel.setPayEndTime("技能专业");
+        excel.setProSkills("技能专业");
         excel.setSkillLevel("技能级别");
-        excel.setHiredate("入职时间");
-        excel.setPositiveTime("转正时间");
-        excel.setWorkingTime("在职时间");
+        excel.setHiredate("2017-01-01");
+        excel.setPositiveTime("2017-01-02");
+        excel.setWorkingTime("2");
         excel.setBasicSalary(10d);
         excel.setPostSalary(10d);
         excel.setManagePay(10d);
@@ -391,6 +382,7 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
         excel.setProjectBenefits(10d);
         excel.setWage(10d);
         excel.setSalary(10d);
+        excel.setSkillPay(10d);
         excel.setComputerSubsidies(10d);
         excel.setAccommodationSubsidies(10d);
         excel.setSenioritySubsidies(10d);
@@ -410,7 +402,7 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
         excel.setLegalRestDay(10d);
         excel.setLegalOvertimeDay(10d);
         excel.setNormalRestDay(10d);
-        excel.setNormalOvertimeDay(10d);
+        excel.setRestOvertimeDay(10d);
         excel.setSurplusOvertimeDay(10d);
         excel.setOffsetOvertime(10d);
         excel.setEffectiveOvertime(10d);
@@ -467,4 +459,12 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
 //    public List<AgeAssistBO> findAgeAssist(SalaryInformationDTO dto) throws SerException {
 //        return null;
 //    }
+
+
+    @Override
+    public SalaryInformationBO findOne(String id) throws SerException {
+        SalaryInformation salaryInformation = super.findById(id);
+        SalaryInformationBO salaryInformationBO = BeanTransform.copyProperties(salaryInformation,SalaryInformationBO.class);
+        return salaryInformationBO;
+    }
 }

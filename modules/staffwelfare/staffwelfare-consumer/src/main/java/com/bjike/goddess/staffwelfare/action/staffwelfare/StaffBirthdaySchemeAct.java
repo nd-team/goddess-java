@@ -39,8 +39,6 @@ public class StaffBirthdaySchemeAct {
 
     @Autowired
     private StaffBirthdaySchemeAPI staffBirthdaySchemeAPI;
-    @Autowired
-    private DepartmentAPI departmentAPI;
 
     /**
      * 功能导航权限
@@ -64,33 +62,12 @@ public class StaffBirthdaySchemeAct {
             throw new ActException(e.getMessage());
         }
     }
-//
-//    /**
-//     * 查询所有地区
-//     *
-//     * @version v1
-//     */
-//    @GetMapping("v1/findAreas")
-//    public Result findAreas() {
-//        // TODO: 17-4-7 查询所有地区,可以于组织结构查询地区列表
-//        return ActResult.initialize("success!");
-//    }
-//
-//    /**
-//     * 查询所有部门
-//     *
-//     * @version v1
-//     */
-//    @GetMapping("v1/findDepartments")
-//    public Result findDepartments() {
-//        // TODO: 17-4-7 查询所有部门，可以于组织结构查询部门列表 DepartmentDetailAPI -> findAllOpinion
-//
-//        return ActResult.initialize("success!");
-//    }
+
 
 
     /**
      * 查询祝福语
+     *
      * @return class WishesStatementVO
      * @throws ActException
      * @version v1
@@ -107,6 +84,7 @@ public class StaffBirthdaySchemeAct {
 
     /**
      * 查询头像帽
+     *
      * @return class WishesStatementVO
      * @version v1
      */
@@ -206,7 +184,7 @@ public class StaffBirthdaySchemeAct {
     /**
      * 领取福利
      *
-     * @param id     方案id
+     * @param id 方案id
      * @param remark 备注
      * @version v1
      */
@@ -222,6 +200,7 @@ public class StaffBirthdaySchemeAct {
 
     /**
      * 查询所有地区和所属部门
+     *
      * @return class EntryBasicInfoVO
      * @throws ActException
      * @version v1
@@ -240,7 +219,8 @@ public class StaffBirthdaySchemeAct {
 
     /**
      * 查询列表总条数
-     * @param dto
+     *
+     * @param dto 条件
      * @throws ActException
      * @version v1
      */
@@ -255,12 +235,13 @@ public class StaffBirthdaySchemeAct {
     }
 
     /**
-     * 根据id来查询单个数据
-     * @param id
+     * 根据id查询单条数据
+     * @param id 条件
      * @return class StaffBirthdaySchemeVO
      * @throws ActException
      * @version v1
      */
+    @GetMapping("v1/find/one")
     public Result findOne(String id) throws ActException{
         try {
             StaffBirthdaySchemeBO bo = staffBirthdaySchemeAPI.findOne(id);

@@ -19,6 +19,11 @@ public class DriverRecruitBO extends BaseBO {
     private String suggest;
 
     /**
+     * 审核结果
+     */
+    private Boolean audit;
+
+    /**
      * 地区
      */
     private String area;
@@ -125,6 +130,14 @@ public class DriverRecruitBO extends BaseBO {
 
     public void setSuggest(String suggest) {
         this.suggest = suggest;
+    }
+
+    public Boolean getAudit() {
+        return audit;
+    }
+
+    public void setAudit(Boolean audit) {
+        this.audit = audit;
     }
 
     public String getArea() {

@@ -41,5 +41,7 @@
     <dubbo:reference interface="com.bjike.goddess.storage.api.StorageUserAPI" id="storageUserApiImpl"/>
 
     <dubbo:reference id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI"/>
+    <dubbo:reference validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI"/>
+    <dubbo:reference validation="true" id="marketInfoApiImpl" interface="com.bjike.goddess.market.api.MarketInfoAPI"/>
 
 </beans>

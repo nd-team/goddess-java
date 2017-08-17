@@ -231,7 +231,7 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
             messageTO.setRangeType( RangeType.SPECIFIED);//根据自己业务写
             messageTO.setSenderId("SYSTEM");
             messageTO.setSenderName("SYSTEM");
-//            messageTO.setReceivers(sendUsers);
+            messageTO.setReceivers(sendUsers);
 //            本地测试方法，记得要开message模块的provider和consumer方法
 //            String [] sendU = new String[1];
 //            sendU[0] = "jiangzaixuan_aj@163.com";
@@ -299,7 +299,11 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
     @Override
     public CarSendEmailBO findOne(String id) throws SerException {
         CarSendEmail carSendEmail = super.findById(id);
+        DepartmentDetailBO departmentDetail = departmentDetailAPI.findBOById(carSendEmail.getProjectManageId());
+        PositionDetailBO positionDetailBO = positionDetailAPI.findBOById(carSendEmail.getPositionNameId());
         CarSendEmailBO bo = BeanTransform.copyProperties(carSendEmail,CarSendEmailBO.class);
+        bo.setPositionName(positionDetailBO.getPosition());
+        bo.setProjectName(departmentDetail.getDepartment());
         return bo;
     }
 }
