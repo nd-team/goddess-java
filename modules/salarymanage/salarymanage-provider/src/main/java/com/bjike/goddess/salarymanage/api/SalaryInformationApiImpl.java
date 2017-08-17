@@ -1,5 +1,7 @@
 package com.bjike.goddess.salarymanage.api;
 
+import com.bjike.goddess.archive.bo.StaffRecords1BO;
+import com.bjike.goddess.archive.bo.StaffRecordsBO;
 import com.bjike.goddess.assistance.bo.AgeAssistBO;
 import com.bjike.goddess.assistance.bo.ComputerAssistBO;
 import com.bjike.goddess.assistance.bo.HotAssistBO;
@@ -10,6 +12,7 @@ import com.bjike.goddess.assistance.dto.HotAssistDTO;
 import com.bjike.goddess.assistance.dto.HouseAssistDTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.managementpromotion.entity.LevelShow;
+import com.bjike.goddess.managepromotion.bo.OverviewSkillLevelBO;
 import com.bjike.goddess.salarymanage.bo.SalaryBasicBO;
 import com.bjike.goddess.salarymanage.bo.SalaryInformationBO;
 import com.bjike.goddess.salarymanage.dto.SalaryBasicDTO;
@@ -130,5 +133,20 @@ public class SalaryInformationApiImpl implements SalaryInformationAPI  {
     @Override
     public SalaryInformationBO findOne(String id) throws SerException {
         return salaryInformationSer.findOne(id);
+    }
+
+    @Override
+    public StaffRecordsBO findStaff(String employeeNumber) throws SerException {
+        return salaryInformationSer.findStaff(employeeNumber);
+    }
+
+    @Override
+    public String findPositiveDate(String employeeId) throws SerException {
+        return salaryInformationSer.findPositiveDate(employeeId);
+    }
+
+    @Override
+    public OverviewSkillLevelBO findSkill(String employeeName) throws SerException {
+        return salaryInformationSer.findSkill(employeeName);
     }
 }

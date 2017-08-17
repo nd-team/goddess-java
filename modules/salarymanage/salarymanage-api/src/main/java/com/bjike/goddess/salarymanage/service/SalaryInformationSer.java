@@ -1,5 +1,7 @@
 package com.bjike.goddess.salarymanage.service;
 
+import com.bjike.goddess.archive.bo.StaffRecords1BO;
+import com.bjike.goddess.archive.bo.StaffRecordsBO;
 import com.bjike.goddess.assistance.bo.AgeAssistBO;
 import com.bjike.goddess.assistance.bo.ComputerAssistBO;
 import com.bjike.goddess.assistance.bo.HotAssistBO;
@@ -11,6 +13,7 @@ import com.bjike.goddess.assistance.dto.HouseAssistDTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.managementpromotion.entity.LevelShow;
+import com.bjike.goddess.managepromotion.bo.OverviewSkillLevelBO;
 import com.bjike.goddess.salarymanage.bo.SalaryBasicBO;
 import com.bjike.goddess.salarymanage.bo.SalaryInformationBO;
 import com.bjike.goddess.salarymanage.dto.SalaryBasicDTO;
@@ -166,4 +169,21 @@ public interface SalaryInformationSer extends Ser<SalaryInformation, SalaryInfor
 //     * 查看工龄补助
 //     */
 //    List<AgeAssistBO> findAgeAssist(SalaryInformationDTO dto) throws SerException;
+
+    /**
+     * 查询入职时间和离职时间和身份证号码和银行卡号
+     * @return
+     * @throws SerException
+     */
+    StaffRecordsBO findStaff(String employeeNumber) throws SerException;
+
+    /**
+     * 根据员工编号id查找转正时间
+     */
+    String findPositiveDate(String employeeId) throws SerException;
+
+    /**
+     * 根据员工姓名获取技能等级获取时间
+     */
+    OverviewSkillLevelBO findSkill(String employeeName) throws SerException;
  }

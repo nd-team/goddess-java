@@ -1,5 +1,8 @@
 package com.bjike.goddess.salarymanage.action.salarymanage;
 
+import com.bjike.goddess.archive.bo.StaffRecordsBO;
+import com.bjike.goddess.archive.vo.StaffRecordsVO;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -13,6 +16,8 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.managementpromotion.bo.LevelShowBO;
 import com.bjike.goddess.managementpromotion.entity.LevelShow;
+import com.bjike.goddess.managepromotion.bo.OverviewSkillLevelBO;
+import com.bjike.goddess.managepromotion.vo.OverviewSkillLevelVO;
 import com.bjike.goddess.salarymanage.api.SalaryInformationAPI;
 import com.bjike.goddess.salarymanage.bo.SalaryInformationBO;
 import com.bjike.goddess.salarymanage.dto.SalaryInformationDTO;
@@ -37,6 +42,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,6 +61,9 @@ public class SalaryInformationAction extends BaseFileAction{
 
     @Autowired
     private FileAPI fileAPI;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 功能导航权限
@@ -81,7 +90,7 @@ public class SalaryInformationAction extends BaseFileAction{
 
     /**
      * 列表
-     * @param dto
+     * @param dto 查询条件
      * @return class SalaryInformationVO
      * @throws ActException
      * @version v1
@@ -100,7 +109,7 @@ public class SalaryInformationAction extends BaseFileAction{
 
     /**
      * 添加薪资资料
-     * @param to
+     * @param to 添加条件
      * @return class SalaryInformationVO
      * @throws ActException
      * @version v1
@@ -119,7 +128,7 @@ public class SalaryInformationAction extends BaseFileAction{
 
     /**
      * 修改
-     * @param to
+     * @param to 修改条件
      * @return class SalaryInformationVO
      * @throws ActException
      * @version v1
@@ -138,7 +147,7 @@ public class SalaryInformationAction extends BaseFileAction{
 
     /**
      * 删除
-     * @param id
+     * @param id 薪资资料id
      * @throws ActException
      * @version v1
      */
@@ -155,7 +164,6 @@ public class SalaryInformationAction extends BaseFileAction{
 
     /**
      * 导入
-     * @param request
      * @throws ActException
      * @version v1
      */
@@ -216,7 +224,7 @@ public class SalaryInformationAction extends BaseFileAction{
     /**
      * 上传附件
      *
-     * @param id      id
+     * @param id id
      * @param request 注入HttpServletRequest对象
      * @version v1
      */
@@ -301,7 +309,7 @@ public class SalaryInformationAction extends BaseFileAction{
 
     /**
      * 列表总条数
-     * @param dto
+     * @param dto 分页查询条件
      * @throws ActException
      * @version v1
      */
@@ -325,7 +333,10 @@ public class SalaryInformationAction extends BaseFileAction{
     @GetMapping("v1/find/level/{id}")
     public Result findByEmployeeId(@PathVariable String id) throws ActException{
         try {
-            LevelShow show = salaryInformationAPI.findByEmployeeId(id);
+            LevelShow show = new LevelShow();
+            if(moduleAPI.isCheck("managementpromotion")) {
+                show = salaryInformationAPI.findByEmployeeId(id);
+            }
             return ActResult.initialize(show);
         }catch (SerException e){
             throw new ActException(e.getMessage());
@@ -343,8 +354,11 @@ public class SalaryInformationAction extends BaseFileAction{
     @GetMapping("v1/find/entryBasic/{id}")
     public Result getByEmpNumber(@PathVariable String id) throws ActException{
         try {
-            List<EntryBasicInfoBO> boList = salaryInformationAPI.getByEmpNumber(id);
-            List<EntryBasicInfoVO> voList = BeanTransform.copyProperties(boList,EntryBasicInfoVO.class);
+            List<EntryBasicInfoVO> voList = new ArrayList<>(0);
+            if(moduleAPI.isCheck("staffentry")){
+                List<EntryBasicInfoBO> boList = salaryInformationAPI.getByEmpNumber(id);
+                voList = BeanTransform.copyProperties(boList,EntryBasicInfoVO.class);
+            }
             return ActResult.initialize(voList);
         }catch (SerException e){
             throw new ActException(e.getMessage());
@@ -369,6 +383,60 @@ public class SalaryInformationAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
+
+    /**
+     * 根据员工编号查询入职时间和离职日期和身份证号码和银行卡号
+     * @param employeeNumber
+     * @return
+     * @throws ActException
+     */
+    @GetMapping("v1/find/staff")
+    public Result findStaff(String employeeNumber) throws ActException{
+        try {
+            StaffRecordsBO bo = salaryInformationAPI.findStaff(employeeNumber);
+            StaffRecordsVO vo = BeanTransform.copyProperties(bo,StaffRecordsVO.class);
+            return ActResult.initialize(vo);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 根据员工编号id查找转正时间
+     * @param employeeId 员工编号id
+     * @throws ActException
+     */
+    @GetMapping("v1/find/positiveDate")
+    public Result findPositiveDate(String employeeId) throws ActException{
+        try {
+            String time = salaryInformationAPI.findPositiveDate(employeeId);
+            return ActResult.initialize(time);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 根据员工姓名查找技能等级获取时间
+     * @param employeeName
+     * @return
+     * @throws ActException
+     */
+    @GetMapping("v1/find/skill")
+    public Result findSkill(String employeeName) throws ActException{
+        try {
+            OverviewSkillLevelBO bo = salaryInformationAPI.findSkill(employeeName);
+            OverviewSkillLevelVO vo = BeanTransform.copyProperties(bo,OverviewSkillLevelVO.class);
+            return ActResult.initialize(vo);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
 
 
 
