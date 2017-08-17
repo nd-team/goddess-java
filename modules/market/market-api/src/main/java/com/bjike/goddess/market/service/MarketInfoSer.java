@@ -171,4 +171,22 @@ public interface MarketInfoSer extends Ser<MarketInfo, MarketInfoDTO> {
     default List<String> getCompetName() throws SerException {
         return null;
     }
+    /**
+     * 获取本表中所有的内部项目名称
+     * lijuntao
+     *
+     * @return class String
+     */
+    default List<String> getProjectName() throws SerException {
+        return null;
+    }
+    /**
+     * 获取本表中所有的项目性质
+     * lijuntao
+     *
+     * @return class String
+     */
+    default List<String> getProjectNature() throws SerException {
+        return null;
+    }
 }

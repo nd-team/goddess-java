@@ -13,6 +13,7 @@ import com.bjike.goddess.firmreward.bo.*;
 import com.bjike.goddess.firmreward.dto.PrizeApplyDTO;
 import com.bjike.goddess.firmreward.excel.SonPermissionObject;
 import com.bjike.goddess.firmreward.to.ApplyDetailTO;
+import com.bjike.goddess.firmreward.to.DetailTO;
 import com.bjike.goddess.firmreward.to.PrizeApplyTO;
 import com.bjike.goddess.firmreward.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -185,7 +186,7 @@ public class PrizeApplyAct {
      */
     @LoginAuth
     @PostMapping("v1/addPrizeDetails")
-    public Result addPrizeDetails(@Validated(value = {ApplyDetailTO.IPrizeDetail.class}) ApplyDetailTO to, BindingResult result) throws ActException {
+    public Result addPrizeDetails(@Validated(value = {DetailTO.IPrizeDetail.class}) ApplyDetailTO to, BindingResult result) throws ActException {
         try {
             prizeApplyAPI.addPrizeDetails(to);
             return new ActResult("addPrizeDetails success!");
@@ -203,7 +204,7 @@ public class PrizeApplyAct {
      */
     @LoginAuth
     @PostMapping("v1/updatePrizeDetails")
-    public Result updatePrizeDetails(@Validated(value = {ApplyDetailTO.IPrizeDetail.class}) ApplyDetailTO to, BindingResult result) throws ActException {
+    public Result updatePrizeDetails(@Validated(value = {DetailTO.IPrizeDetail.class}) ApplyDetailTO to, BindingResult result) throws ActException {
         try {
             prizeApplyAPI.updatePrizeDetails(to);
             return new ActResult("updatePrizeDetails success!");
