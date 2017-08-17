@@ -1,7 +1,6 @@
 package com.bjike.goddess.market.service;
 
 import com.bjike.goddess.assemble.api.ModuleAPI;
-import com.bjike.goddess.assemble.api.ModuleAssembleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -26,6 +25,7 @@ import com.bjike.goddess.market.to.GuidePermissionTO;
 import com.bjike.goddess.market.to.MarketInfoTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -33,8 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -327,6 +326,7 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
         }
 
     }
+
     @Override
     public List<String> getCustomerName() throws SerException {
         String[] fields = new String[]{"customerName"};
@@ -348,7 +348,7 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
 
         List<MarketInfoExport> exports = new ArrayList<>();
         list.stream().forEach(str -> {
-            MarketInfoExport export = BeanTransform.copyProperties(str, MarketInfoExport.class, "projectNature","scale", "workType",  "effective");
+            MarketInfoExport export = BeanTransform.copyProperties(str, MarketInfoExport.class, "projectNature", "scale", "workType", "effective");
             export.setProjectNature(MarketProjectNature.exportStrConvert(str.getProjectNature()));
             export.setScale(Scale.exportStrConvert(str.getScale()));
             export.setWorkType(MarketWorkType.exportStrConvert(str.getWorkType()));
@@ -371,20 +371,21 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
         dto.getConditions().add(Restrict.eq("origanizion", origanizion));
         return BeanTransform.copyProperties(super.findByCis(dto), MarketInfoBO.class);
     }
+
     @Override
     //zhuangkaiqin
     public List<MarketInfoBO> getCollecting(String area, String projectName) throws SerException {
         MarketInfoDTO dto = new MarketInfoDTO();
-        dto.getConditions().add(Restrict.eq("area",area));
-        dto.getConditions().add(Restrict.eq("projectName",projectName));
+        dto.getConditions().add(Restrict.eq("area", area));
+        dto.getConditions().add(Restrict.eq("projectName", projectName));
 
-        return BeanTransform.copyProperties(super.findByCis(dto),MarketInfoBO.class);
+        return BeanTransform.copyProperties(super.findByCis(dto), MarketInfoBO.class);
     }
 
     @Override
     public List<CustomerNameNumBO> getNameNum() throws SerException {
         List<CustomerNameNumBO> customerNameNumBOS = new ArrayList<>(0);
-        if(moduleAPI.isCheck("customer")){  //判断关联模块该模块是否被勾选
+        if (moduleAPI.isCheck("customer")) {  //判断关联模块该模块是否被勾选
             customerNameNumBOS = customerBaseInfoAPI.findNameNum();
         }
         return customerNameNumBOS;
@@ -393,9 +394,54 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
     @Override
     public List<String> getCompetName() throws SerException {
         List<String> competName = new ArrayList<>(0);
-        if(moduleAPI.isCheck("competitormanage")){  //判断关联模块该模块是否被勾选
+        if (moduleAPI.isCheck("competitormanage")) {  //判断关联模块该模块是否被勾选
             competName = competitorAPI.findCompeName();
         }
         return competName;
+    }
+
+    @Override
+    public List<String> getProjectName() throws SerException {
+        List<MarketInfo> list = super.findAll();
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (MarketInfo model : list) {
+            String projectName = model.getProjectName();
+            if (StringUtils.isNotBlank(model.getProjectName())) {
+                set.add(projectName);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> getProjectNature() throws SerException {
+        List<MarketInfo> list = super.findAll();
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (MarketInfo model : list) {
+            String projectNature = changEnums(model.getProjectNature());
+            if (StringUtils.isNotBlank(changEnums(model.getProjectNature()))) {
+                set.add(projectNature);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    public String changEnums(MarketProjectNature marketProjectNature) {
+        String projectNature = "";
+        switch (marketProjectNature) {
+            case NEWPROJECT:
+                projectNature = "新项目市场信息数量";
+                break;
+            case OLDPROJECT:
+                projectNature = "已有项目or进行中项目市场信息数量";
+                break;
+        }
+        return projectNature;
     }
 }

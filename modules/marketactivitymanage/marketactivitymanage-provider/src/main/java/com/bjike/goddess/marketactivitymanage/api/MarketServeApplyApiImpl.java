@@ -178,6 +178,11 @@ public class MarketServeApplyApiImpl implements MarketServeApplyAPI {
     }
 
     @Override
+    public List<String> findProjectCode() throws SerException {
+        return marketServeApplySer.findProjectCode();
+    }
+
+    @Override
     public byte[] exportExcel(String[] areas, String startTime, String endTime) throws SerException {
         return marketServeApplySer.exportExcel(areas,startTime,endTime);
     }

@@ -102,4 +102,13 @@ public class MarketInfoApiImpl implements MarketInfoAPI {
         return marketInfoSer.getCompetName();
     }
 
+    @Override
+    public List<String> getProjectName() throws SerException {
+        return marketInfoSer.getProjectName();
+    }
+
+    @Override
+    public List<String> getProjectNature() throws SerException {
+        return marketInfoSer.getProjectNature();
+    }
 }

@@ -145,6 +145,13 @@ public interface MarketServeApplyAPI {
      * @throws SerException
      */
     List<String> findAllAreas() throws SerException;
+
+    /**
+     * 查看所有的项目代号
+     *
+     * @throws SerException
+     */
+    List<String> findProjectCode() throws SerException;
     /**
      * 导出excel
      *
