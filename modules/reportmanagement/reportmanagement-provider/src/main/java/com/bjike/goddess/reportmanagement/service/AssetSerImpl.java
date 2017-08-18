@@ -590,7 +590,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         double all = finds(dto).get(2);
         RpcTransmit.transmitUserToken(userToken);
         double fund = 0;
-        double stock=0;
+        double stock = 0;
         for (AssetBO bo : list(dto)) {
             if ("货币资金".equals(bo.getAsset())) {
                 fund = bo.getCurrent();   //货币资金
@@ -771,6 +771,13 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         doubles.add(debt);
         doubles.add(all);
         return doubles;
+    }
+
+    @Override
+    public List<AssetBO> list1(AssetDTO dto) throws SerException {
+        checkSeeIdentity();
+        List<Asset> list = super.findByCis(dto, true);
+        return BeanTransform.copyProperties(list, AssetBO.class);
     }
 
     @Override

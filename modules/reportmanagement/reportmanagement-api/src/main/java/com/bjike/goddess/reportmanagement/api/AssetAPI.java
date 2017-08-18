@@ -126,4 +126,13 @@ public interface AssetAPI {
      * @throws SerException
      */
     void delete(String id) throws SerException;
+
+    /**
+     * 列表1
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<AssetBO> list1(AssetDTO dto) throws SerException;
 }

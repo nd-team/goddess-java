@@ -1,6 +1,7 @@
 package com.bjike.goddess.courier.action.courier;
 
 import com.bjike.goddess.accommodation.api.RentalAPI;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.checkhost.api.DormitoryInfoAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -71,6 +72,8 @@ public class CourierAct extends BaseFileAction {
     private CourierCompanyAPI courierCompanyAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 模块设置导航权限
@@ -86,12 +89,14 @@ public class CourierAct extends BaseFileAction {
             SonPermissionObject obj = new SonPermissionObject();
             obj.setName("cuspermission");
             obj.setDescribesion("设置");
-            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
-            if (!isHasPermission) {
-                //int code, String msg
-                obj.setFlag(false);
-            } else {
-                obj.setFlag(true);
+            if (moduleAPI.isCheck("organize")) {
+                Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+                if (!isHasPermission) {
+                    //int code, String msg
+                    obj.setFlag(false);
+                } else {
+                    obj.setFlag(true);
+                }
             }
             list.add(obj);
             return new ActResult(0, "设置权限", list);
@@ -476,9 +481,12 @@ public class CourierAct extends BaseFileAction {
     public Result findDepartments() throws ActException {
         try {
             Set<String> set = new HashSet<>();
-            List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
-            for (DepartmentDetailBO departmentDetailBO : list) {
-                set.add(departmentDetailBO.getDepartment());
+            if (moduleAPI.isCheck("organize")) {
+                List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
+
+                for (DepartmentDetailBO departmentDetailBO : list) {
+                    set.add(departmentDetailBO.getDepartment());
+                }
             }
             return ActResult.initialize(set);
         } catch (SerException e) {
@@ -526,11 +534,15 @@ public class CourierAct extends BaseFileAction {
     @GetMapping("v1/findAllAreas")
     public Result findAllAreas() throws ActException {
         try {
-            Set<String> dormitoryAddress = dormitoryInfoAPI.allAddress();
-            Set<String> address = rentalAPI.allAddress();
             Set<String> set = new HashSet<>();
-            set.addAll(dormitoryAddress);
-            set.addAll(address);
+            if (moduleAPI.isCheck("checkhost")) {
+                Set<String> dormitoryAddress = dormitoryInfoAPI.allAddress();
+                set.addAll(dormitoryAddress);
+            }
+            if (moduleAPI.isCheck("accommodation")) {
+                Set<String> address = rentalAPI.allAddress();
+                set.addAll(address);
+            }
             return ActResult.initialize(set);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -563,7 +575,7 @@ public class CourierAct extends BaseFileAction {
     public Result allMonth() throws ActException {
         try {
             Set<Integer> set = new HashSet<>();
-            for (int i=1;i<=12;i++){
+            for (int i = 1; i <= 12; i++) {
                 set.add(i);
             }
             return ActResult.initialize(set);
@@ -597,7 +609,11 @@ public class CourierAct extends BaseFileAction {
     @GetMapping("v1/findContact/{dormitoryAddress}")
     public Result findContact(@PathVariable String dormitoryAddress) throws ActException {
         try {
-            return ActResult.initialize(dormitoryInfoAPI.findContact(dormitoryAddress));
+            if (moduleAPI.isCheck("checkhost")) {
+                return ActResult.initialize(dormitoryInfoAPI.findContact(dormitoryAddress));
+            } else {
+                return null;
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

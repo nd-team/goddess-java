@@ -20,10 +20,7 @@ import com.bjike.goddess.reimbursementprepare.vo.WaitPayVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -295,6 +292,24 @@ public class WaitPayAct extends BaseFileAction {
     public Result listAccountCom() throws ActException {
         try {
             return ActResult.initialize(applyLendAPI.listAccountCom());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 通过id查找等待付款
+     *
+     * @param id id
+     * @return class WaitPayVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findWait/{id}")
+    public Result findWait(@PathVariable String id, HttpServletRequest re) throws ActException {
+        try {
+            WaitPayBO bo = waitPayAPI.findWait(id);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, WaitPayVO.class, re));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

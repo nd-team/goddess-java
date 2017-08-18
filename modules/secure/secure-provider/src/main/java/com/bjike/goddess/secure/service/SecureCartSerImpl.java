@@ -1,5 +1,6 @@
 package com.bjike.goddess.secure.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -53,6 +54,8 @@ public class SecureCartSerImpl extends ServiceImpl<SecureCart, SecureCartDTO> im
     private InternalContactsAPI internalContactsAPI;
     @Autowired
     private MessageAPI messageAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -204,7 +207,7 @@ public class SecureCartSerImpl extends ServiceImpl<SecureCart, SecureCartDTO> im
         checkAddIdentity();
         SecureCart secureCart = super.findById(to.getId());
         LocalDateTime a = secureCart.getCreateTime();
-        secureCart = BeanTransform.copyProperties(to, SecureCart.class,true);
+        secureCart = BeanTransform.copyProperties(to, SecureCart.class, true);
         secureCart.setCreateTime(a);
         secureCart.setModifyTime(LocalDateTime.now());
         super.update(secureCart);
@@ -287,20 +290,26 @@ public class SecureCartSerImpl extends ServiceImpl<SecureCart, SecureCartDTO> im
             messageTO.setReceivers(flEmails());
             messageTO.setSenderId("SYSTEM");
             messageTO.setSenderName("SYSTEM");
-            messageAPI.send(messageTO);
+            if (flEmails() != null && flEmails().length > 0) {
+                messageAPI.send(messageTO);
+            }
         }
     }
 
     private String[] flEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
-        for (PositionDetailBO positionDetailBO : list1) {
-            if ("综合资源部".equals(positionDetailBO.getDepartmentName()) && "福利模块".equals(positionDetailBO.getModuleName())) {
-                List<UserBO> users = positionDetailUserAPI.findByPosition(positionDetailBO.getId());
-                for (UserBO userBO : users) {
-                    String mail = internalContactsAPI.getEmail(userBO.getUsername());
-                    if (mail != null) {
-                        set.add(mail);
+        if (moduleAPI.isCheck("organize")) {
+            List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
+            for (PositionDetailBO positionDetailBO : list1) {
+                if ("综合资源部".equals(positionDetailBO.getDepartmentName()) && "福利模块".equals(positionDetailBO.getModuleName())) {
+                    List<UserBO> users = positionDetailUserAPI.findByPosition(positionDetailBO.getId());
+                    for (UserBO userBO : users) {
+                        if (moduleAPI.isCheck("contacts")) {
+                            String mail = internalContactsAPI.getEmail(userBO.getUsername());
+                            if (mail != null) {
+                                set.add(mail);
+                            }
+                        }
                     }
                 }
             }

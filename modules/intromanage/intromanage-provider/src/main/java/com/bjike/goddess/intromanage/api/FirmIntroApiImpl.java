@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 公司简介业务接口实现
@@ -122,5 +123,10 @@ public class FirmIntroApiImpl implements FirmIntroAPI {
     @Override
     public List<String> findallMonUser() throws SerException {
         return firmIntroSer.findallMonUser();
+    }
+
+    @Override
+    public Set<String> firmNames() throws SerException {
+        return firmIntroSer.firmNames();
     }
 }

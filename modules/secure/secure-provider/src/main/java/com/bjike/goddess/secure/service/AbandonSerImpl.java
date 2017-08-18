@@ -1,5 +1,9 @@
 package com.bjike.goddess.secure.service;
 
+import com.bjike.goddess.archive.api.StaffRecordsAPI;
+import com.bjike.goddess.archive.bo.StaffRecordsBO;
+import com.bjike.goddess.archive.vo.StaffRecordsVO;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -38,7 +42,9 @@ public class AbandonSerImpl extends ServiceImpl<Abandon, AbandonDTO> implements 
     @Autowired
     private CusPermissionSer cusPermissionSer;
     @Autowired
-    private UserDetailAPI userDetailAPI;
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private StaffRecordsAPI staffRecordsAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -165,10 +171,14 @@ public class AbandonSerImpl extends ServiceImpl<Abandon, AbandonDTO> implements 
         String eNum = userBO.getEmployeeNumber();
         Abandon abandon = BeanTransform.copyProperties(to, Abandon.class, true);
         abandon.setName(name);
-        abandon.setEmployeeNum(eNum);
-        if (null != userDetailAPI.findByUserId(userBO.getId())) {
-            String groupName = userDetailAPI.findByUserId(userBO.getId()).getGroupName();
-            abandon.setGroup1(groupName);
+        if (moduleAPI.isCheck("archive")) {
+            List<StaffRecordsBO> list = staffRecordsAPI.listEmployee();
+            for (StaffRecordsBO staffRecordsBO : list) {
+                if (name.equals(staffRecordsBO.getUsername())) {
+                    abandon.setGroup1(staffRecordsBO.getProject());
+                    abandon.setEmployeeNum(staffRecordsBO.getSerialNumber());
+                }
+            }
         }
         abandon.setSign(true);
         super.save(abandon);
@@ -187,13 +197,7 @@ public class AbandonSerImpl extends ServiceImpl<Abandon, AbandonDTO> implements 
     @Transactional(rollbackFor = {SerException.class})
     public AbandonBO edit(AbandonTO to) throws SerException {
         Abandon abandon = super.findById(to.getId());
-        LocalDateTime a = abandon.getCreateTime();
-        String num=abandon.getEmployeeNum();
-        String group=abandon.getGroup1();
-        abandon = BeanTransform.copyProperties(to, Abandon.class, true);
-        abandon.setCreateTime(a);
-        abandon.setEmployeeNum(num);
-        abandon.setGroup1(group);
+        abandon.setReason(to.getReason());
         abandon.setModifyTime(LocalDateTime.now());
         super.update(abandon);
         return BeanTransform.copyProperties(abandon, AbandonBO.class);
