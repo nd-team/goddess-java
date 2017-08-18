@@ -65,13 +65,17 @@ public class RecommendRotationSerImpl extends ServiceImpl<RecommendRotation, Rec
     private SubsidyStandardSer subsidyStandardSer;
 
     private RecommendRotationBO transformBO(RecommendRotation entity) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        RpcTransmit.transmitUserToken(userToken);
         RecommendRotationBO bo = BeanTransform.copyProperties(entity, RecommendRotationBO.class);
         EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
         dto.getConditions().add(Restrict.eq("name", entity.getUsername()));
         List<EntryBasicInfoBO> entryBasicInfoBOs = entryBasicInfoAPI.listEntryBasicInfo(dto);
         RegularizationDTO regularizationDTO = new RegularizationDTO();
         regularizationDTO.getConditions().add(Restrict.eq("name", entity.getUsername()));
+        RpcTransmit.transmitUserToken(userToken);
         List<RegularizationBO> regularizationBOs = regularizationAPI.list(regularizationDTO);
+        RpcTransmit.transmitUserToken(userToken);
         if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
             EntryBasicInfoBO entryBasicInfoBO = entryBasicInfoBOs.get(0);
             bo.setEntryTime(entryBasicInfoBO.getEntryTime());
@@ -101,7 +105,9 @@ public class RecommendRotationSerImpl extends ServiceImpl<RecommendRotation, Rec
 
     @Override
     public RecommendRotationBO save(RecommendRotationTO to) throws SerException {
-        UserBO currentUser = userAPI.currentUser();
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         //user = userAPI.findByUsername(to.getUsername());
         //查询入职模块的用户
         List<EntryBasicInfoBO> entryBasicInfoVOList = entryBasicInfoAPI.getEntryBasicInfoByName(to.getUsername());
@@ -110,10 +116,12 @@ public class RecommendRotationSerImpl extends ServiceImpl<RecommendRotation, Rec
         RecommendRotation entity = BeanTransform.copyProperties(to, RecommendRotation.class, true);
         if (null == entryBasicInfoVOList.get(0))
             throw new SerException("该用户不存在");
+        RpcTransmit.transmitUserToken(userToken);
         List<PositionDetailBO> bos = positionDetailUserAPI.findPositionByUser(entryBasicInfoVOList.get(0).getId()).stream()
                 .sorted(Comparator.comparing(PositionDetailBO::getArea)
                         .thenComparing(PositionDetailBO::getDepartmentId))
                 .collect(Collectors.toList());
+        RpcTransmit.transmitUserToken(userToken);
         StringBuilder area = new StringBuilder(), department = new StringBuilder(), position = new StringBuilder(), arrangement = new StringBuilder();
         String tempArea = "", tempDepartment = "", tempArrangement = "";
         for (PositionDetailBO positionDetailBO : bos) {
@@ -134,7 +142,7 @@ public class RecommendRotationSerImpl extends ServiceImpl<RecommendRotation, Rec
                 tempArrangement = s;
                 arrangement.append(s);
             }
-        entity.setRecommend(currentUser.getUsername());
+        entity.setRecommend(userBO.getUsername());
         entity.setRecommendTime(LocalDate.now());
         entity.setArea(area.toString());
         entity.setPosition(position.toString());
@@ -150,7 +158,9 @@ public class RecommendRotationSerImpl extends ServiceImpl<RecommendRotation, Rec
 
     @Override
     public RecommendRotationBO update(RecommendRotationTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         UserBO user = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         RecommendRotation entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("该数据不存在");
@@ -198,7 +208,9 @@ public class RecommendRotationSerImpl extends ServiceImpl<RecommendRotation, Rec
 
     @Override
     public RecommendRotationBO delete(String id) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         UserBO user = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         RecommendRotation entity = super.findById(id);
         if (!user.getUsername().equals(entity.getRecommend()))
             throw new SerException("不能删除他人的轮换推荐");
@@ -210,7 +222,9 @@ public class RecommendRotationSerImpl extends ServiceImpl<RecommendRotation, Rec
 
     @Override
     public RecommendRotationBO opinion(RecommendRotationTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         UserBO user = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         RecommendRotation entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("该数据不存在");

@@ -58,6 +58,11 @@ public class AgeAssistApiImpl implements AgeAssistAPI {
     }
 
     @Override
+    public Double getJobAge(String userName) throws SerException {
+        return ageAssistSer.getJobAge(userName);
+    }
+
+    @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         return ageAssistSer.sonPermission();
     }

@@ -31,7 +31,6 @@ dependencies {
     compile project(":modules:businesscommission:businesscommission-api")
     compile project(":common:common-utils")
     compile project(":modules:projectroyalty:projectroyalty-api")
-    compile project(":modules:contractcommunicat:contractcommunicat-api")
     compile project(":modules:marketactivitymanage:marketactivitymanage-api")
     compile project(":modules:market:market-api")
 }

@@ -1,5 +1,6 @@
 package com.bjike.goddess.secure.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -72,6 +73,8 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private CommonalityAPI commonalityAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -210,14 +213,18 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
 
     private String[] mEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
-        for (PositionDetailBO positionDetailBO : list1) {
-            if ("总经理".equals(positionDetailBO.getPosition())) {
-                List<UserBO> users = positionDetailUserAPI.findByPosition(positionDetailBO.getId());
-                for (UserBO userBO : users) {
-                    String mail = internalContactsAPI.getEmail(userBO.getUsername());
-                    if (mail != null) {
-                        set.add(mail);
+        if (moduleAPI.isCheck("organize")) {
+            List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
+            for (PositionDetailBO positionDetailBO : list1) {
+                if ("总经理".equals(positionDetailBO.getPosition())) {
+                    List<UserBO> users = positionDetailUserAPI.findByPosition(positionDetailBO.getId());
+                    for (UserBO userBO : users) {
+                        if (moduleAPI.isCheck("contacts")) {
+                            String mail = internalContactsAPI.getEmail(userBO.getUsername());
+                            if (mail != null) {
+                                set.add(mail);
+                            }
+                        }
                     }
                 }
             }
@@ -229,12 +236,16 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
 
     private String[] zhEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
-        for (DepartmentDetailBO departmentDetailBO : list) {
-            if ("综合资源部".equals(departmentDetailBO.getDepartment())) {
-                CommonalityBO commonality = commonalityAPI.findByDepartment(departmentDetailBO.getId());
-                if (commonality != null) {
-                    set.add(commonality.getEmail());
+        if (moduleAPI.isCheck("organize")) {
+            List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
+            for (DepartmentDetailBO departmentDetailBO : list) {
+                if ("综合资源部".equals(departmentDetailBO.getDepartment())) {
+                    if (moduleAPI.isCheck("contacts")) {
+                        CommonalityBO commonality = commonalityAPI.findByDepartment(departmentDetailBO.getId());
+                        if (commonality != null&&commonality.getEmail()!=null) {
+                            set.add(commonality.getEmail());
+                        }
+                    }
                 }
             }
         }
@@ -245,14 +256,18 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
 
     private String[] flEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
-        for (PositionDetailBO positionDetailBO : list1) {
-            if ("综合资源部".equals(positionDetailBO.getDepartmentName()) && "福利模块".equals(positionDetailBO.getModuleName())) {
-                List<UserBO> users = positionDetailUserAPI.findByPosition(positionDetailBO.getId());
-                for (UserBO userBO : users) {
-                    String mail = internalContactsAPI.getEmail(userBO.getUsername());
-                    if (mail != null) {
-                        set.add(mail);
+        if (moduleAPI.isCheck("organize")) {
+            List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
+            for (PositionDetailBO positionDetailBO : list1) {
+                if ("综合资源部".equals(positionDetailBO.getDepartmentName()) && "福利模块".equals(positionDetailBO.getModuleName())) {
+                    List<UserBO> users = positionDetailUserAPI.findByPosition(positionDetailBO.getId());
+                    for (UserBO userBO : users) {
+                        if (moduleAPI.isCheck("contacts")) {
+                            String mail = internalContactsAPI.getEmail(userBO.getUsername());
+                            if (mail != null) {
+                                set.add(mail);
+                            }
+                        }
                     }
                 }
             }
@@ -273,7 +288,9 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
         messageTO.setTitle("社保减员前参考信息,请审阅");
         messageTO.setContent(html(beforeRemoveEmployeeBO));
         messageTO.setReceivers(mEmails());
-        messageAPI.send(messageTO);
+        if (mEmails() != null && mEmails().length > 0) {
+            messageAPI.send(messageTO);
+        }
         return beforeRemoveEmployeeBO;
     }
 
@@ -354,54 +371,64 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
     @Override
     //每12小时执行一次
     public void send() throws SerException {
-        List<DimissionInfoBO> list = dimissionInfoAPI.all();
-        MessageTO messageTO = new MessageTO();
-        messageTO.setTitle("今天的离职员工");
-        LocalDate now = LocalDate.now();
-        boolean b1 = false;
-        StringBuilder sb1 = new StringBuilder();
-        boolean b2 = false;
-        StringBuilder sb2 = new StringBuilder();
-        String s = "今天离职，请及时处理社保减员！";
-        for (DimissionInfoBO bo : list) {
-            if (DimissionType.NORMAL.equals(bo.getType()) && HandleStatus.AFFIRM.equals(bo.getHandle())) {
-                LocalDate date = DateUtil.parseDate(bo.getDimissionDate());
-                if (now == date) {
-                    b1 = true;
-                    String employeeNumber = bo.getEmployeeNumber();
-                    String name = bo.getUsername();
-                    sb1.append("员工编号为：" + employeeNumber + "的" + name + "，");
+        if (moduleAPI.isCheck("dimission")) {
+            List<DimissionInfoBO> list = dimissionInfoAPI.all();
+            MessageTO messageTO = new MessageTO();
+            messageTO.setTitle("今天的离职员工");
+            LocalDate now = LocalDate.now();
+            boolean b1 = false;
+            StringBuilder sb1 = new StringBuilder();
+            boolean b2 = false;
+            StringBuilder sb2 = new StringBuilder();
+            String s = "今天离职，请及时处理社保减员！";
+            for (DimissionInfoBO bo : list) {
+                if (DimissionType.NORMAL.equals(bo.getType()) && HandleStatus.AFFIRM.equals(bo.getHandle())) {
+                    LocalDate date = DateUtil.parseDate(bo.getDimissionDate());
+                    if (now == date) {
+                        b1 = true;
+                        String employeeNumber = bo.getEmployeeNumber();
+                        String name = bo.getUsername();
+                        sb1.append("员工编号为：" + employeeNumber + "的" + name + "，");
+                    }
+                }
+                if ((!DimissionType.NORMAL.equals(bo.getType())) && HandleStatus.AFFIRM.equals(bo.getHandle())) {
+                    LocalDate date = DateUtil.parseDate(bo.getAdvanceDate());
+                    if (now == date) {
+                        b2 = true;
+                        String employeeNumber = bo.getEmployeeNumber();
+                        String name = bo.getUsername();
+                        sb2.append("员工编号为：" + employeeNumber + "的" + name + "，");
+                    }
                 }
             }
-            if ((!DimissionType.NORMAL.equals(bo.getType())) && HandleStatus.AFFIRM.equals(bo.getHandle())) {
-                LocalDate date = DateUtil.parseDate(bo.getAdvanceDate());
-                if (now == date) {
-                    b2 = true;
-                    String employeeNumber = bo.getEmployeeNumber();
-                    String name = bo.getUsername();
-                    sb2.append("员工编号为：" + employeeNumber + "的" + name + "，");
+            if (b1) {
+                sb1.append(s);
+                messageTO.setContent(sb1.toString());
+                messageTO.setReceivers(flEmails());
+                messageTO.setSenderId("SYSTEM");
+                messageTO.setSenderName("SYSTEM");
+                if (flEmails() != null && flEmails().length > 0) {
+                    messageAPI.send(messageTO);
+                }
+                messageTO.setReceivers(zhEmails());
+                if (zhEmails() != null && zhEmails().length > 0) {
+                    messageAPI.send(messageTO);
                 }
             }
-        }
-        if (b1) {
-            sb1.append(s);
-            messageTO.setContent(sb1.toString());
-            messageTO.setReceivers(flEmails());
-            messageTO.setSenderId("SYSTEM");
-            messageTO.setSenderName("SYSTEM");
-            messageAPI.send(messageTO);
-            messageTO.setReceivers(zhEmails());
-            messageAPI.send(messageTO);
-        }
-        if (b2) {
-            sb2.append(s);
-            messageTO.setContent(sb2.toString());
-            messageTO.setReceivers(flEmails());
-            messageTO.setSenderId("SYSTEM");
-            messageTO.setSenderName("SYSTEM");
-            messageAPI.send(messageTO);
-            messageTO.setReceivers(zhEmails());
-            messageAPI.send(messageTO);
+            if (b2) {
+                sb2.append(s);
+                messageTO.setContent(sb2.toString());
+                messageTO.setReceivers(flEmails());
+                messageTO.setSenderId("SYSTEM");
+                messageTO.setSenderName("SYSTEM");
+                if (flEmails() != null && flEmails().length > 0) {
+                    messageAPI.send(messageTO);
+                }
+                messageTO.setReceivers(zhEmails());
+                if (zhEmails() != null && zhEmails().length > 0) {
+                    messageAPI.send(messageTO);
+                }
+            }
         }
     }
 

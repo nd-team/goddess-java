@@ -91,4 +91,9 @@ public class WaitPayApiImpl implements WaitPayAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return waitPaySer.guidePermission(guidePermissionTO);
     }
+
+    @Override
+    public WaitPayBO findWait(String id) throws SerException {
+        return waitPaySer.findWait(id);
+    }
 }

@@ -314,7 +314,7 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
     @Override
     public List<StructureBO> debtStructure(DebtDTO dto) throws SerException {
         checkSeeIdentity();
-        String userToken=RpcTransmit.getUserToken();
+        String userToken = RpcTransmit.getUserToken();
         FormulaDTO formulaDTO = new FormulaDTO();
         BeanUtils.copyProperties(dto, formulaDTO);
         dto.getSorts().add("debtType=ASC");
@@ -509,5 +509,12 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
             throw new SerException("该对象不存在");
         }
         super.remove(id);
+    }
+
+    @Override
+    public List<DebtBO> list1(DebtDTO dto) throws SerException {
+        checkSeeIdentity();
+        List<Debt> list = super.findByCis(dto, true);
+        return BeanTransform.copyProperties(list, DebtBO.class);
     }
 }

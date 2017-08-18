@@ -33,17 +33,22 @@ public interface MarketInfoAPI {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
-     *市场信息管理列表总条数
+     * 市场信息管理列表总条数
      */
     default Long countMarketInfo(MarketInfoDTO marketInfoDTO) throws SerException {
         return null;
     }
+
     /**
      * 一个市场信息管理
+     *
      * @return class MarketInfoBO
      */
-    default MarketInfoBO getOne(String id) throws SerException {return null;}
+    default MarketInfoBO getOne(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 获取市场信息
@@ -87,6 +92,7 @@ public interface MarketInfoAPI {
     default void removeMarketInfo(String id) throws SerException {
 
     }
+
     /**
      * 获取客户名称
      *
@@ -95,6 +101,7 @@ public interface MarketInfoAPI {
     default List<String> getCustomerName() throws SerException {
         return null;
     }
+
     /**
      * 导出Excel
      *
@@ -113,6 +120,7 @@ public interface MarketInfoAPI {
      * @throws SerException
      */
     List<MarketInfoBO> findByOriganizion(String origanizion) throws SerException;
+
     /**
      * 根据地区,项目组查找
      * zhuangkaiqin
@@ -122,6 +130,7 @@ public interface MarketInfoAPI {
     default List<MarketInfoBO> getCollecting(String area, String projectName) throws SerException {
         return null;
     }
+
     /**
      * 获取所有的用户姓名和用户编号lijuntao
      *
@@ -139,15 +148,21 @@ public interface MarketInfoAPI {
     default List<String> getCompetName() throws SerException {
         return null;
     }
+
     /**
      * 获取本表中所有的内部项目名称
      * lijuntao
      *
      * @return class String
+
+    /**
+     * 获取所有的项目名称
+     * zhuangkaiqin
      */
     default List<String> getProjectName() throws SerException {
         return null;
     }
+
     /**
      * 获取本表中所有的项目性质
      * lijuntao
@@ -157,4 +172,22 @@ public interface MarketInfoAPI {
     default List<String> getProjectNature() throws SerException {
         return null;
     }
+
+    /**
+     * 获取所有的技术类别
+     * zhuangkaiqin
+     */
+    default List<String> getTechnologyCategory() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有的市场信息收集人
+     * zhuangkaiqin
+     */
+    default List<String> getMarketInfoCollecting() throws SerException {
+        return null;
+    }
+
+
 }

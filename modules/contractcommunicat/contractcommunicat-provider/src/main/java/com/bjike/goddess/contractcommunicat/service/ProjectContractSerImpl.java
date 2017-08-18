@@ -17,7 +17,6 @@ import com.bjike.goddess.contractcommunicat.dto.ProjectContractDTO;
 import com.bjike.goddess.contractcommunicat.entity.ProjectContract;
 import com.bjike.goddess.contractcommunicat.enums.CommunicateResult;
 import com.bjike.goddess.contractcommunicat.enums.GuideAddrStatus;
-import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
 import com.bjike.goddess.contractcommunicat.excel.ProjectContractExcel;
 import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
@@ -371,6 +370,16 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
         list.add(new ProjectContractExcel());
         byte[] bytes = ExcelUtil.clazzToExcel(list, excel);
         return bytes;
+    }
+
+    @Override
+    public List<String> getCommunicateUser() throws SerException {
+        List<String> list = new ArrayList<>(0);
+        List<ProjectContract> projectContracts = super.findAll();
+        for (ProjectContract entity : projectContracts) {
+            list.add(entity.getCommunicateUser());
+        }
+        return list;
     }
 
     /**

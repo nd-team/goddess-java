@@ -707,7 +707,7 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         if (list != null && !list.isEmpty()) {
             return DateUtil.dateToString(list.get(0).getPositiveDate());
         }
-        throw new SerException("没有该员工编号的对应转正时间");
+        return null;
     }
 
 

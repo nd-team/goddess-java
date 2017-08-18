@@ -104,4 +104,11 @@ public interface ProjectContractSer extends Ser<ProjectContract, ProjectContract
      * @throws SerException
      */
     List<MarketInfoBO> findProject() throws SerException;
+
+    /**
+     * 查询所有的责任人
+     */
+    default List<String> getCommunicateUser() throws SerException {
+        return null;
+    }
 }
