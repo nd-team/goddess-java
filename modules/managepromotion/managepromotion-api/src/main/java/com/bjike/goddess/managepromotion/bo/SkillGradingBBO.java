@@ -19,11 +19,11 @@ public class SkillGradingBBO extends BaseBO {
      * 技能等级
      */
     private String skillLevel;
-
     /**
-     * 档次
+     * 转正后间隔时间
      */
-    private Integer grade;
+    private Integer intervalAfterTransfer;
+
     /**
      * 技能定级C
      */
@@ -37,12 +37,12 @@ public class SkillGradingBBO extends BaseBO {
         this.skillLevel = skillLevel;
     }
 
-    public Integer getGrade() {
-        return grade;
+    public Integer getIntervalAfterTransfer() {
+        return intervalAfterTransfer;
     }
 
-    public void setGrade(Integer grade) {
-        this.grade = grade;
+    public void setIntervalAfterTransfer(Integer intervalAfterTransfer) {
+        this.intervalAfterTransfer = intervalAfterTransfer;
     }
 
     public List<SkillGradingCBO> getSkillGradingCBOS() {

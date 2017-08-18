@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.managepromotion.bo.CalculateBO;
 import com.bjike.goddess.managepromotion.bo.SkillGradingABO;
 import com.bjike.goddess.managepromotion.bo.SkillGradingBBO;
 import com.bjike.goddess.managepromotion.bo.SkillGradingCBO;
@@ -18,17 +19,16 @@ import com.bjike.goddess.managepromotion.entity.SkillGradingB;
 import com.bjike.goddess.managepromotion.entity.SkillGradingC;
 import com.bjike.goddess.managepromotion.enums.GuideAddrStatus;
 import com.bjike.goddess.managepromotion.excel.SonPermissionObject;
-import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
-import com.bjike.goddess.managepromotion.to.SkillGradingATO;
-import com.bjike.goddess.managepromotion.to.SkillGradingBTO;
-import com.bjike.goddess.managepromotion.to.SkillGradingCTO;
+import com.bjike.goddess.managepromotion.to.*;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -309,14 +309,13 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
                         Integer totalAllowance = skillGradingCTO.getSubsidiesAmount() + quotaJobTitle;
                         skillGradingC.setTotalAllowance(totalAllowance);
                         //每次晋升增长幅度
-//                SkillGrading skill = findBySql(skillGradingATO.getSystem(), skillGradingATO.getIndustry(), skillGradingATO.getSubject(), skillGradingCTO.getTechnicalRank());
-//                if (skill != null) {
-//                    skillGrading.setGrowth(skillGrading.getTotalAllowance() - skill.getTotalAllowance());
-//                } else {
-//                    skillGrading.setGrowth(skillGrading.getTotalAllowance());
-//                }
-//                skillGrading.setCreateTime(LocalDateTime.now());
-
+                        SkillGradingC skill = findBySql(skillGradingATO.getSystem(), skillGradingATO.getIndustry(), skillGradingATO.getSubject(), skillGradingCTO.getTechnicalRank());
+                        if (skill != null) {
+                            skillGradingC.setGrowth(skillGradingC.getTotalAllowance() - skill.getTotalAllowance());
+                        } else {
+                            skillGradingC.setGrowth(skillGradingC.getTotalAllowance());
+                        }
+                        skillGradingC.setCreateTime(LocalDateTime.now());
                         skillGradingCSer.save(skillGradingC);
                     }
                 }
@@ -386,10 +385,10 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
     @Transactional(rollbackFor = SerException.class)
     public void removeSkillGrading(String id) throws SerException {
         checkAddIdentity();
-       SkillGradingC c= skillGradingCSer.findById(id);
-       if (c==null){
-           throw new SerException("该对象不存在");
-       }
+        SkillGradingC c = skillGradingCSer.findById(id);
+        if (c == null) {
+            throw new SerException("该对象不存在");
+        }
 //       String b_id=c.getSkillGradingB().getId();
         skillGradingCSer.remove(id);
         List<SkillGradingB> bList = skillGradingBSer.findAll();
@@ -415,81 +414,88 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
         }
 
     }
-//        SkillGradingADTO skillGradingADTO = new SkillGradingADTO();
-//        skillGradingADTO.getConditions().add(Restrict.eq("id", id));
-//        List<SkillGradingA> aList = skillGradingASer.findByCis(skillGradingADTO);
-//        if (aList != null && aList.size() > 0) {
-//            List<String> aIdList = aList.stream().map(SkillGradingA::getId).collect(Collectors.toList());
-//            String[] aids = new String[aIdList.size()];
-//            aids = aIdList.toArray(aids);
-//            //查询B表对应的数据
-//            SkillGradingBDTO skillGradingBDTO = new SkillGradingBDTO();
-//            skillGradingBDTO.getConditions().add(Restrict.eq("skillGradingA.id", aids));
-//            List<SkillGradingB> bList = skillGradingBSer.findByCis(skillGradingBDTO);
-//            if (bList != null && bList.size() > 0) {
-//                //查询对应C表的数据
-//                List<String> bIdList = bList.stream().map(SkillGradingB::getId).collect(Collectors.toList());
-//                String[] bids = new String[bIdList.size()];
-//                bids = bIdList.toArray(bids);
-//                SkillGradingCDTO skillGradingCDTO = new SkillGradingCDTO();
-//                skillGradingCDTO.getConditions().add(Restrict.in("skillGradingB.id", bids));
-//                List<SkillGradingC> cList = skillGradingCSer.findByCis(skillGradingCDTO);
-//                if (cList != null && cList.size() > 0) {
-//                    skillGradingCSer.remove(cList);
-//                }
-//
-//                skillGradingBSer.remove(bList);
-//            }
-//            skillGradingASer.remove(id);
-//
-//        }
 
-
-//   if ("c".equals(type)) {
-//            String b_id=skillGradingCSer.findById(id).getSkillGradingB().getId();
-//            skillGradingCSer.remove(id);
-//            Set<String> b_ids=new HashSet<>();
-//            for (SkillGradingC c:skillGradingCSer.findAll()){
-//                b_ids.add(c.getSkillGradingB().getId());
-//            }
-//            if (!b_ids.contains(b_id)){
-//                skillGradingBSer.remove(b_id);
-//            }
-//        }
-//        if ("b".equals(type)) {
-////            String[] fields = new String[]{"skillGradingB_id"};
-////            String sql = "select skillGradingB_id from managepromotion_skillgradingc where id  = "+id;
-////            List<SkillGradingC> cList = skillGradingCSer.findBySql(sql,SkillGradingC.class,fields);
-//            SkillGradingC c=skillGradingCSer.findById(id);
-//            if (c!=null) {
-//                skillGradingBSer.remove(c.getSkillGradingB().getId());
-//            }
-//        }
-//        if ("a".equals(type)) {
-//            SkillGradingBDTO skillGradingBDTO = new SkillGradingBDTO();
-//            List<SkillGradingB> bList = skillGradingBSer.findByCis(skillGradingBDTO);
-//            if (bList.size() == 0) {
-//                skillGradingASer.remove(id);
-//            }
-//        }
-//    }
-
-    private SkillGrading findBySql(String system, String industry, String subject, Integer technicalRank) throws SerException {
+    private SkillGradingC findBySql(String system, String industry, String subject, Integer technicalRank) throws SerException {
         Integer[] technicals = new Integer[]{technicalRank};
         String[] systems = new String[]{system};
         String[] industrys = new String[]{industry};
         String[] subjects = new String[]{subject};
-        List<SkillGrading> list = null;
+        List<SkillGradingC> list = null;
         for (int i = 0; i < technicals.length; i++) {
             String sql = "SELECT max(technicalRank) technicalRank,skillLevel,totalAllowance " +
                     " FROM managepromotion_skillgrading WHERE system='" + systems[i] + "' and industry='" + industrys[i] + "' " +
                     "and subject='" + subjects[i] + "' and technicalRank='" + technicals[i] + "' GROUP BY skillLevel,totalAllowance ";
             String[] fields = new String[]{"technicalRank", "skillLevel", "totalAllowance"};
-            list = super.findBySql(sql, SkillGrading.class, fields);
+            list = super.findBySql(sql, SkillGradingC.class, fields);
         }
         if (list != null && list.size() != 0) {
             return list.get(0);
         }
         return null;
+    }
+
+    @Override
+    public List<CalculateBO> calculate(CalculateTO to) throws SerException {
+//        SkillGradingADTO adto = new SkillGradingADTO();
+//        adto.getConditions().add(Restrict.eq("major", to.getMain()));
+//        List<SkillGradingA> listA = skillGradingASer.findByCis(adto);
+//        List<CalculateBO> calculateBOS = new ArrayList<>();
+//        String main = to.getMain();
+//        Integer money = to.getMoney();
+//        String[] fields = new String[]{"major","grade"};
+//        String sql = "SELECT a.major,c.grade as grade FROM managepromotion_skillgradinga a," +
+//                " managepromotion_skillgradingc c, managepromotion_skillgradingb b " +
+//                " WHERE a.major='" + main + "' AND (c.subsidiesAmount+c.quotaJobTitle) = '" + money + "' and " +
+//                " a.id=b.skillGradingA_id AND b.id= c.skillGradingB_id group by a.major,c.grade ";
+//        List<SkillGradingC> listC = skillGradingCSer.findBySql(sql, SkillGradingC.class, fields);
+//        if (listC != null) {
+//            for (SkillGradingC skillGradingC : listC) {
+//                CalculateBO bo = new CalculateBO();
+//                bo.setMain(to.getMain());
+//                bo.setSkill(skillGradingC.getGrade());
+//                calculateBOS.add(bo);
+//            }
+//        }
+//        return calculateBOS;
+//    }
+        SkillGradingADTO adto = new SkillGradingADTO();
+        adto.getConditions().add(Restrict.eq("major", to.getMain()));
+        List<SkillGradingA> listA = skillGradingASer.findByCis(adto);
+        List<CalculateBO> calculateBOS = new ArrayList<>();
+        String main = to.getMain();
+        Integer money = to.getMoney();
+        String eventFirst= to.getEventFirst();
+        String[] fields = new String[]{"major","grade"};
+        String team = "" ;
+        if(StringUtils.isNotEmpty(main)){
+            team += " and a.major='" + main + "'";
+        }
+        if(null != money){
+            team += " AND (c.subsidiesAmount+c.quotaJobTitle) = '" + money + "'";
+        }
+        String sql = "SELECT a.major,c.grade as grade FROM managepromotion_skillgradinga a," +
+                " managepromotion_skillgradingc c, managepromotion_skillgradingb b " +
+                " WHERE 1=1 and " +
+                " a.id=b.skillGradingA_id AND b.id= c.skillGradingB_id "+
+                team+
+                " group by a.major,c.grade ";
+
+        //如果有第三个条件
+        if(StringUtils.isNotEmpty(eventFirst)){
+            team += " and c.subsidiesAmount ="+eventFirst;
+        }
+//        if(StringUtils.isNotEmpty(条件2)){
+//            team += " and 字段2 ="+条件2;
+//        }
+        List<SkillGradingC> listC = skillGradingCSer.findBySql(sql, SkillGradingC.class, fields);
+        if (listC != null) {
+            for (SkillGradingC skillGradingC : listC) {
+                CalculateBO bo = new CalculateBO();
+                bo.setMain(to.getMain());
+                bo.setSkill(skillGradingC.getGrade());
+                calculateBOS.add(bo);
+            }
+        }
+        return calculateBOS;
     }
 }

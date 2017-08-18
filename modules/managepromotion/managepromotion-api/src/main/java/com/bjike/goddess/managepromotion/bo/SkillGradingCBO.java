@@ -15,9 +15,9 @@ public class SkillGradingCBO extends BaseBO{
 
 
     /**
-     * 转正后间隔时间
+     * 档次
      */
-    private Integer intervalAfterTransfer;
+    private String grade;
 
     /**
      * 各档次晋升间隔时间（月）
@@ -64,12 +64,12 @@ public class SkillGradingCBO extends BaseBO{
      */
     private Integer growth;
 
-    public Integer getIntervalAfterTransfer() {
-        return intervalAfterTransfer;
+    public String getGrade() {
+        return grade;
     }
 
-    public void setIntervalAfterTransfer(Integer intervalAfterTransfer) {
-        this.intervalAfterTransfer = intervalAfterTransfer;
+    public void setGrade(String grade) {
+        this.grade = grade;
     }
 
     public Integer getGradeAfterTime() {
