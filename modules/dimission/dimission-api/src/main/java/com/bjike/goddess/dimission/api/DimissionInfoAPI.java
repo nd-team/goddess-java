@@ -5,6 +5,7 @@ import com.bjike.goddess.dimission.bo.DimissionInfoBO;
 import com.bjike.goddess.dimission.bo.DimissionInfoCollectBO;
 import com.bjike.goddess.dimission.bo.DimissionReasonBO;
 import com.bjike.goddess.dimission.dto.DimissionInfoDTO;
+import com.bjike.goddess.dimission.entity.DimissionInfo;
 import com.bjike.goddess.dimission.enums.DimissionType;
 import com.bjike.goddess.dimission.excel.SonPermissionObject;
 import com.bjike.goddess.dimission.to.*;
@@ -294,4 +295,10 @@ public interface DimissionInfoAPI {
     default List<String> getAllName() throws SerException{
         return null;
     }
+
+
+    /**
+     * 根据员工姓名查询离职信息　　－－jiangzaixuan 2017/08/17 11:30
+     */
+    List<DimissionInfo> findByName(String userName) throws SerException;
 }

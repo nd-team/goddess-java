@@ -19,6 +19,7 @@ import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.bo.FindNameBO;
+import com.bjike.goddess.storage.entity.StorageUser;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -751,5 +752,15 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
             }
         }
         return stringList;
+    }
+
+
+
+    @Override
+    public List<DimissionInfo> findByName(String userName) throws SerException {
+        DimissionInfoDTO dto = new DimissionInfoDTO();
+        dto.getConditions().add(Restrict.eq("userName",userName));
+        List<DimissionInfo> list = super.findByCis(dto);
+        return list;
     }
 }

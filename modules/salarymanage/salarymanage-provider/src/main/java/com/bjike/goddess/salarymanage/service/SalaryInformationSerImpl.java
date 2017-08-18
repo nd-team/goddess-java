@@ -1,5 +1,9 @@
 package com.bjike.goddess.salarymanage.service;
 
+import com.bjike.goddess.archive.api.StaffRecordsAPI;
+import com.bjike.goddess.archive.bo.StaffRecords1BO;
+import com.bjike.goddess.archive.bo.StaffRecordsBO;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.assistance.api.AgeAssistAPI;
 import com.bjike.goddess.assistance.api.ComputerAssistAPI;
 import com.bjike.goddess.assistance.api.HotAssistAPI;
@@ -23,6 +27,10 @@ import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.managementpromotion.api.LevelShowAPI;
 import com.bjike.goddess.managementpromotion.bo.LevelShowBO;
 import com.bjike.goddess.managementpromotion.entity.LevelShow;
+import com.bjike.goddess.managepromotion.api.OverviewSkillLevelAPI;
+import com.bjike.goddess.managepromotion.bo.OverviewSkillLevelBO;
+import com.bjike.goddess.managepromotion.dto.OverviewSkillLevelDTO;
+import com.bjike.goddess.regularization.api.RegularizationAPI;
 import com.bjike.goddess.salarymanage.bo.SalaryInformationBO;
 import com.bjike.goddess.salarymanage.dto.SalaryInformationDTO;
 import com.bjike.goddess.salarymanage.entity.SalaryInformation;
@@ -80,6 +88,18 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
 
     @Autowired
     private AgeAssistAPI ageAssistAPI;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
+
+    @Autowired
+    private StaffRecordsAPI staffRecordsAPI;
+
+    @Autowired
+    private RegularizationAPI regularizationAPI;
+
+    @Autowired
+    private OverviewSkillLevelAPI overviewSkillLevelAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -466,5 +486,26 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
         SalaryInformation salaryInformation = super.findById(id);
         SalaryInformationBO salaryInformationBO = BeanTransform.copyProperties(salaryInformation,SalaryInformationBO.class);
         return salaryInformationBO;
+    }
+
+    @Override
+    public StaffRecordsBO findStaff(String employeeNumber) throws SerException {
+        StaffRecordsBO bo = new StaffRecordsBO();
+        if(moduleAPI.isCheck("archive")){
+            bo = staffRecordsAPI.findByNumber(employeeNumber);
+        }
+        return bo;
+    }
+
+    @Override
+    public String findPositiveDate(String employeeId) throws SerException {
+        String time = regularizationAPI.time(employeeId);
+        return time;
+    }
+
+    @Override
+    public OverviewSkillLevelBO findSkill(String employeeName) throws SerException {
+        OverviewSkillLevelBO bo = overviewSkillLevelAPI.findByName(employeeName);
+        return bo;
     }
 }

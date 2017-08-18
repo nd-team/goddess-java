@@ -295,4 +295,9 @@ public interface DimissionInfoSer extends Ser<DimissionInfo, DimissionInfoDTO> {
     default List<String> getAllName() throws SerException {
         return null;
     }
+
+    /**
+     * 根据员工姓名查询离职信息
+     */
+    List<DimissionInfo> findByName(String userName) throws SerException;
 }

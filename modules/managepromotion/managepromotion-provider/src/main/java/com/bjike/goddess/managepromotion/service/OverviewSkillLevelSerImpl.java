@@ -1,5 +1,6 @@
 package com.bjike.goddess.managepromotion.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -217,5 +218,14 @@ public class OverviewSkillLevelSerImpl extends ServiceImpl<OverviewSkillLevel, O
     public void removeOverviewSkillLevel(String id) throws SerException {
         checkAddIdentity();
         super.remove(id);
+    }
+
+    @Override
+    public OverviewSkillLevelBO findByName(String employeeName) throws SerException {
+        OverviewSkillLevelDTO dto = new OverviewSkillLevelDTO();
+        dto.getConditions().add(Restrict.eq("name",employeeName));
+        OverviewSkillLevel overviewSkillLevel = super.findOne(dto);
+        OverviewSkillLevelBO bo = BeanTransform.copyProperties(overviewSkillLevel,OverviewSkillLevelBO.class,true);
+        return bo;
     }
 }
