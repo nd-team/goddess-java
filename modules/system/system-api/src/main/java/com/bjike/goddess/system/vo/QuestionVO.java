@@ -24,6 +24,10 @@ public class QuestionVO {
      * 问题描述
      */
     private String rate;
+    /**
+     * 参考答案条数
+     */
+    private Long answerCount;
 
 
     public String getId() {
@@ -48,5 +52,13 @@ public class QuestionVO {
 
     public void setRate(String rate) {
         this.rate = rate;
+    }
+
+    public Long getAnswerCount() {
+        return answerCount;
+    }
+
+    public void setAnswerCount(Long answerCount) {
+        this.answerCount = answerCount;
     }
 }

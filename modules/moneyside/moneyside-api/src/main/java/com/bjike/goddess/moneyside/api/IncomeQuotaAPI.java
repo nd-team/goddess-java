@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.moneyside.bo.IncomeQuotaBO;
 import com.bjike.goddess.moneyside.dto.IncomeDistributionDTO;
 import com.bjike.goddess.moneyside.dto.IncomeQuotaDTO;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import com.bjike.goddess.moneyside.to.IncomeQuotaTO;
 
 import java.util.List;
@@ -18,6 +19,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface IncomeQuotaAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 收益分配额列表总条数
      */

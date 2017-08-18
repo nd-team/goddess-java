@@ -15,6 +15,7 @@ import com.bjike.goddess.moneyside.bo.InvestFormBO;
 import com.bjike.goddess.moneyside.dto.CashInvestDTO;
 import com.bjike.goddess.moneyside.dto.InvestFormDTO;
 import com.bjike.goddess.moneyside.to.CashInvestTO;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import com.bjike.goddess.moneyside.to.InvestFormTO;
 import com.bjike.goddess.moneyside.to.MoneySideDeleteFileTO;
 import com.bjike.goddess.moneyside.vo.CashInvestVO;
@@ -49,6 +50,28 @@ public class CashInvestAction extends BaseFileAction{
     private CashInvestAPI cashInvestAPI;
     @Autowired
     private FileAPI fileAPI;
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = cashInvestAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 现金投资列表总条数

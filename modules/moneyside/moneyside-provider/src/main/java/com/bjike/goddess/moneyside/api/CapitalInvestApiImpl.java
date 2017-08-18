@@ -5,6 +5,7 @@ import com.bjike.goddess.moneyside.bo.CapitalInvestBO;
 import com.bjike.goddess.moneyside.dto.CapitalInvestDTO;
 import com.bjike.goddess.moneyside.service.CapitalInvestSer;
 import com.bjike.goddess.moneyside.to.CapitalInvestTO;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,15 @@ import java.util.List;
 public class CapitalInvestApiImpl implements CapitalInvestAPI {
     @Autowired
     private CapitalInvestSer capitalInvestSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return capitalInvestSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return capitalInvestSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countCapitalInvest(CapitalInvestDTO capitalInvestDTO) throws SerException {
         return capitalInvestSer.countCapitalInvest(capitalInvestDTO);
@@ -51,5 +61,13 @@ public class CapitalInvestApiImpl implements CapitalInvestAPI {
     @Override
     public void removeCapitalInvest(String id) throws SerException {
         capitalInvestSer.removeCapitalInvest(id);
+    }
+    @Override
+    public CapitalInvestBO getInnerProject(String innerProject) throws SerException {
+        return capitalInvestSer.getInnerProject(innerProject);
+    }
+    @Override
+    public List<String> getInnerProject() throws SerException {
+        return capitalInvestSer.getInnerProject();
     }
 }

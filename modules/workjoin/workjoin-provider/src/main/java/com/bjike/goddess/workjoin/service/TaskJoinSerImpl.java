@@ -209,7 +209,9 @@ public class TaskJoinSerImpl extends ServiceImpl<TaskJoin, TaskJoinDTO> implemen
     public TaskJoinBO editTaskJoin(TaskJoinTO taskJoinTO) throws SerException {
         checkAddIdentity();
         TaskJoin taskJoin = super.findById(taskJoinTO.getId());
-        BeanTransform.copyProperties(taskJoinTO,taskJoin,true);
+        LocalDateTime creatTime = taskJoin.getCreateTime();
+        taskJoin = BeanTransform.copyProperties(taskJoinTO,TaskJoin.class,true);
+        taskJoin.setCreateTime(creatTime);
         taskJoin.setModifyTime(LocalDateTime.now());
         super.update(taskJoin);
         return BeanTransform.copyProperties(taskJoinTO,TaskJoinBO.class,true);

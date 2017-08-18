@@ -95,6 +95,14 @@ public interface FieldDockSer extends Ser<FieldDock, FieldDockDTO> {
 
     }
     /**
+     * 获取所有项目名称
+     *
+     * @throws SerException
+     */
+    default List<String> getProjectName() throws SerException {
+        return null;
+    }
+    /**
      * 导入
      *
      * @param fieldDockTOS 字段对接

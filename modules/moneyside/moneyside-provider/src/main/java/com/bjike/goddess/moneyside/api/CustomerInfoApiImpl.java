@@ -6,6 +6,7 @@ import com.bjike.goddess.moneyside.dto.CustomerInfoDTO;
 import com.bjike.goddess.moneyside.entity.CustomerInfo;
 import com.bjike.goddess.moneyside.service.CustomerInfoSer;
 import com.bjike.goddess.moneyside.to.CustomerInfoTO;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,15 @@ import java.util.List;
 public class CustomerInfoApiImpl implements CustomerInfoAPI {
     @Autowired
     private CustomerInfoSer customerInfoSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return customerInfoSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return customerInfoSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countCustomerInfo(CustomerInfoDTO customerInfoDTO) throws SerException {
         return customerInfoSer.countCustomerInfo(customerInfoDTO);

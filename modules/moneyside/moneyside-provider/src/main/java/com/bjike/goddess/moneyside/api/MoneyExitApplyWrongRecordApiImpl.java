@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.moneyside.bo.MoneyExitApplyWrongRecordBO;
 import com.bjike.goddess.moneyside.dto.MoneyExitApplyWrongRecordDTO;
 import com.bjike.goddess.moneyside.service.MoneyExitApplyWrongRecordSer;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,15 @@ import java.util.List;
 public class MoneyExitApplyWrongRecordApiImpl implements MoneyExitApplyWrongRecordAPI {
     @Autowired
     private MoneyExitApplyWrongRecordSer moneyExitApplyWrongRecordSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return moneyExitApplyWrongRecordSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return moneyExitApplyWrongRecordSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countMoneyExitApplyWrongRecord(MoneyExitApplyWrongRecordDTO moneyExitApplyWrongRecordDTO) throws SerException {
         return moneyExitApplyWrongRecordSer.countMoneyExitApplyWrongRecord(moneyExitApplyWrongRecordDTO);
