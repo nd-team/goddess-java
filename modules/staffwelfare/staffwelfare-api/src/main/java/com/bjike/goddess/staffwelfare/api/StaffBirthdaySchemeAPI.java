@@ -121,4 +121,12 @@ public interface StaffBirthdaySchemeAPI {
      * @throws SerException
      */
     StaffBirthdaySchemeBO findOne(String id) throws SerException;
+
+    /**
+     * 汇总
+     *
+     * @param dto 汇总条件
+     * @return 员工生日福利方案结果集
+     */
+    List<StaffBirthdaySchemeBO> collect(StaffBirthdaySchemeDTO dto) throws SerException;
 }

@@ -146,7 +146,6 @@ public interface MarketServeApplyAPI {
      */
     List<String> findAllAreas() throws SerException;
 
-
     /**
      * 查看所有的项目代号
      *

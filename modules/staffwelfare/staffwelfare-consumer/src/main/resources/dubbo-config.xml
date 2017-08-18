@@ -42,6 +42,8 @@
 
 	<!-- 部门API -->
 	<dubbo:reference interface="com.bjike.goddess.user.api.DepartmentAPI" id="departmentApiImpl" />
+	<!--员工生日汇总-->
+	<dubbo:reference interface="com.bjike.goddess.staffwelfare.api.StaffBirthDayAPI" id="staffBirthDayApiImpl" />
 
 
 	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
@@ -59,6 +61,9 @@
 	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
 	<dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
 	<dubbo:reference  validation="true" id="entryBasicInfoApiImpl" interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" />
+	<dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
+	<dubbo:reference  validation="true" id="dimissionInfoApiImpl" interface="com.bjike.goddess.dimission.api.DimissionInfoAPI" />
+    <dubbo:reference  validation="true" id="staffRecordsApiImpl" interface="com.bjike.goddess.archive.api.StaffRecordsAPI" />
 
 
 

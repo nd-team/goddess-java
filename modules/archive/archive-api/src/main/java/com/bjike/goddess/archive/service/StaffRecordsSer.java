@@ -155,4 +155,10 @@ public interface StaffRecordsSer extends Ser<StaffRecords, StaffRecordsDTO> {
      * @return
      */
     byte[] templateDimissionExcel() throws SerException;
+
+    /**
+     * 根据员工生日月份来查找员工数据　——jiangzaixuan 2017/8/17 10:31
+     */
+
+    List<StaffRecordsBO> findByMonth(Integer month) throws SerException;
 }

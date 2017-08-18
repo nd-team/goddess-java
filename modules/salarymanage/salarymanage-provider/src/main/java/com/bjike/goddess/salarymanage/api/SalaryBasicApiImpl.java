@@ -114,4 +114,5 @@ public class SalaryBasicApiImpl implements SalaryBasicAPI  {
     public SalaryBasicBO findOne(String id) throws SerException {
         return salaryBasicSer.findOne(id);
     }
+
 }
