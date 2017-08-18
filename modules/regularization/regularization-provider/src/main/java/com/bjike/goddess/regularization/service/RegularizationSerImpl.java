@@ -260,7 +260,6 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     }
 
 
-
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
 
@@ -495,12 +494,12 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         String username = getCurUsername();
         ManagementScore model = setManagementScore(id, to, username);
         managementScoreSer.save(model);
-        List<ManagementScoreBO> managementScoreBOS =managementScoreSer.findByRegularId(id);
+        List<ManagementScoreBO> managementScoreBOS = managementScoreSer.findByRegularId(id);
         Integer managementSum = 0;
         Double managementAverage = 0d;
-        if (managementScoreBOS != null && managementScoreBOS.size()>0){
-            managementSum =  managementScoreBOS.stream().mapToInt(ManagementScoreBO::getSpecificScore).sum();
-            managementAverage = Double.valueOf(managementSum/managementScoreBOS.size());
+        if (managementScoreBOS != null && managementScoreBOS.size() > 0) {
+            managementSum = managementScoreBOS.stream().mapToInt(ManagementScoreBO::getSpecificScore).sum();
+            managementAverage = Double.valueOf(managementSum / managementScoreBOS.size());
         }
         Regularization regularization = super.findById(id);
         regularization.setManagementAverage(managementAverage);
@@ -714,11 +713,23 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     @Override
     //chenjunhao
     public Set<String> allNum() throws SerException {
-        List<Regularization> list=super.findAll();
-        Set<String> set=new HashSet<>();
-        for (Regularization r:list){
+        List<Regularization> list = super.findAll();
+        Set<String> set = new HashSet<>();
+        for (Regularization r : list) {
             set.add(r.getEmpNo());
         }
         return set;
+    }
+
+    @Override
+    public String getTime(String userName) throws SerException {
+        String time = null;
+        RegularizationDTO dto = new RegularizationDTO();
+        dto.getConditions().add(Restrict.eq("name", userName));
+        List<Regularization> regularizations = super.findByCis(dto);
+        if (!CollectionUtils.isEmpty(regularizations)) {
+            time = regularizations.get(0).getPositiveDate().toString();
+        }
+        return time;
     }
 }

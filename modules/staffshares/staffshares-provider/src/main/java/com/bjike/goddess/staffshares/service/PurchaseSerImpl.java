@@ -416,6 +416,16 @@ public class PurchaseSerImpl extends ServiceImpl<Purchase, PurchaseDTO> implemen
                 details.setSharesNum(details.getSharesNum() - to.getPurchaseNum());
             } else {
                 throw new SerException("交易数据不存在");
+                //增加新的交易详情数据
+//                Details details = new Details();
+//                details.setCode(temp.getCode());
+//                details.setName(temp.getIssueName());
+//                details.setPublisher(temp.getSellName());
+//                details.setNumber();
+//                details.setPrice();
+//                details.setTime();
+//                details.setSharesNum();
+//                details.setFacevalue();
             }
             //增加出售记录
             Sellschedule sellschedule = new Sellschedule();

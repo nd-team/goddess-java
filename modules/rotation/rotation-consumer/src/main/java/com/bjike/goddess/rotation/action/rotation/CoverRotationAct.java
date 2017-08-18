@@ -1,5 +1,6 @@
 package com.bjike.goddess.rotation.action.rotation;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -9,6 +10,7 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.ArrangementAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.organize.vo.OpinionVO;
 import com.bjike.goddess.rotation.api.CoverRotationAPI;
@@ -19,9 +21,9 @@ import com.bjike.goddess.rotation.to.CoverRotationTO;
 import com.bjike.goddess.rotation.to.GuidePermissionTO;
 import com.bjike.goddess.rotation.vo.CoverRotationOpinionVO;
 import com.bjike.goddess.rotation.vo.CoverRotationVO;
-import com.bjike.goddess.rotation.vo.FindNameVO;
-import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 岗位轮换自荐
@@ -49,6 +52,10 @@ public class CoverRotationAct {
     private ArrangementAPI arrangementAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     /**
      * 保存
@@ -192,21 +199,47 @@ public class CoverRotationAct {
     @GetMapping("v/findThawOpinion")
     public Result findThawOpinion() throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(arrangementAPI.findThawOpinion(), OpinionVO.class));
+            if (moduleAPI.isCheck("organize")) {
+                return ActResult.initialize(BeanTransform.copyProperties(arrangementAPI.findThawOpinion(), OpinionVO.class));
+            } else {
+                return ActResult.initialize(null);
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
+//    /**
+//     * 岗位轮换姓名
+//     *
+//     * @return class FindNameVO
+//     * @version v1
+//     */
+//    @GetMapping("v1/getName")
+//    public Result getName() throws ActException {
+//        try {
+//            return ActResult.initialize(BeanTransform.copyProperties(coverRotationAPI.getName(), FindNameVO.class));
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+
     /**
      * 岗位轮换姓名
-     * @return class FindNameVO
+     *
      * @version v1
      */
     @GetMapping("v1/getName")
     public Result getName() throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(coverRotationAPI.getName(), FindNameVO.class));
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("organize")) {
+                List<UserBO> userBOs = positionDetailUserAPI.findUserListInOrgan();
+                if (!CollectionUtils.isEmpty(userBOs)) {
+                    list = userBOs.stream().map(UserBO::getUsername).distinct().collect(Collectors.toList());
+                }
+            }
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

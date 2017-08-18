@@ -35,6 +35,7 @@ public interface RegularizationAPI {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 根据id查询员工转正
      *
@@ -106,10 +107,10 @@ public interface RegularizationAPI {
     /**
      * 决策层评价
      *
-     * @param id 员工转正唯一标识
+     * @param id                    员工转正唯一标识
      * @param decisionLevelEvaluate 决策层评价
-     * @param decisionLevelRank 决策层评分等级
-     * @param decisionLevelScore 决策层具体评分
+     * @param decisionLevelRank     决策层评分等级
+     * @param decisionLevelScore    决策层具体评分
      * @throws SerException
      */
     void decisionLevelEvaluate(String id, String decisionLevelEvaluate, String decisionLevelRank, Integer decisionLevelScore) throws SerException;
@@ -125,7 +126,7 @@ public interface RegularizationAPI {
     /**
      * 预算模块补充
      *
-     * @param id 员工转正唯一标识
+     * @param id                    员工转正唯一标识
      * @param budgetPositiveComment 预算模块转正意见
      * @throws SerException
      */
@@ -158,13 +159,14 @@ public interface RegularizationAPI {
     default List<String> findallMonUser() throws SerException {
         return null;
     }
+
     /**
      * 链接入职信息
      *
      * @return
      * @throws SerException
      */
-    default List<RegularizationBO> findAddRusult(String name,String empNumer) throws SerException {
+    default List<RegularizationBO> findAddRusult(String name, String empNumer) throws SerException {
         return null;
     }
 
@@ -186,4 +188,12 @@ public interface RegularizationAPI {
      * @throws SerException
      */
     Set<String> allNum() throws SerException;
+
+    /**
+     * 根据员工姓名查找转正时间
+     * zhuangkaiqin
+     */
+    default String getTime(String userName) throws SerException {
+        return null;
+    }
 }
