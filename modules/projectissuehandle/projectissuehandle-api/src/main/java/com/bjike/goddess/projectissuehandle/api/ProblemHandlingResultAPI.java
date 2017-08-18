@@ -1,7 +1,6 @@
 package com.bjike.goddess.projectissuehandle.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.projectissuehandle.bo.CollectBO;
 import com.bjike.goddess.projectissuehandle.bo.ProblemHandlingResultBO;
 import com.bjike.goddess.projectissuehandle.dto.ProblemHandlingResultDTO;
 import com.bjike.goddess.projectissuehandle.to.GuidePermissionTO;
@@ -25,12 +24,14 @@ public interface ProblemHandlingResultAPI {
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 确认问题处理结果列表总条数
      */
@@ -100,10 +101,11 @@ public interface ProblemHandlingResultAPI {
 
     /**
      * 导出Excel
+     *
      * @param dto
      * @throws SerException
      */
-    byte[] exportExcel(ProblemHandlingResultDTO dto ) throws SerException;
+    byte[] exportExcel(ProblemHandlingResultDTO dto) throws SerException;
 
     /**
      * 获取内部项目名称
@@ -113,6 +115,7 @@ public interface ProblemHandlingResultAPI {
     default List<String> getName() throws SerException {
         return null;
     }
+
     /**
      * 获取工程类型
      *
@@ -121,12 +124,21 @@ public interface ProblemHandlingResultAPI {
     default List<String> getType() throws SerException {
         return null;
     }
+
     /**
      * 获取问题对象
      *
      * @return class String
      */
     default List<String> getObject() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取全部的问题处理人员
+     * zhuangkaiqin
+     */
+    default List<String> getProblemHandler() throws SerException {
         return null;
     }
 }

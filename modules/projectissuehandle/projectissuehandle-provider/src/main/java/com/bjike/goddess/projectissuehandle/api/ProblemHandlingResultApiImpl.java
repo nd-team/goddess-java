@@ -92,5 +92,10 @@ public class ProblemHandlingResultApiImpl implements ProblemHandlingResultAPI {
         return problemHandlingResultSer.getObject();
     }
 
+    @Override
+    public List<String> getProblemHandler() throws SerException {
+        return problemHandlingResultSer.getProblemHandler();
+    }
+
 
 }

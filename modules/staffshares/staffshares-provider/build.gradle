@@ -31,6 +31,8 @@ dependencies {
     compile project(":modules:staffshares:staffshares-api")
     compile project(":modules:bonus:bonus-api")
     compile project(":modules:staffentry:staffentry-api")
+    compile project(":modules:assemble:assemble-api")
+    compile project(":modules:assistance:assistance-api")
     compile project(":common:common-utils")
 }
 

@@ -146,6 +146,11 @@ public class DayPlanSerImpl extends ServiceImpl<DayPlan, DayPlanDTO> implements 
         return flag;
     }
 
+    @Override
+    public List<String> getPhase() throws SerException {
+        return null;
+    }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DayPlanBO save(DayPlanTO to) throws SerException {

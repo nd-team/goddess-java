@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -290,7 +291,7 @@ public class AgeAssistSerImpl extends ServiceImpl<AgeAssist, AgeAssistDTO> imple
 
     @Override
     public AgeAssistBO getOneById(String id) throws SerException {
-        if (StringUtils.isBlank(id)){
+        if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
         AgeAssist list = super.findById(id);
@@ -320,8 +321,8 @@ public class AgeAssistSerImpl extends ServiceImpl<AgeAssist, AgeAssistDTO> imple
     @Override
     public AgeAssistBO addAgeAssist(AgeAssistTO ageAssistTO) throws SerException {
         checkAddIdentity();
-        if( ageAssistTO.getJobAge()==null || ageAssistTO.getJobAge().isNaN()){
-            ageAssistTO.setJobAge( 0d );
+        if (ageAssistTO.getJobAge() == null || ageAssistTO.getJobAge().isNaN()) {
+            ageAssistTO.setJobAge(0d);
         }
         AgeAssist ageAssist = BeanTransform.copyProperties(ageAssistTO, AgeAssist.class, true);
 
@@ -338,8 +339,8 @@ public class AgeAssistSerImpl extends ServiceImpl<AgeAssist, AgeAssistDTO> imple
         if (StringUtils.isBlank(ageAssistTO.getId())) {
             throw new SerException("id不能为空");
         }
-        if( ageAssistTO.getJobAge()==null || ageAssistTO.getJobAge().isNaN()){
-            ageAssistTO.setJobAge( 0d );
+        if (ageAssistTO.getJobAge() == null || ageAssistTO.getJobAge().isNaN()) {
+            ageAssistTO.setJobAge(0d);
         }
         AgeAssist ageAssist = BeanTransform.copyProperties(ageAssistTO, AgeAssist.class, true);
         AgeAssist rs = super.findById(ageAssistTO.getId());
@@ -358,5 +359,17 @@ public class AgeAssistSerImpl extends ServiceImpl<AgeAssist, AgeAssistDTO> imple
             throw new SerException("id不能为空");
         }
         super.remove(id);
+    }
+
+    @Override
+    public Double getJobAge(String userName) throws SerException {
+        Double jobAge = 0d;
+        AgeAssistDTO ageAssistDTO = new AgeAssistDTO();
+        ageAssistDTO.getConditions().add(Restrict.eq("empName", userName));
+        List<AgeAssist> ageAssists = super.findByCis(ageAssistDTO);
+        if (!CollectionUtils.isEmpty(ageAssists)) {
+            jobAge = ageAssists.get(0).getJobAge();
+        }
+        return jobAge;
     }
 }

@@ -172,4 +172,12 @@ public interface MarketServeApplySer extends Ser<MarketServeApply, MarketServeAp
      * @throws SerException
      */
     byte[] templateExport() throws SerException;
+
+    /**
+     * 获取全部的招待负责人
+     * zhuangkaiqin
+     */
+    default List<String> getServePrincipal() throws SerException {
+        return null;
+    }
 }

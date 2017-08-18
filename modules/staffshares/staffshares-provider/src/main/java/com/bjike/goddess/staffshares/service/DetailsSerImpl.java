@@ -1,5 +1,7 @@
 package com.bjike.goddess.staffshares.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.assistance.api.AgeAssistAPI;
 import com.bjike.goddess.bonus.api.DisciplineRecordAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -8,8 +10,6 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
-import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
-import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffshares.api.SchemeAPI;
 import com.bjike.goddess.staffshares.bo.DetailsBO;
 import com.bjike.goddess.staffshares.bo.SchemeIssueBO;
@@ -59,8 +59,8 @@ public class DetailsSerImpl extends ServiceImpl<Details, DetailsDTO> implements 
     private UserAPI userAPI;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
-    @Autowired
-    private EntryBasicInfoAPI entryBasicInfoAPI;
+    //    @Autowired
+//    private EntryBasicInfoAPI entryBasicInfoAPI;
     @Autowired
     private DisciplineRecordAPI disciplineRecordAPI;
 
@@ -72,6 +72,10 @@ public class DetailsSerImpl extends ServiceImpl<Details, DetailsDTO> implements 
     private BuyscheduleSer buyscheduleSer;
     @Autowired
     private SellscheduleSer sellscheduleSer;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private AgeAssistAPI ageAssistAPI;
 
 
     /**
@@ -302,21 +306,29 @@ public class DetailsSerImpl extends ServiceImpl<Details, DetailsDTO> implements 
                 purchase.setDepartment(positionDetailBO.getDepartmentName());
                 purchase.setPosition(positionDetailBO.getPosition());
 
-                List<EntryBasicInfoBO> entryBasicInfoBOs = entryBasicInfoAPI.getByEmpNumber(positionDetailBO.getSerialNumber());
-                if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
-                    //获取第一条数据
-                    EntryBasicInfoBO entryBasicInfoBO = entryBasicInfoBOs.get(0);
-                    String time = entryBasicInfoBO.getEntryTime();
-                    int months = getMonthSpace(time, LocalDate.now().toString());
-                    purchase.setMonths(months);
-                } else {
-                    purchase.setMonths(0);
+//                List<EntryBasicInfoBO> entryBasicInfoBOs = entryBasicInfoAPI.getByEmpNumber(positionDetailBO.getSerialNumber());
+//                if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
+                //获取第一条数据
+//                    EntryBasicInfoBO entryBasicInfoBO = entryBasicInfoBOs.get(0);
+//                    String time = entryBasicInfoBO.getEntryTime();
+//                    int months = getMonthSpace(time, LocalDate.now().toString());
+//                    purchase.setMonths(months);
+
+                int months = 0;
+                if (moduleAPI.isCheck("assistance")) {
+                    months = ageAssistAPI.getJobAge(userBO.getUsername()).intValue();
                 }
+                purchase.setMonths(0);
                 purchase.setSellName(entity.getPublisher());
                 purchase.setPurchaseNum(to.getPurchaseNum());
                 purchase.setMoney(to.getPurchaseNum() * entity.getPrice());
-                purchase.setPenalty(disciplineRecordAPI.getPushNum(userBO.getUsername()));
-                purchase.setReward(disciplineRecordAPI.getRewardNum(userBO.getUsername()));
+                if (moduleAPI.isCheck("bonus")) {
+                    purchase.setPenalty(disciplineRecordAPI.getPushNum(userBO.getUsername()));
+                    purchase.setReward(disciplineRecordAPI.getRewardNum(userBO.getUsername()));
+                } else {
+                    purchase.setPenalty(0);
+                    purchase.setReward(0);
+                }
                 // TODO: 17-8-7
                 //各项晋升的次数
                 purchase.setPromotion(0);
@@ -434,6 +446,7 @@ public class DetailsSerImpl extends ServiceImpl<Details, DetailsDTO> implements 
     }
 
     //计算两个日期之间的月数
+
     public int getMonthSpace(String date1, String date2) throws SerException {
 
         int result = 0;

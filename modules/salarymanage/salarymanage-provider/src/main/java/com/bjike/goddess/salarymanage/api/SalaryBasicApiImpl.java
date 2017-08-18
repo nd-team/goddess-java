@@ -115,5 +115,4 @@ public class SalaryBasicApiImpl implements SalaryBasicAPI  {
         return salaryBasicSer.findOne(id);
     }
 
-
 }

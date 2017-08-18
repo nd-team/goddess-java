@@ -30,6 +30,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -79,13 +80,17 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
 
     private CoverRotationBO transformBO(CoverRotation entity) throws SerException {
         CoverRotationBO bo = BeanTransform.copyProperties(entity, CoverRotationBO.class);
+        String userToken = RpcTransmit.getUserToken();
         UserBO user = userAPI.findByUsername(entity.getUsername());
+        RpcTransmit.transmitUserToken(userToken);
         EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
         dto.getConditions().add(Restrict.eq("name", entity.getUsername()));
         List<EntryBasicInfoBO> entryBasicInfoBOs = entryBasicInfoAPI.listEntryBasicInfo(dto);
         RegularizationDTO regularizationDTO = new RegularizationDTO();
         regularizationDTO.getConditions().add(Restrict.eq("name", entity.getUsername()));
+        RpcTransmit.transmitUserToken(userToken);
         List<RegularizationBO> regularizationBOs = regularizationAPI.list(regularizationDTO);
+        RpcTransmit.transmitUserToken(userToken);
         if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
             EntryBasicInfoBO entryBasicInfoBO = entryBasicInfoBOs.get(0);
             bo.setEntryTime(entryBasicInfoBO.getEntryTime());
@@ -108,19 +113,25 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
 
     private List<CoverRotationBO> transformBOList(List<CoverRotation> list) throws SerException {
         List<CoverRotationBO> bos = new ArrayList<>(0);
-        for (CoverRotation entity : list)
-            bos.add(this.transformBO(entity));
+        if (!CollectionUtils.isEmpty(list)) {
+            for (CoverRotation entity : list) {
+                bos.add(this.transformBO(entity));
+            }
+        }
         return bos;
     }
 
     @Override
     public CoverRotationBO save(CoverRotationTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         UserBO user = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         CoverRotation entity = BeanTransform.copyProperties(to, CoverRotation.class, true);
         List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.findPositionByUser(user.getId()).stream()
                 .sorted(Comparator.comparing(PositionDetailBO::getArea)
                         .thenComparing(PositionDetailBO::getDepartmentId))
                 .collect(Collectors.toList());
+        RpcTransmit.transmitUserToken(userToken);
         StringBuilder area = new StringBuilder(), department = new StringBuilder(), position = new StringBuilder(), arrangement = new StringBuilder();
         String tempArea = "", tempDepartment = "", tempArrangement = "";
         for (PositionDetailBO positionDetailBO : positionDetailBOs) {
@@ -157,7 +168,9 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
 
     @Override
     public CoverRotationBO update(CoverRotationTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         UserBO user = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         CoverRotation entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("该数据不存在");
@@ -174,7 +187,9 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
 
     @Override
     public CoverRotationBO delete(String id) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         UserBO user = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         CoverRotation entity = super.findById(id);
         if (!user.getUsername().equals(entity.getUsername()))
             throw new SerException("不能删除他人的轮换申请");
@@ -196,7 +211,9 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
 
     @Override
     public CoverRotationOpinionBO opinion(CoverRotationOpinionTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         UserBO user = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         CoverRotationOpinion entity = BeanTransform.copyProperties(to, CoverRotationOpinion.class);
         entity.setCover(super.findById(to.getCoverId()));
         if (null == entity.getCover())
@@ -229,7 +246,9 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
 
     @Override
     public CoverRotationBO generalOpinion(CoverRotationTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         UserBO user = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         CoverRotation entity = super.findById(to.getId());
         //@TODO 职位判断
         if (null == entity)
@@ -275,8 +294,8 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
         EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
         List<EntryBasicInfoBO> entryBasicInfoBOList = entryBasicInfoAPI.listEntryBasicInfo(dto);
         List<FindNameBO> list = new ArrayList<>();
-        if (null != entryBasicInfoBOList && entryBasicInfoBOList.size() > 0){
-            for(EntryBasicInfoBO bo : entryBasicInfoBOList){
+        if (null != entryBasicInfoBOList && entryBasicInfoBOList.size() > 0) {
+            for (EntryBasicInfoBO bo : entryBasicInfoBOList) {
                 FindNameBO findNameBO = new FindNameBO();
                 findNameBO.setName(bo.getName());
                 list.add(findNameBO);

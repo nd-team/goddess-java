@@ -51,6 +51,7 @@ public class StaffBirthdayAct {
      * 查询员工生日信息
      *
      * @param dto 分页信息
+     * @param month 生日月份
      * @return class UserDetailVO
      * @version v1
      */
