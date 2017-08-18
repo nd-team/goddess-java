@@ -1,5 +1,8 @@
 package com.bjike.goddess.intromanage.action.intromanage;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.business.api.BusinessRegisterAPI;
+import com.bjike.goddess.business.bo.RegisterNaTypeCaBO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -15,9 +18,6 @@ import com.bjike.goddess.intromanage.to.FirmDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.FirmIntroTO;
 import com.bjike.goddess.intromanage.to.GuidePermissionTO;
 import com.bjike.goddess.intromanage.vo.*;
-import com.bjike.goddess.organize.api.PositionDetailUserAPI;
-import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -42,6 +42,10 @@ public class FirmIntroAct {
 
     @Autowired
     private FirmIntroAPI firmIntroAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private BusinessRegisterAPI businessRegisterAPI;
 
     /**
      * 功能导航权限
@@ -65,6 +69,7 @@ public class FirmIntroAct {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 根据id查询公司简介
      *
@@ -79,22 +84,22 @@ public class FirmIntroAct {
         try {
             FirmIntroBO bo = firmIntroAPI.findById(id);
             //查询荣誉与资质
-            List<HonorAndQualityVO> honorAndQualitieVOs = BeanTransform.copyProperties( bo.getHonorAndQualityBOS() ,HonorAndQualityVO.class );
+            List<HonorAndQualityVO> honorAndQualitieVOs = BeanTransform.copyProperties(bo.getHonorAndQualityBOS(), HonorAndQualityVO.class);
             //查询主业介绍
-            List<MainBusinessIntroVO> mainBusinessIntroVOS = BeanTransform.copyProperties( bo.getMainBusinessIntroBOS() ,MainBusinessIntroVO.class );
+            List<MainBusinessIntroVO> mainBusinessIntroVOS = BeanTransform.copyProperties(bo.getMainBusinessIntroBOS(), MainBusinessIntroVO.class);
             //查询成功案例
-            List<SuccessStoriesVO> successStoriesVOS = BeanTransform.copyProperties( bo.getSuccessStoriesBOS() ,SuccessStoriesVO.class );
+            List<SuccessStoriesVO> successStoriesVOS = BeanTransform.copyProperties(bo.getSuccessStoriesBOS(), SuccessStoriesVO.class);
             //查询客户及合作伙伴
-            List<CustomerAndPartnerVO> customerAndPartnerVOS = BeanTransform.copyProperties( bo.getCustomerAndPartnerBOS() ,CustomerAndPartnerVO.class );
+            List<CustomerAndPartnerVO> customerAndPartnerVOS = BeanTransform.copyProperties(bo.getCustomerAndPartnerBOS(), CustomerAndPartnerVO.class);
             //查询通讯途径
-            List<CommunicationPathVO> communicationPathVOS = BeanTransform.copyProperties( bo.getCommunicationPathBOS() ,CommunicationPathVO.class );
+            List<CommunicationPathVO> communicationPathVOS = BeanTransform.copyProperties(bo.getCommunicationPathBOS(), CommunicationPathVO.class);
 
             FirmIntroVO vo = BeanTransform.copyProperties(bo, FirmIntroVO.class, request);
-            vo.setHonorAndQualityVOS( honorAndQualitieVOs );
-            vo.setMainBusinessIntroVOS( mainBusinessIntroVOS );
-            vo.setSuccessStoriesVOS( successStoriesVOS );
-            vo.setCustomerAndPartnerVOS( customerAndPartnerVOS );
-            vo.setCommunicationPathVOS( communicationPathVOS );
+            vo.setHonorAndQualityVOS(honorAndQualitieVOs);
+            vo.setMainBusinessIntroVOS(mainBusinessIntroVOS);
+            vo.setSuccessStoriesVOS(successStoriesVOS);
+            vo.setCustomerAndPartnerVOS(customerAndPartnerVOS);
+            vo.setCommunicationPathVOS(communicationPathVOS);
 
             return ActResult.initialize(vo);
         } catch (SerException e) {
@@ -233,4 +238,42 @@ public class FirmIntroAct {
         }
     }
 
+    /**
+     * 公司名称公司性质公司资金下拉值
+     *
+     * @throws ActException
+     * @return class RegisterNaTypeCaVO
+     * @version v1
+     */
+    @GetMapping("v1/findNaTyCa")
+    public Result findNaTyCa() throws ActException {
+        try {
+            List<RegisterNaTypeCaBO> nameTypeCa = new ArrayList<>();
+            if (moduleAPI.isCheck("business")) {
+                nameTypeCa = businessRegisterAPI.findRegiNaTyCa();
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(nameTypeCa, RegisterNaTypeCaVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 地址下拉值
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findBussiness/address")
+    public Result findBussinessAdd() throws ActException {
+        try {
+            List<String> address = new ArrayList<>();
+            if (moduleAPI.isCheck("business")) {
+                address = businessRegisterAPI.findAddress();
+            }
+            return ActResult.initialize(address);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

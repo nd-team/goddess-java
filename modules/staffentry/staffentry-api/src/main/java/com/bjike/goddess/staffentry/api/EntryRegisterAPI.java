@@ -128,5 +128,28 @@ public interface EntryRegisterAPI {
     default EntryRegister getByNumber(String number) throws SerException {
         return null;
     }
-
+    /**
+     * 获取所有的qq号
+     * lijuntao
+     * @throws SerException
+     */
+    default List<String> findQQ() throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有的毕业学校
+     * lijuntao
+     * @throws SerException
+     */
+    default List<String> findSchoolTag() throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有的毕业时间
+     * lijuntao
+     * @throws SerException
+     */
+    default List<String> findGraduationDate() throws SerException {
+        return null;
+    }
 }

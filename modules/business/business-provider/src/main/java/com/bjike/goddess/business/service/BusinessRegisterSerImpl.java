@@ -1,6 +1,7 @@
 package com.bjike.goddess.business.service;
 
 import com.bjike.goddess.business.bo.BusinessRegisterBO;
+import com.bjike.goddess.business.bo.RegisterNaTypeCaBO;
 import com.bjike.goddess.business.enums.GuideAddrStatus;
 import com.bjike.goddess.business.excel.SonPermissionObject;
 import com.bjike.goddess.business.to.BusinessRegisterTO;
@@ -13,6 +14,7 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -20,8 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 工商注册业务实现
@@ -273,4 +274,25 @@ public class BusinessRegisterSerImpl extends ServiceImpl<BusinessRegister, Busin
         super.remove(id);
     }
 
+    @Override
+    public List<RegisterNaTypeCaBO> findRegiNaTyCa() throws SerException {
+        List<BusinessRegister> businessRegisters = super.findAll();
+        return BeanTransform.copyProperties(businessRegisters,RegisterNaTypeCaBO.class);
+    }
+
+    @Override
+    public List<String> findAddress() throws SerException {
+        List<BusinessRegister> list = super.findAll();
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (BusinessRegister model : list) {
+            String address = model.getAddress();
+            if (StringUtils.isNotBlank(model.getAddress())) {
+                set.add(address);
+            }
+        }
+        return new ArrayList<>(set);
+    }
 }
