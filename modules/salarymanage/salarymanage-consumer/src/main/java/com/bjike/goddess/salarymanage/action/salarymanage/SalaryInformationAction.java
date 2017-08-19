@@ -3,11 +3,21 @@ package com.bjike.goddess.salarymanage.action.salarymanage;
 import com.bjike.goddess.archive.bo.StaffRecordsBO;
 import com.bjike.goddess.archive.vo.StaffRecordsVO;
 import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.assistance.bo.AgeAssistBO;
+import com.bjike.goddess.assistance.bo.ComputerAssistBO;
+import com.bjike.goddess.assistance.bo.HotAssistBO;
+import com.bjike.goddess.assistance.bo.HouseAssistBO;
+import com.bjike.goddess.assistance.entity.HouseAssist;
+import com.bjike.goddess.assistance.vo.AgeAssistVO;
+import com.bjike.goddess.assistance.vo.ComputerAssistVO;
+import com.bjike.goddess.assistance.vo.HotAssistVO;
+import com.bjike.goddess.assistance.vo.HouseAssistVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
@@ -18,6 +28,8 @@ import com.bjike.goddess.managementpromotion.bo.LevelShowBO;
 import com.bjike.goddess.managementpromotion.entity.LevelShow;
 import com.bjike.goddess.managepromotion.bo.OverviewSkillLevelBO;
 import com.bjike.goddess.managepromotion.vo.OverviewSkillLevelVO;
+import com.bjike.goddess.salaryconfirm.bo.SalaryconfirmBO;
+import com.bjike.goddess.salaryconfirm.vo.SalaryconfirmVO;
 import com.bjike.goddess.salarymanage.api.SalaryInformationAPI;
 import com.bjike.goddess.salarymanage.bo.SalaryInformationBO;
 import com.bjike.goddess.salarymanage.dto.SalaryInformationDTO;
@@ -27,6 +39,8 @@ import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
 import com.bjike.goddess.salarymanage.to.SalaryInformationDeleteFileTO;
 import com.bjike.goddess.salarymanage.to.SalaryInformationTO;
 import com.bjike.goddess.salarymanage.vo.SalaryInformationVO;
+import com.bjike.goddess.secure.bo.AttachedBO;
+import com.bjike.goddess.secure.vo.AttachedVO;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 import com.bjike.goddess.storage.api.FileAPI;
@@ -411,14 +425,18 @@ public class SalaryInformationAction extends BaseFileAction{
     /**
      * 根据员工编号查询入职时间和离职日期和身份证号码和银行卡号
      * @param employeeNumber
-     * @return
+     * @return class StaffRecordsVO
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/find/staff")
     public Result findStaff(String employeeNumber) throws ActException{
         try {
-            StaffRecordsBO bo = salaryInformationAPI.findStaff(employeeNumber);
-            StaffRecordsVO vo = BeanTransform.copyProperties(bo,StaffRecordsVO.class);
+            StaffRecordsVO vo = new StaffRecordsVO();
+            if(moduleAPI.isCheck("archive")) {
+                StaffRecordsBO bo = salaryInformationAPI.findStaff(employeeNumber);
+                vo = BeanTransform.copyProperties(bo, StaffRecordsVO.class);
+            }
             return ActResult.initialize(vo);
         }catch (SerException e){
             throw new ActException(e.getMessage());
@@ -430,11 +448,15 @@ public class SalaryInformationAction extends BaseFileAction{
      * 根据员工编号id查找转正时间
      * @param employeeId 员工编号id
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/find/positiveDate")
     public Result findPositiveDate(String employeeId) throws ActException{
         try {
-            String time = salaryInformationAPI.findPositiveDate(employeeId);
+            String time = new String();
+            if(moduleAPI.isCheck("regularization")) {
+                time = salaryInformationAPI.findPositiveDate(employeeId);
+            }
             return ActResult.initialize(time);
         }catch (SerException e){
             throw new ActException(e.getMessage());
@@ -445,14 +467,145 @@ public class SalaryInformationAction extends BaseFileAction{
     /**
      * 根据员工姓名查找技能等级获取时间
      * @param employeeName
-     * @return
+     * @return class OverviewSkillLevelVO
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/find/skill")
     public Result findSkill(String employeeName) throws ActException{
         try {
-            OverviewSkillLevelBO bo = salaryInformationAPI.findSkill(employeeName);
-            OverviewSkillLevelVO vo = BeanTransform.copyProperties(bo,OverviewSkillLevelVO.class);
+            OverviewSkillLevelVO vo = new OverviewSkillLevelVO();
+            if(moduleAPI.isCheck("managepromotion")) {
+                OverviewSkillLevelBO bo = salaryInformationAPI.findSkill(employeeName);
+                vo = BeanTransform.copyProperties(bo, OverviewSkillLevelVO.class);
+            }
+            return ActResult.initialize(vo);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 根据计薪周期查询电脑补助情况
+     * @param dto 查询条件
+     * @return class ComputerAssistVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/computer")
+    public Result findComputer(SalaryInformationDTO dto) throws ActException{
+        try {
+            ComputerAssistVO vo = new ComputerAssistVO();
+            if(moduleAPI.isCheck("assistance")) {
+                ComputerAssistBO bo = salaryInformationAPI.findComputerAssist(dto);
+                vo = BeanTransform.copyProperties(bo, ComputerAssistVO.class);
+            }
+            return ActResult.initialize(vo);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据计薪周期查询高温补助情况
+     * @param dto 查询条件
+     * @return class HotAssistVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/hot")
+    public Result findHot(SalaryInformationDTO dto) throws ActException{
+        try {
+            HotAssistVO vo = new HotAssistVO();
+            if (moduleAPI.isCheck("assistance")) {
+                HotAssistBO bo = salaryInformationAPI.findHotAssist(dto);
+                vo = BeanTransform.copyProperties(bo, HotAssistVO.class);
+            }
+            return ActResult.initialize(vo);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据计薪周期查询住宿补助情况
+     * @param dto 查询条件
+     * @return class HouseAssistVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/house")
+    public Result findHouse(SalaryInformationDTO dto) throws ActException{
+        try {
+            HouseAssistVO vo = new HouseAssistVO();
+            if(moduleAPI.isCheck("assistance")) {
+                HouseAssistBO bo = salaryInformationAPI.findHouseAssist(dto);
+                vo = BeanTransform.copyProperties(bo, HouseAssistVO.class);
+            }
+            return ActResult.initialize(vo);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据计薪周期查询工龄补助情况
+     * @param dto 查询条件
+     * @return class AgeAssistVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/computer")
+    public Result findAge(SalaryInformationDTO dto) throws ActException{
+        try {
+            AgeAssistVO vo = new AgeAssistVO();
+            if(moduleAPI.isCheck("assistance")) {
+                AgeAssistBO bo = salaryInformationAPI.findAgeAssist(dto);
+                vo = BeanTransform.copyProperties(bo, AgeAssistVO.class);
+            }
+            return ActResult.initialize(vo);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据根据计薪周期和员工姓名获取旷工扣款和事病假扣款
+     * @param dto 查询条件
+     * @return class SalaryconfirmVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/confirm")
+    public Result findSalaryConfirm(SalaryInformationDTO dto) throws ActException{
+        try {
+            SalaryconfirmVO vo = new SalaryconfirmVO();
+            if(moduleAPI.isCheck("salaryconfirm")) {
+                SalaryconfirmBO bo = salaryInformationAPI.findSalaryConfirm(dto);
+                vo = BeanTransform.copyProperties(bo, SalaryconfirmVO.class);
+            }
+            return ActResult.initialize(vo);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据根据员工姓名查看扣社保情况
+     * @param dto 查询条件
+     * @return class AttachedVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/attached")
+    public Result findAttached(SalaryInformationDTO dto) throws ActException{
+        try {
+            AttachedVO vo = new AttachedVO();
+            if(moduleAPI.isCheck("secure")) {
+                AttachedBO bo = salaryInformationAPI.findAttached(dto);
+                vo = BeanTransform.copyProperties(bo,AttachedVO.class);
+            }
             return ActResult.initialize(vo);
         }catch (SerException e){
             throw new ActException(e.getMessage());
@@ -462,5 +615,4 @@ public class SalaryInformationAction extends BaseFileAction{
 
 
 
-
- }
+}
