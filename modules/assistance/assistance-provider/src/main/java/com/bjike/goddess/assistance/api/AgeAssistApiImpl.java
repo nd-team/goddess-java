@@ -71,4 +71,9 @@ public class AgeAssistApiImpl implements AgeAssistAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return ageAssistSer.guidePermission(guidePermissionTO);
     }
+
+    @Override
+    public AgeAssistBO findAge(String startTime, String endTime) throws SerException {
+        return ageAssistSer.findAge(startTime,endTime);
+    }
 }

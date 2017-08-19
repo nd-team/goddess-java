@@ -88,6 +88,7 @@ public interface AgeAssistAPI {
         return;
     }
 
+
     ;
 
     /**
@@ -97,5 +98,11 @@ public interface AgeAssistAPI {
     default Double getJobAge(String userName) throws SerException {
         return null;
     }
+
+    /**
+     * 根据计薪周期开始时间和结束时间获取工龄补助信息
+     */
+    AgeAssistBO findAge(String startTime,String endTime) throws SerException;
+
 
 }

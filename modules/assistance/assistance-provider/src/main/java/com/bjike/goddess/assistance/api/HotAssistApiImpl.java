@@ -76,4 +76,9 @@ public class HotAssistApiImpl implements HotAssistAPI {
     public HotAssistBO getOneById(String id) throws SerException {
         return hotAssistSer.getOneById(id);
     }
+
+    @Override
+    public HotAssistBO findHot(String startTime, String endTime) throws SerException {
+        return hotAssistSer.findHot(startTime,endTime);
+    }
 }

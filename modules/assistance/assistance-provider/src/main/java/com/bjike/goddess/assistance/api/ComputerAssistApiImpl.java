@@ -86,4 +86,9 @@ public class ComputerAssistApiImpl implements ComputerAssistAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return computerAssistSer.guidePermission(guidePermissionTO);
     }
+
+    @Override
+    public ComputerAssistBO findComputer(String startTime, String endTime) throws SerException {
+        return computerAssistSer.findComputer(startTime,endTime);
+    }
 }
