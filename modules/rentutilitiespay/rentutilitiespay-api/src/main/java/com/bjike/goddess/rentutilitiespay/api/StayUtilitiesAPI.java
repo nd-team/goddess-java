@@ -129,4 +129,10 @@ public interface StayUtilitiesAPI {
     default StayUtilitiesBO financeAudit(StayUtilitiesTO to) throws SerException {
         return null;
     }
+
+    /**
+     * 根据员工姓名,缴费日期获取缴费情况    --jiangzaixuan 2017-08-18 20:33
+     * todo 这个可能有点问题，要跟志丽沟通下
+     */
+    StayUtilitiesBO findStay(String time,String name) throws SerException;
 }

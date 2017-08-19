@@ -1,5 +1,6 @@
 package com.bjike.goddess.rentutilitiespay.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -425,4 +426,11 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
         }
     }
 
+    @Override
+    public StayUtilitiesBO findStay(String time, String name) throws SerException {
+//        StayUtilitiesDTO dto = new StayUtilitiesDTO();
+//        dto.getConditions().add(Restrict.eq("Lo"))
+//        StayUtilities stayUtilities = super.find
+        return null;
+    }
 }
