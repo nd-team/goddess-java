@@ -86,4 +86,9 @@ public class AttachedApiImpl implements AttachedAPI {
     public void notPass(AddEmployeeDTO dto, String id) throws SerException {
         attachedSer.notPass(dto, id);
     }
+
+    @Override
+    public AttachedBO findAttached(String name) throws SerException {
+        return attachedSer.findAttached(name);
+    }
 }

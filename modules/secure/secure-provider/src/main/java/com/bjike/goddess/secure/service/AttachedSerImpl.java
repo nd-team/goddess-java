@@ -1,6 +1,7 @@
 package com.bjike.goddess.secure.service;
 
 import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -509,5 +510,14 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
     @Override
     public Long count(AttachedDTO dto) throws SerException {
         return super.count(dto);
+    }
+
+    @Override
+    public AttachedBO findAttached(String name) throws SerException {
+        AttachedDTO dto = new AttachedDTO();
+        dto.getConditions().add(Restrict.eq("attachedName",name));
+        Attached attached = super.findOne(dto);
+        AttachedBO bo = BeanTransform.copyProperties(attached,AttachedBO.class,false);
+        return bo;
     }
 }
