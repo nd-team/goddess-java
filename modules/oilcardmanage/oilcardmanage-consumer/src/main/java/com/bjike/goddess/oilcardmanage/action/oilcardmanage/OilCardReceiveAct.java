@@ -151,7 +151,7 @@ public class OilCardReceiveAct {
 
         try {
             oilCardReceiveAPI.returnOilCardReceive(id);
-            return new ActResult("领用成功");
+            return new ActResult("归还成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

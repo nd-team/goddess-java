@@ -243,10 +243,11 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
                 MessageTO messageTO = new MessageTO(username + "申请油卡领用，请批准", "");
                 messageTO.setSendType(SendType.EMAIL);
                 String[] users = new String[]{internalContactsAPI.findByUser(userid).getEmail()};
+                messageTO.setContent(content);
                 messageTO.setReceivers(users);
                 messageAPI.send(messageTO);
 
-                return BeanTransform.copyProperties(to, OilCardReceiveBO.class);
+                return BeanTransform.copyProperties(model, OilCardReceiveBO.class);
             } else {
                 throw new SerException("该油卡非闲置状态,无法领用!");
             }
@@ -304,12 +305,12 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
         if (!CollectionUtils.isEmpty(list)) {
             List<OilCardReceiveBO> boList = new ArrayList<OilCardReceiveBO>();
             for (OilCardReceive model : list) {
-                OilCardReceiveBO bo = BeanTransform.copyProperties(model, OilCardReceiveBO.class);
+                OilCardReceiveBO bo = BeanTransform.copyProperties(model, OilCardReceiveBO.class,false);
                 bo.setOilCardNumber(model.getOilCardBasic().getOilCardNumber());
                 bo.setOilCardCode(model.getOilCardBasic().getOilCardCode());
                 bo.setMainOrDeputy(model.getOilCardBasic().getMainOrDeputy());
                 bo.setBelongMainCard(model.getOilCardBasic().getBelongMainCard());
-                bo.setOilCardBasicBO( BeanTransform.copyProperties(model.getOilCardBasic(), OilCardBasic.class));
+                bo.setOilCardBasicBO( BeanTransform.copyProperties(model.getOilCardBasic(), OilCardBasicBO.class,false));
                 boList.add(bo);
             }
             return boList;

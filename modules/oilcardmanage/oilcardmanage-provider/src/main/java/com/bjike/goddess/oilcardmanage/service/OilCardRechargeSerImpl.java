@@ -273,7 +273,7 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
     public void updateAfterList(LocalDateTime createTime,String oilCardId, Double exRechargeMoney, Double currentRecharge) throws SerException {
 
         OilCardRechargeDTO dto = new OilCardRechargeDTO();
-        dto.getConditions().add(Restrict.eq("oilCardBasic", oilCardId));
+        dto.getConditions().add(Restrict.eq("oilCardBasic.id", oilCardId));
         dto.getConditions().add(Restrict.gt("createTime",createTime));
         List<OilCardRecharge> list = super.findByCis(dto);
         if (list != null && list.size() > 0) {
@@ -291,7 +291,7 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
 
     private void updateAfterList(LocalDateTime createTime,String oilCardId,Double exRecargeMoney) throws SerException{
         OilCardRechargeDTO dto = new OilCardRechargeDTO();
-        dto.getConditions().add(Restrict.eq("oilCardBasic",oilCardId));
+        dto.getConditions().add(Restrict.eq("oilCardBasic.id",oilCardId));
         dto.getConditions().add(Restrict.gt("createTime",createTime));
         List<OilCardRecharge> list = super.findByCis(dto);
         if(list != null && list.size() >0 ){
@@ -364,20 +364,20 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
         OilCardBasicBO oilCardBasic = oilCardBasicSer.findByCode(oilCardCode);
         if (oilCardBasic != null) {
             StringBuilder sql = new StringBuilder(" SELECT count(*) as count, sum(rechargeMoney) as rechargeMoney FROM oilcardmanage_recharge WHERE 0 = 0 ");
-            sql.append(" and oilCardBasic_id = '" + oilCardBasic + "'");
-            sql.append(" and year(rechargeDate) = " + year);
-            sql.append(" and month(rechargeDate) = " + month);
+            sql.append(" and oilCardBasic_id = '" + oilCardBasic.getId() + "'");
+            sql.append(" and year(rechargeDate) = '" + year);
+            sql.append("' and month(rechargeDate) = '" + month+"'");
             String[] fields = new String[]{"count", "rechargeMoney"};
             List<AnalyzeBO> boList = super.findBySql(sql.toString(), AnalyzeBO.class, fields);
             if (!CollectionUtils.isEmpty(boList)) {
                 AnalyzeBO bo = boList.get(0);
                 bo.setAddOilAmount(addOilAmount);
-                StringBuilder cycleEarlyMoneyStr = new StringBuilder(" SELECT cycleEarlyMoney, FROM oilcardmanage_recharge WHERE 0 = 0 ");
-                sql.append(" and oilCardBasic_id = '" + oilCardBasic + "'");
-                sql.append(" and year(rechargeDate) = " + year);
-                sql.append(" and month(rechargeDate) = " + month);
-                sql.append(" order by rechargeDate desc limit 1");
-                List<OilCardRecharge> list = super.findBySql(sql.toString(), OilCardRecharge.class, new String[]{"cycleEarlyMoney"});
+                StringBuilder cycleEarlyMoneyStr = new StringBuilder(" SELECT cycleEarlyMoney FROM oilcardmanage_recharge WHERE 0 = 0 ");
+                cycleEarlyMoneyStr.append(" and oilCardBasic_id = '" + oilCardBasic.getId() + "'");
+                cycleEarlyMoneyStr.append(" and year(rechargeDate) = '" + year);
+                cycleEarlyMoneyStr.append("' and month(rechargeDate) = '" + month+"'");
+                cycleEarlyMoneyStr.append(" order by rechargeDate desc limit 1");
+                List<OilCardRecharge> list = super.findBySql(cycleEarlyMoneyStr.toString(), OilCardRecharge.class, new String[]{"cycleEarlyMoney"});
                 if (!CollectionUtils.isEmpty(list)) {
                     bo.setRechargeMoney(list.get(0).getCycleEarlyMoney());
                 }
