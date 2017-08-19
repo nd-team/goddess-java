@@ -103,7 +103,11 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     public DispatchCarInfoBO insertModel(DispatchCarInfoTO to) throws SerException {
         RpcTransmit.getUserToken();
         UserBO userBO = userAPI.findByUsername(to.getCarUser());
-        to.setUserNumber(userBO.getEmployeeNumber());
+        if(userBO != null) {
+            to.setUserNumber(userBO.getEmployeeNumber());
+        }else{
+            throw new SerException("公司不存在该员工");
+        }
         //加油费 = 加油量 * 当天油价 ，加油量 = 总油耗 * 总里程数 ， 总油耗 = 本车耗油 + 是否开空调 + 是否市内
         DriverInfoBO driver = driverInfoAPI.findByDriver(to.getDriver());
         if (driver == null) {
@@ -1167,8 +1171,8 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     public Double findOilAmount(String oilCardCode, Integer year, Integer month) throws SerException {
 
         String sql = "select addOilAmount , oilPrice from dispatchcar_basicinfo where oilCardNumber = '" + oilCardCode + "'"
-                + "and month(addOilTime) = " + month
-                + "and year(addOilTime) = " + year;
+                + " and month(addOilTime) = '" + month
+                + "' and year(addOilTime) = '" + year+"'";
         String[] fields = new String[]{"addOilAmount", "oilPrice"};
         List<DispatchCarInfo> list = super.findBySql(sql, DispatchCarInfo.class, fields);
 

@@ -1,5 +1,6 @@
 package com.bjike.goddess.dispatchcar.action.dispatchcar;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.carinfo.bo.DriverInfoBO;
 import com.bjike.goddess.carinfo.vo.DriverInfoVO;
 import com.bjike.goddess.common.api.entity.ADD;
@@ -36,6 +37,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,6 +57,9 @@ public class DispatchCarInfoAct extends BaseFileAction {
     private DispatchCarInfoAPI dispatchCarInfoAPI;
     @Autowired
     private FileAPI fileAPI;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 查询总记录数
@@ -261,8 +266,11 @@ public class DispatchCarInfoAct extends BaseFileAction {
    @GetMapping("v1/find/entry")
     public Result findAllEntry() throws ActException{
         try {
-            List<EntryBasicInfoBO> boList = dispatchCarInfoAPI.findAllEntry();
-            List<EntryBasicInfoVO> voList = BeanTransform.copyProperties(boList,EntryBasicInfoVO.class);
+            List<EntryBasicInfoVO> voList = new ArrayList<>(0);
+            if(moduleAPI.isCheck("assemble")) {
+                List<EntryBasicInfoBO> boList = dispatchCarInfoAPI.findAllEntry();
+                voList = BeanTransform.copyProperties(boList, EntryBasicInfoVO.class);
+            }
             return ActResult.initialize(voList);
         }catch (SerException e){
             throw new ActException(e.getMessage());
