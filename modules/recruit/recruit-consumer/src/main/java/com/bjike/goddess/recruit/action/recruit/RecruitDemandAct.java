@@ -1,5 +1,6 @@
 package com.bjike.goddess.recruit.action.recruit;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -49,6 +50,8 @@ public class RecruitDemandAct {
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private PositionDetailAPI positionDetailAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 功能导航权限
@@ -194,8 +197,12 @@ public class RecruitDemandAct {
     @GetMapping("v1/findArea")
     public Result findArea(HttpServletRequest request) throws ActException {
         try {
-            List<AreaBO> list = departmentDetailAPI.findArea();
-            return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
+            if (moduleAPI.isCheck("organize")) {
+                List<AreaBO> list = departmentDetailAPI.findArea();
+                return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
+            } else {
+                return null;
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -211,8 +218,12 @@ public class RecruitDemandAct {
     @GetMapping("v1/findDepartment")
     public Result findDepartment(HttpServletRequest request) throws ActException {
         try {
-            List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
-            return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
+            if (moduleAPI.isCheck("organize")) {
+                List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
+                return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
+            }else {
+                return null;
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -228,8 +239,12 @@ public class RecruitDemandAct {
     @GetMapping("v1/findPosition")
     public Result findPosition(HttpServletRequest request) throws ActException {
         try {
-            List<PositionDetailBO> list = positionDetailAPI.findStatus();
-            return ActResult.initialize(BeanTransform.copyProperties(list, PositionDetailVO.class, request));
+            if (moduleAPI.isCheck("organize")) {
+                List<PositionDetailBO> list = positionDetailAPI.findStatus();
+                return ActResult.initialize(BeanTransform.copyProperties(list, PositionDetailVO.class, request));
+            }else {
+                return null;
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

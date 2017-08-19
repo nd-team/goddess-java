@@ -1,5 +1,6 @@
 package com.bjike.goddess.managementpromotion.action.managementpromotion;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -42,6 +43,8 @@ public class GradeLevelAct {
     private GradeLevelAPI gradeLevelAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 模块设置导航权限
@@ -54,17 +57,19 @@ public class GradeLevelAct {
     public Result i() throws ActException {
         List<SonPermissionObject> list = new ArrayList<>();
         try {
-            SonPermissionObject obj = new SonPermissionObject();
-            obj.setName("cuspermission");
-            obj.setDescribesion("设置");
-            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
-            if (!isHasPermission) {
-                //int code, String msg
-                obj.setFlag(false);
-            } else {
-                obj.setFlag(true);
+            if (moduleAPI.isCheck("organize")) {
+                SonPermissionObject obj = new SonPermissionObject();
+                obj.setName("cuspermission");
+                obj.setDescribesion("设置");
+                Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+                if (!isHasPermission) {
+                    //int code, String msg
+                    obj.setFlag(false);
+                } else {
+                    obj.setFlag(true);
+                }
+                list.add(obj);
             }
-            list.add(obj);
             return new ActResult(0, "设置权限", list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -228,7 +233,7 @@ public class GradeLevelAct {
      * @throws ActException
      * @version v1
      */
-        @GetMapping("v1/allHierarchys")
+    @GetMapping("v1/allHierarchys")
     public Result allHierarchys() throws ActException {
         try {
             Set<String> set = gradeLevelAPI.allHierarchys();

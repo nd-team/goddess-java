@@ -313,4 +313,14 @@ public class ArtificialCostSerImpl extends ServiceImpl<ArtificialCost, Artificia
         }
         return flag;
     }
+
+    @Override
+    public List<ArtificialCostBO> find(Integer year, Integer month, String project) throws SerException {
+        ArtificialCostDTO dto = new ArtificialCostDTO();
+        dto.getConditions().add(Restrict.eq("year", year));
+        dto.getConditions().add(Restrict.eq("month", month));
+        dto.getConditions().add(Restrict.eq("project", project));
+        List<ArtificialCost> list = super.findByCis(dto);
+        return BeanTransform.copyProperties(list, ArtificialCostBO.class);
+    }
 }

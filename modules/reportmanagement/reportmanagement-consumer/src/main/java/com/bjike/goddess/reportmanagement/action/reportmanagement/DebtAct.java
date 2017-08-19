@@ -104,7 +104,7 @@ public class DebtAct {
      * @version v1
      */
     @GetMapping("v1/list1")
-    public Result list1(@Validated(DebtDTO.A.class) DebtDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result list1(DebtDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<DebtBO> list = debtAPI.list1(dto);
             List<DebtVO> vos = new ArrayList<>();

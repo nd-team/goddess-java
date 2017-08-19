@@ -1,5 +1,6 @@
 package com.bjike.goddess.managementpromotion.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -7,7 +8,6 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.managementpromotion.bo.GradeLevelBO;
 import com.bjike.goddess.managementpromotion.dto.GradeLevelDTO;
 import com.bjike.goddess.managementpromotion.entity.GradeLevel;
-import com.bjike.goddess.managementpromotion.entity.PromotionApply;
 import com.bjike.goddess.managementpromotion.enums.GuideAddrStatus;
 import com.bjike.goddess.managementpromotion.to.GradeLevelTO;
 import com.bjike.goddess.managementpromotion.to.GuidePermissionTO;
@@ -51,6 +51,8 @@ public class GradeLevelSerImpl extends ServiceImpl<GradeLevel, GradeLevelDTO> im
     private LevelShowSer levelShowSer;
     @Autowired
     private PromotionApplySer promotionApplySer;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -256,8 +258,8 @@ public class GradeLevelSerImpl extends ServiceImpl<GradeLevel, GradeLevelDTO> im
     public GradeLevelBO save(GradeLevelTO to) throws SerException {
         checkAddIdentity();
         GradeLevel gradeLevel = BeanTransform.copyProperties(to, GradeLevel.class, true);
-        String grade=levelDesignSer.findGrade(gradeLevel.getClassification(), gradeLevel.getDirection(), gradeLevel.getSkillLevel());
-        if (grade==null){
+        String grade = levelDesignSer.findGrade(gradeLevel.getClassification(), gradeLevel.getDirection(), gradeLevel.getSkillLevel());
+        if (grade == null) {
             throw new SerException("获取档次失败，请输入正确的分类，管理方向和技能等级");
         }
         gradeLevel.setGrade(grade);
@@ -290,8 +292,8 @@ public class GradeLevelSerImpl extends ServiceImpl<GradeLevel, GradeLevelDTO> im
         }
         LocalDateTime a = gradeLevel.getCreateTime();
         gradeLevel = BeanTransform.copyProperties(to, GradeLevel.class, true);
-        String grade=levelDesignSer.findGrade(gradeLevel.getClassification(), gradeLevel.getDirection(), gradeLevel.getSkillLevel());
-        if (grade==null){
+        String grade = levelDesignSer.findGrade(gradeLevel.getClassification(), gradeLevel.getDirection(), gradeLevel.getSkillLevel());
+        if (grade == null) {
             throw new SerException("获取档次失败，请输入正确的分类，管理方向和技能等级");
         }
         gradeLevel.setGrade(grade);
@@ -330,10 +332,12 @@ public class GradeLevelSerImpl extends ServiceImpl<GradeLevel, GradeLevelDTO> im
 
     @Override
     public Set<String> allHierarchys() throws SerException {
-        List<HierarchyBO> list = hierarchyAPI.findStatus();
         Set<String> set = new HashSet<String>();
-        for (HierarchyBO h : list) {
-            set.add(h.getHierarchy());
+        if (moduleAPI.isCheck("organize")) {
+            List<HierarchyBO> list = hierarchyAPI.findStatus();
+            for (HierarchyBO h : list) {
+                set.add(h.getHierarchy());
+            }
         }
         return set;
     }

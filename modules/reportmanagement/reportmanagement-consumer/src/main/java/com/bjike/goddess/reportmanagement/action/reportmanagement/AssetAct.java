@@ -161,7 +161,7 @@ public class AssetAct {
      * @version v1
      */
     @GetMapping("v1/list1")
-    public Result list1(@Validated(AssetDTO.A.class) AssetDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result list1(AssetDTO dto,HttpServletRequest request) throws ActException {
         try {
             List<AssetBO> list = assetAPI.list1(dto);
             List<AssetVO> vos = new ArrayList<>();

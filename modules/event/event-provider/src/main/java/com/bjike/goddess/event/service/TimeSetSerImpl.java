@@ -87,6 +87,7 @@ public class TimeSetSerImpl extends ServiceImpl<TimeSet, TimeSetDTO> implements 
                         break;
                 }
             }
+            entity.setName(name);
             entity.setLastTime(lastTime);
             entity.setStatus(Status.NORMAL);
             entity.setId(id);

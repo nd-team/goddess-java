@@ -1,5 +1,6 @@
 package com.bjike.goddess.staffing.action.staffing;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -45,6 +46,8 @@ public class ConfigurationPlanAction {
     private HierarchyAPI hierarchyAPI;
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 功能导航权限
@@ -183,8 +186,12 @@ public class ConfigurationPlanAction {
     @GetMapping("v1/classify")
     public Result classify(HttpServletRequest request) throws ActException {
         try {
-            List<HierarchyBO> list = hierarchyAPI.findStatus();
-            return ActResult.initialize(BeanTransform.copyProperties(list, HierarchyVO.class, request));
+            if (moduleAPI.isCheck("organize")) {
+                List<HierarchyBO> list = hierarchyAPI.findStatus();
+                return ActResult.initialize(BeanTransform.copyProperties(list, HierarchyVO.class, request));
+            }else {
+                return null;
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -200,8 +207,12 @@ public class ConfigurationPlanAction {
     @GetMapping("v1/depart/{classify}")
     public Result depart(@PathVariable String classify, HttpServletRequest request) throws ActException {
         try {
-            List<DepartmentDetailBO> list = departmentDetailAPI.findByHierarchy(classify);
-            return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
+            if (moduleAPI.isCheck("organize")) {
+                List<DepartmentDetailBO> list = departmentDetailAPI.findByHierarchy(classify);
+                return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
+            }else {
+                return null;
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

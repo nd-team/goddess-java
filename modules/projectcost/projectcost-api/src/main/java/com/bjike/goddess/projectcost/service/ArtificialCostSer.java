@@ -124,4 +124,15 @@ public interface ArtificialCostSer extends Ser<ArtificialCost, ArtificialCostDTO
         return null;
     }
 
+    /**
+     * chenjunhao
+     * 通过时间和项目组查找
+     *
+     * @param year
+     * @param month
+     * @param project
+     * @return
+     * @throws SerException
+     */
+    List<ArtificialCostBO> find(Integer year, Integer month, String project) throws SerException;
 }
