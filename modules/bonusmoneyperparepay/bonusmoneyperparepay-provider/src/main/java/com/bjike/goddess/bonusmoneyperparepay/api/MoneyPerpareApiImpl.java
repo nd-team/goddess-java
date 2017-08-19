@@ -93,4 +93,9 @@ public class MoneyPerpareApiImpl implements MoneyPerpareAPI {
     public List<String> findAllProject() throws SerException {
         return moneyPerpareSer.findAllProject();
     }
+
+    @Override
+    public List<Double> findReserve() throws SerException {
+        return moneyPerpareSer.findReserve();
+    }
 }

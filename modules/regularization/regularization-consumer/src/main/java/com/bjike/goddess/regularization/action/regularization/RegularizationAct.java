@@ -1,5 +1,8 @@
 package com.bjike.goddess.regularization.action.regularization;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.bonus.api.DisciplineRecordAPI;
+import com.bjike.goddess.bonus.bo.ScoreBO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -23,6 +26,7 @@ import com.bjike.goddess.regularization.to.*;
 import com.bjike.goddess.regularization.vo.ManagementScoreVO;
 import com.bjike.goddess.regularization.vo.RegularizationVO;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.api.StaffEntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
 import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
@@ -60,10 +64,12 @@ public class RegularizationAct {
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private EntryBasicInfoAPI entryBasicInfoAPI;
-
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
-
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private DisciplineRecordAPI disciplineRecordAPI;
     /**
      * 模块设置导航权限
      *
@@ -358,7 +364,9 @@ public class RegularizationAct {
     public Result allOrageDepartment() throws ActException {
         try {
             List<String> detail = new ArrayList<>();
-            detail = regularizationAPI.findAddAllDetails();
+            if(moduleAPI.isCheck("organize")) {
+                detail = regularizationAPI.findAddAllDetails();
+            }
             return ActResult.initialize(detail);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -372,7 +380,10 @@ public class RegularizationAct {
     @GetMapping("v1/allArea")
     public Result allArea() throws ActException {
         try {
-            List<AreaBO> area = departmentDetailAPI.findArea();
+            List<AreaBO> area = new ArrayList<>(0);
+            if(moduleAPI.isCheck("organize")) {
+                area = departmentDetailAPI.findArea();
+            }
             return ActResult.initialize(area);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -387,7 +398,9 @@ public class RegularizationAct {
     public Result allGetPerson() throws ActException {
         try {
             List<String> getPerson = new ArrayList<>();
-            getPerson = regularizationAPI.findallMonUser();
+            if(moduleAPI.isCheck("organize")) {
+                getPerson = regularizationAPI.findallMonUser();
+            }
             return ActResult.initialize(getPerson);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -403,7 +416,9 @@ public class RegularizationAct {
     public Result allHierarchy() throws ActException {
         try {
             List<OpinionBO> thawOpinion = new ArrayList<>();
-            thawOpinion = arrangementAPI.findThawOpinion();
+            if(moduleAPI.isCheck("organize")) {
+                thawOpinion = arrangementAPI.findThawOpinion();
+            }
             return ActResult.initialize(thawOpinion);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -419,12 +434,14 @@ public class RegularizationAct {
     public Result allEntryNum(@RequestParam String name) throws ActException {
         try {
             List<String> enNum = new ArrayList<>();
-            List<EntryBasicInfoBO> entryBasicInfoVOS = entryBasicInfoAPI.getEntryBasicInfoByName(name);
-            if (entryBasicInfoVOS!=null && entryBasicInfoVOS.size()>0) {
-                for(EntryBasicInfoBO entryBasicInfoVO : entryBasicInfoVOS){
-                    String num = entryBasicInfoVO.getEmployeeID();
-                    if(StringUtils.isNotBlank(num)){
-                        enNum.add(num);
+            if(moduleAPI.isCheck("archive")) {
+                List<EntryBasicInfoBO> entryBasicInfoVOS = entryBasicInfoAPI.getEntryBasicInfoByName(name);
+                if (entryBasicInfoVOS != null && entryBasicInfoVOS.size() > 0) {
+                    for (EntryBasicInfoBO entryBasicInfoVO : entryBasicInfoVOS) {
+                        String num = entryBasicInfoVO.getEmployeeID();
+                        if (StringUtils.isNotBlank(num)) {
+                            enNum.add(num);
+                        }
                     }
                 }
             }
@@ -441,9 +458,17 @@ public class RegularizationAct {
     @GetMapping("v1/addReturn")
     public Result addReturn(@RequestParam String name, @RequestParam String empNumer, HttpServletRequest request) throws ActException {
         try {
-            List<RegularizationBO> regularizationBOS = regularizationAPI.findAddRusult(name,empNumer);
-            List<RegularizationVO> regularizationVOS = BeanTransform.copyProperties(regularizationBOS,RegularizationVO.class,request);
-            return ActResult.initialize(regularizationVOS);
+            RegularizationBO regularizationBO = new RegularizationBO();
+            if(moduleAPI.isCheck("archive")){
+                regularizationBO = regularizationAPI.findAddRusult(name,empNumer);
+            }
+            if(moduleAPI.isCheck("bonus")){
+                ScoreBO scoreBO = disciplineRecordAPI.getRePuTotal(name);
+                regularizationBO.setAwardSoce(Integer.parseInt(new java.text.DecimalFormat("0").format(scoreBO.getRewardTotal())));
+                regularizationBO.setPenaltyScore(Integer.parseInt(new java.text.DecimalFormat("0").format(scoreBO.getPushTotal())));
+            }
+            RegularizationVO regularizationVO = BeanTransform.copyProperties(regularizationBO,RegularizationVO.class,request);
+            return ActResult.initialize(regularizationBO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

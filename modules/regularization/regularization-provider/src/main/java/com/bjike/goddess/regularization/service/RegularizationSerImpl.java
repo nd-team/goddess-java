@@ -684,9 +684,13 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     }
 
     @Override
-    public List<RegularizationBO> findAddRusult(String name, String empNumer) throws SerException {
+    public RegularizationBO findAddRusult(String name, String empNumer) throws SerException {
         List<EntryOptionBO> entryOptionBOS = entryBasicInfoAPI.getEntryOptionByNameAndEmpNum(name, empNumer);
-        return BeanTransform.copyProperties(entryOptionBOS, RegularizationBO.class);
+        EntryOptionBO entryOptionBO = new EntryOptionBO();
+        if(entryOptionBOS!=null && entryOptionBOS.size()>0){
+            entryOptionBO = entryOptionBOS.get(0);
+        }
+        return BeanTransform.copyProperties(entryOptionBO, RegularizationBO.class);
     }
 
     @Override

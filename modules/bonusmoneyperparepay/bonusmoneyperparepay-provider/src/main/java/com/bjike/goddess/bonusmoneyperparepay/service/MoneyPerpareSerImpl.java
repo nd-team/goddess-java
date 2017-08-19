@@ -459,5 +459,19 @@ public class MoneyPerpareSerImpl extends ServiceImpl<MoneyPerpare, MoneyPerpareD
         return moneyPerpareContrastBOList;
     }
 
-
+    @Override
+    public List<Double> findReserve() throws SerException {
+        List<MoneyPerpare> list = super.findAll();
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<Double> set = new HashSet<>();
+        for (MoneyPerpare model : list) {
+            Double reserve = model.getReserve();
+            if (model.getReserve()!=null) {
+                set.add(reserve);
+            }
+        }
+        return new ArrayList<>(set);
+    }
 }

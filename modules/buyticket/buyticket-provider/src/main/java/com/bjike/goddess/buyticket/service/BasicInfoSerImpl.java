@@ -273,7 +273,9 @@ public class BasicInfoSerImpl extends ServiceImpl<BasicInfo, BasicInfoDTO> imple
     public BasicInfoBO editBasicInfo(BasicInfoTO basicInfoTO) throws SerException {
         checkModPermission();
         BasicInfo basicInfo = super.findById(basicInfoTO.getId());
-        BeanTransform.copyProperties(basicInfoTO, basicInfo, true);
+        LocalDateTime createTime = basicInfo.getCreateTime();
+        basicInfo =  BeanTransform.copyProperties(basicInfoTO, BasicInfo.class, true);
+        basicInfo.setCreateTime(createTime);
         basicInfo.setModifyTime(LocalDateTime.now());
         super.update(basicInfo);
         return BeanTransform.copyProperties(basicInfoTO, BasicInfoBO.class);

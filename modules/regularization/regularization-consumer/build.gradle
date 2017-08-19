@@ -40,6 +40,9 @@ dependencies {
     }
 
     compile project(":modules:regularization:regularization-api")
+    compile project(":modules:bonus:bonus-api")
+    compile project(":modules:assemble:assemble-api")
+    compile project(":modules:staffactivity:staffactivity-api")
 
     compile("org.springframework.boot:spring-boot-starter-web")
 }

@@ -158,4 +158,9 @@ public class DisciplineRecordApiImpl implements DisciplineRecordAPI {
     public Integer getRewardNum(String userName) throws SerException {
         return disciplineRecordSer.getRewardNum(userName);
     }
+
+    @Override
+    public ScoreBO getRePuTotal(String userName) throws SerException {
+        return disciplineRecordSer.getRePuTotal(userName);
+    }
 }

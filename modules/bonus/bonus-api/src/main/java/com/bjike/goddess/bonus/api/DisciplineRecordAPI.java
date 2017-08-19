@@ -242,4 +242,9 @@ public interface DisciplineRecordAPI {
      * 根据姓名获取奖励总次数
      */
     Integer getRewardNum(String userName) throws SerException;
+
+    /**
+     * 根据姓名获取奖励和处罚总分数
+     */
+    ScoreBO getRePuTotal(String userName) throws SerException;
 }
