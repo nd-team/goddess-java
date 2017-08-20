@@ -26,7 +26,7 @@ public class DriverRecruitBO extends BaseBO {
     /**
      * 审核结果
      */
-    private Boolean aduit;
+    private Boolean audit;
 
     /**
      * 司机名称
@@ -124,12 +124,12 @@ public class DriverRecruitBO extends BaseBO {
     private String remark;
 
 
-    public Boolean getAduit() {
-        return aduit;
+    public Boolean getAudit() {
+        return audit;
     }
 
-    public void setAduit(Boolean aduit) {
-        this.aduit = aduit;
+    public void setAudit(Boolean audit) {
+        this.audit = audit;
     }
 
     public String getSuggest() {
