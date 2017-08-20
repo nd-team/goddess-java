@@ -11,6 +11,10 @@ import com.bjike.goddess.dispatchcar.api.LeaseCarCostAPI;
 import com.bjike.goddess.dispatchcar.dto.LeaseCarCostDTO;
 import com.bjike.goddess.dispatchcar.to.LeaseCarCostTO;
 import com.bjike.goddess.dispatchcar.vo.LeaseCarCostVO;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
+import com.bjike.goddess.organize.vo.AreaVO;
+import com.bjike.goddess.organize.vo.OpinionVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -131,6 +135,42 @@ public class LeaseCarCostAct {
             List<LeaseCarCostVO> voList = BeanTransform.copyProperties(leaseCarCostAPI.pageList(dto), LeaseCarCostVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 查询所有地区
+     * @return class AreaVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/area")
+    public Result findArea() throws ActException{
+        try {
+            List<AreaBO> boList = leaseCarCostAPI.findArea();
+            List<AreaVO> voList = BeanTransform.copyProperties(boList,AreaVO.class);
+            return ActResult.initialize(voList);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 查询所有未冻结部门
+     * @return class OpinionVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/department")
+    public Result findDepartment() throws ActException{
+        try {
+            List<OpinionBO> boList = leaseCarCostAPI.findDeapartment();
+            List<OpinionVO> voList = BeanTransform.copyProperties(boList,OpinionVO.class);
+            return ActResult.initialize(voList);
+        }catch (SerException e){
             throw new ActException(e.getMessage());
         }
     }
