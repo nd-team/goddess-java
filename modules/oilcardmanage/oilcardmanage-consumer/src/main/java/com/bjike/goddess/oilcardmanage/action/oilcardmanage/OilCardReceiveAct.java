@@ -1,5 +1,6 @@
 package com.bjike.goddess.oilcardmanage.action.oilcardmanage;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -26,6 +27,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,6 +45,9 @@ public class OilCardReceiveAct {
 
     @Autowired
     private OilCardReceiveAPI oilCardReceiveAPI;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 功能导航权限
@@ -239,9 +244,12 @@ public class OilCardReceiveAct {
     @GetMapping("v1/find/area")
     public Result findArea() throws ActException{
         try {
-           List<AreaBO> areaBOS =  oilCardReceiveAPI.findArea();
-           List<AreaVO> areaVOS = BeanTransform.copyProperties(areaBOS,AreaVO.class);
-           return ActResult.initialize(areaVOS);
+            List<AreaVO> voList = new ArrayList<>(0);
+            if(moduleAPI.isCheck("organize")) {
+                List<AreaBO> areaBOS = oilCardReceiveAPI.findArea();
+                voList = BeanTransform.copyProperties(areaBOS, AreaVO.class);
+            }
+           return ActResult.initialize(voList);
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }
@@ -256,8 +264,11 @@ public class OilCardReceiveAct {
     @GetMapping("v1/find/operate")
     public Result findOperate() throws ActException{
         try {
-            List<String> boList = oilCardReceiveAPI.findOperate();
-            return ActResult.initialize(boList);
+            List<String> list = new ArrayList<>(0);
+            if(moduleAPI.isCheck("organize")) {
+                list = oilCardReceiveAPI.findOperate();
+            }
+            return ActResult.initialize(list);
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }
