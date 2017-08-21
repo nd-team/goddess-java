@@ -1,5 +1,6 @@
 package com.bjike.goddess.dimission.action.dimission;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -55,6 +56,8 @@ public class DimissionInfoAct extends BaseFileAction {
     private PositionDetailUserAPI positionDetailUserAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
 
     /**
@@ -611,28 +614,38 @@ public class DimissionInfoAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取全部岗位
      *
      * @version v1
      */
     @GetMapping("v1/getPosition")
-    public Result getPosition() throws ActException{
+    public Result getPosition() throws ActException {
         try {
-            return ActResult.initialize(positionDetailUserAPI.getAllPosition());
+            if (moduleAPI.isCheck("organize")) {
+                return ActResult.initialize(positionDetailUserAPI.getAllPosition());
+            } else {
+                return ActResult.initialize(null);
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取全部部门
      *
      * @version v1
      */
     @GetMapping("v1/getDepartment")
-    public Result getDepartment() throws ActException{
+    public Result getDepartment() throws ActException {
         try {
-            return ActResult.initialize(positionDetailUserAPI.getAllDepartment());
+            if (moduleAPI.isCheck("organize")) {
+                return ActResult.initialize(positionDetailUserAPI.getAllDepartment());
+            } else {
+                return ActResult.initialize(null);
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

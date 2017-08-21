@@ -1,5 +1,6 @@
 package com.bjike.goddess.attainment.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.attainment.bo.SurveyDemandBO;
 import com.bjike.goddess.attainment.dto.SurveyDemandDTO;
 import com.bjike.goddess.attainment.entity.SurveyDemand;
@@ -14,12 +15,14 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -48,6 +51,10 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private SurveyPlanSer surveyPlanSer;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     private SurveyDemandBO transformBO(SurveyDemand entity) throws SerException {
         SurveyDemandBO bo = BeanTransform.copyProperties(entity, SurveyDemandBO.class);
@@ -87,6 +94,12 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
                 scope += name + ",";
         entity.setScopeName(scope);
 
+        if (moduleAPI.isCheck("organize")) {
+            List<String> list = positionDetailUserAPI.getPosition(user.getUsername());
+            if (!CollectionUtils.isEmpty(list)) {
+                entity.setGradation(list.get(0));
+            }
+        }
         super.save(entity);
         return this.transformBO(entity);
     }
@@ -113,6 +126,12 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
             for (String name : to.getScopeNames())
                 scope += name + ",";
         entity.setScopeName(scope);
+        if (moduleAPI.isCheck("organize")) {
+            List<String> list = positionDetailUserAPI.getPosition(entity.getUsername());
+            if (!CollectionUtils.isEmpty(list)) {
+                entity.setGradation(list.get(0));
+            }
+        }
         super.update(entity);
         return this.transformBO(entity);
     }
@@ -174,8 +193,8 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
     public List<String> getDemandId() throws SerException {
         List<SurveyDemand> list = super.findAll();
         List<String> stringList = new ArrayList<>();
-        if(null != list && list.size() >  0){
-            for(SurveyDemand module : list){
+        if (null != list && list.size() > 0) {
+            for (SurveyDemand module : list) {
                 String str = module.getId();
                 stringList.add(str);
             }
