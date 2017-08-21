@@ -100,6 +100,15 @@ public interface PositionInstructionAPI {
     default PositionInstructionBO findById(String id) throws SerException {
         return null;
     }
+    /**
+     * 获取所有输出结果
+     *
+     * @return class String
+     * @throws SerException
+     */
+    default List<String> getOutCome() throws SerException {
+        return null;
+    }
 
 
 }

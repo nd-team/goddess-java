@@ -1,6 +1,7 @@
 package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.organize.bo.*;
 import com.bjike.goddess.organize.dto.WorkRangeDTO;
 import com.bjike.goddess.organize.to.DepartmentWorkRangeTO;
@@ -218,6 +219,16 @@ public interface WorkRangeAPI {
      * @throws SerException
      */
     default List<OpinionBO> findThawOpinion() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有工作范围选项
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<WorkRangeBO> findByStatus(Status status) throws SerException {
         return null;
     }
 
