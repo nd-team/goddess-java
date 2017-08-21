@@ -1,6 +1,8 @@
 package com.bjike.goddess.reportmanagement.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.reportmanagement.enums.AssetType;
+import com.bjike.goddess.reportmanagement.enums.Type;
 
 /**
  * 资产表业务传输对象
@@ -29,6 +31,15 @@ public class AssetBO extends BaseBO {
     private String asset;
 
     /**
+     * 资产类型
+     */
+    private AssetType assetType;
+
+    /**
+     * 运算类型
+     */
+    private Type type;
+    /**
      * 资产行次
      */
     private Integer assetNum;
@@ -47,6 +58,22 @@ public class AssetBO extends BaseBO {
      * 资产期末数
      */
     private Double endAsset;
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public AssetType getAssetType() {
+        return assetType;
+    }
+
+    public void setAssetType(AssetType assetType) {
+        this.assetType = assetType;
+    }
 
     public Integer getAssetNum() {
         return assetNum;

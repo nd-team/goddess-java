@@ -188,10 +188,10 @@ public class LevelShowSerImpl extends ServiceImpl<LevelShow, LevelShowDTO> imple
     public void update(LevelShowTO to) throws SerException {
         checkAddIdentity();
         LevelShow entity = super.findById(to.getId());
-        if (entity==null){
+        if (entity == null) {
             throw new SerException("对象不存在");
         }
-        LocalDateTime a=entity.getCreateTime();
+        LocalDateTime a = entity.getCreateTime();
         entity = BeanTransform.copyProperties(to, LevelShow.class, true);
         entity.setCreateTime(a);
         entity.setModifyTime(LocalDateTime.now());
@@ -203,9 +203,9 @@ public class LevelShowSerImpl extends ServiceImpl<LevelShow, LevelShowDTO> imple
         String[] strings = new String[]{employeeId};
         List<LevelShow> list = null;
         for (String s : strings) {
-            String sql = "SELECT id from managementpromotion_levelshow\n" +
+            String sql = "SELECT id,promotionNum from managementpromotion_levelshow\n" +
                     "where employeeId='" + s + "'";
-            String[] fileds = new String[]{"id"};
+            String[] fileds = new String[]{"id", "promotionNum"};
             list = super.findBySql(sql, LevelShow.class, fileds);
         }
         if ((list != null) && (list.size() != 0)) {

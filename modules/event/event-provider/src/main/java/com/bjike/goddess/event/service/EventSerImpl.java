@@ -26,6 +26,7 @@ import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -272,26 +273,34 @@ public class EventSerImpl extends ServiceImpl<Event, EventDTO> implements EventS
         for (Father father : fathers) {
             EventDTO eventDTO = new EventDTO();
             eventDTO.getSorts().add("requestTime=asc");
-            if (null != time) {
-                eventDTO.getConditions().add(Restrict.between("requestTime", new LocalDate[]{DateUtil.parseDate(time),DateUtil.parseDate(time)}));
+            if (StringUtils.isNotBlank(time)) {
+                eventDTO.getConditions().add(Restrict.between("requestTime", new LocalDate[]{DateUtil.parseDate(time), DateUtil.parseDate(time)}));
             }
             if (null != permissionses) {
-                Set<Integer> set=new HashSet<>();
-                for (Permissions permissions:permissionses){
-                    set.add(permissions.getValue());
+                Set<Integer> set = new HashSet<>();
+                for (Permissions permissions : permissionses) {
+                    if (permissions != null) {
+                        set.add(permissions.getValue());
+                    }
                 }
-                Integer[] integers=new Integer[set.size()];
-                integers=set.toArray(integers);
-                eventDTO.getConditions().add(Restrict.in("permissions", integers));
+                if (!set.isEmpty()) {
+                    Integer[] integers = new Integer[set.size()];
+                    integers = set.toArray(integers);
+                    eventDTO.getConditions().add(Restrict.in("permissions", integers));
+                }
             }
             if (null != eventStatuses) {
-                Set<Integer> set=new HashSet<>();
-                for (EventStatus permissions:eventStatuses){
-                    set.add(permissions.getValue());
+                Set<Integer> set = new HashSet<>();
+                for (EventStatus permissions : eventStatuses) {
+                    if (permissions != null) {
+                        set.add(permissions.getValue());
+                    }
                 }
-                Integer[] integers=new Integer[set.size()];
-                integers=set.toArray(integers);
-                eventDTO.getConditions().add(Restrict.in("eventStatus", integers));
+                if (!set.isEmpty()) {
+                    Integer[] integers = new Integer[set.size()];
+                    integers = set.toArray(integers);
+                    eventDTO.getConditions().add(Restrict.in("eventStatus", integers));
+                }
             }
             eventDTO.getConditions().add(Restrict.eq("father.id", father.getId()));
             eventDTO.getConditions().add(Restrict.eq("name", name));
@@ -332,26 +341,34 @@ public class EventSerImpl extends ServiceImpl<Event, EventDTO> implements EventS
         for (Father father : fathers) {
             EventDTO eventDTO = new EventDTO();
             eventDTO.getSorts().add("requestTime=asc");
-            if (null != time) {
-                eventDTO.getConditions().add(Restrict.between("requestTime", new LocalDate[]{DateUtil.parseDate(time),DateUtil.parseDate(time)}));
+            if (StringUtils.isNotBlank(time)) {
+                eventDTO.getConditions().add(Restrict.between("requestTime", new LocalDate[]{DateUtil.parseDate(time), DateUtil.parseDate(time)}));
             }
             if (null != permissionses) {
-                Set<Integer> set=new HashSet<>();
-                for (Permissions permissions:permissionses){
-                    set.add(permissions.getValue());
+                Set<Integer> set = new HashSet<>();
+                for (Permissions permissions : permissionses) {
+                    if (null != permissions) {
+                        set.add(permissions.getValue());
+                    }
                 }
-                Integer[] integers=new Integer[set.size()];
-                integers=set.toArray(integers);
-                eventDTO.getConditions().add(Restrict.in("permissions", integers));
+                if (!set.isEmpty()) {
+                    Integer[] integers = new Integer[set.size()];
+                    integers = set.toArray(integers);
+                    eventDTO.getConditions().add(Restrict.in("permissions", integers));
+                }
             }
             if (null != eventStatuses) {
-                Set<Integer> set=new HashSet<>();
-                for (EventStatus permissions:eventStatuses){
-                    set.add(permissions.getValue());
+                Set<Integer> set = new HashSet<>();
+                for (EventStatus permissions : eventStatuses) {
+                    if (null != permissions) {
+                        set.add(permissions.getValue());
+                    }
                 }
-                Integer[] integers=new Integer[set.size()];
-                integers=set.toArray(integers);
-                eventDTO.getConditions().add(Restrict.in("eventStatus", integers));
+                if (!set.isEmpty()) {
+                    Integer[] integers = new Integer[set.size()];
+                    integers = set.toArray(integers);
+                    eventDTO.getConditions().add(Restrict.in("eventStatus", integers));
+                }
             }
             eventDTO.getConditions().add(Restrict.eq("father.id", father.getId()));
             List<Event> list = super.findByCis(eventDTO);
@@ -404,26 +421,34 @@ public class EventSerImpl extends ServiceImpl<Event, EventDTO> implements EventS
         List<FatherBO> boList = new ArrayList<>();
         for (Father father : fathers) {
             EventDTO eventDTO = new EventDTO();
-            if (null != time) {
-                eventDTO.getConditions().add(Restrict.between("requestTime", new LocalDate[]{DateUtil.parseDate(time),DateUtil.parseDate(time)}));
+            if (StringUtils.isNotBlank(time)) {
+                eventDTO.getConditions().add(Restrict.between("requestTime", new LocalDate[]{DateUtil.parseDate(time), DateUtil.parseDate(time)}));
             }
             if (null != permissionses) {
-                Set<Integer> set=new HashSet<>();
-                for (Permissions permissions:permissionses){
-                    set.add(permissions.getValue());
+                Set<Integer> set = new HashSet<>();
+                for (Permissions permissions : permissionses) {
+                    if (null != permissions) {
+                        set.add(permissions.getValue());
+                    }
                 }
-                Integer[] integers=new Integer[set.size()];
-                integers=set.toArray(integers);
-                eventDTO.getConditions().add(Restrict.in("permissions", integers));
+                if (!set.isEmpty()) {
+                    Integer[] integers = new Integer[set.size()];
+                    integers = set.toArray(integers);
+                    eventDTO.getConditions().add(Restrict.in("permissions", integers));
+                }
             }
             if (null != eventStatuses) {
-                Set<Integer> set=new HashSet<>();
-                for (EventStatus permissions:eventStatuses){
-                    set.add(permissions.getValue());
+                Set<Integer> set = new HashSet<>();
+                for (EventStatus permissions : eventStatuses) {
+                    if (permissions != null) {
+                        set.add(permissions.getValue());
+                    }
                 }
-                Integer[] integers=new Integer[set.size()];
-                integers=set.toArray(integers);
-                eventDTO.getConditions().add(Restrict.in("eventStatus", integers));
+                if (!set.isEmpty()) {
+                    Integer[] integers = new Integer[set.size()];
+                    integers = set.toArray(integers);
+                    eventDTO.getConditions().add(Restrict.in("eventStatus", integers));
+                }
             }
             eventDTO.getConditions().add(Restrict.eq("father.id", father.getId()));
             eventDTO.getConditions().add(Restrict.eq("name", name));
@@ -448,26 +473,34 @@ public class EventSerImpl extends ServiceImpl<Event, EventDTO> implements EventS
         for (Father father : fathers) {
             EventDTO eventDTO = new EventDTO();
             eventDTO.getSorts().add("getTime=asc");
-            if (null != time) {
-                eventDTO.getConditions().add(Restrict.between("requestTime", new LocalDate[]{DateUtil.parseDate(time),DateUtil.parseDate(time)}));
+            if (StringUtils.isNotBlank(time)) {
+                eventDTO.getConditions().add(Restrict.between("requestTime", new LocalDate[]{DateUtil.parseDate(time), DateUtil.parseDate(time)}));
             }
             if (null != permissionses) {
-                Set<Integer> set=new HashSet<>();
-                for (Permissions permissions:permissionses){
-                    set.add(permissions.getValue());
+                Set<Integer> set = new HashSet<>();
+                for (Permissions permissions : permissionses) {
+                    if (null != permissions) {
+                        set.add(permissions.getValue());
+                    }
                 }
-                Integer[] integers=new Integer[set.size()];
-                integers=set.toArray(integers);
-                eventDTO.getConditions().add(Restrict.in("permissions", integers));
+                if (!set.isEmpty()) {
+                    Integer[] integers = new Integer[set.size()];
+                    integers = set.toArray(integers);
+                    eventDTO.getConditions().add(Restrict.in("permissions", integers));
+                }
             }
             if (null != eventStatuses) {
-                Set<Integer> set=new HashSet<>();
-                for (EventStatus permissions:eventStatuses){
-                    set.add(permissions.getValue());
+                Set<Integer> set = new HashSet<>();
+                for (EventStatus permissions : eventStatuses) {
+                    if (null != permissions) {
+                        set.add(permissions.getValue());
+                    }
                 }
-                Integer[] integers=new Integer[set.size()];
-                integers=set.toArray(integers);
-                eventDTO.getConditions().add(Restrict.in("eventStatus", integers));
+                if (!set.isEmpty()) {
+                    Integer[] integers = new Integer[set.size()];
+                    integers = set.toArray(integers);
+                    eventDTO.getConditions().add(Restrict.in("eventStatus", integers));
+                }
             }
             eventDTO.getConditions().add(Restrict.eq("father.id", father.getId()));
             List<Event> list = super.findByCis(eventDTO);

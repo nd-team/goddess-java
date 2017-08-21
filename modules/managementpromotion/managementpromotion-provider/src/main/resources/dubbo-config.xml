@@ -35,4 +35,7 @@
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.contacts.api.InternalContactsAPI" id="internalContactsApiImpl"/>
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.regularization.api.RegularizationAPI" id="regularizationApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.assemble.api.ModuleAPI" id="moduleApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.event.api.EventAPI" id="eventApiImpl"/>
+
 </beans>

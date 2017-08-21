@@ -1,5 +1,8 @@
 package com.bjike.goddess.reportmanagement.vo;
 
+import com.bjike.goddess.reportmanagement.enums.AssetType;
+import com.bjike.goddess.reportmanagement.enums.Type;
+
 /**
  * 资产表表现层对象
  *
@@ -29,6 +32,14 @@ public class AssetVO {
      * 资产
      */
     private String asset;
+    /**
+     * 运算类型
+     */
+    private Type type;
+    /**
+     * 资产类型
+     */
+    private AssetType assetType;
 
     /**
      * 资产行次
@@ -49,6 +60,22 @@ public class AssetVO {
      * 资产期末数
      */
     private Double endAsset;
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public AssetType getAssetType() {
+        return assetType;
+    }
+
+    public void setAssetType(AssetType assetType) {
+        this.assetType = assetType;
+    }
 
     public String getAssetId() {
         return assetId;

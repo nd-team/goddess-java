@@ -77,4 +77,9 @@ public class ArtificialCostApiImpl implements ArtificialCostAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return artificialCostSer.guidePermission( guidePermissionTO );
     }
+
+    @Override
+    public List<ArtificialCostBO> find(Integer year, Integer month, String project) throws SerException {
+        return artificialCostSer.find(year, month, project);
+    }
 }
