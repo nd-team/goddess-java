@@ -34,6 +34,7 @@ public interface PlatformClassifySer extends Ser<PlatformClassify, PlatformClass
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 平台分类列表总条数
      */
@@ -92,6 +93,16 @@ public interface PlatformClassifySer extends Ser<PlatformClassify, PlatformClass
     default void remove(String id) throws SerException {
 
     }
+
+    /**
+     * 获取所有平台分类
+     *
+     * @throws SerException
+     */
+    default List<String> getPlatformName() throws SerException {
+        return null;
+    }
+
     /**
      * 导入
      *

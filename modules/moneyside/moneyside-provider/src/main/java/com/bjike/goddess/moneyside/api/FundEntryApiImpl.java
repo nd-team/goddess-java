@@ -4,9 +4,11 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.moneyside.bo.CollectBO;
 import com.bjike.goddess.moneyside.bo.FundEntryBO;
 import com.bjike.goddess.moneyside.dto.FundEntryDTO;
+import com.bjike.goddess.moneyside.excel.SonPermissionObject;
 import com.bjike.goddess.moneyside.service.FundEntrySer;
 import com.bjike.goddess.moneyside.to.CollectTO;
 import com.bjike.goddess.moneyside.to.FundEntryTO;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,15 @@ public class FundEntryApiImpl implements FundEntryAPI {
 
     @Autowired
     private FundEntrySer fundEntrySer;
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return fundEntrySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return fundEntrySer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countFundEntry(FundEntryDTO fundEntryDTO) throws SerException {
         return fundEntrySer.countFundEntry(fundEntryDTO);

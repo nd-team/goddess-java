@@ -20,10 +20,10 @@ public class SkillGradingC extends BaseEntity {
 
 
     /**
-     * 转正后间隔时间
+     * 档次
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '转正后间隔时间'")
-    private Integer intervalAfterTransfer;
+    @Column(nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '档次'")
+    private String grade;
 
     /**
      * 各档次晋升间隔时间（月）
@@ -85,12 +85,12 @@ public class SkillGradingC extends BaseEntity {
     @JoinColumn(name = "skillGradingB_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '技能定级B'")
     private SkillGradingB skillGradingB;
 
-    public Integer getIntervalAfterTransfer() {
-        return intervalAfterTransfer;
+    public String getGrade() {
+        return grade;
     }
 
-    public void setIntervalAfterTransfer(Integer intervalAfterTransfer) {
-        this.intervalAfterTransfer = intervalAfterTransfer;
+    public void setGrade(String grade) {
+        this.grade = grade;
     }
 
     public Integer getGradeAfterTime() {

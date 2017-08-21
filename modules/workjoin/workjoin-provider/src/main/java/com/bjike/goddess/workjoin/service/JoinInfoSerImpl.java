@@ -211,7 +211,9 @@ public class JoinInfoSerImpl extends ServiceImpl<JoinInfo, JoinInfoDTO> implemen
     public JoinInfoBO editJoinInfo(JoinInfoTO joinInfoTO) throws SerException {
         checkAddIdentity();
         JoinInfo joinInfo = super.findById(joinInfoTO.getId());
-        BeanTransform.copyProperties(joinInfoTO, joinInfo, true);
+        LocalDateTime creatTime = joinInfo.getCreateTime();
+        joinInfo = BeanTransform.copyProperties(joinInfoTO, JoinInfo.class, true);
+        joinInfo.setCreateTime(creatTime);
         joinInfo.setModifyTime(LocalDateTime.now());
         super.update(joinInfo);
         return BeanTransform.copyProperties(joinInfoTO, JoinInfoBO.class, true);

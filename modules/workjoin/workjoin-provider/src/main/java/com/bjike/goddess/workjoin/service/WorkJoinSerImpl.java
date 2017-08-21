@@ -340,7 +340,9 @@ public class WorkJoinSerImpl extends ServiceImpl<WorkJoin, WorkJoinDTO> implemen
     public WorkJoinBO editWorkJoin(WorkJoinTO workJoinTO) throws SerException {
         checkAddIdentity();
         WorkJoin workJoin = super.findById(workJoinTO.getId());
-        BeanTransform.copyProperties(workJoinTO, workJoin, true);
+        LocalDateTime creatTime = workJoin.getCreateTime();
+        workJoin = BeanTransform.copyProperties(workJoinTO, WorkJoin.class, true);
+        workJoin.setCreateTime(creatTime);
         workJoin.setModifyTime(LocalDateTime.now());
         super.update(workJoin);
         return BeanTransform.copyProperties(workJoin, WorkJoinBO.class);

@@ -12,10 +12,13 @@ import com.bjike.goddess.moneyside.bo.MoneyExitApplyConfirmedBO;
 import com.bjike.goddess.moneyside.dto.MoneyExitApplyConfirmedDTO;
 import com.bjike.goddess.moneyside.dto.MoneyExitApplyDTO;
 import com.bjike.goddess.moneyside.entity.MoneyExitApplyConfirmed;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import com.bjike.goddess.moneyside.vo.MoneyExitApplyConfirmedVO;
 import com.bjike.goddess.moneyside.vo.MoneyExitApplyVO;
 import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +38,28 @@ import java.util.List;
 public class MoneyExitApplyConfirmedAction {
     @Autowired
     private MoneyExitApplyConfirmedAPI moneyExitApplyConfirmedAPI;
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = moneyExitApplyConfirmedAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 资金退出申请确认表列表总条数
      *

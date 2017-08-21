@@ -9,6 +9,7 @@ import com.bjike.goddess.moneyside.dto.EquityInvestDTO;
 import com.bjike.goddess.moneyside.entity.EquityInvest;
 import com.bjike.goddess.moneyside.to.CreditorsInvestTO;
 import com.bjike.goddess.moneyside.to.EquityInvestTO;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -22,7 +23,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface EquityInvestSer extends Ser<EquityInvest, EquityInvestDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
 
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 股权投资列表总条数
      */

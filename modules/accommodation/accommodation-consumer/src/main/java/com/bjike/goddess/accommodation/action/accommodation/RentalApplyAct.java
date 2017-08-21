@@ -276,7 +276,7 @@ public class RentalApplyAct extends BaseFileAction{
      * @des 导出租房申请
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @GetMapping("v1/export")
     public Result exportReport(RentalApplyDTO dto, HttpServletResponse response) throws ActException {
         try {

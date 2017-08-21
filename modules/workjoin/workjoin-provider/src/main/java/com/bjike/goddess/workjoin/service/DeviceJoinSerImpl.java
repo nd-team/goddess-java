@@ -209,7 +209,9 @@ public class DeviceJoinSerImpl extends ServiceImpl<DeviceJoin, DeviceJoinDTO> im
     public DeviceJoinBO editDeviceJoin(DeviceJoinTO deviceJoinTO) throws SerException {
         checkAddIdentity();
         DeviceJoin deviceJoin = super.findById(deviceJoinTO.getId());
-        BeanTransform.copyProperties(deviceJoinTO,deviceJoin,true);
+        LocalDateTime createTime = deviceJoin.getCreateTime();
+        deviceJoin = BeanTransform.copyProperties(deviceJoinTO,DeviceJoin.class,true);
+        deviceJoin.setCreateTime(createTime);
         deviceJoin.setModifyTime(LocalDateTime.now());
         super.update(deviceJoin);
         return BeanTransform.copyProperties(deviceJoin,DeviceJoinBO.class);

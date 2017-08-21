@@ -9,6 +9,7 @@ import com.bjike.goddess.moneyside.dto.CashInvestDTO;
 import com.bjike.goddess.moneyside.entity.CashInvest;
 import com.bjike.goddess.moneyside.to.AccrualAllotTO;
 import com.bjike.goddess.moneyside.to.CashInvestTO;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -22,7 +23,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CashInvestSer extends Ser<CashInvest, CashInvestDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
 
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 现金投资列表总条数
      */

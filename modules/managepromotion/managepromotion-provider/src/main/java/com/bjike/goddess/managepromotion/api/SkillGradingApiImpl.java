@@ -1,6 +1,7 @@
 package com.bjike.goddess.managepromotion.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.managepromotion.bo.CalculateBO;
 import com.bjike.goddess.managepromotion.bo.SkillGradingABO;
 import com.bjike.goddess.managepromotion.bo.SkillGradingBO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingADTO;
@@ -9,6 +10,7 @@ import com.bjike.goddess.managepromotion.dto.SkillGradingDTO;
 import com.bjike.goddess.managepromotion.entity.SkillGradingA;
 import com.bjike.goddess.managepromotion.excel.SonPermissionObject;
 import com.bjike.goddess.managepromotion.service.SkillGradingSer;
+import com.bjike.goddess.managepromotion.to.CalculateTO;
 import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managepromotion.to.SkillGradingATO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,5 +70,9 @@ public class SkillGradingApiImpl implements SkillGradingAPI {
     @Override
     public void removeSkillGrading(String id) throws SerException {
         skillGradingSer.removeSkillGrading(id);
+    }
+    @Override
+    public List<CalculateBO> calculate(CalculateTO to) throws SerException {
+        return skillGradingSer.calculate(to);
     }
 }
