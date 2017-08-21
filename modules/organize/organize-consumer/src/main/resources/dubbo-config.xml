@@ -52,5 +52,6 @@
     <dubbo:reference validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
     <dubbo:reference validation="true" id="businessTypeApiImpl" interface="com.bjike.goddess.marketdevelopment.api.BusinessTypeAPI" />
     <dubbo:reference validation="true" id="businessCourseApiImpl" interface="com.bjike.goddess.marketdevelopment.api.BusinessCourseAPI" />
+    <dubbo:reference validation="true" id="marketInfoApiImpl" interface="com.bjike.goddess.market.api.MarketInfoAPI" />
 
 </beans>

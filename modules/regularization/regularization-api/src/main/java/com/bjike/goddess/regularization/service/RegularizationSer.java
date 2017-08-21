@@ -183,4 +183,12 @@ public interface RegularizationSer extends Ser<Regularization, RegularizationDTO
      * @throws SerException
      */
     Set<String> allNum() throws SerException;
+
+    /**
+     * 根据员工姓名查找转正时间
+     * zhuangkaiqin
+     */
+    default String getTime(String userName) throws SerException {
+        return null;
+    }
 }

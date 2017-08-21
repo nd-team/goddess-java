@@ -17,14 +17,18 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,6 +53,8 @@ public class DisciplineRecordAct {
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private ModuleAPI moduleAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
 
     /**
@@ -364,6 +370,21 @@ public class DisciplineRecordAct {
         }
     }
 
+//    /**
+//     * 获取姓名
+//     *
+//     * @version v1
+//     */
+//    @GetMapping("v1/name")
+//    public Result getName() throws ActException {
+//        try {
+//            List<String> list = disciplineRecordAPI.getName();
+//            return ActResult.initialize(list);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+
     /**
      * 获取姓名
      *
@@ -372,7 +393,13 @@ public class DisciplineRecordAct {
     @GetMapping("v1/name")
     public Result getName() throws ActException {
         try {
-            List<String> list = disciplineRecordAPI.getName();
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("organize")) {
+                List<UserBO> userBOList = positionDetailUserAPI.findUserListInOrgan();
+                if (!CollectionUtils.isEmpty(userBOList)) {
+                    list = userBOList.stream().map(UserBO::getUsername).distinct().collect(Collectors.toList());
+                }
+            }
             return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

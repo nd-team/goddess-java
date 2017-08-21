@@ -21,8 +21,6 @@ import com.bjike.goddess.staffentry.entity.EntryRegister;
 import com.bjike.goddess.staffentry.enums.GuideAddrStatus;
 import com.bjike.goddess.staffentry.to.EntryBasicInfoTO;
 import com.bjike.goddess.staffentry.to.GuidePermissionTO;
-import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
-import com.bjike.goddess.staffentry.vo.SonPermissionObject;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -31,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -373,5 +372,18 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
         List<EntryOptionBO> entryOptionBOList = new ArrayList<>();
         entryOptionBOList.add(entryOptionBO);
         return entryOptionBOList;
+    }
+
+    @Override
+    public String getEntryTime(String userName) throws SerException {
+        String time = null;
+        EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
+        dto.getConditions().add(Restrict.eq("name", userName));
+        List<EntryBasicInfo> entryBasicInfos = super.findByCis(dto);
+        if (!CollectionUtils.isEmpty(entryBasicInfos)) {
+            EntryBasicInfo entity = entryBasicInfos.get(0);
+            time = String.valueOf(entity.getEntryTime());
+        }
+        return time;
     }
 }

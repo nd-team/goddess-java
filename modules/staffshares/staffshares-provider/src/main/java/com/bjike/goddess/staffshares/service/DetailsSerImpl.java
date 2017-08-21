@@ -36,7 +36,6 @@ import org.springframework.util.CollectionUtils;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -224,7 +223,6 @@ public class DetailsSerImpl extends ServiceImpl<Details, DetailsDTO> implements 
         if (StringUtils.isBlank(dto.getId())) {
             throw new SerException("id不能为空");
         }
-        List<DetailsBO> detailsBOs = new ArrayList<>(0);
         //根据ｉｄ查询交易详情
         SchemeIssueBO schemeIssueBO = schemeAPI.getOne(dto.getId());
         if (schemeIssueBO != null) {
@@ -241,16 +239,17 @@ public class DetailsSerImpl extends ServiceImpl<Details, DetailsDTO> implements 
                 details.setTime(LocalDate.parse(schemeIssueBO.getTime()));
                 details.setSharesNum(schemeIssueBO.getSharesNum());
                 super.save(details);
-                detailsBOs.add(BeanTransform.copyProperties(details, DetailsBO.class, false));
+                List<DetailsBO> detailsBOs = BeanTransform.copyProperties(details, DetailsBO.class, false);
+                return detailsBOs;
             } else {
                 //根据ｉｄ查询该条记录的详情
                 detailsDTO.getConditions().add(Restrict.eq("code", schemeIssueBO.getCode()));
                 List<Details> detailses1 = super.findByCis(detailsDTO);
-                BeanTransform.copyProperties(detailses1, detailsBOs, false);
+                List<DetailsBO> detailsBOs = BeanTransform.copyProperties(detailses1, DetailsBO.class, false);
                 return detailsBOs;
             }
         }
-        return detailsBOs;
+        return null;
     }
 
     @Override

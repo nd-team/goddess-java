@@ -5,6 +5,7 @@ import com.bjike.goddess.annual.dto.AnnualInfoDTO;
 import com.bjike.goddess.annual.to.AnnualInfoTO;
 import com.bjike.goddess.annual.to.GuidePermissionTO;
 import com.bjike.goddess.annual.vo.AnnualInfoVO;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -58,6 +59,8 @@ public class AnnualInfoAct {
     private ArrangementAPI arrangementAPI;
     @Autowired
     private PositionDetailAPI positionDetailAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 功能导航权限
@@ -81,6 +84,7 @@ public class AnnualInfoAct {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 我的年假记录
      *
@@ -180,7 +184,8 @@ public class AnnualInfoAct {
 
     /**
      * 所有部门下拉值
-     *@return class DepartmentDetailVO
+     *
+     * @return class DepartmentDetailVO
      * @version v1
      */
     @GetMapping("v1/allOrageDepartment")
@@ -195,14 +200,19 @@ public class AnnualInfoAct {
 
     /**
      * 添加中所有的地区
+     *
      * @return class AreaVO
      * @version v1
      */
     @GetMapping("v1/allArea")
     public Result allArea() throws ActException {
         try {
-            List<AreaBO> area = departmentDetailAPI.findArea();
-            return ActResult.initialize(BeanTransform.copyProperties(area, AreaVO.class));
+            if (moduleAPI.isCheck("organize")) {
+                List<AreaBO> area = departmentDetailAPI.findArea();
+                return ActResult.initialize(BeanTransform.copyProperties(area, AreaVO.class));
+            } else {
+                return ActResult.initialize(null);
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -210,14 +220,19 @@ public class AnnualInfoAct {
 
     /**
      * 获取所有用户
+     *
      * @return class UserVO
      * @version v1
      */
     @GetMapping("v1/allGetPerson")
     public Result allGetPerson() throws ActException {
         try {
-            List<UserBO> getPerson = positionDetailUserAPI.findUserList();
-            return ActResult.initialize(BeanTransform.copyProperties(getPerson,UserVO.class));
+            if (moduleAPI.isCheck("organize")) {
+                List<UserBO> getPerson = positionDetailUserAPI.findUserList();
+                return ActResult.initialize(BeanTransform.copyProperties(getPerson, UserVO.class));
+            } else {
+                return ActResult.initialize(null);
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -225,14 +240,19 @@ public class AnnualInfoAct {
 
     /**
      * 获取所有的岗位层级
+     *
      * @return class OpinionVO
      * @version v1
      */
     @GetMapping("v1/findThaw")
     public Result findThaw() throws ActException {
         try {
-            List<OpinionBO> getThawPerson = arrangementAPI.findThawOpinion();
-            return ActResult.initialize(BeanTransform.copyProperties(getThawPerson, OpinionVO.class));
+            if (moduleAPI.isCheck("organize")) {
+                List<OpinionBO> getThawPerson = arrangementAPI.findThawOpinion();
+                return ActResult.initialize(BeanTransform.copyProperties(getThawPerson, OpinionVO.class));
+            } else {
+                return ActResult.initialize(null);
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -240,14 +260,19 @@ public class AnnualInfoAct {
 
     /**
      * 获取所有的岗位
+     *
      * @return class OpinionVO
      * @version v1
      */
     @GetMapping("v1/findAllOpinion")
     public Result findAllOpinion() throws ActException {
         try {
-            List<OpinionBO> getOpinion = positionDetailAPI.findAllOpinion();
-            return ActResult.initialize(BeanTransform.copyProperties(getOpinion,OpinionVO.class));
+            if (moduleAPI.isCheck("organize")) {
+                List<OpinionBO> getOpinion = positionDetailAPI.findAllOpinion();
+                return ActResult.initialize(BeanTransform.copyProperties(getOpinion, OpinionVO.class));
+            } else {
+                return ActResult.initialize(null);
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

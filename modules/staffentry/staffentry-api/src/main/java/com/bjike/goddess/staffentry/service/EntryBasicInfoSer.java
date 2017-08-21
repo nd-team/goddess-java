@@ -185,5 +185,11 @@ public interface EntryBasicInfoSer extends Ser<EntryBasicInfo, EntryBasicInfoDTO
     }
 
 
-
+    /**
+     * 根据员工姓名获取员工入职时间
+     * zhuangkaiqin
+     */
+    default String getEntryTime(String userName) throws SerException {
+        return null;
+    }
 }

@@ -112,5 +112,10 @@ public class EntryBasicInfoApiImpl implements EntryBasicInfoAPI{
         return BeanTransform.copyProperties(entryBasicInfoSer.findAll(),EntryBasicInfoBO.class,false);
     }
 
+    @Override
+    public String getEntryTime(String userName) throws SerException {
+        return entryBasicInfoSer.getEntryTime(userName);
+    }
+
 
 }

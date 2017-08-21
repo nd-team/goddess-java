@@ -46,5 +46,5 @@
     <dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
     <dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.rotation.api.CusPermissionAPI" />
     <dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
-
+    <dubbo:reference validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI"/>
 </beans>
