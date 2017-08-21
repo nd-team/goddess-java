@@ -83,5 +83,10 @@ public interface HotAssistSer extends Ser<HotAssist, HotAssistDTO> {
     default List<HotAssistBO> collectByProGroup (HotAssistDTO hotAssistDTO) throws SerException {return null;}
 
 
+    /**
+     * 根据计薪周期开始时间和结束时间获取高温补助信息
+     */
+    HotAssistBO findHot(String startTime,String endTime) throws SerException;
+
 
 }

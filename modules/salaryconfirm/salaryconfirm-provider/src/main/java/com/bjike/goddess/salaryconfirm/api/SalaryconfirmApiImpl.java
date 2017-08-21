@@ -129,4 +129,8 @@ public class SalaryconfirmApiImpl implements SalaryconfirmAPI {
         return salaryconfirmSer.guidePermission(to);
     }
 
+    @Override
+    public SalaryconfirmBO findSalary(String salaryStart, String salaryEnd, String name) throws SerException {
+        return salaryconfirmSer.findSalary(salaryStart,salaryEnd,name);
+    }
 }

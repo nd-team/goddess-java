@@ -252,4 +252,23 @@ public class StaffBirthdaySchemeAct {
         }
     }
 
+
+    /**
+     * 汇总
+     * @param dto 汇总条件
+     * @return class StaffBirthdaySchemeVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/collect")
+    public Result collect(StaffBirthdaySchemeDTO dto) throws ActException{
+        try {
+            List<StaffBirthdaySchemeBO> boList = staffBirthdaySchemeAPI.collect(dto);
+            List<StaffBirthdaySchemeVO> voList = BeanTransform.copyProperties(boList,StaffBirthdaySchemeVO.class);
+            return ActResult.initialize(voList);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

@@ -85,5 +85,8 @@ public class StayUtilitiesApiImpl implements StayUtilitiesAPI {
         return stayUtilitiesSer.financeAudit(to);
     }
 
-
+    @Override
+    public StayUtilitiesBO findStay(String time, String name) throws SerException {
+        return stayUtilitiesSer.findStay(time,name);
+    }
 }

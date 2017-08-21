@@ -105,7 +105,6 @@ public class CarSendEmailAction {
      */
     @GetMapping("v1/count")
     public Result count(CarSendEmailDTO dto) throws ActException {
-        //todo 该方法记录为邮件发送总条数，有问题，待修改.2017 - 08 - 07 23:47
         try {
             Long count = carSendEmailAPI.counts(dto);
             return ActResult.initialize(count);

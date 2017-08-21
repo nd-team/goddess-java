@@ -71,6 +71,7 @@ public class OilCardUseAct {
      *
      * @param startTime 开始时间
      * @param endTime   结束时间
+     * @param oilCardCode 油卡编号
      * @return class InfoForOilCardVO
      * @version v1
      */
@@ -100,6 +101,7 @@ public class OilCardUseAct {
      *
      * @param year  年份
      * @param month 月份
+     * @param oilCardCode 油卡编号
      * @return class InfoForOilCardVO
      * @version v1
      */

@@ -86,7 +86,7 @@ public class OilCardBasicApiImpl implements OilCardBasicAPI {
      */
     @Override
     public void deleteOilCardBasic(String id) throws SerException {
-        oilCardBasicSer.remove(id);
+        oilCardBasicSer.deleteOilCardBasic(id);
     }
 
     /**

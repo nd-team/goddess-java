@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffwelfare.bo.StaffBirthDayBO;
 import com.bjike.goddess.staffwelfare.dto.StaffBirthDayDTO;
 import com.bjike.goddess.staffwelfare.service.StaffBirthDaySer;
+import com.bjike.goddess.staffwelfare.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,5 +26,15 @@ public class StaffBirthDayApiImpl implements StaffBirthDayAPI{
     @Override
     public Long count(StaffBirthDayDTO dto) throws SerException {
         return staffBirthDaySer.count(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return staffBirthDaySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return staffBirthDaySer.guidePermission(guidePermissionTO);
     }
 }

@@ -204,6 +204,7 @@ public class DriverRecruitSerImpl extends ServiceImpl<DriverRecruit, DriverRecru
         if (model != null) {
             BeanTransform.copyProperties(to, model, true);
             model.setModifyTime(LocalDateTime.now());
+            model.setRemark(to.getRemark());
             super.update(model);
             return BeanTransform.copyProperties(to, DriverRecruitBO.class);
         } else {
@@ -215,7 +216,9 @@ public class DriverRecruitSerImpl extends ServiceImpl<DriverRecruit, DriverRecru
     public List<DriverRecruitBO> pageList(DriverRecruitDTO dto) throws SerException {
         checkSeeIdentity();
         dto.getSorts().add("createTime=desc");
-        return BeanTransform.copyProperties(super.findByPage(dto), DriverRecruitBO.class);
+        List<DriverRecruit> list = super.findByPage(dto);
+        List<DriverRecruitBO> boList = BeanTransform.copyProperties(list,DriverRecruitBO.class,false);
+        return boList;
     }
 
     @Override

@@ -91,4 +91,12 @@ public interface OilCardBasicSer extends Ser<OilCardBasic, OilCardBasicDTO> {
      * @throws SerException
      */
     List<OilCardBasicBO> findOilCard() throws SerException;
+
+    /**
+     * 删除油卡基本信息
+     *
+     * @param id 删除信息记录Id
+     * @throws SerException 删除油卡记录业务异常
+     */
+    void deleteOilCardBasic(String id) throws SerException;
 }

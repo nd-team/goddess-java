@@ -372,4 +372,14 @@ public class AgeAssistSerImpl extends ServiceImpl<AgeAssist, AgeAssistDTO> imple
         }
         return jobAge;
     }
+
+    @Override
+    public AgeAssistBO findAge(String startTime, String endTime) throws SerException {
+        AgeAssistDTO dto = new AgeAssistDTO();
+        dto.getConditions().add(Restrict.eq("salaryStartTime",startTime));
+        dto.getConditions().add(Restrict.eq("salaryEndTime",endTime));
+        AgeAssist ageAssist = super.findOne(dto);
+        AgeAssistBO bo = BeanTransform.copyProperties(ageAssist,AgeAssistBO.class,false);
+        return bo;
+    }
 }

@@ -13,6 +13,7 @@ import com.bjike.goddess.assistance.dto.HouseAssistDTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.managementpromotion.entity.LevelShow;
 import com.bjike.goddess.managepromotion.bo.OverviewSkillLevelBO;
+import com.bjike.goddess.salaryconfirm.bo.SalaryconfirmBO;
 import com.bjike.goddess.salarymanage.bo.SalaryBasicBO;
 import com.bjike.goddess.salarymanage.bo.SalaryInformationBO;
 import com.bjike.goddess.salarymanage.dto.SalaryBasicDTO;
@@ -23,6 +24,7 @@ import com.bjike.goddess.salarymanage.to.ExportSalaryInformationTO;
 import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
 import com.bjike.goddess.salarymanage.to.SalaryBasicTO;
 import com.bjike.goddess.salarymanage.to.SalaryInformationTO;
+import com.bjike.goddess.secure.bo.AttachedBO;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -109,25 +111,25 @@ public class SalaryInformationApiImpl implements SalaryInformationAPI  {
         return salaryInformationSer.count(dto);
     }
 
-//    @Override
-//    public List<HotAssistBO> findHotAssist(SalaryInformationDTO dto) throws SerException {
-//        return salaryInformationSer.findHotAssist(dto);
-//    }
-//
-//    @Override
-//    public List<HouseAssistBO> findHouseAssist(SalaryInformationDTO dto) throws SerException {
-//        return salaryInformationSer.findHouseAssist(dto);
-//    }
-//
-//    @Override
-//    public List<ComputerAssistBO> findComputerAssist(SalaryInformationDTO dto) throws SerException {
-//        return salaryInformationSer.findComputerAssist(dto);
-//    }
-//
-//    @Override
-//    public List<AgeAssistBO> findAgeAssist(SalaryInformationDTO dto) throws SerException {
-//        return salaryInformationSer.findAgeAssist(dto);
-//    }
+    @Override
+    public HotAssistBO findHotAssist(SalaryInformationDTO dto) throws SerException {
+        return salaryInformationSer.findHotAssist(dto);
+    }
+
+    @Override
+    public HouseAssistBO findHouseAssist(SalaryInformationDTO dto) throws SerException {
+        return salaryInformationSer.findHouseAssist(dto);
+    }
+
+    @Override
+    public ComputerAssistBO findComputerAssist(SalaryInformationDTO dto) throws SerException {
+        return salaryInformationSer.findComputerAssist(dto);
+    }
+
+    @Override
+    public AgeAssistBO findAgeAssist(SalaryInformationDTO dto) throws SerException {
+        return salaryInformationSer.findAgeAssist(dto);
+    }
 
 
     @Override
@@ -148,5 +150,15 @@ public class SalaryInformationApiImpl implements SalaryInformationAPI  {
     @Override
     public OverviewSkillLevelBO findSkill(String employeeName) throws SerException {
         return salaryInformationSer.findSkill(employeeName);
+    }
+
+    @Override
+    public SalaryconfirmBO findSalaryConfirm(SalaryInformationDTO dto) throws SerException {
+        return salaryInformationSer.findSalaryConfirm(dto);
+    }
+
+    @Override
+    public AttachedBO findAttached(SalaryInformationDTO dto) throws SerException {
+        return salaryInformationSer.findAttached(dto);
     }
 }

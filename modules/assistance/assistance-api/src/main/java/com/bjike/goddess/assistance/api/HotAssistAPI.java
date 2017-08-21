@@ -5,6 +5,7 @@ import com.bjike.goddess.assistance.dto.HotAssistDTO;
 import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.to.HotAssistTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.service.Ser;
 
 import java.util.List;
 
@@ -79,5 +80,10 @@ public interface HotAssistAPI {
      */
     default List<HotAssistBO> collectByProGroup (HotAssistDTO hotAssistDTO) throws SerException {return null;}
 
+
+    /**
+     * 根据计薪周期开始时间和结束时间获取高温补助信息
+     */
+    HotAssistBO findHot(String startTime,String endTime) throws SerException;
 
 }

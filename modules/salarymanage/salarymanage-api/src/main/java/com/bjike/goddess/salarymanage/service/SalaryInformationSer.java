@@ -14,6 +14,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.managementpromotion.entity.LevelShow;
 import com.bjike.goddess.managepromotion.bo.OverviewSkillLevelBO;
+import com.bjike.goddess.salaryconfirm.bo.SalaryconfirmBO;
 import com.bjike.goddess.salarymanage.bo.SalaryBasicBO;
 import com.bjike.goddess.salarymanage.bo.SalaryInformationBO;
 import com.bjike.goddess.salarymanage.dto.SalaryBasicDTO;
@@ -23,6 +24,7 @@ import com.bjike.goddess.salarymanage.to.ExportSalaryInformationTO;
 import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
 import com.bjike.goddess.salarymanage.to.SalaryBasicTO;
 import com.bjike.goddess.salarymanage.to.SalaryInformationTO;
+import com.bjike.goddess.secure.bo.AttachedBO;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 
 import java.util.List;
@@ -146,29 +148,29 @@ public interface SalaryInformationSer extends Ser<SalaryInformation, SalaryInfor
      */
     SalaryInformationBO findOne(String id) throws SerException;
 
-//    /**
-//     * 查询高温补助
-//     *
-//     * @throws SerException
-//     */
-//    List<HotAssistBO> findHotAssist(SalaryInformationDTO dto) throws SerException;
-//
-//    /**
-//     * 查询住宿补助
-//     *
-//     * @throws SerException
-//     */
-//    List<HouseAssistBO> findHouseAssist(SalaryInformationDTO dto) throws SerException;
-//
-//    /**
-//     * 查看电脑补助
-//     */
-//    List<ComputerAssistBO> findComputerAssist(SalaryInformationDTO dto) throws SerException;
-//
-//    /**
-//     * 查看工龄补助
-//     */
-//    List<AgeAssistBO> findAgeAssist(SalaryInformationDTO dto) throws SerException;
+    /**
+     * 根据计薪周期查询高温补助
+     *
+     * @throws SerException
+     */
+    HotAssistBO findHotAssist(SalaryInformationDTO dto) throws SerException;
+
+    /**
+     * 根据计薪周期查询住宿补助
+     *
+     * @throws SerException
+     */
+    HouseAssistBO findHouseAssist(SalaryInformationDTO dto) throws SerException;
+
+    /**
+     * 根据计薪周期查看电脑补助
+     */
+    ComputerAssistBO findComputerAssist(SalaryInformationDTO dto) throws SerException;
+
+    /**
+     * 根据计薪周期查看工龄补助
+     */
+    AgeAssistBO findAgeAssist(SalaryInformationDTO dto) throws SerException;
 
     /**
      * 查询入职时间和离职时间和身份证号码和银行卡号
@@ -186,4 +188,14 @@ public interface SalaryInformationSer extends Ser<SalaryInformation, SalaryInfor
      * 根据员工姓名获取技能等级获取时间
      */
     OverviewSkillLevelBO findSkill(String employeeName) throws SerException;
+
+    /**
+     * 根据计薪周期和员工姓名获取旷工扣款和事病假扣款
+     */
+    SalaryconfirmBO findSalaryConfirm(SalaryInformationDTO dto) throws SerException;
+
+    /**
+     * 根据员工姓名查看扣社保情况
+     */
+    AttachedBO findAttached(SalaryInformationDTO dto) throws SerException;
  }
