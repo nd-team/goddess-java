@@ -63,7 +63,7 @@ public class FeatureListApiImpl implements FeatureListAPI {
     }
 
     @Override
-    public String findDetail(String id) throws SerException{
+    public FeatureListBO findDetail(String id) throws SerException{
         return featureListSer.findDetail(id);
     }
 }

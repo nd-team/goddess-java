@@ -124,7 +124,7 @@ public class FeatureListSerImpl extends ServiceImpl<FeatureList, FeatureListDTO>
     }
 
     @Override
-    public String findDetail(String id) throws SerException {
+    public FeatureListBO findDetail(String id) throws SerException {
         FeatureList entity = super.findById(id);
         if (entity == null) {
             throw new SerException("该对象不存在");

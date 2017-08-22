@@ -238,4 +238,16 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
         List<PositionInstruction> list = super.findByCis(dto);
         return this.transformToBOList(list);
     }
+    @Override
+    public List<String> getOutCome() throws SerException {
+        String[] fields = new String[]{"outcome"};
+        List<PositionInstructionBO> boList = super.findBySql("select distinct outcome from organize_position_instruction group by outcome order by outcome asc ", PositionInstructionBO.class, fields);
+
+        List<String> outComeList = boList.stream().map(PositionInstructionBO::getOutcome)
+                .filter(outcome -> (StringUtils.isNotBlank(outcome))).distinct().collect(Collectors.toList());
+
+
+        return outComeList;
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.*;
 import com.bjike.goddess.organize.dto.WorkRangeDTO;
@@ -121,5 +122,9 @@ public class WorkRangeApiImpl implements WorkRangeAPI {
     @Override
     public List<OpinionBO> findThawOpinion() throws SerException {
         return workRangeSer.findThawOpinion();
+    }
+    @Override
+    public List<WorkRangeBO> findByStatus(Status status) throws SerException {
+        return workRangeSer.findByStatus(status);
     }
 }

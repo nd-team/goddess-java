@@ -3,8 +3,6 @@ package com.bjike.goddess.moneyside.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.moneyside.enums.PassStatus;
 
-import java.time.LocalDate;
-
 /**
  * 资金退出申请有误记录业务传输对象
  *
@@ -44,12 +42,12 @@ public class MoneyExitApplyWrongRecordBO extends BaseBO {
     /**
      * 开工时间
      */
-    private LocalDate startProjectTime;
+    private String startProjectTime;
 
     /**
      * 完工时间
      */
-    private LocalDate endProjectTime;
+    private String endProjectTime;
 
     /**
      * 项目进度
@@ -64,12 +62,12 @@ public class MoneyExitApplyWrongRecordBO extends BaseBO {
     /**
      * 预计到账时间
      */
-    private LocalDate forecastArriveTime;
+    private String forecastArriveTime;
 
     /**
      * 退出时间
      */
-    private LocalDate exitTime;
+    private String exitTime;
 
     /**
      * 退出利率
@@ -99,7 +97,7 @@ public class MoneyExitApplyWrongRecordBO extends BaseBO {
     /**
      * 审批时间
      */
-    private LocalDate approverTime;
+    private String approverTime;
 
     /**
      * 审批意见
@@ -152,19 +150,19 @@ public class MoneyExitApplyWrongRecordBO extends BaseBO {
         this.investProject = investProject;
     }
 
-    public LocalDate getStartProjectTime() {
+    public String getStartProjectTime() {
         return startProjectTime;
     }
 
-    public void setStartProjectTime(LocalDate startProjectTime) {
+    public void setStartProjectTime(String startProjectTime) {
         this.startProjectTime = startProjectTime;
     }
 
-    public LocalDate getEndProjectTime() {
+    public String getEndProjectTime() {
         return endProjectTime;
     }
 
-    public void setEndProjectTime(LocalDate endProjectTime) {
+    public void setEndProjectTime(String endProjectTime) {
         this.endProjectTime = endProjectTime;
     }
 
@@ -184,19 +182,19 @@ public class MoneyExitApplyWrongRecordBO extends BaseBO {
         this.settlementProgress = settlementProgress;
     }
 
-    public LocalDate getForecastArriveTime() {
+    public String getForecastArriveTime() {
         return forecastArriveTime;
     }
 
-    public void setForecastArriveTime(LocalDate forecastArriveTime) {
+    public void setForecastArriveTime(String forecastArriveTime) {
         this.forecastArriveTime = forecastArriveTime;
     }
 
-    public LocalDate getExitTime() {
+    public String getExitTime() {
         return exitTime;
     }
 
-    public void setExitTime(LocalDate exitTime) {
+    public void setExitTime(String exitTime) {
         this.exitTime = exitTime;
     }
 
@@ -240,11 +238,11 @@ public class MoneyExitApplyWrongRecordBO extends BaseBO {
         this.approver = approver;
     }
 
-    public LocalDate getApproverTime() {
+    public String getApproverTime() {
         return approverTime;
     }
 
-    public void setApproverTime(LocalDate approverTime) {
+    public void setApproverTime(String approverTime) {
         this.approverTime = approverTime;
     }
 
