@@ -186,7 +186,7 @@ public class ReimburseRecordTO extends BaseTO {
     /**
      * 审核意见
      */
-    @NotBlank(groups = {ReimburseRecordTO.TestAnalysis.class}, message = "是否确认冻结不能为空(是/否)")
+    @NotBlank(groups = {ReimburseRecordTO.TestAnalysis.class,ReimburseRecordTO.TestChargeAudit.class}, message = "是否确认冻结不能为空(是/否)")
     private String auditAdvice;
 
     /**

@@ -341,18 +341,18 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         //checkAsUserPosition
         //checkAsUserArrangement
         //checkAsUserModule
-        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
-        RpcTransmit.transmitUserToken( userToken );
-        Boolean arrangementFlag = positionDetailUserAPI.checkAsUserArrangement(userId, operateIds);
-        RpcTransmit.transmitUserToken( userToken );
-        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId, operateIds);
+//        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
+//        RpcTransmit.transmitUserToken( userToken );
+//        Boolean arrangementFlag = positionDetailUserAPI.checkAsUserArrangement(userId, operateIds);
+//        RpcTransmit.transmitUserToken( userToken );
+//        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId, operateIds);
         RpcTransmit.transmitUserToken( userToken );
         Boolean depart = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
         RpcTransmit.transmitUserToken( userToken );
 
 
         //TODO 部门
-        if (positionFlag || arrangementFlag || moduleFlag || depart) {
+        if ( depart) {
             flag = true;
         } else {
             flag = false;

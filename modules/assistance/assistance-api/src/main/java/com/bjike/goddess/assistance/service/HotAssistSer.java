@@ -84,4 +84,25 @@ public interface HotAssistSer extends Ser<HotAssist, HotAssistDTO> {
 
 
 
+    /**
+     * 获取所有汇总地区
+     *
+     * @throws SerException
+     */
+    default List<String> listAllArea() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有汇总项目组
+     *
+     * @throws SerException
+     */
+    default List<String> listAllProject() throws SerException {
+        return null;
+    }
+
+
+
+
 }

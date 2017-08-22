@@ -192,8 +192,8 @@ public class EntryBasicInfoAction extends BaseFileAction{
      * @return class EntryBasicInfoVO
      * @version v1
      */
-    @GetMapping("v1/sendEmailEntryBasicInfo")
-    public Result emialEntryBasicInfo(@Validated EntryBasicInfoTO entryBasicInfoTO) throws ActException {
+    @PutMapping("v1/sendEmailEntryBasicInfo")
+    public Result emialEntryBasicInfo(@Validated(EntryBasicInfoTO.TestEmail.class) EntryBasicInfoTO entryBasicInfoTO ,BindingResult bindingResult) throws ActException {
         try {
             EntryBasicInfoVO entryBasicInfoVO = BeanTransform.copyProperties(
                     entryBasicInfoAPI.sendEntryBasicInfo(entryBasicInfoTO), EntryBasicInfoVO.class, true);

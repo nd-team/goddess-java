@@ -245,7 +245,7 @@ public class ReimburseRecordApiImpl implements ReimburseRecordAPI {
 
     @Override
     public byte[] exportAlPayExcel(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
-        return reimburseRecordSer.exportExcel(reimburseRecordDTO);
+        return reimburseRecordSer.exportAlPayExcel(reimburseRecordDTO);
     }
 
     @Override

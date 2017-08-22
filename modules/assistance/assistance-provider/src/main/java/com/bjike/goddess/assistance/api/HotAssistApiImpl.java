@@ -76,4 +76,14 @@ public class HotAssistApiImpl implements HotAssistAPI {
     public HotAssistBO getOneById(String id) throws SerException {
         return hotAssistSer.getOneById(id);
     }
+
+    @Override
+    public List<String> listAllArea() throws SerException {
+        return hotAssistSer.listAllArea();
+    }
+
+    @Override
+    public List<String> listAllProject() throws SerException {
+        return hotAssistSer.listAllProject();
+    }
 }

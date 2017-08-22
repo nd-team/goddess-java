@@ -51,12 +51,14 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        Boolean flag = false;
+        Boolean flag = true;
         if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.moudleCusPermission(idFlag);
 //            if( !flag){
 //                throw new SerException("你不是相应模块的人员，不能进行操作");
 //            }
+        }else{
+            flag = true;
         }
         return flag;
     }
@@ -95,6 +97,9 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
                 flag = checkMoudleIdentity("5");
                 break;
             case COLLECT:
+                flag = checkMoudleIdentity("4");
+                break;
+            case SEEFILE:
                 flag = checkMoudleIdentity("4");
                 break;
             default:

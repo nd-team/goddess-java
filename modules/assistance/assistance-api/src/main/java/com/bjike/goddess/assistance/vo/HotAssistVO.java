@@ -106,12 +106,12 @@ public class HotAssistVO {
     private String modifyTime;
 
     /**
-     * 总条数
+     * 总条数(或外出天数)
      */
     private Integer counts;
 
     /**
-     * 补助金额
+     * 补助金额（高温补贴总金额）
      */
     private Double assistMoney;
 
