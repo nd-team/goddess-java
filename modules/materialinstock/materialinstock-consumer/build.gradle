@@ -38,6 +38,7 @@ dependencies {
     }
 
     compile project(":modules:materialinstock:materialinstock-api")
+    compile project(":modules:materialbuy:materialbuy-api")
     compile project(":modules:storage:storage-api")
     compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
