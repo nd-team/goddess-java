@@ -68,12 +68,14 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        Boolean flag = false;
+        Boolean flag = true;
         if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.busCusPermission(idFlag);
 //            if( !flag){
 //                throw new SerException("你不是相应部门的人员，不能进行操作");
 //            }
+        }else{
+            flag = true;
         }
         return flag;
     }

@@ -212,6 +212,38 @@ public class HotAssistAction {
         }
     }
 
+    /**
+     * 汇总需要的地区
+     *
+     * @des 获取所有地区
+     * @version v1
+     */
+    @GetMapping("v1/listAll/area")
+    public Result listAllArea() throws ActException {
+        try {
+            List<String> users = hotAssistAPI.listAllArea();
+            return ActResult.initialize(users);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 汇总需要的项目组
+     *
+     * @des 获取所有项目组
+     * @version v1
+     */
+    @GetMapping("v1/listAll/projectGroup")
+    public Result listAllProject() throws ActException {
+        try {
+            List<String> users = hotAssistAPI.listAllProject();
+            return ActResult.initialize(users);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     
 }

@@ -33,66 +33,116 @@ public interface ComputerAssistAPI {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 电脑补助列表总条数
-     *
      */
     default Long countComputerAssist(ComputerAssistDTO computerAssistDTO) throws SerException {
         return null;
     }
+
     /**
      * 一个电脑补助
+     *
      * @return class ComputerAssistBO
      */
-    default ComputerAssistBO getOneById(String id) throws SerException {return null;}
+    default ComputerAssistBO getOneById(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 电脑补助列表
+     *
      * @return class ComputerAssistBO
      */
-    default List<ComputerAssistBO> listComputerAssist(ComputerAssistDTO computerAssistDTO) throws SerException {return null;}
-    /**
-     *  添加
-     * @param computerAssistTO 电脑补助信息
-     * @return class ComputerAssistBO
-     */
-    default ComputerAssistBO addComputerAssist(ComputerAssistTO computerAssistTO) throws SerException { return null;}
+    default List<ComputerAssistBO> listComputerAssist(ComputerAssistDTO computerAssistDTO) throws SerException {
+        return null;
+    }
 
     /**
-     *  编辑
+     * 添加
+     *
      * @param computerAssistTO 电脑补助信息
      * @return class ComputerAssistBO
      */
-    default ComputerAssistBO editComputerAssist(ComputerAssistTO computerAssistTO) throws SerException { return null;}
+    default ComputerAssistBO addComputerAssist(ComputerAssistTO computerAssistTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 编辑
+     *
+     * @param computerAssistTO 电脑补助信息
+     * @return class ComputerAssistBO
+     */
+    default ComputerAssistBO editComputerAssist(ComputerAssistTO computerAssistTO) throws SerException {
+        return null;
+    }
 
     /**
      * 删除级别
+     *
      * @param id id
      */
-    default void deleteComputerAssist(String id ) throws SerException {return;};
+    default void deleteComputerAssist(String id) throws SerException {
+        return;
+    }
+
+    ;
 
     /**
      * 根据地区汇总
+     *
      * @return class ComputerAssistBO
      */
-    default List<ComputerAssistBO> collectByArea (ComputerAssistDTO computerAssistDTO) throws SerException {return null;}
+    default List<ComputerAssistBO> collectByArea(ComputerAssistDTO computerAssistDTO) throws SerException {
+        return null;
+    }
+
     /**
      * 根据项目组汇总
+     *
      * @return class ComputerAssistBO
      */
-    default List<ComputerAssistBO> collectByProGroup (ComputerAssistDTO computerAssistDTO) throws SerException {return null;}
+    default List<ComputerAssistBO> collectByProGroup(ComputerAssistDTO computerAssistDTO) throws SerException {
+        return null;
+    }
 
     /**
      * 获取所有用户
+     *
      * @throws SerException
      */
-    default List<String> listAllUser() throws SerException { return null;}
+    default List<String> listAllUser() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有汇总地区
+     *
+     * @throws SerException
+     */
+    default List<String> listAllArea() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有汇总项目组
+     *
+     * @throws SerException
+     */
+    default List<String> listAllProject() throws SerException {
+        return null;
+    }
 
     /**
      * 获取用户入职基本信息
+     *
      * @throws SerException
      */
-    default EntryBasicInfoBO getUserByName(ComputerAssistDTO computerAssistDTO) throws SerException { return null;}
+    default EntryBasicInfoBO getUserByName(ComputerAssistDTO computerAssistDTO) throws SerException {
+        return null;
+    }
 
 
     /**

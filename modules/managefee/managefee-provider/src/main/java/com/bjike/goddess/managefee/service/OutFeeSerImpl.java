@@ -6,6 +6,7 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.managefee.bo.ManageFeeBO;
 import com.bjike.goddess.managefee.bo.OutFeeBO;
 import com.bjike.goddess.managefee.bo.OutFeeBO;
 import com.bjike.goddess.managefee.dto.OutFeeDTO;
@@ -198,7 +199,18 @@ public class OutFeeSerImpl extends ServiceImpl<OutFee, OutFeeDTO> implements Out
         outFeeDTO.getSorts().add("createTime=desc");
         List<OutFee> list = super.findByCis(outFeeDTO, true);
 
-        return BeanTransform.copyProperties(list, OutFeeBO.class);
+        List<OutFeeBO> listBO =BeanTransform.copyProperties(list, OutFeeBO.class);
+        if( listBO!= null && listBO.size()>0 ){
+            listBO.stream().forEach(str->{
+                str.setTargetFee( new BigDecimal(str.getTargetFee() ).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
+                str.setActualFee( new BigDecimal(str.getActualFee() ).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
+                str.setRate(  (double)Math.round(str.getActualFee() / str.getTargetFee() *100*100)/100  );
+                str.setRatePersent( str.getRate()+"%" );
+                str.setBalance( new BigDecimal(str.getActualFee() - str.getTargetFee()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
+            });
+        }
+
+        return listBO;
     }
 
 
@@ -221,16 +233,20 @@ public class OutFeeSerImpl extends ServiceImpl<OutFee, OutFeeDTO> implements Out
         voucherGenerateDTO.setStartTime(startTime + "");
         voucherGenerateDTO.setEndTime(endTime + "");
         List<VoucherGenerateBO> voucherList = voucherGenerateAPI.listStatistic(voucherGenerateDTO, "outFee");
-        //记账凭证里面的费用
+        //TODO:这里是关联记账凭证里面的费用
         Double money = 0d;
         if (voucherList != null && voucherList.size() > 0) {
             money = voucherList.stream().filter(str -> str.getBorrowMoney() != null).mapToDouble(VoucherGenerateBO::getBorrowMoney).sum();
+        }else{
+            if (  outFeeTO.getActualFee() == null) {
+                money = 0d;
+            }else{
+                money = outFeeTO.getActualFee();
+            }
         }
 
         OutFee outFee = BeanTransform.copyProperties(outFeeTO, OutFee.class, true);
-        if (money == null && outFeeTO.getActualFee() == null) {
-            money = 0d;
-        }
+
         outFee.setActualFee(money);
         outFee.setRate(outFee.getActualFee() / outFee.getTargetFee());
         outFee.setBalance(outFee.getActualFee() - outFee.getTargetFee());
@@ -352,7 +368,7 @@ public class OutFeeSerImpl extends ServiceImpl<OutFee, OutFeeDTO> implements Out
                 }
             }
         }
-        return list;
+        return returnList;
     }
 
     @Override
@@ -639,8 +655,8 @@ public class OutFeeSerImpl extends ServiceImpl<OutFee, OutFeeDTO> implements Out
 
             OutFeeBO total = new OutFeeBO();
             total.setArea("合计");
-            total.setTargetFee( list.stream().mapToDouble(OutFeeBO::getTargetFee).sum());
-            total.setActualFee( list.stream().mapToDouble(OutFeeBO::getActualFee).sum());
+            total.setTargetFee( new BigDecimal( list.stream().mapToDouble(OutFeeBO::getTargetFee).sum()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
+            total.setActualFee(new BigDecimal( list.stream().mapToDouble(OutFeeBO::getActualFee).sum() ).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
             total.setRate( (double)Math.round( total.getActualFee()/total.getTargetFee()* 100 * 100)/100 );
             total.setRatePersent( total.getRate()+"%" );
             total.setBalance(  new BigDecimal(total.getActualFee() - total.getTargetFee()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
@@ -682,9 +698,9 @@ public class OutFeeSerImpl extends ServiceImpl<OutFee, OutFeeDTO> implements Out
             });
 
             OutFeeBO total = new OutFeeBO();
-            total.setArea("合计");
-            total.setTargetFee( list.stream().mapToDouble(OutFeeBO::getTargetFee).sum());
-            total.setActualFee( list.stream().mapToDouble(OutFeeBO::getActualFee).sum());
+            total.setProjectGroup("合计");
+            total.setTargetFee( new BigDecimal( list.stream().mapToDouble(OutFeeBO::getTargetFee).sum()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
+            total.setActualFee(new BigDecimal( list.stream().mapToDouble(OutFeeBO::getActualFee).sum() ).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
             total.setRate( (double)Math.round( total.getActualFee()/total.getTargetFee()* 100 * 100)/100 );
             total.setRatePersent( total.getRate()+"%" );
             total.setBalance(  new BigDecimal(total.getActualFee() - total.getTargetFee()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
@@ -725,9 +741,9 @@ public class OutFeeSerImpl extends ServiceImpl<OutFee, OutFeeDTO> implements Out
             });
 
             OutFeeBO total = new OutFeeBO();
-            total.setArea("合计");
-            total.setTargetFee( list.stream().mapToDouble(OutFeeBO::getTargetFee).sum());
-            total.setActualFee( list.stream().mapToDouble(OutFeeBO::getActualFee).sum());
+            total.setProject("合计");
+            total.setTargetFee( new BigDecimal( list.stream().mapToDouble(OutFeeBO::getTargetFee).sum()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
+            total.setActualFee(new BigDecimal( list.stream().mapToDouble(OutFeeBO::getActualFee).sum() ).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
             total.setRate( (double)Math.round( total.getActualFee()/total.getTargetFee()* 100 * 100)/100 );
             total.setRatePersent( total.getRate()+"%" );
             total.setBalance(  new BigDecimal(total.getActualFee() - total.getTargetFee()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
@@ -770,9 +786,9 @@ public class OutFeeSerImpl extends ServiceImpl<OutFee, OutFeeDTO> implements Out
             });
 
             OutFeeBO total = new OutFeeBO();
-            total.setArea("合计");
-            total.setTargetFee( list.stream().mapToDouble(OutFeeBO::getTargetFee).sum());
-            total.setActualFee( list.stream().mapToDouble(OutFeeBO::getActualFee).sum());
+            total.setType("合计");
+            total.setTargetFee( new BigDecimal( list.stream().mapToDouble(OutFeeBO::getTargetFee).sum()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
+            total.setActualFee(new BigDecimal( list.stream().mapToDouble(OutFeeBO::getActualFee).sum() ).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
             total.setRate( (double)Math.round( total.getActualFee()/total.getTargetFee()* 100 * 100)/100 );
             total.setRatePersent( total.getRate()+"%" );
             total.setBalance(  new BigDecimal(total.getActualFee() - total.getTargetFee()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );

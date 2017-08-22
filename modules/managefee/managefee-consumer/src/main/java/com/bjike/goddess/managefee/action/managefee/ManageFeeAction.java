@@ -507,7 +507,7 @@ public class ManageFeeAction extends BaseFileAction{
             List<InputStream> inputStreams = super.getInputStreams(request);
             InputStream is = inputStreams.get(1);
             Excel excel = new Excel(0, 1);
-            List<ManageFeeImport> tos = ExcelUtil.excelToClazz(is, ManageFeeAreaExportDetail.class, excel);
+            List<ManageFeeImport> tos = ExcelUtil.excelToClazz(is, ManageFeeImport.class, excel);
             List<ManageFeeTO> tocs = new ArrayList<>();
             for (ManageFeeImport str : tos) {
                 ManageFeeTO manageFeeTO = BeanTransform.copyProperties(str, ManageFeeTO.class);
