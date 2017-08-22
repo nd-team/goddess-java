@@ -37,6 +37,7 @@
     <dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
     <dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
     <dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+    <dubbo:reference  validation="true" id="staffRecordsApiImpl" interface="com.bjike.goddess.archive.api.StaffRecordsAPI" />
 
     <dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.dimission.api.CusPermissionAPI" />
     <dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.dimission.api.CusPermissionOperateAPI" />

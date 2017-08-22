@@ -12,6 +12,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 业务提成定额表业务接口实现
@@ -138,9 +139,7 @@ public class CommissionQuotaApiImpl implements CommissionQuotaAPI {
         List<CommissionQuotaBO> commissionQuotaBOList = commissionQuotaSer.listAreas();
         List<Double> list = new ArrayList<>(0);
         if (!CollectionUtils.isEmpty(commissionQuotaBOList)) {
-            for (CommissionQuotaBO bo : commissionQuotaBOList) {
-                list.add(bo.getActualAmount());
-            }
+            list=commissionQuotaBOList.stream().map(CommissionQuotaBO::getActualAmount).distinct().collect(Collectors.toList());
         }
         return list;
     }

@@ -131,4 +131,12 @@ public interface EntryRegisterSer extends Ser<EntryRegister, EntryRegisterDTO> {
     default EntryRegister getByNumber(String number) throws SerException {
         return null;
     }
+
+    /**
+     * 获取全部的入职等级信息（不分页）
+     * zhuangkaiqin
+     */
+    default List<EntryRegister> list() throws SerException {
+        return null;
+    }
 }

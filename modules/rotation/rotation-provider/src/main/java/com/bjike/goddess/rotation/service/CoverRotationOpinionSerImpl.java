@@ -52,8 +52,9 @@ public class CoverRotationOpinionSerImpl extends ServiceImpl<CoverRotationOpinio
 
     @Override
     public CoverRotationOpinionBO transformBO(CoverRotationOpinion entity) throws SerException {
-        CoverRotationOpinionBO bo = BeanTransform.copyProperties(entity, CoverRotationOpinionBO.class);
+        CoverRotationOpinionBO bo = BeanTransform.copyProperties(entity, CoverRotationOpinionBO.class, "time");
         bo.setCoverId(entity.getCover().getId());
+        bo.setTime(entity.getModifyTime().toString());
         return bo;
     }
 

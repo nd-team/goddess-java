@@ -242,4 +242,18 @@ public interface DisciplineRecordAPI {
      * 根据姓名获取奖励总次数
      */
     Integer getRewardNum(String userName) throws SerException;
+
+    /**
+     * 根据姓名获取奖励总分
+     */
+    default String getRewardBallot(String name) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据姓名获取惩罚总分
+     */
+    default String getPushBallot(String name) throws SerException {
+        return null;
+    }
 }

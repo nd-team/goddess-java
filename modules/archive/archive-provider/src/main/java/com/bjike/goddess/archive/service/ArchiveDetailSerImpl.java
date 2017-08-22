@@ -6,11 +6,15 @@ import com.bjike.goddess.archive.entity.ArchiveDetail;
 import com.bjike.goddess.archive.enums.GuideAddrStatus;
 import com.bjike.goddess.archive.to.ArchiveDetailTO;
 import com.bjike.goddess.archive.to.GuidePermissionTO;
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.bonus.api.DisciplineRecordAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.managementpromotion.api.LevelShowAPI;
+import com.bjike.goddess.managementpromotion.entity.LevelShow;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
@@ -53,6 +57,12 @@ public class ArchiveDetailSerImpl extends ServiceImpl<ArchiveDetail, ArchiveDeta
     private UserAPI userAPI;
     @Autowired
     private RotainCusPermissionSer cusPermissionSer;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private LevelShowAPI levelShowAPI;
+    @Autowired
+    private DisciplineRecordAPI disciplineRecordAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -224,6 +234,18 @@ public class ArchiveDetailSerImpl extends ServiceImpl<ArchiveDetail, ArchiveDeta
     @Override
     public ArchiveDetailBO save(ArchiveDetailTO to) throws SerException {
         ArchiveDetail entity = BeanTransform.copyProperties(to, ArchiveDetail.class);
+        if (moduleAPI.isCheck("managementpromotion")) {
+            LevelShow levelShow = levelShowAPI.findByName(to.getUsername());
+            if (null != levelShow) {
+                entity.setManage(levelShow.getCurrentLevel());
+            }
+        }
+        if (moduleAPI.isCheck("bonus")) {
+            String reward = disciplineRecordAPI.getRewardBallot(to.getUsername());
+            String push = disciplineRecordAPI.getPushBallot(to.getUsername());
+            entity.setReward(reward);
+            entity.setPush(push);
+        }
         super.save(entity);
         return this.transformBO(entity);
     }
@@ -235,6 +257,18 @@ public class ArchiveDetailSerImpl extends ServiceImpl<ArchiveDetail, ArchiveDeta
             try {
                 ArchiveDetail entity = super.findById(to.getId());
                 BeanTransform.copyProperties(to, entity, true);
+                if (moduleAPI.isCheck("managementpromotion")) {
+                    LevelShow levelShow = levelShowAPI.findByName(to.getUsername());
+                    if (null != levelShow) {
+                        entity.setManage(levelShow.getCurrentLevel());
+                    }
+                }
+                if (moduleAPI.isCheck("bonus")) {
+                    String reward = disciplineRecordAPI.getRewardBallot(to.getUsername());
+                    String push = disciplineRecordAPI.getPushBallot(to.getUsername());
+                    entity.setReward(reward);
+                    entity.setPush(push);
+                }
                 entity.setModifyTime(LocalDateTime.now());
                 super.update(entity);
                 return this.transformBO(entity);

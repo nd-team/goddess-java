@@ -205,6 +205,11 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     }
 
     @Override
+    public List<EntryRegister> list() throws SerException {
+        return super.findAll();
+    }
+
+    @Override
     @Transactional(rollbackFor = SerException.class)
     public void removeEntryRegister(String id) throws SerException {
 

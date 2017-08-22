@@ -42,17 +42,28 @@
                      id="storageUserApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
-    <dubbo:reference validation="true" interface="com.bjike.goddess.archive.api.RotainCusPermissionAPI" id="rotainCusPermissionApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.archive.api.RotainPermissionOperateAPI" id="rotainPermissionOperateApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.archive.api.RotainCusPermissionAPI"
+                     id="rotainCusPermissionApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.archive.api.RotainPermissionOperateAPI"
+                     id="rotainPermissionOperateApiImpl"/>
 
-    <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" id="permissionApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.rbac.PermissionAPI"
+                     id="permissionApiImpl"/>
 
-    <dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
-    <dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
-    <dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
-    <dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
-    <dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
-    <dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
-    <dubbo:reference  validation="true" id="entryBasicInfoApiImpl" interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" />
+    <dubbo:reference validation="true" id="departmentDetailApiImpl"
+                     interface="com.bjike.goddess.organize.api.DepartmentDetailAPI"/>
+    <dubbo:reference validation="true" id="arrangementApiImpl"
+                     interface="com.bjike.goddess.organize.api.ArrangementAPI"/>
+    <dubbo:reference validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI"/>
+    <dubbo:reference validation="true" id="positionDetailApiImpl"
+                     interface="com.bjike.goddess.organize.api.PositionDetailAPI"/>
+    <dubbo:reference validation="true" id="positionDetailUserApiImpl"
+                     interface="com.bjike.goddess.organize.api.PositionDetailUserAPI"/>
+    <dubbo:reference validation="true" id="userSetPermissionApiImpl"
+                     interface="com.bjike.goddess.organize.api.UserSetPermissionAPI"/>
+    <dubbo:reference validation="true" id="entryBasicInfoApiImpl"
+                     interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI"/>
+    <dubbo:reference validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI"/>
+    <dubbo:reference validation="true" id="entryRegisterApiImpl" interface="com.bjike.goddess.staffentry.api.EntryRegisterAPI"/>
 
 </beans>
