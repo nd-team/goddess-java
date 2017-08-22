@@ -95,10 +95,10 @@ public interface FeatureListSer extends Ser<FeatureList, FeatureListDTO> {
      * 详情
      *
      * @param id
-     * @return
+     * @return class FeatureListBO
      * @throws SerException
      */
-    default String findDetail(String id) throws SerException{
+    default FeatureListBO findDetail(String id) throws SerException{
         return null;
     }
 }

@@ -232,7 +232,9 @@ public class StayApplySerImpl extends ServiceImpl<StayApply, StayApplyDTO> imple
         checkAddIdentity();
         if (!StringUtils.isEmpty(stayApplyTO.getId())) {
             StayApply stayApply = super.findById(stayApplyTO.getId());
-            BeanTransform.copyProperties(stayApplyTO, stayApply, true);
+            LocalDateTime createTime = stayApply.getCreateTime();
+            stayApply =  BeanTransform.copyProperties(stayApplyTO, StayApply.class, true);
+            stayApply.setCreateTime(createTime);
             stayApply.setModifyTime(LocalDateTime.now());
             super.update(stayApply);
         } else {

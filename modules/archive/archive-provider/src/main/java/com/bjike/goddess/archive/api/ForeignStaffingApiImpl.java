@@ -65,4 +65,19 @@ public class ForeignStaffingApiImpl implements ForeignStaffingAPI {
     public Long getTotal() throws SerException {
         return foreignStaffingSer.getTotal();
     }
+
+    @Override
+    public List<String> getTime() throws SerException {
+        return foreignStaffingSer.getTime();
+    }
+
+    @Override
+    public List<String> getSchool() throws SerException {
+        return foreignStaffingSer.getSchool();
+    }
+
+    @Override
+    public List<String> getQQ() throws SerException {
+        return foreignStaffingSer.getQQ();
+    }
 }

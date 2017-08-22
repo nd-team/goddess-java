@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * 人工成本计划业务实现
@@ -376,7 +377,12 @@ public class ExpendPlanSerImpl extends ServiceImpl<ExpendPlan, ExpendPlanDTO> im
                     expendPlanSonDetailDTO.getConditions().add(Restrict.eq("son.id", son.getId()));
                     List<ExpendPlanSonDetail> sonDetails = expendPlanSonDetailSer.findByCis(expendPlanSonDetailDTO);
                     List<DepartmentDetailBO> detailBOs = departmentDetailAPI.findByHierarchy(hierarchyBOs.get(j - 1).getId());
-                    for (int i = a; i < (4 * detailBOs.size() + a); i++) {
+                    long count=detailBOs.stream().filter(departmentDetailBO -> departmentDetailBO.getDepartment().contains("总经办")).count();    //用于识别该体系下的部门是否包含总经办
+                    long num=detailBOs.size();
+                    if (count>=1){
+                        num=num-count;
+                    }
+                    for (int i = a; i < (4 * num + a); i++) {
                         if (i < sonDetails.size() && i % 4 == 0) {
                             hierarchyTotal += Integer.valueOf(sonDetails.get(i).getContent());
                         }

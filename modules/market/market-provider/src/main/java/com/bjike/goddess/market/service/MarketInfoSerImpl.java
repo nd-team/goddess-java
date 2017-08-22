@@ -444,4 +444,25 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
         }
         return projectNature;
     }
+
+    @Override
+    public List<String> getTechnologyCategory() throws SerException {
+        List<String> list = new ArrayList<>(0);
+        List<MarketInfo> marketInfos = super.findAll();
+        for (MarketInfo entity : marketInfos) {
+            list.add(entity.getTechnologyCategory());
+        }
+        return list;
+    }
+
+    @Override
+    public List<String> getMarketInfoCollecting() throws SerException {
+        List<String> list = new ArrayList<>(0);
+        List<MarketInfo> marketInfos = super.findAll();
+        for (MarketInfo entity : marketInfos) {
+            list.add(entity.getMarketInfoCollecting());
+        }
+        return list;
+    }
+
 }

@@ -209,7 +209,9 @@ public class WorkJoinTimeSpecificationSerImpl extends ServiceImpl<WorkJoinTimeSp
     public WorkJoinTimeSpecificationBO editWorkJoinTimeSpecification(WorkJoinTimeSpecificationTO workJoinTimeSpecificationTO) throws SerException {
         checkAddIdentity();
         WorkJoinTimeSpecification workJoinTimeSpecification = super.findById(workJoinTimeSpecificationTO.getId());
-        BeanTransform.copyProperties(workJoinTimeSpecificationTO, workJoinTimeSpecification, true);
+        LocalDateTime creatTime = workJoinTimeSpecification.getCreateTime();
+        workJoinTimeSpecification =  BeanTransform.copyProperties(workJoinTimeSpecificationTO, WorkJoinTimeSpecification.class, true);
+        workJoinTimeSpecification.setCreateTime(creatTime);
         workJoinTimeSpecification.setModifyTime(LocalDateTime.now());
         super.update(workJoinTimeSpecification);
         return BeanTransform.copyProperties(workJoinTimeSpecification, WorkJoinTimeSpecificationBO.class);

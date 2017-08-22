@@ -11,6 +11,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.rentcar.api.DriverRecruitAPI;
 import com.bjike.goddess.rentcar.dto.DriverRecruitDTO;
 import com.bjike.goddess.rentcar.to.DriverRecruitTO;
+import com.bjike.goddess.rentcar.to.GuidePermissionTO;
 import com.bjike.goddess.rentcar.vo.DriverRecruitVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -35,6 +36,29 @@ public class DriverRecruitAct {
 
     @Autowired
     private DriverRecruitAPI driverRecruitAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = driverRecruitAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 新增

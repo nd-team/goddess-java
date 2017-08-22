@@ -1,5 +1,6 @@
 package com.bjike.goddess.enterpriseculturemanage.action.enterpriseculturemanage;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -17,6 +18,7 @@ import com.bjike.goddess.enterpriseculturemanage.to.GuidePermissionTO;
 import com.bjike.goddess.enterpriseculturemanage.vo.ConstructTeamVO;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +51,9 @@ public class ConstructTeamAct {
 
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 模块设置导航权限
@@ -133,7 +138,11 @@ public class ConstructTeamAct {
     @PostMapping("v1/findUserInfo")
     public Result findUserInfo(HttpServletRequest request) throws ActException {
         try {
-            List<UserVO> voList = BeanTransform.copyProperties(detailUserAPI.findUserList(), UserVO.class, request);
+            List<UserBO> boList = new ArrayList<>(0);
+            if(moduleAPI.isCheck("organize")) {
+               boList =  detailUserAPI.findUserList();
+            }
+            List<UserVO> voList = BeanTransform.copyProperties(boList,UserVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

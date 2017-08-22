@@ -233,7 +233,9 @@ public class HostApplySerImpl extends ServiceImpl<HostApply, HostApplyDTO> imple
         checkAddIdentity();
         if (!StringUtils.isEmpty(hostApplyTO.getId())) {
             HostApply hostApply = super.findById(hostApplyTO.getId());
-            BeanTransform.copyProperties(hostApplyTO, hostApply, true);
+            LocalDateTime createTime = hostApply.getCreateTime();
+            hostApply = BeanTransform.copyProperties(hostApplyTO, HostApply.class, true);
+            hostApply.setCreateTime(createTime);
             hostApply.setModifyTime(LocalDateTime.now());
             super.update(hostApply);
             return BeanTransform.copyProperties(hostApply, HostApplyBO.class);

@@ -113,7 +113,7 @@ public class QuestionAction {
      * 编辑问题
      *
      * @param to 问题数据to
-     * @return class AuswerVO
+     * @return class QuestionVO
      * @des 编辑问题
      * @version v1
      */

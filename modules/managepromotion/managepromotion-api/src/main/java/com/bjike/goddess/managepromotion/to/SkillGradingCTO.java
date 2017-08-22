@@ -20,10 +20,10 @@ public class SkillGradingCTO extends BaseTO {
 
 
     /**
-     * 转正后间隔时间
+     * 档次
      */
-    @NotNull(message = "转正后间隔时间不能为空",groups = {ADD.class, EDIT.class})
-    private Integer intervalAfterTransfer;
+    @NotBlank(message = "档次不能为空",groups = {ADD.class, EDIT.class})
+    private String grade;
 
     /**
      * 各档次晋升间隔时间（月）
@@ -76,12 +76,12 @@ public class SkillGradingCTO extends BaseTO {
      */
     private Integer growth;
 
-    public Integer getIntervalAfterTransfer() {
-        return intervalAfterTransfer;
+    public String getGrade() {
+        return grade;
     }
 
-    public void setIntervalAfterTransfer(Integer intervalAfterTransfer) {
-        this.intervalAfterTransfer = intervalAfterTransfer;
+    public void setGrade(String grade) {
+        this.grade = grade;
     }
 
     public Integer getGradeAfterTime() {

@@ -5,6 +5,7 @@ import com.bjike.goddess.assistance.dto.HotAssistDTO;
 import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.to.HotAssistTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.service.Ser;
 
 import java.util.List;
 
@@ -31,53 +32,103 @@ public interface HotAssistAPI {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 高温补助列表总条数
-     *
      */
     default Long countHotAssist(HotAssistDTO hotAssistDTO) throws SerException {
         return null;
     }
-    /**
-     * 一个高温补助
-     * @return class HotAssistBO
-     */
-    default HotAssistBO getOneById(String id) throws SerException {return null;}
-    /**
-     * 高温补助列表
-     * @return class HotAssistBO
-     */
-    default List<HotAssistBO> listHotAssist(HotAssistDTO hotAssistDTO) throws SerException {return null;}
-    /**
-     *  添加
-     * @param hotAssistTO 高温补助信息
-     * @return class HotAssistBO
-     */
-    default HotAssistBO addHotAssist(HotAssistTO hotAssistTO) throws SerException { return null;}
 
     /**
-     *  编辑
+     * 一个高温补助
+     *
+     * @return class HotAssistBO
+     */
+    default HotAssistBO getOneById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 高温补助列表
+     *
+     * @return class HotAssistBO
+     */
+    default List<HotAssistBO> listHotAssist(HotAssistDTO hotAssistDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 添加
+     *
      * @param hotAssistTO 高温补助信息
      * @return class HotAssistBO
      */
-    default HotAssistBO editHotAssist(HotAssistTO hotAssistTO) throws SerException { return null;}
+    default HotAssistBO addHotAssist(HotAssistTO hotAssistTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 编辑
+     *
+     * @param hotAssistTO 高温补助信息
+     * @return class HotAssistBO
+     */
+    default HotAssistBO editHotAssist(HotAssistTO hotAssistTO) throws SerException {
+        return null;
+    }
 
     /**
      * 删除级别
+     *
      * @param id id
      */
-    default void deleteHotAssist(String id ) throws SerException {return;};
+    default void deleteHotAssist(String id) throws SerException {
+        return;
+    }
+
+    ;
 
     /**
      * 根据地区汇总
+     *
      * @return class HotAssistBO
      */
-    default List<HotAssistBO> collectByArea (HotAssistDTO hotAssistDTO) throws SerException {return null;}
+    default List<HotAssistBO> collectByArea(HotAssistDTO hotAssistDTO) throws SerException {
+        return null;
+    }
+
     /**
      * 根据项目组汇总
+     *
      * @return class HotAssistBO
      */
-    default List<HotAssistBO> collectByProGroup (HotAssistDTO hotAssistDTO) throws SerException {return null;}
+    default List<HotAssistBO> collectByProGroup(HotAssistDTO hotAssistDTO) throws SerException {
+        return null;
+    }
 
+
+    /**
+     * 获取所有汇总地区
+     *
+     * @throws SerException
+     */
+    default List<String> listAllArea() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有汇总项目组
+     *
+     * @throws SerException
+     */
+    default List<String> listAllProject() throws SerException {
+        return null;
+    }
+
+    /*
+     * 根据计薪周期开始时间和结束时间获取高温补助信息
+     */
+    HotAssistBO findHot(String startTime, String endTime) throws SerException;
 
 }

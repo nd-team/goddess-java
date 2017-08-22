@@ -45,6 +45,12 @@ public class CoverRotationOpinionVO {
      */
     private String opinion;
 
+    /**
+     * 时间
+     * @return
+     */
+    private String time;
+
 
     public String getId() {
         return id;
@@ -102,5 +108,11 @@ public class CoverRotationOpinionVO {
         this.opinion = opinion;
     }
 
+    public String getTime() {
+        return time;
+    }
 
+    public void setTime(String time) {
+        this.time = time;
+    }
 }

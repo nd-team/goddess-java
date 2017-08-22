@@ -6,7 +6,6 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.reportmanagement.bo.*;
 import com.bjike.goddess.reportmanagement.dto.*;
-import com.bjike.goddess.reportmanagement.entity.Asset;
 import com.bjike.goddess.reportmanagement.entity.Profit;
 import com.bjike.goddess.reportmanagement.enums.Form;
 import com.bjike.goddess.reportmanagement.enums.GuideAddrStatus;
@@ -211,7 +210,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         boolean b7 = true;
         double incomeMonth = 0;
         double incomeYear = 0;
-        int num=1;
+        int num = 1;
         if ((list != null) && (!list.isEmpty())) {
             for (Profit profit : list) {
                 List<FormulaBO> formulaBOs = formulaSer.findByFid(profit.getId(), formulaDTO);
@@ -354,9 +353,10 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                 bo.setEnd(end);
                 bo.setChange(change);
                 if (end == 0) {
-                    throw new SerException("结束时间数据为0，不能计算");
+                    bo.setChangeScale("0%");
+                } else {
+                    bo.setChangeScale(String.format("%.2f", (change / end) * 100) + "%");
                 }
-                bo.setChangeScale(String.format("%.2f", (change / end) * 100) + "%");
                 if (p == list.get(0)) {
                     bo.setProject("一、" + p.getProject());
                 }
@@ -390,9 +390,10 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                             changeSum = -changeSum;
                         }
                         if (endSum == 0) {
-                            throw new SerException("结束时间数据为0，不能计算");
+                            bo.setChangeScale("0%");
+                        } else {
+                            bo.setChangeScale(String.format("%.2f", (changeSum / endSum) * 100) + "%");
                         }
-                        bo.setChangeScale(String.format("%.2f", (changeSum / endSum) * 100) + "%");
                         boList.add(twoBO);
                         b2 = false;
                     }
@@ -424,9 +425,10 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                             changeSum = -changeSum;
                         }
                         if (endSum == 0) {
-                            throw new SerException("结束时间数据为0，不能计算");
+                            bo.setChangeScale("0%");
+                        } else {
+                            bo.setChangeScale(String.format("%.2f", (changeSum / endSum) * 100) + "%");
                         }
-                        bo.setChangeScale(String.format("%.2f", (changeSum / endSum) * 100) + "%");
                         boList.add(twoBO);
                         b5 = false;
                     }
@@ -458,9 +460,10 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                 changeSum = -changeSum;
             }
             if (endSum == 0) {
-                throw new SerException("结束时间数据为0，不能计算");
+                lastBO.setChangeScale("0%");
+            } else {
+                lastBO.setChangeScale(String.format("%.2f", (changeSum / endSum) * 100) + "%");
             }
-            lastBO.setChangeScale(String.format("%.2f", (changeSum / endSum) * 100) + "%");
             boList.add(lastBO);
         }
         return boList;
@@ -540,7 +543,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
 
     @Override
     public List<ProfitAnalyzeIndicatorBO> analyzeIndicator(ProfitDTO dto) throws SerException {
-        String userToken=RpcTransmit.getUserToken();
+        String userToken = RpcTransmit.getUserToken();
         List<ProfitBO> profits = list(dto);
         List<ProfitAnalyzeIndicatorBO> boList = new ArrayList<>();
         AssetDTO assetDTO = new AssetDTO();

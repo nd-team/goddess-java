@@ -6,6 +6,8 @@ import com.bjike.goddess.dispatchcar.bo.LeaseCarCostBO;
 import com.bjike.goddess.dispatchcar.dto.LeaseCarCostDTO;
 import com.bjike.goddess.dispatchcar.service.LeaseCarCostSer;
 import com.bjike.goddess.dispatchcar.to.LeaseCarCostTO;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,5 +56,15 @@ public class LeaseCarCostApiImpl implements LeaseCarCostAPI {
     @Override
     public LeaseCarCostBO findById(String id) throws SerException {
         return BeanTransform.copyProperties(leaseCarCostSer.findById(id),LeaseCarCostBO.class);
+    }
+
+    @Override
+    public List<OpinionBO> findDeapartment() throws SerException {
+        return leaseCarCostSer.findDeapartment();
+    }
+
+    @Override
+    public List<AreaBO> findArea() throws SerException {
+        return leaseCarCostSer.findArea();
     }
 }

@@ -1,5 +1,6 @@
 package com.bjike.goddess.buyticket.action.buyticket;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.buyticket.api.BuyTicketApplyAPI;
 import com.bjike.goddess.buyticket.bo.BuyTicketApplyBO;
 import com.bjike.goddess.buyticket.dto.BuyTicketApplyDTO;
@@ -19,7 +20,9 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 车票购买申请
@@ -46,6 +50,8 @@ public class BuyTicketApplyAction {
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 模块设置导航权限
@@ -271,9 +277,17 @@ public class BuyTicketApplyAction {
     @GetMapping("v1/allOrageDepartment")
     public Result allOrageDepartment() throws ActException {
         try {
-            List<String> detail = new ArrayList<>();
-            detail = buyTicketApplyAPI.findAddAllDetails();
-            return ActResult.initialize(detail);
+//            List<String> detail = new ArrayList<>();
+//            detail = buyTicketApplyAPI.findAddAllDetails();
+//            return ActResult.initialize(detail);
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("organize")) {
+                List<OpinionBO> opinionBOList = departmentDetailAPI.findThawOpinion();
+                if (!CollectionUtils.isEmpty(opinionBOList)) {
+                    list = opinionBOList.stream().map(OpinionBO::getValue).distinct().collect(Collectors.toList());
+                }
+            }
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

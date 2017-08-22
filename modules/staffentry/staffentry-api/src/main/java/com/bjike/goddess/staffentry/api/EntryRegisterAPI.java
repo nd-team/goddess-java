@@ -5,6 +5,7 @@ import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
 import com.bjike.goddess.staffentry.entity.EntryRegister;
 import com.bjike.goddess.staffentry.to.*;
+import scala.collection.immutable.Nil;
 
 import java.util.List;
 
@@ -150,6 +151,13 @@ public interface EntryRegisterAPI {
      * @throws SerException
      */
     default List<String> findGraduationDate() throws SerException {
+        return null;
+    }
+    /**
+     * 获取全部的入职等级信息（不分页）
+     * zhuangkaiqin
+     */
+    default List<EntryRegister> list() throws SerException {
         return null;
     }
 }

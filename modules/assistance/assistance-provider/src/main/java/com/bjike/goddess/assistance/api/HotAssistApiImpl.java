@@ -29,7 +29,7 @@ public class HotAssistApiImpl implements HotAssistAPI {
 
     @Override
     public Long countHotAssist(HotAssistDTO hotAssistDTO) throws SerException {
-        return hotAssistSer.countHotAssist( hotAssistDTO);
+        return hotAssistSer.countHotAssist(hotAssistDTO);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class HotAssistApiImpl implements HotAssistAPI {
 
     @Override
     public List<HotAssistBO> collectByArea(HotAssistDTO hotAssistDTO) throws SerException {
-        return hotAssistSer.collectByArea( hotAssistDTO);
+        return hotAssistSer.collectByArea(hotAssistDTO);
     }
 
     @Override
@@ -75,5 +75,20 @@ public class HotAssistApiImpl implements HotAssistAPI {
     @Override
     public HotAssistBO getOneById(String id) throws SerException {
         return hotAssistSer.getOneById(id);
+    }
+
+    @Override
+    public List<String> listAllArea() throws SerException {
+        return hotAssistSer.listAllArea();
+    }
+
+    @Override
+    public List<String> listAllProject() throws SerException {
+        return hotAssistSer.listAllProject();
+    }
+
+    @Override
+    public HotAssistBO findHot(String startTime, String endTime) throws SerException {
+        return hotAssistSer.findHot(startTime, endTime);
     }
 }

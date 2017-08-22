@@ -5,6 +5,7 @@ import com.bjike.goddess.dimission.bo.DimissionInfoBO;
 import com.bjike.goddess.dimission.bo.DimissionInfoCollectBO;
 import com.bjike.goddess.dimission.bo.DimissionReasonBO;
 import com.bjike.goddess.dimission.dto.DimissionInfoDTO;
+import com.bjike.goddess.dimission.entity.DimissionInfo;
 import com.bjike.goddess.dimission.enums.DimissionType;
 import com.bjike.goddess.dimission.excel.SonPermissionObject;
 import com.bjike.goddess.dimission.service.DimissionInfoSer;
@@ -157,5 +158,10 @@ public class DimissionInfoApiImpl implements DimissionInfoAPI {
     @Override
     public List<String> getAllName() throws SerException {
         return dimissionInfoSer.getAllName();
+    }
+
+    @Override
+    public List<DimissionInfo> findByName(String userName) throws SerException {
+        return dimissionInfoSer.findByName(userName);
     }
 }

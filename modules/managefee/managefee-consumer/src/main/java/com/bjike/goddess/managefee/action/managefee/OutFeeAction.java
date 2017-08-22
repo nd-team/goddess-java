@@ -565,7 +565,7 @@ public class OutFeeAction extends BaseFileAction {
             List<InputStream> inputStreams = super.getInputStreams(request);
             InputStream is = inputStreams.get(1);
             Excel excel = new Excel(0, 1);
-            List<OutFeeImport> tos = ExcelUtil.excelToClazz(is, OutFeeAreaExportDetail.class, excel);
+            List<OutFeeImport> tos = ExcelUtil.excelToClazz(is, OutFeeImport.class, excel);
             List<OutFeeTO> tocs = new ArrayList<>();
             for (OutFeeImport str : tos) {
                 OutFeeTO outFeeTO = BeanTransform.copyProperties(str, OutFeeTO.class);

@@ -8,7 +8,6 @@ import com.bjike.goddess.materialbuy.to.GuidePermissionTO;
 import com.bjike.goddess.materialbuy.to.MaterialBuyTO;
 import com.bjike.goddess.materialbuy.vo.SonPermissionObject;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -154,7 +153,7 @@ public interface MaterialBuyAPI {
      * @return
      * @throws SerException
      */
-    List<String> findDeparByTyAre(String devType,String area, String[] intervalTime) throws SerException;
+    List<String> findDeparByTyAre(String devType, String area, String[] intervalTime) throws SerException;
 
     /**
      * 物质汇总所需接口
@@ -163,7 +162,7 @@ public interface MaterialBuyAPI {
      * @return
      * @throws SerException
      */
-    List<MaterialBuyBO> findByTyAndAr(String devType, String area,String department, String[] intervalTime) throws SerException;
+    List<MaterialBuyBO> findByTyAndAr(String devType, String area, String department, String[] intervalTime) throws SerException;
 
     /**
      * 物质汇总所需接口
@@ -181,7 +180,7 @@ public interface MaterialBuyAPI {
      * @return
      * @throws SerException
      */
-    List<String> findDepByArea(String area,String[] intervalTime) throws SerException;
+    List<String> findDepByArea(String area, String[] intervalTime) throws SerException;
 
     /**
      * 物质汇总所需接口
@@ -190,7 +189,7 @@ public interface MaterialBuyAPI {
      * @return
      * @throws SerException
      */
-    List<String> findDevByAreaDev(String area,String projectTeam,String[] intervalTime) throws SerException;
+    List<String> findDevByAreaDev(String area, String projectTeam, String[] intervalTime) throws SerException;
 
     /**
      * 物质汇总所需接口
@@ -199,7 +198,7 @@ public interface MaterialBuyAPI {
      * @return
      * @throws SerException
      */
-    List<MaterialBuyBO> findByTeamAnArea(String area,String projectTeam,String devType,String[] intervalTime) throws SerException;
+    List<MaterialBuyBO> findByTeamAnArea(String area, String projectTeam, String devType, String[] intervalTime) throws SerException;
 
     /**
      * 物质汇总所需接口
@@ -218,6 +217,7 @@ public interface MaterialBuyAPI {
      * @throws SerException
      */
     List<String> findByRequis(String requisitioner, String[] intervalTime) throws SerException;
+
     /**
      * 物质汇总所需接口
      * 根据申购人和类型查找所有信息
@@ -225,5 +225,19 @@ public interface MaterialBuyAPI {
      * @return
      * @throws SerException
      */
-    List<MaterialBuyBO> findByRequisType(String requisitioner,String devType, String[] intervalTime) throws SerException;
+    List<MaterialBuyBO> findByRequisType(String requisitioner, String devType, String[] intervalTime) throws SerException;
+
+    /**
+     * 获得申购日期
+     */
+    default List<String> findSubscribeDate() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获得申购人
+     */
+    default List<String> findRequisitioner() throws SerException {
+        return null;
+    }
 }

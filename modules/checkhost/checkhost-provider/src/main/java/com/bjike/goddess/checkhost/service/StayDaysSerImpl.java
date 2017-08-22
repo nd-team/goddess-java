@@ -195,7 +195,9 @@ public class StayDaysSerImpl extends ServiceImpl<StayDays, StayDaysDTO> implemen
         checkAddIdentity();
         if (!StringUtils.isEmpty(stayDaysTO.getId())) {
             StayDays stayDays = super.findById(stayDaysTO.getId());
-            BeanTransform.copyProperties(stayDaysTO, stayDays, true);
+            LocalDateTime createTime = stayDays.getCreateTime();
+            stayDays = BeanTransform.copyProperties(stayDaysTO, StayDays.class, true);
+            stayDays.setCreateTime(createTime);
             stayDays.setModifyTime(LocalDateTime.now());
             super.update(stayDays);
         } else {

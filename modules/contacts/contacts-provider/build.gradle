@@ -34,5 +34,6 @@ dependencies {
     compile project(":common:common-utils")
     compile project(":modules:dimission:dimission-api")
     compile project(":modules:staffentry:staffentry-api")
+    compile project(":modules:assemble:assemble-api")
 }
 

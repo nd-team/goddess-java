@@ -152,7 +152,13 @@ public interface EntryRegisterSer extends Ser<EntryRegister, EntryRegisterDTO> {
      * lijuntao
      * @throws SerException
      */
-    default List<String> findGraduationDate() throws SerException {
+    default List<String> findGraduationDate() throws SerException {return null;}
+
+    /**
+     * 获取全部的入职等级信息（不分页）
+     * zhuangkaiqin
+     */
+    default List<EntryRegister> list() throws SerException {
         return null;
     }
 }

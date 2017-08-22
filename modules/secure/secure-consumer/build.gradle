@@ -39,7 +39,9 @@ dependencies {
 
     compile project(":modules:secure:secure-api")
     compile project(":modules:user:user-api")
-
+    compile project(":modules:assemble:assemble-api")
+    compile project(":modules:intromanage:intromanage-api")
+    compile project(":modules:archive:archive-api")
     compile("org.springframework.boot:spring-boot-starter-web")
 }
 

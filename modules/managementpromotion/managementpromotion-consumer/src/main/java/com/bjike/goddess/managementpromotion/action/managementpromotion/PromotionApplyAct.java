@@ -1,5 +1,6 @@
 package com.bjike.goddess.managementpromotion.action.managementpromotion;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -8,13 +9,25 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.managementpromotion.api.GradeLevelAPI;
+import com.bjike.goddess.managementpromotion.api.LevelShowAPI;
 import com.bjike.goddess.managementpromotion.api.PromotionApplyAPI;
 import com.bjike.goddess.managementpromotion.bo.PromotionApplyBO;
 import com.bjike.goddess.managementpromotion.dto.PromotionApplyDTO;
+import com.bjike.goddess.managementpromotion.entity.LevelShow;
 import com.bjike.goddess.managementpromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managementpromotion.to.PromotionApplyTO;
 import com.bjike.goddess.managementpromotion.vo.PromotionApplyVO;
-import com.bjike.goddess.regularization.api.RegularizationAPI;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.organize.vo.AreaVO;
+import com.bjike.goddess.organize.vo.DepartmentDetailVO;
+import com.bjike.goddess.organize.vo.PositionDetailVO;
+import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -41,7 +54,15 @@ public class PromotionApplyAct {
     @Autowired
     private GradeLevelAPI gradeLevelAPI;
     @Autowired
-    private RegularizationAPI regularizationAPI;
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private PositionDetailAPI positionDetailAPI;
+    @Autowired
+    private LevelShowAPI levelShowAPI;
 
     /**
      * 功能导航权限
@@ -328,16 +349,101 @@ public class PromotionApplyAct {
     }
 
     /**
-     * 获取所有员工编号
+     * 获取所有员工编号和姓名
      *
+     * @return class UserVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/allNum")
-    public Result allNum() throws ActException {
+    public Result allNum(HttpServletRequest request) throws ActException {
         try {
-            Set<String> set = regularizationAPI.allNum();
-            return ActResult.initialize(set);
+            if (moduleAPI.isCheck("organize")) {
+                List<UserBO> list = positionDetailUserAPI.findUserListInOrgan();
+                return ActResult.initialize(BeanTransform.copyProperties(list, UserVO.class, request));
+            }
+            return null;
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有地区
+     *
+     * @return class AreaVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findArea")
+    public Result findArea(HttpServletRequest request) throws ActException {
+        try {
+            if (moduleAPI.isCheck("organize")) {
+                List<AreaBO> list = departmentDetailAPI.findArea();
+                return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
+            }
+            return null;
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有部门，项目组
+     *
+     * @return class DepartmentDetailVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findDepart")
+    public Result findDepart(HttpServletRequest request) throws ActException {
+        try {
+            if (moduleAPI.isCheck("organize")) {
+                List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
+                return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
+            }
+            return null;
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找所有岗位
+     *
+     * @return class PositionDetailVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findPosition")
+    public Result findPosition(HttpServletRequest request) throws ActException {
+        try {
+            if (moduleAPI.isCheck("organize")) {
+                List<PositionDetailBO> list = positionDetailAPI.findStatus();
+                return ActResult.initialize(BeanTransform.copyProperties(list, PositionDetailVO.class, request));
+            }
+            return null;
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 通过员工编号获取已晋升次数
+     *
+     * @param num 员工编号
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findNum/{num}")
+    public Result findNum(@PathVariable String num) throws ActException {
+        try {
+            LevelShow levelShow = levelShowAPI.findByEmployeeId(num);
+            if (null != levelShow) {
+                return ActResult.initialize(levelShow.getPromotionNum());
+            } else {
+                return null;
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

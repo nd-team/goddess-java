@@ -22,6 +22,7 @@ public class JapiTest {
         JapiClient.setActionReletivePath("com/bjike/goddess/competitormanage/action");//主项目action位置
         JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
                 "modules/competitormanage/competitormanage-api",
+                "modules/market/market-api",
                 "modules/organize/organize-api",
                 "modules/storage/storage-api",
                 "modules/user/user-api",

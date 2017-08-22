@@ -1,5 +1,6 @@
 package com.bjike.goddess.bonus.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.bonus.bo.*;
 import com.bjike.goddess.bonus.dto.DisciplineRecordDTO;
 import com.bjike.goddess.bonus.entity.DisciplineRecord;
@@ -53,6 +54,8 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 检查权限(部门)
@@ -364,18 +367,32 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
      * @throws SerException
      */
     private DisciplineRecord checkEntity(DisciplineRecord entity) throws SerException {
-        UserBO user = userAPI.findByUsername(entity.getUsername());
+        UserBO user = null;
+        if (moduleAPI.isCheck("organize")) {
+            List<UserBO> userBOList = positionDetailUserAPI.findUserListInOrgan();
+            if (CollectionUtils.isEmpty(userBOList)) {
+                userBOList = userBOList.stream().filter(obj -> obj.getUsername().equals(entity.getUsername())).collect(Collectors.toList());
+                user = userBOList.get(0);
+            }
+
+        }
+//        UserBO user = userAPI.findByUsername(entity.getUsername());
         if (null == user)
             throw new SerException("该用户不存在");
         entity.setSerialNumber(user.getEmployeeNumber());
-        PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
+        PositionDetailUserBO detailBO = null;
+        if (moduleAPI.isCheck("organize")) {
+            detailBO = positionDetailUserAPI.findOneByUser(user.getId());
+        }
         entity.setArea("");
         entity.setProject("");
         if (null != detailBO)
             for (String id : detailBO.getPositionIds().split(",")) {
-                PositionDetailBO position = positionDetailAPI.findBOById(id);
-                entity.setProject(entity.getProject() + "," + position.getDepartmentName());
-                entity.setArea(entity.getArea() + "," + position.getArea());
+                if (moduleAPI.isCheck("organize")) {
+                    PositionDetailBO position = positionDetailAPI.findBOById(id);
+                    entity.setProject(entity.getProject() + "," + position.getDepartmentName());
+                    entity.setArea(entity.getArea() + "," + position.getArea());
+                }
             }
         if (entity.getStatus()) {//检测奖罚分数填写是否符合规范 true 为奖励 false 为处罚
             if (entity.getBallot() < 0)
@@ -746,16 +763,16 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
     @Override
     public ScoreBO getRePuTotal(String userName) throws SerException {
         DisciplineRecordDTO dto = new DisciplineRecordDTO();
-        dto.getConditions().add(Restrict.eq("username",userName));
+        dto.getConditions().add(Restrict.eq("username", userName));
         List<DisciplineRecord> disciplineRecords = super.findByCis(dto);
         Double rewardTotal = 0d;
         Double pushTotal = 0d;
-        if(disciplineRecords!=null && disciplineRecords.size()>0){
+        if (disciplineRecords != null && disciplineRecords.size() > 0) {
             for (DisciplineRecord disciplineRecord : disciplineRecords) {
-                if(disciplineRecord.getStatus()){
-                    rewardTotal+= disciplineRecord.getBallot();
-                }else{
-                    pushTotal+= disciplineRecord.getBallot();
+                if (disciplineRecord.getStatus()) {
+                    rewardTotal += disciplineRecord.getBallot();
+                } else {
+                    pushTotal += disciplineRecord.getBallot();
                 }
             }
         }
@@ -763,5 +780,33 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
         scoreBO.setRewardTotal(rewardTotal);
         scoreBO.setPushTotal(pushTotal);
         return scoreBO;
+    }
+    public String getRewardBallot(String name) throws SerException {
+        StringBuilder sql = new StringBuilder("select sum(ballot) as ballot ");
+        sql.append(" from bonus_discipline_record ");
+        sql.append(" where name = '" + name + "' ");
+        sql.append(" and is_status = 1 ");
+        String[] fields = new String[]{"ballot"};
+        List<DisciplineRecord> disciplineRecords = super.findBySql(sql.toString(), DisciplineRecord.class, fields);
+        if (!CollectionUtils.isEmpty(disciplineRecords)) {
+            Double ballots = disciplineRecords.stream().map(DisciplineRecord::getBallot).distinct().collect(Collectors.toList()).get(0);
+            return ballots.toString();
+        }
+        return null;
+    }
+
+    @Override
+    public String getPushBallot(String name) throws SerException {
+        StringBuilder sql = new StringBuilder("select sum(ballot) as ballot ");
+        sql.append(" from bonus_discipline_record ");
+        sql.append(" where name = '" + name + "' ");
+        sql.append(" and is_status = 0 ");
+        String[] fields = new String[]{"ballot"};
+        List<DisciplineRecord> disciplineRecords = super.findBySql(sql.toString(), DisciplineRecord.class, fields);
+        if (!CollectionUtils.isEmpty(disciplineRecords)) {
+            Double ballots = disciplineRecords.stream().map(DisciplineRecord::getBallot).distinct().collect(Collectors.toList()).get(0);
+            return ballots.toString();
+        }
+        return null;
     }
 }

@@ -73,6 +73,16 @@ public class ComputerAssistApiImpl implements ComputerAssistAPI {
     }
 
     @Override
+    public List<String> listAllArea() throws SerException {
+        return computerAssistSer.listAllArea();
+    }
+
+    @Override
+    public List<String> listAllProject() throws SerException {
+        return computerAssistSer.listAllProject();
+    }
+
+    @Override
     public EntryBasicInfoBO getUserByName(ComputerAssistDTO computerAssistDTO) throws SerException {
         return computerAssistSer.getUserByName(computerAssistDTO);
     }
@@ -85,5 +95,10 @@ public class ComputerAssistApiImpl implements ComputerAssistAPI {
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return computerAssistSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public ComputerAssistBO findComputer(String startTime, String endTime) throws SerException {
+        return computerAssistSer.findComputer(startTime,endTime);
     }
 }

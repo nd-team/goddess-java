@@ -154,4 +154,11 @@ public interface SalaryBasicSer extends Ser<SalaryBasic, SalaryBasicDTO> {
      */
     Long count(SalaryBasicDTO dto) throws SerException;
 
+    /**
+     * 根据id来查询单个基本信息
+     * @param id
+     * @throws SerException
+     */
+    SalaryBasicBO findOne(String id) throws SerException;
+
  }

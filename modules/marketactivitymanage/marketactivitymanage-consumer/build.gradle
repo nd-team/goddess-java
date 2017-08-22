@@ -43,9 +43,9 @@ dependencies {
     compile project(":modules:assemble:assemble-api")
     compile project(":modules:customer:customer-api")
     compile project(":modules:financeinit:financeinit-api")
-    compile project(":modules:projectmarketfee:projectmarketfee-api")
-    compile project(":modules:reimbursementprepare:reimbursementprepare-api")
-    compile project(":modules:market:market-api")
+//    compile project(":modules:projectmarketfee:projectmarketfee-api")
+//    compile project(":modules:reimbursementprepare:reimbursementprepare-api")
+//    compile project(":modules:market:market-api")
     compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
     compile("org.springframework.boot:spring-boot-starter-web")
 }

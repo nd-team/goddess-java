@@ -28,6 +28,8 @@ import java.util.List;
  */
 public interface DispatchCarInfoAPI {
 
+
+
     /**
      * 新增出车记录
      *

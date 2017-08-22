@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.moneyside.bo.MoneyExitApplyBO;
 import com.bjike.goddess.moneyside.dto.MoneyExitApplyDTO;
 import com.bjike.goddess.moneyside.entity.MoneyExitApply;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import com.bjike.goddess.moneyside.to.MoneyExitApplyTO;
 
 import java.util.List;
@@ -19,6 +20,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface MoneyExitApplySer extends Ser<MoneyExitApply, MoneyExitApplyDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 资金退出申请表列表总条数
      */

@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 高温补助业务实现
@@ -240,11 +241,12 @@ public class HotAssistSerImpl extends ServiceImpl<HotAssist, HotAssistDTO> imple
         String sql = "";
         List<HotAssist> list = new ArrayList<>();
         if ( StringUtils.isNotBlank( hotAssistDTO.getArea()) ){
-            sql = "select area, projectGroup , projectName, assistStartTime , assistEndTime "+
-                    " salaryStartTime , salaryEndTime , outTime , empName , empNumber , jobPosition , outCarNumber , outDriver "+
-                    " moneyCondition , thingCondtion , count(area) as counts  , count(area)*6.9 as assistMoney   " +
+            sql = "select area, projectGroup , projectName, assistStartTime , assistEndTime ,"+
+                    " salaryStartTime , salaryEndTime , outTime , empName , empNumber , jobPosition , outCarNumber , outDriver ,"+
+                    " moneyCondition , thingCondtion , 1 as counts  , 1*6.9 as assistMoney   " +
                     " from assistance_hotassist where area ='"+hotAssistDTO.getArea()+"' " +
                     " ";
+            System.out.println( sql.toCharArray() );
             list = super.findBySql( sql , HotAssist.class,fields );
         }else{
             fields = new String[]{ "area", "counts" , "assistMoney"};
@@ -263,10 +265,10 @@ public class HotAssistSerImpl extends ServiceImpl<HotAssist, HotAssistDTO> imple
                 "moneyCondition","thingCondtion" ,"counts" , "assistMoney"};
         String sql = "";
         List<HotAssist> list = new ArrayList<>();
-        if ( StringUtils.isNotBlank( hotAssistDTO.getArea()) ){
-            sql = "select area, projectGroup , projectName, assistStartTime , assistEndTime "+
-                    " salaryStartTime , salaryEndTime , outTime , empName , empNumber , jobPosition , outCarNumber , outDriver "+
-                    " moneyCondition , thingCondtion , count(projectGroup) as counts  , count(projectGroup)*6.9 as assistMoney   " +
+        if ( StringUtils.isNotBlank( hotAssistDTO.getProjectGroup()) ){
+            sql = "select area, projectGroup , projectName, assistStartTime , assistEndTime , "+
+                    " salaryStartTime , salaryEndTime , outTime , empName , empNumber , jobPosition , outCarNumber , outDriver , "+
+                    " moneyCondition , thingCondtion , 1 as counts  , 1*6.9 as assistMoney   " +
                     " from assistance_hotassist where projectGroup ='"+hotAssistDTO.getProjectGroup()+"' " +
                     " ";
             list = super.findBySql( sql , HotAssist.class,fields );
@@ -278,5 +280,34 @@ public class HotAssistSerImpl extends ServiceImpl<HotAssist, HotAssistDTO> imple
         return BeanTransform.copyProperties(list,HotAssistBO.class);
     }
 
-    
+
+    @Override
+    public List<String> listAllArea() throws SerException {
+        String [] fields = new String[]{"area"};
+        String sql = " select area from assistance_hotassist group by area ";
+        List<HotAssist> list = super.findBySql( sql,  HotAssist.class, fields);
+        List<String> listArea = ( list!=null && list.size()>0) ?
+                list.stream().map(HotAssist::getArea).collect(Collectors.toList()) : new ArrayList<>();
+        return listArea;
+    }
+    @Override
+    public List<String> listAllProject() throws SerException {
+        String [] fields = new String[]{"projectGroup"};
+        String sql = " select projectGroup from assistance_hotassist group by projectGroup ";
+        List<HotAssist> list = super.findBySql( sql,  HotAssist.class, fields);
+        List<String> listArea = ( list!=null && list.size()>0) ?
+                list.stream().map(HotAssist::getProjectGroup).collect(Collectors.toList()) : new ArrayList<>();
+        return listArea;
+    }
+
+    @Override
+    public HotAssistBO findHot(String startTime, String endTime) throws SerException {
+        HotAssistDTO dto = new HotAssistDTO();
+        dto.getConditions().add(Restrict.eq("salaryStartTime",startTime));
+        dto.getConditions().add(Restrict.eq("salaryEndTime",endTime));
+        HotAssist hotAssist = super.findOne(dto);
+        HotAssistBO bo = BeanTransform.copyProperties(hotAssist,HotAssistBO.class,false);
+        return bo;
+    }
+
 }

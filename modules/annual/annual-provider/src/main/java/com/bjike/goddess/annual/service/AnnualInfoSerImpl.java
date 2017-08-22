@@ -8,6 +8,9 @@ import com.bjike.goddess.annual.entity.AnnualInfo;
 import com.bjike.goddess.annual.enums.GuideAddrStatus;
 import com.bjike.goddess.annual.to.AnnualInfoTO;
 import com.bjike.goddess.annual.to.GuidePermissionTO;
+import com.bjike.goddess.archive.api.StaffRecordsAPI;
+import com.bjike.goddess.archive.bo.StaffRecordsBO;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
@@ -26,7 +29,6 @@ import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
-import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -73,9 +75,12 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
     @Autowired
     private MessageAPI messageAPI;
     @Autowired
-    private EntryBasicInfoAPI entryBasicInfoAPI;
-    @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private StaffRecordsAPI staffRecordsAPI;
+
     //定时器格式 : * 00 00 31 12 ?
     private static final String header = "%d年1月1日至%d年12月30日一年内您的病假天数已超过规定天数，根据公司制度您今年将不享受带薪年假。标准：";
     private static final String standard = "职员工龄%d-%d年，请病假累计%d个月以上的,";
@@ -162,6 +167,7 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
         }
         return flag;
     }
+
     /**
      * 权限
      */
@@ -237,6 +243,7 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
+
     @Override
     public List<AnnualInfoBO> findByUsername(String username) throws SerException {
         AnnualInfoDTO dto = new AnnualInfoDTO();
@@ -314,47 +321,53 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
         LocalDate now = LocalDate.now();//定时器为每年1月1日生成数据
         UserDTO userDTO = new UserDTO();
         userDTO.getConditions().add(Restrict.eq(STATUS, Status.THAW));
-        List<UserBO> userBOs = userAPI.findByCis(userDTO);
         AnnualInfoDTO annualInfoDTO = new AnnualInfoDTO();
         annualInfoDTO.getConditions().add(Restrict.eq("year", now.getYear() - 1));//获取去年数据
         List<AnnualInfo> saveList = new ArrayList<>(0), updateList = super.findByCis(annualInfoDTO);
         List<String> receivers = new ArrayList<>(0);
-        for (UserBO userBO : userBOs) {
-            PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(userBO.getId());
-            PositionDetailBO position;
-            int annual = 0;
-            AnnualInfo entity = new AnnualInfo();
-            entity.setYear(now.getYear());
-            entity.setUsername(userBO.getUsername());
-            List<EntryBasicInfoBO> entryBasicInfo = entryBasicInfoAPI.getByEmpNumber(userBO.getEmployeeNumber());
-            if (null != entryBasicInfo && entryBasicInfo.size() > 0) {//没有成功获取入职日期则发送邮件及结束此次循环
-                try {
-                    entity.setEntryTime(LocalDate.parse(entryBasicInfo.get(0).getEntryTime()));
-                } catch (Exception e) {
+//        List<UserBO> userBOs = userAPI.findByCis(userDTO);
+        if (moduleAPI.isCheck("organize")) {
+            List<UserBO> userBOs = positionDetailUserAPI.findUserList();
+            for (UserBO userBO : userBOs) {
+                PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(userBO.getId());
+                PositionDetailBO position;
+                int annual = 0;
+                AnnualInfo entity = new AnnualInfo();
+                entity.setYear(now.getYear());
+                entity.setUsername(userBO.getUsername());
+                StaffRecordsBO staffRecordsBO = null;
+                if (moduleAPI.isCheck("archive")) {
+                    staffRecordsBO = staffRecordsAPI.findByName(userBO.getUsername());
+                }
+                if (null != staffRecordsBO) {//没有成功获取入职日期则发送邮件及结束此次循环
+                    try {
+                        entity.setEntryTime(LocalDate.parse(staffRecordsBO.getEntryTime()));
+                    } catch (Exception e) {
+                        receivers.add(userBO.getId());
+                        continue;
+                    }
+                } else {
                     receivers.add(userBO.getId());
                     continue;
                 }
-            } else {
-                receivers.add(userBO.getId());
-                continue;
+                for (String id : detailBO.getPositionIds().split(",")) {
+                    PositionDetailBO positionDetail = positionDetailAPI.findBOById(id);
+                    entity.setSeniority(this.countSeniority(entity, now, positionDetail.getArrangementId()));
+                    if (entity.getAnnual() > annual) {//计算层级年假后比当前存储年假大则使用计算年假
+                        annual = entity.getAnnual();
+                        entity.setArea(positionDetail.getArea());
+                        entity.setDepartment(positionDetail.getDepartmentName());
+                        entity.setPosition(positionDetail.getPosition());
+                        entity.setArrangement(positionDetail.getArrangementName());
+                    } else
+                        entity.setAnnual(annual);
+                }
+                entity.isAlready(Boolean.FALSE);
+                if (entity.getAnnual() == 0)
+                    receivers.add(userBO.getId());
+                else
+                    saveList.add(entity);
             }
-            for (String id : detailBO.getPositionIds().split(",")) {
-                PositionDetailBO positionDetail = positionDetailAPI.findBOById(id);
-                entity.setSeniority(this.countSeniority(entity, now, positionDetail.getArrangementId()));
-                if (entity.getAnnual() > annual) {//计算层级年假后比当前存储年假大则使用计算年假
-                    annual = entity.getAnnual();
-                    entity.setArea(positionDetail.getArea());
-                    entity.setDepartment(positionDetail.getDepartmentName());
-                    entity.setPosition(positionDetail.getPosition());
-                    entity.setArrangement(positionDetail.getArrangementName());
-                } else
-                    entity.setAnnual(annual);
-            }
-            entity.isAlready(Boolean.FALSE);
-            if (entity.getAnnual() == 0)
-                receivers.add(userBO.getId());
-            else
-                saveList.add(entity);
         }
         if (receivers.size() != 0)
             this.sendEmail(receivers.toArray(new String[0]), now.getYear() - 1);//传入年份为去年
@@ -388,9 +401,9 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
 
     @Override
     public AnnualInfoBO save(AnnualInfoTO to) throws SerException {
-        AnnualInfo annualInfo = BeanTransform.copyProperties(to,AnnualInfo.class,true);
+        AnnualInfo annualInfo = BeanTransform.copyProperties(to, AnnualInfo.class, true);
         annualInfo.setCreateTime(LocalDateTime.now());
         super.save(annualInfo);
-        return BeanTransform.copyProperties(annualInfo,AnnualInfoBO.class);
+        return BeanTransform.copyProperties(annualInfo, AnnualInfoBO.class);
     }
 }

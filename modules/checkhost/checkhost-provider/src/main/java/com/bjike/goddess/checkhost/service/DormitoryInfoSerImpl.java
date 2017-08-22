@@ -252,7 +252,9 @@ public class DormitoryInfoSerImpl extends ServiceImpl<DormitoryInfo, DormitoryIn
         checkAddIdentity();
         if (!StringUtils.isEmpty(dormitoryInfoTO.getId())) {
             DormitoryInfo dormitoryInfo = super.findById(dormitoryInfoTO.getId());
-            BeanTransform.copyProperties(dormitoryInfoTO, dormitoryInfo, true);
+            LocalDateTime createTime = dormitoryInfo.getCreateTime();
+            dormitoryInfo = BeanTransform.copyProperties(dormitoryInfoTO, DormitoryInfo.class, true);
+            dormitoryInfo.setCreateTime(createTime);
             dormitoryInfo.setModifyTime(LocalDateTime.now());
             super.update(dormitoryInfo);
         } else {

@@ -109,4 +109,9 @@ public class StaffRecordsApiImpl implements StaffRecordsAPI {
     public byte[] templateDimissionExcel() throws SerException {
         return staffRecordsSer.templateDimissionExcel();
     }
+
+    @Override
+    public List<StaffRecordsBO> findByMonth(Integer month) throws SerException {
+        return null;
+    }
 }

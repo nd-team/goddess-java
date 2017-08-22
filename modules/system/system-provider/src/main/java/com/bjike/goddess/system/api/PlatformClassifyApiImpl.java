@@ -64,6 +64,10 @@ public class PlatformClassifyApiImpl implements PlatformClassifyAPI {
         platformClassifySer.remove(id);
     }
     @Override
+    public List<String> getPlatformName() throws SerException {
+        return platformClassifySer.getPlatformName();
+    }
+    @Override
     public PlatformClassifyBO importExcel(List<PlatformClassifyTO> platformClassifyTOS) throws SerException {
         return platformClassifySer.importExcel(platformClassifyTOS);
     }

@@ -1,5 +1,6 @@
 package com.bjike.goddess.secure.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -69,6 +70,8 @@ public class BeforeAddSerImpl extends ServiceImpl<BeforeAdd, BeforeAddDTO> imple
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private CommonalityAPI commonalityAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -212,14 +215,20 @@ public class BeforeAddSerImpl extends ServiceImpl<BeforeAdd, BeforeAddDTO> imple
 
     private String[] mEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
-        for (PositionDetailBO positionDetailBO : list1) {
-            if ("总经理".equals(positionDetailBO.getPosition())) {
-                List<UserBO> users = positionDetailUserAPI.findByPosition(positionDetailBO.getId());
-                for (UserBO userBO : users) {
-                    String mail = internalContactsAPI.getEmail(userBO.getUsername());
-                    if (mail != null) {
-                        set.add(mail);
+        if (moduleAPI.isCheck("organize")) {
+            List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
+            for (PositionDetailBO positionDetailBO : list1) {
+                if ("总经理".equals(positionDetailBO.getPosition())) {
+                    if (moduleAPI.isCheck("organize")) {
+                        List<UserBO> users = positionDetailUserAPI.findByPosition(positionDetailBO.getId());
+                        for (UserBO userBO : users) {
+                            if (moduleAPI.isCheck("contacts")) {
+                                String mail = internalContactsAPI.getEmail(userBO.getUsername());
+                                if (mail != null) {
+                                    set.add(mail);
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -231,12 +240,16 @@ public class BeforeAddSerImpl extends ServiceImpl<BeforeAdd, BeforeAddDTO> imple
 
     private String[] zhEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
-        for (DepartmentDetailBO departmentDetailBO : list) {
-            if ("综合资源部".equals(departmentDetailBO.getDepartment())) {
-                CommonalityBO commonality = commonalityAPI.findByDepartment(departmentDetailBO.getId());
-                if (commonality != null) {
-                    set.add(commonality.getEmail());
+        if (moduleAPI.isCheck("organize")) {
+            List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
+            for (DepartmentDetailBO departmentDetailBO : list) {
+                if ("综合资源部".equals(departmentDetailBO.getDepartment())) {
+                    if (moduleAPI.isCheck("contacts")) {
+                        CommonalityBO commonality = commonalityAPI.findByDepartment(departmentDetailBO.getId());
+                        if (commonality != null&&commonality.getEmail()!=null) {
+                            set.add(commonality.getEmail());
+                        }
+                    }
                 }
             }
         }
@@ -272,7 +285,9 @@ public class BeforeAddSerImpl extends ServiceImpl<BeforeAdd, BeforeAddDTO> imple
         messageTO.setTitle("社保增员参考信息");
         messageTO.setContent(html(beforeAddBO));
         messageTO.setReceivers(mEmails());
-        messageAPI.send(messageTO);
+        if (mEmails() != null && mEmails().length > 0) {
+            messageAPI.send(messageTO);
+        }
         return beforeAddBO;
     }
 
@@ -350,14 +365,20 @@ public class BeforeAddSerImpl extends ServiceImpl<BeforeAdd, BeforeAddDTO> imple
             messageTO.setTitle("社保增员参考信息");
             messageTO.setContent(html(beforeAddBO));
             if (users != null) {
-                List<String> mails = internalContactsAPI.getEmails(users);
-                String[] emails = new String[mails.size()];
-                emails = mails.toArray(emails);
-                messageTO.setReceivers(emails);
-                messageAPI.send(messageTO);
+                if (moduleAPI.isCheck("contacts")) {
+                    List<String> mails = internalContactsAPI.getEmails(users);
+                    if (mails != null && !mails.isEmpty()) {
+                        String[] emails = new String[mails.size()];
+                        emails = mails.toArray(emails);
+                        messageTO.setReceivers(emails);
+                        messageAPI.send(messageTO);
+                    }
+                }
             }
             messageTO.setReceivers(zhEmails());
-            messageAPI.send(messageTO);
+            if (zhEmails() != null && zhEmails().length > 0) {
+                messageAPI.send(messageTO);
+            }
         }
     }
 
@@ -385,44 +406,54 @@ public class BeforeAddSerImpl extends ServiceImpl<BeforeAdd, BeforeAddDTO> imple
     @Override
     //每12小时执行一次
     public void send() throws SerException {
-        List<RegularizationBO> boList = regularizationAPI.list(new RegularizationDTO());
-        LocalDate now = LocalDate.now();
-        MessageTO messageTO = new MessageTO();
-        messageTO.setTitle("有转正员工可购买社保");
-        boolean b = false;
-        StringBuilder sb = new StringBuilder();
-        if ((boList != null) && (!boList.isEmpty())) {
-            for (RegularizationBO bo : boList) {
-                if (StringUtils.isNotBlank(bo.getPositiveDate())) {
-                    if (now == DateUtil.parseDate(bo.getPositiveDate())) {
-                        b = true;
-                        String name = bo.getName();
-                        String empNo = bo.getEmpNo();
-                        sb.append("员工编号为:" + empNo + "的" + name + "，");
+        if (moduleAPI.isCheck("regularization")) {
+            List<RegularizationBO> boList = regularizationAPI.list(new RegularizationDTO());
+            LocalDate now = LocalDate.now();
+            MessageTO messageTO = new MessageTO();
+            messageTO.setTitle("有转正员工可购买社保");
+            boolean b = false;
+            StringBuilder sb = new StringBuilder();
+            if ((boList != null) && (!boList.isEmpty())) {
+                for (RegularizationBO bo : boList) {
+                    if (StringUtils.isNotBlank(bo.getPositiveDate())) {
+                        if (now == DateUtil.parseDate(bo.getPositiveDate())) {
+                            b = true;
+                            String name = bo.getName();
+                            String empNo = bo.getEmpNo();
+                            sb.append("员工编号为:" + empNo + "的" + name + "，");
+                        }
                     }
                 }
             }
-        }
-        if (b) {
-            sb.append("已转正，可购买社保，请及时处理!");
-            messageTO.setContent(sb.toString());
-            messageTO.setReceivers(flEmails());
-            messageTO.setSenderId("SYSTEM");
-            messageTO.setSenderName("SYSTEM");
-            messageAPI.send(messageTO);
+            if (b) {
+                sb.append("已转正，可购买社保，请及时处理!");
+                messageTO.setContent(sb.toString());
+                messageTO.setReceivers(flEmails());
+                messageTO.setSenderId("SYSTEM");
+                messageTO.setSenderName("SYSTEM");
+                if (flEmails() != null && flEmails().length > 0) {
+                    messageAPI.send(messageTO);
+                }
+            }
         }
     }
 
     private String[] flEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
-        for (PositionDetailBO positionDetailBO : list1) {
-            if ("综合资源部".equals(positionDetailBO.getDepartmentName()) && "福利模块".equals(positionDetailBO.getModuleName())) {
-                List<UserBO> users = positionDetailUserAPI.findByPosition(positionDetailBO.getId());
-                for (UserBO userBO : users) {
-                    String mail = internalContactsAPI.getEmail(userBO.getUsername());
-                    if (mail != null) {
-                        set.add(mail);
+        if (moduleAPI.isCheck("organize")) {
+            List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
+            for (PositionDetailBO positionDetailBO : list1) {
+                if ("综合资源部".equals(positionDetailBO.getDepartmentName()) && "福利模块".equals(positionDetailBO.getModuleName())) {
+                    if (moduleAPI.isCheck("organize")) {
+                        List<UserBO> users = positionDetailUserAPI.findByPosition(positionDetailBO.getId());
+                        for (UserBO userBO : users) {
+                            if (moduleAPI.isCheck("contacts")) {
+                                String mail = internalContactsAPI.getEmail(userBO.getUsername());
+                                if (mail != null) {
+                                    set.add(mail);
+                                }
+                            }
+                        }
                     }
                 }
             }

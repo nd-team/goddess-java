@@ -148,4 +148,9 @@ public interface SalaryconfirmAPI {
     void sendEmail() throws SerException;
 
     Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
+    /**
+     * 根据计薪周期和员工姓名来查询薪资确认情况
+     */
+    SalaryconfirmBO findSalary(String salaryStart,String salaryEnd,String name) throws SerException;
 }

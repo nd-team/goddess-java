@@ -129,4 +129,9 @@ public interface AttachedSer extends Ser<Attached, AttachedDTO> {
      * @throws SerException
      */
     Long count(AttachedDTO dto) throws SerException;
+
+    /**
+     * 根据员工姓名查找扣社保情况
+     */
+    AttachedBO findAttached(String name) throws SerException;
 }

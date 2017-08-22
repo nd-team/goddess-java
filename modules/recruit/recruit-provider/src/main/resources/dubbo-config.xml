@@ -41,5 +41,6 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.message.api.MessageAPI" id="messageApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.assemble.api.ModuleAPI" id="moduleApiImpl"/>
 
 </beans>

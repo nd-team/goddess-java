@@ -2,6 +2,7 @@ package com.bjike.goddess.managepromotion.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.managepromotion.bo.CalculateBO;
 import com.bjike.goddess.managepromotion.bo.SkillGradingABO;
 import com.bjike.goddess.managepromotion.bo.SkillGradingBO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingADTO;
@@ -9,6 +10,7 @@ import com.bjike.goddess.managepromotion.dto.SkillGradingCDTO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingDTO;
 import com.bjike.goddess.managepromotion.entity.SkillGrading;
 import com.bjike.goddess.managepromotion.excel.SonPermissionObject;
+import com.bjike.goddess.managepromotion.to.CalculateTO;
 import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managepromotion.to.SkillGradingATO;
 
@@ -91,5 +93,14 @@ public interface SkillGradingSer extends Ser<SkillGrading, SkillGradingDTO> {
      */
     default void removeSkillGrading(String id) throws SerException {
 
+    }
+    /**
+     * 计算
+     *
+     * @param to
+     * @throws SerException
+     */
+    default List<CalculateBO> calculate(CalculateTO to) throws SerException {
+        return null;
     }
 }

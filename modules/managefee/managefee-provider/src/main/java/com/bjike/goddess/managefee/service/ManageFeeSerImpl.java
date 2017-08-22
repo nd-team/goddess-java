@@ -163,8 +163,18 @@ public class ManageFeeSerImpl extends ServiceImpl<ManageFee, ManageFeeDTO> imple
         checkPermission();
         manageFeeDTO.getSorts().add("createTime=desc");
         List<ManageFee> list = super.findByCis(manageFeeDTO, true);
+        List<ManageFeeBO> listBO =BeanTransform.copyProperties(list, ManageFeeBO.class);
+        if( listBO!= null && listBO.size()>0 ){
+            listBO.stream().forEach(str->{
+                str.setTargetFee( new BigDecimal(str.getTargetFee() ).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
+                str.setActualFee( new BigDecimal(str.getActualFee() ).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
+                str.setRate(  (double)Math.round(str.getActualFee() / str.getTargetFee() *100*100)/100  );
+                str.setRatePersent( str.getRate()+"%" );
+                str.setBalance( new BigDecimal(str.getActualFee() - str.getTargetFee()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
+            });
+        }
 
-        return BeanTransform.copyProperties(list, ManageFeeBO.class);
+        return listBO;
     }
 
 
@@ -191,12 +201,16 @@ public class ManageFeeSerImpl extends ServiceImpl<ManageFee, ManageFeeDTO> imple
         Double money = 0d;
         if (voucherList != null && voucherList.size() > 0) {
             money = voucherList.stream().filter(str -> str.getBorrowMoney() != null).mapToDouble(VoucherGenerateBO::getBorrowMoney).sum();
+        }else{
+            if (  manageFeeTO.getActualFee() == null) {
+                money = 0d;
+            }else{
+                money = manageFeeTO.getActualFee();
+            }
         }
 
         ManageFee manageFee = BeanTransform.copyProperties(manageFeeTO, ManageFee.class, true);
-        if (money == null && manageFeeTO.getActualFee() == null) {
-            money = 0d;
-        }
+
         manageFee.setActualFee(money);
         manageFee.setRate(manageFee.getActualFee() / manageFee.getTargetFee());
         manageFee.setBalance(manageFee.getActualFee() - manageFee.getTargetFee());
@@ -334,16 +348,16 @@ public class ManageFeeSerImpl extends ServiceImpl<ManageFee, ManageFeeDTO> imple
 
         //全部填，一进入汇总页面合计所有
         //汇总表头：（地区/日期/目标管理费/实际管理费/比例/差额）
-        String[] field = new String[]{"project", "year", "month", "project", "projectGroup", "type", "targetFee", "actualFee", "rate", "balance"};
+        String[] field = new String[]{"project", "year", "month", "area", "projectGroup", "type", "targetFee", "actualFee", "rate", "balance"};
         StringBuffer sql = new StringBuffer("");
         List<ManageFeeBO> list = new ArrayList<>();
         if (StringUtils.isBlank(startTime) || StringUtils.isBlank(endTime)
-                || collectProjectTO.getProjectNames() != null || collectProjectTO.getProjectNames().length > 0) {
+                || collectProjectTO.getProjectNames() == null || collectProjectTO.getProjectNames().length <= 0) {
             list.add(new ManageFeeBO());
             return list;
         }
         String condition = "'".concat(String.join("','", collectProjectTO.getProjectNames())).concat("'");
-        sql.append("select a.project , a.year as year , a.month as month , a.project, a.projectGroup, a.type,a.targetFee as targetFee , a.actualFee as actualFee ,")
+        sql.append("select a.project , a.year as year , a.month as month , a.area, a.projectGroup, a.type,a.targetFee as targetFee , a.actualFee as actualFee ,")
                 .append("  (a.actualFee/a.targetFee) as rate , (a.actualFee-a.targetFee) as balance  from   ")
                 .append(" (select CONCAT(a.year,'-',if(a.month<=9,CONCAT('0',a.month),a.month))as date,a.*  from managefee_managefee as a)a ")
                 .append(" where a.project in (" + condition + ") and a.date BETWEEN '" + startTime + "' AND '" + endTime + "'")
@@ -606,8 +620,8 @@ public class ManageFeeSerImpl extends ServiceImpl<ManageFee, ManageFeeDTO> imple
 
             ManageFeeBO total = new ManageFeeBO();
             total.setArea("合计");
-            total.setTargetFee(list.stream().mapToDouble(ManageFeeBO::getTargetFee).sum());
-            total.setActualFee(list.stream().mapToDouble(ManageFeeBO::getActualFee).sum());
+            total.setTargetFee( new BigDecimal( list.stream().mapToDouble(ManageFeeBO::getTargetFee).sum()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
+            total.setActualFee(new BigDecimal( list.stream().mapToDouble(ManageFeeBO::getActualFee).sum() ).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
             total.setRate( (double) Math.round( total.getActualFee() / total.getTargetFee() * 100 *100 )/100 );
             total.setRatePersent( total.getRate()+"%" );
             total.setBalance( new BigDecimal(total.getActualFee() - total.getTargetFee()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
@@ -649,9 +663,9 @@ public class ManageFeeSerImpl extends ServiceImpl<ManageFee, ManageFeeDTO> imple
             });
 
             ManageFeeBO total = new ManageFeeBO();
-            total.setArea("合计");
-            total.setTargetFee(list.stream().mapToDouble(ManageFeeBO::getTargetFee).sum());
-            total.setActualFee(list.stream().mapToDouble(ManageFeeBO::getActualFee).sum());
+            total.setProjectGroup("合计");
+            total.setTargetFee( new BigDecimal( list.stream().mapToDouble(ManageFeeBO::getTargetFee).sum()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
+            total.setActualFee(new BigDecimal( list.stream().mapToDouble(ManageFeeBO::getActualFee).sum() ).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
             total.setRate(  (double)Math.round(total.getActualFee() / total.getTargetFee() * 100* 100)/100 );
             total.setRatePersent( total.getRate()+"%" );
             total.setBalance( new BigDecimal(total.getActualFee() - total.getTargetFee()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
@@ -695,9 +709,9 @@ public class ManageFeeSerImpl extends ServiceImpl<ManageFee, ManageFeeDTO> imple
             });
 
             ManageFeeBO total = new ManageFeeBO();
-            total.setArea("合计");
-            total.setTargetFee(list.stream().mapToDouble(ManageFeeBO::getTargetFee).sum());
-            total.setActualFee(list.stream().mapToDouble(ManageFeeBO::getActualFee).sum());
+            total.setProject("合计");
+            total.setTargetFee( new BigDecimal( list.stream().mapToDouble(ManageFeeBO::getTargetFee).sum()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
+            total.setActualFee(new BigDecimal( list.stream().mapToDouble(ManageFeeBO::getActualFee).sum() ).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
             total.setRate(  (double)Math.round( total.getActualFee() / total.getTargetFee() * 100* 100)/100 );
             total.setRatePersent( total.getRate()+"%" );
             total.setBalance( new BigDecimal(total.getActualFee() - total.getTargetFee()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
@@ -742,9 +756,9 @@ public class ManageFeeSerImpl extends ServiceImpl<ManageFee, ManageFeeDTO> imple
             });
 
             ManageFeeBO total = new ManageFeeBO();
-            total.setArea("合计");
-            total.setTargetFee(list.stream().mapToDouble(ManageFeeBO::getTargetFee).sum());
-            total.setActualFee(list.stream().mapToDouble(ManageFeeBO::getActualFee).sum());
+            total.setType("合计");
+            total.setTargetFee( new BigDecimal( list.stream().mapToDouble(ManageFeeBO::getTargetFee).sum()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
+            total.setActualFee(new BigDecimal( list.stream().mapToDouble(ManageFeeBO::getActualFee).sum() ).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );
             total.setRate( (double)Math.round(total.getActualFee() / total.getTargetFee() * 100* 100)/100 );
             total.setRatePersent( total.getRate()+"%" );
             total.setBalance( new BigDecimal(total.getActualFee() - total.getTargetFee()).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() );

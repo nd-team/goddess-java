@@ -1,5 +1,6 @@
 package com.bjike.goddess.managementpromotion.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -188,10 +190,10 @@ public class LevelShowSerImpl extends ServiceImpl<LevelShow, LevelShowDTO> imple
     public void update(LevelShowTO to) throws SerException {
         checkAddIdentity();
         LevelShow entity = super.findById(to.getId());
-        if (entity==null){
+        if (entity == null) {
             throw new SerException("对象不存在");
         }
-        LocalDateTime a=entity.getCreateTime();
+        LocalDateTime a = entity.getCreateTime();
         entity = BeanTransform.copyProperties(to, LevelShow.class, true);
         entity.setCreateTime(a);
         entity.setModifyTime(LocalDateTime.now());
@@ -203,13 +205,24 @@ public class LevelShowSerImpl extends ServiceImpl<LevelShow, LevelShowDTO> imple
         String[] strings = new String[]{employeeId};
         List<LevelShow> list = null;
         for (String s : strings) {
-            String sql = "SELECT id from managementpromotion_levelshow\n" +
+            String sql = "SELECT id,promotionNum from managementpromotion_levelshow\n" +
                     "where employeeId='" + s + "'";
-            String[] fileds = new String[]{"id"};
+            String[] fileds = new String[]{"id", "promotionNum"};
             list = super.findBySql(sql, LevelShow.class, fileds);
         }
         if ((list != null) && (list.size() != 0)) {
             return list.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public LevelShow findByName(String name) throws SerException {
+        LevelShowDTO levelShowDTO = new LevelShowDTO();
+        levelShowDTO.getConditions().add(Restrict.eq("name", name));
+        List<LevelShow> levelShows = super.findByCis(levelShowDTO);
+        if (!CollectionUtils.isEmpty(levelShows)) {
+            return levelShows.get(0);
         }
         return null;
     }

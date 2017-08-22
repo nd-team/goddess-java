@@ -21,7 +21,7 @@ public class SalaryInformationSetExcel {
      * 计薪周期开始时间
      */
     @ExcelHeader(name = "计薪周期开始时间",notNull = true)
-    private String payStarTime;
+    private String payStartTime;
 
     /**
      * 计薪周期结束时间
@@ -296,7 +296,7 @@ public class SalaryInformationSetExcel {
      * 正常休息天数加班天数
      */
     @ExcelHeader(name = "正常休息天数加班天数",notNull = true)
-    private Double  RestOvertimeDay;
+    private Double  restOvertimeDay;
 
     /**
      * 剩余加班天数
@@ -335,13 +335,14 @@ public class SalaryInformationSetExcel {
     private String  remark;
 
 
+    public String getPayStartTime() {
+        return payStartTime;
+    }
 
-    public String getPayStarTime () {
-        return payStarTime;
+    public void setPayStartTime(String payStartTime) {
+        this.payStartTime = payStartTime;
     }
-    public void setPayStarTime (String payStarTime ) {
-        this.payStarTime = payStarTime ;
-    }
+
     public String getPayEndTime () {
         return payEndTime;
     }
@@ -612,12 +613,15 @@ public class SalaryInformationSetExcel {
     public void setNormalRestDay (Double normalRestDay ) {
         this.normalRestDay = normalRestDay ;
     }
-    public Double getRestOvertimeDay () {
-        return RestOvertimeDay;
+
+    public Double getRestOvertimeDay() {
+        return restOvertimeDay;
     }
-    public void setRestOvertimeDay (Double RestOvertimeDay ) {
-        this.RestOvertimeDay = RestOvertimeDay ;
+
+    public void setRestOvertimeDay(Double restOvertimeDay) {
+        this.restOvertimeDay = restOvertimeDay;
     }
+
     public Double getSurplusOvertimeDay () {
         return surplusOvertimeDay;
     }

@@ -34,5 +34,6 @@ dependencies {
     compile project(":modules:message:message-api")
     compile project(":common:common-utils")
     compile project(":modules:announcement:announcement-api")
+    compile project(":modules:assemble:assemble-api")
 }
 

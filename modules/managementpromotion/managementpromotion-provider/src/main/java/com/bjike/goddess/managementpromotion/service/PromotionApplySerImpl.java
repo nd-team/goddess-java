@@ -1,12 +1,17 @@
 package com.bjike.goddess.managementpromotion.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
+import com.bjike.goddess.event.api.EventAPI;
+import com.bjike.goddess.event.enums.Permissions;
+import com.bjike.goddess.event.to.EventTO;
 import com.bjike.goddess.managementpromotion.api.LevelDesignAPI;
 import com.bjike.goddess.managementpromotion.api.LevelShowAPI;
 import com.bjike.goddess.managementpromotion.bo.LevelShowBO;
@@ -74,6 +79,10 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
     private PositionDetailAPI positionDetailAPI;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private EventAPI eventAPI;
 
 
     /**
@@ -462,34 +471,78 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
         return flag;
     }
 
+    private Set<String> events(String name) throws SerException {
+        Set<String> set = new HashSet<>();
+        if (moduleAPI.isCheck("organize")) {
+            List<PositionDetailBO> list = positionDetailUserAPI.getPositionDetail(name);
+            List<PositionDetailBO> all = positionDetailAPI.findStatus();
+            for (PositionDetailBO p : list) {
+                String depart = p.getDepartmentName();
+                for (PositionDetailBO p1 : all) {
+                    boolean b = depart.equals(p1.getDepartmentName()) ? true : false;
+                    boolean b1 = "决策层".equals(p1.getArrangementName()) && p1.getPosition().contains("项目经理") && Status.THAW.equals(p1.getStatus());
+                    boolean b2 = "综合资源部".equals(p1.getDepartmentName()) && "规划模块".equals(p1.getModuleName()) && "规划模块负责人".equals(p1.getPosition()) && Status.THAW.equals(p1.getStatus());
+                    boolean b3 = "财务运营部".equals(p1.getDepartmentName()) && "预算模块".equals(p1.getModuleName()) && "预算模块负责人".equals(p1.getPosition()) && Status.THAW.equals(p1.getStatus());
+                    boolean b4 = "管理层".equals(p1.getArrangementName());
+                    boolean b5 = "总经理".equals(p1.getPosition()) && Status.THAW.equals(p1.getStatus());
+                    if ((b && b1) || (b && b4) || b2 || b3 || b5) {
+                        List<UserBO> userBOs = positionDetailUserAPI.findByPosition(p1.getId());
+                        for (UserBO userBO : userBOs) {
+                            set.add(userBO.getUsername());
+                        }
+                    }
+                }
+            }
+        }
+        return set;
+    }
+
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public PromotionApplyBO save(PromotionApplyTO to) throws SerException {
         checkAddIdentity();
         PromotionApply entity = BeanTransform.copyProperties(to, PromotionApply.class, true);
-        List<EntryBasicInfoBO> list = entryBasicInfoAPI.getByEmpNumber(to.getEmployeeId());
-        if ((list != null) && (list.size() != 0)) {
-            LocalDate time = DateUtil.parseDate(list.get(0).getEntryTime());
-            int entryYear = time.getYear();
-            int entryMonth = time.getMonthValue();
-            int year = LocalDate.now().getYear();
-            int month = LocalDate.now().getMonthValue();
-            if (month - entryMonth >= 0) {
-                if (year - entryYear > 0) {
-                    double d = (year - entryYear) * 12 + (month - entryMonth);
-                    entity.setWorkAge(d);
+        if (moduleAPI.isCheck("staffentry")) {
+            List<EntryBasicInfoBO> list = entryBasicInfoAPI.getByEmpNumber(to.getEmployeeId());
+            if ((list != null) && (list.size() != 0)) {
+                LocalDate time = DateUtil.parseDate(list.get(0).getEntryTime());
+                int entryYear = time.getYear();
+                int entryMonth = time.getMonthValue();
+                int year = LocalDate.now().getYear();
+                int month = LocalDate.now().getMonthValue();
+                if (month - entryMonth >= 0) {
+                    if (year - entryYear > 0) {
+                        double d = (year - entryYear) * 12 + (month - entryMonth);
+                        entity.setWorkAge(d);
+                    } else {
+                        entity.setWorkAge((double) (month - entryMonth));
+                    }
                 } else {
-                    entity.setWorkAge((double) (month - entryMonth));
+                    double d = (year - entryYear - 1) * 12 + (12 - entryMonth + month);
+                    entity.setWorkAge(d);
                 }
-            } else {
-                double d = (year - entryYear - 1) * 12 + (12 - entryMonth + month);
-                entity.setWorkAge(d);
             }
         }
-        String time = regularizationAPI.time(to.getEmployeeId());
-        LocalDate date = DateUtil.parseDate(time);
-        entity.setPositiveDate(date);
+        if (moduleAPI.isCheck("regularization")) {
+            String time = regularizationAPI.time(to.getEmployeeId());
+            if (null != time) {
+                LocalDate date = DateUtil.parseDate(time);
+                entity.setPositiveDate(date);
+            }
+        }
         super.save(entity);
+        if (moduleAPI.isCheck("event")) {
+            for (String s : events(entity.getName())) {
+                EventTO eventTO = new EventTO();
+                eventTO.setProject("管理等级晋升");
+                eventTO.setContent("管理等级晋升申请审核");
+                eventTO.setRequestTime(DateUtil.dateToString(LocalDateTime.now()));    //todo:要求处理时间不确定
+                eventTO.setName(s);
+                eventTO.setPermissions(Permissions.ADUIT);
+                eventTO.setEventId(entity.getId());
+                eventAPI.save(eventTO);
+            }
+        }
         return BeanTransform.copyProperties(entity, PromotionApplyBO.class);
     }
 
@@ -531,6 +584,34 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
         boolean b6 = entity.getManagerOpinion() == null;
         if (b1 && b2 && b3 && b4 && b5 && b6) {
             entity = BeanTransform.copyProperties(to, PromotionApply.class, true);
+            if (moduleAPI.isCheck("staffentry")) {
+                List<EntryBasicInfoBO> list = entryBasicInfoAPI.getByEmpNumber(to.getEmployeeId());
+                if ((list != null) && (list.size() != 0)) {
+                    LocalDate time = DateUtil.parseDate(list.get(0).getEntryTime());
+                    int entryYear = time.getYear();
+                    int entryMonth = time.getMonthValue();
+                    int year = LocalDate.now().getYear();
+                    int month = LocalDate.now().getMonthValue();
+                    if (month - entryMonth >= 0) {
+                        if (year - entryYear > 0) {
+                            double d = (year - entryYear) * 12 + (month - entryMonth);
+                            entity.setWorkAge(d);
+                        } else {
+                            entity.setWorkAge((double) (month - entryMonth));
+                        }
+                    } else {
+                        double d = (year - entryYear - 1) * 12 + (12 - entryMonth + month);
+                        entity.setWorkAge(d);
+                    }
+                }
+            }
+            if (moduleAPI.isCheck("regularization")) {
+                String time = regularizationAPI.time(to.getEmployeeId());
+                if (null != time) {
+                    LocalDate date = DateUtil.parseDate(time);
+                    entity.setPositiveDate(date);
+                }
+            }
             entity.setCreateTime(a);
             entity.setModifyTime(LocalDateTime.now());
             super.update(entity);
@@ -542,36 +623,38 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
     @Override
     public List<PromotionApplyBO> find(PromotionApplyDTO dto) throws SerException {
         UserBO userBO = userAPI.currentUser();
-        List<PositionDetailBO> list1 = positionDetailUserAPI.findPositionByUser(userBO.getId());
-        if(("admin".equals(userBO.getUsername().toLowerCase()))){
+        if (("admin".equals(userBO.getUsername().toLowerCase()))) {
             List<PromotionApply> list = super.findByCis(dto, true);
             return BeanTransform.copyProperties(list, PromotionApplyBO.class);
         }
-        for (PositionDetailBO p1 : list1) {
-            String depart = p1.getDepartmentName();
-            String module = p1.getModuleName();
-            List<UserBO> users = modules(userBO.getUsername());
-            Set<String> names = new HashSet<>();
-            for (UserBO u : users) {
-                names.add(u.getUsername());
-            }
-            if (("综合资源部".equals(depart) && "规划模块".equals(module)) || ("运营商务部".equals(depart) && "预算模块".equals(module)) || names.contains(userBO.getUsername())) {
-                List<PromotionApply> list = super.findByCis(dto, true);
-                return BeanTransform.copyProperties(list, PromotionApplyBO.class);
-            } else {
-                List<PromotionApplyBO> boList = new ArrayList<>();
-                dto.getConditions().add(Restrict.eq("name", userBO.getUsername()));
-                List<PromotionApply> list = super.findByCis(dto, true);
-                for (PromotionApply p : list) {
-                    p.setProjectManagerOpinion(null);
-                    p.setResourceDepartmentOpinion(null);
-                    p.setCommerceDepartmentOpinion(null);
-                    p.setModulerOpinion(null);
-                    p.setManagerOpinion(null);
-                    PromotionApplyBO bo = BeanTransform.copyProperties(p, PromotionApplyBO.class);
-                    boList.add(bo);
+        if (moduleAPI.isCheck("organize")) {
+            List<PositionDetailBO> list1 = positionDetailUserAPI.findPositionByUser(userBO.getId());
+            for (PositionDetailBO p1 : list1) {
+                String depart = p1.getDepartmentName();
+                String module = p1.getModuleName();
+                List<UserBO> users = modules(userBO.getUsername());
+                Set<String> names = new HashSet<>();
+                for (UserBO u : users) {
+                    names.add(u.getUsername());
                 }
-                return boList;
+                if (("综合资源部".equals(depart) && "规划模块".equals(module)) || ("运营商务部".equals(depart) && "预算模块".equals(module)) || names.contains(userBO.getUsername())) {
+                    List<PromotionApply> list = super.findByCis(dto, true);
+                    return BeanTransform.copyProperties(list, PromotionApplyBO.class);
+                } else {
+                    List<PromotionApplyBO> boList = new ArrayList<>();
+                    dto.getConditions().add(Restrict.eq("name", userBO.getUsername()));
+                    List<PromotionApply> list = super.findByCis(dto, true);
+                    for (PromotionApply p : list) {
+                        p.setProjectManagerOpinion(null);
+                        p.setResourceDepartmentOpinion(null);
+                        p.setCommerceDepartmentOpinion(null);
+                        p.setModulerOpinion(null);
+                        p.setManagerOpinion(null);
+                        PromotionApplyBO bo = BeanTransform.copyProperties(p, PromotionApplyBO.class);
+                        boList.add(bo);
+                    }
+                    return boList;
+                }
             }
         }
         List<PromotionApplyBO> boList = new ArrayList<>();
@@ -594,9 +677,60 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
         return BeanTransform.copyProperties(super.findById(id), PromotionApplyBO.class);
     }
 
+    private List<PromotionApplyBO> find1(PromotionApplyDTO dto) throws SerException {
+        UserBO userBO = userAPI.currentUser();
+        if (("admin".equals(userBO.getUsername().toLowerCase()))) {
+            List<PromotionApply> list = super.findByCis(dto);
+            return BeanTransform.copyProperties(list, PromotionApplyBO.class);
+        }
+        if (moduleAPI.isCheck("organize")) {
+            List<PositionDetailBO> list1 = positionDetailUserAPI.findPositionByUser(userBO.getId());
+            for (PositionDetailBO p1 : list1) {
+                String depart = p1.getDepartmentName();
+                String module = p1.getModuleName();
+                List<UserBO> users = modules(userBO.getUsername());
+                Set<String> names = new HashSet<>();
+                for (UserBO u : users) {
+                    names.add(u.getUsername());
+                }
+                if (("综合资源部".equals(depart) && "规划模块".equals(module)) || ("运营商务部".equals(depart) && "预算模块".equals(module)) || names.contains(userBO.getUsername())) {
+                    List<PromotionApply> list = super.findByCis(dto);
+                    return BeanTransform.copyProperties(list, PromotionApplyBO.class);
+                } else {
+                    List<PromotionApplyBO> boList = new ArrayList<>();
+                    dto.getConditions().add(Restrict.eq("name", userBO.getUsername()));
+                    List<PromotionApply> list = super.findByCis(dto);
+                    for (PromotionApply p : list) {
+                        p.setProjectManagerOpinion(null);
+                        p.setResourceDepartmentOpinion(null);
+                        p.setCommerceDepartmentOpinion(null);
+                        p.setModulerOpinion(null);
+                        p.setManagerOpinion(null);
+                        PromotionApplyBO bo = BeanTransform.copyProperties(p, PromotionApplyBO.class);
+                        boList.add(bo);
+                    }
+                    return boList;
+                }
+            }
+        }
+        List<PromotionApplyBO> boList = new ArrayList<>();
+        dto.getConditions().add(Restrict.eq("name", userBO.getUsername()));
+        List<PromotionApply> list = super.findByCis(dto);
+        for (PromotionApply p : list) {
+            p.setProjectManagerOpinion(null);
+            p.setResourceDepartmentOpinion(null);
+            p.setCommerceDepartmentOpinion(null);
+            p.setModulerOpinion(null);
+            p.setManagerOpinion(null);
+            PromotionApplyBO bo = BeanTransform.copyProperties(p, PromotionApplyBO.class);
+            boList.add(bo);
+        }
+        return boList;
+    }
+
     @Override
     public Long count(PromotionApplyDTO dto) throws SerException {
-        List<PromotionApplyBO> list = find(dto);
+        List<PromotionApplyBO> list = find1(dto);
         long sum = 0l;
         if (list != null) {
             for (PromotionApplyBO p : list) {
@@ -620,8 +754,12 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
                 MessageTO messageTO = new MessageTO();
                 messageTO.setTitle("有管理等级晋升申请需审核");
                 messageTO.setContent("您有一个管理等级晋升申请需您去审核，请登陆issp系统完成审核");
-                messageTO.setReceivers(new String[]{internalContactsAPI.getEmail(user.getUsername())});
-                messageAPI.send(messageTO);
+                if (moduleAPI.isCheck("contacts")) {
+                    if (null != internalContactsAPI.getEmail(user.getUsername())) {
+                        messageTO.setReceivers(new String[]{internalContactsAPI.getEmail(user.getUsername())});
+                        messageAPI.send(messageTO);
+                    }
+                }
             }
         }
     }
@@ -640,8 +778,12 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
                 MessageTO messageTO = new MessageTO();
                 messageTO.setTitle("有管理等级晋升申请需审核");
                 messageTO.setContent("您有一个管理等级晋升申请需您去审核，请登陆issp系统完成审核");
-                messageTO.setReceivers(new String[]{internalContactsAPI.getEmail(user.getUsername())});
-                messageAPI.send(messageTO);
+                if (moduleAPI.isCheck("contacts")) {
+                    if (null != internalContactsAPI.getEmail(user.getUsername())) {
+                        messageTO.setReceivers(new String[]{internalContactsAPI.getEmail(user.getUsername())});
+                        messageAPI.send(messageTO);
+                    }
+                }
             }
         }
     }
@@ -649,14 +791,16 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
     private List<UserBO> modules(String name) throws SerException {
         List<UserBO> boList = new ArrayList<>();
         UserBO userBO = userAPI.findByUsername(name);
-        List<PositionDetailBO> list = positionDetailUserAPI.findPositionByUser(userBO.getId());
-        List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
-        for (PositionDetailBO p : list) {
-            String module = p.getModuleName();
-            for (PositionDetailBO p1 : list1) {
-                if ((module.equals(p1.getModuleName()) && ("管理层".equals(p1.getArrangementName()) || "决策层".equals(p1.getArrangementName()))) || "总经理".equals(p1.getPosition())) {
-                    List<UserBO> users = positionDetailUserAPI.findByPosition(p1.getId());
-                    boList.addAll(users);
+        if (moduleAPI.isCheck("organize")) {
+            List<PositionDetailBO> list = positionDetailUserAPI.findPositionByUser(userBO.getId());
+            List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
+            for (PositionDetailBO p : list) {
+                String module = p.getModuleName();
+                for (PositionDetailBO p1 : list1) {
+                    if ((module.equals(p1.getModuleName()) && ("管理层".equals(p1.getArrangementName()) || "决策层".equals(p1.getArrangementName()))) || "总经理".equals(p1.getPosition())) {
+                        List<UserBO> users = positionDetailUserAPI.findByPosition(p1.getId());
+                        boList.addAll(users);
+                    }
                 }
             }
         }
@@ -671,12 +815,18 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
      */
     private Set<String> mangerEmail() throws SerException {
         Set<String> set = new HashSet<>();
-        List<PositionDetailBO> list = positionDetailAPI.findStatus();
-        for (PositionDetailBO p : list) {
-            if ("总经理".equals(p.getPosition())) {
-                List<UserBO> users = positionDetailUserAPI.findByPosition(p.getId());
-                for (UserBO u : users) {
-                    set.add(internalContactsAPI.getEmail(u.getUsername()));
+        if (moduleAPI.isCheck("organize")) {
+            List<PositionDetailBO> list = positionDetailAPI.findStatus();
+            for (PositionDetailBO p : list) {
+                if ("总经理".equals(p.getPosition())) {
+                    List<UserBO> users = positionDetailUserAPI.findByPosition(p.getId());
+                    if (moduleAPI.isCheck("contacts")) {
+                        for (UserBO u : users) {
+                            if (null != internalContactsAPI.getEmail(u.getUsername())) {
+                                set.add(internalContactsAPI.getEmail(u.getUsername()));
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -748,19 +898,24 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
                     if (entity.getEmployeeId().equals(l.getEmployeeId())) {
                         LevelShowTO levelShowTO = new LevelShowTO();
                         BeanUtils.copyProperties(entity, levelShowTO);
-                        levelShowTO.setId(levelShowAPI.findByEmployeeId(l.getEmployeeId()).getId());
-                        levelShowAPI.update(levelShowTO);
-                        b = false;
+                        if (null != levelShowAPI.findByEmployeeId(l.getEmployeeId())) {
+                            levelShowTO.setId(levelShowAPI.findByEmployeeId(l.getEmployeeId()).getId());
+                            levelShowTO.setPromotionNum(entity.getPromotionNum() + 1);
+                            levelShowAPI.update(levelShowTO);
+                            b = false;
+                        }
                     }
                 }
                 if (b) {
                     LevelShowTO levelShowTO = new LevelShowTO();
                     BeanUtils.copyProperties(entity, levelShowTO);
+                    levelShowTO.setPromotionNum(entity.getPromotionNum() + 1);
                     levelShowAPI.save(levelShowTO);
                 }
             } else {
                 LevelShowTO levelShowTO = new LevelShowTO();
                 BeanUtils.copyProperties(entity, levelShowTO);
+                levelShowTO.setPromotionNum(entity.getPromotionNum() + 1);
                 levelShowAPI.save(levelShowTO);
             }
         }

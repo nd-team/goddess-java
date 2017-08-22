@@ -5,6 +5,7 @@ import com.bjike.goddess.moneyside.bo.EquityInvestBO;
 import com.bjike.goddess.moneyside.dto.EquityInvestDTO;
 import com.bjike.goddess.moneyside.service.EquityInvestSer;
 import com.bjike.goddess.moneyside.to.EquityInvestTO;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,15 @@ import java.util.List;
 public class EquityInvestApiImpl implements EquityInvestAPI {
     @Autowired
     private EquityInvestSer equityInvestSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return equityInvestSer.sonPermission();
+    }
 
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return equityInvestSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countEquityInvest(EquityInvestDTO equityInvestDTO) throws SerException {
         return equityInvestSer.countEquityInvest(equityInvestDTO);

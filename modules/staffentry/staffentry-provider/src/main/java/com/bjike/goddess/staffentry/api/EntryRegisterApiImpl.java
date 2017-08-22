@@ -97,4 +97,7 @@ public class EntryRegisterApiImpl implements EntryRegisterAPI {
     public List<String> findGraduationDate() throws SerException {
         return entryRegisterSer.findGraduationDate();
     }
+    public List<EntryRegister> list() throws SerException {
+        return entryRegisterSer.list();
+    }
 }

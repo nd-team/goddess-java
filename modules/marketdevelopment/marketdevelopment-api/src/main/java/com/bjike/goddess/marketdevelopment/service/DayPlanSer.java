@@ -114,4 +114,11 @@ public interface DayPlanSer extends Ser<DayPlan, DayPlanDTO> {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
+    /**
+     * 获取全部所属阶段
+     */
+    default List<String> getPhase() throws SerException {
+        return null;
+    }
 }

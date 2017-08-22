@@ -1,5 +1,7 @@
 package com.bjike.goddess.recruit.action.recruit;
 
+import com.bjike.goddess.accommodation.api.RentalAPI;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 面试信息
@@ -40,6 +43,10 @@ public class InterviewInforAct {
     private InterviewInforAPI interviewInforAPI;
     @Autowired
     private FirstPhoneRecordAPI firstPhoneRecordAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private RentalAPI rentalAPI;
 
     /**
      * 功能导航权限
@@ -186,6 +193,23 @@ public class InterviewInforAct {
     public Result allFirstName() throws ActException {
         try {
             return ActResult.initialize(firstPhoneRecordAPI.allFirstName());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有入职地址
+     * @return
+     * @throws ActException
+     */
+    @GetMapping("v1/allAddress")
+    public Result allAddress() throws ActException {
+        try {if (moduleAPI.isCheck("accommodation")) {
+                return ActResult.initialize(rentalAPI.allAddress());
+            }else {
+                return null;
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

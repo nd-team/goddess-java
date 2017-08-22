@@ -1,5 +1,8 @@
 package com.bjike.goddess.dimission.service;
 
+import com.bjike.goddess.archive.api.StaffRecordsAPI;
+import com.bjike.goddess.archive.bo.StaffRecordsBO;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -26,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -66,6 +70,10 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
     private HandoverReferenceSer handoverReferenceSer;
     @Autowired
     private WorkHandoverSer workHandoverSer;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private StaffRecordsAPI staffRecordsAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -248,40 +256,51 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
         DimissionInfoBO bo = BeanTransform.copyProperties(entity, DimissionInfoBO.class);
         UserBO user = userAPI.findByUsername(entity.getUsername());
         if (user != null) {
-            bo.setEmployeeNumber(user.getEmployeeNumber());
-            bo.setPhone(user.getPhone());
-            PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
-            bo.setArea("");
-            bo.setPosition("");
-            bo.setArrangement("");
-            bo.setDepartment("");
-            if (null != detailBO) {
-                List<PositionDetailBO> positionBOs = positionDetailAPI.findByPostIds(detailBO.getPositionIds().split(","));
-                String area = "", department = "", arrangement = "";
-                for (PositionDetailBO position : positionBOs.stream()
-                        .sorted(Comparator.comparing(PositionDetailBO::getArrangementId))
-                        .collect(Collectors.toList())) {
-                    bo.setPosition(position.getPosition() + "," + bo.getPosition());
-                    if (!arrangement.equals(position.getArrangementName())) {
-                        arrangement = position.getArrangementName();
-                        bo.setArrangement(bo.getArrangement() + "," + position.getArrangementName());
-                    }
+//            bo.setEmployeeNumber(user.getEmployeeNumber());
+//            bo.setPhone(user.getPhone());
+            if(moduleAPI.isCheck("archive")){
+                StaffRecordsBO staffRecordsBO = staffRecordsAPI.findByName(entity.getUsername());
+                if(null != staffRecordsBO){
+                    bo.setEntryTime(staffRecordsBO.getEntryTime());
+                    bo.setEducation(staffRecordsBO.getEducation());
+                    bo.setPhone(staffRecordsBO.getTelephone());
                 }
+            }
+            if (moduleAPI.isCheck("organize")) {
+                PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
+                bo.setEmployeeNumber(detailBO.getEmployeesNumber());
+                bo.setArea("");
+                bo.setPosition("");
+                bo.setArrangement("");
+                bo.setDepartment("");
+                if (null != detailBO) {
+                    List<PositionDetailBO> positionBOs = positionDetailAPI.findByPostIds(detailBO.getPositionIds().split(","));
+                    String area = "", department = "", arrangement = "";
+                    for (PositionDetailBO position : positionBOs.stream()
+                            .sorted(Comparator.comparing(PositionDetailBO::getArrangementId))
+                            .collect(Collectors.toList())) {
+                        bo.setPosition(position.getPosition() + "," + bo.getPosition());
+                        if (!arrangement.equals(position.getArrangementName())) {
+                            arrangement = position.getArrangementName();
+                            bo.setArrangement(bo.getArrangement() + "," + position.getArrangementName());
+                        }
+                    }
 
-                for (PositionDetailBO position : positionBOs.stream()
-                        .sorted(Comparator.comparing(PositionDetailBO::getDepartmentId))
-                        .collect(Collectors.toList()))
-                    if (!department.equals(position.getDepartmentName())) {
-                        department = position.getDepartmentName();
-                        bo.setDepartment(position.getDepartmentName() + "," + bo.getDepartment());
-                    }
-                for (PositionDetailBO position : positionBOs.stream()
-                        .sorted(Comparator.comparing(PositionDetailBO::getDepartmentId))
-                        .collect(Collectors.toList()))
-                    if (!area.equals(position.getArea())) {
-                        area = position.getArea();
-                        bo.setArea(position.getArea() + "," + bo.getArea());
-                    }
+                    for (PositionDetailBO position : positionBOs.stream()
+                            .sorted(Comparator.comparing(PositionDetailBO::getDepartmentId))
+                            .collect(Collectors.toList()))
+                        if (!department.equals(position.getDepartmentName())) {
+                            department = position.getDepartmentName();
+                            bo.setDepartment(position.getDepartmentName() + "," + bo.getDepartment());
+                        }
+                    for (PositionDetailBO position : positionBOs.stream()
+                            .sorted(Comparator.comparing(PositionDetailBO::getDepartmentId))
+                            .collect(Collectors.toList()))
+                        if (!area.equals(position.getArea())) {
+                            area = position.getArea();
+                            bo.setArea(position.getArea() + "," + bo.getArea());
+                        }
+                }
             }
         }
 
@@ -343,6 +362,7 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
             entity.setStatus(EmployeeStatus.FORMAL);
             entity.setDimissionDate(entity.getApplyDate().plusDays(30));
         }
+
         super.save(entity);
         return this.transformBO(entity);
     }
@@ -743,13 +763,22 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
 
     @Override
     public List<String> getAllName() throws SerException {
-        List<String> stringList = new ArrayList<>();
-        List<FindNameBO> list = entryBasicInfoAPI.findName();
-        if (null != list && list.size() > 0) {
-            for (FindNameBO bo : list) {
-                stringList.add(bo.getName());
+        if(moduleAPI.isCheck("organize")){
+            List<UserBO> userBOList =positionDetailUserAPI.findUserListInOrgan();
+            if(!CollectionUtils.isEmpty(userBOList)){
+                List<String> list = userBOList.stream().map(UserBO::getUsername).distinct().collect(Collectors.toList());
+                return list;
             }
         }
-        return stringList;
+        return null;
+    }
+
+
+    @Override
+    public List<DimissionInfo> findByName(String userName) throws SerException {
+        DimissionInfoDTO dto = new DimissionInfoDTO();
+        dto.getConditions().add(Restrict.eq("userName", userName));
+        List<DimissionInfo> list = super.findByCis(dto);
+        return list;
     }
 }

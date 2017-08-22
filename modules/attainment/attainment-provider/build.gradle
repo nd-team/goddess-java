@@ -32,5 +32,6 @@ dependencies {
     compile project(":modules:organize:organize-api")
     compile project(":modules:user:user-api")
     compile project(":common:common-utils")
+    compile project(":modules:assemble:assemble-api")
 }
 

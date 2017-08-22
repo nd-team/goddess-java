@@ -210,7 +210,9 @@ public class WorkJoinDutySerImpl extends ServiceImpl<WorkJoinDuty, WorkJoinDutyD
     public WorkJoinDutyBO editWorkJoinDuty(WorkJoinDutyTO workJoinDutyTO) throws SerException {
         checkAddIdentity();
         WorkJoinDuty workJoinDuty = super.findById(workJoinDutyTO.getId());
-        BeanTransform.copyProperties(workJoinDutyTO, workJoinDuty, true);
+        LocalDateTime creatTime = workJoinDuty.getCreateTime();
+        workJoinDuty = BeanTransform.copyProperties(workJoinDutyTO, WorkJoinDuty.class, true);
+        workJoinDuty.setCreateTime(creatTime);
         workJoinDuty.setModifyTime(LocalDateTime.now());
         super.update(workJoinDuty);
         return BeanTransform.copyProperties(workJoinDuty, WorkJoinDutyBO.class);

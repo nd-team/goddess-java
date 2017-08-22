@@ -40,5 +40,6 @@
                      id="storageUserApiImpl"/>
     <dubbo:reference validation="true" id="userSetPermissionApiImpl"
                      interface="com.bjike.goddess.organize.api.UserSetPermissionAPI"/>
+    <dubbo:reference validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
 
 </beans>

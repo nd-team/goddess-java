@@ -193,6 +193,11 @@ public class MarketServeApplyApiImpl implements MarketServeApplyAPI {
     }
 
     @Override
+    public List<String> getServePrincipal() throws SerException {
+        return marketServeApplySer.getServePrincipal();
+    }
+
+    @Override
     public byte[] templateExport() throws SerException {
         return marketServeApplySer.templateExport();
     }

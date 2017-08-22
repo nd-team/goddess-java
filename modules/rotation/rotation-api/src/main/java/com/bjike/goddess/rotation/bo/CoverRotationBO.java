@@ -94,6 +94,16 @@ public class CoverRotationBO extends BaseBO {
      */
     private String rotationDate;
 
+    /**
+     * 申请时间
+     */
+    private String applyTime;
+
+    /**
+     * 获得时间
+     */
+    private String getTime;
+
     public String getUsername() {
         return username;
     }
@@ -220,5 +230,21 @@ public class CoverRotationBO extends BaseBO {
 
     public void setRegularTime(String regularTime) {
         this.regularTime = regularTime;
+    }
+
+    public String getApplyTime() {
+        return applyTime;
+    }
+
+    public void setApplyTime(String applyTime) {
+        this.applyTime = applyTime;
+    }
+
+    public String getGetTime() {
+        return getTime;
+    }
+
+    public void setGetTime(String getTime) {
+        this.getTime = getTime;
     }
 }

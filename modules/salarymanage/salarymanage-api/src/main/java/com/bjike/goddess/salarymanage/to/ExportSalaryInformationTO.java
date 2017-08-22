@@ -1,10 +1,12 @@
 package com.bjike.goddess.salarymanage.to;
 
+import java.io.Serializable;
+
 /**
  * 薪资基本资料导出条件
  * Created by haikuang on 17-8-2.
  */
-public class ExportSalaryInformationTO {
+public class ExportSalaryInformationTO implements Serializable {
     /**
      * 计薪周期开始时间
      */

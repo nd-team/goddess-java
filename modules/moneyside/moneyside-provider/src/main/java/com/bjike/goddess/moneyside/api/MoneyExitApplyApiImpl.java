@@ -6,6 +6,7 @@ import com.bjike.goddess.moneyside.bo.MoneyExitApplyBO;
 import com.bjike.goddess.moneyside.dto.MoneyExitApplyDTO;
 import com.bjike.goddess.moneyside.entity.MoneyExitApply;
 import com.bjike.goddess.moneyside.service.MoneyExitApplySer;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import com.bjike.goddess.moneyside.to.MoneyExitApplyTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,15 @@ import java.util.List;
 public class MoneyExitApplyApiImpl implements MoneyExitApplyAPI {
     @Autowired
     private MoneyExitApplySer moneyExitApplySer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return moneyExitApplySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return moneyExitApplySer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countMoneyExitApply(MoneyExitApplyDTO moneyExitApplyDTO) throws SerException {
         return moneyExitApplySer.countMoneyExitApply(moneyExitApplyDTO);

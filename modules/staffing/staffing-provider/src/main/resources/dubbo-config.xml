@@ -36,4 +36,6 @@
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.HierarchyAPI" id="hierarchyApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.assemble.api.ModuleAPI" id="moduleApiImpl"/>
+
 </beans>

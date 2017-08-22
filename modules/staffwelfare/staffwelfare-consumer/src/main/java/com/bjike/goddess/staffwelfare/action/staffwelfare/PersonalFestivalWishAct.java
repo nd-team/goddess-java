@@ -78,7 +78,7 @@ public class PersonalFestivalWishAct {
 
     /**
      * 查询列表总条数
-     * @param dto
+     * @param dto 汇总条数条件
      * @throws ActException
      * @version v1
      */

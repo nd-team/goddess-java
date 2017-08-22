@@ -180,9 +180,9 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
         String[] strings = new String[]{foreignId};
         List<Formula> list = null;
         for (String s : strings) {
-            String sql = "select project,type1,form from reportmanagement_formula" +
+            String sql = "select id,project,type1,form from reportmanagement_formula" +
                     " where foreign_id='" + s + "' ORDER BY type1 ASC";
-            String[] fileds = new String[]{"project", "type1", "form"};
+            String[] fileds = new String[]{"id","project", "type1", "form"};
             list = super.findBySql(sql, Formula.class, fileds);
         }
         Integer startMonth = 0;
@@ -333,7 +333,7 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
             }
             FormulaBO bo = new FormulaBO();
             bo.setProject("合计：");
-            bo.setForm(form);
+//            bo.setForm(form);
             bo.setBegin(beginSum);
             bo.setEnd(endSum);
             bo.setCurrent(currentSum);

@@ -78,4 +78,9 @@ public class DayPlanApiImpl implements DayPlanAPI {
     public byte[] exportExcel(CollectTO to) throws SerException {
         return dayPlanSer.exportExcel(to);
     }
+
+    @Override
+    public List<String> getPhase() throws SerException {
+        return dayPlanSer.getPhase();
+    }
 }

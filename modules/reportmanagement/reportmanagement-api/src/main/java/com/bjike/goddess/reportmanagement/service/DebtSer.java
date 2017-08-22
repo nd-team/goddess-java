@@ -106,4 +106,13 @@ public interface DebtSer extends Ser<Debt, DebtDTO> {
      * @throws SerException
      */
     void delete(String id) throws SerException;
+
+    /**
+     * 列表1
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<DebtBO> list1(DebtDTO dto) throws SerException;
 }

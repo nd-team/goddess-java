@@ -1,5 +1,8 @@
 package com.bjike.goddess.rotation.service;
 
+import com.bjike.goddess.archive.api.StaffRecordsAPI;
+import com.bjike.goddess.archive.bo.StaffRecordsBO;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -8,8 +11,6 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.regularization.api.RegularizationAPI;
-import com.bjike.goddess.regularization.bo.RegularizationBO;
-import com.bjike.goddess.regularization.dto.RegularizationDTO;
 import com.bjike.goddess.rotation.bo.CoverRotationBO;
 import com.bjike.goddess.rotation.bo.CoverRotationOpinionBO;
 import com.bjike.goddess.rotation.bo.FindNameBO;
@@ -30,6 +31,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -76,24 +78,34 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
     private CoverRotationOpinionSer coverRotationOpinionSer;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private StaffRecordsAPI staffRecordsAPI;
 
     private CoverRotationBO transformBO(CoverRotation entity) throws SerException {
         CoverRotationBO bo = BeanTransform.copyProperties(entity, CoverRotationBO.class);
+        String userToken = RpcTransmit.getUserToken();
         UserBO user = userAPI.findByUsername(entity.getUsername());
-        EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
-        dto.getConditions().add(Restrict.eq("name", entity.getUsername()));
-        List<EntryBasicInfoBO> entryBasicInfoBOs = entryBasicInfoAPI.listEntryBasicInfo(dto);
-        RegularizationDTO regularizationDTO = new RegularizationDTO();
-        regularizationDTO.getConditions().add(Restrict.eq("name", entity.getUsername()));
-        List<RegularizationBO> regularizationBOs = regularizationAPI.list(regularizationDTO);
-        if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
-            EntryBasicInfoBO entryBasicInfoBO = entryBasicInfoBOs.get(0);
-            bo.setEntryTime(entryBasicInfoBO.getEntryTime());
+        RpcTransmit.transmitUserToken(userToken);
+        StaffRecordsBO staffRecordsBO = null;
+        if (moduleAPI.isCheck("archive")) {
+            staffRecordsBO = staffRecordsAPI.findByName(entity.getUsername());
         }
-        if (null != regularizationBOs && regularizationBOs.size() > 0) {
-            RegularizationBO regularizationBO = regularizationBOs.get(0);
-            bo.setEntryTime(regularizationBO.getHiredate());
-            bo.setRegularTime(regularizationBO.getPositiveDate());
+        String time = null;
+        if (moduleAPI.isCheck("regularization")) {
+            time = regularizationAPI.getTime(entity.getUsername());
+        }
+//        RegularizationDTO regularizationDTO = new RegularizationDTO();
+//        regularizationDTO.getConditions().add(Restrict.eq("name", entity.getUsername()));
+//        RpcTransmit.transmitUserToken(userToken);
+//        List<RegularizationBO> regularizationBOs = regularizationAPI.list(regularizationDTO);
+        RpcTransmit.transmitUserToken(userToken);
+        if (null != staffRecordsBO) {
+            bo.setEntryTime(staffRecordsBO.getEntryTime());
+        }
+        if (null != time) {
+            bo.setRegularTime(time);
         }
         if (null != entity.getApplyLevel()) {
             bo.setApplyLevelId(entity.getApplyLevel().getId());
@@ -103,50 +115,67 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
             bo.setRotationLevelId(entity.getRotationLevel().getId());
             bo.setRotationLevelArrangement(entity.getRotationLevel().getArrangement());
         }
+        bo.setApplyTime(entity.getCreateTime().toString());
+        if (bo.getAudit().equals(AuditType.ALLOWED)) {
+            bo.setGetTime(entity.getModifyTime().toString());
+        }
         return bo;
     }
 
     private List<CoverRotationBO> transformBOList(List<CoverRotation> list) throws SerException {
         List<CoverRotationBO> bos = new ArrayList<>(0);
-        for (CoverRotation entity : list)
-            bos.add(this.transformBO(entity));
+        if (!CollectionUtils.isEmpty(list)) {
+            for (CoverRotation entity : list) {
+                bos.add(this.transformBO(entity));
+            }
+        }
         return bos;
     }
 
     @Override
     public CoverRotationBO save(CoverRotationTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         UserBO user = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         CoverRotation entity = BeanTransform.copyProperties(to, CoverRotation.class, true);
-        List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.findPositionByUser(user.getId()).stream()
-                .sorted(Comparator.comparing(PositionDetailBO::getArea)
-                        .thenComparing(PositionDetailBO::getDepartmentId))
-                .collect(Collectors.toList());
-        StringBuilder area = new StringBuilder(), department = new StringBuilder(), position = new StringBuilder(), arrangement = new StringBuilder();
-        String tempArea = "", tempDepartment = "", tempArrangement = "";
-        for (PositionDetailBO positionDetailBO : positionDetailBOs) {
-            if (!tempArea.equals(positionDetailBO.getArea())) {
-                tempArea = positionDetailBO.getArea();
-                area.append(tempArea + ",");
+        if (moduleAPI.isCheck("organize")) {
+            List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.findPositionByUser(user.getId()).stream()
+                    .sorted(Comparator.comparing(PositionDetailBO::getArea)
+                            .thenComparing(PositionDetailBO::getDepartmentId))
+                    .collect(Collectors.toList());
+            RpcTransmit.transmitUserToken(userToken);
+            StringBuilder area = new StringBuilder(), department = new StringBuilder(), position = new StringBuilder(), arrangement = new StringBuilder();
+            String tempArea = "", tempDepartment = "", tempArrangement = "";
+            for (PositionDetailBO positionDetailBO : positionDetailBOs) {
+                if (!tempArea.equals(positionDetailBO.getArea())) {
+                    tempArea = positionDetailBO.getArea();
+                    area.append(tempArea + ",");
+                }
+                if (!tempDepartment.equals(positionDetailBO.getDepartmentName())) {
+                    tempDepartment = positionDetailBO.getDepartmentName();
+                    department.append(tempDepartment + ",");
+                }
+                position.append(positionDetailBO.getPosition());
             }
-            if (!tempDepartment.equals(positionDetailBO.getDepartmentName())) {
-                tempDepartment = positionDetailBO.getDepartmentName();
-                department.append(tempDepartment + ",");
-            }
-            position.append(positionDetailBO.getPosition());
-        }
-        for (String s : positionDetailBOs.stream()
-                .sorted(Comparator.comparing(PositionDetailBO::getArrangementName))
-                .map(PositionDetailBO::getArrangementName).collect(Collectors.toList()))
-            if (!tempArrangement.equals(s)) {
-                tempArrangement = s;
-                arrangement.append(s);
-            }
+            for (String s : positionDetailBOs.stream()
+                    .sorted(Comparator.comparing(PositionDetailBO::getArrangementName))
+                    .map(PositionDetailBO::getArrangementName).collect(Collectors.toList()))
+                if (!tempArrangement.equals(s)) {
+                    tempArrangement = s;
+                    arrangement.append(s);
+                }
 
+            entity.setArea(area.toString());
+            entity.setPosition(position.toString());
+            entity.setArrangement(arrangement.toString());
+            entity.setDepartment(department.toString());
+        } else {
+            entity.setArea("");
+            entity.setPosition("");
+            entity.setArrangement("");
+            entity.setDepartment("");
+        }
         entity.setUsername(user.getUsername());
-        entity.setArea(area.toString());
-        entity.setPosition(position.toString());
-        entity.setArrangement(arrangement.toString());
-        entity.setDepartment(department.toString());
         entity.setAudit(AuditType.NONE);
         entity.setApplyLevel(subsidyStandardSer.findById(to.getApplyLevelId()));
         if (null == entity.getApplyLevel())
@@ -157,7 +186,9 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
 
     @Override
     public CoverRotationBO update(CoverRotationTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         UserBO user = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         CoverRotation entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("该数据不存在");
@@ -174,7 +205,9 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
 
     @Override
     public CoverRotationBO delete(String id) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         UserBO user = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         CoverRotation entity = super.findById(id);
         if (!user.getUsername().equals(entity.getUsername()))
             throw new SerException("不能删除他人的轮换申请");
@@ -196,40 +229,51 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
 
     @Override
     public CoverRotationOpinionBO opinion(CoverRotationOpinionTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         UserBO user = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         CoverRotationOpinion entity = BeanTransform.copyProperties(to, CoverRotationOpinion.class);
         entity.setCover(super.findById(to.getCoverId()));
         if (null == entity.getCover())
             throw new SerException("岗位轮换自荐数据不存在");
-        List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.findPositionByUser(user.getId()).stream()
-                .sorted(Comparator.comparing(PositionDetailBO::getArea)
-                        .thenComparing(PositionDetailBO::getDepartmentId))
-                .collect(Collectors.toList());
-        StringBuilder area = new StringBuilder(), department = new StringBuilder(), position = new StringBuilder();
-        String tempArea = "", tempDepartment = "";
-        for (PositionDetailBO positionDetailBO : positionDetailBOs) {
-            if (!tempArea.equals(positionDetailBO.getArea())) {
-                tempArea = positionDetailBO.getArea();
-                area.append(tempArea + ",");
+        if (moduleAPI.isCheck("organize")) {
+            List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.findPositionByUser(user.getId()).stream()
+                    .sorted(Comparator.comparing(PositionDetailBO::getArea)
+                            .thenComparing(PositionDetailBO::getDepartmentId))
+                    .collect(Collectors.toList());
+            StringBuilder area = new StringBuilder(), department = new StringBuilder(), position = new StringBuilder();
+            String tempArea = "", tempDepartment = "";
+            for (PositionDetailBO positionDetailBO : positionDetailBOs) {
+                if (!tempArea.equals(positionDetailBO.getArea())) {
+                    tempArea = positionDetailBO.getArea();
+                    area.append(tempArea + ",");
+                }
+                if (!tempDepartment.equals(positionDetailBO.getDepartmentName())) {
+                    tempDepartment = positionDetailBO.getDepartmentName();
+                    department.append(tempDepartment + ",");
+                }
+                position.append(positionDetailBO.getPosition());
             }
-            if (!tempDepartment.equals(positionDetailBO.getDepartmentName())) {
-                tempDepartment = positionDetailBO.getDepartmentName();
-                department.append(tempDepartment + ",");
-            }
-            position.append(positionDetailBO.getPosition());
-        }
 
+            entity.setArea(area.toString());
+            entity.setPosition(position.toString());
+            entity.setDepartment(department.toString());
+        } else {
+            entity.setArea("");
+            entity.setPosition("");
+            entity.setDepartment("");
+        }
         entity.setUsername(user.getUsername());
-        entity.setArea(area.toString());
-        entity.setPosition(position.toString());
-        entity.setDepartment(department.toString());
         coverRotationOpinionSer.save(entity);
+        entity.setModifyTime(LocalDateTime.now());
         return coverRotationOpinionSer.transformBO(entity);
     }
 
     @Override
     public CoverRotationBO generalOpinion(CoverRotationTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         UserBO user = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         CoverRotation entity = super.findById(to.getId());
         //@TODO 职位判断
         if (null == entity)
@@ -275,8 +319,8 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
         EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
         List<EntryBasicInfoBO> entryBasicInfoBOList = entryBasicInfoAPI.listEntryBasicInfo(dto);
         List<FindNameBO> list = new ArrayList<>();
-        if (null != entryBasicInfoBOList && entryBasicInfoBOList.size() > 0){
-            for(EntryBasicInfoBO bo : entryBasicInfoBOList){
+        if (null != entryBasicInfoBOList && entryBasicInfoBOList.size() > 0) {
+            for (EntryBasicInfoBO bo : entryBasicInfoBOList) {
                 FindNameBO findNameBO = new FindNameBO();
                 findNameBO.setName(bo.getName());
                 list.add(findNameBO);

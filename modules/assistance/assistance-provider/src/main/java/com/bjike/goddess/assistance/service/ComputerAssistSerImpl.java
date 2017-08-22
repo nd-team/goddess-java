@@ -289,7 +289,7 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
                 "salaryStartTime", "salaryEndTime", "assistDays", "assistMoney"};
         String sql = "";
         List<ComputerAssist> list = new ArrayList<>();
-        if (StringUtils.isNotBlank(computerAssistDTO.getArea())) {
+        if (StringUtils.isNotBlank(computerAssistDTO.getProjectGroup())) {
             sql = "select empName,projectGroup,area,assistStartTime,assistEndTime, " +
                     " salaryStartTime,salaryEndTime,assistDays,assistMoney " +
                     " from assistance_computerassist where projectGroup ='" + computerAssistDTO.getProjectGroup() + "'";
@@ -308,6 +308,24 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
         List<String> list = userBOList.stream().map(UserBO::getUsername).collect(Collectors.toList());
         return list;
     }
+    @Override
+    public List<String> listAllArea() throws SerException {
+        String [] fields = new String[]{"area"};
+        String sql = " select area from assistance_computerassist group by area ";
+        List<ComputerAssist> list = super.findBySql( sql,  ComputerAssist.class, fields);
+        List<String> listArea =( list!=null && list.size()>0) ?
+                list.stream().map(ComputerAssist::getArea).collect(Collectors.toList()) : new ArrayList<>();
+        return listArea;
+    }
+    @Override
+    public List<String> listAllProject() throws SerException {
+        String [] fields = new String[]{"projectGroup"};
+        String sql = " select projectGroup from assistance_computerassist group by projectGroup ";
+        List<ComputerAssist> list = super.findBySql( sql,  ComputerAssist.class, fields);
+        List<String> listArea = ( list!=null && list.size()>0) ?
+                list.stream().map(ComputerAssist::getProjectGroup).collect(Collectors.toList()) : new ArrayList<>();
+        return listArea;
+    }
 
     @Override
     public EntryBasicInfoBO getUserByName(ComputerAssistDTO computerAssistDTO) throws SerException {
@@ -319,5 +337,15 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
             return entryBasicInfoBO.get(0);
         }
         return null;
+    }
+
+    @Override
+    public ComputerAssistBO findComputer(String startTime, String endTime) throws SerException {
+        ComputerAssistDTO dto = new ComputerAssistDTO();
+        dto.getConditions().add(Restrict.eq("salaryStartTime",startTime));
+        dto.getConditions().add(Restrict.eq("salaryEndTime",endTime));
+        ComputerAssist computerAssist = super.findOne(dto);
+        ComputerAssistBO bo = BeanTransform.copyProperties(computerAssist,ComputerAssistBO.class,false);
+        return bo;
     }
 }

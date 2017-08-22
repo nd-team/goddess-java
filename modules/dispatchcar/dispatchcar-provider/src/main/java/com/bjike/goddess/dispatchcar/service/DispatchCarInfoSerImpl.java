@@ -33,6 +33,8 @@ import com.bjike.goddess.oilcardmanage.api.OilCardBasicAPI;
 import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardBasicDTO;
 import com.bjike.goddess.oilcardmanage.entity.OilCardBasic;
+import com.bjike.goddess.organize.api.PositionDetailAPI;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
@@ -91,12 +93,21 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     @Autowired
     private EntryBasicInfoAPI entryBasicInfoAPI;
 
+    @Autowired
+    private PositionDetailAPI positionDetailAPI;
+
+
+
     @Override
     @Transactional(rollbackFor = SerException.class)
     public DispatchCarInfoBO insertModel(DispatchCarInfoTO to) throws SerException {
         RpcTransmit.getUserToken();
         UserBO userBO = userAPI.findByUsername(to.getCarUser());
-        to.setUserNumber(userBO.getEmployeeNumber());
+        if(userBO != null) {
+            to.setUserNumber(userBO.getEmployeeNumber());
+        }else{
+            throw new SerException("公司不存在该员工");
+        }
         //加油费 = 加油量 * 当天油价 ，加油量 = 总油耗 * 总里程数 ， 总油耗 = 本车耗油 + 是否开空调 + 是否市内
         DriverInfoBO driver = driverInfoAPI.findByDriver(to.getDriver());
         if (driver == null) {
@@ -262,8 +273,8 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<DispatchCarInfoBO> pageList(DispatchCarInfoDTO dto) throws SerException {
-        dto.getSorts().add("createTime");
-        List<DispatchCarInfo> list = super.findByPage(dto);
+        dto.getSorts().add("createTime=desc");
+        List<DispatchCarInfo> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, DispatchCarInfoBO.class);
     }
 
@@ -472,7 +483,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             OilCardBasicBO basicBO = oilCardBasicAPI.findByCode(model.getOilCardNumber());
             OilCardBasicBO bo = oilCardBasicAPI.find(basicBO.getId());
             bo.setBalance(bo.getBalance() - model.getOilPrice());
-            OilCardBasic oilCardBasic = BeanTransform.copyProperties(bo,OilCardBasic.class);
+            OilCardBasic oilCardBasic = BeanTransform.copyProperties(bo,OilCardBasic.class,true);
             oilCardBasicAPI.updateOliCardBasic(oilCardBasic);
             if (oilCardBasic.getBalance() < 300) {
                 String content = "运营商务部的同事，你们好，" + oilCardBasic.getOilCardCode() + "号油卡余额" + oilCardBasic.getBalance() + "元，低于300元，请在一天内充值，请综合资源部同事跟进充值情况";
@@ -1160,8 +1171,8 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     public Double findOilAmount(String oilCardCode, Integer year, Integer month) throws SerException {
 
         String sql = "select addOilAmount , oilPrice from dispatchcar_basicinfo where oilCardNumber = '" + oilCardCode + "'"
-                + "and month(addOilTime) = " + month
-                + "and year(addOilTime) = " + year;
+                + " and month(addOilTime) = '" + month
+                + "' and year(addOilTime) = '" + year+"'";
         String[] fields = new String[]{"addOilAmount", "oilPrice"};
         List<DispatchCarInfo> list = super.findBySql(sql, DispatchCarInfo.class, fields);
 

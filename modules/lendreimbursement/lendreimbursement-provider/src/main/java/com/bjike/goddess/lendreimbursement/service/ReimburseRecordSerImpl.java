@@ -20,6 +20,8 @@ import com.bjike.goddess.lendreimbursement.excel.ReimburseRecordExcel;
 import com.bjike.goddess.lendreimbursement.excel.SonPermissionObject;
 import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseRecordTO;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.reimbursementprepare.enums.PayStatus;
 import com.bjike.goddess.reimbursementprepare.excel.ExportExcel;
 import com.bjike.goddess.reimbursementprepare.excel.ExportExcelTO;
@@ -483,7 +485,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         //获取最小报销单号
         String runNum = finoddinforSer.getMinRunNum();
         if (StringUtils.isBlank(runNum)) {
-            throw new SerException("不好意思报销单号已用完,请稍等,谢谢！");
+            throw new SerException("不好意思报销单号已用完,请先去生成报销单号,谢谢！");
         }
         String userName = userAPI.currentUser().getUsername();
         ReimburseRecord reimburseRecord = BeanTransform.copyProperties(reimburseRecordTO, ReimburseRecord.class, true);
@@ -802,6 +804,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 //        reimburseRecordDTO.getConditions().add(Restrict.isNull("chargerAuditStatus"));
 //        reimburseRecordDTO.getConditions().add(Restrict.or("chargerAuditStatus", null));
         reimburseRecordDTO.getConditions().add(Restrict.in("reimStatus", new Integer[]{5, 0}));
+        reimburseRecordDTO.getConditions().add(Restrict.or("ticketCondition", "否"));
 
 
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
@@ -826,6 +829,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 //        reimburseRecordDTO.getConditions().add(Restrict.or("chargerAuditStatus", null));
 
         reimburseRecordDTO.getConditions().add(Restrict.in("reimStatus", new Integer[]{5, 0}));
+        reimburseRecordDTO.getConditions().add(Restrict.or("ticketCondition", "否"));
 
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
             reimburseRecordDTO.getConditions().add(Restrict.eq("reimNumber", reimburseRecordDTO.getReimNumber()));
@@ -845,6 +849,9 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     }
 
 
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ReimburseRecordBO auditRecord(ReimburseRecordTO reimburseRecordTO) throws SerException {
@@ -852,6 +859,9 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
+        List<PositionDetailBO> positionBOList = positionDetailUserAPI.findPositionByUser( userBO.getId() );
+
+        RpcTransmit.transmitUserToken(userToken);
         UserDetailBO udetailBO = userDetailAPI.findByUserId(userBO.getId());
         RpcTransmit.transmitUserToken(userToken);
         PositionBO positionBO = null;
@@ -893,18 +903,18 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
         super.update(temp);
 
-        //填审核日志表
-        ReimburseAuditLog reimburseAuditLog = new ReimburseAuditLog();
-        reimburseAuditLog.setUserName(userName);
-        reimburseAuditLog.setEmpNum(userBO.getEmployeeNumber());
-        reimburseAuditLog.setAuditStatus("通过".equals(reimburseRecordTO.getChargerAuditStatus()) ? "负责人通过" : "负责人不通过");
-        reimburseAuditLog.setAuditTime(LocalDate.now());
-        reimburseAuditLog.setContent(reimburseRecordTO.getAuditAdvice());
-        reimburseAuditLog.setPosition(positionBO != null ? positionBO.getName() : "");
-        reimburseAuditLog.setReimrecordId(reimburseRecordTO.getId());
-        reimburseAuditLog.setCreateTime(LocalDateTime.now());
-        reimburseAuditLog.setModifyTime(LocalDateTime.now());
-        reimburseAuditLogSer.save(reimburseAuditLog);
+        //填审核日志表,负责人审核部改变日志表
+//        ReimburseAuditLog reimburseAuditLog = new ReimburseAuditLog();
+//        reimburseAuditLog.setUserName(userName);
+//        reimburseAuditLog.setEmpNum(userBO.getEmployeeNumber());
+//        reimburseAuditLog.setAuditStatus("通过".equals(reimburseRecordTO.getChargerAuditStatus()) ? "负责人通过" : "负责人不通过");
+//        reimburseAuditLog.setAuditTime(LocalDate.now());
+//        reimburseAuditLog.setContent(reimburseRecordTO.getAuditAdvice());
+//        reimburseAuditLog.setPosition(positionBO != null ? positionBO.getName() : "");
+//        reimburseAuditLog.setReimrecordId(reimburseRecordTO.getId());
+//        reimburseAuditLog.setCreateTime(LocalDateTime.now());
+//        reimburseAuditLog.setModifyTime(LocalDateTime.now());
+//        reimburseAuditLogSer.save(reimburseAuditLog);
 
         return BeanTransform.copyProperties(temp, ReimburseRecordBO.class);
     }
@@ -916,20 +926,24 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        UserDetailBO udetailBO = userDetailAPI.findByUserId(userBO.getId());
-        RpcTransmit.transmitUserToken(userToken);
-        PositionBO positionBO = null;
-        if (udetailBO != null) {
-            positionBO = positionAPI.findById(udetailBO.getPositionId());
-            RpcTransmit.transmitUserToken(userToken);
-        }
+//        UserDetailBO udetailBO = userDetailAPI.findByUserId(userBO.getId());
+//        RpcTransmit.transmitUserToken(userToken);
+//        PositionBO positionBO = null;
+//        if (udetailBO != null) {
+//            positionBO = positionAPI.findById(udetailBO.getPositionId());
+//            RpcTransmit.transmitUserToken(userToken);
+//        }
 
         if (StringUtils.isBlank(reimburseRecordTO.getId())) {
             throw new SerException("id不能为空");
         }
         ReimburseRecord temp = super.findById(reimburseRecordTO.getId());
         if (!userName.equals(temp.getCharger())) {
-            throw new SerException("您不是负责人，不能确认冻结");
+            throw new SerException("您不是负责人，不能进行确认冻结操作");
+        }
+
+        if (!ReimStatus.CONGEL.equals(temp.getReimStatus())) {
+            throw new SerException("改记录没有进行申请冻结，现在不能进行确认冻结操作");
         }
 
 
@@ -954,25 +968,25 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
         super.update(temp);
 
-        //填审核日志表
-        ReimburseAuditLog reimburseAuditLog = new ReimburseAuditLog();
-        reimburseAuditLog.setUserName(userName);
-        reimburseAuditLog.setEmpNum(userBO.getEmployeeNumber());
-        reimburseAuditLog.setAuditStatus("不通过");
-        reimburseAuditLog.setAuditTime(LocalDate.now());
-        reimburseAuditLog.setContent("冻结");
-        reimburseAuditLog.setPosition(positionBO != null ? positionBO.getName() : "");
-        reimburseAuditLog.setReimrecordId(reimburseRecordTO.getId());
-        reimburseAuditLog.setCreateTime(LocalDateTime.now());
-        reimburseAuditLog.setModifyTime(LocalDateTime.now());
-        reimburseAuditLogSer.save(reimburseAuditLog);
+        //填审核日志表，负责人冻结不改变日志表
+//        ReimburseAuditLog reimburseAuditLog = new ReimburseAuditLog();
+//        reimburseAuditLog.setUserName(userName);
+//        reimburseAuditLog.setEmpNum(userBO.getEmployeeNumber());
+//        reimburseAuditLog.setAuditStatus("不通过");
+//        reimburseAuditLog.setAuditTime(LocalDate.now());
+//        reimburseAuditLog.setContent("冻结");
+//        reimburseAuditLog.setPosition(positionBO != null ? positionBO.getName() : "");
+//        reimburseAuditLog.setReimrecordId(reimburseRecordTO.getId());
+//        reimburseAuditLog.setCreateTime(LocalDateTime.now());
+//        reimburseAuditLog.setModifyTime(LocalDateTime.now());
+//        reimburseAuditLogSer.save(reimburseAuditLog);
 
         return BeanTransform.copyProperties(temp, ReimburseRecordBO.class);
     }
 
     @Override
     public Long countAnalisysRecord(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
-//        //但前用户审核分析报销日志
+//        //当前用户审核分析报销日志
 //        String useName = userAPI.currentUser().getUsername();
 //        ReimburseAuditLogDTO raDTO = new ReimburseAuditLogDTO();
 //        raDTO.getConditions().add(Restrict.eq("userName", useName));
@@ -984,142 +998,60 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 //        reimIds.stream().forEach(str -> {
 //            sb.append("'" + str + "',");
 //        });
-        String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser();
-        RpcTransmit.transmitUserToken(userToken);
+        ReimburseRecordDTO dto = reimburseRecordDTO;
+//        dto.getConditions().add(Restrict.in("id", StringUtils.substringBeforeLast(sb.toString(), ",")));
+        dto.getConditions().add(Restrict.eq("reimStatus", 1));
+        dto.getConditions().add(Restrict.eq("ticketCondition", "是"));
+        dto.getSorts().add("createTime=desc");
 
-        //查询分析人员表
-        ReimburseAnalisisorDTO reimAnalisisDTO = new ReimburseAnalisisorDTO();
-        reimAnalisisDTO.getConditions().add(Restrict.eq("empNum", userBO.getEmployeeNumber()));
-        List<ReimburseAnalisisor> analisisorList = reimburseAnalisisorSer.findByCis(reimAnalisisDTO);
-        if (analisisorList == null || analisisorList.size() <= 0) {
-            return 0L;
-        }
-        //查询审核分析表,如果已分析了的，就不会有
-        String[] fields = new String[]{"count"};
-        StringBuffer sql = new StringBuffer("");
-        sql.append(" SELECT count(*) as count ")
-                .append(" FROM lendreimbursement_reimburserecord  re1 ")
-                .append(" WHERE re1.reimStatus = 1 AND re1.ticketCondition = '是' ");
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
-            sql.append(" and re1.reimNumber = '" + reimburseRecordDTO.getReimNumber() + "' ");
-        }
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime()) && StringUtils.isBlank(reimburseRecordDTO.getEndTime())) {
-            sql.append(" and re1.occureDate = '" + reimburseRecordDTO.getStartTime() + "' ");
-        }
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()) && StringUtils.isBlank(reimburseRecordDTO.getStartTime())) {
-            sql.append(" and re1.occureDate = '" + reimburseRecordDTO.getStartTime() + "' ");
-        }
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()) && StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())) {
-            sql.append(" and re1.occureDate between '" + reimburseRecordDTO.getStartTime() + "' and '" + reimburseRecordDTO.getEndTime() + "' ");
-        }
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
-            sql.append(" and re1.reimer = '" + reimburseRecordDTO.getReimer() + "' ");
+            dto.getConditions().add(Restrict.eq("reimer", reimburseRecordDTO.getReimer()));
         }
-
-        sql.append(" and re1.id not in ( ")
-                .append(" SELECT record1.id ")
-                .append(" FROM lendreimbursement_reimburserecord record1 ")
-                .append(" LEFT JOIN lendreimbursement_reimburseauditlog aulog1 ON record1.id = aulog1.reimrecordId ")
-                .append(" WHERE record1.reimStatus = 1 AND record1.ticketCondition = '是' AND aulog1.empNum = '" + userBO.getEmployeeNumber() + "' ");
-
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
-            sql.append(" and record1.reimNumber = '" + reimburseRecordDTO.getReimNumber() + "' ");
+            dto.getConditions().add(Restrict.eq("reimNumber", reimburseRecordDTO.getReimNumber()));
         }
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime()) && StringUtils.isBlank(reimburseRecordDTO.getEndTime())) {
-            sql.append(" and record1.occureDate = '" + reimburseRecordDTO.getStartTime() + "' ");
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())) {
+            dto.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getStartTime()));
         }
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()) && StringUtils.isBlank(reimburseRecordDTO.getStartTime())) {
-            sql.append(" and record1.occureDate = '" + reimburseRecordDTO.getStartTime() + "' ");
-        }
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()) && StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())) {
-            sql.append(" and record1.occureDate between '" + reimburseRecordDTO.getStartTime() + "' and '" + reimburseRecordDTO.getEndTime() + "' ");
-        }
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
-            sql.append(" and record1.reimer = '" + reimburseRecordDTO.getReimer() + "' ");
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime())) {
+            dto.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getEndTime()));
         }
 
-        sql.append(" ) ");
 
-        List<ReimburseRecordBO> count = super.findBySql(sql.toString(), ReimburseRecordBO.class, fields);
-        return count != null ? count.size() : 0L;
+        Long count = super.count(dto);
+        return count;
     }
 
 
     @Override
     public List<ReimburseRecordBO> listAnalisysRecord(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         //负责人审核通过的记录
-        String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser();
-        RpcTransmit.transmitUserToken(userToken);
-
-        //查询分析人员表
-        ReimburseAnalisisorDTO reimAnalisisDTO = new ReimburseAnalisisorDTO();
-        reimAnalisisDTO.getConditions().add(Restrict.eq("empNum", userBO.getEmployeeNumber()));
-        List<ReimburseAnalisisor> analisisorList = reimburseAnalisisorSer.findByCis(reimAnalisisDTO);
-        if (analisisorList == null || analisisorList.size() <= 0) {
-            return null;
-        }
-        //查询审核分析表,如果已分析了的，就不会有
-        String[] fields = new String[]{"id", "AccountFlag", "addContent", "area", "attender", "auditAdvice",
-                "budgetPayTime", "charger", "chargerAuditStatus", "chargerAuditTime", "commitDate",
-                "dayTask", "editDate", "filler", "firstSubject", "noTicketRemark", "occureDate", "payCondition",
-                "payOrigin", "payPlan", "payTime", "plainInfo", "project", "projectGroup", "receiveTicketCon",
-                "receiveTicketTime", "receiveTicketer", "reimMoney", "reimNumber", "reimStatus", "reimer", "reimerRemark",
-                "secondSubject", "summary", "thirdSubject", "ticketCondition", "ticketNumber", "ticketQuantity", "receiveTicketCheck"
-        };
-        StringBuffer sql = new StringBuffer("");
-        sql.append(" SELECT re1.id , re1.AccountFlag , re1.addContent , re1.area , re1.attender , re1.auditAdvice, ")
-                .append(" re1.budgetPayTime , re1.charger , re1.chargerAuditStatus , re1.chargerAuditTime , re1.commitDate , ")
-                .append(" re1.dayTask , re1.editDate , re1.filler,re1.firstSubject , re1.noTicketRemark, re1.occureDate , re1.payCondition, ")
-                .append(" re1.payOrigin , re1.payPlan , re1.payTime , re1.plainInfo , re1.project , re1.projectGroup,re1.receiveTicketCon, ")
-                .append(" re1.receiveTicketTime, re1.receiveTicketer , re1.reimMoney , re1.reimNumber , re1.reimStatus , re1.reimer , re1.reimerRemark , ")
-                .append(" re1.secondSubject , re1.summary , re1.thirdSubject , re1.ticketCondition ,re1.ticketNumber , re1.ticketQuantity ,re1.receiveTicketCheck ")
-                .append(" FROM lendreimbursement_reimburserecord re1")
-                .append(" WHERE re1.reimStatus = 1 AND re1.ticketCondition = '是' ");
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
-            sql.append(" and re1.reimNumber = '" + reimburseRecordDTO.getReimNumber() + "' ");
-        }
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime()) && StringUtils.isBlank(reimburseRecordDTO.getEndTime())) {
-            sql.append(" and re1.occureDate = '" + reimburseRecordDTO.getStartTime() + "' ");
-        }
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()) && StringUtils.isBlank(reimburseRecordDTO.getStartTime())) {
-            sql.append(" and re1.occureDate = '" + reimburseRecordDTO.getStartTime() + "' ");
-        }
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()) && StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())) {
-            sql.append(" and re1.occureDate between '" + reimburseRecordDTO.getStartTime() + "' and '" + reimburseRecordDTO.getEndTime() + "' ");
-        }
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
-            sql.append(" and re1.reimer = '" + reimburseRecordDTO.getReimer() + "' ");
-        }
-
-        sql.append(" and re1.id not in ( ")
-                .append(" SELECT record1.id ")
-                .append(" FROM lendreimbursement_reimburserecord record1 ")
-                .append(" LEFT JOIN lendreimbursement_reimburseauditlog aulog1 ON record1.id = aulog1.reimrecordId ")
-                .append(" WHERE record1.reimStatus = 1 AND record1.ticketCondition = '是' AND aulog1.empNum = '" + userBO.getEmployeeNumber() + "' ");
+        ReimburseRecordDTO dto = reimburseRecordDTO;
+        dto.getConditions().add(Restrict.eq("reimStatus", 1));
+        dto.getConditions().add(Restrict.eq("ticketCondition", "是"));
+        dto.getSorts().add("createTime=desc");
 
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
-            sql.append(" and record1.reimNumber = '" + reimburseRecordDTO.getReimNumber() + "' ");
+            dto.getConditions().add(Restrict.eq("reimNumber", reimburseRecordDTO.getReimNumber()));
         }
         if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime()) && StringUtils.isBlank(reimburseRecordDTO.getEndTime())) {
-            sql.append(" and record1.occureDate = '" + reimburseRecordDTO.getStartTime() + "' ");
+            dto.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getStartTime()));
         }
         if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()) && StringUtils.isBlank(reimburseRecordDTO.getStartTime())) {
-            sql.append(" and record1.occureDate = '" + reimburseRecordDTO.getStartTime() + "' ");
+            dto.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getEndTime()));
         }
         if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()) && StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())) {
-            sql.append(" and record1.occureDate between '" + reimburseRecordDTO.getStartTime() + "' and '" + reimburseRecordDTO.getEndTime() + "' ");
+            dto.getConditions().add(Restrict.between("occureDate", new String[]{reimburseRecordDTO.getStartTime(), reimburseRecordDTO.getEndTime()}));
         }
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
-            sql.append(" and record1.reimer = '" + reimburseRecordDTO.getReimer() + "' ");
+            reimburseRecordDTO.getConditions().add(Restrict.eq("reimer", reimburseRecordDTO.getReimer()));
         }
-        sql.append(" ) ");
-        sql.append(" order by re1.modifyTime desc ");
-        sql.append(" limit " + (reimburseRecordDTO.getPage()) + "," + reimburseRecordDTO.getLimit() + " ");
 
-        List<ReimburseRecordBO> list = super.findBySql(sql.toString(), ReimburseRecordBO.class, fields);
-        return list;
+        dto = addCondition(dto);
+
+        List<ReimburseRecord> recordBOList = super.findByCis(dto, true);
+        List<ReimburseRecordBO> recordBOList1 = BeanTransform.copyProperties(recordBOList, ReimburseRecordBO.class);
+        return recordBOList1;
 
     }
 
@@ -1149,25 +1081,45 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             positionBO = positionAPI.findById(udetailBO.getPositionId());
         }
 
-        ReimburseAuditLog reimburseAuditLog = new ReimburseAuditLog();
+//        ReimburseAuditLog reimburseAuditLog = new ReimburseAuditLog();
 
-        if (StringUtils.isNotBlank(reimburseRecordTO.getChargerAuditStatus()) && reimburseRecordTO.getChargerAuditStatus().equals("通过")) {
-            reimburseAuditLog.setAuditStatus("分析通过");
-        } else if (StringUtils.isNotBlank(reimburseRecordTO.getChargerAuditStatus()) && reimburseRecordTO.getChargerAuditStatus().equals("不通过")) {
-            reimburseAuditLog.setAuditStatus("分析不通过");
-        } else {
-            throw new SerException("分析人员只能选择通过或不通过二个状态,reimStatus");
-        }
+
         //审核日志表
-        reimburseAuditLog.setContent("分析意见:" + reimburseRecordTO.getAuditAdvice());
-        reimburseAuditLog.setUserName(userName);
-        reimburseAuditLog.setEmpNum(userBO.getEmployeeNumber());
-        reimburseAuditLog.setAuditTime(LocalDate.now());
-        reimburseAuditLog.setPosition(positionBO != null ? positionBO.getName() : "");
-        reimburseAuditLog.setReimrecordId(reimburseRecordTO.getId());
-        reimburseAuditLog.setCreateTime(LocalDateTime.now());
-        reimburseAuditLog.setModifyTime(LocalDateTime.now());
-        reimburseAuditLogSer.save(reimburseAuditLog);
+        ReimburseAuditLogDTO reimburseAuditLogDTO = new ReimburseAuditLogDTO();
+        reimburseAuditLogDTO.getConditions().add( Restrict.eq("reimrecordId", reimburseRecordTO.getId()));
+        reimburseAuditLogDTO.getConditions().add( Restrict.eq("empNum", userBO.getEmployeeNumber()));
+        List<ReimburseAuditLog> listReimAuditLog = reimburseAuditLogSer.findByCis( reimburseAuditLogDTO  );
+
+        if( listReimAuditLog != null && listReimAuditLog.size()>0 ){
+            if( StringUtils.isNotBlank( listReimAuditLog.get(0).getContent()) ){
+                throw new SerException("您已经分析过，不可以继续分析");
+            }else{
+                if (StringUtils.isBlank(reimburseRecordTO.getChargerAuditStatus()) ||
+                        (reimburseRecordTO.getChargerAuditStatus().equals("不通过") && reimburseRecordTO.getChargerAuditStatus().equals("通过") )) {
+                    throw new SerException("分析人员只能选择通过或不通过二个状态,reimStatus");
+                }
+                listReimAuditLog.stream().forEach( str ->{
+                    str.setContent( "分析意见:" + reimburseRecordTO.getAuditAdvice());
+                    str.setAuditTime(LocalDate.now());
+                    str.setModifyTime(LocalDateTime.now());
+                    if (StringUtils.isNotBlank(reimburseRecordTO.getChargerAuditStatus()) && reimburseRecordTO.getChargerAuditStatus().equals("通过")) {
+                        str.setAuditStatus( "分析通过"  );
+                    } else if (StringUtils.isNotBlank(reimburseRecordTO.getChargerAuditStatus()) && reimburseRecordTO.getChargerAuditStatus().equals("不通过")) {
+                        str.setAuditStatus( "分析不通过" );
+                    }
+                });
+                reimburseAuditLogSer.update(  listReimAuditLog );
+            }
+        }
+//        reimburseAuditLog.setContent("分析意见:" + reimburseRecordTO.getAuditAdvice());
+//        reimburseAuditLog.setUserName(userName);
+//        reimburseAuditLog.setEmpNum(userBO.getEmployeeNumber());
+//        reimburseAuditLog.setAuditTime(LocalDate.now());
+//        reimburseAuditLog.setPosition(positionBO != null ? positionBO.getName() : "");
+//        reimburseAuditLog.setReimrecordId(reimburseRecordTO.getId());
+//        reimburseAuditLog.setCreateTime(LocalDateTime.now());
+//        reimburseAuditLog.setModifyTime(LocalDateTime.now());
+//        reimburseAuditLogSer.save(reimburseAuditLog);
 
 
         temp.setReimStatus(ReimStatus.CHARGEPASS);
@@ -1234,46 +1186,31 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         String[] fields = new String[]{"count"};
         StringBuffer sql = new StringBuffer("");
         sql.append(" SELECT count(*) as count ")
-                .append(" FROM lendreimbursement_reimburserecord re1 ")
-                .append(" WHERE re1.reimStatus = 1 AND re1.ticketCondition = '是' ");
+                .append(" from lendreimbursement_reimburserecord  ")
+                .append(" where id NOT IN ( ")
+        .append(" SELECT record.id FROM lendreimbursement_reimburserecord record ")
+        .append(" INNER JOIN lendreimbursement_reimburseauditlog log ")
+        .append(" ON record.id = log.reimrecordId AND log.auditStatus = '未处理' ")
+        .append(" ) and reimStatus = 1 AND ticketCondition = '是' ");
+        //and reimer = '' and reimNumber = '' and occureDate BETWEEN '' and ''
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
-            sql.append(" and re1.reimNumber = '" + reimburseRecordDTO.getReimNumber() + "' ");
+            sql.append(" and reimNumber = '" + reimburseRecordDTO.getReimNumber() + "' ");
         }
         if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime()) && StringUtils.isBlank(reimburseRecordDTO.getEndTime())) {
-            sql.append(" and re1.occureDate = '" + reimburseRecordDTO.getStartTime() + "' ");
+            sql.append(" and occureDate = '" + reimburseRecordDTO.getStartTime() + "' ");
         }
         if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()) && StringUtils.isBlank(reimburseRecordDTO.getStartTime())) {
-            sql.append(" and re1.occureDate = '" + reimburseRecordDTO.getStartTime() + "' ");
+            sql.append(" and occureDate = '" + reimburseRecordDTO.getStartTime() + "' ");
         }
         if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()) && StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())) {
-            sql.append(" and re1.occureDate between '" + reimburseRecordDTO.getStartTime() + "' and '" + reimburseRecordDTO.getEndTime() + "' ");
+            sql.append(" and occureDate between '" + reimburseRecordDTO.getStartTime() + "' and '" + reimburseRecordDTO.getEndTime() + "' ");
         }
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
-            sql.append(" and re1.reimer = '" + reimburseRecordDTO.getReimer() + "' ");
+            sql.append(" and reimer = '" + reimburseRecordDTO.getReimer() + "' ");
         }
 
-        sql.append(" and re1.id  in ( ")
-                .append(" SELECT record1.id ")
-                .append(" FROM lendreimbursement_reimburserecord record1 ")
-                .append(" LEFT JOIN lendreimbursement_reimburseauditlog aulog1 ON record1.id = aulog1.reimrecordId ")
-                .append(" WHERE record1.reimStatus = 1 AND record1.ticketCondition = '是' AND aulog1.empNum = '" + userBO.getEmployeeNumber() + "' ");
 
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
-            sql.append(" and record1.reimNumber = '" + reimburseRecordDTO.getReimNumber() + "' ");
-        }
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime()) && StringUtils.isBlank(reimburseRecordDTO.getEndTime())) {
-            sql.append(" and record1.occureDate = '" + reimburseRecordDTO.getStartTime() + "' ");
-        }
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()) && StringUtils.isBlank(reimburseRecordDTO.getStartTime())) {
-            sql.append(" and record1.occureDate = '" + reimburseRecordDTO.getStartTime() + "' ");
-        }
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()) && StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())) {
-            sql.append(" and record1.occureDate between '" + reimburseRecordDTO.getStartTime() + "' and '" + reimburseRecordDTO.getEndTime() + "' ");
-        }
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
-            sql.append(" and record1.reimer = '" + reimburseRecordDTO.getReimer() + "' ");
-        }
-        sql.append(" ) ");
+        System.out.println( sql.toString());
 
         List<ReimburseRecordBO> count = super.findBySql(sql.toString(), ReimburseRecordBO.class, fields);
         return count != null ? count.size() : 0L;
@@ -1303,53 +1240,35 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
                 "secondSubject", "summary", "thirdSubject", "ticketCondition", "ticketNumber", "ticketQuantity", "receiveTicketCheck"
         };
         StringBuffer sql = new StringBuffer("");
-        sql.append(" SELECT re1.id , re1.AccountFlag , re1.addContent , re1.area , re1.attender , re1.auditAdvice, ")
-                .append(" re1.budgetPayTime , re1.charger , re1.chargerAuditStatus , re1.chargerAuditTime , re1.commitDate , ")
-                .append(" re1.dayTask , re1.editDate , re1.filler,re1.firstSubject , re1.noTicketRemark, re1.occureDate , re1.payCondition, ")
-                .append(" re1.payOrigin , re1.payPlan , re1.payTime , re1.plainInfo , re1.project , re1.projectGroup,re1.receiveTicketCon, ")
-                .append(" re1.receiveTicketTime, re1.receiveTicketer , re1.reimMoney , re1.reimNumber , re1.reimStatus , re1.reimer , re1.reimerRemark , ")
-                .append(" re1.secondSubject , re1.summary , re1.thirdSubject , re1.ticketCondition ,re1.ticketNumber , re1.ticketQuantity ,re1.receiveTicketCheck ")
-                .append(" FROM lendreimbursement_reimburserecord re1")
-                .append(" WHERE re1.reimStatus = 1 AND re1.ticketCondition = '是' ");
+        sql.append(" SELECT id , AccountFlag , addContent , area , attender , auditAdvice, ")
+                .append(" budgetPayTime , charger , chargerAuditStatus , chargerAuditTime , commitDate , ")
+                .append(" dayTask , editDate , filler,firstSubject , noTicketRemark, occureDate , payCondition, ")
+                .append(" payOrigin , payPlan , payTime , plainInfo , project , projectGroup,receiveTicketCon, ")
+                .append(" receiveTicketTime, receiveTicketer , reimMoney , reimNumber , reimStatus , reimer , reimerRemark , ")
+                .append(" secondSubject , summary , thirdSubject , ticketCondition ,ticketNumber , ticketQuantity ,receiveTicketCheck ")
+                .append(" from lendreimbursement_reimburserecord  ")
+                .append(" where id NOT IN ( ")
+                .append(" SELECT record.id FROM lendreimbursement_reimburserecord record ")
+                .append(" INNER JOIN lendreimbursement_reimburseauditlog log ")
+                .append(" ON record.id = log.reimrecordId AND log.auditStatus = '未处理' ")
+                .append(" ) and reimStatus = 1 AND ticketCondition = '是' ");
+        //and reimer = '' and reimNumber = '' and occureDate BETWEEN '' and ''
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
-            sql.append(" and re1.reimNumber = '" + reimburseRecordDTO.getReimNumber() + "' ");
+            sql.append(" and reimNumber = '" + reimburseRecordDTO.getReimNumber() + "' ");
         }
         if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime()) && StringUtils.isBlank(reimburseRecordDTO.getEndTime())) {
-            sql.append(" and re1.occureDate = '" + reimburseRecordDTO.getStartTime() + "' ");
+            sql.append(" and occureDate = '" + reimburseRecordDTO.getStartTime() + "' ");
         }
         if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()) && StringUtils.isBlank(reimburseRecordDTO.getStartTime())) {
-            sql.append(" and re1.occureDate = '" + reimburseRecordDTO.getStartTime() + "' ");
+            sql.append(" and occureDate = '" + reimburseRecordDTO.getStartTime() + "' ");
         }
         if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()) && StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())) {
-            sql.append(" and re1.occureDate between '" + reimburseRecordDTO.getStartTime() + "' and '" + reimburseRecordDTO.getEndTime() + "' ");
+            sql.append(" and occureDate between '" + reimburseRecordDTO.getStartTime() + "' and '" + reimburseRecordDTO.getEndTime() + "' ");
         }
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
-            sql.append(" and re1.reimer = '" + reimburseRecordDTO.getReimer() + "' ");
+            sql.append(" and reimer = '" + reimburseRecordDTO.getReimer() + "' ");
         }
-
-        sql.append(" and re1.id in ( ")
-                .append(" SELECT record1.id ")
-                .append(" FROM lendreimbursement_reimburserecord record1 ")
-                .append(" LEFT JOIN lendreimbursement_reimburseauditlog aulog1 ON record1.id = aulog1.reimrecordId ")
-                .append(" WHERE record1.reimStatus = 1 AND record1.ticketCondition = '是' AND aulog1.empNum = '" + userBO.getEmployeeNumber() + "' ");
-
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
-            sql.append(" and record1.reimNumber = '" + reimburseRecordDTO.getReimNumber() + "' ");
-        }
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime()) && StringUtils.isBlank(reimburseRecordDTO.getEndTime())) {
-            sql.append(" and record1.occureDate = '" + reimburseRecordDTO.getStartTime() + "' ");
-        }
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()) && StringUtils.isBlank(reimburseRecordDTO.getStartTime())) {
-            sql.append(" and record1.occureDate = '" + reimburseRecordDTO.getStartTime() + "' ");
-        }
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime()) && StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())) {
-            sql.append(" and record1.occureDate between '" + reimburseRecordDTO.getStartTime() + "' and '" + reimburseRecordDTO.getEndTime() + "' ");
-        }
-        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
-            sql.append(" and record1.reimer = '" + reimburseRecordDTO.getReimer() + "' ");
-        }
-        sql.append(" ) ");
-        sql.append(" order by re1.modifyTime desc ");
+        sql.append(" order by modifyTime desc ");
         sql.append(" limit " + (reimburseRecordDTO.getPage()) + "," + reimburseRecordDTO.getLimit() + " ");
 
         List<ReimburseRecordBO> list = super.findBySql(sql.toString(), ReimburseRecordBO.class, fields);
@@ -1721,8 +1640,12 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
                     .append(" and occureDate between '" + reimburseRecordDTO.getStartTime() + "' and '" + reimburseRecordDTO.getEndTime() + "'")
                     .append("  and  payCondition = '是' ")
                     .append(" order by area desc , project desc ");
-            System.out.println("返回：" + sb.toString());
             collectDataBOList = super.findBySql(sb.toString(), CollectReimerDataBO.class, fields);
+            if( collectDataBOList != null && collectDataBOList.size()>0 ){
+                collectDataBOList.stream().forEach(str->{
+                    str.setReimDatePeriod( str.getReimDate());
+                });
+            }
 
         }
 
@@ -1783,7 +1706,11 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
                     .append("  and  payCondition = '是' ")
                     .append(" order by firstSubject desc , secondSubject desc , thirdSubject desc ");
             collectDataBOList = super.findBySql(sb.toString(), CollectReimerDataBO.class, fields);
-
+            if( collectDataBOList != null && collectDataBOList.size()>0 ){
+                collectDataBOList.stream().forEach(str->{
+                    str.setReimDatePeriod( str.getReimDate());
+                });
+            }
         }
 
         return collectDataBOList;
@@ -1844,7 +1771,11 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
                     .append("  and  payCondition = '是' ")
                     .append(" order by firstSubject desc , secondSubject desc , thirdSubject desc ");
             collectDataBOList = super.findBySql(sb.toString(), CollectReimerDataBO.class, fields);
-
+            if( collectDataBOList != null && collectDataBOList.size()>0 ){
+                collectDataBOList.stream().forEach(str->{
+                    str.setReimDatePeriod( str.getReimDate());
+                });
+            }
         }
 
         return collectDataBOList;
@@ -1904,7 +1835,11 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
                     .append("  and  payCondition = '是' ")
                     .append(" order by firstSubject desc , secondSubject desc , thirdSubject desc ");
             collectDataBOList = super.findBySql(sb.toString(), CollectReimerDataBO.class, fields);
-
+            if( collectDataBOList != null && collectDataBOList.size()>0 ){
+                collectDataBOList.stream().forEach(str->{
+                    str.setReimDatePeriod( str.getReimDate());
+                });
+            }
         }
 
         return collectDataBOList;
@@ -1977,7 +1912,6 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
      */
     @Override
     public byte[] exportExcel(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
-        checkPermission();
         LocalDate start = LocalDate.now();
         LocalDate end = LocalDate.now();
         if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())) {
@@ -1989,7 +1923,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         LocalDate budgetPayTime[] = new LocalDate[]{start, end};
 
         if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime()) || StringUtils.isNotBlank(reimburseRecordDTO.getEndTime())) {
-            reimburseRecordDTO.getConditions().add(Restrict.between("budgetPayTime", budgetPayTime));//借款时间段查询
+            reimburseRecordDTO.getConditions().add(Restrict.between("occureDate", budgetPayTime));//借款时间段查询
         }
         reimburseRecordDTO.getConditions().add(Restrict.ne("payCondition", "是"));
         reimburseRecordDTO.getConditions().add(Restrict.eq("receiveTicketCheck", "是"));
@@ -1999,7 +1933,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
         List<ReimburseRecordExcel> reimburseRecordExcels = new ArrayList<>();
         list.stream().forEach(str -> {
-            ReimburseRecordExcel excel = BeanTransform.copyProperties(str, ReimburseRecordExcel.class, "lendStatus");
+            ReimburseRecordExcel excel = BeanTransform.copyProperties(str, ReimburseRecordExcel.class, "reimStatus");
             excel.setReimStatus(ReimStatus.exportStrConvert(str.getReimStatus()));
 
             reimburseRecordExcels.add(excel);
@@ -2018,7 +1952,6 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
      */
     @Override
     public byte[] exportAlPayExcel(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
-        checkPermission();
         LocalDate start = LocalDate.now();
         LocalDate end = LocalDate.now();
         if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())) {
@@ -2030,7 +1963,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         LocalDate budgetPayTime[] = new LocalDate[]{start, end};
 
         if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime()) || StringUtils.isNotBlank(reimburseRecordDTO.getEndTime())) {
-            reimburseRecordDTO.getConditions().add(Restrict.between("budgetPayTime", budgetPayTime));//借款时间段查询
+            reimburseRecordDTO.getConditions().add(Restrict.between("occureDate", budgetPayTime));//借款时间段查询
         }
         reimburseRecordDTO.getConditions().add(Restrict.eq("payCondition", "是"));
 
@@ -2038,11 +1971,16 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
         List<ReimburseRecordExcel> reimburseRecordExcels = new ArrayList<>();
         list.stream().forEach(str -> {
-            ReimburseRecordExcel excel = BeanTransform.copyProperties(str, ReimburseRecordExcel.class, "lendStatus");
+            ReimburseRecordExcel excel = BeanTransform.copyProperties(str, ReimburseRecordExcel.class, "reimStatus");
             excel.setReimStatus(ReimStatus.exportStrConvert(str.getReimStatus()));
 
             reimburseRecordExcels.add(excel);
         });
+
+        if( reimburseRecordExcels == null ){
+            ReimburseRecordExcel excel = new ReimburseRecordExcel();
+            reimburseRecordExcels.add(excel);
+        }
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(reimburseRecordExcels, excel);
         return bytes;

@@ -287,43 +287,6 @@ public class WeightAllotAction extends BaseFileAction {
         }
     }
 
-//    private String convertSiginStatus(SiginStatus siginStatus) throws ActException {
-//        String status = "";
-//        if (null == siginStatus) {
-//            throw new ActException("签订状态填写不正确,导入失败,正确填写方式（已签订/未签订）");
-//        }
-//        switch (siginStatus) {
-//            case HASSIGN:
-//                status = "已签订";
-//                break;
-//            case HASNOSIGN:
-//                status = "未签订";
-//                break;
-//            default:
-//                throw new ActException("签订状态填写不正确,导入失败,正确填写方式（已签订/未签订）");
-//        }
-//        return status;
-//    }
-
-//    private String convertMakeProject(MakeProjectStatus makeProjectStatus) throws ActException {
-//        String status = "";
-//        if (null == makeProjectStatus) {
-//            throw new ActException("立项情况填写不正确,导入失败,正确填写方式（已立项/未立项）");
-//        }
-//        switch (makeProjectStatus) {
-//            case SIGN:
-//                status = "已立项";
-//                break;
-//            case NOSIGN:
-//                status = "未立项";
-//                break;
-//            default:
-//                throw new ActException("立项情况填写不正确,导入失败,正确填写方式（已立项/未立项）");
-//        }
-//        return status;
-//    }
-
-
     /**
      * 导出excel
      *

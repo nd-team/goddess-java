@@ -2,6 +2,7 @@ package com.bjike.goddess.courier.service;
 
 import com.bjike.goddess.announcement.api.AnnouncementAPI;
 import com.bjike.goddess.announcement.to.AnnouncementTO;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -52,6 +53,8 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private CourierCompanySer courierCompanySer;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -646,7 +649,9 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                 to.setRecipients(new String[]{send, receipt});
                 to.setRequired(false);
                 to.setSend(false);
-                announcementAPI.addPerson(to);
+                if (moduleAPI.isCheck("courier")) {
+                    announcementAPI.addPerson(to);
+                }
             }
         }
     }

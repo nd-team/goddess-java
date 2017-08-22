@@ -1,6 +1,5 @@
 package com.bjike.goddess.marketactivitymanage.service;
 
-import com.alibaba.dubbo.common.json.Yylex;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -9,7 +8,6 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
-import com.bjike.goddess.marketactivitymanage.api.MarketServeRecordAPI;
 import com.bjike.goddess.marketactivitymanage.bo.CustomerInfoBO;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeApplyBO;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeApplyDetailBO;
@@ -38,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 市场招待申请业务实现
@@ -372,7 +371,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
     public void fundModuleOpinion(String id, String fundModuleOpinion) throws SerException {
         checkBusinPermission();
         MarketServeApply model = super.findById(id);
-        if(model.getFundModuleOpinion()!=null ){
+        if (model.getFundModuleOpinion() != null) {
             throw new SerException("您已审核了,就不能再审核了");
         }
         model.setModifyTime(LocalDateTime.now());
@@ -393,20 +392,20 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
         checkAuditAPermission();
 
         MarketServeApply model = super.findById(id);
-        if(model.getExecutiveAuditOpinion()!=null){
+        if (model.getExecutiveAuditOpinion() != null) {
             throw new SerException("您已审核了,就不能再审核了");
-        }else{
+        } else {
             model.setModifyTime(LocalDateTime.now());
             model.setExecutiveAuditOpinion(executiveAuditOpinion);
             super.update(model);
-            if(model.getExecutiveAuditOpinion().equals(AuditType.ALLOWED)){
+            if (model.getExecutiveAuditOpinion().equals(AuditType.ALLOWED)) {
                 MarketServeRecord marketServeRecord = new MarketServeRecord();
-                BeanUtils.copyProperties(model,marketServeRecord);
+                BeanUtils.copyProperties(model, marketServeRecord);
                 marketServeRecord = marketServeRecordSer.save(marketServeRecord);
                 List<CustomerInfoBO> list = customerInfoSer.findByMarketServeId(model.getId());
-                if(null != list && list.size()!=0){
-                    for (CustomerInfoBO customerInfoBO : list){
-                        CustomerInfo customerInfo = BeanTransform.copyProperties(customerInfoBO,CustomerInfo.class,true,"marketServeId","id");
+                if (null != list && list.size() != 0) {
+                    for (CustomerInfoBO customerInfoBO : list) {
+                        CustomerInfo customerInfo = BeanTransform.copyProperties(customerInfoBO, CustomerInfo.class, true, "marketServeId", "id");
                         customerInfo.setCreateTime(LocalDateTime.now());
                         customerInfo.setModifyTime(LocalDateTime.now());
                         customerInfo.setMarketServeId(marketServeRecord.getId());
@@ -685,5 +684,14 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
         byte[] bytes = ExcelUtil.clazzToExcel(marketServeApplyTemplateExprots, exce);
         return bytes;
     }
-}
 
+    @Override
+    public List<String> getServePrincipal() throws SerException {
+        List<MarketServeApply> marketServeApplies = super.findAll();
+        List<String> list = new ArrayList<>(0);
+        if (!CollectionUtils.isEmpty(marketServeApplies)) {
+            list = marketServeApplies.stream().map(MarketServeApply::getServePrincipal).distinct().collect(Collectors.toList());
+        }
+        return list;
+    }
+}

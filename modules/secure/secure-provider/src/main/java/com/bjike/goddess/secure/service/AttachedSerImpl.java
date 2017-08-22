@@ -1,5 +1,7 @@
 package com.bjike.goddess.secure.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -65,6 +67,8 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
     private PositionDetailUserAPI positionDetailUserAPI;
     @Autowired
     private InternalContactsAPI internalContactsAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -218,12 +222,16 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
 
     private String[] yyEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
-        for (DepartmentDetailBO departmentDetailBO : list) {
-            if ("综合资源部".equals(departmentDetailBO.getDepartment())) {
-                CommonalityBO commonality = commonalityAPI.findByDepartment(departmentDetailBO.getId());
-                if (commonality != null) {
-                    set.add(commonality.getEmail());
+        if (moduleAPI.isCheck("organize")) {
+            List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
+            for (DepartmentDetailBO departmentDetailBO : list) {
+                if ("综合资源部".equals(departmentDetailBO.getDepartment())) {
+                    if (moduleAPI.isCheck("contacts")) {
+                        CommonalityBO commonality = commonalityAPI.findByDepartment(departmentDetailBO.getId());
+                        if (commonality != null && commonality.getEmail() != null) {
+                            set.add(commonality.getEmail());
+                        }
+                    }
                 }
             }
         }
@@ -234,12 +242,16 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
 
     private String[] zhEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
-        for (DepartmentDetailBO departmentDetailBO : list) {
-            if ("综合资源部".equals(departmentDetailBO.getDepartment())) {
-                CommonalityBO commonality = commonalityAPI.findByDepartment(departmentDetailBO.getId());
-                if (commonality != null) {
-                    set.add(commonality.getEmail());
+        if (moduleAPI.isCheck("organize")) {
+            List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
+            for (DepartmentDetailBO departmentDetailBO : list) {
+                if ("综合资源部".equals(departmentDetailBO.getDepartment())) {
+                    if (moduleAPI.isCheck("contacts")) {
+                        CommonalityBO commonality = commonalityAPI.findByDepartment(departmentDetailBO.getId());
+                        if (commonality != null && commonality.getEmail() != null) {
+                            set.add(commonality.getEmail());
+                        }
+                    }
                 }
             }
         }
@@ -250,14 +262,18 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
 
     private String[] mEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
-        for (PositionDetailBO positionDetailBO : list1) {
-            if ("总经理".equals(positionDetailBO.getPosition())) {
-                List<UserBO> users = positionDetailUserAPI.findByPosition(positionDetailBO.getId());
-                for (UserBO userBO : users) {
-                    String mail = internalContactsAPI.getEmail(userBO.getUsername());
-                    if (mail != null) {
-                        set.add(mail);
+        if (moduleAPI.isCheck("organize")) {
+            List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
+            for (PositionDetailBO positionDetailBO : list1) {
+                if ("总经理".equals(positionDetailBO.getPosition())) {
+                    List<UserBO> users = positionDetailUserAPI.findByPosition(positionDetailBO.getId());
+                    for (UserBO userBO : users) {
+                        if (moduleAPI.isCheck("contacts")) {
+                            String mail = internalContactsAPI.getEmail(userBO.getUsername());
+                            if (mail != null) {
+                                set.add(mail);
+                            }
+                        }
                     }
                 }
             }
@@ -278,7 +294,9 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
         messageTO.setTitle("社保挂靠信息");
         messageTO.setContent(html(attachedBO));
         messageTO.setReceivers(mEmails());
-        messageAPI.send(messageTO);
+        if (mEmails() != null && mEmails().length > 0) {
+            messageAPI.send(messageTO);
+        }
         return attachedBO;
     }
 
@@ -356,14 +374,20 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
         if (send) {
             String[] users = dto.getUsers();
             if (users != null) {
-                List<String> mails = internalContactsAPI.getEmails(users);
-                String[] emails = new String[mails.size()];
-                emails = mails.toArray(emails);
-                messageTO.setReceivers(emails);
-                messageAPI.send(messageTO);
+                if (moduleAPI.isCheck("contacts")) {
+                    List<String> mails = internalContactsAPI.getEmails(users);
+                    if (mails != null && !mails.isEmpty()) {
+                        String[] emails = new String[mails.size()];
+                        emails = mails.toArray(emails);
+                        messageTO.setReceivers(emails);
+                        messageAPI.send(messageTO);
+                    }
+                }
             }
             messageTO.setReceivers(zhEmails());
-            messageAPI.send(messageTO);
+            if (zhEmails() != null && zhEmails().length > 0) {
+                messageAPI.send(messageTO);
+            }
         }
     }
 
@@ -384,14 +408,20 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
         if (send) {
             String[] users = dto.getUsers();
             if (users != null) {
-                List<String> mails = internalContactsAPI.getEmails(users);
-                String[] emails = new String[mails.size()];
-                emails = mails.toArray(emails);
-                messageTO.setReceivers(emails);
-                messageAPI.send(messageTO);
+                if (moduleAPI.isCheck("contacts")) {
+                    List<String> mails = internalContactsAPI.getEmails(users);
+                    if (mails != null && !mails.isEmpty()) {
+                        String[] emails = new String[mails.size()];
+                        emails = mails.toArray(emails);
+                        messageTO.setReceivers(emails);
+                        messageAPI.send(messageTO);
+                    }
+                }
             }
             messageTO.setReceivers(zhEmails());
-            messageAPI.send(messageTO);
+            if (zhEmails() != null && zhEmails().length > 0) {
+                messageAPI.send(messageTO);
+            }
         }
     }
 
@@ -423,9 +453,13 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
         messageTO.setContent(html(attachedBO));
         messageTO.setTitle("以下是社保挂靠基本信息，请给予意见");
         messageTO.setReceivers(yyEmails());
-        messageAPI.send(messageTO);
+        if (yyEmails() != null && yyEmails().length > 0) {
+            messageAPI.send(messageTO);
+        }
         messageTO.setReceivers(mEmails());
-        messageAPI.send(messageTO);
+        if (mEmails() != null && mEmails().length > 0) {
+            messageAPI.send(messageTO);
+        }
         AddEmployeeTO addEmployeeTO = new AddEmployeeTO();
         BeanUtils.copyProperties(attached, addEmployeeTO);
         addEmployeeTO.setName(attached.getAttachedName());
@@ -476,5 +510,14 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
     @Override
     public Long count(AttachedDTO dto) throws SerException {
         return super.count(dto);
+    }
+
+    @Override
+    public AttachedBO findAttached(String name) throws SerException {
+        AttachedDTO dto = new AttachedDTO();
+        dto.getConditions().add(Restrict.eq("attachedName",name));
+        Attached attached = super.findOne(dto);
+        AttachedBO bo = BeanTransform.copyProperties(attached,AttachedBO.class,false);
+        return bo;
     }
 }

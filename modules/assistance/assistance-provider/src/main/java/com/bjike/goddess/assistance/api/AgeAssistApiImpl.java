@@ -58,6 +58,11 @@ public class AgeAssistApiImpl implements AgeAssistAPI {
     }
 
     @Override
+    public Double getJobAge(String userName) throws SerException {
+        return ageAssistSer.getJobAge(userName);
+    }
+
+    @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         return ageAssistSer.sonPermission();
     }
@@ -65,5 +70,10 @@ public class AgeAssistApiImpl implements AgeAssistAPI {
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return ageAssistSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public AgeAssistBO findAge(String startTime, String endTime) throws SerException {
+        return ageAssistSer.findAge(startTime,endTime);
     }
 }

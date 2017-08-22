@@ -6,6 +6,7 @@ import com.bjike.goddess.moneyside.bo.CustomerInfoBO;
 import com.bjike.goddess.moneyside.dto.CustomerInfoDTO;
 import com.bjike.goddess.moneyside.entity.CustomerInfo;
 import com.bjike.goddess.moneyside.to.CustomerInfoTO;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +20,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CustomerInfoSer extends Ser<CustomerInfo, CustomerInfoDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 客户信息列表总条数
      */

@@ -1,5 +1,6 @@
 package com.bjike.goddess.salarymanage.action.salarymanage;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -19,6 +20,7 @@ import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.vo.*;
 import com.bjike.goddess.salarymanage.api.SalaryBasicAPI;
 import com.bjike.goddess.salarymanage.bo.SalaryBasicBO;
+import com.bjike.goddess.salarymanage.bo.SalaryInformationBO;
 import com.bjike.goddess.salarymanage.dto.SalaryBasicDTO;
 import com.bjike.goddess.salarymanage.entity.SalaryBasic;
 import com.bjike.goddess.salarymanage.excel.SalaryBasicSetExcel;
@@ -57,6 +59,9 @@ public class SalaryBasicAction extends BaseFileAction {
 
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 模块设置导航权限
@@ -141,9 +146,12 @@ public class SalaryBasicAction extends BaseFileAction {
     @GetMapping("v1/findArea")
     public Result findArea() throws ActException{
         try{
-            List<AreaBO> list = salaryBasicAPI.findArea();
-            List<AreaVO> areaVOS = BeanTransform.copyProperties(list,AreaVO.class);
-            return ActResult.initialize(areaVOS);
+            List<AreaVO> voList = new ArrayList<>(0);
+            if(moduleAPI.isCheck("organize")) {
+                List<AreaBO> list = salaryBasicAPI.findArea();
+                voList = BeanTransform.copyProperties(list, AreaVO.class);
+            }
+            return ActResult.initialize(voList);
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }
@@ -159,9 +167,12 @@ public class SalaryBasicAction extends BaseFileAction {
     @GetMapping("v1/thawOpinion/find")
     public Result findThawOpinion() throws ActException{
         try{
-            List<OpinionBO> list = salaryBasicAPI.findThawOpinion();
-            List<OpinionVO> operateVOS = BeanTransform.copyProperties(list,OpinionVO.class);
-            return ActResult.initialize(operateVOS);
+            List<OpinionVO> voList = new ArrayList<>(0);
+            if(moduleAPI.isCheck("organize")){
+                List<OpinionBO> list = salaryBasicAPI.findThawOpinion();
+                voList = BeanTransform.copyProperties(list,OpinionVO.class);
+            }
+            return ActResult.initialize(voList);
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }
@@ -177,9 +188,13 @@ public class SalaryBasicAction extends BaseFileAction {
     @GetMapping("v1/find/status")
     public Result findStatus() throws ActException{
         try {
-           List<HierarchyBO> list =  salaryBasicAPI.findStatus();
-           List<HierarchyVO> hierarchyVOS = BeanTransform.copyProperties(list,HierarchyVO.class);
-           return ActResult.initialize(hierarchyVOS);
+            List<HierarchyVO> voList = new ArrayList<>(0);
+            if(moduleAPI.isCheck("organize")){
+                List<HierarchyBO> list =  salaryBasicAPI.findStatus();
+                voList = BeanTransform.copyProperties(list,HierarchyVO.class);
+
+            }
+           return ActResult.initialize(voList);
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }
@@ -242,7 +257,7 @@ public class SalaryBasicAction extends BaseFileAction {
     }
 
     /**
-     * 查询所有薪资基本资料
+     * 查询基本工资
      * @param dto
      * @return class SalaryBasicVO
      * @throws ActException
@@ -252,9 +267,9 @@ public class SalaryBasicAction extends BaseFileAction {
     @GetMapping("v1/find/salary")
     public Result findSalary(SalaryBasicDTO dto) throws ActException{
         try{
-            List<SalaryBasicBO> list = salaryBasicAPI.findSalaryBasic();
-            List<SalaryBasicVO> voList = BeanTransform.copyProperties(list,SalaryBasicVO.class);
-            return ActResult.initialize(voList);
+            SalaryBasicBO basicBO = salaryBasicAPI.findSalary(dto);
+            SalaryBasicVO basicVO = BeanTransform.copyProperties(basicBO,SalaryBasicVO.class);
+            return ActResult.initialize(basicVO);
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }
@@ -328,7 +343,7 @@ public class SalaryBasicAction extends BaseFileAction {
         try {
             List<InputStream> inputStreams = super.getInputStreams(request);
             InputStream is = inputStreams.get(1);
-            Excel excel = new Excel(0,2);
+            Excel excel = new Excel(0,1);
             List<SalaryBasicSetExcel> tos = ExcelUtil.excelToClazz(is, SalaryBasicSetExcel.class, excel);
             List<SalaryBasicTO> toList = BeanTransform.copyProperties(tos,SalaryBasicTO.class);
             salaryBasicAPI.leadExcel(toList);
@@ -365,7 +380,7 @@ public class SalaryBasicAction extends BaseFileAction {
      * @des 下载模板项目签订与立项
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @GetMapping("v1/templateExport")
     public Result templateExport(HttpServletResponse response) throws ActException {
         try {
@@ -391,6 +406,24 @@ public class SalaryBasicAction extends BaseFileAction {
         try{
             Long count = salaryBasicAPI.count(dto);
             return ActResult.initialize(count);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id来查询单个基本资料
+     * @param id
+     * @return class SalaryBasicVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/one/{id}")
+    public Result findOne(@PathVariable String id) throws ActException{
+        try {
+            SalaryBasicBO bo = salaryBasicAPI.findOne(id);
+            SalaryBasicVO vo = BeanTransform.copyProperties(bo,SalaryBasicVO.class);
+            return ActResult.initialize(vo);
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }

@@ -1,5 +1,6 @@
 package com.bjike.goddess.rentutilitiespay.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -274,6 +275,14 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
         checkSeeIdentity();
         stayUtilitiesDTO.getSorts().add("createTime=desc");
         List<StayUtilities> stayUtilities = super.findByPage(stayUtilitiesDTO);
+        for (StayUtilities s : stayUtilities) {
+            StayUtilities s1 = count(s);
+            s.setWaterStaffPay(s1.getWaterStaffPay());
+            s.setEnergyStaffPay(s1.getEnergyStaffPay());
+            s.setGasStaffPay(s1.getGasStaffPay());
+            s.setStaffPayCollect(s1.getStaffPayCollect());
+            super.update(s);
+        }
         List<StayUtilitiesBO> stayUtilitiesBOS = BeanTransform.copyProperties(stayUtilities, StayUtilitiesBO.class);
         return stayUtilitiesBOS;
     }
@@ -283,7 +292,6 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
     public StayUtilitiesBO insertStayUtilities(StayUtilitiesTO stayUtilitiesTO) throws SerException {
         checkAddIdentity();
         StayUtilities stayUtilities = BeanTransform.copyProperties(stayUtilitiesTO, StayUtilities.class, true, "projectName");
-        stayUtilities = count(stayUtilities);
         stayUtilities.setProjectName(StringUtils.join(stayUtilitiesTO.getProjectName(), ","));
         super.save(stayUtilities);
         return BeanTransform.copyProperties(stayUtilities, StayUtilitiesBO.class);
@@ -296,7 +304,6 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
         StayUtilities stayUtilities = super.findById(stayUtilitiesTO.getId());
         BeanTransform.copyProperties(stayUtilitiesTO, stayUtilities, true, "projectName");
         stayUtilities.setModifyTime(LocalDateTime.now());
-        stayUtilities = count(stayUtilities);
         stayUtilities.setProjectName(StringUtils.join(stayUtilitiesTO.getProjectName(), ","));
         super.update(stayUtilities);
         return BeanTransform.copyProperties(stayUtilities, StayUtilitiesBO.class);
@@ -310,6 +317,9 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
         String[] fields = new String[]{"sumDays", "address"};
         String sql = " select cast(sum(stayDay)as SIGNED )as sumDays ,address from rentutilitiespay_stayutilities group by address ";
         List<StayUtilities> sum = super.findBySql(sql, StayUtilities.class, fields);
+        if (sum == null || sum.isEmpty()) {
+            throw new SerException("不存在");
+        }
         Integer sumDays = sum.get(0).getSumDays();
 
         //个人员工住宿天数
@@ -333,7 +343,6 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
         Double staffPayCollect = waterStaffPay + energyStaffPay + gasStaffPay;
         stayUtilities.setStaffPayCollect(staffPayCollect);
         return stayUtilities;
-
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -390,13 +399,14 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
 
         return nameList;
     }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public StayUtilitiesBO employeeVerify(StayUtilitiesTO to) throws SerException {
         checkResAuditIdentity();
         if (StringUtils.isNotBlank(to.getId())) {
             StayUtilities stayUtilities = super.findById(to.getId());
-            BeanTransform.copyProperties(to,stayUtilities,true,"projectName");
+            BeanTransform.copyProperties(to, stayUtilities, true, "projectName");
             //是否需要修改
             if (stayUtilities.getStaffVerify().equals(StaffVerify.ERROR)) {
                 stayUtilities.setComprehensiveVerifySituation(true);
@@ -410,19 +420,27 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
             throw new SerException("id不能为空");
         }
     }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public StayUtilitiesBO financeAudit(StayUtilitiesTO to) throws SerException {
         checkFinAuditIdentity();
-        if(StringUtils.isNotBlank(to.getId())){
+        if (StringUtils.isNotBlank(to.getId())) {
             StayUtilities stayUtilities = super.findById(to.getId());
-            BeanTransform.copyProperties(to, stayUtilities, true,"projectName");
+            BeanTransform.copyProperties(to, stayUtilities, true, "projectName");
             stayUtilities.setDeductionSituation(to.getDeductionSituation());
             super.update(stayUtilities);
             return BeanTransform.copyProperties(stayUtilities, StayUtilitiesBO.class);
-        }else {
+        } else {
             throw new SerException("id不能为空");
         }
     }
 
+    @Override
+    public StayUtilitiesBO findStay(String time, String name) throws SerException {
+//        StayUtilitiesDTO dto = new StayUtilitiesDTO();
+//        dto.getConditions().add(Restrict.eq("Lo"))
+//        StayUtilities stayUtilities = super.find
+        return null;
+    }
 }

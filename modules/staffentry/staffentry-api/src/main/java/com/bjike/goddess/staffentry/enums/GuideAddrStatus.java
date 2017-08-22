@@ -2,6 +2,7 @@ package com.bjike.goddess.staffentry.enums;
 
 /**
  * 导航权限
+ *
  * @Author: [lijuntao]
  * @Date: [2017-06-20 12:53]
  * @Description: [ ]
@@ -9,6 +10,7 @@ package com.bjike.goddess.staffentry.enums;
  * @Copy: [com.bjike]
  */
 public enum GuideAddrStatus {
+
     /**
      * 列表
      */
@@ -39,9 +41,9 @@ public enum GuideAddrStatus {
      */
     EXPORT(6),
     /**
-     * 生成记账凭证
+     * 附件
      */
-    GENERATE(7),
+    SEEFILE(7),
     /**
      * 查看
      */

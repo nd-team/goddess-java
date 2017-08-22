@@ -1,5 +1,6 @@
 package com.bjike.goddess.individualvision.action.individualvision;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -15,7 +16,10 @@ import com.bjike.goddess.individualvision.excel.SonPermissionObject;
 import com.bjike.goddess.individualvision.to.GuidePermissionTO;
 import com.bjike.goddess.individualvision.to.IndividualVisionPlanTO;
 import com.bjike.goddess.individualvision.vo.IndividualVisionPlanVO;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -40,6 +44,10 @@ import java.util.List;
 public class IndividualVisionPlanAction {
     @Autowired
     private IndividualVisionPlanAPI individualVisionPlanAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
 
@@ -235,6 +243,24 @@ public class IndividualVisionPlanAction {
         try {
             IndividualVisionPlanBO individualVisionPlanBO = individualVisionPlanAPI.auditIndividualVisionPlan(individualVisionPlanTO);
             return ActResult.initialize(BeanTransform.copyProperties(individualVisionPlanBO, IndividualVisionPlanVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 查询未冻结部门项目组详细信息
+     *
+     * @return class DepartmentDetailVO
+     * @version v1
+     */
+    @GetMapping("v1/department")
+    public Result department(HttpServletRequest request) throws ActException {
+        try {
+            List<DepartmentDetailBO> boList = new ArrayList<>();
+            if(moduleAPI.isCheck("organize")){
+                boList = departmentDetailAPI.findStatus();
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(boList, DepartmentDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

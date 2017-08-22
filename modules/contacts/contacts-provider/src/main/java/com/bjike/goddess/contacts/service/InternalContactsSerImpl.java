@@ -1,5 +1,6 @@
 package com.bjike.goddess.contacts.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -28,6 +29,7 @@ import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
@@ -41,6 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -77,6 +80,8 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
 
     @Autowired
     private EntryBasicInfoAPI entryBasicInfoAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     private static final String foot = "（正确可忽略这个邮件，否则请发邮件到综合资源部。）";
     private static final String title = "关于通讯录信息正确性";
@@ -114,28 +119,35 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         EntryBasicInfoDTO entryBasicInfoDTO = new EntryBasicInfoDTO();
         entryBasicInfoDTO.getConditions().add(Restrict.eq(ID, entity.getUserId()));
         String userToken = RpcTransmit.getUserToken();
-        List<EntryBasicInfoBO> user = entryBasicInfoAPI.listEntryBasicInfo(entryBasicInfoDTO);
-        RpcTransmit.transmitUserToken(userToken);
-
-        if (null != user) {
-            if (0 != user.size()) {
-                bo.setUsername(user.get(0).getName());
-                bo.setNumber(user.get(0).getEmployeeID());
+        List<UserBO> userBOList = userAPI.findByCis(userDTO);
+//        List<EntryBasicInfoBO> user = entryBasicInfoAPI.listEntryBasicInfo(entryBasicInfoDTO);
+        if (!CollectionUtils.isEmpty(userBOList)) {
+            UserBO user = userBOList.get(0);
+//            UserBO user = userAPI.findByUsername(entity.getUsername());
+            RpcTransmit.transmitUserToken(userToken);
+            if (moduleAPI.isCheck("organize")) {
+                PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
+                if (null != detailBO)
+                    bo.setUsername(detailBO.getUsername());
+                bo.setNumber(detailBO.getEmployeesNumber());
                 userToken = RpcTransmit.getUserToken();
-                PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.get(0).getId());
                 RpcTransmit.transmitUserToken(userToken);
-                bo.setArea(user.get(0).getArea());
-                bo.setPosition(user.get(0).getPosition());
-                bo.setDepartment(user.get(0).getDepartment());
-//                if (null != detailBO)
-//                    for (String id : detailBO.getPositionIds().split(",")) {
-//                        PositionDetailBO position = positionDetailAPI.findBOById(id);
-//                        bo.setPosition(bo.getPosition() + "," + position.getPosition());
-//                        bo.setDepartment(bo.getDepartment() + "," + position.getDepartmentName());
-//                        bo.setArea(bo.getArea() + "," + position.getArea());
-//                    }
+//                        bo.setArea(user.get(0).getArea());
+//                        bo.setPosition(user.get(0).getPosition());
+//                        bo.setDepartment(user.get(0).getDepartment());
+                for (String id : detailBO.getPositionIds().split(",")) {
+                    PositionDetailBO position = positionDetailAPI.findBOById(id);
+//                    bo.setPosition(bo.getPosition() + "," + position.getPosition());
+//                    bo.setDepartment(bo.getDepartment() + "," + position.getDepartmentName());
+//                    bo.setArea(bo.getArea() + "," + position.getArea());
+                    bo.setPosition(position.getPosition());
+                    bo.setDepartment(position.getDepartmentName());
+                    bo.setArea(position.getArea());
+                    break;
+                }
             }
         }
+
         return bo;
     }
 
@@ -417,7 +429,7 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
     public InternalContactsBO importExcel(List<InternalContactsTO> internalContactsTO) throws SerException {
 
         for (InternalContactsTO to : internalContactsTO) {
-            if(StringUtils.isNotBlank(to.getEmail()) && !Validator.isEmail(to.getEmail())){
+            if (StringUtils.isNotBlank(to.getEmail()) && !Validator.isEmail(to.getEmail())) {
                 throw new SerException("输入的邮箱格式不正确");
             }
             InternalContacts entity = BeanTransform.copyProperties(to, InternalContacts.class);
@@ -431,7 +443,7 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
             entryBasicInfoDTO.getConditions().add(Restrict.eq("name", entity.getUserId()));
             String userToken = RpcTransmit.getUserToken();
             List<EntryBasicInfoBO> user = entryBasicInfoAPI.listEntryBasicInfo(entryBasicInfoDTO);
-            if(null == user || user.size() < 1){
+            if (null == user || user.size() < 1) {
                 throw new SerException("导入的员工应该为已入职员工");
             }
         }

@@ -20,6 +20,9 @@ public class EntryBasicInfoTO extends BaseTO {
     public interface TestAdd {
     }
 
+    public interface TestEmail {
+    }
+
     /**
      * 地区
      */
@@ -125,6 +128,7 @@ public class EntryBasicInfoTO extends BaseTO {
     /**
      * 邮件通知对象邮箱
      */
+    @NotNull(groups = {EntryBasicInfoTO.TestEmail.class}, message = "邮件通知对象邮箱不能为空")
     private String[] emails;
 
     /**
