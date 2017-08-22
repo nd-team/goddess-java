@@ -28,7 +28,7 @@ public class RedisConfiguration {
     public JedisPool jedisPool(Environment env) throws InterruptedException{
         JedisPoolConfig config = new JedisPoolConfig();
         String host = env.getProperty("redis.host");
-        int post = Integer.parseInt(env.getProperty("redis.post"));
+        int post = Integer.parseInt(env.getProperty("redis.port"));
         int maxTotal = Integer.parseInt(env.getProperty("redis.pool.maxTotal"));
         int maxIdle = Integer.parseInt(env.getProperty("redis.pool.maxIdle"));
         int maxWaitMillis = Integer.parseInt(env.getProperty("redis.pool.maxWaitMillis"));
