@@ -1,6 +1,7 @@
 package com.bjike.goddess.carinfo.action.carinfo;
 
 import com.bjike.goddess.carinfo.api.DriverRecruitAPI;
+import com.bjike.goddess.carinfo.bo.DriverRecruitBO;
 import com.bjike.goddess.carinfo.dto.DriverRecruitDTO;
 import com.bjike.goddess.carinfo.to.DriverRecruitTO;
 import com.bjike.goddess.carinfo.to.GuidePermissionTO;
@@ -156,7 +157,8 @@ public class DriverRecruitAct {
     @GetMapping("v1/list")
     public Result pageList(DriverRecruitDTO dto, HttpServletRequest request) throws ActException {
         try {
-            List<DriverRecruitVO> voList = BeanTransform.copyProperties(driverRecruitAPI.pageList(dto), DriverRecruitVO.class, request);
+            List<DriverRecruitBO> boList = driverRecruitAPI.pageList(dto);
+            List<DriverRecruitVO> voList = BeanTransform.copyProperties(boList, DriverRecruitVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

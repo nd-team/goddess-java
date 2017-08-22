@@ -1,5 +1,6 @@
 package com.bjike.goddess.organize.action.organize;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -35,6 +36,8 @@ public class ModuleTypeAct {
 
     @Autowired
     private ModuleTypeAPI moduleTypeAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 保存
@@ -209,5 +212,22 @@ public class ModuleTypeAct {
             throw new ActException(e.getMessage());
         }
     }
+
+//    /**
+//     * 查询所有的模块
+//     *
+//     * @version v1
+//     */
+//    @GetMapping("v1/getModule")
+//    public Result getModule(HttpServletRequest request) throws ActException {
+//        try {
+//            if(moduleAPI.isCheck("")){}
+//
+//            return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.findThawOpinion(), OpinionVO.class, request));
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+
 
 }

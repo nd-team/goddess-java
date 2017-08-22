@@ -338,4 +338,14 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
         }
         return null;
     }
+
+    @Override
+    public ComputerAssistBO findComputer(String startTime, String endTime) throws SerException {
+        ComputerAssistDTO dto = new ComputerAssistDTO();
+        dto.getConditions().add(Restrict.eq("salaryStartTime",startTime));
+        dto.getConditions().add(Restrict.eq("salaryEndTime",endTime));
+        ComputerAssist computerAssist = super.findOne(dto);
+        ComputerAssistBO bo = BeanTransform.copyProperties(computerAssist,ComputerAssistBO.class,false);
+        return bo;
+    }
 }

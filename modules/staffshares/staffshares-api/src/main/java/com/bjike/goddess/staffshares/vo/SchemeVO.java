@@ -3,8 +3,6 @@ package com.bjike.goddess.staffshares.vo;
 import com.bjike.goddess.staffshares.enums.Status;
 import com.bjike.goddess.staffshares.enums.Type;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * 员工持股管理表现层对象
@@ -104,7 +102,7 @@ public class SchemeVO {
     /**
      * 发行时间
      */
-    private LocalDate time;
+    private String time;
 
     /**
      * 出售方式
@@ -119,7 +117,7 @@ public class SchemeVO {
     /**
      * 分红核算时间
      */
-    private LocalDate accountingTime;
+    private String accountingTime;
 
     /**
      * 备注
@@ -129,7 +127,7 @@ public class SchemeVO {
     /**
      * 方案制定时间
      */
-    private LocalDateTime programmeTime;
+    private String programmeTime;
 
     /**
      * 方案制定人
@@ -288,11 +286,11 @@ public class SchemeVO {
         this.mode = mode;
     }
 
-    public LocalDate getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(LocalDate time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
@@ -312,11 +310,11 @@ public class SchemeVO {
         this.standards = standards;
     }
 
-    public LocalDate getAccountingTime() {
+    public String getAccountingTime() {
         return accountingTime;
     }
 
-    public void setAccountingTime(LocalDate accountingTime) {
+    public void setAccountingTime(String accountingTime) {
         this.accountingTime = accountingTime;
     }
 
@@ -328,11 +326,11 @@ public class SchemeVO {
         this.remark = remark;
     }
 
-    public LocalDateTime getProgrammeTime() {
+    public String getProgrammeTime() {
         return programmeTime;
     }
 
-    public void setProgrammeTime(LocalDateTime programmeTime) {
+    public void setProgrammeTime(String programmeTime) {
         this.programmeTime = programmeTime;
     }
 

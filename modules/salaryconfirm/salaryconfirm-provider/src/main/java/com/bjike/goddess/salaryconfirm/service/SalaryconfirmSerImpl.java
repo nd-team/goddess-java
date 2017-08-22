@@ -696,4 +696,15 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
         DecimalFormat df = new DecimalFormat("#.00");
         bo.setGrowUpRate(df.format(growUpRate) + "%");
     }
+
+    @Override
+    public SalaryconfirmBO findSalary(String salaryStart, String salaryEnd, String name) throws SerException {
+        SalaryconfirmDTO dto = new SalaryconfirmDTO();
+        dto.getConditions().add(Restrict.eq("salaryStart",salaryStart));
+        dto.getConditions().add(Restrict.eq("salaryEnd",salaryEnd));
+        dto.getConditions().add(Restrict.eq("name",name));
+        Salaryconfirm salaryconfirm = super.findOne(dto);
+        SalaryconfirmBO bo = BeanTransform.copyProperties(salaryconfirm,SalaryconfirmBO.class,false);
+        return bo;
+    }
 }

@@ -43,6 +43,7 @@
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.contacts.api.InternalContactsAPI" id="internalContactsApiImpl"/>
-	<!--<dubbo:reference validation="true"  interface="com.bjike.goddess.quartz.api.ScheduleJobAPI" id="scheduleJobApiImpl"/>-->
-	<!--<dubbo:reference validation="true"  interface="com.bjike.goddess.quartz.api.ScheduleJobGroupAPI" id="scheduleJobGroupApiImpl"/>-->
+	<dubbo:reference validation="true" interface="com.bjike.goddess.assemble.api.ModuleAPI" id="moduleApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.archive.api.StaffRecordsAPI" id="staffRecordsApiImpl"/>
+
 </beans>

@@ -119,4 +119,10 @@ public interface ComputerAssistSer extends Ser<ComputerAssist, ComputerAssistDTO
     default EntryBasicInfoBO getUserByName(ComputerAssistDTO computerAssistDTO) throws SerException { return null;}
 
 
+    /**
+     * 根据计薪周期开始时间和结束时间获取电脑补助信息
+     */
+    ComputerAssistBO findComputer(String startTime,String endTime) throws SerException;
+
+
 }

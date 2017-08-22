@@ -176,6 +176,21 @@ public class FieldDockAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 获取项目名称
+     *
+     * @des 获取项目名称集合
+     * @version v1
+     */
+    @GetMapping("v1/projectName")
+    public Result projectName() throws ActException {
+        try {
+            List<String> projectNameList = fieldDockAPI.getProjectName();
+            return ActResult.initialize(projectNameList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 导入Excel
@@ -214,7 +229,7 @@ public class FieldDockAction extends BaseFileAction {
      * @des 导出字段对接
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @GetMapping("v1/export")
     public Result exportReport(@Validated(FieldDockDTO.TestExport.class) FieldDockDTO dto, HttpServletResponse response) throws ActException {
         try {

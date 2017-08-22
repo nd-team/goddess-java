@@ -18,18 +18,17 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public class SkillGradingBTO extends BaseTO {
-
     /**
      * 技能等级
      */
     @NotBlank(message = "技能等级不能为空",groups = {ADD.class, EDIT.class})
     private String skillLevel;
-
     /**
-     * 档次
+     * 转正后间隔时间
      */
-    @NotNull(message = "档次不能为空",groups = {ADD.class, EDIT.class})
-    private Integer grade;
+    @NotNull(message = "转正后间隔时间不能为空",groups = {ADD.class, EDIT.class})
+    private Integer intervalAfterTransfer;
+
     /**
      * 技能等级C
      */
@@ -43,12 +42,12 @@ public class SkillGradingBTO extends BaseTO {
         this.skillLevel = skillLevel;
     }
 
-    public Integer getGrade() {
-        return grade;
+    public Integer getIntervalAfterTransfer() {
+        return intervalAfterTransfer;
     }
 
-    public void setGrade(Integer grade) {
-        this.grade = grade;
+    public void setIntervalAfterTransfer(Integer intervalAfterTransfer) {
+        this.intervalAfterTransfer = intervalAfterTransfer;
     }
 
     public List<SkillGradingCTO> getSkillGradingCTOS() {

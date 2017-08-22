@@ -83,9 +83,33 @@ public class DebtAct {
     public Result list(@Validated(DebtDTO.A.class) DebtDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             List<DebtBO> list = debtAPI.list(dto);
-            List<DebtVO> vos=new ArrayList<>();
-            for (DebtBO bo:list){
-                DebtVO vo=BeanTransform.copyProperties(bo, DebtVO.class, request);
+            List<DebtVO> vos = new ArrayList<>();
+            for (DebtBO bo : list) {
+                DebtVO vo = BeanTransform.copyProperties(bo, DebtVO.class, request);
+                vo.setDebtId(bo.getId());
+                vos.add(vo);
+            }
+            return ActResult.initialize(vos);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 编辑列表
+     *
+     * @param dto 负债数据传输
+     * @return class DebtVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/list1")
+    public Result list1(DebtDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            List<DebtBO> list = debtAPI.list1(dto);
+            List<DebtVO> vos = new ArrayList<>();
+            for (DebtBO bo : list) {
+                DebtVO vo = BeanTransform.copyProperties(bo, DebtVO.class, request);
                 vo.setDebtId(bo.getId());
                 vos.add(vo);
             }
@@ -107,7 +131,7 @@ public class DebtAct {
     public Result save(@Validated(ADD.class) DebtTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             DebtBO bo = debtAPI.save(to);
-            DebtVO vo=BeanTransform.copyProperties(bo, DebtVO.class, request);
+            DebtVO vo = BeanTransform.copyProperties(bo, DebtVO.class, request);
             vo.setDebtId(bo.getId());
             return ActResult.initialize(vo);
         } catch (SerException e) {
@@ -163,8 +187,8 @@ public class DebtAct {
      */
     @GetMapping("v1/lookFormula/{id}")
     public Result lookFormula(@PathVariable String id, @Validated(DebtDTO.A.class) DebtDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
-        FormulaDTO formulaDTO=new FormulaDTO();
-        BeanUtils.copyProperties(dto,formulaDTO);
+        FormulaDTO formulaDTO = new FormulaDTO();
+        BeanUtils.copyProperties(dto, formulaDTO);
         request.getSession().setAttribute("id", id);
         try {
             List<FormulaBO> list = formulaAPI.findByFid(id, formulaDTO);
@@ -186,7 +210,7 @@ public class DebtAct {
     public Result debt(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             DebtBO bo = debtAPI.findByID(id);
-            DebtVO vo=BeanTransform.copyProperties(bo, DebtVO.class, request);
+            DebtVO vo = BeanTransform.copyProperties(bo, DebtVO.class, request);
             vo.setDebtId(bo.getId());
             return ActResult.initialize(vo);
         } catch (SerException e) {

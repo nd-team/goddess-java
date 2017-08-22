@@ -1,5 +1,7 @@
 package com.bjike.goddess.salarymanage.api;
 
+import com.bjike.goddess.archive.bo.StaffRecords1BO;
+import com.bjike.goddess.archive.bo.StaffRecordsBO;
 import com.bjike.goddess.assistance.bo.AgeAssistBO;
 import com.bjike.goddess.assistance.bo.ComputerAssistBO;
 import com.bjike.goddess.assistance.bo.HotAssistBO;
@@ -12,7 +14,10 @@ import com.bjike.goddess.assistance.entity.AgeAssist;
 import com.bjike.goddess.assistance.entity.HotAssist;
 import com.bjike.goddess.common.api.exception.SerException;
 
+import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.managementpromotion.entity.LevelShow;
+import com.bjike.goddess.managepromotion.bo.OverviewSkillLevelBO;
+import com.bjike.goddess.salaryconfirm.bo.SalaryconfirmBO;
 import com.bjike.goddess.salarymanage.bo.SalaryInformationBO;
 import com.bjike.goddess.salarymanage.dto.SalaryInformationDTO;
 import com.bjike.goddess.salarymanage.entity.SalaryInformation;
@@ -23,6 +28,7 @@ import com.bjike.goddess.salarymanage.dto.SalaryInformationDTO;
 import com.bjike.goddess.salarymanage.to.ExportSalaryInformationTO;
 
 import com.bjike.goddess.salarymanage.to.SalaryInformationTO;
+import com.bjike.goddess.secure.bo.AttachedBO;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 
 import java.util.List;
@@ -156,27 +162,62 @@ public interface SalaryInformationAPI {
      */
     Long count(SalaryInformationDTO dto) throws SerException;
 
-//    /**
-//     * 查询高温补助
-//     *
-//     * @throws SerException
-//     */
-//    List<HotAssistBO> findHotAssist(SalaryInformationDTO dto) throws SerException;
-//
-//    /**
-//     * 查询住宿补助
-//     *
-//     * @throws SerException
-//     */
-//    List<HouseAssistBO> findHouseAssist(SalaryInformationDTO dto) throws SerException;
-//
-//    /**
-//     * 查看电脑补助
-//     */
-//    List<ComputerAssistBO> findComputerAssist(SalaryInformationDTO dto) throws SerException;
-//
-//    /**
-//     * 查看工龄补助
-//     */
-//    List<AgeAssistBO> findAgeAssist(SalaryInformationDTO dto) throws SerException;
+    /**
+     * 根据id来查询单个薪资资料
+     * @param id
+     * @throws SerException
+     */
+    SalaryInformationBO findOne(String id) throws SerException;
+
+    /**
+     * 根据计薪周期查询高温补助
+     *
+     * @throws SerException
+     */
+    HotAssistBO findHotAssist(SalaryInformationDTO dto) throws SerException;
+
+    /**
+     * 根据计薪周期查询住宿补助
+     *
+     * @throws SerException
+     */
+    HouseAssistBO findHouseAssist(SalaryInformationDTO dto) throws SerException;
+
+    /**
+     * 根据计薪周期查看电脑补助
+     */
+    ComputerAssistBO findComputerAssist(SalaryInformationDTO dto) throws SerException;
+
+    /**
+     * 根据计薪周期查看工龄补助
+     */
+    AgeAssistBO findAgeAssist(SalaryInformationDTO dto) throws SerException;
+
+    /**
+     * 查询入职时间和离职时间和身份证号码和银行卡号
+     * @return
+     * @throws SerException
+     */
+    StaffRecordsBO findStaff(String employeeNumber) throws SerException;
+
+    /**
+     * 根据员工编号id查找转正时间
+     */
+    String findPositiveDate(String employeeId) throws SerException;
+
+    /**
+     * 根据员工姓名获取技能等级获取时间
+     */
+    OverviewSkillLevelBO findSkill(String employeeName) throws SerException;
+
+    /**
+     * 根据计薪周期和员工姓名获取旷工扣款和事病假扣款
+     */
+    SalaryconfirmBO findSalaryConfirm(SalaryInformationDTO dto) throws SerException;
+
+    /**
+     * 根据员工姓名查看扣社保情况
+     */
+    AttachedBO findAttached(SalaryInformationDTO dto) throws SerException;
+
 }

@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -411,6 +412,17 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
 
 
         return collectList;
+    }
+
+    @Override
+    public List<String> getProblemHandler() throws SerException {
+        List<ProblemHandlingResult> problemHandlingResults = super.findAll();
+        if (!CollectionUtils.isEmpty(problemHandlingResults)) {
+            List<String> list = problemHandlingResults.stream().map(ProblemHandlingResult::getProblemHandler).distinct().collect(Collectors.toList());
+            return list;
+        } else {
+            return null;
+        }
     }
 
 

@@ -29,6 +29,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 平台分类业务实现
@@ -266,6 +267,16 @@ public class PlatformClassifySerImpl extends ServiceImpl<PlatformClassify, Platf
         } else {
             throw new SerException("id不能为空");
         }
+    }
+    @Override
+    public List<String> getPlatformName() throws SerException {
+        String[] fields = new String[]{"platformName"};
+        List<PlatformClassifyBO> platformClassifyBOS = super.findBySql("select platformName from system_platformclassify group by platformName order by platformName asc ", PlatformClassifyBO.class, fields);
+
+        List<String> platformNameList = platformClassifyBOS.stream().map(PlatformClassifyBO::getPlatformName)
+                .filter(platformName -> (platformName != null || !"".equals(platformName.trim()))).distinct().collect(Collectors.toList());
+
+        return platformNameList;
     }
 
     @Override

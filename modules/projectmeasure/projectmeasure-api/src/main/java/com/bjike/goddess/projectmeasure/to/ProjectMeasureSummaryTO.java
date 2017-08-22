@@ -77,7 +77,7 @@ public class ProjectMeasureSummaryTO extends BaseTO {
     /**
      * 地区数组
      */
-    @NotNull(groups = {TestCollect.class, ADD.class, EDIT.class}, message = "汇总所需地区不能为空")
+    @NotNull(groups = {ProjectMeasureSummaryTO.TestCollect.class, ADD.class, EDIT.class}, message = "汇总所需地区不能为空")
     private String[] areas;
 
     public String[] getAreas() {

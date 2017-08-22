@@ -4,6 +4,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.dispatchcar.bo.LeaseCarCostBO;
 import com.bjike.goddess.dispatchcar.dto.LeaseCarCostDTO;
 import com.bjike.goddess.dispatchcar.to.LeaseCarCostTO;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 
 import java.util.List;
 
@@ -58,4 +60,14 @@ public interface LeaseCarCostAPI {
     Long count(LeaseCarCostDTO dto) throws SerException;
 
     LeaseCarCostBO findById(String id) throws SerException ;
+
+    /**
+     * 查出所有未冻结的部门
+     */
+    List<OpinionBO> findDeapartment() throws SerException;
+
+    /**
+     * 查询所有地区
+     */
+    List<AreaBO> findArea() throws SerException;
 }

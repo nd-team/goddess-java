@@ -5,6 +5,7 @@ import com.bjike.goddess.moneyside.bo.CallInfoBO;
 import com.bjike.goddess.moneyside.dto.CallInfoDTO;
 import com.bjike.goddess.moneyside.service.CallInfoSer;
 import com.bjike.goddess.moneyside.to.CallInfoTO;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,15 @@ import java.util.Set;
 public class CallInfoApiImpl implements CallInfoAPI {
     @Autowired
     private CallInfoSer callInfoSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return callInfoSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return callInfoSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countCallInfo(CallInfoDTO callInfoDTO) throws SerException {

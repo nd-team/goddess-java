@@ -6,6 +6,7 @@ import com.bjike.goddess.moneyside.bo.AccrualAllotBO;
 import com.bjike.goddess.moneyside.dto.AccrualAllotDTO;
 import com.bjike.goddess.moneyside.entity.AccrualAllot;
 import com.bjike.goddess.moneyside.to.AccrualAllotTO;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,7 +20,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface AccrualAllotSer extends Ser<AccrualAllot, AccrualAllotDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
 
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 权责分配列表总条数
      */

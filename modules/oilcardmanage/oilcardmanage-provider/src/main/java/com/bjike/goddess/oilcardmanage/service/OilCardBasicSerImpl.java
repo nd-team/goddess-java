@@ -8,8 +8,13 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.oilcardmanage.api.OilCardReceiveAPI;
 import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
+import com.bjike.goddess.oilcardmanage.bo.OilCardRechargeBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardBasicDTO;
+import com.bjike.goddess.oilcardmanage.dto.OilCardReceiveDTO;
+import com.bjike.goddess.oilcardmanage.dto.OilCardRechargeDTO;
 import com.bjike.goddess.oilcardmanage.entity.OilCardBasic;
+import com.bjike.goddess.oilcardmanage.entity.OilCardReceive;
+import com.bjike.goddess.oilcardmanage.entity.OilCardRecharge;
 import com.bjike.goddess.oilcardmanage.enums.GuideAddrStatus;
 import com.bjike.goddess.oilcardmanage.enums.OilCardStatus;
 import com.bjike.goddess.oilcardmanage.excel.SonPermissionObject;
@@ -50,6 +55,8 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicD
 
     @Autowired
     private OilCardRechargeSer oilCardRechargeSer;
+
+
 
     /**
      * 核对查看权限（层级别）
@@ -342,5 +349,34 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicD
         List<OilCardBasic> list = super.findByCis(dto);
         List<OilCardBasicBO> boList = BeanTransform.copyProperties(list,OilCardBasicBO.class);
         return boList;
+    }
+
+    @Override
+    public void deleteOilCardBasic(String id) throws SerException {
+        if(id != null) {
+            OilCardBasic basic = super.findById(id);
+            if(basic != null) {
+                OilCardRechargeDTO rechargeDTO = new OilCardRechargeDTO();
+                rechargeDTO.getConditions().add(Restrict.eq("oilCardBasic.id",id));
+                List<OilCardRecharge> oilCardRecharge = oilCardRechargeSer.findByCis(rechargeDTO);
+                if(oilCardRecharge !=null && !oilCardRecharge.isEmpty()){
+                    for(OilCardRecharge recharge : oilCardRecharge){
+                        oilCardRechargeSer.remove(recharge.getId());
+                    }
+                }
+                OilCardReceiveDTO receiveDTO = new OilCardReceiveDTO();
+                receiveDTO.getConditions().add(Restrict.eq("oilCardBasic.id",id));
+                List<OilCardReceive> oilCardReceives = oilCardReceiveSer.findByCis(receiveDTO);
+                if(oilCardReceives != null && !oilCardReceives.isEmpty()){
+                    for(OilCardReceive oilCardReceive : oilCardReceives){
+                        oilCardReceiveSer.remove(oilCardReceive.getId());
+                    }
+                }
+                super.remove(id);
+            }else{
+                throw new SerException("没有此油卡,无法删除");
+            }
+        }
+
     }
 }

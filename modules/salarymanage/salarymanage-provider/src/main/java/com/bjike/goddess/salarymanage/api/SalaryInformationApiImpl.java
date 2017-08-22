@@ -1,5 +1,7 @@
 package com.bjike.goddess.salarymanage.api;
 
+import com.bjike.goddess.archive.bo.StaffRecords1BO;
+import com.bjike.goddess.archive.bo.StaffRecordsBO;
 import com.bjike.goddess.assistance.bo.AgeAssistBO;
 import com.bjike.goddess.assistance.bo.ComputerAssistBO;
 import com.bjike.goddess.assistance.bo.HotAssistBO;
@@ -10,15 +12,19 @@ import com.bjike.goddess.assistance.dto.HotAssistDTO;
 import com.bjike.goddess.assistance.dto.HouseAssistDTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.managementpromotion.entity.LevelShow;
+import com.bjike.goddess.managepromotion.bo.OverviewSkillLevelBO;
+import com.bjike.goddess.salaryconfirm.bo.SalaryconfirmBO;
 import com.bjike.goddess.salarymanage.bo.SalaryBasicBO;
 import com.bjike.goddess.salarymanage.bo.SalaryInformationBO;
 import com.bjike.goddess.salarymanage.dto.SalaryBasicDTO;
 import com.bjike.goddess.salarymanage.dto.SalaryInformationDTO;
+import com.bjike.goddess.salarymanage.entity.SalaryInformation;
 import com.bjike.goddess.salarymanage.service.SalaryInformationSer;
 import com.bjike.goddess.salarymanage.to.ExportSalaryInformationTO;
 import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
 import com.bjike.goddess.salarymanage.to.SalaryBasicTO;
 import com.bjike.goddess.salarymanage.to.SalaryInformationTO;
+import com.bjike.goddess.secure.bo.AttachedBO;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -105,23 +111,54 @@ public class SalaryInformationApiImpl implements SalaryInformationAPI  {
         return salaryInformationSer.count(dto);
     }
 
-//    @Override
-//    public List<HotAssistBO> findHotAssist(SalaryInformationDTO dto) throws SerException {
-//        return salaryInformationSer.findHotAssist(dto);
-//    }
-//
-//    @Override
-//    public List<HouseAssistBO> findHouseAssist(SalaryInformationDTO dto) throws SerException {
-//        return salaryInformationSer.findHouseAssist(dto);
-//    }
-//
-//    @Override
-//    public List<ComputerAssistBO> findComputerAssist(SalaryInformationDTO dto) throws SerException {
-//        return salaryInformationSer.findComputerAssist(dto);
-//    }
-//
-//    @Override
-//    public List<AgeAssistBO> findAgeAssist(SalaryInformationDTO dto) throws SerException {
-//        return salaryInformationSer.findAgeAssist(dto);
-//    }
+    @Override
+    public HotAssistBO findHotAssist(SalaryInformationDTO dto) throws SerException {
+        return salaryInformationSer.findHotAssist(dto);
+    }
+
+    @Override
+    public HouseAssistBO findHouseAssist(SalaryInformationDTO dto) throws SerException {
+        return salaryInformationSer.findHouseAssist(dto);
+    }
+
+    @Override
+    public ComputerAssistBO findComputerAssist(SalaryInformationDTO dto) throws SerException {
+        return salaryInformationSer.findComputerAssist(dto);
+    }
+
+    @Override
+    public AgeAssistBO findAgeAssist(SalaryInformationDTO dto) throws SerException {
+        return salaryInformationSer.findAgeAssist(dto);
+    }
+
+
+    @Override
+    public SalaryInformationBO findOne(String id) throws SerException {
+        return salaryInformationSer.findOne(id);
+    }
+
+    @Override
+    public StaffRecordsBO findStaff(String employeeNumber) throws SerException {
+        return salaryInformationSer.findStaff(employeeNumber);
+    }
+
+    @Override
+    public String findPositiveDate(String employeeId) throws SerException {
+        return salaryInformationSer.findPositiveDate(employeeId);
+    }
+
+    @Override
+    public OverviewSkillLevelBO findSkill(String employeeName) throws SerException {
+        return salaryInformationSer.findSkill(employeeName);
+    }
+
+    @Override
+    public SalaryconfirmBO findSalaryConfirm(SalaryInformationDTO dto) throws SerException {
+        return salaryInformationSer.findSalaryConfirm(dto);
+    }
+
+    @Override
+    public AttachedBO findAttached(SalaryInformationDTO dto) throws SerException {
+        return salaryInformationSer.findAttached(dto);
+    }
 }

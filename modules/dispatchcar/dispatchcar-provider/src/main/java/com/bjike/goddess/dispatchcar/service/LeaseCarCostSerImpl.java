@@ -8,6 +8,9 @@ import com.bjike.goddess.dispatchcar.bo.LeaseCarCostBO;
 import com.bjike.goddess.dispatchcar.dto.LeaseCarCostDTO;
 import com.bjike.goddess.dispatchcar.entity.LeaseCarCost;
 import com.bjike.goddess.dispatchcar.to.LeaseCarCostTO;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.user.api.UserAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -31,6 +34,9 @@ public class LeaseCarCostSerImpl extends ServiceImpl<LeaseCarCost, LeaseCarCostD
 
     @Autowired
     private UserAPI userAPI;
+
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
 
     @Override
     public LeaseCarCostBO insertModel(LeaseCarCostTO to) throws SerException {
@@ -76,4 +82,15 @@ public class LeaseCarCostSerImpl extends ServiceImpl<LeaseCarCost, LeaseCarCostD
         return BeanTransform.copyProperties(list, LeaseCarCostBO.class);
     }
 
+    @Override
+    public List<OpinionBO> findDeapartment() throws SerException {
+        List<OpinionBO> boList = departmentDetailAPI.findThawOpinion();
+        return boList;
+    }
+
+    @Override
+    public List<AreaBO> findArea() throws SerException {
+        List<AreaBO> boList = departmentDetailAPI.findArea();
+        return boList;
+    }
 }

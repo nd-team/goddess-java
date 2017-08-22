@@ -206,4 +206,9 @@ public class RegularizationApiImpl implements RegularizationAPI {
     public Set<String> allNum() throws SerException {
         return regularizationSer.allNum();
     }
+
+    @Override
+    public String getTime(String userName) throws SerException {
+        return regularizationSer.getTime(userName);
+    }
 }

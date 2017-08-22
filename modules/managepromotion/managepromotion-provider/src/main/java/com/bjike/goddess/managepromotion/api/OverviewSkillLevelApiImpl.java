@@ -67,4 +67,9 @@ public class OverviewSkillLevelApiImpl implements OverviewSkillLevelAPI {
     public void removeOverviewSkillLevel(String id) throws SerException {
         overviewSkillLevelSer.removeOverviewSkillLevel(id);
     }
+
+    @Override
+    public OverviewSkillLevelBO findByName(String employeeName) throws SerException {
+        return overviewSkillLevelSer.findByName(employeeName);
+    }
 }

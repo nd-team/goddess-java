@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.event.enums.IntervalType;
 import com.bjike.goddess.event.enums.Permissions;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;

@@ -44,5 +44,6 @@
 
 	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.businessproject.api.CusPermissionAPI" />
 	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.businessproject.api.CusPermissionOperateAPI" />
+	<dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
 
 </beans>

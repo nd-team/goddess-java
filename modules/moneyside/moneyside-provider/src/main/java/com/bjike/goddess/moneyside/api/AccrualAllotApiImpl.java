@@ -5,6 +5,7 @@ import com.bjike.goddess.moneyside.bo.AccrualAllotBO;
 import com.bjike.goddess.moneyside.dto.AccrualAllotDTO;
 import com.bjike.goddess.moneyside.service.AccrualAllotSer;
 import com.bjike.goddess.moneyside.to.AccrualAllotTO;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,15 @@ public class AccrualAllotApiImpl implements AccrualAllotAPI {
 
     @Autowired
     private AccrualAllotSer accrualAllotSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return accrualAllotSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return accrualAllotSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countAccrualAllot(AccrualAllotDTO accrualAllotDTO) throws SerException {

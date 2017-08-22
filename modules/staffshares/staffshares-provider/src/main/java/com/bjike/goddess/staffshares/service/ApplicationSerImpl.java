@@ -1,5 +1,7 @@
 package com.bjike.goddess.staffshares.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.assistance.api.AgeAssistAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
@@ -9,7 +11,6 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
-import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffshares.bo.ApplicationBO;
 import com.bjike.goddess.staffshares.dto.ApplicationDTO;
 import com.bjike.goddess.staffshares.entity.Application;
@@ -26,7 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,8 +49,8 @@ public class ApplicationSerImpl extends ServiceImpl<Application, ApplicationDTO>
     private UserAPI userAPI;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
-    @Autowired
-    private EntryBasicInfoAPI entryBasicInfoAPI;
+//    @Autowired
+//    private EntryBasicInfoAPI entryBasicInfoAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
     @Autowired
@@ -65,6 +65,10 @@ public class ApplicationSerImpl extends ServiceImpl<Application, ApplicationDTO>
     private SchemeSer schemeSer;
     @Autowired
     private SellscheduleSer sellscheduleSer;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private AgeAssistAPI ageAssistAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -306,10 +310,13 @@ public class ApplicationSerImpl extends ServiceImpl<Application, ApplicationDTO>
         entity.setArea(positionDetailBOs.get(0).getArea());
         entity.setDepartment(positionDetailBOs.get(0).getDepartmentName());
         entity.setPosition(positionDetailBOs.get(0).getPosition());
-        List<EntryBasicInfoBO> entryBasicInfoBOs = entryBasicInfoAPI.getEntryBasicInfoByName(userBO.getUsername());
         int months = 0;
-        if (!CollectionUtils.isEmpty(entryBasicInfoBOs)) {
-            months = getMonthSpace(entryBasicInfoBOs.get(0).getEntryTime(), LocalDate.now().toString());
+//        List<EntryBasicInfoBO> entryBasicInfoBOs = entryBasicInfoAPI.getEntryBasicInfoByName(userBO.getUsername());
+//        if (!CollectionUtils.isEmpty(entryBasicInfoBOs)) {
+//            months = getMonthSpace(entryBasicInfoBOs.get(0).getEntryTime(), LocalDate.now().toString());
+//        }
+        if (moduleAPI.isCheck("assistance")) {
+            months = ageAssistAPI.getJobAge(userBO.getUsername()).intValue();
         }
         entity.setMonths(months);
         entity.setReason(to.getReason());
@@ -389,7 +396,7 @@ public class ApplicationSerImpl extends ServiceImpl<Application, ApplicationDTO>
                     }
                 }
             }
-        }else if("admin".equals(userBO.getUsername())){
+        } else if ("admin".equals(userBO.getUsername())) {
             entity.setFinancial(userBO.getUsername());
             entity.setOpinion(to.getOpinion());
             entity.setPlanModule(userBO.getUsername());

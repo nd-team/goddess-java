@@ -1,5 +1,9 @@
 package com.bjike.goddess.salarymanage.service;
 
+import com.bjike.goddess.archive.api.StaffRecordsAPI;
+import com.bjike.goddess.archive.bo.StaffRecords1BO;
+import com.bjike.goddess.archive.bo.StaffRecordsBO;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.assistance.api.AgeAssistAPI;
 import com.bjike.goddess.assistance.api.ComputerAssistAPI;
 import com.bjike.goddess.assistance.api.HotAssistAPI;
@@ -23,6 +27,12 @@ import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.managementpromotion.api.LevelShowAPI;
 import com.bjike.goddess.managementpromotion.bo.LevelShowBO;
 import com.bjike.goddess.managementpromotion.entity.LevelShow;
+import com.bjike.goddess.managepromotion.api.OverviewSkillLevelAPI;
+import com.bjike.goddess.managepromotion.bo.OverviewSkillLevelBO;
+import com.bjike.goddess.managepromotion.dto.OverviewSkillLevelDTO;
+import com.bjike.goddess.regularization.api.RegularizationAPI;
+import com.bjike.goddess.salaryconfirm.api.SalaryconfirmAPI;
+import com.bjike.goddess.salaryconfirm.bo.SalaryconfirmBO;
 import com.bjike.goddess.salarymanage.bo.SalaryInformationBO;
 import com.bjike.goddess.salarymanage.dto.SalaryInformationDTO;
 import com.bjike.goddess.salarymanage.entity.SalaryInformation;
@@ -31,6 +41,10 @@ import com.bjike.goddess.salarymanage.excel.SalaryInformationSetExcel;
 import com.bjike.goddess.salarymanage.to.ExportSalaryInformationTO;
 import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
 import com.bjike.goddess.salarymanage.to.SalaryInformationTO;
+import com.bjike.goddess.secure.api.AttachedAPI;
+import com.bjike.goddess.secure.api.SecureCartAPI;
+import com.bjike.goddess.secure.bo.AttachedBO;
+import com.bjike.goddess.secure.vo.AttachedVO;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.user.api.UserAPI;
@@ -80,6 +94,24 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
 
     @Autowired
     private AgeAssistAPI ageAssistAPI;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
+
+    @Autowired
+    private StaffRecordsAPI staffRecordsAPI;
+
+    @Autowired
+    private RegularizationAPI regularizationAPI;
+
+    @Autowired
+    private OverviewSkillLevelAPI overviewSkillLevelAPI;
+
+    @Autowired
+    private SalaryconfirmAPI salaryconfirmAPI;
+
+    @Autowired
+    private AttachedAPI attachedAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -225,13 +257,13 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
         //规划人能查看所有的 还能根据名称来查找,默认是查找所有的
         if(guideAddIdentity() == true) {
             if (dto.getPayStarTime() != null && dto.getPayEndTime() != null) {
-                LocalDate[] localDates = new LocalDate[]{dto.getPayStarTime(), dto.getPayEndTime()};
+                LocalDate[] localDates = new LocalDate[]{DateUtil.parseDate(dto.getPayStarTime()), DateUtil.parseDate(dto.getPayEndTime())};
                 dto.getConditions().add(Restrict.between("payStarTime", localDates));
                 dto.getConditions().add(Restrict.between("payEndTime", localDates));
             }
             if (dto.getPayStarTime() != null && dto.getPayEndTime() == null) {
                 LocalDate endTime = LocalDate.now();
-                LocalDate[] localDates = new LocalDate[]{dto.getPayStarTime(), endTime};
+                LocalDate[] localDates = new LocalDate[]{DateUtil.parseDate(dto.getPayStarTime()), endTime};
                 dto.getConditions().add(Restrict.between("payStarTime", localDates));
                 dto.getConditions().add(Restrict.between("payEndTime", localDates));
             }
@@ -264,7 +296,7 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
     private void isExit(SalaryInformationTO to) throws SerException{
         String id = to.getEmployeeId();
         SalaryInformationDTO dto = new SalaryInformationDTO();
-        dto.getConditions().add(Restrict.eq("id",id));
+        dto.getConditions().add(Restrict.eq("employeeId",id));
         dto.getConditions().add(Restrict.eq("payStartTime",to.getPayStartTime()));
         dto.getConditions().add(Restrict.eq("payEndTime",to.getPayEndTime()));
         List<SalaryInformation> list = super.findByCis(dto);
@@ -273,33 +305,24 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
         }
     }
 
-    //判断修改之后的数据是否已经存在，如果存在两条以上相同的数据则修改失败
-    private void ifExit(SalaryInformationTO to) throws SerException{
-        String id = to.getEmployeeId();
-        SalaryInformationDTO dto = new SalaryInformationDTO();
-        dto.getConditions().add(Restrict.eq("id",id));
-        dto.getConditions().add(Restrict.eq("payStartTime",to.getPayStartTime()));
-        dto.getConditions().add(Restrict.eq("payEndTime",to.getPayEndTime()));
-        List<SalaryInformation> list = super.findByCis(dto);
-        if(list.size() >1){
-            throw new SerException("该数据已经存在,修改失败");
-        }
-    }
 
     @Override
     public SalaryInformationBO editSalaryInformation(SalaryInformationTO to) throws SerException {
         SalaryInformation temp = super.findById(to.getId());
-        try {
-            DateUtil.parseDate(to.getPayStartTime());
-            DateUtil.parseDate(to.getPayEndTime());
-        } catch (Exception e) {
-            throw new SerException("输入的日期格式不对");
+        if(temp != null) {
+            try {
+                DateUtil.parseDate(to.getPayStartTime());
+                DateUtil.parseDate(to.getPayEndTime());
+            } catch (Exception e) {
+                throw new SerException("输入的日期格式不对");
+            }
+            SalaryInformation salaryInformation = BeanTransform.copyProperties(to, SalaryInformation.class, true);
+            BeanUtils.copyProperties(salaryInformation,temp,"id","createTime");
+            temp.setModifyTime(LocalDateTime.now());
+            super.update(temp);
+        }else{
+            throw new SerException("你要修改的数据不存在！");
         }
-        SalaryInformation salaryInformation = BeanTransform.copyProperties(to,SalaryInformation.class);
-        BeanUtils.copyProperties(salaryInformation,temp,"id","createTime");
-        temp.setModifyTime(LocalDateTime.now());
-        super.update(temp);
-        ifExit(to);
         SalaryInformationBO salaryInformationBO = BeanTransform.copyProperties(temp,SalaryInformationBO.class);
         return salaryInformationBO;
     }
@@ -326,11 +349,11 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
 
     @Override
     public byte[] exportExcel(ExportSalaryInformationTO to) throws SerException {
-        checkAddIdentity();
+//        checkAddIdentity();
         SalaryInformationDTO dto = new SalaryInformationDTO();
         //根据计薪开始时间和计薪结束时间来导出excel
         if(StringUtils.isNotBlank(to.getPayStarTime()) && StringUtils.isNotBlank(to.getPayEndTime())){
-            LocalDate[] localDates = new LocalDate[]{dto.getPayStarTime(),dto.getPayEndTime()};
+            LocalDate[] localDates = new LocalDate[]{DateUtil.parseDate(dto.getPayStarTime()),DateUtil.parseDate(dto.getPayEndTime())};
             dto.getConditions().add(Restrict.between("payStarTime",localDates));
             dto.getConditions().add(Restrict.between("payEndTime",localDates));
         }
@@ -365,8 +388,8 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
 
         SalaryInformationSetExcel excel = new SalaryInformationSetExcel();
 
-        excel.setPayStarTime("计薪周期开始时间");
-        excel.setPayEndTime("计薪周期结束时间");
+        excel.setPayStartTime("2017-08-09");
+        excel.setPayEndTime("2017-08-09");
         excel.setArea("地区");
         excel.setEmployeeId("员工编号");
         excel.setEmployeeName("姓名");
@@ -376,11 +399,11 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
         excel.setStationLevel("岗位层级");
         excel.setManageLevel("管理层级");
         excel.setSkill("技能项");
-        excel.setPayEndTime("技能专业");
+        excel.setProSkills("技能专业");
         excel.setSkillLevel("技能级别");
-        excel.setHiredate("入职时间");
-        excel.setPositiveTime("转正时间");
-        excel.setWorkingTime("在职时间");
+        excel.setHiredate("2017-01-01");
+        excel.setPositiveTime("2017-01-02");
+        excel.setWorkingTime("2");
         excel.setBasicSalary(10d);
         excel.setPostSalary(10d);
         excel.setManagePay(10d);
@@ -391,6 +414,7 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
         excel.setProjectBenefits(10d);
         excel.setWage(10d);
         excel.setSalary(10d);
+        excel.setSkillPay(10d);
         excel.setComputerSubsidies(10d);
         excel.setAccommodationSubsidies(10d);
         excel.setSenioritySubsidies(10d);
@@ -410,7 +434,7 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
         excel.setLegalRestDay(10d);
         excel.setLegalOvertimeDay(10d);
         excel.setNormalRestDay(10d);
-        excel.setNormalOvertimeDay(10d);
+        excel.setRestOvertimeDay(10d);
         excel.setSurplusOvertimeDay(10d);
         excel.setOffsetOvertime(10d);
         excel.setEffectiveOvertime(10d);
@@ -444,27 +468,69 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
     public Long count(SalaryInformationDTO dto) throws SerException {
         return super.count(dto);
     }
-//
-//    @Override
-//    public List<HotAssistBO> findHotAssist(SalaryInformationDTO dto) throws SerException {
-//        HotAssistDTO hotAssistDTO = new HotAssistDTO();
-//        hotAssistDTO.getConditions().add(Restrict.eq("salaryStartTime",dto.getPayStarTime()));
-//        hotAssistDTO.getConditions().add(Restrict.eq("salaryStartTime",dto.getPayEndTime()));
-//        return null;
-//    }
-//
-//    @Override
-//    public List<HouseAssistBO> findHouseAssist(SalaryInformationDTO dto) throws SerException {
-//        return null;
-//    }
-//
-//    @Override
-//    public List<ComputerAssistBO> findComputerAssist(SalaryInformationDTO dto) throws SerException {
-//        return null;
-//    }
-//
-//    @Override
-//    public List<AgeAssistBO> findAgeAssist(SalaryInformationDTO dto) throws SerException {
-//        return null;
-//    }
+
+    @Override
+    public HotAssistBO findHotAssist(SalaryInformationDTO dto) throws SerException {
+        HotAssistBO bo = hotAssistAPI.findHot(dto.getPayStarTime(),dto.getPayEndTime());
+        return bo;
+    }
+
+    @Override
+    public HouseAssistBO findHouseAssist(SalaryInformationDTO dto) throws SerException {
+        HouseAssistBO bo = houseAssistAPI.findHouse(dto.getPayStarTime(),dto.getPayEndTime());
+        return bo;
+    }
+
+    @Override
+    public ComputerAssistBO findComputerAssist(SalaryInformationDTO dto) throws SerException {
+        ComputerAssistBO bo = computerAssistAPI.findComputer(dto.getPayStarTime(),dto.getPayEndTime());
+        return bo;
+    }
+
+    @Override
+    public AgeAssistBO findAgeAssist(SalaryInformationDTO dto) throws SerException {
+        AgeAssistBO bo = ageAssistAPI.findAge(dto.getPayStarTime(),dto.getPayEndTime());
+        return bo;
+    }
+
+
+    @Override
+    public SalaryInformationBO findOne(String id) throws SerException {
+        SalaryInformation salaryInformation = super.findById(id);
+        SalaryInformationBO salaryInformationBO = BeanTransform.copyProperties(salaryInformation,SalaryInformationBO.class);
+        return salaryInformationBO;
+    }
+
+    @Override
+    public StaffRecordsBO findStaff(String employeeNumber) throws SerException {
+        StaffRecordsBO bo = new StaffRecordsBO();
+        if(moduleAPI.isCheck("archive")){
+            bo = staffRecordsAPI.findByNumber(employeeNumber);
+        }
+        return bo;
+    }
+
+    @Override
+    public String findPositiveDate(String employeeId) throws SerException {
+        String time = regularizationAPI.time(employeeId);
+        return time;
+    }
+
+    @Override
+    public OverviewSkillLevelBO findSkill(String employeeName) throws SerException {
+        OverviewSkillLevelBO bo = overviewSkillLevelAPI.findByName(employeeName);
+        return bo;
+    }
+
+    @Override
+    public SalaryconfirmBO findSalaryConfirm(SalaryInformationDTO dto) throws SerException {
+        SalaryconfirmBO bo = salaryconfirmAPI.findSalary(dto.getPayStarTime(),dto.getPayEndTime(),dto.getEmployeeName());
+        return bo;
+    }
+
+    @Override
+    public AttachedBO findAttached(SalaryInformationDTO dto) throws SerException {
+        AttachedBO bo = attachedAPI.findAttached(dto.getEmployeeName());
+        return bo;
+    }
 }

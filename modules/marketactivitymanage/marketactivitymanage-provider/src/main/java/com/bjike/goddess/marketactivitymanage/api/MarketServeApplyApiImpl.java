@@ -178,6 +178,11 @@ public class MarketServeApplyApiImpl implements MarketServeApplyAPI {
     }
 
     @Override
+    public List<String> findProjectCode() throws SerException {
+        return marketServeApplySer.findProjectCode();
+    }
+
+    @Override
     public byte[] exportExcel(String[] areas, String startTime, String endTime) throws SerException {
         return marketServeApplySer.exportExcel(areas,startTime,endTime);
     }
@@ -185,6 +190,11 @@ public class MarketServeApplyApiImpl implements MarketServeApplyAPI {
     @Override
     public void importExcel(List<MarketServeApplyImprotTO> marketServeApplyImprotTOS) throws SerException {
         marketServeApplySer.importExcel(marketServeApplyImprotTOS);
+    }
+
+    @Override
+    public List<String> getServePrincipal() throws SerException {
+        return marketServeApplySer.getServePrincipal();
     }
 
     @Override

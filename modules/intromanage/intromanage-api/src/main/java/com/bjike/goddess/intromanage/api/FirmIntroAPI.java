@@ -8,6 +8,7 @@ import com.bjike.goddess.intromanage.to.FirmIntroTO;
 import com.bjike.goddess.intromanage.to.GuidePermissionTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 公司简介业务接口
@@ -100,4 +101,13 @@ public interface FirmIntroAPI {
     default List<String> findallMonUser() throws SerException {
         return null;
     }
+
+    /**
+     * chenjunhao
+     * 获取所有公司名称
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> firmNames() throws SerException;
 }

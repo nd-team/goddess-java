@@ -269,5 +269,15 @@ public class HouseAssistSerImpl extends ServiceImpl<HouseAssist, HouseAssistDTO>
         super.remove(id);
     }
 
+    @Override
+    public HouseAssistBO findHouse(String startTime, String endTime) throws SerException {
+        HouseAssistDTO dto = new HouseAssistDTO();
+        dto.getConditions().add(Restrict.eq("salaryStartTime",startTime));
+        dto.getConditions().add(Restrict.eq("salaryEndTime",endTime));
+        HouseAssist houseAssist = super.findOne(dto);
+        HouseAssistBO bo = BeanTransform.copyProperties(houseAssist,HouseAssistBO.class,false);
+        return bo;
+    }
+
 
 }

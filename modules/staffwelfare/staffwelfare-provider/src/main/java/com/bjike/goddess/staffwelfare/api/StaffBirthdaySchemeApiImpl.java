@@ -100,4 +100,9 @@ public class StaffBirthdaySchemeApiImpl implements StaffBirthdaySchemeAPI {
     public StaffBirthdaySchemeBO findOne(String id) throws SerException {
         return staffBirthdaySchemeSer.findOne(id);
     }
+
+    @Override
+    public List<StaffBirthdaySchemeBO> collect(StaffBirthdaySchemeDTO dto) throws SerException {
+        return staffBirthdaySchemeSer.collect(dto);
+    }
 }

@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.moneyside.bo.InvestFormBO;
 import com.bjike.goddess.moneyside.dto.InvestFormDTO;
 import com.bjike.goddess.moneyside.service.InvestFormSer;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import com.bjike.goddess.moneyside.to.InvestFormTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,15 @@ public class InvestFormApiImpl implements InvestFormAPI {
 
     @Autowired
     private InvestFormSer investFormSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return investFormSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return investFormSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countInvestForm(InvestFormDTO investFormDTO) throws SerException {

@@ -27,7 +27,11 @@ public class JapiTest {
                 "modules/storage/storage-api",
                 "modules/managementpromotion/managementpromotion-api",
                 "modules/managepromotion/managepromotion-api",
+                "modules/archive/archive-api",
                 "modules/staffentry/staffentry-api",
+                "modules/secure/secure-api",
+                "modules/salaryconfirm/salaryconfirm-api",
+                "modules/assistance/assistance-api",
                 "common/common-api"
         });
 //                JapiClient.saveHistory(false);

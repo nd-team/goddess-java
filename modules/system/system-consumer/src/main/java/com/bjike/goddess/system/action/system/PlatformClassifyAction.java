@@ -234,6 +234,21 @@ public class PlatformClassifyAction extends BaseFileAction{
         }
     }
     /**
+     * 获取平台名称
+     *
+     * @des 获取平台名称集合
+     * @version v1
+     */
+    @GetMapping("v1/platformName")
+    public Result platformName() throws ActException {
+        try {
+            List<String> platformNameList = platformClassifyAPI.getPlatformName();
+            return ActResult.initialize(platformNameList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
      * 导入Excel
      *
      * @param request 注入HttpServletRequest对象

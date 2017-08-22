@@ -9,6 +9,7 @@ import com.bjike.goddess.moneyside.entity.ApplyInvest;
 import com.bjike.goddess.moneyside.service.ApplyInvestSer;
 import com.bjike.goddess.moneyside.to.ApplyInvestTO;
 import com.bjike.goddess.moneyside.to.CollectApplyInvestTO;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,15 @@ import java.util.List;
 public class ApplyInvestApiImpl implements ApplyInvestAPI {
     @Autowired
     private ApplyInvestSer applyInvestSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return applyInvestSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return applyInvestSer.guidePermission(guidePermissionTO);
+    }
     @Override
     public Long countApplyInvest(ApplyInvestDTO applyInvestDTO) throws SerException {
         return applyInvestSer.countApplyInvest(applyInvestDTO);

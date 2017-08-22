@@ -17,12 +17,12 @@ public class SalaryInformationDTO extends BaseDTO {
     /**
      * 计薪周期开始时间
      */
-    private LocalDate payStarTime;
+    private String payStarTime;
 
     /**
      * 计薪周期结束时间
      */
-    private LocalDate payEndTime;
+    private String payEndTime;
 
 
     /**
@@ -30,19 +30,19 @@ public class SalaryInformationDTO extends BaseDTO {
      */
     private String employeeName;
 
-    public LocalDate getPayStarTime() {
+    public String getPayStarTime() {
         return payStarTime;
     }
 
-    public void setPayStarTime(LocalDate payStarTime) {
+    public void setPayStarTime(String payStarTime) {
         this.payStarTime = payStarTime;
     }
 
-    public LocalDate getPayEndTime() {
+    public String getPayEndTime() {
         return payEndTime;
     }
 
-    public void setPayEndTime(LocalDate payEndTime) {
+    public void setPayEndTime(String payEndTime) {
         this.payEndTime = payEndTime;
     }
 

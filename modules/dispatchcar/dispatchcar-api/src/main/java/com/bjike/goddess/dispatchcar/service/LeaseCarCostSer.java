@@ -6,6 +6,8 @@ import com.bjike.goddess.dispatchcar.bo.LeaseCarCostBO;
 import com.bjike.goddess.dispatchcar.dto.LeaseCarCostDTO;
 import com.bjike.goddess.dispatchcar.entity.LeaseCarCost;
 import com.bjike.goddess.dispatchcar.to.LeaseCarCostTO;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 
 import java.util.List;
 
@@ -43,5 +45,15 @@ public interface LeaseCarCostSer extends Ser<LeaseCarCost, LeaseCarCostDTO> {
      * @return 租车费用基本信息结果集
      */
     List<LeaseCarCostBO> pageList(LeaseCarCostDTO dto) throws SerException;
+
+    /**
+     * 查出所有未冻结的部门
+     */
+    List<OpinionBO> findDeapartment() throws SerException;
+
+    /**
+     * 查询所有地区
+     */
+    List<AreaBO> findArea() throws SerException;
 
 }

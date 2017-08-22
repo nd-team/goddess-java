@@ -8,6 +8,7 @@ import com.bjike.goddess.system.bo.QuestionBO;
 import com.bjike.goddess.system.dto.AuswerDTO;
 import com.bjike.goddess.system.dto.QuestionDTO;
 import com.bjike.goddess.system.entity.Auswer;
+import com.bjike.goddess.system.entity.FeatureList;
 import com.bjike.goddess.system.entity.Question;
 import com.bjike.goddess.system.to.AuswerTO;
 import com.bjike.goddess.system.to.QuestionTO;
@@ -78,14 +79,17 @@ public class QuestionSerImpl extends ServiceImpl<Question, QuestionDTO> implemen
     @Transactional(rollbackFor = SerException.class)
     @Override
     public QuestionBO edit(QuestionTO to) throws SerException {
-        if (StringUtils.isNotBlank(to.getId())) {
-            Question question = super.findById(to.getId());
-            question.setModifyTime(LocalDateTime.now());
-            super.update(question);
-            return BeanTransform.copyProperties(question, QuestionBO.class);
-        } else {
-            throw new SerException("id不能为空");
-        }
+        Question question = super.findById(to.getId());
+        LocalDateTime createTime = question.getCreateTime();
+        String name = question.getName();
+        FeatureList featureList = question.getFeatureList();
+        question = BeanTransform.copyProperties(to, Question.class, true);
+        question.setCreateTime(createTime);
+        question.setName(name);
+        question.setFeatureList(featureList);
+        question.setModifyTime(LocalDateTime.now());
+        super.update(question);
+        return BeanTransform.copyProperties(question, QuestionBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -105,7 +109,7 @@ public class QuestionSerImpl extends ServiceImpl<Question, QuestionDTO> implemen
             throw new SerException("该对象不存在");
         }
         AuswerDTO auswerDTO = new AuswerDTO();
-        auswerDTO.getConditions().add(Restrict.eq("help.id", id));
+        auswerDTO.getConditions().add(Restrict.eq("question.id", id));
         List<Auswer> auswers = auswerSer.findByCis(auswerDTO);
         StringBuilder sb = new StringBuilder();
         sb.append("<strong>问题：" + question.getRate() + "</strong></br>");

@@ -7,8 +7,6 @@ import com.bjike.goddess.staffentry.bo.FindNameBO;
 import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.staffentry.to.EntryBasicInfoTO;
 import com.bjike.goddess.staffentry.to.GuidePermissionTO;
-import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
-import com.bjike.goddess.staffentry.vo.SonPermissionObject;
 
 import java.util.List;
 
@@ -187,6 +185,14 @@ public interface EntryBasicInfoAPI {
      * 获取所有入职基本信息不分页
      */
     default List<EntryBasicInfoBO> listEntryBasicInfo() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据员工姓名获取员工入职时间
+     * zhuangkaiqin
+     */
+    default String getEntryTime(String userName) throws SerException {
         return null;
     }
 

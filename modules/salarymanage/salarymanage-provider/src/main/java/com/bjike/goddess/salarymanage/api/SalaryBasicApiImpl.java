@@ -109,4 +109,10 @@ public class SalaryBasicApiImpl implements SalaryBasicAPI  {
     public Long count(SalaryBasicDTO dto) throws SerException {
         return salaryBasicSer.count(dto);
     }
+
+    @Override
+    public SalaryBasicBO findOne(String id) throws SerException {
+        return salaryBasicSer.findOne(id);
+    }
+
 }

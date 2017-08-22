@@ -35,6 +35,7 @@
 	<dubbo:reference  validation="true" id="customerLevelApiImpl" interface="com.bjike.goddess.customer.api.CustomerLevelAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.customer.api.CusPermissionAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.customer.api.CusPermissionOperateAPI" />
+	<dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
 
 
 </beans>

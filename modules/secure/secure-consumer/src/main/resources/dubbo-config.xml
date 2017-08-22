@@ -33,4 +33,10 @@
 	<dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.assemble.api.ModuleAPI" id="moduleApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.archive.api.StaffRecordsAPI" id="staffRecordsApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.intromanage.api.FirmIntroAPI" id="firmIntroApiImpl"/>
+
 </beans>

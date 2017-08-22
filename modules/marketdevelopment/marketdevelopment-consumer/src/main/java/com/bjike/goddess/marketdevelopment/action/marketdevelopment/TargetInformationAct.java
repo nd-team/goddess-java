@@ -1,5 +1,6 @@
 package com.bjike.goddess.marketdevelopment.action.marketdevelopment;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -51,6 +52,8 @@ public class TargetInformationAct extends BaseFileAction {
 
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 功能导航权限
@@ -243,7 +246,11 @@ public class TargetInformationAct extends BaseFileAction {
     @GetMapping("v1/findArea")
     public Result findArea(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(departmentDetailAPI.findArea(), AreaVO.class, request));
+            if (moduleAPI.isCheck("organize")) {
+                return ActResult.initialize(BeanTransform.copyProperties(departmentDetailAPI.findArea(), AreaVO.class, request));
+            } else {
+                return ActResult.initialize(null);
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

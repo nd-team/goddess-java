@@ -4,8 +4,6 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.staffshares.enums.Status;
 import com.bjike.goddess.staffshares.enums.Type;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * 员工持股管理业务传输对象
@@ -101,7 +99,7 @@ public class SchemeBO extends BaseBO {
     /**
      * 发行时间
      */
-    private LocalDate time;
+    private String time;
 
     /**
      * 出售方式
@@ -116,7 +114,7 @@ public class SchemeBO extends BaseBO {
     /**
      * 分红核算时间
      */
-    private LocalDate accountingTime;
+    private String accountingTime;
 
     /**
      * 备注
@@ -126,7 +124,7 @@ public class SchemeBO extends BaseBO {
     /**
      * 方案制定时间
      */
-    private LocalDateTime programmeTime;
+    private String programmeTime;
 
     /**
      * 方案制定人
@@ -277,11 +275,11 @@ public class SchemeBO extends BaseBO {
         this.mode = mode;
     }
 
-    public LocalDate getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(LocalDate time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
@@ -301,11 +299,11 @@ public class SchemeBO extends BaseBO {
         this.standards = standards;
     }
 
-    public LocalDate getAccountingTime() {
+    public String getAccountingTime() {
         return accountingTime;
     }
 
-    public void setAccountingTime(LocalDate accountingTime) {
+    public void setAccountingTime(String accountingTime) {
         this.accountingTime = accountingTime;
     }
 
@@ -317,11 +315,11 @@ public class SchemeBO extends BaseBO {
         this.remark = remark;
     }
 
-    public LocalDateTime getProgrammeTime() {
+    public String getProgrammeTime() {
         return programmeTime;
     }
 
-    public void setProgrammeTime(LocalDateTime programmeTime) {
+    public void setProgrammeTime(String programmeTime) {
         this.programmeTime = programmeTime;
     }
 

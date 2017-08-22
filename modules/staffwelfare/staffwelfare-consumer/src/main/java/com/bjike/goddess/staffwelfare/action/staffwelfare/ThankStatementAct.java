@@ -160,8 +160,9 @@ public class ThankStatementAct {
     }
 
     /**
-     * 列表总条数
-     * @param dto
+     * 查询列表总条数
+     *
+     * @param dto 条件
      * @throws ActException
      * @version v1
      */
@@ -176,12 +177,13 @@ public class ThankStatementAct {
     }
 
     /**
-     * 根据id来查询单个数据
-     * @param id
+     * 根据id查询单条数据
+     * @param id 条件
      * @return class ThankStatementVO
      * @throws ActException
      * @version v1
      */
+    @GetMapping("v1/find/one")
     public Result findOne(String id) throws ActException{
         try {
             ThankStatementBO bo = thankStatementAPI.findOne(id);

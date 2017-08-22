@@ -1,5 +1,9 @@
 package com.bjike.goddess.secure.action.secure;
 
+import com.bjike.goddess.archive.api.StaffRecordsAPI;
+import com.bjike.goddess.archive.bo.StaffRecordsBO;
+import com.bjike.goddess.archive.vo.StaffRecordsVO;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -8,8 +12,16 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.organize.vo.AreaVO;
+import com.bjike.goddess.organize.vo.DepartmentDetailVO;
+import com.bjike.goddess.organize.vo.PositionDetailVO;
 import com.bjike.goddess.secure.api.AddEmployeeAPI;
 import com.bjike.goddess.secure.bo.AddEmployeeBO;
 import com.bjike.goddess.secure.dto.AddEmployeeDTO;
@@ -46,6 +58,14 @@ public class AddEmployeeAct {
     private UserSetPermissionAPI userSetPermissionAPI;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private PositionDetailAPI positionDetailAPI;
+    @Autowired
+    private StaffRecordsAPI staffRecordsAPI;
 
     /**
      * 模块设置导航权限
@@ -58,17 +78,19 @@ public class AddEmployeeAct {
     public Result setButtonPermission() throws ActException {
         List<SonPermissionObject> list = new ArrayList<>();
         try {
-            SonPermissionObject obj = new SonPermissionObject();
-            obj.setName("cuspermission");
-            obj.setDescribesion("设置");
-            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
-            if (!isHasPermission) {
-                //int code, String msg
-                obj.setFlag(false);
-            } else {
-                obj.setFlag(true);
+            if (moduleAPI.isCheck("organize")) {
+                SonPermissionObject obj = new SonPermissionObject();
+                obj.setName("cuspermission");
+                obj.setDescribesion("设置");
+                Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+                if (!isHasPermission) {
+                    //int code, String msg
+                    obj.setFlag(false);
+                } else {
+                    obj.setFlag(true);
+                }
+                list.add(obj);
             }
-            list.add(obj);
             return new ActResult(0, "设置权限", list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -284,7 +306,7 @@ public class AddEmployeeAct {
     }
 
     /**
-     * 获取所有用户
+     * 获取所有姓名和员工编号
      *
      * @return class UserVO
      * @throws ActException
@@ -293,8 +315,96 @@ public class AddEmployeeAct {
     @GetMapping("v1/findUser")
     public Result findUser(HttpServletRequest request) throws ActException {
         try {
-            List<UserBO> list = positionDetailUserAPI.findUserListInOrgan();
-            return ActResult.initialize(BeanTransform.copyProperties(list, UserVO.class, request));
+            if (moduleAPI.isCheck("organize")) {
+                List<UserBO> list = positionDetailUserAPI.findUserListInOrgan();
+                return ActResult.initialize(BeanTransform.copyProperties(list, UserVO.class, request));
+            }
+            return null;
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有地区
+     *
+     * @return class AreaVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findArea")
+    public Result findArea(HttpServletRequest request) throws ActException {
+        try {
+            if (moduleAPI.isCheck("organize")) {
+                List<AreaBO> list = departmentDetailAPI.findArea();
+                return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
+            }
+            return null;
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有部门，项目组
+     *
+     * @return class DepartmentDetailVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findDepart")
+    public Result findDepart(HttpServletRequest request) throws ActException {
+        try {
+            if (moduleAPI.isCheck("organize")) {
+                List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
+                return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
+            }
+            return null;
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有岗位和岗位层次
+     *
+     * @return class PositionDetailVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findPosition")
+    public Result findPosition(HttpServletRequest request) throws ActException {
+        try {
+            if (moduleAPI.isCheck("organize")) {
+                List<PositionDetailBO> list = positionDetailAPI.findStatus();
+                return ActResult.initialize(BeanTransform.copyProperties(list, PositionDetailVO.class, request));
+            }
+            return null;
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据姓名获取身份证号码，户籍地址，电话号码
+     *
+     * @param name 姓名
+     * @return class StaffRecordsVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/userInfo/{name}")
+    public Result userInfo(@PathVariable String name, HttpServletRequest request) throws ActException {
+        try {
+            if (moduleAPI.isCheck("archive")) {
+                List<StaffRecordsBO> list = staffRecordsAPI.listEmployee();
+                for (StaffRecordsBO staffRecordsBO : list) {
+                    if (name.equals(staffRecordsBO.getUsername())) {
+                        return ActResult.initialize(BeanTransform.copyProperties(staffRecordsBO, StaffRecordsVO.class, request));
+                    }
+                }
+            }
+            return null;
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

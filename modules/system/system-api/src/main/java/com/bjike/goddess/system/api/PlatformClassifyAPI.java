@@ -91,6 +91,14 @@ public interface PlatformClassifyAPI {
 
     }
     /**
+     * 获取所有平台分类
+     *
+     * @throws SerException
+     */
+    default List<String> getPlatformName() throws SerException {
+        return null;
+    }
+    /**
     * 导入
     * @param platformClassifyTOS 平台分类
     * @return class PlatformClassifyBO

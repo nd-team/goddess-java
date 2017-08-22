@@ -89,4 +89,9 @@ public interface OverviewSkillLevelAPI {
     default void removeOverviewSkillLevel(String id) throws SerException {
 
     }
+
+    /**
+     * 根据员工姓名查找技能等级情况
+     */
+    OverviewSkillLevelBO findByName(String employeeName) throws SerException;
 }

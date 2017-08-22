@@ -63,7 +63,10 @@ public class FieldDockApiImpl implements FieldDockAPI {
     public void remove(String id) throws SerException {
         fieldDockSer.remove(id);
     }
-
+    @Override
+    public List<String> getProjectName() throws SerException {
+        return fieldDockSer.getProjectName();
+    }
     @Override
     public FieldDockBO importExcel(List<FieldDockTO> fieldDockTOS) throws SerException {
         return fieldDockSer.importExcel(fieldDockTOS);

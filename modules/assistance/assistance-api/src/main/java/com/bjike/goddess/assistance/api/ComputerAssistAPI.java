@@ -7,6 +7,7 @@ import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -142,5 +143,11 @@ public interface ComputerAssistAPI {
     default EntryBasicInfoBO getUserByName(ComputerAssistDTO computerAssistDTO) throws SerException {
         return null;
     }
+
+
+    /**
+     * 根据计薪周期开始时间和结束时间获取电脑补助信息
+     */
+    ComputerAssistBO findComputer(String startTime, String endTime) throws SerException;
 
 }

@@ -6,6 +6,7 @@ import com.bjike.goddess.moneyside.bo.CollectApplyInvestBO;
 import com.bjike.goddess.moneyside.dto.ApplyInvestDTO;
 import com.bjike.goddess.moneyside.to.ApplyInvestTO;
 import com.bjike.goddess.moneyside.to.CollectApplyInvestTO;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +20,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ApplyInvestAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 申请投资总条数
      */

@@ -3,6 +3,7 @@ package com.bjike.goddess.moneyside.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.moneyside.bo.MoneyExitApplyConfirmedBO;
 import com.bjike.goddess.moneyside.dto.MoneyExitApplyConfirmedDTO;
+import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -16,6 +17,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface MoneyExitApplyConfirmedAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 资金退出申请确认表列表总条数
      */

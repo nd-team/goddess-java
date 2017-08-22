@@ -50,6 +50,14 @@
     <dubbo:reference interface="com.bjike.goddess.managementpromotion.api.LevelShowAPI" id="levslShowApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" id="entryBasicInfoApiImpl"/>
 
+	<dubbo:reference interface="com.bjike.goddess.assistance.api.HouseAssistAPI" id="houseAssistApiImpl"/>
+	<dubbo:reference interface="com.bjike.goddess.assistance.api.HotAssistAPI" id="hotAssistApiImpl"/>
+	<dubbo:reference interface="com.bjike.goddess.assistance.api.AgeAssistAPI" id="ageAssistApiImpl"/>
+	<dubbo:reference interface="com.bjike.goddess.assistance.api.ComputerAssistAPI" id="computerAssistApiImpl"/>
+	<dubbo:reference interface="com.bjike.goddess.storage.api.StorageUserAPI" id="storageUser"/>
+	<dubbo:reference interface="com.bjike.goddess.assemble.api.ModuleAPI" id="moduleApiImpl"/>
+	<dubbo:reference interface="com.bjike.goddess.archive.api.StaffRecordsAPI" id="staffRecordsApiImpl"/>
+
 
 
 </beans>

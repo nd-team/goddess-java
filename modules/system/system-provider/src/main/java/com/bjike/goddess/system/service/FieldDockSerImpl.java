@@ -9,7 +9,6 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.system.bo.FieldDockBO;
 import com.bjike.goddess.system.dto.FieldDockDTO;
-import com.bjike.goddess.system.entity.CusPermission;
 import com.bjike.goddess.system.entity.FieldDock;
 import com.bjike.goddess.system.enums.GuideAddrStatus;
 import com.bjike.goddess.system.excel.FieldDockExport;
@@ -28,6 +27,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 字段对接业务实现
@@ -45,6 +45,7 @@ public class FieldDockSerImpl extends ServiceImpl<FieldDock, FieldDockDTO> imple
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+
     /**
      * 核对查看权限（部门级别）
      */
@@ -182,6 +183,7 @@ public class FieldDockSerImpl extends ServiceImpl<FieldDock, FieldDockDTO> imple
         }
         return flag;
     }
+
     @Override
     public Long count(FieldDockDTO dto) throws SerException {
         search(dto);
@@ -242,6 +244,17 @@ public class FieldDockSerImpl extends ServiceImpl<FieldDock, FieldDockDTO> imple
         }
     }
 
+    @Override
+    public List<String> getProjectName() throws SerException {
+        String[] fields = new String[]{"projectName"};
+        List<FieldDockBO> fieldDockBOS = super.findBySql("select projectName from system_fielddock group by projectName order by projectName asc ", FieldDockBO.class, fields);
+
+        List<String> projectNameList = fieldDockBOS.stream().map(FieldDockBO::getProjectName)
+                .filter(projectName -> (projectName != null || !"".equals(projectName.trim()))).distinct().collect(Collectors.toList());
+
+
+        return projectNameList;
+    }
 
     @Override
     public FieldDockBO importExcel(List<FieldDockTO> fieldDockTOS) throws SerException {
@@ -347,56 +360,58 @@ public class FieldDockSerImpl extends ServiceImpl<FieldDock, FieldDockDTO> imple
         byte[] bytes = ExcelUtil.clazzToExcel(fieldDockTemplateExcels, excel);
         return bytes;
     }
+
     private void search(FieldDockDTO dto) throws SerException {
         if (null != dto.getBusinessMarketPlatform()) {
             dto.getConditions().add(Restrict.eq("businessMarketPlatform", dto.getBusinessMarketPlatform()));
         }
         if (null != dto.getCapitalMarketPlatform()) {
-            dto.getConditions().add(Restrict.eq("capitalMarketPlatform",dto.getCapitalMarketPlatform()));
+            dto.getConditions().add(Restrict.eq("capitalMarketPlatform", dto.getCapitalMarketPlatform()));
         }
         if (null != dto.getProjectMarketPlatform()) {
-            dto.getConditions().add(Restrict.eq("projectMarketPlatform",dto.getProjectMarketPlatform()));
+            dto.getConditions().add(Restrict.eq("projectMarketPlatform", dto.getProjectMarketPlatform()));
         }
         if (null != dto.getEmployeeMarketPlatform()) {
-            dto.getConditions().add(Restrict.eq("employeeMarketPlatform",dto.getEmployeeMarketPlatform()));
+            dto.getConditions().add(Restrict.eq("employeeMarketPlatform", dto.getEmployeeMarketPlatform()));
         }
         if (null != dto.getLifeValuePlatform()) {
-            dto.getConditions().add(Restrict.eq("lifeValuePlatform",dto.getLifeValuePlatform()));
+            dto.getConditions().add(Restrict.eq("lifeValuePlatform", dto.getLifeValuePlatform()));
         }
         if (null != dto.getCreativePlatform()) {
-            dto.getConditions().add(Restrict.eq("creativePlatform",dto.getCreativePlatform()));
+            dto.getConditions().add(Restrict.eq("creativePlatform", dto.getCreativePlatform()));
         }
         if (null != dto.getSkillPlatform()) {
-            dto.getConditions().add(Restrict.eq("skillPlatform",dto.getSkillPlatform()));
+            dto.getConditions().add(Restrict.eq("skillPlatform", dto.getSkillPlatform()));
         }
         if (null != dto.getPlan()) {
-            dto.getConditions().add(Restrict.eq("plan",dto.getPlan()));
+            dto.getConditions().add(Restrict.eq("plan", dto.getPlan()));
         }
         if (null != dto.getWelfare()) {
-            dto.getConditions().add(Restrict.eq("welfare",dto.getWelfare()));
+            dto.getConditions().add(Restrict.eq("welfare", dto.getWelfare()));
         }
         if (null != dto.getLiteracy()) {
-            dto.getConditions().add(Restrict.eq("literacy",dto.getLiteracy()));
+            dto.getConditions().add(Restrict.eq("literacy", dto.getLiteracy()));
         }
         if (null != dto.getAccount()) {
-            dto.getConditions().add(Restrict.eq("account",dto.getAccount()));
+            dto.getConditions().add(Restrict.eq("account", dto.getAccount()));
         }
         if (null != dto.getMoney()) {
-            dto.getConditions().add(Restrict.eq("money",dto.getMoney()));
+            dto.getConditions().add(Restrict.eq("money", dto.getMoney()));
         }
         if (null != dto.getBudget()) {
-            dto.getConditions().add(Restrict.eq("budget",dto.getBudget()));
+            dto.getConditions().add(Restrict.eq("budget", dto.getBudget()));
         }
         if (null != dto.getCustomer()) {
-            dto.getConditions().add(Restrict.eq("custome",dto.getCustomer()));
+            dto.getConditions().add(Restrict.eq("custome", dto.getCustomer()));
         }
         if (null != dto.getBusiness()) {
-            dto.getConditions().add(Restrict.eq("business",dto.getBusiness()));
+            dto.getConditions().add(Restrict.eq("business", dto.getBusiness()));
         }
         if (null != dto.getProgress()) {
-            dto.getConditions().add(Restrict.eq("progress",dto.getProgress()));
+            dto.getConditions().add(Restrict.eq("progress", dto.getProgress()));
         }
     }
+
     private FieldDockBO verify(FieldDockTO to) throws SerException {
         FieldDock fieldDock = BeanTransform.copyProperties(to, FieldDock.class, true);
         fieldDock.setCreateTime(LocalDateTime.now());

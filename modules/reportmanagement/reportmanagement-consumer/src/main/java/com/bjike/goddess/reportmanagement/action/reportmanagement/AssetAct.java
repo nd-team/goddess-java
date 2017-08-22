@@ -153,6 +153,30 @@ public class AssetAct {
     }
 
     /**
+     * 编辑列表
+     *
+     * @param dto 资产数据传输
+     * @return class AssetVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/list1")
+    public Result list1(AssetDTO dto,HttpServletRequest request) throws ActException {
+        try {
+            List<AssetBO> list = assetAPI.list1(dto);
+            List<AssetVO> vos = new ArrayList<>();
+            for (AssetBO bo : list) {
+                AssetVO vo = BeanTransform.copyProperties(bo, AssetVO.class, request);
+                vo.setAssetId(bo.getId());
+                vos.add(vo);
+            }
+            return ActResult.initialize(vos);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 添加
      *
      * @param to 资产传输对象
@@ -164,7 +188,7 @@ public class AssetAct {
     public Result save(@Validated(ADD.class) AssetTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             AssetBO bo = assetAPI.save(to);
-            AssetVO vo=BeanTransform.copyProperties(bo, AssetVO.class, request);
+            AssetVO vo = BeanTransform.copyProperties(bo, AssetVO.class, request);
             vo.setAssetId(bo.getId());
             return ActResult.initialize(vo);
         } catch (SerException e) {
@@ -261,7 +285,7 @@ public class AssetAct {
     public Result asset(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             AssetBO bo = assetAPI.findByID(id);
-            AssetVO vo=BeanTransform.copyProperties(bo, AssetVO.class, request);
+            AssetVO vo = BeanTransform.copyProperties(bo, AssetVO.class, request);
             vo.setAssetId(bo.getId());
             return ActResult.initialize(vo);
         } catch (SerException e) {

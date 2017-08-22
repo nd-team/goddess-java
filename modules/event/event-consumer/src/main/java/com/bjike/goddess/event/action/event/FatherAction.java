@@ -251,15 +251,18 @@ public class FatherAction {
     /**
      * 获取所有地区
      *
-     * @return class AreaVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/findArea")
-    public Result findArea(HttpServletRequest request) throws ActException {
+    public Result findArea() throws ActException {
         try {
             List<AreaBO> list = departmentDetailAPI.findArea();
-            return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
+            List<String> areas=new ArrayList<>();
+            for (AreaBO areaBO:list){
+                areas.add(areaBO.getArea());
+            }
+            return ActResult.initialize(areas);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

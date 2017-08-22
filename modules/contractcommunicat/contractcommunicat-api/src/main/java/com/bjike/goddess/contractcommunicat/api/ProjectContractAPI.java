@@ -1,16 +1,18 @@
 package com.bjike.goddess.contractcommunicat.api;
 
+import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contractcommunicat.bo.ProjectContractBO;
 import com.bjike.goddess.contractcommunicat.bo.ProjectContractCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectContractDTO;
-import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
 import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectContractTO;
+import com.bjike.goddess.market.bo.MarketInfoBO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 项目承包洽谈业务接口
@@ -108,4 +110,25 @@ public interface ProjectContractAPI {
     Boolean guidePermission(GuidePermissionTO to) throws SerException;
 
     byte[] exportExcelModule() throws SerException;
+
+    /**
+     * 获取所有合同外部项目名称和合同项目外部编号
+     * @throws SerException
+     */
+    List<BaseInfoManageBO> listBaseInfoManage() throws SerException;
+
+
+    /**
+     * 查询内部项目名称
+     * @throws SerException
+     */
+    List<MarketInfoBO> findProject() throws SerException;
+
+
+    /**
+     * 查询所有的责任人
+     */
+    default List<String> getCommunicateUser() throws SerException {
+        return null;
+    }
 }

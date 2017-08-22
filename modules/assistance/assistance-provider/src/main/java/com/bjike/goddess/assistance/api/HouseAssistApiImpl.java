@@ -67,4 +67,9 @@ public class HouseAssistApiImpl implements HouseAssistAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return houseAssistSer.guidePermission(guidePermissionTO);
     }
+
+    @Override
+    public HouseAssistBO findHouse(String startTime, String endTime) throws SerException {
+        return houseAssistSer.findHouse(startTime,endTime);
+    }
 }

@@ -35,7 +35,6 @@ public interface AgeAssistAPI {
 
     /**
      * 工龄补助列表总条数
-     *
      */
     default Long countAgeAssist(AgeAssistDTO ageAssistDTO) throws SerException {
         return null;
@@ -44,34 +43,66 @@ public interface AgeAssistAPI {
 
     /**
      * 一个工龄补助
+     *
      * @return class AgeAssistBO
      */
-    default AgeAssistBO getOneById(String id ) throws SerException {return null;}
+    default AgeAssistBO getOneById(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 工龄补助列表
+     *
      * @return class AgeAssistBO
      */
-    default List<AgeAssistBO> listAgeAssist(AgeAssistDTO ageAssistDTO) throws SerException {return null;}
-    /**
-     *  添加
-     * @param ageAssistTO 工龄补助信息
-     * @return class AgeAssistBO
-     */
-    default AgeAssistBO addAgeAssist(AgeAssistTO ageAssistTO) throws SerException { return null;}
+    default List<AgeAssistBO> listAgeAssist(AgeAssistDTO ageAssistDTO) throws SerException {
+        return null;
+    }
 
     /**
-     *  编辑
+     * 添加
+     *
      * @param ageAssistTO 工龄补助信息
      * @return class AgeAssistBO
      */
-    default AgeAssistBO editAgeAssist(AgeAssistTO ageAssistTO) throws SerException { return null;}
+    default AgeAssistBO addAgeAssist(AgeAssistTO ageAssistTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 编辑
+     *
+     * @param ageAssistTO 工龄补助信息
+     * @return class AgeAssistBO
+     */
+    default AgeAssistBO editAgeAssist(AgeAssistTO ageAssistTO) throws SerException {
+        return null;
+    }
 
     /**
      * 删除级别
+     *
      * @param id id
      */
-    default void deleteAgeAssist(String id ) throws SerException {return;};
+    default void deleteAgeAssist(String id) throws SerException {
+        return;
+    }
+
+
+    ;
+
+    /**
+     * 根据员工姓名获取工龄
+     * zhuangkaiqin
+     */
+    default Double getJobAge(String userName) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据计薪周期开始时间和结束时间获取工龄补助信息
+     */
+    AgeAssistBO findAge(String startTime,String endTime) throws SerException;
 
 
 }

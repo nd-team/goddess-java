@@ -255,7 +255,7 @@ public class SchemeSerImpl extends ServiceImpl<Scheme, SchemeDTO> implements Sch
             throw new SerException("id不能为空");
         }
         Scheme scheme = super.findById(id);
-        return BeanTransform.copyProperties(scheme, SchemeBO.class);
+        return BeanTransform.copyProperties(scheme, SchemeBO.class,false);
     }
 
     @Override

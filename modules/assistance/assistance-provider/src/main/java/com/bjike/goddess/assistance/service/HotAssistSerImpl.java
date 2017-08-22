@@ -300,6 +300,14 @@ public class HotAssistSerImpl extends ServiceImpl<HotAssist, HotAssistDTO> imple
         return listArea;
     }
 
-
+    @Override
+    public HotAssistBO findHot(String startTime, String endTime) throws SerException {
+        HotAssistDTO dto = new HotAssistDTO();
+        dto.getConditions().add(Restrict.eq("salaryStartTime",startTime));
+        dto.getConditions().add(Restrict.eq("salaryEndTime",endTime));
+        HotAssist hotAssist = super.findOne(dto);
+        HotAssistBO bo = BeanTransform.copyProperties(hotAssist,HotAssistBO.class,false);
+        return bo;
+    }
 
 }

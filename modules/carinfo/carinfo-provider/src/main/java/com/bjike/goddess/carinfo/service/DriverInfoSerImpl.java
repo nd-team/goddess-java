@@ -242,6 +242,7 @@ public class DriverInfoSerImpl extends ServiceImpl<DriverInfo, DriverInfoDTO> im
             DriverInfo driverInfo = findByIdCard(to.getIdCard());
             if (driverInfo == null || (driverInfo != null && driverInfo.getId().equals(model.getId()))) {
                 BeanTransform.copyProperties(to, model, true);
+                model.setRemark(to.getRemark());
                 model.setModifyTime(LocalDateTime.now());
                 super.update(model);
                 return BeanTransform.copyProperties(to, DriverInfoBO.class);
@@ -277,7 +278,6 @@ public class DriverInfoSerImpl extends ServiceImpl<DriverInfo, DriverInfoDTO> im
 
     @Override
     public DriverInfoBO findByDriver(String driver) throws SerException {
-        checkSeeIdentity();
         DriverInfoDTO dto = new DriverInfoDTO();
         dto.getConditions().add(Restrict.eq("driver", driver));
         List<DriverInfo> list = super.findByCis(dto);

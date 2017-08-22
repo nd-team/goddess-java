@@ -126,4 +126,11 @@ public interface DayPlanAPI {
         return null;
     }
 
+    /**
+     * 获取全部所属阶段
+     */
+    default List<String> getPhase() throws SerException {
+        return null;
+    }
+
 }

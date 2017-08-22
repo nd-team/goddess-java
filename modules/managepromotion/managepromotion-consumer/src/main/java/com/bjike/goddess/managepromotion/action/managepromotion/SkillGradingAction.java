@@ -9,14 +9,17 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.managepromotion.api.SkillGradingAPI;
+import com.bjike.goddess.managepromotion.bo.CalculateBO;
 import com.bjike.goddess.managepromotion.bo.SkillGradingABO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingADTO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingCDTO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingDTO;
 import com.bjike.goddess.managepromotion.entity.SkillGradingA;
 import com.bjike.goddess.managepromotion.excel.SonPermissionObject;
+import com.bjike.goddess.managepromotion.to.CalculateTO;
 import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managepromotion.to.SkillGradingATO;
+import com.bjike.goddess.managepromotion.vo.CalculateVO;
 import com.bjike.goddess.managepromotion.vo.SkillGradingAVO;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import org.apache.log4j.Logger;
@@ -218,6 +221,23 @@ public class SkillGradingAction {
         try {
             skillGradingAPI.removeSkillGrading(id);
             return new ActResult("delete success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 计算
+     *
+     * @param to to
+     * @return class CalculateVO
+     * @des 计算
+     * @version v1
+     */
+    @PostMapping("v1/calculate")
+    public Result calculate(CalculateTO to) throws ActException {
+        try {
+            List<CalculateVO> calculateVOS = BeanTransform.copyProperties(skillGradingAPI.calculate(to),CalculateVO.class);
+            return ActResult.initialize(calculateVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
