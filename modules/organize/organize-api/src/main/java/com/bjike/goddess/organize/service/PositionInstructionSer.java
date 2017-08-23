@@ -147,7 +147,6 @@ public interface PositionInstructionSer extends Ser<PositionInstruction, Positio
     default List<PositionInstructionBO> findByReflect(String reflectId) throws SerException {
         return null;
     }
-<<<<<<< Updated upstream
     /**
      * 获取所有输出结果
      *
@@ -155,7 +154,8 @@ public interface PositionInstructionSer extends Ser<PositionInstruction, Positio
      * @throws SerException
      */
     default List<String> getOutCome() throws SerException {
-=======
+        return null;
+    }
 
     /**
      * 获取输出结果
@@ -170,7 +170,6 @@ public interface PositionInstructionSer extends Ser<PositionInstruction, Positio
      * @return
      */
     default List<String> findWorkPermission() throws SerException {
->>>>>>> Stashed changes
         return null;
     }
 }

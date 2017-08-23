@@ -223,18 +223,19 @@ public interface WorkRangeAPI {
     }
 
     /**
-<<<<<<< Updated upstream
      * 获取所有工作范围选项
      *
      * @return
      * @throws SerException
      */
     default List<WorkRangeBO> findByStatus(Status status) throws SerException {
-=======
+        return null;
+    }
+
+    /*
      * 获取未冻结的工作范围
      */
     default List<String> findWorkScope() throws SerException {
->>>>>>> Stashed changes
         return null;
     }
 

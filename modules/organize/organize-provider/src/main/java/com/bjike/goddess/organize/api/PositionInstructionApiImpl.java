@@ -65,11 +65,10 @@ public class PositionInstructionApiImpl implements PositionInstructionAPI {
     public PositionInstructionBO findById(String id) throws SerException {
         return positionInstructionSer.getById(id);
     }
-<<<<<<< Updated upstream
     @Override
     public List<String> getOutCome() throws SerException {
         return positionInstructionSer.getOutCome();
-=======
+    }
 
     @Override
     public List<String> findOutcome() throws SerException {
@@ -79,6 +78,5 @@ public class PositionInstructionApiImpl implements PositionInstructionAPI {
     @Override
     public List<String> findWorkPermission() throws SerException {
         return positionInstructionSer.findWorkPermission();
->>>>>>> Stashed changes
     }
 }

@@ -201,7 +201,6 @@ public interface WorkRangeSer extends Ser<WorkRange, WorkRangeDTO> {
     default List<OpinionBO> findThawOpinion() throws SerException {
         return null;
     }
-<<<<<<< Updated upstream
     /**
      * 获取所有工作范围选项
      *
@@ -209,13 +208,13 @@ public interface WorkRangeSer extends Ser<WorkRange, WorkRangeDTO> {
      * @throws SerException
      */
     default List<WorkRangeBO> findByStatus(Status status) throws SerException {
-=======
+        return null;
+    }
 
     /**
      * 获取工作范围
      */
     default List<String> findWorkScope() throws SerException {
->>>>>>> Stashed changes
         return null;
     }
 }

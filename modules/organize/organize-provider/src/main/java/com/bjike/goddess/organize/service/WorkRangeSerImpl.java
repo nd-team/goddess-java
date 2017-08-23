@@ -249,14 +249,14 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
             bos.add(new OpinionBO(entity.getId(), String.format("方向:%s 科目:%s 专业分类:%s 工作范围:%s", entity.getDirection(), entity.getProject(), entity.getClassify(), entity.getWorkRange())));
         return bos;
     }
-<<<<<<< Updated upstream
+
     @Override
     public List<WorkRangeBO> findByStatus(Status status) throws SerException {
         WorkRangeDTO dto = new WorkRangeDTO();
         dto.getConditions().add(Restrict.eq(STATUS, status));
         List<WorkRange> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, WorkRangeBO.class);
-=======
+    }
 
     @Override
     public List<String> findWorkScope() throws SerException {
@@ -268,6 +268,5 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
             list = workRanges.stream().map(WorkRange::getWorkRange).distinct().collect(Collectors.toList());
         }
         return list;
->>>>>>> Stashed changes
     }
 }

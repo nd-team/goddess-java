@@ -11,15 +11,12 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.*;
-<<<<<<< Updated upstream
 import com.bjike.goddess.organize.bo.ModuleTypeBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.WorkRangeBO;
 import com.bjike.goddess.organize.entity.ModuleType;
 import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.organize.entity.WorkRange;
-=======
->>>>>>> Stashed changes
 import com.bjike.goddess.organize.vo.ModuleTypeVO;
 import com.bjike.goddess.organize.vo.PositionDetailVO;
 import com.bjike.goddess.organize.vo.WorkRangeVO;
@@ -65,10 +62,6 @@ public class WorkJoinAction {
     private WorkRangeAPI workRangeAPI;
     @Autowired
     private PositionInstructionAPI positionInstructionAPI;
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
     /**
      * 模块设置导航权限
      *
@@ -294,19 +287,16 @@ public class WorkJoinAction {
     @GetMapping("v1/position")
     public Result position(HttpServletRequest request) throws ActException {
         try {
-<<<<<<< Updated upstream
             List<PositionDetailBO> boList = new ArrayList<>();
             if(moduleAPI.isCheck("organize")){
                 boList = positionDetailAPI.findStatus();
             }
             return ActResult.initialize(BeanTransform.copyProperties(boList, PositionDetailVO.class, request));
-=======
-            if (moduleAPI.isCheck("organize")) {
-                return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findStatus(), PositionDetailVO.class, request));
-            } else {
-                return ActResult.initialize(null);
-            }
->>>>>>> Stashed changes
+//            if (moduleAPI.isCheck("organize")) {
+//                return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findStatus(), PositionDetailVO.class, request));
+//            } else {
+//                return ActResult.initialize(null);
+//            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -321,19 +311,16 @@ public class WorkJoinAction {
     @GetMapping("v1/module")
     public Result module(HttpServletRequest request) throws ActException {
         try {
-<<<<<<< Updated upstream
             List<ModuleTypeBO> boList = new ArrayList<>();
             if(moduleAPI.isCheck("organize")){
                 boList = moduleTypeAPI.findByStatus(Status.THAW);
             }
             return ActResult.initialize(BeanTransform.copyProperties(boList, ModuleTypeVO.class, request));
-=======
-            if (moduleAPI.isCheck("organize")) {
-                return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.findByStatus(Status.THAW), ModuleTypeVO.class, request));
-            } else {
-                return ActResult.initialize(null);
-            }
->>>>>>> Stashed changes
+//            if (moduleAPI.isCheck("organize")) {
+//                return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.findByStatus(Status.THAW), ModuleTypeVO.class, request));
+//            } else {
+//                return ActResult.initialize(null);
+//            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

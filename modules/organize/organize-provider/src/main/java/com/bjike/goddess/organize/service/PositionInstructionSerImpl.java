@@ -241,7 +241,6 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
         List<PositionInstruction> list = super.findByCis(dto);
         return this.transformToBOList(list);
     }
-<<<<<<< Updated upstream
     @Override
     public List<String> getOutCome() throws SerException {
         String[] fields = new String[]{"outcome"};
@@ -254,7 +253,6 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
         return outComeList;
     }
 
-=======
 
     @Override
     public List<String> findOutcome() throws SerException {
@@ -281,5 +279,4 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
         }
         return new ArrayList<>(set);
     }
->>>>>>> Stashed changes
 }
