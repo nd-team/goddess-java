@@ -1,5 +1,6 @@
 package com.bjike.goddess.materialbuy.action.materialbuy;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -7,6 +8,7 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.materialbuy.api.DeviceTypeAPI;
 import com.bjike.goddess.materialbuy.api.MaterialBuyAPI;
 import com.bjike.goddess.materialbuy.bo.MaterialBuyBO;
 import com.bjike.goddess.materialbuy.dto.DeviceTypeDTO;
@@ -64,6 +66,10 @@ public class MaterialBuyAct extends BaseFileAction{
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private DeviceTypeAPI deviceTypeAPI;
 
     /**
      * 模块设置导航权限
@@ -356,9 +362,11 @@ public class MaterialBuyAct extends BaseFileAction{
     public Result findUserNames() throws ActException {
         try {
             Set<String> set = new HashSet<>();
-            List<UserBO> boList = userAPI.findAllUser();
-            for (UserBO userBO : boList) {
-                set.add(userBO.getUsername());
+            if(moduleAPI.isCheck("organize")){
+                List<UserBO> boList = userAPI.findAllUser();
+                for (UserBO userBO : boList) {
+                    set.add(userBO.getUsername());
+                }
             }
             return ActResult.initialize(set);
         } catch (SerException e) {
@@ -376,8 +384,27 @@ public class MaterialBuyAct extends BaseFileAction{
     @GetMapping("v1/findArea")
     public Result findArea(HttpServletRequest request) throws ActException {
         try {
-            List<AreaBO> list = departmentDetailAPI.findArea();
+            List<AreaBO> list = new ArrayList<>(0);
+            if(moduleAPI.isCheck("organize")) {
+                list = departmentDetailAPI.findArea();
+            }
             return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取所有设备类型名称
+     *
+     * @return class AreaVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findDeviceType")
+    public Result findDeviceType(HttpServletRequest request) throws ActException {
+        try {
+            List<String> list = deviceTypeAPI.findAllDeviceNames();
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -393,7 +420,10 @@ public class MaterialBuyAct extends BaseFileAction{
     @GetMapping("v1/findStatus")
     public Result findStatus(HttpServletRequest request) throws ActException {
         try {
-            List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
+            List<DepartmentDetailBO> list = new ArrayList<>(0);
+            if(moduleAPI.isCheck("organize")) {
+                list = departmentDetailAPI.findStatus();
+            }
             return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

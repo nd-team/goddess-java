@@ -13,6 +13,7 @@ import com.bjike.goddess.staffentry.to.*;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.sun.org.apache.regexp.internal.RE;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
@@ -25,8 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 入职登记业务实现
@@ -429,5 +429,53 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
             credentialSer.save(credentialTOS);
         }
 
+    }
+
+    @Override
+    public List<String> findQQ() throws SerException {
+        List<EntryRegister> list = super.findAll();
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (EntryRegister model : list) {
+            String qq = model.getQq();
+            if (StringUtils.isNotBlank(model.getQq())) {
+                set.add(qq);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> findSchoolTag() throws SerException {
+        List<EntryRegister> list = super.findAll();
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (EntryRegister model : list) {
+            String schoolTag = model.getSchoolTag();
+            if (StringUtils.isNotBlank( model.getSchoolTag())) {
+                set.add(schoolTag);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> findGraduationDate() throws SerException {
+        List<EntryRegister> list = super.findAll();
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (EntryRegister model : list) {
+            String date = model.getGraduationDate().toString();
+            if (model.getGraduationDate()!=null) {
+                set.add(date);
+            }
+        }
+        return new ArrayList<>(set);
     }
 }

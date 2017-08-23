@@ -160,6 +160,9 @@ public class DisciplineRecordApiImpl implements DisciplineRecordAPI {
     }
 
     @Override
+    public ScoreBO getRePuTotal(String userName) throws SerException {
+        return disciplineRecordSer.getRePuTotal(userName);
+    }
     public String getRewardBallot(String name) throws SerException {
         return disciplineRecordSer.getRewardBallot(name);
     }

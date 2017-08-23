@@ -761,6 +761,26 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
     }
 
     @Override
+    public ScoreBO getRePuTotal(String userName) throws SerException {
+        DisciplineRecordDTO dto = new DisciplineRecordDTO();
+        dto.getConditions().add(Restrict.eq("username", userName));
+        List<DisciplineRecord> disciplineRecords = super.findByCis(dto);
+        Double rewardTotal = 0d;
+        Double pushTotal = 0d;
+        if (disciplineRecords != null && disciplineRecords.size() > 0) {
+            for (DisciplineRecord disciplineRecord : disciplineRecords) {
+                if (disciplineRecord.getStatus()) {
+                    rewardTotal += disciplineRecord.getBallot();
+                } else {
+                    pushTotal += disciplineRecord.getBallot();
+                }
+            }
+        }
+        ScoreBO scoreBO = new ScoreBO();
+        scoreBO.setRewardTotal(rewardTotal);
+        scoreBO.setPushTotal(pushTotal);
+        return scoreBO;
+    }
     public String getRewardBallot(String name) throws SerException {
         StringBuilder sql = new StringBuilder("select sum(ballot) as ballot ");
         sql.append(" from bonus_discipline_record ");

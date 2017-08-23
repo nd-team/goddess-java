@@ -227,6 +227,11 @@ public interface DisciplineRecordSer extends Ser<DisciplineRecord, DisciplineRec
     Integer getRewardNum(String userName) throws SerException;
 
     /**
+     * 根据姓名获取奖励和处罚总分数
+     */
+    ScoreBO getRePuTotal(String userName) throws SerException;
+
+    /**
      * 根据姓名获取奖励总分
      */
     default String getRewardBallot(String name) throws SerException {

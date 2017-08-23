@@ -1,5 +1,6 @@
 package com.bjike.goddess.staffactivity.action.staffactivity;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -57,7 +58,8 @@ public class ActivityApplyInforAct {
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
-
+@Autowired
+private ModuleAPI moduleAPI;
     /**
      * 模块设置导航权限
      *
@@ -308,9 +310,11 @@ public class ActivityApplyInforAct {
     public Result findUserNames() throws ActException {
         try {
             Set<String> set = new HashSet<>();
-            List<UserBO> boList = userAPI.findAllUser();
-            for (UserBO userBO : boList) {
-                set.add(userBO.getUsername());
+            if(moduleAPI.isCheck("organize")) {
+                List<UserBO> boList = userAPI.findAllUser();
+                for (UserBO userBO : boList) {
+                    set.add(userBO.getUsername());
+                }
             }
             return ActResult.initialize(set);
         } catch (SerException e) {
@@ -328,7 +332,10 @@ public class ActivityApplyInforAct {
     @GetMapping("v1/findArea")
     public Result findArea(HttpServletRequest request) throws ActException {
         try {
-            List<AreaBO> list = departmentDetailAPI.findArea();
+            List<AreaBO> list = new ArrayList<>(0);
+            if(moduleAPI.isCheck("organize")) {
+               list = departmentDetailAPI.findArea();
+            }
             return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -345,7 +352,10 @@ public class ActivityApplyInforAct {
     @GetMapping("v1/findStatus")
     public Result findStatus(HttpServletRequest request) throws ActException {
         try {
-            List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
+            List<DepartmentDetailBO> list = new ArrayList<>(0);
+            if(moduleAPI.isCheck("organize")) {
+                list = departmentDetailAPI.findStatus();
+            }
             return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

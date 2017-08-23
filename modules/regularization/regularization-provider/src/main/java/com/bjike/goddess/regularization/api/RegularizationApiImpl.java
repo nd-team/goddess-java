@@ -193,7 +193,7 @@ public class RegularizationApiImpl implements RegularizationAPI {
     }
 
     @Override
-    public List<RegularizationBO> findAddRusult(String name, String empNumer) throws SerException {
+    public RegularizationBO findAddRusult(String name, String empNumer) throws SerException {
         return regularizationSer.findAddRusult(name,empNumer);
     }
 
