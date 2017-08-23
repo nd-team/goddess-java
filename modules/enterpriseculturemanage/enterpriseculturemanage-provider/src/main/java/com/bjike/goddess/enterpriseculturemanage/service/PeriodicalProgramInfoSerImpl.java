@@ -200,7 +200,7 @@ public class PeriodicalProgramInfoSerImpl extends ServiceImpl<PeriodicalProgramI
         if (info != null) {
             PeriodicalProgramInfo model = BeanTransform.copyProperties(to, PeriodicalProgramInfo.class, true);
             if (isExist(model)) {
-                throw new SerException("该主题的宣传方案信息已存在!");
+                throw new SerException("该主题的刊物方案信息已存在!");
             }
             model.setTheme(info.getTheme());
             model.setAuditResult(AuditResult.NOTDEAL);
@@ -267,6 +267,7 @@ public class PeriodicalProgramInfoSerImpl extends ServiceImpl<PeriodicalProgramI
         PeriodicalProgramInfo model = super.findById(id);
         if (model != null) {
             model.setAuditResult(auditResult);
+            model.setAuditSuggestion(auditSuggestion);
             super.update(model);
         } else {
             throw new SerException("非法Id,刊物方案信息对象不能为空!");

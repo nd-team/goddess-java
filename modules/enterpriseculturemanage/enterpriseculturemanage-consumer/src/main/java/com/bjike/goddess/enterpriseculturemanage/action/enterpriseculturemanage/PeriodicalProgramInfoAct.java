@@ -176,8 +176,8 @@ public class PeriodicalProgramInfoAct {
      * @param auditSuggestion 审核意见
      * @version v1
      */
-    @PutMapping("v1/audit/{id}")
-    public Result audit(@PathVariable String id, @RequestParam AuditResult auditResult, @RequestParam String auditSuggestion) throws ActException {
+    @PutMapping("v1/audit")
+    public Result audit(@RequestParam String id, @RequestParam AuditResult auditResult, @RequestParam String auditSuggestion) throws ActException {
         try {
             periodicalProgramInfoAPI.audit(id, auditResult, auditSuggestion);
             return new ActResult();
