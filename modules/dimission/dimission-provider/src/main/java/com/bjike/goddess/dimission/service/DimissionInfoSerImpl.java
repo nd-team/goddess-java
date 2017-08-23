@@ -777,7 +777,7 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
     @Override
     public List<DimissionInfo> findByName(String userName) throws SerException {
         DimissionInfoDTO dto = new DimissionInfoDTO();
-        dto.getConditions().add(Restrict.eq("userName", userName));
+        dto.getConditions().add(Restrict.eq("username",userName));
         List<DimissionInfo> list = super.findByCis(dto);
         return list;
     }
