@@ -431,10 +431,10 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
 
     @Override
     public List<StaffRecordsBO> findByMonth(Integer month) throws SerException {
-        String[] staff = new String[]{"username", "serialNumber", "project", "position", "educationn", "major", "school", "graduate", "entryTime", "seniority", "telephone", "birth", "address", "identityCard", "bankCard", "bank", "email", "status"};
-        String sql = "select * from archive_staff_records where month(birth) = '" + month + "'";
-        List<StaffRecords> list = super.findBySql(sql, StaffRecords.class, staff);
-        List<StaffRecordsBO> boList = BeanTransform.copyProperties(list, StaffRecordsBO.class, true);
+        String[] staff = new String[]{"id","createTime","modifyTime","address","bank","bankCard","birth","dimissionTime","education","email","entryTime","graduate","identityCard","major","position","project","school","seniority","serialNumber","status","telephone","username"};
+        String sql = "select * from archive_staff_records where month(birth) = '"+month+"'";
+        List<StaffRecords> list = super.findBySql(sql,StaffRecords.class,staff);
+        List<StaffRecordsBO> boList = BeanTransform.copyProperties(list,StaffRecordsBO.class,false);
         return boList;
     }
 }
