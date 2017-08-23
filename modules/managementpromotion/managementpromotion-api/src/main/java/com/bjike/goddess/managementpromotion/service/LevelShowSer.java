@@ -113,4 +113,10 @@ public interface LevelShowSer extends Ser<LevelShow, LevelShowDTO> {
     default LevelShow findByName(String name) throws SerException {
         return null;
     }
+
+    /**
+     * 通过员工编号查询管理等级
+     * jinagzaixuan
+     */
+    LevelShowBO findEmployeeId(String employeeId) throws SerException;
 }

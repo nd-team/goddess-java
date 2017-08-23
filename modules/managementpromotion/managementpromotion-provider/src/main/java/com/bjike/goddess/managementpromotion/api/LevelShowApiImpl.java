@@ -75,4 +75,9 @@ public class LevelShowApiImpl implements LevelShowAPI {
     public LevelShow findByName(String name) throws SerException {
         return levelShowSer.findByName(name);
     }
+
+    @Override
+    public LevelShowBO findEmployeeId(String employeeId) throws SerException {
+        return levelShowSer.findEmployeeId(employeeId);
+    }
 }

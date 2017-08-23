@@ -226,4 +226,12 @@ public class LevelShowSerImpl extends ServiceImpl<LevelShow, LevelShowDTO> imple
         }
         return null;
     }
+
+    @Override
+    public LevelShowBO findEmployeeId(String employeeId) throws SerException {
+        LevelShowDTO dto = new LevelShowDTO();
+        dto.getConditions().add(Restrict.eq("employeeId",employeeId));
+        LevelShow levelShow = super.findOne(dto);
+        return BeanTransform.copyProperties(levelShow,LevelShowBO.class);
+    }
 }
