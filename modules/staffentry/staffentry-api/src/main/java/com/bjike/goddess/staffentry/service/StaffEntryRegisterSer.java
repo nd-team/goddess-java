@@ -3,8 +3,8 @@ package com.bjike.goddess.staffentry.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.staffentry.bo.StaffEntryRegisterBO;
-import com.bjike.goddess.staffentry.entity.StaffEntryRegister;
 import com.bjike.goddess.staffentry.dto.StaffEntryRegisterDTO;
+import com.bjike.goddess.staffentry.entity.StaffEntryRegister;
 import com.bjike.goddess.staffentry.to.GuidePermissionTO;
 import com.bjike.goddess.staffentry.to.StaffEntryRegisterEmailTO;
 import com.bjike.goddess.staffentry.to.StaffEntryRegisterTO;
@@ -51,9 +51,10 @@ public interface StaffEntryRegisterSer extends Ser<StaffEntryRegister, StaffEntr
      *
      * @return class StaffEntryRegisterBO
      */
-    default StaffEntryRegisterBO getOne(String id ) throws SerException {
+    default StaffEntryRegisterBO getOne(String id) throws SerException {
         return null;
     }
+
     /**
      * 员工入职注册列表
      *
@@ -94,9 +95,8 @@ public interface StaffEntryRegisterSer extends Ser<StaffEntryRegister, StaffEntr
 
     /**
      * 获取注册的员工编号
-     *
      */
-    default String  maxEmpNumber( ) throws SerException {
+    default String maxEmpNumber() throws SerException {
         return null;
     }
 
@@ -108,4 +108,14 @@ public interface StaffEntryRegisterSer extends Ser<StaffEntryRegister, StaffEntr
     default void sendAccountToEmp(StaffEntryRegisterEmailTO staffEntryRegisterEmailTO) throws SerException {
     }
 
+    /**
+     * 根据员工姓名获取注册的员工编号
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    default String getMaxEmpNumberByName(String name) throws SerException {
+        return null;
+    }
 }

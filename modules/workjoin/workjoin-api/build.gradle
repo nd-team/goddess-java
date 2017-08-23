@@ -6,5 +6,8 @@ dependencies {
     compile project(":modules:storage:storage-api")
     compile project(":modules:organize:organize-api")
     compile project(":modules:assemble:assemble-api")
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 }

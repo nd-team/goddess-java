@@ -78,4 +78,9 @@ public class StaffEntryRegisterApiImpl implements StaffEntryRegisterAPI {
     public void sendAccountToEmp(StaffEntryRegisterEmailTO staffEntryRegisterEmailTO) throws SerException {
         staffEntryRegisterSer.sendAccountToEmp( staffEntryRegisterEmailTO );
     }
+
+    @Override
+    public String getMaxEmpNumberByName(String name) throws SerException {
+        return staffEntryRegisterSer.getMaxEmpNumberByName(name);
+    }
 }

@@ -123,8 +123,15 @@ public class WorkRangeApiImpl implements WorkRangeAPI {
     public List<OpinionBO> findThawOpinion() throws SerException {
         return workRangeSer.findThawOpinion();
     }
+<<<<<<< Updated upstream
     @Override
     public List<WorkRangeBO> findByStatus(Status status) throws SerException {
         return workRangeSer.findByStatus(status);
+=======
+
+    @Override
+    public List<String> findWorkScope() throws SerException {
+        return workRangeSer.findWorkScope();
+>>>>>>> Stashed changes
     }
 }

@@ -49,9 +49,10 @@ public interface StaffEntryRegisterAPI {
      *
      * @return class StaffEntryRegisterBO
      */
-    default StaffEntryRegisterBO getOne(String id ) throws SerException {
+    default StaffEntryRegisterBO getOne(String id) throws SerException {
         return null;
     }
+
     /**
      * 员工入职注册列表
      *
@@ -80,6 +81,7 @@ public interface StaffEntryRegisterAPI {
     default StaffEntryRegisterBO editStaffEntryRegister(StaffEntryRegisterTO staffEntryRegisterTO) throws SerException {
         return null;
     }
+
     /**
      * 删除
      *
@@ -90,9 +92,8 @@ public interface StaffEntryRegisterAPI {
 
     /**
      * 获取注册的员工编号
-     *
      */
-    default String  maxEmpNumber( ) throws SerException {
+    default String maxEmpNumber() throws SerException {
         return null;
     }
 
@@ -105,4 +106,14 @@ public interface StaffEntryRegisterAPI {
     }
 
 
+    /**
+     * 根据员工姓名获取注册的员工编号
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    default String getMaxEmpNumberByName(String name) throws SerException {
+        return null;
+    }
 }
