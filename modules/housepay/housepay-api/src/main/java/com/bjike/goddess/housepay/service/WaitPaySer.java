@@ -2,15 +2,16 @@ package com.bjike.goddess.housepay.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.housepay.bo.MoneyReadyBO;
-import com.bjike.goddess.housepay.bo.PayRecordBO;
+import com.bjike.goddess.housepay.bo.AreaCollectBO;
+import com.bjike.goddess.housepay.bo.CollectDetailBO;
+import com.bjike.goddess.housepay.bo.ProjectCollectBO;
 import com.bjike.goddess.housepay.bo.WaitPayBO;
-import com.bjike.goddess.housepay.dto.MoneyReadyDTO;
 import com.bjike.goddess.housepay.dto.WaitPayDTO;
 import com.bjike.goddess.housepay.entity.WaitPay;
 import com.bjike.goddess.housepay.excel.SonPermissionObject;
+import com.bjike.goddess.housepay.to.CollectAreaTO;
+import com.bjike.goddess.housepay.to.CollectProjectTO;
 import com.bjike.goddess.housepay.to.GuidePermissionTO;
-import com.bjike.goddess.housepay.to.MoneyReadyTO;
 import com.bjike.goddess.housepay.to.WaitPayTO;
 
 import java.util.List;
@@ -97,6 +98,7 @@ public interface WaitPaySer extends Ser<WaitPay, WaitPayDTO> {
     default void removeWaitPay(String id) throws SerException {
 
     }
+
     /**
      * 付款
      *
@@ -104,6 +106,85 @@ public interface WaitPaySer extends Ser<WaitPay, WaitPayDTO> {
      * @throws SerException
      */
     default void payment(String id) throws SerException {
+    }
+
+    /**
+     * 地区汇总
+     *
+     * @param to to
+     * @return class AreaCollectBO
+     * @throws SerException
+     */
+    default List<AreaCollectBO> collectArea(CollectAreaTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 地区汇总详情
+     *
+     * @param to to
+     * @return class CollectDetailBO
+     * @throws SerException
+     */
+    default List<CollectDetailBO> collectAreaDetail(CollectAreaTO to) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 获取地区
+     *
+     * @return class String
+     */
+    default List<String> getAreas() throws SerException {
+        return null;
+    }
+
+    /**
+     * 项目汇总
+     *
+     * @param to to
+     * @return class ProjectCollectBO
+     * @throws SerException
+     */
+    default List<ProjectCollectBO> collectProject(CollectProjectTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 项目汇总详情
+     *
+     * @param to to
+     * @return class CollectDetailBO
+     * @throws SerException
+     */
+    default List<CollectDetailBO> collectProjectDatail(CollectProjectTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取项目
+     *
+     * @return class String
+     */
+    default List<String> getProject() throws SerException {
+        return null;
+    }
+    /**
+     * 计算合计
+     *
+     * @return class Double
+     */
+    default Double calculate(WaitPayTO to) throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有年份
+     *
+     */
+    default List<String> yearList( ) throws SerException {
+
+        return null;
     }
 
 }

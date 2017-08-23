@@ -1,12 +1,11 @@
 package com.bjike.goddess.housepay.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.housepay.bo.AreaCollectBO;
-import com.bjike.goddess.housepay.bo.PayRecordBO;
-import com.bjike.goddess.housepay.bo.ProjectCollectBO;
-import com.bjike.goddess.housepay.bo.WaitPayBO;
+import com.bjike.goddess.housepay.bo.*;
 import com.bjike.goddess.housepay.dto.PayRecordDTO;
 import com.bjike.goddess.housepay.dto.WaitPayDTO;
+import com.bjike.goddess.housepay.to.CollectAreaTO;
+import com.bjike.goddess.housepay.to.CollectProjectTO;
 import com.bjike.goddess.housepay.to.GuidePermissionTO;
 
 import java.util.List;
@@ -35,13 +34,23 @@ public interface PayRecordAPI {
     }
 
     /**
-     * 汇总
+     * 地区汇总
      *
-     * @param areas areas
+     * @param to to
      * @return class AreaCollectBO
      * @throws SerException
      */
-    default List<AreaCollectBO> collectArea(String[] areas) throws SerException {
+    default List<AreaCollectBO> collectArea(CollectAreaTO to) throws SerException {
+        return null;
+    }
+    /**
+     * 地区汇总详情
+     *
+     * @param to to
+     * @return class CollectDetailBO
+     * @throws SerException
+     */
+    default List<CollectDetailBO> collectAreaDetail(CollectAreaTO to) throws SerException {
         return null;
     }
 
@@ -55,13 +64,23 @@ public interface PayRecordAPI {
     }
 
     /**
-     * 汇总
+     * 项目汇总
      *
-     * @param projects projects
+     * @param to to
      * @return class ProjectCollectBO
      * @throws SerException
      */
-    default List<ProjectCollectBO> collectProject(String[] projects) throws SerException {
+    default List<ProjectCollectBO> collectProject(CollectProjectTO to) throws SerException {
+        return null;
+    }
+    /**
+     * 项目汇总详情
+     *
+     * @param to to
+     * @return class CollectDetailBO
+     * @throws SerException
+     */
+    default List<CollectDetailBO> collectProjectDatail(CollectProjectTO to) throws SerException {
         return null;
     }
 
