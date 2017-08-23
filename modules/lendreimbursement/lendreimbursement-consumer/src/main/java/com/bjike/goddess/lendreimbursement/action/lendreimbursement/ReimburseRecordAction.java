@@ -717,7 +717,7 @@ public class ReimburseRecordAction extends BaseFileAction {
     @GetMapping("v1/exportHasPay")
     public Result exportHasPay(ReimburseRecordDTO reimburseRecordDTO, HttpServletResponse response) throws ActException {
         try {
-            String fileName = "等待付款.xlsx";
+            String fileName = "已付款记录.xlsx";
             super.writeOutFile(response, reimburseRecordAPI.exportAlPayExcel(reimburseRecordDTO), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
@@ -993,7 +993,7 @@ public class ReimburseRecordAction extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @PutMapping("v1/reimNumByPrepay")
+    @GetMapping("v1/reimNumByPrepay")
     public Result reimNumByPrepay( ) throws ActException {
         try {
             List<String> list = reimburseRecordAPI.reimNumByPrepay( );

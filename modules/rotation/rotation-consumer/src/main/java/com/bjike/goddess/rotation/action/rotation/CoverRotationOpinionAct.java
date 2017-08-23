@@ -22,7 +22,8 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * 岗位轮换自荐意见
  *
- * @Author: [ dengjunren ]
+ * @Author: [ dengjunren
+ * ]
  * @Date: [ 2017-05-13 04:04 ]
  * @Description: [ 岗位轮换自荐意见 ]
  * @Version: [ v1.0.0 ]

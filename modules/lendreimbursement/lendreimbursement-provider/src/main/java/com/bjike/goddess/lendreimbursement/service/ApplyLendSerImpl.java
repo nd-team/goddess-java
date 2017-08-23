@@ -1050,11 +1050,15 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Override
     public Long countSureRecieve(ApplyLendDTO applyLendDTO) throws SerException {
         String userName = userAPI.currentUser().getUsername();
-        ApplyLendDTO dto = applyLendDTO;
-        dto.getConditions().add(Restrict.eq("payCondition", "是"));
-        dto.getConditions().add(Restrict.eq("fillSingler", userName));
-        dto.getConditions().add(Restrict.or("lender", userName));
-        Long counts = super.count(dto);
+        String [] field = new String[]{"id"};
+        StringBuffer sql = new StringBuffer("");
+        sql.append( " SELECT payCondition ,id " )
+                .append( " FROM lendreimbursement_applylend " )
+                .append( " WHERE  payCondition = '是' AND  receivePay IS NULL " )
+                .append( " AND ( fillSingler = '"+userName+"'  OR lender = '"+userName+"') " )
+                ;
+        List<Object> list = super.findBySql(sql.toString());
+        Long counts = ( list != null && list.size()>0 )? list.size() : 0L;
         return counts;
     }
 
@@ -1062,11 +1066,20 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     public List<ApplyLendBO> listSureRecieveMoney(ApplyLendDTO applyLendDTO) throws SerException {
 
         String userName = userAPI.currentUser().getUsername();
-        ApplyLendDTO dto = applyLendDTO;
-        dto.getConditions().add(Restrict.eq("payCondition", "是"));
-        dto.getConditions().add(Restrict.eq("fillSingler", userName));
-        dto.getConditions().add(Restrict.or("lender", userName));
-        List<ApplyLend> applyLend = super.findByCis(dto, true);
+        String [] field = new String[]{"id","fillSingler","lendDate","estimateLendDate","area","projectGroup","projectName","lender",
+                "firstSubject","secondSubject","thirdSubject","explains","writeUp","writeUpCondition","lendReson","remark",
+        "money","attender","lendWay","goodsLink","charger","chargerOpinion"};
+        StringBuffer sql = new StringBuffer("");
+        sql.append( " SELECT id, fillSingler,lendDate,estimateLendDate,area,projectGroup,projectName,lender ," )
+                .append( " firstSubject,secondSubject,thirdSubject,explains,writeUp,writeUpCondition,lendReson,remark, " )
+                .append( " money,attender,lendWay,goodsLink,charger,chargerOpinion " )
+                .append( " FROM lendreimbursement_applylend " )
+                .append( " WHERE  payCondition = '是' AND  receivePay IS NULL " )
+                .append( " AND ( fillSingler = '"+userName+"'  OR lender = '"+userName+"') " )
+        ;
+
+        List<ApplyLendBO> applyLend = super.findBySql( sql.toString() , ApplyLendBO.class , field );
+
         return BeanTransform.copyProperties(applyLend, ApplyLendBO.class);
     }
 
@@ -1138,6 +1151,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ApplyLendBO editBorrowRecordSend(ApplyLendTO applyLendTO) throws SerException {
+        String userName = userAPI.currentUser().getUsername();
         if (StringUtils.isBlank(applyLendTO.getId())) {
             throw new SerException("寄件失败，id不能为空");
         }
@@ -1149,7 +1163,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         lend.setSendDate(applyLend.getSendDate());
         lend.setSendCondition(applyLend.getSendCondition());
         lend.setReceiveAddr(applyLend.getReceiveAddr());
-
+        lend.setSender( userName );
         lend.setDocumentQuantity(applyLendTO.getDocumentQuantity());
         lend.setModifyTime(LocalDateTime.now());
         super.update(lend);
@@ -1394,6 +1408,9 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         if (StringUtils.isBlank(applyLendTO.getTicketCondition())) {
             throw new SerException("失败，收票情况不能为空");
         }
+        if (StringUtils.isBlank(applyLendTO.getTicketDate())) {
+            throw new SerException("失败，收票日期不能为空");
+        }
         if (!"否".equals(applyLendTO.getDocumentCondition()) && !"是".equals(applyLendTO.getDocumentCondition())) {
             throw new SerException("失败，是否收到单据填写是或否");
         }
@@ -1402,6 +1419,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 //        BeanUtils.copyProperties(applyLendTO, lend, "id", "createTime");
 
         lend.setDocumentCondition(applyLendTO.getDocumentCondition());
+        lend.setTicketDate( LocalDate.parse( applyLendTO.getTicketDate()));
         lend.setTicketer(userAPI.currentUser().getUsername());
         lend.setTicketCondition(applyLendTO.getTicketCondition());
         lend.setReceiveTicket(applyLendTO.getReceiveTicket());

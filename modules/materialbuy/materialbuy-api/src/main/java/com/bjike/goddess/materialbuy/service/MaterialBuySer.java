@@ -219,4 +219,18 @@ public interface MaterialBuySer extends Ser<MaterialBuy, MaterialBuyDTO> {
      * @throws SerException
      */
     List<MaterialBuyBO> findByRequisType(String requisitioner,String devType, String[] intervalTime) throws SerException;
+
+    /**
+     * 获得申购日期
+     */
+    default List<String> findSubscribeDate() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获得申购人
+     */
+    default List<String> findRequisitioner() throws SerException {
+        return null;
+    }
 }

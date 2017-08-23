@@ -33,6 +33,7 @@ public interface ForeignStaffingAPI {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 保存
      *
@@ -95,6 +96,36 @@ public interface ForeignStaffingAPI {
      * @throws SerException
      */
     default Long getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取毕业时间
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> getTime() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取毕业学校
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> getSchool() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取qq号
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> getQQ() throws SerException {
         return null;
     }
 }

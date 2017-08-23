@@ -43,6 +43,13 @@ public class CoverRotationOpinionBO extends BaseBO {
      */
     private String opinion;
 
+    /**
+     * 时间
+     *
+     * @return
+     */
+    private String time;
+
 
     public String getCoverId() {
         return coverId;
@@ -90,5 +97,13 @@ public class CoverRotationOpinionBO extends BaseBO {
 
     public void setOpinion(String opinion) {
         this.opinion = opinion;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }

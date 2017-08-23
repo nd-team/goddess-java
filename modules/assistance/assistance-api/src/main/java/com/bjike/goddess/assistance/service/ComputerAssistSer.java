@@ -93,6 +93,25 @@ public interface ComputerAssistSer extends Ser<ComputerAssist, ComputerAssistDTO
      */
     default List<String> listAllUser() throws SerException { return null;}
 
+
+    /**
+     * 获取所有汇总地区
+     *
+     * @throws SerException
+     */
+    default List<String> listAllArea() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有汇总项目组
+     *
+     * @throws SerException
+     */
+    default List<String> listAllProject() throws SerException {
+        return null;
+    }
+
     /**
      * 获取用户入职基本信息
      * @throws SerException

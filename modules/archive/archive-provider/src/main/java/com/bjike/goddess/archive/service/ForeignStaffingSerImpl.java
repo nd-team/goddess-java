@@ -10,16 +10,21 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
+import com.bjike.goddess.staffentry.entity.EntryRegister;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 对外人员信息业务实现
@@ -41,6 +46,8 @@ public class ForeignStaffingSerImpl extends ServiceImpl<ForeignStaffing, Foreign
     private UserAPI userAPI;
     @Autowired
     private RotainCusPermissionSer cusPermissionSer;
+    @Autowired
+    private EntryRegisterAPI entryRegisterAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -249,5 +256,38 @@ public class ForeignStaffingSerImpl extends ServiceImpl<ForeignStaffing, Foreign
     public Long getTotal() throws SerException {
         ForeignStaffingDTO dto = new ForeignStaffingDTO();
         return super.count(dto);
+    }
+
+    @Override
+    public List<String> getTime() throws SerException {
+        List<EntryRegister> entryRegisters = entryRegisterAPI.list();
+        List<String> list = new ArrayList<>(0);
+        if (!CollectionUtils.isEmpty(entryRegisters)) {
+            List<LocalDate> localDateList = entryRegisters.stream().map(EntryRegister::getGraduationDate).distinct().collect(Collectors.toList());
+            for (LocalDate localDate : localDateList) {
+                list.add(localDate.toString());
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<String> getSchool() throws SerException {
+        List<EntryRegister> entryRegisters = entryRegisterAPI.list();
+        if (!CollectionUtils.isEmpty(entryRegisters)) {
+            List<String> list = entryRegisters.stream().map(EntryRegister::getSchoolTag).distinct().collect(Collectors.toList());
+            return list;
+        }
+        return null;
+    }
+
+    @Override
+    public List<String> getQQ() throws SerException {
+        List<EntryRegister> entryRegisters = entryRegisterAPI.list();
+        if (!CollectionUtils.isEmpty(entryRegisters)) {
+            List<String> list = entryRegisters.stream().map(EntryRegister::getQq).distinct().collect(Collectors.toList());
+            return list;
+        }
+        return null;
     }
 }

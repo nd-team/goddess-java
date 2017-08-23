@@ -33,4 +33,6 @@
 	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
 	<dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.materialinstock.api.MaterialInStockAPI" id="materialInStockApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.assemble.api.ModuleAPI" id="moduleApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.businessproject.api.BaseInfoManageAPI" id="baseInfoManageApiImpl"></dubbo:reference>
 </beans>

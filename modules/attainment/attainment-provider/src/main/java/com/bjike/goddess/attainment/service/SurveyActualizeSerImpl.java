@@ -52,7 +52,13 @@ public class SurveyActualizeSerImpl extends ServiceImpl<SurveyActualize, SurveyA
         bo.setStart(bo.getStartTime());
         bo.setEnd(bo.getEndTime());
         bo.setFinish(bo.getFinishTime());
-        bo = BeanTransform.copyProperties(entity, SurveyActualizeBO.class);
+        bo.setStartTime(entity.getStartTime().toString());
+//        bo.setEndTime(entity.getEndTime().toString());
+        bo.setFinishTime(entity.getFinishTime().toString());
+        bo.setSurvey(entity.getSurvey());
+        bo.setQuestionnaire(entity.getQuestionnaire());
+        bo.setRemark(entity.getRemark());
+//        bo = BeanTransform.copyProperties(entity, SurveyActualizeBO.class);
         return bo;
     }
 

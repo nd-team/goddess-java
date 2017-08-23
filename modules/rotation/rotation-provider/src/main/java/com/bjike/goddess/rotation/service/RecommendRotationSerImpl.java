@@ -25,6 +25,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -112,7 +113,10 @@ public class RecommendRotationSerImpl extends ServiceImpl<RecommendRotation, Rec
         //user = userAPI.findByUsername(to.getUsername());
         //查询入职模块的用户
         List<EntryBasicInfoBO> entryBasicInfoVOList = entryBasicInfoAPI.getEntryBasicInfoByName(to.getUsername());
-        EntryBasicInfoBO user = entryBasicInfoVOList.get(0);
+        if (CollectionUtils.isEmpty(entryBasicInfoVOList)) {
+            throw new SerException("该用户不存在");
+//            EntryBasicInfoBO user = entryBasicInfoVOList.get(0);
+        }
 
         RecommendRotation entity = BeanTransform.copyProperties(to, RecommendRotation.class, true);
         if (null == entryBasicInfoVOList.get(0))

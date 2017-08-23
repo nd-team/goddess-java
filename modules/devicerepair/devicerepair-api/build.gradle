@@ -6,4 +6,5 @@ dependencies {
     compile project(":modules:organize:organize-api")
     compile project(":modules:storage:storage-api")
     compile project(":modules:materialinstock:materialinstock-api")
+    compile project(":modules:assemble:assemble-api")
 }

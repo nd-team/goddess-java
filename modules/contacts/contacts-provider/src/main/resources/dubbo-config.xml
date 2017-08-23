@@ -47,6 +47,7 @@
 
     <dubbo:reference  validation="true" id="dimissionInfoApiImpl" interface="com.bjike.goddess.dimission.api.DimissionInfoAPI" />
     <dubbo:reference  validation="true" id="entryBasicInfoApiImpl" interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" />
+    <dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
 
     <dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.contacts.api.ContactPermissionAPI" />
     <dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.contacts.api.ContactPermissionOperateAPI" />

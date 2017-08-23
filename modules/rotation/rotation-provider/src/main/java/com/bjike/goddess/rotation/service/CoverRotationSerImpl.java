@@ -11,8 +11,6 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.regularization.api.RegularizationAPI;
-import com.bjike.goddess.regularization.bo.RegularizationBO;
-import com.bjike.goddess.regularization.dto.RegularizationDTO;
 import com.bjike.goddess.rotation.bo.CoverRotationBO;
 import com.bjike.goddess.rotation.bo.CoverRotationOpinionBO;
 import com.bjike.goddess.rotation.bo.FindNameBO;
@@ -117,6 +115,10 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
             bo.setRotationLevelId(entity.getRotationLevel().getId());
             bo.setRotationLevelArrangement(entity.getRotationLevel().getArrangement());
         }
+        bo.setApplyTime(entity.getCreateTime().toString());
+        if (bo.getAudit().equals(AuditType.ALLOWED)) {
+            bo.setGetTime(entity.getModifyTime().toString());
+        }
         return bo;
     }
 
@@ -167,6 +169,11 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
             entity.setPosition(position.toString());
             entity.setArrangement(arrangement.toString());
             entity.setDepartment(department.toString());
+        } else {
+            entity.setArea("");
+            entity.setPosition("");
+            entity.setArrangement("");
+            entity.setDepartment("");
         }
         entity.setUsername(user.getUsername());
         entity.setAudit(AuditType.NONE);
@@ -248,12 +255,17 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
                 position.append(positionDetailBO.getPosition());
             }
 
-            entity.setUsername(user.getUsername());
             entity.setArea(area.toString());
             entity.setPosition(position.toString());
             entity.setDepartment(department.toString());
+        } else {
+            entity.setArea("");
+            entity.setPosition("");
+            entity.setDepartment("");
         }
+        entity.setUsername(user.getUsername());
         coverRotationOpinionSer.save(entity);
+        entity.setModifyTime(LocalDateTime.now());
         return coverRotationOpinionSer.transformBO(entity);
     }
 
