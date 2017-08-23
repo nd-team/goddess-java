@@ -5,10 +5,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.managepromotion.bo.CalculateBO;
-import com.bjike.goddess.managepromotion.bo.SkillGradingABO;
-import com.bjike.goddess.managepromotion.bo.SkillGradingBBO;
-import com.bjike.goddess.managepromotion.bo.SkillGradingCBO;
+import com.bjike.goddess.managepromotion.bo.*;
 import com.bjike.goddess.managepromotion.dto.SkillGradingADTO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingBDTO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingCDTO;
@@ -434,68 +431,91 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
         return null;
     }
 
+    public static List<List<Object>> str(List<String> list) {
+        List<List<Object>> result = new ArrayList<List<Object>>();
+        long n = (long) Math.pow(2, list.size());
+        List<Object> combine;
+        for (long l = 0L; l < n; l++) {
+            combine = new ArrayList<Object>();
+            for (int i = 0; i < list.size(); i++) {
+                if ((l >>> i & 1) == 1)
+                    combine.add(list.get(i));
+            }
+            result.add(combine);
+        }
+        return result;
+    }
+
+
     @Override
-    public List<CalculateBO> calculate(CalculateTO to) throws SerException {
-//        SkillGradingADTO adto = new SkillGradingADTO();
-//        adto.getConditions().add(Restrict.eq("major", to.getMain()));
-//        List<SkillGradingA> listA = skillGradingASer.findByCis(adto);
-//        List<CalculateBO> calculateBOS = new ArrayList<>();
-//        String main = to.getMain();
-//        Integer money = to.getMoney();
-//        String[] fields = new String[]{"major","grade"};
-//        String sql = "SELECT a.major,c.grade as grade FROM managepromotion_skillgradinga a," +
-//                " managepromotion_skillgradingc c, managepromotion_skillgradingb b " +
-//                " WHERE a.major='" + main + "' AND (c.subsidiesAmount+c.quotaJobTitle) = '" + money + "' and " +
-//                " a.id=b.skillGradingA_id AND b.id= c.skillGradingB_id group by a.major,c.grade ";
-//        List<SkillGradingC> listC = skillGradingCSer.findBySql(sql, SkillGradingC.class, fields);
-//        if (listC != null) {
-//            for (SkillGradingC skillGradingC : listC) {
-//                CalculateBO bo = new CalculateBO();
-//                bo.setMain(to.getMain());
-//                bo.setSkill(skillGradingC.getGrade());
-//                calculateBOS.add(bo);
-//            }
-//        }
-//        return calculateBOS;
-//    }
-        SkillGradingADTO adto = new SkillGradingADTO();
-        adto.getConditions().add(Restrict.eq("major", to.getMain()));
-        List<SkillGradingA> listA = skillGradingASer.findByCis(adto);
-        List<CalculateBO> calculateBOS = new ArrayList<>();
+    public List<SkillBO> calculate(CalculateTO to) throws SerException {
+        List<SkillBO> skillBOS = new ArrayList<>(0);
         String main = to.getMain();
         Integer money = to.getMoney();
-        String eventFirst= to.getEventFirst();
-        String[] fields = new String[]{"major","grade"};
-        String team = "" ;
-        if(StringUtils.isNotEmpty(main)){
-            team += " and a.major='" + main + "'";
+        String[] fields = new String[]{"major", "grade"};
+        StringBuilder sb = new StringBuilder();
+        if (StringUtils.isNotBlank(main) && null != money) {
+            sb.append(" SELECT a.major,c.grade as grade FROM managepromotion_skillgradinga a," +
+                    " managepromotion_skillgradingc c, managepromotion_skillgradingb b " +
+                    " WHERE 1=1 and " +
+                    " a.id=b.skillGradingA_id AND b.id= c.skillGradingB_id " +
+                    " and a.major='" + main + "' AND c.totalAllowance = '" + money + "'");
         }
-        if(null != money){
-            team += " AND (c.subsidiesAmount+c.quotaJobTitle) = '" + money + "'";
-        }
-        String sql = "SELECT a.major,c.grade as grade FROM managepromotion_skillgradinga a," +
-                " managepromotion_skillgradingc c, managepromotion_skillgradingb b " +
-                " WHERE 1=1 and " +
-                " a.id=b.skillGradingA_id AND b.id= c.skillGradingB_id "+
-                team+
-                " group by a.major,c.grade ";
+        sb.append("  group by a.major,c.grade ");
+        skillBOS = super.findBySql(sb.toString(), SkillBO.class, fields);
+        init(skillBOS, money);
+        return skillBOS;
+    }
 
-        //如果有第三个条件
-        if(StringUtils.isNotEmpty(eventFirst)){
-            team += " and c.subsidiesAmount ="+eventFirst;
-        }
-//        if(StringUtils.isNotEmpty(条件2)){
-//            team += " and 字段2 ="+条件2;
-//        }
-        List<SkillGradingC> listC = skillGradingCSer.findBySql(sql, SkillGradingC.class, fields);
-        if (listC != null) {
-            for (SkillGradingC skillGradingC : listC) {
-                CalculateBO bo = new CalculateBO();
-                bo.setMain(to.getMain());
-                bo.setSkill(skillGradingC.getGrade());
-                calculateBOS.add(bo);
+    private void init(List<SkillBO> skillBOS, Integer money) throws SerException {
+        if (null != skillBOS && skillBOS.size() > 0) {
+            String grade = skillBOS.get(0).getGrade();
+            String level = StringUtils.substring(grade, 0, 1);
+            Integer num = Integer.parseInt(StringUtils.substring(grade, 1, 2));
+            String[] field = new String[]{"grade", "subsidiesAmount","totalAllowance", "major"};
+            String sql = "SELECT c.grade,c.subsidiesAmount,c.totalAllowance,a.major from managepromotion_skillgradinga a," +
+                    " managepromotion_skillgradingb b," +
+                    " managepromotion_skillgradingc  c where "
+                    + "a.id=b.skillGradingA_id  AND b.id= c.skillGradingB_id ORDER BY c.grade DESC";
+            List<SubsidiesAmountBO> list = super.findBySql(sql, SubsidiesAmountBO.class, field);
+            int sum = 0;
+            List<LittleBO> littleBOS = new ArrayList<>();
+            int i = 0;
+            for (SubsidiesAmountBO amount : list) {
+                LittleBO littleBO = new LittleBO();
+                littleBO.setGrade(amount.getGrade());
+                littleBO.setMajor(amount.getMajor());
+                String litleGrade = amount.getGrade();
+                String litleLevel = StringUtils.substring(litleGrade, 0, 1);
+                Integer litleNum = Integer.parseInt(StringUtils.substring(litleGrade, 1, 2));
+
+                if (level.compareTo(litleLevel) > 0 ||
+                        (level.equals(litleLevel) && litleNum < num)) {//A1 > B1 > C1
+                    sum=amount.getTotalAllowance()+amount.getSubsidiesAmount();
+                    littleBOS.add(littleBO);
+                    if (sum == money) {
+                        SkillBO skillBO = new SkillBO();
+                        skillBO.setGrade(amount.getGrade());
+                        skillBO.setLittleBOS(littleBOS);
+                        skillBOS.add(skillBO);
+                    }
+                    if(sum>money){
+                        break;
+                    }
+                }
+
+
             }
         }
-        return calculateBOS;
     }
+
+
+    public static void main(String[] args) {
+
+        System.out.println("A".compareTo("C"));
+    }
+
+
 }
+
+

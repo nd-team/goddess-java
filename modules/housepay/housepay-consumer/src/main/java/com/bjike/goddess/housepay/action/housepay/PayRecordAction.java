@@ -12,8 +12,11 @@ import com.bjike.goddess.housepay.bo.WaitPayBO;
 import com.bjike.goddess.housepay.dto.WaitPayDTO;
 import com.bjike.goddess.housepay.entity.WaitPay;
 import com.bjike.goddess.housepay.enums.PayStatus;
+import com.bjike.goddess.housepay.to.CollectAreaTO;
+import com.bjike.goddess.housepay.to.CollectProjectTO;
 import com.bjike.goddess.housepay.to.GuidePermissionTO;
 import com.bjike.goddess.housepay.vo.AreaCollectVO;
+import com.bjike.goddess.housepay.vo.CollectDetailVO;
 import com.bjike.goddess.housepay.vo.ProjectCollectVO;
 import com.bjike.goddess.housepay.vo.WaitPayVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,21 +143,40 @@ public class PayRecordAction {
     /**
      * 地区汇总
      *
-     * @param areas 地区
+     * @param to 地区
      * @return class AreaCollectVO
      * @des 地区汇总已付款记录
      * @version v1
      */
     @GetMapping("v1/collectArea")
-    public Result collectArea(@RequestParam String[] areas) throws ActException {
+    public Result collectArea(CollectAreaTO to) throws ActException {
         try {
             List<AreaCollectVO> areaCollectVOS = BeanTransform.copyProperties(
-                    payRecordAPI.collectArea(areas), AreaCollectVO.class);
+                    payRecordAPI.collectArea(to), AreaCollectVO.class);
             return ActResult.initialize(areaCollectVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 地区汇总详情
+     *
+     * @param to 地区
+     * @return class CollectDetailVO
+     * @des 地区汇总已付款记录
+     * @version v1
+     */
+    @GetMapping("v1/collectAreaDetail")
+    public Result collectAreaDetail(CollectAreaTO to) throws ActException {
+        try {
+            List<CollectDetailVO> collectDetailVOS = BeanTransform.copyProperties(
+                    payRecordAPI.collectAreaDetail(to), CollectDetailVO.class);
+            return ActResult.initialize(collectDetailVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 获取地区
@@ -175,17 +197,35 @@ public class PayRecordAction {
     /**
      * 项目汇总
      *
-     * @param projects 项目
+     * @param to to
      * @return class ProjectCollectVO
      * @des 项目汇总已付款记录
      * @version v1
      */
     @GetMapping("v1/collectProject")
-    public Result collectProject(@RequestParam String[] projects) throws ActException {
+    public Result collectProject(CollectProjectTO to) throws ActException {
         try {
             List<ProjectCollectVO> projectCollectVOS = BeanTransform.copyProperties(
-                    payRecordAPI.collectProject(projects), ProjectCollectVO.class);
+                    payRecordAPI.collectProject(to), ProjectCollectVO.class);
             return ActResult.initialize(projectCollectVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 项目汇总详情
+     *
+     * @param to to
+     * @return class CollectDetailVO
+     * @des 项目汇总已付款记录
+     * @version v1
+     */
+    @GetMapping("v1/collectProjectDetail")
+    public Result collectProjectDetail(CollectProjectTO to) throws ActException {
+        try {
+            List<CollectDetailVO> collectDetailVOS = BeanTransform.copyProperties(
+                    payRecordAPI.collectProjectDatail(to), CollectDetailVO.class);
+            return ActResult.initialize(collectDetailVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

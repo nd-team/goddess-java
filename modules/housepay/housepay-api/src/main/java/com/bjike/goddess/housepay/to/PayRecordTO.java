@@ -18,9 +18,14 @@ import javax.validation.constraints.NotNull;
 public class PayRecordTO extends BaseTO {
 
     /**
-     * 缴费时间
+     * 年份
      */
-    private String payTime;
+    private String year;
+
+    /**
+     * 月份
+     */
+    private String month;
 
     /**
      * 地区
@@ -93,12 +98,20 @@ public class PayRecordTO extends BaseTO {
     private String remark;
 
 
-    public String getPayTime() {
-        return payTime;
+    public String getYear() {
+        return year;
     }
 
-    public void setPayTime(String payTime) {
-        this.payTime = payTime;
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
     }
 
     public String getArea() {

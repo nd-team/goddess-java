@@ -3,6 +3,8 @@ package com.bjike.goddess.housepay.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.housepay.enums.PayStatus;
 
+import javax.persistence.Column;
+
 /**
  * 等待付款业务传输对象
  *
@@ -15,9 +17,14 @@ import com.bjike.goddess.housepay.enums.PayStatus;
 public class WaitPayBO extends BaseBO {
 
     /**
-     * 缴费时间
+     * 年份
      */
-    private String payTime;
+    private String year;
+
+    /**
+     * 月份
+     */
+    private String month;
 
     /**
      * 地区
@@ -90,12 +97,20 @@ public class WaitPayBO extends BaseBO {
     private String remark;
 
 
-    public String getPayTime() {
-        return payTime;
+    public String getYear() {
+        return year;
     }
 
-    public void setPayTime(String payTime) {
-        this.payTime = payTime;
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
     }
 
     public String getArea() {

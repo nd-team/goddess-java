@@ -21,6 +21,7 @@ import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managepromotion.to.SkillGradingATO;
 import com.bjike.goddess.managepromotion.vo.CalculateVO;
 import com.bjike.goddess.managepromotion.vo.SkillGradingAVO;
+import com.bjike.goddess.managepromotion.vo.SkillVO;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -229,14 +230,14 @@ public class SkillGradingAction {
      * 计算
      *
      * @param to to
-     * @return class CalculateVO
+     * @return class SkillVO
      * @des 计算
      * @version v1
      */
     @PostMapping("v1/calculate")
     public Result calculate(CalculateTO to) throws ActException {
         try {
-            List<CalculateVO> calculateVOS = BeanTransform.copyProperties(skillGradingAPI.calculate(to),CalculateVO.class);
+            List<SkillVO> calculateVOS = BeanTransform.copyProperties(skillGradingAPI.calculate(to),SkillVO.class);
             return ActResult.initialize(calculateVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
