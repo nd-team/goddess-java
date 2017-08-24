@@ -171,7 +171,7 @@ public class DispatchCarInfoAct extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/upload/{id}")
-    public Result fileUpload(@PathVariable String id ,HttpServletRequest request) throws ActException {
+    public Result fileUpload(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             String path = "dispatchCar";
             fileAPI.upload(this.getInputStreams(request, path.toString()));
@@ -189,7 +189,7 @@ public class DispatchCarInfoAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/files/{id}")
-    public Result findFiles(@PathVariable String id,HttpServletRequest request) throws ActException {
+    public Result findFiles(@PathVariable String id, HttpServletRequest request) throws ActException {
         // 17-4-14 查看附件
         try {
             //跟前端约定好 ，文件路径是列表id
@@ -242,57 +242,58 @@ public class DispatchCarInfoAct extends BaseFileAction {
 
     /**
      * 查询所有司机信息和车牌号码
+     *
      * @return class DriverInfoVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/find/driver")
-    public Result findDriver() throws ActException{
+    public Result findDriver() throws ActException {
         try {
             List<DriverInfoBO> boList = dispatchCarInfoAPI.findDriver();
-            List<DriverInfoVO> voList = BeanTransform.copyProperties(boList,DriverInfoVO.class);
+            List<DriverInfoVO> voList = BeanTransform.copyProperties(boList, DriverInfoVO.class);
             return ActResult.initialize(voList);
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
     /**
      * 查询所有用车陪同人员和用车人员和任务下达人员和所属地区和所属项目组
+     *
      * @return class EntryBasicInfoVO
      * @throws ActException
      * @version v1
      */
-   @GetMapping("v1/find/entry")
-    public Result findAllEntry() throws ActException{
+    @GetMapping("v1/find/entry")
+    public Result findAllEntry() throws ActException {
         try {
             List<EntryBasicInfoVO> voList = new ArrayList<>(0);
-            if(moduleAPI.isCheck("assemble")) {
-                List<EntryBasicInfoBO> boList = dispatchCarInfoAPI.findAllEntry();
-                voList = BeanTransform.copyProperties(boList, EntryBasicInfoVO.class);
-            }
+            List<EntryBasicInfoBO> boList = dispatchCarInfoAPI.findAllEntry();
+            voList = BeanTransform.copyProperties(boList, EntryBasicInfoVO.class);
             return ActResult.initialize(voList);
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
-   }
+    }
 
     /**
      * 查询所有油卡信息
+     *
      * @return class OilCardBasicVO
      * @throws ActException
      * @version v1
      */
-   @GetMapping("v1/find/oil")
-    public Result findAllOil() throws ActException{
-       try {
-           List<OilCardBasicBO> boList = dispatchCarInfoAPI.findAllOil();
-           List<OilCardBasicVO> voList = BeanTransform.copyProperties(boList,OilCardBasicVO.class);
-           return ActResult.initialize(voList);
-       }catch (SerException e){
-           throw new ActException(e.getMessage());
-       }
-   }
+    @GetMapping("v1/find/oil")
+    public Result findAllOil() throws ActException {
+        try {
+            List<OilCardBasicBO> boList = dispatchCarInfoAPI.findAllOil();
+            List<OilCardBasicVO> voList = BeanTransform.copyProperties(boList, OilCardBasicVO.class);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
 }

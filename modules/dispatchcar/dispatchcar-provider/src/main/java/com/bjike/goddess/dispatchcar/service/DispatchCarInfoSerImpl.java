@@ -1,5 +1,6 @@
 package com.bjike.goddess.dispatchcar.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.carinfo.api.DriverInfoAPI;
 import com.bjike.goddess.carinfo.bo.DriverInfoBO;
 import com.bjike.goddess.carinfo.dto.DriverInfoDTO;
@@ -95,6 +96,9 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
 
     @Autowired
     private PositionDetailAPI positionDetailAPI;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
 
 
 
@@ -1197,8 +1201,11 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
 
     @Override
     public List<EntryBasicInfoBO> findAllEntry() throws SerException {
-        EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
-        List<EntryBasicInfoBO> boList = entryBasicInfoAPI.listEntryBasicInfo(dto);
+        List<EntryBasicInfoBO> boList = new ArrayList<>(0);
+        if(moduleAPI.isCheck("entryBasicInfo")) {
+            EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
+            boList = entryBasicInfoAPI.listEntryBasicInfo(dto);
+        }
         return boList;
     }
 
