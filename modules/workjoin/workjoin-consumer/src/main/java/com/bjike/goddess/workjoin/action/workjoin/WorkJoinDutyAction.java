@@ -83,7 +83,7 @@ public class WorkJoinDutyAction {
     /**
      * 一个工作交接责任义务
      *
-     * @param id
+     * @param id 工作交接id
      * @return class WorkJoinDutyVO
      * @des 获取一个工作交接责任义务
      * @version v1

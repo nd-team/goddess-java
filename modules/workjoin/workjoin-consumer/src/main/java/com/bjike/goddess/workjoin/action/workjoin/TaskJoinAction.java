@@ -9,6 +9,8 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.bo.PositionInstructionBO;
+import com.bjike.goddess.organize.vo.PositionInstructionVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
@@ -93,7 +95,7 @@ public class TaskJoinAction extends BaseFileAction{
     /**
      * 一个任务交接
      *
-     * @param id
+     * @param id 任务交接id
      * @return class TaskJoinVO
      * @des 获取一个任务交接
      * @version v1
@@ -271,6 +273,24 @@ public class TaskJoinAction extends BaseFileAction{
         return new ActResult("delFile success");
     }
 
+
+    /**
+     * 获取汇报对象
+     * @return class PositionInstructionVO
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/find/position")
+    public Result findPosition() throws ActException{
+        try {
+            List<PositionInstructionBO> boList = taskJoinAPI.findPosition();
+            List<PositionInstructionVO> voList = BeanTransform.copyProperties(boList,PositionInstructionVO.class);
+            return ActResult.initialize(voList);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
 }

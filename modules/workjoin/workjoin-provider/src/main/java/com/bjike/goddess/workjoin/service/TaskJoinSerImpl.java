@@ -1,9 +1,13 @@
 package com.bjike.goddess.workjoin.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionInstructionAPI;
+import com.bjike.goddess.organize.bo.PositionInstructionBO;
+import com.bjike.goddess.organize.dto.PositionInstructionDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.workjoin.bo.TaskJoinBO;
@@ -19,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,6 +42,12 @@ public class TaskJoinSerImpl extends ServiceImpl<TaskJoin, TaskJoinDTO> implemen
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+
+    @Autowired
+    private PositionInstructionAPI positionInstructionAPI;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -221,5 +232,17 @@ public class TaskJoinSerImpl extends ServiceImpl<TaskJoin, TaskJoinDTO> implemen
     public void removeTaskJoin(String id) throws SerException {
         checkAddIdentity();
         super.remove(id);
+    }
+
+    @Override
+    public List<PositionInstructionBO> findPosition() throws SerException {
+        List<PositionInstructionBO> boList = new ArrayList<>(0);
+        if(moduleAPI.isCheck("organize")) {
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
+            PositionInstructionDTO dto = new PositionInstructionDTO();
+            boList = positionInstructionAPI.findPage(dto);
+        }
+        return boList;
     }
 }

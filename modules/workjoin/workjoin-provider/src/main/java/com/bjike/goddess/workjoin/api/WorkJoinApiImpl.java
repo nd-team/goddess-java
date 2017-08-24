@@ -2,6 +2,7 @@ package com.bjike.goddess.workjoin.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.workjoin.bo.WorkJoinBO;
 import com.bjike.goddess.workjoin.dto.WorkJoinDTO;
 import com.bjike.goddess.workjoin.entity.WorkJoin;
@@ -75,4 +76,8 @@ public class WorkJoinApiImpl implements WorkJoinAPI {
         return workJoinSer.audit(to);
     }
 
+    @Override
+    public List<UserBO> findUser() throws SerException {
+        return workJoinSer.findUser();
+    }
 }

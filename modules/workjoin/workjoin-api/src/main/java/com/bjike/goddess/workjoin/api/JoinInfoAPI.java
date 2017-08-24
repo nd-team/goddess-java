@@ -1,6 +1,7 @@
 package com.bjike.goddess.workjoin.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.datastore.bo.NumSpecificationBO;
 import com.bjike.goddess.workjoin.bo.JoinInfoBO;
 import com.bjike.goddess.workjoin.dto.JoinInfoDTO;
 import com.bjike.goddess.workjoin.to.GuidePermissionTO;
@@ -84,11 +85,16 @@ public interface JoinInfoAPI {
     /**
      * 根据id删除交接资料
      *
-     * @param id
      * @throws SerException
      */
     default void removeJoinInfo(String id) throws SerException {
 
     }
+
+    /**
+     * 获取制度文件夹编号和经验总结编号
+     * jiangzaixuan
+     */
+    List<NumSpecificationBO> findNumSepecification() throws SerException;
 
 }

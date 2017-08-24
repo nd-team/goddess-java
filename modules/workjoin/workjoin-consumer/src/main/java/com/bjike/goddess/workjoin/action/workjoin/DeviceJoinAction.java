@@ -9,6 +9,8 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
+import com.bjike.goddess.materialinstock.vo.MaterialInStockVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
@@ -90,7 +92,7 @@ public class DeviceJoinAction extends BaseFileAction{
     /**
      * 一个设备交接
      *
-     * @param id
+     * @param id 设备交接id
      * @return class DeviceJoinVO
      * @des 获取一个设备交接
      * @version v1
@@ -266,6 +268,25 @@ public class DeviceJoinAction extends BaseFileAction{
             fileAPI.delFile(storageToken.toString(),workJoinDeleteFileTO.getPaths());
         }
         return new ActResult("delFile success");
+    }
+
+
+    /**
+     * 获取设备编号和设备名称
+     * @return class MaterialInStockVO
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/find/material")
+    public Result findMaterial() throws ActException{
+        try {
+            List<MaterialInStockBO> boList = deviceJoinAPI.findMaterial();
+            List<MaterialInStockVO> voList = BeanTransform.copyProperties(boList,MaterialInStockVO.class);
+            return ActResult.initialize(voList);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
     }
 
 

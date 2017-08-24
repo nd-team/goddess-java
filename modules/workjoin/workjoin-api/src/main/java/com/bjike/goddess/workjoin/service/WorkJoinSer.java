@@ -2,6 +2,7 @@ package com.bjike.goddess.workjoin.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.workjoin.bo.TaskJoinBO;
 import com.bjike.goddess.workjoin.bo.WorkJoinBO;
 import com.bjike.goddess.workjoin.dto.TaskJoinDTO;
@@ -114,6 +115,11 @@ public interface WorkJoinSer extends Ser<WorkJoin, WorkJoinDTO> {
     default WorkJoinBO audit(WorkJoinTO to) throws SerException {
         return null;
     }
+
+    /**
+     * 获取交接人和接手人
+     */
+    List<UserBO> findUser() throws SerException;
 
 
 }

@@ -2,6 +2,7 @@ package com.bjike.goddess.workjoin.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.bo.PositionInstructionBO;
 import com.bjike.goddess.workjoin.bo.TaskJoinBO;
 import com.bjike.goddess.workjoin.dto.TaskJoinDTO;
 import com.bjike.goddess.workjoin.entity.TaskJoin;
@@ -66,4 +67,8 @@ public class TaskJoinApiImpl implements TaskJoinAPI {
         taskJoinSer.removeTaskJoin(id);
     }
 
+    @Override
+    public List<PositionInstructionBO> findPosition() throws SerException {
+        return taskJoinSer.findPosition();
+    }
 }
