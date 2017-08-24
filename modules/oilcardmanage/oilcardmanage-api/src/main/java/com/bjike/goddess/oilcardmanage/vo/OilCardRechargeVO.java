@@ -57,6 +57,12 @@ public class OilCardRechargeVO {
      */
     private Double cycleEarlyMoney;
 
+    /**
+     * 油卡id
+     */
+
+    private String oilCardBasicId;
+
     public String getId() {
         return id;
     }
@@ -127,5 +133,13 @@ public class OilCardRechargeVO {
 
     public void setMainOrDeputy(String mainOrDeputy) {
         this.mainOrDeputy = mainOrDeputy;
+    }
+
+    public String getOilCardBasicId() {
+        return oilCardBasicId;
+    }
+
+    public void setOilCardBasicId(String oilCardBasicId) {
+        this.oilCardBasicId = oilCardBasicId;
     }
 }
