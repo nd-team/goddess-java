@@ -7,10 +7,12 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
+import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.enums.FindType;
 import com.bjike.goddess.dispatchcar.vo.InfoForOilCardVO;
 import com.bjike.goddess.oilcardmanage.api.OilCardRechargeAPI;
+import com.bjike.goddess.oilcardmanage.entity.OilCardReceive;
 import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.vo.AnalyzeVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,16 +77,12 @@ public class OilCardUseAct {
      * @return class InfoForOilCardVO
      * @version v1
      */
-    @GetMapping("v1/list/{oilCardCode}")
-    public Result pageList(@PathVariable String oilCardCode, @RequestParam String startTime, @RequestParam String endTime) throws ActException {
+    @GetMapping("v1/pageList")
+    public Result pageList(@RequestParam String oilCardCode, @RequestParam String startTime, @RequestParam String endTime) throws ActException {
 
         try {
-            DispatchCarInfoDTO dto = new DispatchCarInfoDTO();
-            dto.getConditions().add(Restrict.ne("findType", FindType.WAITAUDIT));
-            dto.getConditions().add(Restrict.gt("addOilTime", startTime));
-            dto.getConditions().add(Restrict.lt("addOilTime", endTime));
-            dto.getConditions().add(Restrict.eq("oilCardNumber", oilCardCode));
-            List<InfoForOilCardVO> voList = BeanTransform.copyProperties(dispatchCarInfoAPI.pageList(dto), InfoForOilCardVO.class);
+            List<DispatchCarInfoBO> infoBOList = oilCardRechargeAPI.findDispatch(oilCardCode,startTime,endTime);
+            List<InfoForOilCardVO> voList = BeanTransform.copyProperties(infoBOList, InfoForOilCardVO.class);
             if (!CollectionUtils.isEmpty(voList)) {
                 for (InfoForOilCardVO vo : voList) {
                     vo.setAddOilAmount(vo.getOilPrice() * vo.getAddOilAmount());
@@ -102,11 +100,11 @@ public class OilCardUseAct {
      * @param year  年份
      * @param month 月份
      * @param oilCardCode 油卡编号
-     * @return class InfoForOilCardVO
+     * @return class AnalyzeVO
      * @version v1
      */
-    @GetMapping("v1/analyze/{oilCardCode}")
-    public Result analyze(@PathVariable String oilCardCode, @RequestParam Integer year, @RequestParam Integer month) throws ActException {
+    @GetMapping("v1/analyze")
+    public Result analyze(@RequestParam String oilCardCode, @RequestParam Integer year, @RequestParam Integer month) throws ActException {
 
         try {
             AnalyzeVO vo = BeanTransform.copyProperties(oilCardRechargeAPI.analyze(oilCardCode, year, month), AnalyzeVO.class);

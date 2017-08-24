@@ -139,8 +139,8 @@ public class OilCardRechargeAct extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @GetMapping("v1/collect/{oilCardBasicId}")
-    public Result collect(@PathVariable String oilCardBasicId, @RequestParam String startTime, @RequestParam String endTime) throws ActException {
+    @GetMapping("v1/collect")
+    public Result collect(@RequestParam String oilCardBasicId, @RequestParam String startTime, @RequestParam String endTime) throws ActException {
 
         try {
             List<OilCardRechargeVO> vo = BeanTransform.copyProperties(oilCardRechargeAPI.collect(oilCardBasicId, startTime, endTime), OilCardRechargeVO.class);
@@ -196,7 +196,7 @@ public class OilCardRechargeAct extends BaseFileAction {
         try {
             //跟前端约定好 ，文件路径是列表id
             // /id/....
-            String path = "/competitor/" + id;
+            String path = "/oilcardmanage/recharge/" + id;
             List<InputStream> inputStreams = super.getInputStreams(request, path);
             fileAPI.upload(inputStreams);
             return new ActResult("上传成功");
@@ -217,7 +217,7 @@ public class OilCardRechargeAct extends BaseFileAction {
     public Result list(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             //跟前端约定好 ，文件路径是列表id
-            String path = "/recharge/" + id;
+            String path = "/oilcardmanage/recharge/" + id;
             FileInfo fileInfo = new FileInfo();
             fileInfo.setPath(path);
             Object storageToken = request.getAttribute("storageToken");

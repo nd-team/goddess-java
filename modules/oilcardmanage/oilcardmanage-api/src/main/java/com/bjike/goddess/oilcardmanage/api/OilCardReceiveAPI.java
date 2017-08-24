@@ -62,7 +62,7 @@ public interface OilCardReceiveAPI {
     /**
      * 审核领用油卡信息
      */
-    void auditOilCardReceive(String id, String auditSuggestion, OilCardReceiveResult oilCardReceiveResult) throws SerException;
+    void auditOilCardReceive(String id, String auditSuggestion, OilCardReceiveResult auditResult) throws SerException;
 
     /**
      * 删除领用油卡信息
@@ -93,7 +93,7 @@ public interface OilCardReceiveAPI {
      *
      * @param id id
      */
-    OilCardReceiveBO findById(String id) throws SerException;
+    OilCardReceiveBO findOne(String id) throws SerException;
 
     /**
      * 查询总记录数

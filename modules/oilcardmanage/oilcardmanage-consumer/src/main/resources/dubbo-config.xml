@@ -44,6 +44,7 @@
 
     <dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.oilcardmanage.api.CusPermissionAPI" />
     <dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.oilcardmanage.api.CusPermissionOperateAPI" />
+    <dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
 
 
     <dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
