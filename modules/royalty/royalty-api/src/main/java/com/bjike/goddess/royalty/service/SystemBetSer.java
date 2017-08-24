@@ -108,5 +108,12 @@ public interface SystemBetSer extends Ser<SystemBet, SystemBetDTO> {
     default List<String> getDepartment() throws SerException {
         return null;
     }
-
+    /**
+     * 根据项目名称获取体系间对赌表
+     *
+     * @throws SerException
+     */
+    default SystemBetABO getSystem(String projectName) throws SerException {
+        return null;
+    }
 }

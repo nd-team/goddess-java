@@ -73,6 +73,10 @@ public class SkillGradingApiImpl implements SkillGradingAPI {
         skillGradingSer.removeSkillGrading(id);
     }
     @Override
+    public List<String> getSkillLevel() throws SerException {
+        return skillGradingSer.getSkillLevel();
+    }
+    @Override
     public List<SkillBO> calculate(CalculateTO to) throws SerException {
         return skillGradingSer.calculate(to);
     }
