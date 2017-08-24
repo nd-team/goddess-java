@@ -23,6 +23,8 @@ import com.bjike.goddess.moneyside.vo.InvestTransferVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
+import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.vo.UserVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -266,6 +268,25 @@ public class InvestTransferAction extends BaseFileAction{
             fileAPI.delFile(storageToken.toString(), moneySideDeleteFileTO.getPaths());
         }
         return new ActResult("delFile success");
+    }
+
+
+    /**
+     * 查询所有投资转让人
+     * @return class UserVO
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/find/user")
+    public Result findUser() throws ActException{
+        try {
+            List<UserBO> bos = investTransferAPI.findUserListInOrgan();
+            List<UserVO> vos = BeanTransform.copyProperties(bos,UserVO.class);
+            return ActResult.initialize(vos);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
     }
 
 
