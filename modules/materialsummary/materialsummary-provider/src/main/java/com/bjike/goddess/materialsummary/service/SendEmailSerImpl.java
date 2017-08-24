@@ -1,5 +1,6 @@
 package com.bjike.goddess.materialsummary.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
@@ -70,6 +71,8 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
     private MessageAPI messageAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
 
     /**
@@ -94,6 +97,7 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
         RpcTransmit.transmitUserToken(userToken);
 
     }
+
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         {
@@ -107,7 +111,7 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
             obj = new SonPermissionObject();
             obj.setName("typebuysummary");
             obj.setDescribesion("物质分类购买情况汇总");
-            if (flagInvenDai ) {
+            if (flagInvenDai) {
                 obj.setFlag(true);
             } else {
                 obj.setFlag(false);
@@ -118,7 +122,7 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
             obj = new SonPermissionObject();
             obj.setName("areabuysummary");
             obj.setDescribesion("部门地区购买情况汇总");
-            if (flagInvenDai ) {
+            if (flagInvenDai) {
                 obj.setFlag(true);
             } else {
                 obj.setFlag(false);
@@ -130,7 +134,7 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
             obj = new SonPermissionObject();
             obj.setName("personbuysummary");
             obj.setDescribesion("个人物质购买情况汇总");
-            if (flagInvenDai ) {
+            if (flagInvenDai) {
                 obj.setFlag(true);
             } else {
                 obj.setFlag(false);
@@ -142,7 +146,7 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
             obj = new SonPermissionObject();
             obj.setName("socestocksummary");
             obj.setDescribesion("入库来源汇总");
-            if (flagInvenDai ) {
+            if (flagInvenDai) {
                 obj.setFlag(true);
             } else {
                 obj.setFlag(false);
@@ -154,7 +158,7 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
             obj = new SonPermissionObject();
             obj.setName("areastocksummary");
             obj.setDescribesion("地区入库情况汇总");
-            if (flagInvenDai ) {
+            if (flagInvenDai) {
                 obj.setFlag(true);
             } else {
                 obj.setFlag(false);
@@ -166,7 +170,7 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
             obj = new SonPermissionObject();
             obj.setName("statedevicsummary");
             obj.setDescribesion("维修状态分类情况汇总");
-            if (flagInvenDai ) {
+            if (flagInvenDai) {
                 obj.setFlag(true);
             } else {
                 obj.setFlag(false);
@@ -178,7 +182,7 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
             obj = new SonPermissionObject();
             obj.setName("warrdevicsummary");
             obj.setDescribesion("保修状态分类情况汇总");
-            if (flagInvenDai ) {
+            if (flagInvenDai) {
                 obj.setFlag(true);
             } else {
                 obj.setFlag(false);
@@ -189,7 +193,7 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
             obj = new SonPermissionObject();
             obj.setName("sendEmail");
             obj.setDescribesion("发送邮件");
-            if (flagInvenDai ) {
+            if (flagInvenDai) {
                 obj.setFlag(true);
             } else {
                 obj.setFlag(false);
@@ -235,6 +239,7 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
+
     /**
      * 核对查看权限（部门级别）
      */
@@ -251,6 +256,7 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
         }
         return flag;
     }
+
     @Override
     public Long counts(SendEmailDTO SendEmailDTO) throws SerException {
         Long count = super.count(SendEmailDTO);
@@ -828,20 +834,32 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
      */
     public List<ResouceStockSummBO> sourStockSendEmail(String[] dateTime) throws SerException {
         List<ResouceStockSummBO> resouceStockSummBOS = new ArrayList<>();
-        List<InstockType> typeStocks = materialInStockAPI.findStockType(dateTime);
+        List<InstockType> typeStocks = new ArrayList<>(0);
+        if (moduleAPI.isCheck("materialinstock")) {
+            typeStocks = materialInStockAPI.findStockType(dateTime);
+        }
         for (InstockType type : typeStocks) {
             Integer tyLevNum = 0;
             Double tyLevAmount = 0d;
-            List<String> areaList = materialInStockAPI.findAreaByType(type, dateTime);
+            List<String> areaList = new ArrayList<>(0);
+            if (moduleAPI.isCheck("materialinstock")) {
+                areaList = materialInStockAPI.findAreaByType(type, dateTime);
+            }
             if (areaList != null && areaList.size() > 0) {
                 for (String area : areaList) {
                     Integer arLevNum = 0;
                     Double arLevAmount = 0d;
-                    List<String> depart = materialInStockAPI.findDepartByTyAnAr(type, area, dateTime);
+                    List<String> depart = new ArrayList<>(0);
+                    if (moduleAPI.isCheck("materialinstock")) {
+                        depart = materialInStockAPI.findDepartByTyAnAr(type, area, dateTime);
+                    }
                     for (String dep : depart) {
                         Integer underlyNum = 0;
                         Double underlyAmount = 0d;
-                        List<MaterialInStockBO> materialInStockBOS = materialInStockAPI.findByTyAnAr(type, area, dep, dateTime);
+                        List<MaterialInStockBO> materialInStockBOS = new ArrayList<>(0);
+                        if (moduleAPI.isCheck("materialinstock")) {
+                            materialInStockBOS = materialInStockAPI.findByTyAnAr(type, area, dep, dateTime);
+                        }
                         for (MaterialInStockBO materialInStockBO : materialInStockBOS) {
                             underlyNum += materialInStockBO.getQuantity();
                             underlyAmount += materialInStockBO.getTotalSum();
@@ -955,18 +973,30 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
      */
     public List<AreaStockSummBO> areaStockSendEmail(String[] dateTime) throws SerException {
         List<AreaStockSummBO> areaStockSummBOS = new ArrayList<>();
-        List<String> areas = materialInStockAPI.findAllArea(dateTime);
+        List<String> areas = new ArrayList<>(0);
+        if (moduleAPI.isCheck("materialinstock")) {
+            areas = materialInStockAPI.findAllArea(dateTime);
+        }
         for (String area : areas) {
             Integer tyLevNum = 0;
             Double tyLevAmount = 0d;
-            List<String> projectGroups = materialInStockAPI.findProByAre(dateTime, area);
+            List<String> projectGroups = new ArrayList<>(0);
+            if (moduleAPI.isCheck("materialinstock")) {
+                projectGroups = materialInStockAPI.findProByAre(dateTime, area);
+            }
             if (projectGroups != null && projectGroups.size() > 0) {
                 for (String project : projectGroups) {
                     Integer arLevNum = 0;
                     Double arLevAmount = 0d;
-                    List<MaterialState> status = materialInStockAPI.findStatusByAreAnpro(dateTime, area, project);
+                    List<MaterialState> status = new ArrayList<>(0);
+                    if (moduleAPI.isCheck("materialinstock")) {
+                        status = materialInStockAPI.findStatusByAreAnpro(dateTime, area, project);
+                    }
                     for (MaterialState state : status) {
-                        List<MaterialInStockBO> materialInStockBOS = materialInStockAPI.findByAreAnpro(dateTime, area, project, state);
+                        List<MaterialInStockBO> materialInStockBOS = new ArrayList<>(0);
+                        if (moduleAPI.isCheck("materialinstock")) {
+                            materialInStockBOS = materialInStockAPI.findByAreAnpro(dateTime, area, project, state);
+                        }
                         Integer underlyNum = 0;
                         Double underlyAmount = 0d;
                         for (MaterialInStockBO materialInStockBO : materialInStockBOS) {
@@ -1067,7 +1097,7 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
     public List<StatusDeviceSummBO> statusDeviceSummYear(Integer year) throws SerException {
         checkPermission();
         year = year != null ? year : LocalDate.now().getYear();
-        String startDate = DateUtil.dateToString(LocalDateTime.of(year, 1, 1,00, 00, 00));
+        String startDate = DateUtil.dateToString(LocalDateTime.of(year, 1, 1, 00, 00, 00));
         String endDate = DateUtil.dateToString(LocalDateTime.of(year, 12, 31, 23, 59, 59));
         String[] date = new String[]{startDate, endDate};
         return statusDeviceSendEmail(date);
@@ -1408,9 +1438,9 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
             //拼body部分
             for (TypeBuySummBO bo : typeBuySummBOS) {
                 sb.append("<tr>");
-                sb.append("<td>" + (StringUtils.isBlank(bo.getType()) ? " ":bo.getType()) + "</td>");
+                sb.append("<td>" + (StringUtils.isBlank(bo.getType()) ? " " : bo.getType()) + "</td>");
                 sb.append("<td>" + (StringUtils.isBlank(bo.getArea()) ? " " : bo.getArea()) + "</td>");
-                sb.append("<td>" + (StringUtils.isBlank(bo.getDepartment()) ? " ":bo.getDepartment()) + "</td>");
+                sb.append("<td>" + (StringUtils.isBlank(bo.getDepartment()) ? " " : bo.getDepartment()) + "</td>");
                 sb.append("<td>" + bo.getTotalNum() + "</td>");
                 sb.append("<td>" + bo.getTotalAmount() + "</td>");
 
@@ -1441,7 +1471,7 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
             //拼body部分
             for (TypeBuySummBO bo : areaBuySummBOS) {
                 sb.append("<tr>");
-                sb.append("<td>" + (StringUtils.isBlank(bo.getArea()) ? " ":bo.getArea()) + "</td>");
+                sb.append("<td>" + (StringUtils.isBlank(bo.getArea()) ? " " : bo.getArea()) + "</td>");
                 sb.append("<td>" + (StringUtils.isBlank(bo.getDepartment()) ? " " : bo.getDepartment()) + "</td>");
                 sb.append("<td>" + (StringUtils.isBlank(bo.getType()) ? " " : bo.getType()) + "</td>");
                 sb.append("<td>" + bo.getTotalNum() + "</td>");
@@ -1473,8 +1503,8 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
             //拼body部分
             for (PersonalBuySummBO bo : personalBuySummBOS) {
                 sb.append("<tr>");
-                sb.append("<td>" +(StringUtils.isBlank( bo.getName()) ? " ": bo.getName()) + "</td>");
-                sb.append("<td>" +(StringUtils.isBlank( bo.getType()) ? " ": bo.getType()) + "</td>");
+                sb.append("<td>" + (StringUtils.isBlank(bo.getName()) ? " " : bo.getName()) + "</td>");
+                sb.append("<td>" + (StringUtils.isBlank(bo.getType()) ? " " : bo.getType()) + "</td>");
                 sb.append("<td>" + bo.getTotalNum() + "</td>");
                 sb.append("<td>" + bo.getTotalAmount() + "</td>");
 
@@ -1505,9 +1535,9 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
             //拼body部分
             for (ResouceStockSummBO bo : resouceStockSummBOS) {
                 sb.append("<tr>");
-                sb.append("<td>" + (StringUtils.isBlank( bo.getSources()) ? " ": bo.getSources()) + "</td>");
-                sb.append("<td>" + (StringUtils.isBlank( bo.getArea()) ? " ": bo.getArea()) + "</td>");
-                sb.append("<td>" + (StringUtils.isBlank( bo.getDepartment()) ? " ": bo.getDepartment()) + "</td>");
+                sb.append("<td>" + (StringUtils.isBlank(bo.getSources()) ? " " : bo.getSources()) + "</td>");
+                sb.append("<td>" + (StringUtils.isBlank(bo.getArea()) ? " " : bo.getArea()) + "</td>");
+                sb.append("<td>" + (StringUtils.isBlank(bo.getDepartment()) ? " " : bo.getDepartment()) + "</td>");
                 sb.append("<td>" + bo.getTotalNum() + "</td>");
                 sb.append("<td>" + bo.getTotalAmount() + "</td>");
 
@@ -1538,9 +1568,9 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
             //拼body部分
             for (AreaStockSummBO bo : areaStockSummBOS) {
                 sb.append("<tr>");
-                sb.append("<td>" + (StringUtils.isBlank( bo.getArea()) ? " ": bo.getArea()) + "</td>");
-                sb.append("<td>" + (StringUtils.isBlank( bo.getProjectGroup()) ? " ": bo.getProjectGroup()) + "</td>");
-                sb.append("<td>" + (StringUtils.isBlank( bo.getStockStatus()) ? " ": bo.getStockStatus()) + "</td>");
+                sb.append("<td>" + (StringUtils.isBlank(bo.getArea()) ? " " : bo.getArea()) + "</td>");
+                sb.append("<td>" + (StringUtils.isBlank(bo.getProjectGroup()) ? " " : bo.getProjectGroup()) + "</td>");
+                sb.append("<td>" + (StringUtils.isBlank(bo.getStockStatus()) ? " " : bo.getStockStatus()) + "</td>");
                 sb.append("<td>" + bo.getTotalNum() + "</td>");
                 sb.append("<td>" + bo.getTotalAmount() + "</td>");
 
@@ -1571,11 +1601,11 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
             //拼body部分
             for (StatusDeviceSummBO bo : statusDeviceSummBOS) {
                 sb.append("<tr>");
-                sb.append("<td>" + (StringUtils.isBlank( bo.getDeviceStatus()) ? " ": bo.getDeviceStatus())  + "</td>");
-                sb.append("<td>" + (StringUtils.isBlank( bo.getArea()) ? " ": bo.getArea())  + "</td>");
-                sb.append("<td>" + (StringUtils.isBlank( bo.getDepartment()) ? " ": bo.getDepartment()) + "</td>");
-                sb.append("<td>" + bo.getTotalNum()==null?"0":bo.getTotalNum() + "</td>");
-                sb.append("<td>" + bo.getTotalAmount()==null?"0":bo.getTotalAmount() + "</td>");
+                sb.append("<td>" + (StringUtils.isBlank(bo.getDeviceStatus()) ? " " : bo.getDeviceStatus()) + "</td>");
+                sb.append("<td>" + (StringUtils.isBlank(bo.getArea()) ? " " : bo.getArea()) + "</td>");
+                sb.append("<td>" + (StringUtils.isBlank(bo.getDepartment()) ? " " : bo.getDepartment()) + "</td>");
+                sb.append("<td>" + bo.getTotalNum() == null ? "0" : bo.getTotalNum() + "</td>");
+                sb.append("<td>" + bo.getTotalAmount() == null ? "0" : bo.getTotalAmount() + "</td>");
 
                 sb.append("<tr>");
             }
@@ -1604,11 +1634,11 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
             //拼body部分
             for (WarrantyDeviceSummBO bo : warrantyDeviceSummBOS) {
                 sb.append("<tr>");
-                sb.append("<td>" + (StringUtils.isBlank( bo.getWarranty() ) ? " ": bo.getWarranty() ) + "</td>");
-                sb.append("<td>" + (StringUtils.isBlank( bo.getArea() ) ? " ": bo.getArea() ) + "</td>");
-                sb.append("<td>" + (StringUtils.isBlank( bo.getDepartment() ) ? " ": bo.getDepartment() ) + "</td>");
-                sb.append("<td>" + bo.getTotalNum()==null?"0":bo.getTotalNum() + "</td>");
-                sb.append("<td>" + bo.getTotalAmount()==null?"0":bo.getTotalAmount() + "</td>");
+                sb.append("<td>" + (StringUtils.isBlank(bo.getWarranty()) ? " " : bo.getWarranty()) + "</td>");
+                sb.append("<td>" + (StringUtils.isBlank(bo.getArea()) ? " " : bo.getArea()) + "</td>");
+                sb.append("<td>" + (StringUtils.isBlank(bo.getDepartment()) ? " " : bo.getDepartment()) + "</td>");
+                sb.append("<td>" + bo.getTotalNum() == null ? "0" : bo.getTotalNum() + "</td>");
+                sb.append("<td>" + bo.getTotalAmount() == null ? "0" : bo.getTotalAmount() + "</td>");
 
                 sb.append("<tr>");
             }
@@ -1676,7 +1706,7 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
                 areaBuy.setModifyTime(LocalDateTime.now());
                 allEmails.add(areaBuy);
             }
-        }else if (persoBuyEmails != null && persoBuyEmails.size() > 0) {
+        } else if (persoBuyEmails != null && persoBuyEmails.size() > 0) {
             for (SendEmail persoBuy : persoBuyEmails) {
                 CollectUnit type = persoBuy.getCollectUnit();
                 LocalDate startDate = LocalDate.parse(changDateTime(type)[0]);
@@ -1702,7 +1732,7 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
                 persoBuy.setModifyTime(LocalDateTime.now());
                 allEmails.add(persoBuy);
             }
-        }else if (resoStockEmails != null && resoStockEmails.size() > 0) {
+        } else if (resoStockEmails != null && resoStockEmails.size() > 0) {
             for (SendEmail resoStock : resoStockEmails) {
                 CollectUnit type = resoStock.getCollectUnit();
                 LocalDate startDate = LocalDate.parse(changDateTime(type)[0]);
@@ -1728,7 +1758,7 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
                 resoStock.setModifyTime(LocalDateTime.now());
                 allEmails.add(resoStock);
             }
-        }else if (areaStockEmails != null && areaStockEmails.size() > 0) {
+        } else if (areaStockEmails != null && areaStockEmails.size() > 0) {
             for (SendEmail areaStock : areaStockEmails) {
                 CollectUnit type = areaStock.getCollectUnit();
                 LocalDate startDate = LocalDate.parse(changDateTime(type)[0]);
@@ -1754,7 +1784,7 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
                 areaStock.setModifyTime(LocalDateTime.now());
                 allEmails.add(areaStock);
             }
-        }else if (stateDevEmails != null && stateDevEmails.size() > 0) {
+        } else if (stateDevEmails != null && stateDevEmails.size() > 0) {
             for (SendEmail stateDev : stateDevEmails) {
                 CollectUnit type = stateDev.getCollectUnit();
                 String[] dateTime = changDateTime(type);
@@ -1778,7 +1808,7 @@ public class SendEmailSerImpl extends ServiceImpl<SendEmail, SendEmailDTO> imple
                 stateDev.setModifyTime(LocalDateTime.now());
                 allEmails.add(stateDev);
             }
-        }else if (warrDevEmails != null && warrDevEmails.size() > 0) {
+        } else if (warrDevEmails != null && warrDevEmails.size() > 0) {
             for (SendEmail warrDev : warrDevEmails) {
                 CollectUnit type = warrDev.getCollectUnit();
                 String[] dateTime = changDateTime(type);

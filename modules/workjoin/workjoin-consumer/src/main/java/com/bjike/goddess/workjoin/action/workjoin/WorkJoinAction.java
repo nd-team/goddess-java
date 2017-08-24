@@ -23,7 +23,6 @@ import com.bjike.goddess.organize.vo.WorkRangeVO;
 import com.bjike.goddess.workjoin.api.WorkJoinAPI;
 import com.bjike.goddess.workjoin.bo.WorkJoinBO;
 import com.bjike.goddess.workjoin.dto.WorkJoinDTO;
-import com.bjike.goddess.workjoin.entity.WorkJoin;
 import com.bjike.goddess.workjoin.excel.SonPermissionObject;
 import com.bjike.goddess.workjoin.to.GuidePermissionTO;
 import com.bjike.goddess.workjoin.to.WorkJoinTO;
@@ -245,6 +244,7 @@ public class WorkJoinAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取工作编号
      *
@@ -292,10 +292,16 @@ public class WorkJoinAction {
                 boList = positionDetailAPI.findStatus();
             }
             return ActResult.initialize(BeanTransform.copyProperties(boList, PositionDetailVO.class, request));
+//            if (moduleAPI.isCheck("organize")) {
+//                return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findStatus(), PositionDetailVO.class, request));
+//            } else {
+//                return ActResult.initialize(null);
+//            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 查询正常状态的模块类型数据
      *
@@ -310,10 +316,16 @@ public class WorkJoinAction {
                 boList = moduleTypeAPI.findByStatus(Status.THAW);
             }
             return ActResult.initialize(BeanTransform.copyProperties(boList, ModuleTypeVO.class, request));
+//            if (moduleAPI.isCheck("organize")) {
+//                return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.findByStatus(Status.THAW), ModuleTypeVO.class, request));
+//            } else {
+//                return ActResult.initialize(null);
+//            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 查询正常状态的工作范围类型数据
      *
@@ -332,6 +344,7 @@ public class WorkJoinAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 查询正常状态的工作目的类型数据
      *
@@ -351,4 +364,57 @@ public class WorkJoinAction {
         }
     }
 
+    /**
+     * 获取工作范围
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findWorkScope")
+    public Result findWorkScope() throws ActException {
+        try {
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("organize")) {
+                list = workRangeAPI.findWorkScope();
+            }
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取工作目的
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findWorkPurpose")
+    public Result findWorkPurpose() throws ActException {
+        try {
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("organize")) {
+                list = positionInstructionAPI.findOutcome();
+            }
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取工作权限
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findPermission")
+    public Result findWorkPermission() throws ActException {
+        try {
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("organize")) {
+                list = positionInstructionAPI.findWorkPermission();
+            }
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

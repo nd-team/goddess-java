@@ -1,6 +1,6 @@
 package com.bjike.goddess.staffentry.action.staffentry;
 
-import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -8,6 +8,10 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailAPI;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
@@ -20,15 +24,17 @@ import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 入职基本信息
@@ -41,16 +47,23 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("entrybasicinfo")
-public class EntryBasicInfoAction extends BaseFileAction{
+public class EntryBasicInfoAction extends BaseFileAction {
 
     @Autowired
     private EntryBasicInfoAPI entryBasicInfoAPI;
     @Autowired
     private FileAPI fileAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private PositionDetailAPI positionDetailAPI;
 
 
     /**
      * 功能导航权限
+     *
      * @param guidePermissionTO 导航类型数据
      * @throws ActException
      * @version v1
@@ -60,11 +73,11 @@ public class EntryBasicInfoAction extends BaseFileAction{
         try {
 
             Boolean isHasPermission = entryBasicInfoAPI.guidePermission(guidePermissionTO);
-            if(! isHasPermission ){
+            if (!isHasPermission) {
                 //int code, String msg
-                return new ActResult(0,"没有权限",false );
-            }else{
-                return new ActResult(0,"有权限",true );
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
             }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -92,8 +105,8 @@ public class EntryBasicInfoAction extends BaseFileAction{
      * 入职基本信息列表
      *
      * @param entryBasicInfoDTO 入职基本信息dto
-     * @des 获取所有入职基本信息
      * @return class EntryBasicInfoVO
+     * @des 获取所有入职基本信息
      * @version v1
      */
     @GetMapping("v1/listEntryBasicInfo")
@@ -111,8 +124,8 @@ public class EntryBasicInfoAction extends BaseFileAction{
      * 添加员工入职
      *
      * @param entryBasicInfoTO 员工入职基本信息数据to
-     * @des 添加员工入职
      * @return class EntryBasicInfoVO
+     * @des 添加员工入职
      * @version v1
      */
     @LoginAuth
@@ -120,7 +133,7 @@ public class EntryBasicInfoAction extends BaseFileAction{
     public Result addEntryBasicInfo(@Validated(EntryBasicInfoTO.TestAdd.class) EntryBasicInfoTO entryBasicInfoTO) throws ActException {
         try {
             EntryBasicInfoBO entryBasicInfoBO1 = entryBasicInfoAPI.insertEntryBasicInfo(entryBasicInfoTO);
-            return ActResult.initialize(BeanTransform.copyProperties(entryBasicInfoBO1,EntryBasicInfoVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(entryBasicInfoBO1, EntryBasicInfoVO.class, true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -131,8 +144,8 @@ public class EntryBasicInfoAction extends BaseFileAction{
      * 编辑员工入职
      *
      * @param entryBasicInfoTO 员工入职基本信息数据bo
-     * @des 编辑员工入职
      * @return class EntryBasicInfoVO
+     * @des 编辑员工入职
      * @version v1
      */
     @LoginAuth
@@ -140,7 +153,7 @@ public class EntryBasicInfoAction extends BaseFileAction{
     public Result editEntryBasicInfo(@Validated(EntryBasicInfoTO.TestAdd.class) EntryBasicInfoTO entryBasicInfoTO) throws ActException {
         try {
             EntryBasicInfoBO entryBasicInfoBO1 = entryBasicInfoAPI.editEntryBasicInfo(entryBasicInfoTO);
-            return ActResult.initialize(BeanTransform.copyProperties(entryBasicInfoBO1,EntryBasicInfoVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(entryBasicInfoBO1, EntryBasicInfoVO.class, true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -169,8 +182,8 @@ public class EntryBasicInfoAction extends BaseFileAction{
      * 一个入职信息
      *
      * @param id 员工入职基本信息id
-     * @des 根据id查找某个员工入职基本信息
      * @return class EntryBasicInfoVO
+     * @des 根据id查找某个员工入职基本信息
      * @version v1
      */
     @GetMapping("v1/getEntryBasicInfo/{id}")
@@ -188,8 +201,8 @@ public class EntryBasicInfoAction extends BaseFileAction{
      * 入职通告邮件
      *
      * @param entryBasicInfoTO 员工入职基本信息bo 主要id 和 emails
-     * @des 根据id emails发送入职通告邮件
      * @return class EntryBasicInfoVO
+     * @des 根据id emails发送入职通告邮件
      * @version v1
      */
     @PutMapping("v1/sendEmailEntryBasicInfo")
@@ -207,8 +220,8 @@ public class EntryBasicInfoAction extends BaseFileAction{
      * 汇总入职情况统计
      *
      * @param entryBasicInfoDTO 员工入职基本信息bo 主要position 和 entryTime
-     * @des 根据岗位(position)、时间段(entryTime) 汇总入职情况统计
      * @return class EntryBasicInfoVO
+     * @des 根据岗位(position)、时间段(entryTime) 汇总入职情况统计
      * @version v1
      */
     @GetMapping("v1/collect")
@@ -229,9 +242,9 @@ public class EntryBasicInfoAction extends BaseFileAction{
      * @version v1
      */
     @GetMapping("v1/listPost")
-    public Result listPost( ) throws ActException {
+    public Result listPost() throws ActException {
         try {
-            List<String> entryBasicInfoVOList =  entryBasicInfoAPI.listPost( ) ;
+            List<String> entryBasicInfoVOList = entryBasicInfoAPI.listPost();
             return ActResult.initialize(entryBasicInfoVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -243,8 +256,8 @@ public class EntryBasicInfoAction extends BaseFileAction{
      * 根据姓名查找入职信息
      *
      * @param name name
-     * @des 根据姓名查找入职信息
      * @return class EntryBasicInfoVO
+     * @des 根据姓名查找入职信息
      * @version v1
      */
     @GetMapping("v1/getInfoByName/{name}")
@@ -339,14 +352,54 @@ public class EntryBasicInfoAction extends BaseFileAction{
     @LoginAuth
     @PostMapping("v1/deleteFile")
     public Result delFile(@Validated(SiginManageDeleteFileTO.TestDEL.class) SiginManageDeleteFileTO siginManageDeleteFileTO, HttpServletRequest request) throws SerException {
-        if(null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length>=0 ){
+        if (null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length >= 0) {
             Object storageToken = request.getAttribute("storageToken");
-            fileAPI.delFile(storageToken.toString(),siginManageDeleteFileTO.getPaths());
+            fileAPI.delFile(storageToken.toString(), siginManageDeleteFileTO.getPaths());
         }
         return new ActResult("delFile success");
     }
 
+    /**
+     * 获取部门／项目组
+     *
+     * @version v1
+     */
+    @GetMapping("v1/department")
+    public Result getDepartment() throws ActException {
+        try {
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("organize")) {
+                List<DepartmentDetailBO> departmentDetailBOs = departmentDetailAPI.findStatus();
+                if (!CollectionUtils.isEmpty(departmentDetailBOs)) {
+                    list = departmentDetailBOs.stream().map(DepartmentDetailBO::getDepartment).distinct().collect(Collectors.toList());
+                }
+            }
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
+    /**
+     * 获取岗位
+     *
+     * @version v1
+     */
+    @GetMapping("v1/position")
+    public Result getPosition() throws ActException {
+        try {
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("organize")) {
+                List<OpinionBO> opinionBOList = positionDetailAPI.findThawOpinion();
+                if (!CollectionUtils.isEmpty(opinionBOList)) {
+                    list = opinionBOList.stream().map(OpinionBO::getValue).distinct().collect(Collectors.toList());
+                }
+            }
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
 }

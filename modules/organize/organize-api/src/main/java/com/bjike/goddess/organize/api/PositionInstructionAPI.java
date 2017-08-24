@@ -110,5 +110,20 @@ public interface PositionInstructionAPI {
         return null;
     }
 
+    /**
+     * 获取输出结果
+     */
+    default List<String> findOutcome() throws SerException {
+        return null;
+    }
 
+
+    /**
+     * 获取操作类型
+     *
+     * @return
+     */
+    default List<String> findWorkPermission() throws SerException {
+        return null;
+    }
 }
