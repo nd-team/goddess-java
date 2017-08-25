@@ -351,10 +351,24 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
             entity.setLaunch(user.getUsername());
         if (StringUtils.isBlank(entity.getName()))
             entity.setName(" ");
-        if (StringUtils.isBlank(entity.getProject()))
-            entity.setProject(" ");
-        if (StringUtils.isBlank(entity.getArea()))
-            entity.setArea(" ");
+        if (StringUtils.isBlank(entity.getProject())){
+            if (moduleAPI.isCheck("organize")) {
+                List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.getPositionDetail(user.getUsername());
+                if (!CollectionUtils.isEmpty(positionDetailBOs)) {
+                    PositionDetailBO positionDetailBO = positionDetailBOs.get(0);
+                    entity.setArea(positionDetailBO.getDepartmentName());
+                }
+            }
+        }
+        if (StringUtils.isBlank(entity.getArea())) {
+            if (moduleAPI.isCheck("organize")) {
+                List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.getPositionDetail(user.getUsername());
+                if (!CollectionUtils.isEmpty(positionDetailBOs)) {
+                    PositionDetailBO positionDetailBO = positionDetailBOs.get(0);
+                    entity.setArea(positionDetailBO.getArea());
+                }
+            }
+        }
         super.save(entity);
         return BeanTransform.copyProperties(entity, DisciplineRecordBO.class);
     }

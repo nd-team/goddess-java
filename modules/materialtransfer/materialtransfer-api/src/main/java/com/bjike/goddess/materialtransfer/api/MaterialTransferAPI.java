@@ -35,6 +35,7 @@ public interface MaterialTransferAPI {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 根据id查询物资调动
      *
@@ -131,6 +132,26 @@ public interface MaterialTransferAPI {
      * @throws SerException
      */
     default List<String> findallMonUser() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取物资入库型号
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findModel() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取单位
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findUnit() throws SerException {
         return null;
     }
 }

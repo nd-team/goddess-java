@@ -42,6 +42,7 @@ dependencies {
     compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
     compile project(":modules:materialtransfer:materialtransfer-api")
     compile project(":modules:materialinstock:materialinstock-api")
+    compile project(":modules:assemble:assemble-api")
     compile("org.springframework.boot:spring-boot-starter-web")
 }
 

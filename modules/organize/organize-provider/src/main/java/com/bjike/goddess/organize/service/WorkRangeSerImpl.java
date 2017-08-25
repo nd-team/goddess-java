@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -248,11 +249,24 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
             bos.add(new OpinionBO(entity.getId(), String.format("方向:%s 科目:%s 专业分类:%s 工作范围:%s", entity.getDirection(), entity.getProject(), entity.getClassify(), entity.getWorkRange())));
         return bos;
     }
+
     @Override
     public List<WorkRangeBO> findByStatus(Status status) throws SerException {
         WorkRangeDTO dto = new WorkRangeDTO();
         dto.getConditions().add(Restrict.eq(STATUS, status));
         List<WorkRange> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, WorkRangeBO.class);
+    }
+
+    @Override
+    public List<String> findWorkScope() throws SerException {
+        WorkRangeDTO dto = new WorkRangeDTO();
+        dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
+        List<WorkRange> workRanges = super.findByCis(dto);
+        List<String> list = new ArrayList<>(0);
+        if (!CollectionUtils.isEmpty(workRanges)) {
+            list = workRanges.stream().map(WorkRange::getWorkRange).distinct().collect(Collectors.toList());
+        }
+        return list;
     }
 }

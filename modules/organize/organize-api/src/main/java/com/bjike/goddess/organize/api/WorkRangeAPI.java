@@ -232,4 +232,11 @@ public interface WorkRangeAPI {
         return null;
     }
 
+    /*
+     * 获取未冻结的工作范围
+     */
+    default List<String> findWorkScope() throws SerException {
+        return null;
+    }
+
 }

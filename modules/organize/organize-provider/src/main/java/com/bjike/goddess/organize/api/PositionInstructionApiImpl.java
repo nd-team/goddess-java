@@ -69,4 +69,14 @@ public class PositionInstructionApiImpl implements PositionInstructionAPI {
     public List<String> getOutCome() throws SerException {
         return positionInstructionSer.getOutCome();
     }
+
+    @Override
+    public List<String> findOutcome() throws SerException {
+        return positionInstructionSer.findOutcome();
+    }
+
+    @Override
+    public List<String> findWorkPermission() throws SerException {
+        return positionInstructionSer.findWorkPermission();
+    }
 }
