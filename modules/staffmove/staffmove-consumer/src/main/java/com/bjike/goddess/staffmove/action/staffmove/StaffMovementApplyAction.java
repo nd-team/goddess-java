@@ -1,6 +1,8 @@
 package com.bjike.goddess.staffmove.action.staffmove;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -15,7 +17,6 @@ import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
-import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.organize.vo.AreaVO;
 import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.organize.vo.PositionDetailVO;
@@ -342,7 +343,9 @@ public class StaffMovementApplyAction {
     public Result findArea(HttpServletRequest request) throws ActException {
         try {
             List<AreaBO> boList = new ArrayList<>();
-            if(moduleAPI.isCheck("organize")){
+            String userToken = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, userToken);
                 boList = departmentDetailAPI.findArea();
             }
             return ActResult.initialize(BeanTransform.copyProperties(boList, AreaVO.class, request));
@@ -361,7 +364,9 @@ public class StaffMovementApplyAction {
     public Result department(HttpServletRequest request) throws ActException {
         try {
             List<DepartmentDetailBO> boList = new ArrayList<>();
-            if(moduleAPI.isCheck("organize")){
+            String userToken = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, userToken);
                 boList = departmentDetailAPI.findStatus();
             }
             return ActResult.initialize(BeanTransform.copyProperties(boList, DepartmentDetailVO.class, request));
@@ -380,7 +385,9 @@ public class StaffMovementApplyAction {
     public Result position(HttpServletRequest request) throws ActException {
         try {
             List<PositionDetailBO> boList = new ArrayList<>();
-            if(moduleAPI.isCheck("organize")){
+            String userToken = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, userToken);
                 boList = positionDetailAPI.findStatus();
             }
             return ActResult.initialize(BeanTransform.copyProperties(boList, PositionDetailVO.class, request));

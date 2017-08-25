@@ -9,20 +9,25 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.royalty.api.DepartmentBetAPI;
+import com.bjike.goddess.royalty.api.SystemBetAPI;
 import com.bjike.goddess.royalty.bo.DepartmentBetABO;
+import com.bjike.goddess.royalty.bo.SystemBetABO;
 import com.bjike.goddess.royalty.dto.DepartmentBetADTO;
 import com.bjike.goddess.royalty.dto.DepartmentBetDDTO;
 import com.bjike.goddess.royalty.dto.DepartmentBetDTO;
 import com.bjike.goddess.royalty.entity.DepartmentBetA;
+import com.bjike.goddess.royalty.entity.SystemBetA;
 import com.bjike.goddess.royalty.to.DepartmentBetATO;
 import com.bjike.goddess.royalty.to.GuidePermissionTO;
 import com.bjike.goddess.royalty.vo.DepartmentBetAVO;
+import com.bjike.goddess.royalty.vo.SystemBetAVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 部门间对赌表
@@ -40,6 +45,8 @@ public class DepartmentBetAction {
     private DepartmentBetAPI departmentBetAPI;
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private SystemBetAPI systemBetAPI;
 
     /**
      * 功能导航权限
@@ -171,18 +178,32 @@ public class DepartmentBetAction {
             throw new ActException(e.getMessage());
         }
     }
-
     /**
-     * 获取岗位
+     * 获取部门
      *
-     * @return class DepartmentDetailVO
-     * @des 获取岗位
+     * @des 获取部门集合
      * @version v1
      */
     @GetMapping("v1/department")
     public Result department() throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(departmentDetailAPI.findStatus(), DepartmentDetailVO.class));
+            List<String> departmentList = systemBetAPI.getDepartment();
+            return ActResult.initialize(departmentList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 根据项目名称获取体系间对赌表
+     *
+     * @des 根据项目名称获取体系间对赌表
+     * @version v1
+     */
+    @GetMapping("v1/getSystem")
+    public Result getSystem(String projectName) throws ActException {
+        try {
+            SystemBetABO systemBetABO = systemBetAPI.getSystem(projectName);
+            return ActResult.initialize(BeanTransform.copyProperties(systemBetABO, SystemBetAVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

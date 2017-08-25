@@ -320,7 +320,7 @@ private RentalApplySer rentalApplySer;
         String sql = sb.toString();
         sql = String.format(sql, areasStr,areasStr);
         String[] fields = new String[]{"area","projectGroup","projectName","address","rent","agency","deposit","managementFee",
-        "water","energy","healthFee","network","gas","remark"};
+                "healthFee", "water","energy","network","gas","remark"};
         List<CollectBO> collectBOS = super.findBySql(sql,CollectBO.class,fields);
         return collectBOS;
     }

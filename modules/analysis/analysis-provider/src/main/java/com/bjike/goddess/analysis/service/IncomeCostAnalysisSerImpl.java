@@ -364,8 +364,14 @@ public class IncomeCostAnalysisSerImpl extends ServiceImpl<IncomeCostAnalysis, I
             bo.setOffice(model.getOffice());
             bo.setMarketCost(model.getMarketCost());
             bo.setTax(model.getTax());
+            bo.setTotal(model.getTotal());
+            bo.setStaffNum(model.getStaffNum());
+            bo.setPerCapitaWage(model.getPerCapitaWage());
+            bo.setIncomeAfterTax(model.getIncomeAfterTax());
+            bo.setBalance(model.getBalance());
             collectBOS.add(bo);
         }
+
         Integer carNum = 0;//出车司机数
         Double driverFee = 0.0;//司机出车费
         Double oilRecharge = 0.0;//油卡充值
@@ -379,6 +385,7 @@ public class IncomeCostAnalysisSerImpl extends ServiceImpl<IncomeCostAnalysis, I
         Integer staffNum = 0;//员工人数
         Double perCapitaWage = 0.0;//人均工资
         Double incomeAfterTax = 0.0;//税后余额收入
+        Double balance = 0.0;//差额
         if (list != null) {
             carNum = list.stream().filter(p -> p.getCarNum() != null).mapToInt(p -> p.getCarNum()).sum();
             driverFee = list.stream().filter(p -> p.getDriverFee() != null).mapToDouble(p -> p.getDriverFee()).sum();
@@ -393,13 +400,14 @@ public class IncomeCostAnalysisSerImpl extends ServiceImpl<IncomeCostAnalysis, I
             staffNum = list.stream().filter(p -> p.getStaffNum() != null).mapToInt(p -> p.getStaffNum()).sum();
             perCapitaWage = list.stream().filter(p -> p.getPerCapitaWage() != null).mapToDouble(p -> p.getPerCapitaWage()).sum();
             incomeAfterTax = list.stream().filter(p -> p.getIncomeAfterTax() != null).mapToDouble(p -> p.getIncomeAfterTax()).sum();
+            balance = list.stream().filter(p->p.getBalance() != null).mapToDouble(p->p.getBalance()).sum();
 
             CollectBO totalBO = new CollectBO("合计", "", "", carNum, driverFee, oilRecharge, rent, socialSecurity,
-                    staffWage, office, marketCost, tax, total, staffNum, perCapitaWage, incomeAfterTax);
+                    staffWage, office, marketCost, tax, total, staffNum, perCapitaWage, incomeAfterTax,balance);
             collectBOS.add(totalBO);
         } else {
             CollectBO totalBO = new CollectBO("合计", "", "", carNum, driverFee, oilRecharge, rent, socialSecurity,
-                    staffWage, office, marketCost, tax, total, staffNum, perCapitaWage, incomeAfterTax);
+                    staffWage, office, marketCost, tax, total, staffNum, perCapitaWage, incomeAfterTax,balance);
             collectBOS.add(totalBO);
         }
 

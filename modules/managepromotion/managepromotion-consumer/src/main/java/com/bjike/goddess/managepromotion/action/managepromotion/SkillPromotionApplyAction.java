@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.managepromotion.api.SkillGradingAPI;
 import com.bjike.goddess.managepromotion.api.SkillPromotionApplyAPI;
 import com.bjike.goddess.managepromotion.bo.SkillPromotionApplyBO;
 import com.bjike.goddess.managepromotion.dto.SkillPromotionApplyDTO;
@@ -36,8 +37,12 @@ import java.util.List;
 public class SkillPromotionApplyAction {
     @Autowired
     private SkillPromotionApplyAPI skillPromotionApplyAPI;
+    @Autowired
+    private SkillGradingAPI skillGradingAPI;
+
     /**
      * 功能导航权限
+     *
      * @param guidePermissionTO 导航类型数据
      * @throws ActException
      * @version v1
@@ -47,11 +52,11 @@ public class SkillPromotionApplyAction {
         try {
 
             Boolean isHasPermission = skillPromotionApplyAPI.guidePermission(guidePermissionTO);
-            if(! isHasPermission ){
+            if (!isHasPermission) {
                 //int code, String msg
-                return new ActResult(0,"没有权限",false );
-            }else{
-                return new ActResult(0,"有权限",true );
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
             }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -126,7 +131,7 @@ public class SkillPromotionApplyAction {
     public Result add(@Validated(ADD.class) SkillPromotionApplyTO skillPromotionApplyTO, BindingResult bindingResult) throws ActException {
         try {
             SkillPromotionApplyBO skillPromotionApplyBO = skillPromotionApplyAPI.insertSkillPromotionApply(skillPromotionApplyTO);
-            return ActResult.initialize(BeanTransform.copyProperties(skillPromotionApplyBO,SkillPromotionApplyVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(skillPromotionApplyBO, SkillPromotionApplyVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -232,6 +237,22 @@ public class SkillPromotionApplyAction {
         try {
             SkillPromotionApplyBO skillPromotionApplyBO = skillPromotionApplyAPI.generalManagerAudit(to);
             return ActResult.initialize(BeanTransform.copyProperties(skillPromotionApplyBO, SkillPromotionApplyVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有技能等级
+     *
+     * @des 获取所有技能等级
+     * @version v1
+     */
+    @GetMapping("v1/skill")
+    public Result skill() throws ActException {
+        try {
+            List<String> skillLevel = skillGradingAPI.getSkillLevel();
+            return ActResult.initialize(skillLevel);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

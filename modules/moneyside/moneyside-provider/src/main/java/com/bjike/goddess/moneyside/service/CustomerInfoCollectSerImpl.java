@@ -7,6 +7,7 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.moneyside.bo.CustomerInfoCollectBO;
 import com.bjike.goddess.moneyside.dto.CustomerInfoCollectDTO;
 import com.bjike.goddess.moneyside.entity.CustomerInfoCollect;
+import com.bjike.goddess.moneyside.entity.FundEntry;
 import com.bjike.goddess.moneyside.enums.GuideAddrStatus;
 import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
@@ -17,6 +18,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 客户信息汇总业务实现
@@ -193,5 +195,13 @@ public class CustomerInfoCollectSerImpl extends ServiceImpl<CustomerInfoCollect,
             "proportionInvestment","totalQuota"};
         List<CustomerInfoCollectBO> customerInfoCollectBOS = super.findBySql(sql ,CustomerInfoCollectBO.class,fields);
         return customerInfoCollectBOS;
+    }
+    @Override
+    public List<String> getInvestor() throws SerException {
+        String[] feilds = new String[]{"investor"};
+        String sql = " SELECT  a.investor FROM moneyside_fundentry a,moneyside_callinfo b,moneyside_moneyexitapply c, moneyside_investtransfer d,moneyside_incomedistribution e, moneyside_incomequota f WHERE a.investor = b.investor and  a.investor = c.investor and a.investor = d.investor and  a.investor = e.investor AND a.investor=f.investor GROUP BY a.investor ";
+        List<FundEntry> fundEntries = super.findBySql(sql,FundEntry.class,feilds);
+        List<String> list = fundEntries.stream().map(FundEntry::getInvestor).collect(Collectors.toList());
+        return list;
     }
 }

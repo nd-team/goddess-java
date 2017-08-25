@@ -469,44 +469,6 @@ public class SystemBetSerImpl extends ServiceImpl<SystemBet, SystemBetDTO> imple
                 systemBetASer.remove(a.getId());
             }
         }
-//        SystemBetADTO systemBetADTO = new SystemBetADTO();
-//        systemBetADTO.getConditions().add(Restrict.eq("id", id));
-//        List<SystemBetA> aList = systemBetASer.findByCis(systemBetADTO);
-//        if (aList != null && aList.size() > 0) {
-//            List<String> aIdList = aList.stream().map(SystemBetA::getId).collect(Collectors.toList());
-//            String[] aids = new String[aIdList.size()];
-//            aids = aIdList.toArray(aids);
-//            //查询B表对应的数据
-//            SystemBetBDTO systemBetBDTO = new SystemBetBDTO();
-//            systemBetBDTO.getConditions().add(Restrict.eq("systemBetA.id", aids));
-//            List<SystemBetB> bList = systemBetBSer.findByCis(systemBetBDTO);
-//            if (bList != null && bList.size() > 0) {
-//                //查询对应C表的数据
-//                List<String> bIdList = bList.stream().map(SystemBetB::getId).collect(Collectors.toList());
-//                String[] bids = new String[bIdList.size()];
-//                bids = bIdList.toArray(bids);
-//                SystemBetCDTO systemBetCDTO = new SystemBetCDTO();
-//                systemBetCDTO.getConditions().add(Restrict.in("systemBetB.id", bids));
-//                List<SystemBetC> cList = systemBetCSer.findByCis(systemBetCDTO);
-//                if (cList != null && cList.size() > 0) {
-//                    //查询对应D表的数据，先删除
-//                    List<String> cIdList = cList.stream().map(SystemBetC::getId).collect(Collectors.toList());
-//                    String[] cids = new String[cIdList.size()];
-//                    cids = cIdList.toArray(cids);
-//                    SystemBetDDTO systemBetDDTO = new SystemBetDDTO();
-//                    systemBetDDTO.getConditions().add(Restrict.in("systemBetC.id", cids));
-//                    List<SystemBetD> dList = systemBetDSer.findByCis(systemBetDDTO);
-//                    if (dList != null && dList.size() > 0) {
-//                        systemBetDSer.remove(dList);
-//                    }
-//                    systemBetCSer.remove(cList);
-//                }
-//
-//                systemBetBSer.remove(bList);
-//            }
-//            systemBetASer.remove(id);
-//
-//        }
     }
 
     @Override
@@ -532,5 +494,16 @@ public class SystemBetSerImpl extends ServiceImpl<SystemBet, SystemBetDTO> imple
 
         return departmentList;
 
+    }
+    @Override
+    public SystemBetABO getSystem(String projectName) throws SerException {
+        SystemBetA a= new SystemBetA();
+        if(StringUtils.isNotBlank(projectName)){
+            SystemBetADTO adto = new SystemBetADTO();
+            adto.getConditions().add(Restrict.eq("projectName",projectName));
+            a = systemBetASer.findOne(adto);
+        }
+        SystemBetABO bo = BeanTransform.copyProperties(a,SystemBetABO.class);
+        return bo;
     }
 }

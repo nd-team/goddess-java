@@ -82,6 +82,18 @@ public class CollectVO {
      * 税后余额收入
      */
     private Double incomeAfterTax;
+    /**
+     * 差额（税后余额收入-合计）
+     */
+    private Double balance;
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
+    }
 
     public String getDate() {
 
