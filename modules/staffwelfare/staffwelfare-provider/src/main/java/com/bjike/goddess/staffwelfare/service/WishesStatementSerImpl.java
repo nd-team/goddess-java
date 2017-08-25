@@ -231,7 +231,6 @@ public class WishesStatementSerImpl extends ServiceImpl<WishesStatement, WishesS
         WishesStatementDTO dto = new WishesStatementDTO();
         dto.getSorts().add("createTime=desc");
         //查询当前用户的非冻结感谢语
-        dto.getConditions().add(Restrict.eq("status", Status.THAW));
         dto.getConditions().add(Restrict.or("createUser", getCurrentUser().getUsername()));
         List<WishesStatement> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, WishesStatementBO.class);
