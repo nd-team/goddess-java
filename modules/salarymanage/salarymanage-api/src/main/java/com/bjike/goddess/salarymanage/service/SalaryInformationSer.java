@@ -12,6 +12,7 @@ import com.bjike.goddess.assistance.dto.HotAssistDTO;
 import com.bjike.goddess.assistance.dto.HouseAssistDTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.managementpromotion.bo.LevelShowBO;
 import com.bjike.goddess.managementpromotion.entity.LevelShow;
 import com.bjike.goddess.managepromotion.bo.OverviewSkillLevelBO;
 import com.bjike.goddess.salaryconfirm.bo.SalaryconfirmBO;
@@ -124,7 +125,7 @@ public interface SalaryInformationSer extends Ser<SalaryInformation, SalaryInfor
      * @param employeeId
      * @throws SerException
      */
-    LevelShow findByEmployeeId(String employeeId) throws SerException;
+    LevelShowBO findEmployeeId(String employeeId) throws SerException;
 
     /**
      * 根据id来查询入职基本信息
