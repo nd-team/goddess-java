@@ -39,8 +39,7 @@ public class OilCardUseAct {
 
     @Autowired
     private OilCardRechargeAPI oilCardRechargeAPI;
-    @Autowired
-    private DispatchCarInfoAPI dispatchCarInfoAPI;
+
 
     /**
      * 功能导航权限
