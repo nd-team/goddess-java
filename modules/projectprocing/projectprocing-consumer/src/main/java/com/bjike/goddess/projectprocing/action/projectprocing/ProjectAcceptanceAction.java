@@ -1,5 +1,7 @@
 package com.bjike.goddess.projectprocing.action.projectprocing;
 
+import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
+import com.bjike.goddess.businessproject.vo.BaseInfoManageVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -184,5 +186,22 @@ public class ProjectAcceptanceAction {
     @PostMapping("v1/uplode")
     public Result uplodeFile( ) throws ActException {
         return  null;
+    }
+
+    /**
+     * 获取内部项目名称和内部项目编号和外部项目名称和外部项目编号
+     * @return calss BaseInfoManageVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/project")
+    public Result findProject() throws ActException{
+        try {
+            List<BaseInfoManageBO> boList = projectAcceptanceAPI.findManage();
+            List<BaseInfoManageVO> voList = BeanTransform.copyProperties(boList,BaseInfoManageVO.class);
+            return ActResult.initialize(voList);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
     }
 }
