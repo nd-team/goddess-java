@@ -73,7 +73,7 @@ public class AgeAssistApiImpl implements AgeAssistAPI {
     }
 
     @Override
-    public AgeAssistBO findAge(String startTime, String endTime) throws SerException {
-        return ageAssistSer.findAge(startTime,endTime);
+    public AgeAssistBO findAge(String employeeName) throws SerException {
+        return ageAssistSer.findAge(employeeName);
     }
 }

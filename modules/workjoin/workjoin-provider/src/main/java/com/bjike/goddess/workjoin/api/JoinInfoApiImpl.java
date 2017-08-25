@@ -2,6 +2,7 @@ package com.bjike.goddess.workjoin.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.datastore.bo.NumSpecificationBO;
 import com.bjike.goddess.workjoin.bo.JoinInfoBO;
 import com.bjike.goddess.workjoin.dto.JoinInfoDTO;
 import com.bjike.goddess.workjoin.entity.JoinInfo;
@@ -67,4 +68,8 @@ public class JoinInfoApiImpl implements JoinInfoAPI {
         joinInfoSer.removeJoinInfo(id);
     }
 
+    @Override
+    public List<NumSpecificationBO> findNumSepecification() throws SerException {
+        return joinInfoSer.findNumSepecification();
+    }
 }

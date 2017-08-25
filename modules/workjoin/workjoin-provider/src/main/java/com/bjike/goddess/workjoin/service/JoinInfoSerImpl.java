@@ -1,9 +1,14 @@
 package com.bjike.goddess.workjoin.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.datastore.api.NumSpecificationAPI;
+import com.bjike.goddess.datastore.bo.NumSpecificationBO;
+import com.bjike.goddess.datastore.dto.NumSpecificationDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.workjoin.bo.JoinInfoBO;
@@ -18,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,6 +42,12 @@ public class JoinInfoSerImpl extends ServiceImpl<JoinInfo, JoinInfoDTO> implemen
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+
+    @Autowired
+    private NumSpecificationAPI numSpecificationAPI;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -226,5 +238,15 @@ public class JoinInfoSerImpl extends ServiceImpl<JoinInfo, JoinInfoDTO> implemen
         super.remove(id);
     }
 
-
+    @Override
+    public List<NumSpecificationBO> findNumSepecification() throws SerException {
+        List<NumSpecificationBO> boList = new ArrayList<>(0);
+        if(moduleAPI.isCheck("datastore")) {
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
+            NumSpecificationDTO dto = new NumSpecificationDTO();
+            boList = numSpecificationAPI.findListNumSpecification(dto);
+        }
+        return boList;
+    }
 }

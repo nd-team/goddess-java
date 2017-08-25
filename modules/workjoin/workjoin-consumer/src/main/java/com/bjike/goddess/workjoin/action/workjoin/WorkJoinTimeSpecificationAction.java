@@ -83,7 +83,7 @@ public class WorkJoinTimeSpecificationAction {
     /**
      * 一个工作交接时间规范
      *
-     * @param id
+     * @param id 工作交接时间id
      * @return class WorkJoinTimeSpecificationVO
      * @des 获取一个工作交接时间规范
      * @version v1

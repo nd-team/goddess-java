@@ -1,6 +1,7 @@
 package com.bjike.goddess.workjoin.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
 import com.bjike.goddess.workjoin.bo.DeviceJoinBO;
 import com.bjike.goddess.workjoin.dto.DeviceJoinDTO;
 import com.bjike.goddess.workjoin.to.DeviceJoinTO;
@@ -90,5 +91,10 @@ public interface DeviceJoinAPI {
 
     }
 
+
+    /**
+     * 查询设备编号
+     */
+    List<MaterialInStockBO> findMaterial() throws SerException;
 
 }

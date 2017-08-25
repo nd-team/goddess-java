@@ -154,7 +154,7 @@ public class WorkJoinAction {
     /**
      * 一个工作交接
      *
-     * @param id
+     * @param id 工作交接id
      * @return class WorkJoinVO
      * @des 获取一个工作交接
      * @version v1
