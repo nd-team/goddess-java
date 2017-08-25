@@ -5,6 +5,5 @@ dependencies {
     compile project(":modules:organize:organize-api")
     compile project(":modules:carinfo:carinfo-api")
     compile project(":modules:staffentry:staffentry-api")
-    compile project(":modules:oilcardmanage:oilcardmanage-api")
     compile project(":modules:assemble:assemble-api")
 }
