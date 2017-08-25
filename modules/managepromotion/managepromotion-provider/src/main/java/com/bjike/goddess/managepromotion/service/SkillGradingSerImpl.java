@@ -26,10 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -318,6 +315,7 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
                 }
             }
         }
+
     }
 
     @Override
@@ -412,6 +410,15 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
 
     }
 
+    @Override
+    public List<String> getSkillLevel() throws SerException {
+        String[] fields = new String[]{"skillLevel"};
+        String sql = "SELECT skillLevel FROM managepromotion_skillgradingb GROUP BY skillLevel ";
+        List<SkillGradingB> skillGradingBS = super.findBySql(sql, SkillGradingB.class, fields);
+        List<String> list = skillGradingBS.stream().map(SkillGradingB::getSkillLevel).collect(Collectors.toList());
+        return list;
+    }
+
     private SkillGradingC findBySql(String system, String industry, String subject, Integer technicalRank) throws SerException {
         Integer[] technicals = new Integer[]{technicalRank};
         String[] systems = new String[]{system};
@@ -431,40 +438,51 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
         return null;
     }
 
-    public static List<List<Object>> str(List<String> list) {
-        List<List<Object>> result = new ArrayList<List<Object>>();
-        long n = (long) Math.pow(2, list.size());
-        List<Object> combine;
-        for (long l = 0L; l < n; l++) {
-            combine = new ArrayList<Object>();
-            for (int i = 0; i < list.size(); i++) {
-                if ((l >>> i & 1) == 1)
-                    combine.add(list.get(i));
-            }
-            result.add(combine);
-        }
-        return result;
-    }
-
 
     @Override
     public List<SkillBO> calculate(CalculateTO to) throws SerException {
-        List<SkillBO> skillBOS = new ArrayList<>(0);
-        String main = to.getMain();
-        Integer money = to.getMoney();
-        String[] fields = new String[]{"major", "grade"};
-        StringBuilder sb = new StringBuilder();
-        if (StringUtils.isNotBlank(main) && null != money) {
-            sb.append(" SELECT a.major,c.grade as grade FROM managepromotion_skillgradinga a," +
-                    " managepromotion_skillgradingc c, managepromotion_skillgradingb b " +
-                    " WHERE 1=1 and " +
-                    " a.id=b.skillGradingA_id AND b.id= c.skillGradingB_id " +
-                    " and a.major='" + main + "' AND c.totalAllowance = '" + money + "'");
+//        List<SkillBO> skillBOS = new ArrayList<>(0);
+//        String main = to.getMain();
+//        Integer money = to.getMoney();
+//        String[] fields = new String[]{"major", "grade"};
+//        StringBuilder sb = new StringBuilder();
+//        if (StringUtils.isNotBlank(main) && null != money) {
+//            sb.append(" SELECT a.major,c.grade as grade FROM managepromotion_skillgradinga a," +
+//                    " managepromotion_skillgradingc c, managepromotion_skillgradingb b " +
+//                    " WHERE 1=1 and " +
+//                    " a.id=b.skillGradingA_id AND b.id= c.skillGradingB_id " +
+//                    " and a.major='" + main + "' AND c.totalAllowance = '" + money + "'");
+//        }
+//        sb.append("  group by a.major,c.grade ");
+//        skillBOS = super.findBySql(sb.toString(), SkillBO.class, fields);
+//        init(skillBOS, money);
+//        return skillBOS;
+        Integer[] a3 = new Integer[]{2000,1200, 500 , 300 , 1975 , 1425 , 400 , 3300 , 2800 , 1150 , 1700 , 2250 , 3800 , 2525 , 1000 , 1250 };
+        List<Integer> list = Arrays.asList(a3);
+        Comparator comp = Collections.reverseOrder();
+        Collections.sort(list,comp);
+        List<String> strlist= new ArrayList<String>();
+        for(int i =0,len=list.size();i<len ; i++){
+            strlist.add(list.get(i)+"");
         }
-        sb.append("  group by a.major,c.grade ");
-        skillBOS = super.findBySql(sb.toString(), SkillBO.class, fields);
-        init(skillBOS, money);
-        return skillBOS;
+        System.out.println(strlist);
+        //所需要的组合
+        List<List<Object>> all = new ArrayList<List<Object>>();
+        //所有组合
+        List<List<Object>> aa = str(strlist);
+        for(List<Object> ss:aa){
+            //计算组合
+            int temp = 0;
+            for(Object s : ss){
+                temp = temp+Integer.parseInt(s.toString());
+            }
+            //比较输入金额，得到所需组合
+            if(2000 == temp){
+                all.add(ss);
+            }
+        }
+        System.out.println(all);
+        return null;
     }
 
     private void init(List<SkillBO> skillBOS, Integer money) throws SerException {
@@ -472,7 +490,7 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
             String grade = skillBOS.get(0).getGrade();
             String level = StringUtils.substring(grade, 0, 1);
             Integer num = Integer.parseInt(StringUtils.substring(grade, 1, 2));
-            String[] field = new String[]{"grade", "subsidiesAmount","totalAllowance", "major"};
+            String[] field = new String[]{"grade", "subsidiesAmount", "totalAllowance", "major"};
             String sql = "SELECT c.grade,c.subsidiesAmount,c.totalAllowance,a.major from managepromotion_skillgradinga a," +
                     " managepromotion_skillgradingb b," +
                     " managepromotion_skillgradingc  c where "
@@ -491,7 +509,7 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
 
                 if (level.compareTo(litleLevel) > 0 ||
                         (level.equals(litleLevel) && litleNum < num)) {//A1 > B1 > C1
-                    sum=amount.getTotalAllowance()+amount.getSubsidiesAmount();
+                    sum = amount.getTotalAllowance() + amount.getSubsidiesAmount();
                     littleBOS.add(littleBO);
                     if (sum == money) {
                         SkillBO skillBO = new SkillBO();
@@ -499,7 +517,7 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
                         skillBO.setLittleBOS(littleBOS);
                         skillBOS.add(skillBO);
                     }
-                    if(sum>money){
+                    if (sum > money) {
                         break;
                     }
                 }
@@ -510,9 +528,48 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
     }
 
 
-    public static void main(String[] args) {
+    public static List<List<Object>> str(List<String> list) {
+        List<List<Object>> result = new ArrayList<List<Object>>();
+        long n = (long) Math.pow(2, list.size());
+        List<Object> combine;
+        for (long l = 0L; l < n; l++) {
+            combine = new ArrayList<Object>();
+            for (int i = 0; i < list.size(); i++) {
+                if ((l >>> i & 1) == 1)
+                    combine.add(list.get(i));
+            }
+            result.add(combine);
+        }
+        return result;
+    }
 
-        System.out.println("A".compareTo("C"));
+
+    public static void main(String[] args) {
+        Integer[] a3 = new Integer[]{2000,1200, 500 , 300 , 1975 , 1425 , 400 , 3300 , 2800 , 1150 , 1700 , 2250 , 3800 , 2525 , 1000 , 1250 };
+        List<Integer> list = Arrays.asList(a3);
+        Comparator comp = Collections.reverseOrder();
+        Collections.sort(list,comp);
+        List<String> strlist= new ArrayList<String>();
+        for(int i =0,len=list.size();i<len ; i++){
+            strlist.add(list.get(i)+"");
+        }
+        System.out.println(strlist);
+        //所需要的组合
+        List<List<Object>> all = new ArrayList<List<Object>>();
+        //所有组合
+        List<List<Object>> aa = str(strlist);
+        for(List<Object> ss:aa){
+            //计算组合
+            int temp = 0;
+            for(Object s : ss){
+                temp = temp+Integer.parseInt(s.toString());
+            }
+            //比较输入金额，得到所需组合
+            if(2000 == temp){
+                all.add(ss);
+            }
+        }
+        System.out.println(all);
     }
 
 

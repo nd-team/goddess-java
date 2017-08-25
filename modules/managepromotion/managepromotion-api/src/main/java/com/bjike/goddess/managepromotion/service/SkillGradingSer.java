@@ -14,6 +14,7 @@ import com.bjike.goddess.managepromotion.excel.SonPermissionObject;
 import com.bjike.goddess.managepromotion.to.CalculateTO;
 import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managepromotion.to.SkillGradingATO;
+import scala.util.parsing.combinator.testing.Str;
 
 import java.util.List;
 
@@ -94,6 +95,15 @@ public interface SkillGradingSer extends Ser<SkillGrading, SkillGradingDTO> {
      */
     default void removeSkillGrading(String id) throws SerException {
 
+    }
+    /**
+     * 获取所有技能等级
+     *
+     * @return class String
+     * @throws SerException
+     */
+    default List<String> getSkillLevel() throws SerException {
+        return null;
     }
     /**
      * 计算

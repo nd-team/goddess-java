@@ -1,17 +1,23 @@
 package com.bjike.goddess.royalty.action.royalty;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.HierarchyAPI;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.organize.vo.HierarchyVO;
 import com.bjike.goddess.royalty.api.SystemBetAPI;
 import com.bjike.goddess.royalty.bo.SystemBetABO;
 import com.bjike.goddess.royalty.dto.SystemBetADTO;
 import com.bjike.goddess.royalty.dto.SystemBetDDTO;
+import com.bjike.goddess.royalty.entity.SystemBetA;
 import com.bjike.goddess.royalty.to.GuidePermissionTO;
 import com.bjike.goddess.royalty.to.SystemBetATO;
 import com.bjike.goddess.royalty.vo.SystemBetAVO;
@@ -21,6 +27,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,6 +46,8 @@ public class SystemBetAction {
     private SystemBetAPI systemBetAPI;
     @Autowired
     private HierarchyAPI hierarchyAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
 
     /**
      * 功能导航权限
@@ -186,22 +195,6 @@ public class SystemBetAction {
     }
 
     /**
-     * 获取部门
-     *
-     * @des 获取部门集合
-     * @version v1
-     */
-    @GetMapping("v1/department")
-    public Result department() throws ActException {
-        try {
-            List<String> departmentList = systemBetAPI.getDepartment();
-            return ActResult.initialize(departmentList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
      * 获取体系
      *
      * @return class HierarchyVO
@@ -216,6 +209,27 @@ public class SystemBetAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 查询未冻结部门项目组详细信息
+     *
+     * @return class DepartmentDetailVO
+     * @version v1
+     */
+    @GetMapping("v1/department")
+    public Result department(HttpServletRequest request) throws ActException {
+        try {
+            List<DepartmentDetailBO> boList = new ArrayList<>();
+//            String userToken = request.getHeader(RpcCommon.USER_TOKEN).toString();
+//            if (moduleAPI.isCheck("organize")) {
+//                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN,userToken);
+                boList = departmentDetailAPI.findStatus();
+//            }
+            return ActResult.initialize(BeanTransform.copyProperties(boList, DepartmentDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 
 

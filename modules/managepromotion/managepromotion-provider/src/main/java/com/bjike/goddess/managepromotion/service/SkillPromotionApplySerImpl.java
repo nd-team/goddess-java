@@ -1,15 +1,24 @@
 package com.bjike.goddess.managepromotion.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.event.api.EventAPI;
+import com.bjike.goddess.event.enums.Permissions;
+import com.bjike.goddess.event.to.EventTO;
 import com.bjike.goddess.managepromotion.bo.SkillPromotionApplyBO;
 import com.bjike.goddess.managepromotion.dto.SkillPromotionApplyDTO;
 import com.bjike.goddess.managepromotion.entity.SkillPromotionApply;
 import com.bjike.goddess.managepromotion.enums.GuideAddrStatus;
 import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managepromotion.to.SkillPromotionApplyTO;
+import com.bjike.goddess.organize.api.PositionDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +27,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 技能晋升申请业务实现
@@ -37,6 +48,14 @@ public class SkillPromotionApplySerImpl extends ServiceImpl<SkillPromotionApply,
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private PositionDetailAPI positionDetailAPI;
+    @Autowired
+    private EventAPI eventAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -368,7 +387,31 @@ public class SkillPromotionApplySerImpl extends ServiceImpl<SkillPromotionApply,
         List<SkillPromotionApplyBO> skillPromotionApplyBOS = BeanTransform.copyProperties(skillPromotionApplies, SkillPromotionApplyBO.class);
         return skillPromotionApplyBOS;
     }
-
+    private Set<String> events(String name) throws SerException {
+        Set<String> set = new HashSet<>();
+        if (moduleAPI.isCheck("organize")) {
+            List<PositionDetailBO> list = positionDetailUserAPI.getPositionDetail(name);
+            List<PositionDetailBO> all = positionDetailAPI.findStatus();
+            for (PositionDetailBO p : list) {
+                String depart = p.getDepartmentName();
+                for (PositionDetailBO p1 : all) {
+                    boolean b = depart.equals(p1.getDepartmentName()) ? true : false;
+                    boolean b1 = "决策层".equals(p1.getArrangementName()) && p1.getPosition().contains("项目经理") && Status.THAW.equals(p1.getStatus());
+                    boolean b2 = "综合资源部".equals(p1.getDepartmentName()) && "规划模块".equals(p1.getModuleName()) && "规划模块负责人".equals(p1.getPosition()) && Status.THAW.equals(p1.getStatus());
+                    boolean b3 = "财务运营部".equals(p1.getDepartmentName()) && "预算模块".equals(p1.getModuleName()) && "预算模块负责人".equals(p1.getPosition()) && Status.THAW.equals(p1.getStatus());
+                    boolean b4 = "管理层".equals(p1.getArrangementName());
+                    boolean b5 = "总经理".equals(p1.getPosition()) && Status.THAW.equals(p1.getStatus());
+                    if ((b && b1) || (b && b4) || b2 || b3 || b5) {
+                        List<UserBO> userBOs = positionDetailUserAPI.findByPosition(p1.getId());
+                        for (UserBO userBO : userBOs) {
+                            set.add(userBO.getUsername());
+                        }
+                    }
+                }
+            }
+        }
+        return set;
+    }
     @Override
     @Transactional(rollbackFor = SerException.class)
     public SkillPromotionApplyBO insertSkillPromotionApply(SkillPromotionApplyTO skillPromotionApplyTO) throws SerException {
@@ -376,6 +419,18 @@ public class SkillPromotionApplySerImpl extends ServiceImpl<SkillPromotionApply,
         SkillPromotionApply skillPromotionApply = BeanTransform.copyProperties(skillPromotionApplyTO, SkillPromotionApply.class, true);
         skillPromotionApply.setCreateTime(LocalDateTime.now());
         super.save(skillPromotionApply);
+        if (moduleAPI.isCheck("event")) {
+            for (String s : events(skillPromotionApply.getName())) {
+                EventTO eventTO = new EventTO();
+                eventTO.setProject("管理等级晋升");
+                eventTO.setContent("管理等级晋升申请审核");
+                eventTO.setRequestTime(DateUtil.dateToString(LocalDateTime.now()));    //todo:要求处理时间不确定
+                eventTO.setName(s);
+                eventTO.setPermissions(Permissions.ADUIT);
+                eventTO.setEventId(skillPromotionApply.getId());
+                eventAPI.save(eventTO);
+            }
+        }
         return BeanTransform.copyProperties(skillPromotionApply, SkillPromotionApplyBO.class);
     }
 

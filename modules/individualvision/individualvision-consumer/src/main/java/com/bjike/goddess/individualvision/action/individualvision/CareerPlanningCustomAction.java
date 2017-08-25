@@ -15,15 +15,12 @@ import com.bjike.goddess.individualvision.to.CareerPlanningCustomTO;
 import com.bjike.goddess.individualvision.to.GuidePermissionTO;
 import com.bjike.goddess.individualvision.vo.CareerPlanningCustomVO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
-import com.bjike.goddess.organize.bo.AreaBO;
-import com.bjike.goddess.organize.vo.AreaVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -192,25 +189,6 @@ public class CareerPlanningCustomAction {
 //            throw new ActException(e.getMessage());
 //        }
 //    }
-
-    /**
-     * 查询地区
-     *
-     * @return class AreaVO
-     * @version v1
-     */
-    @GetMapping("v1/area")
-    public Result area(HttpServletRequest request) throws ActException {
-        try {
-            List<AreaBO> boList = new ArrayList<>();
-            if(moduleAPI.isCheck("organize")){
-                boList = departmentDetailAPI.findArea();
-            }
-            return ActResult.initialize(BeanTransform.copyProperties(boList, AreaVO.class, request));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
 
 
 }

@@ -295,41 +295,6 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
         }
 
         return listABO;
-//        JobsBetADTO adto = new JobsBetADTO();
-//        List<JobsBetA> listA = jobsBetASer.findByCis(adto);
-//        List<JobsBetBO> jobsBetBOS = new ArrayList<>(listA.size());
-//        for (JobsBetA jobsBetA : listA) {
-//            JobsBetBO betBO = new JobsBetBO();
-//            betBO.setJobsBetABO(BeanTransform.copyProperties(jobsBetA, JobsBetABO.class));
-//            JobsBetBDTO bdto = new JobsBetBDTO();
-//            List<JobsBetB> listB = jobsBetBSer.findByCis(bdto);
-//            List<JobsBetBBO> bboList = BeanTransform.copyProperties(listB, JobsBetBBO.class);
-//            betBO.getJobsBetABO().setJobsBetBBOS(bboList);
-//
-//            for (JobsBetBBO jobsBetBBO : bboList) {
-//                JobsBetCDTO dtoC = new JobsBetCDTO();
-//                List<JobsBetC> listC = jobsBetCSer.findByCis(dtoC);
-//                List<JobsBetCBO> cboList = BeanTransform.copyProperties(listC, JobsBetCBO.class);
-//                jobsBetBBO.setJobsBetCBOS(cboList);
-//
-//                for (JobsBetCBO jobsBetCBO : cboList) {
-//                    JobsBetDDTO dtoD = new JobsBetDDTO();
-//                    List<JobsBetD> listD = jobsBetDSer.findByCis(dtoD);
-//                    List<JobsBetDBO> dboList = BeanTransform.copyProperties(listD, JobsBetDBO.class);
-//                    jobsBetCBO.setJobsBetDBOS(dboList);
-//
-//                    for (JobsBetDBO jobsBetDBO : dboList) {
-//                        JobsBetEDTO dtoE = new JobsBetEDTO();
-//                        List<JobsBetE> listE = jobsBetESer.findByCis(dtoE);
-//                        List<JobsBetEBO> eboList = BeanTransform.copyProperties(listE, JobsBetEBO.class);
-//                        jobsBetDBO.setJobsBetEBOS(eboList);
-//                    }
-//                }
-//                jobsBetBOS.add(betBO);
-//            }
-//        }
-
-//        return jobsBetBOS;
     }
 
     @Transactional(rollbackFor = SerException.class)

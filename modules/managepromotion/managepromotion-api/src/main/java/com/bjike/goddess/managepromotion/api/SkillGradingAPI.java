@@ -90,6 +90,15 @@ public interface SkillGradingAPI {
     default void removeSkillGrading(String id) throws SerException {
 
     }
+    /**
+     * 获取所有技能等级
+     *
+     * @return class String
+     * @throws SerException
+     */
+    default List<String> getSkillLevel() throws SerException {
+        return null;
+    }
 
     /**
      * 计算

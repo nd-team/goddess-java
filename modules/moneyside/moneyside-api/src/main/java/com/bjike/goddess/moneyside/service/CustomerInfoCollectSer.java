@@ -44,4 +44,13 @@ public interface CustomerInfoCollectSer extends Ser<CustomerInfoCollect, Custome
     default List<CustomerInfoCollectBO> collect(CustomerInfoCollectDTO dto) throws SerException {
         return null;
     }
+    /**
+     * 获取所有投资人
+     *
+     * @return class String
+     * @throws SerException
+     */
+    default List<String> getInvestor() throws SerException {
+        return null;
+    }
 }
