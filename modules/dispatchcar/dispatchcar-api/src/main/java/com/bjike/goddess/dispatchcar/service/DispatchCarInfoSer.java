@@ -12,6 +12,7 @@ import com.bjike.goddess.dispatchcar.excel.SonPermissionObject;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
 import com.bjike.goddess.dispatchcar.to.FinanceCollectTO;
 import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
+import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 
 import java.util.List;
@@ -213,10 +214,10 @@ public interface DispatchCarInfoSer extends Ser<DispatchCarInfo, DispatchCarInfo
     List<EntryBasicInfoBO> findAllEntry() throws SerException;
 
 
-//    /**
-//     * 查询所有油卡信息
-//     *
-//     * @throws SerException
-//     */
-//    List<OilCardBasicBO> findAllOil() throws SerException;
+    /**
+     * 查询所有油卡信息
+     *
+     * @throws SerException
+     */
+    List<OilCardBasicBO> findAllOil() throws SerException;
 }

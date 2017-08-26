@@ -1217,9 +1217,9 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         return boList;
     }
 
-//    @Override
-//    public List<OilCardBasicBO> findAllOil() throws SerException {
-//        List<OilCardBasicBO> boList = oilCardBasicAPI.findOilCard();
-//        return boList;
-//    }
+    @Override
+    public List<OilCardBasicBO> findAllOil() throws SerException {
+        List<OilCardBasicBO> boList = oilCardBasicAPI.findOilCard();
+        return boList;
+    }
 }
