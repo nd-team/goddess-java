@@ -59,29 +59,6 @@ public class WaitAuditAct extends BaseFileAction {
         }
     }
 
-    /**
-     * 查看附件
-     *
-     * @param id 出车记录id
-     * @version v1
-     */
-    @GetMapping("v1/findfiles/{id}")
-    public Result findFiles(@PathVariable String id,HttpServletRequest request) throws ActException {
-        // 17-4-14 查看附件
-        try {
-            //跟前端约定好 ，文件路径是列表id
-            // /businessproject/id/....
-            String path = "/dispatchcar/" + id;
-            FileInfo fileInfo = new FileInfo();
-            fileInfo.setPath(path);
-            Object storageToken = request.getAttribute("storageToken");
-            fileInfo.setStorageToken(storageToken.toString());
-            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
-            return ActResult.initialize(files);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
 
     /**
      * 文件附件列表
