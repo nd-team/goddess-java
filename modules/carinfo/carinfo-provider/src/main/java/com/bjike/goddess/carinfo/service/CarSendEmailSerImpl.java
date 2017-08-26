@@ -285,6 +285,7 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
             model.setProjectManageId(to.getProjectManageId());
             model.setProjectManage(to.getProjectManage());
             model.setPositionName(to.getPositionName());
+            model.setRemark(to.getRemark());
             super.update(model);
         }else {
             throw new SerException("非法Id,发送对象不能为空！");
