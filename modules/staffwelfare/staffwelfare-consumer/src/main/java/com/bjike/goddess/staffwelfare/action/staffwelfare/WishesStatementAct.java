@@ -68,7 +68,7 @@ public class WishesStatementAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class)WishesStatementTO to, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(ADD.class) WishesStatementTO to, BindingResult bindingResult) throws ActException {
         try {
             WishesStatementVO vo = BeanTransform.copyProperties(wishesStatementAPI.addModel(to), WishesStatementVO.class);
             return ActResult.initialize(vo);
@@ -85,7 +85,7 @@ public class WishesStatementAct {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class)WishesStatementTO to, BindingResult bindingResult) throws ActException {
+    public Result edit(@Validated(EDIT.class) WishesStatementTO to, BindingResult bindingResult) throws ActException {
         try {
             WishesStatementVO vo = BeanTransform.copyProperties(wishesStatementAPI.editModel(to), WishesStatementVO.class);
             return ActResult.initialize(vo);

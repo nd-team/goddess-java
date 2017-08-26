@@ -125,7 +125,7 @@ public class HeadPortraitHatAct {
     }
 
     /**
-     * 新增祝福语
+     * 新增头像帽
      *
      * @param to 祝福语
      * @return class HeadPortraitHatVO
@@ -158,14 +158,14 @@ public class HeadPortraitHatAct {
     }
 
     /**
-     * 编辑祝福语
+     * 编辑头像帽
      *
      * @param to 祝福语
      * @return class HeadPortraitHatVO
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class)HeadPortraitHatTO to, BindingResult bindingResult) throws ActException {
+    public Result edit(@Validated(EDIT.class) HeadPortraitHatTO to, BindingResult bindingResult) throws ActException {
         try {
             HeadPortraitHatVO vo = BeanTransform.copyProperties(headPortraitHatAPI.editModel(to), HeadPortraitHatVO.class);
             return ActResult.initialize(vo);
@@ -175,7 +175,7 @@ public class HeadPortraitHatAct {
     }
 
     /**
-     * 删除祝福语
+     * 删除头像帽
      *
      * @param id 祝福语id
      * @version v1
@@ -191,7 +191,7 @@ public class HeadPortraitHatAct {
     }
 
     /**
-     * 祝福语分页查询
+     * 头像帽分页查询
      *
      * @param dto 分页条件
      * @return class HeadPortraitHatVO
@@ -240,8 +240,8 @@ public class HeadPortraitHatAct {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/find/one/{id}")
-    public Result findOne(String id) throws ActException{
+    @GetMapping("v1/find/one")
+    public Result findOne(@RequestParam String id) throws ActException{
         try {
             HeadPortraitHatBO bo = headPortraitHatAPI.findOne(id);
             HeadPortraitHatVO vo = BeanTransform.copyProperties(bo,HeadPortraitHatVO.class);

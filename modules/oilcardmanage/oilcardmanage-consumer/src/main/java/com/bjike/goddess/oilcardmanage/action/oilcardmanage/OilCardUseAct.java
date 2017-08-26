@@ -8,6 +8,9 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 //import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
 //import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
 //import com.bjike.goddess.dispatchcar.vo.InfoForOilCardVO;
+import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
+import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
+import com.bjike.goddess.dispatchcar.vo.InfoForOilCardVO;
 import com.bjike.goddess.oilcardmanage.api.OilCardRechargeAPI;
 import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.vo.AnalyzeVO;
@@ -38,8 +41,9 @@ public class OilCardUseAct {
 
     @Autowired
     private OilCardRechargeAPI oilCardRechargeAPI;
-//    @Autowired
-//    private DispatchCarInfoAPI dispatchCarInfoAPI;
+    @Autowired
+    private DispatchCarInfoAPI dispatchCarInfoAPI;
+
 
     /**
      * 功能导航权限
@@ -74,22 +78,22 @@ public class OilCardUseAct {
      * @return class InfoForOilCardVO
      * @version v1
      */
-//    @GetMapping("v1/pageList")
-//    public Result pageList(@RequestParam String oilCardCode, @RequestParam String startTime, @RequestParam String endTime) throws ActException {
-//
-//        try {
-//            List<DispatchCarInfoBO> infoBOList = oilCardRechargeAPI.findDispatch(oilCardCode, startTime, endTime);
-//            List<InfoForOilCardVO> voList = BeanTransform.copyProperties(infoBOList, InfoForOilCardVO.class);
-//            if (!CollectionUtils.isEmpty(voList)) {
-//                for (InfoForOilCardVO vo : voList) {
-//                    vo.setAddOilAmount(vo.getOilPrice() * vo.getAddOilAmount());
-//                }
-//            }
-//            return ActResult.initialize(voList);
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-//    }
+    @GetMapping("v1/pageList")
+    public Result pageList(@RequestParam String oilCardCode, @RequestParam String startTime, @RequestParam String endTime) throws ActException {
+
+        try {
+            List<DispatchCarInfoBO> infoBOList = oilCardRechargeAPI.findDispatch(oilCardCode, startTime, endTime);
+            List<InfoForOilCardVO> voList = BeanTransform.copyProperties(infoBOList, InfoForOilCardVO.class);
+            if (!CollectionUtils.isEmpty(voList)) {
+                for (InfoForOilCardVO vo : voList) {
+                    vo.setAddOilAmount(vo.getOilPrice() * vo.getAddOilAmount());
+                }
+            }
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 分析

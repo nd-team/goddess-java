@@ -338,7 +338,9 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicD
     }
 
     @Override
-    public void updateOliCardBasic(OilCardBasic oilCardBasic) throws SerException {
+    public void updateOliCardBasic(OilCardBasicBO basicBO) throws SerException {
+        OilCardBasic oilCardBasic = super.findById(basicBO.getId());
+        oilCardBasic.setBalance(basicBO.getBalance());
         super.update(oilCardBasic);
     }
 
@@ -379,4 +381,5 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic, OilCardBasicD
         }
 
     }
+
 }

@@ -1,5 +1,6 @@
 package com.bjike.goddess.projectprocing.api;
 
+import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectprocing.bo.ProjectAcceptanceBO;
 import com.bjike.goddess.projectprocing.dto.ProjectAcceptanceDTO;
@@ -59,5 +60,10 @@ public class ProjectAcceptanceApiImpl implements ProjectAcceptanceAPI {
     @Override
     public List<ProjectAcceptanceBO> searchListProjectAcceptance(ProjectAcceptanceDTO projectAcceptanceDTO) throws SerException {
         return projectAcceptanceSer.searchListProjectAcceptance(projectAcceptanceDTO);
+    }
+
+    @Override
+    public List<BaseInfoManageBO> findManage() throws SerException {
+        return projectAcceptanceSer.findManage();
     }
 }

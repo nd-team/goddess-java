@@ -6,6 +6,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
+import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
+import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
+import com.bjike.goddess.dispatchcar.enums.FindType;
 import com.bjike.goddess.oilcardmanage.bo.AnalyzeBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardRechargeBO;
@@ -47,8 +51,8 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
 
     @Autowired
     private OilCardBasicSer oilCardBasicSer;
-//    @Autowired
-//    private DispatchCarInfoAPI dispatchCarInfoAPI;
+    @Autowired
+    private DispatchCarInfoAPI dispatchCarInfoAPI;
 
     @Autowired
     private UserAPI userAPI;
@@ -425,19 +429,19 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
         return bo;
     }
 
-//    @Override
-//    public List<DispatchCarInfoBO> findDispatch(String oilCardCode, String startTime, String endTime) throws SerException {
-//        List<DispatchCarInfoBO> bos = new ArrayList<>(0);
-//        if(moduleAPI.isCheck("dispatchcarinfo")) {
-//            String userToken = RpcTransmit.getUserToken();
-//            RpcTransmit.transmitUserToken(userToken);
-//            DispatchCarInfoDTO dto = new DispatchCarInfoDTO();
-//            dto.getConditions().add(Restrict.ne("findType", FindType.WAITAUDIT));
-//            dto.getConditions().add(Restrict.gt("addOilTime", startTime));
-//            dto.getConditions().add(Restrict.lt("addOilTime", endTime));
-//            dto.getConditions().add(Restrict.eq("oilCardNumber", oilCardCode));
-//            bos = dispatchCarInfoAPI.pageList(dto);
-//        }
-//        return bos;
-//    }
+    @Override
+    public List<DispatchCarInfoBO> findDispatch(String oilCardCode, String startTime, String endTime) throws SerException {
+        List<DispatchCarInfoBO> bos = new ArrayList<>(0);
+        if(moduleAPI.isCheck("dispatchcarinfo")) {
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
+            DispatchCarInfoDTO dto = new DispatchCarInfoDTO();
+            dto.getConditions().add(Restrict.ne("findType", FindType.WAITAUDIT));
+            dto.getConditions().add(Restrict.gt("addOilTime", startTime));
+            dto.getConditions().add(Restrict.lt("addOilTime", endTime));
+            dto.getConditions().add(Restrict.eq("oilCardNumber", oilCardCode));
+            bos = dispatchCarInfoAPI.pageList(dto);
+        }
+        return bos;
+    }
 }

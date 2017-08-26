@@ -17,7 +17,7 @@ public class SalaryInformationDTO extends BaseDTO {
     /**
      * 计薪周期开始时间
      */
-    private String payStarTime;
+    private String payStartTime;
 
     /**
      * 计薪周期结束时间
@@ -30,12 +30,13 @@ public class SalaryInformationDTO extends BaseDTO {
      */
     private String employeeName;
 
-    public String getPayStarTime() {
-        return payStarTime;
+
+    public String getPayStartTime() {
+        return payStartTime;
     }
 
-    public void setPayStarTime(String payStarTime) {
-        this.payStarTime = payStarTime;
+    public void setPayStartTime(String payStartTime) {
+        this.payStartTime = payStartTime;
     }
 
     public String getPayEndTime() {

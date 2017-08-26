@@ -20,6 +20,7 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.managementpromotion.api.LevelShowAPI;
+import com.bjike.goddess.managementpromotion.bo.LevelShowBO;
 import com.bjike.goddess.managementpromotion.entity.LevelShow;
 import com.bjike.goddess.managepromotion.api.OverviewSkillLevelAPI;
 import com.bjike.goddess.managepromotion.bo.OverviewSkillLevelBO;
@@ -249,18 +250,18 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
     public List<SalaryInformationBO> pageList(SalaryInformationDTO dto) throws SerException {
         //规划人能查看所有的 还能根据名称来查找,默认是查找所有的
         if (guideAddIdentity() == true) {
-            if (dto.getPayStarTime() != null && dto.getPayEndTime() != null) {
-                LocalDate[] localDates = new LocalDate[]{DateUtil.parseDate(dto.getPayStarTime()), DateUtil.parseDate(dto.getPayEndTime())};
-                dto.getConditions().add(Restrict.between("payStarTime", localDates));
+            if (dto.getPayStartTime() != null && dto.getPayEndTime() != null) {
+                LocalDate[] localDates = new LocalDate[]{DateUtil.parseDate(dto.getPayStartTime()), DateUtil.parseDate(dto.getPayEndTime())};
+                dto.getConditions().add(Restrict.between("payStartTime", localDates));
                 dto.getConditions().add(Restrict.between("payEndTime", localDates));
             }
-            if (dto.getPayStarTime() != null && dto.getPayEndTime() == null) {
+            if (dto.getPayStartTime() != null && dto.getPayEndTime() == null) {
                 LocalDate endTime = LocalDate.now();
-                LocalDate[] localDates = new LocalDate[]{DateUtil.parseDate(dto.getPayStarTime()), endTime};
-                dto.getConditions().add(Restrict.between("payStarTime", localDates));
+                LocalDate[] localDates = new LocalDate[]{DateUtil.parseDate(dto.getPayStartTime()), endTime};
+                dto.getConditions().add(Restrict.between("payStartTime", localDates));
                 dto.getConditions().add(Restrict.between("payEndTime", localDates));
             }
-            if (dto.getPayStarTime() == null && dto.getPayEndTime() != null) {
+            if (dto.getPayStartTime() == null && dto.getPayEndTime() != null) {
                 dto.getConditions().add(Restrict.lt_eq("payEndTime", dto.getPayEndTime()));
             }
             if (dto.getEmployeeName() != null) {
@@ -345,17 +346,16 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
 //        checkAddIdentity();
         SalaryInformationDTO dto = new SalaryInformationDTO();
         //根据计薪开始时间和计薪结束时间来导出excel
-        if (StringUtils.isNotBlank(to.getPayStarTime()) && StringUtils.isNotBlank(to.getPayEndTime())) {
-            LocalDate[] localDates = new LocalDate[]{DateUtil.parseDate(dto.getPayStarTime()), DateUtil.parseDate(dto.getPayEndTime())};
-            dto.getConditions().add(Restrict.between("payStarTime", localDates));
+        if (StringUtils.isNotBlank(to.getPayStartTime()) && StringUtils.isNotBlank(to.getPayEndTime())) {
+            LocalDate[] localDates = new LocalDate[]{DateUtil.parseDate(dto.getPayStartTime()), DateUtil.parseDate(dto.getPayEndTime())};
+            dto.getConditions().add(Restrict.between("payStartTime", localDates));
             dto.getConditions().add(Restrict.between("payEndTime", localDates));
         }
 
         List<SalaryInformation> list = super.findByCis(dto);
         List<SalaryInformationSetExcel> toList = new ArrayList<SalaryInformationSetExcel>();
         for (SalaryInformation model : list) {
-            SalaryInformationSetExcel excel = new SalaryInformationSetExcel();
-            BeanUtils.copyProperties(model, excel);
+            SalaryInformationSetExcel excel = BeanTransform.copyProperties(model, SalaryInformationSetExcel.class);
             toList.add(excel);
         }
         Excel excel = new Excel(0, 2);
@@ -416,7 +416,7 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
         excel.setJinpoCost(10d);
         excel.setJinpoSubsidies(10d);
         excel.setUtilities(10d);
-        excel.setPersonTax(10d);
+        excel.setPersonTax(true);
         excel.setAllRewardScore(10d);
         excel.setAllRewardCost(10d);
         excel.setAttendanceDay(10d);
@@ -442,19 +442,30 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
     }
 
     @Override
-    public LevelShow findByEmployeeId(String employeeId) throws SerException {
-        if (null != employeeId) {
-            LevelShow levelShow = levelShowAPI.findByEmployeeId(employeeId);
-            return levelShow;
-        } else {
-            throw new SerException("员工编号不能为空");
+    public LevelShowBO findEmployeeId(String employeeId) throws SerException {
+        LevelShowBO showBO = new LevelShowBO();
+        if (moduleAPI.isCheck("managementpromotion")) {
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
+            if (null != employeeId) {
+                showBO = levelShowAPI.findEmployeeId(employeeId);
+            } else {
+                throw new SerException("员工编号不能为空");
+            }
         }
+        return showBO;
+
     }
 
     @Override
     public List<EntryBasicInfoBO> getByEmpNumber(String employeeId) throws SerException {
-        List<EntryBasicInfoBO> bo = entryBasicInfoAPI.getByEmpNumber(employeeId);
-        return bo;
+        List<EntryBasicInfoBO> boList = new ArrayList<>(0);
+        if (moduleAPI.isCheck("staffentry")) {
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
+            boList = entryBasicInfoAPI.getByEmpNumber(employeeId);
+        }
+        return boList;
     }
 
     @Override
@@ -464,27 +475,46 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
 
     @Override
     public HotAssistBO findHotAssist(SalaryInformationDTO dto) throws SerException {
-        HotAssistBO bo = hotAssistAPI.findHot(dto.getPayStarTime(), dto.getPayEndTime());
+        HotAssistBO bo = new HotAssistBO();
+        if (moduleAPI.isCheck("assistance")) {
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
+            bo = hotAssistAPI.findHot(dto.getPayStartTime(), dto.getPayEndTime());
+        }
         return bo;
     }
 
     @Override
     public HouseAssistBO findHouseAssist(SalaryInformationDTO dto) throws SerException {
-        HouseAssistBO bo = houseAssistAPI.findHouse(dto.getPayStarTime(), dto.getPayEndTime());
+        HouseAssistBO bo = new HouseAssistBO();
+        if (moduleAPI.isCheck("assistance")) {
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
+            bo = houseAssistAPI.findHouse(dto.getPayStartTime(), dto.getPayEndTime());
+        }
         return bo;
     }
 
     @Override
     public ComputerAssistBO findComputerAssist(SalaryInformationDTO dto) throws SerException {
-        ComputerAssistBO bo = computerAssistAPI.findComputer(dto.getPayStarTime(), dto.getPayEndTime());
+        ComputerAssistBO bo = new ComputerAssistBO();
+        if (moduleAPI.isCheck("assistance")) {
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
+            bo = computerAssistAPI.findComputer(dto.getPayStartTime(), dto.getPayEndTime());
+        }
         return bo;
     }
 
     @Override
     public AgeAssistBO findAgeAssist(SalaryInformationDTO dto) throws SerException {
-//        AgeAssistBO bo = ageAssistAPI.findAge(dto.getPayStarTime(), dto.getPayEndTime());
-//        return bo;
-        return null;
+        AgeAssistBO bo = new AgeAssistBO();
+        if (moduleAPI.isCheck("assistance")) {
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
+            bo = ageAssistAPI.findAge(dto.getEmployeeName());
+        }
+        return bo;
     }
 
 
@@ -506,25 +536,45 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
 
     @Override
     public String findPositiveDate(String employeeId) throws SerException {
-        String time = regularizationAPI.time(employeeId);
+        String time = new String();
+        if (moduleAPI.isCheck("regularization")) {
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
+            time = regularizationAPI.time(employeeId);
+        }
         return time;
     }
 
     @Override
     public OverviewSkillLevelBO findSkill(String employeeName) throws SerException {
-        OverviewSkillLevelBO bo = overviewSkillLevelAPI.findByName(employeeName);
+        OverviewSkillLevelBO bo = new OverviewSkillLevelBO();
+        if (moduleAPI.isCheck("managepromotion")) {
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
+            bo = overviewSkillLevelAPI.findByName(employeeName);
+        }
         return bo;
     }
 
     @Override
     public SalaryconfirmBO findSalaryConfirm(SalaryInformationDTO dto) throws SerException {
-        SalaryconfirmBO bo = salaryconfirmAPI.findSalary(dto.getPayStarTime(), dto.getPayEndTime(), dto.getEmployeeName());
+        SalaryconfirmBO bo = new SalaryconfirmBO();
+        if(moduleAPI.isCheck("salaryconfirm")) {
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
+            bo = salaryconfirmAPI.findSalary(dto.getPayStartTime(), dto.getPayEndTime(), dto.getEmployeeName());
+        }
         return bo;
     }
 
     @Override
     public AttachedBO findAttached(SalaryInformationDTO dto) throws SerException {
-        AttachedBO bo = attachedAPI.findAttached(dto.getEmployeeName());
+        AttachedBO bo = new AttachedBO();
+        if(moduleAPI.isCheck("secure")) {
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
+            bo = attachedAPI.findAttached(dto.getEmployeeName());
+        }
         return bo;
     }
 

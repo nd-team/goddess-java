@@ -9,5 +9,5 @@ dependencies {
     compile project(":modules:message:message-api")
     compile project(":modules:storage:storage-api")
     compile project(":modules:assemble:assemble-api")
-//    compile project(":modules:dispatchcar:dispatchcar-api")
+    compile project(":modules:dispatchcar:dispatchcar-api")
 }

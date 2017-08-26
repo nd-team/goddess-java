@@ -11,6 +11,7 @@ import com.bjike.goddess.assistance.dto.ComputerAssistDTO;
 import com.bjike.goddess.assistance.dto.HotAssistDTO;
 import com.bjike.goddess.assistance.dto.HouseAssistDTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.managementpromotion.bo.LevelShowBO;
 import com.bjike.goddess.managementpromotion.entity.LevelShow;
 import com.bjike.goddess.managepromotion.bo.OverviewSkillLevelBO;
 import com.bjike.goddess.salaryconfirm.bo.SalaryconfirmBO;
@@ -97,8 +98,8 @@ public class SalaryInformationApiImpl implements SalaryInformationAPI  {
     }
 
     @Override
-    public LevelShow findByEmployeeId(String employeeId) throws SerException {
-        return salaryInformationSer.findByEmployeeId(employeeId);
+    public LevelShowBO findEmployeeId(String employeeId) throws SerException {
+        return salaryInformationSer.findEmployeeId(employeeId);
     }
 
     @Override
