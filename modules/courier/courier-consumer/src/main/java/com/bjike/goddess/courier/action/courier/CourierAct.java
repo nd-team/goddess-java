@@ -1,8 +1,10 @@
 package com.bjike.goddess.courier.action.courier;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.accommodation.api.RentalAPI;
 import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.checkhost.api.DormitoryInfoAPI;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -83,13 +85,15 @@ public class CourierAct extends BaseFileAction {
      */
     @LoginAuth
     @GetMapping("v1/setButtonPermission")
-    public Result setButtonPermission() throws ActException {
+    public Result setButtonPermission(HttpServletRequest request) throws ActException {
         List<SonPermissionObject> list = new ArrayList<>();
         try {
+            String token=request.getHeader(RpcCommon.USER_TOKEN).toString();
             SonPermissionObject obj = new SonPermissionObject();
             obj.setName("cuspermission");
             obj.setDescribesion("设置");
             if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
                 Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
                 if (!isHasPermission) {
                     //int code, String msg
@@ -478,10 +482,12 @@ public class CourierAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/findDepartments")
-    public Result findDepartments() throws ActException {
+    public Result findDepartments(HttpServletRequest request) throws ActException {
         try {
             Set<String> set = new HashSet<>();
+            String token=request.getHeader(RpcCommon.USER_TOKEN).toString();
             if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
                 List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
 
                 for (DepartmentDetailBO departmentDetailBO : list) {
@@ -532,14 +538,17 @@ public class CourierAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/findAllAreas")
-    public Result findAllAreas() throws ActException {
+    public Result findAllAreas(HttpServletRequest request) throws ActException {
         try {
             Set<String> set = new HashSet<>();
+            String token=request.getHeader(RpcCommon.USER_TOKEN).toString();
             if (moduleAPI.isCheck("checkhost")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
                 Set<String> dormitoryAddress = dormitoryInfoAPI.allAddress();
                 set.addAll(dormitoryAddress);
             }
             if (moduleAPI.isCheck("accommodation")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
                 Set<String> address = rentalAPI.allAddress();
                 set.addAll(address);
             }
@@ -607,9 +616,11 @@ public class CourierAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/findContact/{dormitoryAddress}")
-    public Result findContact(@PathVariable String dormitoryAddress) throws ActException {
+    public Result findContact(@PathVariable String dormitoryAddress,HttpServletRequest request) throws ActException {
         try {
+            String token=request.getHeader(RpcCommon.USER_TOKEN).toString();
             if (moduleAPI.isCheck("checkhost")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
                 return ActResult.initialize(dormitoryInfoAPI.findContact(dormitoryAddress));
             } else {
                 return null;

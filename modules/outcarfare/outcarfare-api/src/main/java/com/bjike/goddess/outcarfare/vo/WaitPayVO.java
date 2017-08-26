@@ -90,7 +90,19 @@ public class WaitPayVO {
     /**
      * 是否付款
      */
-    private boolean isPay;
+    private Boolean isPay;
+    /**
+     * 删除时间
+     */
+    private String delTime;
+
+    public String getDelTime() {
+        return delTime;
+    }
+
+    public void setDelTime(String delTime) {
+        this.delTime = delTime;
+    }
 
     public String getId() {
         return id;
@@ -212,11 +224,11 @@ public class WaitPayVO {
         this.single = single;
     }
 
-    public boolean isPay() {
+    public Boolean getIsPay() {
         return isPay;
     }
 
-    public void setPay(boolean pay) {
+    public void setIsPay(Boolean pay) {
         isPay = pay;
     }
 }

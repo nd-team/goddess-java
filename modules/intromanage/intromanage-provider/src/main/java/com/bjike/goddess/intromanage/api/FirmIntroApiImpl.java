@@ -2,6 +2,7 @@ package com.bjike.goddess.intromanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.intromanage.bo.BussinesBO;
 import com.bjike.goddess.intromanage.bo.FirmIntroBO;
 import com.bjike.goddess.intromanage.dto.FirmIntroDTO;
 import com.bjike.goddess.intromanage.entity.FirmIntro;
@@ -128,5 +129,10 @@ public class FirmIntroApiImpl implements FirmIntroAPI {
     @Override
     public Set<String> firmNames() throws SerException {
         return firmIntroSer.firmNames();
+    }
+
+    @Override
+    public Set<BussinesBO> moneyByName(String name) throws SerException {
+        return firmIntroSer.moneyByName(name);
     }
 }

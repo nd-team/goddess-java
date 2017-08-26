@@ -160,4 +160,14 @@ public interface StaffRecordsAPI {
      */
 
     List<StaffRecordsBO> findByMonth(Integer month) throws SerException;
+
+    /**
+     * chenjunhao
+     * 通过姓名获取员工档案
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    StaffRecordsBO getByName(String name) throws SerException;
 }

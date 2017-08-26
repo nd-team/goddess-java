@@ -333,7 +333,9 @@ public class GradeLevelSerImpl extends ServiceImpl<GradeLevel, GradeLevelDTO> im
     @Override
     public Set<String> allHierarchys() throws SerException {
         Set<String> set = new HashSet<String>();
+        String token=RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("organize")) {
+            RpcTransmit.transmitUserToken(token);
             List<HierarchyBO> list = hierarchyAPI.findStatus();
             for (HierarchyBO h : list) {
                 set.add(h.getHierarchy());

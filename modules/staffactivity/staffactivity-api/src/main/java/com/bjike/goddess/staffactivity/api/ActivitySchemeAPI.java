@@ -177,4 +177,13 @@ public interface ActivitySchemeAPI {
      * @throws SerException
      */
     String findIdByTheme(String theme) throws SerException;
+
+    /**
+     * chenjunhao
+     * 获取所有活动主题
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> themes() throws SerException;
 }

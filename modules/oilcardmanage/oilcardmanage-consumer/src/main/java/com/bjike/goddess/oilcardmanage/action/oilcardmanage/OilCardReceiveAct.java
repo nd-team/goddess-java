@@ -1,6 +1,6 @@
 package com.bjike.goddess.oilcardmanage.action.oilcardmanage;
 
-import com.bjike.goddess.assemble.api.ModuleAPI;
+//import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -9,10 +9,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.dispatchcar.vo.CusPermissionOperateVO;
 import com.bjike.goddess.oilcardmanage.api.OilCardReceiveAPI;
-import com.bjike.goddess.oilcardmanage.bo.CusPermissionOperateBO;
-import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardReceiveDTO;
 import com.bjike.goddess.oilcardmanage.enums.OilCardReceiveResult;
 import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
@@ -30,6 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+//import com.bjike.goddess.dispatchcar.vo.CusPermissionOperateVO;
+
 /**
  * 油卡领用
  *
@@ -46,8 +45,8 @@ public class OilCardReceiveAct {
     @Autowired
     private OilCardReceiveAPI oilCardReceiveAPI;
 
-    @Autowired
-    private ModuleAPI moduleAPI;
+//    @Autowired
+//    private ModuleAPI moduleAPI;
 
     /**
      * 功能导航权限

@@ -220,4 +220,13 @@ public interface SalaryInformationAPI {
      */
     AttachedBO findAttached(SalaryInformationDTO dto) throws SerException;
 
+    /**
+     * chenjunhao
+     * 通过姓名获取
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    SalaryInformationBO findByName(String name) throws SerException;
 }

@@ -114,4 +114,9 @@ public class StaffRecordsApiImpl implements StaffRecordsAPI {
     public List<StaffRecordsBO> findByMonth(Integer month) throws SerException {
         return staffRecordsSer.findByMonth(month);
     }
+
+    @Override
+    public StaffRecordsBO getByName(String name) throws SerException {
+        return staffRecordsSer.getByName(name);
+    }
 }

@@ -12,6 +12,7 @@ import com.bjike.goddess.outcarfare.to.GuidePermissionTO;
 import com.bjike.goddess.outcarfare.to.WaitPayTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 等待付款业务接口
@@ -101,36 +102,6 @@ public interface WaitPaySer extends Ser<WaitPay, WaitPayDTO> {
     }
 
     /**
-     * 司机汇总
-     *
-     * @return class DriverCountBO
-     * @throws SerException
-     */
-    default List<DriverCountBO> driverCount() throws SerException {
-        return null;
-    }
-
-    /**
-     * 地区汇总
-     *
-     * @return class ArrivalCountBO
-     * @throws SerException
-     */
-    default List<ArrivalCountBO> arrivalCount() throws SerException {
-        return null;
-    }
-
-    /**
-     * 用车人汇总
-     *
-     * @return class CarUserCountBO
-     * @throws SerException
-     */
-    default List<CarUserCountBO> carUserCount() throws SerException {
-        return null;
-    }
-
-    /**
      * 查找已付款列表
      *
      * @param dto dto
@@ -160,4 +131,118 @@ public interface WaitPaySer extends Ser<WaitPay, WaitPayDTO> {
     default Long payCountSum(WaitPayDTO dto) throws SerException {
         return null;
     }
+
+    /**
+     * 删除列表
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<WaitPayBO> delList(WaitPayDTO dto) throws SerException;
+
+    /**
+     * 撤销删除
+     * @param id
+     * @throws SerException
+     */
+    void reback(String id) throws SerException;
+
+    /**
+     * 删除列表总条数
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long delCount(WaitPayDTO dto) throws SerException;
+
+    /**
+     * 定时检测删除
+     * @throws SerException
+     */
+    void quartz() throws SerException;
+
+    /**
+     * 已付款的司机汇总
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<DriverCountBO> driverCount(WaitPayDTO dto) throws SerException;
+
+    /**
+     * 已付款的地区汇总
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<ArrivalCountBO> arrivalCount(WaitPayDTO dto) throws SerException;
+
+    /**
+     * 已付款的用车人汇总
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<CarUserCountBO> carUserCount(WaitPayDTO dto) throws SerException;
+
+    /**
+     * 等待付款的司机汇总
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<DriverCountBO> waitDriverCount(WaitPayDTO dto) throws SerException;
+
+    /**
+     * 等待付款的地区汇总
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<ArrivalCountBO> waitArrivalCount(WaitPayDTO dto) throws SerException;
+
+    /**
+     * 等待付款的用车人汇总
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<CarUserCountBO> waitCarUserCount(WaitPayDTO dto) throws SerException;
+
+    /**
+     * 等待付款汇总明细
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<WaitPayBO> waitDetails(WaitPayDTO dto) throws SerException;
+
+    /**
+     * 已付款汇总明细
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<WaitPayBO> details(WaitPayDTO dto) throws SerException;
+
+    /**
+     * 所有司机
+     * @return
+     * @throws SerException
+     */
+    Set<String> findAllDrivers() throws SerException;
+
+    /**
+     * 所有地区
+     * @return
+     * @throws SerException
+     */
+    Set<String> findAllArrivals() throws SerException;
+
+    /**
+     * 所有用车人
+     * @return
+     * @throws SerException
+     */
+    Set<String> findAllCarUsers() throws SerException;
 }

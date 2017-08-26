@@ -37,7 +37,10 @@ dependencies {
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     }
 
+    compile project(":modules:archive:archive-api")
     compile project(":modules:capability:capability-api")
+    compile project(":modules:staffactivity:staffactivity-api")
+    compile project(":modules:intromanage:intromanage-api")
     compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
 
     compile("org.springframework.boot:spring-boot-starter-web")

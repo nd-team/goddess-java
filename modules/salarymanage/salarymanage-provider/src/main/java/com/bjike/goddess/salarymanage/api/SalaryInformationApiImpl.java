@@ -161,4 +161,9 @@ public class SalaryInformationApiImpl implements SalaryInformationAPI  {
     public AttachedBO findAttached(SalaryInformationDTO dto) throws SerException {
         return salaryInformationSer.findAttached(dto);
     }
+
+    @Override
+    public SalaryInformationBO findByName(String name) throws SerException {
+        return salaryInformationSer.findByName(name);
+    }
 }

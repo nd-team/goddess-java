@@ -1,5 +1,7 @@
 package com.bjike.goddess.assistance.action.assistance;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.assistance.api.AgeAssistAPI;
 import com.bjike.goddess.assistance.bo.AgeAssistBO;
 import com.bjike.goddess.assistance.dto.AgeAssistDTO;
@@ -7,6 +9,7 @@ import com.bjike.goddess.assistance.to.AgeAssistTO;
 import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.vo.AgeAssistVO;
 import com.bjike.goddess.assistance.vo.SonPermissionObject;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -14,14 +17,12 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
-import com.bjike.goddess.organize.service.UserSetPermissionSer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +43,8 @@ public class AgeAssistAction {
     private AgeAssistAPI ageAssistAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 模块设置导航权限
@@ -51,20 +54,24 @@ public class AgeAssistAction {
      */
     @LoginAuth
     @GetMapping("v1/setButtonPermission")
-    public Result setButtonPermission() throws ActException {
+    public Result setButtonPermission(HttpServletRequest request) throws ActException {
         List<SonPermissionObject> list = new ArrayList<>();
         try {
-            SonPermissionObject obj = new SonPermissionObject();
-            obj.setName("cuspermission");
-            obj.setDescribesion("设置");
-            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
-            if (!isHasPermission) {
-                //int code, String msg
-                obj.setFlag(false);
-            } else {
-                obj.setFlag(true);
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                SonPermissionObject obj = new SonPermissionObject();
+                obj.setName("cuspermission");
+                obj.setDescribesion("设置");
+                Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+                if (!isHasPermission) {
+                    //int code, String msg
+                    obj.setFlag(false);
+                } else {
+                    obj.setFlag(true);
+                }
+                list.add(obj);
             }
-            list.add(obj);
             return new ActResult(0, "设置权限", list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -115,9 +122,9 @@ public class AgeAssistAction {
     }
 
     /**
-     *  总条数
+     * 总条数
      *
-     * @param ageAssistDTO  工龄补助信息dto
+     * @param ageAssistDTO 工龄补助信息dto
      * @des 获取所有工龄补助信息总条数
      * @version v1
      */
@@ -133,19 +140,19 @@ public class AgeAssistAction {
 
 
     /**
-     *  一个
+     * 一个
      *
-     * @param id  工龄补助id
+     * @param id 工龄补助id
+     * @return class AgeAssistVO
      * @des 一个工龄补助
      * @version v1
-     * @return class AgeAssistVO
      */
     @GetMapping("v1/one/{id}")
-    public Result getOneById(@PathVariable String id ) throws ActException {
+    public Result getOneById(@PathVariable String id) throws ActException {
         try {
             AgeAssistVO ageAssistVO = BeanTransform.copyProperties(
                     ageAssistAPI.getOneById(id), AgeAssistVO.class);
-            return ActResult.initialize(ageAssistVO );
+            return ActResult.initialize(ageAssistVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -155,8 +162,8 @@ public class AgeAssistAction {
      * 列表
      *
      * @param ageAssistDTO 工龄补助信息dto
+     * @return class AgeAssistVO
      * @des 获取所有工龄补助信息
-     * @return  class AgeAssistVO
      * @version v1
      */
     @GetMapping("v1/list")
@@ -174,8 +181,8 @@ public class AgeAssistAction {
      * 添加
      *
      * @param ageAssistTO 工龄补助基本信息数据to
+     * @return class AgeAssistVO
      * @des 添加工龄补助
-     * @return  class AgeAssistVO
      * @version v1
      */
     @LoginAuth
@@ -183,7 +190,7 @@ public class AgeAssistAction {
     public Result addAgeAssist(@Validated AgeAssistTO ageAssistTO, BindingResult bindingResult) throws ActException {
         try {
             AgeAssistBO ageAssistBO1 = ageAssistAPI.addAgeAssist(ageAssistTO);
-            return ActResult.initialize(BeanTransform.copyProperties(ageAssistBO1,AgeAssistVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(ageAssistBO1, AgeAssistVO.class, true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -194,8 +201,8 @@ public class AgeAssistAction {
      * 编辑
      *
      * @param ageAssistTO 工龄补助基本信息数据bo
+     * @return class AgeAssistVO
      * @des 添加工龄补助
-     * @return  class AgeAssistVO
      * @version v1
      */
     @LoginAuth
@@ -203,7 +210,7 @@ public class AgeAssistAction {
     public Result editAgeAssist(@Validated AgeAssistTO ageAssistTO) throws ActException {
         try {
             AgeAssistBO ageAssistBO1 = ageAssistAPI.editAgeAssist(ageAssistTO);
-            return ActResult.initialize(BeanTransform.copyProperties(ageAssistBO1,AgeAssistVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(ageAssistBO1, AgeAssistVO.class, true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -223,11 +230,9 @@ public class AgeAssistAction {
             ageAssistAPI.deleteAgeAssist(id);
             return new ActResult("delete success!");
         } catch (SerException e) {
-            throw new ActException("删除失败："+e.getMessage());
+            throw new ActException("删除失败：" + e.getMessage());
         }
     }
 
 
-
-    
 }

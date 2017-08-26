@@ -1,5 +1,6 @@
 package com.bjike.goddess.businsurance.action.businsurance;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.businsurance.api.TowerInsureAPI;
 import com.bjike.goddess.businsurance.bo.TowerInsureBO;
 import com.bjike.goddess.businsurance.dto.TowerInsureDTO;
@@ -15,10 +16,13 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
+import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.vo.UserVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -27,7 +31,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +56,10 @@ public class TowerInsureAction extends BaseFileAction {
     private UserSetPermissionAPI userSetPermissionAPI;
     @Autowired
     private FileAPI fileAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 模块设置导航权限
@@ -65,17 +72,19 @@ public class TowerInsureAction extends BaseFileAction {
     public Result setButtonPermission() throws ActException {
         List<SonPermissionObject> list = new ArrayList<>();
         try {
-            SonPermissionObject obj = new SonPermissionObject();
-            obj.setName("cuspermission");
-            obj.setDescribesion("设置");
-            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
-            if (!isHasPermission) {
-                //int code, String msg
-                obj.setFlag(false);
-            } else {
-                obj.setFlag(true);
+            if (moduleAPI.isCheck("organize")) {
+                SonPermissionObject obj = new SonPermissionObject();
+                obj.setName("cuspermission");
+                obj.setDescribesion("设置");
+                Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+                if (!isHasPermission) {
+                    //int code, String msg
+                    obj.setFlag(false);
+                } else {
+                    obj.setFlag(true);
+                }
+                list.add(obj);
             }
-            list.add(obj);
             return new ActResult(0, "设置权限", list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -123,6 +132,7 @@ public class TowerInsureAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 塔工意外险列表总条数
      *
@@ -351,7 +361,6 @@ public class TowerInsureAction extends BaseFileAction {
     }
 
 
-
     /**
      * 上传附件
      *
@@ -435,4 +444,25 @@ public class TowerInsureAction extends BaseFileAction {
         return new ActResult("delFile success");
     }
 
+
+    /**
+     * 获取所有用户
+     *
+     * @return class UserVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/users")
+    public Result users(HttpServletRequest request) throws ActException {
+        try {
+            if (moduleAPI.isCheck("organize")) {
+                List<UserBO> list = positionDetailUserAPI.findUserListInOrgan();
+                return ActResult.initialize(BeanTransform.copyProperties(list, UserVO.class, request));
+            }
+            return null;
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
 }
