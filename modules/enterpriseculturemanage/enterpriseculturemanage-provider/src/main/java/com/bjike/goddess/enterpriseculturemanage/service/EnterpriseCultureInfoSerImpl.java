@@ -283,7 +283,8 @@ public class EnterpriseCultureInfoSerImpl extends ServiceImpl<EnterpriseCultureI
 //            PublicizeProgramInfo publicizeProgramInfo = publicizeProgramInfoSer.findById(model.getId());
             List<PublicizeProgramInfo> info = publicizeProgramInfoSer.findByCis(dto);
             if (info.size() > 0 && info != null) {
-                 return BeanTransform.copyProperties(info,PeriodicalProgramInfoBO.class);
+                 List<PublicizeProgramInfoBO> boList = BeanTransform.copyProperties(info,PublicizeProgramInfoBO.class);
+                 return boList;
             }
         } else {
             throw new SerException("非法Id,企业文化对象不存在!");
