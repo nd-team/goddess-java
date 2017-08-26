@@ -126,7 +126,7 @@ public interface EntryRegisterAPI {
      * 根据员工编号查找员工入职登记
      * zhuangkaiqin
      */
-    default EntryRegister getByNumber(String number) throws SerException {
+    default EntryRegisterBO getByNumber(String number) throws SerException {
         return null;
     }
     /**
