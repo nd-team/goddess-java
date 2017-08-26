@@ -452,7 +452,7 @@ public class RegularizationAct {
     }
     /**
      * 添加时链接数据
-     *
+     * @return class RegularizationVO
      * @version v1
      */
     @GetMapping("v1/addReturn")
@@ -468,7 +468,7 @@ public class RegularizationAct {
                 regularizationBO.setPenaltyScore(Integer.parseInt(new java.text.DecimalFormat("0").format(scoreBO.getPushTotal())));
             }
             RegularizationVO regularizationVO = BeanTransform.copyProperties(regularizationBO,RegularizationVO.class,request);
-            return ActResult.initialize(regularizationBO);
+            return ActResult.initialize(regularizationVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

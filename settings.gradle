@@ -23,65 +23,14 @@ include ':modules:storage:storage-api'
 include ':modules:storage:storage-consumer'
 include ':modules:storage:storage-provider'
 
-//#quartz 任务调度模块-liguiqin
-include ':modules:quartz:quartz-api'
-include ':modules:quartz:quartz-consumer'
-include ':modules:quartz:quartz-provider'
 //#organize 组织结构-liguiqin
 include ':modules:organize:organize-api'
 include ':modules:organize:organize-consumer'
 include ':modules:organize:organize-provider'
-
-//#devicerepair 物质维修-sunfengtao
-include ':modules:devicerepair:devicerepair-api'
-include ':modules:devicerepair:devicerepair-consumer'
-include ':modules:devicerepair:devicerepair-provider'
-//#materialinstock 物质入库-sunfengtao
-include ':modules:materialinstock:materialinstock-api'
-include ':modules:materialinstock:materialinstock-consumer'
-include ':modules:materialinstock:materialinstock-provider'
-////#materialbuy 物质购买-sunfengtao
-//include ':modules:materialbuy:materialbuy-api'
-//include ':modules:materialbuy:materialbuy-consumer'
-//include ':modules:materialbuy:materialbuy-provider'
-//#materialcheck 物质盘点-sunfengtao
-include ':modules:materialcheck:materialcheck-api'
-include ':modules:materialcheck:materialcheck-consumer'
-include ':modules:materialcheck:materialcheck-provider'
-//#materialtransfer 物质调动-sunfengtao
-include ':modules:materialtransfer:materialtransfer-api'
-include ':modules:materialtransfer:materialtransfer-consumer'
-include ':modules:materialtransfer:materialtransfer-provider'
-//#materialreceive 物质领用归还-sunfengtao
-include ':modules:materialreceive:materialreceive-api'
-include ':modules:materialreceive:materialreceive-consumer'
-include ':modules:materialreceive:materialreceive-provider'
-//#materialsummary 物质汇总-sunfengtao
-include ':modules:materialsummary:materialsummary-api'
-include ':modules:materialsummary:materialsummary-consumer'
-include ':modules:materialsummary:materialsummary-provider'
-//#businessproject 商务合同-sunfengtao
-include ':modules:businessproject:businessproject-api'
-include ':modules:businessproject:businessproject-consumer'
-include ':modules:businessproject:businessproject-provider'
-//#annual 年假-sunfengtao
-include ':modules:annual:annual-api'
-include ':modules:annual:annual-consumer'
-include ':modules:annual:annual-provider'
-
-////#marketactivitymanage 市场活动-sunfengtao
-//include ':modules:marketactivitymanage:marketactivitymanage-api'
-//include ':modules:marketactivitymanage:marketactivitymanage-consumer'
-//include ':modules:marketactivitymanage:marketactivitymanage-provider'
-
 //#contacts
 include ':modules:contacts:contacts-api'
 include ':modules:contacts:contacts-consumer'
 include ':modules:contacts:contacts-provider'
-//#customer
-include ':modules:customer:customer-api'
-include ':modules:customer:customer-consumer'
-include ':modules:customer:customer-provider'
 //#dimission
 include ':modules:dimission:dimission-api'
 include ':modules:dimission:dimission-consumer'
@@ -90,31 +39,139 @@ include ':modules:dimission:dimission-provider'
 include ':modules:staffentry:staffentry-api'
 include ':modules:staffentry:staffentry-consumer'
 include ':modules:staffentry:staffentry-provider'
-//#intromanage 简介管理-sunfengtao
-include ':modules:intromanage:intromanage-api'
-include ':modules:intromanage:intromanage-consumer'
-include ':modules:intromanage:intromanage-provider'
-//#buyticket 火车票飞机票-sunfengtao
-include ':modules:buyticket:buyticket-api'
-include ':modules:buyticket:buyticket-consumer'
-include ':modules:buyticket:buyticket-provider'
 //#archive
 include ':modules:archive:archive-api'
 include ':modules:archive:archive-consumer'
 include ':modules:archive:archive-provider'
-//#costdetail 成本明细-lijuntao
-include ':modules:costdetail:costdetail-api'
-include ':modules:costdetail:costdetail-consumer'
-include ':modules:costdetail:costdetail-provider'
-//#contractquotemanager 合同单价-lijuntao
-include ':modules:contractquotemanager:contractquotemanager-api'
-include ':modules:contractquotemanager:contractquotemanager-consumer'
-include ':modules:contractquotemanager:contractquotemanager-provider'
-//#buyticket 合同单价-lijuntao
-include ':modules:buyticket:buyticket-api'
-include ':modules:buyticket:buyticket-consumer'
-include ':modules:buyticket:buyticket-provider'
-
-
-
-
+//#annual
+include ':modules:annual:annual-api'
+include ':modules:annual:annual-consumer'
+include ':modules:annual:annual-provider'
+//#voucher
+include ':modules:voucher:voucher-api'
+include ':modules:voucher:voucher-consumer'
+include ':modules:voucher:voucher-provider'
+//#customer
+include ':modules:customer:customer-api'
+include ':modules:customer:customer-consumer'
+include ':modules:customer:customer-provider'
+//#financeinit
+include ':modules:financeinit:financeinit-api'
+include ':modules:financeinit:financeinit-consumer'
+include ':modules:financeinit:financeinit-provider'
+//#assemble 关联模块 -liguiqin
+include ':modules:assemble:assemble-api'
+include ':modules:assemble:assemble-consumer'
+include ':modules:assemble:assemble-provider'
+//#business -工商注册-年检-变更
+include ':modules:business:business-api'
+include ':modules:business:business-consumer'
+include ':modules:business:business-provider'
+//#intromanage --公司简介
+include ':modules:intromanage:intromanage-api'
+include ':modules:intromanage:intromanage-consumer'
+include ':modules:intromanage:intromanage-provider'
+//#materialsummary --物质汇总
+include ':modules:materialsummary:materialsummary-api'
+include ':modules:materialsummary:materialsummary-consumer'
+include ':modules:materialsummary:materialsummary-provider'
+//#materialinstock --物质入库
+include ':modules:materialinstock:materialinstock-api'
+include ':modules:materialinstock:materialinstock-consumer'
+include ':modules:materialinstock:materialinstock-provider'
+//#materialreceive --物质领用
+include ':modules:materialreceive:materialreceive-api'
+include ':modules:materialreceive:materialreceive-consumer'
+include ':modules:materialreceive:materialreceive-provider'
+//#materialbuy --物质购买
+include ':modules:materialbuy:materialbuy-api'
+include ':modules:materialbuy:materialbuy-consumer'
+include ':modules:materialbuy:materialbuy-provider'
+//#materialcheck --物质盘点
+include ':modules:materialcheck:materialcheck-api'
+include ':modules:materialcheck:materialcheck-consumer'
+include ':modules:materialcheck:materialcheck-provider'
+//#materialtransfer --物质调动
+include ':modules:materialtransfer:materialtransfer-api'
+include ':modules:materialtransfer:materialtransfer-consumer'
+include ':modules:materialtransfer:materialtransfer-provider'
+//#devicerepair --物质维修
+include ':modules:devicerepair:devicerepair-api'
+include ':modules:devicerepair:devicerepair-consumer'
+include ':modules:devicerepair:devicerepair-provider'
+//#shareholdersmanage --股东管理
+include ':modules:shareholdersmanage:shareholdersmanage-api'
+include ':modules:shareholdersmanage:shareholdersmanage-consumer'
+include ':modules:shareholdersmanage:shareholdersmanage-provider'
+//#firmreward --公司奖励
+include ':modules:firmreward:firmreward-api'
+include ':modules:firmreward:firmreward-consumer'
+include ':modules:firmreward:firmreward-provider'
+//#bonusmoneyperparepay --奖金资金准备与支付
+include ':modules:bonusmoneyperparepay:bonusmoneyperparepay-api'
+include ':modules:bonusmoneyperparepay:bonusmoneyperparepay-consumer'
+include ':modules:bonusmoneyperparepay:bonusmoneyperparepay-provider'
+//#assistance
+include ':modules:assistance:assistance-api'
+include ':modules:assistance:assistance-consumer'
+include ':modules:assistance:assistance-provider'
+//#managementpromotion
+include ':modules:managementpromotion:managementpromotion-api'
+include ':modules:managementpromotion:managementpromotion-consumer'
+include ':modules:managementpromotion:managementpromotion-provider'
+//#employee-contract
+include ':modules:employee-contract:employee-contract-api'
+include ':modules:employee-contract:employee-contract-consumer'
+include ':modules:employee-contract:employee-contract-provider'
+//#bonus
+include ':modules:bonus:bonus-api'
+include ':modules:bonus:bonus-consumer'
+include ':modules:bonus:bonus-provider'
+//#businessproject
+include ':modules:businessproject:businessproject-api'
+include ':modules:businessproject:businessproject-consumer'
+include ':modules:businessproject:businessproject-provider'
+//#regularization
+include ':modules:regularization:regularization-api'
+include ':modules:regularization:regularization-consumer'
+include ':modules:regularization:regularization-provider'
+//#event
+include ':modules:event:event-api'
+include ':modules:event:event-consumer'
+include ':modules:event:event-provider'
+//#marketdevelopment
+include ':modules:marketdevelopment:marketdevelopment-api'
+include ':modules:marketdevelopment:marketdevelopment-consumer'
+include ':modules:marketdevelopment:marketdevelopment-provider'
+//#market
+include ':modules:market:market-api'
+include ':modules:market:market-consumer'
+include ':modules:market:market-provider'
+//#competitormanage
+include ':modules:competitormanage:competitormanage-api'
+include ':modules:competitormanage:competitormanage-consumer'
+include ':modules:competitormanage:competitormanage-provider'
+//#staffactivity
+include ':modules:staffactivity:staffactivity-api'
+include ':modules:staffactivity:staffactivity-consumer'
+include ':modules:staffactivity:staffactivity-provider'
+//#regularization --转正管理
+include ':modules:regularization:regularization-api'
+include ':modules:regularization:regularization-consumer'
+include ':modules:regularization:regularization-provider'
+//#projectmeasure --项目测算
+include ':modules:projectmeasure:projectmeasure-api'
+include ':modules:projectmeasure:projectmeasure-consumer'
+include ':modules:projectmeasure:projectmeasure-provider'
+//#marketactivitymanage --市场活动
+include ':modules:marketactivitymanage:marketactivitymanage-api'
+include ':modules:marketactivitymanage:marketactivitymanage-consumer'
+include ':modules:marketactivitymanage:marketactivitymanage-provider'
+//#projectmarketfee
+include ':modules:projectmarketfee:projectmarketfee-api'
+include ':modules:projectmarketfee:projectmarketfee-consumer'
+include ':modules:projectmarketfee:projectmarketfee-provider'
+////#buyticket --火车票飞机票
+//include ':modules:buyticket:buyticket-api'
+//include ':modules:buyticket:buyticket-consumer'
+//include ':modules:buyticket:buyticket-provider'
