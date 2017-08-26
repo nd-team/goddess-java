@@ -14,10 +14,10 @@ public class CarUserCountVO {
      * 用车人
      */
     private String carUser;
-    /**
-     * 租车单价
-     */
-    private Double carPrice;
+//    /**
+//     * 租车单价
+//     */
+//    private Double carPrice;
     /**
      * 加班总费
      */
@@ -43,13 +43,13 @@ public class CarUserCountVO {
         this.carUser = carUser;
     }
 
-    public Double getCarPrice() {
-        return carPrice;
-    }
-
-    public void setCarPrice(Double carPrice) {
-        this.carPrice = carPrice;
-    }
+//    public Double getCarPrice() {
+//        return carPrice;
+//    }
+//
+//    public void setCarPrice(Double carPrice) {
+//        this.carPrice = carPrice;
+//    }
 
     public Double getOvertimeFeeSum() {
         return overtimeFeeSum;

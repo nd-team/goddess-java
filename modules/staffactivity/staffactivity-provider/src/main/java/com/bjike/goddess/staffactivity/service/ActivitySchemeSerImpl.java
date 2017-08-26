@@ -532,4 +532,15 @@ public class ActivitySchemeSerImpl extends ServiceImpl<ActivityScheme, ActivityS
         }
         throw new SerException("没有该主题对应的id");
     }
+
+    @Override
+    //chenjunhao
+    public Set<String> themes() throws SerException {
+        List<ActivityScheme> list = super.findAll();
+        Set<String> set = new HashSet<>();
+        for (ActivityScheme activityScheme : list) {
+            set.add(activityScheme.getTheme());
+        }
+        return set;
+    }
 }

@@ -1,6 +1,8 @@
 package com.bjike.goddess.staffing.action.staffing;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -69,13 +71,15 @@ public class ExpendPlanAction {
      */
     @LoginAuth
     @GetMapping("v1/setButtonPermission")
-    public Result setButtonPermission() throws ActException {
+    public Result setButtonPermission(HttpServletRequest request) throws ActException {
         List<SonPermissionObject> list = new ArrayList<>();
         try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             SonPermissionObject obj = new SonPermissionObject();
             if (moduleAPI.isCheck("organize")) {
                 obj.setName("cuspermission");
                 obj.setDescribesion("设置");
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
                 Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
                 if (!isHasPermission) {
                     //int code, String msg
@@ -414,12 +418,14 @@ public class ExpendPlanAction {
      * @version v1
      */
     @GetMapping("v1/find")
-    public Result find(@Validated(ExpendPlanDTO.FIND.class) ExpendPlanDTO dto, BindingResult result) throws ActException {
+    public Result find(@Validated(ExpendPlanDTO.FIND.class) ExpendPlanDTO dto, BindingResult result,HttpServletRequest request) throws ActException {
         try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             if (moduleAPI.isCheck("projectcost")) {
                 LocalDate time = DateUtil.parseDate(dto.getTime());
                 int year = time.getYear();
                 int month = time.getMonthValue();
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
                 List<ArtificialCostBO> list = artificialCostAPI.find(year, month, dto.getProject());
                 List<PriceVO> vos = new ArrayList<>();
                 for (ArtificialCostBO a : list) {

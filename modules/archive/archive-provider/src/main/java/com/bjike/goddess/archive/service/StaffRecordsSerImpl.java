@@ -437,4 +437,16 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
         List<StaffRecordsBO> boList = BeanTransform.copyProperties(list,StaffRecordsBO.class,false);
         return boList;
     }
+
+    @Override
+    //chenjunhao
+    public StaffRecordsBO getByName(String name) throws SerException {
+        StaffRecordsDTO dto = new StaffRecordsDTO();
+        dto.getConditions().add(Restrict.eq("username", name));
+        List<StaffRecords> list = super.findByCis(dto);
+        if (!list.isEmpty()) {
+            return BeanTransform.copyProperties(list.get(0), StaffRecordsBO.class);
+        }
+        return null;
+    }
 }

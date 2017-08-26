@@ -1,6 +1,8 @@
 package com.bjike.goddess.recruit.action.recruit;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -29,6 +31,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -197,12 +200,13 @@ public class RecruitDemandAct {
     @GetMapping("v1/findArea")
     public Result findArea(HttpServletRequest request) throws ActException {
         try {
+            List<AreaBO> list = new ArrayList<>();
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             if (moduleAPI.isCheck("organize")) {
-                List<AreaBO> list = departmentDetailAPI.findArea();
-                return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
-            } else {
-                return null;
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                list = departmentDetailAPI.findArea();
             }
+            return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -218,12 +222,13 @@ public class RecruitDemandAct {
     @GetMapping("v1/findDepartment")
     public Result findDepartment(HttpServletRequest request) throws ActException {
         try {
+            List<DepartmentDetailBO> list = new ArrayList<>();
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             if (moduleAPI.isCheck("organize")) {
-                List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
-                return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
-            }else {
-                return null;
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                list = departmentDetailAPI.findStatus();
             }
+            return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -239,12 +244,13 @@ public class RecruitDemandAct {
     @GetMapping("v1/findPosition")
     public Result findPosition(HttpServletRequest request) throws ActException {
         try {
+            List<PositionDetailBO> list = new ArrayList<>();
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             if (moduleAPI.isCheck("organize")) {
-                List<PositionDetailBO> list = positionDetailAPI.findStatus();
-                return ActResult.initialize(BeanTransform.copyProperties(list, PositionDetailVO.class, request));
-            }else {
-                return null;
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                list = positionDetailAPI.findStatus();
             }
+            return ActResult.initialize(BeanTransform.copyProperties(list, PositionDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

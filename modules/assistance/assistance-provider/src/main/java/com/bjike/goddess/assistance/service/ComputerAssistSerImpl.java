@@ -1,5 +1,6 @@
 package com.bjike.goddess.assistance.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.assistance.bo.ComputerAssistBO;
 import com.bjike.goddess.assistance.dto.ComputerAssistDTO;
 import com.bjike.goddess.assistance.entity.ComputerAssist;
@@ -45,6 +46,8 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private EntryBasicInfoAPI entryBasicInfoAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -332,9 +335,13 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
         if (StringUtils.isBlank(computerAssistDTO.getEmpName())) {
             throw new SerException("员工姓名不能为空");
         }
-        List<EntryBasicInfoBO> entryBasicInfoBO = entryBasicInfoAPI.getEntryBasicInfoByName( computerAssistDTO.getEmpName() );
-        if (entryBasicInfoBO!=null&&!entryBasicInfoBO.isEmpty()){
-            return entryBasicInfoBO.get(0);
+        String token = RpcTransmit.getUserToken();
+        if (moduleAPI.isCheck("staffentry")) {
+            RpcTransmit.transmitUserToken(token);
+            List<EntryBasicInfoBO> entryBasicInfoBO = entryBasicInfoAPI.getEntryBasicInfoByName(computerAssistDTO.getEmpName());
+            if (entryBasicInfoBO != null && !entryBasicInfoBO.isEmpty()) {
+                return entryBasicInfoBO.get(0);
+            }
         }
         return null;
     }
@@ -342,10 +349,10 @@ public class ComputerAssistSerImpl extends ServiceImpl<ComputerAssist, ComputerA
     @Override
     public ComputerAssistBO findComputer(String startTime, String endTime) throws SerException {
         ComputerAssistDTO dto = new ComputerAssistDTO();
-        dto.getConditions().add(Restrict.eq("salaryStartTime",startTime));
-        dto.getConditions().add(Restrict.eq("salaryEndTime",endTime));
+        dto.getConditions().add(Restrict.eq("salaryStartTime", startTime));
+        dto.getConditions().add(Restrict.eq("salaryEndTime", endTime));
         ComputerAssist computerAssist = super.findOne(dto);
-        ComputerAssistBO bo = BeanTransform.copyProperties(computerAssist,ComputerAssistBO.class,false);
+        ComputerAssistBO bo = BeanTransform.copyProperties(computerAssist, ComputerAssistBO.class, false);
         return bo;
     }
 }

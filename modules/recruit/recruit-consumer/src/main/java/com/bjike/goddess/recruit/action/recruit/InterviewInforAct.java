@@ -1,7 +1,9 @@
 package com.bjike.goddess.recruit.action.recruit;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.accommodation.api.RentalAPI;
 import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -23,8 +25,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * 面试信息
@@ -200,15 +202,19 @@ public class InterviewInforAct {
 
     /**
      * 获取所有入职地址
+     *
      * @return
      * @throws ActException
      */
     @GetMapping("v1/allAddress")
-    public Result allAddress() throws ActException {
-        try {if (moduleAPI.isCheck("accommodation")) {
+    public Result allAddress(HttpServletRequest request) throws ActException {
+        try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            if (moduleAPI.isCheck("accommodation")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
                 return ActResult.initialize(rentalAPI.allAddress());
-            }else {
-                return null;
+            } else {
+                return ActResult.initialize(new HashSet<>());
             }
         } catch (SerException e) {
             throw new ActException(e.getMessage());

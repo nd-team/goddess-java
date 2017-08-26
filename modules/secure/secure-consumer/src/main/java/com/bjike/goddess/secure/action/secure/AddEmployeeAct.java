@@ -1,9 +1,11 @@
 package com.bjike.goddess.secure.action.secure;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.archive.api.StaffRecordsAPI;
 import com.bjike.goddess.archive.bo.StaffRecordsBO;
 import com.bjike.goddess.archive.vo.StaffRecordsVO;
 import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -75,13 +77,15 @@ public class AddEmployeeAct {
      */
     @LoginAuth
     @GetMapping("v1/setButtonPermission")
-    public Result setButtonPermission() throws ActException {
+    public Result setButtonPermission(HttpServletRequest request) throws ActException {
         List<SonPermissionObject> list = new ArrayList<>();
         try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             if (moduleAPI.isCheck("organize")) {
                 SonPermissionObject obj = new SonPermissionObject();
                 obj.setName("cuspermission");
                 obj.setDescribesion("设置");
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
                 Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
                 if (!isHasPermission) {
                     //int code, String msg
@@ -315,11 +319,13 @@ public class AddEmployeeAct {
     @GetMapping("v1/findUser")
     public Result findUser(HttpServletRequest request) throws ActException {
         try {
+            List<UserBO> list = new ArrayList<>();
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             if (moduleAPI.isCheck("organize")) {
-                List<UserBO> list = positionDetailUserAPI.findUserListInOrgan();
-                return ActResult.initialize(BeanTransform.copyProperties(list, UserVO.class, request));
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                list = positionDetailUserAPI.findUserListInOrgan();
             }
-            return null;
+            return ActResult.initialize(BeanTransform.copyProperties(list, UserVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -335,11 +341,13 @@ public class AddEmployeeAct {
     @GetMapping("v1/findArea")
     public Result findArea(HttpServletRequest request) throws ActException {
         try {
+            List<AreaBO> list = new ArrayList<>();
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             if (moduleAPI.isCheck("organize")) {
-                List<AreaBO> list = departmentDetailAPI.findArea();
-                return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                list = departmentDetailAPI.findArea();
             }
-            return null;
+            return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -355,11 +363,13 @@ public class AddEmployeeAct {
     @GetMapping("v1/findDepart")
     public Result findDepart(HttpServletRequest request) throws ActException {
         try {
+            List<DepartmentDetailBO> list = new ArrayList<>();
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             if (moduleAPI.isCheck("organize")) {
-                List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
-                return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                list = departmentDetailAPI.findStatus();
             }
-            return null;
+            return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -375,11 +385,13 @@ public class AddEmployeeAct {
     @GetMapping("v1/findPosition")
     public Result findPosition(HttpServletRequest request) throws ActException {
         try {
+            List<PositionDetailBO> list = new ArrayList<>();
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             if (moduleAPI.isCheck("organize")) {
-                List<PositionDetailBO> list = positionDetailAPI.findStatus();
-                return ActResult.initialize(BeanTransform.copyProperties(list, PositionDetailVO.class, request));
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                list = positionDetailAPI.findStatus();
             }
-            return null;
+            return ActResult.initialize(BeanTransform.copyProperties(list, PositionDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -396,15 +408,19 @@ public class AddEmployeeAct {
     @GetMapping("v1/userInfo/{name}")
     public Result userInfo(@PathVariable String name, HttpServletRequest request) throws ActException {
         try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             if (moduleAPI.isCheck("archive")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
                 List<StaffRecordsBO> list = staffRecordsAPI.listEmployee();
-                for (StaffRecordsBO staffRecordsBO : list) {
-                    if (name.equals(staffRecordsBO.getUsername())) {
-                        return ActResult.initialize(BeanTransform.copyProperties(staffRecordsBO, StaffRecordsVO.class, request));
+                if (null != list) {
+                    for (StaffRecordsBO staffRecordsBO : list) {
+                        if (name.equals(staffRecordsBO.getUsername())) {
+                            return ActResult.initialize(BeanTransform.copyProperties(staffRecordsBO, StaffRecordsVO.class, request));
+                        }
                     }
                 }
             }
-            return null;
+            return ActResult.initialize(new ArrayList<>());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

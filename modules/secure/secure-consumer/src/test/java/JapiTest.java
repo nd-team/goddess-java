@@ -18,8 +18,8 @@ public class JapiTest {
 				"modules/secure/secure-api",
 				"common/common-api",
 				"modules/dimission/dimission-api",
-				"modules/message/message-api",
-				"modules/quartz/quartz-api",
+				"modules/organize/organize-api",
+				"modules/archive/archive-api",
 				"modules/regularization/regularization-api",
 				"modules/user/user-api"
 		});

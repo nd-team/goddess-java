@@ -331,11 +331,14 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
 
     private String[] yyEmails() throws SerException {
         Set<String> set = new HashSet<>();
+        String token=RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("organize")) {
+            RpcTransmit.transmitUserToken(token);
             List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
             for (DepartmentDetailBO departmentDetailBO : list) {
                 if ("运营商务部".equals(departmentDetailBO.getDepartment())) {
                     if (moduleAPI.isCheck("contacts")) {
+                        RpcTransmit.transmitUserToken(token);
                         CommonalityBO commonality = commonalityAPI.findByDepartment(departmentDetailBO.getId());
                         if (commonality != null && commonality.getEmail() != null) {
                             set.add(commonality.getEmail());

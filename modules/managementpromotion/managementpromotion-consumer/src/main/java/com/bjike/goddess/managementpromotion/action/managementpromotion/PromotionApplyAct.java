@@ -1,6 +1,8 @@
 package com.bjike.goddess.managementpromotion.action.managementpromotion;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -34,6 +36,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -203,7 +206,7 @@ public class PromotionApplyAct {
      * @version v1
      */
     //  @LoginAuth
-    @PatchMapping("v1/conform")
+    @PutMapping("v1/conform")
     public Result conform(@Validated(PromotionApplyTO.Conform.class) PromotionApplyTO to, BindingResult bindingResult) throws ActException {
         try {
             promotionApplyAPI.conform(to);
@@ -220,7 +223,7 @@ public class PromotionApplyAct {
      * @throws ActException
      * @version v1
      */
-    @PatchMapping("v1/writePromotionCriteria")
+    @PutMapping("v1/writePromotionCriteria")
     public Result writePromotionCriteria(@Validated(PromotionApplyTO.PromotionCriteria.class) PromotionApplyTO to, BindingResult bindingResult) throws ActException {
         try {
             promotionApplyAPI.writePromotionCriteria(to);
@@ -237,7 +240,7 @@ public class PromotionApplyAct {
      * @throws ActException
      * @version v1
      */
-    @PatchMapping("v1/writeProjectManager")
+    @PutMapping("v1/writeProjectManager")
     public Result writeProjectManager(@Validated(PromotionApplyTO.ProjectManager.class) PromotionApplyTO to, BindingResult bindingResult) throws ActException {
         try {
             promotionApplyAPI.writeProjectManager(to);
@@ -254,7 +257,7 @@ public class PromotionApplyAct {
      * @throws ActException
      * @version v1
      */
-    @PatchMapping("v1/writeResourceDepartment")
+    @PutMapping("v1/writeResourceDepartment")
     public Result writeResourceDepartment(@Validated(PromotionApplyTO.ResourceDepartment.class) PromotionApplyTO to, BindingResult bindingResult) throws ActException {
         try {
             promotionApplyAPI.writeResourceDepartment(to);
@@ -271,7 +274,7 @@ public class PromotionApplyAct {
      * @throws ActException
      * @version v1
      */
-    @PatchMapping("v1/writeCommerceDepartment")
+    @PutMapping("v1/writeCommerceDepartment")
     public Result writeCommerceDepartment(@Validated(PromotionApplyTO.CommerceDepartment.class) PromotionApplyTO to, BindingResult bindingResult) throws ActException {
         try {
             promotionApplyAPI.writeCommerceDepartment(to);
@@ -288,7 +291,7 @@ public class PromotionApplyAct {
      * @throws ActException
      * @version v1
      */
-    @PatchMapping("v1/writeModuler")
+    @PutMapping("v1/writeModuler")
     public Result writeModuler(@Validated(PromotionApplyTO.Moduler.class) PromotionApplyTO to, BindingResult bindingResult) throws ActException {
         try {
             promotionApplyAPI.writeModuler(to);
@@ -305,7 +308,7 @@ public class PromotionApplyAct {
      * @throws ActException
      * @version v1
      */
-    @PatchMapping("v1/writeManager")
+    @PutMapping("v1/writeManager")
     public Result writeManager(@Validated(PromotionApplyTO.Manager.class) PromotionApplyTO to, BindingResult bindingResult) throws ActException {
         try {
             promotionApplyAPI.writeManager(to);
@@ -358,11 +361,13 @@ public class PromotionApplyAct {
     @GetMapping("v1/allNum")
     public Result allNum(HttpServletRequest request) throws ActException {
         try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            List<UserBO> list = new ArrayList<>();
             if (moduleAPI.isCheck("organize")) {
-                List<UserBO> list = positionDetailUserAPI.findUserListInOrgan();
-                return ActResult.initialize(BeanTransform.copyProperties(list, UserVO.class, request));
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                list = positionDetailUserAPI.findUserListInOrgan();
             }
-            return null;
+            return ActResult.initialize(BeanTransform.copyProperties(list, UserVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -378,11 +383,13 @@ public class PromotionApplyAct {
     @GetMapping("v1/findArea")
     public Result findArea(HttpServletRequest request) throws ActException {
         try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            List<AreaBO> list = new ArrayList<>();
             if (moduleAPI.isCheck("organize")) {
-                List<AreaBO> list = departmentDetailAPI.findArea();
-                return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                list = departmentDetailAPI.findArea();
             }
-            return null;
+            return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -398,11 +405,13 @@ public class PromotionApplyAct {
     @GetMapping("v1/findDepart")
     public Result findDepart(HttpServletRequest request) throws ActException {
         try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            List<DepartmentDetailBO> list = new ArrayList<>();
             if (moduleAPI.isCheck("organize")) {
-                List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
-                return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                list = departmentDetailAPI.findStatus();
             }
-            return null;
+            return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -418,11 +427,13 @@ public class PromotionApplyAct {
     @GetMapping("v1/findPosition")
     public Result findPosition(HttpServletRequest request) throws ActException {
         try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            List<PositionDetailBO> list = new ArrayList<>();
             if (moduleAPI.isCheck("organize")) {
-                List<PositionDetailBO> list = positionDetailAPI.findStatus();
-                return ActResult.initialize(BeanTransform.copyProperties(list, PositionDetailVO.class, request));
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                list = positionDetailAPI.findStatus();
             }
-            return null;
+            return ActResult.initialize(BeanTransform.copyProperties(list, PositionDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -441,9 +452,8 @@ public class PromotionApplyAct {
             LevelShow levelShow = levelShowAPI.findByEmployeeId(num);
             if (null != levelShow) {
                 return ActResult.initialize(levelShow.getPromotionNum());
-            } else {
-                return null;
             }
+            return ActResult.initialize(null);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

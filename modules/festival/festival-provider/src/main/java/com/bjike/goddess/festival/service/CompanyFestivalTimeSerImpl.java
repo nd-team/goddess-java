@@ -7,7 +7,9 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.festival.bo.CompanyFestivalTimeBO;
 import com.bjike.goddess.festival.dto.CompanyFestivalTimeDTO;
+import com.bjike.goddess.festival.dto.HolidayProgrammeDTO;
 import com.bjike.goddess.festival.entity.CompanyFestivalTime;
+import com.bjike.goddess.festival.entity.HolidayProgramme;
 import com.bjike.goddess.festival.to.CompanyFestivalTimeTO;
 import com.bjike.goddess.festival.to.GuidePermissionTO;
 import com.bjike.goddess.festival.type.GuideAddrStatus;
@@ -41,6 +43,8 @@ public class CompanyFestivalTimeSerImpl extends ServiceImpl<CompanyFestivalTime,
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private HolidayProgrammeSer holidayProgrammeSer;
 
     /**
      * 检查权限(部门)
@@ -168,6 +172,16 @@ public class CompanyFestivalTimeSerImpl extends ServiceImpl<CompanyFestivalTime,
         }
         CompanyFestivalTime companyFestivalTime = BeanTransform.copyProperties(companyFestivalTimeTO, CompanyFestivalTime.class, true);
         companyFestivalTime.setCreateTime(LocalDateTime.now());
+        HolidayProgrammeDTO holidayProgrammeDTO=new HolidayProgrammeDTO();
+        holidayProgrammeDTO.getConditions().add(Restrict.eq("name",companyFestivalTimeTO.getName()));
+        holidayProgrammeDTO.getSorts().add("createTime=desc");
+        List<HolidayProgramme> list=holidayProgrammeSer.findByCis(holidayProgrammeDTO);
+        if (list!=null&&!list.isEmpty()){
+            HolidayProgramme holidayProgramme=list.get(0);
+            if (null!=holidayProgramme.getOffTime()){
+                companyFestivalTime.setCompanyTimeLong(holidayProgramme.getOffTime());
+            }
+        }
         super.save(companyFestivalTime);
         return BeanTransform.copyProperties(companyFestivalTime, CompanyFestivalTimeBO.class);
     }
@@ -191,6 +205,16 @@ public class CompanyFestivalTimeSerImpl extends ServiceImpl<CompanyFestivalTime,
         CompanyFestivalTime companyFestivalTime = BeanTransform.copyProperties(companyFestivalTimeTO, CompanyFestivalTime.class, true);
 
         BeanUtils.copyProperties(companyFestivalTime, temp, "id", "createTime");
+        HolidayProgrammeDTO holidayProgrammeDTO=new HolidayProgrammeDTO();
+        holidayProgrammeDTO.getConditions().add(Restrict.eq("name",companyFestivalTimeTO.getName()));
+        holidayProgrammeDTO.getSorts().add("createTime=desc");
+        List<HolidayProgramme> list=holidayProgrammeSer.findByCis(holidayProgrammeDTO);
+        if (list!=null&&!list.isEmpty()){
+            HolidayProgramme holidayProgramme=list.get(0);
+            if (null!=holidayProgramme.getOffTime()){
+                companyFestivalTime.setCompanyTimeLong(holidayProgramme.getOffTime());
+            }
+        }
         temp.setModifyTime(LocalDateTime.now());
         super.update(temp);
         return BeanTransform.copyProperties(companyFestivalTime, CompanyFestivalTimeBO.class);

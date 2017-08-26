@@ -1,5 +1,8 @@
 package com.bjike.goddess.capability.action.capability;
 
+import com.bjike.goddess.archive.api.StaffRecordsAPI;
+import com.bjike.goddess.archive.bo.StaffRecordsBO;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.capability.api.SelfCapabilityAPI;
 import com.bjike.goddess.capability.bo.SelfCapabilityBO;
 import com.bjike.goddess.capability.dto.SelfCapabilityDTO;
@@ -24,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -40,12 +42,16 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("selfcapability")
-public class SelfCapabilityAction extends BaseFileAction{
+public class SelfCapabilityAction extends BaseFileAction {
     @Autowired
     private SelfCapabilityAPI selfCapabilityAPI;
 
     @Autowired
     private FileAPI fileAPI;
+    @Autowired
+    private StaffRecordsAPI staffRecordsAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 个人能力总条数
@@ -67,17 +73,17 @@ public class SelfCapabilityAction extends BaseFileAction{
     /**
      * 一个个人能力
      *
-     * @param id 列表id
-     * @param request  前端过滤参数
-     * @des 获取一个个人能力
+     * @param id      列表id
+     * @param request 前端过滤参数
      * @return class SelfCapabilityVO
+     * @des 获取一个个人能力
      * @version v1
      */
     @GetMapping("v1/getOne/{id}")
-    public Result getOne(@PathVariable String id,HttpServletRequest request) throws ActException {
+    public Result getOne(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             SelfCapabilityBO selfCapabilityBO = selfCapabilityAPI.getOne(id);
-            return ActResult.initialize(BeanTransform.copyProperties(selfCapabilityBO ,SelfCapabilityVO.class , request));
+            return ActResult.initialize(BeanTransform.copyProperties(selfCapabilityBO, SelfCapabilityVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -87,13 +93,13 @@ public class SelfCapabilityAction extends BaseFileAction{
      * 个人能力列表
      *
      * @param selfCapabilityDTO 个人能力信息dto
-     * @param request  前端过滤参数
+     * @param request           前端过滤参数
      * @return class SelfCapabilityVO
      * @des 获取所有个人能力信息
      * @version v1
      */
     @GetMapping("v1/listSelf")
-    public Result findList(SelfCapabilityDTO selfCapabilityDTO,HttpServletRequest request) throws ActException {
+    public Result findList(SelfCapabilityDTO selfCapabilityDTO, HttpServletRequest request) throws ActException {
         try {
             List<SelfCapabilityVO> selfCapabilityVOList = BeanTransform.copyProperties(
                     selfCapabilityAPI.listSelfCapability(selfCapabilityDTO), SelfCapabilityVO.class, request);
@@ -123,7 +129,6 @@ public class SelfCapabilityAction extends BaseFileAction{
     }
 
 
-
     /**
      * 编辑个人能力
      *
@@ -134,7 +139,7 @@ public class SelfCapabilityAction extends BaseFileAction{
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result editSelfCapability(@Validated(SelfCapabilityTO.TestAdd.class)  SelfCapabilityTO selfCapabilityTO) throws ActException {
+    public Result editSelfCapability(@Validated(SelfCapabilityTO.TestAdd.class) SelfCapabilityTO selfCapabilityTO) throws ActException {
         try {
             SelfCapabilityBO selfCapabilityBO1 = selfCapabilityAPI.editSelfCapability(selfCapabilityTO);
             return ActResult.initialize(BeanTransform.copyProperties(selfCapabilityBO1, SelfCapabilityVO.class, true));
@@ -142,7 +147,6 @@ public class SelfCapabilityAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
-
 
 
     /**
@@ -188,7 +192,7 @@ public class SelfCapabilityAction extends BaseFileAction{
      * @version v1
      */
     @GetMapping("v1/exportExcel")
-    public Result exportExcelCCapability(String name,HttpServletResponse response) throws ActException {
+    public Result exportExcelCCapability(String name, HttpServletResponse response) throws ActException {
         try {
             String fileName = "个人能力展示.xlsx";
             super.writeOutFile(response, selfCapabilityAPI.exportExcel(name), fileName);
@@ -207,7 +211,7 @@ public class SelfCapabilityAction extends BaseFileAction{
      * @version v1
      */
     @GetMapping("v1/listAllSelfName")
-    public Result listAllSelfName(  ) throws ActException {
+    public Result listAllSelfName() throws ActException {
         try {
             List<String> list = selfCapabilityAPI.listAllSelfName();
             return ActResult.initialize(list);
@@ -241,6 +245,7 @@ public class SelfCapabilityAction extends BaseFileAction{
 
     /**
      * 文件附件列表
+     *
      * @param id id
      * @return class FileVO
      * @version v1
@@ -321,6 +326,28 @@ public class SelfCapabilityAction extends BaseFileAction{
             } else {
                 return new ActResult(0, "有权限", true);
             }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 通过姓名获取工作年限
+     *
+     * @param name 姓名
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/getByName/{name}")
+    public Result getByName(@PathVariable String name) throws ActException {
+        try {
+            if (moduleAPI.isCheck("archive")) {
+                StaffRecordsBO bo = staffRecordsAPI.getByName(name);
+                if (null != bo) {
+                    return ActResult.initialize(bo.getSeniority() + "");
+                }
+            }
+            return null;
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -1,5 +1,6 @@
 package com.bjike.goddess.accommodation.action.accommodation;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.accommodation.api.RentalPreceptAPI;
 import com.bjike.goddess.accommodation.bo.RentalPreceptBO;
 import com.bjike.goddess.accommodation.dto.RentalPreceptDTO;
@@ -7,6 +8,8 @@ import com.bjike.goddess.accommodation.excel.SonPermissionObject;
 import com.bjike.goddess.accommodation.to.GuidePermissionTO;
 import com.bjike.goddess.accommodation.to.RentalPreceptTO;
 import com.bjike.goddess.accommodation.vo.RentalPreceptVO;
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -18,13 +21,14 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
-import com.bjike.goddess.organize.entity.PositionDetail;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.vo.AreaVO;
 import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.organize.vo.PositionDetailVO;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.vo.UserVO;
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -54,6 +58,8 @@ public class RentalPreceptAct {
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private PositionDetailAPI positionDetailAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 模块设置导航权限
@@ -63,20 +69,24 @@ public class RentalPreceptAct {
      */
     @LoginAuth
     @GetMapping("v1/setButtonPermission")
-    public Result i() throws ActException {
+    public Result i(HttpServletRequest request) throws ActException {
         List<SonPermissionObject> list = new ArrayList<>();
         try {
-            SonPermissionObject obj = new SonPermissionObject();
-            obj.setName("cuspermission");
-            obj.setDescribesion("设置");
-            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
-            if (!isHasPermission) {
-                //int code, String msg
-                obj.setFlag(false);
-            } else {
-                obj.setFlag(true);
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                SonPermissionObject obj = new SonPermissionObject();
+                obj.setName("cuspermission");
+                obj.setDescribesion("设置");
+                Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+                if (!isHasPermission) {
+                    //int code, String msg
+                    obj.setFlag(false);
+                } else {
+                    obj.setFlag(true);
+                }
+                list.add(obj);
             }
-            list.add(obj);
             return new ActResult(0, "设置权限", list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -352,7 +362,7 @@ public class RentalPreceptAct {
      * @version v1
      */
     @GetMapping("v1/getRent")
-    public Result getRent( String rentNum) throws ActException {
+    public Result getRent(String rentNum) throws ActException {
         try {
             RentalPreceptBO preceptBO = rentalPreceptAPI.getRent(rentNum);
             return ActResult.initialize(BeanTransform.copyProperties(preceptBO, RentalPreceptVO.class));
@@ -360,6 +370,7 @@ public class RentalPreceptAct {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 查询地区
      *
@@ -369,11 +380,18 @@ public class RentalPreceptAct {
     @GetMapping("v1/findArea")
     public Result findArea(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(departmentDetailAPI.findArea(), AreaVO.class, request));
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            List<AreaBO> list=new ArrayList<>();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                list=departmentDetailAPI.findArea();
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 查询未冻结部门项目组详细信息
      *
@@ -383,11 +401,18 @@ public class RentalPreceptAct {
     @GetMapping("v1/department")
     public Result department(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(departmentDetailAPI.findStatus(), DepartmentDetailVO.class, request));
+            List<DepartmentDetailBO> list=new ArrayList<>();
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                list=departmentDetailAPI.findStatus();
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 查询正常状态的岗位详细
      *
@@ -397,11 +422,18 @@ public class RentalPreceptAct {
     @GetMapping("v1/position")
     public Result position(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findStatus(), PositionDetailVO.class, request));
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            List<PositionDetailBO> list=new ArrayList<>();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                list=positionDetailAPI.findStatus();
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(list, PositionDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 查询用户
      *
