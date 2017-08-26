@@ -49,11 +49,13 @@ public class PersonalFestivalTO extends BaseTO {
     /**
      * 是否开通一声祝福
      */
+    @NotBlank(message = "是否开通一声祝福不能为空!", groups = {ADD.class, EDIT.class})
     private Boolean openWish;
 
     /**
      * 答谢语
      */
+    @NotBlank(message = "答谢语不能为空!", groups = {ADD.class, EDIT.class})
     private String thankStatement;
 
     /**
