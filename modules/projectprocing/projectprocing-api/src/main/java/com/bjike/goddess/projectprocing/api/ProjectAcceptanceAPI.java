@@ -1,5 +1,6 @@
 package com.bjike.goddess.projectprocing.api;
 
+import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectprocing.bo.ProjectAcceptanceBO;
 import com.bjike.goddess.projectprocing.dto.ProjectAcceptanceDTO;
@@ -63,5 +64,10 @@ public interface ProjectAcceptanceAPI {
      * @return class ProjectAcceptanceBO
      */
     default List<ProjectAcceptanceBO> searchListProjectAcceptance(ProjectAcceptanceDTO projectAcceptanceDTO) throws SerException {return null;}
+
+    /**
+     * 获取合同外部名称和合同外部编号和合同内部名称和合同内部编号
+     */
+    List<BaseInfoManageBO> findManage() throws SerException;
 
 }

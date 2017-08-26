@@ -219,8 +219,8 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
         return dispatchCarInfoSer.findAllEntry();
     }
 
-    @Override
-    public List<OilCardBasicBO> findAllOil() throws SerException {
-        return dispatchCarInfoSer.findAllOil();
-    }
+//    @Override
+//    public List<OilCardBasicBO> findAllOil() throws SerException {
+//        return dispatchCarInfoSer.findAllOil();
+//    }
 }

@@ -11,8 +11,12 @@ import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.organize.entity.PositionDetailUser;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
+import com.bjike.goddess.staffentry.entity.EntryRegister;
+import com.bjike.goddess.staffwelfare.bo.StaffBirthDayBO;
 import com.bjike.goddess.staffwelfare.bo.StaffBirthdaySchemeBO;
 import com.bjike.goddess.staffwelfare.dto.StaffBirthdaySchemeDTO;
 import com.bjike.goddess.staffwelfare.entity.StaffBirthDayWelfare;
@@ -32,6 +36,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,8 +55,6 @@ public class StaffBirthdaySchemeSerImpl extends ServiceImpl<StaffBirthdayScheme,
     @Autowired
     private UserAPI userAPI;
     @Autowired
-    private UserDetailAPI userDetailAPI;
-    @Autowired
     private StaffBirthDayWelfareSer staffBirthDayWelfareSer;
 
     @Autowired
@@ -62,6 +65,9 @@ public class StaffBirthdaySchemeSerImpl extends ServiceImpl<StaffBirthdayScheme,
 
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
+
+    @Autowired
+    private EntryRegisterAPI entryRegisterAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -251,17 +257,25 @@ public class StaffBirthdaySchemeSerImpl extends ServiceImpl<StaffBirthdayScheme,
             LocalDateTime dateTime = DateUtil.parseDateTime(dto.getSchemeTime());
             dto.getConditions().add(Restrict.eq("schemeTime", dateTime));
         }
+        Integer totalStaffAmount = 0;
+        Double totalFee = 0.0;
         List<StaffBirthdayScheme> list = super.findByPage(dto);
         if (list != null && !list.isEmpty()) {
-            Integer totalStaffAmount = list.stream().filter(p -> p.getStaffAmount() != null).mapToInt(p -> p.getStaffAmount()).sum();
-            Double totalFee = list.stream().filter(p -> p.getWelfareFeeDetial() != null).mapToDouble(p -> p.getWelfareTotalFee()).sum();
-
-            StaffBirthdayScheme total = new StaffBirthdayScheme(null, "合计", null, totalStaffAmount, null, null, null, null, null, null, totalFee, null, null, null, null,
-                    null, null, null);
-            list.add(total);
+             totalStaffAmount = list.stream().filter(p -> p.getStaffAmount() != null).mapToInt(p -> p.getStaffAmount()).sum();
+             totalFee = list.stream().filter(p -> p.getWelfareTotalFee() != null).mapToDouble(p -> p.getWelfareTotalFee()).sum();
         }
-
-        return BeanTransform.copyProperties(list, StaffBirthdaySchemeBO.class);
+//        StaffBirthdayScheme total = new StaffBirthdayScheme(null, "合计", null, totalStaffAmount, null, null, null, null, null, null, totalFee, null, null, null, null,
+//                null, null, null);
+        StaffBirthdaySchemeBO total = new StaffBirthdaySchemeBO();
+        total.setArea("合计");
+        total.setStaffAmount(totalStaffAmount);
+        total.setWelfareTotalFee(totalFee);
+        List<StaffBirthdaySchemeBO> boList = BeanTransform.copyProperties(list, StaffBirthdaySchemeBO.class);
+        if (boList==null){
+            boList=new ArrayList<>();
+        }
+        boList.add(total);
+        return boList;
     }
 
     @Override
@@ -273,7 +287,7 @@ public class StaffBirthdaySchemeSerImpl extends ServiceImpl<StaffBirthdayScheme,
             UserBO userBO = userAPI.currentUser();
             if (userBO != null) {
                 List<PositionDetailBO> detailBOS = positionDetailUserAPI.findPositionByUser(userBO.getId());
-                if (detailBOS != null) {
+                if (detailBOS != null && detailBOS.size() > 0) {
                     if (detailBOS.get(0).getPosition().equals("总经办")) {
                         model.setGeneralManageUser(userBO.getUsername());
                         model.setGeneralManageSug("通过");
@@ -309,31 +323,36 @@ public class StaffBirthdaySchemeSerImpl extends ServiceImpl<StaffBirthdayScheme,
             UserBO userBO = userAPI.currentUser();
             if (userBO != null) {
 
-                UserDetailBO userDetailBO = userDetailAPI.findByUserId(userBO.getId());
-                if (StringUtils.isEmpty(userDetailBO.getBirthday())) {
-                    throw new SerException("当前用户员工生日数据未填写,请先完善用户数据");
-                }
-                LocalDate birthday = DateUtil.parseDate(userDetailBO.getBirthday());
-                Integer birthMonth = birthday.getMonthValue();
-                Integer schemeMonth = model.getSchemeTime().getMonthValue();
-                if (birthMonth == schemeMonth) {
-                    //设置已经领取
-                    model.setReceive(Boolean.TRUE);
-                    super.update(model);
-                    //添加员工生日福利记录
-                    StaffBirthDayWelfare staffBirthDayWelfare = new StaffBirthDayWelfare();
-                    staffBirthDayWelfare.setBirthday(userDetailBO.getBirthday());
-                    staffBirthDayWelfare.setName(userBO.getUsername());
-                    staffBirthDayWelfare.setUserId(userBO.getId());
-                    // TODO: 17-4-7 地区尚未确定
-                    staffBirthDayWelfare.setArea(userDetailBO.getAddress());
-                    staffBirthDayWelfare.setProjectGroup(userDetailBO.getGroupName());
-                    staffBirthDayWelfare.setSendTime(model.getSendTime());
-                    staffBirthDayWelfare.setSendDetail(model.getWelfareDetail());
-                    staffBirthDayWelfare.setRemark(remark);
-                    staffBirthDayWelfareSer.save(staffBirthDayWelfare);
-                } else {
-                    throw new SerException("亲，还没到您的生日哦!");
+                EntryRegisterBO entryRegister = entryRegisterAPI.getByNumber(userBO.getEmployeeNumber());
+                if(entryRegister != null) {
+                    if (entryRegister.getBirthday() == null) {
+                        throw new SerException("当前用户员工生日数据未填写,请先完善用户数据");
+                    }
+                    List<EntryBasicInfoBO> entryBasicInfo = entryBasicInfoAPI.getByEmpNumber(userBO.getEmployeeNumber());
+                    LocalDate birthday = DateUtil.parseDate(entryRegister.getBirthday());
+                    Integer birthMonth = birthday.getMonthValue();
+                    Integer schemeMonth = model.getSchemeTime().getMonthValue();
+                    if (birthMonth == schemeMonth) {
+                        //设置已经领取
+                        model.setReceive(Boolean.TRUE);
+                        super.update(model);
+                        //添加员工生日福利记录
+                        StaffBirthDayWelfare staffBirthDayWelfare = new StaffBirthDayWelfare();
+                        staffBirthDayWelfare.setBirthday(entryRegister.getBirthday());
+                        staffBirthDayWelfare.setName(userBO.getUsername());
+                        staffBirthDayWelfare.setUserId(userBO.getId());
+                        // TODO: 17-4-7 地区尚未确定
+                        staffBirthDayWelfare.setArea(entryBasicInfo.get(0).getArea());
+                        staffBirthDayWelfare.setProjectGroup(entryBasicInfo.get(0).getProjectGroup());
+                        staffBirthDayWelfare.setSendTime(model.getSendTime());
+                        staffBirthDayWelfare.setSendDetail(model.getWelfareDetail());
+                        staffBirthDayWelfare.setRemark(remark);
+                        staffBirthDayWelfareSer.save(staffBirthDayWelfare);
+                    } else {
+                        throw new SerException("亲，还没到您的生日哦!");
+                    }
+                }else {
+                    throw new SerException("公司没有该员工!");
                 }
             } else {
                 throw new SerException("登录超时,请重新登录!");
@@ -352,7 +371,7 @@ public class StaffBirthdaySchemeSerImpl extends ServiceImpl<StaffBirthdayScheme,
     @Override
     public StaffBirthdaySchemeBO findOne(String id) throws SerException {
         StaffBirthdayScheme staffBirthdayScheme = super.findById(id);
-        StaffBirthdaySchemeBO bo = BeanTransform.copyProperties(staffBirthdayScheme,StaffBirthdaySchemeBO.class,true);
+        StaffBirthdaySchemeBO bo = BeanTransform.copyProperties(staffBirthdayScheme,StaffBirthdaySchemeBO.class,false);
         return bo;
     }
 }

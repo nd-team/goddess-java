@@ -154,7 +154,7 @@ public class StaffBirthdaySchemeAct {
      * @param id 员工生日福利方案id
      * @version v1
      */
-    @GetMapping("v1/delete/{id}")
+    @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
             staffBirthdaySchemeAPI.delete(id);
@@ -242,7 +242,7 @@ public class StaffBirthdaySchemeAct {
      * @version v1
      */
     @GetMapping("v1/find/one")
-    public Result findOne(String id) throws ActException{
+    public Result findOne(@RequestParam String id) throws ActException{
         try {
             StaffBirthdaySchemeBO bo = staffBirthdaySchemeAPI.findOne(id);
             StaffBirthdaySchemeVO vo = BeanTransform.copyProperties(bo,StaffBirthdaySchemeVO.class);
