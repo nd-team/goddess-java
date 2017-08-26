@@ -69,7 +69,7 @@ public class PersonalFestivalAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class)PersonalFestivalTO to, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(ADD.class) PersonalFestivalTO to, BindingResult bindingResult) throws ActException {
         try {
             PersonalFestivalVO vo = BeanTransform.copyProperties(personalFestivalAPI.addModel(to), PersonalFestivalVO.class);
             return ActResult.initialize(vo);
@@ -86,7 +86,7 @@ public class PersonalFestivalAct {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class)PersonalFestivalTO to, BindingResult bindingResult) throws ActException {
+    public Result edit(@Validated(EDIT.class) PersonalFestivalTO to, BindingResult bindingResult) throws ActException {
         try {
             PersonalFestivalVO vo = BeanTransform.copyProperties(personalFestivalAPI.editModel(to), PersonalFestivalVO.class);
             return ActResult.initialize(vo);

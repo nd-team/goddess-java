@@ -165,7 +165,7 @@ public class HeadPortraitHatAct {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class)HeadPortraitHatTO to, BindingResult bindingResult) throws ActException {
+    public Result edit(@Validated(EDIT.class) HeadPortraitHatTO to, BindingResult bindingResult) throws ActException {
         try {
             HeadPortraitHatVO vo = BeanTransform.copyProperties(headPortraitHatAPI.editModel(to), HeadPortraitHatVO.class);
             return ActResult.initialize(vo);
