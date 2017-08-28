@@ -285,38 +285,49 @@ public class DepartMonIndexSetSerImpl extends ServiceImpl<DepartMonIndexSet, Dep
         }
         DepartMonIndexSet temp = super.findById(departMonIndexSetTO.getId());
         Double oldMonComplete = temp.getComplete();
+        if(departMonIndexSetTO.getIfAgain() !=null && departMonIndexSetTO.getIfAgain() == true){
+            PositionIndexSetDTO dto = new PositionIndexSetDTO();
+            dto.getConditions().add(Restrict.eq("departMonthIndexSetId",departMonIndexSetTO.getId()));
+            List<PositionIndexSet> positionIndexSetList = positionIndexSetSer.findByCis(dto);
+            if(positionIndexSetList !=null && positionIndexSetList.size() > 0){
+                positionIndexSetSer.remove(positionIndexSetList);
+            }
+            temp.setSeparateStatus(SeparateStatus.NONE);
+        }else {
 
-        temp.setIndexName(departMonIndexSetTO.getIndexName());
-        temp.setYear(departMonIndexSetTO.getYear());
-        temp.setMonth(departMonIndexSetTO.getMonth());
-        temp.setIndexType(departMonIndexSetTO.getIndexType());
-        temp.setDimension(departMonIndexSetTO.getDimension());
-        temp.setDescribtion(departMonIndexSetTO.getDescribtion());
-        temp.setDepartment(departMonIndexSetTO.getDepartment());
-        temp.setDepartYearWeight(departMonIndexSetTO.getDepartYearWeight());
-        temp.setDepartYearWager(departMonIndexSetTO.getWager());
-        temp.setWeight(departMonIndexSetTO.getTarget() / departMonIndexSetTO.getWager() * 100d);
-        temp.setTarget(departMonIndexSetTO.getTarget());
-        temp.setWager(departMonIndexSetTO.getWager());
-        temp.setComplete(departMonIndexSetTO.getComplete());
-        temp.setExamWay(departMonIndexSetTO.getExamWay());
-        temp.setWhetherStandar(departMonIndexSetTO.getComplete() > departMonIndexSetTO.getTarget() ? "是" : "否");
-        temp.setStandardRate(departMonIndexSetTO.getComplete() / departMonIndexSetTO.getWager());
-        temp.setExamScore(temp.getStandardRate() * temp.getWeight());
-        temp.setExamDepart(departMonIndexSetTO.getExamDepart());
-        temp.setDataOrigin(departMonIndexSetTO.getDataOrigin());
-        temp.setExamDuring(departMonIndexSetTO.getExamDuring());
-        temp.setModifyTime(LocalDateTime.now());
-        //若岗位分解状态为“已分解”，向上重新分解，向下重新分解
-        //否则直接编辑
-        if (temp.getSeparateStatus().equals(SeparateStatus.SEPERATE)) {
-            //修改重新分解岗位指标
-            List<PositionIndexSet> listPost = seperatePostIndex(temp);
+            temp.setIndexName(departMonIndexSetTO.getIndexName());
+            temp.setYear(departMonIndexSetTO.getYear());
+            temp.setMonth(departMonIndexSetTO.getMonth());
+            temp.setIndexType(departMonIndexSetTO.getIndexType());
+            temp.setDimension(departMonIndexSetTO.getDimension());
+            temp.setDescribtion(departMonIndexSetTO.getDescribtion());
+            temp.setDepartment(departMonIndexSetTO.getDepartment());
+            temp.setDepartYearWeight(departMonIndexSetTO.getDepartYearWeight());
+            temp.setDepartYearWager(departMonIndexSetTO.getWager());
+            temp.setWeight(departMonIndexSetTO.getTarget() / departMonIndexSetTO.getWager() * 100d);
+            temp.setTarget(departMonIndexSetTO.getTarget());
+            temp.setWager(departMonIndexSetTO.getWager());
+            temp.setComplete(departMonIndexSetTO.getComplete());
+            temp.setExamWay(departMonIndexSetTO.getExamWay());
+            temp.setWhetherStandar(departMonIndexSetTO.getComplete() > departMonIndexSetTO.getTarget() ? "是" : "否");
+            temp.setStandardRate(departMonIndexSetTO.getComplete() / departMonIndexSetTO.getWager());
+            temp.setExamScore(temp.getStandardRate() * temp.getWeight());
+            temp.setExamDepart(departMonIndexSetTO.getExamDepart());
+            temp.setDataOrigin(departMonIndexSetTO.getDataOrigin());
+            temp.setExamDuring(departMonIndexSetTO.getExamDuring());
+            temp.setModifyTime(LocalDateTime.now());
+            //若岗位分解状态为“已分解”，向上重新分解，向下重新分解
+            //否则直接编辑
+            if (temp.getSeparateStatus().equals(SeparateStatus.SEPERATE)) {
+                //修改重新分解岗位指标
+                List<PositionIndexSet> listPost = seperatePostIndex(temp);
+            }
         }
-        //从上面分解来的，则修改完成值
-        if (temp.getSeperateComeStatus().equals(SeperateComeStatus.DEPARTYEAR)) {
-            editDepartYearComplete(oldMonComplete, temp);
-        }
+            //从上面分解来的，则修改完成值
+            if (temp.getSeperateComeStatus().equals(SeperateComeStatus.DEPARTYEAR)) {
+                editDepartYearComplete(oldMonComplete, temp);
+            }
+
 
         super.update(temp);
 
@@ -478,6 +489,8 @@ public class DepartMonIndexSetSerImpl extends ServiceImpl<DepartMonIndexSet, Dep
             }
             if (saveList != null && saveList.size() > 0) {
                 positionIndexSetSer.save(saveList);
+                temp.setSeparateStatus(SeparateStatus.SEPERATE);
+                super.update(temp);
             }
         }
 
