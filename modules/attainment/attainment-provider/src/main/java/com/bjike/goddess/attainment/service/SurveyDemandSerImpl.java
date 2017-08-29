@@ -86,13 +86,16 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
             throw new SerException("调研类型不存在,无法保存");
         entity.setUsername(user.getUsername());
         entity.setLaunch(LocalDateTime.now());
-        String scope = "";
-        if (entity.getScope().equals(ScopeType.COMPANY))
-            scope = "公司";
-        else
-            for (String name : to.getScopeNames())
-                scope += name + ",";
-        entity.setScopeName(scope);
+        entity.setScope(to.getScope());
+
+//        String scope = "";
+//        if (entity.getScope().equals(ScopeType.COMPANY))
+//            scope = "公司";
+//        else
+        String scopeName = "";
+        for (String name : to.getScopeNames())
+            scopeName += name + ",";
+        entity.setScopeName(scopeName);
 
         if (moduleAPI.isCheck("organize")) {
             List<String> list = positionDetailUserAPI.getPosition(user.getUsername());

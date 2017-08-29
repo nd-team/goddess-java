@@ -33,6 +33,7 @@ public interface AnnualApplyAPI {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 保存年假申请实体数据
      *
@@ -121,4 +122,13 @@ public interface AnnualApplyAPI {
         return null;
     }
 
+    /**
+     * 获取申请开始时间
+     *
+     * @return
+     * @throws SerException
+     */
+    default String getStartTime() throws SerException {
+        return null;
+    }
 }

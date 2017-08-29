@@ -7,10 +7,12 @@ import com.bjike.goddess.attainment.enums.GuideAddrStatus;
 import com.bjike.goddess.attainment.enums.SurveyStatus;
 import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.attainment.to.SurveyActualizeTO;
+import com.bjike.goddess.common.api.dto.PageDTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,9 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,13 +56,22 @@ public class SurveyActualizeSerImpl extends ServiceImpl<SurveyActualize, SurveyA
         bo.setStart(bo.getStartTime());
         bo.setEnd(bo.getEndTime());
         bo.setFinish(bo.getFinishTime());
-        bo.setStartTime(entity.getStartTime().toString());
-//        bo.setEndTime(entity.getEndTime().toString());
-        bo.setFinishTime(entity.getFinishTime().toString());
+
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String landing = entity.getStartTime().format(format);
+
+        SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+
+        bo.setStartTime(DateUtil.dateToString(entity.getStartTime()));
+
+//        bo.setEndTime(DateUtil.dateToString(entity.getEndTime()));
+        bo.setFinishTime(DateUtil.dateToString(entity.getFinishTime()));
+
         bo.setSurvey(entity.getSurvey());
         bo.setQuestionnaire(entity.getQuestionnaire());
         bo.setRemark(entity.getRemark());
 //        bo = BeanTransform.copyProperties(entity, SurveyActualizeBO.class);
+        bo.setId(entity.getId());
         return bo;
     }
 
@@ -72,7 +85,8 @@ public class SurveyActualizeSerImpl extends ServiceImpl<SurveyActualize, SurveyA
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyActualizeBO save(SurveyActualizeTO to) throws SerException {
-        SurveyActualize entity = BeanTransform.copyProperties(to, SurveyActualize.class, true);
+        SurveyActualize entity = BeanTransform.copyProperties(to, SurveyActualize.class,true);
+        surveyPlanSer.findById(to.getPlanId());
         entity.setPlan(surveyPlanSer.findById(to.getPlanId()));
         if (null == entity.getPlan())
             throw new SerException("调研计划不存在,无法保存");

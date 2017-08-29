@@ -214,6 +214,9 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
             this.isExist(toList.get(i - 1), i);
         }
         List<StaffRecords> list = BeanTransform.copyProperties(toList, StaffRecords.class, true);
+        for (StaffRecords staffRecords : list) {
+            staffRecords.setStatus(Status.THAW);
+        }
         super.save(list);
     }
 
@@ -431,10 +434,10 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
 
     @Override
     public List<StaffRecordsBO> findByMonth(Integer month) throws SerException {
-        String[] staff = new String[]{"id","createTime","modifyTime","address","bank","bankCard","birth","dimissionTime","education","email","entryTime","graduate","identityCard","major","position","project","school","seniority","serialNumber","status","telephone","username"};
-        String sql = "select * from archive_staff_records where month(birth) = '"+month+"'";
-        List<StaffRecords> list = super.findBySql(sql,StaffRecords.class,staff);
-        List<StaffRecordsBO> boList = BeanTransform.copyProperties(list,StaffRecordsBO.class,false);
+        String[] staff = new String[]{"id", "createTime", "modifyTime", "address", "bank", "bankCard", "birth", "dimissionTime", "education", "email", "entryTime", "graduate", "identityCard", "major", "position", "project", "school", "seniority", "serialNumber", "status", "telephone", "username"};
+        String sql = "select * from archive_staff_records where month(birth) = '" + month + "'";
+        List<StaffRecords> list = super.findBySql(sql, StaffRecords.class, staff);
+        List<StaffRecordsBO> boList = BeanTransform.copyProperties(list, StaffRecordsBO.class, false);
         return boList;
     }
 }
