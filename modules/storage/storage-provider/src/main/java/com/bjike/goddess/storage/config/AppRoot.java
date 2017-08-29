@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableCaching
 @PropertySource({"classpath:config.properties","classpath:redis.properties"})
 @ImportResource({"classpath:application.xml"})
-@ComponentScan(basePackages = {"com.bjike.goddess.storage"},
+@ComponentScan(basePackages = {"com.bjike.goddess.storage","com.bjike.goddess.redis"},
         excludeFilters = {@ComponentScan.Filter(
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})

@@ -1,11 +1,15 @@
 package com.bjike.goddess.redis.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+
+import javax.annotation.PostConstruct;
 
 /**
  * @Author: [liguiqin]
@@ -14,8 +18,10 @@ import redis.clients.jedis.JedisPoolConfig;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-@Configuration
-public class RedisConfiguration {
+@Component
+public class RedisConfiguration   {
+
+
 
     /**
      * 配置连接池
@@ -23,9 +29,8 @@ public class RedisConfiguration {
      * @param env
      * @return
      */
-    @Autowired
-    @Bean(name = "jedisPool")
-    public JedisPool jedisPool(Environment env) throws InterruptedException{
+    @Bean("jPool")
+    public JedisPool jedisPool(Environment env) throws InterruptedException {
         JedisPoolConfig config = new JedisPoolConfig();
         String host = env.getProperty("redis.host");
         int post = Integer.parseInt(env.getProperty("redis.port"));

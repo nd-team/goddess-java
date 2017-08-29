@@ -20,9 +20,9 @@ import javax.annotation.PostConstruct;
 @EnableJpaRepositories(basePackages = {"com.bjike.goddess.user.dao"})//jpa 所在包
 @EnableTransactionManagement(proxyTargetClass = true)
 @EnableCaching
-@PropertySource({"classpath:config.properties"})
+@PropertySource({"classpath:config.properties","classpath:redis.properties"})
 @ImportResource({"classpath:application.xml"})
-@ComponentScan(basePackages = {"com.bjike.goddess.user"},
+@ComponentScan(basePackages = {"com.bjike.goddess.user","com.bjike.goddess.redis"},
         excludeFilters = {@ComponentScan.Filter(
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})

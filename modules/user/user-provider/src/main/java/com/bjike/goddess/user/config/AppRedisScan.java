@@ -1,6 +1,7 @@
 package com.bjike.goddess.user.config;
 
 import com.bjike.goddess.redis.client.RedisClientImpl;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
 /**

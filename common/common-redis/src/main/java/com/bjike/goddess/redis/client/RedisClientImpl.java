@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,7 +21,7 @@ public class RedisClientImpl implements RedisClient {
 
     private static final String MSG = "服务不可用";
 
-    @Autowired(required = false)
+    @Resource(name = "jPool")
     private JedisPool jedisPool;
     private Jedis jedis = null;
 
