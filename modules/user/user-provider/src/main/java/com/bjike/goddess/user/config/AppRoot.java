@@ -1,9 +1,13 @@
 package com.bjike.goddess.user.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.*;
+import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 
 import javax.annotation.PostConstruct;
 
@@ -27,6 +31,5 @@ import javax.annotation.PostConstruct;
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})
 public class AppRoot {
-
 
 }

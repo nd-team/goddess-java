@@ -13,6 +13,8 @@ import org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by huanghuanlai on 2017/1/14.
@@ -30,7 +32,11 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
     protected ModelAndView doResolveException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) {
         ActResult actResult = new ActResult();
         httpServletResponse.setContentType(JSON_CONTEXT);
-        actResult.setMsg(e.getMessage());
+        if (!isChinese(e.getMessage())) {
+            actResult.setMsg("服务器错误");
+        } else {
+            actResult.setMsg(e.getMessage());
+        }
         e.printStackTrace();
         if (e instanceof ActException || e instanceof HystrixBadRequestException) {
             actResult.setCode(1);
@@ -54,7 +60,7 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
          * 处理数据库异常
          */
         String msg = handleJapException(e);
-        if(StringUtils.isNotBlank(msg)){
+        if (StringUtils.isNotBlank(msg)) {
             actResult.setMsg(msg);
         }
         ResponseContext.writeData(actResult);
@@ -73,7 +79,7 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
             result = StringUtils.substringBefore(result, "' for key");
             result = StringUtils.substringAfter(result, "Duplicate entry '");
             if (StringUtils.isNotBlank(result)) {
-               return "[" + result + "]该名称已被占用!";
+                return "[" + result + "]该名称已被占用!";
             }
             /**
              * 处理非空约束
@@ -95,4 +101,18 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
         }
         return result;
     }
+
+    private static final String REG = "[\u4e00-\u9fa5]";
+
+    public boolean isChinese(String str) {
+        if (StringUtils.isNotBlank(str)) {
+            Pattern p = Pattern.compile(REG);
+            Matcher m = p.matcher(str);
+            if (m.find()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
