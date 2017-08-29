@@ -118,8 +118,8 @@ public class OilCardBasicApiImpl implements OilCardBasicAPI {
 
 
     @Override
-    public void updateOliCardBasic(OilCardBasic oilCardBasic) throws SerException {
-        oilCardBasicSer.updateOliCardBasic(oilCardBasic);
+    public void updateOliCardBasic(OilCardBasicBO basicBO) throws SerException {
+        oilCardBasicSer.updateOliCardBasic(basicBO);
     }
 
     @Override
@@ -136,4 +136,5 @@ public class OilCardBasicApiImpl implements OilCardBasicAPI {
     public List<OilCardBasicBO> findOilCard() throws SerException {
         return oilCardBasicSer.findOilCard();
     }
+
 }

@@ -248,6 +248,7 @@ public class BusinessEvaluateCollectAct {
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
+
     }
 
     /**

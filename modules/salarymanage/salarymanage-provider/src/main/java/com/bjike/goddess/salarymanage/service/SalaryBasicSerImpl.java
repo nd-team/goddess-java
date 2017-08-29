@@ -1,5 +1,6 @@
 package com.bjike.goddess.salarymanage.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -64,6 +65,9 @@ public class SalaryBasicSerImpl extends ServiceImpl<SalaryBasic, SalaryBasicDTO>
 
     @Autowired
     private SalaryInformationSer salaryInformationSer;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -231,20 +235,35 @@ public class SalaryBasicSerImpl extends ServiceImpl<SalaryBasic, SalaryBasicDTO>
 
     @Override
     public List<AreaBO> findArea() throws SerException {
-        List<AreaBO> areaBOS = departmentDetailAPI.findArea();
-        return areaBOS;
+        List<AreaBO> boList = new ArrayList<>(0);
+//        if(moduleAPI.isCheck("organize")) {
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
+            boList = departmentDetailAPI.findArea();
+//        }
+        return boList;
     }
 
     @Override
     public List<OpinionBO> findThawOpinion() throws SerException {
-        List<OpinionBO> opinionBOS = departmentDetailAPI.findThawOpinion();
-        return opinionBOS;
+        List<OpinionBO> boList = new ArrayList<>(0);
+//        if(moduleAPI.isCheck("organize")) {
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
+            boList = departmentDetailAPI.findThawOpinion();
+//        }
+        return boList;
     }
 
     @Override
     public List<HierarchyBO> findStatus() throws SerException {
-        List<HierarchyBO> hierarchyBOS = hierarchyAPI.findStatus();
-        return hierarchyBOS;
+        List<HierarchyBO> boList = new ArrayList<>(0);
+//        if(moduleAPI.isCheck("organize")) {
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
+            boList = hierarchyAPI.findStatus();
+//        }
+        return boList;
     }
 
     @Override

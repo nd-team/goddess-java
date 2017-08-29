@@ -19,9 +19,11 @@ import com.bjike.goddess.dispatchcar.bo.DriverDispatchsBO;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoEditTO;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
+import com.bjike.goddess.dispatchcar.to.DispatchcarDeleteFileTO;
 import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
 import com.bjike.goddess.dispatchcar.vo.AuditDetailVO;
 import com.bjike.goddess.dispatchcar.vo.DispatchCarInfoVO;
+import com.bjike.goddess.oilcardmanage.api.OilCardBasicAPI;
 import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.entity.OilCardBasic;
 import com.bjike.goddess.oilcardmanage.vo.OilCardBasicVO;
@@ -31,12 +33,14 @@ import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +63,7 @@ public class DispatchCarInfoAct extends BaseFileAction {
     private FileAPI fileAPI;
 
     @Autowired
-    private ModuleAPI moduleAPI;
+    private OilCardBasicAPI oilCardBasicAPI;
 
     /**
      * 查询总记录数
@@ -171,7 +175,7 @@ public class DispatchCarInfoAct extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/upload/{id}")
-    public Result fileUpload(@PathVariable String id ,HttpServletRequest request) throws ActException {
+    public Result fileUpload(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             String path = "dispatchCar";
             fileAPI.upload(this.getInputStreams(request, path.toString()));
@@ -189,12 +193,12 @@ public class DispatchCarInfoAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/files/{id}")
-    public Result findFiles(@PathVariable String id,HttpServletRequest request) throws ActException {
+    public Result findFiles(@PathVariable String id, HttpServletRequest request) throws ActException {
         // 17-4-14 查看附件
         try {
             //跟前端约定好 ，文件路径是列表id
             // /businessproject/id/....
-            String path = "/businessproject/siginmanage/" + id;
+            String path = "/dispatchcar/" + id;
             FileInfo fileInfo = new FileInfo();
             fileInfo.setPath(path);
             Object storageToken = request.getAttribute("storageToken");
@@ -204,6 +208,69 @@ public class DispatchCarInfoAct extends BaseFileAction {
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
+    }
+
+    /**
+     * 文件附件列表
+     *
+     * @param id id 列表id
+     * @return class FileVO
+     * @version v1
+     */
+    @GetMapping("v1/listFile/{id}")
+    public Result list(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            String path = "/dispatchcar/" + id;
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
+            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
+            return ActResult.initialize(files);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param path 文件路径
+     * @version v1
+     */
+    @GetMapping("v1/downloadFile")
+    public Result download(@RequestParam String path, HttpServletRequest request, HttpServletResponse response) throws ActException {
+        try {
+            //该文件的路径
+            FileInfo fileInfo = new FileInfo();
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
+            fileInfo.setPath(path);
+            String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
+            byte[] buffer = fileAPI.download(fileInfo);
+            writeOutFile(response, buffer, filename);
+            return new ActResult("download success");
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
+
+    /**
+     * 删除文件或文件夹
+     *
+     * @param dispatchcarDeleteFileTO 多文件信息路径
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/deleteFile")
+    public Result delFile(@Validated(DispatchcarDeleteFileTO.TestDEL.class) DispatchcarDeleteFileTO dispatchcarDeleteFileTO, HttpServletRequest request) throws SerException {
+        if (null != dispatchcarDeleteFileTO.getPaths() && dispatchcarDeleteFileTO.getPaths().length >= 0) {
+            Object storageToken = request.getAttribute("storageToken");
+            fileAPI.delFile(storageToken.toString(), dispatchcarDeleteFileTO.getPaths());
+        }
+        return new ActResult("delFile success");
     }
 
     /**
@@ -242,57 +309,58 @@ public class DispatchCarInfoAct extends BaseFileAction {
 
     /**
      * 查询所有司机信息和车牌号码
+     *
      * @return class DriverInfoVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/find/driver")
-    public Result findDriver() throws ActException{
+    public Result findDriver() throws ActException {
         try {
             List<DriverInfoBO> boList = dispatchCarInfoAPI.findDriver();
-            List<DriverInfoVO> voList = BeanTransform.copyProperties(boList,DriverInfoVO.class);
+            List<DriverInfoVO> voList = BeanTransform.copyProperties(boList, DriverInfoVO.class);
             return ActResult.initialize(voList);
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
     /**
      * 查询所有用车陪同人员和用车人员和任务下达人员和所属地区和所属项目组
+     *
      * @return class EntryBasicInfoVO
      * @throws ActException
      * @version v1
      */
-   @GetMapping("v1/find/entry")
-    public Result findAllEntry() throws ActException{
+    @GetMapping("v1/find/entry")
+    public Result findAllEntry() throws ActException {
         try {
             List<EntryBasicInfoVO> voList = new ArrayList<>(0);
-            if(moduleAPI.isCheck("assemble")) {
-                List<EntryBasicInfoBO> boList = dispatchCarInfoAPI.findAllEntry();
-                voList = BeanTransform.copyProperties(boList, EntryBasicInfoVO.class);
-            }
+            List<EntryBasicInfoBO> boList = dispatchCarInfoAPI.findAllEntry();
+            voList = BeanTransform.copyProperties(boList, EntryBasicInfoVO.class);
             return ActResult.initialize(voList);
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
-   }
+    }
 
     /**
      * 查询所有油卡信息
+     *
      * @return class OilCardBasicVO
      * @throws ActException
      * @version v1
      */
-   @GetMapping("v1/find/oil")
-    public Result findAllOil() throws ActException{
-       try {
-           List<OilCardBasicBO> boList = dispatchCarInfoAPI.findAllOil();
-           List<OilCardBasicVO> voList = BeanTransform.copyProperties(boList,OilCardBasicVO.class);
-           return ActResult.initialize(voList);
-       }catch (SerException e){
-           throw new ActException(e.getMessage());
-       }
-   }
+    @GetMapping("v1/find/oil")
+    public Result findAllOil() throws ActException {
+        try {
+            List<OilCardBasicBO> boList = oilCardBasicAPI.findOilCard();
+            List<OilCardBasicVO> voList = BeanTransform.copyProperties(boList, OilCardBasicVO.class);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
 }

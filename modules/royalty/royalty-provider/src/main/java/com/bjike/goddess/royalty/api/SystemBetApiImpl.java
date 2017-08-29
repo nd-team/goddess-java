@@ -75,4 +75,8 @@ public class SystemBetApiImpl implements SystemBetAPI {
     public List<String> getDepartment() throws SerException {
         return systemBetSer.getDepartment();
     }
+    @Override
+    public SystemBetABO getSystem(String projectName) throws SerException {
+        return systemBetSer.getSystem(projectName);
+    }
 }

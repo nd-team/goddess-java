@@ -262,7 +262,7 @@ public class OilCardBasicAct {
     }
 
     /**
-     * 查询所有未冻结的油卡
+     * 查询所有未冻结且闲置的油卡
      * @return class OilCardBasicVO
      * @throws ActException
      * @version v1

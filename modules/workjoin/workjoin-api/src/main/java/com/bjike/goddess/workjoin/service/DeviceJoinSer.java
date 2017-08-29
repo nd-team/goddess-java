@@ -2,6 +2,7 @@ package com.bjike.goddess.workjoin.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
 import com.bjike.goddess.workjoin.bo.DeviceJoinBO;
 import com.bjike.goddess.workjoin.bo.JoinInfoBO;
 import com.bjike.goddess.workjoin.dto.DeviceJoinDTO;
@@ -95,5 +96,10 @@ public interface DeviceJoinSer extends Ser<DeviceJoin, DeviceJoinDTO> {
     default void removeDeviceJoin(String id) throws SerException {
 
     }
+
+    /**
+     * 查询设备编号
+     */
+    List<MaterialInStockBO> findMaterial() throws SerException;
 
 }

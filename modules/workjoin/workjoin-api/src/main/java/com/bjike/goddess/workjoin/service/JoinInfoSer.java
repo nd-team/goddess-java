@@ -2,6 +2,7 @@ package com.bjike.goddess.workjoin.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.datastore.bo.NumSpecificationBO;
 import com.bjike.goddess.workjoin.bo.JoinInfoBO;
 import com.bjike.goddess.workjoin.dto.JoinInfoDTO;
 import com.bjike.goddess.workjoin.entity.JoinInfo;
@@ -92,6 +93,12 @@ public interface JoinInfoSer extends Ser<JoinInfo, JoinInfoDTO> {
     default void removeJoinInfo(String id) throws SerException {
 
     }
+
+    /**
+     * 获取制度文件夹编号和经验总结编号
+     * jiangzaixuan
+     */
+    List<NumSpecificationBO> findNumSepecification() throws SerException;
 
 
 }

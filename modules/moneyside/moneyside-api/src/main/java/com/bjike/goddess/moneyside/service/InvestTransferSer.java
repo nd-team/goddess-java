@@ -7,6 +7,7 @@ import com.bjike.goddess.moneyside.dto.InvestTransferDTO;
 import com.bjike.goddess.moneyside.entity.InvestTransfer;
 import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import com.bjike.goddess.moneyside.to.InvestTransferTO;
+import com.bjike.goddess.user.bo.UserBO;
 
 import java.util.List;
 
@@ -91,4 +92,9 @@ public interface InvestTransferSer extends Ser<InvestTransfer, InvestTransferDTO
     default void removeInvestTransfer(String id) throws SerException {
 
     }
+
+    /**
+     * 获取所有投资转让人
+     */
+    List<UserBO> findUserListInOrgan() throws SerException;
 }

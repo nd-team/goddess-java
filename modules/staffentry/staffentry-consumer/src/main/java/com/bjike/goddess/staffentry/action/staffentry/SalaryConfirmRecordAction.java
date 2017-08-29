@@ -1,5 +1,6 @@
 package com.bjike.goddess.staffentry.action.staffentry;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -7,6 +8,7 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.staffentry.api.SalaryConfirmRecordAPI;
 import com.bjike.goddess.staffentry.bo.SalaryConfirmRecordBO;
 import com.bjike.goddess.staffentry.dto.SalaryConfirmRecordDTO;
@@ -17,17 +19,20 @@ import com.bjike.goddess.staffentry.vo.SalaryConfirmRecordVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 薪资确认
@@ -40,16 +45,21 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("salaryconfirmrecord")
-public class SalaryConfirmRecordAction extends BaseFileAction{
+public class SalaryConfirmRecordAction extends BaseFileAction {
 
     @Autowired
     private SalaryConfirmRecordAPI salaryConfirmRecordAPI;
     @Autowired
     private FileAPI fileAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
 
     /**
      * 功能导航权限
+     *
      * @param guidePermissionTO 导航类型数据
      * @throws ActException
      * @version v1
@@ -59,11 +69,11 @@ public class SalaryConfirmRecordAction extends BaseFileAction{
         try {
 
             Boolean isHasPermission = salaryConfirmRecordAPI.guidePermission(guidePermissionTO);
-            if(! isHasPermission ){
+            if (!isHasPermission) {
                 //int code, String msg
-                return new ActResult(0,"没有权限",false );
-            }else{
-                return new ActResult(0,"有权限",true );
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
             }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -105,12 +115,13 @@ public class SalaryConfirmRecordAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 薪资确认列表
      *
      * @param salaryConfirmRecordDTO 薪资确认dto
-     * @des 获取所有薪资确认
      * @return class SalaryConfirmRecordVO
+     * @des 获取所有薪资确认
      * @version v1
      */
     @GetMapping("v1/list")
@@ -128,8 +139,8 @@ public class SalaryConfirmRecordAction extends BaseFileAction{
      * 添加
      *
      * @param salaryConfirmRecordTO 员工薪资确认数据to
-     * @des 添加薪资确认
      * @return class SalaryConfirmRecordVO
+     * @des 添加薪资确认
      * @version v1
      */
     @LoginAuth
@@ -137,7 +148,7 @@ public class SalaryConfirmRecordAction extends BaseFileAction{
     public Result addSalaryConfirmRecord(@Validated(SalaryConfirmRecordTO.TestAdd.class) SalaryConfirmRecordTO salaryConfirmRecordTO) throws ActException {
         try {
             SalaryConfirmRecordBO salaryConfirmRecordBO1 = salaryConfirmRecordAPI.insertSalaryConfirmRecord(salaryConfirmRecordTO);
-            return ActResult.initialize(BeanTransform.copyProperties(salaryConfirmRecordBO1,SalaryConfirmRecordVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(salaryConfirmRecordBO1, SalaryConfirmRecordVO.class, true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -148,8 +159,8 @@ public class SalaryConfirmRecordAction extends BaseFileAction{
      * 编辑
      *
      * @param salaryConfirmRecordTO 员工薪资确认数据to
-     * @des 编辑薪资确认
      * @return class SalaryConfirmRecordVO
+     * @des 编辑薪资确认
      * @version v1
      */
     @LoginAuth
@@ -157,7 +168,7 @@ public class SalaryConfirmRecordAction extends BaseFileAction{
     public Result editSalaryConfirmRecord(@Validated(SalaryConfirmRecordTO.TestAdd.class) SalaryConfirmRecordTO salaryConfirmRecordTO) throws ActException {
         try {
             SalaryConfirmRecordBO salaryConfirmRecordBO1 = salaryConfirmRecordAPI.editSalaryConfirmRecord(salaryConfirmRecordTO);
-            return ActResult.initialize(BeanTransform.copyProperties(salaryConfirmRecordBO1,SalaryConfirmRecordVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(salaryConfirmRecordBO1, SalaryConfirmRecordVO.class, true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -263,13 +274,54 @@ public class SalaryConfirmRecordAction extends BaseFileAction{
     @LoginAuth
     @PostMapping("v1/deleteFile")
     public Result delFile(@Validated(SiginManageDeleteFileTO.TestDEL.class) SiginManageDeleteFileTO siginManageDeleteFileTO, HttpServletRequest request) throws SerException {
-        if(null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length>=0 ){
+        if (null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length >= 0) {
             Object storageToken = request.getAttribute("storageToken");
-            fileAPI.delFile(storageToken.toString(),siginManageDeleteFileTO.getPaths());
+            fileAPI.delFile(storageToken.toString(), siginManageDeleteFileTO.getPaths());
         }
         return new ActResult("delFile success");
     }
 
+    /**
+     * 获取用户名
+     *
+     * @version v1
+     */
+    @GetMapping("v1/name")
+    public Result getName() throws ActException {
+        try {
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("organize")) {
+                List<UserBO> userBOList = positionDetailUserAPI.findUserListInOrgan();
+                if (!CollectionUtils.isEmpty(userBOList)) {
+                    list = userBOList.stream().map(UserBO::getUsername).distinct().collect(Collectors.toList());
+                }
+            }
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取员工编号
+     *
+     * @version v1
+     */
+    @GetMapping("v1/employeeNumber")
+    public Result getEmployeeNumber() throws ActException {
+        try {
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("organize")) {
+                List<UserBO> userBOList = positionDetailUserAPI.findUserListInOrgan();
+                if (!CollectionUtils.isEmpty(userBOList)) {
+                    list = userBOList.stream().map(UserBO::getEmployeeNumber).distinct().collect(Collectors.toList());
+                }
+            }
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
 }

@@ -21,8 +21,10 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import scala.Array;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -194,55 +196,56 @@ public class StaffBirthDaySerImpl extends ServiceImpl<StaffBirthDay, StaffBirthD
         List<StaffBirthDayBO> boList = new ArrayList<>(0);
         if (moduleAPI.isCheck("archive")) {
             List<StaffRecordsBO> staffRecordsBOS = staffRecordsAPI.findByMonth(dto.getMonth());
-            if (staffRecordsBOS != null && !staffRecordsBOS.isEmpty()) {
+            List<StaffBirthDayBO> bos = new ArrayList<>(staffRecordsBOS.size());
+            if (staffRecordsBOS != null && staffRecordsBOS.size() > 0) {
                 if (moduleAPI.isCheck("dimission")) {
                     for (StaffRecordsBO staffRecordsBO : staffRecordsBOS) {
                         List<DimissionInfo> infoList = dimissionInfoAPI.findByName(staffRecordsBO.getUsername());
-                        if (infoList == null && infoList.isEmpty()) {
-                            for (StaffBirthDayBO staffBirthDayBO : boList) {
+                        if (infoList != null && infoList.size() > 0) {
+                            for (DimissionInfo dimissionInfo : infoList) {
                                 List<EntryBasicInfoBO> entryBasicInfo = entryBasicInfoAPI.getByEmpNumber(staffRecordsBO.getSerialNumber());
+                                StaffBirthDayBO staffBirthDayBO = new StaffBirthDayBO();
                                 if (entryBasicInfo != null && !entryBasicInfo.isEmpty()) {
                                     staffBirthDayBO.setArea(entryBasicInfo.get(0).getArea());
                                     staffBirthDayBO.setDepartment(entryBasicInfo.get(0).getDepartment());
                                     staffBirthDayBO.setUserName(entryBasicInfo.get(0).getName());
+                                    staffBirthDayBO.setIfDimission(true);
+                                    staffBirthDayBO.setDimissionDate(dimissionInfo.getDimissionDate().toString().replace("T", " "));
                                     staffBirthDayBO.setMonth(dto.getMonth());
                                 } else {
                                     throw new SerException("公司不存在该员工");
                                 }
+                                boList.add(staffBirthDayBO);
                             }
                         } else {
-                            for (StaffBirthDayBO staffBirthDayBO : boList) {
-                                for(DimissionInfo dimissionInfo : infoList) {
-                                    List<EntryBasicInfoBO> entryBasicInfo = entryBasicInfoAPI.getByEmpNumber(staffRecordsBO.getSerialNumber());
-                                    if (entryBasicInfo != null && !entryBasicInfo.isEmpty()) {
-                                        staffBirthDayBO.setArea(entryBasicInfo.get(0).getArea());
-                                        staffBirthDayBO.setDepartment(entryBasicInfo.get(0).getDepartment());
-                                        staffBirthDayBO.setUserName(entryBasicInfo.get(0).getName());
-                                        staffBirthDayBO.setIfDimission(true);
-                                        staffBirthDayBO.setDimissionDate(dimissionInfo.getDimissionDate().toString().replace("T"," "));
-                                        staffBirthDayBO.setMonth(dto.getMonth());
-                                    } else {
-                                        throw new SerException("公司不存在该员工");
-                                    }
-                                }
+                            StaffBirthDayBO staffBirthDayBO = new StaffBirthDayBO();
+                            List<EntryBasicInfoBO> entryBasicInfo = entryBasicInfoAPI.getByEmpNumber(staffRecordsBO.getSerialNumber());
+                            if (entryBasicInfo != null && !entryBasicInfo.isEmpty()) {
+                                staffBirthDayBO.setArea(entryBasicInfo.get(0).getArea());
+                                staffBirthDayBO.setDepartment(entryBasicInfo.get(0).getDepartment());
+                                staffBirthDayBO.setUserName(entryBasicInfo.get(0).getName());
+                                staffBirthDayBO.setMonth(dto.getMonth());
+                            } else {
+                                throw new SerException("公司不存在该员工");
                             }
+                            boList.add(staffBirthDayBO);
                         }
                     }
 
                 }
             } else {
                 for (StaffRecordsBO staffRecordsBO : staffRecordsBOS) {
-                    for (StaffBirthDayBO staffBirthDayBO : boList) {
-                        List<EntryBasicInfoBO> entryBasicInfo = entryBasicInfoAPI.getByEmpNumber(staffRecordsBO.getSerialNumber());
-                        if (entryBasicInfo != null && !entryBasicInfo.isEmpty()) {
-                            staffBirthDayBO.setArea(entryBasicInfo.get(0).getArea());
-                            staffBirthDayBO.setDepartment(entryBasicInfo.get(0).getDepartment());
-                            staffBirthDayBO.setUserName(entryBasicInfo.get(0).getName());
-                            staffBirthDayBO.setMonth(dto.getMonth());
-                        } else {
-                            throw new SerException("公司不存在该员工");
-                        }
+                    List<EntryBasicInfoBO> entryBasicInfo = entryBasicInfoAPI.getByEmpNumber(staffRecordsBO.getSerialNumber());
+                    StaffBirthDayBO staffBirthDayBO = new StaffBirthDayBO();
+                    if (entryBasicInfo != null && entryBasicInfo.size() > 0) {
+                        staffBirthDayBO.setArea(entryBasicInfo.get(0).getArea());
+                        staffBirthDayBO.setDepartment(entryBasicInfo.get(0).getDepartment());
+                        staffBirthDayBO.setUserName(entryBasicInfo.get(0).getName());
+                        staffBirthDayBO.setMonth(dto.getMonth());
+                    } else {
+                        throw new SerException("公司不存在该员工");
                     }
+                    boList.add(staffBirthDayBO);
                 }
             }
         }

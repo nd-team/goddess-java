@@ -1,5 +1,6 @@
 package com.bjike.goddess.materialtransfer.action.materialtransfer;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -9,6 +10,7 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialinstock.api.MaterialInStockAPI;
+import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
 import com.bjike.goddess.materialtransfer.api.MaterialTransferAPI;
 import com.bjike.goddess.materialtransfer.bo.MaterialTransferBO;
 import com.bjike.goddess.materialtransfer.dto.MaterialTransferDTO;
@@ -21,7 +23,9 @@ import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 物资调动
@@ -55,6 +60,11 @@ public class MaterialTransferAct {
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private MaterialInStockAPI materialInStockAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+
     /**
      * 模块设置导航权限
      *
@@ -124,6 +134,7 @@ public class MaterialTransferAct {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 根据id查询物资调动
      *
@@ -313,6 +324,7 @@ public class MaterialTransferAct {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 添加中所有的地区
      *
@@ -321,12 +333,16 @@ public class MaterialTransferAct {
     @GetMapping("v1/allArea")
     public Result allArea() throws ActException {
         try {
-            List<AreaBO> area = departmentDetailAPI.findArea();
+            List<AreaBO> area = new ArrayList<>(0);
+            if (moduleAPI.isCheck("organize")) {
+                area = departmentDetailAPI.findArea();
+            }
             return ActResult.initialize(area);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有用户
      *
@@ -335,13 +351,20 @@ public class MaterialTransferAct {
     @GetMapping("v1/allGetPerson")
     public Result allGetPerson() throws ActException {
         try {
-            List<String> getPerson = new ArrayList<>();
-            getPerson = materialTransferAPI.findallMonUser();
+            List<String> getPerson = new ArrayList<>(0);
+//            getPerson = materialTransferAPI.findallMonUser();
+            if (moduleAPI.isCheck("organize")) {
+                List<UserBO> userBOs = positionDetailUserAPI.findUserListInOrgan();
+                if (!CollectionUtils.isEmpty(userBOs)) {
+                    getPerson = userBOs.stream().map(UserBO::getUsername).distinct().collect(Collectors.toList());
+                }
+            }
             return ActResult.initialize(getPerson);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有入库编号
      *
@@ -353,6 +376,57 @@ public class MaterialTransferAct {
             Set<String> getNo = new HashSet<>();
             getNo = materialInStockAPI.allstockEncoding();
             return ActResult.initialize(new ArrayList<>(getNo));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取物资名称
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findMaterialName")
+    public Result findMaterialName() throws ActException {
+        try {
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("materialinstock")) {
+                List<MaterialInStockBO> materialInStockBOs = materialInStockAPI.findAll();
+                if (!CollectionUtils.isEmpty(materialInStockBOs)) {
+                    list = materialInStockBOs.stream().map(MaterialInStockBO::getMaterialName).distinct().collect(Collectors.toList());
+                }
+            }
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取物资型号
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findModel")
+    public Result findModel() throws ActException {
+        try {
+            List<String> list = materialTransferAPI.findModel();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取单位
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findUnit")
+    public Result findUnit() throws ActException {
+        try {
+            List<String> list = materialTransferAPI.findUnit();
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -307,7 +307,7 @@ public class HeadPortraitHatSerImpl extends ServiceImpl<HeadPortraitHat, HeadPor
         }
 //        fileAPI.upload(to.getMap(), path);
         model.setUrl(path);
-      //  super.save(model);
+        super.save(model);
         to.setId(model.getId());
         return BeanTransform.copyProperties(to, HeadPortraitHatBO.class);
     }
@@ -338,7 +338,7 @@ public class HeadPortraitHatSerImpl extends ServiceImpl<HeadPortraitHat, HeadPor
         checkSeeIdentity();
         dto.getSorts().add("createTime=desc");
         //
-        dto.getConditions().add(Restrict.or("createUser", getCurrentUser().getUsername()));
+//        dto.getConditions().add(Restrict.or("createUser", getCurrentUser().getUsername()));
         List<HeadPortraitHat> list = super.findByPage(dto);
         return BeanTransform.copyProperties(list, HeadPortraitHatBO.class);
     }

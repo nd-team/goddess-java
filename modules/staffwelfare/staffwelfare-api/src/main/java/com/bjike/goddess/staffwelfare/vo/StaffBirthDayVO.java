@@ -7,7 +7,7 @@ public class StaffBirthDayVO {
     /**
      * 月份
      */
-    private String month;
+    private Integer month;
     /**
      * 员工姓名
      */
@@ -34,11 +34,11 @@ public class StaffBirthDayVO {
      */
     private String dimissionDate;
 
-    public String getMonth() {
+    public Integer getMonth() {
         return month;
     }
 
-    public void setMonth(String month) {
+    public void setMonth(Integer month) {
         this.month = month;
     }
 

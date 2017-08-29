@@ -76,6 +76,21 @@ public class CustomerInfoCollectAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 获取所有投资人
+     *
+     * @des 获取所有投资人
+     * @version v1
+     */
+    @GetMapping("v1/investor")
+    public Result investor() throws ActException {
+        try {
+            List<String> boList = customerInfoCollectAPI.getInvestor();
+            return ActResult.initialize(boList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
 }

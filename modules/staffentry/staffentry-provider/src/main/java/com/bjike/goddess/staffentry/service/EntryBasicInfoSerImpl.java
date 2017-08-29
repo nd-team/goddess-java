@@ -212,16 +212,16 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
                 entryBasicInfo = super.findById(entryBasicInfoTO.getId());
 
                 StringBuffer content = new StringBuffer("");
-                content.append(" 员工编号：" + entryBasicInfoTO.getEmployeeID())
-                        .append(" 姓名:" + entryBasicInfoTO.getName())
-                        .append(" 专业:" + entryBasicInfoTO.getProfession())
-                        .append(" 联系电话:" + entryBasicInfoTO.getPhone())
-                        .append(" 邮箱账号:" + entryBasicInfoTO.getEmail())
-                        .append(" 入职时间:" + entryBasicInfoTO.getEntryTime())
-                        .append(" 入职地区:" + entryBasicInfoTO.getArea())
-                        .append(" 入职部门:" + entryBasicInfoTO.getDepartment())
-                        .append(" 入职项目组:" + entryBasicInfoTO.getProjectGroup())
-                        .append(" 入职岗位:" + entryBasicInfoTO.getPosition())
+                content.append(" 员工编号：" + entryBasicInfo.getEmployeeID())
+                        .append(" 姓名:" + entryBasicInfo.getName())
+                        .append(" 专业:" + entryBasicInfo.getProfession())
+                        .append(" 联系电话:" + entryBasicInfo.getPhone())
+                        .append(" 邮箱账号:" + entryBasicInfo.getEmail())
+                        .append(" 入职时间:" + entryBasicInfo.getEntryTime())
+                        .append(" 入职地区:" + entryBasicInfo.getArea())
+                        .append(" 入职部门:" + entryBasicInfo.getDepartment())
+                        .append(" 入职项目组:" + entryBasicInfo.getProjectGroup())
+                        .append(" 入职岗位:" + entryBasicInfo.getPosition())
                 ;
 
                 //发邮件

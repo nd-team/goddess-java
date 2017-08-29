@@ -1,5 +1,6 @@
 package com.bjike.goddess.oilcardmanage.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -7,6 +8,9 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
+import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
+import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
+import com.bjike.goddess.dispatchcar.enums.FindType;
 import com.bjike.goddess.oilcardmanage.bo.AnalyzeBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardRechargeBO;
@@ -52,6 +56,9 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 核对查看权限（层级别）
@@ -184,6 +191,9 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
             case SEEFILE:
                 flag = guideSeeIdentity();
                 break;
+            case ANALYZE:
+                flag = guideSeeIdentity();
+                break;
             default:
                 flag = true;
                 break;
@@ -206,7 +216,7 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
         if (oilCardBasic != null) {
             OilCardRecharge model = BeanTransform.copyProperties(to, OilCardRecharge.class, true);
 
-            to.setId(model.getId());
+//            to.setId(model.getId());
 
 
             //充值：修改油卡期初金额及余额
@@ -219,7 +229,7 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
             model.setCycleEarlyMoney(oilCardBasic.getCycleEarlyMoney());
 
             super.save(model);
-            return BeanTransform.copyProperties(to, OilCardRechargeBO.class);
+            return BeanTransform.copyProperties(model, OilCardRechargeBO.class);
         } else {
             throw new SerException("非法oilCardBasicId,油卡信息对象不能为空!");
         }
@@ -411,6 +421,24 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
     public OilCardRechargeBO findBy(String id) throws SerException {
         OilCardRecharge oilCardRecharge = super.findById(id);
         OilCardRechargeBO bo = BeanTransform.copyProperties(oilCardRecharge,OilCardRechargeBO.class);
+        bo.setOilCardBasicId(oilCardRecharge.getOilCardBasic().getId());
+        bo.setOilCardCode(oilCardRecharge.getOilCardBasic().getOilCardCode());
         return bo;
+    }
+
+    @Override
+    public List<DispatchCarInfoBO> findDispatch(String oilCardCode, String startTime, String endTime) throws SerException {
+        List<DispatchCarInfoBO> bos = new ArrayList<>(0);
+        if(moduleAPI.isCheck("dispatchcarinfo")) {
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
+            DispatchCarInfoDTO dto = new DispatchCarInfoDTO();
+            dto.getConditions().add(Restrict.ne("findType", FindType.WAITAUDIT));
+            dto.getConditions().add(Restrict.gt("addOilTime", startTime));
+            dto.getConditions().add(Restrict.lt("addOilTime", endTime));
+            dto.getConditions().add(Restrict.eq("oilCardNumber", oilCardCode));
+            bos = dispatchCarInfoAPI.pageList(dto);
+        }
+        return bos;
     }
 }

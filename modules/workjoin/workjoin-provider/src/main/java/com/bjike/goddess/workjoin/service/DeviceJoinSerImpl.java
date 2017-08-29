@@ -1,9 +1,13 @@
 package com.bjike.goddess.workjoin.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.materialinstock.api.MaterialInStockAPI;
+import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
+import com.bjike.goddess.materialinstock.dto.MaterialInStockDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.workjoin.bo.DeviceJoinBO;
@@ -18,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,6 +42,12 @@ public class DeviceJoinSerImpl extends ServiceImpl<DeviceJoin, DeviceJoinDTO> im
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
+
+    @Autowired
+    private MaterialInStockAPI materialInStockAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -225,4 +236,15 @@ public class DeviceJoinSerImpl extends ServiceImpl<DeviceJoin, DeviceJoinDTO> im
 
     }
 
+    @Override
+    public List<MaterialInStockBO> findMaterial() throws SerException {
+        List<MaterialInStockBO> boList = new ArrayList<>(0);
+        if(moduleAPI.isCheck("materialinstock")){
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
+            MaterialInStockDTO dto = new MaterialInStockDTO();
+            boList = materialInStockAPI.list(dto);
+        }
+        return boList;
+    }
 }

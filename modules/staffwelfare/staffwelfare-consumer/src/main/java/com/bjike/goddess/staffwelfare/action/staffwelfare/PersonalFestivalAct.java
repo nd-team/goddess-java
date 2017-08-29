@@ -69,7 +69,7 @@ public class PersonalFestivalAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class)PersonalFestivalTO to, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(ADD.class) PersonalFestivalTO to, BindingResult bindingResult) throws ActException {
         try {
             PersonalFestivalVO vo = BeanTransform.copyProperties(personalFestivalAPI.addModel(to), PersonalFestivalVO.class);
             return ActResult.initialize(vo);
@@ -86,7 +86,7 @@ public class PersonalFestivalAct {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class)PersonalFestivalTO to, BindingResult bindingResult) throws ActException {
+    public Result edit(@Validated(EDIT.class) PersonalFestivalTO to, BindingResult bindingResult) throws ActException {
         try {
             PersonalFestivalVO vo = BeanTransform.copyProperties(personalFestivalAPI.editModel(to), PersonalFestivalVO.class);
             return ActResult.initialize(vo);
@@ -105,7 +105,7 @@ public class PersonalFestivalAct {
     public Result delete(@PathVariable String id) throws ActException {
         try {
             personalFestivalAPI.delete(id);
-            return new ActResult();
+            return new ActResult("删除个人节日信息成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -169,8 +169,8 @@ public class PersonalFestivalAct {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/find/one/{id}")
-    public Result findOne(String id) throws ActException{
+    @GetMapping("v1/find/one")
+    public Result findOne(@RequestParam String id) throws ActException{
         try {
             PersonalFestivalBO bo = personalFestivalAPI.findOne(id);
             PersonalFestivalVO vo = BeanTransform.copyProperties(bo,PersonalFestivalVO.class);

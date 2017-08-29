@@ -30,4 +30,5 @@ dependencies {
     compile project(":common:common-provider")
     compile project(":common:common-utils")
     compile project(":modules:staffentry:staffentry-api")
+
 }

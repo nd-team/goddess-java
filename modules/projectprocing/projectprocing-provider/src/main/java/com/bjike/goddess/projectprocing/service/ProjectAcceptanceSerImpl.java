@@ -1,5 +1,9 @@
 package com.bjike.goddess.projectprocing.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.businessproject.api.BaseInfoManageAPI;
+import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
+import com.bjike.goddess.businessproject.dto.BaseInfoManageDTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -17,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +38,12 @@ import java.util.List;
 public class ProjectAcceptanceSerImpl extends ServiceImpl<ProjectAcceptance, ProjectAcceptanceDTO> implements ProjectAcceptanceSer {
     @Autowired
     private CusPermissionSer cusPermissionSer;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
+
+    @Autowired
+    private BaseInfoManageAPI baseInfoManageAPI;
 
     @Override
     public Long countProjectAcceptance(ProjectAcceptanceDTO projectAcceptanceDTO) throws SerException {
@@ -129,5 +140,17 @@ public class ProjectAcceptanceSerImpl extends ServiceImpl<ProjectAcceptance, Pro
     public List<ProjectAcceptanceBO> searchListProjectAcceptance(ProjectAcceptanceDTO projectAcceptanceDTO) throws SerException {
         List<ProjectAcceptance> list = super.findByCis(projectAcceptanceDTO,true);
         return BeanTransform.copyProperties(list,ProjectAcceptanceBO.class);
+    }
+
+    @Override
+    public List<BaseInfoManageBO> findManage() throws SerException {
+        List<BaseInfoManageBO> boList = new ArrayList<>(0);
+        if(moduleAPI.isCheck("businessproject")){
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
+            BaseInfoManageDTO dto = new BaseInfoManageDTO();
+            boList = baseInfoManageAPI.listBaseInfoManage(dto);
+        }
+        return boList;
     }
 }

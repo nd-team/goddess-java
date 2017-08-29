@@ -2,6 +2,7 @@ package com.bjike.goddess.workjoin.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.organize.bo.PositionInstructionBO;
 import com.bjike.goddess.workjoin.bo.JoinInfoBO;
 import com.bjike.goddess.workjoin.bo.TaskJoinBO;
 import com.bjike.goddess.workjoin.dto.JoinInfoDTO;
@@ -95,5 +96,10 @@ public interface TaskJoinSer extends Ser<TaskJoin, TaskJoinDTO> {
     default void removeTaskJoin(String id) throws SerException {
 
     }
+
+    /**
+     * 查询汇报对象
+     */
+    List<PositionInstructionBO> findPosition() throws SerException;
 
 }

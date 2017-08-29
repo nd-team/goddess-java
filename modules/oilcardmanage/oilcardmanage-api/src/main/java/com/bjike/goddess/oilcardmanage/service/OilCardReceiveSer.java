@@ -80,9 +80,9 @@ public interface OilCardReceiveSer extends Ser<OilCardReceive, OilCardReceiveDTO
      *
      * @param id                   id
      * @param auditSuggestion      审核意见
-     * @param oilCardReceiveResult 审核结果
+     * @param auditResult 审核结果
      */
-    void audit(String id, String auditSuggestion, OilCardReceiveResult oilCardReceiveResult) throws SerException;
+    void audit(String id, String auditSuggestion, OilCardReceiveResult auditResult) throws SerException;
 
     /**
      * 查询所有未冻结的油卡
@@ -102,5 +102,12 @@ public interface OilCardReceiveSer extends Ser<OilCardReceive, OilCardReceiveDTO
      * @throws SerException
      */
     List<String> findOperate() throws SerException;
+
+    /**
+     * 根据iD查询油卡领用信息
+     *
+     * @param id id
+     */
+    OilCardReceiveBO findOne(String id) throws SerException;
 
 }

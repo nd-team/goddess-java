@@ -118,4 +118,24 @@ public interface MaterialTransferSer extends Ser<MaterialTransfer, MaterialTrans
     default List<String> findallMonUser() throws SerException {
         return null;
     }
+
+    /**
+     * 获取物资入库型号
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findModel() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取单位
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findUnit() throws SerException {
+        return null;
+    }
 }

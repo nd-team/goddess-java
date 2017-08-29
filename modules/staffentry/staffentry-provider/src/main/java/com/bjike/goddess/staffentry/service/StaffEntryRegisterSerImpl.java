@@ -1,5 +1,6 @@
 package com.bjike.goddess.staffentry.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
@@ -12,11 +13,9 @@ import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.staffentry.bo.StaffEntryRegisterBO;
 import com.bjike.goddess.staffentry.dto.StaffEntryRegisterDTO;
-import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
-import com.bjike.goddess.staffentry.entity.EntryRegister;
-import com.bjike.goddess.staffentry.entity.SalaryConfirmRecord;
 import com.bjike.goddess.staffentry.entity.StaffEntryRegister;
 import com.bjike.goddess.staffentry.enums.GuideAddrStatus;
 import com.bjike.goddess.staffentry.to.GuidePermissionTO;
@@ -26,14 +25,13 @@ import com.bjike.goddess.staffentry.vo.SonPermissionObject;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dto.UserDTO;
-import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.enums.UserType;
 import com.bjike.goddess.user.to.UserTO;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -64,6 +62,10 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private MessageAPI messageAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     /**
      * 添加等权限 检测模块
@@ -115,9 +117,9 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
     public List<SonPermissionObject> sonPermission() throws SerException {
         List<SonPermissionObject> list = new ArrayList<>();
         String userToken = RpcTransmit.getUserToken();
-        Boolean flagSee = checkLevelIdentity( "1" );
+        Boolean flagSee = checkLevelIdentity("1");
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAdd = checkLevelIdentity( "8" );
+        Boolean flagAdd = checkLevelIdentity("8");
         RpcTransmit.transmitUserToken(userToken);
 
         SonPermissionObject obj = new SonPermissionObject();
@@ -125,7 +127,7 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         obj = new SonPermissionObject();
         obj.setName("staffentryregister");
         obj.setDescribesion("用户注册");
-        if (flagSee || flagAdd ) {
+        if (flagSee || flagAdd) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -135,10 +137,10 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         //入职基本信息
         flagSee = entryBasicInfoSer.sonPermission();
         RpcTransmit.transmitUserToken(userToken);
-         obj = new SonPermissionObject();
+        obj = new SonPermissionObject();
         obj.setName("entrybasicinfo");
         obj.setDescribesion("入职基本信息");
-        if (flagSee ) {
+        if (flagSee) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -148,10 +150,10 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         //入职登记信息
         flagSee = entryRegisterSer.sonPermission();
         RpcTransmit.transmitUserToken(userToken);
-         obj = new SonPermissionObject();
+        obj = new SonPermissionObject();
         obj.setName("entryregister");
         obj.setDescribesion("入职登记");
-        if (flagSee ) {
+        if (flagSee) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -161,10 +163,10 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         //薪资确认
         flagSee = salaryConfirmRecordSer.sonPermission();
         RpcTransmit.transmitUserToken(userToken);
-         obj = new SonPermissionObject();
+        obj = new SonPermissionObject();
         obj.setName("salaryConfirmRecord");
         obj.setDescribesion("薪资确认");
-        if (flagSee ) {
+        if (flagSee) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -181,25 +183,25 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         Boolean flag = true;
         switch (guideAddrStatus) {
             case LIST:
-                flag = checkLevelIdentity( "1" );
+                flag = checkLevelIdentity("1");
                 break;
             case ADD:
-                flag = checkLevelIdentity( "8" );
+                flag = checkLevelIdentity("8");
                 break;
             case EDIT:
-                flag = checkLevelIdentity( "8" );
+                flag = checkLevelIdentity("8");
                 break;
             case DELETE:
-                flag = checkLevelIdentity( "8" );
+                flag = checkLevelIdentity("8");
                 break;
             case IMPORT:
-                flag = checkLevelIdentity( "8" );
+                flag = checkLevelIdentity("8");
                 break;
             case EXPORT:
-                flag = checkLevelIdentity( "8" );
+                flag = checkLevelIdentity("8");
                 break;
             case SEE:
-                flag = checkLevelIdentity( "1" );
+                flag = checkLevelIdentity("1");
                 break;
             default:
                 flag = true;
@@ -360,30 +362,34 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
     public String maxEmpNumber() throws SerException {
         String empNumber = userAPI.maxUserEmpNumber();
         return empNumber;
+//        if(moduleAPI.isCheck("organize")){
+//            List<UserBO> userBOList = positionDetailUserAPI.findUserListInOrgan();
+//
+//        }
     }
 
     @Override
     public void sendAccountToEmp(StaffEntryRegisterEmailTO staffEntryRegisterEmailTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
-        if( StringUtils.isBlank(staffEntryRegisterEmailTO.getEmpId()) ){
+        if (StringUtils.isBlank(staffEntryRegisterEmailTO.getEmpId())) {
             throw new SerException("id不能为空");
         }
-        if( StringUtils.isNotBlank(staffEntryRegisterEmailTO.getEmailAccount()) && !Validator.isEmail(staffEntryRegisterEmailTO.getEmailAccount().trim())){
+        if (StringUtils.isNotBlank(staffEntryRegisterEmailTO.getEmailAccount()) && !Validator.isEmail(staffEntryRegisterEmailTO.getEmailAccount().trim())) {
             throw new SerException("邮箱书写不正确");
         }
-        StaffEntryRegister staffEntryRegister = super.findById( staffEntryRegisterEmailTO.getEmpId() );
+        StaffEntryRegister staffEntryRegister = super.findById(staffEntryRegisterEmailTO.getEmpId());
         String userId = staffEntryRegister.getUserId();
         UserDTO userDTO = new UserDTO();
-        userDTO.getConditions().add( Restrict.eq("id" , userId ));
-        List<UserBO> userBOList = userAPI.findByCis( userDTO );
+        userDTO.getConditions().add(Restrict.eq("id", userId));
+        List<UserBO> userBOList = userAPI.findByCis(userDTO);
 
-        RpcTransmit.transmitUserToken( userToken );
-        if( userBOList != null && userBOList.size()>0 ){
+        RpcTransmit.transmitUserToken(userToken);
+        if (userBOList != null && userBOList.size() > 0) {
             String userAccount = userBOList.get(0).getEmployeeNumber();
             String password = userBOList.get(0).getPassword();
 
             //发送员工帐号（编号） 和密码给员工
-            String messageContent = "您的入职帐号和密码为: 帐号：" + userAccount +" 密码：密码请让相关人员告知 ,请保管好您的帐号密码! ";
+            String messageContent = "您的入职帐号和密码为: 帐号：" + userAccount + " 密码：密码请让相关人员告知 ,请保管好您的帐号密码! ";
             MessageTO messageTO = new MessageTO();
             messageTO.setContent(messageContent);
             messageTO.setTitle("帐号密码告知");
@@ -394,10 +400,20 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
             messageTO.setSenderId("SYSTEM");
             messageTO.setSenderName("SYSTEM");
 
-            messageTO.setReceivers( new String[]{staffEntryRegisterEmailTO.getEmailAccount()} );
+            messageTO.setReceivers(new String[]{staffEntryRegisterEmailTO.getEmailAccount()});
             messageAPI.send(messageTO);
         }
 
 
+    }
+
+    @Override
+    public String getMaxEmpNumberByName(String name) throws SerException {
+//        if (moduleAPI.isCheck("organize")) {
+//            List<UserBO> userBOs = positionDetailUserAPI.findUserListInOrgan();
+//            if(!CollectionUtils.isEmpty(userBOs)){}
+//        }
+
+        return null;
     }
 }

@@ -88,6 +88,12 @@ public class OilCardReceiveVO {
      */
     private OilCardBasicVO oilCardBasicVO;
 
+    /**
+     * 油卡id
+     */
+
+    private String oilCardBasicId;
+
     public String getId() {
         return id;
     }
@@ -206,5 +212,13 @@ public class OilCardReceiveVO {
 
     public void setOilCardBasicVO(OilCardBasicVO oilCardBasicVO) {
         this.oilCardBasicVO = oilCardBasicVO;
+    }
+
+    public String getOilCardBasicId() {
+        return oilCardBasicId;
+    }
+
+    public void setOilCardBasicId(String oilCardBasicId) {
+        this.oilCardBasicId = oilCardBasicId;
     }
 }

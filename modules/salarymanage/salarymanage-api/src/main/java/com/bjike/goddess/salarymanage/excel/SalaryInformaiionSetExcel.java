@@ -248,7 +248,7 @@ public class SalaryInformaiionSetExcel {
      * 个税
      */
     @ExcelHeader(name = "个税",notNull = true)
-    private Double  personTax;
+    private Boolean  personTax;
 
     /**
      * 奖励处罚得分汇总
@@ -582,12 +582,15 @@ public class SalaryInformaiionSetExcel {
     public void setUtilities (Double utilities ) {
         this.utilities = utilities ;
     }
-    public Double getPersonTax () {
+
+    public Boolean getPersonTax() {
         return personTax;
     }
-    public void setPersonTax (Double personTax ) {
-        this.personTax = personTax ;
+
+    public void setPersonTax(Boolean personTax) {
+        this.personTax = personTax;
     }
+
     public Double getAllRewardScore () {
         return allRewardScore;
     }

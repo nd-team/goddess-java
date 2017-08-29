@@ -4,4 +4,9 @@ dependencies {
     compile project(":common:common-utils")
     compile project(":modules:user:user-api")
     compile project(":modules:organize:organize-api")
+    compile project(":modules:assemble:assemble-api")
+    compile project(":modules:regularization:regularization-api")
+    compile project(":modules:archive:archive-api")
+    compile project(":modules:event:event-api")
+
 }

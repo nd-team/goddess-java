@@ -1,6 +1,11 @@
 package com.bjike.goddess.individualvision.action.individualvision;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.archive.api.StaffRecordsAPI;
+import com.bjike.goddess.archive.bo.StaffRecordsBO;
+import com.bjike.goddess.archive.vo.StaffRecordsVO;
 import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -17,9 +22,14 @@ import com.bjike.goddess.individualvision.to.GuidePermissionTO;
 import com.bjike.goddess.individualvision.to.IndividualVisionPlanTO;
 import com.bjike.goddess.individualvision.vo.IndividualVisionPlanVO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.vo.AreaVO;
 import com.bjike.goddess.organize.vo.DepartmentDetailVO;
+import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -48,6 +58,10 @@ public class IndividualVisionPlanAction {
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private ModuleAPI moduleAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private StaffRecordsAPI staffRecordsAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
 
@@ -189,7 +203,7 @@ public class IndividualVisionPlanAction {
     public Result add(@Validated(ADD.class) IndividualVisionPlanTO individualVisionPlanTO, BindingResult bindingResult) throws ActException {
         try {
             IndividualVisionPlanBO individualVisionPlanBO = individualVisionPlanAPI.insertIndividualVisionPlan(individualVisionPlanTO);
-            return ActResult.initialize(BeanTransform.copyProperties(individualVisionPlanBO,IndividualVisionPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(individualVisionPlanBO, IndividualVisionPlanVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -207,7 +221,7 @@ public class IndividualVisionPlanAction {
     public Result edit(@Validated(EDIT.class) IndividualVisionPlanTO individualVisionPlanTO, BindingResult bindingResult) throws ActException {
         try {
             IndividualVisionPlanBO individualVisionPlanBO = individualVisionPlanAPI.editIndividualVisionPlan(individualVisionPlanTO);
-            return ActResult.initialize(BeanTransform.copyProperties(individualVisionPlanBO,IndividualVisionPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(individualVisionPlanBO, IndividualVisionPlanVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -239,7 +253,7 @@ public class IndividualVisionPlanAction {
      * @version v1
      */
     @PostMapping("v1/audit")
-    public Result audit(@Validated(IndividualVisionPlanTO.TestAudit.class) IndividualVisionPlanTO individualVisionPlanTO,BindingResult bindingResult) throws ActException {
+    public Result audit(@Validated(IndividualVisionPlanTO.TestAudit.class) IndividualVisionPlanTO individualVisionPlanTO, BindingResult bindingResult) throws ActException {
         try {
             IndividualVisionPlanBO individualVisionPlanBO = individualVisionPlanAPI.auditIndividualVisionPlan(individualVisionPlanTO);
             return ActResult.initialize(BeanTransform.copyProperties(individualVisionPlanBO, IndividualVisionPlanVO.class));
@@ -247,6 +261,28 @@ public class IndividualVisionPlanAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 查询地区
+     *
+     * @return class AreaVO
+     * @version v1
+     */
+    @GetMapping("v1/area")
+    public Result area(HttpServletRequest request) throws ActException {
+        try {
+            List<AreaBO> boList = new ArrayList<>();
+            String userToken = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, userToken);
+                boList = departmentDetailAPI.findArea();
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(boList, AreaVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
     /**
      * 查询未冻结部门项目组详细信息
      *
@@ -257,10 +293,55 @@ public class IndividualVisionPlanAction {
     public Result department(HttpServletRequest request) throws ActException {
         try {
             List<DepartmentDetailBO> boList = new ArrayList<>();
-            if(moduleAPI.isCheck("organize")){
+            String userToken = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, userToken);
                 boList = departmentDetailAPI.findStatus();
             }
             return ActResult.initialize(BeanTransform.copyProperties(boList, DepartmentDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询用户
+     *
+     * @return class UserVO
+     * @version v1
+     */
+    @GetMapping("v1/user")
+    public Result user(HttpServletRequest request) throws ActException {
+        try {
+            List<UserBO> userBOS = new ArrayList<>();
+            String userToken=request.getHeader(RpcCommon.USER_TOKEN).toString();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, userToken);
+                userBOS = positionDetailUserAPI.findUserListInOrgan();
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(userBOS, UserVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据姓名查询入职时间
+     *
+     * @return class StaffRecordsVO
+     * @version v1
+     */
+    @GetMapping("v1/entryTime")
+    public Result entryTime(String username, HttpServletRequest request) throws ActException {
+        try {
+            StaffRecordsBO bo = null;
+            String userToken = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            if (moduleAPI.isCheck("archive")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, userToken);
+                bo = staffRecordsAPI.findByName(username);
+
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(bo, StaffRecordsVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

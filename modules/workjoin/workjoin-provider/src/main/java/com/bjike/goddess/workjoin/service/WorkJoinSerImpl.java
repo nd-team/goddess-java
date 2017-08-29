@@ -1,9 +1,11 @@
 package com.bjike.goddess.workjoin.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.workjoin.bo.WorkJoinBO;
@@ -51,6 +53,12 @@ public class WorkJoinSerImpl extends ServiceImpl<WorkJoin, WorkJoinDTO> implemen
     private WorkJoinDutySer workJoinDutySer;
     @Autowired
     private WorkJoinTimeSpecificationSer workJoinTimeSpecificationSer;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
+
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -408,4 +416,14 @@ public class WorkJoinSerImpl extends ServiceImpl<WorkJoin, WorkJoinDTO> implemen
         return BeanTransform.copyProperties(workJoin, WorkJoinBO.class);
     }
 
+    @Override
+    public List<UserBO> findUser() throws SerException {
+        List<UserBO> boList = new ArrayList<>(0);
+        if(moduleAPI.isCheck("organize")){
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
+            boList = positionDetailUserAPI.findUserList();
+        }
+        return boList;
+    }
 }

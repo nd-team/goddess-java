@@ -26,14 +26,14 @@ public class WaitPay extends BaseEntity {
     /**
      * 年份
      */
-    @Column(name = "year", nullable = false, columnDefinition = "INT(11)   COMMENT '年份'")
-    private Integer year;
+    @Column(name = "year", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '年份'")
+    private String year;
 
     /**
      * 月份
      */
-    @Column(name = "month", nullable = false, columnDefinition = "INT(11)   COMMENT '月份'")
-    private Integer month;
+    @Column(name = "month", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '月份'")
+    private String month;
 
     /**
      * 地区
@@ -121,19 +121,19 @@ public class WaitPay extends BaseEntity {
     private String remark;
 
 
-    public Integer getYear() {
+    public String getYear() {
         return year;
     }
 
-    public void setYear(Integer year) {
+    public void setYear(String year) {
         this.year = year;
     }
 
-    public Integer getMonth() {
+    public String getMonth() {
         return month;
     }
 
-    public void setMonth(Integer month) {
+    public void setMonth(String month) {
         this.month = month;
     }
 

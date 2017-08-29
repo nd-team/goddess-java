@@ -137,8 +137,8 @@ public class StaffEntryRegisterAction {
      * 一个注册用户
      *
      * @param id 注册用户信息id
-     * @des 根据id查询注册用户
      * @return class StaffEntryRegisterVO
+     * @des 根据id查询注册用户
      * @version v1
      */
     @GetMapping("v1/getOne/{id}")
@@ -156,8 +156,8 @@ public class StaffEntryRegisterAction {
      * 列表
      *
      * @param staffEntryRegisterDTO 入职注册dto数据
-     * @des 获取所有用户
      * @return class StaffEntryRegisterVO
+     * @des 获取所有用户
      * @version v1
      */
     @GetMapping(value = "v1/list")
@@ -177,16 +177,16 @@ public class StaffEntryRegisterAction {
      * 添加注册用户
      *
      * @param staffEntryRegisterTO 用户数据
-     * @des 添加用户和用户相关的信息
      * @return class StaffEntryRegisterVO
+     * @des 添加用户和用户相关的信息
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/add")
     public Result addUsers(@Validated(StaffEntryRegisterTO.TestAdd.class) StaffEntryRegisterTO staffEntryRegisterTO) throws ActException {
         try {
-            StaffEntryRegisterBO staffEntryRegisterBO = staffEntryRegisterAPI.addStaffEntryRegister( staffEntryRegisterTO);
-            return ActResult.initialize(BeanTransform.copyProperties(staffEntryRegisterBO,StaffEntryRegisterVO.class));
+            StaffEntryRegisterBO staffEntryRegisterBO = staffEntryRegisterAPI.addStaffEntryRegister(staffEntryRegisterTO);
+            return ActResult.initialize(BeanTransform.copyProperties(staffEntryRegisterBO, StaffEntryRegisterVO.class));
 
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -198,16 +198,16 @@ public class StaffEntryRegisterAction {
      * 修改用户
      *
      * @param staffEntryRegisterTO 用户数据
-     * @des 添加用户和用户相关的信息
      * @return class StaffEntryRegisterVO
+     * @des 添加用户和用户相关的信息
      * @version v1
      */
     @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated(StaffEntryRegisterTO.TestAdd.class) StaffEntryRegisterTO staffEntryRegisterTO) throws ActException {
         try {
-            StaffEntryRegisterBO staffEntryRegisterBO = staffEntryRegisterAPI.editStaffEntryRegister( staffEntryRegisterTO);
-            return ActResult.initialize(BeanTransform.copyProperties(staffEntryRegisterBO,StaffEntryRegisterVO.class));
+            StaffEntryRegisterBO staffEntryRegisterBO = staffEntryRegisterAPI.editStaffEntryRegister(staffEntryRegisterTO);
+            return ActResult.initialize(BeanTransform.copyProperties(staffEntryRegisterBO, StaffEntryRegisterVO.class));
 
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -234,7 +234,6 @@ public class StaffEntryRegisterAction {
     }
 
 
-
     /**
      * 获取注册的员工编号
      *
@@ -242,32 +241,45 @@ public class StaffEntryRegisterAction {
      * @version v1
      */
     @GetMapping("v1/maxEmpNumber")
-    public Result maxEmpNumber( ) throws ActException {
+    public Result maxEmpNumber() throws ActException {
         try {
-            String empNumber = staffEntryRegisterAPI.maxEmpNumber( );
-            return ActResult.initialize( empNumber );
+            String empNumber = staffEntryRegisterAPI.maxEmpNumber();
+            return ActResult.initialize(empNumber);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据员工姓名获取注册的员工编号
+     *
+     * @des 获取注册的员工编号
+     * @version v1
+     */
+    @GetMapping("v1/maxEmpNumber")
+    public Result getMaxEmpNumberByName(@RequestParam String name) throws ActException {
+        try {
+            String empNumber = staffEntryRegisterAPI.getMaxEmpNumberByName(name);
+            return ActResult.initialize(empNumber);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
 
-
-
-
     /**
      * 发送邮件账号密码告知
      *
-     * @param  staffEntryRegisterEmailTO 帐号密码告知
+     * @param staffEntryRegisterEmailTO 帐号密码告知
      * @des 发送邮件
      * @version v1
      */
     @LoginAuth
     @PutMapping("v1/send/accountToEmplore")
-    public Result sendAccountToEmp(@Validated(StaffEntryRegisterEmailTO.TestAdd.class) StaffEntryRegisterEmailTO staffEntryRegisterEmailTO , BindingResult bindingResult ) throws ActException {
+    public Result sendAccountToEmp(@Validated(StaffEntryRegisterEmailTO.TestAdd.class) StaffEntryRegisterEmailTO staffEntryRegisterEmailTO, BindingResult bindingResult) throws ActException {
         //TODO: tanghaixiang 2017-03-09 未做邮件告知员工账号密码 记得抛异常
         try {
-            staffEntryRegisterAPI.sendAccountToEmp(staffEntryRegisterEmailTO );
+            staffEntryRegisterAPI.sendAccountToEmp(staffEntryRegisterEmailTO);
             return new ActResult("send success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
