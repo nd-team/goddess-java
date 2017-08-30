@@ -28,19 +28,19 @@ public class SkillGradingC extends BaseEntity {
     /**
      * 各档次晋升间隔时间（月）
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '各档次晋升间隔时间（月）'")
+    @Column(nullable = false,columnDefinition = "INT(5)   COMMENT '各档次晋升间隔时间（月）'")
     private Integer gradeAfterTime;
 
     /**
      * 技能职衔分数
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '技能职衔分数'")
+    @Column(nullable = false,columnDefinition = "INT(5)   COMMENT '技能职衔分数'")
     private Integer technicalRank;
 
     /**
      * 转换额度（1分）
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '转换额度（1分）'")
+    @Column(nullable = false,columnDefinition = "INT(5)   COMMENT '转换额度（1分）'")
     private Integer convertLine;
 
     /**
@@ -58,25 +58,25 @@ public class SkillGradingC extends BaseEntity {
     /**
      * 补助额度（元）
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '补助额度（元）'")
+    @Column(nullable = false,columnDefinition = "INT(5)   COMMENT '补助额度（元）'")
     private Integer subsidiesAmount;
 
     /**
      * 职衔补助额度
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '职衔补助额度'")
+    @Column(nullable = false,columnDefinition = "INT(5)   COMMENT '职衔补助额度'")
     private Integer quotaJobTitle;
 
     /**
      * 补助额度合计
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '补助额度合计'")
+    @Column(nullable = false,columnDefinition = "INT(5)   COMMENT '补助额度合计'")
     private Integer totalAllowance;
 
     /**
      * 每次晋升增长幅度
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '每次晋升增长幅度'")
+    @Column(nullable = false,columnDefinition = "INT(5)   COMMENT '每次晋升增长幅度'")
     private Integer growth;
     /**
      * 技能定级B

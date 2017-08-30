@@ -1,5 +1,6 @@
 package com.bjike.goddess.oilcardmanage.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -12,6 +13,7 @@ import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.oilcardmanage.bo.CusPermissionOperateBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardReceiveBO;
+import com.bjike.goddess.oilcardmanage.bo.OilCardRechargeBO;
 import com.bjike.goddess.oilcardmanage.dto.CusPermissionDTO;
 import com.bjike.goddess.oilcardmanage.dto.CusPermissionOperateDTO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardBasicDTO;
@@ -40,6 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.enterprise.inject.spi.Bean;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +83,9 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
 
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 核对查看权限（层级别）
@@ -305,12 +311,12 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
         if (!CollectionUtils.isEmpty(list)) {
             List<OilCardReceiveBO> boList = new ArrayList<OilCardReceiveBO>();
             for (OilCardReceive model : list) {
-                OilCardReceiveBO bo = BeanTransform.copyProperties(model, OilCardReceiveBO.class,false);
+                OilCardReceiveBO bo = BeanTransform.copyProperties(model, OilCardReceiveBO.class, false);
                 bo.setOilCardNumber(model.getOilCardBasic().getOilCardNumber());
                 bo.setOilCardCode(model.getOilCardBasic().getOilCardCode());
                 bo.setMainOrDeputy(model.getOilCardBasic().getMainOrDeputy());
                 bo.setBelongMainCard(model.getOilCardBasic().getBelongMainCard());
-                bo.setOilCardBasicBO( BeanTransform.copyProperties(model.getOilCardBasic(), OilCardBasicBO.class,false));
+                bo.setOilCardBasicBO(BeanTransform.copyProperties(model.getOilCardBasic(), OilCardBasicBO.class, false));
                 boList.add(bo);
             }
             return boList;
@@ -321,7 +327,7 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
 
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public void audit(String id, String auditSuggestion, OilCardReceiveResult oilCardReceiveResult) throws SerException {
+    public void audit(String id, String auditSuggestion, OilCardReceiveResult auditResult) throws SerException {
         checkAddIdentity();
         OilCardReceive model = super.findById(id);
         if (model != null) {
@@ -331,7 +337,7 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
             }
             UserBO userBO = userAPI.currentUser();
             if (userBO.getUsername().equals(model.getAuditUser())) {
-                model.setAuditResult(oilCardReceiveResult);
+                model.setAuditResult(auditResult);
                 model.setAuditSuggestion(auditSuggestion);
                 super.update(model);
 
@@ -351,10 +357,10 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
     @Override
     public List<String> findOilCard() throws SerException {
         OilCardBasicDTO dto = new OilCardBasicDTO();
-        dto.getConditions().add(Restrict.eq("cardStatus",OilCardStatus.IDLE));
+        dto.getConditions().add(Restrict.eq("cardStatus", OilCardStatus.IDLE));
         List<OilCardBasic> oilCardBasicBOS = oilCardBasicSer.findByCis(dto);
         List<String> list = new ArrayList<>();
-        for(OilCardBasic oilCardBasic : oilCardBasicBOS){
+        for (OilCardBasic oilCardBasic : oilCardBasicBOS) {
             list.add(oilCardBasic.getOilCardCode());
         }
         return list;
@@ -363,30 +369,44 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
 
     @Override
     public List<AreaBO> findArea() throws SerException {
-        List<AreaBO> areaBOS = departmentDetailAPI.findArea();
-        return areaBOS;
+        List<AreaBO> boList = new ArrayList<>(0);
+        if (moduleAPI.isCheck("organize")) {
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
+            boList = departmentDetailAPI.findArea();
+        }
+        return boList;
     }
 
     @Override
     public List<String> findOperate() throws SerException {
         CusPermissionDTO dto = new CusPermissionDTO();
-        dto.getConditions().add(Restrict.eq("idFlag","2"));
+        dto.getConditions().add(Restrict.eq("idFlag", "2"));
         CusPermission cusPermissions = cusPermissionSer.findOne(dto);
         CusPermissionOperateDTO dto2 = new CusPermissionOperateDTO();
-        dto2.getConditions().add(Restrict.eq("cuspermissionId",cusPermissions.getId()));
+        dto2.getConditions().add(Restrict.eq("cuspermissionId", cusPermissions.getId()));
         List<CusPermissionOperate> cusPermissionOperates = cusPermissionOperateSer.findByCis(dto2);
         List<String> list = new ArrayList<>();
-        for(CusPermissionOperate operate : cusPermissionOperates){
+        for (CusPermissionOperate operate : cusPermissionOperates) {
             PositionDetailDTO detailDTO = new PositionDetailDTO();
             List<String> positionId = positionDetailAPI.getPositions(operate.getOperator());
             List<UserBO> userBOList = new ArrayList<>();
-            for(String id : positionId){
-              userBOList = positionDetailUserAPI.findByPosition(id);
-            }
-            for(UserBO userBO : userBOList){
-                list.add(userBO.getUsername());
+            for (String id : positionId) {
+                userBOList = positionDetailUserAPI.findByPosition(id);
+                if (userBOList != null && userBOList.size() > 0) {
+                    list.add(userBOList.get(0).getUsername());
+                }
             }
         }
         return list;
+    }
+
+    @Override
+    public OilCardReceiveBO findOne(String id) throws SerException {
+        OilCardReceive oilCardReceive = super.findById(id);
+        OilCardReceiveBO bo = BeanTransform.copyProperties(oilCardReceive, OilCardReceiveBO.class, false);
+        bo.setOilCardCode(oilCardReceive.getOilCardBasic().getOilCardCode());
+        bo.setOilCardBasicId(oilCardReceive.getOilCardBasic().getId());
+        return bo;
     }
 }

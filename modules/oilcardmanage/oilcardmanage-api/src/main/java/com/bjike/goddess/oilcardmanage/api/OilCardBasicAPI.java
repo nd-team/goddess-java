@@ -112,11 +112,9 @@ public interface OilCardBasicAPI {
     Long count(OilCardBasicDTO dto) throws SerException;
 
     /**
-     *
+     * 保存油卡基本信息
      */
-
-
-    void updateOliCardBasic(OilCardBasic oilCardBasic) throws SerException;
+    void updateOliCardBasic(OilCardBasicBO basicBO) throws SerException;
 
     /**
      * 查询未冻结的油卡

@@ -1,5 +1,6 @@
 package com.bjike.goddess.individualvision.action.individualvision;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -13,6 +14,7 @@ import com.bjike.goddess.individualvision.dto.CareerPlanningCustomDTO;
 import com.bjike.goddess.individualvision.to.CareerPlanningCustomTO;
 import com.bjike.goddess.individualvision.to.GuidePermissionTO;
 import com.bjike.goddess.individualvision.vo.CareerPlanningCustomVO;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -36,6 +38,10 @@ import java.util.List;
 public class CareerPlanningCustomAction {
     @Autowired
     private CareerPlanningCustomAPI careerPlanningCustomAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 功能导航权限
@@ -107,7 +113,7 @@ public class CareerPlanningCustomAction {
     public Result list(CareerPlanningCustomDTO careerPlanningCustomDTO, HttpServletRequest request) throws ActException {
         try {
             List<CareerPlanningCustomVO> careerPlanningCustomVOS = BeanTransform.copyProperties
-                    (careerPlanningCustomAPI.findListCareerPlanningCustom(careerPlanningCustomDTO),CareerPlanningCustomVO.class,request);
+                    (careerPlanningCustomAPI.findListCareerPlanningCustom(careerPlanningCustomDTO), CareerPlanningCustomVO.class, request);
             return ActResult.initialize(careerPlanningCustomVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -166,23 +172,23 @@ public class CareerPlanningCustomAction {
             throw new ActException(e.getMessage());
         }
     }
-    /**
-     * 发送邮件
-     *
-     * @param careerPlanningCustomTO 发送邮件数据to
-     * @return class CareerPlanningCustomVO
-     * @des 发送邮件职业规划定制
-     * @version v1
-     */
-    @PostMapping("v1/send")
-    public Result send(@Validated CareerPlanningCustomTO careerPlanningCustomTO) throws ActException {
-        try {
-            CareerPlanningCustomBO careerPlanningCustomBO = careerPlanningCustomAPI.sendCareerPlanningCustom(careerPlanningCustomTO);
-            return ActResult.initialize(careerPlanningCustomBO);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 发送邮件
+//     *
+//     * @param careerPlanningCustomTO 发送邮件数据to
+//     * @return class CareerPlanningCustomVO
+//     * @des 发送邮件职业规划定制
+//     * @version v1
+//     */
+//    @PostMapping("v1/send")
+//    public Result send(@Validated CareerPlanningCustomTO careerPlanningCustomTO) throws ActException {
+//        try {
+//            CareerPlanningCustomBO careerPlanningCustomBO = careerPlanningCustomAPI.sendCareerPlanningCustom(careerPlanningCustomTO);
+//            return ActResult.initialize(careerPlanningCustomBO);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
 
 }

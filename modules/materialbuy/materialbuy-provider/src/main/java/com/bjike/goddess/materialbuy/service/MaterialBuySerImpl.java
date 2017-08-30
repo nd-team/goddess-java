@@ -5,7 +5,6 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.contacts.api.CommonalityAPI;
 import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.materialbuy.bo.AreaBuyStatusDayCollectBO;
@@ -37,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 物资购买业务实现
@@ -281,8 +281,8 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
         List<DepartmentDetailBO> departs = departmentDetailAPI.findStatus();
         for (DepartmentDetailBO depart : departs) {
             if ("运营商务部".equals(depart.getDepartment()) || "综合资源部".equals(depart.getDepartment())) {
-                CommonalityBO commonalityBO=commonalityAPI.findByDepartment(depart.getId());
-                if(commonalityBO!=null){
+                CommonalityBO commonalityBO = commonalityAPI.findByDepartment(depart.getId());
+                if (commonalityBO != null) {
                     emails.add(commonalityBO.getEmail());
                 }
             }
@@ -368,8 +368,8 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
             send1(t, content);
             String content1 = "网页链接如下：" + model.getBuyAddress() + "，请确认";
             String title1 = "请确认网页链接";
-            UserBO user=userAPI.findByUsername(model.getRequisitioner());
-            if (user!=null) {
+            UserBO user = userAPI.findByUsername(model.getRequisitioner());
+            if (user != null) {
                 String[] reciers = new String[]{user.getId()};
                 send(title1, content1, reciers);
             }
@@ -486,9 +486,9 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
     @Override
     public List<String> findDevType(String[] intervalTime) throws SerException {
         MaterialBuyDTO dto = new MaterialBuyDTO();
-        dto.getConditions().add(Restrict.between("subscribeDate",intervalTime));
+        dto.getConditions().add(Restrict.between("subscribeDate", intervalTime));
         List<MaterialBuy> materialBuys = super.findByCis(dto);
-        if(CollectionUtils.isEmpty(materialBuys)){
+        if (CollectionUtils.isEmpty(materialBuys)) {
             return Collections.emptyList();
         }
         Set<String> set = new HashSet<>();
@@ -502,12 +502,12 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
     }
 
     @Override
-    public List<String> findAreaByType(String devType,String[] intervalTime) throws SerException {
+    public List<String> findAreaByType(String devType, String[] intervalTime) throws SerException {
         MaterialBuyDTO dto = new MaterialBuyDTO();
-        dto.getConditions().add(Restrict.eq("deviceType",devType));
-        dto.getConditions().add(Restrict.between("subscribeDate",intervalTime));
+        dto.getConditions().add(Restrict.eq("deviceType", devType));
+        dto.getConditions().add(Restrict.between("subscribeDate", intervalTime));
         List<MaterialBuy> materialBuys = super.findByCis(dto);
-        if(CollectionUtils.isEmpty(materialBuys)){
+        if (CollectionUtils.isEmpty(materialBuys)) {
             return Collections.emptyList();
         }
         Set<String> set = new HashSet<>();
@@ -523,11 +523,11 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
     @Override
     public List<String> findDeparByTyAre(String devType, String area, String[] intervalTime) throws SerException {
         MaterialBuyDTO dto = new MaterialBuyDTO();
-        dto.getConditions().add(Restrict.eq("deviceType",devType));
-        dto.getConditions().add(Restrict.eq("area",area));
-        dto.getConditions().add(Restrict.between("subscribeDate",intervalTime));
+        dto.getConditions().add(Restrict.eq("deviceType", devType));
+        dto.getConditions().add(Restrict.eq("area", area));
+        dto.getConditions().add(Restrict.between("subscribeDate", intervalTime));
         List<MaterialBuy> materialBuys = super.findByCis(dto);
-        if(CollectionUtils.isEmpty(materialBuys)){
+        if (CollectionUtils.isEmpty(materialBuys)) {
             return Collections.emptyList();
         }
         Set<String> set = new HashSet<>();
@@ -541,23 +541,23 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
     }
 
     @Override
-    public List<MaterialBuyBO> findByTyAndAr(String devType, String area,String department,String[] intervalTime) throws SerException {
+    public List<MaterialBuyBO> findByTyAndAr(String devType, String area, String department, String[] intervalTime) throws SerException {
         MaterialBuyDTO dto = new MaterialBuyDTO();
         dto.getConditions().add(Restrict.eq("deviceType", devType));
         dto.getConditions().add(Restrict.eq("area", area));
         dto.getConditions().add(Restrict.eq("projectTeam", department));
-        dto.getConditions().add(Restrict.between("subscribeDate",intervalTime));
+        dto.getConditions().add(Restrict.between("subscribeDate", intervalTime));
         List<MaterialBuy> materialBuys = super.findByCis(dto);
-        return BeanTransform.copyProperties(materialBuys,MaterialBuyBO.class);
+        return BeanTransform.copyProperties(materialBuys, MaterialBuyBO.class);
     }
 
 
     @Override
     public List<String> findArea(String[] intervalTime) throws SerException {
         MaterialBuyDTO dto = new MaterialBuyDTO();
-        dto.getConditions().add(Restrict.between("subscribeDate",intervalTime));
+        dto.getConditions().add(Restrict.between("subscribeDate", intervalTime));
         List<MaterialBuy> materialBuys = super.findByCis(dto);
-        if(CollectionUtils.isEmpty(materialBuys)){
+        if (CollectionUtils.isEmpty(materialBuys)) {
             return Collections.emptyList();
         }
         Set<String> set = new HashSet<>();
@@ -573,10 +573,10 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
     @Override
     public List<String> findDepByArea(String area, String[] intervalTime) throws SerException {
         MaterialBuyDTO dto = new MaterialBuyDTO();
-        dto.getConditions().add(Restrict.eq("area",area));
-        dto.getConditions().add(Restrict.between("subscribeDate",intervalTime));
+        dto.getConditions().add(Restrict.eq("area", area));
+        dto.getConditions().add(Restrict.between("subscribeDate", intervalTime));
         List<MaterialBuy> materialBuys = super.findByCis(dto);
-        if(CollectionUtils.isEmpty(materialBuys)){
+        if (CollectionUtils.isEmpty(materialBuys)) {
             return Collections.emptyList();
         }
         Set<String> set = new HashSet<>();
@@ -592,11 +592,11 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
     @Override
     public List<String> findDevByAreaDev(String area, String projectTeam, String[] intervalTime) throws SerException {
         MaterialBuyDTO dto = new MaterialBuyDTO();
-        dto.getConditions().add(Restrict.eq("area",area));
-        dto.getConditions().add(Restrict.eq("projectTeam",projectTeam));
-        dto.getConditions().add(Restrict.between("subscribeDate",intervalTime));
+        dto.getConditions().add(Restrict.eq("area", area));
+        dto.getConditions().add(Restrict.eq("projectTeam", projectTeam));
+        dto.getConditions().add(Restrict.between("subscribeDate", intervalTime));
         List<MaterialBuy> materialBuys = super.findByCis(dto);
-        if(CollectionUtils.isEmpty(materialBuys)){
+        if (CollectionUtils.isEmpty(materialBuys)) {
             return Collections.emptyList();
         }
         Set<String> set = new HashSet<>();
@@ -610,7 +610,7 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
     }
 
     @Override
-    public List<MaterialBuyBO> findByTeamAnArea(String area, String projectTeam,String devType, String[] intervalTime) throws SerException {
+    public List<MaterialBuyBO> findByTeamAnArea(String area, String projectTeam, String devType, String[] intervalTime) throws SerException {
 //        MaterialBuyDTO dto = new MaterialBuyDTO();
 //        dto.getConditions().add(Restrict.eq("projectTeam", projectTeam));
 //        dto.getConditions().add(Restrict.eq("area", area));
@@ -624,9 +624,9 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
     @Override
     public List<String> findRequis(String[] intervalTime) throws SerException {
         MaterialBuyDTO dto = new MaterialBuyDTO();
-        dto.getConditions().add(Restrict.between("subscribeDate",intervalTime));
+        dto.getConditions().add(Restrict.between("subscribeDate", intervalTime));
         List<MaterialBuy> materialBuys = super.findByCis(dto);
-        if(CollectionUtils.isEmpty(materialBuys)){
+        if (CollectionUtils.isEmpty(materialBuys)) {
             return Collections.emptyList();
         }
         Set<String> set = new HashSet<>();
@@ -643,9 +643,9 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
     public List<String> findByRequis(String requisitioner, String[] intervalTime) throws SerException {
         MaterialBuyDTO dto = new MaterialBuyDTO();
         dto.getConditions().add(Restrict.eq("requisitioner", requisitioner));
-        dto.getConditions().add(Restrict.between("subscribeDate",intervalTime));
+        dto.getConditions().add(Restrict.between("subscribeDate", intervalTime));
         List<MaterialBuy> materialBuys = super.findByCis(dto);
-        if(CollectionUtils.isEmpty(materialBuys)){
+        if (CollectionUtils.isEmpty(materialBuys)) {
             return Collections.emptyList();
         }
         Set<String> set = new HashSet<>();
@@ -659,12 +659,35 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
     }
 
     @Override
-    public List<MaterialBuyBO> findByRequisType(String requisitioner,String devType, String[] intervalTime) throws SerException {
+    public List<MaterialBuyBO> findByRequisType(String requisitioner, String devType, String[] intervalTime) throws SerException {
         MaterialBuyDTO dto = new MaterialBuyDTO();
         dto.getConditions().add(Restrict.eq("requisitioner", requisitioner));
         dto.getConditions().add(Restrict.eq("deviceType", devType));
-        dto.getConditions().add(Restrict.between("subscribeDate",intervalTime));
+        dto.getConditions().add(Restrict.between("subscribeDate", intervalTime));
         List<MaterialBuy> materialBuys = super.findByCis(dto);
-        return BeanTransform.copyProperties(materialBuys,MaterialBuyBO.class);
+        return BeanTransform.copyProperties(materialBuys, MaterialBuyBO.class);
+    }
+
+    @Override
+    public List<String> findSubscribeDate() throws SerException {
+        List<String> stringList = new ArrayList<>(0);
+        List<MaterialBuy> materialBuys = super.findAll();
+        if (!CollectionUtils.isEmpty(materialBuys)) {
+            List<LocalDate> list = materialBuys.stream().map(MaterialBuy::getSubscribeDate).distinct().collect(Collectors.toList());
+            for (LocalDate localDate : list) {
+                stringList.add(localDate.toString());
+            }
+        }
+        return stringList;
+    }
+
+    @Override
+    public List<String> findRequisitioner() throws SerException {
+        List<String> list = new ArrayList<>(0);
+        List<MaterialBuy> materialBuys = super.findAll();
+        if (!CollectionUtils.isEmpty(materialBuys)) {
+            list = materialBuys.stream().map(MaterialBuy::getRequisitioner).distinct().collect(Collectors.toList());
+        }
+        return list;
     }
 }

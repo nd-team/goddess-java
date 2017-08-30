@@ -1,8 +1,6 @@
 package com.bjike.goddess.housepay.action.housepay;
 
 import com.bjike.goddess.common.api.dto.Restrict;
-import com.bjike.goddess.common.api.entity.ADD;
-import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -10,13 +8,17 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.housepay.api.WaitPayAPI;
-import com.bjike.goddess.housepay.bo.PayRecordBO;
 import com.bjike.goddess.housepay.bo.WaitPayBO;
 import com.bjike.goddess.housepay.dto.WaitPayDTO;
 import com.bjike.goddess.housepay.enums.PayStatus;
 import com.bjike.goddess.housepay.excel.SonPermissionObject;
+import com.bjike.goddess.housepay.to.CollectAreaTO;
+import com.bjike.goddess.housepay.to.CollectProjectTO;
 import com.bjike.goddess.housepay.to.GuidePermissionTO;
 import com.bjike.goddess.housepay.to.WaitPayTO;
+import com.bjike.goddess.housepay.vo.AreaCollectVO;
+import com.bjike.goddess.housepay.vo.CollectDetailVO;
+import com.bjike.goddess.housepay.vo.ProjectCollectVO;
 import com.bjike.goddess.housepay.vo.WaitPayVO;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,7 @@ public class WaitPayAction {
     private WaitPayAPI waitPayAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+
     /**
      * 模块设置导航权限
      *
@@ -228,6 +231,7 @@ public class WaitPayAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 付款
      *
@@ -244,5 +248,146 @@ public class WaitPayAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 地区汇总
+     *
+     * @param to 地区
+     * @return class AreaCollectVO
+     * @des 地区汇总已付款记录
+     * @version v1
+     */
+    @GetMapping("v1/collectArea")
+    public Result collectArea(CollectAreaTO to) throws ActException {
+        try {
+            List<AreaCollectVO> areaCollectVOS = BeanTransform.copyProperties(
+                    waitPayAPI.collectArea(to), AreaCollectVO.class);
+            return ActResult.initialize(areaCollectVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 地区汇总详情
+     *
+     * @param to 地区
+     * @return class CollectDetailVO
+     * @des 地区汇总已付款记录
+     * @version v1
+     */
+    @GetMapping("v1/collectAreaDetail")
+    public Result collectAreaDetail(CollectAreaTO to) throws ActException {
+        try {
+            List<CollectDetailVO> collectDetailVOS = BeanTransform.copyProperties(
+                    waitPayAPI.collectAreaDetail(to), CollectDetailVO.class);
+            return ActResult.initialize(collectDetailVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 获取地区
+     *
+     * @des 获取地区集合
+     * @version v1
+     */
+    @GetMapping("v1/areas")
+    public Result areas() throws ActException {
+        try {
+            List<String> areasList = waitPayAPI.getAreas();
+            return ActResult.initialize(areasList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 项目汇总
+     *
+     * @param to to
+     * @return class ProjectCollectVO
+     * @des 项目汇总已付款记录
+     * @version v1
+     */
+    @GetMapping("v1/collectProject")
+    public Result collectProject(CollectProjectTO to) throws ActException {
+        try {
+            List<ProjectCollectVO> projectCollectVOS = BeanTransform.copyProperties(
+                    waitPayAPI.collectProject(to), ProjectCollectVO.class);
+            return ActResult.initialize(projectCollectVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 项目汇总详情
+     *
+     * @param to to
+     * @return class CollectDetailVO
+     * @des 项目汇总已付款记录
+     * @version v1
+     */
+    @GetMapping("v1/collectProjectDetail")
+    public Result collectProjectDetail(CollectProjectTO to) throws ActException {
+        try {
+            List<CollectDetailVO> collectDetailVOS = BeanTransform.copyProperties(
+                    waitPayAPI.collectProjectDatail(to), CollectDetailVO.class);
+            return ActResult.initialize(collectDetailVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取项目
+     *
+     * @des 获取项目集合
+     * @version v1
+     */
+    @GetMapping("v1/projects")
+    public Result projects() throws ActException {
+        try {
+            List<String> projectsList = waitPayAPI.getProject();
+            return ActResult.initialize(projectsList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取所有年份
+     *
+     * @des 获取所有年份
+     * @version v1
+     */
+    @PostMapping("v1/year")
+    public Result year() throws ActException {
+        try {
+            List<String> year = waitPayAPI.yearList();
+            return ActResult.initialize(year);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算合计
+     *
+     * @des 根据房租, 水费, 电费, 管理费, 其他费用合计
+     * @version v1
+     */
+    @PostMapping("v1/calculate")
+    public Result calculate(@Validated(WaitPayTO.TestCalculate.class) WaitPayTO to, BindingResult bindingResult) throws ActException {
+        try {
+            Double total = waitPayAPI.calculate(to);
+            return ActResult.initialize(total);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }

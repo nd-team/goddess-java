@@ -38,6 +38,7 @@ dependencies {
     }
 
     compile project(":modules:materialreceive:materialreceive-api")
+    compile project(":modules:assemble:assemble-api")
 
     compile("org.springframework.boot:spring-boot-starter-web")
 }

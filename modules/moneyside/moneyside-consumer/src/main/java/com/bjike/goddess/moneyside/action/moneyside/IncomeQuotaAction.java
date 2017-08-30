@@ -130,7 +130,7 @@ public class IncomeQuotaAction {
     public Result add(@Validated(ADD.class) IncomeQuotaTO incomeQuotaTO, BindingResult bindingResult) throws ActException {
         try {
             IncomeQuotaBO incomeQuotaBO = incomeQuotaAPI.insertIncomeQuota(incomeQuotaTO);
-            return ActResult.initialize(incomeQuotaBO);
+            return ActResult.initialize(BeanTransform.copyProperties(incomeQuotaBO,IncomeQuotaVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -149,7 +149,7 @@ public class IncomeQuotaAction {
     public Result edit(@Validated(EDIT.class) IncomeQuotaTO incomeQuotaTO, BindingResult bindingResult) throws ActException {
         try {
             IncomeQuotaBO incomeQuotaBO = incomeQuotaAPI.editIncomeQuota(incomeQuotaTO);
-            return ActResult.initialize(incomeQuotaBO);
+            return ActResult.initialize(BeanTransform.copyProperties(incomeQuotaBO,IncomeQuotaVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -141,5 +141,13 @@ public interface MoneyPerpareAPI {
     default List<String> findAllProject() throws SerException {
         return null;
     }
-
+    /**
+     * 获取所有的准备金
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<Double> findReserve() throws SerException {
+        return null;
+    }
 }

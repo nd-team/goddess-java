@@ -5,6 +5,7 @@ import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
 import com.bjike.goddess.staffentry.entity.EntryRegister;
 import com.bjike.goddess.staffentry.to.*;
+import scala.collection.immutable.Nil;
 
 import java.util.List;
 
@@ -128,5 +129,35 @@ public interface EntryRegisterAPI {
     default EntryRegister getByNumber(String number) throws SerException {
         return null;
     }
-
+    /**
+     * 获取所有的qq号
+     * lijuntao
+     * @throws SerException
+     */
+    default List<String> findQQ() throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有的毕业学校
+     * lijuntao
+     * @throws SerException
+     */
+    default List<String> findSchoolTag() throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有的毕业时间
+     * lijuntao
+     * @throws SerException
+     */
+    default List<String> findGraduationDate() throws SerException {
+        return null;
+    }
+    /**
+     * 获取全部的入职等级信息（不分页）
+     * zhuangkaiqin
+     */
+    default List<EntryRegister> list() throws SerException {
+        return null;
+    }
 }

@@ -104,4 +104,18 @@ public interface LevelShowAPI {
      * @throws SerException
      */
     LevelShow findByEmployeeId(String employeeId) throws SerException;
+
+    /**
+     * 根据员工姓名查找管理等级情况慨览
+     * zhuangkaiqin
+     */
+    default LevelShow findByName(String name) throws SerException {
+        return null;
+    }
+
+    /**
+     * 通过员工编号查询管理等级
+     * jiangzaixuan
+     */
+    LevelShowBO findEmployeeId(String employeeId) throws SerException;
 }

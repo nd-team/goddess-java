@@ -19,6 +19,7 @@ import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -300,22 +301,23 @@ public class BuyTicketRecordSerImpl extends ServiceImpl<BuyTicketRecord, BuyTick
         String seatInfo = buyTicketRecord.getArrivalTime().toString();//座位信息
         String orderNum = buyTicketRecord.getArrivalTime().toString();//订单号
 
-        StringBuffer content = new StringBuffer();
-        content.append("您好!您因 "+ticketCause+" 需要从"+origin+"前往"+destination+"以下为乘车信息:  "+shift+" ,"+departureTime+"-"+arrivalTime+" ");
-        content.append(seatInfo+"  "+orderNum+"。请按时带上身份证/护照乘车。请悉知和确认乘车信息,谢谢合作!(邮件和系统发送,系统看消息时有个确认键,如有疑问选择不确认,并填写");
-        content.append("问题,点击确认键后,记录列表中乘车人是否有确认乘车信息显示是,确认信息时间-自动生成;如不确认的,系统通知福利模块进行处理,可以到记录查看确认问题,并按要求做修改后,系统自动确认)");
-        MessageTO messageTO = new MessageTO();
-        messageTO.setContent(content.toString());
-        messageTO.setTitle("购票成功提醒");
-        messageTO.setMsgType(MsgType.SYS);
-        messageTO.setSendType(SendType.EMAIL);
-        messageTO.setRangeType(RangeType.SPECIFIED);
-
         String email = internalContactsAPI.getEmail(passName);
+        //如果该乘车人邮箱存在发送邮件,否则就不发
+        if(StringUtils.isNotBlank(email)){
+            StringBuffer content = new StringBuffer();
+            content.append("您好!您因 "+ticketCause+" 需要从"+origin+"前往"+destination+"以下为乘车信息:  "+shift+" ,"+departureTime+"-"+arrivalTime+" ");
+            content.append(seatInfo+"  "+orderNum+"。请按时带上身份证/护照乘车。请悉知和确认乘车信息,谢谢合作!(邮件和系统发送,系统看消息时有个确认键,如有疑问选择不确认,并填写");
+            content.append("问题,点击确认键后,记录列表中乘车人是否有确认乘车信息显示是,确认信息时间-自动生成;如不确认的,系统通知福利模块进行处理,可以到记录查看确认问题,并按要求做修改后,系统自动确认)");
+            MessageTO messageTO = new MessageTO();
+            messageTO.setContent(content.toString());
+            messageTO.setTitle("购票成功提醒");
+            messageTO.setMsgType(MsgType.SYS);
+            messageTO.setSendType(SendType.EMAIL);
+            messageTO.setRangeType(RangeType.SPECIFIED);
 
-
-        messageTO.setReceivers(new String[]{email});
-        messageAPI.send(messageTO);
+            messageTO.setReceivers(new String[]{email});
+            messageAPI.send(messageTO);
+        }
         return BeanTransform.copyProperties(buyTicketRecord,BuyTicketRecordBO.class);
     }
 

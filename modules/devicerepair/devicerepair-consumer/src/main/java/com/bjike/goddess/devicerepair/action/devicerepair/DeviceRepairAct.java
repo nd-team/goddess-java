@@ -1,5 +1,7 @@
 package com.bjike.goddess.devicerepair.action.devicerepair;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.businessproject.api.BaseInfoManageAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -16,15 +18,20 @@ import com.bjike.goddess.devicerepair.excel.SonPermissionObject;
 import com.bjike.goddess.devicerepair.to.*;
 import com.bjike.goddess.devicerepair.type.AuditState;
 import com.bjike.goddess.devicerepair.vo.DeviceRepairVO;
-import com.bjike.goddess.organize.api.DepartmentDetailAPI;
-import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.materialinstock.api.MaterialInStockAPI;
+import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 设备维修
@@ -63,6 +71,12 @@ public class DeviceRepairAct extends BaseFileAction {
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private MaterialInStockAPI materialInStockAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private BaseInfoManageAPI baseInfoManageAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
 
     /**
@@ -411,13 +425,22 @@ public class DeviceRepairAct extends BaseFileAction {
     @GetMapping("v1/allOrageDepartment")
     public Result allOrageDepartment() throws ActException {
         try {
-            List<String> detail = new ArrayList<>();
-            detail = deviceRepairAPI.findAddAllDetails();
-            return ActResult.initialize(detail);
+//            List<String> detail = new ArrayList<>();
+//            detail = deviceRepairAPI.findAddAllDetails();
+//            return ActResult.initialize(detail);
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("organize")) {
+                List<OpinionBO> opinionBOList = departmentDetailAPI.findThawOpinion();
+                if (!CollectionUtils.isEmpty(opinionBOList)) {
+                    list = opinionBOList.stream().map(OpinionBO::getValue).distinct().collect(Collectors.toList());
+                }
+            }
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 添加中所有的地区
      *
@@ -426,29 +449,42 @@ public class DeviceRepairAct extends BaseFileAction {
     @GetMapping("v1/allArea")
     public Result allArea() throws ActException {
         try {
-            List<AreaBO> area = departmentDetailAPI.findArea();
+            List<AreaBO> area = new ArrayList<>(0);
+            if (moduleAPI.isCheck("organize")) {
+                area = departmentDetailAPI.findArea();
+            }
             return ActResult.initialize(area);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
-     * 获取所有用户
+     * 获取所有申请人
      *
      * @version v1
      */
     @GetMapping("v1/allGetPerson")
     public Result allGetPerson() throws ActException {
         try {
-            List<String> getPerson = new ArrayList<>();
-            getPerson = deviceRepairAPI.findallMonUser();
-            return ActResult.initialize(getPerson);
+//            List<String> getPerson = new ArrayList<>();
+//            getPerson = deviceRepairAPI.findallMonUser();
+//            return ActResult.initialize(getPerson);
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("organize")) {
+                List<UserBO> userBOList = positionDetailUserAPI.findUserListInOrgan();
+                if (!CollectionUtils.isEmpty(userBOList)) {
+                    list = userBOList.stream().map(UserBO::getUsername).distinct().collect(Collectors.toList());
+                }
+            }
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
-     * 获取所有入库编号
+     * 获取所有物资编号
      *
      * @version v1
      */
@@ -456,10 +492,162 @@ public class DeviceRepairAct extends BaseFileAction {
     public Result allGetNo() throws ActException {
         try {
             Set<String> getNo = new HashSet<>();
-            getNo = materialInStockAPI.allstockEncoding();
+            if (moduleAPI.isCheck("materialinstock")) {
+                getNo = materialInStockAPI.allstockEncoding();
+            }
             return ActResult.initialize(new ArrayList<>(getNo));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 获取所有项目名称
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findProjectName")
+    public Result findProjectName() throws ActException {
+        try {
+            Set<String> set = new HashSet<>(0);
+            if (moduleAPI.isCheck("businessproject")) {
+                set = baseInfoManageAPI.allInnerProjects();
+            }
+            return ActResult.initialize(new ArrayList<>(set));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有设备名称
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findDeviceName")
+    public Result findDeviceName() throws ActException {
+        try {
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("materialinstock")) {
+                List<MaterialInStockBO> materialInStockBOs = materialInStockAPI.findAll();
+                if (!CollectionUtils.isEmpty(materialInStockBOs)) {
+                    list = materialInStockBOs.stream().map(MaterialInStockBO::getMaterialName).distinct().collect(Collectors.toList());
+                }
+            }
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 获取所有保修期限
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findWarrantyExpire")
+    public Result findWarrantyExpire() throws ActException {
+        try {
+            List<Double> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("materialinstock")) {
+                List<MaterialInStockBO> materialInStockBOs = materialInStockAPI.findAll();
+                if (!CollectionUtils.isEmpty(materialInStockBOs)) {
+                    List<Integer> list1 = materialInStockBOs.stream().map(MaterialInStockBO::getWarrantyExpire).distinct().collect(Collectors.toList());
+                    for (Integer i : list1) {
+                        list.add(i.doubleValue());
+                    }
+                }
+            }
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有保修联系人
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findWarrantyContact")
+    public Result findWarrantyContact() throws ActException {
+        try {
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("materialinstock")) {
+                List<MaterialInStockBO> materialInStockBOs = materialInStockAPI.findAll();
+                if (!CollectionUtils.isEmpty(materialInStockBOs)) {
+                    list = materialInStockBOs.stream().map(MaterialInStockBO::getWarrantyCardContact).distinct().collect(Collectors.toList());
+                }
+            }
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有保修联系电话
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findWarrantyContactPhone")
+    public Result findWarrantyContactPhone() throws ActException {
+        try {
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("materialinstock")) {
+                List<MaterialInStockBO> materialInStockBOs = materialInStockAPI.findAll();
+                if (!CollectionUtils.isEmpty(materialInStockBOs)) {
+                    list = materialInStockBOs.stream().map(MaterialInStockBO::getWarrantyPhone).distinct().collect(Collectors.toList());
+                }
+            }
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有购买网址
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findBuyAddress")
+    public Result findBuyAddress() throws ActException {
+        try {
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("materialinstock")) {
+                List<MaterialInStockBO> materialInStockBOs = materialInStockAPI.findAll();
+                if (!CollectionUtils.isEmpty(materialInStockBOs)) {
+                    list = materialInStockBOs.stream().map(MaterialInStockBO::getBuyWebsites).distinct().collect(Collectors.toList());
+                }
+            }
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有购买途径
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findPurchaseWay")
+    public Result findPurchaseWay() throws ActException {
+        try {
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("materialinstock")) {
+                List<MaterialInStockBO> materialInStockBOs = materialInStockAPI.findAll();
+                if (!CollectionUtils.isEmpty(materialInStockBOs)) {
+                    list = materialInStockBOs.stream().map(MaterialInStockBO::getApproach).distinct().collect(Collectors.toList());
+                }
+            }
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
 }

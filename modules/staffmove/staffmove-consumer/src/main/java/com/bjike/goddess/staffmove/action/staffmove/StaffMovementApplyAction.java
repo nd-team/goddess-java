@@ -1,5 +1,8 @@
 package com.bjike.goddess.staffmove.action.staffmove;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -11,6 +14,9 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.vo.AreaVO;
 import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.organize.vo.PositionDetailVO;
@@ -49,6 +55,8 @@ public class StaffMovementApplyAction {
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private PositionDetailAPI positionDetailAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
 
@@ -334,7 +342,13 @@ public class StaffMovementApplyAction {
     @GetMapping("v1/findArea")
     public Result findArea(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(departmentDetailAPI.findArea(), AreaVO.class, request));
+            List<AreaBO> boList = new ArrayList<>();
+            String userToken = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, userToken);
+                boList = departmentDetailAPI.findArea();
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(boList, AreaVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -349,7 +363,13 @@ public class StaffMovementApplyAction {
     @GetMapping("v1/department")
     public Result department(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(departmentDetailAPI.findStatus(), DepartmentDetailVO.class, request));
+            List<DepartmentDetailBO> boList = new ArrayList<>();
+            String userToken = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, userToken);
+                boList = departmentDetailAPI.findStatus();
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(boList, DepartmentDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -364,7 +384,13 @@ public class StaffMovementApplyAction {
     @GetMapping("v1/position")
     public Result position(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findStatus(), PositionDetailVO.class, request));
+            List<PositionDetailBO> boList = new ArrayList<>();
+            String userToken = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, userToken);
+                boList = positionDetailAPI.findStatus();
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(boList, PositionDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

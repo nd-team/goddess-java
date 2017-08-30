@@ -3,11 +3,9 @@ package com.bjike.goddess.enterpriseculturemanage.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.enterpriseculturemanage.enums.AuditResult;
 import com.bjike.goddess.enterpriseculturemanage.enums.PublicizeWay;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -36,7 +34,7 @@ public class PeriodicalProgramInfoTO extends BaseTO {
     /**
      * 发刊形式
      */
-    @NotBlank(message = "发刊形式不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "发刊形式不能为空", groups = {ADD.class, EDIT.class})
     private PublicizeWay way;
 
     /**

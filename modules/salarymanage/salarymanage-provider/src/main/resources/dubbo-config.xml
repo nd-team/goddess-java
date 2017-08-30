@@ -56,6 +56,8 @@
     <dubbo:reference interface="com.bjike.goddess.secure.api.AttachedAPI" id="attachedApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.rentutilitiespay.api.RentPayAPI" id="rentPayApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.bonus.api.DisciplineRecordAPI" id="disciplineRecordApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.regularization.api.RegularizationAPI" id="regularizationApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.managepromotion.api.OverviewSkillLevelAPI" id="overviewSkillLevelApiImpl"/>
 
     <dubbo:reference interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
 

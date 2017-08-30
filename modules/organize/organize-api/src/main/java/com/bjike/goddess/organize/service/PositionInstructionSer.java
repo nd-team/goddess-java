@@ -147,4 +147,29 @@ public interface PositionInstructionSer extends Ser<PositionInstruction, Positio
     default List<PositionInstructionBO> findByReflect(String reflectId) throws SerException {
         return null;
     }
+    /**
+     * 获取所有输出结果
+     *
+     * @return class String
+     * @throws SerException
+     */
+    default List<String> getOutCome() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取输出结果
+     */
+    default List<String> findOutcome() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取操作类型
+     *
+     * @return
+     */
+    default List<String> findWorkPermission() throws SerException {
+        return null;
+    }
 }

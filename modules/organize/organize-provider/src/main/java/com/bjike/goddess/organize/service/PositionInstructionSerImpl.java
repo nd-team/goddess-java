@@ -15,10 +15,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -237,5 +240,43 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
         dto.getConditions().add(Restrict.eq("reflect.id", reflectId));
         List<PositionInstruction> list = super.findByCis(dto);
         return this.transformToBOList(list);
+    }
+    @Override
+    public List<String> getOutCome() throws SerException {
+        String[] fields = new String[]{"outcome"};
+        List<PositionInstructionBO> boList = super.findBySql("select distinct outcome from organize_position_instruction group by outcome order by outcome asc ", PositionInstructionBO.class, fields);
+
+        List<String> outComeList = boList.stream().map(PositionInstructionBO::getOutcome)
+                .filter(outcome -> (StringUtils.isNotBlank(outcome))).distinct().collect(Collectors.toList());
+
+
+        return outComeList;
+    }
+
+
+    @Override
+    public List<String> findOutcome() throws SerException {
+        List<PositionInstruction> positionInstructions = super.findAll();
+        List<String> list = new ArrayList<>(0);
+        if (!CollectionUtils.isEmpty(positionInstructions)) {
+            list = positionInstructions.stream().map(PositionInstruction::getOutcome).distinct().collect(Collectors.toList());
+        }
+        return list;
+    }
+
+    @Override
+    public List<String> findWorkPermission() throws SerException {
+        Set<String> set = new HashSet<>(0);
+        List<PositionInstruction> positionInstructions = super.findAll();
+        List<Set<Operate>> list = new ArrayList<>(0);
+        if (!CollectionUtils.isEmpty(positionInstructions)) {
+            list = positionInstructions.stream().map(PositionInstruction::getOperates).distinct().collect(Collectors.toList());
+        }
+        for (Set<Operate> operates : list) {
+            for (Operate operate : operates) {
+                set.add(operate.getName());
+            }
+        }
+        return new ArrayList<>(set);
     }
 }

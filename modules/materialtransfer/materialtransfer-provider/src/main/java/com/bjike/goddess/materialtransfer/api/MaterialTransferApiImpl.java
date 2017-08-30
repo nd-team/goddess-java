@@ -158,4 +158,14 @@ public class MaterialTransferApiImpl implements MaterialTransferAPI {
     public List<String> findallMonUser() throws SerException {
         return materialTransferSer.findallMonUser();
     }
+
+    @Override
+    public List<String> findModel() throws SerException {
+        return materialTransferSer.findModel();
+    }
+
+    @Override
+    public List<String> findUnit() throws SerException {
+        return materialTransferSer.findUnit();
+    }
 }

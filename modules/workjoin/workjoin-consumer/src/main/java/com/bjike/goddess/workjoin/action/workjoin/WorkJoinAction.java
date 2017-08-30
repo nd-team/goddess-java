@@ -1,5 +1,6 @@
 package com.bjike.goddess.workjoin.action.workjoin;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -9,15 +10,19 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.organize.api.ModuleTypeAPI;
-import com.bjike.goddess.organize.api.PositionDetailAPI;
-import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.organize.api.*;
+import com.bjike.goddess.organize.bo.ModuleTypeBO;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.organize.bo.WorkRangeBO;
+import com.bjike.goddess.organize.entity.ModuleType;
+import com.bjike.goddess.organize.entity.PositionDetail;
+import com.bjike.goddess.organize.entity.WorkRange;
 import com.bjike.goddess.organize.vo.ModuleTypeVO;
 import com.bjike.goddess.organize.vo.PositionDetailVO;
+import com.bjike.goddess.organize.vo.WorkRangeVO;
 import com.bjike.goddess.workjoin.api.WorkJoinAPI;
 import com.bjike.goddess.workjoin.bo.WorkJoinBO;
 import com.bjike.goddess.workjoin.dto.WorkJoinDTO;
-import com.bjike.goddess.workjoin.entity.WorkJoin;
 import com.bjike.goddess.workjoin.excel.SonPermissionObject;
 import com.bjike.goddess.workjoin.to.GuidePermissionTO;
 import com.bjike.goddess.workjoin.to.WorkJoinTO;
@@ -51,6 +56,12 @@ public class WorkJoinAction {
     private UserSetPermissionAPI userSetPermissionAPI;
     @Autowired
     private ModuleTypeAPI moduleTypeAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private WorkRangeAPI workRangeAPI;
+    @Autowired
+    private PositionInstructionAPI positionInstructionAPI;
     /**
      * 模块设置导航权限
      *
@@ -143,7 +154,7 @@ public class WorkJoinAction {
     /**
      * 一个工作交接
      *
-     * @param id
+     * @param id 工作交接id
      * @return class WorkJoinVO
      * @des 获取一个工作交接
      * @version v1
@@ -233,34 +244,7 @@ public class WorkJoinAction {
             throw new ActException(e.getMessage());
         }
     }
-    /**
-     * 查询正常状态的岗位详细
-     *
-     * @return class PositionDetailVO
-     * @version v1
-     */
-    @GetMapping("v1/position")
-    public Result position(HttpServletRequest request) throws ActException {
-        try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findStatus(), PositionDetailVO.class, request));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-    /**
-     * 查询正常状态的模块类型数据
-     *
-     * @return class ModuleTypeVO
-     * @version v1
-     */
-    @GetMapping("v1/findThaw")
-    public Result findThaw(HttpServletRequest request) throws ActException {
-        try {
-            return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.findByStatus(Status.THAW), ModuleTypeVO.class, request));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+
     /**
      * 获取工作编号
      *
@@ -294,5 +278,143 @@ public class WorkJoinAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 查询正常状态的岗位详细
+     *
+     * @return class PositionDetailVO
+     * @version v1
+     */
+    @GetMapping("v1/position")
+    public Result position(HttpServletRequest request) throws ActException {
+        try {
+            List<PositionDetailBO> boList = new ArrayList<>();
+            if(moduleAPI.isCheck("organize")){
+                boList = positionDetailAPI.findStatus();
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(boList, PositionDetailVO.class, request));
+//            if (moduleAPI.isCheck("organize")) {
+//                return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findStatus(), PositionDetailVO.class, request));
+//            } else {
+//                return ActResult.initialize(null);
+//            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
+    /**
+     * 查询正常状态的模块类型数据
+     *
+     * @return class ModuleTypeVO
+     * @version v1
+     */
+    @GetMapping("v1/module")
+    public Result module(HttpServletRequest request) throws ActException {
+        try {
+            List<ModuleTypeBO> boList = new ArrayList<>();
+            if(moduleAPI.isCheck("organize")){
+                boList = moduleTypeAPI.findByStatus(Status.THAW);
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(boList, ModuleTypeVO.class, request));
+//            if (moduleAPI.isCheck("organize")) {
+//                return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.findByStatus(Status.THAW), ModuleTypeVO.class, request));
+//            } else {
+//                return ActResult.initialize(null);
+//            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询正常状态的工作范围类型数据
+     *
+     * @return class WorkRangeVO
+     * @version v1
+     */
+    @GetMapping("v1/workRange")
+    public Result workRange(HttpServletRequest request) throws ActException {
+        try {
+            List<WorkRangeBO> boList = new ArrayList<>();
+            if(moduleAPI.isCheck("organize")){
+                boList = workRangeAPI.findByStatus(Status.THAW);
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(boList, WorkRangeVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询正常状态的工作目的类型数据
+     *
+     * @return class String
+     * @version v1
+     */
+    @GetMapping("v1/workPurpose")
+    public Result workPurpose() throws ActException {
+        try {
+            List<String> boList = new ArrayList<>();
+            if(moduleAPI.isCheck("organize")){
+                boList = positionInstructionAPI.getOutCome();
+            }
+            return ActResult.initialize(boList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取工作范围
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findWorkScope")
+    public Result findWorkScope() throws ActException {
+        try {
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("organize")) {
+                list = workRangeAPI.findWorkScope();
+            }
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取工作目的
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findWorkPurpose")
+    public Result findWorkPurpose() throws ActException {
+        try {
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("organize")) {
+                list = positionInstructionAPI.findOutcome();
+            }
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取工作权限
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findPermission")
+    public Result findWorkPermission() throws ActException {
+        try {
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("organize")) {
+                list = positionInstructionAPI.findWorkPermission();
+            }
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

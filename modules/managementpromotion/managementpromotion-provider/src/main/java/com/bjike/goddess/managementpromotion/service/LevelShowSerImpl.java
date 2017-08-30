@@ -1,5 +1,6 @@
 package com.bjike.goddess.managementpromotion.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -212,5 +214,24 @@ public class LevelShowSerImpl extends ServiceImpl<LevelShow, LevelShowDTO> imple
             return list.get(0);
         }
         return null;
+    }
+
+    @Override
+    public LevelShow findByName(String name) throws SerException {
+        LevelShowDTO levelShowDTO = new LevelShowDTO();
+        levelShowDTO.getConditions().add(Restrict.eq("name", name));
+        List<LevelShow> levelShows = super.findByCis(levelShowDTO);
+        if (!CollectionUtils.isEmpty(levelShows)) {
+            return levelShows.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public LevelShowBO findEmployeeId(String employeeId) throws SerException {
+        LevelShowDTO dto = new LevelShowDTO();
+        dto.getConditions().add(Restrict.eq("employeeId",employeeId));
+        LevelShow levelShow = super.findOne(dto);
+        return BeanTransform.copyProperties(levelShow,LevelShowBO.class);
     }
 }

@@ -183,7 +183,7 @@ public class StayUtilitiesAction {
     public Result collect ( @RequestParam String[] names ) throws ActException {
         try {
             List<CollectNameBO> collectNameBOS = BeanTransform.copyProperties(
-                    stayUtilitiesAPI.collectName(names),CollectNameVO.class,true);
+                    stayUtilitiesAPI.collectName(names),CollectNameVO.class);
             return ActResult.initialize(collectNameBOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

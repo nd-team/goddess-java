@@ -57,6 +57,11 @@ public class OilCardRechargeBO extends BaseBO {
      */
     private Double cycleEarlyMoney;
 
+    /**
+     * 油卡id
+     */
+    private String oilCardBasicId;
+
     public String getRechargeDate() {
         return rechargeDate;
     }
@@ -119,5 +124,13 @@ public class OilCardRechargeBO extends BaseBO {
 
     public void setMainOrDeputy(String mainOrDeputy) {
         this.mainOrDeputy = mainOrDeputy;
+    }
+
+    public String getOilCardBasicId() {
+        return oilCardBasicId;
+    }
+
+    public void setOilCardBasicId(String oilCardBasicId) {
+        this.oilCardBasicId = oilCardBasicId;
     }
 }

@@ -51,8 +51,7 @@ public class StaffBirthdayAct {
      * 查询员工生日信息
      *
      * @param dto 分页信息
-     * @param month 生日月份
-     * @return class UserDetailVO
+     * @return class StaffBirthDayVO
      * @version v1
      */
     @GetMapping("v1/findStaffBirthInfo")
@@ -62,6 +61,22 @@ public class StaffBirthdayAct {
             List<StaffBirthDayVO> voList = BeanTransform.copyProperties(boList,StaffBirthDayVO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取列表总条数
+     * @param dto 条件
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(StaffBirthDayDTO dto) throws ActException{
+        try {
+            Long count = staffBirthDayAPI.count(dto);
+            return ActResult.initialize(count);
+        }catch (SerException e){
             throw new ActException(e.getMessage());
         }
     }

@@ -1,0 +1,198 @@
+package com.bjike.goddess.housepay.bo;
+
+import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.housepay.enums.PayStatus;
+
+/**
+ * 等待付款业务传输对象
+ *
+ * @Author: [ xiazhili ]
+ * @Date: [ 2017-05-13 09:11 ]
+ * @Description: [ 等待付款业务传输对象 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+public class CollectDetailBO extends BaseBO {
+    /**
+     * 地区
+     */
+    private String area;
+    /**
+     * 年份
+     */
+    private String year;
+
+    /**
+     * 月份
+     */
+    private String month;
+
+    /**
+     * 项目
+     */
+    private String project;
+
+    /**
+     * 房租地址
+     */
+    private String rentAddress;
+
+    /**
+     * 租金
+     */
+    private Double rent;
+
+    /**
+     * 水费
+     */
+    private Double water;
+
+    /**
+     * 电费
+     */
+    private Double energy;
+
+    /**
+     * 管理费
+     */
+    private Double fee;
+
+    /**
+     * 其他费用
+     */
+    private Double otherFee;
+
+    /**
+     * 合计（租金+水费+电费+管理费+其他费用）
+     */
+    private Double total;
+
+    /**
+     * 房东姓名
+     */
+    private String landlord;
+
+    /**
+     * 联系电话
+     */
+    private String contact;
+
+    /**
+     * 交租确认
+     */
+    private String taxesConfirm;
+
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
+    }
+
+    public String getRentAddress() {
+        return rentAddress;
+    }
+
+    public void setRentAddress(String rentAddress) {
+        this.rentAddress = rentAddress;
+    }
+
+    public Double getRent() {
+        return rent;
+    }
+
+    public void setRent(Double rent) {
+        this.rent = rent;
+    }
+
+    public Double getWater() {
+        return water;
+    }
+
+    public void setWater(Double water) {
+        this.water = water;
+    }
+
+    public Double getEnergy() {
+        return energy;
+    }
+
+    public void setEnergy(Double energy) {
+        this.energy = energy;
+    }
+
+    public Double getFee() {
+        return fee;
+    }
+
+    public void setFee(Double fee) {
+        this.fee = fee;
+    }
+
+    public Double getOtherFee() {
+        return otherFee;
+    }
+
+    public void setOtherFee(Double otherFee) {
+        this.otherFee = otherFee;
+    }
+
+    public Double getTotal() {
+        return total;
+    }
+
+    public void setTotal(Double total) {
+        this.total = total;
+    }
+
+    public String getLandlord() {
+        return landlord;
+    }
+
+    public void setLandlord(String landlord) {
+        this.landlord = landlord;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public String getTaxesConfirm() {
+        return taxesConfirm;
+    }
+
+    public void setTaxesConfirm(String taxesConfirm) {
+        this.taxesConfirm = taxesConfirm;
+    }
+
+}

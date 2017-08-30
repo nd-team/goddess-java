@@ -111,16 +111,16 @@ public class OilCardReceiveAct {
     /**
      * 审核
      *
-     * @param id                   id
-     * @param auditSuggestion      审核意见
-     * @param OilCardReceiveResult 审核结果
+     * @param id              id
+     * @param auditSuggestion 审核意见
+     * @param auditResult     审核结果
      * @version v1
      */
     @LoginAuth
-    @GetMapping("v1/audit/{id}")
-    public Result audit(@PathVariable String id, @RequestParam String auditSuggestion, @RequestParam OilCardReceiveResult OilCardReceiveResult) throws ActException {
+    @GetMapping("v1/audit")
+    public Result audit(@RequestParam String id, @RequestParam String auditSuggestion, @RequestParam OilCardReceiveResult auditResult) throws ActException {
         try {
-            oilCardReceiveAPI.auditOilCardReceive(id, auditSuggestion, OilCardReceiveResult);
+            oilCardReceiveAPI.auditOilCardReceive(id, auditSuggestion, auditResult);
             return ActResult.initialize("审核成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -175,9 +175,9 @@ public class OilCardReceiveAct {
 
         try {
             List<OilCardReceiveVO> vo = BeanTransform.copyProperties(oilCardReceiveAPI.pageList(dto), OilCardReceiveVO.class);
-            if(vo != null && vo.size()> 0 ){
+            if (vo != null && vo.size() > 0) {
                 vo.stream().forEach(str -> {
-                    str.setOilCardBasicVO( BeanTransform.copyProperties( str.getOilCardBasicVO() , OilCardBasicVO.class ));
+                    str.setOilCardBasicVO(BeanTransform.copyProperties(str.getOilCardBasicVO(), OilCardBasicVO.class));
                 });
             }
             return ActResult.initialize(vo);
@@ -187,16 +187,16 @@ public class OilCardReceiveAct {
     }
 
     /**
-     * 根据Id查询油卡基础信息
+     * 根据Id查询油卡领用信息
      *
      * @param id id
      * @return class OilCardReceiveVO
      * @version v1
      */
     @GetMapping("v1/find/{id}")
-    public Result pageList(String id) throws ActException {
+    public Result pageList(@PathVariable String id) throws ActException {
         try {
-            OilCardReceiveVO vo = BeanTransform.copyProperties(oilCardReceiveAPI.findById(id), OilCardReceiveVO.class);
+            OilCardReceiveVO vo = BeanTransform.copyProperties(oilCardReceiveAPI.findOne(id), OilCardReceiveVO.class);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -220,56 +220,56 @@ public class OilCardReceiveAct {
     }
 
     /**
-     * 查询所有未冻结的油卡
+     * 查询所有未冻结且闲置的油卡的油卡编号
+     *
      * @return class OilCardBasicVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/find/oilcard")
-    public Result findOilcard() throws ActException{
+    public Result findOilcard() throws ActException {
         try {
             List<String> boList = oilCardReceiveAPI.findOilCard();
             return ActResult.initialize(boList);
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
     /**
      * 查询所有地区
+     *
      * @return class AreaVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/find/area")
-    public Result findArea() throws ActException{
+    public Result findArea() throws ActException {
         try {
-            List<AreaVO> voList = new ArrayList<>(0);
-            if(moduleAPI.isCheck("organize")) {
-                List<AreaBO> areaBOS = oilCardReceiveAPI.findArea();
-                voList = BeanTransform.copyProperties(areaBOS, AreaVO.class);
-            }
-           return ActResult.initialize(voList);
-        }catch (SerException e){
+            List<AreaBO> areaBOS = oilCardReceiveAPI.findArea();
+            List<AreaVO> voList = BeanTransform.copyProperties(areaBOS, AreaVO.class);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
     /**
      * 查询所有审核人
+     *
      * @return class CusPermissionOperateVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/find/operate")
-    public Result findOperate() throws ActException{
+    public Result findOperate() throws ActException {
         try {
             List<String> list = new ArrayList<>(0);
-            if(moduleAPI.isCheck("organize")) {
-                list = oilCardReceiveAPI.findOperate();
-            }
+//            if(moduleAPI.isCheck("organize")) {
+            list = oilCardReceiveAPI.findOperate();
+//            }
             return ActResult.initialize(list);
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }

@@ -37,4 +37,8 @@ public class CustomerInfoCollectApiImpl implements CustomerInfoCollectAPI {
     public List<CustomerInfoCollectBO> collect(CustomerInfoCollectDTO dto) throws SerException {
         return customerInfoCollectSer.collect(dto);
     }
+    @Override
+    public List<String> getInvestor() throws SerException {
+        return customerInfoCollectSer.getInvestor();
+    }
 }

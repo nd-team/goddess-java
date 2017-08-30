@@ -1,5 +1,6 @@
 package com.bjike.goddess.dispatchcar.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.carinfo.api.DriverInfoAPI;
 import com.bjike.goddess.carinfo.bo.DriverInfoBO;
 import com.bjike.goddess.carinfo.dto.DriverInfoDTO;
@@ -33,8 +34,13 @@ import com.bjike.goddess.oilcardmanage.api.OilCardBasicAPI;
 import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardBasicDTO;
 import com.bjike.goddess.oilcardmanage.entity.OilCardBasic;
+import com.bjike.goddess.oilcardmanage.to.OilCardBasicTO;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.organize.bo.PositionDetailUserBO;
+import com.bjike.goddess.organize.entity.PositionDetail;
+import com.bjike.goddess.organize.entity.PositionDetailUser;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
@@ -95,6 +101,12 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
 
     @Autowired
     private PositionDetailAPI positionDetailAPI;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
+
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
 
 
@@ -388,9 +400,9 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     @Transactional(rollbackFor = SerException.class)
     public void fundSugg(String id, String fundModuleSugg) throws SerException {
         UserBO userBO = userAPI.currentUser();
-        UserDetailBO userDetailBO = userDetailAPI.findByUserId(userBO.getId());
-        if (userDetailBO != null) {
-            if (userDetailBO.getPositionName().equals("资金模块负责人")) {
+        List<PositionDetailBO> positionDetailBOS = positionDetailUserAPI.findPositionByUser(userBO.getId());
+        if (positionDetailBOS != null) {
+            if (positionDetailBOS.get(0).getPosition().equals("资金模块负责人")) {
                 DispatchCarInfo model = super.findById(id);
                 if (model != null) {
                     model.setFundModuleSugg(fundModuleSugg);
@@ -412,9 +424,9 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     @Transactional(rollbackFor = SerException.class)
     public void budgetSugg(String id, String budgetModuleSugg) throws SerException {
         UserBO userBO = userAPI.currentUser();
-        UserDetailBO userDetailBO = userDetailAPI.findByUserId(userBO.getId());
-        if (userDetailBO != null) {
-            if (userDetailBO.getPositionName().equals("预算模块负责人")) {
+        List<PositionDetailBO> positionDetailBOS = positionDetailUserAPI.findPositionByUser(userBO.getId());
+        if (positionDetailBOS != null && positionDetailBOS.size() > 0) {
+            if (positionDetailBOS.get(0).getPosition().equals("预算模块负责人")) {
                 DispatchCarInfo model = super.findById(id);
                 if (model != null) {
                     model.setBudgetModuleSugg(budgetModuleSugg);
@@ -483,10 +495,10 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             OilCardBasicBO basicBO = oilCardBasicAPI.findByCode(model.getOilCardNumber());
             OilCardBasicBO bo = oilCardBasicAPI.find(basicBO.getId());
             bo.setBalance(bo.getBalance() - model.getOilPrice());
-            OilCardBasic oilCardBasic = BeanTransform.copyProperties(bo,OilCardBasic.class,true);
-            oilCardBasicAPI.updateOliCardBasic(oilCardBasic);
-            if (oilCardBasic.getBalance() < 300) {
-                String content = "运营商务部的同事，你们好，" + oilCardBasic.getOilCardCode() + "号油卡余额" + oilCardBasic.getBalance() + "元，低于300元，请在一天内充值，请综合资源部同事跟进充值情况";
+//            OilCardBasic oilCardBasic = BeanTransform.copyProperties(bo,OilCardBasic.class,true);
+            oilCardBasicAPI.updateOliCardBasic(bo);
+            if (bo.getBalance() < 300) {
+                String content = "运营商务部的同事，你们好，" + bo.getOilCardCode() + "号油卡余额" + bo.getBalance() + "元，低于300元，请在一天内充值，请综合资源部同事跟进充值情况";
                 MessageTO to = new MessageTO("油卡余额不足300元", content);
                 to.setSendType(SendType.EMAIL);
                 //TODO 未明确发送对象
@@ -1197,14 +1209,17 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
 
     @Override
     public List<EntryBasicInfoBO> findAllEntry() throws SerException {
-        EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
-        List<EntryBasicInfoBO> boList = entryBasicInfoAPI.listEntryBasicInfo(dto);
+        List<EntryBasicInfoBO> boList = new ArrayList<>(0);
+        if(moduleAPI.isCheck("entryBasicInfo")) {
+            EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
+            boList = entryBasicInfoAPI.listEntryBasicInfo(dto);
+        }
         return boList;
     }
 
-    @Override
-    public List<OilCardBasicBO> findAllOil() throws SerException {
-        List<OilCardBasicBO> boList = oilCardBasicAPI.findOilCard();
-        return boList;
-    }
+//    @Override
+//    public List<OilCardBasicBO> findAllOil() throws SerException {
+//        List<OilCardBasicBO> boList = oilCardBasicAPI.findOilCard();
+//        return boList;
+//    }
 }

@@ -2,6 +2,7 @@ package com.bjike.goddess.organize.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.organize.bo.*;
 import com.bjike.goddess.organize.dto.WorkRangeDTO;
 import com.bjike.goddess.organize.entity.WorkRange;
@@ -198,6 +199,22 @@ public interface WorkRangeSer extends Ser<WorkRange, WorkRangeDTO> {
      * @throws SerException
      */
     default List<OpinionBO> findThawOpinion() throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有工作范围选项
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<WorkRangeBO> findByStatus(Status status) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取工作范围
+     */
+    default List<String> findWorkScope() throws SerException {
         return null;
     }
 }

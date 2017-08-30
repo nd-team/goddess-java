@@ -9,6 +9,9 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.datastore.bo.NumSpecificationBO;
+import com.bjike.goddess.datastore.to.NumSpecificationTO;
+import com.bjike.goddess.datastore.vo.NumSpecificationVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
@@ -91,7 +94,7 @@ public class JoinInfoAction extends BaseFileAction{
     /**
      * 一个交接资料
      *
-     * @param id
+     * @param id 交接资料id
      * @return class JoinInfoVO
      * @des 获取一个交接资料
      * @version v1
@@ -267,6 +270,25 @@ public class JoinInfoAction extends BaseFileAction{
             fileAPI.delFile(storageToken.toString(),workJoinDeleteFileTO.getPaths());
         }
         return new ActResult("delFile success");
+    }
+
+
+    /**
+     * 获取制度文件夹编号和经验总结编号
+     * @return class NumSpecificationVO
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/find/specification")
+    public Result findSpecification() throws ActException{
+        try {
+            List<NumSpecificationBO> boList = joinInfoAPI.findNumSepecification();
+            List<NumSpecificationVO> voList = BeanTransform.copyProperties(boList,NumSpecificationVO.class);
+            return ActResult.initialize(voList);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
     }
 
 

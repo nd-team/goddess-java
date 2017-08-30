@@ -44,8 +44,8 @@ public class OilCardReceiveApiImpl implements OilCardReceiveAPI {
     }
 
     @Override
-    public void auditOilCardReceive(String id, String auditSuggestion, OilCardReceiveResult oilCardReceiveResult) throws SerException {
-        oilCardReceiveSer.audit(id, auditSuggestion, oilCardReceiveResult);
+    public void auditOilCardReceive(String id, String auditSuggestion, OilCardReceiveResult auditResult) throws SerException {
+        oilCardReceiveSer.audit(id, auditSuggestion, auditResult);
     }
 
     @Override
@@ -64,8 +64,8 @@ public class OilCardReceiveApiImpl implements OilCardReceiveAPI {
     }
 
     @Override
-    public OilCardReceiveBO findById(String id) throws SerException {
-        return BeanTransform.copyProperties(oilCardReceiveSer.findById(id), OilCardReceiveBO.class);
+    public OilCardReceiveBO findOne(String id) throws SerException {
+        return oilCardReceiveSer.findOne(id);
     }
 
     @Override

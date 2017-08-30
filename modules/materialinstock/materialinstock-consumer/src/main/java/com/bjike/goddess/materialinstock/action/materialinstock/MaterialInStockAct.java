@@ -1,5 +1,6 @@
 package com.bjike.goddess.materialinstock.action.materialinstock;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -9,6 +10,7 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.materialbuy.api.MaterialBuyAPI;
 import com.bjike.goddess.materialinstock.api.MaterialInStockAPI;
 import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
 import com.bjike.goddess.materialinstock.dto.MaterialInStockDTO;
@@ -18,11 +20,13 @@ import com.bjike.goddess.materialinstock.to.StockDeleteFileTO;
 import com.bjike.goddess.materialinstock.vo.MaterialInStockVO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 物资入库
@@ -54,6 +59,12 @@ public class MaterialInStockAct extends BaseFileAction {
 
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private MaterialBuyAPI materialBuyAPI;
+
+
     /**
      * 功能导航权限
      *
@@ -76,10 +87,11 @@ public class MaterialInStockAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 根据id查询物资入库
      *
-     * @param id      物资入库唯一标识
+     * @param id 物资入库唯一标识
      * @return class MaterialInStockVO
      * @throws ActException
      * @version v1
@@ -115,7 +127,7 @@ public class MaterialInStockAct extends BaseFileAction {
     /**
      * 分页查询物资入库
      *
-     * @param dto           物资入库dto
+     * @param dto 物资入库dto
      * @return class MaterialInStockVO
      * @throws ActException
      * @version v1
@@ -134,7 +146,7 @@ public class MaterialInStockAct extends BaseFileAction {
     /**
      * 添加物资入库
      *
-     * @param to      物资入库to
+     * @param to 物资入库to
      * @return class MaterialInStockVO
      * @throws ActException
      * @version v1
@@ -170,7 +182,7 @@ public class MaterialInStockAct extends BaseFileAction {
     /**
      * 编辑物资入库
      *
-     * @param to     物资入库to
+     * @param to 物资入库to
      * @throws ActException
      * @version v1
      */
@@ -266,6 +278,7 @@ public class MaterialInStockAct extends BaseFileAction {
         }
         return new ActResult("delFile success");
     }
+
     /**
      * 所有部门下拉值
      *
@@ -274,13 +287,22 @@ public class MaterialInStockAct extends BaseFileAction {
     @GetMapping("v1/allOrageDepartment")
     public Result allOrageDepartment() throws ActException {
         try {
-            List<String> detail = new ArrayList<>();
-            detail = materialInStockAPI.findAddAllDetails();
-            return ActResult.initialize(detail);
+//            List<String> detail = new ArrayList<>();
+//            detail = materialInStockAPI.findAddAllDetails();
+//            return ActResult.initialize(detail);
+            List<String> list = new ArrayList<>(0);
+            if (moduleAPI.isCheck("organize")) {
+                List<OpinionBO> opinionBOList = departmentDetailAPI.findThawOpinion();
+                if(!CollectionUtils.isEmpty(opinionBOList)){
+                    list = opinionBOList.stream().map(OpinionBO::getValue).distinct().collect(Collectors.toList());
+                }
+            }
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 添加中所有的地区
      *
@@ -289,12 +311,16 @@ public class MaterialInStockAct extends BaseFileAction {
     @GetMapping("v1/allArea")
     public Result allArea() throws ActException {
         try {
-            List<AreaBO> area = departmentDetailAPI.findArea();
+            List<AreaBO> area = new ArrayList<>(0);
+            if (moduleAPI.isCheck("organize")) {
+                area = departmentDetailAPI.findArea();
+            }
             return ActResult.initialize(area);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有用户
      *
@@ -306,6 +332,42 @@ public class MaterialInStockAct extends BaseFileAction {
             List<String> getPerson = new ArrayList<>();
             getPerson = materialInStockAPI.findallUser();
             return ActResult.initialize(getPerson);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取物资入库申购日期
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getBuyDate")
+    public Result getBuyDate() throws ActException {
+        try {
+            List<String> list = new ArrayList<>();
+            if (moduleAPI.isCheck("materialbuy")) {
+                list = materialBuyAPI.findSubscribeDate();
+            }
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取申购人
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getRequisitioner")
+    public Result getRequisitioner() throws ActException {
+        try {
+            List<String> list = new ArrayList<>();
+            if (moduleAPI.isCheck("materialbuy")) {
+                list = materialBuyAPI.findRequisitioner();
+            }
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

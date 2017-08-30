@@ -1,6 +1,7 @@
 package com.bjike.goddess.business.api;
 
 import com.bjike.goddess.business.bo.BusinessRegisterBO;
+import com.bjike.goddess.business.bo.RegisterNaTypeCaBO;
 import com.bjike.goddess.business.dto.BusinessRegisterDTO;
 import com.bjike.goddess.business.excel.SonPermissionObject;
 import com.bjike.goddess.business.to.BusinessRegisterTO;
@@ -88,5 +89,22 @@ public interface BusinessRegisterAPI {
     default void removeBusinessRegister(String id) throws SerException {
 
     }
+    /**
+     * 工商注册的注册公司的名称,注册类型,注册资本
+     * lijuntao
+     * @return class RegisterNaTypeCaBO
+     * @throws SerException
+     */
+    default List<RegisterNaTypeCaBO> findRegiNaTyCa() throws SerException {
+        return null;
+    }
 
+    /**
+     * 工商注册的地址
+     * lijuntao
+     * @throws SerException
+     */
+    default List<String> findAddress() throws SerException {
+        return null;
+    }
 }

@@ -1,5 +1,11 @@
 package com.bjike.goddess.managepromotion.action.managepromotion;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.archive.api.StaffRecordsAPI;
+import com.bjike.goddess.archive.bo.StaffRecordsBO;
+import com.bjike.goddess.archive.vo.StaffRecordsVO;
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -38,6 +44,10 @@ import java.util.List;
 public class EmployeeFunctionLevelAction {
     @Autowired
     private EmployeeFunctionLevelAPI employeeFunctionLevelAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private StaffRecordsAPI staffRecordsAPI;
 
     /**
      * 功能导航权限
@@ -186,6 +196,28 @@ public class EmployeeFunctionLevelAction {
         try {
             OverviewSkillLevelBO overviewSkillLevelBO = employeeFunctionLevelAPI.skill(employeeFunctionLevelTO);
             return ActResult.initialize(BeanTransform.copyProperties(overviewSkillLevelBO, OverviewSkillLevelVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据姓名查询入职时间
+     *
+     * @return class StaffRecordsVO
+     * @version v1
+     */
+    @GetMapping("v1/entryTime")
+    public Result entryTime(String username, HttpServletRequest request) throws ActException {
+        try {
+            StaffRecordsBO bo = null;
+            String userToken = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            if (moduleAPI.isCheck("archive")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, userToken);
+                bo = staffRecordsAPI.findByName(username);
+
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(bo, StaffRecordsVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

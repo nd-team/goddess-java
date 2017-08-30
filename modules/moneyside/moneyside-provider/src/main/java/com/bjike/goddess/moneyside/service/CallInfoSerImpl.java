@@ -1,5 +1,6 @@
 package com.bjike.goddess.moneyside.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.businessproject.api.BaseInfoManageAPI;
 import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
 import com.bjike.goddess.businessproject.dto.BaseInfoManageDTO;
@@ -48,6 +49,9 @@ public class CallInfoSerImpl extends ServiceImpl<CallInfo, CallInfoDTO> implemen
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -328,18 +332,24 @@ public class CallInfoSerImpl extends ServiceImpl<CallInfo, CallInfoDTO> implemen
         BaseInfoManageDTO dto = new BaseInfoManageDTO();
         dto.getConditions().add(Restrict.eq("innerProject", innerProject));
         CallInfo callInfo = new CallInfo();
-        List<BaseInfoManageBO> list = baseInfoManageAPI.searchSiginManage(dto);
-        if (StringUtils.isNotBlank(innerProject)) {
-            for (BaseInfoManageBO baseInfoManageBO : list) {
-                callInfo.setInnerProject(baseInfoManageBO.getInnerProject());
-                callInfo.setArea(baseInfoManageBO.getArea());
-                callInfo.setStartProjectTime(LocalDate.parse(baseInfoManageBO.getStartProjectTime()));
-                callInfo.setEndProjectTime(LocalDate.parse(baseInfoManageBO.getEndProjectTime()));
-                callInfo.setMoney(baseInfoManageBO.getMoney());
-                callInfo.setProjectCharge(baseInfoManageBO.getProjectCharge());
+        List<BaseInfoManageBO> boList = new ArrayList<>(0);
+        if (moduleAPI.isCheck("businessproject")) {
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
+            List<BaseInfoManageBO> list = baseInfoManageAPI.searchSiginManage(dto);
+            if (StringUtils.isNotBlank(innerProject)) {
+                for (BaseInfoManageBO baseInfoManageBO : list) {
+                    callInfo.setInnerProject(baseInfoManageBO.getInnerProject());
+                    callInfo.setArea(baseInfoManageBO.getArea());
+                    callInfo.setStartProjectTime(LocalDate.parse(baseInfoManageBO.getStartProjectTime()));
+                    callInfo.setEndProjectTime(LocalDate.parse(baseInfoManageBO.getEndProjectTime()));
+                    callInfo.setMoney(baseInfoManageBO.getMoney());
+                    callInfo.setProjectCharge(baseInfoManageBO.getProjectCharge());
+                }
+
+            } else {
+                throw new SerException("项目名称不能为空");
             }
-        } else {
-            throw new SerException("项目名称不能为空");
         }
 
         CallInfoBO callInfoBO = BeanTransform.copyProperties(callInfo, CallInfoBO.class);

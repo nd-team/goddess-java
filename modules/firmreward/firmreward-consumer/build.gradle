@@ -38,6 +38,8 @@ dependencies {
     }
 
     compile project(":modules:firmreward:firmreward-api")
+    compile project(":modules:assemble:assemble-api")
+    compile project(":modules:bonusmoneyperparepay:bonusmoneyperparepay-api")
     compile project(":modules:user:user-api")
     compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
     compile("org.springframework.boot:spring-boot-starter-web")

@@ -2,6 +2,7 @@ package com.bjike.goddess.workjoin.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
 import com.bjike.goddess.workjoin.bo.DeviceJoinBO;
 import com.bjike.goddess.workjoin.dto.DeviceJoinDTO;
 import com.bjike.goddess.workjoin.entity.DeviceJoin;
@@ -67,4 +68,8 @@ public class DeviceJoinApiImpl implements DeviceJoinAPI {
 
     }
 
+    @Override
+    public List<MaterialInStockBO> findMaterial() throws SerException {
+        return deviceJoinSer.findMaterial();
+    }
 }

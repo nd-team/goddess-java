@@ -73,6 +73,7 @@
 	<dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
 	<dubbo:reference  validation="true" id="dimissionInfoApiImpl" interface="com.bjike.goddess.dimission.api.DimissionInfoAPI" />
     <dubbo:reference  validation="true" id="staffRecordsApiImpl" interface="com.bjike.goddess.archive.api.StaffRecordsAPI" />
+    <dubbo:reference  validation="true" id="entryRegisterApiImpl" interface="com.bjike.goddess.staffentry.api.EntryRegisterAPI" />
 
     <dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.staffwelfare.api.CusPermissionAPI" />
 

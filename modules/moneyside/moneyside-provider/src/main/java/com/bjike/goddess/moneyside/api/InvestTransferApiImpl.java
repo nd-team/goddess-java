@@ -7,6 +7,7 @@ import com.bjike.goddess.moneyside.service.InvestFormSer;
 import com.bjike.goddess.moneyside.service.InvestTransferSer;
 import com.bjike.goddess.moneyside.to.GuidePermissionTO;
 import com.bjike.goddess.moneyside.to.InvestTransferTO;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,5 +63,10 @@ public class InvestTransferApiImpl implements InvestTransferAPI {
     @Override
     public void removeInvestTransfer(String id) throws SerException {
         investTransferSer.removeInvestTransfer(id);
+    }
+
+    @Override
+    public List<UserBO> findUserListInOrgan() throws SerException {
+        return investTransferSer.findUserListInOrgan();
     }
 }

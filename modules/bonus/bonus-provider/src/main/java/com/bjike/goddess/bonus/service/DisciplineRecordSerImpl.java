@@ -351,10 +351,24 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
             entity.setLaunch(user.getUsername());
         if (StringUtils.isBlank(entity.getName()))
             entity.setName(" ");
-        if (StringUtils.isBlank(entity.getProject()))
-            entity.setProject(" ");
-        if (StringUtils.isBlank(entity.getArea()))
-            entity.setArea(" ");
+        if (StringUtils.isBlank(entity.getProject())){
+            if (moduleAPI.isCheck("organize")) {
+                List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.getPositionDetail(user.getUsername());
+                if (!CollectionUtils.isEmpty(positionDetailBOs)) {
+                    PositionDetailBO positionDetailBO = positionDetailBOs.get(0);
+                    entity.setArea(positionDetailBO.getDepartmentName());
+                }
+            }
+        }
+        if (StringUtils.isBlank(entity.getArea())) {
+            if (moduleAPI.isCheck("organize")) {
+                List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.getPositionDetail(user.getUsername());
+                if (!CollectionUtils.isEmpty(positionDetailBOs)) {
+                    PositionDetailBO positionDetailBO = positionDetailBOs.get(0);
+                    entity.setArea(positionDetailBO.getArea());
+                }
+            }
+        }
         super.save(entity);
         return BeanTransform.copyProperties(entity, DisciplineRecordBO.class);
     }
@@ -758,5 +772,55 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
             }
         }
         return 0;
+    }
+
+    @Override
+    public ScoreBO getRePuTotal(String userName) throws SerException {
+        DisciplineRecordDTO dto = new DisciplineRecordDTO();
+        dto.getConditions().add(Restrict.eq("username", userName));
+        List<DisciplineRecord> disciplineRecords = super.findByCis(dto);
+        Double rewardTotal = 0d;
+        Double pushTotal = 0d;
+        if (disciplineRecords != null && disciplineRecords.size() > 0) {
+            for (DisciplineRecord disciplineRecord : disciplineRecords) {
+                if (disciplineRecord.getStatus()) {
+                    rewardTotal += disciplineRecord.getBallot();
+                } else {
+                    pushTotal += disciplineRecord.getBallot();
+                }
+            }
+        }
+        ScoreBO scoreBO = new ScoreBO();
+        scoreBO.setRewardTotal(rewardTotal);
+        scoreBO.setPushTotal(pushTotal);
+        return scoreBO;
+    }
+    public String getRewardBallot(String name) throws SerException {
+        StringBuilder sql = new StringBuilder("select sum(ballot) as ballot ");
+        sql.append(" from bonus_discipline_record ");
+        sql.append(" where name = '" + name + "' ");
+        sql.append(" and is_status = 1 ");
+        String[] fields = new String[]{"ballot"};
+        List<DisciplineRecord> disciplineRecords = super.findBySql(sql.toString(), DisciplineRecord.class, fields);
+        if (!CollectionUtils.isEmpty(disciplineRecords)) {
+            Double ballots = disciplineRecords.stream().map(DisciplineRecord::getBallot).distinct().collect(Collectors.toList()).get(0);
+            return ballots.toString();
+        }
+        return null;
+    }
+
+    @Override
+    public String getPushBallot(String name) throws SerException {
+        StringBuilder sql = new StringBuilder("select sum(ballot) as ballot ");
+        sql.append(" from bonus_discipline_record ");
+        sql.append(" where name = '" + name + "' ");
+        sql.append(" and is_status = 0 ");
+        String[] fields = new String[]{"ballot"};
+        List<DisciplineRecord> disciplineRecords = super.findBySql(sql.toString(), DisciplineRecord.class, fields);
+        if (!CollectionUtils.isEmpty(disciplineRecords)) {
+            Double ballots = disciplineRecords.stream().map(DisciplineRecord::getBallot).distinct().collect(Collectors.toList()).get(0);
+            return ballots.toString();
+        }
+        return null;
     }
 }

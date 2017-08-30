@@ -1,5 +1,6 @@
 package com.bjike.goddess.materialtransfer.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -32,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 物资调动业务实现
@@ -59,6 +61,10 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+
+
     /**
      * 检查权限(部门)
      *
@@ -268,7 +274,7 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     @Transactional(rollbackFor = SerException.class)
     public MaterialTransferBO save(MaterialTransferTO to) throws SerException {
         checkPermission();
-        String userToekn=RpcTransmit.getUserToken();
+        String userToekn = RpcTransmit.getUserToken();
         MaterialTransferBO bo = BeanTransform.copyProperties(to, MaterialTransferBO.class);
         RpcTransmit.transmitUserToken(userToekn);
         bo = setAttributes(bo);//设置物资属性
@@ -285,7 +291,7 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
      * @return
      */
     private MaterialTransferBO setAttributes(MaterialTransferBO bo) throws SerException {
-        String userToken=RpcTransmit.getUserToken();
+        String userToken = RpcTransmit.getUserToken();
         String curUsername = userAPI.currentUser().getUsername();
         MaterialInStockBO inStockBO = checkMaterialInStock(bo);//检验是否为空
         RpcTransmit.transmitUserToken(userToken);
@@ -306,7 +312,9 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
         inStockBO.setLender(curUsername);            //设置外借人
         inStockBO.setLendArea(lendArea);             //设置外借地区
         inStockBO.setUseState(UseState.TRANSFER);    //设置使用状态为外借
-        materialInStockAPI.updateSingleBO(inStockBO);//更新物资入库
+        if (moduleAPI.isCheck("materialinstock")) {
+            materialInStockAPI.updateSingleBO(inStockBO);//更新物资入库
+        }
         return inStockBO;
     }
 
@@ -353,7 +361,10 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
         if (stockEncoding == null) {
             throw new SerException("您好,入库编码不能为空.");
         }
-        MaterialInStockBO model = materialInStockAPI.findByMaterialCoding(stockEncoding);
+        MaterialInStockBO model = null;
+        if (moduleAPI.isCheck("materialinstock")) {
+            model = materialInStockAPI.findByMaterialCoding(stockEncoding);
+        }
         if (model == null) {
             throw new SerException("该物资不存在,无法进行调动.");
         }
@@ -470,18 +481,18 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
 
     @Override
     public List<String> findAddAllDetails() throws SerException {
-            List<DepartmentDetailBO> departmentDetailBOS = departmentDetailAPI.findStatus();
-            if (CollectionUtils.isEmpty(departmentDetailBOS)) {
-                return Collections.emptyList();
+        List<DepartmentDetailBO> departmentDetailBOS = departmentDetailAPI.findStatus();
+        if (CollectionUtils.isEmpty(departmentDetailBOS)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (DepartmentDetailBO departmentDetailBO : departmentDetailBOS) {
+            String details = departmentDetailBO.getDepartment();
+            if (StringUtils.isNotBlank(departmentDetailBO.getDepartment())) {
+                set.add(details);
             }
-            Set<String> set = new HashSet<>();
-            for (DepartmentDetailBO departmentDetailBO : departmentDetailBOS){
-                String details = departmentDetailBO.getDepartment();
-                if (StringUtils.isNotBlank(departmentDetailBO.getDepartment())) {
-                    set.add(details);
-                }
-            }
-            return new ArrayList<>(set);
+        }
+        return new ArrayList<>(set);
     }
 
     @Override
@@ -491,12 +502,36 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
             return Collections.emptyList();
         }
         Set<String> set = new HashSet<>();
-        for (UserBO userBO : userBOS){
+        for (UserBO userBO : userBOS) {
             String userName = userBO.getUsername();
             if (StringUtils.isNotBlank(userBO.getUsername())) {
                 set.add(userName);
             }
         }
         return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> findModel() throws SerException {
+        List<String> list = new ArrayList<>(0);
+        if (moduleAPI.isCheck("materialinstock")) {
+            List<MaterialInStockBO> materialInStockBOs = materialInStockAPI.findAll();
+            if (!org.springframework.util.CollectionUtils.isEmpty(materialInStockBOs)) {
+                list = materialInStockBOs.stream().map(MaterialInStockBO::getMaterialModel).distinct().collect(Collectors.toList());
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<String> findUnit() throws SerException {
+        List<String> list = new ArrayList<>(0);
+        if (moduleAPI.isCheck("materialinstock")) {
+            List<MaterialInStockBO> materialInStockBOs = materialInStockAPI.findAll();
+            if (!org.springframework.util.CollectionUtils.isEmpty(materialInStockBOs)) {
+                list = materialInStockBOs.stream().map(MaterialInStockBO::getUnit).distinct().collect(Collectors.toList());
+            }
+        }
+        return list;
     }
 }

@@ -2,6 +2,8 @@ package com.bjike.goddess.staffwelfare.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffwelfare.bo.StaffBirthDayWelfareBO;
+import com.bjike.goddess.staffwelfare.bo.ThankStatementBO;
+import com.bjike.goddess.staffwelfare.bo.WishesStatementBO;
 import com.bjike.goddess.staffwelfare.dto.StaffBirthDayWelfareDTO;
 import com.bjike.goddess.staffwelfare.service.StaffBirthDayWelfareSer;
 import com.bjike.goddess.staffwelfare.to.GuidePermissionTO;
@@ -44,5 +46,15 @@ public class StaffBirthDayWelfareApiImpl implements StaffBirthDayWelfareAPI {
     @Override
     public Long count(StaffBirthDayWelfareDTO dayWelfareDTO) throws SerException {
         return staffBirthDayWelfareSer.count(dayWelfareDTO);
+    }
+
+    @Override
+    public List<WishesStatementBO> findWish(String employeeName) throws SerException {
+        return staffBirthDayWelfareSer.findWish(employeeName);
+    }
+
+    @Override
+    public List<ThankStatementBO> findThank(String employeeName) throws SerException {
+        return staffBirthDayWelfareSer.findThank(employeeName);
     }
 }

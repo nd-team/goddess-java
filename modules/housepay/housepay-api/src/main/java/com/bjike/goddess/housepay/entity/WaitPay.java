@@ -24,10 +24,16 @@ import java.time.LocalDateTime;
 public class WaitPay extends BaseEntity {
 
     /**
-     * 缴费时间
+     * 年份
      */
-    @Column(name = "payTime", nullable = false, columnDefinition = "DATE   COMMENT '缴费时间'")
-    private LocalDate payTime;
+    @Column(name = "year", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '年份'")
+    private String year;
+
+    /**
+     * 月份
+     */
+    @Column(name = "month", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '月份'")
+    private String month;
 
     /**
      * 地区
@@ -115,12 +121,20 @@ public class WaitPay extends BaseEntity {
     private String remark;
 
 
-    public LocalDate getPayTime() {
-        return payTime;
+    public String getYear() {
+        return year;
     }
 
-    public void setPayTime(LocalDate payTime) {
-        this.payTime = payTime;
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
     }
 
     public String getArea() {

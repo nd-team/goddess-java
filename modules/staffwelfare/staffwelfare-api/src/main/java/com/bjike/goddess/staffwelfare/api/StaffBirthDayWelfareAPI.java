@@ -1,7 +1,10 @@
 package com.bjike.goddess.staffwelfare.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.staffwelfare.bo.StaffBirthDayBO;
 import com.bjike.goddess.staffwelfare.bo.StaffBirthDayWelfareBO;
+import com.bjike.goddess.staffwelfare.bo.ThankStatementBO;
+import com.bjike.goddess.staffwelfare.bo.WishesStatementBO;
 import com.bjike.goddess.staffwelfare.dto.StaffBirthDayWelfareDTO;
 import com.bjike.goddess.staffwelfare.excel.SonPermissionObject;
 import com.bjike.goddess.staffwelfare.to.GuidePermissionTO;
@@ -45,5 +48,17 @@ public interface StaffBirthDayWelfareAPI  {
      */
     Long count(StaffBirthDayWelfareDTO dayWelfareDTO) throws SerException;
 
-//    List<> birthdayDetail(String userID) throws SerException;
+    /**
+     * 查询生日祝福语
+     * @param employeeName
+     * @throws SerException
+     */
+    List<WishesStatementBO> findWish(String employeeName) throws SerException;
+
+    /**
+     * 查询生日感谢语
+     * @param employeeName
+     * @throws SerException
+     */
+    List<ThankStatementBO> findThank(String employeeName) throws SerException;
 }

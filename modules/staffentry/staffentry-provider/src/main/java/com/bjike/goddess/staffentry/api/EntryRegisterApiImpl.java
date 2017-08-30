@@ -82,4 +82,22 @@ public class EntryRegisterApiImpl implements EntryRegisterAPI {
     public EntryRegister getByNumber(String number) throws SerException {
         return entryRegisterSer.getByNumber(number);
     }
+
+    @Override
+    public List<String> findQQ() throws SerException {
+        return entryRegisterSer.findQQ();
+    }
+
+    @Override
+    public List<String> findSchoolTag() throws SerException {
+        return entryRegisterSer.findSchoolTag();
+    }
+
+    @Override
+    public List<String> findGraduationDate() throws SerException {
+        return entryRegisterSer.findGraduationDate();
+    }
+    public List<EntryRegister> list() throws SerException {
+        return entryRegisterSer.list();
+    }
 }

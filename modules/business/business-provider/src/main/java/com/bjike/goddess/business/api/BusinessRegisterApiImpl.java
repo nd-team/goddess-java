@@ -1,6 +1,7 @@
 package com.bjike.goddess.business.api;
 
 import com.bjike.goddess.business.bo.BusinessRegisterBO;
+import com.bjike.goddess.business.bo.RegisterNaTypeCaBO;
 import com.bjike.goddess.business.dto.BusinessRegisterDTO;
 import com.bjike.goddess.business.excel.SonPermissionObject;
 import com.bjike.goddess.business.service.BusinessRegisterSer;
@@ -62,4 +63,13 @@ public class BusinessRegisterApiImpl implements BusinessRegisterAPI {
         businessRegisterSer.removeBusinessRegister(id);
     }
 
+    @Override
+    public List<RegisterNaTypeCaBO> findRegiNaTyCa() throws SerException {
+        return businessRegisterSer.findRegiNaTyCa();
+    }
+
+    @Override
+    public List<String> findAddress() throws SerException {
+        return businessRegisterSer.findAddress();
+    }
 }

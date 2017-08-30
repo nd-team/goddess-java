@@ -233,7 +233,7 @@ public class SalaryInformationTO extends BaseTO {
      * 个税
      */
     @NotNull(message = "个税不能为空!", groups = {ADD.class, EDIT.class})
-    private Double  personTax;
+    private Boolean  personTax;
 
     /**
      * 奖励处罚得分汇总
@@ -564,12 +564,15 @@ public class SalaryInformationTO extends BaseTO {
     public void setUtilities (Double utilities ) {
         this.utilities = utilities ;
     }
-    public Double getPersonTax () {
+
+    public Boolean getPersonTax() {
         return personTax;
     }
-    public void setPersonTax (Double personTax ) {
-        this.personTax = personTax ;
+
+    public void setPersonTax(Boolean personTax) {
+        this.personTax = personTax;
     }
+
     public Double getAllRewardScore () {
         return allRewardScore;
     }

@@ -1,5 +1,7 @@
 package com.bjike.goddess.firmreward.action.firmreward;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.bonusmoneyperparepay.api.MoneyPerpareAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -47,7 +49,10 @@ public class BonusBudgetAct {
 
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
-
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private MoneyPerpareAPI moneyPerpareAPI;
 
     /**
      * 模块设置导航权限
@@ -284,6 +289,25 @@ public class BonusBudgetAct {
             List<RewardProgramRatioBO> boList = bonusBudgetAPI.checkRewardProgramRatios(ratioId);
             List<RewardProgramRatioVO> voList = BeanTransform.copyProperties(boList, RewardProgramRatioVO.class, request);
             return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 当月预算范围下拉值
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findPay/reserve")
+    public Result findPayReserve() throws ActException {
+        try {
+            List<Double> date = new ArrayList<>();
+            if (moduleAPI.isCheck("bonusmoneyperparepay")) {
+                date = moneyPerpareAPI.findReserve();
+            }
+            return ActResult.initialize(date);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

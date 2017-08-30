@@ -19,13 +19,19 @@ import javax.validation.constraints.NotNull;
 public class WaitPayTO extends BaseTO {
     public interface TestAdd{}
     public interface TestEdit{}
+    public interface TestCalculate{}
 
     /**
-     * 缴费时间
+     * 年份
      */
-    @NotBlank(message = "缴费时间不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
-    private String payTime;
+    @NotBlank(message = "年份不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
+    private String year;
 
+    /**
+     * 月份
+     */
+    @NotBlank(message = "月份不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
+    private String month;
     /**
      * 地区
      */
@@ -47,31 +53,31 @@ public class WaitPayTO extends BaseTO {
     /**
      * 租金
      */
-    @NotNull(message = "租金不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
+    @NotNull(message = "租金不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class,WaitPayTO.TestCalculate.class})
     private Double rent;
 
     /**
      * 水费
      */
-    @NotNull(message = "水费不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
+    @NotNull(message = "水费不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class,WaitPayTO.TestCalculate.class})
     private Double water;
 
     /**
      * 电费
      */
-    @NotNull(message = "电费不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
+    @NotNull(message = "电费不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class,WaitPayTO.TestCalculate.class})
     private Double energy;
 
     /**
      * 管理费
      */
-    @NotNull(message = "管理费不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
+    @NotNull(message = "管理费不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class,WaitPayTO.TestCalculate.class})
     private Double fee;
 
     /**
      * 其他费用
      */
-    @NotNull(message = "其他费用不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class})
+    @NotNull(message = "其他费用不能为空",groups = {WaitPayTO.TestAdd.class,WaitPayTO.TestEdit.class,WaitPayTO.TestCalculate.class})
     private Double otherFee;
 
     /**
@@ -108,12 +114,20 @@ public class WaitPayTO extends BaseTO {
     private String remark;
 
 
-    public String getPayTime() {
-        return payTime;
+    public String getYear() {
+        return year;
     }
 
-    public void setPayTime(String payTime) {
-        this.payTime = payTime;
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
     }
 
     public String getArea() {

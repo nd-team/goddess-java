@@ -217,4 +217,14 @@ public class MaterialBuyApiImpl implements MaterialBuyAPI {
     public List<MaterialBuyBO> findByRequisType(String requisitioner, String devType, String[] intervalTime) throws SerException {
         return materialBuySer.findByRequisType(requisitioner,devType,intervalTime);
     }
+
+    @Override
+    public List<String> findSubscribeDate() throws SerException {
+        return materialBuySer.findSubscribeDate();
+    }
+
+    @Override
+    public List<String> findRequisitioner() throws SerException {
+        return materialBuySer.findRequisitioner();
+    }
 }

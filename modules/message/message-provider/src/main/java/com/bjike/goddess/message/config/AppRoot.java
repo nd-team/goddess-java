@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableCaching
 @PropertySource({"classpath:config.properties","classpath:kafka.properties","classpath:redis.properties"})
 @ImportResource({"classpath:application.xml"})
-@ComponentScan(basePackages = {"com.bjike.goddess.message"},
+@ComponentScan(basePackages = {"com.bjike.goddess.message","com.bjike.goddess.redis"},
         excludeFilters = {@ComponentScan.Filter(
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})

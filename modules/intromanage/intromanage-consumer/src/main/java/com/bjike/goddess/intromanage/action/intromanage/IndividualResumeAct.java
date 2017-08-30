@@ -1,5 +1,6 @@
 package com.bjike.goddess.intromanage.action.intromanage;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -17,6 +18,7 @@ import com.bjike.goddess.intromanage.to.IndividualDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.IndividualResumeTO;
 import com.bjike.goddess.intromanage.vo.*;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -44,6 +46,10 @@ public class IndividualResumeAct {
 
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private EntryRegisterAPI entryRegisterAPI;
 
     /**
      * 模块设置导航权限
@@ -114,6 +120,7 @@ public class IndividualResumeAct {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 根据id查询个人简介
      *
@@ -130,21 +137,21 @@ public class IndividualResumeAct {
             IndividualResumeVO vo = BeanTransform.copyProperties(bo, IndividualResumeVO.class, request);
 
             //查询员工奖励
-            List<StaffRewardVO> honorAndQualitieVOs = BeanTransform.copyProperties( bo.getStaffRewardBOS() ,StaffRewardVO.class );
+            List<StaffRewardVO> honorAndQualitieVOs = BeanTransform.copyProperties(bo.getStaffRewardBOS(), StaffRewardVO.class);
             //查询员工荣誉
-            List<StaffHonorVO> mainBusinessIntroVOS = BeanTransform.copyProperties( bo.getStaffHonorBOS() ,StaffHonorVO.class );
+            List<StaffHonorVO> mainBusinessIntroVOS = BeanTransform.copyProperties(bo.getStaffHonorBOS(), StaffHonorVO.class);
             //查询教育经历
-            List<EducateExperienceVO> successStoriesVOS = BeanTransform.copyProperties( bo.getEducateExperienceBOS() ,EducateExperienceVO.class );
+            List<EducateExperienceVO> successStoriesVOS = BeanTransform.copyProperties(bo.getEducateExperienceBOS(), EducateExperienceVO.class);
             //查询工作经历
-            List<WorkExperienceVO> customerAndPartnerVOS = BeanTransform.copyProperties( bo.getWorkExperienceBOS() ,WorkExperienceVO.class );
+            List<WorkExperienceVO> customerAndPartnerVOS = BeanTransform.copyProperties(bo.getWorkExperienceBOS(), WorkExperienceVO.class);
             //查询证书情况
-            List<CredentialSituationVO> communicationPathVOS = BeanTransform.copyProperties( bo.getCredentialSituationBOS() ,CredentialSituationVO.class );
+            List<CredentialSituationVO> communicationPathVOS = BeanTransform.copyProperties(bo.getCredentialSituationBOS(), CredentialSituationVO.class);
 
-            vo.setStaffRewardVOS( honorAndQualitieVOs );
-            vo.setStaffHonorVOS( mainBusinessIntroVOS );
-            vo.setEducateExperienceVOS( successStoriesVOS );
-            vo.setWorkExperienceVOS( customerAndPartnerVOS );
-            vo.setCredentialSituationVOS( communicationPathVOS );
+            vo.setStaffRewardVOS(honorAndQualitieVOs);
+            vo.setStaffHonorVOS(mainBusinessIntroVOS);
+            vo.setEducateExperienceVOS(successStoriesVOS);
+            vo.setWorkExperienceVOS(customerAndPartnerVOS);
+            vo.setCredentialSituationVOS(communicationPathVOS);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -259,6 +266,61 @@ public class IndividualResumeAct {
         try {
             individualResumeAPI.setIndividualDisplayField(username, to);
             return new ActResult("setIndividualDisplayField success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * qq下拉值
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findStaffentry/qq")
+    public Result findStaffentryQQ() throws ActException {
+        try {
+            List<String> qq = new ArrayList<>();
+            if (moduleAPI.isCheck("staffentry")) {
+                qq = entryRegisterAPI.findQQ();
+            }
+            return ActResult.initialize(qq);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 毕业学校下拉值
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findStaffentry/school")
+    public Result findStaffentrySchool() throws ActException {
+        try {
+            List<String> school = new ArrayList<>();
+            if (moduleAPI.isCheck("staffentry")) {
+                school = entryRegisterAPI.findSchoolTag();
+            }
+            return ActResult.initialize(school);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 毕业时间下拉值
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findStaffentry/date")
+    public Result findStaffentryDate() throws ActException {
+        try {
+            List<String> date = new ArrayList<>();
+            if (moduleAPI.isCheck("staffentry")) {
+                date = entryRegisterAPI.findGraduationDate();
+            }
+            return ActResult.initialize(date);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

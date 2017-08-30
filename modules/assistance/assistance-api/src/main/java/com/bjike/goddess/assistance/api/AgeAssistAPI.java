@@ -102,7 +102,7 @@ public interface AgeAssistAPI {
     /**
      * 根据计薪周期开始时间和结束时间获取工龄补助信息
      */
-    AgeAssistBO findAge(String startTime,String endTime) throws SerException;
+    AgeAssistBO findAge(String employeeName) throws SerException;
 
 
 }

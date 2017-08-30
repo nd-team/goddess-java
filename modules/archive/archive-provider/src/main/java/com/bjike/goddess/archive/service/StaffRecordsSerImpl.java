@@ -12,6 +12,7 @@ import com.bjike.goddess.archive.enums.GuideAddrStatus;
 import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.archive.to.StaffRecords1ExcelTO;
 import com.bjike.goddess.archive.to.StaffRecordsExcelTO;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
@@ -20,6 +21,7 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
@@ -30,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -58,6 +61,10 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
     private EntryBasicInfoAPI entryBasicInfoAPI;
     @Autowired
     private EntryRegisterAPI entryRegisterAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -314,19 +321,19 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
                 staffRecordsBO.setSerialNumber(entryBasicInfoBO.getEmployeeID());
                 staffRecordsBO.setProject(entryBasicInfoBO.getProjectGroup());
                 staffRecordsBO.setPosition(entryBasicInfoBO.getPosition());
-
-                EntryRegister entryRegister = entryRegisterAPI.getByNumber(entryBasicInfoBO.getEmployeeID());
-
-                staffRecordsBO.setEducation(entryRegister.getEducation());
+                if (moduleAPI.isCheck("staffentry")) {
+                    EntryRegister entryRegister = entryRegisterAPI.getByNumber(entryBasicInfoBO.getEmployeeID());
+                    staffRecordsBO.setEducation(entryRegister.getEducation());
+                    staffRecordsBO.setSchool(entryRegister.getSchoolTag());
+                    staffRecordsBO.setGraduate(entryRegister.getGraduationDate().toString());
+                    staffRecordsBO.setBirth(entryRegister.getBirthday().toString());
+                    staffRecordsBO.setAddress(entryRegister.getRegisteredAddress());
+                    staffRecordsBO.setIdentityCard(entryRegister.getIdCard());
+                }
                 staffRecordsBO.setMajor(entryBasicInfoBO.getProfession());
-                staffRecordsBO.setSchool(entryRegister.getSchoolTag());
-                staffRecordsBO.setGraduate(entryRegister.getGraduationDate().toString());
                 staffRecordsBO.setEntryTime(entryBasicInfoBO.getEntryTime());
                 staffRecordsBO.setSeniority(getMonthSpace(entryBasicInfoBO.getEntryTime(), LocalDateTime.now().toString()));
                 staffRecordsBO.setTelephone(entryBasicInfoBO.getPhone());
-                staffRecordsBO.setBirth(entryRegister.getBirthday().toString());
-                staffRecordsBO.setAddress(entryRegister.getRegisteredAddress());
-                staffRecordsBO.setIdentityCard(entryRegister.getIdCard());
                 staffRecordsBO.setBankCard(entryBasicInfoBO.getBankCardID());
                 staffRecordsBO.setBank(entryBasicInfoBO.getBankOfDeposit());
                 staffRecordsBO.setEmail(entryBasicInfoBO.getEmail());
@@ -372,6 +379,18 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
         if (null != list && list.size() > 0) {
             for (StaffRecords entity : list) {
                 entity.setStatus(Status.CONGEAL);
+                if (moduleAPI.isCheck("staffentry")) {
+                    EntryRegister entryRegister = entryRegisterAPI.getByNumber(entity.getSerialNumber());
+                    if (null != entryRegister) {
+                        entity.setGraduate(entryRegister.getGraduationDate());
+                    }
+                }
+                if (moduleAPI.isCheck("organize")) {
+                    List<String> stringList = positionDetailUserAPI.getPosition(entity.getUsername());
+                    if (!CollectionUtils.isEmpty(stringList)) {
+                        entity.setPosition(stringList.get(0));
+                    }
+                }
             }
         }
         super.save(list);
@@ -412,10 +431,10 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
 
     @Override
     public List<StaffRecordsBO> findByMonth(Integer month) throws SerException {
-        String[] staff = new String[]{"username","serialNumber","project","position","educationn","major","school","graduate","entryTime","seniority","telephone","birth","address","identityCard","bankCard","bank","email","status"};
+        String[] staff = new String[]{"id","createTime","modifyTime","address","bank","bankCard","birth","dimissionTime","education","email","entryTime","graduate","identityCard","major","position","project","school","seniority","serialNumber","status","telephone","username"};
         String sql = "select * from archive_staff_records where month(birth) = '"+month+"'";
         List<StaffRecords> list = super.findBySql(sql,StaffRecords.class,staff);
-        List<StaffRecordsBO> boList = BeanTransform.copyProperties(list,StaffRecordsBO.class,true);
+        List<StaffRecordsBO> boList = BeanTransform.copyProperties(list,StaffRecordsBO.class,false);
         return boList;
     }
 }

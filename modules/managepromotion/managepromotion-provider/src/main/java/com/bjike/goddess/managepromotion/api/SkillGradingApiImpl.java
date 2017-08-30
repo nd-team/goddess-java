@@ -2,6 +2,7 @@ package com.bjike.goddess.managepromotion.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.managepromotion.bo.CalculateBO;
+import com.bjike.goddess.managepromotion.bo.SkillBO;
 import com.bjike.goddess.managepromotion.bo.SkillGradingABO;
 import com.bjike.goddess.managepromotion.bo.SkillGradingBO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingADTO;
@@ -72,7 +73,11 @@ public class SkillGradingApiImpl implements SkillGradingAPI {
         skillGradingSer.removeSkillGrading(id);
     }
     @Override
-    public List<CalculateBO> calculate(CalculateTO to) throws SerException {
+    public List<String> getSkillLevel() throws SerException {
+        return skillGradingSer.getSkillLevel();
+    }
+    @Override
+    public List<SkillBO> calculate(CalculateTO to) throws SerException {
         return skillGradingSer.calculate(to);
     }
 }

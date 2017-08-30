@@ -1,6 +1,7 @@
 package com.bjike.goddess.workjoin.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.workjoin.bo.WorkJoinBO;
 import com.bjike.goddess.workjoin.dto.WorkJoinDTO;
 import com.bjike.goddess.workjoin.excel.SonPermissionObject;
@@ -109,4 +110,8 @@ public interface WorkJoinAPI {
         return null;
     }
 
+    /**
+     * 获取交接人和接手人
+     */
+    List<UserBO> findUser() throws SerException;
 }

@@ -1,12 +1,19 @@
 package com.bjike.goddess.staffwelfare.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffwelfare.bo.StaffBirthDayWelfareBO;
+import com.bjike.goddess.staffwelfare.bo.ThankStatementBO;
+import com.bjike.goddess.staffwelfare.bo.WishesStatementBO;
 import com.bjike.goddess.staffwelfare.dto.StaffBirthDayWelfareDTO;
+import com.bjike.goddess.staffwelfare.dto.ThankStatementDTO;
+import com.bjike.goddess.staffwelfare.dto.WishesStatementDTO;
 import com.bjike.goddess.staffwelfare.entity.StaffBirthDayWelfare;
+import com.bjike.goddess.staffwelfare.entity.ThankStatement;
+import com.bjike.goddess.staffwelfare.entity.WishesStatement;
 import com.bjike.goddess.staffwelfare.enums.GuideAddrStatus;
 import com.bjike.goddess.staffwelfare.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
@@ -34,6 +41,12 @@ public class StaffBirthDayWelfareSerImpl extends ServiceImpl<StaffBirthDayWelfar
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+
+    @Autowired
+    private WishesStatementSer wishesStatementSer;
+
+    @Autowired
+    private ThankStatementSer thankStatementSer;
     /**
      * 核对查看权限（部门级别）
      */
@@ -180,5 +193,23 @@ public class StaffBirthDayWelfareSerImpl extends ServiceImpl<StaffBirthDayWelfar
         dto.getSorts().add("createTime=desc");
         List<StaffBirthDayWelfare> list = super.findByPage(dto);
         return BeanTransform.copyProperties(list,StaffBirthDayWelfareBO.class);
+    }
+
+    @Override
+    public List<WishesStatementBO> findWish(String employeeName) throws SerException {
+        WishesStatementDTO dto = new WishesStatementDTO();
+        dto.getConditions().add(Restrict.eq("createUser",employeeName));
+        List<WishesStatement> bos = wishesStatementSer.findByCis(dto);
+        List<WishesStatementBO> boList = BeanTransform.copyProperties(bos,WishesStatementBO.class);
+        return boList;
+    }
+
+    @Override
+    public List<ThankStatementBO> findThank(String employeeName) throws SerException {
+        ThankStatementDTO dto = new ThankStatementDTO();
+        dto.getConditions().add(Restrict.eq("createUser",employeeName));
+        List<ThankStatement> thankStatements = thankStatementSer.findByCis(dto);
+        List<ThankStatementBO> vos = BeanTransform.copyProperties(thankStatements,ThankStatementBO.class);
+        return vos;
     }
 }
