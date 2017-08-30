@@ -4,8 +4,11 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.staffwelfare.bo.PersonalFestivalBO;
+import com.bjike.goddess.staffwelfare.bo.ThankStatementBO;
 import com.bjike.goddess.staffwelfare.dto.PersonalFestivalDTO;
+import com.bjike.goddess.staffwelfare.dto.ThankStatementDTO;
 import com.bjike.goddess.staffwelfare.entity.PersonalFestival;
 import com.bjike.goddess.staffwelfare.entity.PersonalFestivalWish;
 import com.bjike.goddess.staffwelfare.enums.GuideAddrStatus;
@@ -42,6 +45,12 @@ public class PersonalFestivalSerImpl extends ServiceImpl<PersonalFestival, Perso
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
+
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+
+    @Autowired
+    private ThankStatementSer  thankStatementSer;
 
     /**
      * 核对查看权限（部门级别）
@@ -187,15 +196,24 @@ public class PersonalFestivalSerImpl extends ServiceImpl<PersonalFestival, Perso
     @Transactional(rollbackFor = SerException.class)
     public PersonalFestivalBO insertModel(PersonalFestivalTO to) throws SerException {
         checkSeeIdentity();
-        PersonalFestival model = BeanTransform.copyProperties(to, PersonalFestival.class, true);
+        PersonalFestival model = BeanTransform.copyProperties(to, PersonalFestival.class, true,"visibleUsers");
+        String[] visibleUsers=to.getVisibleUsers();
+        StringBuilder sb=new StringBuilder();
+        for (int i=0;i<visibleUsers.length;i++){
+            if (i==visibleUsers.length-1){
+                sb.append(visibleUsers[i]);
+            }else {
+                sb.append(visibleUsers[i]+",");
+            }
+        }
+        model.setVisibleUsers(sb.toString());
         UserBO userBO = userAPI.currentUser();
         if (userBO != null) {
             model.setUserName(userBO.getUsername());
             model.setUserId(userBO.getId());
         }
         super.save(model);
-        to.setId(model.getId());
-        return BeanTransform.copyProperties(to, PersonalFestivalBO.class);
+        return BeanTransform.copyProperties(model, PersonalFestivalBO.class);
     }
 
     @Override
@@ -205,16 +223,27 @@ public class PersonalFestivalSerImpl extends ServiceImpl<PersonalFestival, Perso
         if (!StringUtils.isEmpty(to.getId())) {
             PersonalFestival model = super.findById(to.getId());
             if (model != null) {
-                BeanTransform.copyProperties(to, model, true);
+                BeanTransform.copyProperties(to, model, true,"visibleUsers");
+                StringBuilder sb = new StringBuilder();
+                String[] vis = to.getVisibleUsers();
+                for(int i = 0 ; i< vis.length; i++){
+                    if(i == vis.length - 1) {
+                        sb.append(vis[i]);
+                    }else{
+                        sb.append(vis[i]+",");
+                    }
+                }
+                model.setVisibleUsers(sb.toString());
                 model.setModifyTime(LocalDateTime.now());
                 super.update(model);
             } else {
                 throw new SerException("更新对象不能为空");
             }
+            return BeanTransform.copyProperties(model, PersonalFestivalBO.class);
         } else {
             throw new SerException("更新ID不能为空!");
         }
-        return BeanTransform.copyProperties(to, PersonalFestivalBO.class);
+
     }
 
     @Override
@@ -264,5 +293,18 @@ public class PersonalFestivalSerImpl extends ServiceImpl<PersonalFestival, Perso
         PersonalFestival personalFestival =super.findById(id);
         PersonalFestivalBO bo = BeanTransform.copyProperties(personalFestival,PersonalFestivalBO.class);
         return bo;
+    }
+
+    @Override
+    public List<UserBO> findUserListInOrgan() throws SerException {
+        List<UserBO> boList = positionDetailUserAPI.findUserListInOrgan();
+        return boList;
+    }
+
+    @Override
+    public List<ThankStatementBO> findThank() throws SerException {
+        ThankStatementDTO dto = new ThankStatementDTO();
+        List<ThankStatementBO> boList = thankStatementSer.pageList(dto);
+        return boList;
     }
 }

@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 个人节日
  *
@@ -31,8 +33,8 @@ public class PersonalFestivalTO extends BaseTO {
     /**
      * 可见人员
      */
-    @NotBlank(message = "可见人员不能为空!", groups = {ADD.class, EDIT.class})
-    private String visibleUsers;
+    @NotNull(message = "可见人员不能为空!", groups = {ADD.class, EDIT.class})
+    private String[] visibleUsers;
 
     /**
      * 提醒时间
@@ -49,7 +51,7 @@ public class PersonalFestivalTO extends BaseTO {
     /**
      * 是否开通一声祝福
      */
-    @NotBlank(message = "是否开通一声祝福不能为空!", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "是否开通一声祝福不能为空!", groups = {ADD.class, EDIT.class})
     private Boolean openWish;
 
     /**
@@ -89,11 +91,11 @@ public class PersonalFestivalTO extends BaseTO {
         this.festivalDate = festivalDate;
     }
 
-    public String getVisibleUsers() {
+    public String[] getVisibleUsers() {
         return visibleUsers;
     }
 
-    public void setVisibleUsers(String visibleUsers) {
+    public void setVisibleUsers(String[] visibleUsers) {
         this.visibleUsers = visibleUsers;
     }
 

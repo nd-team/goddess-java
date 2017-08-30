@@ -6,6 +6,8 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 感谢语
  *
@@ -31,7 +33,7 @@ public class ThankStatementTO extends BaseTO {
     /**
      * 是否共享为公有
      */
-    @NotBlank(message = "是否共享为公有不能为空!", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "是否共享为公有不能为空!", groups = {ADD.class, EDIT.class})
     private Boolean share;
 
     /**

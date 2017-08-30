@@ -35,6 +35,10 @@ public class HeadPortraitHatVO {
      */
     private String updateUser;
 
+    /**
+     * 更新时间
+     */
+    private String updateDate;
 
     public String getId() {
         return id;
@@ -74,5 +78,13 @@ public class HeadPortraitHatVO {
 
     public void setUpdateUser(String updateUser) {
         this.updateUser = updateUser;
+    }
+
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
     }
 }

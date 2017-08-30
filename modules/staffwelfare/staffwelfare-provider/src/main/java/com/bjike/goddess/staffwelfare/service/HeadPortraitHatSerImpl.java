@@ -340,7 +340,19 @@ public class HeadPortraitHatSerImpl extends ServiceImpl<HeadPortraitHat, HeadPor
         //
 //        dto.getConditions().add(Restrict.or("createUser", getCurrentUser().getUsername()));
         List<HeadPortraitHat> list = super.findByPage(dto);
-        return BeanTransform.copyProperties(list, HeadPortraitHatBO.class);
+        List<HeadPortraitHatBO> boList = BeanTransform.copyProperties(list, HeadPortraitHatBO.class);
+        if(boList != null && boList.size() > 0){
+            for(HeadPortraitHat headPortraitHat : list){
+                for(HeadPortraitHatBO headPortraitHatBO : boList){
+                    if(org.apache.commons.lang3.StringUtils.isNotBlank(headPortraitHat.getModifyTime().toString())){
+                        headPortraitHatBO.setUpdateDate(headPortraitHat.getModifyTime().toString());
+                    }else {
+                        headPortraitHatBO.setUpdateDate(headPortraitHat.getCreateTime().toString());
+                    }
+                }
+            }
+        }
+        return boList;
     }
 
     @Override

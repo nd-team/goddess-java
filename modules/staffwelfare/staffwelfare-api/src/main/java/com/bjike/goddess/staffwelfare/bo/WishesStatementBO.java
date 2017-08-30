@@ -28,6 +28,10 @@ public class WishesStatementBO extends BaseBO {
      */
     private String updateUser;
 
+    /**
+     * 更新时间
+     */
+    private String updateDate;
 
     public String getCreateUser() {
         return createUser;
@@ -51,5 +55,13 @@ public class WishesStatementBO extends BaseBO {
 
     public void setUpdateUser(String updateUser) {
         this.updateUser = updateUser;
+    }
+
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
     }
 }

@@ -2,10 +2,12 @@ package com.bjike.goddess.staffwelfare.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffwelfare.bo.PersonalFestivalBO;
+import com.bjike.goddess.staffwelfare.bo.ThankStatementBO;
 import com.bjike.goddess.staffwelfare.dto.PersonalFestivalDTO;
 import com.bjike.goddess.staffwelfare.excel.SonPermissionObject;
 import com.bjike.goddess.staffwelfare.to.GuidePermissionTO;
 import com.bjike.goddess.staffwelfare.to.PersonalFestivalTO;
+import com.bjike.goddess.user.bo.UserBO;
 
 import java.util.List;
 
@@ -86,4 +88,14 @@ public interface PersonalFestivalAPI {
      * @throws SerException
      */
     PersonalFestivalBO findOne(String id) throws SerException;
+
+    /**
+     * 查询所有员工
+     */
+    List<UserBO> findUserListInOrgan() throws SerException;
+
+    /**
+     * 查询所有答谢语
+     */
+    List<ThankStatementBO> findThank() throws SerException;
 }

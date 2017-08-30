@@ -60,6 +60,10 @@ public class PersonalFestivalWishVO {
      */
     private String receiveUserId;
 
+    /**
+     * 备注
+     */
+    private String remark;
 
     public String getId() {
         return id;
@@ -139,5 +143,13 @@ public class PersonalFestivalWishVO {
 
     public void setThankStatement(String thankStatement) {
         this.thankStatement = thankStatement;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

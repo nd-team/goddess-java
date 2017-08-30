@@ -7,6 +7,7 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffwelfare.bo.PersonalFestivalBO;
 import com.bjike.goddess.staffwelfare.bo.PersonalFestivalWishBO;
+import com.bjike.goddess.staffwelfare.dto.PersonalFestivalDTO;
 import com.bjike.goddess.staffwelfare.dto.PersonalFestivalWishDTO;
 import com.bjike.goddess.staffwelfare.entity.PersonalFestival;
 import com.bjike.goddess.staffwelfare.entity.PersonalFestivalWish;
@@ -14,6 +15,7 @@ import com.bjike.goddess.staffwelfare.enums.GuideAddrStatus;
 import com.bjike.goddess.staffwelfare.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -193,21 +195,46 @@ public class PersonalFestivalWishSerImpl extends ServiceImpl<PersonalFestivalWis
         }
         //查询当前用户收到的祝福语
         dto.getConditions().add(Restrict.eq("receiveUserId",userBO.getId()));
-        List<PersonalFestivalWish> list = super.findByPage(dto);
-        List<PersonalFestivalWishBO> boList = new ArrayList<PersonalFestivalWishBO>();
-        if (list != null && !list.isEmpty()) {
-            boList = BeanTransform.copyProperties(list, PersonalFestivalWishBO.class);
-            for (PersonalFestivalWishBO bo : boList) {
-                PersonalFestival personalFestival = personalFestivalSer.findById(bo.getFestivalId());
-                if(personalFestival!=null){
-                    PersonalFestivalBO personalFestivalBO = BeanTransform.copyProperties(personalFestival,PersonalFestivalBO.class);
-                    bo.setFestivalName(personalFestivalBO.getFestivalName());
-                    bo.setFestivalTime(personalFestivalBO.getFestivalDate());
-                    bo.setThankStatement(personalFestivalBO.getThankStatement());
+        PersonalFestivalDTO personalFestivalDTO = new PersonalFestivalDTO();
+        if(StringUtils.isNotBlank(dto.getFestivalName())) {
+            personalFestivalDTO.getConditions().add(Restrict.eq("festivalName", dto.getFestivalName()));
+        }
+        List<PersonalFestival> personalFestivals = personalFestivalSer.findByCis(personalFestivalDTO);
+        List<PersonalFestivalWishBO> boList = new ArrayList<>();
+        if(personalFestivals != null && personalFestivals.size() > 0){
+            for(PersonalFestival personalFestival : personalFestivals){
+                PersonalFestivalWishDTO wishDTO = new PersonalFestivalWishDTO();
+                wishDTO.getConditions().add(Restrict.eq("festivalId",personalFestival.getId()));
+                List<PersonalFestivalWish> wishList = super.findByCis(wishDTO);
+                if(wishList != null && wishList.size() > 0) {
+                    for(PersonalFestivalWish personalFestivalWish : wishList) {
+                        PersonalFestivalWishBO wishBO = new PersonalFestivalWishBO();
+                        wishBO.setFestivalName(personalFestival.getFestivalName());
+                        wishBO.setFestivalTime(personalFestival.getFestivalDate().toString());
+                        wishBO.setSendUser(personalFestivalWish.getSendUser());
+                        wishBO.setWishStatement(personalFestivalWish.getWishStatement());
+                        wishBO.setThankStatement(personalFestival.getThankStatement());
+                        wishBO.setRemark(personalFestival.getRemark());
+                        boList.add(wishBO);
+                    }
                 }
             }
-
         }
+//        List<PersonalFestivalWish> list = super.findByPage(dto);
+//        List<PersonalFestivalWishBO> boList = new ArrayList<PersonalFestivalWishBO>();
+//        if (list != null && !list.isEmpty()) {
+//            boList = BeanTransform.copyProperties(list, PersonalFestivalWishBO.class);
+//            for (PersonalFestivalWishBO bo : boList) {
+//                PersonalFestival personalFestival = personalFestivalSer.findById(bo.getFestivalId());
+//                if(personalFestival!=null){
+//                    PersonalFestivalBO personalFestivalBO = BeanTransform.copyProperties(personalFestival,PersonalFestivalBO.class);
+//                    bo.setFestivalName(personalFestivalBO.getFestivalName());
+//                    bo.setFestivalTime(personalFestivalBO.getFestivalDate());
+//                    bo.setThankStatement(personalFestivalBO.getThankStatement());
+//                }
+//            }
+//
+//        }
         return boList;
     }
 

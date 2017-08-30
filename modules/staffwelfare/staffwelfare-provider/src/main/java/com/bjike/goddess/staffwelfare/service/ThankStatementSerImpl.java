@@ -223,7 +223,19 @@ public class ThankStatementSerImpl extends ServiceImpl<ThankStatement, ThankStat
         dto.getConditions().add(Restrict.or("createUser",getCurrentUser().getUsername()));
         dto.getConditions().add(Restrict.or("share",1));
         List<ThankStatement> list = super.findByPage(dto);
-        return BeanTransform.copyProperties(list, ThankStatementBO.class);
+        List<ThankStatementBO> boList = BeanTransform.copyProperties(list, ThankStatementBO.class);
+        if(boList !=null && boList.size() > 0){
+            for(ThankStatement thankStatement : list) {
+                for (ThankStatementBO thankStatementBO : boList) {
+                    if(org.apache.commons.lang3.StringUtils.isNotBlank(thankStatement.getModifyTime().toString())) {
+                        thankStatementBO.setUpdateDate(thankStatement.getModifyTime().toString());
+                    }else{
+                        thankStatementBO.setUpdateDate(thankStatement.getCreateTime().toString());
+                    }
+                }
+            }
+        }
+        return boList;
     }
 
     @Override

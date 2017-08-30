@@ -184,7 +184,7 @@ public class ThankStatementAct {
      * @version v1
      */
     @GetMapping("v1/find/one")
-    public Result findOne(String id) throws ActException{
+    public Result findOne(@RequestParam String id) throws ActException{
         try {
             ThankStatementBO bo = thankStatementAPI.findOne(id);
             ThankStatementVO vo = BeanTransform.copyProperties(bo,ThankStatementVO.class);

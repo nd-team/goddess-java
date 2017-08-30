@@ -9,10 +9,14 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffwelfare.api.PersonalFestivalAPI;
 import com.bjike.goddess.staffwelfare.bo.PersonalFestivalBO;
+import com.bjike.goddess.staffwelfare.bo.ThankStatementBO;
 import com.bjike.goddess.staffwelfare.dto.PersonalFestivalDTO;
 import com.bjike.goddess.staffwelfare.to.GuidePermissionTO;
 import com.bjike.goddess.staffwelfare.to.PersonalFestivalTO;
 import com.bjike.goddess.staffwelfare.vo.PersonalFestivalVO;
+import com.bjike.goddess.staffwelfare.vo.ThankStatementVO;
+import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -175,6 +179,40 @@ public class PersonalFestivalAct {
             PersonalFestivalBO bo = personalFestivalAPI.findOne(id);
             PersonalFestivalVO vo = BeanTransform.copyProperties(bo,PersonalFestivalVO.class);
             return ActResult.initialize(vo);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有可见人员
+     * @return class UserVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/look")
+    public Result findLook() throws ActException{
+        try {
+            List<UserBO> boList = personalFestivalAPI.findUserListInOrgan();
+            List<UserVO> voList = BeanTransform.copyProperties(boList,UserVO.class);
+            return ActResult.initialize(voList);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有感谢语
+     * @return class ThankStatementVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/thank")
+    public Result findThank() throws ActException{
+        try {
+            List<ThankStatementBO> boList = personalFestivalAPI.findThank();
+            List<ThankStatementVO> voList = BeanTransform.copyProperties(boList,ThankStatementVO.class);
+            return ActResult.initialize(voList);
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }
