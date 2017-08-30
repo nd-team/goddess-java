@@ -32,19 +32,6 @@ dependencies {
     compile project(":modules:quartz:quartz-api")
     compile project(":modules:user:user-api")
 
-
-//    compile project(":modules:salaryconfirm:salaryconfirm-api")
-//    compile project(":modules:market:market-api")
-//    compile project(":modules:projectissuehandle:projectissuehandle-api")
-//    compile project(":modules:customer:customer-api")
-//    compile project(":modules:businessproject:businessproject-api")
-//    compile project(":modules:bidding:bidding-api")
-//    compile project(":modules:capability:capability-api")
-//    compile project(":modules:contractcommunicat:contractcommunicat-api")
-//    compile project(":modules:secure:secure-api")
-//    compile project(":modules:marketactivitymanage:marketactivitymanage-api")
-    compile project(":modules:materialsummary:materialsummary-api")
-
     compile project(":modules:salaryconfirm:salaryconfirm-api")
     compile project(":modules:market:market-api")
     compile project(":modules:projectissuehandle:projectissuehandle-api")
@@ -54,7 +41,14 @@ dependencies {
     compile project(":modules:capability:capability-api")
     compile project(":modules:contractcommunicat:contractcommunicat-api")
     compile project(":modules:secure:secure-api")
-    compile project(":modules:event:event-api")
+    compile project(":modules:businessevaluate:businessevaluate-api")
+    compile project(":modules:marketactivitymanage:marketactivitymanage-api")
+    compile project(":modules:competitormanage:competitormanage-api")
+    compile project(":modules:businessinteraction:businessinteraction-api")
+//    compile project(":modules:materialsummary:materialsummary-api")
+//    compile project(":modules:event:event-api")
+
+
 
 }
 
