@@ -228,7 +228,7 @@ public class AssistancePlanSerImpl extends ServiceImpl<AssistancePlan, Assistanc
         if (StringUtils.isNotBlank(assistancePlanDTO.getHelpObject())) {
             assistancePlanDTO.getConditions().add(Restrict.like("helpObject", assistancePlanDTO.getHelpObject()));
         }
-        assistancePlanDTO.getSorts().add("typeName=desc");
+        assistancePlanDTO.getSorts().add("seriNum=desc");
         List<AssistancePlan> list = super.findByCis(assistancePlanDTO, true);
 
         return BeanTransform.copyProperties(list, AssistancePlanBO.class);
