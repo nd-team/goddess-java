@@ -88,6 +88,10 @@ public class SurveyDemandVO {
      * 关闭原因
      */
     private String closeReason;
+    /**
+     * 调研范围
+     */
+    private ScopeType scope;
 
     public String getId() {
         return id;
@@ -207,5 +211,13 @@ public class SurveyDemandVO {
 
     public void setCloseReason(String closeReason) {
         this.closeReason = closeReason;
+    }
+
+    public ScopeType getScope() {
+        return scope;
+    }
+
+    public void setScope(ScopeType scope) {
+        this.scope = scope;
     }
 }

@@ -14,6 +14,7 @@ import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
 import com.bjike.goddess.projectroyalty.to.TargetAuotaTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -245,6 +246,9 @@ public class TargetAuotaSerImpl extends ServiceImpl<TargetAuota, TargetAuotaDTO>
         if (null == entity)
             throw new SerException("数据不存在");
         BeanTransform.copyProperties(to, entity, true);
+        if(StringUtils.isBlank(to.getRemark())){
+            entity.setRemark("");
+        }
         entity.setAllocation(weightAllocationSer.findById(to.getAllocationId()));
         if (null == entity.getAllocation())
             throw new SerException("所选的权重分配不存在");

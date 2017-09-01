@@ -71,7 +71,7 @@ public class StaffRecords1Excel implements Serializable {
     /**
      * 在职时间(月)
      */
-    @ExcelHeader(name = "在职时间", notNull = true)
+    @ExcelHeader(name = "在职时间(月数)", notNull = true)
     private Integer seniority;
 
     /**

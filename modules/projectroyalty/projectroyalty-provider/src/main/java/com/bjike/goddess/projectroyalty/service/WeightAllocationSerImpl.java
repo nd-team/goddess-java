@@ -14,6 +14,7 @@ import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
 import com.bjike.goddess.projectroyalty.to.WeightAllocationTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -258,6 +259,9 @@ public class WeightAllocationSerImpl extends ServiceImpl<WeightAllocation, Weigh
         if (null == entity)
             throw new SerException("数据不存在");
         BeanTransform.copyProperties(to, entity, true);
+        if(StringUtils.isBlank(to.getRemark())){
+            entity.setRemark("");
+        }
         entity.setModifyTime(LocalDateTime.now());
         this.countAllocation(entity, to);
         super.update(entity);

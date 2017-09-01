@@ -310,6 +310,7 @@ public class ContractChangeSerImpl extends ServiceImpl<ContractChange, ContractC
         bo.setSerialNumber(manageBO.getSerialNumber());
         bo.setType(manageBO.getTypeName());
         bo.setNature(manageBO.getNatureName());
+        bo.setEmployeeUnit(manageBO.getEmployeeUnit());
         return bo;
     }
 

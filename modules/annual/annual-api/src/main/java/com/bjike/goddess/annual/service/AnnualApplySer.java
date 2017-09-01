@@ -122,4 +122,13 @@ public interface AnnualApplySer extends Ser<AnnualApply, AnnualApplyDTO> {
         return null;
     }
 
+    /**
+     * 获取申请开始时间
+     *
+     * @return
+     * @throws SerException
+     */
+    default String getStartTime() throws SerException {
+        return null;
+    }
 }
