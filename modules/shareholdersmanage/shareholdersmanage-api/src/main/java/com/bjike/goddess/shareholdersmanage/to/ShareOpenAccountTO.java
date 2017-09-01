@@ -1,203 +1,217 @@
 package com.bjike.goddess.shareholdersmanage.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.to.BaseTO;
-/**
-* 股东开户
-* @Author:			[ lijuntao ]
-* @Date:			[  2017-08-18 02:41 ]
-* @Description:	[ 股东开户 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
-*/
-public class ShareOpenAccountTO extends BaseTO { 
+import com.bjike.goddess.shareholdersmanage.type.Gender;
+import com.bjike.goddess.shareholdersmanage.type.TypeName;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
-* 地区
-*/
- private String  area; 
+ * 股东开户
+ *
+ * @Author: [ lijuntao ]
+ * @Date: [ 2017-08-18 02:41 ]
+ * @Description: [ 股东开户 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+public class ShareOpenAccountTO extends BaseTO {
 
-/**
-* 开户日期
-*/
- private LocalDate  openDate; 
+    /**
+     * 地区
+     */
+    @NotBlank(groups = {ADD.class}, message = "地区不能为空")
+    private String area;
 
-/**
-* 类型名称
-*/
- private TypeName  typeName; 
+    /**
+     * 开户日期
+     */
+    @NotBlank(groups = {ADD.class}, message = "开户日期不能为空")
+    private String openDate;
 
-/**
-* 股东姓名
-*/
- private String  shareholderName; 
+    /**
+     * 类型名称
+     */
+    @NotNull(groups = {ADD.class}, message = "类型名称不能为空")
+    private TypeName typeName;
 
-/**
-* 性别
-*/
- private Gender  gender; 
+    /**
+     * 股东姓名
+     */
+    @NotBlank(groups = {ADD.class}, message = "股东姓名不能为空")
+    private String shareholderName;
 
-/**
-* 证件类型
-*/
- private String  documentType; 
+    /**
+     * 性别
+     */
+    @NotNull(groups = {ADD.class}, message = "性别不能为空")
+    private Gender gender;
 
-/**
-* 证件号码
-*/
- private String  certifiID; 
+    /**
+     * 证件类型
+     */
+    @NotBlank(groups = {ADD.class}, message = "证件类型不能为空")
+    private String documentType;
 
-/**
-* 联系住址
-*/
- private String  contactAddress; 
+    /**
+     * 证件号码
+     */
+    @NotBlank(groups = {ADD.class}, message = "证件号码不能为空")
+    private String certifiID;
 
-/**
-* 联系电话
-*/
- private String  contactNum; 
+    /**
+     * 联系住址
+     */
+    @NotBlank(groups = {ADD.class}, message = "联系住址不能为空")
+    private String contactAddress;
 
-/**
-* 持股数量
-*/
- private Integer  holdNum; 
+    /**
+     * 联系电话
+     */
+    @NotBlank(groups = {ADD.class}, message = "联系电话不能为空")
+    private String contactNum;
 
-/**
-* 每股价格/元
-*/
- private Double  perSharePrice; 
+    /**
+     * 持股数量
+     */
+    @NotNull(groups = {ADD.class}, message = "持股数量不能为空")
+    private Integer holdNum;
 
-/**
-* 出资额
-*/
- private Double  amount; 
+    /**
+     * 每股价格/元
+     */
+    @NotNull(groups = {ADD.class}, message = "每股价格不能为空")
+    private Double perSharePrice;
 
-/**
-* 占股比例
-*/
- private Double  percentage; 
+    /**
+     * 出资方式
+     */
+    @NotBlank(groups = {ADD.class}, message = "出资方式不能为空")
+    private String capitalWay;
 
-/**
-* 出资方式
-*/
- private String  capitalWay; 
+    /**
+     * 股权类型
+     */
+    @NotBlank(groups = {ADD.class}, message = "股权类型不能为空")
+    private String equityType;
 
-/**
-* 股权类型
-*/
- private String  equityType; 
-
-/**
-* 股东状态
-*/
- private ShareholderStatus  shareholderStatus; 
-
-/**
-* 备注
-*/
- private String  remark; 
-
+    /**
+     * 备注
+     */
+    private String remark;
 
 
- public String getArea () { 
- return area;
- } 
- public void setArea (String area ) { 
- this.area = area ; 
- } 
- public LocalDate getOpenDate () { 
- return openDate;
- } 
- public void setOpenDate (LocalDate openDate ) { 
- this.openDate = openDate ; 
- } 
- public TypeName getTypeName () { 
- return typeName;
- } 
- public void setTypeName (TypeName typeName ) { 
- this.typeName = typeName ; 
- } 
- public String getShareholderName () { 
- return shareholderName;
- } 
- public void setShareholderName (String shareholderName ) { 
- this.shareholderName = shareholderName ; 
- } 
- public Gender getGender () { 
- return gender;
- } 
- public void setGender (Gender gender ) { 
- this.gender = gender ; 
- } 
- public String getDocumentType () { 
- return documentType;
- } 
- public void setDocumentType (String documentType ) { 
- this.documentType = documentType ; 
- } 
- public String getCertifiID () { 
- return certifiID;
- } 
- public void setCertifiID (String certifiID ) { 
- this.certifiID = certifiID ; 
- } 
- public String getContactAddress () { 
- return contactAddress;
- } 
- public void setContactAddress (String contactAddress ) { 
- this.contactAddress = contactAddress ; 
- } 
- public String getContactNum () { 
- return contactNum;
- } 
- public void setContactNum (String contactNum ) { 
- this.contactNum = contactNum ; 
- } 
- public Integer getHoldNum () { 
- return holdNum;
- } 
- public void setHoldNum (Integer holdNum ) { 
- this.holdNum = holdNum ; 
- } 
- public Double getPerSharePrice () { 
- return perSharePrice;
- } 
- public void setPerSharePrice (Double perSharePrice ) { 
- this.perSharePrice = perSharePrice ; 
- } 
- public Double getAmount () { 
- return amount;
- } 
- public void setAmount (Double amount ) { 
- this.amount = amount ; 
- } 
- public Double getPercentage () { 
- return percentage;
- } 
- public void setPercentage (Double percentage ) { 
- this.percentage = percentage ; 
- } 
- public String getCapitalWay () { 
- return capitalWay;
- } 
- public void setCapitalWay (String capitalWay ) { 
- this.capitalWay = capitalWay ; 
- } 
- public String getEquityType () { 
- return equityType;
- } 
- public void setEquityType (String equityType ) { 
- this.equityType = equityType ; 
- } 
- public ShareholderStatus getShareholderStatus () { 
- return shareholderStatus;
- } 
- public void setShareholderStatus (ShareholderStatus shareholderStatus ) { 
- this.shareholderStatus = shareholderStatus ; 
- } 
- public String getRemark () { 
- return remark;
- } 
- public void setRemark (String remark ) { 
- this.remark = remark ; 
- } 
- }
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getOpenDate() {
+        return openDate;
+    }
+
+    public void setOpenDate(String openDate) {
+        this.openDate = openDate;
+    }
+
+    public TypeName getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(TypeName typeName) {
+        this.typeName = typeName;
+    }
+
+    public String getShareholderName() {
+        return shareholderName;
+    }
+
+    public void setShareholderName(String shareholderName) {
+        this.shareholderName = shareholderName;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public String getDocumentType() {
+        return documentType;
+    }
+
+    public void setDocumentType(String documentType) {
+        this.documentType = documentType;
+    }
+
+    public String getCertifiID() {
+        return certifiID;
+    }
+
+    public void setCertifiID(String certifiID) {
+        this.certifiID = certifiID;
+    }
+
+    public String getContactAddress() {
+        return contactAddress;
+    }
+
+    public void setContactAddress(String contactAddress) {
+        this.contactAddress = contactAddress;
+    }
+
+    public String getContactNum() {
+        return contactNum;
+    }
+
+    public void setContactNum(String contactNum) {
+        this.contactNum = contactNum;
+    }
+
+    public Integer getHoldNum() {
+        return holdNum;
+    }
+
+    public void setHoldNum(Integer holdNum) {
+        this.holdNum = holdNum;
+    }
+
+    public Double getPerSharePrice() {
+        return perSharePrice;
+    }
+
+    public void setPerSharePrice(Double perSharePrice) {
+        this.perSharePrice = perSharePrice;
+    }
+
+    public String getCapitalWay() {
+        return capitalWay;
+    }
+
+    public void setCapitalWay(String capitalWay) {
+        this.capitalWay = capitalWay;
+    }
+
+    public String getEquityType() {
+        return equityType;
+    }
+
+    public void setEquityType(String equityType) {
+        this.equityType = equityType;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+}

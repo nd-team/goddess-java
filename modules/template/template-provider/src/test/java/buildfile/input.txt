@@ -1,20 +1,18 @@
-模块名:materialsummary
-类名:RecipReturnSendEmail
+模块名:shareholdersmanage
+类名:ShareOutBonusDetail
 作者:lijuntao
-描述:物质领用归还发送邮件
+描述:分红明细
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String type 汇总类型;
-String remark 备注;
-Double sendNum 发送间隔;
-String sendNumAndUnit 发送间隔和单位;
-String collectSendUnit 发送单位;
-String collectUnit 汇总间隔;
-String sendObject 发送对象;
-LocalDateTime lastSendTime 上次发送时间;
-String status 状态;
-String createPersion 创建人;
+String shareholderName 股东姓名;
+Double totalShareOutBonus 共分红;
+Double shareOutBonusPropor 分红比例;
+Double shareOutBonusAmount 分红额;
+Double incomeTaxPropor 所得税比例;
+Double incomeTax 所得税;
+Double AfterTaxProfits 税后利润;
+String ShareOutBonusManageId 分红管理id;
 )
