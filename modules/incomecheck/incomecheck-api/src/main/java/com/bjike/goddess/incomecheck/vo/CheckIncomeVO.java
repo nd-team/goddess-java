@@ -81,6 +81,16 @@ public class CheckIncomeVO {
     private String modifyTime;
 
 
+    /**
+     * 比例差异提醒
+     */
+    private String warnRate;
+    /**
+     * 完工比例差异提醒
+     */
+    private String warnComRate;
+
+
     public String getId() {
         return id;
     }
@@ -191,5 +201,21 @@ public class CheckIncomeVO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public String getWarnRate() {
+        return warnRate;
+    }
+
+    public void setWarnRate(String warnRate) {
+        this.warnRate = warnRate;
+    }
+
+    public String getWarnComRate() {
+        return warnComRate;
+    }
+
+    public void setWarnComRate(String warnComRate) {
+        this.warnComRate = warnComRate;
     }
 }
