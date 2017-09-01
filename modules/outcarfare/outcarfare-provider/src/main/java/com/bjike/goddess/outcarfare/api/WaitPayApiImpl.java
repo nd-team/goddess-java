@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 等待付款业务接口实现
@@ -54,21 +55,6 @@ public class WaitPayApiImpl implements WaitPayAPI {
     }
 
     @Override
-    public List<DriverCountBO> driverCount() throws SerException {
-        return waitPaySer.driverCount();
-    }
-
-    @Override
-    public List<ArrivalCountBO> arrivalCount() throws SerException {
-        return waitPaySer.arrivalCount();
-    }
-
-    @Override
-    public List<CarUserCountBO> carUserCount() throws SerException {
-        return waitPaySer.carUserCount();
-    }
-
-    @Override
     public List<WaitPayBO> pays(WaitPayDTO dto) throws SerException {
         return waitPaySer.pays(dto);
     }
@@ -91,5 +77,80 @@ public class WaitPayApiImpl implements WaitPayAPI {
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return waitPaySer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public List<WaitPayBO> delList(WaitPayDTO dto) throws SerException {
+        return waitPaySer.delList(dto);
+    }
+
+    @Override
+    public void reback(String id) throws SerException {
+        waitPaySer.reback(id);
+    }
+
+    @Override
+    public Long delCount(WaitPayDTO dto) throws SerException {
+        return waitPaySer.delCount(dto);
+    }
+
+    @Override
+    public void quartz() throws SerException {
+        waitPaySer.quartz();
+    }
+
+    @Override
+    public List<DriverCountBO> driverCount(WaitPayDTO dto) throws SerException {
+        return waitPaySer.driverCount(dto);
+    }
+
+    @Override
+    public List<ArrivalCountBO> arrivalCount(WaitPayDTO dto) throws SerException {
+        return waitPaySer.arrivalCount(dto);
+    }
+
+    @Override
+    public List<CarUserCountBO> carUserCount(WaitPayDTO dto) throws SerException {
+        return waitPaySer.carUserCount(dto);
+    }
+
+    @Override
+    public List<DriverCountBO> waitDriverCount(WaitPayDTO dto) throws SerException {
+        return waitPaySer.waitDriverCount(dto);
+    }
+
+    @Override
+    public List<ArrivalCountBO> waitArrivalCount(WaitPayDTO dto) throws SerException {
+        return waitPaySer.waitArrivalCount(dto);
+    }
+
+    @Override
+    public List<CarUserCountBO> waitCarUserCount(WaitPayDTO dto) throws SerException {
+        return waitPaySer.waitCarUserCount(dto);
+    }
+
+    @Override
+    public List<WaitPayBO> waitDetails(WaitPayDTO dto) throws SerException {
+        return waitPaySer.waitDetails(dto);
+    }
+
+    @Override
+    public List<WaitPayBO> details(WaitPayDTO dto) throws SerException {
+        return waitPaySer.details(dto);
+    }
+
+    @Override
+    public Set<String> findAllDrivers() throws SerException {
+        return waitPaySer.findAllDrivers();
+    }
+
+    @Override
+    public Set<String> findAllArrivals() throws SerException {
+        return waitPaySer.findAllArrivals();
+    }
+
+    @Override
+    public Set<String> findAllCarUsers() throws SerException {
+        return waitPaySer.findAllCarUsers();
     }
 }

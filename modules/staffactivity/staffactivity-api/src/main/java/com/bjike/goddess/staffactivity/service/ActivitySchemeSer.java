@@ -155,4 +155,13 @@ public interface ActivitySchemeSer extends Ser<ActivityScheme, ActivitySchemeDTO
      * @throws SerException
      */
     String findIdByTheme(String theme) throws SerException;
+
+    /**
+     * chenjunhao
+     * 获取所有活动主题
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> themes() throws SerException;
 }

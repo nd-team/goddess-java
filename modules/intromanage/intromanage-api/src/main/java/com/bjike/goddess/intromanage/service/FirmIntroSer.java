@@ -2,6 +2,7 @@ package com.bjike.goddess.intromanage.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.intromanage.bo.BussinesBO;
 import com.bjike.goddess.intromanage.bo.FirmIntroBO;
 import com.bjike.goddess.intromanage.dto.FirmIntroDTO;
 import com.bjike.goddess.intromanage.entity.FirmIntro;
@@ -105,4 +106,14 @@ public interface FirmIntroSer extends Ser<FirmIntro, FirmIntroDTO> {
      * @throws SerException
      */
     Set<String> firmNames() throws SerException;
+
+    /**
+     * chenjunhao
+     * 根据公司名称获取注册资金和员工数量
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    Set<BussinesBO> moneyByName(String name) throws SerException;
 }

@@ -6,6 +6,7 @@ import com.bjike.goddess.dispatchcar.enums.Acctype;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 
 /**
@@ -36,7 +37,7 @@ public class WaitPay extends BaseEntity {
     /**
      * 单号
      */
-    @Column(name = "number",  columnDefinition = "VARCHAR(255)   COMMENT '单号'")
+    @Column(name = "number", columnDefinition = "VARCHAR(255)   COMMENT '单号'")
     private String number;
 
     /**
@@ -60,19 +61,19 @@ public class WaitPay extends BaseEntity {
     /**
      * 租车单价
      */
-    @Column(name = "carPrice",  columnDefinition = "DECIMAL(10,2)   COMMENT '租车单价'")
+    @Column(name = "carPrice", columnDefinition = "DECIMAL(10,2)   COMMENT '租车单价'")
     private Double carPrice;
 
     /**
      * 加班时长
      */
-    @Column(name = "overtimeHour",  columnDefinition = "DECIMAL(10,2)   COMMENT '加班时长'")
+    @Column(name = "overtimeHour", columnDefinition = "DECIMAL(10,2)   COMMENT '加班时长'")
     private Double overtimeHour;
 
     /**
      * 加班单价
      */
-    @Column(name = "overtimePrice",  columnDefinition = "DECIMAL(10,2)   COMMENT '加班单价'")
+    @Column(name = "overtimePrice", columnDefinition = "DECIMAL(10,2)   COMMENT '加班单价'")
     private Double overtimePrice;
 
     /**
@@ -84,13 +85,13 @@ public class WaitPay extends BaseEntity {
     /**
      * 餐费补贴
      */
-    @Column(name = "allowance",  columnDefinition = "DECIMAL(10,2)   COMMENT '餐费补贴'")
+    @Column(name = "allowance", columnDefinition = "DECIMAL(10,2)   COMMENT '餐费补贴'")
     private Double allowance;
 
     /**
      * 停车/过路费
      */
-    @Column(name = "parkFee",  columnDefinition = "DECIMAL(10,2)   COMMENT '停车/过路费'")
+    @Column(name = "parkFee", columnDefinition = "DECIMAL(10,2)   COMMENT '停车/过路费'")
     private Double parkFee;
 
     /**
@@ -109,13 +110,41 @@ public class WaitPay extends BaseEntity {
      * 是否付款
      */
     @Column(name = "isPay", columnDefinition = "TINYINT(1)  COMMENT '是否付款'")
-    private boolean isPay;
+    private Boolean isPay;
 
     /**
      * 出车等待付款id
      */
     @Column(name = "dispatchCarInfo_id", unique = true, columnDefinition = "VARCHAR(255)   COMMENT '出车等待付款id'")
     private String dispatchCarInfoId;
+
+    /**
+     * 是否删除
+     */
+    @Column(name = "is_del", columnDefinition = "TINYINT(1) COMMENT '是否删除'")
+    private Boolean isDel;
+
+    /**
+     * 删除时间
+     */
+    @Column(name = "delTime", columnDefinition = "DATE   COMMENT '删除时间'")
+    private LocalDate delTime;
+
+    public Boolean getIsDel() {
+        return isDel;
+    }
+
+    public void setIsDel(Boolean del) {
+        isDel = del;
+    }
+
+    public LocalDate getDelTime() {
+        return delTime;
+    }
+
+    public void setDelTime(LocalDate delTime) {
+        this.delTime = delTime;
+    }
 
     public String getDriverName() {
         return driverName;
@@ -229,11 +258,11 @@ public class WaitPay extends BaseEntity {
         this.single = single;
     }
 
-    public boolean getIsPay() {
+    public Boolean getIsPay() {
         return isPay;
     }
 
-    public void setIsPay(boolean isPay) {
+    public void setIsPay(Boolean isPay) {
         this.isPay = isPay;
     }
 

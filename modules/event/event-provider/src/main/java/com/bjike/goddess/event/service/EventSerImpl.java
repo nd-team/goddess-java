@@ -243,6 +243,7 @@ public class EventSerImpl extends ServiceImpl<Event, EventDTO> implements EventS
         int month = dto.getMonth();
         int year = dto.getYear();
         dto.getConditions().add(Restrict.eq("name", name));
+        dto.getConditions().add(Restrict.ne("eventStatus",EventStatus.HAVEDEAL.getValue()));
         List<Event> list = super.findByCis(dto);
         List<ContentBO> contentVOs = new ArrayList<>();
         for (Event event : list) {

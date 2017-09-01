@@ -1,6 +1,8 @@
 package com.bjike.goddess.managementpromotion.action.managementpromotion;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -54,13 +56,15 @@ public class GradeLevelAct {
      */
     @LoginAuth
     @GetMapping("v1/setButtonPermission")
-    public Result i() throws ActException {
+    public Result i(HttpServletRequest request) throws ActException {
         List<SonPermissionObject> list = new ArrayList<>();
         try {
+            String token=request.getHeader(RpcCommon.USER_TOKEN).toString();
             if (moduleAPI.isCheck("organize")) {
                 SonPermissionObject obj = new SonPermissionObject();
                 obj.setName("cuspermission");
                 obj.setDescribesion("设置");
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
                 Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
                 if (!isHasPermission) {
                     //int code, String msg

@@ -5,9 +5,14 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
 import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
-import com.bjike.goddess.outcarfare.bo.*;
+import com.bjike.goddess.dispatchcar.enums.FindType;
+import com.bjike.goddess.outcarfare.bo.ArrivalCountBO;
+import com.bjike.goddess.outcarfare.bo.CarUserCountBO;
+import com.bjike.goddess.outcarfare.bo.DriverCountBO;
+import com.bjike.goddess.outcarfare.bo.WaitPayBO;
 import com.bjike.goddess.outcarfare.dto.WaitPayDTO;
 import com.bjike.goddess.outcarfare.entity.WaitPay;
 import com.bjike.goddess.outcarfare.enums.GuideAddrStatus;
@@ -22,11 +27,11 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 等待付款业务实现
@@ -174,20 +179,23 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     public WaitPayBO save(WaitPayTO to) throws SerException {
         checkAddIdentity();
         WaitPay waitPay = BeanTransform.copyProperties(to, WaitPay.class, true);
+        waitPay.setIsDel(false);
         super.save(waitPay);
         return BeanTransform.copyProperties(waitPay, WaitPayBO.class);
     }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public WaitPayBO edit(WaitPayTO to) throws SerException {
         checkAddIdentity();
-        if(StringUtils.isNotBlank(to.getId())){
+        if (StringUtils.isNotBlank(to.getId())) {
             WaitPay waitPay = super.findById(to.getId());
-            BeanTransform.copyProperties(to,waitPay,true);
+            BeanTransform.copyProperties(to, waitPay, true);
+            waitPay.setIsDel(false);
             waitPay.setModifyTime(LocalDateTime.now());
             super.update(waitPay);
-            return BeanTransform.copyProperties(waitPay,WaitPayBO.class);
-        }else {
+            return BeanTransform.copyProperties(waitPay, WaitPayBO.class);
+        } else {
             throw new SerException("id不能为空");
         }
 
@@ -200,16 +208,69 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
         waitPay.setIsPay(to.getIsPay());
         super.update(waitPay);
     }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void delete(String id) throws SerException {
         checkAddIdentity();
-        if(StringUtils.isNotBlank(id)){
-            super.remove(id);
-        }else {
+        if (StringUtils.isNotBlank(id)) {
+            WaitPay waitPay = super.findById(id);
+            waitPay.setIsDel(true);
+            waitPay.setDelTime(LocalDate.now());
+            waitPay.setModifyTime(LocalDateTime.now());
+            super.update(waitPay);
+        } else {
             throw new SerException("id不能为空");
         }
+    }
 
+    @Override
+    public List<WaitPayBO> delList(WaitPayDTO dto) throws SerException {
+        checkSeeIdentity();
+        dto.getSorts().add("delTime=asc");
+        dto.getConditions().add(Restrict.eq("isPay", Boolean.TRUE));
+        dto.getConditions().add(Restrict.eq("isDel", Boolean.FALSE));
+        List<WaitPay> list = super.findByCis(dto, true);
+        return BeanTransform.copyProperties(list, WaitPayBO.class);
+    }
+
+    @Override
+    public void reback(String id) throws SerException {
+        checkAddIdentity();
+        WaitPay entity = super.findById(id);
+        entity.setDelTime(null);
+        entity.setIsDel(false);
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+    }
+
+    @Override
+    public Long delCount(WaitPayDTO dto) throws SerException {
+        dto.getConditions().add(Restrict.eq("isPay", Boolean.TRUE));
+        dto.getConditions().add(Restrict.eq("isDel", Boolean.FALSE));
+        return super.count(dto);
+    }
+
+    @Override
+    @Transactional(rollbackFor = {SerException.class})
+    public void quartz() throws SerException {
+        WaitPayDTO dto = new WaitPayDTO();
+        dto.getConditions().add(Restrict.eq("isPay", Boolean.TRUE));
+        dto.getConditions().add(Restrict.eq("isDel", Boolean.FALSE));
+        List<WaitPay> list = super.findByCis(dto);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            long now = simpleDateFormat.parse(DateUtil.dateToString(LocalDate.now())).getTime();
+            for (WaitPay m : list) {
+                LocalDate a = m.getDelTime().plusDays(30);
+                long delTime = simpleDateFormat.parse(DateUtil.dateToString(a)).getTime();
+                if (now - delTime >= 0) {
+                    super.remove(m);
+                }
+            }
+        } catch (ParseException e) {
+            throw new SerException(e.getMessage());
+        }
     }
 
     @Override
@@ -237,6 +298,8 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
                     waitPay.setParkFee(v.getParkCost() + v.getRoadCost());
                     waitPay.setAmount(v.getCost());
                     waitPay.setDispatchCarInfoId(v.getId());
+                    waitPay.setIsDel(false);
+                    waitPay.setIsPay(false);
                     super.save(waitPay);
                 } else {
                     boolean b1 = true;
@@ -244,12 +307,11 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
                         if (null != p.getDispatchCarInfoId()) {
                             if (p.getDispatchCarInfoId().equals(v.getId())) {
                                 LocalDateTime a = p.getCreateTime();
-                                LocalDateTime b = p.getModifyTime();
                                 String id = p.getId();
                                 BeanUtils.copyProperties(v, p);
                                 p.setId(id);
                                 p.setCreateTime(a);
-                                p.setModifyTime(b);
+                                p.setModifyTime(LocalDateTime.now());
                                 p.setDriverName(v.getDriver());
                                 p.setCarDate(v.getDispatchDate());
                                 p.setNumber(v.getNumber());
@@ -287,6 +349,8 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
                         waitPay.setAmount(v.getCost());
                         waitPay.setOvertimePrice(v.getCarRentalCost() / 8);
                         waitPay.setDispatchCarInfoId(v.getId());
+                        waitPay.setIsDel(false);
+                        waitPay.setIsPay(false);
                         super.save(waitPay);
                     }
                 }
@@ -295,11 +359,12 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
         for (WaitPay p : super.findAll()) {
             if (null != p.getDispatchCarInfoId()) {
                 DispatchCarInfoBO v = dispatchCarInfoAPI.findById(p.getDispatchCarInfoId());
-                if (v == null || v.getPay()) {
+                if (v == null || (!FindType.WAITPAY.equals(v.getFindType())) || v.getPay()) {
                     super.remove(p.getId());
                 }
             }
         }
+        dto.getConditions().add(Restrict.eq("isDel", Boolean.TRUE));
         dto.getConditions().add(Restrict.eq("isPay", Boolean.TRUE));
         List<WaitPay> l = super.findByCis(dto, true);
         RpcTransmit.transmitUserToken(userToken);
@@ -313,40 +378,324 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     }
 
     @Override
-    public List<DriverCountBO> driverCount() throws SerException {
-        WaitPayDTO dto = new WaitPayDTO();
+    public List<DriverCountBO> driverCount(WaitPayDTO dto) throws SerException {
+//        list(dto);
+        String[] drivers = dto.getDrivers();
+        dto.getConditions().add(Restrict.in("driverName", drivers));
+        dto.getConditions().add(Restrict.eq("isDel", Boolean.TRUE));
+        dto.getConditions().add(Restrict.eq("isPay", Boolean.FALSE));
+        List<WaitPay> list = super.findByCis(dto);
+        List<DriverCountBO> boList = new ArrayList<>();
+        double overtimeFeeSum = list.stream().mapToDouble((WaitPay w) -> w.getOvertimeFee()).sum();
+        double allowanceSum = list.stream().mapToDouble((WaitPay w) -> w.getAllowance()).sum();
+        double parkFeeSum = list.stream().mapToDouble((WaitPay w) -> w.getParkFee()).sum();
+        double amountSum = list.stream().mapToDouble((WaitPay w) -> w.getAmount()).sum();
+        for (String driverName : drivers) {
+            double overtimeFee = list.stream().filter(waitPay -> driverName.equals(waitPay.getDriverName())).mapToDouble((WaitPay w) -> w.getOvertimeFee()).sum();
+            double allowance = list.stream().filter(waitPay -> driverName.equals(waitPay.getDriverName())).mapToDouble((WaitPay w) -> w.getAllowance()).sum();
+            double parkFee = list.stream().filter(waitPay -> driverName.equals(waitPay.getDriverName())).mapToDouble((WaitPay w) -> w.getParkFee()).sum();
+            double amount = list.stream().filter(waitPay -> driverName.equals(waitPay.getDriverName())).mapToDouble((WaitPay w) -> w.getAmount()).sum();
+            DriverCountBO bo = new DriverCountBO();
+            bo.setDriverName(driverName);
+            bo.setOvertimeFeeSum(overtimeFee);
+            bo.setAllowanceSum(allowance);
+            bo.setParkFeeSum(parkFee);
+            bo.setAmountSum(amount);
+            boList.add(bo);
+        }
+        DriverCountBO bo = new DriverCountBO();
+        bo.setDriverName("合计");
+        bo.setOvertimeFeeSum(overtimeFeeSum);
+        bo.setAllowanceSum(allowanceSum);
+        bo.setParkFeeSum(parkFeeSum);
+        bo.setAmountSum(amountSum);
+        boList.add(bo);
+        return boList;
+    }
+
+    @Override
+    public List<ArrivalCountBO> arrivalCount(WaitPayDTO dto) throws SerException {
+//        list(dto);
+        String[] drivers = dto.getArrivals();
+        dto.getConditions().add(Restrict.in("arrival", drivers));
+        dto.getConditions().add(Restrict.eq("isDel", Boolean.TRUE));
+        dto.getConditions().add(Restrict.eq("isPay", Boolean.FALSE));
+        List<WaitPay> list = super.findByCis(dto);
+        List<ArrivalCountBO> boList = new ArrayList<>();
+        double overtimeFeeSum = list.stream().mapToDouble((WaitPay w) -> w.getOvertimeFee()).sum();
+        double allowanceSum = list.stream().mapToDouble((WaitPay w) -> w.getAllowance()).sum();
+        double parkFeeSum = list.stream().mapToDouble((WaitPay w) -> w.getParkFee()).sum();
+        double amountSum = list.stream().mapToDouble((WaitPay w) -> w.getAmount()).sum();
+        for (String driverName : drivers) {
+            double overtimeFee = list.stream().filter(waitPay -> driverName.equals(waitPay.getArrival())).mapToDouble((WaitPay w) -> w.getOvertimeFee()).sum();
+            double allowance = list.stream().filter(waitPay -> driverName.equals(waitPay.getArrival())).mapToDouble((WaitPay w) -> w.getAllowance()).sum();
+            double parkFee = list.stream().filter(waitPay -> driverName.equals(waitPay.getArrival())).mapToDouble((WaitPay w) -> w.getParkFee()).sum();
+            double amount = list.stream().filter(waitPay -> driverName.equals(waitPay.getArrival())).mapToDouble((WaitPay w) -> w.getAmount()).sum();
+            ArrivalCountBO bo = new ArrivalCountBO();
+            bo.setArrival(driverName);
+            bo.setOvertimeFeeSum(overtimeFee);
+            bo.setAllowanceSum(allowance);
+            bo.setParkFeeSum(parkFee);
+            bo.setAmountSum(amount);
+            boList.add(bo);
+        }
+        ArrivalCountBO bo = new ArrivalCountBO();
+        bo.setArrival("合计");
+        bo.setOvertimeFeeSum(overtimeFeeSum);
+        bo.setAllowanceSum(allowanceSum);
+        bo.setParkFeeSum(parkFeeSum);
+        bo.setAmountSum(amountSum);
+        boList.add(bo);
+        return boList;
+    }
+
+    @Override
+    public List<CarUserCountBO> carUserCount(WaitPayDTO dto) throws SerException {
+//        list(dto);
+        String[] drivers = dto.getCarUsers();
+        dto.getConditions().add(Restrict.in("carUser", drivers));
+        dto.getConditions().add(Restrict.eq("isDel", Boolean.TRUE));
+        dto.getConditions().add(Restrict.eq("isPay", Boolean.FALSE));
+        List<WaitPay> list = super.findByCis(dto);
+        List<CarUserCountBO> boList = new ArrayList<>();
+        double overtimeFeeSum = list.stream().mapToDouble((WaitPay w) -> w.getOvertimeFee()).sum();
+        double allowanceSum = list.stream().mapToDouble((WaitPay w) -> w.getAllowance()).sum();
+        double parkFeeSum = list.stream().mapToDouble((WaitPay w) -> w.getParkFee()).sum();
+        double amountSum = list.stream().mapToDouble((WaitPay w) -> w.getAmount()).sum();
+        for (String driverName : drivers) {
+            double overtimeFee = list.stream().filter(waitPay -> driverName.equals(waitPay.getCarUser())).mapToDouble((WaitPay w) -> w.getOvertimeFee()).sum();
+            double allowance = list.stream().filter(waitPay -> driverName.equals(waitPay.getCarUser())).mapToDouble((WaitPay w) -> w.getAllowance()).sum();
+            double parkFee = list.stream().filter(waitPay -> driverName.equals(waitPay.getCarUser())).mapToDouble((WaitPay w) -> w.getParkFee()).sum();
+            double amount = list.stream().filter(waitPay -> driverName.equals(waitPay.getCarUser())).mapToDouble((WaitPay w) -> w.getAmount()).sum();
+            CarUserCountBO bo = new CarUserCountBO();
+            bo.setCarUser(driverName);
+            bo.setOvertimeFeeSum(overtimeFee);
+            bo.setAllowanceSum(allowance);
+            bo.setParkFeeSum(parkFee);
+            bo.setAmountSum(amount);
+            boList.add(bo);
+        }
+        CarUserCountBO bo = new CarUserCountBO();
+        bo.setCarUser("合计");
+        bo.setOvertimeFeeSum(overtimeFeeSum);
+        bo.setAllowanceSum(allowanceSum);
+        bo.setParkFeeSum(parkFeeSum);
+        bo.setAmountSum(amountSum);
+        boList.add(bo);
+        return boList;
+    }
+
+    @Override
+    public List<DriverCountBO> waitDriverCount(WaitPayDTO dto) throws SerException {
         list(dto);
-        List<PayBO> list = findAlreadyPays();
-        Set<String> drivers = findAllDrivers();
-        Set<Double> prices = findAllPrices();
-        List<DriverCountBO> boList = new ArrayList<DriverCountBO>();
-        Double overtimeFeeSum = 0.00;
-        Double allowanceSum = 0.00;
-        Double parkFeeSum = 0.00;
-        Double amountSum = 0.00;
-        for (String driver : drivers) {
-            for (Double price : prices) {
-                for (PayBO w : list) {
-                    if (w.getDriverName().equals(driver) && w.getCarPrice().equals(price)) {
-                        overtimeFeeSum += w.getOvertimeFee();
-                        allowanceSum += w.getAllowance();
-                        parkFeeSum += w.getParkFee();
-                        amountSum += w.getAmount();
+        String[] drivers = dto.getDrivers();
+        dto.getConditions().add(Restrict.in("driverName", drivers));
+        dto.getConditions().add(Restrict.eq("isDel", Boolean.TRUE));
+        dto.getConditions().add(Restrict.eq("isPay", Boolean.TRUE));
+        List<WaitPay> list = super.findByCis(dto);
+        List<DriverCountBO> boList = new ArrayList<>();
+        double overtimeFeeSum = list.stream().mapToDouble((WaitPay w) -> w.getOvertimeFee()).sum();
+        double allowanceSum = list.stream().mapToDouble((WaitPay w) -> w.getAllowance()).sum();
+        double parkFeeSum = list.stream().mapToDouble((WaitPay w) -> w.getParkFee()).sum();
+        double amountSum = list.stream().mapToDouble((WaitPay w) -> w.getAmount()).sum();
+        for (String driverName : drivers) {
+            double overtimeFee = list.stream().filter(waitPay -> driverName.equals(waitPay.getDriverName())).mapToDouble((WaitPay w) -> w.getOvertimeFee()).sum();
+            double allowance = list.stream().filter(waitPay -> driverName.equals(waitPay.getDriverName())).mapToDouble((WaitPay w) -> w.getAllowance()).sum();
+            double parkFee = list.stream().filter(waitPay -> driverName.equals(waitPay.getDriverName())).mapToDouble((WaitPay w) -> w.getParkFee()).sum();
+            double amount = list.stream().filter(waitPay -> driverName.equals(waitPay.getDriverName())).mapToDouble((WaitPay w) -> w.getAmount()).sum();
+            DriverCountBO bo = new DriverCountBO();
+            bo.setDriverName(driverName);
+            bo.setOvertimeFeeSum(overtimeFee);
+            bo.setAllowanceSum(allowance);
+            bo.setParkFeeSum(parkFee);
+            bo.setAmountSum(amount);
+            boList.add(bo);
+        }
+        DriverCountBO bo = new DriverCountBO();
+        bo.setDriverName("合计");
+        bo.setOvertimeFeeSum(overtimeFeeSum);
+        bo.setAllowanceSum(allowanceSum);
+        bo.setParkFeeSum(parkFeeSum);
+        bo.setAmountSum(amountSum);
+        boList.add(bo);
+        return boList;
+    }
+
+    @Override
+    public List<ArrivalCountBO> waitArrivalCount(WaitPayDTO dto) throws SerException {
+        list(dto);
+        String[] drivers = dto.getArrivals();
+        dto.getConditions().add(Restrict.in("arrival", drivers));
+        dto.getConditions().add(Restrict.eq("isDel", Boolean.TRUE));
+        dto.getConditions().add(Restrict.eq("isPay", Boolean.TRUE));
+        List<WaitPay> list = super.findByCis(dto);
+        List<ArrivalCountBO> boList = new ArrayList<>();
+        double overtimeFeeSum = list.stream().mapToDouble((WaitPay w) -> w.getOvertimeFee()).sum();
+        double allowanceSum = list.stream().mapToDouble((WaitPay w) -> w.getAllowance()).sum();
+        double parkFeeSum = list.stream().mapToDouble((WaitPay w) -> w.getParkFee()).sum();
+        double amountSum = list.stream().mapToDouble((WaitPay w) -> w.getAmount()).sum();
+        for (String driverName : drivers) {
+            double overtimeFee = list.stream().filter(waitPay -> driverName.equals(waitPay.getArrival())).mapToDouble((WaitPay w) -> w.getOvertimeFee()).sum();
+            double allowance = list.stream().filter(waitPay -> driverName.equals(waitPay.getArrival())).mapToDouble((WaitPay w) -> w.getAllowance()).sum();
+            double parkFee = list.stream().filter(waitPay -> driverName.equals(waitPay.getArrival())).mapToDouble((WaitPay w) -> w.getParkFee()).sum();
+            double amount = list.stream().filter(waitPay -> driverName.equals(waitPay.getArrival())).mapToDouble((WaitPay w) -> w.getAmount()).sum();
+            ArrivalCountBO bo = new ArrivalCountBO();
+            bo.setArrival(driverName);
+            bo.setOvertimeFeeSum(overtimeFee);
+            bo.setAllowanceSum(allowance);
+            bo.setParkFeeSum(parkFee);
+            bo.setAmountSum(amount);
+            boList.add(bo);
+        }
+        ArrivalCountBO bo = new ArrivalCountBO();
+        bo.setArrival("合计");
+        bo.setOvertimeFeeSum(overtimeFeeSum);
+        bo.setAllowanceSum(allowanceSum);
+        bo.setParkFeeSum(parkFeeSum);
+        bo.setAmountSum(amountSum);
+        boList.add(bo);
+        return boList;
+    }
+
+    @Override
+    public List<CarUserCountBO> waitCarUserCount(WaitPayDTO dto) throws SerException {
+        list(dto);
+        String[] drivers = dto.getCarUsers();
+        dto.getConditions().add(Restrict.in("carUser", drivers));
+        dto.getConditions().add(Restrict.eq("isDel", Boolean.TRUE));
+        dto.getConditions().add(Restrict.eq("isPay", Boolean.TRUE));
+        List<WaitPay> list = super.findByCis(dto);
+        List<CarUserCountBO> boList = new ArrayList<>();
+        double overtimeFeeSum = list.stream().mapToDouble((WaitPay w) -> w.getOvertimeFee()).sum();
+        double allowanceSum = list.stream().mapToDouble((WaitPay w) -> w.getAllowance()).sum();
+        double parkFeeSum = list.stream().mapToDouble((WaitPay w) -> w.getParkFee()).sum();
+        double amountSum = list.stream().mapToDouble((WaitPay w) -> w.getAmount()).sum();
+        for (String driverName : drivers) {
+            double overtimeFee = list.stream().filter(waitPay -> driverName.equals(waitPay.getCarUser())).mapToDouble((WaitPay w) -> w.getOvertimeFee()).sum();
+            double allowance = list.stream().filter(waitPay -> driverName.equals(waitPay.getCarUser())).mapToDouble((WaitPay w) -> w.getAllowance()).sum();
+            double parkFee = list.stream().filter(waitPay -> driverName.equals(waitPay.getCarUser())).mapToDouble((WaitPay w) -> w.getParkFee()).sum();
+            double amount = list.stream().filter(waitPay -> driverName.equals(waitPay.getCarUser())).mapToDouble((WaitPay w) -> w.getAmount()).sum();
+            CarUserCountBO bo = new CarUserCountBO();
+            bo.setCarUser(driverName);
+            bo.setOvertimeFeeSum(overtimeFee);
+            bo.setAllowanceSum(allowance);
+            bo.setParkFeeSum(parkFee);
+            bo.setAmountSum(amount);
+            boList.add(bo);
+        }
+        CarUserCountBO bo = new CarUserCountBO();
+        bo.setCarUser("合计");
+        bo.setOvertimeFeeSum(overtimeFeeSum);
+        bo.setAllowanceSum(allowanceSum);
+        bo.setParkFeeSum(parkFeeSum);
+        bo.setAmountSum(amountSum);
+        boList.add(bo);
+        return boList;
+    }
+
+    @Override
+    public List<WaitPayBO> waitDetails(WaitPayDTO dto) throws SerException {
+        list(dto);
+        String[] drivers = dto.getDrivers();
+        String[] arrivals = dto.getArrivals();
+        String[] carUsers = dto.getCarUsers();
+        dto.getConditions().add(Restrict.eq("isDel", Boolean.TRUE));
+        dto.getConditions().add(Restrict.eq("isPay", Boolean.TRUE));
+        List<WaitPayBO> boList = new LinkedList<>();
+        if (null != drivers) {
+            dto.getSorts().add("driverName=asc");
+            dto.getConditions().add(Restrict.in("driverName", drivers));
+            List<WaitPay> list = super.findByCis(dto);
+            if (!list.isEmpty()) {
+                boList = BeanTransform.copyProperties(list, WaitPayBO.class);
+            }
+            for (String driver : drivers) {
+                double overtimeFee = list.stream().filter(waitPay -> driver.equals(waitPay.getDriverName())).mapToDouble((WaitPay w) -> w.getOvertimeFee()).sum();
+                double allowance = list.stream().filter(waitPay -> driver.equals(waitPay.getDriverName())).mapToDouble((WaitPay w) -> w.getAllowance()).sum();
+                double parkFee = list.stream().filter(waitPay -> driver.equals(waitPay.getDriverName())).mapToDouble((WaitPay w) -> w.getParkFee()).sum();
+                double amount = list.stream().filter(waitPay -> driver.equals(waitPay.getDriverName())).mapToDouble((WaitPay w) -> w.getAmount()).sum();
+                ListIterator<WaitPayBO> iterator = boList.listIterator();
+                boolean b = false;
+                int num = 0;
+                while (iterator.hasNext()) {
+                    if (driver.equals(iterator.next().getDriverName())) {
+                        b = true;
+                        num = iterator.nextIndex();
                     }
                 }
-                if (amountSum != 0) {
-                    DriverCountBO bo = new DriverCountBO();
+                if (b) {
+                    WaitPayBO bo = new WaitPayBO();
                     bo.setDriverName(driver);
-                    bo.setCarPrice(price);
-                    bo.setOvertimeFeeSum(overtimeFeeSum);
-                    bo.setAllowanceSum(allowanceSum);
-                    bo.setParkFeeSum(parkFeeSum);
-                    bo.setAmountSum(amountSum);
-                    boList.add(bo);
-                    overtimeFeeSum = 0.00;
-                    allowanceSum = 0.00;
-                    parkFeeSum = 0.00;
-                    amountSum = 0.00;      //置为0
+                    bo.setNumber("合计");
+                    bo.setOvertimeFee(overtimeFee);
+                    bo.setAllowance(allowance);
+                    bo.setParkFee(parkFee);
+                    bo.setAmount(amount);
+                    boList.add(num, bo);
+                }
+            }
+        } else if (null != arrivals) {
+            dto.getSorts().add("arrival=asc");
+            dto.getConditions().add(Restrict.in("arrival", arrivals));
+            List<WaitPay> list = super.findByCis(dto);
+            if (!list.isEmpty()) {
+                boList = BeanTransform.copyProperties(list, WaitPayBO.class);
+            }
+            for (String driver : arrivals) {
+                double overtimeFee = list.stream().filter(waitPay -> driver.equals(waitPay.getArrival())).mapToDouble((WaitPay w) -> w.getOvertimeFee()).sum();
+                double allowance = list.stream().filter(waitPay -> driver.equals(waitPay.getArrival())).mapToDouble((WaitPay w) -> w.getAllowance()).sum();
+                double parkFee = list.stream().filter(waitPay -> driver.equals(waitPay.getArrival())).mapToDouble((WaitPay w) -> w.getParkFee()).sum();
+                double amount = list.stream().filter(waitPay -> driver.equals(waitPay.getArrival())).mapToDouble((WaitPay w) -> w.getAmount()).sum();
+                ListIterator<WaitPayBO> iterator = boList.listIterator();
+                boolean b = false;
+                int num = 0;
+                while (iterator.hasNext()) {
+                    if (driver.equals(iterator.next().getArrival())) {
+                        b = true;
+                        num = iterator.nextIndex();
+                    }
+                }
+                if (b) {
+                    WaitPayBO bo = new WaitPayBO();
+                    bo.setArrival(driver);
+                    bo.setNumber("合计");
+                    bo.setOvertimeFee(overtimeFee);
+                    bo.setAllowance(allowance);
+                    bo.setParkFee(parkFee);
+                    bo.setAmount(amount);
+                    boList.add(num, bo);
+                }
+            }
+        } else if (null != carUsers) {
+            dto.getSorts().add("carUser=asc");
+            dto.getConditions().add(Restrict.in("carUser", carUsers));
+            List<WaitPay> list = super.findByCis(dto);
+            if (!list.isEmpty()) {
+                boList = BeanTransform.copyProperties(list, WaitPayBO.class);
+            }
+            for (String driver : carUsers) {
+                double overtimeFee = list.stream().filter(waitPay -> driver.equals(waitPay.getCarUser())).mapToDouble((WaitPay w) -> w.getOvertimeFee()).sum();
+                double allowance = list.stream().filter(waitPay -> driver.equals(waitPay.getCarUser())).mapToDouble((WaitPay w) -> w.getAllowance()).sum();
+                double parkFee = list.stream().filter(waitPay -> driver.equals(waitPay.getCarUser())).mapToDouble((WaitPay w) -> w.getParkFee()).sum();
+                double amount = list.stream().filter(waitPay -> driver.equals(waitPay.getCarUser())).mapToDouble((WaitPay w) -> w.getAmount()).sum();
+                ListIterator<WaitPayBO> iterator = boList.listIterator();
+                boolean b = false;
+                int num = 0;
+                while (iterator.hasNext()) {
+                    if (driver.equals(iterator.next().getCarUser())) {
+                        b = true;
+                        num = iterator.nextIndex();
+                    }
+                }
+                if (b) {
+                    WaitPayBO bo = new WaitPayBO();
+                    bo.setCarUser(driver);
+                    bo.setNumber("合计");
+                    bo.setOvertimeFee(overtimeFee);
+                    bo.setAllowance(allowance);
+                    bo.setParkFee(parkFee);
+                    bo.setAmount(amount);
+                    boList.add(num, bo);
                 }
             }
         }
@@ -354,81 +703,108 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     }
 
     @Override
-    public List<ArrivalCountBO> arrivalCount() throws SerException {
-        WaitPayDTO dto = new WaitPayDTO();
-        list(dto);
-        List<PayBO> list = findAlreadyPays();
-        Set<String> arrivals = findAllArrivals();
-        Set<Double> prices = findAllPrices();
-        List<ArrivalCountBO> boList = new ArrayList<ArrivalCountBO>();
-        Double overtimeFeeSum = 0.00;
-        Double allowanceSum = 0.00;
-        Double parkFeeSum = 0.00;
-        Double amountSum = 0.00;
-        for (String arrival : arrivals) {
-            for (Double price : prices) {
-                for (PayBO w : list) {
-                    if (w.getArrival().equals(arrival) && w.getCarPrice().equals(price)) {
-                        overtimeFeeSum += w.getOvertimeFee();
-                        allowanceSum += w.getAllowance();
-                        parkFeeSum += w.getParkFee();
-                        amountSum += w.getAmount();
+    public List<WaitPayBO> details(WaitPayDTO dto) throws SerException {
+//        list(dto);
+        String[] drivers = dto.getDrivers();
+        String[] arrivals = dto.getArrivals();
+        String[] carUsers = dto.getCarUsers();
+        dto.getConditions().add(Restrict.eq("isDel", Boolean.TRUE));
+        dto.getConditions().add(Restrict.eq("isPay", Boolean.FALSE));
+        List<WaitPayBO> boList = new LinkedList<>();
+        if (null != drivers) {
+            dto.getSorts().add("driverName=asc");
+            dto.getConditions().add(Restrict.in("driverName", drivers));
+            List<WaitPay> list = super.findByCis(dto);
+            if (!list.isEmpty()) {
+                boList = BeanTransform.copyProperties(list, WaitPayBO.class);
+            }
+            for (String driver : drivers) {
+                double overtimeFee = list.stream().filter(waitPay -> driver.equals(waitPay.getDriverName())).mapToDouble((WaitPay w) -> w.getOvertimeFee()).sum();
+                double allowance = list.stream().filter(waitPay -> driver.equals(waitPay.getDriverName())).mapToDouble((WaitPay w) -> w.getAllowance()).sum();
+                double parkFee = list.stream().filter(waitPay -> driver.equals(waitPay.getDriverName())).mapToDouble((WaitPay w) -> w.getParkFee()).sum();
+                double amount = list.stream().filter(waitPay -> driver.equals(waitPay.getDriverName())).mapToDouble((WaitPay w) -> w.getAmount()).sum();
+                ListIterator<WaitPayBO> iterator = boList.listIterator();
+                boolean b = false;
+                int num = 0;
+                while (iterator.hasNext()) {
+                    if (driver.equals(iterator.next().getDriverName())) {
+                        b = true;
+                        num = iterator.nextIndex();
                     }
                 }
-                if (amountSum != 0) {
-                    ArrivalCountBO bo = new ArrivalCountBO();
-                    bo.setArrival(arrival);
-                    bo.setCarPrice(price);
-                    bo.setOvertimeFeeSum(overtimeFeeSum);
-                    bo.setAllowanceSum(allowanceSum);
-                    bo.setParkFeeSum(parkFeeSum);
-                    bo.setAmountSum(amountSum);
-                    boList.add(bo);
-                    overtimeFeeSum = 0.00;
-                    allowanceSum = 0.00;
-                    parkFeeSum = 0.00;
-                    amountSum = 0.00;      //置为0
+                if (b) {
+                    WaitPayBO bo = new WaitPayBO();
+                    bo.setDriverName(driver);
+                    bo.setNumber("合计");
+                    bo.setOvertimeFee(overtimeFee);
+                    bo.setAllowance(allowance);
+                    bo.setParkFee(parkFee);
+                    bo.setAmount(amount);
+                    boList.add(num, bo);
                 }
             }
-        }
-        return boList;
-    }
-
-    @Override
-    public List<CarUserCountBO> carUserCount() throws SerException {
-        WaitPayDTO dto = new WaitPayDTO();
-        list(dto);
-        List<PayBO> list = findAlreadyPays();
-        Set<String> carUsers = findAllCarUsers();
-        Set<Double> prices = findAllPrices();
-        List<CarUserCountBO> boList = new ArrayList<CarUserCountBO>();
-        Double overtimeFeeSum = 0.00;
-        Double allowanceSum = 0.00;
-        Double parkFeeSum = 0.00;
-        Double amountSum = 0.00;
-        for (String carUser : carUsers) {
-            for (Double price : prices) {
-                for (PayBO w : list) {
-                    if (w.getCarUser().equals(carUser) && w.getCarPrice().equals(price)) {
-                        overtimeFeeSum += w.getOvertimeFee();
-                        allowanceSum += w.getAllowance();
-                        parkFeeSum += w.getParkFee();
-                        amountSum += w.getAmount();
+        } else if (null != arrivals) {
+            dto.getSorts().add("arrival=asc");
+            dto.getConditions().add(Restrict.in("arrival", arrivals));
+            List<WaitPay> list = super.findByCis(dto);
+            if (!list.isEmpty()) {
+                boList = BeanTransform.copyProperties(list, WaitPayBO.class);
+            }
+            for (String driver : arrivals) {
+                double overtimeFee = list.stream().filter(waitPay -> driver.equals(waitPay.getArrival())).mapToDouble((WaitPay w) -> w.getOvertimeFee()).sum();
+                double allowance = list.stream().filter(waitPay -> driver.equals(waitPay.getArrival())).mapToDouble((WaitPay w) -> w.getAllowance()).sum();
+                double parkFee = list.stream().filter(waitPay -> driver.equals(waitPay.getArrival())).mapToDouble((WaitPay w) -> w.getParkFee()).sum();
+                double amount = list.stream().filter(waitPay -> driver.equals(waitPay.getArrival())).mapToDouble((WaitPay w) -> w.getAmount()).sum();
+                ListIterator<WaitPayBO> iterator = boList.listIterator();
+                boolean b = false;
+                int num = 0;
+                while (iterator.hasNext()) {
+                    if (driver.equals(iterator.next().getArrival())) {
+                        b = true;
+                        num = iterator.nextIndex();
                     }
                 }
-                if (amountSum != 0) {
-                    CarUserCountBO bo = new CarUserCountBO();
-                    bo.setCarUser(carUser);
-                    bo.setCarPrice(price);
-                    bo.setOvertimeFeeSum(overtimeFeeSum);
-                    bo.setAllowanceSum(allowanceSum);
-                    bo.setParkFeeSum(parkFeeSum);
-                    bo.setAmountSum(amountSum);
-                    boList.add(bo);
-                    overtimeFeeSum = 0.00;
-                    allowanceSum = 0.00;
-                    parkFeeSum = 0.00;
-                    amountSum = 0.00;      //置为0
+                if (b) {
+                    WaitPayBO bo = new WaitPayBO();
+                    bo.setArrival(driver);
+                    bo.setNumber("合计");
+                    bo.setOvertimeFee(overtimeFee);
+                    bo.setAllowance(allowance);
+                    bo.setParkFee(parkFee);
+                    bo.setAmount(amount);
+                    boList.add(num, bo);
+                }
+            }
+        } else if (null != carUsers) {
+            dto.getSorts().add("carUser=asc");
+            dto.getConditions().add(Restrict.in("carUser", carUsers));
+            List<WaitPay> list = super.findByCis(dto);
+            if (!list.isEmpty()) {
+                boList = BeanTransform.copyProperties(list, WaitPayBO.class);
+            }
+            for (String driver : carUsers) {
+                double overtimeFee = list.stream().filter(waitPay -> driver.equals(waitPay.getCarUser())).mapToDouble((WaitPay w) -> w.getOvertimeFee()).sum();
+                double allowance = list.stream().filter(waitPay -> driver.equals(waitPay.getCarUser())).mapToDouble((WaitPay w) -> w.getAllowance()).sum();
+                double parkFee = list.stream().filter(waitPay -> driver.equals(waitPay.getCarUser())).mapToDouble((WaitPay w) -> w.getParkFee()).sum();
+                double amount = list.stream().filter(waitPay -> driver.equals(waitPay.getCarUser())).mapToDouble((WaitPay w) -> w.getAmount()).sum();
+                ListIterator<WaitPayBO> iterator = boList.listIterator();
+                boolean b = false;
+                int num = 0;
+                while (iterator.hasNext()) {
+                    if (driver.equals(iterator.next().getCarUser())) {
+                        b = true;
+                        num = iterator.nextIndex();
+                    }
+                }
+                if (b) {
+                    WaitPayBO bo = new WaitPayBO();
+                    bo.setCarUser(driver);
+                    bo.setNumber("合计");
+                    bo.setOvertimeFee(overtimeFee);
+                    bo.setAllowance(allowance);
+                    bo.setParkFee(parkFee);
+                    bo.setAmount(amount);
+                    boList.add(num, bo);
                 }
             }
         }
@@ -438,6 +814,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Override
     public List<WaitPayBO> pays(WaitPayDTO dto) throws SerException {
         checkSeeIdentity();
+        dto.getConditions().add(Restrict.eq("isDel", Boolean.TRUE));
         dto.getConditions().add(Restrict.eq("isPay", Boolean.FALSE));
         List<WaitPay> l = super.findByCis(dto, true);
         return BeanTransform.copyProperties(l, WaitPayBO.class);
@@ -445,29 +822,16 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
 
     @Override
     public Long waitCountSum(WaitPayDTO dto) throws SerException {
+        dto.getConditions().add(Restrict.eq("isDel", Boolean.TRUE));
         dto.getConditions().add(Restrict.eq("isPay", Boolean.TRUE));
         return super.count(dto);
     }
 
     @Override
     public Long payCountSum(WaitPayDTO dto) throws SerException {
+        dto.getConditions().add(Restrict.eq("isDel", Boolean.TRUE));
         dto.getConditions().add(Restrict.eq("isPay", Boolean.FALSE));
         return super.count(dto);
-    }
-
-    private List<PayBO> findAlreadyPays() throws SerException {
-        list(new WaitPayDTO());
-        List<WaitPay> list = super.findAll();
-        List<PayBO> boList = new ArrayList<PayBO>();
-        for (WaitPay w : list) {
-            if (w.getIsPay()) {
-                PayBO bo = new PayBO();
-                BeanUtils.copyProperties(w, bo);
-                bo.setHavePay(true);
-                boList.add(bo);
-            }
-        }
-        return boList;
     }
 
     /**
@@ -476,7 +840,8 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
      * @return class String
      * @throws SerException
      */
-    private Set<String> findAllDrivers() throws SerException {
+    @Override
+    public Set<String> findAllDrivers() throws SerException {
         list(new WaitPayDTO());
         List<WaitPay> list = super.findAll();
         Set<String> set = new HashSet<String>();
@@ -492,7 +857,8 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
      * @return class String
      * @throws SerException
      */
-    private Set<String> findAllArrivals() throws SerException {
+    @Override
+    public Set<String> findAllArrivals() throws SerException {
         list(new WaitPayDTO());
         List<WaitPay> list = super.findAll();
         Set<String> set = new HashSet<String>();
@@ -508,7 +874,8 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
      * @return class String
      * @throws SerException
      */
-    private Set<String> findAllCarUsers() throws SerException {
+    @Override
+    public Set<String> findAllCarUsers() throws SerException {
         list(new WaitPayDTO());
         List<WaitPay> list = super.findAll();
         Set<String> set = new HashSet<String>();
@@ -518,19 +885,4 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
         return set;
     }
 
-    /**
-     * 查找所有租车单价
-     *
-     * @return class Double
-     * @throws SerException
-     */
-    private Set<Double> findAllPrices() throws SerException {
-        list(new WaitPayDTO());
-        List<WaitPay> list = super.findAll();
-        Set<Double> set = new HashSet<Double>();
-        for (WaitPay w : list) {
-            set.add(w.getCarPrice());
-        }
-        return set;
-    }
 }

@@ -10,17 +10,14 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.oilcardmanage.api.OilCardRechargeAPI;
-import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardRechargeDTO;
 import com.bjike.goddess.oilcardmanage.to.CompetitorDeleteFileTO;
 import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardRechargeTO;
-import com.bjike.goddess.oilcardmanage.vo.OilCardBasicVO;
 import com.bjike.goddess.oilcardmanage.vo.OilCardRechargeVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -272,22 +269,21 @@ public class OilCardRechargeAct extends BaseFileAction {
 
     /**
      * 删除充值记录
+     *
      * @param id
      * @throws ActException、
      * @version v1
      */
     @LoginAuth
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id) throws ActException{
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             oilCardRechargeAPI.delete(id);
             return new ActResult();
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
-
-
 
 
 }

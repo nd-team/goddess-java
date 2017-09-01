@@ -1,6 +1,8 @@
 package com.bjike.goddess.secure.action.secure;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -23,6 +25,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -239,14 +242,15 @@ public class BeforeAddAct {
      * @version v1
      */
     @GetMapping("v1/firmNames")
-    public Result firmNames() throws ActException {
+    public Result firmNames(HttpServletRequest request) throws ActException {
         try {
+            Set<String> set = new HashSet<>();
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             if (moduleAPI.isCheck("intromanage")) {
-                Set<String> set = firmIntroAPI.firmNames();
-                return ActResult.initialize(set);
-            } else {
-                return null;
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                set = firmIntroAPI.firmNames();
             }
+            return ActResult.initialize(set);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

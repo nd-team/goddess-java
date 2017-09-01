@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 通讯途径业务接口实现
@@ -94,5 +95,10 @@ public class CommunicationPathApiImpl implements CommunicationPathAPI {
     @Override
     public void update(CommunicationPathTO to) throws SerException {
         communicationPathSer.update(to);
+    }
+
+    @Override
+    public Set<String> address() throws SerException {
+        return communicationPathSer.address();
     }
 }

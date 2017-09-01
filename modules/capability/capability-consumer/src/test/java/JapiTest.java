@@ -15,7 +15,7 @@ import java.io.IOException;
 public class JapiTest {
 
 	public static void main(String[] args) throws IOException {
-		JapiClient.setPrefixPath("/home/ike/goddess/goddess-java/");//路径前缀
+		JapiClient.setPrefixPath("/home/ike/github/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
 		JapiClient.setProjectJavaPath("modules/capability/capability-consumer");//主项目位置
 		JapiClient.setActionReletivePath("com/bjike/goddess/capability/action");//主项目action位置
@@ -23,6 +23,7 @@ public class JapiTest {
 				"modules/capability/capability-api",
 				"modules/user/user-api",
 				"modules/storage/storage-api",
+				"modules/intromanage/intromanage-api",
 				"common/common-api"
 		});
 		JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索

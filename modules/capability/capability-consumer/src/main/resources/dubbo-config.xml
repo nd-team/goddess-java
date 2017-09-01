@@ -36,5 +36,10 @@
 	<dubbo:reference  validation="true" id="cooperCapabilityApiImpl" interface="com.bjike.goddess.capability.api.CooperCapabilityAPI" />
 	<dubbo:reference  validation="true" id="selfCapabilityApiImpl" interface="com.bjike.goddess.capability.api.SelfCapabilityAPI" />
 	<dubbo:reference  validation="true" id="selfCapabilitySocialApiImpl" interface="com.bjike.goddess.capability.api.SelfCapabilitySocialAPI" />
+	<dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
+	<dubbo:reference  validation="true" id="communicationPathApiImpl" interface="com.bjike.goddess.intromanage.api.CommunicationPathAPI" />
+	<dubbo:reference  validation="true" id="firmIntroApiImpl" interface="com.bjike.goddess.intromanage.api.FirmIntroAPI" />
+	<dubbo:reference  validation="true" id="activitySchemeApiImpl" interface="com.bjike.goddess.staffactivity.api.ActivitySchemeAPI" />
+	<dubbo:reference  validation="true" id="staffRecordsApiImpl" interface="com.bjike.goddess.archive.api.StaffRecordsAPI" />
 
 </beans>

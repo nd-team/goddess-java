@@ -1,23 +1,30 @@
 package com.bjike.goddess.assistance.action.assistance;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.assistance.api.AssistanceRecordAPI;
 import com.bjike.goddess.assistance.bo.AssistanceRecordBO;
 import com.bjike.goddess.assistance.dto.AssistanceRecordDTO;
 import com.bjike.goddess.assistance.to.AssistanceRecordTO;
 import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.vo.AssistanceRecordVO;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,6 +43,10 @@ public class AssistanceRecordAction {
 
     @Autowired
     private AssistanceRecordAPI assistanceRecordAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 功能导航权限
@@ -78,19 +89,19 @@ public class AssistanceRecordAction {
     }
 
     /**
-     *  一个
+     * 一个
      *
-     * @param id  公司员工补助信息id
+     * @param id 公司员工补助信息id
+     * @return class AssistanceRecordVO
      * @des 一个公司员工补助信息
      * @version v1
-     * @return class AssistanceRecordVO
      */
     @GetMapping("v1/one/{id}")
-    public Result getOneById(@PathVariable String id ) throws ActException {
+    public Result getOneById(@PathVariable String id) throws ActException {
         try {
             AssistanceRecordVO ageAssistVO = BeanTransform.copyProperties(
                     assistanceRecordAPI.getOneById(id), AssistanceRecordVO.class);
-            return ActResult.initialize(ageAssistVO );
+            return ActResult.initialize(ageAssistVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -173,5 +184,25 @@ public class AssistanceRecordAction {
         }
     }
 
-
+    /**
+     * 获取所有用户
+     *
+     * @return class UserVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/users")
+    public Result users(HttpServletRequest request) throws ActException {
+        try {
+            List<UserBO> list = new ArrayList<>();
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                list = positionDetailUserAPI.findUserListInOrgan();
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(list, UserVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

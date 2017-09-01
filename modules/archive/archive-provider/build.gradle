@@ -34,7 +34,7 @@ dependencies {
     compile project(":modules:staffentry:staffentry-api")
     compile project(":modules:assemble:assemble-api")
     compile project(":modules:managementpromotion:managementpromotion-api")
-    compile project(":modules:employee-contract:employee-contract-api")
+//    compile project(":modules:employee-contract:employee-contract-api")
     compile project(":modules:bonus:bonus-api")
     compile project(":common:common-utils")
 }

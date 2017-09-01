@@ -3,7 +3,6 @@ package com.bjike.goddess.oilcardmanage.service;
 import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -20,7 +19,6 @@ import com.bjike.goddess.oilcardmanage.entity.OilCardRecharge;
 import com.bjike.goddess.oilcardmanage.enums.GuideAddrStatus;
 import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardRechargeTO;
-import com.bjike.goddess.oilcardmanage.vo.OilCardBasicVO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +30,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+//import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
+//import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
+//import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
+//import com.bjike.goddess.dispatchcar.enums.FindType;
 
 /**
  * 油卡充值业务处理类
@@ -370,7 +373,7 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
     @Override
     public AnalyzeBO analyze(String oilCardCode, Integer year, Integer month) throws SerException {
 
-        double addOilAmount = dispatchCarInfoAPI.findOilAmount(oilCardCode, year, month);
+//        double addOilAmount = dispatchCarInfoAPI.findOilAmount(oilCardCode, year, month);
         OilCardBasicBO oilCardBasic = oilCardBasicSer.findByCode(oilCardCode);
         if (oilCardBasic != null) {
             StringBuilder sql = new StringBuilder(" SELECT count(*) as count, sum(rechargeMoney) as rechargeMoney FROM oilcardmanage_recharge WHERE 0 = 0 ");
@@ -381,7 +384,7 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
             List<AnalyzeBO> boList = super.findBySql(sql.toString(), AnalyzeBO.class, fields);
             if (!CollectionUtils.isEmpty(boList)) {
                 AnalyzeBO bo = boList.get(0);
-                bo.setAddOilAmount(addOilAmount);
+//                bo.setAddOilAmount(addOilAmount);
                 StringBuilder cycleEarlyMoneyStr = new StringBuilder(" SELECT cycleEarlyMoney FROM oilcardmanage_recharge WHERE 0 = 0 ");
                 cycleEarlyMoneyStr.append(" and oilCardBasic_id = '" + oilCardBasic.getId() + "'");
                 cycleEarlyMoneyStr.append(" and year(rechargeDate) = '" + year);

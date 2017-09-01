@@ -473,8 +473,11 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
 
     private Set<String> events(String name) throws SerException {
         Set<String> set = new HashSet<>();
+        String token = RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("organize")) {
+            RpcTransmit.transmitUserToken(token);
             List<PositionDetailBO> list = positionDetailUserAPI.getPositionDetail(name);
+            RpcTransmit.transmitUserToken(token);
             List<PositionDetailBO> all = positionDetailAPI.findStatus();
             for (PositionDetailBO p : list) {
                 String depart = p.getDepartmentName();
@@ -486,6 +489,7 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
                     boolean b4 = "管理层".equals(p1.getArrangementName());
                     boolean b5 = "总经理".equals(p1.getPosition()) && Status.THAW.equals(p1.getStatus());
                     if ((b && b1) || (b && b4) || b2 || b3 || b5) {
+                        RpcTransmit.transmitUserToken(token);
                         List<UserBO> userBOs = positionDetailUserAPI.findByPosition(p1.getId());
                         for (UserBO userBO : userBOs) {
                             set.add(userBO.getUsername());
@@ -502,7 +506,9 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
     public PromotionApplyBO save(PromotionApplyTO to) throws SerException {
         checkAddIdentity();
         PromotionApply entity = BeanTransform.copyProperties(to, PromotionApply.class, true);
+        String token = RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("staffentry")) {
+            RpcTransmit.transmitUserToken(token);
             List<EntryBasicInfoBO> list = entryBasicInfoAPI.getByEmpNumber(to.getEmployeeId());
             if ((list != null) && (list.size() != 0)) {
                 LocalDate time = DateUtil.parseDate(list.get(0).getEntryTime());
@@ -524,6 +530,7 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
             }
         }
         if (moduleAPI.isCheck("regularization")) {
+            RpcTransmit.transmitUserToken(token);
             String time = regularizationAPI.time(to.getEmployeeId());
             if (null != time) {
                 LocalDate date = DateUtil.parseDate(time);
@@ -540,6 +547,7 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
                 eventTO.setName(s);
                 eventTO.setPermissions(Permissions.ADUIT);
                 eventTO.setEventId(entity.getId());
+                RpcTransmit.transmitUserToken(token);
                 eventAPI.save(eventTO);
             }
         }
@@ -584,7 +592,9 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
         boolean b6 = entity.getManagerOpinion() == null;
         if (b1 && b2 && b3 && b4 && b5 && b6) {
             entity = BeanTransform.copyProperties(to, PromotionApply.class, true);
+            String token = RpcTransmit.getUserToken();
             if (moduleAPI.isCheck("staffentry")) {
+                RpcTransmit.transmitUserToken(token);
                 List<EntryBasicInfoBO> list = entryBasicInfoAPI.getByEmpNumber(to.getEmployeeId());
                 if ((list != null) && (list.size() != 0)) {
                     LocalDate time = DateUtil.parseDate(list.get(0).getEntryTime());
@@ -606,6 +616,7 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
                 }
             }
             if (moduleAPI.isCheck("regularization")) {
+                RpcTransmit.transmitUserToken(token);
                 String time = regularizationAPI.time(to.getEmployeeId());
                 if (null != time) {
                     LocalDate date = DateUtil.parseDate(time);
@@ -627,7 +638,9 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
             List<PromotionApply> list = super.findByCis(dto, true);
             return BeanTransform.copyProperties(list, PromotionApplyBO.class);
         }
+        String token = RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("organize")) {
+            RpcTransmit.transmitUserToken(token);
             List<PositionDetailBO> list1 = positionDetailUserAPI.findPositionByUser(userBO.getId());
             for (PositionDetailBO p1 : list1) {
                 String depart = p1.getDepartmentName();
@@ -678,12 +691,14 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
     }
 
     private List<PromotionApplyBO> find1(PromotionApplyDTO dto) throws SerException {
+        String token = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         if (("admin".equals(userBO.getUsername().toLowerCase()))) {
             List<PromotionApply> list = super.findByCis(dto);
             return BeanTransform.copyProperties(list, PromotionApplyBO.class);
         }
         if (moduleAPI.isCheck("organize")) {
+            RpcTransmit.transmitUserToken(token);
             List<PositionDetailBO> list1 = positionDetailUserAPI.findPositionByUser(userBO.getId());
             for (PositionDetailBO p1 : list1) {
                 String depart = p1.getDepartmentName();
@@ -730,6 +745,8 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
 
     @Override
     public Long count(PromotionApplyDTO dto) throws SerException {
+        String token=RpcTransmit.getUserToken();
+        RpcTransmit.transmitUserToken(token);
         List<PromotionApplyBO> list = find1(dto);
         long sum = 0l;
         if (list != null) {
@@ -745,6 +762,7 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
     //规划填写是否符合晋升条件
     public void conform(PromotionApplyTO to) throws SerException {
         checkGuiHuaIdentity();
+        String token = RpcTransmit.getUserToken();
         PromotionApply entity = super.findById(to.getId());
         entity.setIsConform(to.getIsConform());
         super.update(entity);
@@ -755,7 +773,9 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
                 messageTO.setTitle("有管理等级晋升申请需审核");
                 messageTO.setContent("您有一个管理等级晋升申请需您去审核，请登陆issp系统完成审核");
                 if (moduleAPI.isCheck("contacts")) {
+                    RpcTransmit.transmitUserToken(token);
                     if (null != internalContactsAPI.getEmail(user.getUsername())) {
+                        RpcTransmit.transmitUserToken(token);
                         messageTO.setReceivers(new String[]{internalContactsAPI.getEmail(user.getUsername())});
                         messageAPI.send(messageTO);
                     }
@@ -769,17 +789,21 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
     //综合素养模块填写晋升标准达标数
     public void writePromotionCriteria(PromotionApplyTO to) throws SerException {
         checkSuYangIdentity();
+        String token = RpcTransmit.getUserToken();
         PromotionApply entity = super.findById(to.getId());
         entity.setPromotionCriteria(to.getPromotionCriteria());
         super.update(entity);
         if ((entity.getIsConform() != null) && (entity.getPromotionCriteria() != null)) {
+            RpcTransmit.transmitUserToken(token);
             List<UserBO> users = modules(entity.getName());
             for (UserBO user : users) {
                 MessageTO messageTO = new MessageTO();
                 messageTO.setTitle("有管理等级晋升申请需审核");
                 messageTO.setContent("您有一个管理等级晋升申请需您去审核，请登陆issp系统完成审核");
                 if (moduleAPI.isCheck("contacts")) {
+                    RpcTransmit.transmitUserToken(token);
                     if (null != internalContactsAPI.getEmail(user.getUsername())) {
+                        RpcTransmit.transmitUserToken(token);
                         messageTO.setReceivers(new String[]{internalContactsAPI.getEmail(user.getUsername())});
                         messageAPI.send(messageTO);
                     }
@@ -789,17 +813,23 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
     }
 
     private List<UserBO> modules(String name) throws SerException {
+        String token = RpcTransmit.getUserToken();
         List<UserBO> boList = new ArrayList<>();
         UserBO userBO = userAPI.findByUsername(name);
-        if (moduleAPI.isCheck("organize")) {
-            List<PositionDetailBO> list = positionDetailUserAPI.findPositionByUser(userBO.getId());
-            List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
-            for (PositionDetailBO p : list) {
-                String module = p.getModuleName();
-                for (PositionDetailBO p1 : list1) {
-                    if ((module.equals(p1.getModuleName()) && ("管理层".equals(p1.getArrangementName()) || "决策层".equals(p1.getArrangementName()))) || "总经理".equals(p1.getPosition())) {
-                        List<UserBO> users = positionDetailUserAPI.findByPosition(p1.getId());
-                        boList.addAll(users);
+        if (null != userBO) {
+            if (moduleAPI.isCheck("organize")) {
+                RpcTransmit.transmitUserToken(token);
+                List<PositionDetailBO> list = positionDetailUserAPI.findPositionByUser(userBO.getId());
+                RpcTransmit.transmitUserToken(token);
+                List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
+                for (PositionDetailBO p : list) {
+                    String module = p.getModuleName();
+                    for (PositionDetailBO p1 : list1) {
+                        if ((module.equals(p1.getModuleName()) && ("管理层".equals(p1.getArrangementName()) || "决策层".equals(p1.getArrangementName()))) || "总经理".equals(p1.getPosition())) {
+                            RpcTransmit.transmitUserToken(token);
+                            List<UserBO> users = positionDetailUserAPI.findByPosition(p1.getId());
+                            boList.addAll(users);
+                        }
                     }
                 }
             }
@@ -815,14 +845,19 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
      */
     private Set<String> mangerEmail() throws SerException {
         Set<String> set = new HashSet<>();
+        String token = RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("organize")) {
+            RpcTransmit.transmitUserToken(token);
             List<PositionDetailBO> list = positionDetailAPI.findStatus();
             for (PositionDetailBO p : list) {
                 if ("总经理".equals(p.getPosition())) {
+                    RpcTransmit.transmitUserToken(token);
                     List<UserBO> users = positionDetailUserAPI.findByPosition(p.getId());
                     if (moduleAPI.isCheck("contacts")) {
                         for (UserBO u : users) {
+                            RpcTransmit.transmitUserToken(token);
                             if (null != internalContactsAPI.getEmail(u.getUsername())) {
+                                RpcTransmit.transmitUserToken(token);
                                 set.add(internalContactsAPI.getEmail(u.getUsername()));
                             }
                         }
@@ -999,7 +1034,9 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
     @Override
     //每月21号定时发邮件给总经办  //todo:
     public void send() throws SerException {
+        String token=RpcTransmit.getUserToken();
         List<PromotionApplyBO> list = rank();
+        RpcTransmit.transmitUserToken(token);
         Set<String> set = mangerEmail();
         for (String s : set) {
             MessageTO messageTO = new MessageTO();

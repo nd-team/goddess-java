@@ -1,6 +1,7 @@
 package com.bjike.goddess.oilcardmanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+//import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
 import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
 import com.bjike.goddess.oilcardmanage.bo.AnalyzeBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
@@ -104,6 +105,6 @@ public interface OilCardRechargeAPI {
     /**
      * 油卡使用记录查询
      */
-    List<DispatchCarInfoBO> findDispatch(String oilCardCode,String startTime,String endTime) throws SerException;
+    List<DispatchCarInfoBO> findDispatch(String oilCardCode, String startTime, String endTime) throws SerException;
 
 }
