@@ -3,7 +3,9 @@ package com.bjike.goddess.shareholdersmanage.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.shareholdersmanage.bo.ShareOpenAccountBO;
 import com.bjike.goddess.shareholdersmanage.dto.ShareOpenAccountDTO;
+import com.bjike.goddess.shareholdersmanage.excel.SonPermissionObject;
 import com.bjike.goddess.shareholdersmanage.service.ShareOpenAccountSer;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 import com.bjike.goddess.shareholdersmanage.to.ShareOpenAccountBTO;
 import com.bjike.goddess.shareholdersmanage.to.ShareOpenAccountTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,17 @@ import java.util.List;
 public class ShareOpenAccountApiImpl implements ShareOpenAccountAPI {
     @Autowired
     private ShareOpenAccountSer shareOpenAccountSer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return shareOpenAccountSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return shareOpenAccountSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long countShareOpen(ShareOpenAccountDTO shareOpenAccountDTO) throws SerException {
         return shareOpenAccountSer.countShareOpen(shareOpenAccountDTO);
@@ -87,5 +100,10 @@ public class ShareOpenAccountApiImpl implements ShareOpenAccountAPI {
     @Override
     public List<String> findShareholderName() throws SerException {
         return shareOpenAccountSer.findShareholderName();
+    }
+
+    @Override
+    public List<String> findArea() throws SerException {
+        return shareOpenAccountSer.findArea();
     }
 }

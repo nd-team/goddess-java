@@ -1,6 +1,11 @@
 package com.bjike.goddess.shareholdersmanage.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 分红管理
@@ -16,38 +21,37 @@ public class ShareOutBonusManageTO extends BaseTO {
     /**
      * 分红日期
      */
-    private String ShareOutBonusDate;
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "分红日期不能为空")
+    private String shareOutBonusDate;
 
     /**
      * 地区
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "地区不能为空")
     private String area;
 
     /**
      * 分红名称
      */
-    private String ShareOutBonusName;
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "分红名称不能为空")
+    private String shareOutBonusName;
 
     /**
      * 股权类型
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "股权类型不能为空")
     private String equityType;
 
     /**
-     * 共派股Double
+     * 共派股
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "共派股不能为空")
     private Integer totalSentStocks;
-
     /**
-     * 共分红
+     * 每股分红
      */
-    private Double totalShareOutBonus;
-
-    /**
-     * 共缴所得税
-     */
-    private Double TotalIncomeTax;
-
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "每股分红不能为空")
+    private Double perShareDividends;
     /**
      * 备注
      */
@@ -55,11 +59,11 @@ public class ShareOutBonusManageTO extends BaseTO {
 
 
     public String getShareOutBonusDate() {
-        return ShareOutBonusDate;
+        return shareOutBonusDate;
     }
 
     public void setShareOutBonusDate(String shareOutBonusDate) {
-        ShareOutBonusDate = shareOutBonusDate;
+        this.shareOutBonusDate = shareOutBonusDate;
     }
 
     public String getArea() {
@@ -71,11 +75,11 @@ public class ShareOutBonusManageTO extends BaseTO {
     }
 
     public String getShareOutBonusName() {
-        return ShareOutBonusName;
+        return shareOutBonusName;
     }
 
-    public void setShareOutBonusName(String ShareOutBonusName) {
-        this.ShareOutBonusName = ShareOutBonusName;
+    public void setShareOutBonusName(String shareOutBonusName) {
+        this.shareOutBonusName = shareOutBonusName;
     }
 
     public String getEquityType() {
@@ -94,20 +98,12 @@ public class ShareOutBonusManageTO extends BaseTO {
         this.totalSentStocks = totalSentStocks;
     }
 
-    public Double getTotalShareOutBonus() {
-        return totalShareOutBonus;
+    public Double getPerShareDividends() {
+        return perShareDividends;
     }
 
-    public void setTotalShareOutBonus(Double totalShareOutBonus) {
-        this.totalShareOutBonus = totalShareOutBonus;
-    }
-
-    public Double getTotalIncomeTax() {
-        return TotalIncomeTax;
-    }
-
-    public void setTotalIncomeTax(Double TotalIncomeTax) {
-        this.TotalIncomeTax = TotalIncomeTax;
+    public void setPerShareDividends(Double perShareDividends) {
+        this.perShareDividends = perShareDividends;
     }
 
     public String getRemark() {

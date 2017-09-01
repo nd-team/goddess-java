@@ -3,9 +3,11 @@ package com.bjike.goddess.shareholdersmanage.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.shareholdersmanage.bo.EquityGiftBO;
+import com.bjike.goddess.shareholdersmanage.bo.ProportioAnmountBO;
 import com.bjike.goddess.shareholdersmanage.dto.EquityGiftDTO;
 import com.bjike.goddess.shareholdersmanage.entity.EquityGift;
 import com.bjike.goddess.shareholdersmanage.to.EquityGiftTO;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +21,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface EquityGiftSer extends Ser<EquityGift, EquityGiftDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 股权赠与列表总条数
      */
@@ -38,7 +53,7 @@ public interface EquityGiftSer extends Ser<EquityGift, EquityGiftDTO> {
     /**
      * 股权赠与列表
      *
-     * @param equityGiftDTO 股权转让dto
+     * @param equityGiftDTO 股权赠与dto
      * @return class EquityGiftBO
      * @throws SerException
      */
@@ -49,7 +64,7 @@ public interface EquityGiftSer extends Ser<EquityGift, EquityGiftDTO> {
     /**
      * 股权赠与添加
      *
-     * @param equityGiftTO 股权转让数据to
+     * @param equityGiftTO 股权赠与数据to
      * @throws SerException
      */
     default EquityGiftBO save(EquityGiftTO equityGiftTO) throws SerException {
@@ -59,7 +74,7 @@ public interface EquityGiftSer extends Ser<EquityGift, EquityGiftDTO> {
     /**
      * 股权赠与编辑
      *
-     * @param equityGiftTO 股权继承数据to
+     * @param equityGiftTO 股权赠与数据to
      * @throws SerException
      */
     default EquityGiftBO edit(EquityGiftTO equityGiftTO) throws SerException {
@@ -75,4 +90,5 @@ public interface EquityGiftSer extends Ser<EquityGift, EquityGiftDTO> {
     default void delete(String id) throws SerException {
         return;
     }
+
 }

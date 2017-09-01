@@ -15,7 +15,9 @@ import com.bjike.goddess.shareholdersmanage.dto.LogoutEquityDTO;
 import com.bjike.goddess.shareholdersmanage.entity.LogoutEquity;
 import com.bjike.goddess.shareholdersmanage.service.LogoutEquitySer;
 import com.bjike.goddess.shareholdersmanage.service.LogoutShareSer;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 import com.bjike.goddess.shareholdersmanage.to.LogoutEquityTO;
+import com.bjike.goddess.shareholdersmanage.vo.LogoutEquityLinkDateVO;
 import com.bjike.goddess.shareholdersmanage.vo.LogoutEquityVO;
 import com.bjike.goddess.shareholdersmanage.vo.LogoutShareLinkDateVO;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
@@ -40,9 +42,29 @@ import java.util.List;
 public class LogoutEquityAction {
     @Autowired
     private LogoutEquityAPI logoutEquityAPI;
-    @Autowired
-    private LogoutShareAPI logoutShareAPI;
 
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, javax.servlet.http.HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = logoutEquityAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 列表总条数
      *
@@ -64,7 +86,7 @@ public class LogoutEquityAction {
      * 一个注销股权
      *
      * @param id 注销股权id
-     * @return class LogoutShareVO
+     * @return class LogoutEquityVO
      * @des 根据id获取注销股权
      * @version v1
      */
@@ -83,7 +105,7 @@ public class LogoutEquityAction {
      * 注销股权列表
      *
      * @param logoutEquityDTO 注销股权dto
-     * @return class ShareChangeVO
+     * @return class LogoutEquityVO
      * @des 获取所有注销股权
      * @version v1
      */
@@ -103,7 +125,7 @@ public class LogoutEquityAction {
      * 添加注销股权
      *
      * @param logoutEquityTO 注销股权to
-     * @return class LogoutShareVO
+     * @return class LogoutEquityVO
      * @des 添加注销股权
      * @version v1
      */
@@ -123,7 +145,7 @@ public class LogoutEquityAction {
      * 编辑注销股权
      *
      * @param logoutEquityTO 注销股权数据bo
-     * @return class logoutEquityBO
+     * @return class LogoutEquityVO
      * @des 编辑注销股权
      * @version v1
      */
@@ -166,9 +188,9 @@ public class LogoutEquityAction {
     @GetMapping("v1/getLinkDate/logoutShareName")
     public Result getLinkDate(@RequestParam String logoutShareName) throws ActException {
         try {
-            LogoutShareLinkDateVO logoutShareLinkDateVO = BeanTransform.copyProperties(
-                    logoutShareAPI.linkDateByName(logoutShareName), LogoutShareLinkDateVO.class);
-            return ActResult.initialize(logoutShareLinkDateVO);
+            LogoutEquityLinkDateVO logoutEquityLinkDateVO = BeanTransform.copyProperties(
+                    logoutEquityAPI.linkDateByName(logoutShareName), LogoutEquityLinkDateVO.class);
+            return ActResult.initialize(logoutEquityLinkDateVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

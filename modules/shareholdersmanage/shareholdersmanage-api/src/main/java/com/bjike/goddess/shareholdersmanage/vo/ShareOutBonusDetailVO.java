@@ -48,12 +48,12 @@ public class ShareOutBonusDetailVO {
     /**
      * 税后利润
      */
-    private Double AfterTaxProfits;
+    private Double afterTaxProfits;
 
     /**
      * 分红管理id
      */
-    private String ShareOutBonusManageId;
+    private String shareOutBonusManageId;
 
 
     public String getId() {
@@ -113,18 +113,18 @@ public class ShareOutBonusDetailVO {
     }
 
     public Double getAfterTaxProfits() {
-        return AfterTaxProfits;
+        return afterTaxProfits;
     }
 
-    public void setAfterTaxProfits(Double AfterTaxProfits) {
-        this.AfterTaxProfits = AfterTaxProfits;
+    public void setAfterTaxProfits(Double afterTaxProfits) {
+        this.afterTaxProfits = afterTaxProfits;
     }
 
     public String getShareOutBonusManageId() {
-        return ShareOutBonusManageId;
+        return shareOutBonusManageId;
     }
 
-    public void setShareOutBonusManageId(String ShareOutBonusManageId) {
-        this.ShareOutBonusManageId = ShareOutBonusManageId;
+    public void setShareOutBonusManageId(String shareOutBonusManageId) {
+        this.shareOutBonusManageId = shareOutBonusManageId;
     }
 }

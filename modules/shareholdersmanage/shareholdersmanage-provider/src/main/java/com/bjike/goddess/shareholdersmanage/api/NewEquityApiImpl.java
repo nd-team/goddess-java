@@ -5,6 +5,7 @@ import com.bjike.goddess.shareholdersmanage.bo.NewEquityBO;
 import com.bjike.goddess.shareholdersmanage.bo.NewEquityLinkDateBO;
 import com.bjike.goddess.shareholdersmanage.dto.NewEquityDTO;
 import com.bjike.goddess.shareholdersmanage.service.NewEquitySer;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 import com.bjike.goddess.shareholdersmanage.to.NewEquityTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,16 @@ import java.util.List;
 public class NewEquityApiImpl implements NewEquityAPI {
     @Autowired
     private NewEquitySer newEquitySer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return newEquitySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return newEquitySer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countNewEquity(NewEquityDTO newEquityDTO) throws SerException {

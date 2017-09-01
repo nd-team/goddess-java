@@ -9,6 +9,7 @@ import com.bjike.goddess.shareholdersmanage.dto.EquityTransactRecordDTO;
 import com.bjike.goddess.shareholdersmanage.entity.EquityTransactRecord;
 import com.bjike.goddess.shareholdersmanage.entity.ShareOpenAccount;
 import com.bjike.goddess.shareholdersmanage.to.EquityTransactRecordTO;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -22,7 +23,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface EquityTransactRecordSer extends Ser<EquityTransactRecord, EquityTransactRecordDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
 
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 股权交易记录列表总条数
      */

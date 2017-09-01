@@ -6,6 +6,7 @@ import com.bjike.goddess.shareholdersmanage.bo.EquityTransactRecordDetailBO;
 import com.bjike.goddess.shareholdersmanage.bo.ShareAndTypeBO;
 import com.bjike.goddess.shareholdersmanage.dto.EquityTransactRecordDTO;
 import com.bjike.goddess.shareholdersmanage.to.EquityTransactRecordTO;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +20,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface EquityTransactRecordAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 股权交易记录列表总条数
      */
@@ -132,6 +146,14 @@ public interface EquityTransactRecordAPI {
      *
      */
     default List<ShareAndTypeBO> getNameAndType() throws SerException {
+        return null;
+    }
+    /**
+     * 查看所有的股权类型
+     *
+     * @throws SerException
+     */
+    default List<String> findEquityType() throws SerException {
         return null;
     }
 }

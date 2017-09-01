@@ -28,9 +28,9 @@ public class PledgeEquity extends BaseEntity {
     private String area;
 
     /**
-     * 出资人
+     * 出质人
      */
-    @Column(name = "investor", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '出资人'")
+    @Column(name = "investor", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '出质人'")
     private String investor;
 
     /**

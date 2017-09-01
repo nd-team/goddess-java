@@ -7,6 +7,7 @@ import com.bjike.goddess.shareholdersmanage.bo.ShareAndTypeBO;
 import com.bjike.goddess.shareholdersmanage.dto.EquityTransactRecordDTO;
 import com.bjike.goddess.shareholdersmanage.service.EquityTransactRecordSer;
 import com.bjike.goddess.shareholdersmanage.to.EquityTransactRecordTO;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,16 @@ import java.util.List;
 public class EquityTransactRecordApiImpl implements EquityTransactRecordAPI {
     @Autowired
     private EquityTransactRecordSer equityTransactRecordSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return equityTransactRecordSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return equityTransactRecordSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countTrans(EquityTransactRecordDTO equityTransactRecordDTO) throws SerException {
@@ -94,5 +105,10 @@ public class EquityTransactRecordApiImpl implements EquityTransactRecordAPI {
     @Override
     public List<ShareAndTypeBO> getNameAndType() throws SerException {
         return equityTransactRecordSer.getNameAndType();
+    }
+
+    @Override
+    public List<String> findEquityType() throws SerException {
+        return equityTransactRecordSer.findEquityType();
     }
 }

@@ -1,18 +1,14 @@
 模块名:shareholdersmanage
-类名:ShareOutBonusDetail
+类名:FairChange
 作者:lijuntao
-描述:分红明细
+描述:公允值变动
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String shareholderName 股东姓名;
-Double totalShareOutBonus 共分红;
-Double shareOutBonusPropor 分红比例;
-Double shareOutBonusAmount 分红额;
-Double incomeTaxPropor 所得税比例;
-Double incomeTax 所得税;
-Double AfterTaxProfits 税后利润;
-String ShareOutBonusManageId 分红管理id;
+String area 地区;
+String equityType 股权类型;
+LocalDate changDate 变动时间;
+Double perSharePrice 每股价格/元;
 )

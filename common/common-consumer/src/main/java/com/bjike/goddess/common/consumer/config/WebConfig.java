@@ -27,7 +27,6 @@ import java.util.List;
  */
 @Component
 public class WebConfig extends WebMvcConfigurerAdapter {
-
     @Autowired(required = false)
     private Interceptor interceptor;
     @Autowired(required = false)

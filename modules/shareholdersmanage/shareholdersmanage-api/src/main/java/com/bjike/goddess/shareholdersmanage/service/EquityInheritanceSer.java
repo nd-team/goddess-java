@@ -6,6 +6,7 @@ import com.bjike.goddess.shareholdersmanage.bo.EquityInheritanceBO;
 import com.bjike.goddess.shareholdersmanage.dto.EquityInheritanceDTO;
 import com.bjike.goddess.shareholdersmanage.entity.EquityInheritance;
 import com.bjike.goddess.shareholdersmanage.to.EquityInheritanceTO;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +20,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface EquityInheritanceSer extends Ser<EquityInheritance, EquityInheritanceDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 股权继承列表总条数
      */

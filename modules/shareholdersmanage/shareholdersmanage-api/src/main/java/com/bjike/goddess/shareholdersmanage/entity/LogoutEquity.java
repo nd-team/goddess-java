@@ -60,8 +60,8 @@ public class LogoutEquity extends BaseEntity {
     /**
      * 注销日期
      */
-    @Column(name = "LogoutDate", nullable = false, columnDefinition = "DATE   COMMENT '注销日期'")
-    private LocalDate LogoutDate;
+    @Column(name = "logoutDate", nullable = false, columnDefinition = "DATE   COMMENT '注销日期'")
+    private LocalDate logoutDate;
 
     /**
      * 备注
@@ -119,11 +119,11 @@ public class LogoutEquity extends BaseEntity {
     }
 
     public LocalDate getLogoutDate() {
-        return LogoutDate;
+        return logoutDate;
     }
 
-    public void setLogoutDate(LocalDate LogoutDate) {
-        this.LogoutDate = LogoutDate;
+    public void setLogoutDate(LocalDate logoutDate) {
+        this.logoutDate = logoutDate;
     }
 
     public String getRemark() {

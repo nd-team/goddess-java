@@ -3,6 +3,7 @@ package com.bjike.goddess.shareholdersmanage.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.shareholdersmanage.bo.EquityInheritanceBO;
 import com.bjike.goddess.shareholdersmanage.bo.EquityTransactRecordBO;
@@ -12,6 +13,10 @@ import com.bjike.goddess.shareholdersmanage.entity.EquityInheritance;
 import com.bjike.goddess.shareholdersmanage.to.EquityInheritanceTO;
 import com.bjike.goddess.shareholdersmanage.to.EquityTransactRecordDetailTO;
 import com.bjike.goddess.shareholdersmanage.to.EquityTransactRecordTO;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
+import com.bjike.goddess.shareholdersmanage.type.GuideAddrStatus;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -38,6 +43,110 @@ public class EquityInheritanceSerImpl extends ServiceImpl<EquityInheritance, Equ
     private EquityTransactRecordSer equityTransactRecordSer;
     @Autowired
     private EquityTransactRecordDetailSer equityTransactRecordDetailSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private UserAPI userAPI;
+    /**
+     * 检查权限
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是财务部门人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideIdentity();
+                break;
+            case ADD:
+                flag = guideIdentity();
+                break;
+            case EDIT:
+                flag = guideIdentity();
+                break;
+            case DELETE:
+                flag = guideIdentity();
+                break;
+            case SEE:
+                flag = guideIdentity();
+                break;
+            case COLLECT:
+                flag = guideIdentity();
+                break;
+            case UPLOAD:
+                flag = guideIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideIdentity();
+                break;
+            case IMPORT:
+                flag = guideIdentity();
+                break;
+            case EXPORT:
+                flag = guideIdentity();
+                break;
+            case SEEFILE:
+                flag = guideIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
     @Override
     public Long countInheritance(EquityInheritanceDTO equityInheritanceDTO) throws SerException {
         Long count = super.count(equityInheritanceDTO);
@@ -52,6 +161,7 @@ public class EquityInheritanceSerImpl extends ServiceImpl<EquityInheritance, Equ
 
     @Override
     public List<EquityInheritanceBO> findList(EquityInheritanceDTO equityInheritanceDTO) throws SerException {
+        checkPermission();
         searchCondi(equityInheritanceDTO);
         equityInheritanceDTO.getSorts().add("createTime=desc");
         List<EquityInheritance> equityInheritanceList = super.findByCis(equityInheritanceDTO);
@@ -71,43 +181,48 @@ public class EquityInheritanceSerImpl extends ServiceImpl<EquityInheritance, Equ
     @Transactional(rollbackFor = SerException.class)
     @Override
     public EquityInheritanceBO save(EquityInheritanceTO equityInheritanceTO) throws SerException {
+       checkPermission();
         //添加本条数据
         EquityInheritance equityInheritance = BeanTransform.copyProperties(equityInheritanceTO,EquityInheritance.class,true);
         equityInheritance.setCreateTime(LocalDateTime.now());
         equityInheritance = super.save(equityInheritance);
-        EquityTransactRecordBO equityTransactRecordBOH = equityTransactRecordSer.getByName(equityInheritanceTO.getHeir());//
-        EquityTransactRecordBO equityTransactRecordBOBH = equityTransactRecordSer.getByName(equityInheritanceTO.getBeHeir());//变更后股东信息
+        EquityTransactRecordBO equityTransactRecordBOH = equityTransactRecordSer.getByName(equityInheritanceTO.getHeir());//继承人交易记录信息
+        EquityTransactRecordBO equityTransactRecordBOBH = equityTransactRecordSer.getByName(equityInheritanceTO.getBeHeir());//被继承人交易记录信息
         //添加交易记录明细数据
+        //继承人
         EquityTransactRecordDetailTO equityTransactRecordDetailTOH = new EquityTransactRecordDetailTO();
         equityTransactRecordDetailTOH.setShareholderName(equityInheritanceTO.getHeir());
         equityTransactRecordDetailTOH.setTransactDate(LocalDate.now().toString());
-        equityTransactRecordDetailTOH.setPerSharePrice(equityTransactRecordBOH.getPerSharePrice());
-        equityTransactRecordDetailTOH.setHoldNum(equityTransactRecordBOH.getHoldNum());
-        equityTransactRecordDetailTOH.setAmount(equityTransactRecordBOH.getAmount());
+        equityTransactRecordDetailTOH.setPerSharePrice(equityTransactRecordBOBH.getPerSharePrice());
+        equityTransactRecordDetailTOH.setHoldNum(equityTransactRecordBOBH.getHoldNum());
+        equityTransactRecordDetailTOH.setAmount(equityTransactRecordBOBH.getAmount());
         equityTransactRecordDetailTOH.setTransactType("股权继承");
         equityTransactRecordDetailTOH.setTransactId(equityInheritance.getId());
         equityTransactRecordDetailSer.save(equityTransactRecordDetailTOH);
 
+        //被继承人
         EquityTransactRecordDetailTO equityTransactRecordDetailTOBH = new EquityTransactRecordDetailTO();
         equityTransactRecordDetailTOBH.setShareholderName(equityInheritanceTO.getBeHeir());
         equityTransactRecordDetailTOBH.setTransactDate(LocalDate.now().toString());
-        equityTransactRecordDetailTOBH.setPerSharePrice(equityTransactRecordBOH.getPerSharePrice());
-        equityTransactRecordDetailTOBH.setHoldNum(-equityTransactRecordBOH.getHoldNum());
-        equityTransactRecordDetailTOBH.setAmount(-equityTransactRecordBOH.getAmount());
+        equityTransactRecordDetailTOBH.setPerSharePrice(equityTransactRecordBOBH.getPerSharePrice());
+        equityTransactRecordDetailTOBH.setHoldNum(-equityTransactRecordBOBH.getHoldNum());
+        equityTransactRecordDetailTOBH.setAmount(-equityTransactRecordBOBH.getAmount());
         equityTransactRecordDetailTOBH.setTransactType("股权继承");
         equityTransactRecordDetailTOBH.setTransactId(equityInheritance.getId());
         equityTransactRecordDetailSer.save(equityTransactRecordDetailTOBH);
         //修改交易记录数据
+        //继承人
         EquityTransactRecordTO equityTransactRecordTOH = new EquityTransactRecordTO();
         equityTransactRecordTOH.setHoldNum(equityTransactRecordBOH.getHoldNum()+equityTransactRecordBOBH.getHoldNum());
         equityTransactRecordTOH.setAmount(equityTransactRecordBOH.getAmount()+equityTransactRecordBOBH.getAmount());
-        equityTransactRecordTOH.setId(equityTransactRecordBOBH.getId());
+        equityTransactRecordTOH.setId(equityTransactRecordBOH.getId());
         equityTransactRecordSer.updateTrans(equityTransactRecordTOH);
 
+        //被继承人
         EquityTransactRecordTO equityTransactRecordTOBH = new EquityTransactRecordTO();
         equityTransactRecordTOBH.setHoldNum(0);
         equityTransactRecordTOBH.setAmount(0d);
-        equityTransactRecordTOBH.setId(equityTransactRecordBOH.getId());
+        equityTransactRecordTOBH.setId(equityTransactRecordBOBH.getId());
         equityTransactRecordSer.updateTrans(equityTransactRecordTOBH);
         equityTransactRecordSer.updateTransList();
         return BeanTransform.copyProperties(equityInheritance,EquityInheritanceBO.class);
@@ -115,6 +230,7 @@ public class EquityInheritanceSerImpl extends ServiceImpl<EquityInheritance, Equ
     @Transactional(rollbackFor = SerException.class)
     @Override
     public EquityInheritanceBO edit(EquityInheritanceTO equityInheritanceTO) throws SerException {
+       checkPermission();
         //判断继承人和被继承人是否被修改
         EquityInheritance equityInheritance = super.findById(equityInheritanceTO.getId());
         String heir = equityInheritance.getHeir();//继承人
@@ -130,35 +246,41 @@ public class EquityInheritanceSerImpl extends ServiceImpl<EquityInheritance, Equ
             equityTransactRecordSer.reinstate(equityTransactRecordBOBH, equityTransactRecordDetailBOBH);//恢复变更后股东信息
 
             //修改交易记录明细数据
+            EquityTransactRecordBO equityTransactRecordBOAH = equityTransactRecordSer.getByName(equityInheritanceTO.getHeir());//修改之后的继承人信息交易记录
+            EquityTransactRecordBO equityTransactRecordBOABH = equityTransactRecordSer.getByName(equityInheritanceTO.getBeHeir());//修改之后的被继承人信息交易记录
+            //继承人
             EquityTransactRecordDetailTO equityTransactRecordDetailTOH = new EquityTransactRecordDetailTO();
             equityTransactRecordDetailTOH.setId(equityTransactRecordDetailBOH.getId());
-            equityTransactRecordDetailTOH.setShareholderName(equityTransactRecordDetailBOH.getShareholderName());
-            equityTransactRecordDetailTOH.setHoldNum(equityTransactRecordDetailBOH.getHoldNum());
+            equityTransactRecordDetailTOH.setShareholderName(equityTransactRecordBOAH.getShareholderName());
+            equityTransactRecordDetailTOH.setHoldNum(equityTransactRecordBOABH.getHoldNum());
             equityTransactRecordDetailTOH.setTransactDate(LocalDate.now().toString());
-            equityTransactRecordDetailTOH.setPerSharePrice(equityTransactRecordDetailBOH.getPerSharePrice());
-            equityTransactRecordDetailTOH.setAmount(equityTransactRecordDetailBOH.getAmount());
+            equityTransactRecordDetailTOH.setPerSharePrice(equityTransactRecordBOABH.getPerSharePrice());
+            equityTransactRecordDetailTOH.setAmount(equityTransactRecordBOABH.getAmount());
             equityTransactRecordDetailSer.edit(equityTransactRecordDetailTOH);
 
+            //被继承人
             EquityTransactRecordDetailTO equityTransactRecordDetailTOBH = new EquityTransactRecordDetailTO();
             equityTransactRecordDetailTOBH.setId(equityTransactRecordDetailBOBH.getId());
-            equityTransactRecordDetailTOBH.setShareholderName(equityTransactRecordDetailBOBH.getShareholderName());
-            equityTransactRecordDetailTOBH.setHoldNum(-equityTransactRecordDetailBOBH.getHoldNum());
+            equityTransactRecordDetailTOBH.setShareholderName(equityTransactRecordBOABH.getShareholderName());
+            equityTransactRecordDetailTOBH.setHoldNum(-equityTransactRecordBOABH.getHoldNum());
             equityTransactRecordDetailTOBH.setTransactDate(LocalDate.now().toString());
-            equityTransactRecordDetailTOBH.setPerSharePrice(equityTransactRecordDetailBOBH.getPerSharePrice());
-            equityTransactRecordDetailTOBH.setAmount(-equityTransactRecordDetailBOBH.getAmount());
+            equityTransactRecordDetailTOBH.setPerSharePrice(equityTransactRecordBOABH.getPerSharePrice());
+            equityTransactRecordDetailTOBH.setAmount(-equityTransactRecordBOABH.getAmount());
             equityTransactRecordDetailSer.edit(equityTransactRecordDetailTOBH);
             //修改被修改交易记录数据
+            //继承人
             EquityTransactRecordTO equityTransactRecordTOH = new EquityTransactRecordTO();
-            equityTransactRecordTOH.setId(equityTransactRecordBOH.getId());
-            equityTransactRecordTOH.setHoldNum(equityTransactRecordBOH.getHoldNum() + equityTransactRecordBOBH.getHoldNum());
-            equityTransactRecordTOH.setAmount(equityTransactRecordBOH.getAmount() + equityTransactRecordBOBH.getAmount());
+            equityTransactRecordTOH.setId(equityTransactRecordBOAH.getId());
+            equityTransactRecordTOH.setHoldNum(equityTransactRecordBOAH.getHoldNum() + equityTransactRecordBOABH.getHoldNum());
+            equityTransactRecordTOH.setAmount(equityTransactRecordBOAH.getAmount() + equityTransactRecordBOABH.getAmount());
             equityTransactRecordSer.updateTrans(equityTransactRecordTOH);
 
+            //被继承人
             EquityTransactRecordTO equityTransactRecordTOBH = new EquityTransactRecordTO();
-            equityTransactRecordTOBH.setId(equityTransactRecordBOBH.getId());
+            equityTransactRecordTOBH.setId(equityTransactRecordBOABH.getId());
             equityTransactRecordTOBH.setHoldNum(0);
             equityTransactRecordTOBH.setAmount(0d);
-            equityTransactRecordSer.updateTrans(equityTransactRecordTOH);
+            equityTransactRecordSer.updateTrans(equityTransactRecordTOBH);
 
             equityTransactRecordSer.updateTransList();
         }
@@ -173,6 +295,7 @@ public class EquityInheritanceSerImpl extends ServiceImpl<EquityInheritance, Equ
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void delete(String id) throws SerException {
+        checkPermission();
         //恢复交易记录数据
         EquityInheritance equityInheritance = super.findById(id);
         String heir = equityInheritance.getHeir();//继承人
@@ -183,6 +306,7 @@ public class EquityInheritanceSerImpl extends ServiceImpl<EquityInheritance, Equ
         EquityTransactRecordDetailBO equityTransactRecordDetailBOBH = equityTransactRecordDetailSer.getByNameId(beHeir,id);//被继承人信息交易记录明细
         equityTransactRecordSer.reinstate(equityTransactRecordBOH,equityTransactRecordDetailBOH);
         equityTransactRecordSer.reinstate(equityTransactRecordBOBH,equityTransactRecordDetailBOBH);
+        equityTransactRecordSer.updateTransList();
         //删除交易记录明细数据
         equityTransactRecordDetailSer.deleteByTransactId(id);
         //删除本条数据

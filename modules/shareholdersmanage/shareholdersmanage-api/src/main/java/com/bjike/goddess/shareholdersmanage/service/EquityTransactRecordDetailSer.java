@@ -7,6 +7,7 @@ import com.bjike.goddess.shareholdersmanage.bo.EquityTransactRecordDetailBO;
 import com.bjike.goddess.shareholdersmanage.dto.EquityTransactRecordDetailDTO;
 import com.bjike.goddess.shareholdersmanage.entity.EquityTransactRecordDetail;
 import com.bjike.goddess.shareholdersmanage.to.EquityTransactRecordDetailTO;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -20,6 +21,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface EquityTransactRecordDetailSer extends Ser<EquityTransactRecordDetail, EquityTransactRecordDetailDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 股权交易记录详情列表总条数
      */
@@ -96,6 +110,14 @@ public interface EquityTransactRecordDetailSer extends Ser<EquityTransactRecordD
      * @return class EquityTransactRecordDetailBO
      */
     default EquityTransactRecordDetailBO getByNameId(String shareholderName,String transactId) throws SerException {
+        return null;
+    }
+    /**
+     * 根据交易操作id查询所有改记录明细
+     *
+     * @return class EquityTransactRecordDetailBO
+     */
+    default List<EquityTransactRecordDetailBO> getByTransactId(String transactId) throws SerException {
         return null;
     }
     /**

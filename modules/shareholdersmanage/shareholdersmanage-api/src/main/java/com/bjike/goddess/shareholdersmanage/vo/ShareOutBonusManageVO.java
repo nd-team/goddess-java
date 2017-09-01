@@ -18,7 +18,7 @@ public class ShareOutBonusManageVO {
     /**
      * 分红日期
      */
-    private String ShareOutBonusDate;
+    private String shareOutBonusDate;
 
     /**
      * 地区
@@ -28,7 +28,7 @@ public class ShareOutBonusManageVO {
     /**
      * 分红名称
      */
-    private String ShareOutBonusName;
+    private String shareOutBonusName;
 
     /**
      * 股权类型
@@ -36,10 +36,13 @@ public class ShareOutBonusManageVO {
     private String equityType;
 
     /**
-     * 共派股Double
+     * 共派股
      */
     private Integer totalSentStocks;
-
+    /**
+     * 每股分红
+     */
+    private Double perShareDividends;
     /**
      * 共分红
      */
@@ -48,7 +51,7 @@ public class ShareOutBonusManageVO {
     /**
      * 共缴所得税
      */
-    private Double TotalIncomeTax;
+    private Double totalIncomeTax;
 
     /**
      * 备注
@@ -65,11 +68,11 @@ public class ShareOutBonusManageVO {
     }
 
     public String getShareOutBonusDate() {
-        return ShareOutBonusDate;
+        return shareOutBonusDate;
     }
 
     public void setShareOutBonusDate(String shareOutBonusDate) {
-        ShareOutBonusDate = shareOutBonusDate;
+        this.shareOutBonusDate = shareOutBonusDate;
     }
 
     public String getArea() {
@@ -81,11 +84,11 @@ public class ShareOutBonusManageVO {
     }
 
     public String getShareOutBonusName() {
-        return ShareOutBonusName;
+        return shareOutBonusName;
     }
 
-    public void setShareOutBonusName(String ShareOutBonusName) {
-        this.ShareOutBonusName = ShareOutBonusName;
+    public void setShareOutBonusName(String shareOutBonusName) {
+        this.shareOutBonusName = shareOutBonusName;
     }
 
     public String getEquityType() {
@@ -112,12 +115,20 @@ public class ShareOutBonusManageVO {
         this.totalShareOutBonus = totalShareOutBonus;
     }
 
-    public Double getTotalIncomeTax() {
-        return TotalIncomeTax;
+    public Double getPerShareDividends() {
+        return perShareDividends;
     }
 
-    public void setTotalIncomeTax(Double TotalIncomeTax) {
-        this.TotalIncomeTax = TotalIncomeTax;
+    public void setPerShareDividends(Double perShareDividends) {
+        this.perShareDividends = perShareDividends;
+    }
+
+    public Double getTotalIncomeTax() {
+        return totalIncomeTax;
+    }
+
+    public void setTotalIncomeTax(Double totalIncomeTax) {
+        this.totalIncomeTax = totalIncomeTax;
     }
 
     public String getRemark() {

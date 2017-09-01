@@ -24,8 +24,8 @@ public class ShareOutBonusManage extends BaseEntity {
     /**
      * 分红日期
      */
-    @Column(name = "ShareOutBonusDate", nullable = false, columnDefinition = "DATE   COMMENT '分红日期'")
-    private LocalDate ShareOutBonusDate;
+    @Column(name = "shareOutBonusDate", nullable = false, columnDefinition = "DATE   COMMENT '分红日期'")
+    private LocalDate shareOutBonusDate;
 
     /**
      * 地区
@@ -37,7 +37,7 @@ public class ShareOutBonusManage extends BaseEntity {
      * 分红名称
      */
     @Column(name = "ShareOutBonusName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '分红名称'")
-    private String ShareOutBonusName;
+    private String shareOutBonusName;
 
     /**
      * 股权类型
@@ -48,9 +48,14 @@ public class ShareOutBonusManage extends BaseEntity {
     /**
      * 共派股Double
      */
-    @Column(name = "totalSentStocks", nullable = false, columnDefinition = "INT(11)   COMMENT '共派股Double'")
+    @Column(name = "totalSentStocks", nullable = false, columnDefinition = "INT(11)   COMMENT '共派股'")
     private Integer totalSentStocks;
 
+    /**
+     * 每股分红
+     */
+    @Column(name = "perShareDividends", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '每股分红'")
+    private Double perShareDividends;
     /**
      * 共分红
      */
@@ -60,8 +65,8 @@ public class ShareOutBonusManage extends BaseEntity {
     /**
      * 共缴所得税
      */
-    @Column(name = "TotalIncomeTax", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '共缴所得税'")
-    private Double TotalIncomeTax;
+    @Column(name = "totalIncomeTax",nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '共缴所得税'")
+    private Double totalIncomeTax;
 
     /**
      * 备注
@@ -71,11 +76,11 @@ public class ShareOutBonusManage extends BaseEntity {
 
 
     public LocalDate getShareOutBonusDate() {
-        return ShareOutBonusDate;
+        return shareOutBonusDate;
     }
 
-    public void setShareOutBonusDate(LocalDate ShareOutBonusDate) {
-        this.ShareOutBonusDate = ShareOutBonusDate;
+    public void setShareOutBonusDate(LocalDate shareOutBonusDate) {
+        this.shareOutBonusDate = shareOutBonusDate;
     }
 
     public String getArea() {
@@ -87,11 +92,11 @@ public class ShareOutBonusManage extends BaseEntity {
     }
 
     public String getShareOutBonusName() {
-        return ShareOutBonusName;
+        return shareOutBonusName;
     }
 
-    public void setShareOutBonusName(String ShareOutBonusName) {
-        this.ShareOutBonusName = ShareOutBonusName;
+    public void setShareOutBonusName(String shareOutBonusName) {
+        this.shareOutBonusName = shareOutBonusName;
     }
 
     public String getEquityType() {
@@ -119,11 +124,11 @@ public class ShareOutBonusManage extends BaseEntity {
     }
 
     public Double getTotalIncomeTax() {
-        return TotalIncomeTax;
+        return totalIncomeTax;
     }
 
-    public void setTotalIncomeTax(Double TotalIncomeTax) {
-        this.TotalIncomeTax = TotalIncomeTax;
+    public void setTotalIncomeTax(Double totalIncomeTax) {
+        this.totalIncomeTax = totalIncomeTax;
     }
 
     public String getRemark() {
@@ -132,5 +137,13 @@ public class ShareOutBonusManage extends BaseEntity {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Double getPerShareDividends() {
+        return perShareDividends;
+    }
+
+    public void setPerShareDividends(Double perShareDividends) {
+        this.perShareDividends = perShareDividends;
     }
 }

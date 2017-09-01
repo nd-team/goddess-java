@@ -3,6 +3,7 @@ package com.bjike.goddess.shareholdersmanage.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.shareholdersmanage.bo.EquityTransactRecordBO;
 import com.bjike.goddess.shareholdersmanage.bo.EquityTransactRecordDetailBO;
@@ -10,8 +11,14 @@ import com.bjike.goddess.shareholdersmanage.bo.ShareAndTypeBO;
 import com.bjike.goddess.shareholdersmanage.dto.EquityTransactRecordDTO;
 import com.bjike.goddess.shareholdersmanage.entity.EquityTransactRecord;
 import com.bjike.goddess.shareholdersmanage.to.EquityTransactRecordTO;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
+import com.bjike.goddess.shareholdersmanage.type.GuideAddrStatus;
+import com.bjike.goddess.shareholdersmanage.type.ShareholderStatus;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +38,110 @@ import java.util.*;
 @CacheConfig(cacheNames = "shareholdersmanageSerCache")
 @Service
 public class EquityTransactRecordSerImpl extends ServiceImpl<EquityTransactRecord, EquityTransactRecordDTO> implements EquityTransactRecordSer {
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private UserAPI userAPI;
+    /**
+     * 检查权限
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是财务部门人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideIdentity();
+                break;
+            case ADD:
+                flag = guideIdentity();
+                break;
+            case EDIT:
+                flag = guideIdentity();
+                break;
+            case DELETE:
+                flag = guideIdentity();
+                break;
+            case SEE:
+                flag = guideIdentity();
+                break;
+            case COLLECT:
+                flag = guideIdentity();
+                break;
+            case UPLOAD:
+                flag = guideIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideIdentity();
+                break;
+            case IMPORT:
+                flag = guideIdentity();
+                break;
+            case EXPORT:
+                flag = guideIdentity();
+                break;
+            case SEEFILE:
+                flag = guideIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
     @Override
     public Long countTrans(EquityTransactRecordDTO equityTransactRecordDTO) throws SerException {
         Long count = super.count(equityTransactRecordDTO);
@@ -45,6 +156,7 @@ public class EquityTransactRecordSerImpl extends ServiceImpl<EquityTransactRecor
 
     @Override
     public List<EquityTransactRecordBO> findList(EquityTransactRecordDTO equityTransactRecordDTO) throws SerException {
+        checkPermission();
         equityTransactRecordDTO.getSorts().add("modifyTime=desc");
         List<EquityTransactRecord> equityTransactRecords = super.findByCis(equityTransactRecordDTO);
         return BeanTransform.copyProperties(equityTransactRecords, EquityTransactRecordBO.class);
@@ -66,7 +178,7 @@ public class EquityTransactRecordSerImpl extends ServiceImpl<EquityTransactRecor
     public void updateTrans(EquityTransactRecordTO equityTransactRecordTO) throws SerException {
         EquityTransactRecord equityTransactRecord = super.findById(equityTransactRecordTO.getId());
         if (equityTransactRecord == null) {
-            throw new SerException("该对象不存在");
+            throw new SerException("数据不存在");
         }
         BeanTransform.copyProperties(equityTransactRecordTO, equityTransactRecord, true);
         equityTransactRecord.setModifyTime(LocalDateTime.now());
@@ -120,6 +232,7 @@ public class EquityTransactRecordSerImpl extends ServiceImpl<EquityTransactRecor
 
     @Override
     public List<EquityTransactRecordBO> summationTrans() throws SerException {
+       checkPermission();
         List<EquityTransactRecordBO> equityTransactRecordBOS = new ArrayList<>();
         List<EquityTransactRecord> equityTransactRecords = super.findAll();
         equityTransactRecordBOS = BeanTransform.copyProperties(equityTransactRecords, EquityTransactRecordBO.class);
@@ -168,6 +281,7 @@ public class EquityTransactRecordSerImpl extends ServiceImpl<EquityTransactRecor
     public List<String> getNameByEquityType(String equityType) throws SerException {
         EquityTransactRecordDTO equityTransactRecordDTO = new EquityTransactRecordDTO();
         equityTransactRecordDTO.getConditions().add(Restrict.eq("equityType",equityType));
+        equityTransactRecordDTO.getConditions().add(Restrict.eq("shareholderStatus", ShareholderStatus.NORMAL));
         List<EquityTransactRecord> list = super.findByCis(equityTransactRecordDTO);
         if (CollectionUtils.isEmpty(list)) {
             return Collections.emptyList();
@@ -184,6 +298,8 @@ public class EquityTransactRecordSerImpl extends ServiceImpl<EquityTransactRecor
 
     @Override
     public List<ShareAndTypeBO> getNameAndType() throws SerException {
+        EquityTransactRecordDTO equityTransactRecordDTO = new EquityTransactRecordDTO();
+        equityTransactRecordDTO.getConditions().add(Restrict.eq("shareholderStatus", ShareholderStatus.NORMAL));
         List<EquityTransactRecord> list = super.findAll();
         return BeanTransform.copyProperties(list,ShareAndTypeBO.class);
     }

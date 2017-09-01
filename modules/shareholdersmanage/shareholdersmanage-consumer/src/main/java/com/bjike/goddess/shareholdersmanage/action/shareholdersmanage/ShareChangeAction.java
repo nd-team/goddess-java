@@ -13,6 +13,7 @@ import com.bjike.goddess.shareholdersmanage.api.ShareChangeAPI;
 import com.bjike.goddess.shareholdersmanage.bo.ShareChangeBO;
 import com.bjike.goddess.shareholdersmanage.dto.ShareChangeDTO;
 import com.bjike.goddess.shareholdersmanage.entity.ShareChange;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 import com.bjike.goddess.shareholdersmanage.to.ShareChangeTO;
 import com.bjike.goddess.shareholdersmanage.to.ShareOpenDeleteFileTO;
 import com.bjike.goddess.shareholdersmanage.vo.ShareChangeVO;
@@ -27,6 +28,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -45,7 +47,28 @@ public class ShareChangeAction extends BaseFileAction {
     private ShareChangeAPI shareChangeAPI;
     @Autowired
     private FileAPI fileAPI;
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, javax.servlet.http.HttpServletRequest request) throws ActException {
+        try {
 
+            Boolean isHasPermission = shareChangeAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 列表总条数
      *
@@ -154,6 +177,25 @@ public class ShareChangeAction extends BaseFileAction {
         try {
             shareChangeAPI.delete(id);
             return new ActResult("delete success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 上传附件
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/uploadFile/{id}")
+    public Result uploadFile(@PathVariable String id, javax.servlet.http.HttpServletRequest request) throws ActException {
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            // /id/....
+            String path = "/" + id;
+            List<InputStream> inputStreams = getInputStreams(request, path);
+            fileAPI.upload(inputStreams);
+            return new ActResult("upload success");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
