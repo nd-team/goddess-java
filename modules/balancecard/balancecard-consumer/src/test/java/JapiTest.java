@@ -16,7 +16,8 @@ public class JapiTest {
 
 	public static void main(String[] args) throws IOException {
 //		/media/data4/jzx/goddess-java/modules/balancecard
-//		JapiClient.delete(true);  删除api用的命令
+		//删除api用的命令
+//		JapiClient.delete(true);
 		JapiClient.setPrefixPath("/media/data4/jzx/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
 		JapiClient.setProjectJavaPath("modules/balancecard/balancecard-consumer");//主项目位置

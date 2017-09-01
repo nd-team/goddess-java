@@ -99,13 +99,6 @@ public class PersonalFestival extends BaseEntity {
         this.festivalDate = festivalDate;
     }
 
-    public String getVisibleUsers() {
-        return visibleUsers;
-    }
-
-    public void setVisibleUsers(String visibleUsers) {
-        this.visibleUsers = visibleUsers;
-    }
 
     public LocalDateTime getRemindTime() {
         return remindTime;
@@ -161,5 +154,13 @@ public class PersonalFestival extends BaseEntity {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getVisibleUsers() {
+        return visibleUsers;
+    }
+
+    public void setVisibleUsers(String visibleUsers) {
+        this.visibleUsers = visibleUsers;
     }
 }

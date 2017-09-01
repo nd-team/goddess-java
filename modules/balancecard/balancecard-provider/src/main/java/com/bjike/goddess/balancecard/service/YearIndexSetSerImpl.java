@@ -23,6 +23,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.organize.dto.PositionDetailDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -293,33 +294,65 @@ public class YearIndexSetSerImpl extends ServiceImpl<YearIndexSet, YearIndexSetD
             throw new SerException("id不能为空");
         }
         YearIndexSet yearIndexSet = super.findById(yearIndexSetTO.getId());
-
-        //判断分解状态 已分解：重新分解下面的
-        //若是 未分解的话，直接修改
-        yearIndexSet.setIndexName(yearIndexSetTO.getIndexName());
-        yearIndexSet.setYear(yearIndexSetTO.getYear());
-        yearIndexSet.setIndexType(yearIndexSetTO.getIndexType());
-        yearIndexSet.setDimension(yearIndexSetTO.getDimension());
-        yearIndexSet.setDescribtion(yearIndexSetTO.getDescribtion());
-        yearIndexSet.setYearTarget(yearIndexSetTO.getYearTarget());
-        yearIndexSet.setComplete(yearIndexSetTO.getComplete());
-        yearIndexSet.setDataOrigin(yearIndexSetTO.getDataOrigin());
-        yearIndexSet.setExamDuring(yearIndexSetTO.getExamDuring());
-        yearIndexSet.setModifyTime(LocalDateTime.now());
-        if (SeparateStatus.SEPERATE.equals(yearIndexSet.getSeparateStatus())) {
-            //判断分解状态 已分解：重新分解下面的
-            //修改部门年度
-            List<DepartYearIndexSet> listDYear = seperateDepartYearIndex(yearIndexSet);
-            //修改部门月度
-            if (listDYear != null && listDYear.size() > 0) {
-
-                List<DepartMonIndexSet> listDMon = seperateDepartMonIndex(listDYear);
-                //修改岗位
+        //判断是否要重新分解，如果要重新分解，那么就要删除之前分解到下面的数据
+        if(yearIndexSetTO.getIfAgain() !=null && yearIndexSetTO.getIfAgain() == true){
+            DepartYearIndexSetDTO departYearIndexSetDTO = new DepartYearIndexSetDTO();
+            departYearIndexSetDTO.getConditions().add(Restrict.eq("yearIndexSetId",yearIndexSetTO.getId()));
+            List<DepartYearIndexSet> listDYear = departYearIndexSetSer.findByCis(departYearIndexSetDTO);
+            if(listDYear != null && listDYear.size() > 0) {
+                //所有部门年id
+                List<String> dyIdList = listDYear.stream().map(DepartYearIndexSet::getId).collect(Collectors.toList());
+                DepartMonIndexSetDTO monIndexSetDTO = new DepartMonIndexSetDTO();
+                monIndexSetDTO.getConditions().add(Restrict.eq("departYearSetId", (String[]) listDYear.toArray()));
+                List<DepartMonIndexSet> listDMon = departMonIndexSetSer.findByCis(monIndexSetDTO);
                 if (listDMon != null && listDMon.size() > 0) {
-                    List<PositionIndexSet> listPost = seperatePostIndex(listDMon);
+                    List<String> dmIdList = listDMon.stream().map(DepartMonIndexSet::getId).collect(Collectors.toList());
+                    PositionIndexSetDTO positionIndexSetDTO = new PositionIndexSetDTO();
+                    positionIndexSetDTO.getConditions().add(Restrict.eq("departMonthSetId",(String []) dmIdList.toArray()));
+                    List<PositionIndexSet> listPosit = positionIndexSetSer.findByCis(positionIndexSetDTO);
+                    if(listPosit !=null && listPosit.size() > 0){
+                        positionIndexSetSer.remove(listPosit);
+                        departMonIndexSetSer.remove(listDMon);
+                        departYearIndexSetSer.remove(listDYear);
+                        yearIndexSet.setSeparateStatus(SeparateStatus.NONE);
+                    }else {
+                        departMonIndexSetSer.remove(listDMon);
+                        departYearIndexSetSer.remove(listDYear);
+                        yearIndexSet.setSeparateStatus(SeparateStatus.NONE);
+                    }
+                }else{
+                    departYearIndexSetSer.remove(listDYear);
+                    yearIndexSet.setSeparateStatus(SeparateStatus.NONE);
                 }
             }
+        }else {
+            //判断分解状态 已分解：重新分解下面的
+            //若是 未分解的话，直接修改
+            yearIndexSet.setIndexName(yearIndexSetTO.getIndexName());
+            yearIndexSet.setYear(yearIndexSetTO.getYear());
+            yearIndexSet.setIndexType(yearIndexSetTO.getIndexType());
+            yearIndexSet.setDimension(yearIndexSetTO.getDimension());
+            yearIndexSet.setDescribtion(yearIndexSetTO.getDescribtion());
+            yearIndexSet.setYearTarget(yearIndexSetTO.getYearTarget());
+            yearIndexSet.setComplete(yearIndexSetTO.getComplete());
+            yearIndexSet.setDataOrigin(yearIndexSetTO.getDataOrigin());
+            yearIndexSet.setExamDuring(yearIndexSetTO.getExamDuring());
+            yearIndexSet.setModifyTime(LocalDateTime.now());
+            if (SeparateStatus.SEPERATE.equals(yearIndexSet.getSeparateStatus())) {
+                //判断分解状态 已分解：重新分解下面的
+                //修改部门年度
+                List<DepartYearIndexSet> listDYear = seperateDepartYearIndex(yearIndexSet);
+                //修改部门月度
+                if (listDYear != null && listDYear.size() > 0) {
 
+                    List<DepartMonIndexSet> listDMon = seperateDepartMonIndex(listDYear);
+                    //修改岗位
+                    if (listDMon != null && listDMon.size() > 0) {
+                        List<PositionIndexSet> listPost = seperatePostIndex(listDMon);
+                    }
+                }
+
+            }
         }
         super.update(yearIndexSet);
         return BeanTransform.copyProperties(yearIndexSet, YearIndexSetBO.class);
@@ -445,7 +478,6 @@ public class YearIndexSetSerImpl extends ServiceImpl<YearIndexSet, YearIndexSetD
 
         //删除部门年度指标
         if (listDYear != null && listDYear.size() > 0) {
-            departYearIndexSetSer.remove(listDYear);
             //所有部门年id
             List<String> dyIdList = listDYear.stream().map(DepartYearIndexSet::getId).collect(Collectors.toList());
             DepartMonIndexSetDTO dmDTO = new DepartMonIndexSetDTO();
@@ -453,19 +485,30 @@ public class YearIndexSetSerImpl extends ServiceImpl<YearIndexSet, YearIndexSetD
             List<DepartMonIndexSet> listDMon = departMonIndexSetSer.findByCis(dmDTO);
             //删除部门月指标
             if (listDMon != null && listDMon.size() > 0) {
-                departMonIndexSetSer.remove(listDMon);
                 //所有部门月id
                 List<String> dmIdList = listDMon.stream().map(DepartMonIndexSet::getId).collect(Collectors.toList());
                 PositionIndexSetDTO pDTO = new PositionIndexSetDTO();
                 pDTO.getConditions().add(Restrict.in("departMonIndexSetId", (String[]) dmIdList.toArray()));
                 List<PositionIndexSet> postList = positionIndexSetSer.findByCis(pDTO);
                 if (postList != null && postList.size() > 0) {
+                    //删除部门指标
                     positionIndexSetSer.remove(postList);
+                    //删除部门月度指标
+                    departMonIndexSetSer.remove(listDMon);
+                    //删除部门年度指标
+                    departYearIndexSetSer.remove(listDYear);
+                    super.remove(id);
                 } else {
+                    //删除部门月度指标
+                    departMonIndexSetSer.remove(listDMon);
+                    //删除部门年度指标
+                    departYearIndexSetSer.remove(listDYear);
                     //删除年指标
                     super.remove(id);
                 }
             } else {
+                //删除部门年度指标
+                departYearIndexSetSer.remove(listDYear);
                 //删除年指标
                 super.remove(id);
             }

@@ -221,7 +221,19 @@ public class WishesStatementSerImpl extends ServiceImpl<WishesStatement, WishesS
         //查询当前用户的祝福语
         dto.getConditions().add(Restrict.or("createUser", getCurrentUser().getUsername()));
         List<WishesStatement> list = super.findByPage(dto);
-        return BeanTransform.copyProperties(list, WishesStatementBO.class);
+        List<WishesStatementBO> boList = BeanTransform.copyProperties(list, WishesStatementBO.class);
+        if(boList !=null && boList.size() > 0){
+            for(WishesStatement wishesStatement : list){
+                for(WishesStatementBO wishesStatementBO : boList){
+                    if(org.apache.commons.lang3.StringUtils.isNotBlank(wishesStatement.getModifyTime().toString())) {
+                        wishesStatementBO.setUpdateDate(wishesStatement.getModifyTime().toString());
+                    }else{
+                        wishesStatementBO.setUpdateDate(wishesStatement.getCreateTime().toString());
+                    }
+                }
+            }
+        }
+        return boList;
     }
 
     @Override

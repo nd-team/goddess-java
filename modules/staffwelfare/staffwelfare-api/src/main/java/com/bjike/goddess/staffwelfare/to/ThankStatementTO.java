@@ -1,7 +1,12 @@
 package com.bjike.goddess.staffwelfare.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 感谢语
@@ -22,11 +27,13 @@ public class ThankStatementTO extends BaseTO {
     /**
      * 感谢语
      */
+    @NotBlank(message = "感谢语不能为空!", groups = {ADD.class, EDIT.class})
     private String thankStatement;
 
     /**
      * 是否共享为公有
      */
+    @NotNull(message = "是否共享为公有不能为空!", groups = {ADD.class, EDIT.class})
     private Boolean share;
 
     /**

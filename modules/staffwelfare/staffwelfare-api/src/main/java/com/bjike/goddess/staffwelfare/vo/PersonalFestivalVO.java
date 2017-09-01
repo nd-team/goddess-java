@@ -65,6 +65,13 @@ public class PersonalFestivalVO {
      */
     private String userId;
 
+    public String getVisibleUsers() {
+        return visibleUsers;
+    }
+
+    public void setVisibleUsers(String visibleUsers) {
+        this.visibleUsers = visibleUsers;
+    }
 
     public String getFestivalName() {
         return festivalName;
@@ -80,14 +87,6 @@ public class PersonalFestivalVO {
 
     public void setFestivalDate(String festivalDate) {
         this.festivalDate = festivalDate;
-    }
-
-    public String getVisibleUsers() {
-        return visibleUsers;
-    }
-
-    public void setVisibleUsers(String visibleUsers) {
-        this.visibleUsers = visibleUsers;
     }
 
     public String getRemindTime() {

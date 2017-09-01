@@ -9,6 +9,18 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
 * @Version:		[ v1.0.0 ]
 * @Copy:   		[ com.bjike ]
 */
-public class PersonalFestivalWishDTO extends BaseDTO { 
+public class PersonalFestivalWishDTO extends BaseDTO {
 
- }
+    /**
+     * 节日名称
+     */
+    private String festivalName;
+
+    public String getFestivalName() {
+        return festivalName;
+    }
+
+    public void setFestivalName(String festivalName) {
+        this.festivalName = festivalName;
+    }
+}

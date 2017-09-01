@@ -79,40 +79,55 @@ public class StaffBirthDayWelfareAct {
         }
     }
 
+//    /**
+//     * 查询生日祝福语
+//     *
+//     * @param employeeName 员工姓名
+//     * @return class WishesStatementVO
+//     * @version v1
+//     */
+//    @GetMapping("v1/find/wish")
+//    public Result findWish(@RequestParam String employeeName) throws ActException {
+//       try {
+//            List<WishesStatementVO> voList = BeanTransform.copyProperties(staffBirthDayWelfareAPI.findWish(employeeName), WishesStatementVO.class);
+//            return ActResult.initialize(voList);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+//
+//    /**
+//     * 查询生日感谢语
+//     *
+//     * @param employeeName 员工姓名
+//     * @return class ThankStatementVO
+//     * @version v1
+//     */
+//    @GetMapping("v1/find/thank")
+//    public Result findThank(@RequestParam String employeeName) throws ActException {
+//        try {
+//            List<ThankStatementVO> voList = BeanTransform.copyProperties(staffBirthDayWelfareAPI.findThank(employeeName), ThankStatementVO.class);
+//            return ActResult.initialize(voList);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+
     /**
-     * 查询生日祝福语
-     *
+     * 一声祝福
      * @param employeeName 员工姓名
-     * @return class WishesStatementVO
+     * @throws ActException
      * @version v1
      */
     @GetMapping("v1/find/wish")
-    public Result findWish(@RequestParam String employeeName) throws ActException {
-       try {
-            List<WishesStatementVO> voList = BeanTransform.copyProperties(staffBirthDayWelfareAPI.findWish(employeeName), WishesStatementVO.class);
-            return ActResult.initialize(voList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 查询生日感谢语
-     *
-     * @param employeeName 员工姓名
-     * @return class ThankStatementVO
-     * @version v1
-     */
-    @GetMapping("v1/find/thank")
     public Result findThank(@RequestParam String employeeName) throws ActException {
         try {
-            List<ThankStatementVO> voList = BeanTransform.copyProperties(staffBirthDayWelfareAPI.findThank(employeeName), ThankStatementVO.class);
+            List<String[]> voList = staffBirthDayWelfareAPI.findOnewish(employeeName);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
-
 
 
 

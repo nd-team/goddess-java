@@ -128,7 +128,7 @@ public interface EntryRegisterSer extends Ser<EntryRegister, EntryRegisterDTO> {
      * @param number
      * @return
      */
-    default EntryRegister getByNumber(String number) throws SerException {
+    default EntryRegisterBO getByNumber(String number) throws SerException {
         return null;
     }
     /**

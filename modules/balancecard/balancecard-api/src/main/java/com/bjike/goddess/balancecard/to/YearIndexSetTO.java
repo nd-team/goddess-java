@@ -110,6 +110,11 @@ public class YearIndexSetTO extends BaseTO {
     @NotNull(groups = {YearIndexSetTO.TestSer.class}, message = "部门项目组分解数据不能为空")
     private List<DepartSerperateTO> departSerperateTOS;
 
+    /**
+     * 是否重新分解
+     */
+    private Boolean ifAgain;
+
 
     public String getIndexName() {
         return indexName;
@@ -238,5 +243,13 @@ public class YearIndexSetTO extends BaseTO {
 
     public void setIndexNumber(Integer indexNumber) {
         this.indexNumber = indexNumber;
+    }
+
+    public Boolean getIfAgain() {
+        return ifAgain;
+    }
+
+    public void setIfAgain(Boolean ifAgain) {
+        this.ifAgain = ifAgain;
     }
 }
