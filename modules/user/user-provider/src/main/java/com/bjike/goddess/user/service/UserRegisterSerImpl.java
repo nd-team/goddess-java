@@ -10,6 +10,7 @@ import com.bjike.goddess.user.enums.UserType;
 import com.bjike.goddess.user.session.auth_code.AuthCodeSession;
 import com.bjike.goddess.user.to.UserRegisterTO;
 import com.bjike.goddess.user.utils.SeqUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -74,7 +75,7 @@ public class UserRegisterSerImpl implements UserRegisterSer {
         try {
             UserBO bo = userSer.findByUsername(registerTO.getUsername());
             if (null == bo) {
-                String employeeNumber = userSer.findByMaxField("employeeNumber", User.class);
+                String employeeNumber = userSer.maxUserEmpNumber();
                 String sysNO = userSer.findByMaxField("systemNO", User.class);
                 User user = new User();
                 user.setUsername(registerTO.getUsername());
@@ -93,6 +94,5 @@ public class UserRegisterSerImpl implements UserRegisterSer {
             throw new SerException(e.getMessage());
         }
     }
-
 
 }
