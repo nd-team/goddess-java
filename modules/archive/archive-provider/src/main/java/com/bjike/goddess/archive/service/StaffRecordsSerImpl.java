@@ -19,12 +19,14 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.staffentry.entity.EntryRegister;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -34,6 +36,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -214,6 +217,9 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
             this.isExist(toList.get(i - 1), i);
         }
         List<StaffRecords> list = BeanTransform.copyProperties(toList, StaffRecords.class, true);
+        for (StaffRecords staffRecords : list) {
+            staffRecords.setStatus(Status.THAW);
+        }
         super.save(list);
     }
 
@@ -322,7 +328,7 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
                 staffRecordsBO.setProject(entryBasicInfoBO.getProjectGroup());
                 staffRecordsBO.setPosition(entryBasicInfoBO.getPosition());
                 if (moduleAPI.isCheck("staffentry")) {
-                    EntryRegister entryRegister = entryRegisterAPI.getByNumber(entryBasicInfoBO.getEmployeeID());
+                    EntryRegisterBO entryRegister = entryRegisterAPI.getByNumber(entryBasicInfoBO.getEmployeeID());
                     staffRecordsBO.setEducation(entryRegister.getEducation());
                     staffRecordsBO.setSchool(entryRegister.getSchoolTag());
                     staffRecordsBO.setGraduate(entryRegister.getGraduationDate().toString());
@@ -380,9 +386,9 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
             for (StaffRecords entity : list) {
                 entity.setStatus(Status.CONGEAL);
                 if (moduleAPI.isCheck("staffentry")) {
-                    EntryRegister entryRegister = entryRegisterAPI.getByNumber(entity.getSerialNumber());
+                    EntryRegisterBO entryRegister = entryRegisterAPI.getByNumber(entity.getSerialNumber());
                     if (null != entryRegister) {
-                        entity.setGraduate(entryRegister.getGraduationDate());
+                        entity.setGraduate(DateUtil.parseDate(entryRegister.getGraduationDate()));
                     }
                 }
                 if (moduleAPI.isCheck("organize")) {
@@ -431,10 +437,22 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
 
     @Override
     public List<StaffRecordsBO> findByMonth(Integer month) throws SerException {
-        String[] staff = new String[]{"id","createTime","modifyTime","address","bank","bankCard","birth","dimissionTime","education","email","entryTime","graduate","identityCard","major","position","project","school","seniority","serialNumber","status","telephone","username"};
-        String sql = "select * from archive_staff_records where month(birth) = '"+month+"'";
-        List<StaffRecords> list = super.findBySql(sql,StaffRecords.class,staff);
-        List<StaffRecordsBO> boList = BeanTransform.copyProperties(list,StaffRecordsBO.class,false);
+        String[] staff = new String[]{"id", "createTime", "modifyTime", "address", "bank", "bankCard", "birth", "dimissionTime", "education", "email", "entryTime", "graduate", "identityCard", "major", "position", "project", "school", "seniority", "serialNumber", "status", "telephone", "username"};
+        String sql = "select * from archive_staff_records where month(birth) = '" + month + "'";
+        List<StaffRecords> list = super.findBySql(sql, StaffRecords.class, staff);
+        List<StaffRecordsBO> boList = BeanTransform.copyProperties(list, StaffRecordsBO.class, false);
         return boList;
+    }
+
+    @Override
+    //chenjunhao
+    public StaffRecordsBO getByName(String name) throws SerException {
+        StaffRecordsDTO dto = new StaffRecordsDTO();
+        dto.getConditions().add(Restrict.eq("username", name));
+        List<StaffRecords> list = super.findByCis(dto);
+        if (!list.isEmpty()) {
+            return BeanTransform.copyProperties(list.get(0), StaffRecordsBO.class);
+        }
+        return null;
     }
 }

@@ -15,7 +15,7 @@ import java.io.IOException;
 public class JapiTest {
 
 	public static void main(String[] args) throws IOException {
-		JapiClient.setPrefixPath("/home/ike/java/goddess-java/");//路径前缀
+		JapiClient.setPrefixPath("/home/ike/github/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
 		JapiClient.setProjectJavaPath("modules/businsurance/businsurance-consumer");//主项目位置
 		JapiClient.setActionReletivePath("com/bjike/goddess/businsurance/action");//主项目action位置

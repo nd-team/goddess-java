@@ -111,6 +111,7 @@ public class SellscheduleAction {
     /**
      * 汇总
      *
+     * @return class SellscheduleCollectVO
      * @version v1
      */
     @GetMapping("v1/collect")

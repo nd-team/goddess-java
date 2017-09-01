@@ -50,13 +50,13 @@ public class SurveyDemand extends BaseEntity {
     /**
      * 调研范围
      */
-    @Column(name = "scope", nullable = false, columnDefinition = "TINYINT(2)  DEFAULT 0  COMMENT '调研范围'", insertable = false)
+    @Column(name = "scope", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '调研范围'")
     private ScopeType scope;
 
     /**
      * 调研范围准确对象
      */
-    @Column(name = "scopeName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '调研范围准确对象'")
+    @Column(name = "scopeName", nullable = false, columnDefinition = "TEST   COMMENT '调研范围准确对象'")
     private String scopeName;
 
     /**

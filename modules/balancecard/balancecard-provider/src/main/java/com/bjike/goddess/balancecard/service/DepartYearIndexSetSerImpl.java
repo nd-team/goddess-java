@@ -247,46 +247,58 @@ public class DepartYearIndexSetSerImpl extends ServiceImpl<DepartYearIndexSet, D
         }
         DepartYearIndexSet departYearIndexSet = super.findById(departYearIndexSetTO.getId());
         Double oldYearComplete = departYearIndexSet.getComplete();
-
-        //没有分解过
-        departYearIndexSet.setIndexName(departYearIndexSetTO.getIndexName());
-        departYearIndexSet.setYear(departYearIndexSetTO.getYear());
-        departYearIndexSet.setIndexType(departYearIndexSetTO.getIndexType());
-        departYearIndexSet.setDimension(departYearIndexSetTO.getDimension());
-        departYearIndexSet.setDescribtion(departYearIndexSetTO.getDescribtion());
-        departYearIndexSet.setYearTarget(departYearIndexSetTO.getYearTarget());
-        departYearIndexSet.setDepartment(departYearIndexSetTO.getDepartment());
-        departYearIndexSet.setDepartYearWeight(departYearIndexSetTO.getDepartYearWeight());
-        departYearIndexSet.setDepartWeightSum(departYearIndexSetTO.getDepartWeightSum());
-        departYearIndexSet.setTarget(departYearIndexSet.getTarget());
-        departYearIndexSet.setWager(departYearIndexSetTO.getWager());
-        departYearIndexSet.setComplete(departYearIndexSetTO.getComplete());
-        departYearIndexSet.setExamWay(departYearIndexSetTO.getExamWay());
-        departYearIndexSet.setWhetherStandar(departYearIndexSetTO.getComplete() > departYearIndexSetTO.getTarget() ? "是" : "否");
-        departYearIndexSet.setStandardRate(departYearIndexSetTO.getComplete() / departYearIndexSetTO.getWager());
-        departYearIndexSet.setExamScore(departYearIndexSet.getStandardRate() * departYearIndexSet.getDepartYearWeight());
-        departYearIndexSet.setExamDepart(departYearIndexSetTO.getExamDepart());
-        departYearIndexSet.setDataOrigin(departYearIndexSetTO.getDataOrigin());
-        departYearIndexSet.setExamDuring(departYearIndexSetTO.getExamDuring());
-        departYearIndexSet.setModifyTime(LocalDateTime.now());
-        //判断分解状态 已分解：重新分解下面的 且 判断是否由上面分解下来的，要修改上面的
-        //若是 未分解的话，直接修改
-        if (departYearIndexSet.getSeparateStatus().equals(SeparateStatus.SEPERATE)) {
-            //修改重新分解部门月度
-            List<DepartMonIndexSet> listDMon = seperateDepartMonIndex(departYearIndexSet);
-            //修改重新分解岗位指标
-            if (listDMon != null && listDMon.size() > 0) {
-                List<PositionIndexSet> listPost = seperatePostIndex(listDMon);
+        if(departYearIndexSetTO.getIfAgain() !=null && departYearIndexSetTO.getIfAgain() == true){
+            DepartMonIndexSetDTO monIndexSetDTO = new DepartMonIndexSetDTO();
+            monIndexSetDTO.getConditions().add(Restrict.eq("departYearIndexSetId",departYearIndexSet.getId()));
+            List<DepartMonIndexSet> monIndexSetList = departMonIndexSetSer.findByCis(monIndexSetDTO);
+            List<String> dmIdList = monIndexSetList.stream().map(DepartMonIndexSet::getId).collect(Collectors.toList());
+            PositionIndexSetDTO positionIndexSetDTO = new PositionIndexSetDTO();
+            positionIndexSetDTO.getConditions().add(Restrict.eq("departMonIndexSetId",(String []) dmIdList.toArray()));
+            List<PositionIndexSet> positionIndexSetList = positionIndexSetSer.findByCis(positionIndexSetDTO);
+            if(positionIndexSetList !=null && positionIndexSetList.size() > 0){
+                positionIndexSetSer.remove(positionIndexSetList);
+            }
+            departMonIndexSetSer.remove(monIndexSetList);
+            departYearIndexSet.setSeparateStatus(SeparateStatus.NONE);
+        }else {
+            //没有分解过
+            departYearIndexSet.setIndexName(departYearIndexSetTO.getIndexName());
+            departYearIndexSet.setYear(departYearIndexSetTO.getYear());
+            departYearIndexSet.setIndexType(departYearIndexSetTO.getIndexType());
+            departYearIndexSet.setDimension(departYearIndexSetTO.getDimension());
+            departYearIndexSet.setDescribtion(departYearIndexSetTO.getDescribtion());
+            departYearIndexSet.setYearTarget(departYearIndexSetTO.getYearTarget());
+            departYearIndexSet.setDepartment(departYearIndexSetTO.getDepartment());
+            departYearIndexSet.setDepartYearWeight(departYearIndexSetTO.getDepartYearWeight());
+            departYearIndexSet.setDepartWeightSum(departYearIndexSetTO.getDepartWeightSum());
+            departYearIndexSet.setTarget(departYearIndexSet.getTarget());
+            departYearIndexSet.setWager(departYearIndexSetTO.getWager());
+            departYearIndexSet.setComplete(departYearIndexSetTO.getComplete());
+            departYearIndexSet.setExamWay(departYearIndexSetTO.getExamWay());
+            departYearIndexSet.setWhetherStandar(departYearIndexSetTO.getComplete() > departYearIndexSetTO.getTarget() ? "是" : "否");
+            departYearIndexSet.setStandardRate(departYearIndexSetTO.getComplete() / departYearIndexSetTO.getWager());
+            departYearIndexSet.setExamScore(departYearIndexSet.getStandardRate() * departYearIndexSet.getDepartYearWeight());
+            departYearIndexSet.setExamDepart(departYearIndexSetTO.getExamDepart());
+            departYearIndexSet.setDataOrigin(departYearIndexSetTO.getDataOrigin());
+            departYearIndexSet.setExamDuring(departYearIndexSetTO.getExamDuring());
+            departYearIndexSet.setModifyTime(LocalDateTime.now());
+            //判断分解状态 已分解：重新分解下面的 且 判断是否由上面分解下来的，要修改上面的
+            //若是 未分解的话，直接修改
+            if (departYearIndexSet.getSeparateStatus().equals(SeparateStatus.SEPERATE)) {
+                //修改重新分解部门月度
+                List<DepartMonIndexSet> listDMon = seperateDepartMonIndex(departYearIndexSet);
+                //修改重新分解岗位指标
+                if (listDMon != null && listDMon.size() > 0) {
+                    List<PositionIndexSet> listPost = seperatePostIndex(listDMon);
+                }
             }
         }
+            //若是由年指标分解下来的，那就重新修改年指标完成值
+            if (departYearIndexSet.getSeperateComeStatus().equals(SeperateComeStatus.YEAR)) {
+                //修改年指标完成值
+                editYearComplete(oldYearComplete, departYearIndexSet);
 
-        //若是由年指标分解下来的，那就重新修改年指标完成值
-        if (departYearIndexSet.getSeperateComeStatus().equals(SeperateComeStatus.YEAR)) {
-            //修改年指标完成值
-            editYearComplete(oldYearComplete, departYearIndexSet);
-
-        }
-
+            }
         super.update(departYearIndexSet);
         return BeanTransform.copyProperties(departYearIndexSet, DepartYearIndexSetBO.class);
     }
@@ -479,12 +491,13 @@ public class DepartYearIndexSetSerImpl extends ServiceImpl<DepartYearIndexSet, D
                     throw new SerException("分解失败，对赌值要大于0");
                 }
             }
-//            System.out.println( JSON.toJSONString( saveList));
-
-            departMonIndexSetSer.save(saveList);
+            if(saveList != null && saveList.size() > 0) {
+                //更新
+                temp.setSeparateStatus(SeparateStatus.SEPERATE);
+                super.update(temp);
+                departMonIndexSetSer.save(saveList);
+            }
         }
-
-
         return BeanTransform.copyProperties(temp, DepartYearIndexSetBO.class);
     }
 

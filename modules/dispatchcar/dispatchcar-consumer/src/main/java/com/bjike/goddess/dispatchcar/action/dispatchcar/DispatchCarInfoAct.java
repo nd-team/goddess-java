@@ -177,34 +177,9 @@ public class DispatchCarInfoAct extends BaseFileAction {
     @PostMapping("v1/upload/{id}")
     public Result fileUpload(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            String path = "dispatchCar";
+            String path = "/dispatchcar/" + id;
             fileAPI.upload(this.getInputStreams(request, path.toString()));
             return new ActResult("上传成功");
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-
-    }
-
-    /**
-     * 查看附件
-     *
-     * @param id 出车记录id
-     * @version v1
-     */
-    @GetMapping("v1/files/{id}")
-    public Result findFiles(@PathVariable String id, HttpServletRequest request) throws ActException {
-        // 17-4-14 查看附件
-        try {
-            //跟前端约定好 ，文件路径是列表id
-            // /businessproject/id/....
-            String path = "/dispatchcar/" + id;
-            FileInfo fileInfo = new FileInfo();
-            fileInfo.setPath(path);
-            Object storageToken = request.getAttribute("storageToken");
-            fileInfo.setStorageToken(storageToken.toString());
-            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
-            return ActResult.initialize(files);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

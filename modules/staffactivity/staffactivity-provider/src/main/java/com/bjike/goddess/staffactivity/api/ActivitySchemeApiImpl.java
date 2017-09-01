@@ -215,4 +215,9 @@ public class ActivitySchemeApiImpl implements ActivitySchemeAPI {
     public String findIdByTheme(String theme) throws SerException {
         return activitySchemeSer.findIdByTheme(theme);
     }
+
+    @Override
+    public Set<String> themes() throws SerException {
+        return activitySchemeSer.themes();
+    }
 }

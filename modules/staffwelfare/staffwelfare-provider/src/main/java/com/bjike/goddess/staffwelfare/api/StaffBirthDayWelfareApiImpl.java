@@ -57,4 +57,9 @@ public class StaffBirthDayWelfareApiImpl implements StaffBirthDayWelfareAPI {
     public List<ThankStatementBO> findThank(String employeeName) throws SerException {
         return staffBirthDayWelfareSer.findThank(employeeName);
     }
+
+    @Override
+    public List<String[]> findOnewish(String employeeName) throws SerException {
+        return staffBirthDayWelfareSer.findOnewish(employeeName);
+    }
 }

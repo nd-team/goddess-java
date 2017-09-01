@@ -23,6 +23,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -211,5 +212,25 @@ public class StaffBirthDayWelfareSerImpl extends ServiceImpl<StaffBirthDayWelfar
         List<ThankStatement> thankStatements = thankStatementSer.findByCis(dto);
         List<ThankStatementBO> vos = BeanTransform.copyProperties(thankStatements,ThankStatementBO.class);
         return vos;
+    }
+
+    @Override
+    public List<String[]> findOnewish(String employeeName) throws SerException {
+        WishesStatementDTO dto = new WishesStatementDTO();
+        dto.getConditions().add(Restrict.eq("createUser",employeeName));
+        List<WishesStatement> bos = wishesStatementSer.findByCis(dto);
+        ThankStatementDTO thankStatementDTO = new ThankStatementDTO();
+        dto.getConditions().add(Restrict.eq("createUser",employeeName));
+        List<ThankStatement> thankStatements = thankStatementSer.findByCis(thankStatementDTO);
+        List<String[]> oneWish = new ArrayList<>();
+        List<String[]> allWish = new ArrayList<>();
+        for(WishesStatement wishesStatement :bos){
+            for(ThankStatement thankStatement:thankStatements){
+                String[] oneStrings = new String[]{employeeName,wishesStatement.getWishesStatement(),thankStatement.getThankStatement()};
+                oneWish.add(oneStrings);
+            }
+        }
+        allWish.addAll(oneWish);
+        return allWish;
     }
 }

@@ -2,21 +2,19 @@ package com.bjike.goddess.accommodation.service;
 
 import com.bjike.goddess.accommodation.bo.RentalPreceptBO;
 import com.bjike.goddess.accommodation.dto.RentalPreceptDTO;
-import com.bjike.goddess.accommodation.entity.Rental;
 import com.bjike.goddess.accommodation.entity.RentalPrecept;
 import com.bjike.goddess.accommodation.enums.GuideAddrStatus;
 import com.bjike.goddess.accommodation.enums.PassStatus;
 import com.bjike.goddess.accommodation.excel.SonPermissionObject;
 import com.bjike.goddess.accommodation.to.GuidePermissionTO;
 import com.bjike.goddess.accommodation.to.RentalPreceptTO;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
-import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -54,6 +52,8 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
     private RentalSer rentalSer;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -453,7 +453,7 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
         checkAddIdentity();
         RentalPrecept precept = BeanTransform.copyProperties(preceptTO, RentalPrecept.class, true, "projectName");
         //设置自动生成租房编号
-        String rentNum = super.findByMaxField("rentNum",RentalPrecept.class);
+        String rentNum = super.findByMaxField("rentNum", RentalPrecept.class);
         precept.setRentNum(generateNum(rentNum));
         precept.setCreateTime(LocalDateTime.now());
         precept.setProjectName(StringUtils.join(preceptTO.getProjectName(), ","));
@@ -467,9 +467,9 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
         checkAddIdentity();
         if (!StringUtils.isEmpty(preceptTO.getId())) {
             RentalPrecept rentalPrecept = super.findById(preceptTO.getId());
-            BeanTransform.copyProperties(preceptTO, rentalPrecept, true,"projectName");
+            BeanTransform.copyProperties(preceptTO, rentalPrecept, true, "projectName");
             rentalPrecept.setModifyTime(LocalDateTime.now());
-            rentalPrecept.setProjectName(StringUtils.join(preceptTO.getProjectName(),","));
+            rentalPrecept.setProjectName(StringUtils.join(preceptTO.getProjectName(), ","));
             super.update(rentalPrecept);
             return BeanTransform.copyProperties(rentalPrecept, RentalPreceptBO.class);
         } else {
@@ -488,45 +488,49 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
             throw new SerException(e.getMessage());
         }
     }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public RentalPreceptBO businessAudit(RentalPreceptTO preceptTO) throws SerException {
         checkBusinessAuditIdentity();
         RentalPrecept precept = super.findById(preceptTO.getId());
-        BeanTransform.copyProperties(preceptTO, precept,true,"projectName");
+        BeanTransform.copyProperties(preceptTO, precept, true, "projectName");
 
         precept.setCommerceRemark(preceptTO.getCommerceRemark());
         super.update(precept);
         return BeanTransform.copyProperties(precept, RentalPreceptBO.class);
     }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public RentalPreceptBO financeAudit(RentalPreceptTO preceptTO) throws SerException {
         checkFinanceAuditIdentity();
         RentalPrecept precept = super.findById(preceptTO.getId());
-        BeanTransform.copyProperties(preceptTO, precept,true,"projectName");
+        BeanTransform.copyProperties(preceptTO, precept, true, "projectName");
         precept.setMoneyOn(preceptTO.getMoneyOn());
         precept.setOperatingRemark(preceptTO.getOperatingRemark());
         super.update(precept);
         return BeanTransform.copyProperties(precept, RentalPreceptBO.class);
     }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public RentalPreceptBO resourceAudit(RentalPreceptTO preceptTO) throws SerException {
         checkResourceAuditIdentity();
         RentalPrecept precept = super.findById(preceptTO.getId());
-        BeanTransform.copyProperties(preceptTO,precept,true,"projectName");
+        BeanTransform.copyProperties(preceptTO, precept, true, "projectName");
         precept.setComprehensiveRemark(preceptTO.getComprehensiveRemark());
         super.update(precept);
         return BeanTransform.copyProperties(precept, RentalPreceptBO.class);
     }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public RentalPreceptBO manageAudit(RentalPreceptTO preceptTO) throws SerException {
         checkManagerAuditIdentity();
         UserBO userBO = userAPI.currentUser();
         RentalPrecept precept = super.findById(preceptTO.getId());
-        BeanTransform.copyProperties(preceptTO, precept,true,"projectName");
+        BeanTransform.copyProperties(preceptTO, precept, true, "projectName");
         precept.setManage(userBO.getUsername());
         precept.setManageOpinion(preceptTO.getManageOpinion());
         precept.setManagePass(preceptTO.getManagePass());
@@ -539,12 +543,13 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
         RentalPreceptBO bo = BeanTransform.copyProperties(precept, RentalPreceptBO.class);
         return bo;
     }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public RentalPreceptBO generalAudit(RentalPreceptTO preceptTO) throws SerException {
         checkGeneralAuditIdentity();
         RentalPrecept rentalPrecept = super.findById(preceptTO.getId());
-        BeanTransform.copyProperties(preceptTO, rentalPrecept,true,"projectName");
+        BeanTransform.copyProperties(preceptTO, rentalPrecept, true, "projectName");
         if (rentalPrecept.getPassStatus().getCode() == 0) {
             throw new SerException("总经办审核失败,项目经理还未审核");
         }
@@ -568,7 +573,7 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
     private static final String ZERO_NUMBER = "000000"; // 员工编号0位数
 //    private static String[] ss = DateUtil.dateToString(LocalDate.now()).split("-");
 
-    private static String DATE = LocalDate.now().toString().replaceAll("-","")+"-";
+    private static String DATE = LocalDate.now().toString().replaceAll("-", "") + "-";
 
     /**
      * 生成下一个编号
@@ -608,20 +613,25 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
     @Override
     public RentalPreceptBO getRent(String rentNum) throws SerException {
         RentalPrecept rentalPrecept = new RentalPrecept();
-        if(StringUtils.isNotBlank(rentNum)){
+        if (StringUtils.isNotBlank(rentNum)) {
             RentalPreceptDTO dto = new RentalPreceptDTO();
-            dto.getConditions().add(Restrict.eq("rentNum",rentNum));
+            dto.getConditions().add(Restrict.eq("rentNum", rentNum));
             rentalPrecept = super.findOne(dto);
         }
-        RentalPreceptBO bo = BeanTransform.copyProperties(rentalPrecept,RentalPreceptBO.class);
+        RentalPreceptBO bo = BeanTransform.copyProperties(rentalPrecept, RentalPreceptBO.class);
         return bo;
     }
+
     @Override
     public List<UserBO> getUser() throws SerException {
-        List<UserBO> userBOS = positionDetailUserAPI.findUserListInOrgan();
+        List<UserBO> userBOS = new ArrayList<>();
+        String token=RpcTransmit.getUserToken();
+        if (moduleAPI.isCheck("organize")) {
+            RpcTransmit.transmitUserToken(token);
+            userBOS = positionDetailUserAPI.findUserListInOrgan();
+        }
         return userBOS;
     }
-
 
 
 }

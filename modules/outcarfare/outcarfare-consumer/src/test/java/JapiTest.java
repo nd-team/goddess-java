@@ -16,6 +16,8 @@ public class JapiTest {
         JapiClient.setActionReletivePath("com/bjike/goddess/outcarfare/action");//主项目action位置
         JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
                 "modules/outcarfare/outcarfare-api",
+                "modules/organize/organize-api",
+                "modules/user/user-api",
                 "common/common-api",
                 "modules/dispatchcar/dispatchcar-api"
         });

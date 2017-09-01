@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 
 /**
@@ -45,6 +46,12 @@ public class MoneyReady extends BaseEntity {
     private String groupTeam;
 
     /**
+     * 地区
+     */
+    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    private String area;
+
+    /**
      * 比例分配
      */
     @Column(name = "prorate", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '比例分配'")
@@ -67,6 +74,56 @@ public class MoneyReady extends BaseEntity {
      */
     @Column(name = "month", nullable = false, columnDefinition = "INT(11)   COMMENT '月份'")
     private Integer month;
+
+    /**
+     * 时间
+     */
+    @Column(name = "time", nullable = false, columnDefinition = "DATE   COMMENT '时间'")
+    private LocalDate time;
+
+    /**
+     * 是否删除
+     */
+    @Column(name = "is_del", columnDefinition = "TINYINT(1) COMMENT '是否删除'")
+    private Boolean isDel;
+
+    /**
+     * 删除时间
+     */
+    @Column(name = "delTime",columnDefinition = "DATE   COMMENT '删除时间'")
+    private LocalDate delTime;
+
+    public Boolean getIsDel() {
+        return isDel;
+    }
+
+    public void setIsDel(Boolean del) {
+        isDel = del;
+    }
+
+    public LocalDate getDelTime() {
+        return delTime;
+    }
+
+    public void setDelTime(LocalDate delTime) {
+        this.delTime = delTime;
+    }
+
+    public LocalDate getTime() {
+        return time;
+    }
+
+    public void setTime(LocalDate time) {
+        this.time = time;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
 
     public String getCategory() {
         return category;

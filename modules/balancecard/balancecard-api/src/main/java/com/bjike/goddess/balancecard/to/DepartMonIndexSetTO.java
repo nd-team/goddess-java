@@ -198,6 +198,11 @@ public class DepartMonIndexSetTO extends BaseTO {
     @NotNull(groups = {DepartMonIndexSetTO.TestSer.class}, message = "岗位分解数据不能为空")
     private List<PostSerperateTO> postSerperateTOList;
 
+    /**
+     * 是否重新分解
+     */
+    private Boolean ifAgain;
+
 
     public String getIndexName() {
         return indexName;
@@ -452,5 +457,13 @@ public class DepartMonIndexSetTO extends BaseTO {
 
     public void setMonthIndexNumber(Integer monthIndexNumber) {
         this.monthIndexNumber = monthIndexNumber;
+    }
+
+    public Boolean getIfAgain() {
+        return ifAgain;
+    }
+
+    public void setIfAgain(Boolean ifAgain) {
+        this.ifAgain = ifAgain;
     }
 }

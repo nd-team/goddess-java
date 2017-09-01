@@ -2,10 +2,12 @@ package com.bjike.goddess.staffwelfare.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffwelfare.bo.PersonalFestivalBO;
+import com.bjike.goddess.staffwelfare.bo.ThankStatementBO;
 import com.bjike.goddess.staffwelfare.dto.PersonalFestivalDTO;
 import com.bjike.goddess.staffwelfare.service.PersonalFestivalSer;
 import com.bjike.goddess.staffwelfare.to.GuidePermissionTO;
 import com.bjike.goddess.staffwelfare.to.PersonalFestivalTO;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,5 +71,15 @@ public class PersonalFestivalApiImpl implements PersonalFestivalAPI {
     @Override
     public PersonalFestivalBO findOne(String id) throws SerException {
         return personalFestivalSer.findOne(id);
+    }
+
+    @Override
+    public List<UserBO> findUserListInOrgan() throws SerException {
+        return personalFestivalSer.findUserListInOrgan();
+    }
+
+    @Override
+    public List<ThankStatementBO> findThank() throws SerException {
+        return personalFestivalSer.findThank();
     }
 }

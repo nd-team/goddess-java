@@ -8,6 +8,7 @@ import com.bjike.goddess.intromanage.entity.CommunicationPath;
 import com.bjike.goddess.intromanage.to.CommunicationPathTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 通讯途径业务接口
@@ -53,4 +54,13 @@ public interface CommunicationPathSer extends Ser<CommunicationPath, Communicati
      */
     void update(CommunicationPathTO to) throws SerException;
 
+
+    /**
+     * chenjunhao
+     * 获取所有公司地址
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> address() throws SerException;
 }

@@ -299,10 +299,11 @@ public class DepartYearIndexSetAction extends BaseFileAction {
      * 根据年指标id查询所分解的部门年度信息来构建树状图
      * @param id 年度指标传来的年度指标id
      * @des 获取所分解的所有部门年度指标信息
+     * @return class DepartYearIndexSetVO
      * @version v1
      */
     @GetMapping("v1/dendrogram/{id}")
-    public Result dendrogram(String id) throws ActException{
+    public Result dendrogram(@PathVariable String id) throws ActException{
         try {
            List<DepartYearIndexSetVO> departYearIndexSetVOList = BeanTransform.copyProperties(
                     departYearIndexSetAPI.dendrogram( id), DepartYearIndexSetVO.class);

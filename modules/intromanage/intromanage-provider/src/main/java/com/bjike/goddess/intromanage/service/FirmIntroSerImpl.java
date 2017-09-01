@@ -752,4 +752,20 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
         }
         return set;
     }
+
+    @Override
+    //chenjunhao
+    public Set<BussinesBO> moneyByName(String name) throws SerException {
+        FirmIntroDTO firmIntroDTO = new FirmIntroDTO();
+        firmIntroDTO.getConditions().add(Restrict.eq("firmName", name));
+        List<FirmIntro> list = super.findByCis(firmIntroDTO);
+        Set<BussinesBO> set = new HashSet<>();
+        for (FirmIntro firmIntro : list) {
+            BussinesBO bussinesBO = new BussinesBO();
+            bussinesBO.setRegisterMoney(firmIntro.getRegisterMoney());
+            bussinesBO.setStaffNo(firmIntro.getStaffNo());
+            set.add(bussinesBO);
+        }
+        return set;
+    }
 }

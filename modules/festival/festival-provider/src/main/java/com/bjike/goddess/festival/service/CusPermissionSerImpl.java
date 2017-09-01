@@ -1,5 +1,6 @@
 package com.bjike.goddess.festival.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -55,6 +56,8 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private CusPermissionOperateSer cusPermissionOperateSer;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     @Override
     public Long countPermission(CusPermissionDTO cusPermissionDTO) throws SerException {
@@ -100,15 +103,16 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
             List<OpinionBO> opinionBOS = new ArrayList<>();
             List<CusOperateBO> coboList = null;
             if (null != ids && ids.length != 0) {
-
-                if (CusPermissionType.LEVEL.equals(type)) {
-                    opinionBOS = arrangementAPI.findByIds(ids);
-                } else if (CusPermissionType.MODULE.equals(type)) {
-                    opinionBOS = moduleTypeAPI.findByIds(ids);
-                } else if (CusPermissionType.POSITION.equals(type)) {
-                    opinionBOS = positionDetailAPI.findByIds(ids);
-                } else if (CusPermissionType.DEPART.equals(type)) {
-                    opinionBOS = departmentDetailAPI.findByIds(ids);
+                if (moduleAPI.isCheck("organize")) {
+                    if (CusPermissionType.LEVEL.equals(type)) {
+                        opinionBOS = arrangementAPI.findByIds(ids);
+                    } else if (CusPermissionType.MODULE.equals(type)) {
+                        opinionBOS = moduleTypeAPI.findByIds(ids);
+                    } else if (CusPermissionType.POSITION.equals(type)) {
+                        opinionBOS = positionDetailAPI.findByIds(ids);
+                    } else if (CusPermissionType.DEPART.equals(type)) {
+                        opinionBOS = departmentDetailAPI.findByIds(ids);
+                    }
                 }
 
                 coboList = new ArrayList<>();
@@ -157,7 +161,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         List<OpinionBO> opinionBOS = new ArrayList<>();
         List<CusOperateBO> coboList = new ArrayList<>();
         if (null != ids && ids.length != 0) {
-
+            if (moduleAPI.isCheck("organize")) {
             if (CusPermissionType.LEVEL.equals(type)) {
                 //根据id数组查询名字和id
                 opinionBOS = arrangementAPI.findByIds(ids);
@@ -167,7 +171,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
                 opinionBOS = positionDetailAPI.findByIds(ids);
             } else if (CusPermissionType.DEPART.equals(type)) {
                 opinionBOS = departmentDetailAPI.findByIds(ids);
-            }
+            }}
 
 
             for (OpinionBO op : opinionBOS) {
@@ -192,17 +196,18 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         }
         CusPermission cusPermission = super.findById(id);
         CusPermissionType type = cusPermission.getType();
-        if (CusPermissionType.LEVEL.equals(type)) {
-            list = arrangementAPI.findThawOpinion();
-        } else if (CusPermissionType.MODULE.equals(type)) {
-            list = moduleTypeAPI.findThawOpinion();
-        } else if (CusPermissionType.POSITION.equals(type)) {
-            list = positionDetailAPI.findThawOpinion();
-        } else if (CusPermissionType.DEPART.equals(type)) {
-            //TODO 部门查询
-            list = departmentDetailAPI.findThawOpinion();
+        if (moduleAPI.isCheck("organize")) {
+            if (CusPermissionType.LEVEL.equals(type)) {
+                list = arrangementAPI.findThawOpinion();
+            } else if (CusPermissionType.MODULE.equals(type)) {
+                list = moduleTypeAPI.findThawOpinion();
+            } else if (CusPermissionType.POSITION.equals(type)) {
+                list = positionDetailAPI.findThawOpinion();
+            } else if (CusPermissionType.DEPART.equals(type)) {
+                //TODO 部门查询
+                list = departmentDetailAPI.findThawOpinion();
+            }
         }
-
         return list;
     }
 
@@ -283,7 +288,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         if (deleteList != null && deleteList.size() > 0) {
             cusPermissionOperateSer.remove(deleteList);
         }
-        if( operators != null && operators.length>0 ){
+        if (operators != null && operators.length > 0) {
             List<CusPermissionOperate> list = new ArrayList<>();
             for (String operateId : operators) {
                 CusPermissionOperate cpo = new CusPermissionOperate();
@@ -336,16 +341,18 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         //checkAsUserPosition
         //checkAsUserArrangement
         //checkAsUserModule
-        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);//岗位
-        Boolean arrangementFlag = positionDetailUserAPI.checkAsUserArrangement(userId, operateIds);//层次
-        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId, operateIds);
+        if (moduleAPI.isCheck("organize")) {
+            Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);//岗位
+            Boolean arrangementFlag = positionDetailUserAPI.checkAsUserArrangement(userId, operateIds);//层次
+            Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId, operateIds);
 
 
-        //TODO 部门
-        if (moduleFlag) {
-            flag = true;
-        } else {
-            flag = false;
+            //TODO 部门
+            if (moduleFlag) {
+                flag = true;
+            } else {
+                flag = false;
+            }
         }
         return flag;
     }
@@ -387,13 +394,14 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
 
         //TODO 部门id 商务部
+        if (moduleAPI.isCheck("organize")) {
+            Boolean departmentFlag = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
 
-        Boolean departmentFlag = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
-
-        if (departmentFlag) {
-            flag = true;
-        } else {
-            flag = false;
+            if (departmentFlag) {
+                flag = true;
+            } else {
+                flag = false;
+            }
         }
         RpcTransmit.transmitUserToken(userToken);
         String aa = RpcTransmit.getUserToken();
@@ -439,15 +447,17 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         //checkAsUserArrangement
         //checkAsUserModule
 //        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);//岗位
-        Boolean arrangementFlag = positionDetailUserAPI.checkAsUserArrangement(userId, operateIds);//层次
+        if (moduleAPI.isCheck("organize")) {
+            Boolean arrangementFlag = positionDetailUserAPI.checkAsUserArrangement(userId, operateIds);//层次
 //        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId, operateIds);
 
 
-        //TODO 部门
-        if (arrangementFlag) {
-            flag = true;
-        } else {
-            flag = false;
+            //TODO 部门
+            if (arrangementFlag) {
+                flag = true;
+            } else {
+                flag = false;
+            }
         }
         return flag;
     }

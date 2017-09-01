@@ -42,6 +42,11 @@ public class ThankStatementVO {
      */
     private Status status;
 
+    /**
+     * 更新时间
+     */
+    private String updateDate;
+
 
     public String getId() {
         return id;
@@ -89,5 +94,13 @@ public class ThankStatementVO {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
     }
 }

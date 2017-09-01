@@ -1,6 +1,8 @@
 package com.bjike.goddess.staffing.action.staffing;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -26,6 +28,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -186,12 +189,13 @@ public class ConfigurationPlanAction {
     @GetMapping("v1/classify")
     public Result classify(HttpServletRequest request) throws ActException {
         try {
+            List<HierarchyBO> list = new ArrayList<>();
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             if (moduleAPI.isCheck("organize")) {
-                List<HierarchyBO> list = hierarchyAPI.findStatus();
-                return ActResult.initialize(BeanTransform.copyProperties(list, HierarchyVO.class, request));
-            }else {
-                return null;
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                list = hierarchyAPI.findStatus();
             }
+            return ActResult.initialize(BeanTransform.copyProperties(list, HierarchyVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -207,12 +211,13 @@ public class ConfigurationPlanAction {
     @GetMapping("v1/depart/{classify}")
     public Result depart(@PathVariable String classify, HttpServletRequest request) throws ActException {
         try {
+            List<DepartmentDetailBO> list = new ArrayList<>();
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             if (moduleAPI.isCheck("organize")) {
-                List<DepartmentDetailBO> list = departmentDetailAPI.findByHierarchy(classify);
-                return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
-            }else {
-                return null;
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                list = departmentDetailAPI.findByHierarchy(classify);
             }
+            return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

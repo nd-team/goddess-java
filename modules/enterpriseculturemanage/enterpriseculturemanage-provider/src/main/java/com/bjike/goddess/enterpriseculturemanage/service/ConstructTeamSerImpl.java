@@ -1,5 +1,6 @@
 package com.bjike.goddess.enterpriseculturemanage.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -58,6 +59,9 @@ public class ConstructTeamSerImpl extends ServiceImpl<ConstructTeam, ConstructTe
 
     @Autowired
     private PublicizeProgramInfoSer publicizeProgramInfoSer;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
     /**
      * 核对查看权限（部门级别）
      */
@@ -316,9 +320,12 @@ public class ConstructTeamSerImpl extends ServiceImpl<ConstructTeam, ConstructTe
     public List<User> findByJobNumber(String number) throws SerException {
         UserDTO userDTO = new UserDTO();
         userDTO.getConditions().add(Restrict.eq("employeeNumber",number));
-        List<UserBO> userBO = userAPI.findByCis(userDTO);
-        List<UserTO> userTO = BeanTransform.copyProperties(userBO, UserTO.class);
-        List<User> user = BeanTransform.copyProperties(userTO,User.class);
+        List<User> user = new ArrayList<>(0);
+        if(moduleAPI.isCheck("user")) {
+            List<UserBO> userBO = userAPI.findByCis(userDTO);
+            List<UserTO> userTO = BeanTransform.copyProperties(userBO, UserTO.class);
+            user = BeanTransform.copyProperties(userTO, User.class);
+        }
         return user;
     }
 }

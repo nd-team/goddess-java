@@ -91,9 +91,9 @@ public class StayDaysTO extends BaseTO {
     @NotNull(groups = {ADD.class, EDIT.class}, message = "是否领用钥匙不能为空")
     private Boolean receiveKey;
     /**
-     * 是否领用床上用品
+     * 当月是否离宿
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否领用床上用品不能为空")
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "当月是否离宿不能为空")
     private Boolean bed;
 
     /**

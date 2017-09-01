@@ -61,4 +61,9 @@ public interface StaffBirthDayWelfareAPI  {
      * @throws SerException
      */
     List<ThankStatementBO> findThank(String employeeName) throws SerException;
+
+    /**
+     * 一声祝福
+     */
+    List<String[]> findOnewish(String employeeName) throws SerException;
 }

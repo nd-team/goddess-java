@@ -8,7 +8,6 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffshares.api.BuyscheduleAPI;
 import com.bjike.goddess.staffshares.api.SellscheduleAPI;
-import com.bjike.goddess.staffshares.bo.BuyscheduleBO;
 import com.bjike.goddess.staffshares.bo.BuyscheduleCollectBO;
 import com.bjike.goddess.staffshares.dto.BuyscheduleDTO;
 import com.bjike.goddess.staffshares.to.GuidePermissionTO;
@@ -130,6 +129,7 @@ public class BuyscheduleAction {
     /**
      * 汇总
      *
+     * @return class BuyscheduleCollectVO
      * @version v1
      */
     @GetMapping("v1/collect")

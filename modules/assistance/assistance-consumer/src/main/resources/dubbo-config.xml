@@ -29,4 +29,8 @@
 	<dubbo:reference  validation="true" id="hotAssistApiImpl" interface="com.bjike.goddess.assistance.api.HotAssistAPI" />
 	<dubbo:reference  validation="true" id="houseAssistApiImpl" interface="com.bjike.goddess.assistance.api.HouseAssistAPI" />
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.assemble.api.ModuleAPI" id="moduleApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.salarymanage.api.SalaryInformationAPI" id="salaryInformationApiImpl"/>
+
 </beans>

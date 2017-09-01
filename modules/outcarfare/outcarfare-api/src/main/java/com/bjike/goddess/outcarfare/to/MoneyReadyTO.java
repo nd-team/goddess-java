@@ -75,6 +75,20 @@ public class MoneyReadyTO extends BaseTO {
     @Max(value = 12, groups = {ADD.class, EDIT.class}, message = "月份必须小于等于12")
     private Integer month;
 
+    /**
+     * 地区
+     */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "地区不能为空")
+    private String area;
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
     public String getCategory() {
         return category;
     }

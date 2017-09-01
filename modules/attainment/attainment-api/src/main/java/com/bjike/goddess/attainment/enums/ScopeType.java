@@ -14,6 +14,7 @@ public enum ScopeType {
      * 公司
      */
     COMPANY(0),
+
     /**
      * 部门
      */

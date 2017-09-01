@@ -2,7 +2,6 @@ package com.bjike.goddess.secure.service;
 
 import com.bjike.goddess.archive.api.StaffRecordsAPI;
 import com.bjike.goddess.archive.bo.StaffRecordsBO;
-import com.bjike.goddess.archive.vo.StaffRecordsVO;
 import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -15,7 +14,6 @@ import com.bjike.goddess.secure.enums.GuideAddrStatus;
 import com.bjike.goddess.secure.to.AbandonTO;
 import com.bjike.goddess.secure.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
-import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -168,15 +166,18 @@ public class AbandonSerImpl extends ServiceImpl<Abandon, AbandonDTO> implements 
     public AbandonBO save(AbandonTO to) throws SerException {
         UserBO userBO = userAPI.currentUser();
         String name = userBO.getUsername();
-        String eNum = userBO.getEmployeeNumber();
         Abandon abandon = BeanTransform.copyProperties(to, Abandon.class, true);
         abandon.setName(name);
+        String token=RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("archive")) {
+            RpcTransmit.transmitUserToken(token);
             List<StaffRecordsBO> list = staffRecordsAPI.listEmployee();
-            for (StaffRecordsBO staffRecordsBO : list) {
-                if (name.equals(staffRecordsBO.getUsername())) {
-                    abandon.setGroup1(staffRecordsBO.getProject());
-                    abandon.setEmployeeNum(staffRecordsBO.getSerialNumber());
+            if (null != list) {
+                for (StaffRecordsBO staffRecordsBO : list) {
+                    if (name.equals(staffRecordsBO.getUsername())) {
+                        abandon.setGroup1(staffRecordsBO.getProject());
+                        abandon.setEmployeeNum(staffRecordsBO.getSerialNumber());
+                    }
                 }
             }
         }

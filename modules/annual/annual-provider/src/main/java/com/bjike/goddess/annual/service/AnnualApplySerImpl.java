@@ -10,6 +10,7 @@ import com.bjike.goddess.annual.enums.GuideAddrStatus;
 import com.bjike.goddess.annual.to.AnnualApplyAuditTo;
 import com.bjike.goddess.annual.to.AnnualApplyTO;
 import com.bjike.goddess.annual.to.GuidePermissionTO;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -17,6 +18,7 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
+import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.user.api.PositionAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
@@ -59,6 +61,10 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private EntryBasicInfoAPI entryBasicInfoAPI;
 
     /**
      * 检查权限(部门)
@@ -313,6 +319,7 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
             if (!adopt)
                 return null;
             entity.setAuditTime(LocalDateTime.now());
+            entity.setOpinion(to.getOpinion());
             entity.setAuditor(auditor.getUsername());
             entity.setAudit(AuditType.DENIED);
             if (to.getFruit()) {
@@ -369,5 +376,17 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
     public Long getTotal() throws SerException {
         AnnualApplyDTO dto = new AnnualApplyDTO();
         return super.count(dto);
+    }
+
+    @Override
+    public String getStartTime() throws SerException {
+        String time = "";
+        if (moduleAPI.isCheck("staffentry")) {
+            String userToken = RpcTransmit.getUserToken();
+            UserBO userBO = userAPI.currentUser();
+            RpcTransmit.transmitUserToken(userToken);
+            time = entryBasicInfoAPI.getEntryTime(userBO.getUsername());
+        }
+        return time;
     }
 }

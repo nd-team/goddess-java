@@ -79,7 +79,7 @@ public class EntryRegisterApiImpl implements EntryRegisterAPI {
     }
 
     @Override
-    public EntryRegister getByNumber(String number) throws SerException {
+    public EntryRegisterBO getByNumber(String number) throws SerException {
         return entryRegisterSer.getByNumber(number);
     }
 

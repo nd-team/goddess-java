@@ -44,12 +44,12 @@ public class AnnualApplyAct {
     private AnnualApplyAPI annualApplyAPI;
     @Autowired
     private EntryBasicInfoAPI entryBasicInfoAPI;
-    @Autowired
-    private ModuleAPI moduleAPI;
-    @Autowired
-    private UserAPI userAPI;
-    @Autowired
-    private AgeAssistAPI ageAssistAPI;
+//    @Autowired
+//    private ModuleAPI moduleAPI;
+//    @Autowired
+//    private UserAPI userAPI;
+//    @Autowired
+//    private AgeAssistAPI ageAssistAPI;
 
     /**
      * 功能导航权限
@@ -211,37 +211,31 @@ public class AnnualApplyAct {
     @GetMapping("v1/getStartTime")
     public Result getStartTime() throws ActException {
         try {
-            if (moduleAPI.isCheck("staffentry")) {
-                String userToken = (String) RpcContext.getContext().get("userToken");
-                UserBO userBO = userAPI.currentUser();
-                return ActResult.initialize(entryBasicInfoAPI.getEntryTime(userBO.getUsername()));
-            } else {
-                return ActResult.initialize(null);
-            }
+            return ActResult.initialize(annualApplyAPI.getStartTime());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
-    /**
-     * 获取申请结束时间
-     *
-     * @version v1
-     */
-    @GetMapping("v1/getStartTime")
-    public Result getEndTime() throws ActException {
-        try {
-            if (moduleAPI.isCheck("assistance")) {
-                String userToken = (String) RpcContext.getContext().get("userToken");
-                UserBO userBO = userAPI.currentUser();
-                return ActResult.initialize(ageAssistAPI.getJobAge(userBO.getUsername()).toString());
-            } else {
-                return ActResult.initialize(null);
-            }
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 获取申请结束时间
+//     *
+//     * @version v1
+//     */
+//    @GetMapping("v1/getStartTime")
+//    public Result getEndTime() throws ActException {
+//        try {
+//            if (moduleAPI.isCheck("assistance")) {
+//                String userToken = (String) RpcContext.getContext().get("userToken");
+//                UserBO userBO = userAPI.currentUser();
+//                return ActResult.initialize(ageAssistAPI.getJobAge(userBO.getUsername()).toString());
+//            } else {
+//                return ActResult.initialize(null);
+//            }
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
 
 }

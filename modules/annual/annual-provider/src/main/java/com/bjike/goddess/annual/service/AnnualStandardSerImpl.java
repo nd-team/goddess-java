@@ -1,9 +1,9 @@
 package com.bjike.goddess.annual.service;
 
-import com.bjike.goddess.annual.api.AnnualApplyAPI;
-import com.bjike.goddess.annual.api.AnnualInfoAPI;
 import com.bjike.goddess.annual.bo.AnnualStandardBO;
+import com.bjike.goddess.annual.dto.AnnualArrangementStandardDTO;
 import com.bjike.goddess.annual.dto.AnnualStandardDTO;
+import com.bjike.goddess.annual.entity.AnnualArrangementStandard;
 import com.bjike.goddess.annual.entity.AnnualStandard;
 import com.bjike.goddess.annual.enums.GuideAddrStatus;
 import com.bjike.goddess.annual.excel.SonPermissionObject;
@@ -131,6 +131,7 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
         }
         return flag;
     }
+
     /**
      * 权限
      */
@@ -159,7 +160,6 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
                 obj.setFlag(false);
             }
             list.add(obj);
-
 
 
             RpcTransmit.transmitUserToken(userToken);
@@ -282,8 +282,13 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
         AnnualStandard entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据不存在");
-        if (annualArrangementStandardSer.findByStandard(entity.getId()).size() != 0)
-            throw new SerException("存在依赖关系无法删除");
+        if (annualArrangementStandardSer.findByStandard(entity.getId()).size() != 0) {
+            AnnualArrangementStandardDTO dto = new AnnualArrangementStandardDTO();
+            dto.getConditions().add(Restrict.eq("standard.id", entity.getId()));
+            List<AnnualArrangementStandard> annualArrangementStandardList = annualArrangementStandardSer.findByCis(dto);
+            annualArrangementStandardSer.remove(annualArrangementStandardList);
+//            throw new SerException("存在依赖关系无法删除");
+        }
         super.remove(entity);
         return BeanTransform.copyProperties(entity, AnnualStandardBO.class);
     }

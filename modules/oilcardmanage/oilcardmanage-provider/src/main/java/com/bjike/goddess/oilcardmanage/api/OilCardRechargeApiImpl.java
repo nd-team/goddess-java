@@ -1,10 +1,8 @@
 package com.bjike.goddess.oilcardmanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
 import com.bjike.goddess.oilcardmanage.bo.AnalyzeBO;
-import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardRechargeBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardRechargeDTO;
 import com.bjike.goddess.oilcardmanage.service.OilCardRechargeSer;
@@ -14,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+//import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
 
 /**
  * 油卡充值对外发布接口实现类

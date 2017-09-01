@@ -132,7 +132,9 @@ public class TimeSetSerImpl extends ServiceImpl<TimeSet, TimeSetDTO> implements 
             bo.setIntervalTime(intervalTime);
             return bo;
         }
-        return null;
+        TimeSetBO bo=new TimeSetBO();
+        bo.setPermissions(permissions);
+        return bo;
     }
 
     @Override

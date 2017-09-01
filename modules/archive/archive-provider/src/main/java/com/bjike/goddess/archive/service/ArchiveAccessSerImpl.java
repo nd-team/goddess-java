@@ -13,19 +13,22 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.bo.UserDetailBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 档案调阅业务实现
@@ -64,6 +67,8 @@ public class ArchiveAccessSerImpl extends ServiceImpl<ArchiveAccess, ArchiveAcce
     private StaffRecordsSer staffRecordsSer;
     @Autowired
     private RotainCusPermissionSer cusPermissionSer;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -381,14 +386,23 @@ public class ArchiveAccessSerImpl extends ServiceImpl<ArchiveAccess, ArchiveAcce
             throw new SerException("该数据不存在");
         if (null == user)
             throw new SerException("请登陆重试");
-        UserDetailBO detail = userDetailAPI.findByUserId(user.getId());
-        if (null == detail)
+//        UserDetailBO detail = userDetailAPI.findByUserId(user.getId());
+        List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.getPositionDetail(user.getUsername());
+        if (CollectionUtils.isEmpty(positionDetailBOs) && !"admin".equals(user.getUsername())) {
             throw new SerException("对不起,你没有权限审核");
-        if (detail.getDepartmentName().indexOf("福利") > 0) {
+        }
+        List<String> detail = new ArrayList<>(0);
+        if (!CollectionUtils.isEmpty(positionDetailBOs)) {
+            detail = positionDetailBOs.stream().map(PositionDetailBO::getDepartmentName).distinct().collect(Collectors.toList());
+        }
+//        if (null == detail && !"admin".equals(user.getUsername()))
+//            throw new SerException("对不起,你没有权限审核");
+//        if (detail.getDepartmentName().indexOf("福利") > 0 ) {
+        if (detail.indexOf("福利") > 0 || "admin".equals(user.getUsername())) {
             entity.setWelfare(user.getUsername());
             entity.setWelfareOpinion(to.getOpinion());
         }
-        if (detail.getDepartmentName().indexOf("总经办") > 0) {
+        if (detail.indexOf("总经办") > 0 || "admin".equals(user.getUsername())) {
             entity.setManage(user.getUsername());
             entity.setManageOpinion(to.getOpinion());
             entity.setAudit(to.getPass() ? AuditType.ALLOWED : AuditType.DENIED);

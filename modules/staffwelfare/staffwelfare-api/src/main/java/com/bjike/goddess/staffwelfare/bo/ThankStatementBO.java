@@ -39,6 +39,10 @@ public class ThankStatementBO extends BaseBO {
      */
     private Status status;
 
+    /**
+     * 更新时间
+     */
+    private String updateDate;
 
     public String getCreateUser() {
         return createUser;
@@ -78,5 +82,13 @@ public class ThankStatementBO extends BaseBO {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
     }
 }

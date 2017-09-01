@@ -1,7 +1,6 @@
 package com.bjike.goddess.salarymanage.service;
 
 import com.bjike.goddess.archive.api.StaffRecordsAPI;
-import com.bjike.goddess.archive.bo.StaffRecords1BO;
 import com.bjike.goddess.archive.bo.StaffRecordsBO;
 import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.assistance.api.AgeAssistAPI;
@@ -12,10 +11,6 @@ import com.bjike.goddess.assistance.bo.AgeAssistBO;
 import com.bjike.goddess.assistance.bo.ComputerAssistBO;
 import com.bjike.goddess.assistance.bo.HotAssistBO;
 import com.bjike.goddess.assistance.bo.HouseAssistBO;
-import com.bjike.goddess.assistance.dto.AgeAssistDTO;
-import com.bjike.goddess.assistance.dto.ComputerAssistDTO;
-import com.bjike.goddess.assistance.dto.HotAssistDTO;
-import com.bjike.goddess.assistance.dto.HouseAssistDTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -29,7 +24,6 @@ import com.bjike.goddess.managementpromotion.bo.LevelShowBO;
 import com.bjike.goddess.managementpromotion.entity.LevelShow;
 import com.bjike.goddess.managepromotion.api.OverviewSkillLevelAPI;
 import com.bjike.goddess.managepromotion.bo.OverviewSkillLevelBO;
-import com.bjike.goddess.managepromotion.dto.OverviewSkillLevelDTO;
 import com.bjike.goddess.regularization.api.RegularizationAPI;
 import com.bjike.goddess.salaryconfirm.api.SalaryconfirmAPI;
 import com.bjike.goddess.salaryconfirm.bo.SalaryconfirmBO;
@@ -42,14 +36,13 @@ import com.bjike.goddess.salarymanage.to.ExportSalaryInformationTO;
 import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
 import com.bjike.goddess.salarymanage.to.SalaryInformationTO;
 import com.bjike.goddess.secure.api.AttachedAPI;
-import com.bjike.goddess.secure.api.SecureCartAPI;
 import com.bjike.goddess.secure.bo.AttachedBO;
-import com.bjike.goddess.secure.vo.AttachedVO;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -583,5 +576,17 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
             bo = attachedAPI.findAttached(dto.getEmployeeName());
         }
         return bo;
+    }
+
+    @Override
+    //chenjunhao
+    public SalaryInformationBO findByName(String name) throws SerException {
+        SalaryInformationDTO dto = new SalaryInformationDTO();
+        dto.getConditions().add(Restrict.eq("employeeName", name));
+        List<SalaryInformation> list = super.findByCis(dto);
+        if (null != list && !list.isEmpty()) {
+            return BeanTransform.copyProperties(list.get(0), SalaryInformationBO.class);
+        }
+        return null;
     }
 }

@@ -74,4 +74,9 @@
 	<!--待办事件-->
 	<!--<dubbo:reference validation="true" interface="com.bjike.goddess.event.api.EventAPI" id="eventApiImpl"/>-->
 
+	<dubbo:reference validation="true" interface="com.bjike.goddess.event.api.EventAPI" id="eventApiImpl"/>
+	<!-- 出车费准备与支付 -->
+	<dubbo:reference validation="true" interface="com.bjike.goddess.outcarfare.api.MoneyReadyAPI" id="moneyReadyApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.outcarfare.api.WaitPayAPI" id="waitPayApiImpl"/>
+
 </beans>

@@ -58,6 +58,10 @@ public class PersonalFestivalWishBO extends BaseBO {
      */
     private String receiveUserId;
 
+    /**
+     * 备注
+     */
+    private String remark;
 
     public String getFestivalId() {
         return festivalId;
@@ -129,5 +133,13 @@ public class PersonalFestivalWishBO extends BaseBO {
 
     public void setThankStatement(String thankStatement) {
         this.thankStatement = thankStatement;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

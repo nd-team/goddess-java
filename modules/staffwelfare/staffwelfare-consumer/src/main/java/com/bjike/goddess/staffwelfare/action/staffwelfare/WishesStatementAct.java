@@ -151,7 +151,7 @@ public class WishesStatementAct {
      * @version v1
      */
     @GetMapping("v1/find/one")
-    public Result findOne(String id) throws ActException{
+    public Result findOne(@RequestParam String id) throws ActException{
         try {
             WishesStatementBO bo = wishesStatementAPI.findOne(id);
             WishesStatementVO vo = BeanTransform.copyProperties(bo,WishesStatementVO.class);

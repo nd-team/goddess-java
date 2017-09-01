@@ -76,4 +76,9 @@ public class AnnualApplyApiImpl implements AnnualApplyAPI {
     public Long getTotal() throws SerException {
         return annualApplySer.getTotal();
     }
+
+    @Override
+    public String getStartTime() throws SerException {
+        return annualApplySer.getStartTime();
+    }
 }
