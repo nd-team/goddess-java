@@ -3,6 +3,7 @@ package com.bjike.goddess.feedback.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.feedback.bo.RelevancyDetailBO;
 import com.bjike.goddess.feedback.dto.RelevancyDetailDTO;
+import com.bjike.goddess.feedback.to.GuidePermissionTO;
 import com.bjike.goddess.feedback.to.RelevancyDetailTO;
 
 import java.util.List;
@@ -17,6 +18,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface RelevancyDetailAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 各模块关联明细列表总条数
      */
@@ -75,6 +90,7 @@ public interface RelevancyDetailAPI {
     default void remove(String id) throws SerException {
 
     }
+
     /**
      * 获取所有主功能
      *

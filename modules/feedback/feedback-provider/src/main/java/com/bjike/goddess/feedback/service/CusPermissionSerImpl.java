@@ -5,8 +5,6 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.organize.api.*;
-import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.feedback.bo.CusOperateBO;
 import com.bjike.goddess.feedback.bo.CusPermissionBO;
 import com.bjike.goddess.feedback.dto.CusPermissionDTO;
@@ -15,6 +13,8 @@ import com.bjike.goddess.feedback.entity.CusPermission;
 import com.bjike.goddess.feedback.entity.CusPermissionOperate;
 import com.bjike.goddess.feedback.enums.CusPermissionType;
 import com.bjike.goddess.feedback.to.CusPermissionTO;
+import com.bjike.goddess.organize.api.*;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@CacheConfig(cacheNames = "royaltySerCache")
+@CacheConfig(cacheNames = "feedbackSerCache")
 @Service
 public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissionDTO> implements CusPermissionSer {
 

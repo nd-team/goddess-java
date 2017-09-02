@@ -2,14 +2,11 @@ package com.bjike.goddess.feedback.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.feedback.bo.ProblemFeedbackBO;
 import com.bjike.goddess.feedback.bo.ProblemResultBO;
 import com.bjike.goddess.feedback.bo.ReceivedFeedbackBO;
-import com.bjike.goddess.feedback.dto.ProblemFeedbackDTO;
 import com.bjike.goddess.feedback.dto.ReceivedFeedbackDTO;
-import com.bjike.goddess.feedback.entity.ProblemResult;
 import com.bjike.goddess.feedback.entity.ReceivedFeedback;
-import com.bjike.goddess.feedback.to.ProblemFeedbackTO;
+import com.bjike.goddess.feedback.to.GuidePermissionTO;
 import com.bjike.goddess.feedback.to.ReceivedFeedbackTO;
 
 import java.util.List;
@@ -25,11 +22,26 @@ import java.util.List;
  */
 public interface ReceivedFeedbackSer extends Ser<ReceivedFeedback, ReceivedFeedbackDTO> {
     /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 已受理的反馈列表总条数
      */
     default Long count(ReceivedFeedbackDTO dto) throws SerException {
         return null;
     }
+
     /**
      * 一个已受理的反馈
      *
@@ -38,6 +50,7 @@ public interface ReceivedFeedbackSer extends Ser<ReceivedFeedback, ReceivedFeedb
     default ReceivedFeedbackBO getOne(String id) throws SerException {
         return null;
     }
+
     /**
      * 已受理的反馈
      *
@@ -70,6 +83,7 @@ public interface ReceivedFeedbackSer extends Ser<ReceivedFeedback, ReceivedFeedb
     default ReceivedFeedbackBO priority(ReceivedFeedbackTO to) throws SerException {
         return null;
     }
+
     /**
      * 最终解决方案录入
      *

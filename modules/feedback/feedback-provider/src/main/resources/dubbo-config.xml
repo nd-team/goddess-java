@@ -30,7 +30,6 @@
 	<dubbo:service interface="com.bjike.goddess.feedback.api.ProblemResultAPI" ref="problemResultApiImpl" />
 	<dubbo:service interface="com.bjike.goddess.feedback.api.OtherIdeaAPI" ref="otherIdeaApiImpl" />
 	<dubbo:service interface="com.bjike.goddess.feedback.api.ResponsibleIdeaAPI" ref="responsibleIdeaApiImpl" />
-	<dubbo:service interface="com.bjike.goddess.feedback.api.SendEmailAPI" ref="sendEmailApiImpl" />
 	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.feedback.api.CusPermissionAPI" />
 	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.feedback.api.CusPermissionOperateAPI" />
 
@@ -46,7 +45,7 @@
 	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
 	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
 
-	<dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
+	<!--<dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />-->
 	<dubbo:reference  validation="true" id="internalContactsApiImpl" interface="com.bjike.goddess.contacts.api.InternalContactsAPI" />
 
 	<!--<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />-->

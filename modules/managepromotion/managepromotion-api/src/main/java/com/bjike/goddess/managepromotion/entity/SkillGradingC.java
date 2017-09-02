@@ -85,8 +85,9 @@ public class SkillGradingC extends BaseEntity {
     @JoinColumn(name = "skillGradingB_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '技能定级B'")
     private SkillGradingB skillGradingB;
 
+
     public String getGrade() {
-        return grade;
+        return null;
     }
 
     public void setGrade(String grade) {

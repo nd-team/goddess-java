@@ -3,8 +3,8 @@ package com.bjike.goddess.feedback.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.feedback.bo.ProblemCodeRuleBO;
 import com.bjike.goddess.feedback.dto.ProblemCodeRuleDTO;
+import com.bjike.goddess.feedback.to.GuidePermissionTO;
 import com.bjike.goddess.feedback.to.ProblemCodeRuleTO;
-import com.bjike.goddess.feedback.to.ProblemFeedbackTO;
 
 import java.util.List;
 
@@ -18,6 +18,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ProblemCodeRuleAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 问题编码规则列表总条数
      */
@@ -44,6 +58,7 @@ public interface ProblemCodeRuleAPI {
     default List<ProblemCodeRuleBO> list(ProblemCodeRuleDTO dto) throws SerException {
         return null;
     }
+
     /**
      * 编辑问题编码规则
      *

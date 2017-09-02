@@ -3,6 +3,7 @@ package com.bjike.goddess.feedback.to;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -126,27 +127,27 @@ public class ProblemFeedbackTO extends BaseTO {
      * 问题跟进处理计划完成时间
      */
     @NotBlank(message = "问题跟进处理计划完成时间不能为空", groups = {ProblemFeedbackTO.TestAccept.class})
-    private LocalDateTime acceptTime;
+    private String acceptTime;
 
     /**
      * 意见收集完成时间
      */
     @NotBlank(message = "意见收集完成时间不能为空", groups = {ProblemFeedbackTO.TestAccept.class})
-    private LocalDateTime ideaTime;
+    private String ideaTime;
 
-    public LocalDateTime getAcceptTime() {
+    public String getAcceptTime() {
         return acceptTime;
     }
 
-    public void setAcceptTime(LocalDateTime acceptTime) {
+    public void setAcceptTime(String acceptTime) {
         this.acceptTime = acceptTime;
     }
 
-    public LocalDateTime getIdeaTime() {
+    public String getIdeaTime() {
         return ideaTime;
     }
 
-    public void setIdeaTime(LocalDateTime ideaTime) {
+    public void setIdeaTime(String ideaTime) {
         this.ideaTime = ideaTime;
     }
 

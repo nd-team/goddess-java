@@ -36,7 +36,7 @@ public class ProblemFeedback extends BaseEntity {
     /**
      * 所属地区
      */
-    @Column(name = "area",  columnDefinition = "VARCHAR(255)   COMMENT '所属地区'")
+    @Column(name = "area", columnDefinition = "VARCHAR(255)   COMMENT '所属地区'")
     private String area;
 
     /**
@@ -78,31 +78,31 @@ public class ProblemFeedback extends BaseEntity {
     /**
      * 问题类型
      */
-    @Column(name = "problemType",  columnDefinition = "VARCHAR(255)   COMMENT '问题类型'")
+    @Column(name = "problemType", columnDefinition = "VARCHAR(255)   COMMENT '问题类型'")
     private String problemType;
 
     /**
      * 主功能
      */
-    @Column(name = "mainFunction",  columnDefinition = "VARCHAR(255)   COMMENT '主功能'")
+    @Column(name = "mainFunction", columnDefinition = "VARCHAR(255)   COMMENT '主功能'")
     private String mainFunction;
 
     /**
      * 关联相关模块
      */
-    @Column(name = "correlativeModule",  columnDefinition = "VARCHAR(255)   COMMENT '关联相关模块'")
+    @Column(name = "correlativeModule", columnDefinition = "VARCHAR(255)   COMMENT '关联相关模块'")
     private String correlativeModule;
 
     /**
      * 问题责任人
      */
-    @Column(name = "problemDutyOfficer",  columnDefinition = "VARCHAR(255)   COMMENT '问题责任人'")
+    @Column(name = "problemDutyOfficer", columnDefinition = "VARCHAR(255)   COMMENT '问题责任人'")
     private String problemDutyOfficer;
 
     /**
      * 问题来源
      */
-    @Column(name = "problemSource",  columnDefinition = "VARCHAR(255)   COMMENT '问题来源'")
+    @Column(name = "problemSource", columnDefinition = "VARCHAR(255)   COMMENT '问题来源'")
     private String problemSource;
 
     /**
@@ -113,7 +113,7 @@ public class ProblemFeedback extends BaseEntity {
     /**
      * 通报途径
      */
-    @Column(name = "notificationWay",  columnDefinition = "VARCHAR(255)   COMMENT '通报途径'")
+    @Column(name = "notificationWay", columnDefinition = "VARCHAR(255)   COMMENT '通报途径'")
     private String notificationWay;
     /**
      * 通报时间

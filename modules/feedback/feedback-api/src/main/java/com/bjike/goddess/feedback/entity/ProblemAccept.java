@@ -22,25 +22,25 @@ public class ProblemAccept extends BaseEntity {
     /**
      * 问题受理编号(对内)
      */
-    @Column(name = "acceptNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '问题受理编号(对内)'")
+    @Column(name = "acceptNum",  columnDefinition = "VARCHAR(255)   COMMENT '问题受理编号(对内)'")
     private String acceptNum;
 
     /**
      * 问题受理所属部门
      */
-    @Column(name = "acceptDepartment", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '问题受理所属部门'")
+    @Column(name = "acceptDepartment",  columnDefinition = "VARCHAR(255)   COMMENT '问题受理所属部门'")
     private String acceptDepartment;
 
     /**
      * 问题受理所属模块
      */
-    @Column(name = "acceptModule", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '问题受理所属模块'")
+    @Column(name = "acceptModule",  columnDefinition = "VARCHAR(255)   COMMENT '问题受理所属模块'")
     private String acceptModule;
 
     /**
      * 问题受理人
      */
-    @Column(name = "acceptPerson", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '问题受理人'")
+    @Column(name = "acceptPerson",  columnDefinition = "VARCHAR(255)   COMMENT '问题受理人'")
     private String acceptPerson;
 
     /**

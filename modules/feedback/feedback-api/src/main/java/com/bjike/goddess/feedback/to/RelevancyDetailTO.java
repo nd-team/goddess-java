@@ -25,7 +25,7 @@ public class RelevancyDetailTO extends BaseTO {
     /**
      * 主功能
      */
-    @NotBlank(message = "主模板不能为空",groups = {RelevancyDetailTO.TestADD.class,RelevancyDetailTO.TestEDIT.class})
+    @NotBlank(message = "主功能不能为空",groups = {RelevancyDetailTO.TestADD.class,RelevancyDetailTO.TestEDIT.class})
     private String mainFunction;
 
     /**

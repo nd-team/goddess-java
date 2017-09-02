@@ -5,6 +5,7 @@ import com.bjike.goddess.feedback.bo.ProblemResultBO;
 import com.bjike.goddess.feedback.bo.ReceivedFeedbackBO;
 import com.bjike.goddess.feedback.dto.ReceivedFeedbackDTO;
 import com.bjike.goddess.feedback.service.ReceivedFeedbackSer;
+import com.bjike.goddess.feedback.to.GuidePermissionTO;
 import com.bjike.goddess.feedback.to.ReceivedFeedbackTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,14 +25,27 @@ import java.util.List;
 public class ReceivedFeedbackApiImpl implements ReceivedFeedbackAPI {
     @Autowired
     private ReceivedFeedbackSer receivedFeedbackSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return receivedFeedbackSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return receivedFeedbackSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long count(ReceivedFeedbackDTO dto) throws SerException {
         return receivedFeedbackSer.count(dto);
     }
+
     @Override
     public ReceivedFeedbackBO getOne(String id) throws SerException {
         return receivedFeedbackSer.getOne(id);
     }
+
     @Override
     public List<ReceivedFeedbackBO> list(ReceivedFeedbackDTO dto) throws SerException {
         return receivedFeedbackSer.list(dto);
@@ -46,6 +60,7 @@ public class ReceivedFeedbackApiImpl implements ReceivedFeedbackAPI {
     public ReceivedFeedbackBO priority(ReceivedFeedbackTO to) throws SerException {
         return receivedFeedbackSer.priority(to);
     }
+
     @Override
     public ProblemResultBO solve(ReceivedFeedbackTO to) throws SerException {
         return receivedFeedbackSer.solve(to);

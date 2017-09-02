@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.feedback.bo.ProblemCodeRuleBO;
 import com.bjike.goddess.feedback.dto.ProblemCodeRuleDTO;
 import com.bjike.goddess.feedback.entity.ProblemCodeRule;
+import com.bjike.goddess.feedback.to.GuidePermissionTO;
 import com.bjike.goddess.feedback.to.ProblemCodeRuleTO;
 
 import java.util.List;
@@ -19,6 +20,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ProblemCodeRuleSer extends Ser<ProblemCodeRule, ProblemCodeRuleDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 问题编码规则列表总条数
      */

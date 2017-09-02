@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.feedback.bo.ProblemResultBO;
 import com.bjike.goddess.feedback.bo.ReceivedFeedbackBO;
 import com.bjike.goddess.feedback.dto.ReceivedFeedbackDTO;
+import com.bjike.goddess.feedback.to.GuidePermissionTO;
 import com.bjike.goddess.feedback.to.ReceivedFeedbackTO;
 
 import java.util.List;
@@ -18,6 +19,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ReceivedFeedbackAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 已受理的反馈列表总条数
      */

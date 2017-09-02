@@ -408,7 +408,7 @@ public class SystemBetSerImpl extends ServiceImpl<SystemBet, SystemBetDTO> imple
                         //对赌得分（分值*目标-部门分配对赌权重）
                         Double betScore = systemBetATO.getScore() * systemBetCTO.getBetWeight();
                         systemBetC.setBetScore(betScore);
-
+                        systemBetC.setId(null);
                         systemBetCSer.update(systemBetC);
                         systemBetCS.add(systemBetC);
 
@@ -418,6 +418,7 @@ public class SystemBetSerImpl extends ServiceImpl<SystemBet, SystemBetDTO> imple
                             for (SystemBetETO systemBetETO : systemBetETOS) {
                                 SystemBetD systemBetD = BeanTransform.copyProperties(systemBetETO, SystemBetD.class, true);
                                 systemBetD.setSystemBetC(systemBetC);
+                                systemBetD.setId(null);
                                 systemBetDSer.update(systemBetD);
                                 systemBetDS.add(systemBetD);
                             }
@@ -474,7 +475,7 @@ public class SystemBetSerImpl extends ServiceImpl<SystemBet, SystemBetDTO> imple
     @Override
     public List<String> getProjectName() throws SerException {
         String[] fields = new String[]{"projectName"};
-        List<SystemBetABO> systemBetABOS = super.findBySql("select distinct projectName from royalty_departmentbeta group by projectName order by projectName asc ", SystemBetABO.class, fields);
+        List<SystemBetABO> systemBetABOS = super.findBySql("select distinct projectName from royalty_systembeta group by projectName order by projectName asc ", SystemBetABO.class, fields);
 
         List<String> projectNameList = systemBetABOS.stream().map(SystemBetABO::getProjectName)
                 .filter(projectName -> (StringUtils.isNotBlank(projectName))).distinct().collect(Collectors.toList());
@@ -486,7 +487,7 @@ public class SystemBetSerImpl extends ServiceImpl<SystemBet, SystemBetDTO> imple
     @Override
     public List<String> getDepartment() throws SerException {
         String[] fields = new String[]{"department"};
-        List<SystemBetBBO> systemBetBBOS = super.findBySql("select distinct department from royalty_departmentbetb group by department order by department asc ", SystemBetBBO.class, fields);
+        List<SystemBetBBO> systemBetBBOS = super.findBySql("select distinct department from royalty_systembetb group by department order by department asc ", SystemBetBBO.class, fields);
 
         List<String> departmentList = systemBetBBOS.stream().map(SystemBetBBO::getDepartment)
                 .filter(department -> (StringUtils.isNotBlank(department))).distinct().collect(Collectors.toList());

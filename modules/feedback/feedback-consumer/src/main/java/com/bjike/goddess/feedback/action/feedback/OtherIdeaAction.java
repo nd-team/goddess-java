@@ -8,14 +8,10 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.feedback.api.OtherIdeaAPI;
 import com.bjike.goddess.feedback.bo.OtherIdeaBO;
-import com.bjike.goddess.feedback.bo.ResponsibleIdeaBO;
 import com.bjike.goddess.feedback.dto.OtherIdeaDTO;
-import com.bjike.goddess.feedback.dto.ResponsibleIdeaDTO;
-import com.bjike.goddess.feedback.entity.OtherIdea;
+import com.bjike.goddess.feedback.to.GuidePermissionTO;
 import com.bjike.goddess.feedback.to.OtherIdeaTO;
-import com.bjike.goddess.feedback.to.ResponsibleIdeaTO;
 import com.bjike.goddess.feedback.vo.OtherIdeaVO;
-import com.bjike.goddess.feedback.vo.ResponsibleIdeaVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -41,6 +37,30 @@ import java.util.List;
 public class OtherIdeaAction {
     @Autowired
     private OtherIdeaAPI otherIdeaAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = otherIdeaAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
     /**
      * 其他模块意见列表总条数
      *
@@ -62,7 +82,7 @@ public class OtherIdeaAction {
      * 其他模块意见列表
      *
      * @param dto 其他模块意见dto
-     * @return class ResponsibleIdeaVO
+     * @return class OtherIdeaVO
      * @des 获取所有其他模块意见
      * @version v1
      */
@@ -90,7 +110,7 @@ public class OtherIdeaAction {
     public Result add(@Validated(OtherIdeaTO.TestAdd.class) OtherIdeaTO to, BindingResult bindingResult) throws ActException {
         try {
             OtherIdeaBO otherIdeaBO = otherIdeaAPI.insert(to);
-            return ActResult.initialize(BeanTransform.copyProperties(otherIdeaBO,OtherIdeaVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(otherIdeaBO, OtherIdeaVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

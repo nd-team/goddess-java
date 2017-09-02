@@ -12,7 +12,7 @@
 
 	<dubbo:application name="${dubbo.application.name}" />
 	<dubbo:provider timeout="${dubbo.provider.timeout}"  filter="userFilter"/>
-	<dubbo:consumer check="false" timeout="15000" />
+	<dubbo:consumer check="false" timeout="30000" />
 	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
 	<dubbo:registry address="${dubbo.registry.address}" />
 

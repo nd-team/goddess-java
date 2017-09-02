@@ -193,20 +193,6 @@ public class DepartmentBetAction {
             throw new ActException(e.getMessage());
         }
     }
-    /**
-     * 根据项目名称获取体系间对赌表
-     *
-     * @des 根据项目名称获取体系间对赌表
-     * @version v1
-     */
-    @GetMapping("v1/getSystem")
-    public Result getSystem(String projectName) throws ActException {
-        try {
-            SystemBetABO systemBetABO = systemBetAPI.getSystem(projectName);
-            return ActResult.initialize(BeanTransform.copyProperties(systemBetABO, SystemBetAVO.class));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+
 
 }

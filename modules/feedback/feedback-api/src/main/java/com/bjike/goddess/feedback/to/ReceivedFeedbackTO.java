@@ -31,7 +31,7 @@ public class ReceivedFeedbackTO extends BaseTO {
     /**
      * 优先级（人工编辑）
      */
-    @NotBlank(message = "优先级（人工编辑）不能为空",groups = {ReceivedFeedbackTO.TestPriority.class})
+    @NotNull(message = "优先级（人工编辑）不能为空",groups = {ReceivedFeedbackTO.TestPriority.class})
     private Integer artificialPriority;
 
     /**
@@ -42,7 +42,6 @@ public class ReceivedFeedbackTO extends BaseTO {
     /**
      * 一线项目组意见-建议描述
      */
-    @NotBlank(message = "一线项目组意见-建议描述不能为空",groups = {ReceivedFeedbackTO.TestAdvice.class})
     private String firstProjectGroupOpinion;
 
     /**
@@ -53,7 +52,6 @@ public class ReceivedFeedbackTO extends BaseTO {
     /**
      * 规划模块意见-建议描述
      */
-    @NotBlank(message = "规划模块意见-建议描述不能为空",groups = {ReceivedFeedbackTO.TestAdvice.class})
     private String planOpinion;
 
     /**
@@ -64,7 +62,6 @@ public class ReceivedFeedbackTO extends BaseTO {
     /**
      * 综合素养意见-建议描述
      */
-    @NotBlank(message = "综合素养意见-建议描述不能为空",groups = {ReceivedFeedbackTO.TestAdvice.class})
     private String literacyOpinion;
 
     /**
@@ -75,7 +72,6 @@ public class ReceivedFeedbackTO extends BaseTO {
     /**
      * 商务市场部意见-建议描述
      */
-    @NotBlank(message = "商务市场部意见-建议描述不能为空",groups = {ReceivedFeedbackTO.TestAdvice.class})
     private String businessOpinion;
 
     /**
@@ -86,7 +82,6 @@ public class ReceivedFeedbackTO extends BaseTO {
     /**
      * 资金意见-建议描述
      */
-    @NotBlank(message = "资金意见-建议描述不能为空",groups = {ReceivedFeedbackTO.TestAdvice.class})
     private String moneyOpinion;
 
     /**
@@ -97,7 +92,6 @@ public class ReceivedFeedbackTO extends BaseTO {
     /**
      * 账务意见-建议描述
      */
-    @NotBlank(message = "账务意见-建议描述不能为空",groups = {ReceivedFeedbackTO.TestAdvice.class})
     private String accountOpinion;
 
     /**
@@ -108,7 +102,6 @@ public class ReceivedFeedbackTO extends BaseTO {
     /**
      * 预算意见-建议描述
      */
-    @NotBlank(message = "预算意见-建议描述不能为空",groups = {ReceivedFeedbackTO.TestAdvice.class})
     private String budgetOpinion;
 
     /**
@@ -119,7 +112,6 @@ public class ReceivedFeedbackTO extends BaseTO {
     /**
      * 研发部意见-建议描述
      */
-    @NotBlank(message = "研发部意见-建议描述不能为空",groups = {ReceivedFeedbackTO.TestAdvice.class})
     private String divisionOpinion;
 
     /**
@@ -130,7 +122,6 @@ public class ReceivedFeedbackTO extends BaseTO {
     /**
      * 总经办（公司宏观视角）意见-建议描述
      */
-    @NotBlank(message = "总经办（公司宏观视角）意见-建议描述不能为空",groups = {ReceivedFeedbackTO.TestAdvice.class})
     private String generalManagerOpinion;
 
     /**

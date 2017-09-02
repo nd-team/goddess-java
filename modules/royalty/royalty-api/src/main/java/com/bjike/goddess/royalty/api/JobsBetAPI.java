@@ -100,5 +100,13 @@ public interface JobsBetAPI {
     default List<ManageCommissionBO> collect(CollectTO to) throws SerException {
         return null;
     }
+    /**
+     * 获取项目名称
+     *
+     * @throws SerException
+     */
+    default List<String> getProjectName() throws SerException {
+        return null;
+    }
 
 }

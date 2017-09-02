@@ -1,5 +1,7 @@
 package com.bjike.goddess.feedback.vo;
 
+import com.bjike.goddess.feedback.enums.AdoptStatus;
+
 /**
  * 非责任相关人意见表现层对象
  *
@@ -43,7 +45,7 @@ public class ResponsibleIdeaVO {
     /**
      * 是否采纳
      */
-    private Boolean adopt;
+    private AdoptStatus adopt;
 
 
     public String getId() {
@@ -94,11 +96,11 @@ public class ResponsibleIdeaVO {
         this.projectGroup = projectGroup;
     }
 
-    public Boolean getAdopt() {
+    public AdoptStatus getAdopt() {
         return adopt;
     }
 
-    public void setAdopt(Boolean adopt) {
+    public void setAdopt(AdoptStatus adopt) {
         this.adopt = adopt;
     }
 }

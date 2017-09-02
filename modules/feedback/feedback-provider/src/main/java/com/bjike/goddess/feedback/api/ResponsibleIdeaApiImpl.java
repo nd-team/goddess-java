@@ -1,10 +1,10 @@
 package com.bjike.goddess.feedback.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.feedback.bo.ResponsibleIdeaBO;
 import com.bjike.goddess.feedback.dto.ResponsibleIdeaDTO;
-import com.bjike.goddess.feedback.entity.ResponsibleIdea;
+import com.bjike.goddess.feedback.service.ResponsibleIdeaSer;
+import com.bjike.goddess.feedback.to.GuidePermissionTO;
 import com.bjike.goddess.feedback.to.ResponsibleIdeaTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,22 +23,40 @@ import java.util.List;
 @Service("responsibleIdeaApiImpl")
 public class ResponsibleIdeaApiImpl implements ResponsibleIdeaAPI {
     @Autowired
-    private ResponsibleIdeaAPI responsibleIdeaAPI;
+    private ResponsibleIdeaSer responsibleIdeaSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return responsibleIdeaSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return responsibleIdeaSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long count(ResponsibleIdeaDTO dto) throws SerException {
-        return responsibleIdeaAPI.count(dto);
+        return responsibleIdeaSer.count(dto);
+    }
+
+    @Override
+    public ResponsibleIdeaBO getId(String id) throws SerException {
+        return responsibleIdeaSer.getId(id);
     }
 
     @Override
     public List<ResponsibleIdeaBO> list(ResponsibleIdeaDTO dto) throws SerException {
-        return responsibleIdeaAPI.list(dto);
+        return responsibleIdeaSer.list(dto);
     }
+
     @Override
     public ResponsibleIdeaBO insert(ResponsibleIdeaTO to) throws SerException {
-        return responsibleIdeaAPI.insert(to);
+        return responsibleIdeaSer.insert(to);
     }
+
     @Override
     public ResponsibleIdeaBO adopt(ResponsibleIdeaTO to) throws SerException {
-        return responsibleIdeaAPI.adopt(to);
+        return responsibleIdeaSer.adopt(to);
     }
 }

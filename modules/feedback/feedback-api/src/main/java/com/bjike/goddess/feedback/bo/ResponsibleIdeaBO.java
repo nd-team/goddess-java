@@ -1,6 +1,7 @@
 package com.bjike.goddess.feedback.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.feedback.enums.AdoptStatus;
 
 /**
  * 非责任相关人意见业务传输对象
@@ -41,7 +42,7 @@ public class ResponsibleIdeaBO extends BaseBO {
     /**
      * 是否采纳
      */
-    private Boolean adopt;
+    private AdoptStatus adopt;
 
 
     public String getResponsibleOpinion() {
@@ -84,11 +85,11 @@ public class ResponsibleIdeaBO extends BaseBO {
         this.projectGroup = projectGroup;
     }
 
-    public Boolean getAdopt() {
+    public AdoptStatus getAdopt() {
         return adopt;
     }
 
-    public void setAdopt(Boolean adopt) {
+    public void setAdopt(AdoptStatus adopt) {
         this.adopt = adopt;
     }
 }

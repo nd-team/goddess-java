@@ -1,7 +1,9 @@
 package com.bjike.goddess.feedback.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.feedback.bo.ProblemResultBO;
@@ -11,7 +13,9 @@ import com.bjike.goddess.feedback.dto.ReceivedFeedbackDTO;
 import com.bjike.goddess.feedback.entity.ProblemAccept;
 import com.bjike.goddess.feedback.entity.ProblemResult;
 import com.bjike.goddess.feedback.entity.ReceivedFeedback;
+import com.bjike.goddess.feedback.enums.GuideAddrStatus;
 import com.bjike.goddess.feedback.enums.IdentityChoice;
+import com.bjike.goddess.feedback.to.GuidePermissionTO;
 import com.bjike.goddess.feedback.to.ReceivedFeedbackTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -21,6 +25,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,11 +42,153 @@ import java.util.List;
 @Service
 public class ReceivedFeedbackSerImpl extends ServiceImpl<ReceivedFeedback, ReceivedFeedbackDTO> implements ReceivedFeedbackSer {
     @Autowired
-    private UserAPI userAPI;
-    @Autowired
     private ProblemResultSer problemResultSer;
     @Autowired
     private ProblemAcceptSer problemAcceptSer;
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
 
     @Override
     public Long count(ReceivedFeedbackDTO dto) throws SerException {
@@ -57,13 +204,27 @@ public class ReceivedFeedbackSerImpl extends ServiceImpl<ReceivedFeedback, Recei
 
     @Override
     public List<ReceivedFeedbackBO> list(ReceivedFeedbackDTO dto) throws SerException {
+        checkSeeIdentity();
         ProblemAcceptDTO problemAcceptDTO = new ProblemAcceptDTO();
         List<ProblemAccept> problemAccepts = problemAcceptSer.findByCis(problemAcceptDTO);
         List<ReceivedFeedbackBO> receivedFeedbackBOS = new ArrayList<>();
         for (ProblemAccept problemAccept : problemAccepts) {
             ReceivedFeedbackBO receivedFeedbackBO = new ReceivedFeedbackBO();
+            dto = new ReceivedFeedbackDTO();
+            dto.getConditions().add(Restrict.eq("problemAccept.id", problemAccept.getId()));
+            ReceivedFeedback receivedFeedback = super.findOne(dto);
+            if (null == receivedFeedback) {
+                receivedFeedback = new ReceivedFeedback();
+                receivedFeedback.setProblemAccept(problemAccept);
+                receivedFeedback.setCreateTime(LocalDateTime.now());
+                receivedFeedback = super.save(receivedFeedback);
+            }
+            receivedFeedbackBO.setId(receivedFeedback.getId());
+
             //录入人
-            receivedFeedbackBO.setInputUser(problemAccept.getProblemFeedback().getInputUser());
+            if (null != problemAccept.getProblemFeedback().getInputUser()) {
+                receivedFeedbackBO.setInputUser(problemAccept.getProblemFeedback().getInputUser());
+            }
             //问题编号(对外)
             receivedFeedbackBO.setProblemNum(problemAccept.getProblemFeedback().getProblemNum());
             //问题受理编号(对内)
@@ -108,16 +269,38 @@ public class ReceivedFeedbackSerImpl extends ServiceImpl<ReceivedFeedback, Recei
             receivedFeedbackBO.setProblemDutyOfficer(problemAccept.getProblemFeedback().getProblemDutyOfficer());
             //问题来源
             receivedFeedbackBO.setProblemSource(problemAccept.getProblemFeedback().getProblemSource());
+            receivedFeedbackBO.setFirstProjectGroupOpinion(receivedFeedback.getFirstProjectGroupOpinion()); //一线项目组意见-建议描述
+            receivedFeedbackBO.setFirstIdea(receivedFeedback.getFirstIdea()); //意见提出人
+            receivedFeedbackBO.setPlanOpinion(receivedFeedback.getPlanOpinion()); //规划模块意见-建议描述
+            receivedFeedbackBO.setPlanIdea(receivedFeedback.getPlanIdea()); //意见提出人
+            receivedFeedbackBO.setLiteracyOpinion(receivedFeedback.getLiteracyOpinion()); //综合素养意见-建议描述
+            receivedFeedbackBO.setLiteracyIdea(receivedFeedback.getLiteracyIdea()); //意见提出人
+            receivedFeedbackBO.setBudgetOpinion(receivedFeedback.getBusinessOpinion()); //商务市场部意见-建议描述
+            receivedFeedbackBO.setBusinessIdea(receivedFeedback.getBusinessIdea()); //意见提出人
+            receivedFeedbackBO.setMoneyOpinion(receivedFeedback.getMoneyOpinion()); //资金意见-建议描述
+            receivedFeedbackBO.setMoneyIdea(receivedFeedback.getMoneyIdea()); //意见提出人
+            receivedFeedbackBO.setAccountOpinion(receivedFeedback.getAccountOpinion()); //账务意见-建议描述
+            receivedFeedbackBO.setAccountIdea(receivedFeedback.getAccountIdea()); //意见提出人
+            receivedFeedbackBO.setBudgetOpinion(receivedFeedback.getBudgetOpinion()); //预算意见-建议描述
+            receivedFeedbackBO.setBudgetIdea(receivedFeedback.getBudgetIdea()); //意见提出人
+            receivedFeedbackBO.setDivisionOpinion(receivedFeedback.getDivisionOpinion()); //研发部意见-建议描述
+            receivedFeedbackBO.setDivisionIdea(receivedFeedback.getDivisionIdea()); //意见提出人
+            receivedFeedbackBO.setGeneralManagerOpinion(receivedFeedback.getGeneralManagerOpinion()); //总经办（公司宏观视角）意见-建议描述
+            receivedFeedbackBO.setGeneralManagerIdea(receivedFeedback.getGeneralManagerIdea()); //意见提出人
+
+            receivedFeedbackBO.setArtificialPriority(receivedFeedback.getArtificialPriority()); //优先级
             receivedFeedbackBOS.add(receivedFeedbackBO);
         }
 //        List<ReceivedFeedback> receivedFeedbacks = super.findByCis(dto);
 //        List<ReceivedFeedbackBO> receivedFeedbackBOS = BeanTransform.copyProperties(receivedFeedbacks, ReceivedFeedbackBO.class);
+//        super.save(receivedFeedback);
         return receivedFeedbackBOS;
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ReceivedFeedbackBO provideAdvice(ReceivedFeedbackTO to) throws SerException {
+        checkAddIdentity();
         if (StringUtils.isNotBlank(to.getId())) {
             ReceivedFeedback receivedFeedback = super.findById(to.getId());
             UserBO userBO = userAPI.currentUser();
@@ -168,9 +351,11 @@ public class ReceivedFeedbackSerImpl extends ServiceImpl<ReceivedFeedback, Recei
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ReceivedFeedbackBO priority(ReceivedFeedbackTO to) throws SerException {
+        checkAddIdentity();
         if (StringUtils.isNotBlank(to.getId())) {
             ReceivedFeedback receivedFeedback = super.findById(to.getId());
             BeanTransform.copyProperties(to, receivedFeedback, true);
+            receivedFeedback.setModifyTime(LocalDateTime.now());
             receivedFeedback.setArtificialPriority(to.getArtificialPriority());
             super.update(receivedFeedback);
             return BeanTransform.copyProperties(receivedFeedback, ReceivedFeedbackBO.class);
@@ -182,6 +367,7 @@ public class ReceivedFeedbackSerImpl extends ServiceImpl<ReceivedFeedback, Recei
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProblemResultBO solve(ReceivedFeedbackTO to) throws SerException {
+        checkAddIdentity();
         if (StringUtils.isNotBlank(to.getId())) {
             ReceivedFeedback receivedFeedback = super.findById(to.getId());
             ProblemResult problemResult = new ProblemResult();

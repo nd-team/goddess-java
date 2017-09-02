@@ -9,21 +9,16 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.managepromotion.api.SkillGradingAPI;
-import com.bjike.goddess.managepromotion.bo.CalculateBO;
 import com.bjike.goddess.managepromotion.bo.SkillGradingABO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingADTO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingCDTO;
-import com.bjike.goddess.managepromotion.dto.SkillGradingDTO;
-import com.bjike.goddess.managepromotion.entity.SkillGradingA;
 import com.bjike.goddess.managepromotion.excel.SonPermissionObject;
 import com.bjike.goddess.managepromotion.to.CalculateTO;
 import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managepromotion.to.SkillGradingATO;
 import com.bjike.goddess.managepromotion.vo.CalculateVO;
 import com.bjike.goddess.managepromotion.vo.SkillGradingAVO;
-import com.bjike.goddess.managepromotion.vo.SkillVO;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -226,6 +221,23 @@ public class SkillGradingAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 获取所有技能等级
+     *
+     * @des 获取所有技能等级
+     * @version v1
+     */
+    @GetMapping("v1/major")
+    public Result major() throws ActException {
+        try {
+            List<String> major = skillGradingAPI.getSkillLevel();
+            return ActResult.initialize(major);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
     /**
      * 计算
      *
@@ -235,9 +247,9 @@ public class SkillGradingAction {
      * @version v1
      */
     @PostMapping("v1/calculate")
-    public Result calculate(CalculateTO to) throws ActException {
+    public Result calculate(CalculateTO to, SkillGradingADTO dto, HttpServletRequest request) throws ActException {
         try {
-            List<SkillVO> calculateVOS = BeanTransform.copyProperties(skillGradingAPI.calculate(to),SkillVO.class);
+            List<CalculateVO> calculateVOS = BeanTransform.copyProperties(skillGradingAPI.calculate(to, dto), CalculateVO.class, request);
             return ActResult.initialize(calculateVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

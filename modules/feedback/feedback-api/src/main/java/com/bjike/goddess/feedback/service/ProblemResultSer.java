@@ -3,12 +3,10 @@ package com.bjike.goddess.feedback.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.feedback.bo.ProblemResultBO;
-import com.bjike.goddess.feedback.bo.ReceivedFeedbackBO;
 import com.bjike.goddess.feedback.dto.ProblemResultDTO;
-import com.bjike.goddess.feedback.dto.ReceivedFeedbackDTO;
 import com.bjike.goddess.feedback.entity.ProblemResult;
+import com.bjike.goddess.feedback.to.GuidePermissionTO;
 import com.bjike.goddess.feedback.to.ProblemResultTO;
-import com.bjike.goddess.feedback.to.ReceivedFeedbackTO;
 
 import java.util.List;
 
@@ -23,11 +21,26 @@ import java.util.List;
  */
 public interface ProblemResultSer extends Ser<ProblemResult, ProblemResultDTO> {
     /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 问题处理结果列表总条数
      */
     default Long count(ProblemResultDTO dto) throws SerException {
         return null;
     }
+
     /**
      * 一个问题处理结果
      *
@@ -36,6 +49,7 @@ public interface ProblemResultSer extends Ser<ProblemResult, ProblemResultDTO> {
     default ProblemResultBO getOne(String id) throws SerException {
         return null;
     }
+
     /**
      * 问题处理结果列表
      *
@@ -68,6 +82,7 @@ public interface ProblemResultSer extends Ser<ProblemResult, ProblemResultDTO> {
     default ProblemResultBO coordinate(ProblemResultTO to) throws SerException {
         return null;
     }
+
     /**
      * 协调结果
      *

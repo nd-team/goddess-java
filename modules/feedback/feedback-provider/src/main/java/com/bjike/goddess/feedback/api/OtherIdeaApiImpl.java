@@ -1,15 +1,13 @@
 package com.bjike.goddess.feedback.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.feedback.bo.OtherIdeaBO;
 import com.bjike.goddess.feedback.dto.OtherIdeaDTO;
-import com.bjike.goddess.feedback.entity.OtherIdea;
 import com.bjike.goddess.feedback.service.OtherIdeaSer;
+import com.bjike.goddess.feedback.to.GuidePermissionTO;
 import com.bjike.goddess.feedback.to.OtherIdeaTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,6 +24,17 @@ import java.util.List;
 public class OtherIdeaApiImpl implements OtherIdeaAPI {
     @Autowired
     private OtherIdeaSer otherIdeaSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return otherIdeaSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return otherIdeaSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long count(OtherIdeaDTO dto) throws SerException {
         return otherIdeaSer.count(dto);

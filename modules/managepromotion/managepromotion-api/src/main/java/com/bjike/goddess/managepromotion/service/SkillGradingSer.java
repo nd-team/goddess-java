@@ -3,9 +3,7 @@ package com.bjike.goddess.managepromotion.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.managepromotion.bo.CalculateBO;
-import com.bjike.goddess.managepromotion.bo.SkillBO;
 import com.bjike.goddess.managepromotion.bo.SkillGradingABO;
-import com.bjike.goddess.managepromotion.bo.SkillGradingBO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingADTO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingCDTO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingDTO;
@@ -14,7 +12,6 @@ import com.bjike.goddess.managepromotion.excel.SonPermissionObject;
 import com.bjike.goddess.managepromotion.to.CalculateTO;
 import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managepromotion.to.SkillGradingATO;
-import scala.util.parsing.combinator.testing.Str;
 
 import java.util.List;
 
@@ -42,6 +39,7 @@ public interface SkillGradingSer extends Ser<SkillGrading, SkillGradingDTO> {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 技能定级列表总条数
      */
@@ -96,6 +94,7 @@ public interface SkillGradingSer extends Ser<SkillGrading, SkillGradingDTO> {
     default void removeSkillGrading(String id) throws SerException {
 
     }
+
     /**
      * 获取所有技能等级
      *
@@ -105,13 +104,14 @@ public interface SkillGradingSer extends Ser<SkillGrading, SkillGradingDTO> {
     default List<String> getSkillLevel() throws SerException {
         return null;
     }
+
     /**
      * 计算
      *
      * @param to
      * @throws SerException
      */
-    default  List<SkillBO>  calculate(CalculateTO to) throws SerException {
+    default List<CalculateBO> calculate(CalculateTO to, SkillGradingADTO dto) throws SerException {
         return null;
     }
 }

@@ -72,10 +72,25 @@ public class ManageCommissionAction {
      * @version v1
      */
     @GetMapping("v1/collect")
-    public Result collect(CollectTO to) throws ActException {
+    public Result collect(@Validated(CollectTO.TestCollect.class) CollectTO to) throws ActException {
         try {
             List<ManageCommissionVO> manageCommissionVOS = BeanTransform.copyProperties(jobsBetAPI.collect(to),ManageCommissionVO.class);
             return ActResult.initialize(manageCommissionVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取项目名称
+     *
+     * @des 获取项目名称
+     * @version v1
+     */
+    @GetMapping("v1/projectName")
+    public Result projectName() throws ActException {
+        try {
+            List<String> proejctName = jobsBetAPI.getProjectName();
+            return ActResult.initialize(proejctName);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -3,6 +3,8 @@ package com.bjike.goddess.royalty.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import org.apache.commons.lang3.ThreadUtils;
 
+import java.util.List;
+
 /**
  * Created by ike on 17-7-17.
  */
@@ -122,8 +124,12 @@ public ManageCommissionBO(String projectName,Double systemBasesScore,
     /**
      * 部门
      */
-    private String department;
+    private String systemDepartment;
 
+    /**
+     * 部门
+     */
+    private String department;
     /**
      * 目标-部门分配基础权重（%）
      */
@@ -248,9 +254,13 @@ public ManageCommissionBO(String projectName,Double systemBasesScore,
      */
     private Double jobsTotalScore;
 
+    public String getSystemDepartment() {
+        return systemDepartment;
+    }
 
-
-
+    public void setSystemDepartment(String systemDepartment) {
+        this.systemDepartment = systemDepartment;
+    }
 
     public String getProjectName() {
         return projectName;
