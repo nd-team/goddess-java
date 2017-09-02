@@ -523,7 +523,7 @@ public class ShareOpenAccountSerImpl extends ServiceImpl<ShareOpenAccount, Share
         checkPermission();
         ShareOpenAccount shareOpenAccount = super.findById(shareOpenAccountBTO.getId());
         if (shareOpenAccount == null) {
-            throw new SerException("该对象不存在");
+            throw new SerException("此数据不存在");
         }
         LocalDateTime date = shareOpenAccount.getCreateTime();
         Integer holdNum = shareOpenAccount.getHoldNum();//持股数量
@@ -531,6 +531,8 @@ public class ShareOpenAccountSerImpl extends ServiceImpl<ShareOpenAccount, Share
         String capitalWay = shareOpenAccount.getCapitalWay();//出资方式
         String equityType = shareOpenAccount.getEquityType();//股权类型
         Double percentage = shareOpenAccount.getPercentage();//股权比例
+        Double amount = shareOpenAccount.getAmount();//出资额
+        ShareholderStatus shareholderStatus = shareOpenAccount.getShareholderStatus();//股东状态
         shareOpenAccount = BeanTransform.copyProperties(shareOpenAccountBTO, ShareOpenAccount.class, true, "remark");
         shareOpenAccount.setModifyTime(LocalDateTime.now());
         shareOpenAccount.setCreateTime(date);
@@ -539,6 +541,8 @@ public class ShareOpenAccountSerImpl extends ServiceImpl<ShareOpenAccount, Share
         shareOpenAccount.setCapitalWay(capitalWay);
         shareOpenAccount.setEquityType(equityType);
         shareOpenAccount.setPercentage(percentage);
+        shareOpenAccount.setShareholderStatus(shareholderStatus);
+        shareOpenAccount.setAmount(amount);
         super.update(shareOpenAccount);
         return BeanTransform.copyProperties(shareOpenAccount, ShareOpenAccountBO.class);
     }

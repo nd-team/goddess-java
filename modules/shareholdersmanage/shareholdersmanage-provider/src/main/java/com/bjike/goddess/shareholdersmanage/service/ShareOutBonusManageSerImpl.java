@@ -190,6 +190,7 @@ public class ShareOutBonusManageSerImpl extends ServiceImpl<ShareOutBonusManage,
         LocalDateTime date = share.getCreateTime();
         Double totalIncomeTax = share.getTotalIncomeTax();
         Double totalShareOutBonus = share.getTotalShareOutBonus();
+        String equityType = share.getEquityType();
 
         //判断每股分红和共派股是否被修改
         if (share.getTotalSentStocks()!= shareOutBonusManageTO.getTotalSentStocks() || share.getPerShareDividends() != shareOutBonusManageTO.getPerShareDividends()){
@@ -220,6 +221,9 @@ public class ShareOutBonusManageSerImpl extends ServiceImpl<ShareOutBonusManage,
         share.setModifyTime(LocalDateTime.now());
         share.setTotalShareOutBonus(totalShareOutBonus);//设置共分红
         share.setTotalIncomeTax(totalIncomeTax);//设置共缴费
+        if(StringUtils.isBlank(shareOutBonusManageTO.getEquityType())){
+            share.setEquityType(equityType);
+        }
 
         super.update(share);
         return BeanTransform.copyProperties(share,ShareOutBonusManageBO.class);
