@@ -1,6 +1,5 @@
 package com.bjike.goddess.dispatchcar.action.dispatchcar;
 
-import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.carinfo.bo.DriverInfoBO;
 import com.bjike.goddess.carinfo.vo.DriverInfoVO;
 import com.bjike.goddess.common.api.entity.ADD;
@@ -8,27 +7,20 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
-import com.bjike.goddess.dispatchcar.bo.DriverDispatchFeeBO;
-import com.bjike.goddess.dispatchcar.bo.DriverDispatchsBO;
+import com.bjike.goddess.dispatchcar.bo.OilCardBasicCarBO;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoEditTO;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
 import com.bjike.goddess.dispatchcar.to.DispatchcarDeleteFileTO;
-import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
 import com.bjike.goddess.dispatchcar.vo.AuditDetailVO;
 import com.bjike.goddess.dispatchcar.vo.DispatchCarInfoVO;
-import com.bjike.goddess.oilcardmanage.api.OilCardBasicAPI;
-import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
-import com.bjike.goddess.oilcardmanage.entity.OilCardBasic;
 import com.bjike.goddess.oilcardmanage.vo.OilCardBasicVO;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
-import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
 import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
@@ -61,9 +53,6 @@ public class DispatchCarInfoAct extends BaseFileAction {
     private DispatchCarInfoAPI dispatchCarInfoAPI;
     @Autowired
     private FileAPI fileAPI;
-
-    @Autowired
-    private OilCardBasicAPI oilCardBasicAPI;
 
     /**
      * 查询总记录数
@@ -329,7 +318,7 @@ public class DispatchCarInfoAct extends BaseFileAction {
     @GetMapping("v1/find/oil")
     public Result findAllOil() throws ActException {
         try {
-            List<OilCardBasicBO> boList = oilCardBasicAPI.findOilCard();
+            List<OilCardBasicCarBO> boList = dispatchCarInfoAPI.findAllOil();
             List<OilCardBasicVO> voList = BeanTransform.copyProperties(boList, OilCardBasicVO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {

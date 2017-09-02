@@ -23,10 +23,6 @@ public class HeadPortraitHatBO extends BaseBO {
      */
     private String name;
 
-    /**
-     * 头像帽图片URL名称
-     */
-    private String url;
 
     /**
      * 更新人
@@ -52,14 +48,6 @@ public class HeadPortraitHatBO extends BaseBO {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     public String getUpdateUser() {

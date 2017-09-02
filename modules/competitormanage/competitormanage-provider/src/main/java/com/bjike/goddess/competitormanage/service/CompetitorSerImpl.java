@@ -427,10 +427,12 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
     @Override
     public List<MarketInfoBO> findProject() throws SerException {
         List<MarketInfoBO> marketInfoBOList = new ArrayList<>(0);
-        if(moduleAPI.isCheck("market")) {
+//        if(moduleAPI.isCheck("market")) {
             MarketInfoDTO dto = new MarketInfoDTO();
+            String userToken =  RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
             marketInfoBOList = marketInfoAPI.findListMarketInfo(dto);
-        }
+//        }
         return marketInfoBOList;
     }
 }

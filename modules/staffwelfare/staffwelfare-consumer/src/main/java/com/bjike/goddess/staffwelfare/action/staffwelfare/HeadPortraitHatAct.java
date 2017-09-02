@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -17,6 +18,7 @@ import com.bjike.goddess.staffwelfare.excel.SonPermissionObject;
 import com.bjike.goddess.staffwelfare.to.GuidePermissionTO;
 import com.bjike.goddess.staffwelfare.to.HeadPortraitHatTO;
 import com.bjike.goddess.staffwelfare.vo.HeadPortraitHatVO;
+import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.io.IOUtils;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
@@ -29,6 +31,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,13 +48,15 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("headportraithat")
-public class HeadPortraitHatAct {
+public class HeadPortraitHatAct extends BaseFileAction{
 
     @Autowired
     private HeadPortraitHatAPI headPortraitHatAPI;
 
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private FileAPI fileAPI;
 
     /**
      * 模块设置导航权限
@@ -135,22 +140,11 @@ public class HeadPortraitHatAct {
     @PostMapping("v1/add")
     public Result add(@Validated(ADD.class) HeadPortraitHatTO to, HttpServletRequest request, BindingResult bindingResult) throws ActException {
         try {
-            String token = RpcContext.getContext().getAttachment("userToken");
-
-            //文件上传
-            try {
-                List<MultipartFile> multipartFiles = this.getMultipartFile(request);
-                Map<String, byte[]> map = new HashMap<>(multipartFiles.size());
-                for (MultipartFile multipartFile : multipartFiles) {
-                    byte[] bytes = IOUtils.toByteArray(multipartFile.getInputStream());
-                    map.put(multipartFile.getOriginalFilename(), bytes);
-                }
-                to.setMap(map);
-            }catch (IOException e){
-                throw new ActException(e.getMessage());
-            }
-
-            HeadPortraitHatVO vo = BeanTransform.copyProperties(headPortraitHatAPI.addModel(to), HeadPortraitHatVO.class);
+            HeadPortraitHatBO bo = headPortraitHatAPI.addModel(to);
+            HeadPortraitHatVO vo = BeanTransform.copyProperties(bo, HeadPortraitHatVO.class);
+            String path = "/staffwelfare/headportraithat/" + vo.getId();
+            List<InputStream> inputStreams = getInputStreams(request, path);
+            fileAPI.upload(inputStreams);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -180,11 +174,14 @@ public class HeadPortraitHatAct {
      * @param id 祝福语id
      * @version v1
      */
-    @GetMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id) throws ActException {
+    @DeleteMapping("v1/delete/{id}")
+    public Result delete(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
+            String[] path = new String[]{"/staffwelfare/headportraithat/"+id};
+            Object storageToken = request.getAttribute("storageToken");
+            fileAPI.delFile(storageToken.toString(),path);
             headPortraitHatAPI.delete(id);
-            return new ActResult();
+            return new ActResult("删除成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

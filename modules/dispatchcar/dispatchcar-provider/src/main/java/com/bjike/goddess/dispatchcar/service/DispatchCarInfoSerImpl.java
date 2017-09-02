@@ -4,7 +4,6 @@ import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.carinfo.api.DriverInfoAPI;
 import com.bjike.goddess.carinfo.bo.DriverInfoBO;
 import com.bjike.goddess.carinfo.dto.DriverInfoDTO;
-import com.bjike.goddess.carinfo.entity.DriverInfo;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
@@ -32,23 +31,15 @@ import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.oilcardmanage.api.OilCardBasicAPI;
 import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
-import com.bjike.goddess.oilcardmanage.dto.OilCardBasicDTO;
-import com.bjike.goddess.oilcardmanage.entity.OilCardBasic;
-import com.bjike.goddess.oilcardmanage.to.OilCardBasicTO;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
-import com.bjike.goddess.organize.bo.PositionDetailUserBO;
-import com.bjike.goddess.organize.entity.PositionDetail;
-import com.bjike.goddess.organize.entity.PositionDetailUser;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
-import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.bo.UserDetailBO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -1210,16 +1201,17 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     @Override
     public List<EntryBasicInfoBO> findAllEntry() throws SerException {
         List<EntryBasicInfoBO> boList = new ArrayList<>(0);
-        if(moduleAPI.isCheck("entryBasicInfo")) {
+//        if(moduleAPI.isCheck("entryBasicInfo")) {
             EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
             boList = entryBasicInfoAPI.listEntryBasicInfo(dto);
-        }
+//        }
         return boList;
     }
 
     @Override
-    public List<OilCardBasicBO> findAllOil() throws SerException {
+    public List<OilCardBasicCarBO> findAllOil() throws SerException {
         List<OilCardBasicBO> boList = oilCardBasicAPI.findOilCard();
-        return boList;
+        List<OilCardBasicCarBO> carBOS = BeanTransform.copyProperties(boList,OilCardBasicCarBO.class);
+        return carBOS;
     }
 }

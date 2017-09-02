@@ -16,9 +16,7 @@ import com.bjike.goddess.dispatchcar.to.ConditionTO;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
 import com.bjike.goddess.dispatchcar.to.FinanceCollectTO;
 import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
-import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
-import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -220,7 +218,7 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
     }
 
     @Override
-    public List<OilCardBasicBO> findAllOil() throws SerException {
+    public List<OilCardBasicCarBO> findAllOil() throws SerException {
         return dispatchCarInfoSer.findAllOil();
     }
 }
