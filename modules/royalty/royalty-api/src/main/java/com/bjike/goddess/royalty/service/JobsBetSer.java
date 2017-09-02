@@ -37,6 +37,7 @@ public interface JobsBetSer extends Ser<JobsBet, JobsBetDTO> {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 岗位间对赌表列表总条数
      */
@@ -91,6 +92,7 @@ public interface JobsBetSer extends Ser<JobsBet, JobsBetDTO> {
     default void delete(String id) throws SerException {
 
     }
+
     /**
      * 汇总
      *
@@ -98,6 +100,15 @@ public interface JobsBetSer extends Ser<JobsBet, JobsBetDTO> {
      * @throws SerException
      */
     default List<ManageCommissionBO> collect(CollectTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取项目名称
+     *
+     * @throws SerException
+     */
+    default List<String> getProjectName() throws SerException {
         return null;
     }
 }

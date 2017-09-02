@@ -2,6 +2,8 @@ package com.bjike.goddess.royalty.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 汇总
  *
@@ -12,10 +14,12 @@ import com.bjike.goddess.common.api.to.BaseTO;
  * @Copy: [ com.bjike ]
  */
 public class CollectTO extends BaseTO {
+    public interface TestCollect{}
 
     /**
      * 项目名称
      */
+    @NotNull(message = "项目名称不能为空",groups = CollectTO.TestCollect.class )
     private String[] projectName;
 
     public String[] getProjectName() {

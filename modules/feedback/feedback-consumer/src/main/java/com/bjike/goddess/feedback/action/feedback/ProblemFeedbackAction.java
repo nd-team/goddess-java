@@ -11,13 +11,15 @@ import com.bjike.goddess.feedback.api.ProblemFeedbackAPI;
 import com.bjike.goddess.feedback.bo.ProblemAcceptBO;
 import com.bjike.goddess.feedback.bo.ProblemFeedbackBO;
 import com.bjike.goddess.feedback.dto.ProblemFeedbackDTO;
+import com.bjike.goddess.feedback.excel.SonPermissionObject;
+import com.bjike.goddess.feedback.to.GuidePermissionTO;
 import com.bjike.goddess.feedback.to.ProblemFeedbackTO;
 import com.bjike.goddess.feedback.vo.ProblemAcceptVO;
 import com.bjike.goddess.feedback.vo.ProblemFeedbackVO;
 import com.bjike.goddess.organize.api.ModuleTypeAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
-import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.organize.vo.ModuleTypeVO;
 import com.bjike.goddess.organize.vo.PositionDetailVO;
 import com.bjike.goddess.user.bo.UserBO;
@@ -28,6 +30,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,6 +51,80 @@ public class ProblemFeedbackAction {
     private ModuleTypeAPI moduleTypeAPI;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result i() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = problemFeedbackAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = problemFeedbackAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 问题反馈模块列表总条数
@@ -190,8 +267,15 @@ public class ProblemFeedbackAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 根据名字获取岗位详细(地区，部门，模块，层级，岗位)
+     *
+     * @return class PositionDetailVO
+     * @version v1
+     */
     @GetMapping("v1/name")
-    public Result name(String name,HttpServletRequest request) throws ActException {
+    public Result name(String name, HttpServletRequest request) throws ActException {
         try {
             List<PositionDetailBO> userBOS = positionDetailUserAPI.getPositionDetail(name);
             return ActResult.initialize(BeanTransform.copyProperties(userBOS, PositionDetailVO.class, request));

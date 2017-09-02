@@ -73,4 +73,8 @@ public class JobsBetApiImpl implements JobsBetAPI {
     public List<ManageCommissionBO> collect(CollectTO to) throws SerException {
         return jobsBetSer.collect(to);
     }
+    @Override
+    public List<String> getProjectName() throws SerException {
+        return jobsBetSer.getProjectName();
+    }
 }

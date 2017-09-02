@@ -121,7 +121,15 @@ public class ProblemResultVO {
      * 问题来源
      */
     private String problemSource;
+    /**
+     * 优先级（系统计算分值）
+     */
+    private Integer systemPriority;
 
+    /**
+     * 优先级（人工编辑）
+     */
+    private Integer artificialPriority;
     /**
      * 最终解决方案
      */
@@ -226,6 +234,22 @@ public class ProblemResultVO {
 
     public Boolean getNotification() {
         return notification;
+    }
+
+    public Integer getSystemPriority() {
+        return systemPriority;
+    }
+
+    public void setSystemPriority(Integer systemPriority) {
+        this.systemPriority = systemPriority;
+    }
+
+    public Integer getArtificialPriority() {
+        return artificialPriority;
+    }
+
+    public void setArtificialPriority(Integer artificialPriority) {
+        this.artificialPriority = artificialPriority;
     }
 
     public void setNotification(Boolean notification) {

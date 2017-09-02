@@ -6,6 +6,8 @@ import com.bjike.goddess.feedback.bo.ProblemAcceptBO;
 import com.bjike.goddess.feedback.bo.ProblemFeedbackBO;
 import com.bjike.goddess.feedback.dto.ProblemFeedbackDTO;
 import com.bjike.goddess.feedback.entity.ProblemFeedback;
+import com.bjike.goddess.feedback.excel.SonPermissionObject;
+import com.bjike.goddess.feedback.to.GuidePermissionTO;
 import com.bjike.goddess.feedback.to.ProblemFeedbackTO;
 
 import java.util.List;
@@ -20,6 +22,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ProblemFeedbackSer extends Ser<ProblemFeedback, ProblemFeedbackDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 问题反馈模块列表总条数
      */

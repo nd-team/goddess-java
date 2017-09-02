@@ -31,31 +31,31 @@ public class ResponsibleIdea extends BaseEntity {
     /**
      * 意见提出人
      */
-    @Column(name = "ResponsibleIdea", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '意见提出人'")
+    @Column(name = "ResponsibleIdea", columnDefinition = "VARCHAR(255)   COMMENT '意见提出人'")
     private String responsibleIdea;
 
     /**
      * 意见提出日期
      */
-    @Column(name = "ideaDate", nullable = false, columnDefinition = "DATETIME   COMMENT '意见提出日期'")
+    @Column(name = "ideaDate",  columnDefinition = "DATETIME   COMMENT '意见提出日期'")
     private LocalDateTime ideaDate;
 
     /**
      * 所属地区
      */
-    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '所属地区'")
+    @Column(name = "area", columnDefinition = "VARCHAR(255)   COMMENT '所属地区'")
     private String area;
 
     /**
      * 所属项目组/部门
      */
-    @Column(name = "projectGroup", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '所属项目组/部门'")
+    @Column(name = "projectGroup", columnDefinition = "VARCHAR(255)   COMMENT '所属项目组/部门'")
     private String projectGroup;
 
     /**
      * 是否采纳
      */
-    @Column(name = "adopt", nullable = false, columnDefinition = "TINYINT(2)  COMMENT '是否采纳'")
+    @Column(name = "adopt",  columnDefinition = "TINYINT(2)  COMMENT '是否采纳'")
     private AdoptStatus adopt;
 
 

@@ -11,10 +11,9 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.feedback.api.RelevancyDetailAPI;
 import com.bjike.goddess.feedback.bo.RelevancyDetailBO;
 import com.bjike.goddess.feedback.dto.RelevancyDetailDTO;
-import com.bjike.goddess.feedback.entity.RelevancyDetail;
+import com.bjike.goddess.feedback.to.GuidePermissionTO;
 import com.bjike.goddess.feedback.to.RelevancyDetailTO;
 import com.bjike.goddess.feedback.vo.RelevancyDetailVO;
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -37,6 +36,30 @@ import java.util.List;
 public class RelevancyDetailAction {
     @Autowired
     private RelevancyDetailAPI relevancyDetailAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = relevancyDetailAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
     /**
      * 各模块关联明细列表总条数
      *
@@ -104,7 +127,7 @@ public class RelevancyDetailAction {
     public Result add(@Validated(ADD.class) RelevancyDetailTO to, BindingResult bindingResult) throws ActException {
         try {
             RelevancyDetailBO relevancyDetailBO = relevancyDetailAPI.insert(to);
-            return ActResult.initialize(BeanTransform.copyProperties(relevancyDetailBO,RelevancyDetailVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(relevancyDetailBO, RelevancyDetailVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -123,7 +146,7 @@ public class RelevancyDetailAction {
     public Result edit(@Validated(EDIT.class) RelevancyDetailTO to, BindingResult bindingResult) throws ActException {
         try {
             RelevancyDetailBO relevancyDetailBO = relevancyDetailAPI.edit(to);
-            return ActResult.initialize(BeanTransform.copyProperties(relevancyDetailBO,RelevancyDetailVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(relevancyDetailBO, RelevancyDetailVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -146,6 +169,7 @@ public class RelevancyDetailAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有主功能
      *

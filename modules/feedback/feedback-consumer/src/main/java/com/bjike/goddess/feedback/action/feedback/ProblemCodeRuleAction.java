@@ -9,15 +9,12 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.feedback.api.ProblemCodeRuleAPI;
 import com.bjike.goddess.feedback.bo.ProblemCodeRuleBO;
-import com.bjike.goddess.feedback.bo.ProblemFeedbackBO;
 import com.bjike.goddess.feedback.dto.ProblemCodeRuleDTO;
-import com.bjike.goddess.feedback.dto.ProblemFeedbackDTO;
+import com.bjike.goddess.feedback.to.GuidePermissionTO;
 import com.bjike.goddess.feedback.to.ProblemCodeRuleTO;
 import com.bjike.goddess.feedback.vo.ProblemCodeRuleVO;
-import com.bjike.goddess.feedback.vo.ProblemFeedbackVO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.ModuleTypeAPI;
-import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.organize.vo.ModuleTypeVO;
 import com.bjike.goddess.organize.vo.OpinionVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +43,30 @@ public class ProblemCodeRuleAction {
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private ModuleTypeAPI moduleTypeAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = problemCodeRuleAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
     /**
      * 问题编码规则列表总条数
      *
@@ -118,6 +139,7 @@ public class ProblemCodeRuleAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 查询未冻结部门选项
      *
@@ -132,6 +154,7 @@ public class ProblemCodeRuleAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 查询正常状态的模块类型数据
      *

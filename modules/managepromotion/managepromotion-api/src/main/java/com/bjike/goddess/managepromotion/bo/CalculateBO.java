@@ -13,7 +13,33 @@ import com.bjike.goddess.common.api.to.BaseTO;
  * @Copy: [ com.bjike ]
  */
 public class CalculateBO extends BaseBO {
+    public CalculateBO(){}
+    public CalculateBO(String main,String skill,String eventFirst,String eventFirstSkill,
+                       String eventSecond,String eventSecondSkill,String eventThird,
+                       String eventThirdSkill,String eventFour,String eventFourSkill,
+                       String eventFive,String eventFiveSkill){
+        this.main = main;
+        this.skill = skill;
+        this.eventFirst = eventFirst;
+        this.eventFirstSkill = eventFirstSkill;
+        this.eventSecond = eventSecond;
+        this.eventSecondSkill = eventSecondSkill;
+        this.eventThird = eventThird;
+        this.eventThirdSkill = eventThirdSkill;
+        this.eventFour = eventFour;
+        this.eventFourSkill = eventFourSkill;
+        this.eventFive = eventFive;
+        this.eventFiveSkill = eventFiveSkill;
+    }
+    /**
+     * 主项技能定位-专业
+     */
+    private Integer subsidiesAmount;
 
+    /**
+     * 主项技能等级
+     */
+    private Integer quotaJobTitle;
     /**
      * 主项技能定位-专业
      */
@@ -65,6 +91,22 @@ public class CalculateBO extends BaseBO {
      * 小项技能定位-专业5技能等级
      */
     private String eventFiveSkill;
+
+    public Integer getSubsidiesAmount() {
+        return subsidiesAmount;
+    }
+
+    public void setSubsidiesAmount(Integer subsidiesAmount) {
+        this.subsidiesAmount = subsidiesAmount;
+    }
+
+    public Integer getQuotaJobTitle() {
+        return quotaJobTitle;
+    }
+
+    public void setQuotaJobTitle(Integer quotaJobTitle) {
+        this.quotaJobTitle = quotaJobTitle;
+    }
 
     public String getMain() {
         return main;

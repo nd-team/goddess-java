@@ -293,7 +293,7 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
                 if (systemBetBS != null && !systemBetBS.isEmpty()) {
                     departmentTotalScore = systemBetBS.get(0).getDepartmentTotalScore();
                 }
-                if (departmentTotalScore != 0) {
+                    if (departmentTotalScore != 0) {
                     basesScore = departmentTotalScore * departmentBetB.getBaseWeight();
                     departmentBetB.setBasesScore(basesScore);
                 }
@@ -396,6 +396,7 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
                 departmentBetB.setDepartmentTotalScore(totalScore);
 
                 departmentBetB.setDepartmentBetA(departmentBetA);
+                departmentBetB.setId(null);
                 departmentBetBSer.update(departmentBetB);
                 departmentBetBS.add(departmentBetB);
                 //C表
@@ -411,7 +412,7 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
                             double betScore = departmentTotalScore * departmentBetC.getBetWeight();
                             departmentBetC.setBetScore(betScore);
                         }
-
+                        departmentBetC.setId(null);
                         departmentBetCSer.update(departmentBetC);
                         departmentBetCS.add(departmentBetC);
                         //D表
@@ -422,6 +423,7 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
                             for (DepartmentBetETO departmentBetETO : departmentBetETOS) {
                                 DepartmentBetD departmentBetD = BeanTransform.copyProperties(departmentBetETO, DepartmentBetD.class, true);
                                 departmentBetD.setDepartmentBetC(departmentBetC);
+                                departmentBetD.setId(null);
                                 departmentBetDSer.update(departmentBetD);
                                 departmentBetDS.add(departmentBetD);
                             }

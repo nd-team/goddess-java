@@ -1,20 +1,16 @@
 package com.bjike.goddess.feedback.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.feedback.bo.ProblemAcceptBO;
 import com.bjike.goddess.feedback.bo.ProblemFeedbackBO;
 import com.bjike.goddess.feedback.dto.ProblemFeedbackDTO;
-import com.bjike.goddess.feedback.entity.ProblemFeedback;
+import com.bjike.goddess.feedback.excel.SonPermissionObject;
 import com.bjike.goddess.feedback.service.ProblemFeedbackSer;
+import com.bjike.goddess.feedback.to.GuidePermissionTO;
 import com.bjike.goddess.feedback.to.ProblemFeedbackTO;
-import com.bjike.goddess.user.bo.UserBO;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -30,6 +26,17 @@ import java.util.List;
 public class ProblemFeedbackApiImpl implements ProblemFeedbackAPI {
     @Autowired
     private ProblemFeedbackSer problemFeedbackSer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return problemFeedbackSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return problemFeedbackSer.guidePermission(guidePermissionTO);
+    }
+
 
     @Override
     public Long count(ProblemFeedbackDTO dto) throws SerException {
@@ -55,6 +62,7 @@ public class ProblemFeedbackApiImpl implements ProblemFeedbackAPI {
     public ProblemFeedbackBO edit(ProblemFeedbackTO to) throws SerException {
         return problemFeedbackSer.edit(to);
     }
+
     @Override
     public ProblemAcceptBO problemAccept(ProblemFeedbackTO to) throws SerException {
         return problemFeedbackSer.problemAccept(to);

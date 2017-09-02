@@ -1,7 +1,7 @@
 package com.bjike.goddess.managepromotion.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.managepromotion.bo.SkillBO;
+import com.bjike.goddess.managepromotion.bo.CalculateBO;
 import com.bjike.goddess.managepromotion.bo.SkillGradingABO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingADTO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingCDTO;
@@ -90,6 +90,7 @@ public interface SkillGradingAPI {
     default void removeSkillGrading(String id) throws SerException {
 
     }
+
     /**
      * 获取所有技能等级
      *
@@ -106,7 +107,7 @@ public interface SkillGradingAPI {
      * @param to
      * @throws SerException
      */
-    default List<SkillBO> calculate(CalculateTO to) throws SerException {
+    default List<CalculateBO> calculate(CalculateTO to, SkillGradingADTO dto) throws SerException {
         return null;
     }
 }

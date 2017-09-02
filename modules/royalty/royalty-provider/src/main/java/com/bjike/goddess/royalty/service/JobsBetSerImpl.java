@@ -12,6 +12,8 @@ import com.bjike.goddess.royalty.enums.GuideAddrStatus;
 import com.bjike.goddess.royalty.to.*;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -457,7 +459,7 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
                         //部门总得分
                         double totalScore = jobsBetC.getRestrictScore() + basesScore;
                         jobsBetC.setDepartmentTotalScore(totalScore);
-
+                        jobsBetC.setId(null);
                         jobsBetCSer.update(jobsBetC);
                         jobsBetCS.add(jobsBetC);
 
@@ -473,6 +475,7 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
                                     jobsBetD.setBetScore(betScore);
                                 }
 
+                                jobsBetD.setId(null);
                                 jobsBetDSer.update(jobsBetD);
                                 jobsBetDS.add(jobsBetD);
 
@@ -481,6 +484,7 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
                                     for (JobsBetFTO jobsBetFTO : jobsBetFTOS) {
                                         JobsBetE jobsBetE = BeanTransform.copyProperties(jobsBetFTO, JobsBetE.class, true);
                                         jobsBetE.setJobsBetD(jobsBetD);
+                                        jobsBetE.setId(null);
                                         jobsBetESer.update(jobsBetE);
                                         jobsBetES.add(jobsBetE);
                                     }
@@ -701,6 +705,7 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
                             bo.setSystemBetScore(systemBetC.getBetScore());
                             bo.setUnmetAllocationSystem(systemBetD.getUnmetAllocationSystem());
                             bo.setSystemUnmetAllocation(systemBetD.getUnmetAllocation());
+                            bo.setSystemDepartment(systemBetB.getDepartment());
 //                                bo.setDepartment(departmentBetB.getDepartment());
 //                                bo.setDepartmentBaseWeight(departmentBetB.getBaseWeight());
 //                                bo.setDepartmentBasesScore(departmentBetB.getBasesScore());
@@ -731,6 +736,7 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
         Double jobsBetScore = 0.0; //对赌得分
         Double jobsRestrictScore = 0.0; //制约得分
         Double jobsTotalScore = 0.0;//部门总得分
+        ManageCommissionBO totalBO = null;
         if (list != null) {
             systemBasesScore = list.stream().filter(p -> p.getSystemBasesScore() != null).mapToDouble(p -> p.getSystemBasesScore()).sum();
             systemBetScore = list.stream().filter(p -> p.getSystemBetScore() != null).mapToDouble(p -> p.getSystemBetScore()).sum();
@@ -748,12 +754,78 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
             jobsTotalScore = list.stream().filter(p -> p.getJobsTotalScore() != null).mapToDouble(p -> p.getJobsTotalScore()).sum();
 
 
-            ManageCommissionBO totalBO = new ManageCommissionBO("合计分值", systemBasesScore, systemBetScore, systemRestrictScore, systemTotalScore,
+            totalBO = new ManageCommissionBO("合计分值", systemBasesScore, systemBetScore, systemRestrictScore, systemTotalScore,
                     departmentBasesScore, departmentBetScore, departmentRestrictScore, departmentTotalScore,
                     jobsBasesScore, jobsBetScore, jobsRestrictScore, jobsTotalScore);
-            list.add(totalBO);
-        }
 
-        return list;
+        }
+        List<ManageCommissionBO> bos = new ArrayList<>();
+        for (int i = 0; i < list.size() - 1; i++) {
+            for (int j = i + 1; j < list.size(); j++) {
+                if (list.get(i).getDepartment() != null && list.get(j).getSystemDepartment() != null) {
+
+                    if (list.get(i).getDepartment().equals(list.get(j).getSystemDepartment())) {
+                        ManageCommissionBO bo = list.get(i);
+                        ManageCommissionBO naBo = list.get(j);
+//                        bo.setProjectName(naBo.getProjectName());
+//                        bo.setScore(naBo.getScore());
+//                        bo.setSystem(naBo.getSystem());
+//                        bo.setSystemBaseWeight(naBo.getSystemBaseWeight());
+//                        bo.setSystemBetWeight(naBo.getSystemBetWeight());
+//                        bo.setSystemIndexNum(naBo.getSystemIndexNum());
+//                        bo.setSystemIndexName(naBo.getSystemIndexName());
+//                        bo.setSystemConfirmTargetValue(naBo.getSystemConfirmTargetValue());
+//                        bo.setSystemStandard(naBo.getSystemStandard());
+//                        bo.setSystemBasesScore(naBo.getSystemBasesScore());
+//                        bo.setSystemBetScore(naBo.getSystemBetScore());
+//                        bo.setUnmetAllocationSystem(naBo.getUnmetAllocationSystem());
+//                        bo.setSystemUnmetAllocation(naBo.getSystemUnmetAllocation());
+//                        bo.setSystemRestrictScore(naBo.getSystemRestrictScore());
+//                        bo.setSystemTotalScore(naBo.getSystemTotalScore());
+                        BeanUtils.copyProperties(naBo, bo, "department", "departmentBaseWeight", "departmentBetWeight",
+                                "departmentIndexNum", "departmentIndexName", "departmentConfirmTargetValue",
+                                "departmentStandard", "departmentBasesScore", "departmentBetScore",
+                                "unmetAllocationDepartment", "departmentUnmetAllocation", "departmentRestrictScore",
+                                "departmentTotalScore");
+                        bos.add(bo);
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < bos.size(); i++) {
+            for (int j = 0; j < list.size(); j++) {
+                if (bos.get(i).getDepartment() != null && list.get(j).getProjectGroup() != null) {
+
+                    if (bos.get(i).getDepartment().equals(list.get(j).getProjectGroup())) {
+                        ManageCommissionBO bo = bos.get(i);
+                        ManageCommissionBO naBo = list.get(j);
+                        BeanUtils.copyProperties(naBo, bo, "projectName", "score", "system",
+                                "systemBaseWeight", "systemBetWeight", "systemIndexNum", "systemIndexName",
+                                "systemConfirmTargetValue", "systemStandard", "systemBasesScore", "systemBetScore",
+                                "unmetAllocationSystem", "systemUnmetAllocation", "systemRestrictScore",
+                                "systemTotalScore", "department", "departmentBaseWeight", "departmentBetWeight",
+                                "departmentIndexNum", "departmentIndexName", "departmentConfirmTargetValue",
+                                "departmentStandard", "departmentBasesScore", "departmentBetScore",
+                                "unmetAllocationDepartment", "departmentUnmetAllocation", "departmentRestrictScore",
+                                "departmentTotalScore");
+                    }
+                }
+            }
+        }
+        if (null != totalBO) {
+            bos.add(totalBO);
+        }
+        return bos;
+    }
+    @Override
+    public List<String> getProjectName() throws SerException {
+        String[] fields = new String[]{"projectName"};
+        List<SystemBetABO> systemBetABOS = super.findBySql("SELECT a.projectName AS projectName FROM royalty_systembeta a,royalty_departmentbeta b,royalty_jobsbeta c WHERE a.projectName=b.projectName and a.projectName=c.projectName GROUP BY a.projectName ", SystemBetABO.class, fields);
+
+        List<String> projectNameList = systemBetABOS.stream().map(SystemBetABO::getProjectName)
+                .filter(projectName -> (StringUtils.isNotBlank(projectName))).distinct().collect(Collectors.toList());
+
+
+        return projectNameList;
     }
 }

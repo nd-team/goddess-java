@@ -4,10 +4,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.feedback.bo.RelevancyDetailBO;
 import com.bjike.goddess.feedback.dto.RelevancyDetailDTO;
 import com.bjike.goddess.feedback.service.RelevancyDetailSer;
+import com.bjike.goddess.feedback.to.GuidePermissionTO;
 import com.bjike.goddess.feedback.to.RelevancyDetailTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,6 +25,17 @@ public class RelevancyDetailApiImpl implements RelevancyDetailAPI {
 
     @Autowired
     private RelevancyDetailSer relevancyDetailSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return relevancyDetailSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return relevancyDetailSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long count(RelevancyDetailDTO dto) throws SerException {
         return relevancyDetailSer.count(dto);
@@ -55,6 +66,7 @@ public class RelevancyDetailApiImpl implements RelevancyDetailAPI {
         relevancyDetailSer.remove(id);
 
     }
+
     @Override
     public List<String> getMainFunction() throws SerException {
         return relevancyDetailSer.getMainFunction();

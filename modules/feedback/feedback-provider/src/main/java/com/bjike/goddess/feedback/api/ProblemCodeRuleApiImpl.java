@@ -1,11 +1,10 @@
 package com.bjike.goddess.feedback.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.feedback.bo.ProblemCodeRuleBO;
 import com.bjike.goddess.feedback.dto.ProblemCodeRuleDTO;
-import com.bjike.goddess.feedback.entity.ProblemCodeRule;
 import com.bjike.goddess.feedback.service.ProblemCodeRuleSer;
+import com.bjike.goddess.feedback.to.GuidePermissionTO;
 import com.bjike.goddess.feedback.to.ProblemCodeRuleTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +24,17 @@ import java.util.List;
 public class ProblemCodeRuleApiImpl implements ProblemCodeRuleAPI {
     @Autowired
     private ProblemCodeRuleSer problemCodeRuleSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return problemCodeRuleSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return problemCodeRuleSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long count(ProblemCodeRuleDTO dto) throws SerException {
         return problemCodeRuleSer.count(dto);
@@ -39,6 +49,7 @@ public class ProblemCodeRuleApiImpl implements ProblemCodeRuleAPI {
     public List<ProblemCodeRuleBO> list(ProblemCodeRuleDTO dto) throws SerException {
         return problemCodeRuleSer.list(dto);
     }
+
     @Override
     public ProblemCodeRuleBO edit(ProblemCodeRuleTO to) throws SerException {
         return problemCodeRuleSer.edit(to);

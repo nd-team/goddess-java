@@ -2,13 +2,9 @@ package com.bjike.goddess.managepromotion.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.managepromotion.bo.CalculateBO;
-import com.bjike.goddess.managepromotion.bo.SkillBO;
 import com.bjike.goddess.managepromotion.bo.SkillGradingABO;
-import com.bjike.goddess.managepromotion.bo.SkillGradingBO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingADTO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingCDTO;
-import com.bjike.goddess.managepromotion.dto.SkillGradingDTO;
-import com.bjike.goddess.managepromotion.entity.SkillGradingA;
 import com.bjike.goddess.managepromotion.excel.SonPermissionObject;
 import com.bjike.goddess.managepromotion.service.SkillGradingSer;
 import com.bjike.goddess.managepromotion.to.CalculateTO;
@@ -33,6 +29,7 @@ public class SkillGradingApiImpl implements SkillGradingAPI {
 
     @Autowired
     private SkillGradingSer skillGradingSer;
+
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         return skillGradingSer.sonPermission();
@@ -72,12 +69,14 @@ public class SkillGradingApiImpl implements SkillGradingAPI {
     public void removeSkillGrading(String id) throws SerException {
         skillGradingSer.removeSkillGrading(id);
     }
+
     @Override
     public List<String> getSkillLevel() throws SerException {
         return skillGradingSer.getSkillLevel();
     }
+
     @Override
-    public List<SkillBO> calculate(CalculateTO to) throws SerException {
-        return skillGradingSer.calculate(to);
+    public List<CalculateBO> calculate(CalculateTO to, SkillGradingADTO dto) throws SerException {
+        return skillGradingSer.calculate(to, dto);
     }
 }

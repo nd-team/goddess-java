@@ -7,15 +7,11 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.feedback.api.ReceivedFeedbackAPI;
-import com.bjike.goddess.feedback.bo.ProblemFeedbackBO;
 import com.bjike.goddess.feedback.bo.ProblemResultBO;
 import com.bjike.goddess.feedback.bo.ReceivedFeedbackBO;
-import com.bjike.goddess.feedback.dto.ProblemFeedbackDTO;
 import com.bjike.goddess.feedback.dto.ReceivedFeedbackDTO;
-import com.bjike.goddess.feedback.entity.ReceivedFeedback;
-import com.bjike.goddess.feedback.to.ProblemFeedbackTO;
+import com.bjike.goddess.feedback.to.GuidePermissionTO;
 import com.bjike.goddess.feedback.to.ReceivedFeedbackTO;
-import com.bjike.goddess.feedback.vo.ProblemFeedbackVO;
 import com.bjike.goddess.feedback.vo.ProblemResultVO;
 import com.bjike.goddess.feedback.vo.ReceivedFeedbackVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +33,33 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("receivedfeedback")
-public class ReceivedFeedbackAction{
+public class ReceivedFeedbackAction {
     @Autowired
     private ReceivedFeedbackAPI receivedFeedbackAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = receivedFeedbackAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
     /**
      * 已受理的反馈列表总条数
      *
@@ -104,7 +124,7 @@ public class ReceivedFeedbackAction{
      */
     @LoginAuth
     @PostMapping("v1/advice")
-    public Result advice(@Validated(ReceivedFeedbackTO.TestAdvice.class) ReceivedFeedbackTO to, BindingResult bindingResult) throws ActException {
+    public Result advice(ReceivedFeedbackTO to, BindingResult bindingResult) throws ActException {
         try {
             ReceivedFeedbackBO receivedFeedbackBO = receivedFeedbackAPI.provideAdvice(to);
             return ActResult.initialize(BeanTransform.copyProperties(receivedFeedbackBO, ReceivedFeedbackVO.class));
@@ -131,6 +151,7 @@ public class ReceivedFeedbackAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 最终解决方案录入
      *

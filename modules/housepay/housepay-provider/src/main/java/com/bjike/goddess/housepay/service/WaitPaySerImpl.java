@@ -266,7 +266,9 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     public WaitPayBO editWaitPay(WaitPayTO waitPayTO) throws SerException {
         checkAddIdentity();
         WaitPay waitPay = super.findById(waitPayTO.getId());
-        BeanTransform.copyProperties(waitPayTO, waitPay, true);
+        LocalDateTime createTime = waitPay.getCreateTime();
+        waitPay = BeanTransform.copyProperties(waitPayTO, WaitPay.class, true);
+        waitPay.setCreateTime(createTime);
         waitPay.setModifyTime(LocalDateTime.now());
         waitPay.setPay(PayStatus.NO);
         super.update(waitPay);
@@ -625,14 +627,10 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     public List<String> yearList() throws SerException {
         //获取所有年
         List<String> yearList = new ArrayList<>();
-        LocalDate now = LocalDate.now();
-        int start = 1900;
-        int end = now.getYear();
-        String year = "";
-        while (start <= end) {
-            year = start + "";
-            start = start + 1;
-            yearList.add(year);
+        int year = LocalDate.now().getYear();
+
+        for (int i = year - 5; i <= year + 5; i++) {
+            yearList.add(String.valueOf(i));
         }
         return yearList;
     }

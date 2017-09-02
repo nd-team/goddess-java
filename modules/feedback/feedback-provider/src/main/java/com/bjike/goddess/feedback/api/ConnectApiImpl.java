@@ -5,12 +5,11 @@ import com.bjike.goddess.feedback.bo.ConnectBO;
 import com.bjike.goddess.feedback.dto.ConnectDTO;
 import com.bjike.goddess.feedback.service.ConnectSer;
 import com.bjike.goddess.feedback.to.ConnectTO;
+import com.bjike.goddess.feedback.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 各类沟通模板业务接口实现
@@ -26,18 +25,32 @@ public class ConnectApiImpl implements ConnectAPI {
 
     @Autowired
     private ConnectSer connectSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return connectSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return connectSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long count(ConnectDTO dto) throws SerException {
         return connectSer.count(dto);
     }
+
     @Override
     public ConnectBO getOne(String id) throws SerException {
         return connectSer.getOne(id);
     }
+
     @Override
     public List<ConnectBO> list(ConnectDTO dto) throws SerException {
         return connectSer.list(dto);
     }
+
     @Override
     public ConnectBO edit(ConnectTO to) throws SerException {
         return connectSer.edit(to);

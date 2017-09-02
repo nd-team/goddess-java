@@ -24,6 +24,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 岗位间对赌表
@@ -189,6 +190,7 @@ public class JobsBetAction {
             throw new ActException(e.getMessage());
         }
     }
+
 
 
 }

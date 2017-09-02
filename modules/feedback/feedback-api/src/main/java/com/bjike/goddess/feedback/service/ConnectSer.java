@@ -6,6 +6,7 @@ import com.bjike.goddess.feedback.bo.ConnectBO;
 import com.bjike.goddess.feedback.dto.ConnectDTO;
 import com.bjike.goddess.feedback.entity.Connect;
 import com.bjike.goddess.feedback.to.ConnectTO;
+import com.bjike.goddess.feedback.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +20,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ConnectSer extends Ser<Connect, ConnectDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 各类沟通模板列表总条数
      */
@@ -87,6 +102,7 @@ public interface ConnectSer extends Ser<Connect, ConnectDTO> {
     default List<String> getSort() throws SerException {
         return null;
     }
+
     /**
      * 根据分类获取各类沟通模板
      *

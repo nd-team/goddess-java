@@ -8,17 +8,13 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.feedback.api.ProblemResultAPI;
-import com.bjike.goddess.feedback.bo.ProblemFeedbackBO;
 import com.bjike.goddess.feedback.bo.ProblemResultBO;
-import com.bjike.goddess.feedback.dto.ProblemFeedbackDTO;
 import com.bjike.goddess.feedback.dto.ProblemResultDTO;
-import com.bjike.goddess.feedback.to.ProblemFeedbackTO;
+import com.bjike.goddess.feedback.to.GuidePermissionTO;
 import com.bjike.goddess.feedback.to.ProblemResultTO;
-import com.bjike.goddess.feedback.vo.ProblemFeedbackVO;
 import com.bjike.goddess.feedback.vo.ProblemResultVO;
 import com.bjike.goddess.organize.api.ModuleTypeAPI;
 import com.bjike.goddess.organize.vo.ModuleTypeVO;
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -43,6 +39,30 @@ public class ProblemResultAction {
     private ProblemResultAPI problemResultAPI;
     @Autowired
     private ModuleTypeAPI moduleTypeAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = problemResultAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
     /**
      * 问题处理结果列表总条数
      *
@@ -115,6 +135,7 @@ public class ProblemResultAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 确认是否需要协调
      *
@@ -133,6 +154,7 @@ public class ProblemResultAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 协调结果
      *
@@ -151,6 +173,7 @@ public class ProblemResultAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有模块
      *
