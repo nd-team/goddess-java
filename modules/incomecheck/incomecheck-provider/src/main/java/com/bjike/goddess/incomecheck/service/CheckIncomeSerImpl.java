@@ -322,7 +322,11 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
             sql = sql + " group by area  order by area desc ";
             list = super.findBySql(sql, CheckIncomeBO.class, field);
             list.stream().forEach(str -> {
-                str.setTime(startTime + "到" + endTime);
+                if( StringUtils.isBlank(startTime) && StringUtils.isBlank(endTime)){
+                    str.setTime(" -- ");
+                }else{
+                    str.setTime(startTime + "到" + endTime);
+                }
             });
         } else {
             //如果有选地区，汇总表头：(地区/年份/月份/项目组/项目名称/类别/目标管理费/实际管理费/比例/差额)
@@ -369,7 +373,11 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
             sql = sql + " group by projectGroup  order by projectGroup desc ";
             list = super.findBySql(sql, CheckIncomeBO.class, field);
             list.stream().forEach(str -> {
-                str.setTime(startTime + "到" + endTime);
+                if( StringUtils.isBlank(startTime) && StringUtils.isBlank(endTime)){
+                    str.setTime(" -- ");
+                }else{
+                    str.setTime(startTime + "到" + endTime);
+                }
             });
         } else {
             //如果有选地区，汇总表头：(地区/年份/月份/项目组/项目名称/类别/目标管理费/实际管理费/比例/差额)
@@ -416,11 +424,15 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
             sql = sql + " group by projectName  order by projectName desc ";
             list = super.findBySql(sql, CheckIncomeBO.class, field);
             list.stream().forEach(str -> {
-                str.setTime(startTime + "到" + endTime);
+                if( StringUtils.isBlank(startTime) && StringUtils.isBlank(endTime)){
+                    str.setTime(" -- ");
+                }else{
+                    str.setTime(startTime + "到" + endTime);
+                }
             });
         } else {
             //如果有选地区，汇总表头：(地区/年份/月份/项目组/项目名称/类别/目标管理费/实际管理费/比例/差额)
-            field = new String[]{"projectName", "time", "area", "projectName", "planIncome", "actualIncome", "rate", "balance", "targetTask", "actualTask", "completeRate"};
+            field = new String[]{"projectName", "time", "area", "projectGroup", "planIncome", "actualIncome", "rate", "balance", "targetTask", "actualTask", "completeRate"};
             sql = "select projectName , time , area ,projectGroup ,planIncome ,actualIncome ," +
                     "  (actualIncome/planIncome) as rate , (actualIncome-planIncome) as balance " +
                     " ,  targetTask , actualTask , (actualTask-targetTask) as completeRate from incomecheck_checkincome where 1=1 ";

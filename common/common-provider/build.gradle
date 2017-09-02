@@ -1,7 +1,7 @@
 apply from: '../../config.gradle'
 
 dependencies {
-
+    compile group: 'redis.clients', name: 'jedis', version: "$jedis_version"
     compile group: 'javax.el', name: 'javax.el-api', version: "$javax_el_api_version"
     compile group: 'org.glassfish.web', name: 'javax.el', version: "$javax_el_version"
     compile group: 'com.alibaba', name: 'fastjson', version: "$fastjson_version"

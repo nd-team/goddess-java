@@ -1,6 +1,8 @@
 package com.bjike.goddess.customer.action.customer;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -57,22 +59,22 @@ public class CustomerLevelAction {
      */
     @LoginAuth
     @GetMapping("v1/setButtonPermission")
-    public Result setButtonPermission() throws ActException {
+    public Result setButtonPermission(HttpServletRequest request) throws ActException {
         List<SonPermissionObject> list = new ArrayList<>();
         try {
             SonPermissionObject obj = new SonPermissionObject();
             obj.setName("cuspermission");
             obj.setDescribesion("设置");
-            if (moduleAPI.isCheck("organize")) {
-                Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
-                if (!isHasPermission) {
-                    //int code, String msg
-                    obj.setFlag(false);
-                } else {
-                    obj.setFlag(true);
-                }
-                list.add(obj);
+//            String userToken = request.getHeader(RpcCommon.USER_TOKEN);
+//            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, userToken);
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
             }
+            list.add(obj);
             return new ActResult(0, "设置权限", list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
