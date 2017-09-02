@@ -12,7 +12,7 @@ import com.bjike.goddess.dispatchcar.excel.SonPermissionObject;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
 import com.bjike.goddess.dispatchcar.to.FinanceCollectTO;
 import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
-import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
+
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 
 import java.util.List;
@@ -219,5 +219,5 @@ public interface DispatchCarInfoSer extends Ser<DispatchCarInfo, DispatchCarInfo
      *
      * @throws SerException
      */
-    List<OilCardBasicBO> findAllOil() throws SerException;
+    List<OilCardBasicCarBO> findAllOil() throws SerException;
 }
