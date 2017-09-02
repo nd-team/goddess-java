@@ -65,8 +65,6 @@ public class CustomerLevelAction {
             SonPermissionObject obj = new SonPermissionObject();
             obj.setName("cuspermission");
             obj.setDescribesion("设置");
-//            String userToken = request.getHeader(RpcCommon.USER_TOKEN);
-//            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, userToken);
             Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
             if (!isHasPermission) {
                 //int code, String msg

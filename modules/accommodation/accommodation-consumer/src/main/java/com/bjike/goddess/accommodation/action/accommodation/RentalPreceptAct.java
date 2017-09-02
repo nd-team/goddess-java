@@ -73,20 +73,18 @@ public class RentalPreceptAct {
         List<SonPermissionObject> list = new ArrayList<>();
         try {
             String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
-            if (moduleAPI.isCheck("organize")) {
-                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
-                SonPermissionObject obj = new SonPermissionObject();
-                obj.setName("cuspermission");
-                obj.setDescribesion("设置");
-                Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
-                if (!isHasPermission) {
-                    //int code, String msg
-                    obj.setFlag(false);
-                } else {
-                    obj.setFlag(true);
-                }
-                list.add(obj);
+            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
             }
+            list.add(obj);
             return new ActResult(0, "设置权限", list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -381,10 +379,10 @@ public class RentalPreceptAct {
     public Result findArea(HttpServletRequest request) throws ActException {
         try {
             String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
-            List<AreaBO> list=new ArrayList<>();
+            List<AreaBO> list = new ArrayList<>();
             if (moduleAPI.isCheck("organize")) {
                 RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
-                list=departmentDetailAPI.findArea();
+                list = departmentDetailAPI.findArea();
             }
             return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
         } catch (SerException e) {
@@ -401,11 +399,11 @@ public class RentalPreceptAct {
     @GetMapping("v1/department")
     public Result department(HttpServletRequest request) throws ActException {
         try {
-            List<DepartmentDetailBO> list=new ArrayList<>();
+            List<DepartmentDetailBO> list = new ArrayList<>();
             String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             if (moduleAPI.isCheck("organize")) {
                 RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
-                list=departmentDetailAPI.findStatus();
+                list = departmentDetailAPI.findStatus();
             }
             return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
         } catch (SerException e) {
@@ -423,10 +421,10 @@ public class RentalPreceptAct {
     public Result position(HttpServletRequest request) throws ActException {
         try {
             String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
-            List<PositionDetailBO> list=new ArrayList<>();
+            List<PositionDetailBO> list = new ArrayList<>();
             if (moduleAPI.isCheck("organize")) {
                 RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
-                list=positionDetailAPI.findStatus();
+                list = positionDetailAPI.findStatus();
             }
             return ActResult.initialize(BeanTransform.copyProperties(list, PositionDetailVO.class, request));
         } catch (SerException e) {

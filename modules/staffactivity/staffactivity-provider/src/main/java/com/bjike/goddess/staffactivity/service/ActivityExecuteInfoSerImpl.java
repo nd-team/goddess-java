@@ -301,9 +301,12 @@ public class ActivityExecuteInfoSerImpl extends ServiceImpl<ActivityExecuteInfo,
                     MessageTO messageTO = new MessageTO();
                     messageTO.setTitle("您有活动执行未填写");
                     messageTO.setContent("您有活动执行未填写，请上系统填写");
-                    String[] r = new String[]{internalContactsAPI.getEmail(name)};
-                    messageTO.setReceivers(r);
-                    messageAPI.send(messageTO);
+                    String mail = internalContactsAPI.getEmail(name);
+                    if (null != mail) {
+                        String[] r = new String[]{mail};
+                        messageTO.setReceivers(r);
+                        messageAPI.send(messageTO);
+                    }
                 }
             }
         }

@@ -92,7 +92,6 @@ public class CourierAct extends BaseFileAction {
             SonPermissionObject obj = new SonPermissionObject();
             obj.setName("cuspermission");
             obj.setDescribesion("设置");
-            if (moduleAPI.isCheck("organize")) {
                 RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
                 Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
                 if (!isHasPermission) {
@@ -101,7 +100,6 @@ public class CourierAct extends BaseFileAction {
                 } else {
                     obj.setFlag(true);
                 }
-            }
             list.add(obj);
             return new ActResult(0, "设置权限", list);
         } catch (SerException e) {

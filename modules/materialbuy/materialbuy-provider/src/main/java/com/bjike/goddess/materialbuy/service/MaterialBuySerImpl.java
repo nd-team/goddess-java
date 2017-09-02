@@ -6,6 +6,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contacts.api.CommonalityAPI;
+import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.materialbuy.bo.AreaBuyStatusDayCollectBO;
 import com.bjike.goddess.materialbuy.bo.MaterialBuyBO;
@@ -69,6 +70,8 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
     private DeviceTypeSer deviceTypeSer;
     @Autowired
     private TempMatterDemandSer tempMatterDemandSer;
+    @Autowired
+    private InternalContactsAPI internalContactsAPI;
 
     private static String title = "有物资购买需要您审核";
 
@@ -287,9 +290,11 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
                 }
             }
         }
-        String[] mails = new String[emails.size()];
-        mails = emails.toArray(mails);
-        send(title, content, mails);
+        if (!emails.isEmpty()) {
+            String[] mails = new String[emails.size()];
+            mails = emails.toArray(mails);
+            send(title, content, mails);
+        }
         List<PositionDetailBO> list = positionDetailAPI.findStatus();
         List<UserBO> users = null;
         for (PositionDetailBO positionDetailBO : list) {
@@ -300,11 +305,18 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
         if (users != null) {
             List<String> list1 = new ArrayList<>();
             for (UserBO user : users) {
-                list1.add(user.getId());
+                list1.add(user.getUsername());
             }
-            String[] ids = new String[list1.size()];
-            ids = list1.toArray(ids);
-            send(title, content, ids);
+            if (!list1.isEmpty()) {
+                String[] names = new String[list1.size()];
+                names = list1.toArray(names);
+                List<String> mails=internalContactsAPI.getEmails(names);
+                if (!mails.isEmpty()){
+                    String[] strings=new String[mails.size()];
+                    strings=mails.toArray(strings);
+                    send(title, content, strings);
+                }
+            }
         }
     }
 
@@ -370,8 +382,10 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
             String title1 = "请确认网页链接";
             UserBO user = userAPI.findByUsername(model.getRequisitioner());
             if (user != null) {
-                String[] reciers = new String[]{user.getId()};
-                send(title1, content1, reciers);
+                String email = internalContactsAPI.getEmail(user.getUsername());
+                if (null != email) {
+                    send(title1, content1, new String[]{email});
+                }
             }
         }
     }

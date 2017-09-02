@@ -933,6 +933,7 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
                     if (entity.getEmployeeId().equals(l.getEmployeeId())) {
                         LevelShowTO levelShowTO = new LevelShowTO();
                         BeanUtils.copyProperties(entity, levelShowTO);
+                        levelShowTO.setPositiveDate(DateUtil.dateToString(entity.getPositiveDate()));
                         if (null != levelShowAPI.findByEmployeeId(l.getEmployeeId())) {
                             levelShowTO.setId(levelShowAPI.findByEmployeeId(l.getEmployeeId()).getId());
                             levelShowTO.setPromotionNum(entity.getPromotionNum() + 1);

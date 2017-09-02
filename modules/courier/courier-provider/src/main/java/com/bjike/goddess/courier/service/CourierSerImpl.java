@@ -650,7 +650,7 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                 to.setRequired(false);
                 to.setSend(false);
                 String token=RpcTransmit.getUserToken();
-                if (moduleAPI.isCheck("courier")) {
+                if (moduleAPI.isCheck("announcement")) {
                     RpcTransmit.transmitUserToken(token);
                     announcementAPI.addPerson(to);
                 }

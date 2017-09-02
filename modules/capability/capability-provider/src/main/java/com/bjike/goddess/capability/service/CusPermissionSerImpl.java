@@ -1,6 +1,5 @@
 package com.bjike.goddess.capability.service;
 
-import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.capability.bo.CusOperateBO;
 import com.bjike.goddess.capability.bo.CusPermissionBO;
 import com.bjike.goddess.capability.dto.CusPermissionDTO;
@@ -56,8 +55,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private CusPermissionOperateSer cusPermissionOperateSer;
-    @Autowired
-    private ModuleAPI moduleAPI;
 
     @Override
     public Long countPermission(CusPermissionDTO cusPermissionDTO) throws SerException {
@@ -103,7 +100,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
             List<OpinionBO> opinionBOS = new ArrayList<>();
             List<CusOperateBO> coboList = null;
             if (null != ids && ids.length != 0) {
-                if (moduleAPI.isCheck("organize")) {
                     if (CusPermissionType.LEVEL.equals(type)) {
                         opinionBOS = arrangementAPI.findByIds(ids);
                     } else if (CusPermissionType.MODULE.equals(type)) {
@@ -113,7 +109,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
                     } else if (CusPermissionType.DEPART.equals(type)) {
                         opinionBOS = departmentDetailAPI.findByIds(ids);
                     }
-                }
 
                 coboList = new ArrayList<>();
                 for (OpinionBO op : opinionBOS) {
@@ -161,7 +156,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         List<OpinionBO> opinionBOS = new ArrayList<>();
         List<CusOperateBO> coboList = new ArrayList<>();
         if (null != ids && ids.length != 0) {
-            if (moduleAPI.isCheck("organize")) {
                 if (CusPermissionType.LEVEL.equals(type)) {
                     //根据id数组查询名字和id
                     opinionBOS = arrangementAPI.findByIds(ids);
@@ -172,7 +166,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
                 } else if (CusPermissionType.DEPART.equals(type)) {
                     opinionBOS = departmentDetailAPI.findByIds(ids);
                 }
-            }
 
 
             for (OpinionBO op : opinionBOS) {
@@ -197,7 +190,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         }
         CusPermission cusPermission = super.findById(id);
         CusPermissionType type = cusPermission.getType();
-        if (moduleAPI.isCheck("organize")) {
             if (CusPermissionType.LEVEL.equals(type)) {
                 list = arrangementAPI.findThawOpinion();
             } else if (CusPermissionType.MODULE.equals(type)) {
@@ -208,7 +200,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
                 //TODO 部门查询
                 list = departmentDetailAPI.findThawOpinion();
             }
-        }
 
         return list;
     }
@@ -342,7 +333,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         //checkAsUserPosition
         //checkAsUserArrangement
         //checkAsUserModule
-        if (moduleAPI.isCheck("organize")) {
             Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
 //        Boolean arrangementFlag = positionDetailUserAPI.checkAsUserArrangement(userId, operateIds);
 //        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId, operateIds);
@@ -355,7 +345,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
             } else {
                 flag = false;
             }
-        }
 
         return flag;
     }
@@ -397,7 +386,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
         //TODO 部门id 商务部
 //        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId,operateIds);
-        if (moduleAPI.isCheck("organize")) {
             Boolean moduleFlag = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
 
             if (moduleFlag) {
@@ -405,7 +393,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
             } else {
                 flag = false;
             }
-        }
         RpcTransmit.transmitUserToken(userToken);
         String aa = RpcTransmit.getUserToken();
         return flag;
