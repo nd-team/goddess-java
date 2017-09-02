@@ -25,6 +25,7 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 头像帽业务实现
@@ -300,16 +301,17 @@ public class HeadPortraitHatSerImpl extends ServiceImpl<HeadPortraitHat, HeadPor
 
         HeadPortraitHat model = BeanTransform.copyProperties(to, HeadPortraitHat.class, true);
         model.setCreateUser(getCurrentUser().getUsername());
-        String path = "/headPortraitHat";
+//        String uuid= UUID.randomUUID().toString();
+//        String path = "/headPortraitHat/"+uuid;
 
-        if(null!=o){
-            RpcContext.getContext().setAttachment("storageToken",o.toString());
-        }
+//        if(null!=o){
+//            RpcContext.getContext().setAttachment("storageToken",o.toString());
+//        }
 //        fileAPI.upload(to.getMap(), path);
-        model.setUrl(path);
+//        model.setUrl(path);
         super.save(model);
-        to.setId(model.getId());
-        return BeanTransform.copyProperties(to, HeadPortraitHatBO.class);
+        HeadPortraitHatBO bo = BeanTransform.copyProperties(model,HeadPortraitHatBO.class);
+        return bo;
     }
 
     @Override

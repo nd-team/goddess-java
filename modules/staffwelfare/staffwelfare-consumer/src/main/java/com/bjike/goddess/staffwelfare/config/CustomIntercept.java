@@ -40,7 +40,7 @@ public class CustomIntercept implements Interceptor {
          * 登录拦截器
          */
         HIInfo loginInfo = new HIInfo(new LoginIntercept(userAPI), "/**");
-        HIInfo storage = new HIInfo(new StorageIntercept(storageUserAPI,"lgqhhh","123456","test"), "/**");
+        HIInfo storage = new HIInfo(new StorageIntercept(storageUserAPI,"staffwelfare","123456","staffwelfare"), "/**");
 
         /**
          * 顺序
