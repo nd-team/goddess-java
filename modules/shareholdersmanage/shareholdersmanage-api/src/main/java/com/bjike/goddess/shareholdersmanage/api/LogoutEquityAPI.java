@@ -2,7 +2,9 @@ package com.bjike.goddess.shareholdersmanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.shareholdersmanage.bo.LogoutEquityBO;
+import com.bjike.goddess.shareholdersmanage.bo.LogoutEquityLinkDateBO;
 import com.bjike.goddess.shareholdersmanage.dto.LogoutEquityDTO;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 import com.bjike.goddess.shareholdersmanage.to.LogoutEquityTO;
 
 import java.util.List;
@@ -17,6 +19,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface LogoutEquityAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 注销股权列表总条数
      */
@@ -72,5 +87,14 @@ public interface LogoutEquityAPI {
      */
     default void delete(String id) throws SerException {
         return;
+    }
+    /**
+     * 根据注销股东名称链接数据
+     *
+     * @param logoutShareName
+     * @throws SerException
+     */
+    default LogoutEquityLinkDateBO linkDateByName(String logoutShareName) throws SerException {
+        return null;
     }
 }

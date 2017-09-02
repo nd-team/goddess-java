@@ -14,6 +14,7 @@ import com.bjike.goddess.shareholdersmanage.bo.EquityInheritanceBO;
 import com.bjike.goddess.shareholdersmanage.bo.EquityTransactRecordBO;
 import com.bjike.goddess.shareholdersmanage.dto.EquityInheritanceDTO;
 import com.bjike.goddess.shareholdersmanage.to.EquityInheritanceTO;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 import com.bjike.goddess.shareholdersmanage.vo.EquityInheritanceVO;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,28 @@ public class EquityInheritanceAction {
     @Autowired
     private EquityTransactRecordAPI equityTransactRecordAPI;
 
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, javax.servlet.http.HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = equityInheritanceAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 列表总条数
      *
@@ -100,7 +123,7 @@ public class EquityInheritanceAction {
      * 添加股权继承
      *
      * @param equityInheritanceTO 股权继承to
-     * @return class EquityInheritanceBO
+     * @return class EquityInheritanceVO
      * @des 添加股权继承
      * @version v1
      */
@@ -120,7 +143,7 @@ public class EquityInheritanceAction {
      * 编辑股权继承
      *
      * @param equityInheritanceTO 股权继承数据bo
-     * @return class EquityTransferVO
+     * @return class EquityInheritanceVO
      * @des 股权继承转让
      * @version v1
      */

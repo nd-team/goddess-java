@@ -3,6 +3,7 @@ package com.bjike.goddess.shareholdersmanage.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.shareholdersmanage.bo.ShareChangeBO;
 import com.bjike.goddess.shareholdersmanage.dto.ShareChangeDTO;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 import com.bjike.goddess.shareholdersmanage.to.ShareChangeTO;
 
 import java.util.List;
@@ -17,6 +18,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ShareChangeAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 股东变更列表总条数
      */

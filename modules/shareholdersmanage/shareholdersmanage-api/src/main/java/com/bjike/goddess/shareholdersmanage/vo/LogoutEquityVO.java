@@ -48,7 +48,7 @@ public class LogoutEquityVO {
     /**
      * 注销日期
      */
-    private String LogoutDate;
+    private String logoutDate;
 
     /**
      * 备注
@@ -113,11 +113,11 @@ public class LogoutEquityVO {
     }
 
     public String getLogoutDate() {
-        return LogoutDate;
+        return logoutDate;
     }
 
     public void setLogoutDate(String logoutDate) {
-        LogoutDate = logoutDate;
+        this.logoutDate = logoutDate;
     }
 
     public String getRemark() {

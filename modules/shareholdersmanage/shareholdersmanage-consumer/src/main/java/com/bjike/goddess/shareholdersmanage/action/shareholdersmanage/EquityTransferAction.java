@@ -13,6 +13,7 @@ import com.bjike.goddess.shareholdersmanage.api.NewEquityAPI;
 import com.bjike.goddess.shareholdersmanage.bo.EquityTransferBO;
 import com.bjike.goddess.shareholdersmanage.dto.EquityTransferDTO;
 import com.bjike.goddess.shareholdersmanage.to.EquityTransferTO;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 import com.bjike.goddess.shareholdersmanage.vo.EquityTransferVO;
 import com.bjike.goddess.shareholdersmanage.vo.NewEquityLinkDateVO;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
@@ -40,6 +41,28 @@ public class EquityTransferAction {
     @Autowired
     private NewEquityAPI newEquityAPI;
 
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, javax.servlet.http.HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = equityTransferAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 列表总条数
      *
@@ -100,7 +123,7 @@ public class EquityTransferAction {
      * 添加股权转让
      *
      * @param equityTransferTO 股权转让to
-     * @return class EquityTransferBO
+     * @return class EquityTransferVO
      * @des 添加股权转让
      * @version v1
      */

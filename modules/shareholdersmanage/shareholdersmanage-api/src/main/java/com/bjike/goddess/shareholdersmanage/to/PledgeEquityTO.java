@@ -1,6 +1,11 @@
 package com.bjike.goddess.shareholdersmanage.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 质押股权
@@ -16,41 +21,49 @@ public class PledgeEquityTO extends BaseTO {
     /**
      * 地区
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "地区不能为空")
     private String area;
 
     /**
-     * 出资人
+     * 出质人
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "出质人不能为空")
     private String investor;
 
     /**
      * 债权人
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "债权人不能为空")
     private String creditor;
 
     /**
      * 担保人
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "担保人不能为空")
     private String guarantor;
 
     /**
      * 股权类型
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "股权类型不能为空")
     private String equityType;
 
     /**
      * 股权数量
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "股权数量不能为空")
     private Integer holdNum;
 
     /**
      * 金额
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "金额不能为空")
     private Double amount;
 
     /**
      * 出资日期
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "出资日期不能为空")
     private String pledgeDate;
 
     /**

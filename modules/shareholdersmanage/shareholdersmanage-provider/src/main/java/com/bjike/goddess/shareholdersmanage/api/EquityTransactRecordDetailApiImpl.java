@@ -6,6 +6,7 @@ import com.bjike.goddess.shareholdersmanage.bo.EquityTransactRecordDetailBO;
 import com.bjike.goddess.shareholdersmanage.dto.EquityTransactRecordDetailDTO;
 import com.bjike.goddess.shareholdersmanage.service.EquityTransactRecordDetailSer;
 import com.bjike.goddess.shareholdersmanage.to.EquityTransactRecordDetailTO;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,16 @@ import java.util.List;
 public class EquityTransactRecordDetailApiImpl implements EquityTransactRecordDetailAPI {
     @Autowired
     private EquityTransactRecordDetailSer equityTransactRecordDetailSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return equityTransactRecordDetailSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return equityTransactRecordDetailSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countTranDetail(EquityTransactRecordDetailDTO equityTransactRecordDetailDTO) throws SerException {
@@ -63,6 +74,11 @@ public class EquityTransactRecordDetailApiImpl implements EquityTransactRecordDe
     @Override
     public List<EquityTransactRecordDetailBO> getByName(String shareholderName) throws SerException {
         return equityTransactRecordDetailSer.getByName(shareholderName);
+    }
+
+    @Override
+    public List<EquityTransactRecordDetailBO> getByTransactId(String transactId) throws SerException {
+        return equityTransactRecordDetailSer.getByTransactId(transactId);
     }
 
     @Override

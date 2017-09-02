@@ -1,6 +1,9 @@
 package com.bjike.goddess.shareholdersmanage.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 股权赠与
@@ -16,26 +19,31 @@ public class EquityGiftTO extends BaseTO {
     /**
      * 地区
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "地区不能为空")
     private String area;
 
     /**
      * 受赠人
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "受赠人不能为空")
     private String donee;
 
     /**
      * 赠与人
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "赠与人不能为空")
     private String donor;
 
     /**
      * 股权类型
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "股权类型不能为空")
     private String equityType;
 
     /**
      * 赠与日期
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "赠与日期不能为空")
     private String heirDate;
 
     /**

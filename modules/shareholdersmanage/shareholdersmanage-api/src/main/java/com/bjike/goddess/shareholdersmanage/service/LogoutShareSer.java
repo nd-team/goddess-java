@@ -6,6 +6,7 @@ import com.bjike.goddess.shareholdersmanage.bo.LogoutShareBO;
 import com.bjike.goddess.shareholdersmanage.bo.LogoutShareLinkDateBO;
 import com.bjike.goddess.shareholdersmanage.dto.LogoutShareDTO;
 import com.bjike.goddess.shareholdersmanage.entity.LogoutShare;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 import com.bjike.goddess.shareholdersmanage.to.LogoutShareTO;
 
 import java.util.List;
@@ -20,6 +21,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface LogoutShareSer extends Ser<LogoutShare, LogoutShareDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 注销股东列表总条数
      */

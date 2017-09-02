@@ -1,5 +1,6 @@
 package com.bjike.goddess.shareholdersmanage.excel;
 
+import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.shareholdersmanage.type.Gender;
@@ -18,7 +19,7 @@ import java.time.LocalDate;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class ShareOpenAccountExport extends BaseTO{
+public class ShareOpenAccountExport extends BaseBO{
 
     /**
      * 地区

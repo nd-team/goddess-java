@@ -59,14 +59,14 @@ public class ShareOutBonusDetail extends BaseEntity {
     /**
      * 税后利润
      */
-    @Column(name = "AfterTaxProfits", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '税后利润'")
-    private Double AfterTaxProfits;
+    @Column(name = "afterTaxProfits", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '税后利润'")
+    private Double afterTaxProfits;
 
     /**
      * 分红管理id
      */
-    @Column(name = "ShareOutBonusManageId", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '分红管理id'")
-    private String ShareOutBonusManageId;
+    @Column(name = "shareOutBonusManageId", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '分红管理id'")
+    private String shareOutBonusManageId;
 
 
     public String getShareholderName() {
@@ -118,18 +118,18 @@ public class ShareOutBonusDetail extends BaseEntity {
     }
 
     public Double getAfterTaxProfits() {
-        return AfterTaxProfits;
+        return afterTaxProfits;
     }
 
-    public void setAfterTaxProfits(Double AfterTaxProfits) {
-        this.AfterTaxProfits = AfterTaxProfits;
+    public void setAfterTaxProfits(Double afterTaxProfits) {
+        this.afterTaxProfits = afterTaxProfits;
     }
 
     public String getShareOutBonusManageId() {
-        return ShareOutBonusManageId;
+        return shareOutBonusManageId;
     }
 
-    public void setShareOutBonusManageId(String ShareOutBonusManageId) {
-        this.ShareOutBonusManageId = ShareOutBonusManageId;
+    public void setShareOutBonusManageId(String shareOutBonusManageId) {
+        this.shareOutBonusManageId = shareOutBonusManageId;
     }
 }

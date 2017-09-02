@@ -9,6 +9,17 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
 * @Version:		[ v1.0.0 ]
 * @Copy:   		[ com.bjike ]
 */
-public class PledgeEquityDTO extends BaseDTO { 
+public class PledgeEquityDTO extends BaseDTO {
+ /**
+  * 地区
+  */
+ private String area;
 
+ public String getArea() {
+  return area;
+ }
+
+ public void setArea(String area) {
+  this.area = area;
+ }
  }

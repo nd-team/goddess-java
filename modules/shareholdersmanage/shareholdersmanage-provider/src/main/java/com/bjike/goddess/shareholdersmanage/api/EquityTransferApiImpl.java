@@ -5,6 +5,7 @@ import com.bjike.goddess.shareholdersmanage.bo.EquityTransferBO;
 import com.bjike.goddess.shareholdersmanage.dto.EquityTransferDTO;
 import com.bjike.goddess.shareholdersmanage.service.EquityTransferSer;
 import com.bjike.goddess.shareholdersmanage.to.EquityTransferTO;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,16 @@ import java.util.List;
 public class EquityTransferApiImpl implements EquityTransferAPI {
     @Autowired
     private EquityTransferSer equityTransferSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return equityTransferSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return equityTransferSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countEquityfer(EquityTransferDTO equityTransferDTO) throws SerException {

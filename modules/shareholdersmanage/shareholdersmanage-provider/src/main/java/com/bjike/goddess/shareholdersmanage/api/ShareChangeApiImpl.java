@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.shareholdersmanage.bo.ShareChangeBO;
 import com.bjike.goddess.shareholdersmanage.dto.ShareChangeDTO;
 import com.bjike.goddess.shareholdersmanage.service.ShareChangeSer;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 import com.bjike.goddess.shareholdersmanage.to.ShareChangeTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,16 @@ import java.util.List;
 public class ShareChangeApiImpl implements ShareChangeAPI {
     @Autowired
     private ShareChangeSer shareChangeSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return shareChangeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return shareChangeSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countShareChange(ShareChangeDTO shareChangeDTO) throws SerException {

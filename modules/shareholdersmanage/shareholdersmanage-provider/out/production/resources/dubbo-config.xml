@@ -36,6 +36,9 @@
 	<dubbo:service ref="shareOpenAccountApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.ShareOpenAccountAPI" />
 	<dubbo:service ref="shareOutBonusDetailApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.ShareOutBonusDetailAPI" />
 	<dubbo:service ref="shareOutBonusManageApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.ShareOutBonusManageAPI" />
+	<dubbo:service ref="fairChangeApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.FairChangeAPI" />
+	<dubbo:service ref="cusPermissionApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.CusPermissionAPI" />
+	<dubbo:service ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.CusPermissionOperateAPI" />
 
 	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
         否则不需要配置-->
@@ -48,7 +51,7 @@
 	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
 	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
 	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
-
+	<dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
 	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
 	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
 </beans>

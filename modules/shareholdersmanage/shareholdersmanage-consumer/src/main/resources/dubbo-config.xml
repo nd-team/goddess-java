@@ -36,6 +36,9 @@
 	<dubbo:reference  validation="true" id="shareOpenAccountApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.ShareOpenAccountAPI" />
 	<dubbo:reference  validation="true" id="shareOutBonusDetailApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.ShareOutBonusDetailAPI" />
 	<dubbo:reference  validation="true" id="shareOutBonusManageApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.ShareOutBonusManageAPI" />
+	<dubbo:reference  validation="true" id="fairChangeApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.FairChangeAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.CusPermissionAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.CusPermissionOperateAPI" />
 
 
 

@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.shareholdersmanage.bo.ShareOpenAccountBO;
 import com.bjike.goddess.shareholdersmanage.dto.ShareOpenAccountDTO;
 import com.bjike.goddess.shareholdersmanage.entity.ShareOpenAccount;
+import com.bjike.goddess.shareholdersmanage.excel.SonPermissionObject;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 import com.bjike.goddess.shareholdersmanage.to.ShareOpenAccountBTO;
 import com.bjike.goddess.shareholdersmanage.to.ShareOpenAccountTO;
 
@@ -20,6 +22,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ShareOpenAccountSer extends Ser<ShareOpenAccount, ShareOpenAccountDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 股东开户列表总条数
      */
@@ -131,6 +147,14 @@ public interface ShareOpenAccountSer extends Ser<ShareOpenAccount, ShareOpenAcco
      * @throws SerException
      */
     default List<String> findShareholderName() throws SerException {
+        return null;
+    }
+    /**
+     * 查看所有的地区
+     *
+     * @throws SerException
+     */
+    default List<String> findArea() throws SerException {
         return null;
     }
 }

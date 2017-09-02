@@ -6,6 +6,7 @@ import com.bjike.goddess.shareholdersmanage.bo.ChangeEquityTypeBO;
 import com.bjike.goddess.shareholdersmanage.dto.ChangeEquityTypeDTO;
 import com.bjike.goddess.shareholdersmanage.entity.ChangeEquityType;
 import com.bjike.goddess.shareholdersmanage.to.ChangeEquityTypeTO;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -20,6 +21,19 @@ import java.util.List;
  */
 public interface ChangeEquityTypeSer extends Ser<ChangeEquityType, ChangeEquityTypeDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 变更股权类型列表总条数
      */
@@ -50,7 +64,7 @@ public interface ChangeEquityTypeSer extends Ser<ChangeEquityType, ChangeEquityT
     /**
      * 变更股权类型添加
      *
-     * @param changeEquityTypeTO 注销股权数据to
+     * @param changeEquityTypeTO 变更股权类型to
      * @throws SerException
      */
     default ChangeEquityTypeBO save(ChangeEquityTypeTO changeEquityTypeTO) throws SerException {

@@ -5,6 +5,7 @@ import com.bjike.goddess.shareholdersmanage.bo.EquityInheritanceBO;
 import com.bjike.goddess.shareholdersmanage.dto.EquityInheritanceDTO;
 import com.bjike.goddess.shareholdersmanage.service.EquityInheritanceSer;
 import com.bjike.goddess.shareholdersmanage.to.EquityInheritanceTO;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,16 @@ import java.util.List;
 public class EquityInheritanceApiImpl implements EquityInheritanceAPI {
     @Autowired
     private EquityInheritanceSer equityInheritanceSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return equityInheritanceSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return equityInheritanceSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countInheritance(EquityInheritanceDTO equityInheritanceDTO) throws SerException {

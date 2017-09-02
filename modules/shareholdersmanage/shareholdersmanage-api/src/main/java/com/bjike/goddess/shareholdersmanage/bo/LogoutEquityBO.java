@@ -46,7 +46,7 @@ public class LogoutEquityBO extends BaseBO {
     /**
      * 注销日期
      */
-    private String LogoutDate;
+    private String logoutDate;
 
     /**
      * 备注
@@ -103,11 +103,11 @@ public class LogoutEquityBO extends BaseBO {
     }
 
     public String getLogoutDate() {
-        return LogoutDate;
+        return logoutDate;
     }
 
     public void setLogoutDate(String logoutDate) {
-        LogoutDate = logoutDate;
+        this.logoutDate = logoutDate;
     }
 
     public String getRemark() {

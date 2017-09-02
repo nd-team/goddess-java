@@ -15,6 +15,7 @@ import com.bjike.goddess.shareholdersmanage.bo.ShareAndTypeBO;
 import com.bjike.goddess.shareholdersmanage.dto.EquityTransactRecordDTO;
 import com.bjike.goddess.shareholdersmanage.entity.EquityTransactRecord;
 import com.bjike.goddess.shareholdersmanage.to.EquityTransactRecordTO;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 import com.bjike.goddess.shareholdersmanage.to.ShareOpenDeleteFileTO;
 import com.bjike.goddess.shareholdersmanage.vo.EquityTransactRecordDetailVO;
 import com.bjike.goddess.shareholdersmanage.vo.EquityTransactRecordVO;
@@ -49,6 +50,28 @@ public class EquityTransactRecordAction{
     private EquityTransactRecordAPI equityTransactRecordAPI;
     @Autowired
     private EquityTransactRecordDetailAPI equityTransactRecordDetailAPI;
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, javax.servlet.http.HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = equityTransactRecordAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 列表总条数
      *
@@ -162,11 +185,26 @@ public class EquityTransactRecordAction{
      * @version v1
      */
     @GetMapping("v1/findName/type")
-    public Result findNameByType(String  equityType, HttpServletRequest request) throws ActException {
+    public Result findNameByType(@RequestParam String  equityType, HttpServletRequest request) throws ActException {
         try {
             List<String> name = new ArrayList<>();
             name = equityTransactRecordAPI.getNameByEquityType(equityType);
             return ActResult.initialize(name);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 所有的股权类型
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findEquityType")
+    public Result findEquityType() throws ActException {
+        try {
+            List<String> type = new ArrayList<>();
+            type = equityTransactRecordAPI.findEquityType();
+            return ActResult.initialize(type);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

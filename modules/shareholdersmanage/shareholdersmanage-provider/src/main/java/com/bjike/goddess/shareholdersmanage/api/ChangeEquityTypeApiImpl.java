@@ -6,6 +6,7 @@ import com.bjike.goddess.shareholdersmanage.dto.ChangeEquityTypeDTO;
 import com.bjike.goddess.shareholdersmanage.entity.ChangeEquityType;
 import com.bjike.goddess.shareholdersmanage.service.ChangeEquityTypeSer;
 import com.bjike.goddess.shareholdersmanage.to.ChangeEquityTypeTO;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,17 @@ import java.util.List;
 public class ChangeEquityTypeApiImpl implements ChangeEquityTypeAPI {
     @Autowired
     private ChangeEquityTypeSer changeEquityTypeSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return changeEquityTypeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return changeEquityTypeSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long countChangeType(ChangeEquityTypeDTO changeEquityTypeDTO) throws SerException {
         return changeEquityTypeSer.countChangeType(changeEquityTypeDTO);

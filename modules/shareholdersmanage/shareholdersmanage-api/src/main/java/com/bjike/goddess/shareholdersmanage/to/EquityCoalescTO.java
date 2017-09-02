@@ -1,6 +1,11 @@
 package com.bjike.goddess.shareholdersmanage.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 股权合并
@@ -16,36 +21,43 @@ public class EquityCoalescTO extends BaseTO {
     /**
      * 地区
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "地区不能为空")
     private String area;
 
     /**
      * 合并方
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "合并方不能为空")
     private String combined;
 
     /**
      * 被合并方
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "被合并方不能为空")
     private String beCombined;
 
     /**
      * 合并方式
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "合并方式不能为空")
     private String coalescWay;
 
     /**
      * 合并日期
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "合并日期不能为空")
     private String coalescDate;
 
     /**
      * 占股比例
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "占股比例不能为空")
     private Double percentage;
 
     /**
      * 金额
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "金额不能为空")
     private Double amount;
 
     /**

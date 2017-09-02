@@ -19,7 +19,7 @@ public class PledgeEquityBO extends BaseBO {
     private String area;
 
     /**
-     * 出资人
+     * 出质人
      */
     private String investor;
 

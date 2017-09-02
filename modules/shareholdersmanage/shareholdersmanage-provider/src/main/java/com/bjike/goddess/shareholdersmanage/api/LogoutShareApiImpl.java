@@ -5,6 +5,7 @@ import com.bjike.goddess.shareholdersmanage.bo.LogoutShareBO;
 import com.bjike.goddess.shareholdersmanage.bo.LogoutShareLinkDateBO;
 import com.bjike.goddess.shareholdersmanage.dto.LogoutShareDTO;
 import com.bjike.goddess.shareholdersmanage.service.LogoutShareSer;
+import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 import com.bjike.goddess.shareholdersmanage.to.LogoutShareTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,16 @@ import java.util.List;
 public class LogoutShareApiImpl implements LogoutShareAPI {
     @Autowired
     private LogoutShareSer logoutShareSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return logoutShareSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return logoutShareSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countLogout(LogoutShareDTO logoutShareDTO) throws SerException {
