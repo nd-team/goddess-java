@@ -476,6 +476,8 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     public List<BaseInfoManageBO> listBaseInfoManage() throws SerException {
         List<BaseInfoManageBO> list = new ArrayList<>(0);
         if(moduleAPI.isCheck("businessproject")) {
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
             BaseInfoManageDTO dto = new BaseInfoManageDTO();
             list = baseInfoManageAPI.listBaseInfoManage(dto);
         }
@@ -486,6 +488,8 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     public List<MarketInfoBO> findProject() throws SerException {
         List<MarketInfoBO> list = new ArrayList<>(0);
         if(moduleAPI.isCheck("market")){
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
             MarketInfoDTO dto = new MarketInfoDTO();
             list = marketInfoAPI.findListMarketInfo(dto);
         }
