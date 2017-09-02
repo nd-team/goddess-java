@@ -225,6 +225,7 @@ public class PositionIndexSetSerImpl extends ServiceImpl<PositionIndexSet, Posit
         temp.setDataOrigin(positionIndexSetTO.getDataOrigin());
         temp.setExamDuring(positionIndexSetTO.getExamDuring());
         temp.setModifyTime(LocalDateTime.now());
+        temp.setPositionerNumber(positionIndexSetTO.getPositionerNumber());
 
         //修改上面的完成值
         if (temp.getSeperateComeStatus().equals(SeperateComeStatus.DEPARTMONTH)) {
