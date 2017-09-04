@@ -194,11 +194,11 @@ public class StaffBirthDaySerImpl extends ServiceImpl<StaffBirthDay, StaffBirthD
     @Override
     public List<StaffBirthDayBO> findBirthDay(StaffBirthDayDTO dto) throws SerException {
         List<StaffBirthDayBO> boList = new ArrayList<>(0);
-        if (moduleAPI.isCheck("archive")) {
+//        if (moduleAPI.isCheck("archive")) {
             List<StaffRecordsBO> staffRecordsBOS = staffRecordsAPI.findByMonth(dto.getMonth());
             List<StaffBirthDayBO> bos = new ArrayList<>(staffRecordsBOS.size());
             if (staffRecordsBOS != null && staffRecordsBOS.size() > 0) {
-                if (moduleAPI.isCheck("dimission")) {
+//                if (moduleAPI.isCheck("dimission")) {
                     for (StaffRecordsBO staffRecordsBO : staffRecordsBOS) {
                         List<DimissionInfo> infoList = dimissionInfoAPI.findByName(staffRecordsBO.getUsername());
                         if (infoList != null && infoList.size() > 0) {
@@ -232,7 +232,7 @@ public class StaffBirthDaySerImpl extends ServiceImpl<StaffBirthDay, StaffBirthD
                         }
                     }
 
-                }
+//                }
             } else {
                 for (StaffRecordsBO staffRecordsBO : staffRecordsBOS) {
                     List<EntryBasicInfoBO> entryBasicInfo = entryBasicInfoAPI.getByEmpNumber(staffRecordsBO.getSerialNumber());
@@ -248,7 +248,7 @@ public class StaffBirthDaySerImpl extends ServiceImpl<StaffBirthDay, StaffBirthD
                     boList.add(staffBirthDayBO);
                 }
             }
-        }
+//        }
         return boList;
     }
 }
