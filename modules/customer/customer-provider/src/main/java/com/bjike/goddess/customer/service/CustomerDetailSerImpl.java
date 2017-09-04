@@ -38,15 +38,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -249,7 +245,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
     public CustomerDetailBO addCustomerDetail(CustomerDetailTO customerDetailTO) throws SerException {
         //商务模块添加权限
 //        checkAddIdentity("4");
-        if( StringUtils.isBlank( customerDetailTO.getCustomerNum())){
+        if (StringUtils.isBlank(customerDetailTO.getCustomerNum())) {
             throw new SerException("客户编号不能为空");
         }
         String baseInfoNum = customerDetailTO.getCustomerNum();
@@ -260,7 +256,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
         CustomerDetail customerDetail = BeanTransform.copyProperties(customerDetailTO, CustomerDetail.class, true);
         customerDetail.setCreateTime(LocalDateTime.now());
         customerDetail.setCustomerBaseInfo(baseInfo);
-        customerDetail.setSortWord( Double.parseDouble(baseInfoNum.substring(4, baseInfoNum.length())) );
+        customerDetail.setSortWord(Double.parseDouble(baseInfoNum.substring(4, baseInfoNum.length())));
         customerDetail = super.save(customerDetail);
 
         //添加家庭信息4条家庭信息
@@ -415,12 +411,12 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
             for (CustomerBaseInfo str : baseList) {
                 String customerNum = str.getCustomerNum();//客户信息编号
                 String level = str.getCustomerLevel().getName();//客户级别
-                String customerType = covertCustomerType( str.getCustomerType() );//客户类别
-                String customerStatus =covertCustomerStatus( str.getCustomerStatus() );//客户状态
+                String customerType = covertCustomerType(str.getCustomerType());//客户类别
+                String customerStatus = covertCustomerStatus(str.getCustomerStatus());//客户状态
                 String origin = str.getOrigin();//客户来源
                 Double relation = str.getRelation();//关系程度
                 String customerName = str.getCustomerName();//客户姓名
-                String customerSex = covertCustomerSex( str.getCustomerSex() );//性别
+                String customerSex = covertCustomerSex(str.getCustomerSex());//性别
 //                Integer age = str.getArea();//年龄
 //                String customerName = str.getCustomerName();//出生年月日
                 String area = str.getArea();//地区
@@ -444,7 +440,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
                 if (detailList != null && detailList.size() > 0) {
                     for (CustomerDetail customerDetail : detailList) {
                         Integer age = customerDetail.getAge();//年龄
-                        String birthday = (null == customerDetail.getBirthday()? "":customerDetail.getBirthday().toString());//出生年月日
+                        String birthday = (null == customerDetail.getBirthday() ? "" : customerDetail.getBirthday().toString());//出生年月日
                         String workExperience = customerDetail.getWorkExperience();//工作经历
                         String studyExperience = customerDetail.getStudyExperience();//求学经历
                         String love = customerDetail.getLove();//爱好
@@ -609,6 +605,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
         }
         return str;
     }
+
     private String covertCustomerStatus(CustomerStatus customerStatus) throws SerException {
         String str = "";
         switch (customerStatus) {
@@ -627,6 +624,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
         }
         return str;
     }
+
     private String covertCustomerSex(CustomerSex customerSex) throws SerException {
         String str = "";
         switch (customerSex) {

@@ -9,16 +9,16 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.shareholdersmanage.api.EquityTransactRecordAPI;
 import com.bjike.goddess.shareholdersmanage.api.ShareOutBonusDetailAPI;
 import com.bjike.goddess.shareholdersmanage.api.ShareOutBonusManageAPI;
-import com.bjike.goddess.shareholdersmanage.bo.ShareOutBonusDetailBO;
-import com.bjike.goddess.shareholdersmanage.bo.ShareOutBonusManageBO;
-import com.bjike.goddess.shareholdersmanage.bo.ShareRosterBO;
-import com.bjike.goddess.shareholdersmanage.bo.ShareRosterDetailBO;
+import com.bjike.goddess.shareholdersmanage.bo.*;
 import com.bjike.goddess.shareholdersmanage.dto.ShareOutBonusDetailDTO;
 import com.bjike.goddess.shareholdersmanage.dto.ShareOutBonusManageDTO;
+import com.bjike.goddess.shareholdersmanage.entity.EquityTransactRecord;
 import com.bjike.goddess.shareholdersmanage.entity.ShareOutBonusDetail;
 import com.bjike.goddess.shareholdersmanage.entity.ShareOutBonusManage;
+import com.bjike.goddess.shareholdersmanage.service.EquityTransactRecordSer;
 import com.bjike.goddess.shareholdersmanage.to.GuidePermissionTO;
 import com.bjike.goddess.shareholdersmanage.to.ShareOutBonusDetailTO;
 import com.bjike.goddess.shareholdersmanage.to.ShareOutBonusManageTO;
@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,6 +50,8 @@ public class ShareOutBonusManageAction extends BaseFileAction{
     private ShareOutBonusDetailAPI shareOutBonusDetailAPI;
     @Autowired
     private ShareOutBonusManageAPI shareOutBonusManageAPI;
+    @Autowired
+    private EquityTransactRecordAPI equityTransactRecordAPI;
     /**
      * 功能导航权限
      *
@@ -396,6 +399,43 @@ public class ShareOutBonusManageAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         } catch (IOException e1) {
             throw new ActException(e1.getMessage());
+        }
+    }
+    /**
+     * 添加时根据类型获取股东名称
+     *
+     * @param id 分类管理id
+     * @des 根据类型获取股东名称
+     * @version v1
+     */
+    @GetMapping("v1/findShareholderNameBy/type")
+    public Result getLinkDate(@RequestParam String id) throws ActException {
+        try {
+            List<String> shareholderNames = new ArrayList<>();
+            ShareOutBonusManageBO shareOutBonusManageBO = shareOutBonusManageAPI.getOne(id);
+            shareholderNames = equityTransactRecordAPI.getNameByEquityType(shareOutBonusManageBO.getEquityType());
+            return ActResult.initialize(shareholderNames);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 编辑时根据类型获取股东名称
+     *
+     * @param id 分类明细id
+     * @des 根据类型获取股东名称
+     * @version v1
+     */
+    @GetMapping("v1/editName/type")
+    public Result getEditNameByType(@RequestParam String id) throws ActException {
+        try {
+            List<String> shareholderNames = new ArrayList<>();
+            ShareOutBonusDetailBO shareOutBonusDetailBO = shareOutBonusDetailAPI.getOne(id);
+            EquityTransactRecordBO equityTransactRecordBO = equityTransactRecordAPI.getByName(shareOutBonusDetailBO.getShareholderName());
+            shareholderNames = equityTransactRecordAPI.getNameByEquityType(equityTransactRecordBO.getEquityType());
+            return ActResult.initialize(shareholderNames);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
         }
     }
 }
