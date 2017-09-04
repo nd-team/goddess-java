@@ -370,11 +370,11 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
     @Override
     public List<AreaBO> findArea() throws SerException {
         List<AreaBO> boList = new ArrayList<>(0);
-        if (moduleAPI.isCheck("organize")) {
+//        if (moduleAPI.isCheck("organize")) {
             String userToken = RpcTransmit.getUserToken();
             RpcTransmit.transmitUserToken(userToken);
             boList = departmentDetailAPI.findArea();
-        }
+//        }
         return boList;
     }
 

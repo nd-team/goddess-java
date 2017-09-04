@@ -165,7 +165,7 @@ public class EnterpriseCultureInfoAct {
 
 
     /**
-     * 宣传方案
+     * 宣传方案e
      *
      * @param id 企业文化信息id
      * @return class PublicizeProgramInfoVO

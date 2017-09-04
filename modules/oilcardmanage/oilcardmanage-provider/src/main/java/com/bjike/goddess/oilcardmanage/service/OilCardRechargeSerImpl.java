@@ -432,7 +432,7 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
     @Override
     public List<DispatchCarInfoBO> findDispatch(String oilCardCode, String startTime, String endTime) throws SerException {
         List<DispatchCarInfoBO> bos = new ArrayList<>(0);
-        if(moduleAPI.isCheck("dispatchcarinfo")) {
+//        if(moduleAPI.isCheck("dispatchcarinfo")) {
             String userToken = RpcTransmit.getUserToken();
             RpcTransmit.transmitUserToken(userToken);
             DispatchCarInfoDTO dto = new DispatchCarInfoDTO();
@@ -441,7 +441,7 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
             dto.getConditions().add(Restrict.lt("addOilTime", endTime));
             dto.getConditions().add(Restrict.eq("oilCardNumber", oilCardCode));
             bos = dispatchCarInfoAPI.pageList(dto);
-        }
+//        }
         return bos;
     }
 }
