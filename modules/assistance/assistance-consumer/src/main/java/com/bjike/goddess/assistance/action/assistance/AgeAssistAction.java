@@ -1,7 +1,6 @@
 package com.bjike.goddess.assistance.action.assistance;
 
 import com.alibaba.dubbo.rpc.RpcContext;
-import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.assistance.api.AgeAssistAPI;
 import com.bjike.goddess.assistance.bo.AgeAssistBO;
 import com.bjike.goddess.assistance.dto.AgeAssistDTO;
@@ -43,8 +42,6 @@ public class AgeAssistAction {
     private AgeAssistAPI ageAssistAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
-    @Autowired
-    private ModuleAPI moduleAPI;
 
     /**
      * 模块设置导航权限
@@ -58,20 +55,18 @@ public class AgeAssistAction {
         List<SonPermissionObject> list = new ArrayList<>();
         try {
             String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
-            if (moduleAPI.isCheck("organize")) {
-                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
-                SonPermissionObject obj = new SonPermissionObject();
-                obj.setName("cuspermission");
-                obj.setDescribesion("设置");
-                Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
-                if (!isHasPermission) {
-                    //int code, String msg
-                    obj.setFlag(false);
-                } else {
-                    obj.setFlag(true);
-                }
-                list.add(obj);
+            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
             }
+            list.add(obj);
             return new ActResult(0, "设置权限", list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

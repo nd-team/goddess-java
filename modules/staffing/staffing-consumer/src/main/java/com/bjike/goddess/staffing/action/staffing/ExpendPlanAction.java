@@ -76,19 +76,17 @@ public class ExpendPlanAction {
         try {
             String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             SonPermissionObject obj = new SonPermissionObject();
-            if (moduleAPI.isCheck("organize")) {
-                obj.setName("cuspermission");
-                obj.setDescribesion("设置");
-                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
-                Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
-                if (!isHasPermission) {
-                    //int code, String msg
-                    obj.setFlag(false);
-                } else {
-                    obj.setFlag(true);
-                }
-                list.add(obj);
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
             }
+            list.add(obj);
             return new ActResult(0, "设置权限", list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -418,7 +416,7 @@ public class ExpendPlanAction {
      * @version v1
      */
     @GetMapping("v1/find")
-    public Result find(@Validated(ExpendPlanDTO.FIND.class) ExpendPlanDTO dto, BindingResult result,HttpServletRequest request) throws ActException {
+    public Result find(@Validated(ExpendPlanDTO.FIND.class) ExpendPlanDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             if (moduleAPI.isCheck("projectcost")) {

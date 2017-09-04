@@ -1,6 +1,5 @@
 package com.bjike.goddess.customer.service;
 
-import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -56,8 +55,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private CusPermissionOperateSer cusPermissionOperateSer;
-    @Autowired
-    private ModuleAPI moduleAPI;
 
     @Override
     public Long countPermission(CusPermissionDTO cusPermissionDTO) throws SerException {
@@ -103,7 +100,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
             List<OpinionBO> opinionBOS = new ArrayList<>();
             List<CusOperateBO> coboList = null;
             if (null != ids && ids.length != 0) {
-                if (moduleAPI.isCheck("organize")) {
                     if (CusPermissionType.LEVEL.equals(type)) {
                         opinionBOS = arrangementAPI.findByIds(ids);
                     } else if (CusPermissionType.MODULE.equals(type)) {
@@ -113,7 +109,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
                     } else if (CusPermissionType.DEPART.equals(type)) {
                         opinionBOS = departmentDetailAPI.findByIds(ids);
                     }
-                }
                 coboList = new ArrayList<>();
                 for (OpinionBO op : opinionBOS) {
                     CusOperateBO cobo = new CusOperateBO();
@@ -161,20 +156,15 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         List<OpinionBO> opinionBOS = new ArrayList<>();
         List<CusOperateBO> coboList = new ArrayList<>();
         if (null != ids && ids.length != 0) {
-            RpcTransmit.transmitUserToken( userToken );
-            if (moduleAPI.isCheck("organize")) {
-                RpcTransmit.transmitUserToken( userToken );
-
-                if (CusPermissionType.LEVEL.equals(type)) {
-                    //根据id数组查询名字和id
-                    opinionBOS = arrangementAPI.findByIds(ids);
-                } else if (CusPermissionType.MODULE.equals(type)) {
-                    opinionBOS = moduleTypeAPI.findByIds(ids);
-                } else if (CusPermissionType.POSITION.equals(type)) {
-                    opinionBOS = positionDetailAPI.findByIds(ids);
-                } else if (CusPermissionType.DEPART.equals(type)) {
-                    opinionBOS = departmentDetailAPI.findByIds(ids);
-                }
+            if (CusPermissionType.LEVEL.equals(type)) {
+                //根据id数组查询名字和id
+                opinionBOS = arrangementAPI.findByIds(ids);
+            } else if (CusPermissionType.MODULE.equals(type)) {
+                opinionBOS = moduleTypeAPI.findByIds(ids);
+            } else if (CusPermissionType.POSITION.equals(type)) {
+                opinionBOS = positionDetailAPI.findByIds(ids);
+            } else if (CusPermissionType.DEPART.equals(type)) {
+                opinionBOS = departmentDetailAPI.findByIds(ids);
             }
 
 
@@ -201,9 +191,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         }
         CusPermission cusPermission = super.findById(id);
         CusPermissionType type = cusPermission.getType();
-        RpcTransmit.transmitUserToken( userToken );
-        if (moduleAPI.isCheck("organize")) {
-            RpcTransmit.transmitUserToken( userToken );
             if (CusPermissionType.LEVEL.equals(type)) {
                 list = arrangementAPI.findThawOpinion();
             } else if (CusPermissionType.MODULE.equals(type)) {
@@ -214,7 +201,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
                 //TODO 部门查询
                 list = departmentDetailAPI.findThawOpinion();
             }
-        }
         return list;
     }
 

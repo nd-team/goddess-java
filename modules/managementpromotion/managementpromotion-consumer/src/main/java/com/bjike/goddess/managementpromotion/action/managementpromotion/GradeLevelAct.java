@@ -1,7 +1,6 @@
 package com.bjike.goddess.managementpromotion.action.managementpromotion;
 
 import com.alibaba.dubbo.rpc.RpcContext;
-import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -45,8 +44,6 @@ public class GradeLevelAct {
     private GradeLevelAPI gradeLevelAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
-    @Autowired
-    private ModuleAPI moduleAPI;
 
     /**
      * 模块设置导航权限
@@ -59,21 +56,19 @@ public class GradeLevelAct {
     public Result i(HttpServletRequest request) throws ActException {
         List<SonPermissionObject> list = new ArrayList<>();
         try {
-            String token=request.getHeader(RpcCommon.USER_TOKEN).toString();
-            if (moduleAPI.isCheck("organize")) {
-                SonPermissionObject obj = new SonPermissionObject();
-                obj.setName("cuspermission");
-                obj.setDescribesion("设置");
-                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
-                Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
-                if (!isHasPermission) {
-                    //int code, String msg
-                    obj.setFlag(false);
-                } else {
-                    obj.setFlag(true);
-                }
-                list.add(obj);
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
             }
+            list.add(obj);
             return new ActResult(0, "设置权限", list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

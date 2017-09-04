@@ -27,7 +27,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -72,19 +71,17 @@ public class TowerInsureAction extends BaseFileAction {
     public Result setButtonPermission() throws ActException {
         List<SonPermissionObject> list = new ArrayList<>();
         try {
-            if (moduleAPI.isCheck("organize")) {
-                SonPermissionObject obj = new SonPermissionObject();
-                obj.setName("cuspermission");
-                obj.setDescribesion("设置");
-                Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
-                if (!isHasPermission) {
-                    //int code, String msg
-                    obj.setFlag(false);
-                } else {
-                    obj.setFlag(true);
-                }
-                list.add(obj);
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
             }
+            list.add(obj);
             return new ActResult(0, "设置权限", list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

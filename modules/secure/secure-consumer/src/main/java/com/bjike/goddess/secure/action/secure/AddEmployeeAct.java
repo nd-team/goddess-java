@@ -81,20 +81,18 @@ public class AddEmployeeAct {
         List<SonPermissionObject> list = new ArrayList<>();
         try {
             String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
-            if (moduleAPI.isCheck("organize")) {
-                SonPermissionObject obj = new SonPermissionObject();
-                obj.setName("cuspermission");
-                obj.setDescribesion("设置");
-                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
-                Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
-                if (!isHasPermission) {
-                    //int code, String msg
-                    obj.setFlag(false);
-                } else {
-                    obj.setFlag(true);
-                }
-                list.add(obj);
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
             }
+            list.add(obj);
             return new ActResult(0, "设置权限", list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
