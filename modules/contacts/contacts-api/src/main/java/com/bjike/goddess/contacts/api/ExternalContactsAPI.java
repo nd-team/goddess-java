@@ -2,6 +2,7 @@ package com.bjike.goddess.contacts.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contacts.bo.ExternalContactsBO;
+import com.bjike.goddess.contacts.bo.MobileExternalContactsBO;
 import com.bjike.goddess.contacts.dto.ExternalContactsDTO;
 import com.bjike.goddess.contacts.to.ExternalContactsTO;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
@@ -116,6 +117,39 @@ public interface ExternalContactsAPI {
     ExternalContactsBO importExcel(List<ExternalContactsTO> tocs) throws SerException;
 
     default byte[] templateExport() throws SerException {
+        return null;
+    }
+
+    /**
+     * 移动端获取列表
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<MobileExternalContactsBO> mobileList(ExternalContactsDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 移动端总条数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default Long getMobileTotal(ExternalContactsDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id 获取移动端数据
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    default MobileExternalContactsBO findByMobileID(String id) throws SerException {
         return null;
     }
 }

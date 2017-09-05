@@ -92,4 +92,14 @@ public class DividendsApiImpl implements DividendsAPI {
     public List<DividendsConditionsBO> detailList() throws SerException {
         return dividendsSer.detailList();
     }
+
+    @Override
+    public Long detailCount() throws SerException {
+        return dividendsSer.detailCount();
+    }
+
+    @Override
+    public Long collectCount() throws SerException {
+        return null;
+    }
 }

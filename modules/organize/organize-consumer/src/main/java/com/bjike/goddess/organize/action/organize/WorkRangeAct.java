@@ -14,11 +14,13 @@ import com.bjike.goddess.marketdevelopment.api.BusinessTypeAPI;
 import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
 import com.bjike.goddess.marketdevelopment.bo.BusinessTypeBO;
 import com.bjike.goddess.organize.api.WorkRangeAPI;
+import com.bjike.goddess.organize.bo.WorkRangeFlatBO;
 import com.bjike.goddess.organize.dto.WorkRangeDTO;
 import com.bjike.goddess.organize.to.DepartmentWorkRangeTO;
 import com.bjike.goddess.organize.to.WorkRangeTO;
 import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.organize.vo.OpinionVO;
+import com.bjike.goddess.organize.vo.WorkRangeFlatVO;
 import com.bjike.goddess.organize.vo.WorkRangeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -429,6 +431,22 @@ public class WorkRangeAct {
     public Result findThawOpinion() throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findThawOpinion(), OpinionVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 平台列表
+     *
+     * @return class
+     * @version v1
+     */
+    @GetMapping("v1/flat/list")
+    public Result getFlatList(WorkRangeDTO dto) throws ActException {
+        try {
+            List<WorkRangeFlatBO> workRangeFlatBOs = workRangeAPI.getFlatList(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(workRangeFlatBOs, WorkRangeFlatVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

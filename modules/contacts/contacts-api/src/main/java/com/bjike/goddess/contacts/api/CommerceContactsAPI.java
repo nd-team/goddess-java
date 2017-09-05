@@ -2,6 +2,7 @@ package com.bjike.goddess.contacts.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contacts.bo.CommerceContactsBO;
+import com.bjike.goddess.contacts.bo.MobileCommerceContactsBO;
 import com.bjike.goddess.contacts.dto.CommerceContactsDTO;
 import com.bjike.goddess.contacts.excel.SonPermissionObject;
 import com.bjike.goddess.contacts.to.CommerceContactsTO;
@@ -84,6 +85,7 @@ public interface CommerceContactsAPI {
 
     /**
      * 下拉导航权限
+     *
      * @return
      * @throws SerException
      */
@@ -99,7 +101,40 @@ public interface CommerceContactsAPI {
     /**
      * 模板导出
      */
-    default byte[] templateExport() throws SerException{
+    default byte[] templateExport() throws SerException {
+        return null;
+    }
+
+    /**
+     * 移动端获取列表
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<MobileCommerceContactsBO> mobileList(CommerceContactsDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 移动端总条数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default Long getMobileTotal(CommerceContactsDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id 获取移动端数据
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    default MobileCommerceContactsBO findByMobileID(String id) throws SerException {
         return null;
     }
 }

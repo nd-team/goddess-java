@@ -239,4 +239,14 @@ public interface WorkRangeAPI {
         return null;
     }
 
+    /**
+     * 平台列表
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<WorkRangeFlatBO> getFlatList(WorkRangeDTO dto) throws SerException {
+        return null;
+    }
 }

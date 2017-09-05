@@ -1,7 +1,6 @@
 package com.bjike.goddess.contacts.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
-
 import com.bjike.goddess.customer.enums.CustomerSex;
 import com.bjike.goddess.customer.enums.CustomerStatus;
 import com.bjike.goddess.customer.enums.CustomerType;
@@ -133,6 +132,12 @@ public class CommerceContacts extends BaseEntity {
      */
     @Column(name = "workRight", columnDefinition = "VARCHAR(255)   COMMENT '职权'")
     private String workRight;
+
+    /**
+     * 备注
+     */
+    @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    private String remark;
 
     public String getCustomerNum() {
         return customerNum;
@@ -276,5 +281,13 @@ public class CommerceContacts extends BaseEntity {
 
     public void setWorkRight(String workRight) {
         this.workRight = workRight;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

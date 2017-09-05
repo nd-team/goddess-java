@@ -133,4 +133,9 @@ public class WorkRangeApiImpl implements WorkRangeAPI {
     public List<String> findWorkScope() throws SerException {
         return workRangeSer.findWorkScope();
     }
+
+    @Override
+    public List<WorkRangeFlatBO> getFlatList(WorkRangeDTO dto) throws SerException {
+        return workRangeSer.getFlatList(dto);
+    }
 }

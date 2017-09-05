@@ -11,6 +11,7 @@ import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.contacts.api.CommonalityAPI;
 import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.contacts.bo.ExternalContactsBO;
+import com.bjike.goddess.contacts.bo.MobileExternalContactsBO;
 import com.bjike.goddess.contacts.dto.ExternalContactsDTO;
 import com.bjike.goddess.contacts.entity.ExternalContacts;
 import com.bjike.goddess.contacts.enums.GuideAddrStatus;
@@ -26,12 +27,16 @@ import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.bo.UserDetailBO;
+import com.bjike.goddess.user.dto.UserDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -60,6 +65,8 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
     private MessageAPI messageAPI;
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private UserDetailAPI userDetailAPI;
 
 
     @Transactional(rollbackFor = SerException.class)
@@ -262,6 +269,64 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
         return bytes;
     }
 
+    @Override
+    public List<MobileExternalContactsBO> mobileList(ExternalContactsDTO dto) throws SerException {
+//        dto.getSorts().add("writeTime=desc");
+        searchMobileCondition(dto);
+        List<ExternalContacts> list = super.findByCis(dto);
+        List<ExternalContactsBO> externalContactsBOs = BeanTransform.copyProperties(list, ExternalContactsBO.class,false);
+        if (!CollectionUtils.isEmpty(externalContactsBOs)) {
+            List<MobileExternalContactsBO> bos = BeanTransform.copyProperties(externalContactsBOs, MobileExternalContactsBO.class, "sex", "headSculpture", "number");
+            for (MobileExternalContactsBO bo : bos) {
+                UserDTO userDTO = new UserDTO();
+                userDTO.getConditions().add(Restrict.eq("username", bo.getUsername()));
+                UserBO userBO = userAPI.findOne(userDTO);
+                if (null != userBO) {
+                    bo.setHeadSculpture(userBO.getHeadSculpture());
+                    UserDetailBO userDetailBO = userDetailAPI.findByUserId(userBO.getId());
+                    if (null != userDetailBO) {
+                        bo.setSex(userDetailBO.getSex());
+                    }
+                }
+            }
+            return bos;
+        }
+        return null;
+    }
+
+    @Override
+    public Long getMobileTotal(ExternalContactsDTO dto) throws SerException {
+        searchMobileCondition(dto);
+        return super.count(dto);
+    }
+
+    @Override
+    public MobileExternalContactsBO findByMobileID(String id) throws SerException {
+        if (StringUtils.isBlank(id)) {
+            return null;
+        }
+        ExternalContactsDTO dto = new ExternalContactsDTO();
+        dto.getConditions().add(Restrict.eq("id", id));
+        ExternalContacts entity = super.findOne(dto);
+        ExternalContactsBO bo = BeanTransform.copyProperties(entity, ExternalContactsBO.class, false);
+        if (null != bo) {
+            MobileExternalContactsBO mobileExternalContactsBO = BeanTransform.copyProperties(bo, MobileExternalContactsBO.class, "sex", "headSculpture", "number");
+            UserDTO userDTO = new UserDTO();
+            userDTO.getConditions().add(Restrict.eq("username", mobileExternalContactsBO.getUsername()));
+            UserBO userBO = userAPI.findOne(userDTO);
+            if (null != userBO) {
+                mobileExternalContactsBO.setHeadSculpture(userBO.getHeadSculpture());
+                UserDetailBO userDetailBO = userDetailAPI.findByUserId(userBO.getId());
+                if (null != userDetailBO) {
+                    mobileExternalContactsBO.setSex(userDetailBO.getSex());
+                }
+            }
+            return mobileExternalContactsBO;
+        }
+        return null;
+    }
+
+
     /**
      * 核对查看权限（部门级别）
      */
@@ -425,4 +490,12 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
         return null;
     }
 
+    private void searchMobileCondition(ExternalContactsDTO dto) throws SerException {
+        /**
+         * 用户名
+         */
+        if (StringUtils.isNotBlank(dto.getUserName())) {
+            dto.getConditions().add(Restrict.like("username", dto.getUserName()));
+        }
+    }
 }

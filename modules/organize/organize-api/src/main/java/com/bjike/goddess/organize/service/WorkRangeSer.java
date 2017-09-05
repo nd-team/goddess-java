@@ -201,6 +201,7 @@ public interface WorkRangeSer extends Ser<WorkRange, WorkRangeDTO> {
     default List<OpinionBO> findThawOpinion() throws SerException {
         return null;
     }
+
     /**
      * 获取所有工作范围选项
      *
@@ -215,6 +216,17 @@ public interface WorkRangeSer extends Ser<WorkRange, WorkRangeDTO> {
      * 获取工作范围
      */
     default List<String> findWorkScope() throws SerException {
+        return null;
+    }
+
+    /**
+     * 平台列表
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<WorkRangeFlatBO> getFlatList(WorkRangeDTO dto) throws SerException {
         return null;
     }
 }

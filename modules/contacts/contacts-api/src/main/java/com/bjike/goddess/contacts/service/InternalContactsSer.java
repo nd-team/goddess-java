@@ -3,6 +3,7 @@ package com.bjike.goddess.contacts.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.contacts.bo.InternalContactsBO;
+import com.bjike.goddess.contacts.bo.MobileInternalContactsBO;
 import com.bjike.goddess.contacts.bo.NameAndIdBO;
 import com.bjike.goddess.contacts.dto.InternalContactsDTO;
 import com.bjike.goddess.contacts.entity.InternalContacts;
@@ -159,6 +160,38 @@ public interface InternalContactsSer extends Ser<InternalContacts, InternalConta
      * 根据名字获邮箱
      */
     default String getEmail(String name) throws SerException {
+        return null;
+    }
+
+    /**
+     * 移动端获取列表
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<MobileInternalContactsBO> mobileList(InternalContactsDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 移动端总条数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default Long getMobileTotal(InternalContactsDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id 获取移动端数据
+     *
+     * @param id
+     * @return
+     */
+    default MobileInternalContactsBO findByMobileID(String id) throws SerException {
         return null;
     }
 }

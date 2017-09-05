@@ -2,6 +2,7 @@ package com.bjike.goddess.contacts.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contacts.bo.CommerceContactsBO;
+import com.bjike.goddess.contacts.bo.MobileCommerceContactsBO;
 import com.bjike.goddess.contacts.dto.CommerceContactsDTO;
 import com.bjike.goddess.contacts.excel.SonPermissionObject;
 import com.bjike.goddess.contacts.service.CommerceContactsSer;
@@ -70,5 +71,20 @@ public class CommerceContactsApiImpl implements CommerceContactsAPI {
     @Override
     public byte[] templateExport() throws SerException {
         return commerceContactsSer.templateExport();
+    }
+
+    @Override
+    public List<MobileCommerceContactsBO> mobileList(CommerceContactsDTO dto) throws SerException {
+        return commerceContactsSer.mobileList(dto);
+    }
+
+    @Override
+    public Long getMobileTotal(CommerceContactsDTO dto) throws SerException {
+        return commerceContactsSer.getMobileTotal(dto);
+    }
+
+    @Override
+    public MobileCommerceContactsBO findByMobileID(String id) throws SerException {
+        return commerceContactsSer.findByMobileID(id);
     }
 }

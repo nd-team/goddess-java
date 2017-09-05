@@ -37,6 +37,7 @@ public interface DividendsSer extends Ser<Dividends, DividendsDTO> {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 公司干股交易情况
      *
@@ -151,4 +152,15 @@ public interface DividendsSer extends Ser<Dividends, DividendsDTO> {
     default List<DividendsConditionsBO> detailList() throws SerException {
         return null;
     }
+
+    /**
+     * 公司干股交易情况总条数
+     *
+     * @return
+     */
+    default Long detailCount() throws SerException {
+        return null;
+    }
+
+
 }

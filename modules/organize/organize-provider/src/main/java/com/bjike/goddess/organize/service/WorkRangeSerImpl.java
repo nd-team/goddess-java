@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.organize.bo.*;
 import com.bjike.goddess.organize.dto.WorkRangeDTO;
 import com.bjike.goddess.organize.entity.DepartmentDetail;
@@ -268,5 +269,36 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
             list = workRanges.stream().map(WorkRange::getWorkRange).distinct().collect(Collectors.toList());
         }
         return list;
+    }
+
+    @Override
+    public List<WorkRangeFlatBO> getFlatList(WorkRangeDTO dto) throws SerException {
+        List<WorkRange> workRanges = super.findAll();
+        List<String> directions = new ArrayList<>(0);
+        if (null != workRanges && workRanges.size() > 0) {
+            directions = workRanges.stream().map(WorkRange::getDirection).distinct().collect(Collectors.toList());
+            for (String str : directions) {
+                WorkRangeFlatBO workRangeFlatBO = new WorkRangeFlatBO();
+                workRangeFlatBO.setDirection(str);
+                for (WorkRange workRange : workRanges) {
+                    if (workRange.getDirection().equals(workRangeFlatBO.getDirection())) {
+                        WorkRangeListBO workRangeListBO = new WorkRangeListBO();
+                        workRangeListBO.setStatus(workRange.getStatus());
+                        workRangeListBO.setCreateTime(DateUtil.dateToString(workRange.getCreateTime()));
+                        workRangeListBO.setNode(workRange.getNode());
+                        workRangeListBO.setWorkRange(workRange.getWorkRange());
+
+                        ClassifyFlatBO classifyFlatBO = new ClassifyFlatBO();
+//                        classifyFlatBO.getWorkRangeListBOs().add()
+
+                        ProjectFlatBO projectFlatBO = new ProjectFlatBO();
+                        projectFlatBO.setProject(workRange.getProject());
+                        workRangeFlatBO.getProjectFlatBOs().add(projectFlatBO);
+                    }
+                }
+
+            }
+        }
+        return null;
     }
 }

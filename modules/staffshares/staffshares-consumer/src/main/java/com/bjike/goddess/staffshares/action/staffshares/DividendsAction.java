@@ -81,13 +81,27 @@ public class DividendsAction {
     }
 
     /**
+     * 公司干股交易情况总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/detail/count")
+    public Result detailCount() throws ActException {
+        try {
+            return ActResult.initialize(dividendsAPI.detailCount());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 分红
      *
      * @param to 公司干股分红
      * @version v1
      */
     @GetMapping("v1/dividends/{id}")
-    public Result dividends(@Validated(ADD.class) DividendsTO to,BindingResult result) throws ActException {
+    public Result dividends(@Validated(ADD.class) DividendsTO to, BindingResult result) throws ActException {
         try {
             dividendsAPI.dividends(to);
             return ActResult.initialize("分红成功");
@@ -148,7 +162,7 @@ public class DividendsAction {
      * @version v1
      */
     @PostMapping("v1/confirm/{id}")
-    public Result confirm(@Validated(EDIT.class) DividendsTO to,BindingResult result) throws ActException {
+    public Result confirm(@Validated(EDIT.class) DividendsTO to, BindingResult result) throws ActException {
         try {
             dividendsAPI.confirm(to);
             return ActResult.initialize("确认成功");
@@ -160,7 +174,6 @@ public class DividendsAction {
     /**
      * 交易持股明细列表
      *
-     * @param dto 交易持股明细数据传输对象
      * @return class DividendsDetailVO
      * @version v1
      */
@@ -214,6 +227,20 @@ public class DividendsAction {
         try {
             List<DividendsDetailBO> dividendsDetailBOs = dividendsAPI.collect();
             return ActResult.initialize(BeanTransform.copyProperties(dividendsDetailBOs, DividendsDetailVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 交易持股明细汇总总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/collect/count")
+    public Result collectCount() throws ActException {
+        try {
+            return ActResult.initialize(dividendsAPI.collectCount());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

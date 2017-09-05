@@ -227,6 +227,7 @@ public class DetailsSerImpl extends ServiceImpl<Details, DetailsDTO> implements 
         SchemeIssueBO schemeIssueBO = schemeAPI.getOne(dto.getId());
         if (schemeIssueBO != null) {
             DetailsDTO detailsDTO = new DetailsDTO();
+            detailsDTO.getConditions().add(Restrict.eq("code", schemeIssueBO.getCode()));
             List<Details> detailses = super.findByCis(detailsDTO);
             if (CollectionUtils.isEmpty(detailses)) {
                 //插入第一条数据
@@ -266,7 +267,7 @@ public class DetailsSerImpl extends ServiceImpl<Details, DetailsDTO> implements 
     public Long getTotal(DetailsDTO detailsDTO) throws SerException {
         searchCondition(detailsDTO);
         Long count = super.count(detailsDTO);
-        return count;
+        return count = 1l;
     }
 
     @Override
