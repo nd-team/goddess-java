@@ -16,7 +16,7 @@
     <dubbo:consumer check="false" timeout="15000"/>
     <dubbo:registry address="${dubbo.registry.address}"/>
     <dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}"/>
-    <dubbo:protocol name="hessian" port="5555" server="jetty"/>
+    <dubbo:protocol name="hessian" port="5587" server="jetty"/>
 
     <!--发布接口,供其他模块调用-->
     <dubbo:service  protocol="hessian"  interface="com.bjike.goddess.storage.api.FileAPI" ref="fileApiImpl" />
