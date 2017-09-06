@@ -250,21 +250,7 @@ public class StaffEntryRegisterAction {
         }
     }
 
-    /**
-     * 根据员工姓名获取注册的员工编号
-     *
-     * @des 获取注册的员工编号
-     * @version v1
-     */
-    @GetMapping("v1/maxEmpNumber")
-    public Result getMaxEmpNumberByName(@RequestParam String name) throws ActException {
-        try {
-            String empNumber = staffEntryRegisterAPI.getMaxEmpNumberByName(name);
-            return ActResult.initialize(empNumber);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+
 
 
     /**

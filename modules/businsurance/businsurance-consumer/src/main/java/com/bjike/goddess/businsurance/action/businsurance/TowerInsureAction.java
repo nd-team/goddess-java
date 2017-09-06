@@ -1,5 +1,6 @@
 package com.bjike.goddess.businsurance.action.businsurance;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.businsurance.api.TowerInsureAPI;
 import com.bjike.goddess.businsurance.bo.TowerInsureBO;
@@ -9,6 +10,7 @@ import com.bjike.goddess.businsurance.to.GuidePermissionTO;
 import com.bjike.goddess.businsurance.to.SiginManageDeleteFileTO;
 import com.bjike.goddess.businsurance.to.TowerInsureTO;
 import com.bjike.goddess.businsurance.vo.TowerInsureVO;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -27,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -71,17 +74,19 @@ public class TowerInsureAction extends BaseFileAction {
     public Result setButtonPermission() throws ActException {
         List<SonPermissionObject> list = new ArrayList<>();
         try {
-            SonPermissionObject obj = new SonPermissionObject();
-            obj.setName("cuspermission");
-            obj.setDescribesion("设置");
-            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
-            if (!isHasPermission) {
-                //int code, String msg
-                obj.setFlag(false);
-            } else {
-                obj.setFlag(true);
-            }
-            list.add(obj);
+//            if (moduleAPI.isCheck("organize")) {
+                SonPermissionObject obj = new SonPermissionObject();
+                obj.setName("cuspermission");
+                obj.setDescribesion("设置");
+                Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+                if (!isHasPermission) {
+                    //int code, String msg
+                    obj.setFlag(false);
+                } else {
+                    obj.setFlag(true);
+                }
+                list.add(obj);
+//            }
             return new ActResult(0, "设置权限", list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -452,7 +457,9 @@ public class TowerInsureAction extends BaseFileAction {
     @GetMapping("v1/users")
     public Result users(HttpServletRequest request) throws ActException {
         try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
                 List<UserBO> list = positionDetailUserAPI.findUserListInOrgan();
                 return ActResult.initialize(BeanTransform.copyProperties(list, UserVO.class, request));
             }
