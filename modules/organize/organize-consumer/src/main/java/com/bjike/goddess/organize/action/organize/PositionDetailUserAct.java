@@ -208,20 +208,21 @@ public class PositionDetailUserAct {
         }
     }
 
-//    /**
-//     * 获取用户列表
-//     *
-//     * @version v1
-//     */
-//    @GetMapping("v1/name")
-//    public Result getPosition(String name ) throws ActException {
-//        try {
-//            return ActResult.initialize(positionDetailUserAPI.getPositionDetail(name));
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-//    }
-
+    /**
+     * 根据名字获取岗位详细(地区，部门，模块，层级，岗位)
+     *
+     * @return class PositionDetailVO
+     * @version v1
+     */
+    @GetMapping("v1/name")
+    public Result name(String name, HttpServletRequest request) throws ActException {
+        try {
+            List<PositionDetailBO> userBOS = positionDetailUserAPI.getPositionDetail(name);
+            return ActResult.initialize(BeanTransform.copyProperties(userBOS, PositionDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
 }

@@ -21,7 +21,10 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * 用户职位业务实现
@@ -317,38 +320,58 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         return list;
     }
 
+//    @Override
+//    public List<PositionDetailBO> getPositionDetail(String name) throws SerException {
+//        //根据名字获取用户ｉｄ
+//        UserBO userBO = userAPI.findByUsername(name);
+//        String userId = "";
+//        if (null != userBO) {
+//            userId = userBO.getId();
+//        }
+//        PositionDetailUserDTO positionDetailUserDTO = new PositionDetailUserDTO();
+//        positionDetailUserDTO.getConditions().add(Restrict.eq("userId", userId));
+//        List<PositionDetailUser> positionDetailUserList = super.findByCis(positionDetailUserDTO);
+//        List<PositionDetail> positionList = new ArrayList<>(0);
+//        List<PositionDetailBO> positionDetailBOs1 = new ArrayList<>(0);
+//        if (null != positionDetailUserList && positionDetailUserList.size() > 0) {
+//            PositionDetailUser positionDetailUser = positionDetailUserList.get(0);
+//            Set<PositionDetail> positionDetailSet = positionDetailUser.getPositionSet();
+//            Iterator it=positionDetailSet.iterator();
+//            while(it.hasNext()){
+//                positionList.add((PositionDetail) it.next());
+//            }
+//            List<PositionDetailBO> positionBOList = BeanTransform.copyProperties(positionList,PositionDetailBO.class);
+//            //查询未冻结数据
+//            if(null != positionBOList && positionBOList.size() > 0){
+//                for(PositionDetailBO bo : positionBOList){
+//                    if(Status.THAW.equals(bo.getStatus())){
+//                        positionDetailBOs1.add(BeanTransform.copyProperties(bo,PositionDetailBO.class));
+//                    }
+//                }
+//            }
+//        }
+//        return positionDetailBOs1;
+//    }
+
     @Override
     public List<PositionDetailBO> getPositionDetail(String name) throws SerException {
-        //根据名字获取用户ｉｄ
+//        根据名字获取用户ｉｄ
         UserBO userBO = userAPI.findByUsername(name);
         String userId = "";
         if (null != userBO) {
             userId = userBO.getId();
         }
-        PositionDetailUserDTO positionDetailUserDTO = new PositionDetailUserDTO();
-        positionDetailUserDTO.getConditions().add(Restrict.eq("userId", userId));
-        List<PositionDetailUser> positionDetailUserList = super.findByCis(positionDetailUserDTO);
-        List<PositionDetail> positionList = new ArrayList<>(0);
-        List<PositionDetailBO> positionDetailBOs1 = new ArrayList<>(0);
-        if (null != positionDetailUserList && positionDetailUserList.size() > 0) {
-            PositionDetailUser positionDetailUser = positionDetailUserList.get(0);
-            Set<PositionDetail> positionDetailSet = positionDetailUser.getPositionSet();
-            Iterator it=positionDetailSet.iterator();
-            while(it.hasNext()){
-                positionList.add((PositionDetail) it.next());
-            }
-            List<PositionDetailBO> positionBOList = BeanTransform.copyProperties(positionList,PositionDetailBO.class);
-            //查询未冻结数据
-            if(null != positionBOList && positionBOList.size() > 0){
-                for(PositionDetailBO bo : positionBOList){
-                    if(Status.THAW.equals(bo.getStatus())){
-                        positionDetailBOs1.add(BeanTransform.copyProperties(bo,PositionDetailBO.class));
-                    }
-                }
-            }
-        }
-        return positionDetailBOs1;
+        String fields[] = new String[]{"pool", "serialNumber", "staff", "arrangementId", "departmentId", "description", "position", "status", "moduleId"
+//                ,"position_id","user_id"
+        };
+        userId = "00a94d4e-5c1f-4ed9-8a1b-e9e5811c1c0e";
+        StringBuilder sql = new StringBuilder("SELECT pool, serialNumber, staff, arrangement_id, department_id, description, position, status, module_id");
+        sql.append(" FROM organize_position_detail a,");
+        sql.append(" organize_position_detail_user_table b ");
+        sql.append(" WHERE a.id=b.position_id ");
+        sql.append(" AND b.user_id= '" + userId + "'");
+        List<PositionDetailBO> positionDetails = positionDetailSer.findBySql(sql.toString(), PositionDetailBO.class, fields);
+        List<PositionDetailBO> list = BeanTransform.copyProperties(positionDetails, PositionDetailBO.class);
+        return list;
     }
-
-
 }

@@ -39,7 +39,7 @@ public class KafkaProducerImpl implements IKafkaProducer {
         props.put("request.required.acks", env.getProperty("request.required.acks"));
 
         Producer<String,String> producer = new Producer(new ProducerConfig(props));
-        producer.send(new KeyedMessage("messages", messageTO.getId(), JSON.toJSONString(messageTO)));
+        producer.send(new KeyedMessage("msgs", messageTO.getId(), JSON.toJSONString(messageTO)));
     }
 
 

@@ -17,6 +17,7 @@ import com.bjike.goddess.organize.api.WorkRangeAPI;
 import com.bjike.goddess.organize.bo.WorkRangeFlatBO;
 import com.bjike.goddess.organize.dto.WorkRangeDTO;
 import com.bjike.goddess.organize.to.DepartmentWorkRangeTO;
+import com.bjike.goddess.organize.to.WorkRangeFlatTO;
 import com.bjike.goddess.organize.to.WorkRangeTO;
 import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.organize.vo.OpinionVO;
@@ -439,17 +440,112 @@ public class WorkRangeAct {
     /**
      * 平台列表
      *
-     * @return class
+     * @return class WorkRangeFlatBO
      * @version v1
      */
     @GetMapping("v1/flat/list")
     public Result getFlatList(WorkRangeDTO dto) throws ActException {
         try {
             List<WorkRangeFlatBO> workRangeFlatBOs = workRangeAPI.getFlatList(dto);
-            return ActResult.initialize(BeanTransform.copyProperties(workRangeFlatBOs, WorkRangeFlatVO.class));
+            List<WorkRangeFlatVO> list = BeanTransform.copyProperties(workRangeFlatBOs, WorkRangeFlatVO.class);
+            return ActResult.initialize(workRangeFlatBOs);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 平台添加
+     *
+     * @version v1
+     */
+    @PostMapping("v1/flat/add")
+    public Result flatAdd(@Validated(ADD.class) WorkRangeFlatTO to, BindingResult result) throws ActException {
+        try {
+            workRangeAPI.flatAdd(to);
+            return ActResult.initialize("ADD SUCCESS");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据平台业务方向分类获取平台对象
+     *
+     * @return class WorkRangeFlatBO
+     * @version v1
+     */
+    @GetMapping("v1/flat/find/{direction}")
+    public Result findByFlatDirection(@PathVariable String direction) throws ActException {
+        try {
+            List<WorkRangeFlatBO> workRangeFlatBOs = workRangeAPI.findByFlatDirection(direction);
+            return ActResult.initialize(workRangeFlatBOs);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 平台编辑
+     *
+     * @version v1
+     */
+    @PutMapping("v1/flat/update/{directionEdit}")
+    public Result flatUpdate(@Validated(EDIT.class) WorkRangeFlatTO to, BindingResult result) throws ActException {
+        try {
+            workRangeAPI.flatUpdate(to);
+            return ActResult.initialize("EDIT SUCCESS");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 平台删除
+     *
+     * @version v1
+     */
+    @DeleteMapping("v1/flat/delete/{direction}")
+    public Result faltDelete(@PathVariable String direction) throws ActException {
+        try {
+            workRangeAPI.faltDelete(direction);
+            return ActResult.initialize("DELETE SUCCESS");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 平台关闭
+     *
+     * @param direction 业务方向分类
+     * @version v1
+     */
+    @PatchMapping("v1/flat/close/{direction}")
+    public Result flatClose(@PathVariable String direction) throws ActException {
+        try {
+            workRangeAPI.flatClose(direction);
+            return ActResult.initialize("CLOSE SUCCESS");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 平台重启
+     *
+     * @param direction 业务方向分类
+     * @version v1
+     */
+    @PatchMapping("v1/flat/open/{direction}")
+    public Result open(@PathVariable String direction) throws ActException {
+        try {
+            workRangeAPI.flatOpen(direction);
+            return ActResult.initialize("OPEN SUCCESS");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }
