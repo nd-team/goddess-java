@@ -28,6 +28,7 @@ public interface DividendsAPI {
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
@@ -147,6 +148,26 @@ public interface DividendsAPI {
      * @throws SerException
      */
     default List<DividendsConditionsBO> detailList() throws SerException {
+        return null;
+    }
+
+    /**
+     * 公司干股情况总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long detailCount() throws SerException {
+        return null;
+    }
+
+    /**
+     * 交易持股明细汇总总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long collectCount() throws SerException {
         return null;
     }
 }

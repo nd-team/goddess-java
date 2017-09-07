@@ -2,6 +2,7 @@ package com.bjike.goddess.contacts.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contacts.bo.ExternalContactsBO;
+import com.bjike.goddess.contacts.bo.MobileExternalContactsBO;
 import com.bjike.goddess.contacts.dto.ExternalContactsDTO;
 import com.bjike.goddess.contacts.service.ExternalContactsSer;
 import com.bjike.goddess.contacts.to.ExternalContactsTO;
@@ -79,5 +80,20 @@ public class ExternalContactsApiImpl implements ExternalContactsAPI {
     @Override
     public byte[] templateExport() throws SerException {
         return externalContactsSer.templateExport();
+    }
+
+    @Override
+    public List<MobileExternalContactsBO> mobileList(ExternalContactsDTO dto) throws SerException {
+        return externalContactsSer.mobileList(dto);
+    }
+
+    @Override
+    public Long getMobileTotal(ExternalContactsDTO dto) throws SerException {
+        return externalContactsSer.getMobileTotal(dto);
+    }
+
+    @Override
+    public MobileExternalContactsBO findByMobileID(String id) throws SerException {
+        return externalContactsSer.findByMobileID(id);
     }
 }

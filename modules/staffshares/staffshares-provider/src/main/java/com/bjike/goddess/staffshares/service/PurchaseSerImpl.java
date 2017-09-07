@@ -407,7 +407,7 @@ public class PurchaseSerImpl extends ServiceImpl<Purchase, PurchaseDTO> implemen
             detailsDTO.getConditions().add(Restrict.eq("name", temp.getIssueName()));
             detailsDTO.getConditions().add(Restrict.eq("publisher", temp.getSellName()));
             List<Details> detailses = detailsSer.findByCis(detailsDTO);
-            if (!CollectionUtils.isEmpty(detailses)) {
+            if (null != detailses && detailses.size() > 0) {
                 Details details = detailses.get(0);
                 if (details.getSharesNum() - to.getPurchaseNum() < 0) {
                     throw new SerException("购买股数不能超过出售的股数，审核无效");
@@ -415,8 +415,8 @@ public class PurchaseSerImpl extends ServiceImpl<Purchase, PurchaseDTO> implemen
                 //交易详情的出售剩余数量＝原交易详情出售剩余数量　－　购买数量
                 details.setSharesNum(details.getSharesNum() - to.getPurchaseNum());
             } else {
-                throw new SerException("交易数据不存在");
-                //增加新的交易详情数据
+//                throw new SerException("交易数据不存在");
+//                增加新的交易详情数据
 //                Details details = new Details();
 //                details.setCode(temp.getCode());
 //                details.setName(temp.getIssueName());

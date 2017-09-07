@@ -7,6 +7,7 @@ import com.bjike.goddess.organize.bo.*;
 import com.bjike.goddess.organize.dto.WorkRangeDTO;
 import com.bjike.goddess.organize.entity.WorkRange;
 import com.bjike.goddess.organize.to.DepartmentWorkRangeTO;
+import com.bjike.goddess.organize.to.WorkRangeFlatTO;
 import com.bjike.goddess.organize.to.WorkRangeTO;
 
 import java.util.List;
@@ -201,6 +202,7 @@ public interface WorkRangeSer extends Ser<WorkRange, WorkRangeDTO> {
     default List<OpinionBO> findThawOpinion() throws SerException {
         return null;
     }
+
     /**
      * 获取所有工作范围选项
      *
@@ -216,5 +218,76 @@ public interface WorkRangeSer extends Ser<WorkRange, WorkRangeDTO> {
      */
     default List<String> findWorkScope() throws SerException {
         return null;
+    }
+
+    /**
+     * 平台列表
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<WorkRangeFlatBO> getFlatList(WorkRangeDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 平台添加
+     *
+     * @param to
+     * @throws SerException
+     */
+    default void flatAdd(WorkRangeFlatTO to) throws SerException {
+        return;
+    }
+
+    /**
+     * 根据平台业务方向分类获取平台对象
+     *
+     * @param direction
+     * @return
+     */
+    default List<WorkRangeFlatBO> findByFlatDirection(String direction) throws SerException {
+        return null;
+    }
+
+    /**
+     * 平台删除
+     *
+     * @param direction
+     * @throws SerException
+     */
+    default void faltDelete(String direction) throws SerException {
+        return;
+    }
+
+    /**
+     * 平台编辑
+     *
+     * @param to
+     * @throws SerException
+     */
+    default void flatUpdate(WorkRangeFlatTO to) throws SerException {
+        return;
+    }
+
+    /**
+     * 平台关闭
+     *
+     * @param direction
+     * @throws SerException
+     */
+    default void flatClose(String direction) throws SerException {
+        return;
+    }
+
+    /**
+     * 平台重启
+     *
+     * @param direction
+     * @throws SerException
+     */
+    default void flatOpen(String direction) throws SerException {
+        return;
     }
 }

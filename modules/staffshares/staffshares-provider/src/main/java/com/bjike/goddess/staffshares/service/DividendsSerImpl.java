@@ -12,6 +12,7 @@ import com.bjike.goddess.staffshares.bo.CompanySchemeBO;
 import com.bjike.goddess.staffshares.bo.DividendsBO;
 import com.bjike.goddess.staffshares.bo.DividendsConditionsBO;
 import com.bjike.goddess.staffshares.bo.DividendsDetailBO;
+import com.bjike.goddess.staffshares.dto.CompanysSchemeDTO;
 import com.bjike.goddess.staffshares.dto.DividendsDTO;
 import com.bjike.goddess.staffshares.entity.*;
 import com.bjike.goddess.staffshares.enums.GuideAddrStatus;
@@ -206,7 +207,7 @@ public class DividendsSerImpl extends ServiceImpl<Dividends, DividendsDTO> imple
     @Override
     public List<CompanySchemeBO> detail() throws SerException {
         List<Scheme> schemeList = schemeSer.findAll().stream().filter(obj -> obj.getStatus().equals(Status.ISSUED)).collect(Collectors.toList());
-        if (!CollectionUtils.isEmpty(schemeList)) {
+        if (CollectionUtils.isEmpty(schemeList)) {
             for (Scheme scheme : schemeList) {
                 CompanysScheme companySchemeBO = new CompanysScheme();
                 companySchemeBO.setCode(scheme.getCode());
@@ -226,8 +227,15 @@ public class DividendsSerImpl extends ServiceImpl<Dividends, DividendsDTO> imple
                 companysSchemeSer.save(companySchemeBO);
             }
         }
-        List<CompanySchemeBO> companySchemeBOs = BeanTransform.copyProperties(companysSchemeSer.findAll(), CompanySchemeBO.class, false);
+        CompanysSchemeDTO dto = new CompanysSchemeDTO();
+        List<CompanySchemeBO> companySchemeBOs = BeanTransform.copyProperties(companysSchemeSer.findByPage(dto), CompanySchemeBO.class, false);
         return companySchemeBOs;
+    }
+
+    @Override
+    public Long detailCount() throws SerException {
+        CompanysSchemeDTO dto = new CompanysSchemeDTO();
+        return companysSchemeSer.count(dto);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -427,6 +435,7 @@ public class DividendsSerImpl extends ServiceImpl<Dividends, DividendsDTO> imple
         dividendsConditionsBOList.add(dividendsConditionsBO);
         return dividendsConditionsBOList;
     }
+
 
     private Boolean cheakFinance(UserBO userBO) throws SerException {
         Boolean tar = false;

@@ -10,6 +10,7 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.contacts.bo.InternalContactsBO;
+import com.bjike.goddess.contacts.bo.MobileInternalContactsBO;
 import com.bjike.goddess.contacts.bo.NameAndIdBO;
 import com.bjike.goddess.contacts.dto.InternalContactsDTO;
 import com.bjike.goddess.contacts.entity.InternalContacts;
@@ -37,6 +38,7 @@ import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.dto.UserDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +50,7 @@ import org.springframework.util.CollectionUtils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 内部通讯录业务实现
@@ -127,23 +130,25 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
             RpcTransmit.transmitUserToken(userToken);
             if (moduleAPI.isCheck("organize")) {
                 PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
-                if (null != detailBO)
+                if (null != detailBO) {
                     bo.setUsername(detailBO.getUsername());
-                bo.setNumber(detailBO.getEmployeesNumber());
-                userToken = RpcTransmit.getUserToken();
-                RpcTransmit.transmitUserToken(userToken);
+                    bo.setNumber(detailBO.getEmployeesNumber());
+
+                    userToken = RpcTransmit.getUserToken();
+                    RpcTransmit.transmitUserToken(userToken);
 //                        bo.setArea(user.get(0).getArea());
 //                        bo.setPosition(user.get(0).getPosition());
 //                        bo.setDepartment(user.get(0).getDepartment());
-                for (String id : detailBO.getPositionIds().split(",")) {
-                    PositionDetailBO position = positionDetailAPI.findBOById(id);
+                    for (String id : detailBO.getPositionIds().split(",")) {
+                        PositionDetailBO position = positionDetailAPI.findBOById(id);
 //                    bo.setPosition(bo.getPosition() + "," + position.getPosition());
 //                    bo.setDepartment(bo.getDepartment() + "," + position.getDepartmentName());
 //                    bo.setArea(bo.getArea() + "," + position.getArea());
-                    bo.setPosition(position.getPosition());
-                    bo.setDepartment(position.getDepartmentName());
-                    bo.setArea(position.getArea());
-                    break;
+                        bo.setPosition(position.getPosition());
+                        bo.setDepartment(position.getDepartmentName());
+                        bo.setArea(position.getArea());
+                        break;
+                    }
                 }
             }
         }
@@ -592,6 +597,63 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         return null;
     }
 
+    @Override
+    public List<MobileInternalContactsBO> mobileList(InternalContactsDTO dto) throws SerException {
+        searchMobileCondition(dto);
+        List<InternalContacts> list = super.findByPage(dto);
+        List<InternalContactsBO> bos = this.transformBOList(list);
+        if (!CollectionUtils.isEmpty(bos)) {
+            List<MobileInternalContactsBO> mobileInternalContactsBOs = BeanTransform.copyProperties(bos, MobileInternalContactsBO.class, "headSculpture", "sex", "phoneNumber", "emergency", "emergencyPhone");
+            for (MobileInternalContactsBO bo : mobileInternalContactsBOs) {
+                UserDTO userDTO = new UserDTO();
+                userDTO.getConditions().add(Restrict.eq("id", bo.getUserId()));
+                UserBO userBO = userAPI.findOne(userDTO);
+                if (null != userBO) {
+                    bo.setHeadSculpture(userBO.getHeadSculpture());
+                }
+                UserDetailBO userDetailBO = userDetailAPI.findByUserId(bo.getUserId());
+                if (null != userDetailBO) {
+                    bo.setSex(userDetailBO.getSex());
+                }
+            }
+            return mobileInternalContactsBOs;
+        }
+        return null;
+    }
+
+    @Override
+    public Long getMobileTotal(InternalContactsDTO dto) throws SerException {
+        searchMobileCondition(dto);
+        return super.count(dto);
+    }
+
+    @Override
+    public MobileInternalContactsBO findByMobileID(String id) throws SerException {
+        if (StringUtils.isBlank(id)) {
+            return null;
+        }
+        InternalContactsDTO dto = new InternalContactsDTO();
+        dto.getConditions().add(Restrict.eq("id", id));
+        InternalContacts entity = super.findOne(dto);
+        InternalContactsBO bo = this.transformBO(entity);
+        if (null != bo) {
+            MobileInternalContactsBO mobileInternalContactsBO = BeanTransform.copyProperties(bo, MobileInternalContactsBO.class, "headSculpture", "sex", "phoneNumber", "emergency", "emergencyPhone");
+            UserDTO userDTO = new UserDTO();
+            userDTO.getConditions().add(Restrict.eq("id", mobileInternalContactsBO.getUserId()));
+            UserBO userBO = userAPI.findOne(userDTO);
+            if (null != userBO) {
+                mobileInternalContactsBO.setHeadSculpture(userBO.getHeadSculpture());
+            }
+            UserDetailBO userDetailBO = userDetailAPI.findByUserId(mobileInternalContactsBO.getUserId());
+            if (null != userDetailBO) {
+                mobileInternalContactsBO.setSex(userDetailBO.getSex());
+            }
+            return mobileInternalContactsBO;
+        }
+        return null;
+    }
+
+
     /**
      * 核对查看权限（部门级别）
      */
@@ -768,6 +830,100 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         //结束
         sb.append("</table>");
         return sb.toString();
+    }
+
+    private void searchMobileCondition(InternalContactsDTO dto) throws SerException {
+        /**
+         * 用户名
+         */
+        if (StringUtils.isNotBlank(dto.getUserName())) {
+            //根据用户名查询用户id
+            List<UserBO> userBOList = positionDetailUserAPI.findUserListInOrgan();
+            List<InternalContacts> internalContactses = super.findAll();
+            List<String> list = new ArrayList<>(0);
+            if (!CollectionUtils.isEmpty(internalContactses)) {
+                list = internalContactses.stream().map(InternalContacts::getUserId).distinct().collect(Collectors.toList());
+            }
+            if (!CollectionUtils.isEmpty(userBOList) && !CollectionUtils.isEmpty(list)) {
+                for (UserBO userBO : userBOList) {
+                    if (userBO.getUsername().equals(dto.getUserName()) && list.contains(userBO.getId())) {
+                        dto.getConditions().add(Restrict.eq("userId", userBO.getId()));
+                    }
+                }
+            }
+        }
+//        /**
+//         * 用户性别
+//         */
+//        if (dto.getSex() != null) {
+//            dto.getConditions().add(Restrict.eq("sex", dto.getSex()));
+//        }
+//        /**
+//         * 地区
+//         */
+//        if (StringUtils.isNotBlank(dto.getArea())) {
+//            dto.getConditions().add(Restrict.eq("area", dto.getArea()));
+//        }
+//        /**
+//         * 员工编号
+//         */
+//        if (StringUtils.isNotBlank(dto.getNumber())) {
+//            dto.getConditions().add(Restrict.eq("number", dto.getNumber()));
+//        }
+//        /**
+//         * 部门/项目组
+//         */
+//        if (StringUtils.isNotBlank(dto.getDepartment())) {
+//            dto.getConditions().add(Restrict.eq("department", dto.getDepartment()));
+//        }
+//        /**
+//         * 职位
+//         */
+//        if (StringUtils.isNotBlank(dto.getPosition())) {
+//            dto.getConditions().add(Restrict.eq("position", dto.getPosition()));
+//        }
+//        /**
+//         * 联系电话
+//         */
+//        if (StringUtils.isNotBlank(dto.getPhone())) {
+//            dto.getConditions().add(Restrict.eq("phone", dto.getPhone()));
+//        }
+//        /**
+//         * 邮箱
+//         */
+//        if (StringUtils.isNotBlank(dto.getEmail())) {
+//            dto.getConditions().add(Restrict.eq("email", dto.getEmail()));
+//        }
+//        /**
+//         * 集团号
+//         */
+//        if (StringUtils.isNotBlank(dto.getBloc())) {
+//            dto.getConditions().add(Restrict.eq("bloc", dto.getBloc()));
+//        }
+//        /**
+//         * QQ号
+//         */
+//        if (StringUtils.isNotBlank(dto.getQq())) {
+//            dto.getConditions().add(Restrict.eq("qq", dto.getQq()));
+//        }
+//        /**
+//         * 微信号
+//         */
+//        if (StringUtils.isNotBlank(dto.getWeChat())) {
+//            dto.getConditions().add(Restrict.eq("weChat", dto.getWeChat()));
+//        }
+//        /**
+//         * 备注
+//         */
+//        if (StringUtils.isNotBlank(dto.getRemark())) {
+//            dto.getConditions().add(Restrict.eq("remark", dto.getRemark()));
+//        }
+//        /**
+//         * 状态
+//         */
+//        if (dto.getStatus() != null) {
+//            dto.getConditions().add(Restrict.eq("status", dto.getStatus()));
+//        }
     }
 
 }

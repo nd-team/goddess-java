@@ -2,6 +2,7 @@ package com.bjike.goddess.contacts.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contacts.bo.InternalContactsBO;
+import com.bjike.goddess.contacts.bo.MobileInternalContactsBO;
 import com.bjike.goddess.contacts.bo.NameAndIdBO;
 import com.bjike.goddess.contacts.dto.InternalContactsDTO;
 import com.bjike.goddess.contacts.service.InternalContactsSer;
@@ -111,5 +112,20 @@ public class InternalContactsApiImpl implements InternalContactsAPI {
     @Override
     public String getEmail(String name) throws SerException {
         return internalContactsSer.getEmail(name);
+    }
+
+    @Override
+    public List<MobileInternalContactsBO> mobileList(InternalContactsDTO dto) throws SerException {
+        return internalContactsSer.mobileList(dto);
+    }
+
+    @Override
+    public Long getMobileTotal(InternalContactsDTO dto) throws SerException {
+        return internalContactsSer.getMobileTotal(dto);
+    }
+
+    @Override
+    public MobileInternalContactsBO findByMobileID(String id) throws SerException {
+        return internalContactsSer.findByMobileID(id);
     }
 }
