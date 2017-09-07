@@ -81,6 +81,7 @@ public class SiginManageAction extends BaseFileAction {
                 obj.setFlag(true);
             }
             list.add(obj);
+
             return new ActResult(0, "设置权限", list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

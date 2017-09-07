@@ -1,5 +1,6 @@
 package com.bjike.goddess.capability.action.capability;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.archive.api.StaffRecordsAPI;
 import com.bjike.goddess.archive.bo.StaffRecordsBO;
 import com.bjike.goddess.assemble.api.ModuleAPI;
@@ -10,6 +11,7 @@ import com.bjike.goddess.capability.to.CapabilityDeleteFileTO;
 import com.bjike.goddess.capability.to.GuidePermissionTO;
 import com.bjike.goddess.capability.to.SelfCapabilityTO;
 import com.bjike.goddess.capability.vo.SelfCapabilityVO;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -339,9 +341,11 @@ public class SelfCapabilityAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/getByName/{name}")
-    public Result getByName(@PathVariable String name) throws ActException {
+    public Result getByName(@PathVariable String name,HttpServletRequest request) throws ActException {
         try {
+            String userToken = request.getHeader(RpcCommon.USER_TOKEN);
             if (moduleAPI.isCheck("archive")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, userToken);
                 StaffRecordsBO bo = staffRecordsAPI.getByName(name);
                 if (null != bo) {
                     return ActResult.initialize(bo.getSeniority() + "");

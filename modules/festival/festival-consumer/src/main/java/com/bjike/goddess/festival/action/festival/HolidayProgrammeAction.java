@@ -1,6 +1,8 @@
 package com.bjike.goddess.festival.action.festival;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -20,6 +22,7 @@ import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -257,7 +260,10 @@ public class HolidayProgrammeAction {
     @GetMapping("v1/findDepart")
     public Result findDepart(HttpServletRequest request) throws ActException {
         try {
+            String userToken = request.getHeader(RpcCommon.USER_TOKEN);
+
             if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, userToken);
                 List<DepartmentDetailVO> list = BeanTransform.copyProperties(
                         departmentDetailAPI.findStatus(), DepartmentDetailVO.class, request);
                 return ActResult.initialize(list);

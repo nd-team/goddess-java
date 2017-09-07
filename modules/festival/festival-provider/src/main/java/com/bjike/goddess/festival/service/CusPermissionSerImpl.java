@@ -14,6 +14,7 @@ import com.bjike.goddess.festival.entity.CusPermission;
 import com.bjike.goddess.festival.entity.CusPermissionOperate;
 import com.bjike.goddess.festival.to.CusPermissionTO;
 import com.bjike.goddess.festival.type.CusPermissionType;
+import com.bjike.goddess.organize.api.*;
 import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -190,6 +191,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         }
         CusPermission cusPermission = super.findById(id);
         CusPermissionType type = cusPermission.getType();
+
         if (CusPermissionType.LEVEL.equals(type)) {
             list = arrangementAPI.findThawOpinion();
         } else if (CusPermissionType.MODULE.equals(type)) {
@@ -435,6 +437,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         //checkAsUserArrangement
         //checkAsUserModule
 //        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);//岗位
+
         Boolean arrangementFlag = positionDetailUserAPI.checkAsUserArrangement(userId, operateIds);//层次
 //        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId, operateIds);
 

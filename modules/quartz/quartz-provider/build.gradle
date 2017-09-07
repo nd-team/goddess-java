@@ -45,9 +45,9 @@ dependencies {
     compile project(":modules:marketactivitymanage:marketactivitymanage-api")
     compile project(":modules:competitormanage:competitormanage-api")
     compile project(":modules:businessinteraction:businessinteraction-api")
-    compile project(":modules:materialsummary:materialsummary-api")
-    compile project(":modules:event:event-api")
-    compile project(":modules:outcarfare:outcarfare-api")
+//    compile project(":modules:materialsummary:materialsummary-api")
+//    compile project(":modules:event:event-api")
+//    compile project(":modules:outcarfare:outcarfare-api")
 
 
 }
