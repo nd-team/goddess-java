@@ -25,6 +25,7 @@ import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.dto.UserDTO;
+import com.bjike.goddess.user.entity.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -217,10 +218,13 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
                 break;
             case SPECIFIED:
                 List<UserMessage> userMessages = new ArrayList<>();
-                for (String user : to.getReceivers()) {
+                for (String user : to.getReceivers()) { //接收人可能是id可能是邮件
+                    UserDTO dto = new UserDTO();
+                    dto.getConditions().add(Restrict.eq("id",user));
+                    dto.getConditions().add(Restrict.or("email",user));
                     UserMessage userMessage = new UserMessage();
                     userMessage.setMessage(message);
-                    userMessage.setUserId(user);
+                    userMessage.setUserId(userAPI.findOne(dto).getId());
                     userMessages.add(userMessage);
                 }
                 userMessageSer.save(userMessages);
