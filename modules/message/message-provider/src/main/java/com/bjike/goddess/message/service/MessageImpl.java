@@ -25,7 +25,6 @@ import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.dto.UserDTO;
-import com.bjike.goddess.user.entity.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -149,7 +148,7 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
         if (null != dto.getMsgType()) {
             sb.append(" where msgType=" + dto.getMsgType().getCode());
         }
-        sb.append(" order by createTime desc limit "+start+","+dto.getLimit());
+        sb.append(" order by createTime desc limit " + start + "," + dto.getLimit());
         String sql = sb.toString();
         sql = String.format(sql, groupId, dto.getUserId());
         String[] fields = new String[]{"id", "createTime", "modifyTime", "title", "content", "senderId", "senderName"};
@@ -220,12 +219,15 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
                 List<UserMessage> userMessages = new ArrayList<>();
                 for (String user : to.getReceivers()) { //接收人可能是id可能是邮件
                     UserDTO dto = new UserDTO();
-                    dto.getConditions().add(Restrict.eq("id",user));
-                    dto.getConditions().add(Restrict.or("email",user));
-                    UserMessage userMessage = new UserMessage();
-                    userMessage.setMessage(message);
-                    userMessage.setUserId(userAPI.findOne(dto).getId());
-                    userMessages.add(userMessage);
+                    dto.getConditions().add(Restrict.eq("id", user));
+                    dto.getConditions().add(Restrict.or("email", user));
+                    UserBO bo = userAPI.findOne(dto);
+                    if (null != bo) {
+                        UserMessage userMessage = new UserMessage();
+                        userMessage.setMessage(message);
+                        userMessage.setUserId(bo.getId());
+                        userMessages.add(userMessage);
+                    }
                 }
                 userMessageSer.save(userMessages);
                 break;
