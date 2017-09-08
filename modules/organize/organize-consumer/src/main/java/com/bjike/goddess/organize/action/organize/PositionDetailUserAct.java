@@ -8,12 +8,13 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.DepartPositionBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
 import com.bjike.goddess.organize.to.PositionDetailUserTO;
+import com.bjike.goddess.organize.vo.DepartPositionVO;
 import com.bjike.goddess.organize.vo.PositionDetailUserVO;
 import com.bjike.goddess.organize.vo.PositionDetailVO;
-import com.bjike.goddess.organize.vo.UserPositionVO;
 import com.bjike.goddess.user.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -21,11 +22,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 用户职位
+ * 组织（人员）构成
  *
  * @Author: [ dengjunren ]
  * @Date: [ 2017-04-14 02:33 ]
@@ -40,26 +40,26 @@ public class PositionDetailUserAct {
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
 
-    private PositionDetailUserVO assemble(PositionDetailUserVO vo) {
-        if (vo.getPosition() != null && vo.getPositionIds() != null) {
-            String[] names = vo.getPosition().split(","), ids = vo.getPositionIds().split(",");
-            vo.setPositionVo(new ArrayList<>(0));
-            for (int i = 0, lent = ids.length; lent > i; i++) {
-                UserPositionVO positionVO = new UserPositionVO();
-                positionVO.setId(ids[i]);
-                positionVO.setPosition(names[i]);
-                vo.getPositionVo().add(positionVO);
-            }
-        }
-        return vo;
-    }
+//    private PositionDetailUserVO assemble(PositionDetailUserVO vo) {
+//        if (vo.getPosition() != null && vo.getPositionIds() != null) {
+//            String[] names = vo.getPosition().split(","), ids = vo.getPositionIds().split(",");
+//            vo.setPositionVo(new ArrayList<>(0));
+//            for (int i = 0, lent = ids.length; lent > i; i++) {
+//                UserPositionVO positionVO = new UserPositionVO();
+//                positionVO.setId(ids[i]);
+//                positionVO.setPosition(names[i]);
+//                vo.getPositionVo().add(positionVO);
+//            }
+//        }
+//        return vo;
+//    }
 
-    private List<PositionDetailUserVO> assemble(List<PositionDetailUserVO> vos) {
-        for (PositionDetailUserVO vo : vos) {
-            this.assemble(vo);
-        }
-        return vos;
-    }
+//    private List<PositionDetailUserVO> assemble(List<PositionDetailUserVO> vos) {
+//        for (PositionDetailUserVO vo : vos) {
+//            this.assemble(vo);
+//        }
+//        return vos;
+//    }
 
     /**
      * 保存
@@ -71,7 +71,8 @@ public class PositionDetailUserAct {
     @PostMapping("v1/save")
     public Result save(@Validated(ADD.class) PositionDetailUserTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionDetailUserAPI.save(to), PositionDetailUserVO.class, request));
+            positionDetailUserAPI.save(to);
+            return new ActResult("添加成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -84,10 +85,11 @@ public class PositionDetailUserAct {
      * @return class PositionDetailUserVO
      * @version v1
      */
-    @PutMapping("v1/update/{id}")
+    @PutMapping("v1/update")
     public Result update(@Validated(EDIT.class) PositionDetailUserTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionDetailUserAPI.update(to), PositionDetailUserVO.class, request));
+            positionDetailUserAPI.update(to);
+            return new ActResult("修改成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -103,7 +105,8 @@ public class PositionDetailUserAct {
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionDetailUserAPI.delete(id), PositionDetailUserVO.class, request));
+            positionDetailUserAPI.delete(id);
+            return new ActResult("删除成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -184,10 +187,11 @@ public class PositionDetailUserAct {
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             PositionDetailUserVO vo = BeanTransform.copyProperties(positionDetailUserAPI.findById(id), PositionDetailUserVO.class, request);
-            List<PositionDetailBO> bos = positionDetailUserAPI.findPositionByUser(vo.getUserId());
-            if (null != bos)
-                vo.setPositionDetails(BeanTransform.copyProperties(bos, PositionDetailVO.class));
-            return ActResult.initialize(this.assemble(vo));
+//            List<PositionDetailBO> bos = positionDetailUserAPI.findPositionByUser(vo.getUserId());
+//            if (null != bos)
+//                vo.setPositionDetails(BeanTransform.copyProperties(bos, PositionDetailVO.class));
+//            return ActResult.initialize(this.assemble(vo));
+            return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -224,5 +228,21 @@ public class PositionDetailUserAct {
         }
     }
 
+    /**
+     * 获取所有部门下的职位
+     *
+     * @return class DepartPositionVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/departPositions")
+    public Result departPositions(HttpServletRequest request) throws ActException {
+        try {
+            List<DepartPositionBO> userBOS = positionDetailUserAPI.departPositions();
+            return ActResult.initialize(BeanTransform.copyProperties(userBOS, DepartPositionVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

@@ -28,17 +28,46 @@ public class ModuleType extends BaseEntity {
     private String module;
 
     /**
-     * 描述
+     * 项目组/部门
      */
-    @Column(name = "description", columnDefinition = "VARCHAR(255)   COMMENT '描述'")
-    private String description;
+    @Column(name = "depart", columnDefinition = "VARCHAR(255)   COMMENT '项目组/部门'", nullable = false)
+    private String depart;
+
+    /**
+     * 是否为职能模块
+     */
+    @Column(columnDefinition = "TINYINT(1)  COMMENT '是否为职能模块'", nullable = false)
+    private Boolean position;
 
     /**
      * 状态
      */
-    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '状态'", nullable = false, insertable = false)
+    @Column(columnDefinition = "TINYINT(2)  COMMENT '状态'", nullable = false)
     private Status status;
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public String getDepart() {
+        return depart;
+    }
+
+    public void setDepart(String depart) {
+        this.depart = depart;
+    }
+
+    public Boolean getPosition() {
+        return position;
+    }
+
+    public void setPosition(Boolean position) {
+        this.position = position;
+    }
 
     public String getModule() {
         return module;
@@ -48,19 +77,4 @@ public class ModuleType extends BaseEntity {
         this.module = module;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
 }

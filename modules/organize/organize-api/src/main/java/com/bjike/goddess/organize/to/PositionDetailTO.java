@@ -44,7 +44,6 @@ public class PositionDetailTO extends BaseTO {
     /**
      * 模块id
      */
-    @NotNull(message = "模块id不能为空", groups = {ADD.class, EDIT.class})
     private String moduleId;
 
     /**
@@ -63,6 +62,20 @@ public class PositionDetailTO extends BaseTO {
      * 当前人数
      */
     private String current;
+
+    /**
+     * 是否有岗位说明书
+     */
+    @NotNull(message = "是否有岗位说明书", groups = {ADD.class, EDIT.class})
+    private Boolean book;
+
+    public Boolean getBook() {
+        return book;
+    }
+
+    public void setBook(Boolean book) {
+        this.book = book;
+    }
 
     public String getSerialNumber() {
         return serialNumber;

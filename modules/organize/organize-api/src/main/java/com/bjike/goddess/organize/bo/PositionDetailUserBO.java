@@ -1,6 +1,9 @@
 package com.bjike.goddess.organize.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.organize.enums.StaffStatus;
+
+import java.util.List;
 
 /**
  * 用户职位业务传输对象
@@ -28,16 +31,40 @@ public class PositionDetailUserBO extends BaseBO {
      */
     private String employeesNumber;
 
-    /**
-     * 职位
-     */
-    private String position;
+//    /**
+//     * 职位
+//     */
+//    private String position;
+//
+//    /**
+//     * 职位id
+//     */
+//    private String positionIds;
 
     /**
-     * 职位id
+     * 人员状态
      */
-    private String positionIds;
+    private StaffStatus staffStatus;
+    /**
+     * 详细信息
+     */
+    private List<PositionUserDetailBO> detailS;
 
+    public List<PositionUserDetailBO> getDetailS() {
+        return detailS;
+    }
+
+    public void setDetailS(List<PositionUserDetailBO> detailS) {
+        this.detailS = detailS;
+    }
+
+    public StaffStatus getStaffStatus() {
+        return staffStatus;
+    }
+
+    public void setStaffStatus(StaffStatus staffStatus) {
+        this.staffStatus = staffStatus;
+    }
 
     public String getUserId() {
         return userId;
@@ -45,22 +72,6 @@ public class PositionDetailUserBO extends BaseBO {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public String getPositionIds() {
-        return positionIds;
-    }
-
-    public void setPositionIds(String positionIds) {
-        this.positionIds = positionIds;
     }
 
     public String getUsername() {

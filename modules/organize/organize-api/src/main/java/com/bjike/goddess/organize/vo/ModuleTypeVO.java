@@ -23,9 +23,14 @@ public class ModuleTypeVO {
     private String module;
 
     /**
-     * 描述
+     * 项目组/部门
      */
-    private String description;
+    private String depart;
+
+    /**
+     * 是否为职能模块
+     */
+    private Boolean position;
 
     /**
      * 状态
@@ -48,12 +53,20 @@ public class ModuleTypeVO {
         this.module = module;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDepart() {
+        return depart;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDepart(String depart) {
+        this.depart = depart;
+    }
+
+    public Boolean getPosition() {
+        return position;
+    }
+
+    public void setPosition(Boolean position) {
+        this.position = position;
     }
 
     public Status getStatus() {

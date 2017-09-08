@@ -5,13 +5,21 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.bo.DepartPositionBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
+import com.bjike.goddess.organize.bo.PositionUserDetailBO;
+import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.dto.PositionDetailDTO;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
+import com.bjike.goddess.organize.dto.PositionUserDetailDTO;
+import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.organize.entity.PositionDetailUser;
+import com.bjike.goddess.organize.entity.PositionUserDetail;
+import com.bjike.goddess.organize.enums.WorkStatus;
 import com.bjike.goddess.organize.to.PositionDetailUserTO;
+import com.bjike.goddess.organize.to.PositionUserDetailTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dto.UserDTO;
@@ -21,10 +29,8 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 用户职位业务实现
@@ -43,6 +49,10 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     private PositionDetailSer positionDetailSer;
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private PositionUserDetailSer positionUserDetailSer;
+    @Autowired
+    private DepartmentDetailSer departmentDetailSer;
 
     private PositionDetailUserBO transformBO(PositionDetailUser entity) throws SerException {
         PositionDetailUserBO bo = BeanTransform.copyProperties(entity, PositionDetailUserBO.class);
@@ -53,14 +63,39 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
             bo.setUsername(userBOs.get(0).getUsername());
             bo.setEmployeesNumber(userBOs.get(0).getEmployeeNumber());
         }
-        StringBuilder positionId = new StringBuilder(0), positionName = new StringBuilder(0);
-        if (null != entity.getPositionSet())
+//        StringBuilder positionId = new StringBuilder(0), positionName = new StringBuilder(0);
+//        if (null != entity.getPositionSet())
+//            for (PositionDetail positionDetail : entity.getPositionSet()) {
+//                positionId.append(positionDetail.getId()).append(",");
+//                positionName.append(positionDetail.getPosition()).append(",");
+//            }
+//        bo.setPosition(positionName.toString());
+//        bo.setPositionIds(positionId.toString());
+        String userId = entity.getUserId();
+        List<PositionUserDetailBO> detailBOS = new ArrayList<>();
+        if (null != entity.getPositionSet()) {
             for (PositionDetail positionDetail : entity.getPositionSet()) {
-                positionId.append(positionDetail.getId()).append(",");
-                positionName.append(positionDetail.getPosition()).append(",");
+                PositionUserDetailDTO detailDTO = new PositionUserDetailDTO();
+                detailDTO.getConditions().add(Restrict.eq("userId", userId));
+                detailDTO.getConditions().add(Restrict.eq("positionId", positionDetail.getId()));
+                PositionUserDetail detail = positionUserDetailSer.findOne(detailDTO);
+                PositionUserDetailBO detailBO = new PositionUserDetailBO();
+                if (null != detail) {
+                    detailBO = BeanTransform.copyProperties(detail, PositionUserDetailBO.class);
+                }
+                detailBO.setHierarchyNumber(positionDetail.getDepartment().getHierarchy().getSerialNumber());
+                detailBO.setHierarchy(positionDetail.getDepartment().getHierarchy().getHierarchy());
+                detailBO.setArea(positionDetail.getDepartment().getArea());
+                detailBO.setDepartNumber(positionDetail.getDepartment().getSerialNumber());
+                detailBO.setDepartment(positionDetail.getDepartment().getDepartment());
+                detailBO.setArrangement(positionDetail.getArrangement().getArrangement());
+                detailBO.setModule(positionDetail.getModule().getModule());
+                detailBO.setPosition(positionDetail.getPosition());
+                detailBO.setPositionNumber(positionDetail.getSerialNumber());
+                detailBOS.add(detailBO);
             }
-        bo.setPosition(positionName.toString());
-        bo.setPositionIds(positionId.toString());
+        }
+        bo.setDetailS(detailBOS);
         return bo;
     }
 
@@ -83,7 +118,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     }
 
     @Override
-    public PositionDetailUserBO save(PositionDetailUserTO to) throws SerException {
+    public void save(PositionDetailUserTO to) throws SerException {
         this.checkUnique(to);
         PositionDetailUser entity = new PositionDetailUser();
         entity.setUserId(to.getUserId());
@@ -93,15 +128,30 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         List<UserBO> userBOList = userAPI.findByCis(userDTO);
         if (null == userBOList || userBOList.size() <= 0)
             throw new SerException("该用户不存在");
-        if (null != to.getPositionIds())
-            for (String id : to.getPositionIds())
-                entity.getPositionSet().add(positionDetailSer.findById(id));
+        List<PositionUserDetailTO> detailTOS = to.getDetailTOS();
+        if (null != detailTOS) {
+            long num = detailTOS.stream().filter(positionUserDetailTO -> WorkStatus.MAIN.equals(positionUserDetailTO.getWorkStatus())).count();
+            if (num < 1) {
+                throw new SerException("一个员工必须要有一个主职");
+            }
+            if (num > 1) {
+                throw new SerException("一个员工只能有一个主职");
+            }
+            for (PositionUserDetailTO detailTO : detailTOS) {
+                String positionId = detailTO.getPositionId();
+                entity.getPositionSet().add(positionDetailSer.findById(positionId));
+                PositionUserDetail positionUserDetail = BeanTransform.copyProperties(detailTO, PositionUserDetail.class, true, "id");
+                positionUserDetail.setUserId(to.getUserId());
+                positionUserDetailSer.save(positionUserDetail);
+            }
+        }
+        entity.setStaffStatus(to.getStaffStatus());
         super.save(entity);
-        return this.transformBO(entity);
+//        return this.transformBO(entity);
     }
 
     @Override
-    public PositionDetailUserBO update(PositionDetailUserTO to) throws SerException {
+    public void update(PositionDetailUserTO to) throws SerException {
         if (StringUtils.isNotBlank(to.getId())) {
             UserDTO userDTO = new UserDTO();
             userDTO.getConditions().add(Restrict.eq(ID, to.getUserId()));
@@ -114,26 +164,54 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
             try {
                 BeanTransform.copyProperties(to, entity, true);
                 entity.setPositionSet(new HashSet<>(0));
-                if (null != to.getPositionIds())
-                    for (String id : to.getPositionIds())
-                        entity.getPositionSet().add(positionDetailSer.findById(id));
+                String userId = to.getUserId();
+                PositionUserDetailDTO detailDTO = new PositionUserDetailDTO();
+                detailDTO.getConditions().add(Restrict.eq("userId", userId));
+                List<PositionUserDetail> list = positionUserDetailSer.findByCis(detailDTO);
+                positionUserDetailSer.remove(list);
+                List<PositionUserDetailTO> detailTOS = to.getDetailTOS();
+                if (null != detailTOS) {
+                    long num = detailTOS.stream().filter(positionUserDetailTO -> WorkStatus.MAIN.equals(positionUserDetailTO.getWorkStatus())).count();
+                    if (num < 1) {
+                        throw new SerException("一个员工必须要有一个主职");
+                    }
+                    if (num > 1) {
+                        throw new SerException("一个员工只能有一个主职");
+                    }
+                    for (PositionUserDetailTO detailTO : detailTOS) {
+                        entity.getPositionSet().add(positionDetailSer.findById(detailTO.getPositionId()));
+                        PositionUserDetail positionUserDetail = BeanTransform.copyProperties(detailTO, PositionUserDetail.class, true, "id");
+                        positionUserDetail.setUserId(to.getUserId());
+                        positionUserDetailSer.save(positionUserDetail);
+                    }
+                }
+                entity.setStaffStatus(to.getStaffStatus());
                 entity.setModifyTime(LocalDateTime.now());
                 super.update(entity);
-                return this.transformBO(entity);
+//                return this.transformBO(entity);
+
             } catch (Exception e) {
                 throw new SerException("数据对象不能为空");
             }
         } else
-            throw new SerException("数据ID不能为空");
+            throw new
+
+                    SerException("数据ID不能为空");
+
     }
 
     @Override
-    public PositionDetailUserBO delete(String id) throws SerException {
+    public void delete(String id) throws SerException {
         PositionDetailUser entity = super.findById(id);
         if (null == entity)
             throw new SerException("数据对象不能为空");
+        String userId = entity.getUserId();
+        PositionUserDetailDTO detailDTO = new PositionUserDetailDTO();
+        detailDTO.getConditions().add(Restrict.eq("userId", userId));
+        List<PositionUserDetail> list = positionUserDetailSer.findByCis(detailDTO);
+        positionUserDetailSer.remove(list);
         super.remove(entity);
-        return this.transformBO(entity);
+//        return this.transformBO(entity);
     }
 
     @Override
@@ -284,9 +362,9 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         List<String> stringList = new ArrayList<>();
         if (null != positionDetailUserBOList && positionDetailUserBOList.size() > 0) {
             for (PositionDetailUserBO bo : positionDetailUserBOList) {
-                String str = "";
-                str = bo.getPosition();
-                stringList.add(str);
+                List<PositionUserDetailBO> detailBOS = bo.getDetailS();
+                List<String> list = detailBOS.stream().map(positionUserDetailBO -> positionUserDetailBO.getPosition()).collect(Collectors.toList());
+                stringList.addAll(list);
             }
         }
         return stringList;
@@ -298,10 +376,12 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         List<PositionDetailUserBO> positionDetailUserBOList = maps(dto);
         List<String[]> stringList = new ArrayList<>();
         if (null != positionDetailUserBOList && positionDetailUserBOList.size() > 0) {
-            String string[] = new String[positionDetailUserBOList.size()];
             for (PositionDetailUserBO bo : positionDetailUserBOList) {
-                string = bo.getPosition().split(";");
-                stringList.add(string);
+                List<PositionUserDetailBO> detailBOS = bo.getDetailS();
+                List<String> list = detailBOS.stream().map(positionUserDetailBO -> positionUserDetailBO.getPosition()).collect(Collectors.toList());
+                String[] strings = new String[list.size()];
+                strings = list.toArray(strings);
+                stringList.add(strings);
             }
         }
         return stringList;
@@ -364,7 +444,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         String fields[] = new String[]{"pool", "serialNumber", "staff", "arrangementId", "departmentId", "description", "position", "status", "moduleId"
 //                ,"position_id","user_id"
         };
-        userId = "00a94d4e-5c1f-4ed9-8a1b-e9e5811c1c0e";
+//        userId = "00a94d4e-5c1f-4ed9-8a1b-e9e5811c1c0e";
         StringBuilder sql = new StringBuilder("SELECT pool, serialNumber, staff, arrangement_id, department_id, description, position, status, module_id");
         sql.append(" FROM organize_position_detail a,");
         sql.append(" organize_position_detail_user_table b ");
@@ -373,5 +453,101 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         List<PositionDetailBO> positionDetails = positionDetailSer.findBySql(sql.toString(), PositionDetailBO.class, fields);
         List<PositionDetailBO> list = BeanTransform.copyProperties(positionDetails, PositionDetailBO.class);
         return list;
+    }
+//        PositionDetailUserDTO positionDetailUserDTO = new PositionDetailUserDTO();
+//        positionDetailUserDTO.getConditions().add(Restrict.eq("userId", userId));
+//        List<PositionDetailUser> positionDetailUserList = super.findByCis(positionDetailUserDTO);
+//        List<PositionDetail> positionList = new ArrayList<>(0);
+//        List<PositionDetailBO> positionDetailBOs1 = new ArrayList<>(0);
+//        if (null != positionDetailUserList && positionDetailUserList.size() > 0) {
+//            PositionDetailUser positionDetailUser = positionDetailUserList.get(0);
+//            Set<PositionDetail> positionDetailSet = positionDetailUser.getPositionSet();
+//            Iterator it = positionDetailSet.iterator();
+//            while (it.hasNext()) {
+//                positionList.add((PositionDetail) it.next());
+//            }
+//            List<PositionDetailBO> positionBOList = BeanTransform.copyProperties(positionList, PositionDetailBO.class);
+//            //查询未冻结数据
+//            if (null != positionBOList && positionBOList.size() > 0) {
+//                for (PositionDetailBO bo : positionBOList) {
+//                    if (Status.THAW.equals(bo.getStatus())) {
+//                        positionDetailBOs1.add(BeanTransform.copyProperties(bo, PositionDetailBO.class));
+//                    }
+//                }
+//            }
+//        }
+//        return positionDetailBOs1;
+//    }
+
+    @Override
+    public List<DepartPositionBO> departPositions() throws SerException {
+        DepartmentDetailDTO departmentDetailDTO = new DepartmentDetailDTO();
+        departmentDetailDTO.getConditions().add(Restrict.eq("status", Status.THAW));
+        List<DepartmentDetail> list = departmentDetailSer.findByCis(departmentDetailDTO);
+        List<DepartPositionBO> bos = new ArrayList<>();
+        for (DepartmentDetail depart : list) {
+            PositionDetailDTO positionDetailDTO = new PositionDetailDTO();
+            positionDetailDTO.getConditions().add(Restrict.eq("department.id", depart.getId()));
+            positionDetailDTO.getConditions().add(Restrict.eq("status", Status.THAW));
+            List<PositionDetail> positionDetails = positionDetailSer.findByCis(positionDetailDTO);
+            List<PositionDetailBO> positions = BeanTransform.copyProperties(positionDetails, PositionDetailBO.class);
+            DepartPositionBO bo = new DepartPositionBO();
+            bo.setDepartment(depart.getDepartment());
+            bo.setPositions(positions);
+            bos.add(bo);
+        }
+        return bos;
+    }
+
+    @Override
+    public PositionDetailUserBO bo(PositionDetailUser entity, Set<String> positions) throws SerException {
+        PositionDetailUserBO bo = BeanTransform.copyProperties(entity, PositionDetailUserBO.class);
+        UserDTO userDTO = new UserDTO();
+        userDTO.getConditions().add(Restrict.eq(ID, entity.getUserId()));
+        List<UserBO> userBOs = userAPI.findByCis(userDTO);
+        if (null != userBOs && userBOs.size() > 0) {
+            bo.setUsername(userBOs.get(0).getUsername());
+            bo.setEmployeesNumber(userBOs.get(0).getEmployeeNumber());
+        }
+//        StringBuilder positionId = new StringBuilder(0), positionName = new StringBuilder(0);
+//        if (null != entity.getPositionSet())
+//            for (PositionDetail positionDetail : entity.getPositionSet()) {
+//                positionId.append(positionDetail.getId()).append(",");
+//                positionName.append(positionDetail.getPosition()).append(",");
+//            }
+//        bo.setPosition(positionName.toString());
+//        bo.setPositionIds(positionId.toString());
+        String userId = entity.getUserId();
+        List<PositionUserDetailBO> detailBOS = new ArrayList<>();
+        if (null != entity.getPositionSet()) {
+            for (PositionDetail positionDetail : entity.getPositionSet()) {
+                if (positions.contains(positionDetail.getId())) {
+                    PositionUserDetailDTO detailDTO = new PositionUserDetailDTO();
+                    detailDTO.getConditions().add(Restrict.eq("userId", userId));
+                    detailDTO.getConditions().add(Restrict.eq("positionId", positionDetail.getId()));
+                    PositionUserDetail detail = positionUserDetailSer.findOne(detailDTO);
+                    PositionUserDetailBO detailBO = new PositionUserDetailBO();
+                    if (null != detail) {
+                        detailBO = BeanTransform.copyProperties(detail, PositionUserDetailBO.class);
+                    }
+                    detailBO.setHierarchyNumber(positionDetail.getDepartment().getHierarchy().getSerialNumber());
+                    detailBO.setHierarchy(positionDetail.getDepartment().getHierarchy().getHierarchy());
+                    detailBO.setArea(positionDetail.getDepartment().getArea());
+                    detailBO.setDepartNumber(positionDetail.getDepartment().getSerialNumber());
+                    detailBO.setDepartment(positionDetail.getDepartment().getDepartment());
+                    detailBO.setArrangement(positionDetail.getArrangement().getArrangement());
+                    detailBO.setModule(positionDetail.getModule().getModule());
+                    detailBO.setPosition(positionDetail.getPosition());
+                    detailBO.setPositionNumber(positionDetail.getSerialNumber());
+                    detailBOS.add(detailBO);
+                }
+            }
+        }
+        bo.setDetailS(detailBOS);
+        List<PositionUserDetailBO> bos = bo.getDetailS();
+        if (!bos.isEmpty()) {
+            return bo;
+        }
+        return null;
     }
 }

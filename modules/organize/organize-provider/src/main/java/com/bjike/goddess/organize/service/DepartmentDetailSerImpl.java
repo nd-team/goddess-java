@@ -10,6 +10,7 @@ import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.entity.DepartmentDetail;
+import com.bjike.goddess.organize.entity.Hierarchy;
 import com.bjike.goddess.organize.to.DepartmentDetailTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,22 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         //体系-部门
         bo.setShowNumber(String.format("%s-%s", entity.getHierarchy().getSerialNumber(), entity.getSerialNumber()));
         return bo;
+    }
+
+    @Override
+    public String number(DepartmentDetailTO to) throws SerException {
+        if (null==to.getHierarchyId()){
+            throw new SerException("必须先选体系");
+        }if (null==to.getSerialNumber()){
+            throw new SerException("编号不能为空");
+        }
+        Hierarchy hierarchy=hierarchySer.findById(to.getHierarchyId());
+        if (null==hierarchy){
+            throw new SerException("体系不能为空");
+        }
+        //体系-部门
+        String number=String.format("%s-%s", hierarchy.getSerialNumber(), to.getSerialNumber());
+        return number;
     }
 
     private List<DepartmentDetailBO> transformationToBOList(List<DepartmentDetail> list) throws SerException {
@@ -113,10 +130,20 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
     @Override
     public DepartmentDetailBO save(DepartmentDetailTO to) throws SerException {
         this.checkUnique(to);
+        StringBuilder sb=new StringBuilder();
         DepartmentDetail department = BeanTransform.copyProperties(to, DepartmentDetail.class, true);
         department.setHierarchy(hierarchySer.findById(to.getHierarchyId()));
         if (department.getHierarchy() == null)
             throw new SerException("体系不能为空");
+        String[] innerProjects=to.getInnerProjects();
+        for (int i=0;i<innerProjects.length;i++){
+            if (i==innerProjects.length-1){
+                sb.append(innerProjects[i]);
+            }else {
+                sb.append(innerProjects[i]+",");
+            }
+        }
+        department.setInnerProject(sb.toString());
         department.setCreateTime(LocalDateTime.now());
         department.setStatus(Status.THAW);
         super.save(department);
@@ -128,6 +155,7 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
     public DepartmentDetailBO update(DepartmentDetailTO to) throws SerException {
         if (StringUtils.isBlank(to.getId()))
             throw new SerException("数据ID不能为空");
+        StringBuilder sb=new StringBuilder();
         DepartmentDetail entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");
@@ -146,6 +174,15 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         entity.setHierarchy(hierarchySer.findById(to.getHierarchyId()));
         if (entity.getHierarchy() == null)
             throw new SerException("体系不能为空");
+        String[] innerProjects=to.getInnerProjects();
+        for (int i=0;i<innerProjects.length;i++){
+            if (i==innerProjects.length-1){
+                sb.append(innerProjects[i]);
+            }else {
+                sb.append(innerProjects[i]+",");
+            }
+        }
+        entity.setInnerProject(sb.toString());
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         return this.transformationToBO(entity);

@@ -93,6 +93,18 @@ public class PositionDetailBO extends BaseBO {
      * 职位状态
      */
     private Status status;
+    /**
+     * 是否有岗位说明书
+     */
+    private Boolean book;
+
+    public Boolean getBook() {
+        return book;
+    }
+
+    public void setBook(Boolean book) {
+        this.book = book;
+    }
 
     public Status getStatus() {
         return status;

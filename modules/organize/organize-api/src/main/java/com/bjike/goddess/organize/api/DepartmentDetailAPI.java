@@ -96,6 +96,7 @@ public interface DepartmentDetailAPI {
         return null;
     }
 
+
     /**
      * 冻结
      *
@@ -139,17 +140,6 @@ public interface DepartmentDetailAPI {
     default DepartmentDetailBO getById(String id) throws SerException {
         return null;
     }
-
-    /**
-     * 获取总条数
-     *
-     * @return
-     * @throws SerException
-     */
-    default Long getTotal() throws SerException {
-        return null;
-    }
-
 
     /**
      * 查询所有地区
@@ -203,5 +193,20 @@ public interface DepartmentDetailAPI {
         return null;
     }
 
+    /**
+     * 真实编号
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    String number(DepartmentDetailTO to) throws SerException;
+
+    /**
+     * 总条数
+     * @return
+     * @throws SerException
+     */
+    Long getTotal() throws SerException;
 
 }

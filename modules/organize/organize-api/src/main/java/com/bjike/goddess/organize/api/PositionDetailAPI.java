@@ -3,6 +3,7 @@ package com.bjike.goddess.organize.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.organize.bo.ReHierarchyBO;
 import com.bjike.goddess.organize.dto.PositionDetailDTO;
 import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.organize.to.PositionDetailTO;
@@ -98,6 +99,17 @@ public interface PositionDetailAPI {
     }
 
     /**
+     * 转换岗位详细传输对象
+     *
+     * @param list 岗位详细数据对象集合
+     * @return
+     * @throws SerException
+     */
+    default List<PositionDetailBO> transformationToBOList(Collection<PositionDetail> list) throws SerException {
+        return null;
+    }
+
+    /**
      * 冻结
      *
      * @param id 岗位详细数据id
@@ -120,17 +132,6 @@ public interface PositionDetailAPI {
     }
 
     /**
-     * 转换岗位详细传输对象
-     *
-     * @param list 岗位详细数据对象集合
-     * @return
-     * @throws SerException
-     */
-    default List<PositionDetailBO> transformationToBOList(Collection<PositionDetail> list) throws SerException {
-        return null;
-    }
-
-    /**
      * 删除
      *
      * @param id 岗位详细数据id
@@ -141,27 +142,15 @@ public interface PositionDetailAPI {
         return null;
     }
 
+    List<PositionDetailBO> maps(PositionDetailDTO dto) throws SerException;
+
     /**
      * 列表
      *
-     * @param dto 岗位详细数据传输
      * @return
      * @throws SerException
      */
-    default List<PositionDetailBO> maps(PositionDetailDTO dto) throws SerException {
-        return null;
-    }
-
-    /**
-     * 获取总条数
-     *
-     * @return
-     * @throws SerException
-     */
-    default Long getTotal() throws SerException {
-        return null;
-    }
-
+    List<ReHierarchyBO> list() throws SerException;
 
     /**
      * 查询未冻结职位选项
@@ -206,18 +195,50 @@ public interface PositionDetailAPI {
     }
 
     /**
-     * 查询地区
+     * 根据编号查询岗位信息
+     *
+     * @param serialNumber 编号
+     * @return
+     * @throws SerException
      */
-    default List<String> findArea() throws SerException {
+    default PositionDetailBO findByNumber(String serialNumber) throws SerException {
         return null;
     }
 
     /**
-     * 根据层级ｉｄ查询岗位id
+     * 根据岗位名称查询岗位信息
+     *
+     * @param position 岗位名称
+     * @return
+     * @throws SerException
+     */
+    default PositionDetailBO findByPosition(String position) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 根据层级ｉｄ查询所有的岗位
+     *
+     * @return
      */
     default List<String> getPositions(String id) throws SerException {
         return null;
     }
 
-    ;
+    /**
+     * 获取真实编号
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    String number(PositionDetailTO to) throws SerException;
+
+    /**
+     * 总条数
+     * @return
+     * @throws SerException
+     */
+    Long getTotal() throws SerException;
 }

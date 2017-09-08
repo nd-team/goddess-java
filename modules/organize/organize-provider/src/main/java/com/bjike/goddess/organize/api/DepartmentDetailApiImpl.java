@@ -113,4 +113,9 @@ public class DepartmentDetailApiImpl implements DepartmentDetailAPI {
     public List<OpinionBO> findAllOpinion() throws SerException {
         return departmentDetailSer.findAllOpinion();
     }
+
+    @Override
+    public String number(DepartmentDetailTO to) throws SerException {
+        return departmentDetailSer.number(to);
+    }
 }

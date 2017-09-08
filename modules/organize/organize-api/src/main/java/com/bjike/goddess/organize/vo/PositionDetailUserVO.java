@@ -32,15 +32,15 @@ public class PositionDetailUserVO {
      */
     private String employeesNumber;
 
-    /**
-     * 职位
-     */
-    private String position;
-
-    /**
-     * 职位id
-     */
-    private String positionIds;
+//    /**
+//     * 职位
+//     */
+//    private String position;
+//
+//    /**
+//     * 职位id
+//     */
+//    private String positionIds;
 
     /**
      * 职位选项数据
@@ -51,7 +51,18 @@ public class PositionDetailUserVO {
      * 职位信息
      */
     private List<PositionDetailVO> positionDetails;
+    /**
+     * 详细信息
+     */
+    private List<PositionUserDetailVO> detailS;
 
+    public List<PositionUserDetailVO> getDetailS() {
+        return detailS;
+    }
+
+    public void setDetailS(List<PositionUserDetailVO> detailS) {
+        this.detailS = detailS;
+    }
 
     public String getId() {
         return id;
@@ -67,22 +78,6 @@ public class PositionDetailUserVO {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public String getPositionIds() {
-        return positionIds;
-    }
-
-    public void setPositionIds(String positionIds) {
-        this.positionIds = positionIds;
     }
 
     public String getUsername() {

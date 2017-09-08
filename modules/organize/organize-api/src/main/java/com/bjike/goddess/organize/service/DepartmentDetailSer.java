@@ -145,6 +145,7 @@ public interface DepartmentDetailSer extends Ser<DepartmentDetail, DepartmentDet
 
     /**
      * 查询所有地区
+     *
      * @return
      * @throws SerException
      */
@@ -154,6 +155,7 @@ public interface DepartmentDetailSer extends Ser<DepartmentDetail, DepartmentDet
 
     /**
      * 根据地区查询
+     *
      * @param area
      * @return
      * @throws SerException
@@ -192,5 +194,14 @@ public interface DepartmentDetailSer extends Ser<DepartmentDetail, DepartmentDet
     default List<OpinionBO> findAllOpinion() throws SerException {
         return null;
     }
+
+    /**
+     * 真实编号
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    String number(DepartmentDetailTO to) throws SerException;
 
 }

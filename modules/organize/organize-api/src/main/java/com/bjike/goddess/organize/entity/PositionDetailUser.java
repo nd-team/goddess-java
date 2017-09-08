@@ -1,6 +1,7 @@
 package com.bjike.goddess.organize.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.organize.enums.StaffStatus;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -31,6 +32,19 @@ public class PositionDetailUser extends BaseEntity {
             inverseJoinColumns = {@JoinColumn(name = "position_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '岗位详细id'")})
     private Set<PositionDetail> positionSet = new HashSet<>(0);
 
+    /**
+     * 人员状态
+     */
+    @Column(columnDefinition = "TINYINT(2) comment '人员状态' ",nullable = false)
+    private StaffStatus staffStatus;
+
+    public StaffStatus getStaffStatus() {
+        return staffStatus;
+    }
+
+    public void setStaffStatus(StaffStatus staffStatus) {
+        this.staffStatus = staffStatus;
+    }
 
     public String getUserId() {
         return userId;

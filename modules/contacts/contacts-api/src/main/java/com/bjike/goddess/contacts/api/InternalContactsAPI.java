@@ -118,7 +118,7 @@ public interface InternalContactsAPI {
     /**
      * 下拉导航权限
      */
-    default Boolean sonPermission() throws SerException {
+    default Boolean sonPermission() throws  SerException {
         return null;
     }
 

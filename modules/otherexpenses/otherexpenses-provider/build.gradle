@@ -29,7 +29,7 @@ dependencies {
     compile project(":common:common-jpa")
     compile project(":common:common-provider")
     compile project(":modules:otherexpenses:otherexpenses-api")
-    compile project(":modules:businessproject:businessproject-api")
+//    compile project(":modules:businessproject:businessproject-api")
     compile project(":modules:message:message-api")
     compile project(":modules:organize:organize-api")
     compile project(":common:common-utils")

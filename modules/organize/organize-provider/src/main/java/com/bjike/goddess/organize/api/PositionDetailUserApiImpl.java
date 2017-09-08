@@ -1,9 +1,11 @@
 package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.organize.bo.DepartPositionBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
+import com.bjike.goddess.organize.entity.PositionDetailUser;
 import com.bjike.goddess.organize.service.PositionDetailUserSer;
 import com.bjike.goddess.organize.to.PositionDetailUserTO;
 import com.bjike.goddess.user.bo.UserBO;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 用户职位业务接口实现
@@ -27,20 +30,6 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     @Autowired
     private PositionDetailUserSer positionDetailUserSer;
 
-    @Override
-    public PositionDetailUserBO save(PositionDetailUserTO to) throws SerException {
-        return positionDetailUserSer.save(to);
-    }
-
-    @Override
-    public PositionDetailUserBO update(PositionDetailUserTO to) throws SerException {
-        return positionDetailUserSer.update(to);
-    }
-
-    @Override
-    public PositionDetailUserBO delete(String id) throws SerException {
-        return positionDetailUserSer.delete(id);
-    }
 
     @Override
     public List<PositionDetailBO> findPositionByUser(String user_id) throws SerException {
@@ -126,5 +115,35 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     @Override
     public List<PositionDetailBO> getPositionDetail(String name) throws SerException {
         return positionDetailUserSer.getPositionDetail(name);
+    }
+
+    @Override
+    public void save(PositionDetailUserTO to) throws SerException {
+        positionDetailUserSer.save(to);
+    }
+
+    @Override
+    public void update(PositionDetailUserTO to) throws SerException {
+        positionDetailUserSer.update(to);
+    }
+
+    @Override
+    public void delete(String id) throws SerException {
+        positionDetailUserSer.delete(id);
+    }
+
+    @Override
+    public PositionDetailUserBO getById(String id) throws SerException {
+        return positionDetailUserSer.getById(id);
+    }
+
+    @Override
+    public List<DepartPositionBO> departPositions() throws SerException {
+        return positionDetailUserSer.departPositions();
+    }
+
+    @Override
+    public PositionDetailUserBO bo(PositionDetailUser entity, Set<String> positions) throws SerException {
+        return positionDetailUserSer.bo(entity,positions);
     }
 }
