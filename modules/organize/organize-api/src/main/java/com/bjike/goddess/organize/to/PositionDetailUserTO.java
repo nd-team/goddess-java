@@ -3,8 +3,10 @@ package com.bjike.goddess.organize.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.organize.enums.StaffStatus;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 用户职位
@@ -22,11 +24,24 @@ public class PositionDetailUserTO extends BaseTO {
      */
     @NotNull(message = "用户信息不能为空", groups = {ADD.class, EDIT.class})
     private String userId;
-
     /**
-     * 岗位详细数据id
+     * 职位详情
      */
-    private String[] positionIds;
+    @NotNull(message = "职位详情不能为空", groups = {ADD.class, EDIT.class})
+    private List<PositionUserDetailTO> detailTOS;
+    /**
+     * 人员状态
+     */
+    @NotNull(message = "人员状态不能为空", groups = {ADD.class, EDIT.class})
+    private StaffStatus staffStatus;
+
+    public StaffStatus getStaffStatus() {
+        return staffStatus;
+    }
+
+    public void setStaffStatus(StaffStatus staffStatus) {
+        this.staffStatus = staffStatus;
+    }
 
     public String getUserId() {
         return userId;
@@ -36,11 +51,11 @@ public class PositionDetailUserTO extends BaseTO {
         this.userId = userId;
     }
 
-    public String[] getPositionIds() {
-        return positionIds;
+    public List<PositionUserDetailTO> getDetailTOS() {
+        return detailTOS;
     }
 
-    public void setPositionIds(String[] positionIds) {
-        this.positionIds = positionIds;
+    public void setDetailTOS(List<PositionUserDetailTO> detailTOS) {
+        this.detailTOS = detailTOS;
     }
 }

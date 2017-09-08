@@ -61,6 +61,20 @@ public class DepartmentDetail extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(255) COMMENT '描述'")
     private String description;
 
+    /**
+     * 内部项目名称
+     */
+    @Column(columnDefinition = "TEXT COMMENT '内部项目名称'")
+    private String innerProject;
+
+    public String getInnerProject() {
+        return innerProject;
+    }
+
+    public void setInnerProject(String innerProject) {
+        this.innerProject = innerProject;
+    }
+
     public String getSerialNumber() {
         return serialNumber;
     }

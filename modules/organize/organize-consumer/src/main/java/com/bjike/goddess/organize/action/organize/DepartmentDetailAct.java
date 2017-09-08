@@ -1,5 +1,7 @@
 package com.bjike.goddess.organize.action.organize;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.businessproject.api.BaseInfoManageAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -19,6 +21,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 部门详细操作
@@ -35,6 +39,10 @@ public class DepartmentDetailAct {
 
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private BaseInfoManageAPI baseInfoManageAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 保存部门项目组详细信息
@@ -226,5 +234,38 @@ public class DepartmentDetailAct {
         }
     }
 
+    /**
+     * 获取所有内部项目名称
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/allInnerProjects")
+    public Result allInnerProjects() throws ActException {
+        try {
+            Set<String> set = new HashSet<>();
+            if (moduleAPI.isCheck("businessproject")) {
+                set = baseInfoManageAPI.allInnerProjects();
+            }
+            return ActResult.initialize(set);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
+    /**
+     * 真实编号
+     *
+     * @param to to
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/number")
+    public Result number(DepartmentDetailTO to) throws ActException {
+        try {
+            return ActResult.initialize(departmentDetailAPI.number(to));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

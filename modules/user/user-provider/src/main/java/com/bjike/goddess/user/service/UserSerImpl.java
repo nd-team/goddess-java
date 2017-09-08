@@ -342,9 +342,9 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
     //chenjunhao
     public String findNameById(String id) throws SerException {
         User user = super.findById(id);
-        if (user == null) {
-            throw new SerException("该对象不存在");
+        if (user != null) {
+            return user.getUsername();
         }
-        return user.getUsername();
+        return null;
     }
 }

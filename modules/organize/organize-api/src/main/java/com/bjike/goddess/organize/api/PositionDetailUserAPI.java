@@ -1,13 +1,16 @@
 package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.organize.bo.DepartPositionBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
+import com.bjike.goddess.organize.entity.PositionDetailUser;
 import com.bjike.goddess.organize.to.PositionDetailUserTO;
 import com.bjike.goddess.user.bo.UserBO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 用户职位业务接口
@@ -19,7 +22,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface PositionDetailUserAPI {
+    /**
+     * 总条数
+     * @return
+     * @throws SerException
+     */
+    Long getTotal() throws SerException;
 
+    /**
+     * 通过id查找
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    PositionDetailUserBO findById(String id) throws SerException;
     /**
      * 保存
      *
@@ -27,9 +43,7 @@ public interface PositionDetailUserAPI {
      * @return
      * @throws SerException
      */
-    default PositionDetailUserBO save(PositionDetailUserTO to) throws SerException {
-        return null;
-    }
+    void save(PositionDetailUserTO to) throws SerException;
 
     /**
      * 修改
@@ -38,9 +52,7 @@ public interface PositionDetailUserAPI {
      * @return
      * @throws SerException
      */
-    default PositionDetailUserBO update(PositionDetailUserTO to) throws SerException {
-        return null;
-    }
+    void update(PositionDetailUserTO to) throws SerException;
 
     /**
      * 删除
@@ -49,9 +61,7 @@ public interface PositionDetailUserAPI {
      * @return
      * @throws SerException
      */
-    default PositionDetailUserBO delete(String id) throws SerException {
-        return null;
-    }
+    void delete(String id) throws SerException;
 
     /**
      * 根据用户id查询职位详细数据
@@ -90,24 +100,12 @@ public interface PositionDetailUserAPI {
     /**
      * 检测用户是否在指定层级中
      *
-     * @param user_id        用户id
-     * @param arrangement_id 层级id
+     * @param user_id         用户id
+     * @param arrangement_ids 层级id
      * @return
      * @throws SerException
      */
-    default Boolean checkAsUserArrangement(String user_id, String... arrangement_id) throws SerException {
-        return null;
-    }
-
-    /**
-     * 检测用户是否在指定模块中
-     *
-     * @param user_id   用户id
-     * @param module_id 模块id
-     * @return
-     * @throws SerException
-     */
-    default Boolean checkAsUserModule(String user_id, String... module_id) throws SerException {
+    default Boolean checkAsUserArrangement(String user_id, String... arrangement_ids) throws SerException {
         return null;
     }
 
@@ -124,6 +122,18 @@ public interface PositionDetailUserAPI {
     }
 
     /**
+     * 检测用户是否在指定模块中
+     *
+     * @param user_id    用户id
+     * @param module_ids 模块id
+     * @return
+     * @throws SerException
+     */
+    default Boolean checkAsUserModule(String user_id, String... module_ids) throws SerException {
+        return null;
+    }
+
+    /**
      * 列表
      *
      * @param dto 用户职位数据传输对象
@@ -135,23 +145,13 @@ public interface PositionDetailUserAPI {
     }
 
     /**
-     * 获取总条数
-     *
-     * @return
-     * @throws SerException
-     */
-    default Long getTotal() throws SerException {
-        return null;
-    }
-
-    /**
      * 根据id查询用户职位数据
      *
      * @param id 用户职位数据id
      * @return
      * @throws SerException
      */
-    default PositionDetailUserBO findById(String id) throws SerException {
+    default PositionDetailUserBO getById(String id) throws SerException {
         return null;
     }
 
@@ -188,7 +188,7 @@ public interface PositionDetailUserAPI {
     }
 
     /**
-     * 根据名字获取所在岗位
+     * 根据名字获取岗位名称
      */
     default List<String> getPosition(String name) throws SerException {
         return null;
@@ -221,4 +221,21 @@ public interface PositionDetailUserAPI {
     default List<PositionDetailBO> getPositionDetail(String name) throws SerException {
         return null;
     }
+
+    /**
+     * 获取所有部门下的职位
+     *
+     * @return
+     * @throws SerException
+     */
+    List<DepartPositionBO> departPositions() throws SerException;
+
+    /**
+     * 检测是否在该部门
+     * @param entity
+     * @param positions
+     * @return
+     * @throws SerException
+     */
+    PositionDetailUserBO bo(PositionDetailUser entity, Set<String> positions) throws SerException;
 }

@@ -53,5 +53,9 @@
     <dubbo:reference validation="true" id="businessTypeApiImpl" interface="com.bjike.goddess.marketdevelopment.api.BusinessTypeAPI" />
     <dubbo:reference validation="true" id="businessCourseApiImpl" interface="com.bjike.goddess.marketdevelopment.api.BusinessCourseAPI" />
     <dubbo:reference validation="true" id="marketInfoApiImpl" interface="com.bjike.goddess.market.api.MarketInfoAPI" />
+    <dubbo:reference validation="true" id="baseInfoManageApiImpl" interface="com.bjike.goddess.businessproject.api.BaseInfoManageAPI" />
+    <dubbo:reference validation="true" id="emailApiImpl" interface="com.bjike.goddess.organize.api.EmailAPI" />
+    <dubbo:reference validation="true" id="internalContactsApiImpl" interface="com.bjike.goddess.contacts.api.InternalContactsAPI" />
+    <dubbo:reference validation="true" id="commonalityApiImpl" interface="com.bjike.goddess.contacts.api.CommonalityAPI" />
 
 </beans>

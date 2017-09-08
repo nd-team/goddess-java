@@ -108,10 +108,12 @@ public class DebtAct {
         try {
             List<DebtBO> list = debtAPI.list1(dto);
             List<DebtVO> vos = new ArrayList<>();
-            for (DebtBO bo : list) {
-                DebtVO vo = BeanTransform.copyProperties(bo, DebtVO.class, request);
-                vo.setDebtId(bo.getId());
-                vos.add(vo);
+            if (null != list) {
+                for (DebtBO bo : list) {
+                    DebtVO vo = BeanTransform.copyProperties(bo, DebtVO.class, request);
+                    vo.setDebtId(bo.getId());
+                    vos.add(vo);
+                }
             }
             return ActResult.initialize(vos);
         } catch (SerException e) {

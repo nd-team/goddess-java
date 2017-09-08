@@ -945,12 +945,14 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
                 if (b) {
                     LevelShowTO levelShowTO = new LevelShowTO();
                     BeanUtils.copyProperties(entity, levelShowTO);
+                    levelShowTO.setPositiveDate(DateUtil.dateToString(entity.getPositiveDate()));
                     levelShowTO.setPromotionNum(entity.getPromotionNum() + 1);
                     levelShowAPI.save(levelShowTO);
                 }
             } else {
                 LevelShowTO levelShowTO = new LevelShowTO();
                 BeanUtils.copyProperties(entity, levelShowTO);
+                levelShowTO.setPositiveDate(DateUtil.dateToString(entity.getPositiveDate()));
                 levelShowTO.setPromotionNum(entity.getPromotionNum() + 1);
                 levelShowAPI.save(levelShowTO);
             }

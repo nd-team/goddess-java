@@ -73,6 +73,18 @@ public class DepartmentDetailVO {
      * 部门状态
      */
     private Status status;
+    /**
+     * 内部项目名称
+     */
+    private String innerProject;
+
+    public String getInnerProject() {
+        return innerProject;
+    }
+
+    public void setInnerProject(String innerProject) {
+        this.innerProject = innerProject;
+    }
 
     public Status getStatus() {
         return status;

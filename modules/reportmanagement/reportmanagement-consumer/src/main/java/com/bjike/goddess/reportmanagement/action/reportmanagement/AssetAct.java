@@ -161,14 +161,16 @@ public class AssetAct {
      * @version v1
      */
     @GetMapping("v1/list1")
-    public Result list1(AssetDTO dto,HttpServletRequest request) throws ActException {
+    public Result list1(AssetDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<AssetBO> list = assetAPI.list1(dto);
             List<AssetVO> vos = new ArrayList<>();
-            for (AssetBO bo : list) {
-                AssetVO vo = BeanTransform.copyProperties(bo, AssetVO.class, request);
-                vo.setAssetId(bo.getId());
-                vos.add(vo);
+            if (null != list) {
+                for (AssetBO bo : list) {
+                    AssetVO vo = BeanTransform.copyProperties(bo, AssetVO.class, request);
+                    vo.setAssetId(bo.getId());
+                    vos.add(vo);
+                }
             }
             return ActResult.initialize(vos);
         } catch (SerException e) {

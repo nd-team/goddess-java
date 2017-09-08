@@ -8,10 +8,11 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
-import com.bjike.goddess.organize.dto.PositionDetailDTO;
+import com.bjike.goddess.organize.bo.ReHierarchyBO;
 import com.bjike.goddess.organize.to.PositionDetailTO;
 import com.bjike.goddess.organize.vo.OpinionVO;
 import com.bjike.goddess.organize.vo.PositionDetailVO;
+import com.bjike.goddess.organize.vo.ReHierarchyVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -169,14 +170,14 @@ public class PositionDetailAct {
     /**
      * 列表
      *
-     * @param dto 岗位详细数据传输
-     * @return class PositionDetailVO
+     * @return class ReHierarchyVO
      * @version v1
      */
-    @GetMapping("v1/maps")
-    public Result maps(PositionDetailDTO dto, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/list")
+    public Result list(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.maps(dto), PositionDetailVO.class, request));
+            List<ReHierarchyBO> list = positionDetailAPI.list();
+            return ActResult.initialize(BeanTransform.copyProperties(list, ReHierarchyVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -260,6 +261,23 @@ public class PositionDetailAct {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 获取真实编号
+     *
+     * @param to to
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/number")
+    public Result number(PositionDetailTO to) throws ActException {
+        try {
+            return ActResult.initialize(positionDetailAPI.number(to));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 //    /**
 //     * 获取所有的岗位

@@ -53,6 +53,19 @@ public class DepartmentDetailTO extends BaseTO {
      */
     private String description;
 
+    /**
+     * 内部项目名称
+     */
+    @NotNull(message = "内部项目名称不能为空", groups = {ADD.class, EDIT.class})
+    private String[] innerProjects;
+
+    public String[] getInnerProjects() {
+        return innerProjects;
+    }
+
+    public void setInnerProjects(String[] innerProjects) {
+        this.innerProjects = innerProjects;
+    }
 
     public String getSerialNumber() {
         return serialNumber;
