@@ -89,7 +89,9 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
                 detailBO.setDepartNumber(positionDetail.getDepartment().getSerialNumber());
                 detailBO.setDepartment(positionDetail.getDepartment().getDepartment());
                 detailBO.setArrangement(positionDetail.getArrangement().getArrangement());
-                detailBO.setModule(positionDetail.getModule().getModule());
+                if (null != positionDetail.getModule()) {
+                    detailBO.setModule(positionDetail.getModule().getModule());
+                }
                 detailBO.setPosition(positionDetail.getPosition());
                 detailBO.setPositionNumber(positionDetail.getSerialNumber());
                 detailBOS.add(detailBO);
@@ -536,7 +538,9 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
                     detailBO.setDepartNumber(positionDetail.getDepartment().getSerialNumber());
                     detailBO.setDepartment(positionDetail.getDepartment().getDepartment());
                     detailBO.setArrangement(positionDetail.getArrangement().getArrangement());
-                    detailBO.setModule(positionDetail.getModule().getModule());
+                    if (null != positionDetail.getModule()) {
+                        detailBO.setModule(positionDetail.getModule().getModule());
+                    }
                     detailBO.setPosition(positionDetail.getPosition());
                     detailBO.setPositionNumber(positionDetail.getSerialNumber());
                     detailBOS.add(detailBO);

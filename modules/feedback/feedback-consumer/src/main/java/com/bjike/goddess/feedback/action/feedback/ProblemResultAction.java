@@ -84,7 +84,7 @@ public class ProblemResultAction {
      * 一个问题处理结果
      *
      * @param id
-     * @return class ProblemFeedbackVO
+     * @return class ProblemResultVO
      * @des 获取一个问题处理结果
      * @version v1
      */

@@ -32,6 +32,7 @@ import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
+import com.bjike.goddess.organize.bo.PositionUserDetailBO;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
@@ -139,8 +140,9 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
 //                        bo.setArea(user.get(0).getArea());
 //                        bo.setPosition(user.get(0).getPosition());
 //                        bo.setDepartment(user.get(0).getDepartment());
-                    for (String id : detailBO.getPositionIds().split(",")) {
-                        PositionDetailBO position = positionDetailAPI.findBOById(id);
+                    List<PositionUserDetailBO> list=detailBO.getDetailS();
+                    for (PositionUserDetailBO p : list) {
+                        PositionDetailBO position = positionDetailAPI.findBOById(p.getPositionId());
 //                    bo.setPosition(bo.getPosition() + "," + position.getPosition());
 //                    bo.setDepartment(bo.getDepartment() + "," + position.getDepartmentName());
 //                    bo.setArea(bo.getArea() + "," + position.getArea());

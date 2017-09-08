@@ -122,6 +122,10 @@ public class ProblemFeedbackTO extends BaseTO {
      * 发送对象
      */
     private String[] sendObject;
+    /**
+     * 公邮
+     */
+    private String[] publicEmail;
 
     /**
      * 问题跟进处理计划完成时间
@@ -169,6 +173,14 @@ public class ProblemFeedbackTO extends BaseTO {
 
     public String getArea() {
         return area;
+    }
+
+    public String[] getPublicEmail() {
+        return publicEmail;
+    }
+
+    public void setPublicEmail(String[] publicEmail) {
+        this.publicEmail = publicEmail;
     }
 
     public void setArea(String area) {

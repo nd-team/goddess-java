@@ -8,6 +8,10 @@ import com.bjike.goddess.organize.enums.WorkStatus;
  */
 public class PositionUserDetailVO {
     /**
+     * 职位id
+     */
+    private String positionId;
+    /**
      * 体系编号
      */
     private String hierarchyNumber;
@@ -59,6 +63,14 @@ public class PositionUserDetailVO {
      * 代理类型
      */
     private AgentType agentType;
+
+    public String getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(String positionId) {
+        this.positionId = positionId;
+    }
 
     public String getHierarchyNumber() {
         return hierarchyNumber;

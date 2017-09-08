@@ -554,8 +554,8 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
 
         //第二中情况
         List<CalculateBO> calculateTwo = new ArrayList<>();
-        calculateTwo = calculateSecond(to);
-//        calculateTwo = caculateTwo(to);
+//        calculateTwo = calculateSecond(to);
+        calculateTwo = caculateTwo(to);
 
 
         //第三中情况:补助+主项+两个其他补助
@@ -1056,7 +1056,7 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
         StringBuffer sb = new StringBuffer("");
         sb.append("  SELECT a.major,c.grade,c.subsidiesAmount,c.quotaJobTitle FROM ")
                 .append(" managepromotion_skillgradinga a ")
-                .append(" LEFT JOIN mgraanagepromotion_skillgradingb b ON a.id=b.skillGradingA_id ")
+                .append(" LEFT JOIN managepromotion_skillgradingb b ON a.id=b.skillGradingA_id ")
                 .append(" LEFT JOIN managepromotion_skillgradingc c ON b.id=c.skillGradingB_id ");
         calculateBOS = super.findBySql(sb.toString(), CalculateBO.class, feilds);
         List<CalculateBO> calculateBOS1 = new ArrayList<>();
@@ -1171,27 +1171,34 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
                 .append(" LEFT JOIN managepromotion_skillgradingb b ON a.id=b.skillGradingA_id ")
                 .append(" LEFT JOIN managepromotion_skillgradingc c ON b.id=c.skillGradingB_id ");
         calculateBOS = super.findBySql(sb.toString(), CalculateBO.class, feilds);
-        List<CalculateBO> calculateBOS1 = new ArrayList<>();
-        List<CalculateBO> calculateBOS2 = new ArrayList<>();
-        List<CalculateBO> calculateBOS3 = new ArrayList<>();
-        List<CalculateBO> calculateBOS4 = new ArrayList<>();
-        List<CalculateBO> calculateBOS5 = new ArrayList<>();
-        calculateBOS1.addAll(calculateBOS);
-        calculateBOS2.addAll(calculateBOS);
-        calculateBOS3.addAll(calculateBOS);
-        calculateBOS4.addAll(calculateBOS);
-        calculateBOS.stream().forEach(str -> {
+//        List<CalculateBO> calculateBOS1 = new ArrayList<>();
+//        List<CalculateBO> calculateBOS2 = new ArrayList<>();
+//        List<CalculateBO> calculateBOS3 = new ArrayList<>();
+//        List<CalculateBO> calculateBOS4 = new ArrayList<>();
+        List<CalculateBO> calculateBOS5 = new ArrayList<>(calculateBOS);
+//        calculateBOS1.addAll(calculateBOS);
+//        calculateBOS2.addAll(calculateBOS);
+//        calculateBOS3.addAll(calculateBOS);
+//        calculateBOS4.addAll(calculateBOS);
+
+
+        for (CalculateBO str : calculateBOS) {
             Integer money = str.getSubsidiesAmount() + str.getQuotaJobTitle();
             String name = str.getMain();
             String grade = str.getSkill();
-            calculateBOS1.stream().forEach(str1 -> {
+
+            for (CalculateBO str1 : calculateBOS) {
                 Integer secondMoney = money + str1.getSubsidiesAmount();
-                calculateBOS2.stream().forEach(str2 -> {
+
+                for (CalculateBO str2 : calculateBOS) {
                     Integer thirdMoney = secondMoney + str2.getSubsidiesAmount();
-                    calculateBOS3.stream().forEach(str3 -> {
+
+                    for (CalculateBO str3 : calculateBOS) {
                         Integer fourMoney = thirdMoney + str3.getSubsidiesAmount();
-                        calculateBOS4.stream().forEach(str4 -> {
+
+                        for (CalculateBO str4 : calculateBOS) {
                             Integer fiveMoney = fourMoney + str4.getSubsidiesAmount();
+//                            System.out.println(fiveMoney);
                             if (fiveMoney.equals(to.getMoney())
                                     && (!name.equals(str1.getMain())) && !name.equals(str2.getMain()) && !name.equals(str3.getMain()) &&
                                     !name.equals(str4.getMain()) &&
@@ -1207,14 +1214,53 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
 
                                 CalculateBO calculateBO = new CalculateBO(name, grade, str1.getMain(), str1.getSkill(), str2.getMain(), str2.getSkill(), str3.getMain(), str3.getSkill(), str4.getMain(), str4.getSkill(), "", "");
                                 calculateBOS5.add(calculateBO);
-                            }
-                        });
-                    });
-                });
-            });
 
-        });
-        return calculateBOS5;
+
+
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+
+
+//            calculateBOS.stream().forEach(str -> {
+//                Integer money = str.getSubsidiesAmount() + str.getQuotaJobTitle();
+//                String name = str.getMain();
+//                String grade = str.getSkill();
+//                calculateBOS1.stream().forEach(str1 -> {
+//                    Integer secondMoney = money + str1.getSubsidiesAmount();
+//                    calculateBOS2.stream().forEach(str2 -> {
+//                        Integer thirdMoney = secondMoney + str2.getSubsidiesAmount();
+//                        calculateBOS3.stream().forEach(str3 -> {
+//                            Integer fourMoney = thirdMoney + str3.getSubsidiesAmount();
+//                            calculateBOS4.stream().forEach(str4 -> {
+//                                Integer fiveMoney = fourMoney + str4.getSubsidiesAmount();
+//                                if (fiveMoney.equals(to.getMoney())
+//                                        && (!name.equals(str1.getMain())) && !name.equals(str2.getMain()) && !name.equals(str3.getMain()) &&
+//                                        !name.equals(str4.getMain()) &&
+//                                        !str1.getMain().equals(str2.getMain()) && !str1.getMain().equals(str3.getMain()) &&
+//                                        !str1.getMain().equals(str4.getMain()) &&
+//                                        !str2.getMain().equals(str3.getMain()) && !str2.getMain().equals(str4.getMain()) &&
+//                                        !str3.getMain().equals(str4.getMain()) &&
+//                                        !str1.getMain().equals(str2.getMain()) && !str1.getMain().equals(str3.getMain()) &&
+//                                        !str1.getMain().equals(str4.getMain()) && !str2.getMain().equals(str3.getMain()) &&
+//                                        !str2.getMain().equals(str4.getMain()) && !str3.getMain().equals(str4.getMain()) &&
+//                                        grade.compareTo(str1.getSkill()) < 0 && str1.getSkill().compareTo(str2.getSkill()) < 0 &&
+//                                        str2.getSkill().compareTo(str3.getSkill()) < 0 && str3.getSkill().compareTo(str4.getSkill()) < 0) {
+//
+//                                    CalculateBO calculateBO = new CalculateBO(name, grade, str1.getMain(), str1.getSkill(), str2.getMain(), str2.getSkill(), str3.getMain(), str3.getSkill(), str4.getMain(), str4.getSkill(), "", "");
+//                                    calculateBOS5.add(calculateBO);
+//                                }
+//                            });
+//                        });
+//                    });
+//                });
+//
+//            });
+            return calculateBOS5;
     }
 
     private List<CalculateBO> calculateSix(CalculateTO to) throws SerException {
@@ -1226,31 +1272,38 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
                 .append(" LEFT JOIN managepromotion_skillgradingb b ON a.id=b.skillGradingA_id ")
                 .append(" LEFT JOIN managepromotion_skillgradingc c ON b.id=c.skillGradingB_id ");
         calculateBOS = super.findBySql(sb.toString(), CalculateBO.class, feilds);
-        List<CalculateBO> calculateBOS1 = new ArrayList<>();
-        List<CalculateBO> calculateBOS2 = new ArrayList<>();
-        List<CalculateBO> calculateBOS3 = new ArrayList<>();
-        List<CalculateBO> calculateBOS4 = new ArrayList<>();
-        List<CalculateBO> calculateBOS5 = new ArrayList<>();
-        List<CalculateBO> calculateBOS6 = new ArrayList<>();
-        calculateBOS1.addAll(calculateBOS);
-        calculateBOS2.addAll(calculateBOS);
-        calculateBOS3.addAll(calculateBOS);
-        calculateBOS4.addAll(calculateBOS);
-        calculateBOS5.addAll(calculateBOS);
-        calculateBOS.stream().forEach(str -> {
+//        List<CalculateBO> calculateBOS1 = new ArrayList<>(calculateBOS);
+//        List<CalculateBO> calculateBOS2 = new ArrayList<>(calculateBOS);
+//        List<CalculateBO> calculateBOS3 = new ArrayList<>(calculateBOS);
+//        List<CalculateBO> calculateBOS4 = new ArrayList<>(calculateBOS);
+//        List<CalculateBO> calculateBOS5 = new ArrayList<>(calculateBOS);
+        List<CalculateBO> calculateBOS6 = new ArrayList<>(calculateBOS);
+
+        for (CalculateBO str : calculateBOS) {
             Integer money = str.getSubsidiesAmount() + str.getQuotaJobTitle();
             String name = str.getMain();
             String grade = str.getSkill();
-            calculateBOS1.stream().forEach(str1 -> {
+
+            for (CalculateBO str1 : calculateBOS) {
                 Integer secondMoney = money + str1.getSubsidiesAmount();
-                calculateBOS2.stream().forEach(str2 -> {
+
+
+                for (CalculateBO str2 : calculateBOS) {
                     Integer thirdMoney = secondMoney + str2.getSubsidiesAmount();
-                    calculateBOS3.stream().forEach(str3 -> {
+
+
+                    for (CalculateBO str3 : calculateBOS) {
                         Integer fourMoney = thirdMoney + str3.getSubsidiesAmount();
-                        calculateBOS4.stream().forEach(str4 -> {
+
+
+                        for (CalculateBO str4 : calculateBOS) {
                             Integer fiveMoney = fourMoney + str4.getSubsidiesAmount();
-                            calculateBOS5.stream().forEach(str5 -> {
+
+
+                            for (CalculateBO str5 : calculateBOS) {
                                 Integer sixMoney = fiveMoney + str5.getSubsidiesAmount();
+
+
                                 if (sixMoney.equals(to.getMoney())
                                         && (!name.equals(str1.getMain())) && !name.equals(str2.getMain()) && !name.equals(str3.getMain()) &&
                                         !name.equals(str4.getMain()) && !name.equals(str5.getMain()) &&
@@ -1272,13 +1325,57 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
                                     CalculateBO calculateBO = new CalculateBO(name, grade, str1.getMain(), str1.getSkill(), str2.getMain(), str2.getSkill(), str3.getMain(), str3.getSkill(), str4.getMain(), str4.getSkill(), str5.getMain(), str5.getSkill());
                                     calculateBOS6.add(calculateBO);
                                 }
-                            });
-                        });
-                    });
-                });
-            });
 
-        });
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+//        calculateBOS.stream().forEach(str -> {
+//            Integer money = str.getSubsidiesAmount() + str.getQuotaJobTitle();
+//            String name = str.getMain();
+//            String grade = str.getSkill();
+//            calculateBOS1.stream().forEach(str1 -> {
+//                Integer secondMoney = money + str1.getSubsidiesAmount();
+//                calculateBOS2.stream().forEach(str2 -> {
+//                    Integer thirdMoney = secondMoney + str2.getSubsidiesAmount();
+//                    calculateBOS3.stream().forEach(str3 -> {
+//                        Integer fourMoney = thirdMoney + str3.getSubsidiesAmount();
+//                        calculateBOS4.stream().forEach(str4 -> {
+//                            Integer fiveMoney = fourMoney + str4.getSubsidiesAmount();
+//                            calculateBOS5.stream().forEach(str5 -> {
+//                                Integer sixMoney = fiveMoney + str5.getSubsidiesAmount();
+//                                if (sixMoney.equals(to.getMoney())
+//                                        && (!name.equals(str1.getMain())) && !name.equals(str2.getMain()) && !name.equals(str3.getMain()) &&
+//                                        !name.equals(str4.getMain()) && !name.equals(str5.getMain()) &&
+//                                        !str1.getMain().equals(str2.getMain()) && !str1.getMain().equals(str3.getMain()) &&
+//                                        !str1.getMain().equals(str4.getMain()) && !str1.getMain().equals(str5.getMain()) &&
+//                                        !str2.getMain().equals(str3.getMain()) && !str2.getMain().equals(str4.getMain()) &&
+//                                        !str2.getMain().equals(str5.getMain()) &&
+//                                        !str3.getMain().equals(str4.getMain()) && !str3.getMain().equals(str5.getMain()) &&
+//                                        !str4.getMain().equals(str5.getMain()) &&
+//                                        !str1.getMain().equals(str2.getMain()) && !str1.getMain().equals(str3.getMain()) &&
+//                                        !str1.getMain().equals(str4.getMain()) && !str1.getMain().equals(str5.getMain()) &&
+//                                        !str2.getMain().equals(str3.getMain()) && !str2.getMain().equals(str4.getMain()) &&
+//                                        !str2.getMain().equals(str5.getMain()) && !str3.getMain().equals(str4.getMain()) &&
+//                                        !str3.getMain().equals(str5.getMain()) && !str4.getMain().equals(str5.getMain()) &&
+//                                        grade.compareTo(str1.getSkill()) < 0 && str1.getSkill().compareTo(str2.getSkill()) < 0 &&
+//                                        str2.getSkill().compareTo(str3.getSkill()) < 0 && str3.getSkill().compareTo(str4.getSkill()) < 0 &&
+//                                        str4.getSkill().compareTo(str5.getSkill()) < 0) {
+//
+//                                    CalculateBO calculateBO = new CalculateBO(name, grade, str1.getMain(), str1.getSkill(), str2.getMain(), str2.getSkill(), str3.getMain(), str3.getSkill(), str4.getMain(), str4.getSkill(), str5.getMain(), str5.getSkill());
+//                                    calculateBOS6.add(calculateBO);
+//                                }
+//                            });
+//                        });
+//                    });
+//                });
+//            });
+//
+//        });
         return calculateBOS6;
     }
 }

@@ -66,63 +66,63 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         return count;
     }
 
-    @Override
-    public List<CusPermissionBO> list(CusPermissionDTO cusPermissionDTO) throws SerException {
-        if (StringUtils.isNotBlank(cusPermissionDTO.getDescription())) {
-            cusPermissionDTO.getConditions().add(Restrict.like("description", cusPermissionDTO.getDescription()));
-        }
-
-        List<CusPermission> list = super.findByCis(cusPermissionDTO, true);
-        List<CusPermissionBO> bo = new ArrayList<>();
-        for (CusPermission str : list) {
-            CusPermissionBO temp = BeanTransform.copyProperties(str, CusPermissionBO.class);
-
-            //先查询操作对象
-            List<String> idList = new ArrayList<>();
-            CusPermissionOperateDTO cpoDTO = new CusPermissionOperateDTO();
-            cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", temp.getId()));
-            List<CusPermissionOperate> operateList = cusPermissionOperateSer.findByCis(cpoDTO);
-            if (operateList != null && operateList.size() > 0) {
-                operateList.stream().forEach(op -> {
-                    idList.add(op.getOperator());
-                });
-            }
-            //操作对象list转String[]
-            String[] ids = null;
-            if (null != idList && idList.size() > 0) {
-                ids = new String[idList.size()];
-                for (int i = 0; i < idList.size(); i++) {
-                    ids[i] = idList.get(i);
-                }
-
-            }
-            CusPermissionType type = str.getType();
-            List<OpinionBO> opinionBOS = new ArrayList<>();
-            List<CusOperateBO> coboList = null;
-            if (null != ids && ids.length != 0)
-                    if (CusPermissionType.LEVEL.equals(type)) {
-                        opinionBOS = arrangementAPI.findByIds(ids);
-                    } else if (CusPermissionType.MODULE.equals(type)) {
-                        opinionBOS = moduleTypeAPI.findByIds(ids);
-                    } else if (CusPermissionType.POSITION.equals(type)) {
-                        opinionBOS = positionDetailAPI.findByIds(ids);
-                    } else if (CusPermissionType.DEPART.equals(type)) {
-                        opinionBOS = departmentDetailAPI.findByIds(ids);
-                    }
-                coboList = new ArrayList<>();
-                for (OpinionBO op : opinionBOS) {
-                    CusOperateBO cobo = new CusOperateBO();
-                    cobo.setId(op.getId());
-                    cobo.setOperator(op.getValue());
-                    coboList.add(cobo);
-                }
-            }
-            temp.setCusOperateBO(coboList);
-
-            bo.add(temp);
-        }
-        return bo;
-    }
+//    @Override
+//    public List<CusPermissionBO> list(CusPermissionDTO cusPermissionDTO) throws SerException {
+//        if (StringUtils.isNotBlank(cusPermissionDTO.getDescription())) {
+//            cusPermissionDTO.getConditions().add(Restrict.like("description", cusPermissionDTO.getDescription()));
+//        }
+//
+//        List<CusPermission> list = super.findByCis(cusPermissionDTO, true);
+//        List<CusPermissionBO> bo = new ArrayList<>();
+//        for (CusPermission str : list) {
+//            CusPermissionBO temp = BeanTransform.copyProperties(str, CusPermissionBO.class);
+//
+//            //先查询操作对象
+//            List<String> idList = new ArrayList<>();
+//            CusPermissionOperateDTO cpoDTO = new CusPermissionOperateDTO();
+//            cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", temp.getId()));
+//            List<CusPermissionOperate> operateList = cusPermissionOperateSer.findByCis(cpoDTO);
+//            if (operateList != null && operateList.size() > 0) {
+//                operateList.stream().forEach(op -> {
+//                    idList.add(op.getOperator());
+//                });
+//            }
+//            //操作对象list转String[]
+//            String[] ids = null;
+//            if (null != idList && idList.size() > 0) {
+//                ids = new String[idList.size()];
+//                for (int i = 0; i < idList.size(); i++) {
+//                    ids[i] = idList.get(i);
+//                }
+//
+//            }
+//            CusPermissionType type = str.getType();
+//            List<OpinionBO> opinionBOS = new ArrayList<>();
+//            List<CusOperateBO> coboList = null;
+//            if (null != ids && ids.length != 0)
+//                    if (CusPermissionType.LEVEL.equals(type)) {
+//                        opinionBOS = arrangementAPI.findByIds(ids);
+//                    } else if (CusPermissionType.MODULE.equals(type)) {
+//                        opinionBOS = moduleTypeAPI.findByIds(ids);
+//                    } else if (CusPermissionType.POSITION.equals(type)) {
+//                        opinionBOS = positionDetailAPI.findByIds(ids);
+//                    } else if (CusPermissionType.DEPART.equals(type)) {
+//                        opinionBOS = departmentDetailAPI.findByIds(ids);
+//                    }
+//                coboList = new ArrayList<>();
+//                for (OpinionBO op : opinionBOS) {
+//                    CusOperateBO cobo = new CusOperateBO();
+//                    cobo.setId(op.getId());
+//                    cobo.setOperator(op.getValue());
+//                    coboList.add(cobo);
+//                }
+//            }
+//            temp.setCusOperateBO(coboList);
+//
+//            bo.add(temp);
+//        }
+//        return bo;
+//    }
 
     @Override
     public CusPermissionBO getOneById(String id) throws SerException {

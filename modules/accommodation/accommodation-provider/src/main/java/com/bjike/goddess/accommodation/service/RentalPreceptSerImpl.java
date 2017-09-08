@@ -467,7 +467,9 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
         checkAddIdentity();
         if (!StringUtils.isEmpty(preceptTO.getId())) {
             RentalPrecept rentalPrecept = super.findById(preceptTO.getId());
-            BeanTransform.copyProperties(preceptTO, rentalPrecept, true, "projectName");
+            LocalDateTime createTime = rentalPrecept.getCreateTime();
+            rentalPrecept = BeanTransform.copyProperties(preceptTO, RentalPrecept.class, true, "projectName");
+            rentalPrecept.setCreateTime(createTime);
             rentalPrecept.setModifyTime(LocalDateTime.now());
             rentalPrecept.setProjectName(StringUtils.join(preceptTO.getProjectName(), ","));
             super.update(rentalPrecept);

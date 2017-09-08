@@ -7,6 +7,8 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.contacts.api.CommonalityAPI;
+import com.bjike.goddess.contacts.vo.CommonalityVO;
 import com.bjike.goddess.feedback.api.ProblemFeedbackAPI;
 import com.bjike.goddess.feedback.bo.ProblemAcceptBO;
 import com.bjike.goddess.feedback.bo.ProblemFeedbackBO;
@@ -53,6 +55,8 @@ public class ProblemFeedbackAction {
     private PositionDetailUserAPI positionDetailUserAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private CommonalityAPI commonalityAPI;
 
     /**
      * 模块设置导航权限
@@ -279,6 +283,37 @@ public class ProblemFeedbackAction {
         try {
             List<PositionDetailBO> userBOS = positionDetailUserAPI.getPositionDetail(name);
             return ActResult.initialize(BeanTransform.copyProperties(userBOS, PositionDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询用户
+     *
+     * @return class UserVO
+     * @version v1
+     */
+    @GetMapping("v1/sendObject")
+    public Result sendObject(HttpServletRequest request) throws ActException {
+        try {
+            List<UserBO> userBOS = positionDetailUserAPI.findUserListInOrgan();
+            return ActResult.initialize(BeanTransform.copyProperties(userBOS, UserVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询未冻结的公共邮箱
+     *
+     * @return class CommonalityVO
+     * @version v1
+     */
+    @GetMapping("v1/email")
+    public Result email(HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(commonalityAPI.findThaw(), CommonalityVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

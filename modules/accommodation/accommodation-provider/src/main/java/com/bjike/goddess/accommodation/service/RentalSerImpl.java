@@ -257,7 +257,9 @@ private RentalApplySer rentalApplySer;
     public RentalBO editRental(RentalTO rentalTO) throws SerException {
 
         Rental rental = super.findById(rentalTO.getId());
-        BeanTransform.copyProperties(rentalTO, rental, true,"projectName");
+        LocalDateTime createTime = rental.getCreateTime();
+        rental = BeanTransform.copyProperties(rentalTO, Rental.class, true,"projectName");
+        rental.setCreateTime(createTime);
         rental.setModifyTime(LocalDateTime.now());
         rental.setProjectName(StringUtils.join(rentalTO.getProjectName(),","));
         super.update(rental);

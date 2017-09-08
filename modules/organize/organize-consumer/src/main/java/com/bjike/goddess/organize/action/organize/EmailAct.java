@@ -75,7 +75,7 @@ public class EmailAct {
     public Result edit(@Validated(EDIT.class) EmailTO to, BindingResult result) throws ActException {
         try {
             emailAPI.edit(to);
-            return new ActResult("添加成功");
+            return new ActResult("编辑成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -195,6 +195,16 @@ public class EmailAct {
         try {
             List<CommonalityBO> list = commonalityAPI.findThaw();
             return ActResult.initialize(BeanTransform.copyProperties(list, CommonalityVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    @GetMapping("v1/send")
+    public Result send(HttpServletRequest request) throws ActException {
+        try {
+            emailAPI.send();
+            return new ActResult("");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
