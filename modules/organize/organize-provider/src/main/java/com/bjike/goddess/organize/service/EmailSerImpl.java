@@ -59,6 +59,12 @@ public class EmailSerImpl extends ServiceImpl<Email, EmailDTO> implements EmailS
     @Transactional(rollbackFor = {SerException.class})
     public void add(EmailTO to) throws SerException {
         Email email = BeanTransform.copyProperties(to, Email.class, true);
+        LocalDateTime sendTime=email.getSetTime();
+        Long mis = sendTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                - LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        if (mis<=0){
+            throw new SerException("发送时间必须大于当前时间");
+        }
         String[] departs = to.getDeparts();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < departs.length; i++) {
@@ -81,8 +87,8 @@ public class EmailSerImpl extends ServiceImpl<Email, EmailDTO> implements EmailS
             }
             email.setSendObject(sb1.toString());
         }
-        IntervalType intervalType = email.getIntervalType();
-        int interval = email.getInterval();
+        IntervalType intervalType = email.getIt();
+        int interval = email.getItTime();
         LocalDateTime lastTime = null;
         switch (intervalType) {
             case MINUTE:
@@ -112,6 +118,12 @@ public class EmailSerImpl extends ServiceImpl<Email, EmailDTO> implements EmailS
         Email email = BeanTransform.copyProperties(to, Email.class, true);
         BeanUtils.copyProperties(email, entity, "id", "createTime");
         LocalDateTime time = DateUtil.parseDateTime(to.getSetTime());
+        entity.setSetTime(time);
+        Long mis = time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                - LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        if (mis<=0){
+            throw new SerException("发送时间必须大于当前时间");
+        }
         String[] departs = to.getDeparts();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < departs.length; i++) {
@@ -121,7 +133,7 @@ public class EmailSerImpl extends ServiceImpl<Email, EmailDTO> implements EmailS
                 sb.append(departs[i] + ",");
             }
         }
-        email.setDepart(sb.toString());
+        entity.setDepart(sb.toString());
         String[] sendObjects = to.getSendObjects();
         if (null != sendObjects) {
             StringBuilder sb1 = new StringBuilder();
@@ -132,11 +144,10 @@ public class EmailSerImpl extends ServiceImpl<Email, EmailDTO> implements EmailS
                     sb1.append(sendObjects[i] + ",");
                 }
             }
-            email.setSendObject(sb1.toString());
+            entity.setSendObject(sb1.toString());
         }
-        entity.setSetTime(time);
-        IntervalType intervalType = email.getIntervalType();
-        int interval = email.getInterval();
+        IntervalType intervalType = email.getIt();
+        int interval = email.getItTime();
         LocalDateTime lastTime = null;
         switch (intervalType) {
             case MINUTE:
@@ -155,7 +166,7 @@ public class EmailSerImpl extends ServiceImpl<Email, EmailDTO> implements EmailS
                 lastTime = email.getSetTime().minusMonths(interval);
                 break;
         }
-        email.setLastTime(lastTime);
+        entity.setLastTime(lastTime);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
     }
@@ -192,7 +203,7 @@ public class EmailSerImpl extends ServiceImpl<Email, EmailDTO> implements EmailS
                 String[] strings = sendObject.split(",");
                 stringList = Arrays.asList(strings);
             }
-            if (email.getAll()) {
+            if (email.getSendAll()) {
                 String[] departs = email.getDepart().split(",");
                 String[] names = names(departs);
                 if (null != names) {
@@ -202,8 +213,8 @@ public class EmailSerImpl extends ServiceImpl<Email, EmailDTO> implements EmailS
             }
             LocalDateTime lastTime = email.getLastTime();
             LocalDateTime now = LocalDateTime.now();
-            IntervalType intervalType = email.getIntervalType();
-            int interval = email.getInterval();
+            IntervalType intervalType = email.getIt();
+            int interval = email.getItTime();
             LocalDateTime time = null;
             switch (intervalType) {
                 case MINUTE:
@@ -224,7 +235,7 @@ public class EmailSerImpl extends ServiceImpl<Email, EmailDTO> implements EmailS
             }
             Long mis = now.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
                     - time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();      //当前时间和发送时间作比较
-            if (mis <= 0) {
+            if (mis >= 0) {
                 email.setLastTime(now);
                 email.setModifyTime(LocalDateTime.now());
                 super.update(email);

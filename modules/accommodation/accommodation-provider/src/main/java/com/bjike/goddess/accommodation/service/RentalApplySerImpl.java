@@ -384,7 +384,9 @@ public class RentalApplySerImpl extends ServiceImpl<RentalApply, RentalApplyDTO>
     public RentalApplyBO editApply(RentalApplyTO applyTO) throws SerException {
         checkAddIdentity();
         RentalApply rentalApply = super.findById(applyTO.getId());
-        BeanTransform.copyProperties(applyTO, rentalApply, true, "projectName");
+        LocalDateTime createTime = rentalApply.getCreateTime();
+        rentalApply = BeanTransform.copyProperties(applyTO, RentalApply.class, true, "projectName");
+        rentalApply.setCreateTime(createTime);
         rentalApply.setModifyTime(LocalDateTime.now());
         rentalApply.setProjectName(StringUtils.join(applyTO.getProjectName(), ","));
         super.update(rentalApply);

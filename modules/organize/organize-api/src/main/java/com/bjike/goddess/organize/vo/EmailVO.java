@@ -17,15 +17,15 @@ public class EmailVO {
     /**
      * 是否发送至本项目组所有人
      */
-    private Boolean all;
+    private Boolean sendAll;
     /**
      * 间隔类型
      */
-    private IntervalType intervalType;
+    private IntervalType it;
     /**
      * 间隔时长
      */
-    private Integer interval;
+    private Integer itTime;
 
     /**
      * 发送时间
@@ -56,28 +56,28 @@ public class EmailVO {
         this.depart = depart;
     }
 
-    public Boolean getAll() {
-        return all;
+    public Boolean getSendAll() {
+        return sendAll;
     }
 
-    public void setAll(Boolean all) {
-        this.all = all;
+    public void setSendAll(Boolean sendAll) {
+        this.sendAll = sendAll;
     }
 
-    public IntervalType getIntervalType() {
-        return intervalType;
+    public IntervalType getIt() {
+        return it;
     }
 
-    public void setIntervalType(IntervalType intervalType) {
-        this.intervalType = intervalType;
+    public void setIt(IntervalType it) {
+        this.it = it;
     }
 
-    public Integer getInterval() {
-        return interval;
+    public Integer getItTime() {
+        return itTime;
     }
 
-    public void setInterval(Integer interval) {
-        this.interval = interval;
+    public void setItTime(Integer itTime) {
+        this.itTime = itTime;
     }
 
     public String getSetTime() {

@@ -31,6 +31,23 @@ public class CalculateBO extends BaseBO {
         this.eventFive = eventFive;
         this.eventFiveSkill = eventFiveSkill;
     }
+
+    public CalculateBO(String main, String skill, String eventFirst, String eventFirstSkill, String eventSecond, String eventSecondSkill, String eventThird, String eventThirdSkill, String eventFour, String eventFourSkill, String eventFive, String eventFiveSkill, Integer totalMoney) {
+        this.main = main;
+        this.skill = skill;
+        this.eventFirst = eventFirst;
+        this.eventFirstSkill = eventFirstSkill;
+        this.eventSecond = eventSecond;
+        this.eventSecondSkill = eventSecondSkill;
+        this.eventThird = eventThird;
+        this.eventThirdSkill = eventThirdSkill;
+        this.eventFour = eventFour;
+        this.eventFourSkill = eventFourSkill;
+        this.eventFive = eventFive;
+        this.eventFiveSkill = eventFiveSkill;
+        this.totalMoney = totalMoney;
+    }
+
     /**
      * 主项技能定位-专业
      */
@@ -91,6 +108,19 @@ public class CalculateBO extends BaseBO {
      * 小项技能定位-专业5技能等级
      */
     private String eventFiveSkill;
+
+    /**
+     * 当前总数
+     */
+    private Integer totalMoney;
+
+    public Integer getTotalMoney() {
+        return totalMoney;
+    }
+
+    public void setTotalMoney(Integer totalMoney) {
+        this.totalMoney = totalMoney;
+    }
 
     public Integer getSubsidiesAmount() {
         return subsidiesAmount;

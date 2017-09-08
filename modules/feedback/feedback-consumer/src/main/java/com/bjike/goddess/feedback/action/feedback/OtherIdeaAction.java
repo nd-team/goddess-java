@@ -101,7 +101,7 @@ public class OtherIdeaAction {
      * 添加其他模块意见
      *
      * @param to 其他模块意见数据to
-     * @return class ResponsibleIdeaVO
+     * @return class OtherIdeaVO
      * @des 添加其他模块意见
      * @version v1
      */

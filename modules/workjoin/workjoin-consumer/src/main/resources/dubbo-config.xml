@@ -52,4 +52,8 @@
     <dubbo:reference validation="true" id="workRangeApiImpl" interface="com.bjike.goddess.organize.api.WorkRangeAPI"/>
     <dubbo:reference validation="true" id="positionInstructionApiImpl"
                      interface="com.bjike.goddess.organize.api.PositionInstructionAPI"/>
+    <dubbo:reference validation="true" id="materialInStockApiImpl"
+                     interface="com.bjike.goddess.materialinstock.api.MaterialInStockAPI"/>
+    <dubbo:reference validation="true" id="numSpecificationApiImpl"
+                     interface="com.bjike.goddess.datastore.api.NumSpecificationAPI"/>
 </beans>

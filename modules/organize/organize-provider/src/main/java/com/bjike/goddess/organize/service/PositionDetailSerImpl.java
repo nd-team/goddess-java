@@ -65,8 +65,8 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         bo.setDepartmentName(department.getDepartment());
         bo.setHierarchyName(department.getHierarchyName());
         bo.setArrangementId(arrangement.getId());
-        bo.setModuleId(moduleType.getId());
         if (null != moduleType) {
+            bo.setModuleId(moduleType.getId());
             bo.setModuleName(moduleType.getModule());
         }
         bo.setCurrent(positionDetailUserSer.findByPosition(entity.getId()).size() + "人");
