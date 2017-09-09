@@ -17,9 +17,11 @@ import com.bjike.goddess.organize.bo.HierarchyBO;
 import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.organize.vo.HierarchyVO;
 import com.bjike.goddess.staffing.api.ConfigurationPlanAPI;
+import com.bjike.goddess.staffing.api.CountAPI;
 import com.bjike.goddess.staffing.bo.ConfigurationPlanBO;
 import com.bjike.goddess.staffing.dto.ConfigurationPlanDTO;
 import com.bjike.goddess.staffing.to.ConfigurationPlanTO;
+import com.bjike.goddess.staffing.to.CountTO;
 import com.bjike.goddess.staffing.to.GuidePermissionTO;
 import com.bjike.goddess.staffing.vo.ConfigurationPlanVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +53,11 @@ public class ConfigurationPlanAction {
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private ModuleAPI moduleAPI;
+    @Autowired
+    private CountAPI countAPI;
+
+    private static String navigation="人数配置计划";
+    private CountTO countTO=new CountTO(navigation);
 
     /**
      * 功能导航权限
@@ -83,9 +90,13 @@ public class ConfigurationPlanAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class) ConfigurationPlanTO to) throws ActException {
+    public Result add(@Validated(ADD.class) ConfigurationPlanTO to,HttpServletRequest request) throws ActException {
         try {
-            ConfigurationPlanBO bo = configurationPlanAPI.save(to);
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            configurationPlanAPI.save(to);
+            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+            countTO.setFunction("添加");
+            countAPI.add(countTO);
             return new ActResult("添加成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -101,10 +112,14 @@ public class ConfigurationPlanAction {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(ConfigurationPlanDTO dto) throws ActException {
+    public Result list(ConfigurationPlanDTO dto,HttpServletRequest request) throws ActException {
         try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             List<ConfigurationPlanVO> list = BeanTransform.copyProperties(
-                    configurationPlanAPI.list(dto), ConfigurationPlanVO.class);
+                    configurationPlanAPI.list(dto), ConfigurationPlanVO.class,request);
+            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+            countTO.setFunction("列表");
+            countAPI.add(countTO);
             return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -137,9 +152,13 @@ public class ConfigurationPlanAction {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class) ConfigurationPlanTO to, BindingResult result) throws ActException {
+    public Result edit(@Validated(EDIT.class) ConfigurationPlanTO to, BindingResult result,HttpServletRequest request) throws ActException {
         try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             configurationPlanAPI.edit(to);
+            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+            countTO.setFunction("编辑");
+            countAPI.add(countTO);
             return new ActResult("编辑成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -154,9 +173,13 @@ public class ConfigurationPlanAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id,HttpServletRequest request) throws ActException {
         try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             configurationPlanAPI.delete(id);
+            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+            countTO.setFunction("删除");
+            countAPI.add(countTO);
             return new ActResult("删除成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

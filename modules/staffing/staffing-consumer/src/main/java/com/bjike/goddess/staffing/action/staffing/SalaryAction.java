@@ -1,5 +1,7 @@
 package com.bjike.goddess.staffing.action.staffing;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -7,9 +9,11 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.staffing.api.CountAPI;
 import com.bjike.goddess.staffing.api.SalaryAPI;
 import com.bjike.goddess.staffing.bo.SalaryBO;
 import com.bjike.goddess.staffing.dto.SalaryDTO;
+import com.bjike.goddess.staffing.to.CountTO;
 import com.bjike.goddess.staffing.to.GuidePermissionTO;
 import com.bjike.goddess.staffing.to.SalaryTO;
 import com.bjike.goddess.staffing.vo.SalaryVO;
@@ -35,6 +39,11 @@ import java.util.List;
 public class SalaryAction {
     @Autowired
     private SalaryAPI salaryAPI;
+    @Autowired
+    private CountAPI countAPI;
+
+    private static String navigation="工资区间";
+    private CountTO countTO=new CountTO(navigation);
 
     /**
      * 功能导航权限
@@ -70,7 +79,11 @@ public class SalaryAction {
     @GetMapping("v1/list")
     public Result list(SalaryDTO dto, HttpServletRequest request) throws ActException {
         try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             List<SalaryBO> list = salaryAPI.list(dto);
+            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+            countTO.setFunction("列表");
+            countAPI.add(countTO);
             return ActResult.initialize(BeanTransform.copyProperties(list, SalaryVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -88,7 +101,11 @@ public class SalaryAction {
     @PostMapping("v1/save")
     public Result save(@Validated(ADD.class) SalaryTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             SalaryBO bo = salaryAPI.save(to);
+            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+            countTO.setFunction("添加");
+            countAPI.add(countTO);
             return ActResult.initialize(BeanTransform.copyProperties(bo, SalaryVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -121,9 +138,13 @@ public class SalaryAction {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class) SalaryTO to, BindingResult result) throws ActException {
+    public Result edit(@Validated(EDIT.class) SalaryTO to, BindingResult result,HttpServletRequest request) throws ActException {
         try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             salaryAPI.edit(to);
+            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+            countTO.setFunction("编辑");
+            countAPI.add(countTO);
             return new ActResult("编辑成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -138,9 +159,13 @@ public class SalaryAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id,HttpServletRequest request) throws ActException {
         try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             salaryAPI.delete(id);
+            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+            countTO.setFunction("删除");
+            countAPI.add(countTO);
             return new ActResult("删除成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
