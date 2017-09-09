@@ -54,7 +54,7 @@ public interface ShareOutBonusDetailAPI {
      * @return class ShareOutBonusDetailBO
      * @throws SerException
      */
-    default List<ShareOutBonusDetailBO> findListBySharId(String ShareOutBonusManageId) throws SerException {
+    default List<ShareOutBonusDetailBO> findListBySharId(String shareOutBonusManageId) throws SerException {
         return null;
     }
 
@@ -104,11 +104,11 @@ public interface ShareOutBonusDetailAPI {
     /**
      * 计算分红额或者所得税
      *
-     * @param ShareOutBonusManageId 分红管理id
+     * @param shareOutBonusManageId 分红管理id
      * @param Propor                比例
      * @return
      */
-    default Double computAmount(String ShareOutBonusManageId, Double Propor) throws SerException {
+    default Double computAmount(String shareOutBonusManageId, Double Propor) throws SerException {
         return null;
     }
     /**

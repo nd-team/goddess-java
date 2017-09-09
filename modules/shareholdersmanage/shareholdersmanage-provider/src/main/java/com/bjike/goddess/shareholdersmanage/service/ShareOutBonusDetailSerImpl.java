@@ -18,6 +18,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -160,7 +161,7 @@ public class ShareOutBonusDetailSerImpl extends ServiceImpl<ShareOutBonusDetail,
         List<ShareOutBonusDetail> shareOutBonusDetails = super.findByCis(shareOutBonusDetailDTO);
         return BeanTransform.copyProperties(shareOutBonusDetails,ShareOutBonusDetailBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ShareOutBonusDetailBO save(ShareOutBonusDetailTO shareOutBonusDetailTO) throws SerException {
        checkPermission();
@@ -178,7 +179,7 @@ public class ShareOutBonusDetailSerImpl extends ServiceImpl<ShareOutBonusDetail,
         shareOutBonusManageSer.update(shareOutBonusManage);
         return BeanTransform.copyProperties(shareOutBonusDetail,ShareOutBonusDetailBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ShareOutBonusDetailBO edit(ShareOutBonusDetailTO shareOutBonusDetailTO) throws SerException {
         checkPermission();
@@ -199,7 +200,7 @@ public class ShareOutBonusDetailSerImpl extends ServiceImpl<ShareOutBonusDetail,
         shareOutBonusManageSer.update(shareOutBonusManage);
         return BeanTransform.copyProperties(shareOutBonusDetail,ShareOutBonusDetailBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void delete(String id) throws SerException {
        checkPermission();
@@ -207,23 +208,28 @@ public class ShareOutBonusDetailSerImpl extends ServiceImpl<ShareOutBonusDetail,
         super.remove(id);
         ShareOutBonusManage shareOutBonusManage = shareOutBonusManageSer.findById(shareOutBonusDetail.getShareOutBonusManageId());
         List<ShareOutBonusDetailBO> shareOutBonusDetailBOS = findListBySharId(shareOutBonusDetail.getShareOutBonusManageId());
-        Double totalIncomeTax = shareOutBonusDetailBOS.stream().mapToDouble(s->s.getIncomeTax()).sum();
+        Double totalIncomeTax = 0d;
+        if(shareOutBonusDetailBOS!=null && shareOutBonusDetailBOS.size()>0){
+            totalIncomeTax = shareOutBonusDetailBOS.stream().mapToDouble(s->s.getIncomeTax()).sum();
+        }
         shareOutBonusManage.setTotalIncomeTax(totalIncomeTax);
         shareOutBonusManage.setModifyTime(LocalDateTime.now());
         shareOutBonusManageSer.update(shareOutBonusManage);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
-    public void deleteByShareId(String ShareOutBonusManageId) throws SerException {
+    public void deleteByShareId(String shareOutBonusManageId) throws SerException {
         ShareOutBonusDetailDTO shareOutBonusDetailDTO = new ShareOutBonusDetailDTO();
-        shareOutBonusDetailDTO.getConditions().add(Restrict.eq("ShareOutBonusManageId",ShareOutBonusManageId));
+        shareOutBonusDetailDTO.getConditions().add(Restrict.eq("shareOutBonusManageId",shareOutBonusManageId));
         List<ShareOutBonusDetail> shareOutBonusDetails = super.findByCis(shareOutBonusDetailDTO);
-        super.remove(shareOutBonusDetails);
+        if(shareOutBonusDetails!=null&& shareOutBonusDetails.size()>0){
+            super.remove(shareOutBonusDetails);
+        }
     }
 
     @Override
-    public Double computAmount(String ShareOutBonusManageId, Double shareOutBonusPropor) throws SerException{
-        ShareOutBonusManageBO shareOutBonusManageBO = shareOutBonusManageSer.getOne(ShareOutBonusManageId);
+    public Double computAmount(String shareOutBonusManageId, Double shareOutBonusPropor) throws SerException{
+        ShareOutBonusManageBO shareOutBonusManageBO = shareOutBonusManageSer.getOne(shareOutBonusManageId);
         Double shareOutBonusAmount = shareOutBonusManageBO.getTotalShareOutBonus()*(shareOutBonusPropor/100);
         return shareOutBonusAmount;
     }
