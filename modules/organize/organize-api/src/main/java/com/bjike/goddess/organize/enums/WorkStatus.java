@@ -2,6 +2,7 @@ package com.bjike.goddess.organize.enums;
 
 /**
  * 担任状态
+ *
  * @Author: [chenjunhao]
  * @Date: [2017-09-06 15:34]
  * @Description: [ ]
@@ -16,8 +17,7 @@ public enum WorkStatus {
     /**
      * 兼任
      */
-    PARTJOB(1)
-    ;
+    PARTJOB(1);
     private int code;
 
     WorkStatus(int code) {
@@ -26,5 +26,19 @@ public enum WorkStatus {
 
     public int getCode() {
         return this.code;
+    }
+
+    @Override
+    public String toString() {
+        String s = null;
+        switch (code) {
+            case 0:
+                s = "主职";
+                break;
+            case 1:
+                s = "兼任";
+                break;
+        }
+        return s;
     }
 }
