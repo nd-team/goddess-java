@@ -1,6 +1,5 @@
-package com.bjike.goddess.message.api;
+package com.bjike.goddess.message.mail;
 
-import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.message.to.email.Email;
@@ -27,15 +26,14 @@ import java.util.Map;
 
 /**
  * @Author: [liguiqin]
- * @Date: [2017-03-24 17:29]
+ * @Date: [2017-09-11 13:56]
  * @Description: [ ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-@Service("emailApiImpl")
-public class EmailApiImpl implements EmailAPI {
-    private static final Logger CONSOLE = LoggerFactory.getLogger(EmailApiImpl.class);
-
+@Service
+public class MailSerImpl implements MailSer {
+    private static final Logger CONSOLE = LoggerFactory.getLogger(MailSerImpl.class);
     @Autowired
     private Environment env;
 
@@ -168,6 +166,4 @@ public class EmailApiImpl implements EmailAPI {
     private String getUserName(String username) {
         return username.split("@")[0];
     }
-
-
 }

@@ -8,21 +8,17 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.message.api.EmailAPI;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.bo.MessageBO;
 import com.bjike.goddess.message.dto.MessageDTO;
 import com.bjike.goddess.message.enums.MsgType;
-import com.bjike.goddess.message.kafka.KafkaConsumer;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.message.vo.MessageVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 

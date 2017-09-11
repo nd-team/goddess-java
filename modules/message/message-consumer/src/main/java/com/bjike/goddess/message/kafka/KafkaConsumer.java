@@ -1,23 +1,9 @@
 package com.bjike.goddess.message.kafka;
 
-import com.alibaba.fastjson.JSON;
-import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.message.api.EmailAPI;
-import com.bjike.goddess.message.to.MessageTO;
-import com.bjike.goddess.message.to.email.Email;
+import com.bjike.goddess.message.mail.MailSer;
 import kafka.consumer.ConsumerConfig;
-import kafka.consumer.ConsumerIterator;
-import kafka.consumer.KafkaStream;
-import kafka.javaapi.consumer.ConsumerConnector;
-import kafka.serializer.StringDecoder;
-import kafka.utils.VerifiableProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -28,9 +14,8 @@ import java.util.Properties;
  * @Copy: [com.bjike]
  */
 public class KafkaConsumer {
-    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumer.class);
 
-    public static EmailAPI emailAPI;
+    public static MailSer mailSer;
     public static Environment env;
 
     public void consumer() {
@@ -49,41 +34,10 @@ public class KafkaConsumer {
         props.put("auto.offset.reset", env.getProperty("auto.offset.reset"));
         //序列化类
         props.put("serializer.class", env.getProperty("serializer.class"));
-
         ConsumerConfig config = new ConsumerConfig(props);
-
-        ConsumerConnector consumer = kafka.consumer.Consumer.createJavaConsumerConnector(config);
-        Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
-        topicCountMap.put("messages", new Integer(1));
-
-        StringDecoder keyDecoder = new StringDecoder(new VerifiableProperties());
-        StringDecoder valueDecoder = new StringDecoder(new VerifiableProperties());
-
-        Map<String, List<KafkaStream<String, String>>> consumerMap =
-                consumer.createMessageStreams(topicCountMap, keyDecoder, valueDecoder);
-        KafkaStream<String, String> stream = consumerMap.get("messages").get(0);
-        ConsumerIterator<String, String> it = stream.iterator();
-        while (it.hasNext()) {
-            String msg = new String(it.next().message());
-            MessageTO to = null;
-            try {
-                to = JSON.parseObject(msg, MessageTO.class);
-
-            } catch (Exception e) {
-                LOGGER.error("消息json转换错误!");
-            }
-            if (null != to.getReceivers()) {
-                try {
-                    Email email = new Email(to.getTitle(), to.getContent());
-                    email.setReceiver(to.getReceivers());
-                    emailAPI.send(email);
-                    LOGGER.info("收到消息:" + msg);
-                } catch (SerException e) {
-                    LOGGER.error(e.getMessage());
-                }
-            }
-        }
-
+        new Thread(new MsgRunner(mailSer,"messages",config)).start();
+        new Thread(new MsgRunner(mailSer,"assn_pub_msg",config)).start();
     }
+
 
 }

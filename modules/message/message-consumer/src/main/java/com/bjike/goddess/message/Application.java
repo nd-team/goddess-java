@@ -13,9 +13,9 @@ import java.io.IOException;
  * 扫描com.bjike.goddess.common.consumer 加入过滤器引入userToken
  */
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.bjike.goddess.message.action","com.bjike.goddess.message.config", "com.bjike.goddess.common.consumer"})
+@ComponentScan(basePackages = {"com.bjike.goddess.message.action","com.bjike.goddess.message.config","com.bjike.goddess.message.mail", "com.bjike.goddess.common.consumer"})
 @ImportResource("classpath:app.xml")
-@PropertySource({"classpath:kafka.properties"})
+@PropertySource({"classpath:kafka.properties","classpath:config.properties"})
 @EnableAutoConfiguration(exclude = {ValidationAutoConfiguration.class})
 public class Application {
 
