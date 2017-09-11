@@ -68,6 +68,9 @@
     <!-- 商业能力互动-->
     <dubbo:reference validation="true" interface="com.bjike.goddess.businessinteraction.api.CollectEmailAPI"
                      id="businessinteractEmailApiImpl"/>
+
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.EmailAPI"
+                     id="emailApiImpl"/>
     <!-- 物资汇总-->
     <!--<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.SendEmailAPI" id="sendEmailApiImpl"/>
 -->

@@ -6,7 +6,9 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.contacts.api.CommonalityAPI;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
+import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.feedback.bo.ProblemAcceptBO;
 import com.bjike.goddess.feedback.bo.ProblemFeedbackBO;
 import com.bjike.goddess.feedback.dto.ProblemCodeRuleDTO;
@@ -19,10 +21,15 @@ import com.bjike.goddess.feedback.excel.SonPermissionObject;
 import com.bjike.goddess.feedback.to.GuidePermissionTO;
 import com.bjike.goddess.feedback.to.ProblemFeedbackTO;
 import com.bjike.goddess.message.api.MessageAPI;
+import com.bjike.goddess.message.enums.MsgType;
+import com.bjike.goddess.message.enums.RangeType;
+import com.bjike.goddess.message.enums.SendType;
+import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.entity.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -328,30 +335,35 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
             }
 
             super.save(problemFeedback);
-//            String passName = problemFeedback.getProblemExhibitor();
-//            LocalDateTime getTime = problemFeedback.getGetTime();//获取时间(问题提出时间)
-//            String area = problemFeedback.getArea();//所属地区
-//            String projectGroup = problemFeedback.getProjectGroup(); //所属项目组/部门
-//            String problemExhibitor = problemFeedback.getProblemExhibitor();//问题提出人
-//            String problemDescription = problemFeedback.getProblemDescription(); //问题描述
-//            LocalDateTime expectDealTime = problemFeedback.getExpectDealTime();//期望处理时间
-//            StringBuffer content = new StringBuffer();
-            //设置发送内容
-//            content.append("各位同事:");
-//            content.append("本人是" + area + " " + projectGroup + " " + problemExhibitor + ",在" + getTime + "发现" + problemDescription + "请在" + expectDealTime + "前跟进处理,谢谢!");
-//            MessageTO messageTO = new MessageTO();
-//            messageTO.setContent(content.toString());
-//            messageTO.setTitle("问题反馈");
-//            messageTO.setMsgType(MsgType.SYS);
-//            messageTO.setSendType(SendType.EMAIL);
-//            messageTO.setRangeType(RangeType.SPECIFIED);
-//            messageTO.setReceivers(new String[]{"xiazhili_aj@163.com"});
+            String passName = problemFeedback.getProblemExhibitor();
+            LocalDateTime getTime = problemFeedback.getGetTime();//获取时间(问题提出时间)
+            String area = problemFeedback.getArea();//所属地区
+            String projectGroup = problemFeedback.getProjectGroup(); //所属项目组/部门
+            String problemExhibitor = problemFeedback.getProblemExhibitor();//问题提出人
+            String problemDescription = problemFeedback.getProblemDescription(); //问题描述
+            LocalDateTime expectDealTime = problemFeedback.getExpectDealTime();//期望处理时间
+            StringBuffer content = new StringBuffer();
+//            设置发送内容
+            content.append("各位同事:");
+            content.append("本人是" + area + " " + projectGroup + " " + problemExhibitor + ",在" + getTime + "发现" + problemDescription + "请在" + expectDealTime + "前跟进处理,谢谢!");
+            MessageTO messageTO = new MessageTO();
+            messageTO.setContent(content.toString());
+            messageTO.setTitle("问题反馈");
+            messageTO.setMsgType(MsgType.SYS);
+            messageTO.setSendType(SendType.EMAIL);
+            messageTO.setRangeType(RangeType.SPECIFIED);
+            if(to.getPublicEmail()!=null){
+                messageTO.setReceivers(to.getPublicEmail());
+                messageAPI.send(messageTO);
+            }
+            if(to.getSendObject()!=null){
+                List<String> sendObject = internalContactsAPI.getEmails(to.getSendObject());
+                String[] strings=new String[sendObject.size()];
+                strings=sendObject.toArray(strings);
+                messageTO.setReceivers(strings);
+                messageAPI.send(messageTO);
+            }
 
-//        String email = internalContactsAPI.getEmail(passName);
-//
-//
-//        messageTO.setReceivers(new String[]{email});
-//            messageAPI.send(messageTO);
         }
         return BeanTransform.copyProperties(problemFeedback, ProblemFeedbackBO.class);
     }
@@ -369,33 +381,40 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
             problemFeedback.setNotificationTime(LocalDateTime.now());
             super.update(problemFeedback);
 
-//            String passName = problemFeedback.getProblemExhibitor();
-//            String getTime = String.valueOf(problemFeedback.getGetTime());//获取时间(问题提出时间)
-//            String area = problemFeedback.getArea();//所属地区
-//            String projectGroup = problemFeedback.getProjectGroup(); //所属项目组/部门
-//            String problemExhibitor = problemFeedback.getProblemExhibitor();//问题提出人
-//            String problemDescription = problemFeedback.getProblemDescription(); //问题描述
-//            String ideaTime = String.valueOf(to.getIdeaTime()); //意见收集完成时间
-//            StringBuffer content = new StringBuffer();
-//            //设置发送内容
-//            content.append("各项目组/部门：");
-//            content.append("福利模块在" + getTime + "收到" + area + " " + projectGroup + " " + problemExhibitor + "反馈的问题，" +
-//                    " 问题描述如下：" + problemDescription + "。请各模块就此问题，依据各自的工作权责，提出处理意见或防止再次发生的建议，" +
-//                    " 并请各模块在" + ideaTime + "前反馈，前回复至综合资源部。特此说明：如果各部门/模块无法在规定时间内提出建议和预计解决时间，" +
-//                    " 默认为已承担问题处理延后的责任。特此函告，请答复！");
-//            content.append("综合资源部福利模块" + LocalDate.now());
-//            MessageTO messageTO = new MessageTO();
-//            messageTO.setContent(content.toString());
-//            messageTO.setTitle("协助");
-//            messageTO.setMsgType(MsgType.SYS);
-//            messageTO.setSendType(SendType.EMAIL);
-//            messageTO.setRangeType(RangeType.SPECIFIED);
+            String passName = problemFeedback.getProblemExhibitor();
+            String getTime = String.valueOf(problemFeedback.getGetTime());//获取时间(问题提出时间)
+            String area = problemFeedback.getArea();//所属地区
+            String projectGroup = problemFeedback.getProjectGroup(); //所属项目组/部门
+            String problemExhibitor = problemFeedback.getProblemExhibitor();//问题提出人
+            String problemDescription = problemFeedback.getProblemDescription(); //问题描述
+            String ideaTime = String.valueOf(to.getIdeaTime()); //意见收集完成时间
+            StringBuffer content = new StringBuffer();
+            //设置发送内容
+            content.append("各项目组/部门：");
+            content.append("福利模块在" + getTime + "收到" + area + " " + projectGroup + " " + problemExhibitor + "反馈的问题，" +
+                    " 问题描述如下：" + problemDescription + "。请各模块就此问题，依据各自的工作权责，提出处理意见或防止再次发生的建议，" +
+                    " 并请各模块在" + ideaTime + "前反馈，前回复至综合资源部。特此说明：如果各部门/模块无法在规定时间内提出建议和预计解决时间，" +
+                    " 默认为已承担问题处理延后的责任。特此函告，请答复！");
+            content.append("综合资源部福利模块" + LocalDate.now());
+            MessageTO messageTO = new MessageTO();
+            messageTO.setContent(content.toString());
+            messageTO.setTitle("协助");
+            messageTO.setMsgType(MsgType.SYS);
+            messageTO.setSendType(SendType.EMAIL);
+            messageTO.setRangeType(RangeType.SPECIFIED);
 
-//            String name = internalContactsAPI.getEmail(passName);
-//
-//
-//            messageTO.setReceivers(new String[]{name});
-//            messageAPI.send(messageTO);
+            if(to.getPublicEmail()!=null){
+                messageTO.setReceivers(to.getPublicEmail());
+                messageAPI.send(messageTO);
+            }
+            if(to.getSendObject()!=null){
+                List<String> sendObject = internalContactsAPI.getEmails(to.getSendObject());
+                String[] strings=new String[sendObject.size()];
+                strings=sendObject.toArray(strings);
+                messageTO.setReceivers(strings);
+                messageAPI.send(messageTO);
+            }
+
 
             return BeanTransform.copyProperties(problemFeedback, ProblemFeedbackBO.class);
         } else {
@@ -425,31 +444,38 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
                 problemAccept.setAcceptModule(positionDetailBO.getModuleName());
             }
             problemAcceptSer.save(problemAccept);
-//            String passName = problemFeedback.getProblemExhibitor();
-//            String getTime = String.valueOf(problemFeedback.getGetTime());//获取时间(问题提出时间)
-//            String problemExhibitor = problemFeedback.getProblemExhibitor();//问题提出人
-//            String problemDescription = problemFeedback.getProblemDescription(); //问题描述
-//            String ideaTime = String.valueOf(to.getIdeaTime()); //意见收集完成时间
-//            String acceptTime = String.valueOf(to.getAcceptTime());//问题跟进处理计划完成时间不能为空
-//            StringBuffer content = new StringBuffer();
-//            //设置发送内容
-//            content.append(problemExhibitor+":");
-//            content.append(   "你好！关于"+getTime+"发现"+problemDescription+"，已收悉。 " +
-//                    " 经与各项目组/部门商讨，现函付如下： " +
-//                    " 你的问题我们会在"+ideaTime+"内收集完各项目组各部门意见，计划于"+acceptTime+"反馈处理结果，" +
-//                    " 如跟你的期望时间有出入，福利模块负责人跟你协商，请悉知！");
-//            MessageTO messageTO = new MessageTO();
-//            messageTO.setContent(content.toString());
-//            messageTO.setTitle("问题受理后的回复");
-//            messageTO.setMsgType(MsgType.SYS);
-//            messageTO.setSendType(SendType.EMAIL);
-//            messageTO.setRangeType(RangeType.SPECIFIED);
+            String passName = problemFeedback.getProblemExhibitor();
+            String getTime = String.valueOf(problemFeedback.getGetTime());//获取时间(问题提出时间)
+            String problemExhibitor = problemFeedback.getProblemExhibitor();//问题提出人
+            String problemDescription = problemFeedback.getProblemDescription(); //问题描述
+            String ideaTime = String.valueOf(to.getIdeaTime()); //意见收集完成时间
+            String acceptTime = String.valueOf(to.getAcceptTime());//问题跟进处理计划完成时间不能为空
+            StringBuffer content = new StringBuffer();
+            //设置发送内容
+            content.append(problemExhibitor + ":");
+            content.append("你好！关于" + getTime + "发现" + problemDescription + "，已收悉。 " +
+                    " 经与各项目组/部门商讨，现函付如下： " +
+                    " 你的问题我们会在" + ideaTime + "内收集完各项目组各部门意见，计划于" + acceptTime + "反馈处理结果，" +
+                    " 如跟你的期望时间有出入，福利模块负责人跟你协商，请悉知！");
+            MessageTO messageTO = new MessageTO();
+            messageTO.setContent(content.toString());
+            messageTO.setTitle("问题受理后的回复");
+            messageTO.setMsgType(MsgType.SYS);
+            messageTO.setSendType(SendType.EMAIL);
+            messageTO.setRangeType(RangeType.SPECIFIED);
 
-//            String email = internalContactsAPI.getEmail(passName);
-//
-//
-//            messageTO.setReceivers(new String[]{email});
-//            messageAPI.send(messageTO);
+            if(to.getPublicEmail()!=null){
+                messageTO.setReceivers(to.getPublicEmail());
+                messageAPI.send(messageTO);
+            }
+            if(to.getSendObject()!=null){
+                List<String> sendObject = internalContactsAPI.getEmails(to.getSendObject());
+                String[] strings=new String[sendObject.size()];
+                strings=sendObject.toArray(strings);
+                messageTO.setReceivers(strings);
+                messageAPI.send(messageTO);
+            }
+
 
             return BeanTransform.copyProperties(problemAccept, ProblemAcceptBO.class);
         } else {

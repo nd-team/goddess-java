@@ -27,7 +27,6 @@ public class PositionDetailUserTO extends BaseTO {
     /**
      * 职位详情
      */
-    @NotNull(message = "职位详情不能为空", groups = {ADD.class, EDIT.class})
     private List<PositionUserDetailTO> detailTOS;
     /**
      * 人员状态

@@ -1,12 +1,17 @@
 package com.bjike.goddess.organize.bo;
 
+import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.organize.enums.AgentType;
 import com.bjike.goddess.organize.enums.WorkStatus;
 
 /**
  * Created by ike on 17-9-6.
  */
-public class PositionUserDetailBO {
+public class PositionUserDetailBO extends BaseBO{
+    /**
+     * 职位id
+     */
+    private String positionId;
     /**
      * 体系编号
      */
@@ -59,6 +64,14 @@ public class PositionUserDetailBO {
      * 代理类型
      */
     private AgentType agentType;
+
+    public String getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(String positionId) {
+        this.positionId = positionId;
+    }
 
     public String getHierarchyNumber() {
         return hierarchyNumber;

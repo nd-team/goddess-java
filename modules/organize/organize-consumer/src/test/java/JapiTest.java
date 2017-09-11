@@ -11,17 +11,17 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.ImportResource;
 
 import java.io.IOException;
-
 public class JapiTest {
-
 	public static void main(String[] args) throws IOException {
-		JapiClient.setPrefixPath("/home/ike/goddess/goddess-java/");//路径前缀
+		JapiClient.setPrefixPath("/home/ike/code/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
 		JapiClient.setProjectJavaPath("modules/organize/organize-consumer");//主项目位置
 		JapiClient.setActionReletivePath("com/bjike/goddess/organize/action");//主项目action位置
 		JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
 				"modules/organize/organize-api",
 				"modules/user/user-api",
+				"modules/contacts/contacts-api",
+				"modules/businessproject/businessproject-api",
 				"common/common-api"
 		});
 		JapiClient.setFlushServer(true);

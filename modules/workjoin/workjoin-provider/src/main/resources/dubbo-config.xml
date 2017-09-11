@@ -43,7 +43,9 @@
 	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
 	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
 	<dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
-	<dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.datastore.api.ModuleAPI" />
+	<dubbo:reference  validation="true" id="materialInStockApiImpl" interface="com.bjike.goddess.materialinstock.api.MaterialInStockAPI" />
+	<dubbo:reference  validation="true" id="numSpecificationApiImpl" interface="com.bjike.goddess.datastore.api.NumSpecificationAPI" />
+	<dubbo:reference  validation="true" id="positionInstructionApiImpl" interface="com.bjike.goddess.organize.api.PositionInstructionAPI" />
 
 
 </beans>

@@ -49,12 +49,12 @@ public class WorkRangeAct {
     private WorkRangeAPI workRangeAPI;
     @Autowired
     private ModuleAPI moduleAPI;
-    @Autowired
-    private BusinessTypeAPI businessTypeAPI;
-    @Autowired
-    private BusinessCourseAPI businessCourseAPI;
-    @Autowired
-    private MarketInfoAPI marketInfoAPI;
+//    @Autowired
+//    private BusinessTypeAPI businessTypeAPI;
+//    @Autowired
+//    private BusinessCourseAPI businessCourseAPI;
+//    @Autowired
+//    private MarketInfoAPI marketInfoAPI;
 
 
     /**
@@ -288,21 +288,21 @@ public class WorkRangeAct {
      *
      * @version v1
      */
-    @GetMapping("v1/findDirection")
-    public Result findDirection() throws ActException {
-        try {
-            List<String> list = new ArrayList<>(0);
-            if (moduleAPI.isCheck("marketdevelopment")) {
-                List<BusinessTypeBO> businessTypeBOs = businessTypeAPI.findThaw();
-                for (BusinessTypeBO businessTypeBO : businessTypeBOs) {
-                    list.add(businessTypeBO.getType());
-                }
-            }
-            return ActResult.initialize(list);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    @GetMapping("v1/findDirection")
+//    public Result findDirection() throws ActException {
+//        try {
+//            List<String> list = new ArrayList<>(0);
+//            if (moduleAPI.isCheck("marketdevelopment")) {
+//                List<BusinessTypeBO> businessTypeBOs = businessTypeAPI.findThaw();
+//                for (BusinessTypeBO businessTypeBO : businessTypeBOs) {
+//                    list.add(businessTypeBO.getType());
+//                }
+//            }
+//            return ActResult.initialize(list);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
 
 //    /**
@@ -325,27 +325,27 @@ public class WorkRangeAct {
      *
      * @version v1
      */
-    @GetMapping("v1/findProject")
-    public Result findProject() throws ActException {
-        try {
-            List<String> stringList = new ArrayList<>(0);
-            if (moduleAPI.isCheck("marketdevelopment")) {
-                List<BusinessCourseBO> businessCourseBOList = businessCourseAPI.findThaw();
-                for (BusinessCourseBO businessCourseBO : businessCourseBOList) {
-                    stringList.add(businessCourseBO.getCourse());
-                }
-            }
-            if (moduleAPI.isCheck("market")) {
-                List<String> stringList1 = marketInfoAPI.getProjectName();
-                for (String str : stringList) {
-                    stringList.add(str);
-                }
-            }
-            return ActResult.initialize(stringList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    @GetMapping("v1/findProject")
+//    public Result findProject() throws ActException {
+//        try {
+//            List<String> stringList = new ArrayList<>(0);
+//            if (moduleAPI.isCheck("marketdevelopment")) {
+//                List<BusinessCourseBO> businessCourseBOList = businessCourseAPI.findThaw();
+//                for (BusinessCourseBO businessCourseBO : businessCourseBOList) {
+//                    stringList.add(businessCourseBO.getCourse());
+//                }
+//            }
+//            if (moduleAPI.isCheck("market")) {
+//                List<String> stringList1 = marketInfoAPI.getProjectName();
+//                for (String str : stringList) {
+//                    stringList.add(str);
+//                }
+//            }
+//            return ActResult.initialize(stringList);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
 //    /**
 //     * 查询分类
@@ -368,27 +368,27 @@ public class WorkRangeAct {
      *
      * @version v1
      */
-    @GetMapping("v1/findClassify")
-    public Result findClassify(HttpServletRequest request) throws ActException {
-        try {
-            List<String> list = new ArrayList<>(0);
-            if (moduleAPI.isCheck("marketdevelopment")) {
-                List<BusinessTypeBO> businessTypeBOs = businessTypeAPI.findThaw();
-                for (BusinessTypeBO businessTypeBO : businessTypeBOs) {
-                    list.add(businessTypeBO.getType());
-                }
-            }
-            if (moduleAPI.isCheck("market")) {
-                List<String> stringList = marketInfoAPI.getTechnologyCategory();
-                for (String str : stringList) {
-                    list.add(str);
-                }
-            }
-            return ActResult.initialize(list);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    @GetMapping("v1/findClassify")
+//    public Result findClassify(HttpServletRequest request) throws ActException {
+//        try {
+//            List<String> list = new ArrayList<>(0);
+//            if (moduleAPI.isCheck("marketdevelopment")) {
+//                List<BusinessTypeBO> businessTypeBOs = businessTypeAPI.findThaw();
+//                for (BusinessTypeBO businessTypeBO : businessTypeBOs) {
+//                    list.add(businessTypeBO.getType());
+//                }
+//            }
+//            if (moduleAPI.isCheck("market")) {
+//                List<String> stringList = marketInfoAPI.getTechnologyCategory();
+//                for (String str : stringList) {
+//                    list.add(str);
+//                }
+//            }
+//            return ActResult.initialize(list);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
     /**
      * 关闭

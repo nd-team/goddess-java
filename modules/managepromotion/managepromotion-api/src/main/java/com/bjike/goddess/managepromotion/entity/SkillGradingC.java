@@ -87,7 +87,7 @@ public class SkillGradingC extends BaseEntity {
 
 
     public String getGrade() {
-        return null;
+        return grade;
     }
 
     public void setGrade(String grade) {

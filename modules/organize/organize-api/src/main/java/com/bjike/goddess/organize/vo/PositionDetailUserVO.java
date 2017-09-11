@@ -1,5 +1,7 @@
 package com.bjike.goddess.organize.vo;
 
+import com.bjike.goddess.organize.enums.StaffStatus;
+
 import java.util.List;
 
 /**
@@ -55,6 +57,18 @@ public class PositionDetailUserVO {
      * 详细信息
      */
     private List<PositionUserDetailVO> detailS;
+    /**
+     * 人员状态
+     */
+    private StaffStatus staffStatus;
+
+    public StaffStatus getStaffStatus() {
+        return staffStatus;
+    }
+
+    public void setStaffStatus(StaffStatus staffStatus) {
+        this.staffStatus = staffStatus;
+    }
 
     public List<PositionUserDetailVO> getDetailS() {
         return detailS;
