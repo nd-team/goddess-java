@@ -46,8 +46,8 @@ public class ShareOutBonusDetailApiImpl implements ShareOutBonusDetailAPI {
     }
 
     @Override
-    public List<ShareOutBonusDetailBO> findListBySharId(String ShareOutBonusManageId) throws SerException {
-        return shareOutBonusDetailSer.findListBySharId(ShareOutBonusManageId);
+    public List<ShareOutBonusDetailBO> findListBySharId(String shareOutBonusManageId) throws SerException {
+        return shareOutBonusDetailSer.findListBySharId(shareOutBonusManageId);
     }
 
     @Override
@@ -71,8 +71,8 @@ public class ShareOutBonusDetailApiImpl implements ShareOutBonusDetailAPI {
     }
 
     @Override
-    public Double computAmount(String ShareOutBonusManageId, Double Propor) throws SerException {
-        return shareOutBonusDetailSer.computAmount(ShareOutBonusManageId, Propor);
+    public Double computAmount(String shareOutBonusManageId, Double Propor) throws SerException {
+        return shareOutBonusDetailSer.computAmount(shareOutBonusManageId, Propor);
     }
 
     @Override

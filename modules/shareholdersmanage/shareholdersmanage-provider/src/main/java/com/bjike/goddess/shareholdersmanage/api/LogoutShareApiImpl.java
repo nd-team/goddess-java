@@ -53,7 +53,7 @@ public class LogoutShareApiImpl implements LogoutShareAPI {
 
     @Override
     public LogoutShareBO save(LogoutShareTO logoutShareTO) throws SerException {
-        return null;
+        return logoutShareSer.save(logoutShareTO);
     }
 
     @Override

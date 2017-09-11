@@ -243,7 +243,7 @@ public class ShareOutBonusManageAction extends BaseFileAction{
         }
     }
     /**
-     * 删除
+     * 删除分红明细数据
      *
      * @param id id
      * @des 根据id删除分红明细

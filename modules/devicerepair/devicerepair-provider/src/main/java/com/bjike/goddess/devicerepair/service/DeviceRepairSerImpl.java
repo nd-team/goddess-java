@@ -331,7 +331,9 @@ public class DeviceRepairSerImpl extends ServiceImpl<DeviceRepair, DeviceRepairD
      * @throws SerException
      */
     private void updateDeviceRepair(DeviceRepairTO to, DeviceRepair model) throws SerException {
-        BeanTransform.copyProperties(to, model, true);
+        LocalDateTime date = model.getCreateTime();
+        model = BeanTransform.copyProperties(to, DeviceRepair.class, true);
+        model.setCreateTime(date);
         model.setModifyTime(LocalDateTime.now());
         super.update(model);
     }

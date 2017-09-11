@@ -269,7 +269,7 @@ public class LogoutShareSerImpl extends ServiceImpl<LogoutShare, LogoutShareDTO>
     //恢复股东开户中的股东状态
     public void reShareholderStatus(String logoutShareName, ShareholderStatus status) throws SerException {
         ShareOpenAccountBO shareOpenAccountBO = shareOpenAccountSer.findByName(logoutShareName);
-        ShareOpenAccount shareOpenAccount = BeanTransform.copyProperties(shareOpenAccountBO, ShareOpenAccount.class, true);
+        ShareOpenAccount shareOpenAccount = shareOpenAccountSer.findById(shareOpenAccountBO.getId());
         shareOpenAccount.setShareholderStatus(status);
         shareOpenAccountSer.update(shareOpenAccount);
     }
