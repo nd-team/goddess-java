@@ -42,7 +42,7 @@ public class SalaryAction {
     @Autowired
     private CountAPI countAPI;
 
-    private static String navigation="工资区间";
+    private static final String navigation="工资区间";
     private CountTO countTO=new CountTO(navigation);
 
     /**

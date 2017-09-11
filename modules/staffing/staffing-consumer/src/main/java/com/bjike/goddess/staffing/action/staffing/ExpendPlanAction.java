@@ -67,7 +67,7 @@ public class ExpendPlanAction {
     @Autowired
     private CountAPI countAPI;
 
-    private static String navigation="人工成本计划";
+    private static final String navigation="人工成本计划";
     private CountTO countTO=new CountTO(navigation);
 
     /**

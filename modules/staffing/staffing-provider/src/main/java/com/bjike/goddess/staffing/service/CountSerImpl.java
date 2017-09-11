@@ -41,7 +41,7 @@ public class CountSerImpl extends ServiceImpl<Count, CountDTO> implements CountS
     @Autowired
     private UserAPI userAPI;
 
-    private static String module = "人员编制";
+    private static final String module = "人员编制";
 
     @Override
     @Transactional(rollbackFor = SerException.class)

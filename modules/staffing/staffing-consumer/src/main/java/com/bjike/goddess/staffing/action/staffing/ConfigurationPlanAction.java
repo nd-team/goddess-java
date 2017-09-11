@@ -56,7 +56,7 @@ public class ConfigurationPlanAction {
     @Autowired
     private CountAPI countAPI;
 
-    private static String navigation="人数配置计划";
+    private static final String navigation="人数配置计划";
     private CountTO countTO=new CountTO(navigation);
 
     /**

@@ -42,7 +42,7 @@ public class ConfigurationActualAction {
     @Autowired
     private CountAPI countAPI;
 
-    private static String navigation = "人数配置实际";
+    private static final String navigation = "人数配置实际";
     private CountTO countTO = new CountTO(navigation);
 
     /**

@@ -45,7 +45,7 @@ public class CusPermissionAction {
     @Autowired
     private CountAPI countAPI;
 
-    private static String navigation = "权限配置";
+    private static final String navigation = "权限配置";
     private CountTO countTO = new CountTO(navigation);
 
     /**
