@@ -40,7 +40,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 社保增员信息名单
@@ -374,7 +377,7 @@ public class AddEmployeeAct {
     }
 
     /**
-     * 获取所有岗位和岗位层次
+     * 获取所有岗位
      *
      * @return class PositionDetailVO
      * @throws ActException
@@ -390,6 +393,28 @@ public class AddEmployeeAct {
                 list = positionDetailAPI.findStatus();
             }
             return ActResult.initialize(BeanTransform.copyProperties(list, PositionDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有岗位层次
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findLevel")
+    public Result findLevel(HttpServletRequest request) throws ActException {
+        try {
+            Set<String> set = new HashSet<>();
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                List<PositionDetailBO> list = positionDetailAPI.findStatus();
+                set = list.stream().map(positionDetailBO -> positionDetailBO.getArrangementName()).collect(Collectors.toSet());
+            }
+            return ActResult.initialize(set);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

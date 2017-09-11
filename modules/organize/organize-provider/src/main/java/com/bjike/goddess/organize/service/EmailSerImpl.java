@@ -59,10 +59,10 @@ public class EmailSerImpl extends ServiceImpl<Email, EmailDTO> implements EmailS
     @Transactional(rollbackFor = {SerException.class})
     public void add(EmailTO to) throws SerException {
         Email email = BeanTransform.copyProperties(to, Email.class, true);
-        LocalDateTime sendTime=email.getSetTime();
+        LocalDateTime sendTime = email.getSetTime();
         Long mis = sendTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
                 - LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        if (mis<=0){
+        if (mis <= 0) {
             throw new SerException("发送时间必须大于当前时间");
         }
         String[] departs = to.getDeparts();
@@ -121,7 +121,7 @@ public class EmailSerImpl extends ServiceImpl<Email, EmailDTO> implements EmailS
         entity.setSetTime(time);
         Long mis = time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
                 - LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        if (mis<=0){
+        if (mis <= 0) {
             throw new SerException("发送时间必须大于当前时间");
         }
         String[] departs = to.getDeparts();
@@ -298,13 +298,25 @@ public class EmailSerImpl extends ServiceImpl<Email, EmailDTO> implements EmailS
                     sb.append("<td>" + detailS.get(i).getDepartment() + "</td>");
                     sb.append("<td>" + detailS.get(i).getRotationLevel() + "</td>");
                     sb.append("<td>" + detailS.get(i).getArrangement() + "</td>");
-                    sb.append("<td>" + detailS.get(i).getModule() + "</td>");
+                    if (null == detailS.get(i).getModule()) {
+                        sb.append("<td> </td>");
+                    } else {
+                        sb.append("<td>" + detailS.get(i).getModule() + "</td>");
+                    }
                     sb.append("<td>" + detailS.get(i).getPosition() + "</td>");
                     sb.append("<td>" + detailS.get(i).getPositionNumber() + "</td>");
-                    sb.append("<td>" + detailS.get(i).getWorkStatus() + "</td>");
-                    sb.append("<td>" + detailS.get(i).getAgent() + "</td>");
-                    sb.append("<td>" + detailS.get(i).getAgentType() + "</td>");
-                    sb.append("<td rowspan='" + size + "'>" + bo.getStaffStatus() + "</td>");
+                    sb.append("<td>" + detailS.get(i).getWorkStatus().toString() + "</td>");
+                    if (detailS.get(i).getAgent()) {
+                        sb.append("<td>是</td>");
+                    } else {
+                        sb.append("<td>否</td>");
+                    }
+                    if (null == detailS.get(i).getAgentType()) {
+                        sb.append("<td> </td>");
+                    } else {
+                        sb.append("<td>" + detailS.get(i).getAgentType().toString() + "</td>");
+                    }
+                    sb.append("<td rowspan='" + size + "'>" + bo.getStaffStatus().toString() + "</td>");
                     sb.append("</tr>");
                 } else {
                     sb.append("<tr>");
@@ -315,12 +327,24 @@ public class EmailSerImpl extends ServiceImpl<Email, EmailDTO> implements EmailS
                     sb.append("<td>" + detailS.get(i).getDepartment() + "</td>");
                     sb.append("<td>" + detailS.get(i).getRotationLevel() + "</td>");
                     sb.append("<td>" + detailS.get(i).getArrangement() + "</td>");
-                    sb.append("<td>" + detailS.get(i).getModule() + "</td>");
+                    if (null == detailS.get(i).getModule()) {
+                        sb.append("<td> </td>");
+                    } else {
+                        sb.append("<td>" + detailS.get(i).getModule() + "</td>");
+                    }
                     sb.append("<td>" + detailS.get(i).getPosition() + "</td>");
                     sb.append("<td>" + detailS.get(i).getPositionNumber() + "</td>");
-                    sb.append("<td>" + detailS.get(i).getWorkStatus() + "</td>");
-                    sb.append("<td>" + detailS.get(i).getAgent() + "</td>");
-                    sb.append("<td>" + detailS.get(i).getAgentType() + "</td>");
+                    sb.append("<td>" + detailS.get(i).getWorkStatus().toString() + "</td>");
+                    if (detailS.get(i).getAgent()) {
+                        sb.append("<td>是</td>");
+                    } else {
+                        sb.append("<td>否</td>");
+                    }
+                    if (null == detailS.get(i).getAgentType()) {
+                        sb.append("<td> </td>");
+                    } else {
+                        sb.append("<td>" + detailS.get(i).getAgentType().toString() + "</td>");
+                    }
                     sb.append("</tr>");
                 }
             }
