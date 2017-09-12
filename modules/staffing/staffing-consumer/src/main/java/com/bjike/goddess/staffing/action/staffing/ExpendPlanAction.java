@@ -19,9 +19,11 @@ import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.bo.HierarchyBO;
 import com.bjike.goddess.projectcost.api.ArtificialCostAPI;
 import com.bjike.goddess.projectcost.bo.ArtificialCostBO;
+import com.bjike.goddess.staffing.api.CountAPI;
 import com.bjike.goddess.staffing.api.ExpendPlanAPI;
 import com.bjike.goddess.staffing.bo.ExpendPlanBO;
 import com.bjike.goddess.staffing.dto.ExpendPlanDTO;
+import com.bjike.goddess.staffing.to.CountTO;
 import com.bjike.goddess.staffing.to.ExpendPlanTO;
 import com.bjike.goddess.staffing.to.GuidePermissionTO;
 import com.bjike.goddess.staffing.vo.ExpendPlanVO;
@@ -62,6 +64,11 @@ public class ExpendPlanAction {
     private ModuleAPI moduleAPI;
     @Autowired
     private ArtificialCostAPI artificialCostAPI;
+    @Autowired
+    private CountAPI countAPI;
+
+    private static final String navigation="人工成本计划";
+    private CountTO countTO=new CountTO(navigation);
 
     /**
      * 模块设置导航权限
@@ -315,7 +322,11 @@ public class ExpendPlanAction {
     @GetMapping("v1/list")
     public Result list(ExpendPlanDTO dto, HttpServletRequest request) throws ActException {
         try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             List<ExpendPlanBO> list = expendPlanAPI.list(dto);
+            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+            countTO.setFunction("列表");
+            countAPI.add(countTO);
             return ActResult.initialize(BeanTransform.copyProperties(list, ExpendPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -332,7 +343,11 @@ public class ExpendPlanAction {
     @PostMapping("v1/add")
     public Result add(@Validated(ADD.class) ExpendPlanTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            ExpendPlanBO bo = expendPlanAPI.save(to);
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            expendPlanAPI.save(to);
+            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+            countTO.setFunction("添加");
+            countAPI.add(countTO);
             return new ActResult("添加成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -365,9 +380,13 @@ public class ExpendPlanAction {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class) ExpendPlanTO to, BindingResult result) throws ActException {
+    public Result edit(@Validated(EDIT.class) ExpendPlanTO to, BindingResult result,HttpServletRequest request) throws ActException {
         try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             expendPlanAPI.edit(to);
+            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+            countTO.setFunction("编辑");
+            countAPI.add(countTO);
             return new ActResult("编辑成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -382,9 +401,13 @@ public class ExpendPlanAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id,HttpServletRequest request) throws ActException {
         try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             expendPlanAPI.delete(id);
+            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+            countTO.setFunction("删除");
+            countAPI.add(countTO);
             return new ActResult("删除成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

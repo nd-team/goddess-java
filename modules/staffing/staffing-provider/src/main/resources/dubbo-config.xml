@@ -27,6 +27,7 @@
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.staffing.api.ConfigurationActualAPI" ref="configurationActualApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.staffing.api.CusPermissionAPI" ref="cusPermissionApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.staffing.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.staffing.api.CountAPI" ref="countApiImpl"/>
 
 
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>

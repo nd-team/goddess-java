@@ -95,20 +95,20 @@ public interface ShareOutBonusDetailSer extends Ser<ShareOutBonusDetail, ShareOu
     /**
      * 根据分红管理id删除所有相关的分红明细
      *
-     * @param ShareOutBonusManageId
+     * @param shareOutBonusManageId
      * @throws SerException
      */
-    default void deleteByShareId(String ShareOutBonusManageId) throws SerException {
+    default void deleteByShareId(String shareOutBonusManageId) throws SerException {
 
     }
 
     /**
      * 计算分红额
-     * @param ShareOutBonusManageId 分红管理id
+     * @param shareOutBonusManageId 分红管理id
      * @param shareOutBonusPropor 分红比例
      * @return
      */
-    default Double computAmount(String ShareOutBonusManageId,Double shareOutBonusPropor)throws SerException{
+    default Double computAmount(String shareOutBonusManageId,Double shareOutBonusPropor)throws SerException{
         return null;
     }
     /**

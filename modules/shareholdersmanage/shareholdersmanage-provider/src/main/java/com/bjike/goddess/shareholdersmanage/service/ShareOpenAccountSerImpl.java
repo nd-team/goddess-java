@@ -385,6 +385,21 @@ public class ShareOpenAccountSerImpl extends ServiceImpl<ShareOpenAccount, Share
             case COLLECT:
                 flag = guideIdentity();
                 break;
+            case UPLOAD:
+                flag = guideIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideIdentity();
+                break;
+            case IMPORT:
+                flag = guideIdentity();
+                break;
+            case EXPORT:
+                flag = guideIdentity();
+                break;
+            case SEEFILE:
+                flag = guideIdentity();
+                break;
             default:
                 flag = true;
                 break;
