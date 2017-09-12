@@ -2,6 +2,7 @@ package com.bjike.goddess.intromanage.service;
 
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -20,6 +21,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -316,6 +318,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
     public FirmIntroBO save(FirmIntroTO to) throws SerException {
         checkPermission();
         FirmIntro entity = BeanTransform.copyProperties(to, FirmIntro.class, true);
+        entity.setUpdateDate(LocalDate.now());
         entity = super.save(entity);
         FirmIntroBO bo = BeanTransform.copyProperties(entity, FirmIntroBO.class);
         String firmId = bo.getId();
@@ -767,5 +770,19 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
             set.add(bussinesBO);
         }
         return set;
+    }
+
+    @Override
+    public void congealFirmin(String id) throws SerException {
+        FirmIntro firmIntro = super.findById(id);
+        firmIntro.setStatus(Status.CONGEAL);
+        super.update(firmIntro);
+    }
+
+    @Override
+    public void thawFirmin(String id) throws SerException {
+        FirmIntro firmIntro = super.findById(id);
+        firmIntro.setStatus(Status.THAW);
+        super.update(firmIntro);
     }
 }
