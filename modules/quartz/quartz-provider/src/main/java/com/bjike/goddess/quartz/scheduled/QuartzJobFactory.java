@@ -74,7 +74,6 @@ public class QuartzJobFactory implements Job {
                                 String realUrl = StringUtils.substringBefore(ul, "?");
                                 APISession.put(scheduleJob.getClazz(), realUrl);
                                 url = realUrl;
-                                String s = APISession.get(scheduleJob.getClazz());
                                 break;
                             }
                         }
