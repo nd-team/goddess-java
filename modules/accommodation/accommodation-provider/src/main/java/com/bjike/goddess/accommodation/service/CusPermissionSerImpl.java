@@ -1,5 +1,6 @@
 package com.bjike.goddess.accommodation.service;
 
+import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.accommodation.bo.CusOperateBO;
 import com.bjike.goddess.accommodation.bo.CusPermissionBO;
 import com.bjike.goddess.accommodation.dto.CusPermissionDTO;
@@ -17,11 +18,26 @@ import com.bjike.goddess.organize.api.*;
 import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.entity.User;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.Consts;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import sun.net.www.http.HttpClient;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +74,18 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
     @Override
     public Long countPermission(CusPermissionDTO cusPermissionDTO) throws SerException {
+//        CloseableHttpClient httpClient = HttpClients.createDefault();
+//        HttpGet httpGet = new HttpGet("http://account.issp.bjike.com:8080/axxx/v1/dfdf");
+//        HttpPost httpPost = new HttpPost("");
+//        List<BasicNameValuePair> data = new ArrayList<>();
+//        data.add(new BasicNameValuePair("username","lake"));
+//        httpPost.setEntity(new UrlEncodedFormEntity(data, Consts.UTF_8));
+//        try {
+//            CloseableHttpResponse response = httpClient.execute(httpGet);
+//            User user = JSON.parse("自己这边建一个类","EntityUtils.toString(response.getEntity()){code:1,data:{usernmae:1234,age:''}}");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         if (StringUtils.isNotBlank(cusPermissionDTO.getDescription())) {
             cusPermissionDTO.getConditions().add(Restrict.like("description", cusPermissionDTO.getDescription()));
         }

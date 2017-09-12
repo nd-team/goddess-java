@@ -27,8 +27,7 @@ import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
-import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
-import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.organize.bo.PositionUserDetailBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -350,17 +349,20 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
                     receivers.add(userBO.getId());
                     continue;
                 }
-                for (String id : detailBO.getPositionIds().split(",")) {
-                    PositionDetailBO positionDetail = positionDetailAPI.findBOById(id);
-                    entity.setSeniority(this.countSeniority(entity, now, positionDetail.getArrangementId()));
-                    if (entity.getAnnual() > annual) {//计算层级年假后比当前存储年假大则使用计算年假
-                        annual = entity.getAnnual();
-                        entity.setArea(positionDetail.getArea());
-                        entity.setDepartment(positionDetail.getDepartmentName());
-                        entity.setPosition(positionDetail.getPosition());
-                        entity.setArrangement(positionDetail.getArrangementName());
-                    } else
-                        entity.setAnnual(annual);
+                List<PositionUserDetailBO> positionUserDetailBOS = detailBO.getDetailS();
+                if (null != positionUserDetailBOS) {
+                    for (PositionUserDetailBO p : positionUserDetailBOS) {
+                        PositionDetailBO positionDetail = positionDetailAPI.findBOById(p.getPositionId());
+                        entity.setSeniority(this.countSeniority(entity, now, positionDetail.getArrangementId()));
+                        if (entity.getAnnual() > annual) {//计算层级年假后比当前存储年假大则使用计算年假
+                            annual = entity.getAnnual();
+                            entity.setArea(positionDetail.getArea());
+                            entity.setDepartment(positionDetail.getDepartmentName());
+                            entity.setPosition(positionDetail.getPosition());
+                            entity.setArrangement(positionDetail.getArrangementName());
+                        } else
+                            entity.setAnnual(annual);
+                    }
                 }
                 entity.isAlready(Boolean.FALSE);
                 if (entity.getAnnual() == 0)

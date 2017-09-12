@@ -1,14 +1,19 @@
-模块名:shareholdersmanage
-类名:FairChange
-作者:lijuntao
-描述:公允值变动
+模块名:lendreimbursement
+类名:AjoafinancereimbursementUser
+作者:tanghaixiang
+描述:报销老系统
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String area 地区;
-String equityType 股权类型;
-LocalDate changDate 变动时间;
-Double perSharePrice 每股价格/元;
+Status status 状态;
+String username 流水报销单号;
+String employeeNumber 项目名称;
+String password 报销人地区;
+String headPath 报销人姓名;
+String department_id 单据编号:报销单号-单据数量排序;
+String post_id 报销人备注;
+String group_id 外键关联科目表;
+String superUser 类别;
 )
