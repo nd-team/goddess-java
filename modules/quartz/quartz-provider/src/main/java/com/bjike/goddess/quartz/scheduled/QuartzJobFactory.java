@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URLDecoder;
 import java.util.*;
 
 
@@ -55,24 +56,26 @@ public class QuartzJobFactory implements Job {
         }
     }
 
-    private void invokeDubbo(ScheduleJob scheduleJob) throws SerException {
+    private static  void  invokeDubbo(ScheduleJob scheduleJob) throws SerException {
         try {
             String url = null;//Dubbo服务暴露的ip地址&端口
             boolean exists = false;
             for (String ad : ADDRESS_SET) { // 缓存地址获取
-                if (ad.indexOf(scheduleJob.getClazz()) <= 0) {
+                if (ad.indexOf(scheduleJob.getClazz()) >= 0) {
                     url = ad;
                     exists = true;
                     break;
                 }
             }
             if (!exists) { //远程zookeeper获取
-                ZkClient zk = new ZkClient("zookeeper.host.bjike.com:2181", 5000);
+                ZkClient zk = new ZkClient("45.76.206.84:2181", 5000);
                 List<String> url_list = zk.getChildren("/dubbo/" + scheduleJob.getClazz() + "/providers");
                 zk.close();
                 if (null != url_list && url_list.size() > 0) {
+                    try {
                     for (String ul : url_list) {
-                        if (ul.indexOf(scheduleJob.getClazz()) <= 0) {
+                        ul = URLDecoder.decode(ul,"utf-8");
+                        if (ul.indexOf(scheduleJob.getClazz()) >= 0) {
                             String realUrl = StringUtils.substringBefore(ul, "?");
                             if (!ADDRESS_SET.contains(realUrl)) {
                                 ADDRESS_SET.add(realUrl);
@@ -80,11 +83,13 @@ public class QuartzJobFactory implements Job {
                                 break;
                             }
                         }
+                    }}catch (Exception e){
+                        throw new SerException("解析url错误");
                     }
+
                 } else {
                     throw new SerException(scheduleJob.getClazz() + "未注册");
                 }
-
 
             }
             if (null != url) {
@@ -109,6 +114,5 @@ public class QuartzJobFactory implements Job {
             CONSOLE.error("Exception:" + e.getTargetException().getMessage());
         }
     }
-
 
 }
