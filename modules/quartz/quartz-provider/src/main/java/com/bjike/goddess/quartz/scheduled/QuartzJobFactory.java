@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URLDecoder;
 import java.util.*;
 
 
@@ -60,7 +59,7 @@ public class QuartzJobFactory implements Job {
             String url = null;//Dubbo服务暴露的ip地址&端口
             boolean exists = false;
             for (String ad : ADDRESS_SET) { // 缓存地址获取
-                if (ad.indexOf(scheduleJob.getClazz()) < 0) {
+                if (ad.indexOf(scheduleJob.getClazz()) <= 0) {
                     url = ad;
                     exists = true;
                     break;
@@ -70,9 +69,9 @@ public class QuartzJobFactory implements Job {
                 ZkClient zk = new ZkClient("zookeeper.host.bjike.com:2181", 5000);
                 List<String> url_list = zk.getChildren("/dubbo/" + scheduleJob.getClazz() + "/providers");
                 zk.close();
-                if(null!=url_list && url_list.size()>0){
+                if (null != url_list && url_list.size() > 0) {
                     for (String ul : url_list) {
-                        if (ul.indexOf(scheduleJob.getClazz()) < 0) {
+                        if (ul.indexOf(scheduleJob.getClazz()) <= 0) {
                             String realUrl = StringUtils.substringBefore(ul, "?");
                             if (!ADDRESS_SET.contains(realUrl)) {
                                 ADDRESS_SET.add(realUrl);
@@ -81,7 +80,7 @@ public class QuartzJobFactory implements Job {
                             }
                         }
                     }
-                }else {
+                } else {
                     throw new SerException(scheduleJob.getClazz() + "未注册");
                 }
 
@@ -110,14 +109,5 @@ public class QuartzJobFactory implements Job {
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        String str = "dubbo%3A%2F%2F45.32.18.228%3A5580%2Fcom.bjike.goddess.user.api.UserLoginLogAPI%3Fanyhost%3Dtrue%26application%3Duser-provider%26default.service.filter%3DuserFilter%26default.timeout%3D15000000%26dubbo%3D2.5.4-SNAPSHOT%26generic%3Dfalse%26interface%3Dcom.bjike.goddess.user.api.UserLoginLogAPI%26methods%3DfindByUserId%2Csave%26pid%3D22%26revision%3D1.0%26side%3Dprovider%26timestamp%3D1504753859974";
-        str = URLDecoder.decode(str, "utf-8");
-        System.out.println(str);
-        str = StringUtils.substringBefore(str, "?");
-        List<String> strings = new ArrayList<>();
-        strings.add(str);
-        System.out.println(strings.indexOf("UserLoginLogAPI") < 0);
-    }
 
 }
