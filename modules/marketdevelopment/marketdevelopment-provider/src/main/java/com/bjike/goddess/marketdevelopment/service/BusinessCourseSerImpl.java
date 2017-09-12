@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 业务方向科目业务实现
@@ -138,6 +139,18 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
 
         RpcTransmit.transmitUserToken(userToken);
         return flag;
+    }
+
+    @Override
+    public List<String> getProjectName() throws SerException {
+        BusinessCourseDTO dto = new BusinessCourseDTO();
+        dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
+        dto.getSorts().add("course=asc");
+        List<BusinessCourse> list = super.findByCis(dto);
+        if (null != list && list.size() > 0) {
+            return list.stream().map(BusinessCourse::getCourse).distinct().collect(Collectors.toList());
+        }
+        return null;
     }
 
     /**

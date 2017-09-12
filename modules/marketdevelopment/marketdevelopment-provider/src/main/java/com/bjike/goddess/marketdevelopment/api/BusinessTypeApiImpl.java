@@ -76,4 +76,9 @@ public class BusinessTypeApiImpl implements BusinessTypeAPI {
     public Integer getTotal() throws SerException {
         return businessTypeSer.findAll().size();
     }
+
+    @Override
+    public List<String> findDirection() throws SerException {
+        return businessTypeSer.findDirection();
+    }
 }

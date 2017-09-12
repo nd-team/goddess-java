@@ -214,4 +214,18 @@ public class BusinessCourseAct {
         }
     }
 
+    /**
+     * 查询正常数据的业务方向科目
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getProjectName")
+    public Result getProjectName() throws ActException {
+        try {
+            return ActResult.initialize(businessCourseAPI.getProjectName());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

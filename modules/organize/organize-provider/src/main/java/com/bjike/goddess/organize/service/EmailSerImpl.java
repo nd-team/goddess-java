@@ -1,11 +1,12 @@
 package com.bjike.goddess.organize.service;
 
+import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
-import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
@@ -21,12 +22,19 @@ import com.bjike.goddess.organize.dto.PositionUserDetailDTO;
 import com.bjike.goddess.organize.entity.*;
 import com.bjike.goddess.organize.enums.IntervalType;
 import com.bjike.goddess.organize.to.EmailTO;
+import com.bjike.goddess.organize.vo.ActResultOrgan;
 import com.bjike.goddess.user.api.UserAPI;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -52,8 +60,6 @@ public class EmailSerImpl extends ServiceImpl<Email, EmailDTO> implements EmailS
     private PositionUserDetailSer positionUserDetailSer;
     @Autowired
     private UserAPI userAPI;
-    @Autowired
-    private InternalContactsAPI internalContactsAPI;
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
@@ -207,7 +213,25 @@ public class EmailSerImpl extends ServiceImpl<Email, EmailDTO> implements EmailS
                 String[] departs = email.getDepart().split(",");
                 String[] names = names(departs);
                 if (null != names) {
-                    List<String> emails = internalContactsAPI.getEmails(names);
+//                    List<String> emails = internalContactsAPI.getEmails(names);
+                    List<String> emails = new ArrayList<>(0);
+                    CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
+                    HttpGet httpGet = new HttpGet("https://contacts.issp.bjike.com:8080/internalcontacts/v1/getEmail");//线上
+//                    HttpGet httpGet = new HttpGet("http://localhost:51310/internalcontacts/v1/getEmail");//线下测试
+//                    httpGet.setHeader("userToken", RpcContext.getContext().getAttachment("userToken"));
+                    String token = RpcTransmit.getUserToken();
+                    httpGet.setHeader("userToken", token);
+                    RpcTransmit.transmitUserToken(token);
+
+                    ActResultOrgan resultOrgan = new ActResultOrgan();
+                    try {
+                        CloseableHttpResponse response = closeableHttpClient.execute(httpGet);
+                        resultOrgan = JSON.parseObject(EntityUtils.toString(response.getEntity()), ActResultOrgan.class);
+                        emails = (List<String>) (resultOrgan.getData());
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     stringList.addAll(emails);
                 }
             }

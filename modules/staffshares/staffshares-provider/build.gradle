@@ -35,4 +35,3 @@ dependencies {
     compile project(":modules:assistance:assistance-api")
     compile project(":common:common-utils")
 }
-

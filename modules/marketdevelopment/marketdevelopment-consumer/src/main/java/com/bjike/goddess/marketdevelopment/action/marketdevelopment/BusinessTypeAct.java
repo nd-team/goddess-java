@@ -19,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 业务类型
@@ -196,6 +197,21 @@ public class BusinessTypeAct {
     public Result getTotal() throws ActException {
         try {
             return ActResult.initialize(businessTypeAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查詢業務方向
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findDirection")
+    public Result findDirection() throws ActException {
+        try {
+            List<String> strings = businessTypeAPI.findDirection();
+            return ActResult.initialize(strings);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

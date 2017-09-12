@@ -169,4 +169,9 @@ public class WorkRangeApiImpl implements WorkRangeAPI {
     public void flatOpen(String direction) throws SerException {
         workRangeSer.flatOpen(direction);
     }
+
+    @Override
+    public Long getFlatTotal() throws SerException {
+        return workRangeSer.getFlatTotal();
+    }
 }

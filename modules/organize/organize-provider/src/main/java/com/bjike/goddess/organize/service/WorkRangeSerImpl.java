@@ -456,7 +456,7 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
     @Override
     public void flatClose(String direction) throws SerException {
         WorkRangeDTO dto = new WorkRangeDTO();
-        dto.getConditions().add(Restrict.eq("direction",direction));
+        dto.getConditions().add(Restrict.eq("direction", direction));
         List<WorkRange> workRanges = super.findByCis(dto);
 
         if (null != workRanges && workRanges.size() > 0) {
@@ -471,7 +471,7 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
     @Override
     public void flatOpen(String direction) throws SerException {
         WorkRangeDTO dto = new WorkRangeDTO();
-        dto.getConditions().add(Restrict.eq("direction",direction));
+        dto.getConditions().add(Restrict.eq("direction", direction));
         List<WorkRange> workRanges = super.findByCis(dto);
         if (null != workRanges && workRanges.size() > 0) {
             for (WorkRange workRange : workRanges) {
@@ -479,6 +479,12 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
                 super.save(workRange);
             }
         }
+    }
+
+    @Override
+    public Long getFlatTotal() throws SerException {
+        WorkRangeFlatsDTO dto = new WorkRangeFlatsDTO();
+        return workRangeFlatsSer.count(dto);
     }
 
 }

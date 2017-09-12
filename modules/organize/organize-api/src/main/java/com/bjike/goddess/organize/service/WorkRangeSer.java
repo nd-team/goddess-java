@@ -290,4 +290,14 @@ public interface WorkRangeSer extends Ser<WorkRange, WorkRangeDTO> {
     default void flatOpen(String direction) throws SerException {
         return;
     }
+
+    /**
+     * 获取平台总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getFlatTotal() throws SerException {
+        return null;
+    }
 }

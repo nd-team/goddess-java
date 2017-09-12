@@ -133,4 +133,11 @@ public interface BusinessCourseSer extends Ser<BusinessCourse, BusinessCourseDTO
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
+    /**
+     * 查询正常数据的业务方向科目
+     */
+    default List<String> getProjectName() throws SerException {
+        return null;
+    }
 }

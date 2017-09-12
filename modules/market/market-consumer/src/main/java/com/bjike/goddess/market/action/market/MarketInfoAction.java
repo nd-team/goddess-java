@@ -41,11 +41,13 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("marketinfo")
-public class MarketInfoAction extends BaseFileAction{
+public class MarketInfoAction extends BaseFileAction {
     @Autowired
     private MarketInfoAPI marketInfoAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+
+
     /**
      * 模块设置导航权限
      *
@@ -116,6 +118,7 @@ public class MarketInfoAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 市场信息管理列表总条数
      *
@@ -132,19 +135,20 @@ public class MarketInfoAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 一个市场信息管理
      *
      * @param id
+     * @return class MarketInfoVO
      * @des 获取一个市场信息管理
-     * @return  class MarketInfoVO
      * @version v1
      */
     @GetMapping("v1/market/{id}")
     public Result market(@PathVariable String id) throws ActException {
         try {
             MarketInfoBO marketInfoBO = marketInfoAPI.getOne(id);
-            return ActResult.initialize(BeanTransform.copyProperties(marketInfoBO , MarketInfoVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(marketInfoBO, MarketInfoVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -162,7 +166,7 @@ public class MarketInfoAction extends BaseFileAction{
     public Result list(MarketInfoDTO marketInfoDTO, HttpServletRequest request) throws ActException {
         try {
             List<MarketInfoVO> marketInfoVOS = BeanTransform.copyProperties
-                    (marketInfoAPI.findListMarketInfo(marketInfoDTO), MarketInfoVO.class,request);
+                    (marketInfoAPI.findListMarketInfo(marketInfoDTO), MarketInfoVO.class, request);
             return ActResult.initialize(marketInfoVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -198,7 +202,7 @@ public class MarketInfoAction extends BaseFileAction{
      */
     @LoginAuth
     @PostMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class) MarketInfoTO marketInfoTO,BindingResult bindingResult) throws ActException {
+    public Result edit(@Validated(EDIT.class) MarketInfoTO marketInfoTO, BindingResult bindingResult) throws ActException {
         try {
             MarketInfoBO marketInfoBO = marketInfoAPI.editMarketInfo(marketInfoTO);
             return ActResult.initialize(marketInfoBO);
@@ -224,6 +228,7 @@ public class MarketInfoAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取客户名称
      *
@@ -239,6 +244,7 @@ public class MarketInfoAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 导出excel
      *
@@ -259,12 +265,13 @@ public class MarketInfoAction extends BaseFileAction{
             throw new ActException(e1.getMessage());
         }
     }
+
     /**
      * 获取所有的客户名称和客户编号
      *
+     * @return class MarketNameNumVO
      * @des 获取所有的客户名称和客户编号
      * @version v1
-     * @return class MarketNameNumVO
      */
     @GetMapping("v1/customer/nameNum")
     public Result findCustomerNameNum() throws ActException {
@@ -275,6 +282,7 @@ public class MarketInfoAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有的竞争对手名称
      *
@@ -290,6 +298,40 @@ public class MarketInfoAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 获取所有的项目名称
+     *
+     * @des 获取所有的项目名称
+     * @version v1
+     */
+    @GetMapping("v1/getProjectName/name")
+    public Result getProjectName() throws ActException {
+        try {
+            List<String> name = marketInfoAPI.getProjectName();
+            return ActResult.initialize(name);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 添加编辑中所有的项目性质
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findMarket/getTechnologyCategory")
+    public Result getTechnologyCategory() throws ActException {
+        try {
+            List<String> projectNature = new ArrayList<>();
+            projectNature = marketInfoAPI.getTechnologyCategory();
+            return ActResult.initialize(projectNature);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 
 }

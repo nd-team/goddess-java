@@ -1,6 +1,6 @@
 package com.bjike.goddess.organize.action.organize;
 
-import com.bjike.goddess.assemble.api.ModuleAPI;
+//import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -36,8 +36,8 @@ public class ModuleTypeAct {
 
     @Autowired
     private ModuleTypeAPI moduleTypeAPI;
-    @Autowired
-    private ModuleAPI moduleAPI;
+//    @Autowired
+//    private ModuleAPI moduleAPI;
 
     /**
      * 保存
