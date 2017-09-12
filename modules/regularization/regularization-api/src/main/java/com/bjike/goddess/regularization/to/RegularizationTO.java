@@ -71,7 +71,31 @@ public class RegularizationTO extends BaseTO {
      */
     @NotBlank(groups = {ADD.class, EDIT.class}, message = "岗位不能为空")
     private String post;
-
+    /**
+     * 岗位层级
+     */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "岗位不能为空")
+    private String postHierarchy;
+    /**
+     * 转正申请日期
+     */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "岗位不能为空")
+    private String regularDate;
+    /**
+     * 工作年限
+     */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "岗位不能为空")
+    private Double workingYear;
+    /**
+     * 确定事项是否确认
+     */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "岗位不能为空")
+    private Boolean confirmEvent;
+    /**
+     * 确认人
+     */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "岗位不能为空")
+    private String confirmPeople;
     /**
      * 试用期月份
      */
@@ -507,5 +531,45 @@ public class RegularizationTO extends BaseTO {
 
     public void setSpecificScore(Integer specificScore) {
         this.specificScore = specificScore;
+    }
+
+    public String getPostHierarchy() {
+        return postHierarchy;
+    }
+
+    public void setPostHierarchy(String postHierarchy) {
+        this.postHierarchy = postHierarchy;
+    }
+
+    public String getRegularDate() {
+        return regularDate;
+    }
+
+    public void setRegularDate(String regularDate) {
+        this.regularDate = regularDate;
+    }
+
+    public Double getWorkingYear() {
+        return workingYear;
+    }
+
+    public void setWorkingYear(Double workingYear) {
+        this.workingYear = workingYear;
+    }
+
+    public Boolean getConfirmEvent() {
+        return confirmEvent;
+    }
+
+    public void setConfirmEvent(Boolean confirmEvent) {
+        this.confirmEvent = confirmEvent;
+    }
+
+    public String getConfirmPeople() {
+        return confirmPeople;
+    }
+
+    public void setConfirmPeople(String confirmPeople) {
+        this.confirmPeople = confirmPeople;
     }
 }

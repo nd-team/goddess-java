@@ -116,4 +116,23 @@ public interface FirmIntroSer extends Ser<FirmIntro, FirmIntroDTO> {
      * @throws SerException
      */
     Set<BussinesBO> moneyByName(String name) throws SerException;
+
+    /**
+     * 冻结公司简介
+     *
+     * @param id id
+     */
+    default void congealFirmin(String id) throws SerException {
+        return;
+    }
+
+
+    /**
+     * 解冻公司简介
+     *
+     * @param id id
+     */
+    default void thawFirmin(String id) throws SerException {
+        return;
+    }
 }

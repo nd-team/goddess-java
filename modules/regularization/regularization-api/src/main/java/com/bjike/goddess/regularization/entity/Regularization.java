@@ -74,6 +74,46 @@ public class Regularization extends BaseEntity {
      */
     @Column(name = "post", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '岗位'")
     private String post;
+    /**
+     * 岗位层级
+     */
+    @Column(name = "postHierarchy", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '岗位层级'")
+    private String postHierarchy;
+    /**
+     * 转正申请日期
+     */
+    @Column(name = "regularDate", nullable = false, columnDefinition = "DATE COMMENT '转正申请日期'")
+    private LocalDate regularDate;
+    /**
+     * 工作年限
+     */
+    @Column(name = "workingYear", nullable = false, columnDefinition = "DECIMAL(10,2)  COMMENT '工作年限'")
+    private Double workingYear;
+    /**
+     * 截止目前试用期时长
+     */
+    @Column(name = "asProbationLength", nullable = false, columnDefinition = "INT(2) COMMENT '工作年限'")
+    private Integer asProbationLength;
+    /**
+     * 确定事项是否确认
+     */
+    @Column(name = "confirmEvent", nullable = false, columnDefinition = "INT(2) COMMENT '确定事项是否确认'")
+    private Boolean confirmEvent;
+    /**
+     * 确认人
+     */
+    @Column(name = "confirmPeople", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '确认人'")
+    private String confirmPeople;
+    /**
+     * 转正是否通过
+     */
+    @Column(name = "isPassed", columnDefinition = "INT(2) COMMENT '转正是否通过'")
+    private Boolean isPassed;
+    /**
+     * 转正开始日期
+     */
+    @Column(name = "positiveStartDate", columnDefinition = "DATE COMMENT '转正开始日期'")
+    private LocalDate positiveStartDate;
 
     /**
      * 试用期月份
@@ -484,4 +524,67 @@ public class Regularization extends BaseEntity {
         return posFacialInfor;
     }
 
+    public String getPostHierarchy() {
+        return postHierarchy;
+    }
+
+    public void setPostHierarchy(String postHierarchy) {
+        this.postHierarchy = postHierarchy;
+    }
+
+    public LocalDate getRegularDate() {
+        return regularDate;
+    }
+
+    public void setRegularDate(LocalDate regularDate) {
+        this.regularDate = regularDate;
+    }
+
+    public Double getWorkingYear() {
+        return workingYear;
+    }
+
+    public void setWorkingYear(Double workingYear) {
+        this.workingYear = workingYear;
+    }
+
+    public Integer getAsProbationLength() {
+        return asProbationLength;
+    }
+
+    public void setAsProbationLength(Integer asProbationLength) {
+        this.asProbationLength = asProbationLength;
+    }
+
+    public Boolean getConfirmEvent() {
+        return confirmEvent;
+    }
+
+    public void setConfirmEvent(Boolean confirmEvent) {
+        this.confirmEvent = confirmEvent;
+    }
+
+    public String getConfirmPeople() {
+        return confirmPeople;
+    }
+
+    public void setConfirmPeople(String confirmPeople) {
+        this.confirmPeople = confirmPeople;
+    }
+
+    public Boolean getPassed() {
+        return isPassed;
+    }
+
+    public void setPassed(Boolean passed) {
+        isPassed = passed;
+    }
+
+    public LocalDate getPositiveStartDate() {
+        return positiveStartDate;
+    }
+
+    public void setPositiveStartDate(LocalDate positiveStartDate) {
+        this.positiveStartDate = positiveStartDate;
+    }
 }
