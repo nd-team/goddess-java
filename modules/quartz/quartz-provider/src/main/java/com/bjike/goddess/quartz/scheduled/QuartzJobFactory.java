@@ -34,6 +34,7 @@ public class QuartzJobFactory implements Job {
             Class<?> exec = null;
             if (maps.containsKey(className)) {
                 exec = maps.get(className);
+                maps.put(className, exec);
             } else {
                 ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
                 if (null == classLoader) {
