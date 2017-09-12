@@ -27,7 +27,7 @@ public class ScheduleJob extends BaseEntity {
     /**
      * 地址
      */
-    @Column(name = "address", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地址:ip+端口'")
+    @Column(name = "address", columnDefinition = "VARCHAR(255)   COMMENT '地址:ip+端口'")
     private String address;
 
 
