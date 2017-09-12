@@ -38,6 +38,9 @@ compile(project(":common:common-consumer")){
 }
 
 compile project(":modules:regularization:regularization-api")
+compile project(":modules:assemble:assemble-api")
+compile project(":modules:bonus:bonus-api")
+
 
 compile("org.springframework.boot:spring-boot-starter-web")
 }
