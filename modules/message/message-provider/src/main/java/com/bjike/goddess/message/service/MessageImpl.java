@@ -148,7 +148,7 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
         if (null != dto.getMsgType()) {
             sb.append(" where msgType=" + dto.getMsgType().getCode());
         }
-        sb.append(" order by createTime desc limit " + start + "," + dto.getLimit());
+        sb.append(" order by createTime desc limit "+start+","+dto.getLimit());
         String sql = sb.toString();
         sql = String.format(sql, groupId, dto.getUserId());
         String[] fields = new String[]{"id", "createTime", "modifyTime", "title", "content", "senderId", "senderName"};
@@ -217,17 +217,11 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
                 break;
             case SPECIFIED:
                 List<UserMessage> userMessages = new ArrayList<>();
-                for (String user : to.getReceivers()) { //接收人可能是id可能是邮件
-                    UserDTO dto = new UserDTO();
-                    dto.getConditions().add(Restrict.eq("id", user));
-                    dto.getConditions().add(Restrict.or("email", user));
-                    UserBO bo = userAPI.findOne(dto);
-                    if (null != bo) {
-                        UserMessage userMessage = new UserMessage();
-                        userMessage.setMessage(message);
-                        userMessage.setUserId(bo.getId());
-                        userMessages.add(userMessage);
-                    }
+                for (String user : to.getReceivers()) {
+                    UserMessage userMessage = new UserMessage();
+                    userMessage.setMessage(message);
+                    userMessage.setUserId(user);
+                    userMessages.add(userMessage);
                 }
                 userMessageSer.save(userMessages);
                 break;

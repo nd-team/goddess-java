@@ -1,6 +1,5 @@
-package com.bjike.goddess.message.api;
+package com.bjike.goddess.message.mail;
 
-import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.message.to.email.Email;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -28,15 +26,14 @@ import java.util.Map;
 
 /**
  * @Author: [liguiqin]
- * @Date: [2017-03-24 17:29]
+ * @Date: [2017-09-11 13:56]
  * @Description: [ ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-@Service("emailApiImpl")
-public class EmailApiImpl implements EmailAPI {
-    private static final Logger CONSOLE = LoggerFactory.getLogger(EmailApiImpl.class);
-
+@Service
+public class MailSerImpl implements MailSer {
+    private static final Logger CONSOLE = LoggerFactory.getLogger(MailSerImpl.class);
     @Autowired
     private Environment env;
 
@@ -48,19 +45,16 @@ public class EmailApiImpl implements EmailAPI {
             initHtmlEmailInfo(email, em);
             email.send();
         } catch (Exception e) {
-            e.printStackTrace();
             throw new SerException(e.getMessage());
         }
 
     }
-
 
     private void initHtmlEmail(HtmlEmail email, Email em) {
         try {
             String username = StringUtils.isNotBlank(em.getUsername()) ? em.getUsername() : env.getProperty("email.username");
             String password = StringUtils.isNotBlank(em.getPassword()) ? em.getPassword() : env.getProperty("email.password");
             password = new String(new BASE64Decoder().decodeBuffer(password));
-//                password="ychthx9822";
             String host = StringUtils.isNotBlank(em.getHost()) ? em.getHost() : env.getProperty("email.host");
             String sender = StringUtils.isNotBlank(em.getSender()) ? em.getSender() : env.getProperty("email.sender");
             String senderName = StringUtils.isNotBlank(em.getSenderName()) ? em.getSenderName() : env.getProperty("email.senderName");
@@ -172,6 +166,4 @@ public class EmailApiImpl implements EmailAPI {
     private String getUserName(String username) {
         return username.split("@")[0];
     }
-
-
 }
