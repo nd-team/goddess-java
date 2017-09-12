@@ -1,7 +1,9 @@
 package com.bjike.goddess.organize.action.organize;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.assemble.api.ModuleAPI;
-import com.bjike.goddess.businessproject.api.BaseInfoManageAPI;
+//import com.bjike.goddess.businessproject.api.BaseInfoManageAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -12,16 +14,25 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.to.DepartmentDetailTO;
+import com.bjike.goddess.organize.vo.ActResultOrgan;
 import com.bjike.goddess.organize.vo.AreaVO;
 import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.organize.vo.OpinionVO;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -39,10 +50,6 @@ public class DepartmentDetailAct {
 
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
-    @Autowired
-    private BaseInfoManageAPI baseInfoManageAPI;
-    @Autowired
-    private ModuleAPI moduleAPI;
 
     /**
      * 保存部门项目组详细信息
@@ -242,15 +249,33 @@ public class DepartmentDetailAct {
      */
     @GetMapping("v1/allInnerProjects")
     public Result allInnerProjects() throws ActException {
+//        try {
+//            Set<String> set = new HashSet<>();
+//            if (moduleAPI.isCheck("businessproject")) {
+////                set = baseInfoManageAPI.allInnerProjects();
+//            }
+//            return ActResult.initialize(set);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+        List<Object> list = new ArrayList<>(0);
+        CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
+//        HttpGet httpGet = new HttpGet("https://businessproject.issp.bjike.com:8080/baseinfomanage/v1/allInnerProjects");//线上
+        HttpGet httpGet = new HttpGet("http://localhost:51204/baseinfomanage/v1/allInnerProjects");//线下测试
+        httpGet.setHeader("userToken", RpcContext.getContext().getAttachment("userToken"));
+
+        ActResultOrgan resultOrgan = new ActResultOrgan();
+
+        List<String> list1 =new ArrayList<>();
         try {
-            Set<String> set = new HashSet<>();
-            if (moduleAPI.isCheck("businessproject")) {
-                set = baseInfoManageAPI.allInnerProjects();
-            }
-            return ActResult.initialize(set);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
+            CloseableHttpResponse response = closeableHttpClient.execute(httpGet);
+            resultOrgan = JSON.parseObject(EntityUtils.toString(response.getEntity()), ActResultOrgan.class);
+            list.add(resultOrgan.getData());
+            list1 =  (List<String>)resultOrgan.getData();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return ActResult.initialize(list1);
     }
 
     /**

@@ -100,4 +100,9 @@ public class CommonalityApiImpl implements CommonalityAPI {
     public byte[] templateExport() throws SerException {
         return commonalitySer.templateExport();
     }
+
+    @Override
+    public List<String> getEmails() throws SerException {
+        return commonalitySer.getEmails();
+    }
 }

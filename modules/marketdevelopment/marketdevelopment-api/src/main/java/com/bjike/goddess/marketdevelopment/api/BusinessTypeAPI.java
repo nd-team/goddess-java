@@ -1,7 +1,6 @@
 package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
 import com.bjike.goddess.marketdevelopment.bo.BusinessTypeBO;
 import com.bjike.goddess.marketdevelopment.dto.BusinessTypeDTO;
 import com.bjike.goddess.marketdevelopment.to.BusinessTypeTO;
@@ -122,6 +121,16 @@ public interface BusinessTypeAPI {
      * @throws SerException
      */
     default Integer getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 查詢業務方向
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findDirection() throws SerException {
         return null;
     }
 }

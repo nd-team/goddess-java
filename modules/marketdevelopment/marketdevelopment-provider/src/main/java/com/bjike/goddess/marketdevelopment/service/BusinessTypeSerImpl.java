@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 业务类型业务实现
@@ -138,6 +139,18 @@ public class BusinessTypeSerImpl extends ServiceImpl<BusinessType, BusinessTypeD
 
         RpcTransmit.transmitUserToken(userToken);
         return flag;
+    }
+
+    @Override
+    public List<String> findDirection() throws SerException {
+        BusinessTypeDTO dto = new BusinessTypeDTO();
+        dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
+        dto.getSorts().add("createTime=desc");
+        List<BusinessType> list = super.findByCis(dto);
+        if (null != list && list.size() > 0) {
+            return list.stream().map(BusinessType::getType).distinct().collect(Collectors.toList());
+        }
+        return null;
     }
 
     @Transactional(rollbackFor = SerException.class)

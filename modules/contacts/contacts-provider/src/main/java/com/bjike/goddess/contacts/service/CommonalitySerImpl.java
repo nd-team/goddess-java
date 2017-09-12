@@ -36,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 公共邮箱管理业务实现
@@ -145,7 +146,7 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
         //拼body部分
         sb.append("<tr>");
         String pdID = getDepartmentName(entity.getDepartmentId());
-        if(StringUtils.isEmpty(pdID)){
+        if (StringUtils.isEmpty(pdID)) {
             pdID = entity.getDepartmentId();
         }
         sb.append("<td>" + pdID + "</td>");
@@ -169,7 +170,7 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
         entity.setModifyTime(LocalDateTime.now());
         entity.setStatus(Status.THAW);
         String dpID = getDepartment(to.getDepartmentId());
-        if(StringUtils.isEmpty(dpID)){
+        if (StringUtils.isEmpty(dpID)) {
             dpID = to.getDepartmentId();
         }
         entity.setDepartmentId(dpID);
@@ -233,7 +234,7 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
         //拼body部分
         sb.append("<tr>");
         String pdID = getDepartmentName(entity.getDepartmentId());
-        if(StringUtils.isEmpty(pdID)){
+        if (StringUtils.isEmpty(pdID)) {
             pdID = entity.getDepartmentId();
         }
         sb.append("<td>" + pdID + "</td>");
@@ -324,7 +325,7 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
         if (null == entity)
             throw new SerException("该数据不存在");
         String name = getDepartmentName(entity.getDepartmentId());
-        if(StringUtils.isEmpty(name)){
+        if (StringUtils.isEmpty(name)) {
             name = entity.getDepartmentId();
         }
         entity.setDepartmentId(name);
@@ -423,7 +424,7 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
 
                 CommonalityDTO dto = new CommonalityDTO();
                 String dpID = getDepartment(to.getDepartmentId());
-                if(StringUtils.isEmpty(dpID)){
+                if (StringUtils.isEmpty(dpID)) {
                     dpID = to.getDepartmentId();
                 }
                 dto.getConditions().add(Restrict.eq("departmentId", dpID));
@@ -455,6 +456,17 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
         Excel exce = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(commerceContactsExports, exce);
         return bytes;
+    }
+
+    @Override
+    public List<String> getEmails() throws SerException {
+        CommonalityDTO dto = new CommonalityDTO();
+        dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
+        List<Commonality> list = super.findByCis(dto);
+        if (null != list && list.size() > 0) {
+            return list.stream().map(Commonality::getEmail).distinct().collect(Collectors.toList());
+        }
+        return null;
     }
 
     /**

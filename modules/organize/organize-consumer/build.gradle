@@ -38,10 +38,6 @@ dependencies {
     }
 
     compile project(":modules:organize:organize-api")
-    compile project(":modules:businessproject:businessproject-api")
-    compile project(":modules:marketdevelopment:marketdevelopment-api")
-    compile project(":modules:market:market-api")
-
     compile("org.springframework.boot:spring-boot-starter-web")
 }
 

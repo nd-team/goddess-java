@@ -81,4 +81,9 @@ public class BusinessCourseApiImpl implements BusinessCourseAPI {
     public Integer getTotal() throws SerException {
         return businessCourseSer.findAll().size();
     }
+
+    @Override
+    public List<String> getProjectName() throws SerException {
+        return businessCourseSer.getProjectName();
+    }
 }

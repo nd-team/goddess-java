@@ -1,5 +1,7 @@
 package com.bjike.goddess.organize.action.organize;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -7,23 +9,27 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.contacts.api.CommonalityAPI;
-import com.bjike.goddess.contacts.api.InternalContactsAPI;
-import com.bjike.goddess.contacts.bo.CommonalityBO;
-import com.bjike.goddess.contacts.vo.CommonalityVO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.EmailAPI;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.dto.EmailDTO;
 import com.bjike.goddess.organize.to.EmailTO;
+import com.bjike.goddess.organize.vo.ActResultOrgan;
 import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.organize.vo.EmailVO;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,10 +48,6 @@ public class EmailAct {
     private EmailAPI emailAPI;
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
-    @Autowired
-    private InternalContactsAPI internalContactsAPI;
-    @Autowired
-    private CommonalityAPI commonalityAPI;
 
     /**
      * 添加
@@ -174,13 +176,29 @@ public class EmailAct {
      */
     @GetMapping("v1/emails")
     public Result emails(@Validated(EmailDTO.EMAIL.class) EmailDTO dto, BindingResult result) throws ActException {
+//        try {
+//            String[] names = dto.getNames();
+//            List<String> list = internalContactsAPI.getEmails(names);
+//            return ActResult.initialize(list);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+        List<String> list = new ArrayList<>(0);
+        CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet("https://contacts.issp.bjike.com:8080/internalcontacts/v1/getEmail");//线上
+//        HttpGet httpGet = new HttpGet("http://localhost:51310/internalcontacts/v1/getEmail");//线下测试
+        httpGet.setHeader("userToken", RpcContext.getContext().getAttachment("userToken"));
+
+        ActResultOrgan resultOrgan = new ActResultOrgan();
         try {
-            String[] names = dto.getNames();
-            List<String> list = internalContactsAPI.getEmails(names);
-            return ActResult.initialize(list);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
+            CloseableHttpResponse response = closeableHttpClient.execute(httpGet);
+            resultOrgan = JSON.parseObject(EntityUtils.toString(response.getEntity()), ActResultOrgan.class);
+            list = (List<String>) (resultOrgan.getData());
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return ActResult.initialize(list);
     }
 
     /**
@@ -192,12 +210,30 @@ public class EmailAct {
      */
     @GetMapping("v1/findThaw")
     public Result findThaw(HttpServletRequest request) throws ActException {
+//        try {
+//            List<CommonalityBO> list = commonalityAPI.findThaw();
+//            return ActResult.initialize(BeanTransform.copyProperties(list, CommonalityVO.class, request));
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+
+        List<String> list = new ArrayList<>(0);
+        CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
+//        HttpGet httpGet = new HttpGet("https://contacts.issp.bjike.com:8080/commonality/v1/getEmails");//线上
+        HttpGet httpGet = new HttpGet("http://localhost:51310/commonality/v1/getEmails");//线下测试
+        httpGet.setHeader("userToken", RpcContext.getContext().getAttachment("userToken"));
+
+        ActResultOrgan resultOrgan = new ActResultOrgan();
         try {
-            List<CommonalityBO> list = commonalityAPI.findThaw();
-            return ActResult.initialize(BeanTransform.copyProperties(list, CommonalityVO.class, request));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
+            CloseableHttpResponse response = closeableHttpClient.execute(httpGet);
+            resultOrgan = JSON.parseObject(EntityUtils.toString(response.getEntity()), ActResultOrgan.class);
+            list = (List<String>) (resultOrgan.getData());
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return ActResult.initialize(list);
+
     }
 
     @GetMapping("v1/send")

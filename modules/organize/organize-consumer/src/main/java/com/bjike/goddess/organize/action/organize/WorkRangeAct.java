@@ -1,6 +1,7 @@
 package com.bjike.goddess.organize.action.organize;
 
-import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -8,29 +9,29 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.market.api.MarketInfoAPI;
-import com.bjike.goddess.marketdevelopment.api.BusinessCourseAPI;
-import com.bjike.goddess.marketdevelopment.api.BusinessTypeAPI;
-import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
-import com.bjike.goddess.marketdevelopment.bo.BusinessTypeBO;
 import com.bjike.goddess.organize.api.WorkRangeAPI;
 import com.bjike.goddess.organize.bo.WorkRangeFlatBO;
 import com.bjike.goddess.organize.dto.WorkRangeDTO;
 import com.bjike.goddess.organize.to.DepartmentWorkRangeTO;
 import com.bjike.goddess.organize.to.WorkRangeFlatTO;
 import com.bjike.goddess.organize.to.WorkRangeTO;
-import com.bjike.goddess.organize.vo.DepartmentDetailVO;
-import com.bjike.goddess.organize.vo.OpinionVO;
-import com.bjike.goddess.organize.vo.WorkRangeFlatVO;
-import com.bjike.goddess.organize.vo.WorkRangeVO;
+import com.bjike.goddess.organize.vo.*;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 工作范围信息设置操作
@@ -47,14 +48,6 @@ public class WorkRangeAct {
 
     @Autowired
     private WorkRangeAPI workRangeAPI;
-    @Autowired
-    private ModuleAPI moduleAPI;
-//    @Autowired
-//    private BusinessTypeAPI businessTypeAPI;
-//    @Autowired
-//    private BusinessCourseAPI businessCourseAPI;
-//    @Autowired
-//    private MarketInfoAPI marketInfoAPI;
 
 
     /**
@@ -267,22 +260,6 @@ public class WorkRangeAct {
         }
     }
 
-
-//    /**
-//     * 查询方向
-//     *
-//     * @return class DirectionVO
-//     * @version v1
-//     */
-//    @GetMapping("v1/findDirection")
-//    public Result findDirection(HttpServletRequest request) throws ActException {
-//        try {
-//            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findDirection(), DirectionVO.class, request));
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-//    }
-
     /**
      * 查询方向
      *
@@ -303,22 +280,27 @@ public class WorkRangeAct {
 //            throw new ActException(e.getMessage());
 //        }
 //    }
+    @GetMapping("v1/findDirection")
+    public Result findDirection() throws ActException {
+        List<String> list = new ArrayList<>(0);
+        CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet("https://marketdevelopment.issp.bjike.com:8080/businesstype/v1/findDirection");//线上
+//        HttpGet httpGet = new HttpGet("http://localhost:51306/businesstype/v1/findDirection");//线下测试
+        httpGet.setHeader("userToken", RpcContext.getContext().getAttachment("userToken"));
 
+        ActResultOrgan resultOrgan = new ActResultOrgan();
+        try {
+            CloseableHttpResponse response = closeableHttpClient.execute(httpGet);
+            resultOrgan = JSON.parseObject(EntityUtils.toString(response.getEntity()), ActResultOrgan.class);
+//            list.add(resultOrgan.getData());
+            list = (List<String>) (resultOrgan.getData());
 
-//    /**
-//     * 查询科目
-//     *
-//     * @return class ProjectVO
-//     * @version v1
-//     */
-//    @GetMapping("v1/findProject")
-//    public Result findProject(HttpServletRequest request) throws ActException {
-//        try {
-//            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findProject(), ProjectVO.class, request));
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-//    }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ActResult.initialize(list);
+    }
+
 
     /**
      * 查询科目
@@ -346,30 +328,108 @@ public class WorkRangeAct {
 //            throw new ActException(e.getMessage());
 //        }
 //    }
+    @GetMapping("v1/findProject")
+    public Result findProject() throws ActException {
+        List<String> stringList = new ArrayList<>(0);
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet("https://market.issp.bjike.com:8080/marketinfo/v1/getProjectName/name");//线上
+//        HttpGet httpGet = new HttpGet("http://localhost:51604/marketinfo/v1/getProjectName/name");//线下测试
+        httpGet.setHeader("userToken", RpcContext.getContext().getAttachment("userToken"));
+        ActResultOrgan resultOrgan = new ActResultOrgan();
+        try {
+            CloseableHttpResponse response = httpClient.execute(httpGet);
+            resultOrgan = JSON.parseObject(EntityUtils.toString(response.getEntity()), ActResultOrgan.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        stringList = (List<String>) (resultOrgan.getData());
 
-//    /**
-//     * 查询分类
-//     *
-//     * @return class ClassifyVO
-//     * @version v1
-//     */
-//    @GetMapping("v1/findClassify")
-//    public Result findClassify(HttpServletRequest request) throws ActException {
-//        try {
-//            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findClassify(), ClassifyVO.class, request));
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-//    }
-//
+        CloseableHttpClient httpClient1 = HttpClients.createDefault();
+        HttpGet httpGet1 = new HttpGet("https://marketdevelopment.issp.bjike.com:8080/businesscourse/v1/getProjectName");//线上
+//        HttpGet httpGet1 = new HttpGet("http://localhost:51306/businesscourse/v1/getProjectName");//线下测试
+        httpGet1.setHeader("userToken", RpcContext.getContext().getAttachment("userToken"));
+        ActResultOrgan resultOrgan1 = new ActResultOrgan();
+        try {
+            CloseableHttpResponse response1 = httpClient1.execute(httpGet1);
+            resultOrgan1 = JSON.parseObject(EntityUtils.toString(response1.getEntity()), ActResultOrgan.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        List<String> list = (List<String>) (resultOrgan1.getData());
+        stringList.addAll(list);
+        Set<String> set = new HashSet<>(0);
+        set.addAll(stringList);
+        return ActResult.initialize(set);
+    }
+
+    /**
+     * 查询科目测试
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findProjectTest")
+    public Result findProjectTest() throws ActException {
+        List<String> stringList = new ArrayList<>(0);
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet("https://market.issp.bjike.com:8080/marketinfo/v1/getProjectName/name");//线上
+//        HttpGet httpGet = new HttpGet("http://localhost:51604/marketinfo/v1/getProjectName/name");//线下测试
+        httpGet.setHeader("userToken", RpcContext.getContext().getAttachment("userToken"));
+//                HttpPost httpPost = new HttpPost("");
+//                List<BasicNameValuePair> data = new ArrayList<>();
+//                data.add(new BasicNameValuePair("username","lake"));
+//                httpPost.setEntity(new UrlEncodedFormEntity(data, Consts.UTF_8));
+        ActResultOrgan resultOrgan = new ActResultOrgan();
+        try {
+            CloseableHttpResponse response = httpClient.execute(httpGet);
+            resultOrgan = JSON.parseObject(EntityUtils.toString(response.getEntity()), ActResultOrgan.class);
+            System.out.println();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ActResult.initialize(resultOrgan.getData());
+    }
 
     /**
      * 查询分类
      *
      * @version v1
      */
-//    @GetMapping("v1/findClassify")
-//    public Result findClassify(HttpServletRequest request) throws ActException {
+    @GetMapping("v1/findClassify")
+    public Result findClassify(HttpServletRequest request) throws ActException {
+        List<String> list = new ArrayList<>(0);
+        CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet("https://marketdevelopment.issp.bjike.com:8080/businesstype/v1/findDirection");//线上
+//        HttpGet httpGet = new HttpGet("http://localhost:51306/businesstype/v1/findDirection");//线下测试
+        httpGet.setHeader("userToken", RpcContext.getContext().getAttachment("userToken"));
+
+        ActResultOrgan resultOrgan = new ActResultOrgan();
+        try {
+            CloseableHttpResponse response = closeableHttpClient.execute(httpGet);
+            resultOrgan = JSON.parseObject(EntityUtils.toString(response.getEntity()), ActResultOrgan.class);
+            list = (List<String>) (resultOrgan.getData());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        CloseableHttpClient closeableHttpClient1 = HttpClients.createDefault();
+        HttpGet httpGet1 = new HttpGet("https://market.issp.bjike.com:8080/marketinfo/v1/findMarket/getTechnologyCategory");//线上
+//        HttpGet httpGet1 = new HttpGet("http://localhost:51604/marketinfo/v1/findMarket/getTechnologyCategory");//线下测试
+        httpGet1.setHeader("userToken", RpcContext.getContext().getAttachment("userToken"));
+        ActResultOrgan resultOrgan1 = new ActResultOrgan();
+        Set<String> set = new HashSet<>(0);
+        try {
+            CloseableHttpResponse response1 = closeableHttpClient1.execute(httpGet1);
+            resultOrgan1 = JSON.parseObject(EntityUtils.toString(response1.getEntity()), ActResultOrgan.class);
+            List<String> list1 = (List<String>) (resultOrgan1.getData());
+            list.addAll(list1);
+            set.addAll(list);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return ActResult.initialize(set);
+
+
 //        try {
 //            List<String> list = new ArrayList<>(0);
 //            if (moduleAPI.isCheck("marketdevelopment")) {
@@ -389,6 +449,7 @@ public class WorkRangeAct {
 //            throw new ActException(e.getMessage());
 //        }
 //    }
+    }
 
     /**
      * 关闭
@@ -542,6 +603,20 @@ public class WorkRangeAct {
         try {
             workRangeAPI.flatOpen(direction);
             return ActResult.initialize("OPEN SUCCESS");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取平台总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/flat/total")
+    public Result getFlatTotal() throws ActException {
+        try {
+            return ActResult.initialize(workRangeAPI.getFlatTotal());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

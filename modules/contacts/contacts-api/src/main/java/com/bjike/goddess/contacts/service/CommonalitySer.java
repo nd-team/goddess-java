@@ -157,4 +157,14 @@ public interface CommonalitySer extends Ser<Commonality, CommonalityDTO> {
     default byte[] templateExport() throws SerException {
         return null;
     }
+
+    /**
+     * 获取未冻结的公邮邮件List<String>
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> getEmails() throws SerException {
+        return null;
+    }
 }

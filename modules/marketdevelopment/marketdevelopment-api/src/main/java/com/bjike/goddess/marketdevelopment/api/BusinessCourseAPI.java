@@ -2,7 +2,6 @@ package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
-import com.bjike.goddess.marketdevelopment.bo.MarketMeasureCollectBO;
 import com.bjike.goddess.marketdevelopment.dto.BusinessCourseDTO;
 import com.bjike.goddess.marketdevelopment.to.BusinessCourseTO;
 import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
@@ -132,6 +131,13 @@ public interface BusinessCourseAPI {
      * @throws SerException
      */
     default Integer getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 查询正常数据的业务方向科目
+     */
+    default List<String> getProjectName() throws SerException {
         return null;
     }
 }

@@ -100,4 +100,14 @@ public interface BusinessTypeSer extends Ser<BusinessType, BusinessTypeDTO> {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
+    /**
+     * 查詢業務方向
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findDirection() throws SerException {
+        return null;
+    }
 }

@@ -40,7 +40,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("commonality")
-public class CommonalityAct extends BaseFileAction{
+public class CommonalityAct extends BaseFileAction {
 
     @Autowired
     private CommonalityAPI commonalityAPI;
@@ -164,9 +164,9 @@ public class CommonalityAct extends BaseFileAction{
      * @version v1
      */
     @GetMapping("v1/findByDepartment")
-    public Result findByDepartment(String department,HttpServletRequest request) throws ActException {
+    public Result findByDepartment(String department, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(commonalityAPI.findByDepartment(department), CommonalityVO.class,request));
+            return ActResult.initialize(BeanTransform.copyProperties(commonalityAPI.findByDepartment(department), CommonalityVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -264,7 +264,7 @@ public class CommonalityAct extends BaseFileAction{
     public Result templateExport(HttpServletResponse response) throws ActException {
         try {
             String fileName = "公共邮箱管理导入模板.xlsx";
-            super.writeOutFile(response, commonalityAPI.templateExport( ), fileName);
+            super.writeOutFile(response, commonalityAPI.templateExport(), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -273,6 +273,17 @@ public class CommonalityAct extends BaseFileAction{
         }
     }
 
-
-
+    /**
+     * 获取未冻结的公邮邮件List<String>
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getEmails")
+    public Result getEmails() throws ActException {
+        try {
+            return ActResult.initialize(commonalityAPI.getEmails());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }
