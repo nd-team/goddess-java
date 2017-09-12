@@ -1,5 +1,6 @@
 package com.bjike.goddess.intromanage.vo;
 
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.intromanage.type.DemandType;
 
 import java.util.List;
@@ -109,7 +110,20 @@ public class FirmIntroVO {
      * 需求类型
      */
     private DemandType demandType;
+    /**
+     * 更新（制作）时间
+     */
+    private String updateDate;
 
+    /**
+     * 战略定位
+     */
+    private String positioning;
+
+    /**
+     * 状态
+     */
+    private Status status;
 
     /**
      * 荣誉与资质
@@ -285,6 +299,30 @@ public class FirmIntroVO {
 
     public void setDemandType(DemandType demandType) {
         this.demandType = demandType;
+    }
+
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getPositioning() {
+        return positioning;
+    }
+
+    public void setPositioning(String positioning) {
+        this.positioning = positioning;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public List<HonorAndQualityVO> getHonorAndQualityVOS() {

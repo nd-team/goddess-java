@@ -29,6 +29,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -415,6 +416,11 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     @Transactional(rollbackFor = {SerException.class})
     public RegularizationBO save(RegularizationTO to) throws SerException {
         Regularization entity = BeanTransform.copyProperties(to, Regularization.class, true);
+        entity.setCreateTime(LocalDateTime.now());
+        LocalDate time = DateUtil.parseDate(to.getHiredate());
+        LocalDate date = LocalDate.now();
+        int monthDiff = (date.getYear() - time.getYear()) * 12 + date.getMonthValue() - time.getMonthValue();
+        entity.setAsProbationLength(monthDiff);
         entity = super.save(entity);
         RegularizationBO bo = BeanTransform.copyProperties(entity, RegularizationBO.class);
         return bo;
@@ -736,4 +742,5 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         }
         return time;
     }
+
 }

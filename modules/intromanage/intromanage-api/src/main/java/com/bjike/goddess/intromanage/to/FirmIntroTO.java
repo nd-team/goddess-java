@@ -3,6 +3,7 @@ package com.bjike.goddess.intromanage.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.intromanage.type.DemandType;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -19,6 +20,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public class FirmIntroTO extends BaseTO {
+
 
     /**
      * 公司名称
@@ -121,6 +123,12 @@ public class FirmIntroTO extends BaseTO {
      */
     @NotNull(groups = {ADD.class, EDIT.class}, message = "需求类型不能为空")
     private DemandType demandType;
+
+    /**
+     * 战略定位
+     */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "战略定位不能为空")
+    private String positioning;
 
     /**
      * 荣誉与资质
@@ -285,6 +293,14 @@ public class FirmIntroTO extends BaseTO {
 
     public List<HonorAndQualityTO> getHonorAndQualityTOS() {
         return honorAndQualityTOS;
+    }
+
+    public String getPositioning() {
+        return positioning;
+    }
+
+    public void setPositioning(String positioning) {
+        this.positioning = positioning;
     }
 
     public void setHonorAndQualityTOS(List<HonorAndQualityTO> honorAndQualityTOS) {
