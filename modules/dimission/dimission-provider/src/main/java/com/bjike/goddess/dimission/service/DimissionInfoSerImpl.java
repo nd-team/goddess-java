@@ -20,6 +20,8 @@ import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
+import com.bjike.goddess.organize.bo.PositionUserDetailBO;
+import com.bjike.goddess.organize.enums.WorkStatus;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.bo.FindNameBO;
 import com.bjike.goddess.user.api.UserAPI;
@@ -274,32 +276,43 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
                 bo.setArrangement("");
                 bo.setDepartment("");
                 if (null != detailBO) {
-                    List<PositionDetailBO> positionBOs = positionDetailAPI.findByPostIds(detailBO.getPositionIds().split(","));
-                    String area = "", department = "", arrangement = "";
-                    for (PositionDetailBO position : positionBOs.stream()
-                            .sorted(Comparator.comparing(PositionDetailBO::getArrangementId))
-                            .collect(Collectors.toList())) {
-                        bo.setPosition(position.getPosition() + "," + bo.getPosition());
-                        if (!arrangement.equals(position.getArrangementName())) {
-                            arrangement = position.getArrangementName();
-                            bo.setArrangement(bo.getArrangement() + "," + position.getArrangementName());
+                    List<PositionDetailBO> positionBOs = new ArrayList<>();
+                            List<PositionUserDetailBO> positionUserDetailBOSList = detailBO.getDetailS();
+                    if (null != positionUserDetailBOSList) {
+                        for (PositionUserDetailBO p : positionUserDetailBOSList) {
+                            if (WorkStatus.MAIN.equals(p.getWorkStatus())) {
+                                positionBOs = positionDetailAPI.findByPostIds(p.getPositionId().split(","));
+                            }
                         }
                     }
+                    String area = "", department = "", arrangement = "";
+                    if( positionBOs!=null) {
+                        for (PositionDetailBO position : positionBOs.stream()
+                                .sorted(Comparator.comparing(PositionDetailBO::getArrangementId))
+                                .collect(Collectors.toList())) {
+                            bo.setPosition(position.getPosition() + "," + bo.getPosition());
+                            if (!arrangement.equals(position.getArrangementName())) {
+                                arrangement = position.getArrangementName();
+                                bo.setArrangement(bo.getArrangement() + "," + position.getArrangementName());
+                            }
+                        }
 
-                    for (PositionDetailBO position : positionBOs.stream()
-                            .sorted(Comparator.comparing(PositionDetailBO::getDepartmentId))
-                            .collect(Collectors.toList()))
-                        if (!department.equals(position.getDepartmentName())) {
-                            department = position.getDepartmentName();
-                            bo.setDepartment(position.getDepartmentName() + "," + bo.getDepartment());
-                        }
-                    for (PositionDetailBO position : positionBOs.stream()
-                            .sorted(Comparator.comparing(PositionDetailBO::getDepartmentId))
-                            .collect(Collectors.toList()))
-                        if (!area.equals(position.getArea())) {
-                            area = position.getArea();
-                            bo.setArea(position.getArea() + "," + bo.getArea());
-                        }
+                        for (PositionDetailBO position : positionBOs.stream()
+                                .sorted(Comparator.comparing(PositionDetailBO::getDepartmentId))
+                                .collect(Collectors.toList()))
+                            if (!department.equals(position.getDepartmentName())) {
+                                department = position.getDepartmentName();
+                                bo.setDepartment(position.getDepartmentName() + "," + bo.getDepartment());
+                            }
+
+                        for (PositionDetailBO position : positionBOs.stream()
+                                .sorted(Comparator.comparing(PositionDetailBO::getDepartmentId))
+                                .collect(Collectors.toList()))
+                            if (!area.equals(position.getArea())) {
+                                area = position.getArea();
+                                bo.setArea(position.getArea() + "," + bo.getArea());
+                            }
+                    }
                 }
             }
         }

@@ -15,6 +15,8 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
+import com.bjike.goddess.organize.bo.PositionUserDetailBO;
+import com.bjike.goddess.organize.enums.WorkStatus;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -80,8 +82,17 @@ public class SurveyPlanAuditSerImpl extends ServiceImpl<SurveyPlanAudit, SurveyP
             entity = BeanTransform.copyProperties(to, SurveyPlanAudit.class, true);
             entity.setAuditor(user.getUsername());
             entity.setAuditTime(LocalDateTime.now());
-            if (null != detailUserBO)
-                entity.setPosition(detailUserBO.getPosition());
+            if (null != detailUserBO) {
+                List<PositionUserDetailBO> positionUserDetailBOSList = detailUserBO.getDetailS();
+                if (null != positionUserDetailBOSList) {
+                    for (PositionUserDetailBO p : positionUserDetailBOSList) {
+                        if (WorkStatus.MAIN.equals(p.getWorkStatus())) {
+                            entity.setPosition(p.getPosition());
+                        }
+
+                    }
+                }
+            }
             if (null != userDetail)
                 entity.setDepartment(userDetail.getDepartmentName());
             entity.setPlan(plan);

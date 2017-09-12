@@ -17,6 +17,8 @@ import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
+import com.bjike.goddess.organize.bo.PositionUserDetailBO;
+import com.bjike.goddess.organize.enums.WorkStatus;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -381,6 +383,7 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
      * @throws SerException
      */
     private DisciplineRecord checkEntity(DisciplineRecord entity) throws SerException {
+
         UserBO user = null;
         if (moduleAPI.isCheck("organize")) {
             List<UserBO> userBOList = positionDetailUserAPI.findUserListInOrgan();
@@ -400,14 +403,22 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
         }
         entity.setArea("");
         entity.setProject("");
-        if (null != detailBO)
-            for (String id : detailBO.getPositionIds().split(",")) {
-                if (moduleAPI.isCheck("organize")) {
-                    PositionDetailBO position = positionDetailAPI.findBOById(id);
-                    entity.setProject(entity.getProject() + "," + position.getDepartmentName());
-                    entity.setArea(entity.getArea() + "," + position.getArea());
+        if (null != detailBO) {
+            List<PositionUserDetailBO> positionUserDetailBOSList = detailBO.getDetailS();
+            if (null != positionUserDetailBOSList) {
+                for (PositionUserDetailBO p : positionUserDetailBOSList) {
+                    if (WorkStatus.MAIN.equals(p.getWorkStatus())) {
+                        for (String id : p.getPositionId().split(",")) {
+                            if (moduleAPI.isCheck("organize")) {
+                                PositionDetailBO position = positionDetailAPI.findBOById(id);
+                                entity.setProject(entity.getProject() + "," + position.getDepartmentName());
+                                entity.setArea(entity.getArea() + "," + position.getArea());
+                            }
+                        }
+                    }
                 }
             }
+        }
         if (entity.getStatus()) {//检测奖罚分数填写是否符合规范 true 为奖励 false 为处罚
             if (entity.getBallot() < 0)
                 entity.setBallot(-entity.getBallot());

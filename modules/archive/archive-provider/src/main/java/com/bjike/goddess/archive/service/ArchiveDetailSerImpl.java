@@ -20,6 +20,8 @@ import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
+import com.bjike.goddess.organize.bo.PositionUserDetailBO;
+import com.bjike.goddess.organize.enums.WorkStatus;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -212,12 +214,20 @@ public class ArchiveDetailSerImpl extends ServiceImpl<ArchiveDetail, ArchiveDeta
         UserBO user = userAPI.findByUsername(entity.getUsername());
         if (null != user) {
             PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
-            if (null != detailBO)
-                for (String id : detailBO.getPositionIds().split(",")) {
-                    PositionDetailBO position = positionDetailAPI.findBOById(id);
-                    bo.setPosition(bo.getPosition() + "," + position.getPosition());
-                    bo.setProject(bo.getProject() + "," + position.getDepartmentName());
+            if (null != detailBO) {
+                List<PositionUserDetailBO> positionUserDetailBOSList = detailBO.getDetailS();
+                if (null != positionUserDetailBOSList) {
+                    for (PositionUserDetailBO p : positionUserDetailBOSList) {
+                        if (WorkStatus.MAIN.equals(p.getWorkStatus())) {
+                            for (String id : p.getPositionId().split(",")) {
+                                PositionDetailBO position = positionDetailAPI.findBOById(id);
+                                bo.setPosition(bo.getPosition() + "," + position.getPosition());
+                                bo.setProject(bo.getProject() + "," + position.getDepartmentName());
+                            }
+                        }
+                    }
                 }
+            }
             bo.setSerialNumber(user.getEmployeeNumber());
         }
         return bo;
