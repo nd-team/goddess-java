@@ -101,10 +101,7 @@ public class ScheduleJobSerImpl extends ServiceImpl<ScheduleJob, ScheduleJobDTO>
 
     @Override
     public List<ScheduleJob> findScheduleJobs() throws SerException {
-        ScheduleJobDTO dto = new ScheduleJobDTO();
-        dto.getConditions().add(Restrict.eq("scheduleJobGroup.enable", 1));
-        dto.getConditions().add(Restrict.eq("enable", 1));
-        return findByCis(dto);
+        return findAll();
     }
 
     @Override
