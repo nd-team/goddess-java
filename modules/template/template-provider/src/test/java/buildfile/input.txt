@@ -1,20 +1,22 @@
-模块名:lendreimbursement
-类名:AjoafinancereimbursementUser
-作者:tanghaixiang
-描述:报销老系统
+模块名:regularization
+类名:CommunicationFormwork
+作者:lijuntao
+描述:各类交流沟通模块
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-Status status 状态;
-String username 流水报销单号;
-String employeeNumber 项目名称;
-String password 报销人地区;
-String headPath 报销人姓名;
-String department_id 单据编号:报销单号-单据数量排序;
-String post_id 报销人备注;
-String group_id 外键关联科目表;
-String superUser 类别;
+ModuleName moduleName 模板名称;
+String belongType 所属类型;
+String classifi 分类;
+String triggerField 触发字段;
+String title 标题;
+String emailModule 邮件内容模板;
+String example 例子;
+String attachment 附件;
+String lordSendObj 主送对象;
+String ccObj 抄送对象;
+String way 途径;
 )
 
