@@ -2,6 +2,7 @@ package com.bjike.goddess.regularization.vo;
 
 import com.bjike.goddess.regularization.type.StaffStatus;
 
+
 /**
  * 转正人员信息表现层对象
  *
