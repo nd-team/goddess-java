@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 功能列表业务实现
@@ -129,6 +130,44 @@ public class FeatureListSerImpl extends ServiceImpl<FeatureList, FeatureListDTO>
         if (entity == null) {
             throw new SerException("该对象不存在");
         }
-        return BeanTransform.copyProperties(entity,FeatureListBO.class);
+        return BeanTransform.copyProperties(entity, FeatureListBO.class);
+    }
+
+    @Override
+    public List<String> getFeatureName() throws SerException {
+        List<FeatureList> featureLists = super.findAll();
+        if (null != featureLists && featureLists.size() > 0) {
+            List<String> list = featureLists.stream().map(FeatureList::getName).distinct().collect(Collectors.toList());
+            return list;
+        }
+        return null;
+    }
+
+    @Override
+    public String getPurpose(String name) throws SerException {
+        if (StringUtils.isNotBlank(name)) {
+            FeatureListDTO dto = new FeatureListDTO();
+            dto.getConditions().add(Restrict.eq("name", name));
+            List<FeatureList> featureLists = super.findByCis(dto);
+            if (null != featureLists && featureLists.size() > 0) {
+                FeatureList featureList = featureLists.get(0);
+                return featureList.getPurpose();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String getVersion(String name) throws SerException {
+        if (StringUtils.isNotBlank(name)) {
+            FeatureListDTO dto = new FeatureListDTO();
+            dto.getConditions().add(Restrict.eq("name", name));
+            List<FeatureList> featureLists = super.findByCis(dto);
+            if (null != featureLists && featureLists.size() > 0) {
+                FeatureList featureList = featureLists.get(0);
+                return featureList.getVersion();
+            }
+        }
+        return null;
     }
 }

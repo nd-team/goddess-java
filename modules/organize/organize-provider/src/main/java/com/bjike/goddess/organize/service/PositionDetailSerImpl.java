@@ -101,6 +101,20 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
     }
 
     @Override
+    public Long getPositionNum(String startTime, String endTime) throws SerException {
+        String fields[] = new String[]{"positionNum"};
+        StringBuilder sql = new StringBuilder("select count(position) from organize_position_detail ");
+        sql.append(" where createTime between '" + startTime + "' ");
+        sql.append(" and '" + endTime + "' ");
+        List<ManagerBO> managerBOs = super.findBySql(sql.toString(), ManagerBO.class, fields);
+        if (null != managerBOs && managerBOs.size() > 0) {
+            List<Long> areas = managerBOs.stream().map(ManagerBO::getPositionNum).distinct().collect(Collectors.toList());
+            return areas.get(0);
+        }
+        return 0l;
+    }
+
+    @Override
     public List<PositionDetailBO> transformationToBOList(Collection<PositionDetail> list) throws SerException {
         List<PositionDetailBO> bos = new ArrayList<>(list.size());
         for (PositionDetail entity : list)

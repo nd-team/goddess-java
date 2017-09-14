@@ -167,4 +167,49 @@ public interface BaseInfoManageSer extends Ser<BaseInfoManage, BaseInfoManageDTO
      * @throws SerException
      */
     byte[] templateExcel() throws SerException;
+
+    /**
+     * 获取全部信息(不分页)
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<BaseInfoManageBO> getgetAll() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取某段时间内的内部项目数
+     *
+     * @param startTime
+     * @param endTime
+     * @return
+     * @throws SerException
+     */
+    default Long getInterProject(String startTime, String endTime) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取某段时间内的内部项目名称
+     *
+     * @param startTime
+     * @param endTime
+     * @return
+     * @throws SerException
+     */
+    default List<String> getInterProjectName(String startTime, String endTime) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据内部项目名称获取所部的地区
+     *
+     * @param projectNane
+     * @return
+     * @throws SerException
+     */
+    default List<String> getArea(String projectNane) throws SerException {
+        return null;
+    }
 }

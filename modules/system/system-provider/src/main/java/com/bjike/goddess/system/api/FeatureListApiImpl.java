@@ -66,4 +66,19 @@ public class FeatureListApiImpl implements FeatureListAPI {
     public FeatureListBO findDetail(String id) throws SerException{
         return featureListSer.findDetail(id);
     }
+
+    @Override
+    public List<String> getFeatureName() throws SerException {
+        return featureListSer.getFeatureName();
+    }
+
+    @Override
+    public String getPurpose(String name) throws SerException {
+        return featureListSer.getPurpose(name);
+    }
+
+    @Override
+    public String getVersion(String name) throws SerException {
+        return featureListSer.getVersion(name);
+    }
 }

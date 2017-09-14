@@ -106,4 +106,24 @@ public class BaseInfoManageApiImpl implements BaseInfoManageAPI {
     public byte[] templateExcel() throws SerException {
         return baseInfoManageSer.templateExcel();
     }
+
+    @Override
+    public List<BaseInfoManageBO> getgetAll() throws SerException {
+        return baseInfoManageSer.getgetAll();
+    }
+
+    @Override
+    public Long getInterProject(String startTime, String endTime) throws SerException {
+        return baseInfoManageSer.getInterProject(startTime, endTime);
+    }
+
+    @Override
+    public List<String> getInterProjectName(String startTime, String endTime) throws SerException {
+        return baseInfoManageSer.getInterProjectName(startTime, endTime);
+    }
+
+    @Override
+    public List<String> getArea(String projectNane) throws SerException {
+        return baseInfoManageSer.getArea(projectNane);
+    }
 }

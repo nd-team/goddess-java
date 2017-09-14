@@ -8,6 +8,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.bo.DepartmentPeopleBO;
+import com.bjike.goddess.organize.bo.ManagerBO;
 import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.entity.DepartmentDetail;
@@ -70,6 +71,34 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         //体系-部门
         String number = String.format("%s-%s", hierarchy.getSerialNumber(), to.getSerialNumber());
         return number;
+    }
+
+    @Override
+    public Integer getAreaNum(String startTime, String endTime) throws SerException {
+        String fields[] = new String[]{"area"};
+        StringBuilder sql = new StringBuilder("select count(area) from organize_department_detail ");
+        sql.append(" where createTime between '" + startTime + "' ");
+        sql.append(" and '" + endTime + "' ");
+        List<ManagerBO> managerBOs = super.findBySql(sql.toString(), ManagerBO.class, fields);
+        if (null != managerBOs && managerBOs.size() > 0) {
+            List<Integer> areas = managerBOs.stream().map(ManagerBO::getArea).distinct().collect(Collectors.toList());
+            return areas.get(0);
+        }
+        return 0;
+    }
+
+    @Override
+    public Integer getDepartmentNum(String startTime, String endTime) throws SerException {
+        String fields[] = new String[]{"department"};
+        StringBuilder sql = new StringBuilder("select count(department) from organize_department_detail ");
+        sql.append(" where createTime between '" + startTime + "' ");
+        sql.append(" and '" + endTime + "' ");
+        List<ManagerBO> managerBOs = super.findBySql(sql.toString(), ManagerBO.class, fields);
+        if (null != managerBOs && managerBOs.size() > 0) {
+            List<Integer> areas = managerBOs.stream().map(ManagerBO::getDepartment).distinct().collect(Collectors.toList());
+            return areas.get(0);
+        }
+        return 0;
     }
 
     private List<DepartmentDetailBO> transformationToBOList(List<DepartmentDetail> list) throws SerException {
@@ -292,6 +321,5 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
             return Integer.parseInt(list.get(0).getPeopleCount() + "");
         }
         return null;
-
     }
 }
