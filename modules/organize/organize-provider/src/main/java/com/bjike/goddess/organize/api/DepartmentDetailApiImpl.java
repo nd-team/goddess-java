@@ -123,4 +123,9 @@ public class DepartmentDetailApiImpl implements DepartmentDetailAPI {
     public Integer departmentTotalPeople(String department) throws SerException {
         return departmentDetailSer.departmentTotalPeople(department);
     }
+
+    @Override
+    public Integer getAreaNum(String startTime, String endTime) throws SerException {
+        return departmentDetailSer.getAreaNum(startTime, endTime);
+    }
 }
