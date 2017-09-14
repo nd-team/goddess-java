@@ -19,63 +19,72 @@ import javax.validation.constraints.NotNull;
 public class OverviewSkillLevelTO extends BaseTO {
 
     /**
+     * 年份
+     */
+    private Integer year;
+    /**
+     * 月份
+     */
+    private Integer month;
+    /**
      * 地区
      */
-    @NotBlank(message = "地区不能为空",groups = {ADD.class, EDIT.class})
     private String area;
 
     /**
-     * 体系
+     * 姓名
      */
-    @NotBlank(message = "体系不能为空",groups = {ADD.class, EDIT.class})
-    private String system;
+    private String name;
+
 
     /**
      * 部门
      */
-    @NotBlank(message = "部门不能为空",groups = {ADD.class, EDIT.class})
     private String department;
 
     /**
      * 岗位
      */
-    @NotBlank(message = "岗位不能为空",groups = {ADD.class, EDIT.class})
     private String jobs;
+    /**
+     * 岗位层级
+     */
+    private String postHierarchy;
+    /**
+     * 入职时间
+     */
+    private String entryTime;
+    /**
+     * 转正时间
+     */
+    private String positiveTime;
+    /**
+     * 在职时间（月）
+     */
+    private String workingTime ;
+    /**
+     * 技能项
+     */
+    private String skill;
 
     /**
-     * 姓名
+     * 技能专业
      */
-    @NotBlank(message = "姓名不能为空",groups = {ADD.class, EDIT.class})
-    private String name;
-
-    /**
-     * 技能定位-专业（业务范围包含的技能）
-     */
-    @NotBlank(message = "技能定位-专业（业务范围包含的技能）不能为空",groups = {ADD.class, EDIT.class})
     private String major;
 
     /**
-     * 小项主项技能等级
+     * 技能级别
      */
-    @NotBlank(message = "小项主项技能等级不能为空",groups = {ADD.class, EDIT.class})
-    private String minorMasterSkillLevel;
+    private String grade;
 
     /**
      * 转正技能等级
      */
-    @NotBlank(message = "转正技能等级不能为空",groups = {ADD.class, EDIT.class})
     private String transferSkillLevel;
-
-    /**
-     * 转正时间
-     */
-    @NotBlank(message = "转正时间不能为空",groups = {ADD.class, EDIT.class})
-    private String positiveTime;
 
     /**
      * 获取时间
      */
-    @NotBlank(message = "获取时间不能为空",groups = {ADD.class, EDIT.class})
     private String acquisitionTime;
 
     /**
@@ -83,18 +92,21 @@ public class OverviewSkillLevelTO extends BaseTO {
      */
     private Integer promotedNumber;
 
-    /**
-     * 主项/小项（是否为主项）
-     */
-    @NotNull(message = "主项/小项（是否为主项）不能为空",groups = {ADD.class, EDIT.class})
-    private Boolean subject;
+    public Integer getYear() {
+        return year;
+    }
 
-    /**
-     * 小项顺序
-     */
-    @NotNull(message = "小项顺序不能为空",groups = {ADD.class, EDIT.class})
-    private Integer orderEvent;
+    public void setYear(Integer year) {
+        this.year = year;
+    }
 
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
+    }
 
     public String getArea() {
         return area;
@@ -104,12 +116,12 @@ public class OverviewSkillLevelTO extends BaseTO {
         this.area = area;
     }
 
-    public String getSystem() {
-        return system;
+    public String getName() {
+        return name;
     }
 
-    public void setSystem(String system) {
-        this.system = system;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDepartment() {
@@ -128,12 +140,44 @@ public class OverviewSkillLevelTO extends BaseTO {
         this.jobs = jobs;
     }
 
-    public String getName() {
-        return name;
+    public String getPostHierarchy() {
+        return postHierarchy;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPostHierarchy(String postHierarchy) {
+        this.postHierarchy = postHierarchy;
+    }
+
+    public String getEntryTime() {
+        return entryTime;
+    }
+
+    public void setEntryTime(String entryTime) {
+        this.entryTime = entryTime;
+    }
+
+    public String getPositiveTime() {
+        return positiveTime;
+    }
+
+    public void setPositiveTime(String positiveTime) {
+        this.positiveTime = positiveTime;
+    }
+
+    public String getWorkingTime() {
+        return workingTime;
+    }
+
+    public void setWorkingTime(String workingTime) {
+        this.workingTime = workingTime;
+    }
+
+    public String getSkill() {
+        return skill;
+    }
+
+    public void setSkill(String skill) {
+        this.skill = skill;
     }
 
     public String getMajor() {
@@ -144,12 +188,12 @@ public class OverviewSkillLevelTO extends BaseTO {
         this.major = major;
     }
 
-    public String getMinorMasterSkillLevel() {
-        return minorMasterSkillLevel;
+    public String getGrade() {
+        return grade;
     }
 
-    public void setMinorMasterSkillLevel(String minorMasterSkillLevel) {
-        this.minorMasterSkillLevel = minorMasterSkillLevel;
+    public void setGrade(String grade) {
+        this.grade = grade;
     }
 
     public String getTransferSkillLevel() {
@@ -158,14 +202,6 @@ public class OverviewSkillLevelTO extends BaseTO {
 
     public void setTransferSkillLevel(String transferSkillLevel) {
         this.transferSkillLevel = transferSkillLevel;
-    }
-
-    public String getPositiveTime() {
-        return positiveTime;
-    }
-
-    public void setPositiveTime(String positiveTime) {
-        this.positiveTime = positiveTime;
     }
 
     public String getAcquisitionTime() {
@@ -182,21 +218,5 @@ public class OverviewSkillLevelTO extends BaseTO {
 
     public void setPromotedNumber(Integer promotedNumber) {
         this.promotedNumber = promotedNumber;
-    }
-
-    public Boolean getSubject() {
-        return subject;
-    }
-
-    public void setSubject(Boolean subject) {
-        this.subject = subject;
-    }
-
-    public Integer getOrderEvent() {
-        return orderEvent;
-    }
-
-    public void setOrderEvent(Integer orderEvent) {
-        this.orderEvent = orderEvent;
     }
 }

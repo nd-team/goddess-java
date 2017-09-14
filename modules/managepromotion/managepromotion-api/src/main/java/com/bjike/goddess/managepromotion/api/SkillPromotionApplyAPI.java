@@ -1,9 +1,11 @@
 package com.bjike.goddess.managepromotion.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.managepromotion.bo.SkillLevelCollectBO;
 import com.bjike.goddess.managepromotion.bo.SkillPromotionApplyBO;
 import com.bjike.goddess.managepromotion.dto.SkillPromotionApplyDTO;
 import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
+import com.bjike.goddess.managepromotion.to.SkillLevelCollectTO;
 import com.bjike.goddess.managepromotion.to.SkillPromotionApplyTO;
 
 import java.util.List;
@@ -127,6 +129,46 @@ public interface SkillPromotionApplyAPI {
      * @throws SerException
      */
     default SkillPromotionApplyBO generalManagerAudit(SkillPromotionApplyTO skillPromotionApplyTO) throws SerException {
+        return  null;
+    }
+    /**
+     * 技能等级晋升管理日汇总
+     *
+     * @param to to
+     * @return class SkillLevelCollectBO
+     * @throws SerException
+     */
+    default List<SkillLevelCollectBO> dayLevelCollect(SkillLevelCollectTO to) throws SerException {
+        return  null;
+    }
+    /**
+     * 技能等级晋升管理周汇总
+     *
+     * @param to to
+     * @return class SkillLevelCollectBO
+     * @throws SerException
+     */
+    default List<SkillLevelCollectBO> weekLevelCollect(SkillLevelCollectTO to) throws SerException {
+        return  null;
+    }
+    /**
+     * 技能等级晋升管理月汇总
+     *
+     * @param to to
+     * @return class SkillLevelCollectBO
+     * @throws SerException
+     */
+    default List<SkillLevelCollectBO> monthLevelCollect(SkillLevelCollectTO to) throws SerException {
+        return  null;
+    }
+    /**
+     * 技能等级晋升管理累计汇总
+     *
+     * @param to to
+     * @return class SkillLevelCollectBO
+     * @throws SerException
+     */
+    default List<SkillLevelCollectBO> totalLevelCollect(SkillLevelCollectTO to) throws SerException {
         return  null;
     }
 }

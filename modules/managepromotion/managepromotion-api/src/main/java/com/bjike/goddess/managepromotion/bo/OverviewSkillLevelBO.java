@@ -14,14 +14,23 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 public class OverviewSkillLevelBO extends BaseBO {
 
     /**
+     * 年份
+     */
+    private Integer year;
+    /**
+     * 月份
+     */
+    private Integer month;
+    /**
      * 地区
      */
     private String area;
 
     /**
-     * 体系
+     * 姓名
      */
-    private String system;
+    private String name;
+
 
     /**
      * 部门
@@ -32,31 +41,41 @@ public class OverviewSkillLevelBO extends BaseBO {
      * 岗位
      */
     private String jobs;
-
     /**
-     * 姓名
+     * 岗位层级
      */
-    private String name;
+    private String postHierarchy;
+    /**
+     * 入职时间
+     */
+    private String entryTime;
+    /**
+     * 转正时间
+     */
+    private String positiveTime;
+    /**
+     * 在职时间（月）
+     */
+    private String workingTime ;
+    /**
+     * 技能项
+     */
+    private String skill;
 
     /**
-     * 技能定位-专业（业务范围包含的技能）
+     * 技能专业
      */
     private String major;
 
     /**
-     * 小项主项技能等级
+     * 技能级别
      */
-    private String minorMasterSkillLevel;
+    private String grade;
 
     /**
      * 转正技能等级
      */
     private String transferSkillLevel;
-
-    /**
-     * 转正时间
-     */
-    private String positiveTime;
 
     /**
      * 获取时间
@@ -68,16 +87,21 @@ public class OverviewSkillLevelBO extends BaseBO {
      */
     private Integer promotedNumber;
 
-    /**
-     * 主项/小项（是否为主项）
-     */
-    private Boolean subject;
+    public Integer getYear() {
+        return year;
+    }
 
-    /**
-     * 小项顺序
-     */
-    private Integer orderEvent;
+    public void setYear(Integer year) {
+        this.year = year;
+    }
 
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
+    }
 
     public String getArea() {
         return area;
@@ -87,12 +111,12 @@ public class OverviewSkillLevelBO extends BaseBO {
         this.area = area;
     }
 
-    public String getSystem() {
-        return system;
+    public String getName() {
+        return name;
     }
 
-    public void setSystem(String system) {
-        this.system = system;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDepartment() {
@@ -111,12 +135,44 @@ public class OverviewSkillLevelBO extends BaseBO {
         this.jobs = jobs;
     }
 
-    public String getName() {
-        return name;
+    public String getPostHierarchy() {
+        return postHierarchy;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPostHierarchy(String postHierarchy) {
+        this.postHierarchy = postHierarchy;
+    }
+
+    public String getEntryTime() {
+        return entryTime;
+    }
+
+    public void setEntryTime(String entryTime) {
+        this.entryTime = entryTime;
+    }
+
+    public String getPositiveTime() {
+        return positiveTime;
+    }
+
+    public void setPositiveTime(String positiveTime) {
+        this.positiveTime = positiveTime;
+    }
+
+    public String getWorkingTime() {
+        return workingTime;
+    }
+
+    public void setWorkingTime(String workingTime) {
+        this.workingTime = workingTime;
+    }
+
+    public String getSkill() {
+        return skill;
+    }
+
+    public void setSkill(String skill) {
+        this.skill = skill;
     }
 
     public String getMajor() {
@@ -127,12 +183,12 @@ public class OverviewSkillLevelBO extends BaseBO {
         this.major = major;
     }
 
-    public String getMinorMasterSkillLevel() {
-        return minorMasterSkillLevel;
+    public String getGrade() {
+        return grade;
     }
 
-    public void setMinorMasterSkillLevel(String minorMasterSkillLevel) {
-        this.minorMasterSkillLevel = minorMasterSkillLevel;
+    public void setGrade(String grade) {
+        this.grade = grade;
     }
 
     public String getTransferSkillLevel() {
@@ -141,14 +197,6 @@ public class OverviewSkillLevelBO extends BaseBO {
 
     public void setTransferSkillLevel(String transferSkillLevel) {
         this.transferSkillLevel = transferSkillLevel;
-    }
-
-    public String getPositiveTime() {
-        return positiveTime;
-    }
-
-    public void setPositiveTime(String positiveTime) {
-        this.positiveTime = positiveTime;
     }
 
     public String getAcquisitionTime() {
@@ -165,21 +213,5 @@ public class OverviewSkillLevelBO extends BaseBO {
 
     public void setPromotedNumber(Integer promotedNumber) {
         this.promotedNumber = promotedNumber;
-    }
-
-    public Boolean getSubject() {
-        return subject;
-    }
-
-    public void setSubject(Boolean subject) {
-        this.subject = subject;
-    }
-
-    public Integer getOrderEvent() {
-        return orderEvent;
-    }
-
-    public void setOrderEvent(Integer orderEvent) {
-        this.orderEvent = orderEvent;
     }
 }

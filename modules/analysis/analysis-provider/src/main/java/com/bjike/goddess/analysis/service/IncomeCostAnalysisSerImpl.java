@@ -356,6 +356,7 @@ public class IncomeCostAnalysisSerImpl extends ServiceImpl<IncomeCostAnalysis, I
             bo.setArea(model.getArea());
             bo.setDepartment(model.getDepartment());
             bo.setDate(String.valueOf(model.getYear() + "-" + model.getMonth()));
+            bo.setCarNum(model.getCarNum());
             bo.setDriverFee(model.getDriverFee());
             bo.setOilRecharge(model.getOilRecharge());
             bo.setRent(model.getRent());

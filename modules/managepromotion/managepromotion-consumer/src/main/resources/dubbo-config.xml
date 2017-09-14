@@ -31,6 +31,9 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.managepromotion.api.OverviewSkillLevelAPI" id="overviewSkillLevelApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.managepromotion.api.SkillPromotionApplyAPI" id="skillPromotionApplyApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.managepromotion.api.EmployeePromotedAPI" id="employeePromotedApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.managepromotion.api.ExchangeTemplateAPI" id="exchangeTemplateApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.managepromotion.api.SkillStandardAPI" id="skillStandardApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.managepromotion.api.EmailAPI" id="emailApiImpl"/>
 	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.managepromotion.api.CusPermissionAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.managepromotion.api.CusPermissionOperateAPI" />
 
@@ -50,6 +53,10 @@
 	<dubbo:reference  validation="true" id="regularizationApiImpl" interface="com.bjike.goddess.regularization.api.RegularizationAPI" />
 	<dubbo:reference  validation="true" id="staffRecordApiImpl" interface="com.bjike.goddess.archive.api.StaffRecordsAPI" />
 	<dubbo:reference  validation="true" id="eventApiImpl" interface="com.bjike.goddess.event.api.EventAPI" />
+	<dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
+	<dubbo:reference  validation="true" id="internalContactsApiImpl" interface="com.bjike.goddess.contacts.api.InternalContactsAPI" />
+	<dubbo:reference  validation="true" id="commonalityApiImpl" interface="com.bjike.goddess.contacts.api.CommonalityAPI" />
+
 
 
 </beans>

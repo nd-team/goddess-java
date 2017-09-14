@@ -1,6 +1,7 @@
 package com.bjike.goddess.managepromotion.vo;
 
 import com.bjike.goddess.managepromotion.enums.AuditStatus;
+import com.bjike.goddess.managepromotion.enums.DealStatus;
 
 /**
  * 技能晋升申请表现层对象
@@ -119,6 +120,22 @@ public class SkillPromotionApplyVO {
      */
     private String managerOpinion;
     /**
+     * 处理状态
+     */
+    private DealStatus dealStatus;
+    /**
+     * 晋升时间
+     */
+    private String promotionTime;
+    /**
+     * 是否通过
+     */
+    private Boolean pass;
+    /**
+     * 是否通报结果
+     */
+    private Boolean result;
+    /**
      * 审核状态
      */
     private AuditStatus auditStatus;
@@ -137,6 +154,38 @@ public class SkillPromotionApplyVO {
 
     public void setArea(String area) {
         this.area = area;
+    }
+
+    public DealStatus getDealStatus() {
+        return dealStatus;
+    }
+
+    public void setDealStatus(DealStatus dealStatus) {
+        this.dealStatus = dealStatus;
+    }
+
+    public String getPromotionTime() {
+        return promotionTime;
+    }
+
+    public void setPromotionTime(String promotionTime) {
+        this.promotionTime = promotionTime;
+    }
+
+    public Boolean getPass() {
+        return pass;
+    }
+
+    public void setPass(Boolean pass) {
+        this.pass = pass;
+    }
+
+    public Boolean getResult() {
+        return result;
+    }
+
+    public void setResult(Boolean result) {
+        this.result = result;
     }
 
     public String getDepartment() {

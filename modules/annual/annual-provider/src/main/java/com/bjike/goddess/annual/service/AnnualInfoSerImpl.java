@@ -44,6 +44,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * 年假信息业务实现
  *
@@ -349,20 +350,18 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
                     receivers.add(userBO.getId());
                     continue;
                 }
-                List<PositionUserDetailBO> positionUserDetailBOS = detailBO.getDetailS();
-                if (null != positionUserDetailBOS) {
-                    for (PositionUserDetailBO p : positionUserDetailBOS) {
-                        PositionDetailBO positionDetail = positionDetailAPI.findBOById(p.getPositionId());
-                        entity.setSeniority(this.countSeniority(entity, now, positionDetail.getArrangementId()));
-                        if (entity.getAnnual() > annual) {//计算层级年假后比当前存储年假大则使用计算年假
-                            annual = entity.getAnnual();
-                            entity.setArea(positionDetail.getArea());
-                            entity.setDepartment(positionDetail.getDepartmentName());
-                            entity.setPosition(positionDetail.getPosition());
-                            entity.setArrangement(positionDetail.getArrangementName());
-                        } else
-                            entity.setAnnual(annual);
-                    }
+                List<PositionUserDetailBO> detailBOS = detailBO.getDetailS();
+                for (PositionUserDetailBO bo : detailBOS) {
+                    PositionDetailBO positionDetail = positionDetailAPI.findBOById(bo.getPositionId());
+                    entity.setSeniority(this.countSeniority(entity, now, positionDetail.getArrangementId()));
+                    if (entity.getAnnual() > annual) {//计算层级年假后比当前存储年假大则使用计算年假
+                        annual = entity.getAnnual();
+                        entity.setArea(positionDetail.getArea());
+                        entity.setDepartment(positionDetail.getDepartmentName());
+                        entity.setPosition(positionDetail.getPosition());
+                        entity.setArrangement(positionDetail.getArrangementName());
+                    } else
+                        entity.setAnnual(annual);
                 }
                 entity.isAlready(Boolean.FALSE);
                 if (entity.getAnnual() == 0)
