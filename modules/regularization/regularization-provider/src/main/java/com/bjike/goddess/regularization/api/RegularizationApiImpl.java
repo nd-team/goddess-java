@@ -211,4 +211,9 @@ public class RegularizationApiImpl implements RegularizationAPI {
     public String getTime(String userName) throws SerException {
         return regularizationSer.getTime(userName);
     }
+
+    @Override
+    public Boolean checkTran(String userName) throws SerException {
+        return regularizationSer.checkTran(userName);
+    }
 }
