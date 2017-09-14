@@ -14,6 +14,7 @@ import com.bjike.goddess.managepromotion.bo.OverviewSkillLevelBO;
 import com.bjike.goddess.managepromotion.bo.SkillPromotionApplyBO;
 import com.bjike.goddess.managepromotion.dto.EmployeePromotedDTO;
 import com.bjike.goddess.managepromotion.dto.SkillPromotionApplyDTO;
+import com.bjike.goddess.managepromotion.entity.SkillPromotionApply;
 import com.bjike.goddess.managepromotion.to.*;
 import com.bjike.goddess.managepromotion.vo.CollectVO;
 import com.bjike.goddess.managepromotion.vo.EmployeePromotedVO;
@@ -259,7 +260,5 @@ public class EmployeePromotedAction {
             throw new ActException(e.getMessage());
         }
     }
-
-
 
 }

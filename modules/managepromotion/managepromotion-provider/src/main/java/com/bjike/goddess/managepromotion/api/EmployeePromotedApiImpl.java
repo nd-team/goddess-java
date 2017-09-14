@@ -1,17 +1,16 @@
 package com.bjike.goddess.managepromotion.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.managepromotion.bo.CollectBO;
-import com.bjike.goddess.managepromotion.bo.EmployeePromotedBO;
+import com.bjike.goddess.managepromotion.bo.*;
 import com.bjike.goddess.managepromotion.dto.EmployeePromotedDTO;
 import com.bjike.goddess.managepromotion.service.EmployeePromotedSer;
-import com.bjike.goddess.managepromotion.to.CollectTO;
-import com.bjike.goddess.managepromotion.to.EmployeePromotedTO;
-import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
+import com.bjike.goddess.managepromotion.to.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * 员工已晋升情况业务接口实现
@@ -75,5 +74,58 @@ public class EmployeePromotedApiImpl implements EmployeePromotedAPI {
     @Override
     public List<String> getStatus() throws SerException {
         return employeePromotedSer.getStatus();
+    }
+    @Override
+    public List<SkillPromotionDetailCollectBO> detailWeekCollect(SkillPromotionDetailCollectTO to) throws SerException {
+        return employeePromotedSer.detailWeekCollect(to);
+    }
+    @Override
+    public List<SkillPromotionDetailCollectBO> detailMonthCollect(SkillPromotionDetailCollectTO to) throws SerException {
+        return employeePromotedSer.detailMonthCollect(to);
+    }
+
+    @Override
+    public List<SkillPromotionDetailCollectBO> detailTotalCollect(SkillPromotionDetailCollectTO to) throws SerException {
+        return employeePromotedSer.detailTotalCollect(to);
+    }
+
+    @Override
+    public List<ProfessionalSkillCollectBO> dayProfessionalCollect(ProfessionalSkillTO to) throws SerException {
+        return employeePromotedSer.dayProfessionalCollect(to);
+    }
+
+    @Override
+    public List<ProfessionalSkillCollectBO> weekProfessionalCollect(ProfessionalSkillTO to) throws SerException {
+        return employeePromotedSer.weekProfessionalCollect(to);
+    }
+
+    @Override
+    public List<ProfessionalSkillCollectBO> monthProfessionalCollect(ProfessionalSkillTO to) throws SerException {
+        return employeePromotedSer.monthProfessionalCollect(to);
+    }
+
+    @Override
+    public List<ProfessionalSkillCollectBO> totalProfessionalCollect(ProfessionalSkillTO to) throws SerException {
+        return employeePromotedSer.totalProfessionalCollect(to);
+    }
+
+    @Override
+    public List<StaffSkillCollectBO> dayStaffCollect(StaffSkillCollectTO to) throws SerException {
+        return employeePromotedSer.dayStaffCollect(to);
+    }
+
+    @Override
+    public List<StaffSkillCollectBO> weekStaffCollect(StaffSkillCollectTO to) throws SerException {
+        return employeePromotedSer.weekStaffCollect(to);
+    }
+
+    @Override
+    public List<StaffSkillCollectBO> monthStaffCollect(StaffSkillCollectTO to) throws SerException {
+        return employeePromotedSer.monthStaffCollect(to);
+    }
+
+    @Override
+    public List<StaffSkillCollectBO> totalStaffCollect(StaffSkillCollectTO to) throws SerException {
+        return employeePromotedSer.totalStaffCollect(to);
     }
 }

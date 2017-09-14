@@ -118,4 +118,9 @@ public class DepartmentDetailApiImpl implements DepartmentDetailAPI {
     public String number(DepartmentDetailTO to) throws SerException {
         return departmentDetailSer.number(to);
     }
+
+    @Override
+    public Integer departmentTotalPeople(String department) throws SerException {
+        return departmentDetailSer.departmentTotalPeople(department);
+    }
 }
