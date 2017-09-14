@@ -162,7 +162,7 @@ public class EquityGiftSerImpl extends ServiceImpl<EquityGift, EquityGiftDTO> im
         checkPermission();
         searchCondi(equityGiftDTO);
         equityGiftDTO.getSorts().add("createTime=desc");
-        List<EquityGift> equityGifts = super.findByCis(equityGiftDTO);
+        List<EquityGift> equityGifts = super.findByPage(equityGiftDTO);
         return BeanTransform.copyProperties(equityGifts, EquityGiftBO.class);
     }
     /**

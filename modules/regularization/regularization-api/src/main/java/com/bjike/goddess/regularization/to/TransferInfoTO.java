@@ -1,7 +1,11 @@
 package com.bjike.goddess.regularization.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.regularization.type.Assess;
 import com.bjike.goddess.regularization.type.StaffStatus;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 转正人员信息
@@ -13,11 +17,35 @@ import com.bjike.goddess.regularization.type.StaffStatus;
  * @Copy: [ com.bjike ]
  */
 public class TransferInfoTO extends BaseTO {
+    public interface testFollowUp{
 
+    }
+    public interface testWelfareAssess{
+
+    }
+    public interface testPlanAssess{
+
+    }
+    public interface testBudgetAssess{
+
+    }
+    public interface testModuleRespon{
+
+    }
+    public interface testProjectManage{
+
+    }
+    public interface testGenManage{
+
+    }
+    public interface testInterview{
+
+    }
     /**
      * 三天是否跟进
      */
-    private Boolean threeFollow;
+    @NotNull(message = "三天是否跟进不能为空",groups = {TransferInfoTO.testFollowUp.class})
+    private Assess threeFollow;
 
     /**
      * 三天跟进收集的意见
@@ -27,7 +55,8 @@ public class TransferInfoTO extends BaseTO {
     /**
      * 一周内是否跟进
      */
-    private Boolean weekFollow;
+    @NotNull(message = "一周内是否跟进不能为空",groups = {TransferInfoTO.testFollowUp.class})
+    private Assess weekFollow;
 
     /**
      * 一周跟进收集的意见
@@ -37,7 +66,8 @@ public class TransferInfoTO extends BaseTO {
     /**
      * 一个月是否跟进
      */
-    private Boolean monthFollow;
+    @NotNull(message = "一个月是否跟进不能为空",groups = {TransferInfoTO.testFollowUp.class})
+    private Assess monthFollow;
 
     /**
      * 一个月跟进收集的意见
@@ -45,93 +75,81 @@ public class TransferInfoTO extends BaseTO {
     private String monthFollowOpinion;
 
     /**
-     * 状态
-     */
-    private StaffStatus staffStatus;
-
-    /**
-     * 转正申请日期
-     */
-    private String applyDate;
-
-    /**
-     * 截止目前试用期时长
-     */
-    private String asProbationLength;
-
-    /**
-     * 确定事项是否确认
-     */
-    private Boolean confirmEvent;
-
-    /**
-     * 确认人
-     */
-    private String confirmPeople;
-
-    /**
      * 截至申请日期考勤情况
      */
+    @NotBlank(message = "截至申请日期考勤情况不能为空",groups = {TransferInfoTO.testWelfareAssess.class})
     private String applyDateAtten;
 
     /**
      * 奖励处罚情况
      */
+    @NotBlank(message = "奖励处罚情况不能为空",groups = {TransferInfoTO.testWelfareAssess.class})
     private String rewardPunOpinion;
 
     /**
      * 转正后主项技能
      */
+    @NotBlank(message = "转正后主项技能不能为空",groups = {TransferInfoTO.testPlanAssess.class})
     private String additionalSkill;
 
     /**
      * 转正后主项技能等级
      */
+    @NotBlank(message = "转正后主项技能等级不能为空",groups = {TransferInfoTO.testPlanAssess.class})
     private String additionalSkillGrade;
 
     /**
      * 转正后小项技能
      */
+    @NotBlank(message = "转正后小项技能不能为空",groups = {TransferInfoTO.testPlanAssess.class})
     private String eventsSkill;
 
     /**
      * 转正后小项技能等级
      */
+    @NotBlank(message = "转正后小项技能等级不能为空",groups = {TransferInfoTO.testPlanAssess.class})
     private String eventsSkillGrade;
 
     /**
      * 是否符合人员编制
      */
+    @NotNull(message = "是否符合人员编制不能为空",groups = {TransferInfoTO.testPlanAssess.class})
     private Boolean conformStaffing;
 
     /**
      * 收入与成本分析意见
      */
+    @NotBlank(message = "收入与成本分析意见不能为空",groups = {TransferInfoTO.testBudgetAssess.class})
     private String incomeCostOpinion;
 
     /**
      * 模块负责人
      */
+    @NotBlank(message = "模块负责人不能为空",groups = {TransferInfoTO.testModuleRespon.class})
     private String moduleLeader;
 
     /**
      * 模块负责人意见
      */
+    @NotBlank(message = "模块负责人意见不能为空",groups = {TransferInfoTO.testModuleRespon.class})
     private String moduleLeaderOpinion;
 
     /**
      * 项目经理
      */
+    @NotBlank(message = "项目经理不能为空",groups = {TransferInfoTO.testProjectManage.class})
     private String proManage;
 
     /**
      * 项目经理意见
      */
+    @NotBlank(message = "项目经理意见不能为空",groups = {TransferInfoTO.testProjectManage.class})
     private String proManageOpinion;
 
     /**
      * 总经理
      */
+    @NotBlank(message = "项目经理意见不能为空",groups = {TransferInfoTO.testGenManage.class})
     private String generManage;
 
     /**
@@ -142,38 +160,38 @@ public class TransferInfoTO extends BaseTO {
     /**
      * 是否同意转正
      */
+    @NotNull(message = "是否同意转正不能为空",groups = {TransferInfoTO.testGenManage.class})
     private Boolean consentPositive;
 
     /**
      * 转正开始日期
      */
+    @NotBlank(message = "转正开始日期不能为空",groups = {TransferInfoTO.testGenManage.class})
     private String positiveStartDate;
 
     /**
      * 转正是否通过
      */
+    @NotNull(message = "转正是否通过不能为空",groups = {TransferInfoTO.testGenManage.class})
     private Boolean positiveThrough;
-
-    /**
-     * 实际试用期时长
-     */
-    private String praProbationaryPer;
 
     /**
      * 转正情况面谈人
      */
+    @NotNull(message = "转正情况面谈人不能为空",groups = {TransferInfoTO.testInterview.class})
     private String interviewPeper;
 
     /**
      * 面谈内容
      */
+    @NotBlank(message = "面谈内容不能为空",groups = {TransferInfoTO.testInterview.class})
     private String interviewContent;
 
-    public Boolean getThreeFollow() {
+    public Assess getThreeFollow() {
         return threeFollow;
     }
 
-    public void setThreeFollow(Boolean threeFollow) {
+    public void setThreeFollow(Assess threeFollow) {
         this.threeFollow = threeFollow;
     }
 
@@ -185,11 +203,11 @@ public class TransferInfoTO extends BaseTO {
         this.threeFollowOpinion = threeFollowOpinion;
     }
 
-    public Boolean getWeekFollow() {
+    public Assess getWeekFollow() {
         return weekFollow;
     }
 
-    public void setWeekFollow(Boolean weekFollow) {
+    public void setWeekFollow(Assess weekFollow) {
         this.weekFollow = weekFollow;
     }
 
@@ -201,11 +219,11 @@ public class TransferInfoTO extends BaseTO {
         this.weekFollowOpinion = weekFollowOpinion;
     }
 
-    public Boolean getMonthFollow() {
+    public Assess getMonthFollow() {
         return monthFollow;
     }
 
-    public void setMonthFollow(Boolean monthFollow) {
+    public void setMonthFollow(Assess monthFollow) {
         this.monthFollow = monthFollow;
     }
 
@@ -215,46 +233,6 @@ public class TransferInfoTO extends BaseTO {
 
     public void setMonthFollowOpinion(String monthFollowOpinion) {
         this.monthFollowOpinion = monthFollowOpinion;
-    }
-
-    public StaffStatus getStaffStatus() {
-        return staffStatus;
-    }
-
-    public void setStaffStatus(StaffStatus staffStatus) {
-        this.staffStatus = staffStatus;
-    }
-
-    public String getApplyDate() {
-        return applyDate;
-    }
-
-    public void setApplyDate(String applyDate) {
-        this.applyDate = applyDate;
-    }
-
-    public String getAsProbationLength() {
-        return asProbationLength;
-    }
-
-    public void setAsProbationLength(String asProbationLength) {
-        this.asProbationLength = asProbationLength;
-    }
-
-    public Boolean getConfirmEvent() {
-        return confirmEvent;
-    }
-
-    public void setConfirmEvent(Boolean confirmEvent) {
-        this.confirmEvent = confirmEvent;
-    }
-
-    public String getConfirmPeople() {
-        return confirmPeople;
-    }
-
-    public void setConfirmPeople(String confirmPeople) {
-        this.confirmPeople = confirmPeople;
     }
 
     public String getApplyDateAtten() {
@@ -391,14 +369,6 @@ public class TransferInfoTO extends BaseTO {
 
     public void setPositiveThrough(Boolean positiveThrough) {
         this.positiveThrough = positiveThrough;
-    }
-
-    public String getPraProbationaryPer() {
-        return praProbationaryPer;
-    }
-
-    public void setPraProbationaryPer(String praProbationaryPer) {
-        this.praProbationaryPer = praProbationaryPer;
     }
 
     public String getInterviewPeper() {

@@ -109,6 +109,24 @@ public class ShareOutBonusManageAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 一个分红明细
+     *
+     * @param id 分红明细id
+     * @return class ShareOutBonusManageVO
+     * @des 根据id获取分红明细
+     * @version v1
+     */
+    @GetMapping("v1/getDetailById/{id}")
+    public Result getDetailById(@PathVariable String id) throws ActException {
+        try {
+            ShareOutBonusDetailVO shareOutBonusDetailVO = BeanTransform.copyProperties(
+                    shareOutBonusDetailAPI.getOne(id), ShareOutBonusDetailVO.class);
+            return ActResult.initialize(shareOutBonusDetailVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 分红管理列表

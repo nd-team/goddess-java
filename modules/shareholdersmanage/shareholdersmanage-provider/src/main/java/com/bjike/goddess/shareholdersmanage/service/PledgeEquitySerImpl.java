@@ -165,7 +165,7 @@ public class PledgeEquitySerImpl extends ServiceImpl<PledgeEquity, PledgeEquityD
         checkPermission();
         searchCondi(pledgeEquityDTO);
         pledgeEquityDTO.getSorts().add("createTime=desc");
-        List<PledgeEquity> pledgeEquityList = super.findByCis(pledgeEquityDTO);
+        List<PledgeEquity> pledgeEquityList = super.findByPage(pledgeEquityDTO);
         return BeanTransform.copyProperties(pledgeEquityList, PledgeEquityBO.class);
     }
     /**

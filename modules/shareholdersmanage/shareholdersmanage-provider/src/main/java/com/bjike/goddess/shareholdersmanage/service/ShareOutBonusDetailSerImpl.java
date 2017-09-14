@@ -158,7 +158,7 @@ public class ShareOutBonusDetailSerImpl extends ServiceImpl<ShareOutBonusDetail,
         checkPermission();
         ShareOutBonusDetailDTO shareOutBonusDetailDTO = new ShareOutBonusDetailDTO();
         shareOutBonusDetailDTO.getConditions().add(Restrict.eq("shareOutBonusManageId",shareOutBonusManageId));
-        List<ShareOutBonusDetail> shareOutBonusDetails = super.findByCis(shareOutBonusDetailDTO);
+        List<ShareOutBonusDetail> shareOutBonusDetails = super.findByPage(shareOutBonusDetailDTO);
         return BeanTransform.copyProperties(shareOutBonusDetails,ShareOutBonusDetailBO.class);
     }
     @Transactional(rollbackFor = SerException.class)

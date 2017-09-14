@@ -158,6 +158,8 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
         try {
             entryBasicInfo.setCreateTime(LocalDateTime.now());
             super.save(entryBasicInfo);
+            //添加转正人员信息lijuntao
+
         } catch (SerException e) {
             throw new SerException(e.getMessage());
         }
