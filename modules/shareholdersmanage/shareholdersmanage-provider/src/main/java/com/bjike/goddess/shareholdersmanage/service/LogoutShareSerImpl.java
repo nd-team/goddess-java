@@ -166,7 +166,7 @@ public class LogoutShareSerImpl extends ServiceImpl<LogoutShare, LogoutShareDTO>
        checkPermission();
         searchCondi(logoutShareDTO);
         logoutShareDTO.getSorts().add("createTime=desc");
-        List<LogoutShare> logoutShares = super.findByCis(logoutShareDTO);
+        List<LogoutShare> logoutShares = super.findByPage(logoutShareDTO);
         return BeanTransform.copyProperties(logoutShares, LogoutShareBO.class);
     }
 

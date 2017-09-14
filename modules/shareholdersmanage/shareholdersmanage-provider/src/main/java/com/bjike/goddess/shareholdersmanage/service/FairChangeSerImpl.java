@@ -166,7 +166,7 @@ public class FairChangeSerImpl extends ServiceImpl<FairChange, FairChangeDTO> im
         checkPermission();
         searchCondi(fairChangeDTO);
         fairChangeDTO.getSorts().add("createTime=desc");
-        List<FairChange> equityGifts = super.findByCis(fairChangeDTO);
+        List<FairChange> equityGifts = super.findByPage(fairChangeDTO);
         return BeanTransform.copyProperties(equityGifts, FairChangeBO.class);
     }
     /**

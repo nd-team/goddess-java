@@ -161,7 +161,7 @@ public class EquityTransactRecordDetailSerImpl extends ServiceImpl<EquityTransac
         List<EquityTransactRecordDetailBO> equityTransactRecordDetailBOS = new ArrayList<>();
         EquityTransactRecordDetailDTO equityTransactRecordDetailDTO = new EquityTransactRecordDetailDTO();
         equityTransactRecordDetailDTO.getConditions().add(Restrict.eq("shareholderName",shareholderName));
-        List<EquityTransactRecordDetail> equityTransactRecordDetails = super.findByCis(equityTransactRecordDetailDTO);
+        List<EquityTransactRecordDetail> equityTransactRecordDetails = super.findByPage(equityTransactRecordDetailDTO);
         equityTransactRecordDetailBOS = BeanTransform.copyProperties(equityTransactRecordDetails, EquityTransactRecordDetailBO.class);
         EquityTransactRecordDetailBO equityTransactRecordDetailBO1 = new EquityTransactRecordDetailBO();
         Double totalAmount = equityTransactRecordDetailBOS.stream().mapToDouble(e->e.getAmount()).sum();

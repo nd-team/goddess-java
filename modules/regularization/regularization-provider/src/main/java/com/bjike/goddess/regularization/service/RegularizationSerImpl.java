@@ -11,13 +11,16 @@ import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.regularization.bo.ManagementScoreBO;
 import com.bjike.goddess.regularization.bo.RegularizationBO;
+import com.bjike.goddess.regularization.bo.TransferInfoBO;
 import com.bjike.goddess.regularization.dto.ManagementScoreDTO;
 import com.bjike.goddess.regularization.dto.RegularizationDTO;
 import com.bjike.goddess.regularization.entity.ManagementScore;
 import com.bjike.goddess.regularization.entity.Regularization;
+import com.bjike.goddess.regularization.entity.TransferInfo;
 import com.bjike.goddess.regularization.excel.SonPermissionObject;
 import com.bjike.goddess.regularization.to.*;
 import com.bjike.goddess.regularization.type.GuideAddrStatus;
+import com.bjike.goddess.regularization.type.StaffStatus;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.bo.EntryOptionBO;
 import com.bjike.goddess.user.api.UserAPI;
@@ -69,7 +72,29 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private TransferInfoSer transferInfoSer;
 
+    /**
+     * 检查员工转正查看权限(模块)
+     *
+     * @throws SerException
+     */
+    private Boolean checkzzSeePermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("3");
+        } else {
+            flag = true;
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+        return flag;
+    }
 
     /**
      * 检查权限(部门)
@@ -80,8 +105,8 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
-        RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
+        RpcTransmit.transmitUserToken(userToken);
         if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.busCusPermission("1");
         } else {
@@ -118,18 +143,18 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     }
 
     /**
-     * 检查权限(模块)
+     * 检查权限(福利模块考察)
      *
      * @throws SerException
      */
-    private void checkModPermission() throws SerException {
+    private void checkModWPermission() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("3");
+            flag = cusPermissionSer.getCusPermission("4");
         } else {
             flag = true;
         }
@@ -141,28 +166,75 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     }
 
     /**
-     * 检查员工转正查看权限(模块)
+     * 检查权限(规划模块考察)
      *
      * @throws SerException
      */
-    private Boolean checkzzSeePermission() throws SerException {
+    private void checkModPPermission() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("3");
+            flag = cusPermissionSer.getCusPermission("5");
         } else {
             flag = true;
         }
+        if (!flag) {
+            throw new SerException("您不是相关人员，没有该操作权限");
+        }
         RpcTransmit.transmitUserToken(userToken);
 
-        return flag;
     }
 
     /**
-     * 检查权限(岗位)
+     * 检查权限(预算模块考察)
+     *
+     * @throws SerException
+     */
+    private void checkModBPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("6");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是相关人员，没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 检查权限(模块负责人审核)
+     *
+     * @throws SerException
+     */
+    private void checkModPepolPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.jobsCusPermission("7");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是模块负责人,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 检查权限(总经理岗位)
      *
      * @throws SerException
      */
@@ -173,7 +245,30 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.jobsCusPermission("4");
+            flag = cusPermissionSer.jobsCusPermission("3");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是总经理,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 检查权限(项目经理岗位)
+     *
+     * @throws SerException
+     */
+    private void checkManagePermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.jobsCusPermission("8");
         } else {
             flag = true;
         }
@@ -218,17 +313,79 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         return flag;
     }
 
+
     /**
-     * 核对模块审核权限（模块级别）
+     * 检查权限(福利模块考察)
+     *
+     * @throws SerException
      */
-    private Boolean guideMondIdentity() throws SerException {
+    private Boolean guideModWIdentity() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("3");
+            flag = cusPermissionSer.getCusPermission("4");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 检查权限(规划模块考察)
+     *
+     * @throws SerException
+     */
+    private Boolean guideModPIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("5");
+        } else {
+            flag = true;
+        }
+        return flag;
+
+    }
+
+    /**
+     * 检查权限(预算模块考察)
+     *
+     * @throws SerException
+     */
+    private Boolean guideModBIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("6");
+        } else {
+            flag = true;
+        }
+        return flag;
+
+    }
+
+    /**
+     * 核对模块负责人审核权限(岗位级别)
+     *
+     * @throws SerException
+     */
+    private Boolean guideModPepolIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.jobsCusPermission("7");
         } else {
             flag = true;
         }
@@ -245,7 +402,26 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.jobsCusPermission("4");
+            flag = cusPermissionSer.jobsCusPermission("3");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对项目经理审核权限(岗位)
+     *
+     * @throws SerException
+     */
+    private Boolean guideManageIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.jobsCusPermission("8");
         } else {
             flag = true;
         }
@@ -256,9 +432,9 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
      * 权限
      */
     private Boolean guideAllTrueIdentity() throws SerException {
-
         return true;
     }
+
 
 
     @Override
@@ -268,7 +444,9 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         String userToken = RpcTransmit.getUserToken();
         Boolean flagGuide = guideIdentity();
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagGuideMod = guideMondIdentity();
+        Boolean flagGuideModP = guideModPIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagGuideModB = guideModBIdentity();
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagGuidePosi = guidePosinIdentity();
         RpcTransmit.transmitUserToken(userToken);
@@ -282,7 +460,7 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         obj = new SonPermissionObject();
         obj.setName("regularization");
         obj.setDescribesion("员工转正");
-        if (flagGuide || flagGuideMod || flagGuidePosi || flagGuideArr || flagAllTrue) {
+        if (flagGuide || flagGuideModP || flagGuideModB || flagGuidePosi || flagGuideArr || flagAllTrue) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -366,12 +544,30 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
                 flag = guideArrIdentity();
                 break;
             case PLANMODUL:
-                flag = guideMondIdentity();
+                flag = guideModPIdentity();
                 break;
             case BUDGETMODUL:
-                flag = guideMondIdentity();
+                flag = guideModBIdentity();
                 break;
             case AUDIT:
+                flag = guidePosinIdentity();
+                break;
+            case WELFAREASSESS:
+                flag = guideModWIdentity();
+                break;
+            case PLANASSESS:
+                flag = guideModPIdentity();
+                break;
+            case BUDGETASSESS:
+                flag = guideModBIdentity();
+                break;
+            case MODULERESPON:
+                flag = guideModPepolIdentity();
+                break;
+            case PROJECTMANAGE:
+                flag = guideManageIdentity();
+                break;
+            case GENMANAGE:
                 flag = guidePosinIdentity();
                 break;
             default:
@@ -423,6 +619,16 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         entity.setAsProbationLength(monthDiff);
         entity = super.save(entity);
         RegularizationBO bo = BeanTransform.copyProperties(entity, RegularizationBO.class);
+        //将转正信息添加到转正人员信息中
+        TransferInfoBO transferInfoBO = transferInfoSer.findByEmpNo(to.getEmpNo());
+        TransferInfo transferInfo = transferInfoSer.findById(transferInfoBO.getId());
+        transferInfo.setModifyTime(LocalDateTime.now());
+        transferInfo.setStaffStatus(StaffStatus.POSITIVE);
+        transferInfo.setApplyDate(entity.getRegularDate());
+        transferInfo.setAsProbationLength(entity.getAsProbationLength());
+        transferInfo.setConfirmEvent(entity.getConfirmEvent());
+        transferInfo.setConfirmPeople(entity.getConfirmPeople());
+        transferInfoSer.update(transferInfo);
         return bo;
     }
 
@@ -458,6 +664,7 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         BeanTransform.copyProperties(to, model, true);
         model.setModifyTime(LocalDateTime.now());
         super.update(model);
+        //TODO 将修改的转正信息修改到转正人员信息中 lijuntao 由于不知道怎么处理状态
     }
 
     /**
@@ -470,8 +677,10 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     @Transactional(rollbackFor = {SerException.class})
     public void remove(String id) throws SerException {
         checkPermission();
+        Regularization regularization = super.findById(id);
         removeManageScore(id);
         super.remove(id);
+        //TODO 删除转正信息时修改到转正人员信息中 lijuntao 由于不知道怎么处理状态
     }
 
     /**
@@ -600,7 +809,7 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void planModuleSupply(PlanModuleSupplyTO to) throws SerException {
-        checkModPermission();
+        checkModPPermission();
         String curUsername = getCurUsername();
         Regularization model = super.findById(to.getId());
         if (model == null) {
@@ -623,7 +832,7 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void budgetModuleSupply(String id, String budgetPositiveComment) throws SerException {
-        checkModPermission();
+        checkModBPermission();
         String curUsername = getCurUsername();
         Regularization model = super.findById(id);
         if (model == null) {
@@ -741,6 +950,20 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
             time = regularizations.get(0).getPositiveDate().toString();
         }
         return time;
+    }
+
+    @Override
+    public Boolean checkTran(String userName) throws SerException {
+        Boolean bool = false;
+        RegularizationDTO dto = new RegularizationDTO();
+        dto.getConditions().add(Restrict.eq("name", userName));
+        List<Regularization> regularizations = super.findByCis(dto);
+        if (!CollectionUtils.isEmpty(regularizations)) {
+            if(regularizations.get(0).getPassed()){
+                bool=true;
+            }
+        }
+        return bool;
     }
 
 }

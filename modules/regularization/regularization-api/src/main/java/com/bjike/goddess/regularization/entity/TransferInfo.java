@@ -1,6 +1,7 @@
 package com.bjike.goddess.regularization.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.regularization.type.Assess;
 import com.bjike.goddess.regularization.type.StaffStatus;
 
 import javax.persistence.Column;
@@ -97,8 +98,8 @@ public class TransferInfo extends BaseEntity {
     /**
      * 三天是否跟进
      */
-    @Column(name = "is_threeFollow", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '三天是否跟进'", insertable = false)
-    private Boolean threeFollow;
+    @Column(name = "is_threeFollow", columnDefinition = "INT(2)  COMMENT '三天是否跟进'")
+    private Assess threeFollow;
 
     /**
      * 三天跟进收集的意见
@@ -109,8 +110,8 @@ public class TransferInfo extends BaseEntity {
     /**
      * 一周内是否跟进
      */
-    @Column(name = "is_weekFollow", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '一周内是否跟进'", insertable = false)
-    private Boolean weekFollow;
+    @Column(name = "is_weekFollow", columnDefinition = "INT(2)  COMMENT '一周内是否跟进'")
+    private Assess weekFollow;
 
     /**
      * 一周跟进收集的意见
@@ -121,8 +122,8 @@ public class TransferInfo extends BaseEntity {
     /**
      * 一个月是否跟进
      */
-    @Column(name = "is_monthFollow", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '一个月是否跟进'", insertable = false)
-    private Boolean monthFollow;
+    @Column(name = "is_monthFollow", columnDefinition = "INT(2)  COMMENT '一个月是否跟进'")
+    private Assess monthFollow;
 
     /**
      * 一个月跟进收集的意见
@@ -145,8 +146,8 @@ public class TransferInfo extends BaseEntity {
     /**
      * 截止目前试用期时长
      */
-    @Column(name = "asProbationLength", columnDefinition = "VARCHAR(255)   COMMENT '截止目前试用期时长'")
-    private String asProbationLength;
+    @Column(name = "asProbationLength", columnDefinition = "TINYINT(2)   COMMENT '截止目前试用期时长'")
+    private Integer asProbationLength;
 
     /**
      * 确定事项是否确认
@@ -265,8 +266,8 @@ public class TransferInfo extends BaseEntity {
     /**
      * 实际试用期时长
      */
-    @Column(name = "praProbationaryPer", columnDefinition = "VARCHAR(255)   COMMENT '实际试用期时长'")
-    private String praProbationaryPer;
+    @Column(name = "praProbationaryPer", columnDefinition = "TINYINT(2)   COMMENT '实际试用期时长'")
+    private Integer praProbationaryPer;
 
     /**
      * 转正情况面谈人
@@ -377,11 +378,11 @@ public class TransferInfo extends BaseEntity {
         this.probationDue = probationDue;
     }
 
-    public Boolean getThreeFollow() {
+    public Assess getThreeFollow() {
         return threeFollow;
     }
 
-    public void setThreeFollow(Boolean threeFollow) {
+    public void setThreeFollow(Assess threeFollow) {
         this.threeFollow = threeFollow;
     }
 
@@ -393,11 +394,11 @@ public class TransferInfo extends BaseEntity {
         this.threeFollowOpinion = threeFollowOpinion;
     }
 
-    public Boolean getWeekFollow() {
+    public Assess getWeekFollow() {
         return weekFollow;
     }
 
-    public void setWeekFollow(Boolean weekFollow) {
+    public void setWeekFollow(Assess weekFollow) {
         this.weekFollow = weekFollow;
     }
 
@@ -409,11 +410,11 @@ public class TransferInfo extends BaseEntity {
         this.weekFollowOpinion = weekFollowOpinion;
     }
 
-    public Boolean getMonthFollow() {
+    public Assess getMonthFollow() {
         return monthFollow;
     }
 
-    public void setMonthFollow(Boolean monthFollow) {
+    public void setMonthFollow(Assess monthFollow) {
         this.monthFollow = monthFollow;
     }
 
@@ -441,11 +442,11 @@ public class TransferInfo extends BaseEntity {
         this.applyDate = applyDate;
     }
 
-    public String getAsProbationLength() {
+    public Integer getAsProbationLength() {
         return asProbationLength;
     }
 
-    public void setAsProbationLength(String asProbationLength) {
+    public void setAsProbationLength(Integer asProbationLength) {
         this.asProbationLength = asProbationLength;
     }
 
@@ -601,11 +602,11 @@ public class TransferInfo extends BaseEntity {
         this.positiveThrough = positiveThrough;
     }
 
-    public String getPraProbationaryPer() {
+    public Integer getPraProbationaryPer() {
         return praProbationaryPer;
     }
 
-    public void setPraProbationaryPer(String praProbationaryPer) {
+    public void setPraProbationaryPer(Integer praProbationaryPer) {
         this.praProbationaryPer = praProbationaryPer;
     }
 
