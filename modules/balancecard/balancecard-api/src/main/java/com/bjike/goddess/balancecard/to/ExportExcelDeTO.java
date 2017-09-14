@@ -1,7 +1,9 @@
 package com.bjike.goddess.balancecard.to;
 
 
+import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 维度指标设置
