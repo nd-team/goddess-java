@@ -293,6 +293,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
             bo.setBusinessType(str.getBusinessType());
             bo.setBusinessCooperate(str.getBusinessCooperate());
             bo.setContractProperty(str.getContractProperty());
+            bo.setRemark( str.getRemark());
             siginManageBOS.add(bo);
         });
         return siginManageBOS;

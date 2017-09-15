@@ -186,6 +186,7 @@ public class SiginManageAction extends BaseFileAction {
                 vo.setBusinessType(str.getBusinessType());
                 vo.setBusinessCooperate(str.getBusinessCooperate());
                 vo.setContractProperty(str.getContractProperty());
+                vo.setRemark(str.getRemark());
                 siginManageVOList.add(vo);
             });
 
