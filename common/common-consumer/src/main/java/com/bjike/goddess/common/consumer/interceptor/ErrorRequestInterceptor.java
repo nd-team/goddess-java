@@ -2,10 +2,16 @@ package com.bjike.goddess.common.consumer.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.consumer.restful.ActResult;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +21,21 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Component
 public class ErrorRequestInterceptor implements HandlerInterceptor {
+
+    private static Logger CONSOLE = LoggerFactory.getLogger(ErrorRequestInterceptor.class);
+
+    @Autowired
+    private Environment environment;
+
+    @PostConstruct
+    public void init(){
+        if(StringUtils.isBlank(environment.getProperty("spring.application.name"))){
+            CONSOLE.error(ModuleInfo.MODULE_NAME);
+        }else{
+            ModuleInfo.MODULE_NAME = environment.getProperty("spring.application.name");
+        }
+
+    }
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
@@ -31,7 +52,8 @@ public class ErrorRequestInterceptor implements HandlerInterceptor {
                 result.setMsg("请求方式不支持,请检查.");
             }
             result.setCode(httpServletResponse.getStatus());
-            httpServletResponse.getWriter().print(result.toString());
+            result.setData(ModuleInfo.MODULE_NAME.toString());
+            httpServletResponse.getWriter().print(JSON.toJSONString(result));
             return false;
         }
         return true;

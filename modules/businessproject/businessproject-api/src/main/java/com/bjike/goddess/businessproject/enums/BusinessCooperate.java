@@ -31,7 +31,12 @@ public enum BusinessCooperate {
      * 销售合同
      */
     @ExcelValue(name = "销售合同")
-    SALECONTRACT(3);
+    SALECONTRACT(3),
+    /**
+     * 背靠背
+     */
+    @ExcelValue(name = "背靠背")
+    BACKTOBACK(4);
 
     private int code;
 
@@ -56,6 +61,8 @@ public enum BusinessCooperate {
         }
         if (code == BusinessCooperate.SALECONTRACT.getCode()) {
             businessCooperate = BusinessCooperate.SALECONTRACT;
+        }if (code == BusinessCooperate.BACKTOBACK.getCode()) {
+            businessCooperate = BusinessCooperate.BACKTOBACK;
         }
         return businessCooperate;
     }
@@ -73,6 +80,8 @@ public enum BusinessCooperate {
         }
         if (code == BusinessCooperate.SALECONTRACT.getCode()) {
             name = "销售合同";
+        }if (code == BusinessCooperate.BACKTOBACK.getCode()) {
+            name = "背靠背";
         }
         return name;
     }
@@ -90,6 +99,8 @@ public enum BusinessCooperate {
         }
         if (BusinessCooperate.SALECONTRACT.equals(businessCooperate)) {
             name = "XS";
+        }if (BusinessCooperate.BACKTOBACK.equals(businessCooperate)) {
+            name = "BKB";
         }
         return name;
     }
@@ -107,6 +118,8 @@ public enum BusinessCooperate {
         }
         if (businessCooperate.equals(BusinessCooperate.SALECONTRACT)) {
             name = "销售合同";
+        } if (businessCooperate.equals(BusinessCooperate.BACKTOBACK)) {
+            name = "背靠背";
         }
         return name;
     }

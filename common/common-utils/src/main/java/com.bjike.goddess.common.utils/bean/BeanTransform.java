@@ -314,6 +314,7 @@ public class BeanTransform {
 
     }
 
+
     private static boolean excludeField(String[] excludes, Field field) {
         boolean has_ex = false;
         for (String exclude : excludes) {

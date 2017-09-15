@@ -78,7 +78,7 @@ public class SiginManageExcel extends BaseTO {
     /**
      * 完工时间
      */
-    @ExcelHeader(name = "完工时间",notNull = true)
+    @ExcelHeader(name = "完工时间")
     private LocalDate endProjectTime;
 
     /**
