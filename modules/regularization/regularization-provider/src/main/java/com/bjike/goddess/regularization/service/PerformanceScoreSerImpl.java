@@ -53,8 +53,8 @@ public class PerformanceScoreSerImpl extends ServiceImpl<PerformanceScore, Perfo
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
-        RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
+        RpcTransmit.transmitUserToken(userToken);
         if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.busCusPermission("1");
         } else {
@@ -91,18 +91,18 @@ public class PerformanceScoreSerImpl extends ServiceImpl<PerformanceScore, Perfo
     }
 
     /**
-     * 检查权限(模块)
+     * 检查权限(福利模块考察)
      *
      * @throws SerException
      */
-    private void checkModPermission() throws SerException {
+    private void checkModWPermission() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("3");
+            flag = cusPermissionSer.getCusPermission("4");
         } else {
             flag = true;
         }
@@ -114,28 +114,75 @@ public class PerformanceScoreSerImpl extends ServiceImpl<PerformanceScore, Perfo
     }
 
     /**
-     * 检查员工转正查看权限(模块)
+     * 检查权限(规划模块考察)
      *
      * @throws SerException
      */
-    private Boolean checkzzSeePermission() throws SerException {
+    private void checkModPPermission() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("3");
+            flag = cusPermissionSer.getCusPermission("5");
         } else {
             flag = true;
         }
+        if (!flag) {
+            throw new SerException("您不是相关人员，没有该操作权限");
+        }
         RpcTransmit.transmitUserToken(userToken);
 
-        return flag;
     }
 
     /**
-     * 检查权限(岗位)
+     * 检查权限(预算模块考察)
+     *
+     * @throws SerException
+     */
+    private void checkModBPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("6");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是相关人员，没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 检查权限(模块负责人审核)
+     *
+     * @throws SerException
+     */
+    private void checkModPepolPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.jobsCusPermission("7");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是模块负责人,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 检查权限(总经理岗位)
      *
      * @throws SerException
      */
@@ -146,7 +193,30 @@ public class PerformanceScoreSerImpl extends ServiceImpl<PerformanceScore, Perfo
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.jobsCusPermission("4");
+            flag = cusPermissionSer.jobsCusPermission("3");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是总经理,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 检查权限(项目经理岗位)
+     *
+     * @throws SerException
+     */
+    private void checkManagePermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.jobsCusPermission("8");
         } else {
             flag = true;
         }
@@ -191,17 +261,79 @@ public class PerformanceScoreSerImpl extends ServiceImpl<PerformanceScore, Perfo
         return flag;
     }
 
+
     /**
-     * 核对模块审核权限（模块级别）
+     * 检查权限(福利模块考察)
+     *
+     * @throws SerException
      */
-    private Boolean guideMondIdentity() throws SerException {
+    private Boolean guideModWIdentity() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("3");
+            flag = cusPermissionSer.getCusPermission("4");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 检查权限(规划模块考察)
+     *
+     * @throws SerException
+     */
+    private Boolean guideModPIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("5");
+        } else {
+            flag = true;
+        }
+        return flag;
+
+    }
+
+    /**
+     * 检查权限(预算模块考察)
+     *
+     * @throws SerException
+     */
+    private Boolean guideModBIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("6");
+        } else {
+            flag = true;
+        }
+        return flag;
+
+    }
+
+    /**
+     * 核对模块负责人审核权限(岗位级别)
+     *
+     * @throws SerException
+     */
+    private Boolean guideModPepolIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.jobsCusPermission("7");
         } else {
             flag = true;
         }
@@ -218,7 +350,7 @@ public class PerformanceScoreSerImpl extends ServiceImpl<PerformanceScore, Perfo
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.jobsCusPermission("4");
+            flag = cusPermissionSer.jobsCusPermission("3");
         } else {
             flag = true;
         }
@@ -226,11 +358,22 @@ public class PerformanceScoreSerImpl extends ServiceImpl<PerformanceScore, Perfo
     }
 
     /**
-     * 权限
+     * 核对项目经理审核权限(岗位)
+     *
+     * @throws SerException
      */
-    private Boolean guideAllTrueIdentity() throws SerException {
-
-        return true;
+    private Boolean guideManageIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.jobsCusPermission("8");
+        } else {
+            flag = true;
+        }
+        return flag;
     }
 
     @Override
@@ -238,17 +381,18 @@ public class PerformanceScoreSerImpl extends ServiceImpl<PerformanceScore, Perfo
         String userToken = RpcTransmit.getUserToken();
         Boolean flagGuide = guideIdentity();
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagGuideMod = guideMondIdentity();
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagGuidePosi = guidePosinIdentity();
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagGuideArr = guideArrIdentity();
-        RpcTransmit.transmitUserToken(userToken);
-        if (flagGuide || flagGuideMod || flagGuidePosi || flagGuideArr) {
+        if (flagGuide) {
             return true;
         } else {
             return false;
         }
+    }
+
+    /**
+     * 权限
+     */
+    private Boolean guideAllTrueIdentity() throws SerException {
+        return true;
     }
 
     @Override
@@ -285,12 +429,30 @@ public class PerformanceScoreSerImpl extends ServiceImpl<PerformanceScore, Perfo
                 flag = guideArrIdentity();
                 break;
             case PLANMODUL:
-                flag = guideMondIdentity();
+                flag = guideModPIdentity();
                 break;
             case BUDGETMODUL:
-                flag = guideMondIdentity();
+                flag = guideModBIdentity();
                 break;
             case AUDIT:
+                flag = guidePosinIdentity();
+                break;
+            case WELFAREASSESS:
+                flag = guideModWIdentity();
+                break;
+            case PLANASSESS:
+                flag = guideModPIdentity();
+                break;
+            case BUDGETASSESS:
+                flag = guideModBIdentity();
+                break;
+            case MODULERESPON:
+                flag = guideModPepolIdentity();
+                break;
+            case PROJECTMANAGE:
+                flag = guideManageIdentity();
+                break;
+            case GENMANAGE:
                 flag = guidePosinIdentity();
                 break;
             default:

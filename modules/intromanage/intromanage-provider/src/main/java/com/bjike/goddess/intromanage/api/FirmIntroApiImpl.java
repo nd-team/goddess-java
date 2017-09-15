@@ -135,4 +135,14 @@ public class FirmIntroApiImpl implements FirmIntroAPI {
     public Set<BussinesBO> moneyByName(String name) throws SerException {
         return firmIntroSer.moneyByName(name);
     }
+
+    @Override
+    public void congealFirmin(String id) throws SerException {
+        firmIntroSer.congealFirmin(id);
+    }
+
+    @Override
+    public void thawFirmin(String id) throws SerException {
+        firmIntroSer.thawFirmin(id);
+    }
 }

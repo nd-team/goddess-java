@@ -2,13 +2,10 @@ package com.bjike.goddess.managepromotion.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.managepromotion.bo.CollectBO;
-import com.bjike.goddess.managepromotion.bo.EmployeePromotedBO;
+import com.bjike.goddess.managepromotion.bo.*;
 import com.bjike.goddess.managepromotion.dto.EmployeePromotedDTO;
 import com.bjike.goddess.managepromotion.entity.EmployeePromoted;
-import com.bjike.goddess.managepromotion.to.CollectTO;
-import com.bjike.goddess.managepromotion.to.EmployeePromotedTO;
-import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
+import com.bjike.goddess.managepromotion.to.*;
 
 import java.util.List;
 
@@ -28,12 +25,14 @@ public interface EmployeePromotedSer extends Ser<EmployeePromoted, EmployeePromo
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 员工已晋升情况列表总条数
      */
@@ -102,6 +101,7 @@ public interface EmployeePromotedSer extends Ser<EmployeePromoted, EmployeePromo
     default List<CollectBO> collect(CollectTO to) throws SerException {
         return null;
     }
+
     /**
      * 获取所有姓名
      *
@@ -110,12 +110,134 @@ public interface EmployeePromotedSer extends Ser<EmployeePromoted, EmployeePromo
     default List<String> getName() throws SerException {
         return null;
     }
+
     /**
      * 获取所有状态
      *
      * @throws SerException
      */
     default List<String> getStatus() throws SerException {
+        return null;
+    }
+
+    /**
+     * 技能晋升明细周汇总
+     *
+     * @param to to
+     * @return class SkillPromotionDetailCollectBO
+     * @throws SerException
+     */
+    default List<SkillPromotionDetailCollectBO> detailWeekCollect(SkillPromotionDetailCollectTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 技能晋升明细月汇总
+     *
+     * @param to to
+     * @return class SkillPromotionDetailCollectBO
+     * @throws SerException
+     */
+    default List<SkillPromotionDetailCollectBO> detailMonthCollect(SkillPromotionDetailCollectTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 技能晋升明细累计汇总
+     *
+     * @param to to
+     * @return class SkillPromotionDetailCollectBO
+     * @throws SerException
+     */
+    default List<SkillPromotionDetailCollectBO> detailTotalCollect(SkillPromotionDetailCollectTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 各专业技能日汇总
+     *
+     * @param to to
+     * @return class ProfessionalSkillCollectBO
+     * @throws SerException
+     */
+    default List<ProfessionalSkillCollectBO> dayProfessionalCollect(ProfessionalSkillTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 各专业技能周汇总
+     *
+     * @param to to
+     * @return class ProfessionalSkillCollectBO
+     * @throws SerException
+     */
+    default List<ProfessionalSkillCollectBO> weekProfessionalCollect(ProfessionalSkillTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 各专业技能月汇总
+     *
+     * @param to to
+     * @return class ProfessionalSkillCollectBO
+     * @throws SerException
+     */
+    default List<ProfessionalSkillCollectBO> monthProfessionalCollect(ProfessionalSkillTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 各专业技能累计汇总
+     *
+     * @param to to
+     * @return class ProfessionalSkillCollectBO
+     * @throws SerException
+     */
+    default List<ProfessionalSkillCollectBO> totalProfessionalCollect(ProfessionalSkillTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 人员技能&晋升日汇总
+     *
+     * @param to to
+     * @return class StaffSkillCollectBO
+     * @throws SerException
+     */
+    default List<StaffSkillCollectBO> dayStaffCollect(StaffSkillCollectTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 人员技能&晋升周汇总
+     *
+     * @param to to
+     * @return class StaffSkillCollectBO
+     * @throws SerException
+     */
+    default List<StaffSkillCollectBO> weekStaffCollect(StaffSkillCollectTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 人员技能&晋升月汇总
+     *
+     * @param to to
+     * @return class StaffSkillCollectBO
+     * @throws SerException
+     */
+    default List<StaffSkillCollectBO> monthStaffCollect(StaffSkillCollectTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 人员技能&晋升累计汇总
+     *
+     * @param to to
+     * @return class StaffSkillCollectBO
+     * @throws SerException
+     */
+    default List<StaffSkillCollectBO> totalStaffCollect(StaffSkillCollectTO to) throws SerException {
         return null;
     }
 }

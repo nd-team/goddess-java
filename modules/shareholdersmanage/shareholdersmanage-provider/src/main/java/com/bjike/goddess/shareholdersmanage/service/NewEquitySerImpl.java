@@ -165,7 +165,7 @@ public class NewEquitySerImpl extends ServiceImpl<NewEquity, NewEquityDTO> imple
        checkPermission();
         searchCondi(newEquityDTO);
         newEquityDTO.getSorts().add("createTime=desc");
-        List<NewEquity> newEquities = super.findByCis(newEquityDTO);
+        List<NewEquity> newEquities = super.findByPage(newEquityDTO);
         return BeanTransform.copyProperties(newEquities, NewEquityBO.class);
     }
 

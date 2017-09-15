@@ -22,16 +22,27 @@ import java.time.LocalDate;
 public class OverviewSkillLevel extends BaseEntity {
 
     /**
+     * 年份
+     */
+    @Column(name = "year", columnDefinition = "INT(11)   COMMENT '年份'")
+    private Integer year;
+    /**
+     * 月份
+     */
+    @Column(name = "month", columnDefinition = "INT(11)   COMMENT '月份'")
+    private Integer month;
+    /**
      * 地区
      */
     @Column(name = "area", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
 
     /**
-     * 体系
+     * 姓名
      */
-    @Column(name = "system", columnDefinition = "VARCHAR(255)   COMMENT '体系'")
-    private String system;
+    @Column(name = "name", columnDefinition = "VARCHAR(255)   COMMENT '姓名'")
+    private String name;
+
 
     /**
      * 部门
@@ -44,36 +55,49 @@ public class OverviewSkillLevel extends BaseEntity {
      */
     @Column(name = "jobs", columnDefinition = "VARCHAR(255)   COMMENT '岗位'")
     private String jobs;
+    /**
+     * 岗位层级
+     */
+    @Column(name = "postHierarchy", columnDefinition = "VARCHAR(255)   COMMENT '岗位层级'")
+    private String postHierarchy;
+    /**
+     * 入职时间
+     */
+    @Column(name = "entryTime", columnDefinition = "DATE   COMMENT '入职时间'")
+    private LocalDate entryTime;
+    /**
+     * 转正时间
+     */
+    @Column(name = "positiveTime", columnDefinition = "DATE   COMMENT '转正时间'")
+    private LocalDate positiveTime;
+    /**
+     * 在职时间（月）
+     */
+    @Column(name = "workingTime", columnDefinition = "VARCHAR(255)   COMMENT '在职时间（月）'")
+    private String workingTime ;
+    /**
+     * 技能项
+     */
+    @Column(name = "skill", columnDefinition = "VARCHAR(255)   COMMENT '技能项'")
+    private String skill;
 
     /**
-     * 姓名
+     * 技能专业
      */
-    @Column(name = "name", columnDefinition = "VARCHAR(255)   COMMENT '姓名'")
-    private String name;
-
-    /**
-     * 技能定位-专业（业务范围包含的技能）
-     */
-    @Column(name = "major", columnDefinition = "VARCHAR(255)   COMMENT '技能定位-专业（业务范围包含的技能）'")
+    @Column(name = "major", columnDefinition = "VARCHAR(255)   COMMENT '技能专业'")
     private String major;
 
     /**
-     * 小项主项技能等级
+     * 技能级别
      */
-    @Column(name = "minorMasterSkillLevel", columnDefinition = "VARCHAR(255)   COMMENT '小项主项技能等级'")
-    private String minorMasterSkillLevel;
+    @Column(name = "grade", columnDefinition = "VARCHAR(255)   COMMENT '技能级别'")
+    private String grade;
 
     /**
      * 转正技能等级
      */
     @Column(name = "transferSkillLevel", columnDefinition = "VARCHAR(255)   COMMENT '转正技能等级'")
     private String transferSkillLevel;
-
-    /**
-     * 转正时间
-     */
-    @Column(name = "positiveTime", columnDefinition = "DATE   COMMENT '转正时间'")
-    private LocalDate positiveTime;
 
     /**
      * 获取时间
@@ -84,21 +108,24 @@ public class OverviewSkillLevel extends BaseEntity {
     /**
      * 已晋升次数
      */
-    @Column( columnDefinition = "VARCHAR(255)   COMMENT '已晋升次数'")
+    @Column( columnDefinition = "INT(11)   COMMENT '已晋升次数'")
     private Integer promotedNumber;
 
-    /**
-     * 主项/小项（是否为主项）
-     */
-    @Column(name = "is_subject", columnDefinition = "TINYINT(2)  COMMENT '主项/小项（是否为主项）'")
-    private Boolean subject;
+    public Integer getYear() {
+        return year;
+    }
 
-    /**
-     * 小项顺序
-     */
-    @Column( columnDefinition = "VARCHAR(255)   COMMENT '小项顺序'")
-    private Integer orderEvent;
+    public void setYear(Integer year) {
+        this.year = year;
+    }
 
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
+    }
 
     public String getArea() {
         return area;
@@ -108,12 +135,12 @@ public class OverviewSkillLevel extends BaseEntity {
         this.area = area;
     }
 
-    public String getSystem() {
-        return system;
+    public String getName() {
+        return name;
     }
 
-    public void setSystem(String system) {
-        this.system = system;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDepartment() {
@@ -132,12 +159,44 @@ public class OverviewSkillLevel extends BaseEntity {
         this.jobs = jobs;
     }
 
-    public String getName() {
-        return name;
+    public String getPostHierarchy() {
+        return postHierarchy;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPostHierarchy(String postHierarchy) {
+        this.postHierarchy = postHierarchy;
+    }
+
+    public LocalDate getEntryTime() {
+        return entryTime;
+    }
+
+    public void setEntryTime(LocalDate entryTime) {
+        this.entryTime = entryTime;
+    }
+
+    public LocalDate getPositiveTime() {
+        return positiveTime;
+    }
+
+    public void setPositiveTime(LocalDate positiveTime) {
+        this.positiveTime = positiveTime;
+    }
+
+    public String getWorkingTime() {
+        return workingTime;
+    }
+
+    public void setWorkingTime(String workingTime) {
+        this.workingTime = workingTime;
+    }
+
+    public String getSkill() {
+        return skill;
+    }
+
+    public void setSkill(String skill) {
+        this.skill = skill;
     }
 
     public String getMajor() {
@@ -148,12 +207,12 @@ public class OverviewSkillLevel extends BaseEntity {
         this.major = major;
     }
 
-    public String getMinorMasterSkillLevel() {
-        return minorMasterSkillLevel;
+    public String getGrade() {
+        return grade;
     }
 
-    public void setMinorMasterSkillLevel(String minorMasterSkillLevel) {
-        this.minorMasterSkillLevel = minorMasterSkillLevel;
+    public void setGrade(String grade) {
+        this.grade = grade;
     }
 
     public String getTransferSkillLevel() {
@@ -162,14 +221,6 @@ public class OverviewSkillLevel extends BaseEntity {
 
     public void setTransferSkillLevel(String transferSkillLevel) {
         this.transferSkillLevel = transferSkillLevel;
-    }
-
-    public LocalDate getPositiveTime() {
-        return positiveTime;
-    }
-
-    public void setPositiveTime(LocalDate positiveTime) {
-        this.positiveTime = positiveTime;
     }
 
     public LocalDate getAcquisitionTime() {
@@ -186,21 +237,5 @@ public class OverviewSkillLevel extends BaseEntity {
 
     public void setPromotedNumber(Integer promotedNumber) {
         this.promotedNumber = promotedNumber;
-    }
-
-    public Boolean getSubject() {
-        return subject;
-    }
-
-    public void setSubject(Boolean subject) {
-        this.subject = subject;
-    }
-
-    public Integer getOrderEvent() {
-        return orderEvent;
-    }
-
-    public void setOrderEvent(Integer orderEvent) {
-        this.orderEvent = orderEvent;
     }
 }

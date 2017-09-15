@@ -10,26 +10,33 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.event.api.EventAPI;
 import com.bjike.goddess.event.enums.Permissions;
 import com.bjike.goddess.event.to.EventTO;
+import com.bjike.goddess.managepromotion.bo.SkillLevelCollectBO;
 import com.bjike.goddess.managepromotion.bo.SkillPromotionApplyBO;
 import com.bjike.goddess.managepromotion.dto.SkillPromotionApplyDTO;
+import com.bjike.goddess.managepromotion.entity.OverviewSkillLevel;
 import com.bjike.goddess.managepromotion.entity.SkillPromotionApply;
 import com.bjike.goddess.managepromotion.enums.GuideAddrStatus;
 import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
+import com.bjike.goddess.managepromotion.to.SkillLevelCollectTO;
 import com.bjike.goddess.managepromotion.to.SkillPromotionApplyTO;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.text.StrBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 技能晋升申请业务实现
@@ -387,6 +394,7 @@ public class SkillPromotionApplySerImpl extends ServiceImpl<SkillPromotionApply,
         List<SkillPromotionApplyBO> skillPromotionApplyBOS = BeanTransform.copyProperties(skillPromotionApplies, SkillPromotionApplyBO.class);
         return skillPromotionApplyBOS;
     }
+
     private Set<String> events(String name) throws SerException {
         Set<String> set = new HashSet<>();
         if (moduleAPI.isCheck("organize")) {
@@ -412,6 +420,7 @@ public class SkillPromotionApplySerImpl extends ServiceImpl<SkillPromotionApply,
         }
         return set;
     }
+
     @Override
     @Transactional(rollbackFor = SerException.class)
     public SkillPromotionApplyBO insertSkillPromotionApply(SkillPromotionApplyTO skillPromotionApplyTO) throws SerException {
@@ -445,6 +454,7 @@ public class SkillPromotionApplySerImpl extends ServiceImpl<SkillPromotionApply,
         return BeanTransform.copyProperties(skillPromotionApply, SkillPromotionApplyBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SkillPromotionApplyBO headAudit(SkillPromotionApplyTO skillPromotionApplyTO) throws SerException {
         checkHeadIdentity();
@@ -456,6 +466,7 @@ public class SkillPromotionApplySerImpl extends ServiceImpl<SkillPromotionApply,
         return BeanTransform.copyProperties(skillPromotionApply, SkillPromotionApplyBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SkillPromotionApplyBO budgetAudit(SkillPromotionApplyTO skillPromotionApplyTO) throws SerException {
         checkBudgetIdentity();
@@ -466,6 +477,7 @@ public class SkillPromotionApplySerImpl extends ServiceImpl<SkillPromotionApply,
         return BeanTransform.copyProperties(skillPromotionApply, SkillPromotionApplyBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SkillPromotionApplyBO projectManagerAudit(SkillPromotionApplyTO skillPromotionApplyTO) throws SerException {
         checkManagerIdentity();
@@ -482,6 +494,7 @@ public class SkillPromotionApplySerImpl extends ServiceImpl<SkillPromotionApply,
         return BeanTransform.copyProperties(skillPromotionApply, SkillPromotionApplyBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SkillPromotionApplyBO planAudit(SkillPromotionApplyTO skillPromotionApplyTO) throws SerException {
         checkPlanIdentity();
@@ -497,6 +510,7 @@ public class SkillPromotionApplySerImpl extends ServiceImpl<SkillPromotionApply,
         return BeanTransform.copyProperties(skillPromotionApply, SkillPromotionApplyBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SkillPromotionApplyBO generalManagerAudit(SkillPromotionApplyTO skillPromotionApplyTO) throws SerException {
         checkGeneralIdentity();
@@ -507,9 +521,85 @@ public class SkillPromotionApplySerImpl extends ServiceImpl<SkillPromotionApply,
         } else {
             skillPromotionApply.setManagerOpinion(skillPromotionApplyTO.getManagerOpinion());
             skillPromotionApply.setPhase(4);
+            skillPromotionApply.setPromotionTime(LocalDate.parse(skillPromotionApplyTO.getPromotionTime()));
+            skillPromotionApply.setPass(skillPromotionApplyTO.getPass());
             skillPromotionApply.setAuditStatus(skillPromotionApplyTO.getAuditStatus());
             super.update(skillPromotionApply);
         }
         return BeanTransform.copyProperties(skillPromotionApply, SkillPromotionApplyBO.class);
+    }
+
+    @Override
+    public List<SkillLevelCollectBO> dayLevelCollect(SkillLevelCollectTO to) throws SerException {
+        LocalDate time = null;
+        if (to.getTime() != null) {
+            time = DateUtil.parseDate(to.getTime());
+        } else {
+            time = LocalDate.now();
+        }
+        List<SkillLevelCollectBO> boList = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT * FROM ( ");
+        sb.append(" SELECT A.*,B.pass,B.unpass,C.result,C.unresult FROM ");
+        sb.append(" (SELECT area,department, ");
+        sb.append(" max(CASE WHEN dealStatus=0 THEN dealStatusCount END )AS receiving, ");
+        sb.append(" max(CASE WHEN dealStatus=1 THEN dealStatusCount END )AS untreated, ");
+        sb.append(" max(CASE WHEN dealStatus=2 THEN dealStatusCount END )AS completedProcessing FROM ");
+        sb.append(" (SELECT count(*) as dealStatusCount, dealStatus as dealStatus, area as area,department AS department ");
+        sb.append(" FROM managepromotion_skillpromotionapply a WHERE acquisitionTime='"+time+"' ");
+        sb.append(" GROUP BY area,department,dealStatus)a ");
+        sb.append(" GROUP BY area,department)A, ");
+        sb.append(" (SELECT area,department, ");
+        sb.append(" max(CASE WHEN pass=0 THEN passCount END )AS unpass, ");
+        sb.append(" max(CASE WHEN pass=1 THEN passCount END )AS pass FROM ");
+        sb.append(" (SELECT count(*) as passCount, is_pass as pass, area as area,department AS department ");
+        sb.append(" FROM managepromotion_skillpromotionapply a WHERE acquisitionTime='"+time+"' ");
+        sb.append(" GROUP BY area,department,is_pass)a ");
+        sb.append(" GROUP BY area,department)B, ");
+        sb.append(" (SELECT area,department, ");
+        sb.append(" max(CASE WHEN result=0 THEN resultCount END )AS unresult, ");
+        sb.append(" max(CASE WHEN result=1 THEN resultCount END )AS result FROM ");
+        sb.append(" (SELECT count(*) as resultCount, is_result as result , area as area,department AS department ");
+        sb.append(" FROM managepromotion_skillpromotionapply a WHERE acquisitionTime='"+time+"' ");
+        sb.append(" GROUP BY area,department,is_result)a ");
+        sb.append(" GROUP BY area,department)C ");
+        sb.append(" WHERE A.area = B.area AND A.area = C.area AND A.department = B.department AND A.department = C.department)D ");
+        String sql = sb.toString();
+        String[] fields = new String[]{"area","department","receving","untreated","completedProcessing",
+        "pass","unpass","result","unresult"};
+        List<SkillLevelCollectBO> skillLevelCollectBOS = super.findBySql(sql,SkillLevelCollectBO.class,fields);
+        return skillLevelCollectBOS;
+    }
+
+    @Override
+    public List<SkillLevelCollectBO> weekLevelCollect(SkillLevelCollectTO to) throws SerException {
+        return null;
+    }
+
+    @Override
+    public List<SkillLevelCollectBO> monthLevelCollect(SkillLevelCollectTO to) throws SerException {
+        return null;
+    }
+
+    @Override
+    public List<SkillLevelCollectBO> totalLevelCollect(SkillLevelCollectTO to) throws SerException {
+        return null;
+    }
+    //获取所有地区
+    private List<String> levelAreas() throws SerException {
+        String[] fields = new String[]{"area"};
+        String sql = " SELECT area AS  area FROM managepromotion_skillpromotionapply GROUP BY area ";
+        List<SkillPromotionApply> skillPromotionApplies = super.findBySql(sql, SkillPromotionApply.class, fields);
+        List<String> areas = skillPromotionApplies.stream().map(SkillPromotionApply::getArea).collect(Collectors.toList());
+        return areas;
+    }
+
+    //获取所有项目组/部门
+    private List<String> levelDepartments() throws SerException {
+        String[] fields = new String[]{"department"};
+        String sql = " SELECT department AS  department FROM managepromotion_skillpromotionapply GROUP BY department ";
+        List<SkillPromotionApply> skillPromotionApplies = super.findBySql(sql, SkillPromotionApply.class, fields);
+        List<String> departments = skillPromotionApplies.stream().map(SkillPromotionApply::getDepartment).collect(Collectors.toList());
+        return departments;
     }
 }

@@ -170,7 +170,7 @@ public class EquityCoalescSerImpl extends ServiceImpl<EquityCoalesc, EquityCoale
         checkPermission();
         searchCondi(equityCoalescDTO);
         equityCoalescDTO.getSorts().add("createTime=desc");
-        List<EquityCoalesc> equityGifts = super.findByCis(equityCoalescDTO);
+        List<EquityCoalesc> equityGifts = super.findByPage(equityCoalescDTO);
         return BeanTransform.copyProperties(equityGifts, EquityCoalescBO.class);
     }
     /**

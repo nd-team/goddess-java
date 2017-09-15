@@ -164,7 +164,7 @@ public class EquityInheritanceSerImpl extends ServiceImpl<EquityInheritance, Equ
         checkPermission();
         searchCondi(equityInheritanceDTO);
         equityInheritanceDTO.getSorts().add("createTime=desc");
-        List<EquityInheritance> equityInheritanceList = super.findByCis(equityInheritanceDTO);
+        List<EquityInheritance> equityInheritanceList = super.findByPage(equityInheritanceDTO);
         return BeanTransform.copyProperties(equityInheritanceList, EquityInheritanceBO.class);
     }
     /**

@@ -426,7 +426,7 @@ public class ShareOpenAccountSerImpl extends ServiceImpl<ShareOpenAccount, Share
         searchCondi(shareOpenAccountDTO);
         shareOpenAccountDTO.getConditions().add(Restrict.eq("shareholderStatus", ShareholderStatus.NORMAL));
         shareOpenAccountDTO.getSorts().add("createTime=desc");
-        List<ShareOpenAccount> shareOpenAccounts = super.findByCis(shareOpenAccountDTO);
+        List<ShareOpenAccount> shareOpenAccounts = super.findByPage(shareOpenAccountDTO);
         return BeanTransform.copyProperties(shareOpenAccounts, ShareOpenAccountBO.class);
     }
 

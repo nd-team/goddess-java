@@ -2,6 +2,7 @@ package com.bjike.goddess.managepromotion.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.managepromotion.enums.AuditStatus;
+import com.bjike.goddess.managepromotion.enums.DealStatus;
 
 /**
  * 技能晋升申请业务传输对象
@@ -117,6 +118,22 @@ public class SkillPromotionApplyBO extends BaseBO {
      */
     private String managerOpinion;
     /**
+     * 处理状态
+     */
+    private DealStatus dealStatus;
+    /**
+     * 晋升时间
+     */
+    private String promotionTime;
+    /**
+     * 是否通过
+     */
+    private Boolean pass;
+    /**
+     * 是否通报结果
+     */
+    private Boolean result;
+    /**
      * 审核状态
      */
     private AuditStatus auditStatus;
@@ -127,6 +144,38 @@ public class SkillPromotionApplyBO extends BaseBO {
 
     public void setArea(String area) {
         this.area = area;
+    }
+
+    public DealStatus getDealStatus() {
+        return dealStatus;
+    }
+
+    public void setDealStatus(DealStatus dealStatus) {
+        this.dealStatus = dealStatus;
+    }
+
+    public String getPromotionTime() {
+        return promotionTime;
+    }
+
+    public void setPromotionTime(String promotionTime) {
+        this.promotionTime = promotionTime;
+    }
+
+    public Boolean getPass() {
+        return pass;
+    }
+
+    public void setPass(Boolean pass) {
+        this.pass = pass;
+    }
+
+    public Boolean getResult() {
+        return result;
+    }
+
+    public void setResult(Boolean result) {
+        this.result = result;
     }
 
     public String getDepartment() {

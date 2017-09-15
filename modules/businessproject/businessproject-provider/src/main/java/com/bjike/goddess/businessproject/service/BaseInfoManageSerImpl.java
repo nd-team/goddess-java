@@ -19,6 +19,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.organize.bo.ManagerBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -386,9 +387,9 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
 
     @Override
     public List<BaseInfoManageBO> searchSiginManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
-        searchCondition( baseInfoManageDTO );
-        List<BaseInfoManage> list = super.findByCis( baseInfoManageDTO );
-        List<BaseInfoManageBO> listBO = BeanTransform.copyProperties(list , BaseInfoManageBO.class);
+        searchCondition(baseInfoManageDTO);
+        List<BaseInfoManage> list = super.findByCis(baseInfoManageDTO);
+        List<BaseInfoManageBO> listBO = BeanTransform.copyProperties(list, BaseInfoManageBO.class);
         return listBO;
     }
 
@@ -434,6 +435,55 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
         return bytes;
+    }
+
+    @Override
+    public List<BaseInfoManageBO> getgetAll() throws SerException {
+        return null;
+    }
+
+    @Override
+    public Long getInterProject(String startTime, String endTime) throws SerException {
+        String fields[] = new String[]{"projectNum"};
+        StringBuilder sql = new StringBuilder("select count(innerProject) as projectNum from businessproject_baseinfomanage");
+        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+            sql.append(" where siginTime between '" + startTime + "'");
+            sql.append(" and '" + endTime + "'");
+        }
+        List<ManagerBO> managerBOs = super.findBySql(sql.toString(), ManagerBO.class, fields);
+        if (null != managerBOs && managerBOs.size() > 0) {
+            List<Long> pros = managerBOs.stream().map(ManagerBO::getProjectNum).distinct().collect(Collectors.toList());
+            return pros.get(0);
+        }
+        return 0l;
+    }
+
+    @Override
+    public List<String> getInterProjectName(String startTime, String endTime) throws SerException {
+        String fields[] = new String[]{"innerProject"};
+        StringBuilder sql = new StringBuilder("select innerProject from businessproject_baseinfomanage");
+        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+            sql.append(" where siginTime between '" + startTime + "'");
+            sql.append(" and '" + endTime + "'");
+        }
+        List<BaseInfoManage> baseInfoManages = super.findBySql(sql.toString(), BaseInfoManage.class, fields);
+        if (null != baseInfoManages && baseInfoManages.size() > 0) {
+            List<String> pros = baseInfoManages.stream().map(BaseInfoManage::getInnerProject).distinct().collect(Collectors.toList());
+            return pros;
+        }
+        return null;
+    }
+
+    @Override
+    public List<String> getArea(String projectNane) throws SerException {
+        BaseInfoManageDTO dto = new BaseInfoManageDTO();
+        dto.getConditions().add(Restrict.eq("innerProject", projectNane));
+        List<BaseInfoManage> baseInfoManages = super.findByCis(dto);
+        if (null != baseInfoManages && baseInfoManages.size() > 0) {
+            List<String> list = baseInfoManages.stream().map(BaseInfoManage::getArea).distinct().collect(Collectors.toList());
+            return list;
+        }
+        return null;
     }
 
     @Override

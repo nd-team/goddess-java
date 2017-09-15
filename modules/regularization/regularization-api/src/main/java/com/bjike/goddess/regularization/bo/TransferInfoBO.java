@@ -1,6 +1,7 @@
 package com.bjike.goddess.regularization.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.regularization.type.Assess;
 import com.bjike.goddess.regularization.type.StaffStatus;
 
 /**
@@ -77,7 +78,7 @@ public class TransferInfoBO extends BaseBO {
     /**
      * 三天是否跟进
      */
-    private Boolean threeFollow;
+    private Assess threeFollow;
 
     /**
      * 三天跟进收集的意见
@@ -87,7 +88,7 @@ public class TransferInfoBO extends BaseBO {
     /**
      * 一周内是否跟进
      */
-    private Boolean weekFollow;
+    private Assess weekFollow;
 
     /**
      * 一周跟进收集的意见
@@ -97,7 +98,7 @@ public class TransferInfoBO extends BaseBO {
     /**
      * 一个月是否跟进
      */
-    private Boolean monthFollow;
+    private Assess monthFollow;
 
     /**
      * 一个月跟进收集的意见
@@ -217,7 +218,7 @@ public class TransferInfoBO extends BaseBO {
     /**
      * 实际试用期时长
      */
-    private String praProbationaryPer;
+    private Integer praProbationaryPer;
 
     /**
      * 转正情况面谈人
@@ -335,11 +336,11 @@ public class TransferInfoBO extends BaseBO {
     }
 
 
-    public Boolean getThreeFollow() {
+    public Assess getThreeFollow() {
         return threeFollow;
     }
 
-    public void setThreeFollow(Boolean threeFollow) {
+    public void setThreeFollow(Assess threeFollow) {
         this.threeFollow = threeFollow;
     }
 
@@ -351,11 +352,11 @@ public class TransferInfoBO extends BaseBO {
         this.threeFollowOpinion = threeFollowOpinion;
     }
 
-    public Boolean getWeekFollow() {
+    public Assess getWeekFollow() {
         return weekFollow;
     }
 
-    public void setWeekFollow(Boolean weekFollow) {
+    public void setWeekFollow(Assess weekFollow) {
         this.weekFollow = weekFollow;
     }
 
@@ -367,11 +368,11 @@ public class TransferInfoBO extends BaseBO {
         this.weekFollowOpinion = weekFollowOpinion;
     }
 
-    public Boolean getMonthFollow() {
+    public Assess getMonthFollow() {
         return monthFollow;
     }
 
-    public void setMonthFollow(Boolean monthFollow) {
+    public void setMonthFollow(Assess monthFollow) {
         this.monthFollow = monthFollow;
     }
 
@@ -552,11 +553,11 @@ public class TransferInfoBO extends BaseBO {
         this.positiveThrough = positiveThrough;
     }
 
-    public String getPraProbationaryPer() {
+    public Integer getPraProbationaryPer() {
         return praProbationaryPer;
     }
 
-    public void setPraProbationaryPer(String praProbationaryPer) {
+    public void setPraProbationaryPer(Integer praProbationaryPer) {
         this.praProbationaryPer = praProbationaryPer;
     }
 

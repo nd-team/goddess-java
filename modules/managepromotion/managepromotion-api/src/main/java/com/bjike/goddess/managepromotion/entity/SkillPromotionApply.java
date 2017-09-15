@@ -2,6 +2,7 @@ package com.bjike.goddess.managepromotion.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.managepromotion.enums.AuditStatus;
+import com.bjike.goddess.managepromotion.enums.DealStatus;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -55,7 +56,7 @@ public class SkillPromotionApply extends BaseEntity {
     /**
      * 主项/小项
      */
-    @Column(name = "is_subject", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '主项/小项'", insertable = false)
+    @Column(name = "is_subject", columnDefinition = "TINYINT(1)   COMMENT '主项/小项'")
     private Boolean subject;
 
     /**
@@ -145,10 +146,62 @@ public class SkillPromotionApply extends BaseEntity {
     @Column(name = "managerOpinion", columnDefinition = "VARCHAR(255)   COMMENT '总经办审核意见'")
     private String managerOpinion;
     /**
+     * 处理状态
+     */
+    @Column(columnDefinition = "TINYINT(2)   COMMENT '处理状态'")
+    private DealStatus dealStatus;
+    /**
+     * 晋升时间
+     */
+    @Column(columnDefinition = "TINYINT(2)   COMMENT '晋升时间'")
+    private LocalDate promotionTime;
+    /**
+     * 是否通过
+     */
+    @Column(name = "is_pass", columnDefinition = "TINYINT(2)  COMMENT '是否通过'")
+    private Boolean pass;
+    /**
+     * 是否通报结果
+     */
+    @Column(name = "is_result", columnDefinition = "TINYINT(2)  COMMENT '是否通报结果'")
+    private Boolean result;
+    /**
      * 审核状态
      */
     @Column(columnDefinition = "TINYINT(2)   COMMENT '审核状态'")
     private AuditStatus auditStatus;
+
+    public DealStatus getDealStatus() {
+        return dealStatus;
+    }
+
+    public void setDealStatus(DealStatus dealStatus) {
+        this.dealStatus = dealStatus;
+    }
+
+    public LocalDate getPromotionTime() {
+        return promotionTime;
+    }
+
+    public void setPromotionTime(LocalDate promotionTime) {
+        this.promotionTime = promotionTime;
+    }
+
+    public Boolean getPass() {
+        return pass;
+    }
+
+    public void setPass(Boolean pass) {
+        this.pass = pass;
+    }
+
+    public Boolean getResult() {
+        return result;
+    }
+
+    public void setResult(Boolean result) {
+        this.result = result;
+    }
 
     public String getArea() {
         return area;

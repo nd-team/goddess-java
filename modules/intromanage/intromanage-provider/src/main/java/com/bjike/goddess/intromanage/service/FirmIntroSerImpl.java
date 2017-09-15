@@ -222,6 +222,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
     @Override
     public List<FirmIntroBO> list(FirmIntroDTO dto) throws SerException {
         checkPermission();
+        seachCond(dto);
         List<FirmIntro> list = super.findByPage(dto);
         UserBO userBO = userAPI.currentUser();
         String currentUsername = userBO.getUsername();//获取当前用户姓名
@@ -244,6 +245,12 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
         return boList;
     }
 
+    public void seachCond(FirmIntroDTO dto) throws SerException{
+        FirmIntroDTO firmIntroDTO = new FirmIntroDTO();
+        if(StringUtils.isNotBlank(dto.getFirmName())){
+            firmIntroDTO.getConditions().add(Restrict.eq("firmName",dto.getFirmName()));
+        }
+    }
 
     /**
      * 检查是否显示字段

@@ -303,8 +303,8 @@ public class YearIndexSetSerImpl extends ServiceImpl<YearIndexSet, YearIndexSetD
                 //所有部门年id
                 List<String> dyIdList = listDYear.stream().map(DepartYearIndexSet::getId).collect(Collectors.toList());
                 DepartMonIndexSetDTO monIndexSetDTO = new DepartMonIndexSetDTO();
-                String[] dyIdStrings=new String[dyIdList.size()];
-                dyIdStrings=dyIdList.toArray(dyIdStrings);
+                String[] dyIdStrings = new String[dyIdList.size()];
+                dyIdStrings = dyIdList.toArray(dyIdStrings);
                 monIndexSetDTO.getConditions().add(Restrict.in("departYearIndexSetId", dyIdStrings));
                 List<DepartMonIndexSet> listDMon = departMonIndexSetSer.findByCis(monIndexSetDTO);
                 if (listDMon != null && listDMon.size() > 0) {
@@ -685,18 +685,17 @@ public class YearIndexSetSerImpl extends ServiceImpl<YearIndexSet, YearIndexSetD
     @Override
     public byte[] exportYearExcel(ExportExcelYearTO to) throws SerException {
         YearIndexSetDTO dto = new YearIndexSetDTO();
-        if (StringUtils.isBlank(to.getStartTime()) && !StringUtils.isBlank(to.getEndTime())) {
-            throw new SerException("请输入时间");
+        if (StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
+            LocalDate start = LocalDate.parse(to.getStartTime());
+            LocalDate end = LocalDate.parse(to.getEndTime());
+            String startYear = String.valueOf(start.getYear());
+            String endYear = String.valueOf(end.getYear());
+
+            String[] years = new String[]{startYear, endYear};
+            dto.getConditions().add(Restrict.between("year", years));
         }
-        LocalDate start = LocalDate.parse(to.getStartTime());
-        LocalDate end = LocalDate.parse(to.getEndTime());
-        String startYear = String.valueOf(start.getYear());
-        String endYear = String.valueOf(end.getYear());
-
-        String[] years = new String[]{startYear, endYear};
-        dto.getConditions().add(Restrict.between("year", years));
-
         List<YearIndexSet> list = super.findByCis(dto);
+
         List<YearIndexSetExcel> toList = new ArrayList<YearIndexSetExcel>();
         for (YearIndexSet model : list) {
             YearIndexSetExcel excel = new YearIndexSetExcel();

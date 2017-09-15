@@ -158,7 +158,7 @@ public class EquityTransactRecordSerImpl extends ServiceImpl<EquityTransactRecor
     public List<EquityTransactRecordBO> findList(EquityTransactRecordDTO equityTransactRecordDTO) throws SerException {
         checkPermission();
         equityTransactRecordDTO.getSorts().add("modifyTime=desc");
-        List<EquityTransactRecord> equityTransactRecords = super.findByCis(equityTransactRecordDTO);
+        List<EquityTransactRecord> equityTransactRecords = super.findByPage(equityTransactRecordDTO);
         return BeanTransform.copyProperties(equityTransactRecords, EquityTransactRecordBO.class);
     }
 

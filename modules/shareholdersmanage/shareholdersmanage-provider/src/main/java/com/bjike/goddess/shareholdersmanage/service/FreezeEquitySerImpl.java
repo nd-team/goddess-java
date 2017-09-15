@@ -168,7 +168,7 @@ public class FreezeEquitySerImpl extends ServiceImpl<FreezeEquity, FreezeEquityD
         checkPermission();
         searchCondi(freezeEquityDTO);
         freezeEquityDTO.getSorts().add("createTime=desc");
-        List<FreezeEquity> changeEquityTypes = super.findByCis(freezeEquityDTO);
+        List<FreezeEquity> changeEquityTypes = super.findByPage(freezeEquityDTO);
         return BeanTransform.copyProperties(changeEquityTypes, FreezeEquityBO.class);
     }
 

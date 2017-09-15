@@ -11,6 +11,7 @@ import com.bjike.goddess.balancecard.to.*;
 import com.bjike.goddess.balancecard.vo.DepartYearIndexSetVO;
 import com.bjike.goddess.balancecard.vo.DepartMonIndexSetVO;
 import com.bjike.goddess.balancecard.vo.PositionIndexSetVO;
+import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -18,6 +19,7 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -52,7 +54,6 @@ public class IndexHouseAction extends BaseFileAction {
     private YearIndexSetAPI yearIndexSetAPI;
 
 
-
     /**
      * 功能导航权限
      *
@@ -79,6 +80,7 @@ public class IndexHouseAction extends BaseFileAction {
 
 
     //TODO: 列表是树形的，看流程图，还没做
+
     /**
      * 年度报告
      *
@@ -89,7 +91,7 @@ public class IndexHouseAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/yearReport")
-    public Result yearReport(ExportExcelYearTO to, HttpServletResponse response) throws ActException {
+    public Result yearReport(@Validated(ADD.class) ExportExcelYearTO to, HttpServletResponse response) throws ActException {
         try {
             String fileName = "年度报告.xlsx";
             super.writeOutFile(response, yearIndexSetAPI.exportYearExcel(to), fileName);
@@ -111,7 +113,7 @@ public class IndexHouseAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/departYearReport")
-    public Result departYearReport(ExportExcelDepartTO to, HttpServletResponse response) throws ActException {
+    public Result departYearReport(@Validated(ADD.class) ExportExcelDepartTO to, HttpServletResponse response) throws ActException {
         try {
             String fileName = "部门年度报告.xlsx";
             super.writeOutFile(response, departYearIndexSetAPI.departYearReport(to), fileName);
@@ -134,7 +136,7 @@ public class IndexHouseAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/departMonReport")
-    public Result departMonReport(ExportExcelDepartTO to, HttpServletResponse response) throws ActException {
+    public Result departMonReport(@Validated(ADD.class) ExportExcelDepartTO to, HttpServletResponse response) throws ActException {
         try {
             String fileName = "部门月度报告.xlsx";
             super.writeOutFile(response, departMonIndexSetAPI.exportExcel(to), fileName);
@@ -156,7 +158,7 @@ public class IndexHouseAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/positionReport")
-    public Result positionReport(ExportExcelPositTO to, HttpServletResponse response) throws ActException {
+    public Result positionReport(@Validated(ADD.class) ExportExcelPositTO to, HttpServletResponse response) throws ActException {
         try {
             String fileName = "岗位报告.xlsx";
             super.writeOutFile(response, positionIndexSetAPI.positionReport(to), fileName);
@@ -178,7 +180,7 @@ public class IndexHouseAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/personReport")
-    public Result personReport(ExportExcelPositTO to, HttpServletResponse response) throws ActException {
+    public Result personReport(@Validated(ADD.class) ExportExcelPositTO to, HttpServletResponse response) throws ActException {
         try {
             String fileName = "岗位报告.xlsx";
             super.writeOutFile(response, positionIndexSetAPI.personReport(to), fileName);
@@ -199,7 +201,7 @@ public class IndexHouseAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/deminsionReport")
-    public Result personReport(ExportExcelDeTO to, HttpServletResponse response) throws ActException {
+    public Result personReport(@Validated(ADD.class) ExportExcelDeTO to, HttpServletResponse response) throws ActException {
         try {
             //年度报告/部门年度报告/部门月度报告/岗位报告/个人
             String flag = to.getFlag();
@@ -208,49 +210,73 @@ public class IndexHouseAction extends BaseFileAction {
                 case "年度报告":
                     fileName = "年度维度报告.xlsx";
                     ExportExcelYearTO yearto = new ExportExcelYearTO();
-                    yearto.setDimension( to.getDimension());
-                    yearto.setStartTime( to.getStartTime() );
-                    yearto.setEndTime( to.getEndTime());
+                    if(StringUtils.isNotBlank(to.getDimension())) {
+                        yearto.setDimension(to.getDimension());
+                    }
+                    if(StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
+                        yearto.setStartTime(to.getStartTime());
+                        yearto.setEndTime(to.getEndTime());
+                    }
                     super.writeOutFile(response, yearIndexSetAPI.exportYearDeExcel(yearto), fileName);
                     break;
                 case "部门年度报告":
                     fileName = "部门年度维度报告.xlsx";
                     ExportExcelDepartTO dyearto = new ExportExcelDepartTO();
-                    dyearto.setDimension( to.getDimension());
-                    dyearto.setStartTime( to.getStartTime() );
-                    dyearto.setEndTime( to.getEndTime());
+                    if(StringUtils.isNotBlank(to.getDimension())) {
+                        dyearto.setDimension(to.getDimension());
+                    }
+                    if(StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
+                        dyearto.setStartTime(to.getStartTime());
+                        dyearto.setEndTime(to.getEndTime());
+                    }
                     super.writeOutFile(response, departYearIndexSetAPI.departYearReport(dyearto), fileName);
                     break;
                 case "部门月度报告":
                     fileName = "部门月度维度报告.xlsx";
                     ExportExcelDepartTO dMonto = new ExportExcelDepartTO();
-                    dMonto.setDimension( to.getDimension());
-                    dMonto.setStartTime( to.getStartTime() );
-                    dMonto.setEndTime( to.getEndTime());
+                    if(StringUtils.isNotBlank(to.getDimension())) {
+                        dMonto.setDimension(to.getDimension());
+                    }
+                    if(StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
+                        dMonto.setStartTime(to.getStartTime());
+                        dMonto.setEndTime(to.getEndTime());
+                    }
                     super.writeOutFile(response, departMonIndexSetAPI.exportExcel(dMonto), fileName);
                     break;
                 case "岗位报告":
                     fileName = "岗位维度报告.xlsx";
                     ExportExcelPositTO postto = new ExportExcelPositTO();
-                    postto.setDimension( to.getDimension());
-                    postto.setStartTime( to.getStartTime() );
-                    postto.setEndTime( to.getEndTime());
+                    if(StringUtils.isNotBlank(to.getDimension())) {
+                        postto.setDimension(to.getDimension());
+                    }
+                    if(StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
+                        postto.setStartTime(to.getStartTime());
+                        postto.setEndTime(to.getEndTime());
+                    }
                     super.writeOutFile(response, positionIndexSetAPI.positionReport(postto), fileName);
                     break;
                 case "个人报告":
                     fileName = "个人维度报告.xlsx";
                     ExportExcelPositTO perto = new ExportExcelPositTO();
-                    perto.setDimension( to.getDimension());
-                    perto.setStartTime( to.getStartTime() );
-                    perto.setEndTime( to.getEndTime());
+                    if(StringUtils.isNotBlank(to.getDimension())) {
+                        perto.setDimension(to.getDimension());
+                    }
+                    if(StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
+                        perto.setStartTime(to.getStartTime());
+                        perto.setEndTime(to.getEndTime());
+                    }
                     super.writeOutFile(response, positionIndexSetAPI.personReport(perto), fileName);
                     break;
                 default:
                     fileName = "年度维度报告.xlsx";
                     ExportExcelYearTO yearTo = new ExportExcelYearTO();
-                    yearTo.setDimension( to.getDimension());
-                    yearTo.setStartTime( to.getStartTime() );
-                    yearTo.setEndTime( to.getEndTime());
+                    if(StringUtils.isNotBlank(to.getDimension())) {
+                        yearTo.setDimension(to.getDimension());
+                    }
+                    if(StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
+                        yearTo.setStartTime(to.getStartTime());
+                        yearTo.setEndTime(to.getEndTime());
+                    }
                     super.writeOutFile(response, yearIndexSetAPI.exportYearDeExcel(yearTo), fileName);
                     break;
             }
@@ -272,7 +298,7 @@ public class IndexHouseAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/indexTypeReport")
-    public Result indexTypeReport(ExportExcelTypeTO to, HttpServletResponse response) throws ActException {
+    public Result indexTypeReport(@Validated(ADD.class) ExportExcelTypeTO to, HttpServletResponse response) throws ActException {
         try {
             //年度报告/部门年度报告/部门月度报告/岗位报告/个人
             String flag = to.getFlag();
@@ -281,49 +307,73 @@ public class IndexHouseAction extends BaseFileAction {
                 case "年度报告":
                     fileName = "年度标类型报告.xlsx";
                     ExportExcelYearTO yearto = new ExportExcelYearTO();
-                    yearto.setIndexType( to.getIndexType());
-                    yearto.setStartTime( to.getStartTime() );
-                    yearto.setEndTime( to.getEndTime());
+                    if(StringUtils.isNotBlank(to.getIndexType())) {
+                        yearto.setDimension(to.getIndexType());
+                    }
+                    if(StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
+                        yearto.setStartTime(to.getStartTime());
+                        yearto.setEndTime(to.getEndTime());
+                    }
                     super.writeOutFile(response, yearIndexSetAPI.exportYearDeExcel(yearto), fileName);
                     break;
                 case "部门年度报告":
                     fileName = "部门年度标类型报告.xlsx";
                     ExportExcelDepartTO dyearto = new ExportExcelDepartTO();
-                    dyearto.setIndexType( to.getIndexType());
-                    dyearto.setStartTime( to.getStartTime() );
-                    dyearto.setEndTime( to.getEndTime());
+                    if(StringUtils.isNotBlank(to.getIndexType())) {
+                        dyearto.setDimension(to.getIndexType());
+                    }
+                    if(StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
+                        dyearto.setStartTime(to.getStartTime());
+                        dyearto.setEndTime(to.getEndTime());
+                    }
                     super.writeOutFile(response, departYearIndexSetAPI.departYearReport(dyearto), fileName);
                     break;
                 case "部门月度报告":
                     fileName = "部门月度标类型报告.xlsx";
                     ExportExcelDepartTO dMonto = new ExportExcelDepartTO();
-                    dMonto.setIndexType( to.getIndexType());
-                    dMonto.setStartTime( to.getStartTime() );
-                    dMonto.setEndTime( to.getEndTime());
+                    if(StringUtils.isNotBlank(to.getIndexType())) {
+                        dMonto.setDimension(to.getIndexType());
+                    }
+                    if(StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
+                        dMonto.setStartTime(to.getStartTime());
+                        dMonto.setEndTime(to.getEndTime());
+                    }
                     super.writeOutFile(response, departMonIndexSetAPI.exportExcel(dMonto), fileName);
                     break;
                 case "岗位报告":
                     fileName = "岗位标类型报告.xlsx";
                     ExportExcelPositTO postto = new ExportExcelPositTO();
-                    postto.setIndexType( to.getIndexType());
-                    postto.setStartTime( to.getStartTime() );
-                    postto.setEndTime( to.getEndTime());
+                    if(StringUtils.isNotBlank(to.getIndexType())) {
+                        postto.setDimension(to.getIndexType());
+                    }
+                    if(StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
+                        postto.setStartTime(to.getStartTime());
+                        postto.setEndTime(to.getEndTime());
+                    }
                     super.writeOutFile(response, positionIndexSetAPI.positionReport(postto), fileName);
                     break;
                 case "个人报告":
                     fileName = "个人标类型报告.xlsx";
                     ExportExcelPositTO perto = new ExportExcelPositTO();
-                    perto.setIndexType( to.getIndexType());
-                    perto.setStartTime( to.getStartTime() );
-                    perto.setEndTime( to.getEndTime());
+                    if(StringUtils.isNotBlank(to.getIndexType())) {
+                        perto.setDimension(to.getIndexType());
+                    }
+                    if(StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
+                        perto.setStartTime(to.getStartTime());
+                        perto.setEndTime(to.getEndTime());
+                    }
                     super.writeOutFile(response, positionIndexSetAPI.personReport(perto), fileName);
                     break;
                 default:
                     fileName = "年度指标类型报告.xlsx";
                     ExportExcelYearTO yearTo = new ExportExcelYearTO();
-                    yearTo.setIndexType( to.getIndexType());
-                    yearTo.setStartTime( to.getStartTime() );
-                    yearTo.setEndTime( to.getEndTime());
+                    if(StringUtils.isNotBlank(to.getIndexType())) {
+                        yearTo.setDimension(to.getIndexType());
+                    }
+                    if(StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
+                        yearTo.setStartTime(to.getStartTime());
+                        yearTo.setEndTime(to.getEndTime());
+                    }
                     super.writeOutFile(response, yearIndexSetAPI.exportYearDeExcel(yearTo), fileName);
                     break;
             }

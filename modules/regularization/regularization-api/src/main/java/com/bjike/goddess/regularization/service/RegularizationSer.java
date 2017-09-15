@@ -191,4 +191,11 @@ public interface RegularizationSer extends Ser<Regularization, RegularizationDTO
     default String getTime(String userName) throws SerException {
         return null;
     }
+    /**
+     * 根据员工姓名判断是否转正
+     * jiangzaixuan
+     */
+    default Boolean checkTran(String userName) throws SerException {
+        return null;
+    }
 }

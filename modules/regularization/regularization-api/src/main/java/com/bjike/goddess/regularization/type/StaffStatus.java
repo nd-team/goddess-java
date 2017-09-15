@@ -1,7 +1,7 @@
 package com.bjike.goddess.regularization.type;
 
 /**
- * 导航权限
+ * 员工状态
  *
  * @Author: [lijuntao]
  * @Date: [2017-06-20 12:53]

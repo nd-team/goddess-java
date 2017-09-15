@@ -85,7 +85,7 @@ public interface FeatureListAPI {
      * @param questionTO
      * @throws SerException
      */
-    default void ask(String id, QuestionTO questionTO) throws SerException{
+    default void ask(String id, QuestionTO questionTO) throws SerException {
 
     }
 
@@ -96,8 +96,38 @@ public interface FeatureListAPI {
      * @return class FeatureListBO
      * @throws SerException
      */
-    default FeatureListBO findDetail(String id) throws SerException{
+    default FeatureListBO findDetail(String id) throws SerException {
         return null;
     }
 
+    /**
+     * 获取功能名称
+     * zhuangkaiqin
+     */
+    default List<String> getFeatureName() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据功能名称获取功能目的
+     * zhuangkaiqin
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    default String getPurpose(String name) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据功能名称获取版本
+     * zhuangkaiqin
+     *
+     * @param name
+     * @return
+     */
+    default String getVersion(String name) throws SerException {
+        return null;
+    }
 }
