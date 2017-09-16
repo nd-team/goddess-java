@@ -34,7 +34,7 @@ public class RecommendInfoTO extends BaseTO {
      * 推荐内容
      */
     @NotNull(message = "推荐内容不能为空", groups = {ADD.class, EDIT.class})
-    private List<RecommendContentTO> contentList;
+    private List<OldRecommendContentTO> contentList;
 
     /**
      * 推荐人
@@ -73,11 +73,11 @@ public class RecommendInfoTO extends BaseTO {
         this.remark = remark;
     }
 
-    public List<RecommendContentTO> getContentList() {
+    public List<OldRecommendContentTO> getContentList() {
         return contentList;
     }
 
-    public void setContentList(List<RecommendContentTO> contentList) {
+    public void setContentList(List<OldRecommendContentTO> contentList) {
         this.contentList = contentList;
     }
 

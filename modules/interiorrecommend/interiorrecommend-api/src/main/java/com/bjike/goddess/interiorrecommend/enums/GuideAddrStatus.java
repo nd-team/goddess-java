@@ -80,7 +80,7 @@ public enum GuideAddrStatus {
     /**
      * 审核
      */
-    AUDIT(16),;
+    AUDIT(16);
 
     private int code;
 
