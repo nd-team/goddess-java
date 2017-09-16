@@ -6,6 +6,7 @@ import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
 import com.bjike.goddess.organize.entity.PositionDetailUser;
+import com.bjike.goddess.organize.enums.StaffStatus;
 import com.bjike.goddess.organize.service.PositionDetailUserSer;
 import com.bjike.goddess.organize.to.PositionDetailUserTO;
 import com.bjike.goddess.user.bo.UserBO;
@@ -115,6 +116,11 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     @Override
     public List<PositionDetailBO> getPositionDetail(String name) throws SerException {
         return positionDetailUserSer.getPositionDetail(name);
+    }
+
+    @Override
+    public StaffStatus statusByName(String name) throws SerException {
+        return positionDetailUserSer.statusByName(name);
     }
 
     @Override

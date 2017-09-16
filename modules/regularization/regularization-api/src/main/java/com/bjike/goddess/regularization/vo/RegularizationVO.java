@@ -1,5 +1,7 @@
 package com.bjike.goddess.regularization.vo;
 
+import com.bjike.goddess.regularization.type.SexType;
+
 /**
  * 员工转正表现层对象
  *
@@ -23,7 +25,7 @@ public class RegularizationVO {
     /**
      * 性别
      */
-    private String gender;
+    private SexType gender;
 
     /**
      * 学历
@@ -227,11 +229,11 @@ public class RegularizationVO {
         this.name = name;
     }
 
-    public String getGender() {
+    public SexType getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(SexType gender) {
         this.gender = gender;
     }
 

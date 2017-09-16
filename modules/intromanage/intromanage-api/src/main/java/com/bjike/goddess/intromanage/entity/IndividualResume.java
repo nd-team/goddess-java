@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.organize.enums.StaffStatus;
 
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -55,12 +56,6 @@ public class IndividualResume extends BaseEntity {
      */
     @Column(name = "updateDate", nullable = false, columnDefinition = "DATE COMMENT '最新获取/更新时间'")
     private LocalDate updateDate;
-
-    /**
-     * 个人邮箱
-     */
-    @Column(name = "myEmail", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '个人邮箱'")
-    private String myEmail;
 
     /**
      * 工作邮箱
@@ -559,5 +554,29 @@ public class IndividualResume extends BaseEntity {
 
     public void setWorkExperience(String workExperience) {
         this.workExperience = workExperience;
+    }
+
+    public LocalDate getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(LocalDate updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public StaffStatus getStaffStatus() {
+        return staffStatus;
+    }
+
+    public void setStaffStatus(StaffStatus staffStatus) {
+        this.staffStatus = staffStatus;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

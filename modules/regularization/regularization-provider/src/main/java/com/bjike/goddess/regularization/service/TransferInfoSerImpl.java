@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -504,7 +505,7 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
         TransferInfo transferInfo = super.findOne(transferInfoDTO);
         return BeanTransform.copyProperties(transferInfo, TransferInfoBO.class);
     }
-
+    @Transactional(rollbackFor = {SerException.class})
     @Override
     public void followUp(TransferInfoTO transferInfoTO) throws SerException {
         checkPermission();
@@ -518,7 +519,7 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
         transferInfo.setModifyTime(LocalDateTime.now());
         super.update(transferInfo);
     }
-
+    @Transactional(rollbackFor = {SerException.class})
     @Override
     public void welfareAssess(TransferInfoTO transferInfoTO) throws SerException {
         checkModWPermission();
@@ -532,13 +533,13 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
             throw new SerException("该员工还没有申请转正或者已经转正了");
         }
     }
-
+    @Transactional(rollbackFor = {SerException.class})
     @Override
     public void planAssess(TransferInfoTO transferInfoTO) throws SerException {
         checkModPPermission();
         TransferInfo transferInfo = super.findById(transferInfoTO.getId());
         if (transferInfo.getStaffStatus() == StaffStatus.POSITIVE) {
-            transferInfo.setAdditionalSkill(transferInfo.getAdditionalSkill());
+            transferInfo.setAdditionalSkill(transferInfoTO.getAdditionalSkill());
             transferInfo.setAdditionalSkillGrade(transferInfoTO.getAdditionalSkillGrade());
             transferInfo.setEventsSkill(transferInfoTO.getEventsSkill());
             transferInfo.setEventsSkillGrade(transferInfoTO.getEventsSkillGrade());
@@ -548,24 +549,24 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
             throw new SerException("该员工还没有申请转正或者已经转正了");
         }
     }
-
+    @Transactional(rollbackFor = {SerException.class})
     @Override
     public void budgetAssess(TransferInfoTO transferInfoTO) throws SerException {
         checkModBPermission();
         TransferInfo transferInfo = super.findById(transferInfoTO.getId());
         if (transferInfo.getStaffStatus() == StaffStatus.POSITIVE) {
-            transferInfo.setIncomeCostOpinion(transferInfo.getIncomeCostOpinion());
+            transferInfo.setIncomeCostOpinion(transferInfoTO.getIncomeCostOpinion());
             super.update(transferInfo);
         } else {
             throw new SerException("该员工还没有申请转正或者已经转正了");
         }
     }
-
+    @Transactional(rollbackFor = {SerException.class})
     @Override
     public void moduleRespon(TransferInfoTO transferInfoTO) throws SerException {
         checkModPepolPermission();
         TransferInfo transferInfo = super.findById(transferInfoTO.getId());
-        if (transferInfo.getModuleLeader() != null) {
+        if (transferInfo.getModuleLeader() == null) {
             if (transferInfo.getApplyDateAtten() == null || transferInfo.getAdditionalSkill() == null || transferInfo.getIncomeCostOpinion() == null) {
                 throw new SerException("需要福利模块,规划模块,预算模块先填写将考察内容");
             } else {
@@ -577,12 +578,12 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
             throw new SerException("您已经审核过了");
         }
     }
-
+    @Transactional(rollbackFor = {SerException.class})
     @Override
     public void projectManage(TransferInfoTO transferInfoTO) throws SerException {
         checkManagePermission();
         TransferInfo transferInfo = super.findById(transferInfoTO.getId());
-        if (transferInfo.getProManage() != null) {
+        if (transferInfo.getProManage() == null) {
             if (transferInfo.getModuleLeader() == null) {
                 throw new SerException("需要模块负责人先审核");
             } else {
@@ -594,12 +595,12 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
             throw new SerException("您已经审核过了");
         }
     }
-
+    @Transactional(rollbackFor = {SerException.class})
     @Override
     public void genManage(TransferInfoTO transferInfoTO) throws SerException {
         checkPonsPermission();
         TransferInfo transferInfo = super.findById(transferInfoTO.getId());
-        if (transferInfo.getGenerManage() != null) {
+        if (transferInfo.getGenerManage() == null) {
             if (transferInfo.getProManage() == null) {
                 throw new SerException("需要项目经理先审核");
             } else {
@@ -624,11 +625,11 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
             throw new SerException("您已经审核过了");
         }
     }
-
+    @Transactional(rollbackFor = {SerException.class})
     @Override
     public void interview(TransferInfoTO transferInfoTO) throws SerException {
         TransferInfo transferInfo = super.findById(transferInfoTO.getId());
-        if (transferInfo.getInterviewPeper() != null) {
+        if (transferInfo.getInterviewPeper() == null) {
             if (transferInfo.getGenerManage() == null) {
                 throw new SerException("需要总经理先审核");
             } else {
@@ -642,6 +643,7 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
     }
 
     //定时检测所有在试用期的员工是否到期未申请转正
+    @Transactional(rollbackFor = {SerException.class})
     @Override
     public void check() throws SerException {
         TransferInfoDTO transferInfoDTO = new TransferInfoDTO();
@@ -697,10 +699,10 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
     public List<SummationBO> summaTotal(String endDate) throws SerException {
         checkPermission();
         List<SummationBO> summationBOS = new ArrayList<>();
-        String sql = "select min(hiredate) as hiredate from  " + getTableName(TransferInfo.class);
+        String sql = "select min(createTime) as createTime from  " + getTableName(TransferInfo.class);
         List<Object> objects = super.findBySql(sql);
         if (null != objects && objects.size() > 0) {
-            String startDate = String.valueOf(objects.get(0));
+            String startDate = StringUtils.substringBefore(String.valueOf(objects.get(0))," ");
             endDate = StringUtils.isNotBlank(endDate) ? endDate : LocalDate.now().toString();
             summationBOS = totalMethod(startDate, endDate);
         }

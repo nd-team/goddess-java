@@ -14,6 +14,7 @@ import com.bjike.goddess.regularization.bo.RegularizationBO;
 import com.bjike.goddess.regularization.bo.TransferInfoBO;
 import com.bjike.goddess.regularization.dto.ManagementScoreDTO;
 import com.bjike.goddess.regularization.dto.RegularizationDTO;
+import com.bjike.goddess.regularization.entity.CommunicationFormwork;
 import com.bjike.goddess.regularization.entity.ManagementScore;
 import com.bjike.goddess.regularization.entity.Regularization;
 import com.bjike.goddess.regularization.entity.TransferInfo;
@@ -74,6 +75,8 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private TransferInfoSer transferInfoSer;
+    @Autowired
+    private CommunicationFormworkSer communicationFormworkSer;
 
     /**
      * 检查员工转正查看权限(模块)
@@ -506,6 +509,32 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         }
         list.add(obj);
 
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagTransfer = transferInfoSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("transferinfo");
+        obj.setDescribesion("转正人员信息");
+        if (flagTransfer) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagcommunication = communicationFormworkSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("communicationformwork");
+        obj.setDescribesion("各类沟通交流模版");
+        if (flagcommunication) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
         return list;
 
     }
@@ -516,6 +545,7 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
         Boolean flag = true;
         switch (guideAddrStatus) {
+
             case ZZLIST:
                 flag = guideAllTrueIdentity();
                 break;
@@ -570,9 +600,13 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
             case GENMANAGE:
                 flag = guidePosinIdentity();
                 break;
+            case COLLECT:
+                flag = guideIdentity();
+                break;
             default:
                 flag = true;
                 break;
+
         }
 
         RpcTransmit.transmitUserToken(userToken);
@@ -621,14 +655,16 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         RegularizationBO bo = BeanTransform.copyProperties(entity, RegularizationBO.class);
         //将转正信息添加到转正人员信息中
         TransferInfoBO transferInfoBO = transferInfoSer.findByEmpNo(to.getEmpNo());
-        TransferInfo transferInfo = transferInfoSer.findById(transferInfoBO.getId());
-        transferInfo.setModifyTime(LocalDateTime.now());
-        transferInfo.setStaffStatus(StaffStatus.POSITIVE);
-        transferInfo.setApplyDate(entity.getRegularDate());
-        transferInfo.setAsProbationLength(entity.getAsProbationLength());
-        transferInfo.setConfirmEvent(entity.getConfirmEvent());
-        transferInfo.setConfirmPeople(entity.getConfirmPeople());
-        transferInfoSer.update(transferInfo);
+        if(transferInfoBO!=null){
+            TransferInfo transferInfo = transferInfoSer.findById(transferInfoBO.getId());
+            transferInfo.setModifyTime(LocalDateTime.now());
+            transferInfo.setStaffStatus(StaffStatus.POSITIVE);
+            transferInfo.setApplyDate(entity.getRegularDate());
+            transferInfo.setAsProbationLength(entity.getAsProbationLength());
+            transferInfo.setConfirmEvent(entity.getConfirmEvent());
+            transferInfo.setConfirmPeople(entity.getConfirmPeople());
+            transferInfoSer.update(transferInfo);
+        }
         return bo;
     }
 

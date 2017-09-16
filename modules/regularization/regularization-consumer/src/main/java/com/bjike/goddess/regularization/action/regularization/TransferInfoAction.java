@@ -9,12 +9,14 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.regularization.api.TransferInfoAPI;
+import com.bjike.goddess.regularization.bo.SummationBO;
 import com.bjike.goddess.regularization.bo.TransferInfoBO;
 import com.bjike.goddess.regularization.dto.TransferInfoDTO;
 import com.bjike.goddess.regularization.entity.TransferInfo;
 import com.bjike.goddess.regularization.service.TransferInfoSer;
 import com.bjike.goddess.regularization.to.GuidePermissionTO;
 import com.bjike.goddess.regularization.to.TransferInfoTO;
+import com.bjike.goddess.regularization.vo.SummationVO;
 import com.bjike.goddess.regularization.vo.TransferInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -240,6 +242,81 @@ public class TransferInfoAction {
         try {
             transferInfoAPI.interview(to);
             return new ActResult("audit success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 转正管理日汇总
+     *
+     * @param date 日期
+     * @return class SummationVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/summarize/day")
+    public Result summarizeDay(String date, HttpServletRequest request) throws ActException {
+        try {
+            List<SummationBO> boList = transferInfoAPI.summaDay(date);
+            List<SummationVO> voList = BeanTransform.copyProperties(boList, SummationVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 转正管理周汇总
+     *
+     * @param year 年份
+     * @param month 月份
+     * @param week 周期
+     * @return class SummationVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/summarize/week")
+    public Result summarizeDay(Integer year,Integer month,Integer week, HttpServletRequest request) throws ActException {
+        try {
+            List<SummationBO> boList = transferInfoAPI.summaWeek(year,month,week);
+            List<SummationVO> voList = BeanTransform.copyProperties(boList, SummationVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 转正管理月汇总
+     *
+     * @param year 年份
+     * @param month 月份
+     * @return class SummationVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/summarize/month")
+    public Result summarizeMonth(Integer year,Integer month, HttpServletRequest request) throws ActException {
+        try {
+            List<SummationBO> boList = transferInfoAPI.summaMonth(year,month);
+            List<SummationVO> voList = BeanTransform.copyProperties(boList, SummationVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 转正管理累计汇总
+     *
+     * @param date 截止日期
+     * @return class SummationVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/summarize/total")
+    public Result summarizeMonth(String date, HttpServletRequest request) throws ActException {
+        try {
+            List<SummationBO> boList = transferInfoAPI.summaTotal(date);
+            List<SummationVO> voList = BeanTransform.copyProperties(boList, SummationVO.class, request);
+            return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

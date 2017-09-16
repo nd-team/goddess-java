@@ -1,6 +1,7 @@
 package com.bjike.goddess.regularization.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.regularization.type.SexType;
 
 /**
  * 员工转正业务传输对象
@@ -21,7 +22,7 @@ public class RegularizationBO extends BaseBO {
     /**
      * 性别
      */
-    private String gender;
+    private SexType gender;
 
     /**
      * 学历
@@ -217,11 +218,11 @@ public class RegularizationBO extends BaseBO {
         this.name = name;
     }
 
-    public String getGender() {
+    public SexType getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(SexType gender) {
         this.gender = gender;
     }
 

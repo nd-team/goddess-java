@@ -6,6 +6,8 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.regularization.type.ModuleName;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 各类交流沟通模块
  *
@@ -20,7 +22,7 @@ public class CommunicationFormworkTO extends BaseTO {
     /**
      * 模板名称
      */
-    @NotBlank(message = "模板名称不能为空" , groups = {ADD.class, EDIT.class})
+    @NotNull(message = "模板名称不能为空" , groups = {ADD.class, EDIT.class})
     private ModuleName moduleName;
 
     /**

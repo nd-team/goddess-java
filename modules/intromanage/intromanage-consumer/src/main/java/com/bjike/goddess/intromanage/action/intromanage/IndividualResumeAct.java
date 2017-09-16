@@ -6,25 +6,34 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.intromanage.api.IndividualResumeAPI;
 import com.bjike.goddess.intromanage.bo.IndividualResumeBO;
+import com.bjike.goddess.intromanage.bo.SummationBO;
 import com.bjike.goddess.intromanage.dto.IndividualResumeDTO;
 import com.bjike.goddess.intromanage.excel.SonPermissionObject;
 import com.bjike.goddess.intromanage.to.GuidePermissionTO;
 import com.bjike.goddess.intromanage.to.IndividualDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.IndividualResumeTO;
+import com.bjike.goddess.intromanage.to.SiginManageDeleteFileTO;
 import com.bjike.goddess.intromanage.vo.*;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
+import com.bjike.goddess.storage.api.FileAPI;
+import com.bjike.goddess.storage.to.FileInfo;
+import com.bjike.goddess.storage.vo.FileVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +48,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("individualresume")
-public class IndividualResumeAct {
+public class IndividualResumeAct extends BaseFileAction{
 
     @Autowired
     private IndividualResumeAPI individualResumeAPI;
@@ -50,6 +59,8 @@ public class IndividualResumeAct {
     private ModuleAPI moduleAPI;
     @Autowired
     private EntryRegisterAPI entryRegisterAPI;
+    @Autowired
+    private FileAPI fileAPI;
 
     /**
      * 模块设置导航权限
@@ -321,6 +332,186 @@ public class IndividualResumeAct {
                 date = entryRegisterAPI.findGraduationDate();
             }
             return ActResult.initialize(date);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 上传附件
+     *
+     * @des 审核项目签订与立项
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/uploadFile/{id}")
+    public Result uploadFile(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            // /id/....
+            String paths = "/businessproject/siginmanage/" + id;
+            List<InputStream> inputStreams = getInputStreams(request, paths);
+            fileAPI.upload(inputStreams);
+            return new ActResult("upload success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 文件附件列表
+     *
+     * @param id 签订与立项id
+     * @return class FileVO
+     * @version v1
+     */
+    @GetMapping("v1/listFile/{id}")
+    public Result list(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            // /businessproject/id/....
+            String path = "/businessproject/siginmanage/" + id;
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
+            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
+            return ActResult.initialize(files);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param path 文件信息路径
+     * @version v1
+     */
+    @GetMapping("v1/downloadFile")
+    public Result download(@RequestParam String path, HttpServletRequest request, HttpServletResponse response) throws ActException {
+        try {
+
+
+            //该文件的路径
+            Object storageToken = request.getAttribute("storageToken");
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            fileInfo.setStorageToken(storageToken.toString());
+            String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
+            byte[] buffer = fileAPI.download(fileInfo);
+            writeOutFile(response, buffer, filename);
+            return new ActResult("download success");
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
+
+    /**
+     * 删除文件或文件夹
+     *
+     * @param siginManageDeleteFileTO 多文件信息路径
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/deleteFile")
+    public Result delFile(@Validated(SiginManageDeleteFileTO.TestDEL.class) SiginManageDeleteFileTO siginManageDeleteFileTO, HttpServletRequest request) throws SerException {
+        if (null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length >= 0) {
+            Object storageToken = request.getAttribute("storageToken");
+            fileAPI.delFile(storageToken.toString(), siginManageDeleteFileTO.getPaths());
+        }
+        return new ActResult("delFile success");
+    }
+
+    /**
+     * 冻结
+     *
+     * @param id id
+     * @des 根据id冻结公司简介
+     * @version v1
+     */
+    @LoginAuth
+    @DeleteMapping("v1/congeal/{id}")
+    public Result congeal(@PathVariable String id) throws ActException {
+        try {
+            individualResumeAPI.congealFirmin(id);
+            return new ActResult("congeal success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 解冻
+     *
+     * @param id id
+     * @des 根据id解冻公司简介
+     * @version v1
+     */
+    @LoginAuth
+    @DeleteMapping("v1/thaw/{id}")
+    public Result thaw(@PathVariable String id ) throws ActException {
+        try {
+            individualResumeAPI.thawFirmin(id);
+            return new ActResult("thaw success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 简介管理周汇总
+     *
+     * @param year 年份
+     * @param month 月份
+     * @param week 周期
+     * @return class SummationVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/summarize/week")
+    public Result summarizeDay(Integer year,Integer month,Integer week, HttpServletRequest request) throws ActException {
+        try {
+            SummationBO bo = individualResumeAPI.summaWeek(year,month,week);
+            SummationVO vo = BeanTransform.copyProperties(bo, SummationVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 简介管理月汇总
+     *
+     * @param year 年份
+     * @param month 月份
+     * @return class SummationVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/summarize/month")
+    public Result summarizeMonth(Integer year,Integer month, HttpServletRequest request) throws ActException {
+        try {
+            SummationBO bo = individualResumeAPI.summaMonth(year,month);
+            SummationVO vo = BeanTransform.copyProperties(bo, SummationVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 简介管理累计汇总
+     *
+     * @param date 截止日期
+     * @return class SummationVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/summarize/total")
+    public Result summarizeMonth(String date, HttpServletRequest request) throws ActException {
+        try {
+            SummationBO bo = individualResumeAPI.summaTotal(date);
+            SummationVO vo = BeanTransform.copyProperties(bo, SummationVO.class, request);
+            return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

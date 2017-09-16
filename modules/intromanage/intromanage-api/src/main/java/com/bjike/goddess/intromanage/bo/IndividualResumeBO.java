@@ -1,6 +1,8 @@
 package com.bjike.goddess.intromanage.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.organize.enums.StaffStatus;
 
 import java.util.List;
 
@@ -29,6 +31,10 @@ public class IndividualResumeBO extends BaseBO {
      * 姓名
      */
     private String name;
+    /**
+     * 最新获取/更新时间
+     */
+    private String updateDate;
 
     /**
      * 员工编号
@@ -199,7 +205,14 @@ public class IndividualResumeBO extends BaseBO {
      * 工作年限
      */
     private String workExperience;
-
+    /**
+     * 员工状态
+     */
+    private StaffStatus staffStatus;
+    /**
+     * 状态
+     */
+    private Status status;
 
     /**
      * 员工奖励
@@ -536,6 +549,30 @@ public class IndividualResumeBO extends BaseBO {
 
     public void seteMsil(String eMsil) {
         this.eMsil = eMsil;
+    }
+
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public StaffStatus getStaffStatus() {
+        return staffStatus;
+    }
+
+    public void setStaffStatus(StaffStatus staffStatus) {
+        this.staffStatus = staffStatus;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public List<StaffRewardBO> getStaffRewardBOS() {

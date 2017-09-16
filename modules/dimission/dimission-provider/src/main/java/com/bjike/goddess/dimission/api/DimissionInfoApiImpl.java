@@ -161,7 +161,17 @@ public class DimissionInfoApiImpl implements DimissionInfoAPI {
     }
 
     @Override
+    public String getDate() throws SerException {
+        return dimissionInfoSer.getDate();
+    }
+
+    @Override
     public List<DimissionInfo> findByName(String userName) throws SerException {
         return dimissionInfoSer.findByName(userName);
+    }
+
+    @Override
+    public Integer getDimissionNum(String[] date) throws SerException {
+        return dimissionInfoSer.getDimissionNum(date);
     }
 }

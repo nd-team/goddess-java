@@ -3,6 +3,7 @@ package com.bjike.goddess.intromanage.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.intromanage.bo.IndividualResumeBO;
+import com.bjike.goddess.intromanage.bo.SummationBO;
 import com.bjike.goddess.intromanage.dto.IndividualResumeDTO;
 import com.bjike.goddess.intromanage.entity.IndividualResume;
 import com.bjike.goddess.intromanage.excel.SonPermissionObject;
@@ -118,5 +119,30 @@ public class IndividualResumeApiImpl implements IndividualResumeAPI {
     @Override
     public void setIndividualDisplayField(String[] username, IndividualDisplayFieldTO to) throws SerException {
         individualResumeSer.setIndividualDisplayField(username, to);
+    }
+
+    @Override
+    public void congealFirmin(String id) throws SerException {
+        individualResumeSer.congealFirmin(id);
+    }
+
+    @Override
+    public void thawFirmin(String id) throws SerException {
+        individualResumeSer.thawFirmin(id);
+    }
+
+    @Override
+    public SummationBO summaWeek(Integer year, Integer month, Integer week) throws SerException {
+        return individualResumeSer.summaWeek(year,month,week);
+    }
+
+    @Override
+    public SummationBO summaMonth(Integer year, Integer month) throws SerException {
+        return individualResumeSer.summaMonth(year,month);
+    }
+
+    @Override
+    public SummationBO summaTotal(String endDate) throws SerException {
+        return individualResumeSer.summaTotal(endDate);
     }
 }
