@@ -144,7 +144,7 @@ public abstract class BaseFileAction {
 
     /**
      * 上传文件调用该方法获得文件流
-     *
+     * InputStreams 顺序为文件信息,文件
      * @param request
      * @return
      * @throws SerException
