@@ -204,4 +204,26 @@ public interface DepartmentDetailSer extends Ser<DepartmentDetail, DepartmentDet
      */
     String number(DepartmentDetailTO to) throws SerException;
 
+    /**
+     * 一个部门的总人数
+     *
+     * @param department department
+     * @return
+     * @throws SerException
+     */
+    Integer departmentTotalPeople(String department) throws SerException;
+
+    /**
+     * 根据时间获取地区个数
+     */
+    default Integer getAreaNum(String startTime,String endTime) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据时间获取项目组/部门个数
+     */
+    default Integer getDepartmentNum(String startTime,String endTime) throws SerException {
+        return null;
+    }
 }

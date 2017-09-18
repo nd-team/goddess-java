@@ -1,10 +1,12 @@
 package com.bjike.goddess.managepromotion.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.managepromotion.bo.SkillLevelCollectBO;
 import com.bjike.goddess.managepromotion.bo.SkillPromotionApplyBO;
 import com.bjike.goddess.managepromotion.dto.SkillPromotionApplyDTO;
 import com.bjike.goddess.managepromotion.service.SkillPromotionApplySer;
 import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
+import com.bjike.goddess.managepromotion.to.SkillLevelCollectTO;
 import com.bjike.goddess.managepromotion.to.SkillPromotionApplyTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -79,6 +81,25 @@ public class SkillPromotionApplyApiImpl implements SkillPromotionApplyAPI {
     @Override
     public SkillPromotionApplyBO generalManagerAudit(SkillPromotionApplyTO skillPromotionApplyTO) throws SerException {
         return skillPromotionApplySer.generalManagerAudit(skillPromotionApplyTO);
+    }
+    @Override
+    public List<SkillLevelCollectBO> dayLevelCollect(SkillLevelCollectTO to) throws SerException {
+        return skillPromotionApplySer.dayLevelCollect(to);
+    }
+
+    @Override
+    public List<SkillLevelCollectBO> weekLevelCollect(SkillLevelCollectTO to) throws SerException {
+        return skillPromotionApplySer.weekLevelCollect(to);
+    }
+
+    @Override
+    public List<SkillLevelCollectBO> monthLevelCollect(SkillLevelCollectTO to) throws SerException {
+        return skillPromotionApplySer.monthLevelCollect(to);
+    }
+
+    @Override
+    public List<SkillLevelCollectBO> totalLevelCollect(SkillLevelCollectTO to) throws SerException {
+        return skillPromotionApplySer.totalLevelCollect(to);
     }
 
 }

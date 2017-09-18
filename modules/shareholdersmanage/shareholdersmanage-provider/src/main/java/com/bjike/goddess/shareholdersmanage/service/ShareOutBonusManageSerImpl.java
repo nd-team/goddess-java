@@ -167,7 +167,7 @@ public class ShareOutBonusManageSerImpl extends ServiceImpl<ShareOutBonusManage,
     @Override
     public List<ShareOutBonusManageBO> findList(ShareOutBonusManageDTO shareOutBonusManageDTO) throws SerException {
         shareOutBonusManageDTO.getSorts().add("createTime=desc");
-        List<ShareOutBonusManage> pledgeEquityList = super.findByCis(shareOutBonusManageDTO);
+        List<ShareOutBonusManage> pledgeEquityList = super.findByPage(shareOutBonusManageDTO);
         return BeanTransform.copyProperties(pledgeEquityList, ShareOutBonusManageBO.class);
     }
     @Transactional(rollbackFor = SerException.class)

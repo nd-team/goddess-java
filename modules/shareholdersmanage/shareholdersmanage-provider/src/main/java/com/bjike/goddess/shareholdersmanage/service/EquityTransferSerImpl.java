@@ -166,7 +166,7 @@ public class EquityTransferSerImpl extends ServiceImpl<EquityTransfer, EquityTra
         checkPermission();
         searchCondi(equityTransferDTO);
         equityTransferDTO.getSorts().add("createTime=desc");
-        List<EquityTransfer> equityTransferList = super.findByCis(equityTransferDTO);
+        List<EquityTransfer> equityTransferList = super.findByPage(equityTransferDTO);
         return BeanTransform.copyProperties(equityTransferList, EquityTransferBO.class);
     }
 

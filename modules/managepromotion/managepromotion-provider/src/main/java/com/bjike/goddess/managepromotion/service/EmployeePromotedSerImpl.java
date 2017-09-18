@@ -6,14 +6,13 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
-import com.bjike.goddess.managepromotion.bo.CollectBO;
-import com.bjike.goddess.managepromotion.bo.EmployeePromotedBO;
+import com.bjike.goddess.managepromotion.bo.*;
 import com.bjike.goddess.managepromotion.dto.EmployeePromotedDTO;
 import com.bjike.goddess.managepromotion.entity.EmployeePromoted;
+import com.bjike.goddess.managepromotion.entity.OverviewSkillLevel;
 import com.bjike.goddess.managepromotion.enums.GuideAddrStatus;
-import com.bjike.goddess.managepromotion.to.CollectTO;
-import com.bjike.goddess.managepromotion.to.EmployeePromotedTO;
-import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
+import com.bjike.goddess.managepromotion.to.*;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -22,8 +21,13 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,6 +48,10 @@ public class EmployeePromotedSerImpl extends ServiceImpl<EmployeePromoted, Emplo
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private OverviewSkillLevelSer overviewSkillLevelSer;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -313,6 +321,282 @@ public class EmployeePromotedSerImpl extends ServiceImpl<EmployeePromoted, Emplo
 
 
         return statusList;
+    }
+
+    @Override
+    public List<SkillPromotionDetailCollectBO> detailWeekCollect(SkillPromotionDetailCollectTO to) throws SerException {
+        List<SkillPromotionDetailCollectBO> boList = new ArrayList<>();
+        LocalDate[] time = null;
+        Integer year = to.getYear();
+        Integer month = to.getMonth();
+        Integer week = to.getWeek();
+        if (year != null && month != null && week != null) {
+            time = DateUtil.getWeekTimes(year, month, week);
+        } else {
+            String dateString = DateUtil.dateToString(LocalDate.now());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = null;
+            try {
+                date = sdf.parse(dateString);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            int weekOfMonth = calendar.get(Calendar.WEEK_OF_MONTH);
+            time = DateUtil.getWeekTimes(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), weekOfMonth);
+        }
+        LocalDate start = time[0];
+        LocalDate end = time[1];
+        String sql = " SELECT projectGroup AS projectGroup,name AS name,jobs AS jobs, " +
+                " channel AS channel,times AS times,sum(promotionBefore)AS promotionBefore, " +
+                " sum(promotionAfter) AS promotionAfter,sum(promotionAfter-promotionBefore)as extent " +
+                " FROM managepromotion_employeepromoted WHERE times between '"+start+"' and '"+end+"' " +
+                " GROUP BY projectGroup,name,jobs,channel,times ";
+        String[] fields = new String[]{"projectGroup","name","jobs","channel","times","promotionBefore","promotionAfter","extent"};
+        List<SkillPromotionDetailCollectBO> skillPromotionDetailCollectBOS = super.findBySql(sql,SkillPromotionDetailCollectTO.class,fields);
+        for (SkillPromotionDetailCollectBO collectBO:skillPromotionDetailCollectBOS){
+            collectBO.setCycle(start+"-"+end);
+            boList.add(collectBO);
+        }
+        return boList;
+    }
+
+
+    @Override
+    public List<SkillPromotionDetailCollectBO> detailMonthCollect(SkillPromotionDetailCollectTO to) throws SerException {
+        return null;
+    }
+
+    @Override
+    public List<SkillPromotionDetailCollectBO> detailTotalCollect(SkillPromotionDetailCollectTO to) throws SerException {
+        return null;
+    }
+
+    @Override
+    public List<ProfessionalSkillCollectBO> dayProfessionalCollect(ProfessionalSkillTO to) throws SerException {
+        LocalDate time = null;
+        if (to.getTime() != null) {
+            time = DateUtil.parseDate(to.getTime());
+        } else {
+            time =LocalDate.now();
+        }
+        List<ProfessionalSkillCollectBO> boList = new ArrayList<>();
+        String sql = "SELECT  area AS area ,department AS  department,major AS  major,grade AS grade,count(*) as count " +
+                " FROM managepromotion_overviewskilllevel WHERE acquisitionTime='" + time + "' GROUP BY area,department,major,grade ";
+        String[] fields = new String[]{"area", "department", "major", "grade", "people"};
+        List<ProfessionalSkillCollectBO> professionalSkillBOS = super.findBySql(sql, ProfessionalSkillCollectBO.class, fields);
+
+        for (ProfessionalSkillCollectBO collectBO : professionalSkillBOS) {
+            Integer peopleCount = 0;
+            peopleCount = departmentDetailAPI.departmentTotalPeople(collectBO.getDepartment());
+            collectBO.setPromotionPeople(collectBO.getPeople() - peopleCount);
+            boList.add(collectBO);
+        }
+        return boList;
+    }
+
+    @Override
+    public List<ProfessionalSkillCollectBO> weekProfessionalCollect(ProfessionalSkillTO to) throws SerException {
+        LocalDate[] time = null;
+        Integer year = to.getYear();
+        Integer month = to.getMonth();
+        Integer week = to.getWeek();
+        if (year != null && month != null && week != null) {
+            time = DateUtil.getWeekTimes(year, month, week);
+        } else {
+            String dateString = DateUtil.dateToString(LocalDate.now());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = null;
+            try {
+                date = sdf.parse(dateString);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            int weekOfMonth = calendar.get(Calendar.WEEK_OF_MONTH);
+            time = DateUtil.getWeekTimes(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), weekOfMonth);
+        }
+        LocalDate start = time[0];
+        LocalDate end = time[1];
+        List<ProfessionalSkillCollectBO> boList = new ArrayList<>();
+        String sql = "SELECT  area AS area ,department AS  department,major AS  major,grade AS grade,count(*) as count " +
+                " FROM managepromotion_overviewskilllevel WHERE acquisitionTime between '" + start + "' and '" + end + "' GROUP BY area,department,major,grade ";
+        String[] fields = new String[]{"area", "department", "major", "grade", "people"};
+        List<ProfessionalSkillCollectBO> professionalSkillBOS = super.findBySql(sql, ProfessionalSkillCollectBO.class, fields);
+
+        for (ProfessionalSkillCollectBO collectBO : professionalSkillBOS) {
+            Integer peopleCount = 0;
+            peopleCount = departmentDetailAPI.departmentTotalPeople(collectBO.getDepartment());
+            collectBO.setPromotionPeople(collectBO.getPeople() - peopleCount);
+            boList.add(collectBO);
+        }
+        return boList;
+    }
+
+
+    @Override
+    public List<ProfessionalSkillCollectBO> monthProfessionalCollect(ProfessionalSkillTO to) throws SerException {
+        Integer year = 0;
+        Integer month = 0;
+        if (to.getYear() != null && to.getMonth() != null) {
+            year = to.getYear();
+            month = to.getMonth();
+        } else {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+        }
+
+        List<ProfessionalSkillCollectBO> boList = new ArrayList<>();
+        String sql = "SELECT  area AS area ,department AS  department,major AS  major,grade AS grade,count(*) as count " +
+                " FROM managepromotion_overviewskilllevel WHERE year(acquisitionTime) = '" + year + "' and month(acquisitionTime) = '" + month + "' GROUP BY area,department,major,grade ";
+        String[] fields = new String[]{"area", "department", "major", "grade", "people"};
+        List<ProfessionalSkillCollectBO> professionalSkillBOS = super.findBySql(sql, ProfessionalSkillCollectBO.class, fields);
+
+        for (ProfessionalSkillCollectBO collectBO : professionalSkillBOS) {
+            Integer peopleCount = 0;
+            peopleCount = departmentDetailAPI.departmentTotalPeople(collectBO.getDepartment());
+            collectBO.setPromotionPeople(collectBO.getPeople() - peopleCount);
+            boList.add(collectBO);
+        }
+        return boList;
+    }
+
+    @Override
+    public List<ProfessionalSkillCollectBO> totalProfessionalCollect(ProfessionalSkillTO to) throws SerException {
+        LocalDate end = null;
+        if (to.getTime() != null) {
+            end = DateUtil.parseDate(to.getTime());
+        } else {
+            end = LocalDate.now();
+        }
+        List<ProfessionalSkillCollectBO> boList = new ArrayList<>();
+
+        String sql = "SELECT  area AS area ,department AS  department,major AS  major,grade AS grade,count(*) as count " +
+                " FROM managepromotion_overviewskilllevel where acquisitionTime <= '" + end + "' GROUP BY area,department,major,grade ";
+        String[] fields = new String[]{"area", "department", "major", "grade", "people"};
+        List<ProfessionalSkillCollectBO> professionalSkillBOS = super.findBySql(sql, ProfessionalSkillCollectBO.class, fields);
+
+        for (ProfessionalSkillCollectBO collectBO : professionalSkillBOS) {
+            Integer peopleCount = 0;
+            peopleCount = departmentDetailAPI.departmentTotalPeople(collectBO.getDepartment());
+            collectBO.setPromotionPeople(collectBO.getPeople() - peopleCount);
+            boList.add(collectBO);
+        }
+        return boList;
+    }
+
+
+    //获取所有地区
+    private List<String> professionalAreas() throws SerException {
+        String[] fields = new String[]{"area"};
+        String sql = " SELECT area AS  area FROM managepromotion_overviewskilllevel GROUP BY area ";
+        List<OverviewSkillLevel> overviewSkillLevels = super.findBySql(sql, OverviewSkillLevel.class, fields);
+        List<String> areas = overviewSkillLevels.stream().map(OverviewSkillLevel::getArea).collect(Collectors.toList());
+        return areas;
+    }
+
+    //获取所有项目组/部门
+    private List<String> professionaldDepartments() throws SerException {
+        String[] fields = new String[]{"department"};
+        String sql = " SELECT department AS  department FROM managepromotion_overviewskilllevel GROUP BY department ";
+        List<OverviewSkillLevel> overviewSkillLevels = super.findBySql(sql, OverviewSkillLevel.class, fields);
+        List<String> departments = overviewSkillLevels.stream().map(OverviewSkillLevel::getDepartment).collect(Collectors.toList());
+        return departments;
+    }
+
+
+    @Override
+    public List<StaffSkillCollectBO> dayStaffCollect(StaffSkillCollectTO to) throws SerException {
+        LocalDate time = null;
+        if (to.getTime() != null) {
+            time = DateUtil.parseDate(to.getTime());
+        } else {
+            time = LocalDate.now();
+        }
+        List<StaffSkillCollectBO> boList = new ArrayList<>();
+        String sql = " SELECT area AS area ,department AS  department,name as name, " +
+                " count(*) as skillNum,sum(promotedNumber) AS promotedNumber " +
+                " FROM managepromotion_overviewskilllevel where acquisitionTime = '" + time + "' " +
+                " GROUP BY area,department,name ";
+        String[] fields = new String[]{"area", "department", "name", "skillNum", "promotedNumber"};
+        boList = super.findBySql(sql, StaffSkillCollectBO.class, fields);
+        return boList;
+    }
+
+    @Override
+    public List<StaffSkillCollectBO> weekStaffCollect(StaffSkillCollectTO to) throws SerException {
+        LocalDate[] time = null;
+        Integer year = to.getYear();
+        Integer month = to.getMonth();
+        Integer week = to.getWeek();
+        if (year != null && month != null && week != null) {
+            time = DateUtil.getWeekTimes(year, month, week);
+        } else {
+            String dateString = DateUtil.dateToString(LocalDate.now());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = null;
+            try {
+                date = sdf.parse(dateString);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            int weekOfMonth = calendar.get(Calendar.WEEK_OF_MONTH);
+            time = DateUtil.getWeekTimes(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), weekOfMonth);
+        }
+        LocalDate start = time[0];
+        LocalDate end = time[1];
+        List<StaffSkillCollectBO> boList = new ArrayList<>();
+        String sql = " SELECT area AS area ,department AS  department,name as name, " +
+                " count(*) as skillNum,sum(promotedNumber) AS promotedNumber " +
+                " FROM managepromotion_overviewskilllevel WHERE acquisitionTime between '" + start + "' and '" + end + "' GROUP BY area,department,name ";
+        String[] fields = new String[]{"area", "department", "name", "skillNum", "promotedNumber"};
+        boList = super.findBySql(sql, StaffSkillCollectBO.class, fields);
+        return boList;
+    }
+
+    @Override
+    public List<StaffSkillCollectBO> monthStaffCollect(StaffSkillCollectTO to) throws SerException {
+        Integer year = 0;
+        Integer month = 0;
+        if (to.getYear() != null && to.getMonth() != null) {
+            year = to.getYear();
+            month = to.getMonth();
+        } else {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+        }
+        List<StaffSkillCollectBO> boList = new ArrayList<>();
+        String sql = " SELECT area AS area ,department AS  department,name as name, " +
+                " count(*) as skillNum,sum(promotedNumber) AS promotedNumber " +
+                " FROM managepromotion_overviewskilllevel WHERE year(acquisitionTime) = '" + year + "' and month(acquisitionTime) " +
+                " = '" + month + "' GROUP BY area,department,name ";
+        String[] fields = new String[]{"area", "department", "name", "skillNum", "promotedNumber"};
+        boList = super.findBySql(sql, StaffSkillCollectBO.class, fields);
+        return boList;
+    }
+
+    @Override
+    public List<StaffSkillCollectBO> totalStaffCollect(StaffSkillCollectTO to) throws SerException {
+        LocalDate end = null;
+        if (to.getTime() != null) {
+            end = DateUtil.parseDate(to.getTime());
+        } else {
+            end = LocalDate.now();
+        }
+        List<StaffSkillCollectBO> boList = new ArrayList<>();
+        String sql = " SELECT area AS area ,department AS  department,name as name, " +
+                " count(*) as skillNum,sum(promotedNumber) AS promotedNumber " +
+                " FROM managepromotion_overviewskilllevel WHERE acquisitionTime <= '"+end+"' GROUP BY area,department,name ";
+        String[] fields = new String[]{"area", "department", "name", "skillNum", "promotedNumber"};
+        boList = super.findBySql(sql, StaffSkillCollectBO.class, fields);
+        return boList;
     }
 
 }

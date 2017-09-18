@@ -167,7 +167,7 @@ public class ChangeEquityTypeSerImpl extends ServiceImpl<ChangeEquityType, Chang
     public List<ChangeEquityTypeBO> findList(ChangeEquityTypeDTO changeEquityTypeDTO) throws SerException {
         checkPermission();
         changeEquityTypeDTO.getSorts().add("createTime=desc");
-        List<ChangeEquityType> changeEquityTypes = super.findByCis(changeEquityTypeDTO);
+        List<ChangeEquityType> changeEquityTypes = super.findByPage(changeEquityTypeDTO);
         return BeanTransform.copyProperties(changeEquityTypes, ChangeEquityTypeBO.class);
     }
 

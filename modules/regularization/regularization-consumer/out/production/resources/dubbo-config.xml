@@ -19,6 +19,9 @@
 	<dubbo:reference validation="true" interface="com.bjike.goddess.regularization.api.RegularizationAPI" id="regularizationApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.regularization.api.ScoreFormulaSetAPI" id="scoreFormulaSetApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.regularization.api.TimeCriteriaSetAPI" id="timeCriteriaSetApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.regularization.api.TransferInfoAPI" id="transferInfoApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.regularization.api.CommunicationFormworkAPI" id="communicationFormworkApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.regularization.api.CountAPI" id="countApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.regularization.api.CusPermissionAPI" id="cusPermissionApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.regularization.api.CusPermissionOperateAPI" id="cusPermissionOperateApiImpl"/>
 

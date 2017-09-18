@@ -165,7 +165,7 @@ public class LogoutEquitySerImpl extends ServiceImpl<LogoutEquity, LogoutEquityD
         checkPermission();
         searchCondi(logoutEquityDTO);
         logoutEquityDTO.getSorts().add("createTime=desc");
-        List<LogoutEquity> logoutEquities = super.findByCis(logoutEquityDTO);
+        List<LogoutEquity> logoutEquities = super.findByPage(logoutEquityDTO);
         return BeanTransform.copyProperties(logoutEquities, LogoutEquityBO.class);
     }
     /**

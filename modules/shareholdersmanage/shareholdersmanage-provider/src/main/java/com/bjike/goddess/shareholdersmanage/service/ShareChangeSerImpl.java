@@ -167,7 +167,7 @@ public class ShareChangeSerImpl extends ServiceImpl<ShareChange, ShareChangeDTO>
         checkPermission();
         searchCondi(shareChangeDTO);
         shareChangeDTO.getSorts().add("createTime=desc");
-        List<ShareChange> shareChanges = super.findByCis(shareChangeDTO);
+        List<ShareChange> shareChanges = super.findByPage(shareChangeDTO);
         return BeanTransform.copyProperties(shareChanges, ShareChangeBO.class);
     }
     /**

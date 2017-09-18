@@ -57,7 +57,31 @@ public enum GuideAddrStatus {
     /**
      * 总经办审批
      */
-    AUDIT(11);
+    AUDIT(11),
+    /**
+     * 福利模块考察
+     */
+    WELFAREASSESS(12),
+    /**
+     * 规划模块考察
+     */
+    PLANASSESS(13),
+    /**
+     * 预算模块考察
+     */
+    BUDGETASSESS(14),
+    /**
+     * 模块负责人审核
+     */
+    MODULERESPON(15),
+    /**
+     * 项目经理审核
+     */
+    PROJECTMANAGE(16),
+    /**
+     * 总经理审核
+     */
+    GENMANAGE(17);
 
 
 

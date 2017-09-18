@@ -1,6 +1,5 @@
 package com.bjike.goddess.system.action.system;
 
-import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -18,17 +17,11 @@ import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import com.bjike.goddess.system.api.FeatureListAPI;
 import com.bjike.goddess.system.bo.FeatureListBO;
-import com.bjike.goddess.system.bo.FieldDockBO;
 import com.bjike.goddess.system.dto.FeatureListDTO;
-import com.bjike.goddess.system.dto.FieldDockDTO;
-import com.bjike.goddess.system.entity.FeatureList;
-import com.bjike.goddess.system.entity.Question;
 import com.bjike.goddess.system.to.FeatureListTO;
-import com.bjike.goddess.system.to.FieldDockTO;
 import com.bjike.goddess.system.to.QuestionTO;
 import com.bjike.goddess.system.to.SystemTO;
 import com.bjike.goddess.system.vo.FeatureListVO;
-import com.bjike.goddess.system.vo.FieldDockVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -52,7 +45,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("featurelist")
-public class FeatureListAction extends BaseFileAction{
+public class FeatureListAction extends BaseFileAction {
     @Autowired
     private FeatureListAPI featureListAPI;
     @Autowired
@@ -61,6 +54,7 @@ public class FeatureListAction extends BaseFileAction{
     private ModuleTypeAPI moduleTypeAPI;
     @Autowired
     private FileAPI fileAPI;
+
     /**
      * 功能列表总条数
      *
@@ -129,7 +123,7 @@ public class FeatureListAction extends BaseFileAction{
     public Result add(FeatureListTO to, BindingResult bindingResult) throws ActException {
         try {
             FeatureListBO featureListBO = featureListAPI.insert(to);
-            return ActResult.initialize(BeanTransform.copyProperties(featureListBO,FeatureListVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(featureListBO, FeatureListVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -148,7 +142,7 @@ public class FeatureListAction extends BaseFileAction{
     public Result edit(FeatureListTO to, BindingResult bindingResult) throws ActException {
         try {
             FeatureListBO featureListBO = featureListAPI.edit(to);
-            return ActResult.initialize(BeanTransform.copyProperties(featureListBO,FeatureListVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(featureListBO, FeatureListVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -171,10 +165,11 @@ public class FeatureListAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 我要发问
      *
-     * @param id     id
+     * @param id         id
      * @param questionTO questionTO
      * @throws ActException
      * @version v1
@@ -205,6 +200,7 @@ public class FeatureListAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 查询未冻结部门项目组详细信息
      *
@@ -219,6 +215,7 @@ public class FeatureListAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 查询正常状态的模块类型数据
      *
@@ -233,6 +230,7 @@ public class FeatureListAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 上传附件
      *
@@ -245,7 +243,7 @@ public class FeatureListAction extends BaseFileAction{
         try {
             String id = systemTO.getId();
             String folder = systemTO.getFolder();
-            String path =  "/" + folder + "/" + id;
+            String path = "/" + folder + "/" + id;
             List<InputStream> inputStreams = getInputStreams(request, path);
             fileAPI.upload(inputStreams);
             return new ActResult("upload success");
@@ -267,7 +265,7 @@ public class FeatureListAction extends BaseFileAction{
             //跟前端约定好 ，文件路径是列表id
             String id = systemTO.getId();
             String folder = systemTO.getFolder();
-            String path =  "/" + folder + "/" + id;
+            String path = "/" + folder + "/" + id;
             FileInfo fileInfo = new FileInfo();
             fileInfo.setPath(path);
             Object storageToken = request.getAttribute("storageToken");
@@ -318,6 +316,7 @@ public class FeatureListAction extends BaseFileAction{
         }
         return new ActResult("delFile success");
     }
+
     /**
      * 附件文件夹
      *
@@ -340,6 +339,46 @@ public class FeatureListAction extends BaseFileAction{
         }
     }
 
+    /**
+     * 获取功能名称
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getFeatureName")
+    public Result getFeatureName() throws ActException {
+        try {
+            return ActResult.initialize(featureListAPI.getFeatureName());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
+    /**
+     * 根据功能名称获取功能目的
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getPurpose/{name}")
+    public Result getPurpose(@PathVariable String name) throws ActException {
+        try {
+            return ActResult.initialize(featureListAPI.getPurpose(name));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据功能名称获取版本
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getVersion/{name}")
+    public Result getVersion(@PathVariable String name) throws ActException {
+        try {
+            return ActResult.initialize(featureListAPI.getVersion(name));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

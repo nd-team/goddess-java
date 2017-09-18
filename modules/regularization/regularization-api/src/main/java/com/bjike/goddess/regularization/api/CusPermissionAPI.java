@@ -1,10 +1,10 @@
 package com.bjike.goddess.regularization.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.regularization.bo.CusPermissionBO;
 import com.bjike.goddess.regularization.dto.CusPermissionDTO;
 import com.bjike.goddess.regularization.to.CusPermissionTO;
-import com.bjike.goddess.organize.bo.OpinionBO;
 
 import java.util.List;
 

@@ -3,7 +3,6 @@ package com.bjike.goddess.businessproject.action.businessproject;
 import com.bjike.goddess.businessproject.api.BaseInfoManageAPI;
 import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
 import com.bjike.goddess.businessproject.dto.BaseInfoManageDTO;
-import com.bjike.goddess.businessproject.excel.BaseInfoManageExcel;
 import com.bjike.goddess.businessproject.excel.BaseInfoManageLeadExcel;
 import com.bjike.goddess.businessproject.to.BaseInfoManageTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
@@ -407,5 +406,48 @@ public class BaseInfoManageAction extends BaseFileAction {
             throw new ActException(e1.getMessage());
         }
     }
+
+    /**
+     * 获取某段时间内的内部项目数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getInterProject")
+    public Result getInterProject(String startTime, String endTime) throws ActException {
+        try {
+            return ActResult.initialize(baseInfoManageAPI.getInterProject(startTime, endTime));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取某段时间内的内部项目名称
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getInterProject/name")
+    public Result getInterProjectName(String startTime, String endTime) throws ActException {
+        try {
+            return ActResult.initialize(baseInfoManageAPI.getInterProjectName(startTime, endTime));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据内部项目名称获取所部的地区
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getArea")
+    public Result getArea(String projectNane) throws ActException {
+        try {
+            return ActResult.initialize(baseInfoManageAPI.getArea(projectNane));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }

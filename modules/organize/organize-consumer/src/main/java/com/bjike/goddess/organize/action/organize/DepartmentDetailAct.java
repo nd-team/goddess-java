@@ -2,7 +2,6 @@ package com.bjike.goddess.organize.action.organize;
 
 import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.fastjson.JSON;
-import com.bjike.goddess.assemble.api.ModuleAPI;
 //import com.bjike.goddess.businessproject.api.BaseInfoManageAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;

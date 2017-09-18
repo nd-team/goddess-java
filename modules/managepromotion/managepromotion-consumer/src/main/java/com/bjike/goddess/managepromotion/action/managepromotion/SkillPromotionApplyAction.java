@@ -12,6 +12,7 @@ import com.bjike.goddess.managepromotion.api.SkillGradingAPI;
 import com.bjike.goddess.managepromotion.api.SkillPromotionApplyAPI;
 import com.bjike.goddess.managepromotion.bo.SkillPromotionApplyBO;
 import com.bjike.goddess.managepromotion.dto.SkillPromotionApplyDTO;
+import com.bjike.goddess.managepromotion.entity.SkillPromotionApply;
 import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
 import com.bjike.goddess.managepromotion.to.SkillPromotionApplyTO;
 import com.bjike.goddess.managepromotion.vo.SkillPromotionApplyVO;
@@ -147,7 +148,7 @@ public class SkillPromotionApplyAction {
      */
     @LoginAuth
     @PostMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class) SkillPromotionApplyTO skillPromotionApplyTO, BindingResult bindingResult) throws ActException {
+    public Result edit(@Validated(SkillPromotionApplyTO.TestEdit.class) SkillPromotionApplyTO skillPromotionApplyTO, BindingResult bindingResult) throws ActException {
         try {
             SkillPromotionApplyBO skillPromotionApplyBO = skillPromotionApplyAPI.editSkillPromotionApply(skillPromotionApplyTO);
             return ActResult.initialize(skillPromotionApplyBO);

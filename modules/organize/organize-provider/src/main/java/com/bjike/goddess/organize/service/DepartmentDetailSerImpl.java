@@ -7,6 +7,8 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.DepartmentPeopleBO;
+import com.bjike.goddess.organize.bo.ManagerBO;
 import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.entity.DepartmentDetail;
@@ -56,18 +58,47 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
 
     @Override
     public String number(DepartmentDetailTO to) throws SerException {
-        if (null==to.getHierarchyId()){
+        if (null == to.getHierarchyId()) {
             throw new SerException("必须先选体系");
-        }if (null==to.getSerialNumber()){
+        }
+        if (null == to.getSerialNumber()) {
             throw new SerException("编号不能为空");
         }
-        Hierarchy hierarchy=hierarchySer.findById(to.getHierarchyId());
-        if (null==hierarchy){
+        Hierarchy hierarchy = hierarchySer.findById(to.getHierarchyId());
+        if (null == hierarchy) {
             throw new SerException("体系不能为空");
         }
         //体系-部门
-        String number=String.format("%s-%s", hierarchy.getSerialNumber(), to.getSerialNumber());
+        String number = String.format("%s-%s", hierarchy.getSerialNumber(), to.getSerialNumber());
         return number;
+    }
+
+    @Override
+    public Integer getAreaNum(String startTime, String endTime) throws SerException {
+        String fields[] = new String[]{"area"};
+        StringBuilder sql = new StringBuilder("select count(area) from organize_department_detail ");
+        sql.append(" where createTime between '" + startTime + "' ");
+        sql.append(" and '" + endTime + "' ");
+        List<ManagerBO> managerBOs = super.findBySql(sql.toString(), ManagerBO.class, fields);
+        if (null != managerBOs && managerBOs.size() > 0) {
+            List<Integer> areas = managerBOs.stream().map(ManagerBO::getArea).distinct().collect(Collectors.toList());
+            return areas.get(0);
+        }
+        return 0;
+    }
+
+    @Override
+    public Integer getDepartmentNum(String startTime, String endTime) throws SerException {
+        String fields[] = new String[]{"department"};
+        StringBuilder sql = new StringBuilder("select count(department) from organize_department_detail ");
+        sql.append(" where createTime between '" + startTime + "' ");
+        sql.append(" and '" + endTime + "' ");
+        List<ManagerBO> managerBOs = super.findBySql(sql.toString(), ManagerBO.class, fields);
+        if (null != managerBOs && managerBOs.size() > 0) {
+            List<Integer> areas = managerBOs.stream().map(ManagerBO::getDepartment).distinct().collect(Collectors.toList());
+            return areas.get(0);
+        }
+        return 0;
     }
 
     private List<DepartmentDetailBO> transformationToBOList(List<DepartmentDetail> list) throws SerException {
@@ -130,17 +161,17 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
     @Override
     public DepartmentDetailBO save(DepartmentDetailTO to) throws SerException {
         this.checkUnique(to);
-        StringBuilder sb=new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         DepartmentDetail department = BeanTransform.copyProperties(to, DepartmentDetail.class, true);
         department.setHierarchy(hierarchySer.findById(to.getHierarchyId()));
         if (department.getHierarchy() == null)
             throw new SerException("体系不能为空");
-        String[] innerProjects=to.getInnerProjects();
-        for (int i=0;i<innerProjects.length;i++){
-            if (i==innerProjects.length-1){
+        String[] innerProjects = to.getInnerProjects();
+        for (int i = 0; i < innerProjects.length; i++) {
+            if (i == innerProjects.length - 1) {
                 sb.append(innerProjects[i]);
-            }else {
-                sb.append(innerProjects[i]+",");
+            } else {
+                sb.append(innerProjects[i] + ",");
             }
         }
         department.setInnerProject(sb.toString());
@@ -155,7 +186,7 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
     public DepartmentDetailBO update(DepartmentDetailTO to) throws SerException {
         if (StringUtils.isBlank(to.getId()))
             throw new SerException("数据ID不能为空");
-        StringBuilder sb=new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         DepartmentDetail entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");
@@ -174,12 +205,12 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         entity.setHierarchy(hierarchySer.findById(to.getHierarchyId()));
         if (entity.getHierarchy() == null)
             throw new SerException("体系不能为空");
-        String[] innerProjects=to.getInnerProjects();
-        for (int i=0;i<innerProjects.length;i++){
-            if (i==innerProjects.length-1){
+        String[] innerProjects = to.getInnerProjects();
+        for (int i = 0; i < innerProjects.length; i++) {
+            if (i == innerProjects.length - 1) {
                 sb.append(innerProjects[i]);
-            }else {
-                sb.append(innerProjects[i]+",");
+            } else {
+                sb.append(innerProjects[i] + ",");
             }
         }
         entity.setInnerProject(sb.toString());
@@ -278,4 +309,17 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         return bos;
     }
 
+    @Override
+    public Integer departmentTotalPeople(String department) throws SerException {
+        String sql = "SELECT count(DISTINCT c.user_id) peopleCount FROM " +
+                " organize_department_detail a,organize_position_detail b,organize_position_detail_user_table c " +
+                " WHERE a.id = b.department_id AND b.id = c.position_id AND " +
+                " department = '" + department + "'";
+
+        List<DepartmentPeopleBO> list = super.findBySql(sql, DepartmentPeopleBO.class, new String[]{"peopleCount"});
+        if (list != null && !list.isEmpty()) {
+            return Integer.parseInt(list.get(0).getPeopleCount() + "");
+        }
+        return null;
+    }
 }

@@ -235,4 +235,11 @@ public interface PositionDetailSer extends Ser<PositionDetail, PositionDetailDTO
      * @throws SerException
      */
     String number(PositionDetailTO to) throws SerException;
+
+    /**
+     * 根据时间获取岗位名称数量
+     */
+    default Long getPositionNum(String startTime, String endTime) throws SerException {
+        return null;
+    }
 }
