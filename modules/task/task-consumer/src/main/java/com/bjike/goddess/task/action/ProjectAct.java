@@ -4,8 +4,10 @@ import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.task.api.ProjectAPI;
+import com.bjike.goddess.task.bo.ProjectBO;
 import com.bjike.goddess.task.dto.ProjectDTO;
 import com.bjike.goddess.task.entity.Project;
 import com.bjike.goddess.task.to.ProjectTO;
@@ -14,10 +16,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -43,12 +42,28 @@ public class ProjectAct {
     @GetMapping("v1/list")
     public Result list(ProjectDTO dto) throws ActException {
         try {
-            List<ProjectVO> vos = projectAPI.list(dto);
+            List<ProjectBO> vos = projectAPI.list(dto);
             return ActResult.initialize(vos);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 项目列表
+     *
+     * @version v1
+     */
+    @GetMapping("v1/list/{userId}")
+    public Result list(@PathVariable String userId, Status status) throws ActException {
+        try {
+            List<ProjectBO> bos = projectAPI.list(userId,status);
+            return ActResult.initialize(bos);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 项目添加

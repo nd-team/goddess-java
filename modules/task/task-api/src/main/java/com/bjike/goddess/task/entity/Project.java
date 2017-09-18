@@ -1,5 +1,6 @@
 package com.bjike.goddess.task.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.task.enums.ExecStatus;
@@ -57,6 +58,9 @@ public class Project extends BaseEntity {
     @OneToMany(mappedBy = "project", cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private Set<Table> tableSet;
 
+    @OneToOne( mappedBy = "project", cascade = CascadeType.REMOVE,fetch = FetchType.LAZY)
+    private ProjectRange range;
+
     public String getName() {
         return name;
     }
@@ -111,5 +115,13 @@ public class Project extends BaseEntity {
 
     public void setTableSet(Set<Table> tableSet) {
         this.tableSet = tableSet;
+    }
+
+    public ProjectRange getRange() {
+        return range;
+    }
+
+    public void setRange(ProjectRange range) {
+        this.range = range;
     }
 }

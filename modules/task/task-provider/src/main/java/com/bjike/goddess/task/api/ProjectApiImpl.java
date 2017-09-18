@@ -1,7 +1,9 @@
 package com.bjike.goddess.task.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.task.bo.ProjectBO;
 import com.bjike.goddess.task.dto.ProjectDTO;
 import com.bjike.goddess.task.entity.Project;
 import com.bjike.goddess.task.service.ProjectSer;
@@ -32,8 +34,14 @@ public class ProjectApiImpl implements ProjectAPI {
     }
 
     @Override
-    public List<ProjectVO> list(ProjectDTO dto) throws SerException {
+    public List<ProjectBO> list(ProjectDTO dto) throws SerException {
         List<Project> projects = projectSer.list(dto);
-        return BeanTransform.copyProperties(projects,ProjectVO.class);
+        return BeanTransform.copyProperties(projects,ProjectBO.class);
+    }
+
+    @Override
+    public List<ProjectBO> list(String userId, Status status) throws SerException {
+        List<Project> projects = projectSer.list(userId,status);
+        return BeanTransform.copyProperties(projects,ProjectBO.class);
     }
 }

@@ -69,7 +69,7 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
         rowSer.save(row);
         List<Grid> grids = new ArrayList<>();
         for (Map.Entry entry : fieldValMap.entrySet()) { // 表单列&值
-            if(null!=entry.getValue()){
+            if (null != entry.getValue()) {
                 for (Field field : fields) {
                     if (field.getName().equals(entry.getKey())) {
                         Val val = new Val();
@@ -100,7 +100,7 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
             XSSFWorkbook wb = null;
             try {
                 wb = ExcelUtil.getWb(is);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 throw new SerException("解析excel文件错误,请检查文件是否正确");
             }
             XSSFSheet sheet = wb.getSheetAt(0);
@@ -119,7 +119,7 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
                         String val = ExcelUtil.getCellValue(row.getCell(j), null);
                         if (StringUtils.isNotBlank(val)) {
                             fieldValMap.put(title, val);
-                        }else {
+                        } else {
                             fieldValMap.put(title, null);
                         }
                     }
@@ -127,7 +127,7 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
                     throw new SerException("获取excel内容错误");
                 }
                 System.out.println(fieldValMap);
-               this.add(fieldValMap, tableId, node);
+                this.add(fieldValMap, tableId, node);
             }
 
         } else {
@@ -170,55 +170,51 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
 
     /**
      * 构建查询sql
-     * @des 完整sql见 CglibTest
+     *
      * @param fields
      * @param dto
      * @return
      * @throws SerException
+     * @des 完整sql见 CglibTest
      */
     private String getSql(List<Field> fields, RowDTO dto) throws SerException {
         String cond = "";
         String tableId = dto.getTableId();
-        if (StringUtils.isNotBlank(tableId)) {
-            if (dto.isPage()) {
-                int start = dto.getPage() - 1 * dto.getLimit();
-                start = start > 0 ? start : 0;
-                int limit = dto.getLimit();
-                cond = "limit " + start + "," + limit + "";
-            }
-            StringBuilder header = new StringBuilder(" SELECT ");
-            for (int i = 0; i < fields.size(); i++) {
-                String fieldName = fields.get(i).getName();
-                header.append(" MAX(CASE name WHEN '" + fieldName + "' THEN name ELSE '' END ) '" + fieldName + "',");
-            }
-            String tmp_header = header.toString().substring(0, header.toString().length() - 1);
-            header = new StringBuilder(tmp_header);
-            header.append(" from(");
-            header.append("  select name  from task_field where tid='" + tableId + "' order by seq asc) a ");
-            header.append(" union all ");
-
-            StringBuilder sb = new StringBuilder(header.toString() + "SELECT * FROM( SELECT ");
-            for (int i = 0; i < fields.size(); i++) {
-                String fieldName = fields.get(i).getName();
-                sb.append(" MAX(CASE name WHEN '" + fieldName + "' THEN value ELSE '' END ) '" + fieldName + "',");
-            }
-            String str = sb.toString().substring(0, sb.toString().length() - 1);
-            sb = new StringBuilder(str);
-            sb.append(" FROM( ");
-            sb.append(" ( ");
-            sb.append("  SELECT name,value,fid,rid,seq  FROM (SELECT b.*  FROM task_table a,task_field b ");
-            sb.append("  WHERE a.id='" + tableId + "' AND a.id = b.tid ");
-            sb.append("  )a,( ");
-            sb.append("   SELECT a.fid,b.id AS rid,c.val AS value  FROM task_grid a , ");
-            sb.append("    (SELECT * FROM task_row ORDER BY seq  " + cond + ") b,task_val c WHERE b.tid ='" + tableId + "' ");
-            sb.append("     AND a.rid=b.id AND c.id=a.vid) b WHERE a.id=b.fid ORDER BY seq ASC ");
-            sb.append("     ) ");
-            sb.append("     )a ,task_row c WHERE a.rid=c.id GROUP BY rid ORDER BY c.seq )b");
-            return sb.toString();
-        } else {
-            throw new SerException("所属表不能为空");
+        if (dto.isPage()) {
+            int start = dto.getPage() - 1 * dto.getLimit();
+            start = start > 0 ? start : 0;
+            int limit = dto.getLimit();
+            cond = "limit " + start + "," + limit + "";
         }
+        StringBuilder header = new StringBuilder(" SELECT ");
+        for (int i = 0; i < fields.size(); i++) {
+            String fieldName = fields.get(i).getName();
+            header.append(" MAX(CASE name WHEN '" + fieldName + "' THEN name ELSE '' END ) '" + fieldName + "',");
+        }
+        String tmp_header = header.toString().substring(0, header.toString().length() - 1);
+        header = new StringBuilder(tmp_header);
+        header.append(" from(");
+        header.append("  select name  from task_field where tid='" + tableId + "' order by seq asc) a ");
+        header.append(" union all ");
 
+        StringBuilder sb = new StringBuilder(header.toString() + "SELECT * FROM( SELECT ");
+        for (int i = 0; i < fields.size(); i++) {
+            String fieldName = fields.get(i).getName();
+            sb.append(" MAX(CASE name WHEN '" + fieldName + "' THEN value ELSE '' END ) '" + fieldName + "',");
+        }
+        String str = sb.toString().substring(0, sb.toString().length() - 1);
+        sb = new StringBuilder(str);
+        sb.append(" FROM( ");
+        sb.append(" ( ");
+        sb.append("  SELECT name,value,fid,rid,seq  FROM (SELECT b.*  FROM task_table a,task_field b ");
+        sb.append("  WHERE a.id='" + tableId + "' AND a.id = b.tid and b.node='" + dto.getNode() + "'");
+        sb.append("  )a,( ");
+        sb.append("   SELECT a.fid,b.id AS rid,c.val AS value  FROM task_grid a , ");
+        sb.append("    (SELECT * FROM task_row ORDER BY seq  " + cond + ") b,task_val c WHERE b.tid ='" + tableId + "' ");
+        sb.append("     AND a.rid=b.id AND c.id=a.vid) b WHERE a.id=b.fid ORDER BY seq ASC ");
+        sb.append("     ) ");
+        sb.append("     )a ,task_row c WHERE a.rid=c.id GROUP BY rid ORDER BY c.seq )b");
+        return sb.toString();
     }
 
     /**
@@ -232,39 +228,47 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
         String tableId = dto.getTableId();
         String node = dto.getNode();
         List<Field> fields = fieldSer.list(tableId, node);
-        String sql = this.getSql(fields, dto);
-        HashMap fieldMap = new HashMap();
-        List<CglibBean> results = new ArrayList<>();
-        try {
-            //设置表头
-            for (Field field : fields) {
-                // 1--name 2--seq
-                fieldMap.put(String.valueOf(field.getSeq()), Class.forName("java.lang.String"));
-            }
-            CglibBean fieldBean = new CglibBean(fieldMap);
-            for (Field field : fields) {
-                fieldBean.setValue(String.valueOf(field.getSeq()), field.getName());
-            }
-            //设置表值
-            List<Object> objects = super.findBySql(sql);
-            HashMap valMap = new HashMap();
-            for (Field field : fields) {
-                valMap.put(field.getName(), Class.forName("java.lang.String"));
-            }
-            Object[] titles = (Object[]) objects.get(0);
-            for (int i = 1; i < objects.size(); i++) {
-                Object[] values = (Object[]) objects.get(i);
-                CglibBean bean = new CglibBean(valMap);
-                for (int j = 0; j < titles.length; j++) {
-                    String val = null != values[j] ? String.valueOf(values[j]) : "";
-                    bean.setValue(String.valueOf(titles[j]), val);
+        if (null != fields && fields.size() > 0) {
+            String sql = this.getSql(fields, dto);
+            HashMap fieldMap = new HashMap();
+            List<CglibBean> results = new ArrayList<>();
+            try {
+                //设置表头
+                for (Field field : fields) {
+                    // 1--name 2--seq
+                    fieldMap.put(String.valueOf(field.getSeq()), Class.forName("java.lang.String"));
                 }
-                results.add(bean);
-            }
+                CglibBean fieldBean = new CglibBean(fieldMap);
+                for (Field field : fields) {
+                    fieldBean.setValue(String.valueOf(field.getSeq()), field.getName());
+                }
+                //设置表值
+                List<Object> objects = super.findBySql(sql);
+                HashMap valMap = new HashMap();
+                for (Field field : fields) {
+                    valMap.put(field.getName(), Class.forName("java.lang.String"));
+                }
+                Object[] titles = null;
+                if (objects.get(0) instanceof String[]) {
+                    titles = (Object[]) objects.get(0);
+                } else {
+                    titles = new Object[]{objects.get(0)};
+                }
+                for (int i = 1; i < objects.size(); i++) {
+                    Object[] values = (Object[]) objects.get(i);
+                    CglibBean bean = new CglibBean(valMap);
+                    for (int j = 0; j < titles.length; j++) {
+                        String val = null != values[j] ? String.valueOf(values[j]) : "";
+                        bean.setValue(String.valueOf(titles[j]), val);
+                    }
+                    results.add(bean);
+                }
 
-        } catch (Exception e) {
-            throw new SerException(e.getMessage());
+            } catch (Exception e) {
+                throw new SerException(e.getMessage());
+            }
+            return results;
         }
-        return results;
+        return new ArrayList<>(0);
     }
 }

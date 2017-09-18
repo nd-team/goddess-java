@@ -1,6 +1,8 @@
 package com.bjike.goddess.task.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.task.bo.ProjectBO;
 import com.bjike.goddess.task.dto.ProjectDTO;
 import com.bjike.goddess.task.entity.Project;
 import com.bjike.goddess.task.to.ProjectTO;
@@ -33,7 +35,17 @@ public interface ProjectAPI {
      * @param dto
      * @throws SerException
      */
-    default List<ProjectVO> list(ProjectDTO dto) throws SerException {
+    default List<ProjectBO> list(ProjectDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 用户项目列表
+     * status 为空查询全部
+     *
+     * @throws SerException
+     */
+    default List<ProjectBO> list(String userId, Status status) throws SerException {
         return null;
     }
 }

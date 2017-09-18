@@ -1,31 +1,29 @@
-package com.bjike.goddess.task.to;
+package com.bjike.goddess.task.bo;
 
-import com.bjike.goddess.common.api.entity.ADD;
-import com.bjike.goddess.common.api.entity.EDIT;
-import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.task.enums.ExecStatus;
-import org.hibernate.validator.constraints.NotBlank;
 
 /**
- * 项目
- *
  * @Author: [liguiqin]
- * @Date: [2016-12-24 10:16]
- * @Description: []
+ * @Date: [2017-09-18 17:45]
+ * @Description: [ ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class ProjectTO extends BaseTO {
+public class ProjectBO extends BaseBO {
+    /**
+     * id
+     */
+    private String id;
+
     /**
      * 项目名
      */
-    @NotBlank(message = "项目名不能为空", groups = {ADD.class, EDIT.class})
     private String name;
     /**
      * 地区
      */
-    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private String area;
 
     /**
@@ -41,18 +39,19 @@ public class ProjectTO extends BaseTO {
      * 执行状态
      */
     private ExecStatus execStatus;
+
     /**
-     * 个人可见范围
+     * 创建时间
      */
-    private String[] users;
-    /**
-     * 部门可见范围
-     */
-    private String[] departments;
-    /**
-     * 项目组可见范围
-     */
-    private String[] groups;
+    private String createTime;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -94,27 +93,11 @@ public class ProjectTO extends BaseTO {
         this.execStatus = execStatus;
     }
 
-    public String[] getUsers() {
-        return users;
+    public String getCreateTime() {
+        return createTime;
     }
 
-    public void setUsers(String[] users) {
-        this.users = users;
-    }
-
-    public String[] getDepartments() {
-        return departments;
-    }
-
-    public void setDepartments(String[] departments) {
-        this.departments = departments;
-    }
-
-    public String[] getGroups() {
-        return groups;
-    }
-
-    public void setGroups(String[] groups) {
-        this.groups = groups;
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 }
