@@ -120,4 +120,14 @@ public class InterviewInforApiImpl implements InterviewInforAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return interviewInforSer.guidePermission(guidePermissionTO);
     }
+
+    @Override
+    public List<InterviewInforBO> findInterview() throws SerException {
+        return interviewInforSer.findInterview();
+    }
+
+    @Override
+    public InterviewInforBO findByName(String name) throws SerException {
+        return interviewInforSer.findByName(name);
+    }
 }
