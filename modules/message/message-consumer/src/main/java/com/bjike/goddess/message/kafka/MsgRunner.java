@@ -50,7 +50,6 @@ public class MsgRunner implements Runnable {
 
         StringDecoder keyDecoder = new StringDecoder(new VerifiableProperties());
         StringDecoder valueDecoder = new StringDecoder(new VerifiableProperties());
-
         Map<String, List<KafkaStream<String, String>>> consumerMap =
                 consumer.createMessageStreams(topicCountMap, keyDecoder, valueDecoder);
         KafkaStream<String, String> stream = consumerMap.get(topic).get(0);
@@ -76,6 +75,7 @@ public class MsgRunner implements Runnable {
                 }
             }
         }
+
     }
 
     public MailSer getMailSer() {
