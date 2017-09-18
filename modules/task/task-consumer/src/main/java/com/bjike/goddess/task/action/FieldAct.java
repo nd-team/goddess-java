@@ -16,10 +16,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +60,23 @@ public class FieldAct {
     public Result add(@Validated({ADD.class}) FieldTO to, BindingResult rs) throws ActException {
         try {
             fieldAPI.add(to);
+            return ActResult.initialize(true);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 删除列
+     *
+     * @param id 列id
+     * @return
+     * @throws ActException
+     */
+    @DeleteMapping("v1/delete/{id}")
+    public Result delete(@PathVariable String id) throws ActException {
+        try {
+            fieldAPI.delete(id);
             return ActResult.initialize(true);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

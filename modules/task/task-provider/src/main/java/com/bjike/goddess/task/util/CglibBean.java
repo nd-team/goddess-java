@@ -3,6 +3,7 @@ package com.bjike.goddess.task.util;
 import net.sf.cglib.beans.BeanGenerator;
 import net.sf.cglib.beans.BeanMap;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -14,15 +15,15 @@ import java.util.Set;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class CglibBeanUtil {
+public class CglibBean implements Serializable{
     public Object object = null;
 
     public BeanMap beanMap = null;
-    public CglibBeanUtil() {
+    public CglibBean() {
         super();
     }
     @SuppressWarnings("unchecked")
-    public CglibBeanUtil(Map propertyMap) {
+    public CglibBean(Map propertyMap) {
         this.object = generateBean(propertyMap);
         this.beanMap = BeanMap.create(this.object);
     }

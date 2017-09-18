@@ -6,7 +6,7 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.task.dto.RowDTO;
 import com.bjike.goddess.task.entity.*;
-import com.bjike.goddess.task.util.CglibBeanUtil;
+import com.bjike.goddess.task.util.CglibBean;
 import com.bjike.goddess.task.util.WbUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -50,9 +50,9 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
 
     @Override
     public List<Object> list(RowDTO dto) throws SerException {
-        List<CglibBeanUtil> beans = this.getCglibBean(dto);
+        List<CglibBean> beans = this.getCglibBean(dto);
         List<Object> objects = new ArrayList<>(beans.size());
-        for (CglibBeanUtil bean : beans) {
+        for (CglibBean bean : beans) {
             objects.add(bean.getObject());
         }
         return objects;
@@ -69,19 +69,22 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
         rowSer.save(row);
         List<Grid> grids = new ArrayList<>();
         for (Map.Entry entry : fieldValMap.entrySet()) { // 表单列&值
-            for (Field field : fields) {
-                if (field.getName().equals(entry.getKey())) {
-                    Val val = new Val();
-                    val.setVal(String.valueOf(entry.getValue()));
-                    valSer.save(val);
-                    Grid grid = new Grid();
-                    grid.setField(field);
-                    grid.setRow(row);
-                    grid.setVal(val);
-                    grids.add(grid);
-                    break;
+            if(null!=entry.getValue()){
+                for (Field field : fields) {
+                    if (field.getName().equals(entry.getKey())) {
+                        Val val = new Val();
+                        val.setVal(String.valueOf(entry.getValue()));
+                        valSer.save(val);
+                        Grid grid = new Grid();
+                        grid.setField(field);
+                        grid.setRow(row);
+                        grid.setVal(val);
+                        grids.add(grid);
+                        break;
+                    }
                 }
             }
+
         }
         gridSer.save(grids);
     }
@@ -102,26 +105,29 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
             }
             XSSFSheet sheet = wb.getSheetAt(0);
             List<Field> fields = fieldSer.list(tableId, node);
+            int rowCount = sheet.getLastRowNum();
+            int rowIndex = 1;
             XSSFRow titleRow = sheet.getRow(0);
             int cellCount = titleRow.getLastCellNum();
             WbUtil.validate(titleRow, fields); //表头对应验证
             Map<String, String> fieldValMap = new HashMap<>();
-            int rowCount = sheet.getLastRowNum();
             for (int i = 0; i < rowCount; i++) {
-                XSSFRow row = sheet.getRow(i);
+                XSSFRow row = sheet.getRow(rowIndex++);
                 try {
                     for (int j = 0; j < cellCount; j++) {
                         String title = ExcelUtil.getCellValue(titleRow.getCell(j), null);
                         String val = ExcelUtil.getCellValue(row.getCell(j), null);
                         if (StringUtils.isNotBlank(val)) {
                             fieldValMap.put(title, val);
+                        }else {
+                            fieldValMap.put(title, null);
                         }
                     }
                 } catch (Exception e) {
                     throw new SerException("获取excel内容错误");
                 }
-
-                this.add(fieldValMap, tableId, node);
+                System.out.println(fieldValMap);
+               this.add(fieldValMap, tableId, node);
             }
 
         } else {
@@ -143,7 +149,7 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
         XSSFSheet sheet = wb.createSheet(table.getName() + DateUtil.dateToString(LocalDate.now()));
         List<Field> fields = fieldSer.list(dto.getTableId(), dto.getNode());
         WbUtil.initHeader(wb, sheet, fields); //初始化表头
-        List<CglibBeanUtil> beans = this.getCglibBean(dto);
+        List<CglibBean> beans = this.getCglibBean(dto);
         WbUtil.initRows(wb, sheet, fields, beans); //初始化内容
         ByteArrayOutputStream os = new ByteArrayOutputStream(1024);
         try {
@@ -158,13 +164,13 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
     public Integer getSeq(String tableId) throws SerException {
         String sql = "SELECT IFNULL(MAX(seq),0) as seq FROM task_row WHERE tid = '%s' ";
         sql = String.format(sql, tableId);
-        List<Object> objs = super.findBySql(sql);
-        return Integer.parseInt(String.valueOf(objs.get(0)));
+        List<Object> objects = super.findBySql(sql);
+        return Integer.parseInt(String.valueOf(objects.get(0)));
     }
 
     /**
      * 构建查询sql
-     *
+     * @des 完整sql见 CglibTest
      * @param fields
      * @param dto
      * @return
@@ -191,7 +197,7 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
             header.append("  select name  from task_field where tid='" + tableId + "' order by seq asc) a ");
             header.append(" union all ");
 
-            StringBuilder sb = new StringBuilder(header.toString() + " SELECT ");
+            StringBuilder sb = new StringBuilder(header.toString() + "SELECT * FROM( SELECT ");
             for (int i = 0; i < fields.size(); i++) {
                 String fieldName = fields.get(i).getName();
                 sb.append(" MAX(CASE name WHEN '" + fieldName + "' THEN value ELSE '' END ) '" + fieldName + "',");
@@ -204,10 +210,10 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
             sb.append("  WHERE a.id='" + tableId + "' AND a.id = b.tid ");
             sb.append("  )a,( ");
             sb.append("   SELECT a.fid,b.id AS rid,c.val AS value  FROM task_grid a , ");
-            sb.append("    (select * from task_row order by seq  " + cond + ") b,task_val c WHERE b.tid ='" + tableId + "' ");
+            sb.append("    (SELECT * FROM task_row ORDER BY seq  " + cond + ") b,task_val c WHERE b.tid ='" + tableId + "' ");
             sb.append("     AND a.rid=b.id AND c.id=a.vid) b WHERE a.id=b.fid ORDER BY seq ASC ");
             sb.append("     ) ");
-            sb.append("     )a GROUP BY rid ");
+            sb.append("     )a ,task_row c WHERE a.rid=c.id GROUP BY rid ORDER BY c.seq )b");
             return sb.toString();
         } else {
             throw new SerException("所属表不能为空");
@@ -222,20 +228,20 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
      * @return
      * @throws SerException
      */
-    private List<CglibBeanUtil> getCglibBean(RowDTO dto) throws SerException {
+    private List<CglibBean> getCglibBean(RowDTO dto) throws SerException {
         String tableId = dto.getTableId();
         String node = dto.getNode();
         List<Field> fields = fieldSer.list(tableId, node);
         String sql = this.getSql(fields, dto);
         HashMap fieldMap = new HashMap();
-        List<CglibBeanUtil> results = new ArrayList<>();
+        List<CglibBean> results = new ArrayList<>();
         try {
             //设置表头
             for (Field field : fields) {
                 // 1--name 2--seq
                 fieldMap.put(String.valueOf(field.getSeq()), Class.forName("java.lang.String"));
             }
-            CglibBeanUtil fieldBean = new CglibBeanUtil(fieldMap);
+            CglibBean fieldBean = new CglibBean(fieldMap);
             for (Field field : fields) {
                 fieldBean.setValue(String.valueOf(field.getSeq()), field.getName());
             }
@@ -248,7 +254,7 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
             Object[] titles = (Object[]) objects.get(0);
             for (int i = 1; i < objects.size(); i++) {
                 Object[] values = (Object[]) objects.get(i);
-                CglibBeanUtil bean = new CglibBeanUtil(valMap);
+                CglibBean bean = new CglibBean(valMap);
                 for (int j = 0; j < titles.length; j++) {
                     String val = null != values[j] ? String.valueOf(values[j]) : "";
                     bean.setValue(String.valueOf(titles[j]), val);

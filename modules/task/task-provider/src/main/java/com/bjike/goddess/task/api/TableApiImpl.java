@@ -49,7 +49,6 @@ public class TableApiImpl implements TableAPI {
 
     @Override
     public void delete(String id) throws SerException {
-
         tableSer.remove(id);
     }
 

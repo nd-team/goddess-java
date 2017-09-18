@@ -19,10 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,6 +50,23 @@ public class RowAct extends BaseFileAction {
     private TableAPI tableAPI;
 
     /**
+     * 列表
+     *
+     * @param dto
+     * @return
+     * @throws ActException
+     */
+    @GetMapping("v1/list")
+    public String list(@Validated({GET.class}) RowDTO dto, BindingResult rs) throws ActException {
+        try {
+            String result =  rowAPI.list(dto);
+            return result;
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 添加一行数据
      *
      * @param to 行数据
@@ -75,6 +89,23 @@ public class RowAct extends BaseFileAction {
                 }
             }
             rowAPI.add(fieldValMap, to.getTableId(), to.getNode());
+            return ActResult.initialize(true);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 删除行
+     *
+     * @param id 列id
+     * @return
+     * @throws ActException
+     */
+    @DeleteMapping("v1/delete/{id}")
+    public Result delete(@PathVariable String id) throws ActException {
+        try {
+            rowAPI.delete(id);
             return ActResult.initialize(true);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -122,21 +153,7 @@ public class RowAct extends BaseFileAction {
         }
     }
 
-    /**
-     * 列表
-     *
-     * @param dto
-     * @return
-     * @throws ActException
-     */
-    @GetMapping("v1/list")
-    public Result excelExport(@Validated({GET.class}) RowDTO dto, BindingResult rs) throws ActException {
-        try {
-            return ActResult.initialize(rowAPI.list(dto));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+
 
 
 }

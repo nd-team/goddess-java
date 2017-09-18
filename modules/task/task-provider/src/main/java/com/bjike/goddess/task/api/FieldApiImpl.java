@@ -31,7 +31,10 @@ public class FieldApiImpl implements FieldAPI {
         fieldSer.add(to);
     }
 
-
+    @Override
+    public void delete(String id) throws SerException {
+        fieldSer.remove(id);
+    }
 
     @Override
     public List<FieldVO> list(String tableId,String node ) throws SerException {

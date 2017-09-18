@@ -35,6 +35,11 @@ public class RowApiImpl implements RowAPI {
     }
 
     @Override
+    public void delete(String id) throws SerException {
+        rowSer.remove(id);
+    }
+
+    @Override
     public String list(RowDTO dto) throws SerException {
         return JSON.toJSONString(rowSer.list(dto));
     }

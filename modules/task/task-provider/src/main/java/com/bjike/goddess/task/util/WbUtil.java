@@ -42,10 +42,10 @@ public class WbUtil {
         }
     }
 
-    public static void initRows(XSSFWorkbook wb, XSSFSheet sheet, List<Field> fields, List<CglibBeanUtil> beans) {
+    public static void initRows(XSSFWorkbook wb, XSSFSheet sheet, List<Field> fields, List<CglibBean> beans) {
         int rowCount = 1;
         XSSFCellStyle contentStyle = ExcelUtil.getStyle(wb, IndexedColors.WHITE.getIndex());
-        for (CglibBeanUtil bean : beans) {
+        for (CglibBean bean : beans) {
             XSSFRow row = sheet.createRow(rowCount++);
             row.setHeight((short) 300);
             int cellIndex = 0;

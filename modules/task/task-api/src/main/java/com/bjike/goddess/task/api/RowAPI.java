@@ -38,6 +38,15 @@ public interface RowAPI {
     default void add(Map<String, String> fieldValMap, String tableId, String node) throws SerException {
 
     }
+    /**
+     * 删除数据行
+     * @param id
+     * @throws SerException
+     */
+
+    default void delete(String id) throws SerException {
+
+    }
 
 
     /**

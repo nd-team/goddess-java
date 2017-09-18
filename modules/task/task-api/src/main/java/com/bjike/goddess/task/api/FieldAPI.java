@@ -24,6 +24,15 @@ public interface FieldAPI {
     default void add(FieldTO to) throws SerException {
 
     }
+    /**
+     * 列删除
+     *
+     * @param id
+     * @throws SerException
+     */
+    default void delete(String id) throws SerException {
+
+    }
 
 
     /**
