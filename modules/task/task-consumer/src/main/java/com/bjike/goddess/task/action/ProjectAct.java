@@ -4,14 +4,11 @@ import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.task.api.ProjectAPI;
 import com.bjike.goddess.task.bo.ProjectBO;
 import com.bjike.goddess.task.dto.ProjectDTO;
-import com.bjike.goddess.task.entity.Project;
 import com.bjike.goddess.task.to.ProjectTO;
-import com.bjike.goddess.task.vo.ProjectVO;
 import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -35,14 +32,15 @@ public class ProjectAct {
     private ProjectAPI projectAPI;
 
     /**
-     * 项目列表
+     * 所有项目列表
      *
+     * @des 默认分页
      * @version v1
      */
     @GetMapping("v1/list")
     public Result list(ProjectDTO dto) throws ActException {
         try {
-            List<ProjectBO> vos = projectAPI.list(dto);
+            List<ProjectBO> vos = projectAPI.list(dto, true);
             return ActResult.initialize(vos);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -50,14 +48,15 @@ public class ProjectAct {
     }
 
     /**
-     * 项目列表
+     * 用户项目列表
      *
+     * @des 默认不分页
      * @version v1
      */
     @GetMapping("v1/list/{userId}")
-    public Result list(@PathVariable String userId, Status status) throws ActException {
+    public Result list(@PathVariable String userId, ProjectDTO dto) throws ActException {
         try {
-            List<ProjectBO> bos = projectAPI.list(userId,status);
+            List<ProjectBO> bos = projectAPI.list(userId, dto);
             return ActResult.initialize(bos);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -81,4 +80,39 @@ public class ProjectAct {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 项目解冻
+     *
+     * @param id 项目id
+     * @return
+     * @throws ActException
+     */
+    @PutMapping("v1/thaw/{id}")
+    public Result thaw(@PathVariable String id) throws ActException {
+        try {
+            projectAPI.thaw(id);
+            return ActResult.initialize(true);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 项目解冻
+     *
+     * @param id 项目id
+     * @return
+     * @throws ActException
+     */
+    @PutMapping("v1/congeal/{id}")
+    public Result congeal(@PathVariable String id) throws ActException {
+        try {
+            projectAPI.congeal(id);
+            return ActResult.initialize(true);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

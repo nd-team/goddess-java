@@ -1,6 +1,7 @@
 package com.bjike.goddess.task.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.task.enums.ExecStatus;
 
 import javax.persistence.*;
@@ -52,6 +53,12 @@ public class Table extends BaseEntity{
     @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '执行状态' ", nullable = false, insertable = false)
     private ExecStatus execStatus;
 
+    /**
+     * 状态
+     */
+    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '表状态' ", nullable = false, insertable = false)
+    private Status status;
+
     public String getName() {
         return name;
     }
@@ -98,5 +105,13 @@ public class Table extends BaseEntity{
 
     public void setFieldSet(Set<Field> fieldSet) {
         this.fieldSet = fieldSet;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

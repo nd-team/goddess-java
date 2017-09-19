@@ -251,11 +251,16 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
                 Object[] titles = null;
                 if (objects.get(0) instanceof String[]) {
                     titles = (Object[]) objects.get(0);
-                } else {
+                } else {//如果只有一列的情况
                     titles = new Object[]{objects.get(0)};
                 }
                 for (int i = 1; i < objects.size(); i++) {
-                    Object[] values = (Object[]) objects.get(i);
+                    Object[] values = null;
+                    if (objects.get(i) instanceof String[]) {
+                        values = (Object[]) objects.get(i);
+                    } else {//如果只有一列的情况
+                        values = new Object[]{objects.get(i)};
+                    }
                     CglibBean bean = new CglibBean(valMap);
                     for (int j = 0; j < titles.length; j++) {
                         String val = null != values[j] ? String.valueOf(values[j]) : "";

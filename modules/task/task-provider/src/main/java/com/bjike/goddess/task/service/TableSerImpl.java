@@ -1,9 +1,10 @@
 package com.bjike.goddess.task.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.task.dto.TableDTO;
+import com.bjike.goddess.task.entity.Project;
 import com.bjike.goddess.task.entity.Table;
 import com.bjike.goddess.task.to.TableTO;
 import com.bjike.goddess.user.api.UserAPI;
@@ -31,29 +32,35 @@ public class TableSerImpl extends ServiceImpl<Table, TableDTO> implements TableS
 
     @Override
     public void add(TableTO to) throws SerException {
-        Table table = BeanTransform.copyProperties(to, Table.class);
-        table.setProject(projectSer.findById(to.getProjectId()));
-        table.setUserId(userAPI.currentUser().getId());
-        super.save(table);
+        String[] names = to.getNames();
+        if (null != names) {
+            List<Table> tables = new ArrayList<>(names.length);
+            String userId = userAPI.currentUser().getId();
+            Project project = projectSer.findById(to.getProjectId());
+            for (String name : names) {
+                Table table = new Table();
+                table.setName(name);
+                table.setProject(project);
+                table.setUserId(userId);
+                tables.add(table);
+            }
+            super.save(tables);
+        }
+
     }
 
-    @Override
-    public void add(List<TableTO> tos) throws SerException {
-        List<Table> tables = new ArrayList<>(tos.size());
-        String userId = userAPI.currentUser().getId();
-        for (TableTO to : tos) {
-            Table table = BeanTransform.copyProperties(to, Table.class);
-            table.setProject(projectSer.findById(to.getProjectId()));
-            table.setUserId(userId);
-            tables.add(table);
-        }
-        super.save(tables);
-    }
 
     @Override
     public List<Table> list(TableDTO dto) throws SerException {
         return super.findByCis(dto);
     }
 
+
+    @Override
+    public List<Table> list(String projectId) throws SerException {
+        TableDTO dto = new TableDTO();
+        dto.getConditions().add(Restrict.eq("project.id", projectId));
+        return super.findByCis(dto);
+    }
 
 }

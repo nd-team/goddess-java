@@ -35,7 +35,7 @@ public interface ProjectAPI {
      * @param dto
      * @throws SerException
      */
-    default List<ProjectBO> list(ProjectDTO dto) throws SerException {
+    default List<ProjectBO> list(ProjectDTO dto,boolean page) throws SerException {
         return null;
     }
 
@@ -45,7 +45,26 @@ public interface ProjectAPI {
      *
      * @throws SerException
      */
-    default List<ProjectBO> list(String userId, Status status) throws SerException {
+    default List<ProjectBO> list(String userId,ProjectDTO dto) throws SerException {
         return null;
+    }
+
+    /**
+     * 解冻项目
+     *
+     * @param id 项目id
+     * @throws SerException
+     */
+    default void thaw(String id) throws SerException {
+
+    }
+
+    /**
+     * 冻结项目
+     * @param id 项目id
+     * @throws SerException
+     */
+    default void congeal(String id) throws SerException {
+
     }
 }

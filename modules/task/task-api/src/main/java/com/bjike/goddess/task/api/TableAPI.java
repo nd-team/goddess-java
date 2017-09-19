@@ -16,20 +16,65 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface TableAPI {
+    /**
+     * id查询表
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
     default TableBO findById(String id) throws SerException {
         return null;
     }
+
+    /**
+     * 添加表
+     *
+     * @param to
+     * @throws SerException
+     */
     default void add(TableTO to) throws SerException {
 
     }
 
-    default void add(List<TableTO> tos) throws SerException {
 
-    } default void delete(String id) throws SerException {
+    /**
+     * 删除表
+     */
+    default void delete(String id) throws SerException {
 
     }
 
-    default List<TableVO> list(TableDTO dto) throws SerException {
+    /**
+     * 所有表
+     *
+     * @param dto
+     * @param page
+     * @return
+     * @throws SerException
+     */
+    default List<TableVO> list(TableDTO dto,boolean page) throws SerException {
         return null;
     }
+
+
+    /**
+     * 解冻表
+     *
+     * @param id 表id
+     * @throws SerException
+     */
+    default void thaw(String id) throws SerException {
+
+    }
+
+    /**
+     * 冻结表
+     * @param id 表id
+     * @throws SerException
+     */
+    default void congeal(String id) throws SerException {
+
+    }
+
 }

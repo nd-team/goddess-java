@@ -55,7 +55,7 @@ public class ExcelUtil {
      * @return
      * @throws IOException
      */
-    public static XSSFWorkbook getWb(InputStream is) throws IOException {
+    public static XSSFWorkbook getWb(InputStream is) throws Exception {
         XSSFWorkbook wb = new XSSFWorkbook(is);
         return wb;
     }

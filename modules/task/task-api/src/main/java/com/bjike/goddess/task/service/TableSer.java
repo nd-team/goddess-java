@@ -19,23 +19,19 @@ import java.util.List;
  */
 public interface TableSer extends Ser<Table, TableDTO> {
     /**
-     * 添加一个表
+     * 添加表
      * @param to
      * @throws SerException
      */
     default void add(TableTO to) throws SerException {
     }
 
-    /**
-     * 添加多个表
-     * @param tos
-     * @throws SerException
-     */
-    default void add(List<TableTO> tos) throws SerException {
-
-    }
 
     default List<Table> list(TableDTO dto) throws SerException {
+        return null;
+    }
+
+    default List<Table> list(String projectId) throws SerException {
         return null;
     }
 

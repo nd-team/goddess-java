@@ -1,5 +1,6 @@
 package com.bjike.goddess.task.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -7,6 +8,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.task.dto.ProjectDTO;
 import com.bjike.goddess.task.entity.Project;
 import com.bjike.goddess.task.entity.ProjectRange;
+import com.bjike.goddess.task.enums.ExecStatus;
 import com.bjike.goddess.task.to.ProjectTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
@@ -54,36 +56,46 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
     }
 
     @Override
-    public List<Project> list(ProjectDTO dto) throws SerException {
-        return super.findByCis(dto);
+    public List<Project> list(ProjectDTO dto, boolean page) throws SerException {
+        if (null != dto.getExecStatus()) {
+            dto.getConditions().add(Restrict.eq("execStatus", dto.getExecStatus()));
+        }
+        if (null != dto.getStatus()) {
+            dto.getConditions().add(Restrict.eq("status", dto.getStatus()));
+        }
+        return super.findByCis(dto, page);
     }
 
-    @Override
-    public List<Project> list(String userId, Status status) throws SerException {
+    public List<Project> list(String userId,ProjectDTO dto) throws SerException {
+        Status status =dto.getStatus();
+        ExecStatus execStatus=dto.getExecStatus();
         UserDetailBO detail = detailAPI.findByUserId(userId);
-        if(null==detail){
+        if (null == detail) {
             detail = new UserDetailBO();
         }
         StringBuilder sb = new StringBuilder();
         if (null != status) {
-            sb.append("select *  from (");
+            sb.append("SELECT *  FROM (");
         }
-        sb.append(" select *  from task_project where userId = '" + userId + "' ");
-        sb.append(" union ");
-        sb.append(" select a.*  from task_project a,( ");
-        sb.append(" select pid  from task_project_range where users like '%" + userId + "%' ");
-        if(null!=detail.getDepartmentId()){
-            sb.append(" union ");
-            sb.append(" select pid  from task_project_range where departments like '%" + detail.getDepartmentId() + "%' ");
+        sb.append(" SELECT *  FROM task_project WHERE userId = '" + userId + "' ");
+        sb.append(" UNION ");
+        sb.append(" SELECT a.*  FROM task_project a,( ");
+        sb.append(" SELECT pid  FROM task_project_range WHERE users LIKE '%" + userId + "%' ");
+        if (null != detail.getDepartmentId()) {
+            sb.append(" UNION ");
+            sb.append(" SELECT pid  FROM task_project_range WHERE departments LIKE '%" + detail.getDepartmentId() + "%' ");
         }
-        if(null!=detail.getGroupId()){
-            sb.append(" union ");
-            sb.append("   select pid  from task_project_range where groups like '%" + detail.getGroupId() + "%'");
+        if (null != detail.getGroupId()) {
+            sb.append(" UNION ");
+            sb.append("   SELECT pid  FROM task_project_range WHERE groups LIKE '%" + detail.getGroupId() + "%'");
         }
-        sb.append( ")b where a.id=b.pid ");
+        sb.append(")b WHERE a.id=b.pid ) WHERE 1=1");
 
         if (null != status) {
-            sb.append(") where status=" + status.getCode());
+            sb.append(" and status=" + status.getCode());
+        }
+        if (null != execStatus) {
+            sb.append(" and execStatus=" + execStatus.getCode());
         }
         String sql = sb.toString();
         String[] fields = new String[]{"id", "createTime", "modifyTime", "area", "description", "execStatus", "name", "status"};

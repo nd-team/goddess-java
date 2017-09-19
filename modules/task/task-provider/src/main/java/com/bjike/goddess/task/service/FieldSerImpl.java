@@ -62,7 +62,7 @@ public class FieldSerImpl extends ServiceImpl<Field, FieldDTO> implements FieldS
         FieldDTO dto = new FieldDTO();
         dto.getConditions().add(Restrict.eq("table.id",tableId));
         dto.getConditions().add(Restrict.eq("node",node));
-        dto.getSorts().add("seq=asc");
+        dto.getSorts().add("seq=ASC");
         return super.findByCis(dto);
     }
     @Override

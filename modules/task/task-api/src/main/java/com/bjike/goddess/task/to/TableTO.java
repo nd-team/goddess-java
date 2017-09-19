@@ -21,7 +21,7 @@ public class TableTO extends BaseTO {
      * 表名称
      */
     @NotBlank(message = "表名称不能为空",groups = {ADD.class, EDIT.class})
-    private String name;
+    private String[] names;
     /**
      * 所属项目
      */
@@ -33,12 +33,12 @@ public class TableTO extends BaseTO {
      */
     private ExecStatus execStatus;
 
-    public String getName() {
-        return name;
+    public String[] getNames() {
+        return names;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNames(String[] names) {
+        this.names = names;
     }
 
     public String getProjectId() {
