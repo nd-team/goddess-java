@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import scala.util.parsing.combinator.testing.Str;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -301,20 +302,26 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
             }
         }
         for (ReHierarchyBO h : hierarchyBOS) {
-            List<DepartmentDetail> departmentDetails = departs.stream().filter(departmentDetail -> h.getId().equals(departmentDetail.getHierarchy().getId())).collect(Collectors.toList());
-            List<ReDepartBO> departS = BeanTransform.copyProperties(departmentDetails, ReDepartBO.class);
+            Set<String> departIds = departs.stream().filter(departmentDetail -> h.getId().equals(departmentDetail.getHierarchy().getId())).map(departmentDetail -> departmentDetail.getId()).collect(Collectors.toSet());
+            List<ReDepartBO> departS = new ArrayList<>();
+            for (String id : departIds) {
+                departS.add(BeanTransform.copyProperties(departmentDetailSer.findById(id), ReDepartBO.class));
+            }
             h.setDeparts(departS);
-            List<String> departIds = departS.stream().map(reDepartBO -> reDepartBO.getId()).collect(Collectors.toList());
             PositionDetailDTO dto = new PositionDetailDTO();
             dto.getConditions().add(Restrict.in("department.id", departIds));
             List<PositionDetail> list = super.findByCis(dto);
-            Set<Arrangement> set = list.stream().map(positionDetail -> positionDetail.getArrangement()).collect(Collectors.toSet());
-            List<Arrangement> arrangements = new ArrayList<>(set);
-            List<ReArrangementBO> reArrangementBOS = BeanTransform.copyProperties(arrangements, ReArrangementBO.class);
+            Set<String> arrangementIds = list.stream().map(positionDetail -> positionDetail.getArrangement().getId()).collect(Collectors.toSet());
+            List<ReArrangementBO> reArrangementBOS = new ArrayList<>();
+            for (String id : arrangementIds) {
+                reArrangementBOS.add(BeanTransform.copyProperties(arrangementSer.findById(id), ReArrangementBO.class));
+            }
             h.setArrangementS(reArrangementBOS);
-            Set<ModuleType> moduleTypes = list.stream().filter(positionDetail -> null!=positionDetail.getModule()).map(positionDetail ->positionDetail.getModule()).collect(Collectors.toSet());
-            List<ModuleType> modules = new ArrayList<>(moduleTypes);
-            List<ReModuleBO> moduleBOS = BeanTransform.copyProperties(modules, ReModuleBO.class);
+            Set<String> moduleTypeIds = list.stream().filter(positionDetail -> null != positionDetail.getModule()).map(positionDetail -> positionDetail.getModule().getId()).collect(Collectors.toSet());
+            List<ReModuleBO> moduleBOS = new ArrayList<>();
+            for (String id:moduleTypeIds){
+                moduleBOS.add(BeanTransform.copyProperties(moduleTypeSer.findById(id),ReModuleBO.class));
+            }
             h.setModuleS(moduleBOS);
             for (ReArrangementBO reArrangementBO : reArrangementBOS) {
                 PositionDetailDTO dto1 = new PositionDetailDTO();
