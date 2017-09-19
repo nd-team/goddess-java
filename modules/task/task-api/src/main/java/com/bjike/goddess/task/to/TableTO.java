@@ -7,6 +7,8 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.task.enums.ExecStatus;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 表
  *
@@ -20,7 +22,7 @@ public class TableTO extends BaseTO {
     /**
      * 表名称
      */
-    @NotBlank(message = "表名称不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "表名称不能为空",groups = {ADD.class, EDIT.class})
     private String[] names;
     /**
      * 所属项目

@@ -6,20 +6,12 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.task.api.FieldAPI;
-import com.bjike.goddess.task.api.TableAPI;
-import com.bjike.goddess.task.dto.FieldDTO;
-import com.bjike.goddess.task.dto.TableDTO;
-import com.bjike.goddess.task.entity.Field;
 import com.bjike.goddess.task.to.FieldTO;
-import com.bjike.goddess.task.to.TableTO;
 import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @Author: [liguiqin]
@@ -43,7 +35,7 @@ public class FieldAct {
     @GetMapping("v1/list")
     public Result list(String tableId, String node) throws ActException {
         try {
-            return ActResult.initialize(fieldAPI.list(tableId,node));
+            return ActResult.initialize(fieldAPI.list(tableId, node));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -55,6 +47,7 @@ public class FieldAct {
      * @param to 列信息
      * @return
      * @throws ActException
+     * @des 设置任务节点：任务名称，执行人（选项），计划执行时间，任务类型（选项），类型（根据任务的类型选择获取类型：1.当选择行政任务时：内部项目名称；2.工程/培训任务：功能流程名称），任务内容，计划任务量，所需时长，备注(除了备注,其他默认必填)
      */
     @PostMapping("v1/add")
     public Result add(@Validated({ADD.class}) FieldTO to, BindingResult rs) throws ActException {

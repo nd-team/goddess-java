@@ -40,8 +40,8 @@ public class ProjectAct {
     @GetMapping("v1/list")
     public Result list(ProjectDTO dto) throws ActException {
         try {
-            List<ProjectBO> vos = projectAPI.list(dto, true);
-            return ActResult.initialize(vos);
+            List<ProjectBO> bos = projectAPI.list(dto, true);
+            return ActResult.initialize(bos);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

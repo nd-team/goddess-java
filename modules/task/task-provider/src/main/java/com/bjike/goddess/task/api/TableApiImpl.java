@@ -72,6 +72,7 @@ public class TableApiImpl implements TableAPI {
         Table table = tableSer.findById(id);
         if (null != table) {
             table.setStatus(Status.THAW);
+            tableSer.update(table);
         } else {
             throw new SerException("项目表不存在");
         }
@@ -82,6 +83,7 @@ public class TableApiImpl implements TableAPI {
         Table table = tableSer.findById(id);
         if (null != table) {
             table.setStatus(Status.CONGEAL);
+            tableSer.update(table);
         } else {
             throw new SerException("项目表不存在");
         }

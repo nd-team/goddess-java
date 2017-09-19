@@ -168,6 +168,24 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
         return Integer.parseInt(String.valueOf(objects.get(0)));
     }
 
+    @Override
+    public String findContent(String id) throws SerException {
+        String sql = "";
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT v.val FROM task_grid g,task_row r,task_field f,task_val v ");
+        sb.append("  WHERE r.id ='" + id + "' ");
+        sb.append("  AND v.id = g.vid ");
+        sb.append("  AND g.rid = r.id ");
+        sb.append("   AND g.fid = f.id ");
+        sb.append("  AND f.name = '任务内容' ");
+        sql = sb.toString();
+        List<Object> objects = super.findBySql(sql);
+        if (null != objects && objects.size() >= 0) {
+            return String.valueOf(objects.get(0));
+        }
+        throw new SerException("任务内容未填写");
+    }
+
     /**
      * 构建查询sql
      *

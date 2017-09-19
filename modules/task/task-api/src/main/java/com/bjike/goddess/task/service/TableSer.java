@@ -35,5 +35,8 @@ public interface TableSer extends Ser<Table, TableDTO> {
         return null;
     }
 
+    default Table findByRowId(String rowId) throws SerException {
+        return null;
+    }
 
 }

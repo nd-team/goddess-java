@@ -23,9 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +57,7 @@ public class RowAct extends BaseFileAction {
     @GetMapping("v1/list")
     public String list(@Validated({GET.class}) RowDTO dto, BindingResult rs) throws ActException {
         try {
-            String result =  rowAPI.list(dto);
+            String result = rowAPI.list(dto);
             return result;
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -78,13 +76,13 @@ public class RowAct extends BaseFileAction {
         try {
             List<FieldVO> fields = fieldAPI.list(to.getTableId(), to.getNode());
             Map<String, String> fieldValMap = new HashMap<>();
-            for (FieldVO vo : fields) {
-                String val = request.getParameter(vo.getName());
+            for (FieldVO field : fields) {
+                String val = request.getParameter(field.getName());
                 if (StringUtils.isNotBlank(val)) {
-                    fieldValMap.put(vo.getName(), val);
+                    fieldValMap.put(field.getName(), val);
                 } else {
-                    if (vo.isNeed()) {
-                        throw new SerException(vo.getName() + "不能为空");
+                    if (field.isNeed()) {
+                        throw new SerException(field.getName() + "不能为空");
                     }
                 }
             }
@@ -142,7 +140,7 @@ public class RowAct extends BaseFileAction {
         try {
             try {
                 TableBO table = tableAPI.findById(dto.getTableId());
-                byte[] bytes= rowAPI.excelExport(dto);
+                byte[] bytes = rowAPI.excelExport(dto);
                 writeOutFile(response, bytes, table.getName() + ".xlsx");
             } catch (Exception e) {
 
@@ -152,8 +150,6 @@ public class RowAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
-
-
 
 
 }

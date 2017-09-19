@@ -42,4 +42,14 @@ public interface ProjectSer extends Ser<Project, ProjectDTO> {
     default List<Project> list(String userId, ProjectDTO dto) throws SerException {
         return null;
     }
+
+    /**
+     * 通过表id查找项目
+     * @param tableId
+     * @return
+     * @throws SerException
+     */
+    default Project findByTableId(String tableId) throws SerException{
+        return null;
+    }
 }

@@ -50,6 +50,7 @@ public class ProjectApiImpl implements ProjectAPI {
         Project project = projectSer.findById(id);
         if (null != project) {
             project.setStatus(Status.THAW);
+            projectSer.update(project);
         } else {
             throw new SerException("项目不存在");
         }
@@ -60,6 +61,7 @@ public class ProjectApiImpl implements ProjectAPI {
         Project project = projectSer.findById(id);
         if (null != project) {
             project.setStatus(Status.CONGEAL);
+            projectSer.update(project);
         } else {
             throw new SerException("项目不存在");
         }

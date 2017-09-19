@@ -15,12 +15,12 @@ import java.util.Set;
  */
 @Entity
 @javax.persistence.Table(name = "task_row")
-public class Row extends BaseEntity{
+public class Row extends BaseEntity {
     /**
      * 所属表
      */
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "tid", columnDefinition = "VARCHAR(36) COMMENT '所属表' ",nullable = false)
+    @JoinColumn(name = "tid", columnDefinition = "VARCHAR(36) COMMENT '所属表' ", nullable = false)
     private Table table;
 
     /**
@@ -40,6 +40,13 @@ public class Row extends BaseEntity{
      */
     @OneToMany(mappedBy = "row", cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private Set<Grid> gridSet;
+
+    /**
+     * 任务行
+     */
+    @OneToMany(mappedBy = "row", cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    private Set<Task> taskSet;
+
 
     public Table getTable() {
         return table;
@@ -71,5 +78,13 @@ public class Row extends BaseEntity{
 
     public void setGridSet(Set<Grid> gridSet) {
         this.gridSet = gridSet;
+    }
+
+    public Set<Task> getTaskSet() {
+        return taskSet;
+    }
+
+    public void setTaskSet(Set<Task> taskSet) {
+        this.taskSet = taskSet;
     }
 }

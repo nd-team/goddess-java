@@ -71,6 +71,15 @@ public interface RowSer extends Ser<Row, RowDTO> {
     default Integer getSeq(String tableId) throws SerException {
         return null;
     }
-
+    /**
+     * 查询行的工作内容
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    default  String findContent(String id) throws SerException {
+        return null;
+    }
 
 }

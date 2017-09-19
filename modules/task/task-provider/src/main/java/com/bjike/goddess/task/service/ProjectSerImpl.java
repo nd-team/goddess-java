@@ -63,12 +63,13 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
         if (null != dto.getStatus()) {
             dto.getConditions().add(Restrict.eq("status", dto.getStatus()));
         }
+        dto.getSorts().add("createTime");
         return super.findByCis(dto, page);
     }
 
-    public List<Project> list(String userId,ProjectDTO dto) throws SerException {
-        Status status =dto.getStatus();
-        ExecStatus execStatus=dto.getExecStatus();
+    public List<Project> list(String userId, ProjectDTO dto) throws SerException {
+        Status status = dto.getStatus();
+        ExecStatus execStatus = dto.getExecStatus();
         UserDetailBO detail = detailAPI.findByUserId(userId);
         if (null == detail) {
             detail = new UserDetailBO();
@@ -89,7 +90,7 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
             sb.append(" UNION ");
             sb.append("   SELECT pid  FROM task_project_range WHERE groups LIKE '%" + detail.getGroupId() + "%'");
         }
-        sb.append(")b WHERE a.id=b.pid ) WHERE 1=1");
+        sb.append(")b WHERE a.id=b.pid");
 
         if (null != status) {
             sb.append(" and status=" + status.getCode());
@@ -97,8 +98,20 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
         if (null != execStatus) {
             sb.append(" and execStatus=" + execStatus.getCode());
         }
+        sb.append(" order by createTime desc ");
         String sql = sb.toString();
         String[] fields = new String[]{"id", "createTime", "modifyTime", "area", "description", "execStatus", "name", "status"};
         return super.findBySql(sql, Project.class, fields);
     }
+
+    @Override
+    public Project findByTableId(String tableId) throws SerException {
+            String sql = "select pid from task_table where id='" + tableId + "'";
+            List<Object> objects = super.findBySql(sql);
+            if(null!=objects && objects.size()>0){
+                String pid =  String.valueOf(objects.get(0));
+                return super.findById(pid);
+            }
+            throw  new SerException("找不到数据行");
+        }
 }

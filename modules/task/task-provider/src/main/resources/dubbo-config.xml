@@ -25,13 +25,16 @@
     <dubbo:service interface="com.bjike.goddess.task.api.RowAPI" ref="rowApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.task.api.GridAPI" ref="gridApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.task.api.ValAPI" ref="valApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.task.api.ScheduleAPI" ref="scheduleApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.task.api.TaskAPI" ref="taskApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.task.api.NodeAPI" ref="nodeApiImpl"/>
 
     <!--接口引用-->
-    <dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
-    <dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserDetailAPI" id="userDetailApiImpl"/>
-    <dubbo:reference  validation="true"  interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
-    <dubbo:reference  validation="true"  interface="com.bjike.goddess.storage.api.StorageUserAPI" id="storageUserApiImpl"/>
-
+    <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserDetailAPI" id="userDetailApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.StorageUserAPI"
+                     id="storageUserApiImpl"/>
 
 
 </beans>

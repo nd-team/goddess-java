@@ -32,10 +32,10 @@ public class TableSerImpl extends ServiceImpl<Table, TableDTO> implements TableS
 
     @Override
     public void add(TableTO to) throws SerException {
+        String userId = userAPI.currentUser().getId();
         String[] names = to.getNames();
         if (null != names) {
             List<Table> tables = new ArrayList<>(names.length);
-            String userId = userAPI.currentUser().getId();
             Project project = projectSer.findById(to.getProjectId());
             for (String name : names) {
                 Table table = new Table();
@@ -52,6 +52,7 @@ public class TableSerImpl extends ServiceImpl<Table, TableDTO> implements TableS
 
     @Override
     public List<Table> list(TableDTO dto) throws SerException {
+        dto.getSorts().add("createTime");
         return super.findByCis(dto);
     }
 
@@ -60,7 +61,18 @@ public class TableSerImpl extends ServiceImpl<Table, TableDTO> implements TableS
     public List<Table> list(String projectId) throws SerException {
         TableDTO dto = new TableDTO();
         dto.getConditions().add(Restrict.eq("project.id", projectId));
+        dto.getSorts().add("createTime");
         return super.findByCis(dto);
     }
 
+    @Override
+    public Table findByRowId(String rowId) throws SerException {
+        String sql = "select tid from task_row where id='" + rowId + "'";
+        List<Object> objects = super.findBySql(sql);
+        if(null!=objects && objects.size()>0){
+            String tid =  String.valueOf(objects.get(0));
+            return super.findById(tid);
+        }
+       throw  new SerException("找不到数据行");
+    }
 }
