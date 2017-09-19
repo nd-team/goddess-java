@@ -42,4 +42,5 @@ public class ReArrangementVO {
     public void setArrangement(String arrangement) {
         this.arrangement = arrangement;
     }
+
 }

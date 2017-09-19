@@ -16,7 +16,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import scala.util.parsing.combinator.testing.Str;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -307,52 +306,58 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
             for (String id : departIds) {
                 departS.add(BeanTransform.copyProperties(departmentDetailSer.findById(id), ReDepartBO.class));
             }
-            h.setDeparts(departS);
-            PositionDetailDTO dto = new PositionDetailDTO();
-            dto.getConditions().add(Restrict.in("department.id", departIds));
-            List<PositionDetail> list = super.findByCis(dto);
-            Set<String> arrangementIds = list.stream().map(positionDetail -> positionDetail.getArrangement().getId()).collect(Collectors.toSet());
-            List<ReArrangementBO> reArrangementBOS = new ArrayList<>();
-            for (String id : arrangementIds) {
-                reArrangementBOS.add(BeanTransform.copyProperties(arrangementSer.findById(id), ReArrangementBO.class));
-            }
-            h.setArrangementS(reArrangementBOS);
-            Set<String> moduleTypeIds = list.stream().filter(positionDetail -> null != positionDetail.getModule()).map(positionDetail -> positionDetail.getModule().getId()).collect(Collectors.toSet());
-            List<ReModuleBO> moduleBOS = new ArrayList<>();
-            for (String id:moduleTypeIds){
-                moduleBOS.add(BeanTransform.copyProperties(moduleTypeSer.findById(id),ReModuleBO.class));
-            }
-            h.setModuleS(moduleBOS);
-            for (ReArrangementBO reArrangementBO : reArrangementBOS) {
-                PositionDetailDTO dto1 = new PositionDetailDTO();
-                dto1.getConditions().add(Restrict.in("arrangement.id", reArrangementBO.getId()));
-                List<PositionDetail> list1 = super.findByCis(dto1);
-                List<RePositionBO> bos = new ArrayList<>();
-                for (PositionDetail p : list1) {
-                    PositionUserDetailDTO detailDTO = new PositionUserDetailDTO();
-                    detailDTO.getConditions().add(Restrict.eq("positionId", p.getId()));
-                    detailDTO.getConditions().add(Restrict.eq("workStatus", WorkStatus.MAIN));
-                    List<PositionUserDetail> mains = positionUserDetailSer.findByCis(detailDTO);
-                    String main = get(mains);
-                    PositionUserDetailDTO detailDTO1 = new PositionUserDetailDTO();
-                    detailDTO1.getConditions().add(Restrict.eq("positionId", p.getId()));
-                    detailDTO1.getConditions().add(Restrict.eq("workStatus", WorkStatus.PARTJOB));
-                    List<PositionUserDetail> parts = positionUserDetailSer.findByCis(detailDTO1);
-                    String part = get(parts);
-                    PositionUserDetailDTO detailDTO2 = new PositionUserDetailDTO();
-                    detailDTO2.getConditions().add(Restrict.eq("positionId", p.getId()));
-                    detailDTO2.getConditions().add(Restrict.eq("agent", Boolean.FALSE));
-                    List<PositionUserDetail> agents = positionUserDetailSer.findByCis(detailDTO2);
-                    String agent = get(agents);
-                    RePositionBO positionBO = BeanTransform.copyProperties(p, RePositionBO.class);
-                    positionBO.setMain(main);
-                    positionBO.setPart(part);
-                    positionBO.setAgent(agent);
-                    positionBO.setCurrent(positionDetailUserSer.findByPosition(p.getId()).size() + "人");
-                    bos.add(positionBO);
+            for (ReDepartBO d : departS) {
+                PositionDetailDTO dto = new PositionDetailDTO();
+                dto.getConditions().add(Restrict.eq("department.id", d.getId()));
+                List<PositionDetail> list = super.findByCis(dto);
+                Set<String> arrangementIds = list.stream().map(positionDetail -> positionDetail.getArrangement().getId()).collect(Collectors.toSet());
+                List<ReArrangementBO> reArrangementBOS = new ArrayList<>();
+                for (String id : arrangementIds) {
+                    reArrangementBOS.add(BeanTransform.copyProperties(arrangementSer.findById(id), ReArrangementBO.class));
                 }
-                reArrangementBO.setPositionS(bos);
+                for (ReArrangementBO reArrangementBO : reArrangementBOS) {
+                    PositionDetailDTO dto1 = new PositionDetailDTO();
+                    dto1.getConditions().add(Restrict.eq("department.id", d.getId()));
+                    dto1.getConditions().add(Restrict.eq("arrangement.id", reArrangementBO.getId()));
+                    List<PositionDetail> list1 = super.findByCis(dto1);
+//                    Set<String> moduleTypeIds = list1.stream().filter(positionDetail -> null != positionDetail.getModule()).map(positionDetail -> positionDetail.getModule().getId()).collect(Collectors.toSet());
+//                    List<ReModuleBO> moduleBOS = new ArrayList<>();
+//                    for (String id : moduleTypeIds) {
+//                        moduleBOS.add(BeanTransform.copyProperties(moduleTypeSer.findById(id), ReModuleBO.class));
+//                    }
+                    List<RePositionBO> bos = new ArrayList<>();
+                    for (PositionDetail p : list1) {
+                        PositionUserDetailDTO detailDTO = new PositionUserDetailDTO();
+                        detailDTO.getConditions().add(Restrict.eq("positionId", p.getId()));
+                        detailDTO.getConditions().add(Restrict.eq("workStatus", WorkStatus.MAIN));
+                        List<PositionUserDetail> mains = positionUserDetailSer.findByCis(detailDTO);
+                        String main = get(mains);
+                        PositionUserDetailDTO detailDTO1 = new PositionUserDetailDTO();
+                        detailDTO1.getConditions().add(Restrict.eq("positionId", p.getId()));
+                        detailDTO1.getConditions().add(Restrict.eq("workStatus", WorkStatus.PARTJOB));
+                        List<PositionUserDetail> parts = positionUserDetailSer.findByCis(detailDTO1);
+                        String part = get(parts);
+                        PositionUserDetailDTO detailDTO2 = new PositionUserDetailDTO();
+                        detailDTO2.getConditions().add(Restrict.eq("positionId", p.getId()));
+                        detailDTO2.getConditions().add(Restrict.eq("agent", Boolean.FALSE));
+                        List<PositionUserDetail> agents = positionUserDetailSer.findByCis(detailDTO2);
+                        String agent = get(agents);
+                        RePositionBO positionBO = BeanTransform.copyProperties(p, RePositionBO.class,"module");
+                        positionBO.setMain(main);
+                        positionBO.setPart(part);
+                        positionBO.setAgent(agent);
+                        if (null != p.getModule().getModule()) {
+                            positionBO.setModule(p.getModule().getModule());
+                        }
+                        positionBO.setCurrent(positionDetailUserSer.findByPosition(p.getId()).size() + "人");
+                        bos.add(positionBO);
+                    }
+                    reArrangementBO.setPositionS(bos);
+//                    reArrangementBO.setModuleS(moduleBOS);
+                }
+                d.setArrangementS(reArrangementBOS);
             }
+            h.setDeparts(departS);
         }
         return hierarchyBOS;
     }

@@ -12,6 +12,7 @@ public class ReArrangementBO extends BaseBO{
      * 岗位层级
      */
     private String arrangement;
+
     /**
      * 岗位详情
      */

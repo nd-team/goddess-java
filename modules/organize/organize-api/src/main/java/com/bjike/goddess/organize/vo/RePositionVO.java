@@ -47,9 +47,21 @@ public class RePositionVO {
      */
     private Boolean book;
     /**
+     * 模块
+     */
+    private String module;
+    /**
      * 状态
      */
     private Status status;
+
+    public String getModule() {
+        return module;
+    }
+
+    public void setModule(String module) {
+        this.module = module;
+    }
 
     public String getId() {
         return id;

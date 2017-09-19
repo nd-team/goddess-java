@@ -20,30 +20,6 @@ public class ReHierarchyBO extends BaseBO{
      * 部门详情
      */
     private List<ReDepartBO> departs;
-    /**
-     * 层级详情
-     */
-    private List<ReArrangementBO> arrangementS;
-    /**
-     * 模块详情
-     */
-    private List<ReModuleBO> moduleS;
-
-    public List<ReModuleBO> getModuleS() {
-        return moduleS;
-    }
-
-    public void setModuleS(List<ReModuleBO> moduleS) {
-        this.moduleS = moduleS;
-    }
-
-    public List<ReArrangementBO> getArrangementS() {
-        return arrangementS;
-    }
-
-    public void setArrangementS(List<ReArrangementBO> arrangementS) {
-        this.arrangementS = arrangementS;
-    }
 
     public List<ReDepartBO> getDeparts() {
         return departs;
