@@ -25,6 +25,8 @@ public class JapiTest {
 				"modules/intromanage/intromanage-api",
 				"modules/assemble/assemble-api",
 				"modules/staffentry/staffentry-api",
+				"modules/organize/organize-api",
+				"modules/storage/storage-api",
 				"common/common-api",
 				"user/user-api"
 		});

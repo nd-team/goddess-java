@@ -1,5 +1,7 @@
 package com.bjike.goddess.bidding.vo;
 
+import com.bjike.goddess.common.api.type.Status;
+
 /**
  * 招投标网站信息表现层对象
  *
@@ -47,7 +49,16 @@ public class BiddingWebInfoVO {
     /**
      * 状态
      */
-    private String status;
+    private Status status;
+    /**
+     * 检索关键词
+     */
+    private String keyWords;
+    /**
+     * 检索频率
+     */
+    private String retrieveFrequency;
+
 
     public String getId() {
         return id;
@@ -105,11 +116,27 @@ public class BiddingWebInfoVO {
         this.registrationInfo = registrationInfo;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getKeyWords() {
+        return keyWords;
+    }
+
+    public void setKeyWords(String keyWords) {
+        this.keyWords = keyWords;
+    }
+
+    public String getRetrieveFrequency() {
+        return retrieveFrequency;
+    }
+
+    public void setRetrieveFrequency(String retrieveFrequency) {
+        this.retrieveFrequency = retrieveFrequency;
     }
 }

@@ -1,22 +1,22 @@
-模块名:regularization
-类名:CommunicationFormwork
+模块名:assistance
+类名:ComputerSubsidies
 作者:lijuntao
-描述:各类交流沟通模块
+描述:电脑补助
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-ModuleName moduleName 模板名称;
-String belongType 所属类型;
-String classifi 分类;
-String triggerField 触发字段;
-String title 标题;
-String emailModule 邮件内容模板;
-String example 例子;
-String attachment 附件;
-String lordSendObj 主送对象;
-String ccObj 抄送对象;
-String way 途径;
+String area 地区;
+String department 项目组/部门;
+String name 姓名;
+LocalDate entryDate 入职日期;
+Boolean necklineComputer 是否领用电脑;
+Usage usage 使用情况;
+Double computerAmount 电脑补助额;
+Boolean confirm 是否确认;
+LocalDate confirmDate 确认时间;
+SubsidiesStatus subsidiesStatus 补助状态;
+StaffStatus staffStatus  状态;
 )
 

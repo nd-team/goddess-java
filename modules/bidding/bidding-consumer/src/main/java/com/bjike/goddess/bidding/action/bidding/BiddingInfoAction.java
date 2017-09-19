@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -429,5 +430,26 @@ public class BiddingInfoAction extends BaseFileAction{
             throw new ActException(e1.getMessage());
         }
     }
+    /**
+     * 年份
+     *
+     * @version v1
+     */
+    @GetMapping("v1/year")
+    public Result yearList() throws ActException {
+        try {
+            //获取所有年
+            List<String> yearList = new ArrayList<>();
+            int year = LocalDate.now().getYear();
+
+            for (int i = year - 5; i <= year + 5; i++) {
+                yearList.add(String.valueOf(i));
+            }
+            return ActResult.initialize(yearList);
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }

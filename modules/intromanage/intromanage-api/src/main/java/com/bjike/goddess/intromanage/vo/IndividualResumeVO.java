@@ -1,5 +1,8 @@
 package com.bjike.goddess.intromanage.vo;
 
+import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.organize.enums.StaffStatus;
+
 import java.util.List;
 
 /**
@@ -62,7 +65,10 @@ public class IndividualResumeVO {
      * 转正时间
      */
     private String positiveTime;
-
+    /**
+     * 最新获取/更新时间
+     */
+    private String updateDate;
     /**
      * 是否购买社保
      */
@@ -202,7 +208,14 @@ public class IndividualResumeVO {
      * 工作年限
      */
     private String workExperience;
-
+    /**
+     * 员工状态
+     */
+    private StaffStatus staffStatus;
+    /**
+     * 状态
+     */
+    private Status status;
     /**
      * 员工奖励
      */
@@ -546,6 +559,30 @@ public class IndividualResumeVO {
 
     public void seteMsil(String eMsil) {
         this.eMsil = eMsil;
+    }
+
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public StaffStatus getStaffStatus() {
+        return staffStatus;
+    }
+
+    public void setStaffStatus(StaffStatus staffStatus) {
+        this.staffStatus = staffStatus;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public List<StaffRewardVO> getStaffRewardVOS() {

@@ -23,7 +23,6 @@ import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.organize.bo.PositionUserDetailBO;
 import com.bjike.goddess.organize.enums.WorkStatus;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
-import com.bjike.goddess.staffentry.bo.FindNameBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -260,9 +259,9 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
         if (user != null) {
 //            bo.setEmployeeNumber(user.getEmployeeNumber());
 //            bo.setPhone(user.getPhone());
-            if(moduleAPI.isCheck("archive")){
+            if (moduleAPI.isCheck("archive")) {
                 StaffRecordsBO staffRecordsBO = staffRecordsAPI.findByName(entity.getUsername());
-                if(null != staffRecordsBO){
+                if (null != staffRecordsBO) {
                     bo.setEntryTime(staffRecordsBO.getEntryTime());
                     bo.setEducation(staffRecordsBO.getEducation());
                     bo.setPhone(staffRecordsBO.getTelephone());
@@ -277,7 +276,7 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
                 bo.setDepartment("");
                 if (null != detailBO) {
                     List<PositionDetailBO> positionBOs = new ArrayList<>();
-                            List<PositionUserDetailBO> positionUserDetailBOSList = detailBO.getDetailS();
+                    List<PositionUserDetailBO> positionUserDetailBOSList = detailBO.getDetailS();
                     if (null != positionUserDetailBOSList) {
                         for (PositionUserDetailBO p : positionUserDetailBOSList) {
                             if (WorkStatus.MAIN.equals(p.getWorkStatus())) {
@@ -286,7 +285,7 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
                         }
                     }
                     String area = "", department = "", arrangement = "";
-                    if( positionBOs!=null) {
+                    if (positionBOs != null) {
                         for (PositionDetailBO position : positionBOs.stream()
                                 .sorted(Comparator.comparing(PositionDetailBO::getArrangementId))
                                 .collect(Collectors.toList())) {
@@ -776,9 +775,9 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
 
     @Override
     public List<String> getAllName() throws SerException {
-        if(moduleAPI.isCheck("organize")){
-            List<UserBO> userBOList =positionDetailUserAPI.findUserListInOrgan();
-            if(!CollectionUtils.isEmpty(userBOList)){
+        if (moduleAPI.isCheck("organize")) {
+            List<UserBO> userBOList = positionDetailUserAPI.findUserListInOrgan();
+            if (!CollectionUtils.isEmpty(userBOList)) {
                 List<String> list = userBOList.stream().map(UserBO::getUsername).distinct().collect(Collectors.toList());
                 return list;
             }
@@ -786,11 +785,33 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
         return null;
     }
 
+    @Override
+    public Integer getDimissionNum(String[] date) throws SerException {
+        Integer number = 0;
+        DimissionInfoDTO dimissionInfoDTO = new DimissionInfoDTO();
+        dimissionInfoDTO.getConditions().add(Restrict.between("dimissionDate", date));
+        List<DimissionInfo> dimissionInfos = super.findByCis(dimissionInfoDTO);
+        if (dimissionInfos != null && dimissionInfos.size() > 0) {
+            number = dimissionInfos.size();
+        }
+        return number;
+    }
+
+    @Override
+    public String getDate() throws SerException {
+        String sql = "select min(dimissionDate) as dimissionDate from " + getTableName(DimissionInfo.class);
+        List<Object> objects = super.findBySql(sql);
+        String startDate = "";
+        if(objects!=null && objects.size()>0){
+            startDate = String.valueOf(objects.get(0));
+        }
+        return startDate;
+    }
 
     @Override
     public List<DimissionInfo> findByName(String userName) throws SerException {
         DimissionInfoDTO dto = new DimissionInfoDTO();
-        dto.getConditions().add(Restrict.eq("username",userName));
+        dto.getConditions().add(Restrict.eq("username", userName));
         List<DimissionInfo> list = super.findByCis(dto);
         return list;
     }

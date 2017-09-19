@@ -1,10 +1,12 @@
 package com.bjike.goddess.bidding.api;
 
+import com.bjike.goddess.bidding.bo.BiddingCollectBO;
 import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.bo.BiddingInfoCollectBO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.excel.SonPermissionObject;
 import com.bjike.goddess.bidding.service.BiddingInfoSer;
+import com.bjike.goddess.bidding.to.BiddingCollectTO;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
 import com.bjike.goddess.bidding.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -91,5 +93,24 @@ public class BiddingInfoApiImpl implements BiddingInfoAPI {
     @Override
     public byte[] exportExcel(BiddingInfoDTO dto) throws SerException{
         return biddingInfoSer.exportExcel(dto);
+    }
+    @Override
+    public List<BiddingCollectBO> dayCollect(BiddingCollectTO to) throws SerException {
+        return biddingInfoSer.dayCollect(to);
+    }
+
+    @Override
+    public List<BiddingCollectBO> weekCollect(BiddingCollectTO to) throws SerException {
+        return biddingInfoSer.weekCollect(to);
+    }
+
+    @Override
+    public List<BiddingCollectBO> monthCollect(BiddingCollectTO to) throws SerException {
+        return biddingInfoSer.monthCollect(to);
+    }
+
+    @Override
+    public List<BiddingCollectBO> totalCollect(BiddingCollectTO to) throws SerException {
+        return biddingInfoSer.totalCollect(to);
     }
 }

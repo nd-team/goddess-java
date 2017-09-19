@@ -145,4 +145,9 @@ public class FirmIntroApiImpl implements FirmIntroAPI {
     public void thawFirmin(String id) throws SerException {
         firmIntroSer.thawFirmin(id);
     }
+
+    @Override
+    public String getDate() throws SerException {
+        return firmIntroSer.getDate();
+    }
 }

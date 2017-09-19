@@ -89,6 +89,24 @@ public interface BiddingWebInfoAPI {
 
     }
     /**
+     * 冻结
+     *
+     * @param id
+     * @throws SerException
+     */
+    default void congel(String id) throws SerException {
+
+    }
+    /**
+     * 解冻
+     *
+     * @param id
+     * @throws SerException
+     */
+    default void thaw(String id) throws SerException {
+
+    }
+    /**
      * 获取网站名称
      *
      * @return class String
@@ -112,6 +130,14 @@ public interface BiddingWebInfoAPI {
     default BiddingWebInfoBO getWebInfo(String webName) throws SerException {
         return null;
     }
+    /**
+     * 获取信息
+     * @param url
+     * @param key
+     * @return
+     * @throws SerException
+     */
+    String info(String url,String key) throws SerException;
 
 
 }

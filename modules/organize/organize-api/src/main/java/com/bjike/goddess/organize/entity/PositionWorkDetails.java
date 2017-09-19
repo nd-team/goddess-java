@@ -101,13 +101,13 @@ public class PositionWorkDetails extends BaseEntity {
     /**
      * 功能（流程）目的
      */
-    @Column(name = "purpose", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '功能（流程）目的'")
+    @Column(name = "purpose", columnDefinition = "VARCHAR(255)   COMMENT '功能（流程）目的'")
     private String purpose;
 
     /**
      * 功能版本
      */
-    @Column(name = "version", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '功能版本'")
+    @Column(name = "version",columnDefinition = "VARCHAR(255)   COMMENT '功能版本'")
     private String version;
 
     /**

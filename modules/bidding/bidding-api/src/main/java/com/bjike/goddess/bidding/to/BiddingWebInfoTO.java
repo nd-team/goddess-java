@@ -3,6 +3,7 @@ package com.bjike.goddess.bidding.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.common.api.type.Status;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -54,8 +55,15 @@ public class BiddingWebInfoTO extends BaseTO {
     /**
      * 状态
      */
-    @NotBlank(message = "状态不能为空",groups = {ADD.class, EDIT.class})
-    private String status;
+    private Status status;
+    /**
+     * 检索关键词
+     */
+    private String keyWords;
+    /**
+     * 检索频率
+     */
+    private String retrieveFrequency;
 
 
     public String getWebName() {
@@ -106,11 +114,27 @@ public class BiddingWebInfoTO extends BaseTO {
         this.registrationInfo = registrationInfo;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getKeyWords() {
+        return keyWords;
+    }
+
+    public void setKeyWords(String keyWords) {
+        this.keyWords = keyWords;
+    }
+
+    public String getRetrieveFrequency() {
+        return retrieveFrequency;
+    }
+
+    public void setRetrieveFrequency(String retrieveFrequency) {
+        this.retrieveFrequency = retrieveFrequency;
     }
 }

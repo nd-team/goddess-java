@@ -139,4 +139,11 @@ public interface FirmIntroAPI {
     default void thawFirmin(String id) throws SerException {
         return;
     }
+    /**
+     * 获取最早时间
+     *
+     */
+    default String getDate() throws SerException {
+        return null;
+    }
 }

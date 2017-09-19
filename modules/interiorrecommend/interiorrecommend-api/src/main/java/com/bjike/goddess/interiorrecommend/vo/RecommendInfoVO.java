@@ -1,6 +1,6 @@
 package com.bjike.goddess.interiorrecommend.vo;
 
-import com.bjike.goddess.interiorrecommend.to.RecommendContentTO;
+import com.bjike.goddess.interiorrecommend.to.OldRecommendContentTO;
 
 import java.util.List;
 
@@ -53,7 +53,7 @@ public class RecommendInfoVO {
     /**
      * 推荐内容
      */
-    private List<RecommendContentTO> contentList;
+    private List<OldRecommendContentTO> contentList;
 
 
     /**
@@ -171,11 +171,11 @@ public class RecommendInfoVO {
         this.remark = remark;
     }
 
-    public List<RecommendContentTO> getContentList() {
+    public List<OldRecommendContentTO> getContentList() {
         return contentList;
     }
 
-    public void setContentList(List<RecommendContentTO> contentList) {
+    public void setContentList(List<OldRecommendContentTO> contentList) {
         this.contentList = contentList;
     }
 

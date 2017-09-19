@@ -455,6 +455,9 @@ public class PerformanceScoreSerImpl extends ServiceImpl<PerformanceScore, Perfo
             case GENMANAGE:
                 flag = guidePosinIdentity();
                 break;
+            case COLLECT:
+                flag = guideIdentity();
+                break;
             default:
                 flag = true;
                 break;

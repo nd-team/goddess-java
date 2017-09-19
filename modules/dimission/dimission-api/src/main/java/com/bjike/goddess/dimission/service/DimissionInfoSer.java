@@ -295,6 +295,20 @@ public interface DimissionInfoSer extends Ser<DimissionInfo, DimissionInfoDTO> {
     default List<String> getAllName() throws SerException {
         return null;
     }
+    /**
+     * 根据时间获取离职人数
+     * lijuntao
+     */
+    default Integer getDimissionNum(String[] date) throws SerException {
+        return null;
+    }
+    /**
+     * 获取最早时间
+     * lijuntao
+     */
+    default String getDate() throws SerException {
+        return null;
+    }
 
     /**
      * 根据员工姓名查询离职信息

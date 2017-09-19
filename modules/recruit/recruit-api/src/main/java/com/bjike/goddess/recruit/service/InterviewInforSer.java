@@ -77,4 +77,14 @@ public interface InterviewInforSer extends Ser<InterviewInfor, InterviewInforDTO
      * @throws SerException
      */
     void zjbAudit(String id, Boolean whetherPassBoss, String bossAdvice) throws SerException;
+
+    /**
+     * 查询所有面试信息
+     */
+    List<InterviewInforBO> findInterview() throws SerException;
+
+    /**
+     * 根据姓名获取通过面试的信息
+     */
+    InterviewInforBO findByName(String name) throws SerException;
 }

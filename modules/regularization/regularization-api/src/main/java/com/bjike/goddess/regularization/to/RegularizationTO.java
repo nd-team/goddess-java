@@ -3,6 +3,7 @@ package com.bjike.goddess.regularization.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.regularization.type.SexType;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -27,8 +28,8 @@ public class RegularizationTO extends BaseTO {
     /**
      * 性别
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "性别不能为空")
-    private String gender;
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "性别不能为空")
+    private SexType gender;
 
     /**
      * 学历
@@ -84,12 +85,12 @@ public class RegularizationTO extends BaseTO {
     /**
      * 工作年限
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "岗位不能为空")
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "岗位不能为空")
     private Double workingYear;
     /**
      * 确定事项是否确认
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "岗位不能为空")
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "岗位不能为空")
     private Boolean confirmEvent;
     /**
      * 确认人
@@ -253,11 +254,11 @@ public class RegularizationTO extends BaseTO {
         this.name = name;
     }
 
-    public String getGender() {
+    public SexType getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(SexType gender) {
         this.gender = gender;
     }
 

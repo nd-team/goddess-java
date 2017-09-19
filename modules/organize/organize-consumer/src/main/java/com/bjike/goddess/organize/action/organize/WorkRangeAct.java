@@ -356,9 +356,11 @@ public class WorkRangeAct {
             e.printStackTrace();
         }
         List<String> list = (List<String>) (resultOrgan1.getData());
-        stringList.addAll(list);
         Set<String> set = new HashSet<>(0);
-        set.addAll(stringList);
+        if (null != stringList && !stringList.isEmpty()) {
+            stringList.addAll(list);
+            set.addAll(stringList);
+        }
         return ActResult.initialize(set);
     }
 
@@ -421,8 +423,12 @@ public class WorkRangeAct {
             CloseableHttpResponse response1 = closeableHttpClient1.execute(httpGet1);
             resultOrgan1 = JSON.parseObject(EntityUtils.toString(response1.getEntity()), ActResultOrgan.class);
             List<String> list1 = (List<String>) (resultOrgan1.getData());
-            list.addAll(list1);
-            set.addAll(list);
+            if (null != list1 && !list1.isEmpty()) {
+                list.addAll(list1);
+            }
+            if (null != list && !list.isEmpty()) {
+                set.addAll(list);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
