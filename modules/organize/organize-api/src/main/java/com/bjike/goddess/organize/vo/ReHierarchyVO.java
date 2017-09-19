@@ -22,14 +22,6 @@ public class ReHierarchyVO {
      * 部门详情
      */
     private List<ReDepartVO> departs;
-    /**
-     * 层级详情
-     */
-    private List<ReArrangementVO> arrangementS;
-    /**
-     * 模块详情
-     */
-    private List<ReModuleVO> moduleS;
 
     public String getId() {
         return id;
@@ -45,22 +37,6 @@ public class ReHierarchyVO {
 
     public void setDeparts(List<ReDepartVO> departs) {
         this.departs = departs;
-    }
-
-    public List<ReArrangementVO> getArrangementS() {
-        return arrangementS;
-    }
-
-    public void setArrangementS(List<ReArrangementVO> arrangementS) {
-        this.arrangementS = arrangementS;
-    }
-
-    public List<ReModuleVO> getModuleS() {
-        return moduleS;
-    }
-
-    public void setModuleS(List<ReModuleVO> moduleS) {
-        this.moduleS = moduleS;
     }
 
     public String getSerialNumber() {
