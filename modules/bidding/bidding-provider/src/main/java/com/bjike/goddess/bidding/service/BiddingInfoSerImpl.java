@@ -1,19 +1,18 @@
 package com.bjike.goddess.bidding.service;
 
+import com.bjike.goddess.bidding.bo.BiddingCollectBO;
 import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.bo.BiddingInfoCollectBO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.entity.BiddingInfo;
-import com.bjike.goddess.bidding.enums.BiddingType;
-import com.bjike.goddess.bidding.enums.BusinessType;
 import com.bjike.goddess.bidding.enums.GuideAddrStatus;
 import com.bjike.goddess.bidding.excel.BiddingInfoExport;
 import com.bjike.goddess.bidding.excel.SonPermissionObject;
+import com.bjike.goddess.bidding.to.BiddingCollectTO;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
 import com.bjike.goddess.bidding.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -28,10 +27,11 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -276,16 +276,16 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
     public Long countBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
         biddingInfoDTO.getSorts().add("createTime=desc");
         if (StringUtils.isNotBlank(biddingInfoDTO.getWebName())) {
-            biddingInfoDTO.getConditions().add(Restrict.eq("webName",biddingInfoDTO.getWebName()));
+            biddingInfoDTO.getConditions().add(Restrict.eq("webName", biddingInfoDTO.getWebName()));
         }
-        if(StringUtils.isNotBlank(biddingInfoDTO.getUrl())){
-            biddingInfoDTO.getConditions().add(Restrict.eq("url",biddingInfoDTO.getUrl()));
+        if (StringUtils.isNotBlank(biddingInfoDTO.getUrl())) {
+            biddingInfoDTO.getConditions().add(Restrict.eq("url", biddingInfoDTO.getUrl()));
         }
-        if(StringUtils.isNotBlank(biddingInfoDTO.getCities())){
-            biddingInfoDTO.getConditions().add(Restrict.eq("cities",biddingInfoDTO.getCities()));
+        if (StringUtils.isNotBlank(biddingInfoDTO.getCities())) {
+            biddingInfoDTO.getConditions().add(Restrict.eq("cities", biddingInfoDTO.getCities()));
         }
-        if(StringUtils.isNotBlank(biddingInfoDTO.getProvinces())){
-            biddingInfoDTO.getConditions().add(Restrict.eq("provinces",biddingInfoDTO.getProvinces()));
+        if (StringUtils.isNotBlank(biddingInfoDTO.getProvinces())) {
+            biddingInfoDTO.getConditions().add(Restrict.eq("provinces", biddingInfoDTO.getProvinces()));
         }
         Long count = super.count(biddingInfoDTO);
         return count;
@@ -315,8 +315,13 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
     public BiddingInfoBO insertBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {
         checkAddIdentity();
         checkDate(biddingInfoTO);
-        BiddingInfo biddingInfo = BeanTransform.copyProperties(biddingInfoTO, BiddingInfo.class, true,"tenderModule");
-        biddingInfo.setTenderModule(StringUtils.join(biddingInfoTO.getTenderModule(),","));
+        BiddingInfo biddingInfo = BeanTransform.copyProperties(biddingInfoTO, BiddingInfo.class, true, "tenderModule");
+        biddingInfo.setTenderModule(StringUtils.join(biddingInfoTO.getTenderModule(), ","));
+        if (biddingInfo.getPassProjectEstimates().equals(0)) {
+            biddingInfo.setOpportunity(false);
+        } else {
+            biddingInfo.setOpportunity(true);
+        }
         super.save(biddingInfo);
         return BeanTransform.copyProperties(biddingInfo, BiddingInfoBO.class);
     }
@@ -329,10 +334,15 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
             throw new SerException("id不能为空");
         }
         BiddingInfo biddingInfo = super.findById(biddingInfoTO.getId());
-        BeanTransform.copyProperties(biddingInfoTO, biddingInfo, true,"tenderModule");
+        BeanTransform.copyProperties(biddingInfoTO, biddingInfo, true, "tenderModule");
         checkDate(biddingInfoTO);
         biddingInfo.setModifyTime(LocalDateTime.now());
-        biddingInfo.setTenderModule(StringUtils.join(biddingInfoTO.getTenderModule(),","));
+        biddingInfo.setTenderModule(StringUtils.join(biddingInfoTO.getTenderModule(), ","));
+        if (biddingInfo.getPassProjectEstimates().equals(0)) {
+            biddingInfo.setOpportunity(false);
+        } else {
+            biddingInfo.setOpportunity(true);
+        }
         super.update(biddingInfo);
         return BeanTransform.copyProperties(biddingInfo, BiddingInfoBO.class);
     }
@@ -382,45 +392,57 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         if (cities == null || cities.length <= 0) {
             throw new SerException("汇总失败，请选择地市");
         }
-        String[] citiesTemp = new String[cities.length];
-        for (int i = 0; i < cities.length; i++) {
-            citiesTemp[i] = "'" + cities[i] + "'";
+        List<BiddingInfoCollectBO> boList = new ArrayList<>();
+//        String[] citiesTemp = new String[cities.length];
+//        for (int i = 0; i < cities.length; i++) {
+//            citiesTemp[i] = cities[i];
+//        }
+        StringBuilder sb= new StringBuilder();
+        for (int i=0;i<cities.length;i++){
+            if (i==cities.length-1){
+                sb.append("'"+cities[i]+"'");
+            }else {
+                sb.append("'"+cities[i]+"',");
+            }
         }
-        String citiesStr = StringUtils.join(citiesTemp, ',');
-        StringBuilder sb = new StringBuilder();
-        sb.append(" SELECT * from ");
-        sb.append(" (SELECT A.*,B.mobile,B.soft,B.system,B.plan FROM ");
-        sb.append(" (SELECT cities,max(CASE WHEN biddingType=0 THEN biddingTypeCounts END ) AS invite, ");
-        sb.append(" max(CASE WHEN biddingType=1 THEN biddingTypeCounts END ) AS openly FROM ");
-        sb.append(" (select count(*) AS biddingTypeCounts,biddingType AS biddingType,cities as cities ");
-        sb.append(" FROM bidding_biddinginfo a WHERE cities IN (%s) GROUP BY biddingType,cities ORDER BY cities )a GROUP BY cities)A, ");
-        sb.append(" (SELECT cities,max(CASE WHEN businessType=0 THEN businessTypeCounts END )AS mobile, ");
-        sb.append(" max(CASE WHEN businessType=2 THEN businessTypeCounts END )AS soft, ");
-        sb.append(" max(CASE WHEN businessType=3 THEN businessTypeCounts END )AS system, ");
-        sb.append(" max(CASE WHEN businessType=4 THEN businessTypeCounts END )AS plan FROM ");
-        sb.append(" (SELECT count(*) AS businessTypeCounts,businessType as businessType,cities as cities ");
-        sb.append(" FROM bidding_biddinginfo a WHERE cities IN (%s) GROUP BY businessType,cities ORDER BY cities)a GROUP BY cities)B ");
-        sb.append(" WHERE A.cities=B.cities)C ");
-        sb.append(" UNION ");
-        sb.append(" SELECT '合计' as area ,sum(invite) AS invite,sum(openly) AS openly,sum(mobile) AS mobile, ");
-        sb.append(" sum(soft) AS soft,sum(system) AS system,sum(plan) AS plan from ");
-        sb.append(" (SELECT A.*,B.mobile,B.soft,B.system,B.plan FROM ");
-        sb.append(" (SELECT cities,max(CASE WHEN biddingType=0 THEN biddingTypeCounts END ) AS invite, ");
-        sb.append(" max(CASE WHEN biddingType=1 THEN biddingTypeCounts END ) AS openly FROM ");
-        sb.append(" (select count(*) AS biddingTypeCounts,biddingType AS biddingType,cities as cities ");
-        sb.append(" FROM bidding_biddinginfo a WHERE cities IN (%s) GROUP BY biddingType,cities ORDER BY cities )a GROUP BY cities)A, ");
-        sb.append(" (SELECT cities,max(CASE WHEN businessType=0 THEN businessTypeCounts END )AS mobile, ");
-        sb.append(" max(CASE WHEN businessType=1 THEN businessTypeCounts END )AS soft, ");
-        sb.append(" max(CASE WHEN businessType=2 THEN businessTypeCounts END )AS system, ");
-        sb.append(" max(CASE WHEN businessType=3 THEN businessTypeCounts END )AS plan FROM ");
-        sb.append(" (SELECT count(*) AS businessTypeCounts,businessType as businessType,cities as cities ");
-        sb.append(" FROM bidding_biddinginfo a WHERE cities IN (%s) GROUP BY businessType,cities ORDER BY cities)a GROUP BY cities)B ");
-        sb.append(" WHERE A.cities=B.cities)C ");
-        String sql = sb.toString();
-        sql = String.format(sql, citiesStr, citiesStr, citiesStr, citiesStr);
-        String[] fields = new String[]{"cities", "invite", "openly", "mobile", "soft", "system", "plan"};
-        List<BiddingInfoCollectBO> biddingInfoCollectBOS = super.findBySql(sql, BiddingInfoCollectBO.class, fields);
-        return biddingInfoCollectBOS;
+
+        String sql = "SELECT biddingType,count(biddingType) as count FROM bidding_biddinginfo " +
+                "WHERE cities IN (" + sb.toString() + ") GROUP BY biddingType ";
+        List<Object> objects = super.findBySql(sql);
+        Map<String, Integer> map = new HashMap<>(objects.size());
+        if (null != objects && objects.size() > 0) {
+            for (Object o : objects) {
+                Object[] val = (Object[]) o;
+                map.put(String.valueOf(val[0]), Integer.parseInt(String.valueOf(val[1])));
+            }
+
+        }
+
+        sql = " SELECT businessType,count(businessType) AS count " +
+                "FROM bidding_biddinginfo WHERE cities IN (" + sb.toString()+ ") GROUP BY businessType ";
+        List<Object> object = super.findBySql(sql);
+        Map<String, Integer> businessMap = new HashMap<>(object.size());
+        if (null != object && object.size() > 0) {
+            for (Object o : object) {
+                Object[] val = (Object[]) o;
+                businessMap.put(String.valueOf(val[0]), Integer.parseInt(String.valueOf(val[1])));
+            }
+
+        }
+        BiddingInfoCollectBO bo = new BiddingInfoCollectBO();
+        StringBuilder sb1= new StringBuilder();
+        for (int i=0;i<cities.length;i++){
+            if (i==cities.length-1){
+                sb1.append(""+cities[i]+"");
+            }else {
+                sb1.append(""+cities[i]+",");
+            }
+        }
+        bo.setCities(sb1.toString());
+        bo.setBiddingMap(map);
+        bo.setBusinessMap(businessMap);
+        boList.add(bo);
+        return boList;
     }
 
     @Override
@@ -480,9 +502,8 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
 
         List<BiddingInfoExport> biddingInfoExports = new ArrayList<>();
         list.stream().forEach(str -> {
-            BiddingInfoExport export = BeanTransform.copyProperties(str, BiddingInfoExport.class, "biddingType", "businessType", "status");
-            export.setBiddingType(BiddingType.exportStrConvert(str.getBiddingType()));
-            export.setBusinessType(BusinessType.exportStrConvert(str.getBusinessType()));
+            BiddingInfoExport export = BeanTransform.copyProperties(str, BiddingInfoExport.class, "status");
+//            export.setBusinessType(BusinessType.exportStrConvert(str.getBusinessType()));
 //            if (str.getStatus().equals(Status.THAW)) {
 //                export.setStatus("解冻");
 //            } else if (str.getStatus().equals(Status.CONGEAL)) {
@@ -502,4 +523,157 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
     }
 
 
+    @Override
+    public List<BiddingCollectBO> dayCollect(BiddingCollectTO to) throws SerException {
+        LocalDate time = null;
+        if (to.getTime() != null) {
+            time = DateUtil.parseDate(to.getTime());
+        } else {
+            time = LocalDate.now();
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT a.businessType as businessType,a.year as year, ");
+        sb.append(" count(a.businessType) as biddinginfoNum,count(a.is_projectEstimates) as projectEstimatesNum, ");
+        sb.append(" a.scale AS scaleNum,count(a.is_passProjectEstimates) AS biddingProjectNum, ");
+        sb.append(" count(b.competitive) as contendNum,sum(b.biddingPrice) as biddingPrice, ");
+        sb.append(" count(b.is_finish) AS bidNum,count(b.is_passProjectEstimates) AS winNum, ");
+        sb.append(" sum(b.marginPrice) AS marginPrice,sum(b.returnMarginPrice) as returnMarginPrice ");
+        sb.append(" FROM bidding_biddinginfo a,bidding_bidopeninginfo b ");
+        sb.append(" WHERE a.businessType=b.businessType AND a.is_projectEstimates=1 ");
+        sb.append(" AND a.is_passProjectEstimates=1 AND b.is_finish=1 AND b.is_passProjectEstimates=1 ");
+        sb.append(" AND a.updateTime = b.updateTime AND a.updateTime='" + time + "' ");
+        sb.append(" GROUP BY a.businessType,b.businessType,a.year,b.year, a.scale, ");
+        sb.append(" b.competitive ");
+        String sql = sb.toString();
+        String[] feilds = new String[]{"businessType", "year", "biddinginfoNum", "projectEstimatesNum",
+                "scaleNum", "biddingProjectNum", "contendNum", "biddingPrice", "bidNum", "winNum", "marginPrice", "returnMarginPrice"};
+        List<BiddingCollectBO> boList = super.findBySql(sql, BiddingCollectBO.class, feilds);
+        return boList;
+    }
+
+    @Override
+    public List<BiddingCollectBO> weekCollect(BiddingCollectTO to) throws SerException {
+        LocalDate[] time = null;
+        Integer year = to.getYear();
+        Integer month = to.getMonth();
+        Integer week = to.getWeek();
+        if (year != null && month != null && week != null) {
+            time = DateUtil.getWeekTimes(year, month, week);
+        } else {
+            String dateString = DateUtil.dateToString(LocalDate.now());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = null;
+            try {
+                date = sdf.parse(dateString);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            int weekOfMonth = calendar.get(Calendar.WEEK_OF_MONTH);
+            time = DateUtil.getWeekTimes(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), weekOfMonth);
+        }
+        LocalDate start = time[0];
+        LocalDate end = time[1];
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT a.businessType as businessType,a.year as year, ");
+        sb.append(" count(a.businessType) as biddinginfoNum,count(a.is_projectEstimates) as projectEstimatesNum, ");
+        sb.append(" a.scale AS scaleNum,count(a.is_passProjectEstimates) AS biddingProjectNum, ");
+        sb.append(" count(b.competitive) as contendNum,sum(b.biddingPrice) as biddingPrice, ");
+        sb.append(" count(b.is_finish) AS bidNum,count(b.is_passProjectEstimates) AS winNum, ");
+        sb.append(" sum(b.marginPrice) AS marginPrice,sum(b.returnMarginPrice) as returnMarginPrice ");
+        sb.append(" FROM bidding_biddinginfo a,bidding_bidopeninginfo b ");
+        sb.append(" WHERE a.businessType=b.businessType AND a.is_projectEstimates=1 ");
+        sb.append(" AND a.is_passProjectEstimates=1 AND b.is_finish=1 AND b.is_passProjectEstimates=1 ");
+        sb.append(" AND a.updateTime = b.updateTime AND a.updateTime between '" + start + "' and '" + end + "' ");
+        sb.append(" GROUP BY a.businessType,b.businessType,a.year,b.year, a.scale, ");
+        sb.append(" b.competitive ");
+        String sql = sb.toString();
+        String[] feilds = new String[]{"businessType", "year", "biddinginfoNum", "projectEstimatesNum",
+                "scaleNum", "biddingProjectNum", "contendNum", "biddingPrice", "bidNum", "winNum", "marginPrice", "returnMarginPrice"};
+        List<BiddingCollectBO> boList = super.findBySql(sql, BiddingCollectBO.class, feilds);
+        return boList;
+    }
+
+    @Override
+    public List<BiddingCollectBO> monthCollect(BiddingCollectTO to) throws SerException {
+        Integer year = 0;
+        Integer month = 0;
+        if (to.getYear() != null && to.getMonth() != null) {
+            year = to.getYear();
+            month = to.getMonth();
+        } else {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT a.businessType as businessType,a.year as year, ");
+        sb.append(" count(a.businessType) as biddinginfoNum,count(a.is_projectEstimates) as projectEstimatesNum, ");
+        sb.append(" a.scale AS scaleNum,count(a.is_passProjectEstimates) AS biddingProjectNum, ");
+        sb.append(" count(b.competitive) as contendNum,sum(b.biddingPrice) as biddingPrice, ");
+        sb.append(" count(b.is_finish) AS bidNum,count(b.is_passProjectEstimates) AS winNum, ");
+        sb.append(" sum(b.marginPrice) AS marginPrice,sum(b.returnMarginPrice) as returnMarginPrice ");
+        sb.append(" FROM bidding_biddinginfo a,bidding_bidopeninginfo b ");
+        sb.append(" WHERE a.businessType=b.businessType AND a.is_projectEstimates=1 ");
+        sb.append(" AND a.is_passProjectEstimates=1 AND b.is_finish=1 AND b.is_passProjectEstimates=1 ");
+        sb.append(" AND a.updateTime = b.updateTime AND year(a.updateTime) = '" + year + "' and month(a.updateTime) = '" + month + "' ");
+        sb.append(" GROUP BY a.businessType,b.businessType,a.year,b.year, a.scale, ");
+        sb.append(" b.competitive ");
+        String sql = sb.toString();
+        String[] feilds = new String[]{"businessType", "year", "biddinginfoNum", "projectEstimatesNum",
+                "scaleNum", "biddingProjectNum", "contendNum", "biddingPrice", "bidNum", "winNum", "marginPrice", "returnMarginPrice"};
+        List<BiddingCollectBO> boList = super.findBySql(sql, BiddingCollectBO.class, feilds);
+        return boList;
+    }
+
+    @Override
+    public List<BiddingCollectBO> totalCollect(BiddingCollectTO to) throws SerException {
+        LocalDate end = null;
+        if (to.getTime() != null) {
+            end = DateUtil.parseDate(to.getTime());
+        } else {
+            end = LocalDate.now();
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT a.businessType as businessType,a.year as year, ");
+        sb.append(" count(a.businessType) as biddinginfoNum,count(a.is_projectEstimates) as projectEstimatesNum, ");
+        sb.append(" a.scale AS scaleNum,count(a.is_passProjectEstimates) AS biddingProjectNum, ");
+        sb.append(" count(b.competitive) as contendNum,sum(b.biddingPrice) as biddingPrice, ");
+        sb.append(" count(b.is_finish) AS bidNum,count(b.is_passProjectEstimates) AS winNum, ");
+        sb.append(" sum(b.marginPrice) AS marginPrice,sum(b.returnMarginPrice) as returnMarginPrice ");
+        sb.append(" FROM bidding_biddinginfo a,bidding_bidopeninginfo b ");
+        sb.append(" WHERE a.businessType=b.businessType AND a.is_projectEstimates=1 ");
+        sb.append(" AND a.is_passProjectEstimates=1 AND b.is_finish=1 AND b.is_passProjectEstimates=1 ");
+        sb.append(" AND a.updateTime = b.updateTime AND a.updateTime<='" + end + "' ");
+        sb.append(" GROUP BY a.businessType,b.businessType,a.year,b.year, a.scale, ");
+        sb.append(" b.competitive ");
+        String sql = sb.toString();
+        String[] feilds = new String[]{"businessType", "year", "biddinginfoNum", "projectEstimatesNum",
+                "scaleNum", "biddingProjectNum", "contendNum", "biddingPrice", "bidNum", "winNum", "marginPrice", "returnMarginPrice"};
+        List<BiddingCollectBO> boList = super.findBySql(sql, BiddingCollectBO.class, feilds);
+        return boList;
+    }
+    //        StringBuilder sb = new StringBuilder();
+//        sb.append(" SELECT * from ");
+//        sb.append(" (SELECT cities,max(CASE WHEN businessType=0 THEN businessTypeCounts END )AS mobile, ");
+//        sb.append(" max(CASE WHEN businessType=2 THEN businessTypeCounts END )AS soft, ");
+//        sb.append(" max(CASE WHEN businessType=3 THEN businessTypeCounts END )AS system, ");
+//        sb.append(" max(CASE WHEN businessType=4 THEN businessTypeCounts END )AS plan FROM ");
+//        sb.append(" (SELECT count(*) AS businessTypeCounts,businessType as businessType,cities as cities ");
+//        sb.append(" FROM bidding_biddinginfo a WHERE cities IN (%s) GROUP BY businessType,cities ORDER BY cities)a GROUP BY cities)A ");
+//        sb.append(" UNION ");
+//        sb.append(" SELECT '合计' as area ,sum(mobile) AS mobile, ");
+//        sb.append(" sum(soft) AS soft,sum(system) AS system,sum(plan) AS plan from ");
+//        sb.append(" (SELECT cities,max(CASE WHEN businessType=0 THEN businessTypeCounts END )AS mobile, ");
+//        sb.append(" max(CASE WHEN businessType=2 THEN businessTypeCounts END )AS soft, ");
+//        sb.append(" max(CASE WHEN businessType=3 THEN businessTypeCounts END )AS system, ");
+//        sb.append(" max(CASE WHEN businessType=4 THEN businessTypeCounts END )AS plan FROM ");
+//        sb.append(" (SELECT count(*) AS businessTypeCounts,businessType as businessType,cities as cities ");
+//        sb.append(" FROM bidding_biddinginfo a WHERE cities IN (%s) GROUP BY businessType,cities ORDER BY cities)a GROUP BY cities)A ");
+//        String sql = sb.toString();
+//        sql = String.format(sql, citiesStr, citiesStr, citiesStr, citiesStr);
+//        String[] fields = new String[]{"cities", "mobile", "soft", "system", "plan"};
+//        List<BiddingInfoCollectBO> biddingInfoCollectBOS = super.findBySql(sql, BiddingInfoCollectBO.class, fields);
+//        for (BiddingInfoCollectBO collectBO : biddingInfoCollectBOS) {
 }

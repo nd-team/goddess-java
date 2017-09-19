@@ -124,10 +124,10 @@ public interface EmployeePromotedSer extends Ser<EmployeePromoted, EmployeePromo
      * 技能晋升明细周汇总
      *
      * @param to to
-     * @return class SkillPromotionDetailCollectBO
+     * @return class SkillPromotionDetailCollectABO
      * @throws SerException
      */
-    default List<SkillPromotionDetailCollectBO> detailWeekCollect(SkillPromotionDetailCollectTO to) throws SerException {
+    default SkillPromotionDetailCollectABO detailWeekCollect(SkillPromotionDetailCollectTO to) throws SerException {
         return null;
     }
 
@@ -135,10 +135,10 @@ public interface EmployeePromotedSer extends Ser<EmployeePromoted, EmployeePromo
      * 技能晋升明细月汇总
      *
      * @param to to
-     * @return class SkillPromotionDetailCollectBO
+     * @return class SkillPromotionDetailCollectABO
      * @throws SerException
      */
-    default List<SkillPromotionDetailCollectBO> detailMonthCollect(SkillPromotionDetailCollectTO to) throws SerException {
+    default SkillPromotionDetailCollectABO detailMonthCollect(SkillPromotionDetailCollectTO to) throws SerException {
         return null;
     }
 
@@ -146,10 +146,10 @@ public interface EmployeePromotedSer extends Ser<EmployeePromoted, EmployeePromo
      * 技能晋升明细累计汇总
      *
      * @param to to
-     * @return class SkillPromotionDetailCollectBO
+     * @return class SkillPromotionDetailCollectABO
      * @throws SerException
      */
-    default List<SkillPromotionDetailCollectBO> detailTotalCollect(SkillPromotionDetailCollectTO to) throws SerException {
+    default SkillPromotionDetailCollectABO detailTotalCollect(SkillPromotionDetailCollectTO to) throws SerException {
         return null;
     }
 

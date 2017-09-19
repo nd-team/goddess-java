@@ -13,6 +13,10 @@ import com.bjike.goddess.common.api.to.BaseTO;
  */
 public class SkillPromotionDetailCollectTO extends BaseTO {
     /**
+     * 时间
+     */
+    private String time;
+    /**
      * 年份
      */
     private Integer year;
@@ -24,6 +28,14 @@ public class SkillPromotionDetailCollectTO extends BaseTO {
      * 第几周
      */
     private Integer week;
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
 
     public Integer getYear() {
         return year;

@@ -2,6 +2,8 @@ package com.bjike.goddess.managepromotion.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
+import java.util.List;
+
 /**
  * 技能晋升明细汇总
  *
@@ -19,10 +21,9 @@ public class SkillPromotionDetailCollectBO extends BaseBO {
     private String cycle;
 
     /**
-     * 部门/项目组
+     * 项目组/部门
      */
     private String department;
-
     /**
      * 姓名
      */
@@ -58,7 +59,6 @@ public class SkillPromotionDetailCollectBO extends BaseBO {
      * 幅度
      */
     private Integer extent;
-
     /**
      * 项目组/部门合计
      */
@@ -67,7 +67,6 @@ public class SkillPromotionDetailCollectBO extends BaseBO {
      * 增加总成本
      */
     private Integer totalCost;
-
     /**
      * 人数
      */

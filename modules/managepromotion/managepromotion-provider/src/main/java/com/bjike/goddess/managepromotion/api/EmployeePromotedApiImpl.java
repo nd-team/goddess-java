@@ -8,9 +8,7 @@ import com.bjike.goddess.managepromotion.to.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * 员工已晋升情况业务接口实现
@@ -76,16 +74,16 @@ public class EmployeePromotedApiImpl implements EmployeePromotedAPI {
         return employeePromotedSer.getStatus();
     }
     @Override
-    public List<SkillPromotionDetailCollectBO> detailWeekCollect(SkillPromotionDetailCollectTO to) throws SerException {
+    public SkillPromotionDetailCollectABO detailWeekCollect(SkillPromotionDetailCollectTO to) throws SerException {
         return employeePromotedSer.detailWeekCollect(to);
     }
     @Override
-    public List<SkillPromotionDetailCollectBO> detailMonthCollect(SkillPromotionDetailCollectTO to) throws SerException {
+    public SkillPromotionDetailCollectABO detailMonthCollect(SkillPromotionDetailCollectTO to) throws SerException {
         return employeePromotedSer.detailMonthCollect(to);
     }
 
     @Override
-    public List<SkillPromotionDetailCollectBO> detailTotalCollect(SkillPromotionDetailCollectTO to) throws SerException {
+    public SkillPromotionDetailCollectABO detailTotalCollect(SkillPromotionDetailCollectTO to) throws SerException {
         return employeePromotedSer.detailTotalCollect(to);
     }
 

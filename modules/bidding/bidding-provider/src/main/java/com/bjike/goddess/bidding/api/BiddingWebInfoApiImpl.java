@@ -56,12 +56,21 @@ public class BiddingWebInfoApiImpl implements BiddingWebInfoAPI {
 
     @Override
     public void removeBiddingWebInfo(String id) throws SerException {
-        biddingWebInfoSer.remove(id);
+        biddingWebInfoSer.removeBiddingWebInfo(id);
     }
 
     @Override
     public List<BiddingWebInfoBO> findListBiddingWebInfo(BiddingWebInfoDTO biddingWebInfoDTO) throws SerException {
         return biddingWebInfoSer.findListBiddingWebInfo(biddingWebInfoDTO);
+    }
+    @Override
+    public void congel(String id) throws SerException {
+        biddingWebInfoSer.congel(id);
+    }
+
+    @Override
+    public void thaw(String id) throws SerException {
+        biddingWebInfoSer.thaw(id);
     }
     @Override
     public List<String> getWebName() throws SerException {
@@ -74,6 +83,10 @@ public class BiddingWebInfoApiImpl implements BiddingWebInfoAPI {
     @Override
     public BiddingWebInfoBO getWebInfo(String webName) throws SerException {
         return biddingWebInfoSer.getWebInfo(webName);
+    }
+    @Override
+    public String info(String url, String key) throws SerException {
+        return biddingWebInfoSer.info(url,key);
     }
 
 

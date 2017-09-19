@@ -37,8 +37,10 @@ public class ReflectSerImpl extends ServiceImpl<Reflect, ReflectDTO> implements 
 
     private ReflectBO transform(Reflect entity) throws SerException {
         ReflectBO bo = BeanTransform.copyProperties(entity, ReflectBO.class);
-        bo.setClassifyId(entity.getId());
-        bo.setClassifyName(entity.getClassify().getName());
+        bo.setClassifyId(entity.getClassify().getId());
+        if (null != entity.getClassify()) {
+            bo.setClassifyName(entity.getClassify().getName());
+        }
         return bo;
     }
 
