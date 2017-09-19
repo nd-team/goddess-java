@@ -141,6 +141,33 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
             case SETACCOR:
                 flag = guideIdentity();
                 break;
+            case CONGEL:
+                flag = guideIdentity();
+                break;
+            case THAW:
+                flag = guideIdentity();
+                break;
+            case COLLECT:
+                flag = guideIdentity();
+                break;
+            case UPLOAD:
+                flag = guideIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideIdentity();
+                break;
+            case IMPORT:
+                flag = guideIdentity();
+                break;
+            case EXPORT:
+                flag = guideIdentity();
+                break;
+            case SEE:
+                flag = guideIdentity();
+                break;
+            case SEEFILE:
+                flag = guideIdentity();
+                break;
             default:
                 flag = true;
                 break;
@@ -245,10 +272,9 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
         return boList;
     }
 
-    public void seachCond(FirmIntroDTO dto) throws SerException{
-        FirmIntroDTO firmIntroDTO = new FirmIntroDTO();
-        if(StringUtils.isNotBlank(dto.getFirmName())){
-            firmIntroDTO.getConditions().add(Restrict.eq("firmName",dto.getFirmName()));
+    public void seachCond(FirmIntroDTO dto) throws SerException {
+        if (StringUtils.isNotBlank(dto.getFirmName())) {
+            dto.getConditions().add(Restrict.eq("firmName", dto.getFirmName()));
         }
     }
 
@@ -326,6 +352,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
         checkPermission();
         FirmIntro entity = BeanTransform.copyProperties(to, FirmIntro.class, true);
         entity.setUpdateDate(LocalDate.now());
+        entity.setStatus(Status.THAW);
         entity = super.save(entity);
         FirmIntroBO bo = BeanTransform.copyProperties(entity, FirmIntroBO.class);
         String firmId = bo.getId();
@@ -791,5 +818,16 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
         FirmIntro firmIntro = super.findById(id);
         firmIntro.setStatus(Status.THAW);
         super.update(firmIntro);
+    }
+
+    @Override
+    public String getDate() throws SerException {
+        String sql = "select min(updateDate) as updateDate from " + getTableName(FirmIntro.class);
+        List<Object> objects = super.findBySql(sql);
+        String startDate = "";
+        if (objects != null && objects.size() > 0) {
+            startDate = String.valueOf(objects.get(0));
+        }
+        return startDate;
     }
 }

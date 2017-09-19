@@ -3,6 +3,7 @@ package com.bjike.goddess.intromanage.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.intromanage.bo.IndividualResumeBO;
+import com.bjike.goddess.intromanage.bo.SummationBO;
 import com.bjike.goddess.intromanage.dto.IndividualResumeDTO;
 import com.bjike.goddess.intromanage.entity.IndividualResume;
 import com.bjike.goddess.intromanage.excel.SonPermissionObject;
@@ -87,5 +88,54 @@ public interface IndividualResumeSer extends Ser<IndividualResume, IndividualRes
      * @throws SerException
      */
     void setIndividualDisplayField(String[] username, IndividualDisplayFieldTO to) throws SerException;
+    /**
+     * 冻结公司简介
+     *
+     * @param id id
+     */
+    default void congealFirmin(String id) throws SerException {
+        return;
+    }
+
+
+    /**
+     * 解冻公司简介
+     *
+     * @param id id
+     */
+    default void thawFirmin(String id) throws SerException {
+        return;
+    }
+
+    /**
+     * 转正管理周汇总
+     * @param year 年份
+     * @param month 月份
+     * @param week 周期
+     * @return class SummationBO
+     * @throws SerException
+     */
+    default SummationBO summaWeek(Integer year, Integer month, Integer week) throws SerException{
+        return null;
+    }
+    /**
+     * 转正管理月汇总
+     * @param year 年份
+     * @param month 月份
+     * @return class SummationBO
+     * @throws SerException
+     */
+    default SummationBO summaMonth(Integer year,Integer month) throws SerException{
+        return null;
+    }
+    /**
+     * 转正管理累计汇总
+     * @param endDate 截止日期
+     * @return class SummationBO
+     * @throws SerException
+     */
+    default SummationBO summaTotal(String endDate) throws SerException{
+        return null;
+    }
 
 }

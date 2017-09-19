@@ -2,6 +2,7 @@ package com.bjike.goddess.regularization.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.regularization.type.Assess;
+import com.bjike.goddess.regularization.type.SexType;
 import com.bjike.goddess.regularization.type.StaffStatus;
 
 import javax.persistence.Column;
@@ -56,8 +57,8 @@ public class TransferInfo extends BaseEntity {
     /**
      * 性别
      */
-    @Column(name = "gender", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '性别'")
-    private String gender;
+    @Column(name = "gender", nullable = false, columnDefinition = "INT(2)   COMMENT '性别'")
+    private SexType gender;
 
     /**
      * 学历
@@ -140,7 +141,7 @@ public class TransferInfo extends BaseEntity {
     /**
      * 转正申请日期
      */
-    @Column(name = "applyDate", nullable = false, columnDefinition = "DATE   COMMENT '转正申请日期'")
+    @Column(name = "applyDate", columnDefinition = "DATE   COMMENT '转正申请日期'")
     private LocalDate applyDate;
 
     /**
@@ -322,11 +323,11 @@ public class TransferInfo extends BaseEntity {
         this.empNo = empNo;
     }
 
-    public String getGender() {
+    public SexType getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(SexType gender) {
         this.gender = gender;
     }
 

@@ -42,7 +42,7 @@ dependencies {
     compile project(":modules:business:business-api")
     compile project(":modules:staffentry:staffentry-api")
     compile project(":modules:user:user-api")
-
+    compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
     compile("org.springframework.boot:spring-boot-starter-web")
 }
 

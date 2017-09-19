@@ -81,7 +81,11 @@ public enum GuideAddrStatus {
     /**
      * 总经理审核
      */
-    GENMANAGE(17);
+    GENMANAGE(17),
+    /**
+     * 汇总
+     */
+    COLLECT(18);
 
 
 

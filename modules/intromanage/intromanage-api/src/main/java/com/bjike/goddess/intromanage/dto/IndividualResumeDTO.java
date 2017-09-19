@@ -12,5 +12,16 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [ com.bjike ]
  */
 public class IndividualResumeDTO extends BaseDTO {
+    /**
+     * 姓名
+     */
+    private String name;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
