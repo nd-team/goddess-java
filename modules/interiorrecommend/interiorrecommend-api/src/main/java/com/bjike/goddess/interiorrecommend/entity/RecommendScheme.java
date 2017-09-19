@@ -1,10 +1,13 @@
 package com.bjike.goddess.interiorrecommend.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.interiorrecommend.enums.RecommendType;
+import com.bjike.goddess.interiorrecommend.enums.SolutionStatus;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -23,105 +26,110 @@ public class RecommendScheme extends BaseEntity {
     /**
      * 方案制作时间
      */
-    @Column(name = "makeTime", nullable = false, columnDefinition = "DATETIME   COMMENT '方案制作时间'")
-    private LocalDateTime makeTime;
+    @Column(name = "makeTime", nullable = false, columnDefinition = "DATE   COMMENT '方案制作时间'")
+    private LocalDate makeTime;
 
     /**
-     * 方案类型
+     * 方案名称
      */
-    @Column(name = "type", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '方案类型'")
+    @Column(name = "type", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '方案名称'")
     private String type;
 
     /**
-     * 推荐目的
+     * 目的
      */
-    @Column(name = "purpose", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '推荐目的'")
+    @Column(name = "purpose", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '目的'")
     private String purpose;
 
     /**
-     * 推荐开通时间
+     * 推荐奖开通时间
      */
-    @Column(name = "openTime", nullable = false, columnDefinition = "DATETIME   COMMENT '推荐开通时间'")
-    private LocalDateTime openTime;
+    @Column(name = "openTime", nullable = false, columnDefinition = "DATE  COMMENT '推荐奖开通时间'")
+    private LocalDate openTime;
 
     /**
-     * 推荐关闭时间
+     * 推荐奖关闭时间
      */
-    @Column(name = "closeTime", nullable = false, columnDefinition = "DATETIME   COMMENT '推荐关闭时间'")
-    private LocalDateTime closeTime;
+    @Column(name = "closeTime", nullable = false, columnDefinition = "DATE   COMMENT '推荐奖关闭时间'")
+    private LocalDate closeTime;
 
     /**
-     * 适用对象
+     * 适用范围
      */
-    @Column(name = "suitableObj", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '适用对象'")
+    @Column(name = "suitableObj", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '适用范围'")
     private String suitableObj;
 
     /**
-     * 推荐要求明细
+     * 推荐条件
      */
-    @Column(name = "requireDetail", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '推荐要求明细'")
+    @Column(name = "requireDetail", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '推荐条件'")
     private String requireDetail;
 
-    /**
-     * 推荐采纳指标
-     */
-    @Column(name = "acceptTarget", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '推荐采纳指标'")
-    private String acceptTarget;
 
     /**
-     * 奖励标准明细
+     * 招聘负责人职责
      */
-    @Column(name = "awardDetail", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '奖励标准明细'")
-    private String awardDetail;
+    @Column(name = "hiringDuties",nullable = false,columnDefinition = "VARCHAR(255) COMMENT '招聘负责人职责'")
+    private String hiringDuties;
 
     /**
-     * 综合资源部意见
+     * 推荐人职责
      */
-    @Column(name = "resourcesSuggest", columnDefinition = "VARCHAR(255)   COMMENT '综合资源部意见'")
-    private String resourcesSuggest;
+    @Column(name = "recommenderDuty",nullable = false,columnDefinition = "VARCHAR(255) COMMENT '推荐人职责'")
+    private String recommenderDuty;
 
     /**
-     * 综合资源部审核
+     * 推荐类型
      */
-    @Column(name = "is_resourcesAudit", columnDefinition = "TINYINT(1)   COMMENT '综合资源部审核'")
-    private Boolean resourcesAudit;
+    @Column(name = "recommendType",nullable = false,columnDefinition = "TINYINT(3) COMMENT '推荐类型'")
+    private RecommendType recommendType;
 
     /**
-     * 运营商务部意见
+     * 推荐岗位
      */
-    @Column(name = "operateSuggest", columnDefinition = "VARCHAR(255)   COMMENT '运营商务部意见'")
-    private String operateSuggest;
+    @Column(name = "recommendPosition",nullable = false,columnDefinition = "VARCHAR(255)  COMMENT '推荐岗位'")
+    private String recommendPosition;
+
 
     /**
-     * 运营商务部审核
+     * 推荐时长
      */
-    @Column(name = "is_operateAudit", columnDefinition = "TINYINT(1) COMMENT '运营商务部审核'")
-    private Boolean operateAudit;
+    @Column(name = "recommendTime",nullable = false,columnDefinition = "INT(11)  COMMENT '推荐时长'")
+    private Integer recommendTime;
+
 
     /**
-     * 总经办意见
+     * 推荐考核内容
      */
-    @Column(name = "generalSuggest", columnDefinition = "VARCHAR(255)   COMMENT '总经办意见'")
-    private String generalSuggest;
+    @Column(name = "checkContent",nullable = false,columnDefinition = "VARCHAR(255)  COMMENT '推荐考核内容'")
+    private String checkContent;
 
     /**
-     * 总经办审核
+     * 内容要求
      */
-    @Column(name = "generalAudit", columnDefinition = "TINYINT(1)   COMMENT '总经办审核'")
-    private Boolean generalAudit;
+    @Column(name = "contentRequire",nullable = false,columnDefinition = "VARCHAR(255)  COMMENT '内容要求'")
+    private String contentRequire;
 
     /**
-     * 备注
+     * 方案状态
      */
-    @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
-    private String remark;
+    private SolutionStatus status;
 
+    /**
+     * 预计推荐奖金额
+     */
+    private Integer predictMoney;
 
-    public LocalDateTime getMakeTime() {
+    /**
+     * 推荐奖金额
+     */
+    private Integer awardMoney;
+
+    public LocalDate getMakeTime() {
         return makeTime;
     }
 
-    public void setMakeTime(LocalDateTime makeTime) {
+    public void setMakeTime(LocalDate makeTime) {
         this.makeTime = makeTime;
     }
 
@@ -131,30 +139,6 @@ public class RecommendScheme extends BaseEntity {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getPurpose() {
-        return purpose;
-    }
-
-    public void setPurpose(String purpose) {
-        this.purpose = purpose;
-    }
-
-    public LocalDateTime getOpenTime() {
-        return openTime;
-    }
-
-    public void setOpenTime(LocalDateTime openTime) {
-        this.openTime = openTime;
-    }
-
-    public LocalDateTime getCloseTime() {
-        return closeTime;
-    }
-
-    public void setCloseTime(LocalDateTime closeTime) {
-        this.closeTime = closeTime;
     }
 
     public String getSuitableObj() {
@@ -173,76 +157,107 @@ public class RecommendScheme extends BaseEntity {
         this.requireDetail = requireDetail;
     }
 
-    public String getAcceptTarget() {
-        return acceptTarget;
+    public String getPurpose() {
+        return purpose;
     }
 
-    public void setAcceptTarget(String acceptTarget) {
-        this.acceptTarget = acceptTarget;
+    public void setPurpose(String purpose) {
+        this.purpose = purpose;
     }
 
-    public String getAwardDetail() {
-        return awardDetail;
+    public LocalDate getOpenTime() {
+        return openTime;
     }
 
-    public void setAwardDetail(String awardDetail) {
-        this.awardDetail = awardDetail;
+    public void setOpenTime(LocalDate openTime) {
+        this.openTime = openTime;
     }
 
-    public String getResourcesSuggest() {
-        return resourcesSuggest;
+    public LocalDate getCloseTime() {
+        return closeTime;
     }
 
-    public void setResourcesSuggest(String resourcesSuggest) {
-        this.resourcesSuggest = resourcesSuggest;
+    public void setCloseTime(LocalDate closeTime) {
+        this.closeTime = closeTime;
     }
 
-    public Boolean getResourcesAudit() {
-        return resourcesAudit;
+    public String getHiringDuties() {
+        return hiringDuties;
     }
 
-    public void setResourcesAudit(Boolean resourcesAudit) {
-        this.resourcesAudit = resourcesAudit;
+    public void setHiringDuties(String hiringDuties) {
+        this.hiringDuties = hiringDuties;
     }
 
-    public String getOperateSuggest() {
-        return operateSuggest;
+    public String getRecommenderDuty() {
+        return recommenderDuty;
     }
 
-    public void setOperateSuggest(String operateSuggest) {
-        this.operateSuggest = operateSuggest;
+    public void setRecommenderDuty(String recommenderDuty) {
+        this.recommenderDuty = recommenderDuty;
     }
 
-    public Boolean getOperateAudit() {
-        return operateAudit;
+    public RecommendType getRecommendType() {
+        return recommendType;
     }
 
-    public void setOperateAudit(Boolean operateAudit) {
-        this.operateAudit = operateAudit;
+    public void setRecommendType(RecommendType recommendType) {
+        this.recommendType = recommendType;
     }
 
-    public String getGeneralSuggest() {
-        return generalSuggest;
+    public String getRecommendPosition() {
+        return recommendPosition;
     }
 
-    public void setGeneralSuggest(String generalSuggest) {
-        this.generalSuggest = generalSuggest;
+    public void setRecommendPosition(String recommendPosition) {
+        this.recommendPosition = recommendPosition;
     }
 
-    public Boolean getGeneralAudit() {
-        return generalAudit;
+    public Integer getRecommendTime() {
+        return recommendTime;
     }
 
-    public void setGeneralAudit(Boolean generalAudit) {
-        this.generalAudit = generalAudit;
+    public void setRecommendTime(Integer recommendTime) {
+        this.recommendTime = recommendTime;
     }
 
-    public String getRemark() {
-        return remark;
+    public String getCheckContent() {
+        return checkContent;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setCheckContent(String checkContent) {
+        this.checkContent = checkContent;
     }
 
+    public String getContentRequire() {
+        return contentRequire;
+    }
+
+    public void setContentRequire(String contentRequire) {
+        this.contentRequire = contentRequire;
+    }
+
+    public SolutionStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(SolutionStatus status) {
+        this.status = status;
+    }
+
+    public Integer getPredictMoney() {
+        return predictMoney;
+    }
+
+    public void setPredictMoney(Integer predictMoney) {
+        this.predictMoney = predictMoney;
+    }
+
+    public Integer getAwardMoney() {
+        return awardMoney;
+    }
+
+    public void setAwardMoney(Integer awardMoney) {
+        this.awardMoney = awardMoney;
+    }
 }

@@ -7,6 +7,7 @@ import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.RecommendSchemeTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 推荐方案业务接口
@@ -64,32 +65,32 @@ public interface RecommendSchemeAPI {
     List<RecommendSchemeBO> pageList(RecommendSchemeDTO dto) throws SerException;
 
 
-    /**
-     * 综合资源部审核
-     *
-     * @param id               id
-     * @param resourcesSuggest 意见
-     * @param resourcesAudit   结果
-     */
-    void resourcesAudit(String id, String resourcesSuggest, Boolean resourcesAudit) throws SerException;
-
-    /**
-     * 运营商务部审核
-     *
-     * @param id             id
-     * @param operateSuggest 意见
-     * @param operateAudit   结果
-     */
-    void operateAudit(String id, String operateSuggest, Boolean operateAudit) throws SerException;
-
-    /**
-     * 总经办审核
-     *
-     * @param id             id
-     * @param generalSuggest 意见
-     * @param generalAudit   结果
-     */
-    void generalAudit(String id, String generalSuggest, Boolean generalAudit) throws SerException;
+//    /**
+//     * 综合资源部审核
+//     *
+//     * @param id               id
+//     * @param resourcesSuggest 意见
+//     * @param resourcesAudit   结果
+//     */
+//    void resourcesAudit(String id, String resourcesSuggest, Boolean resourcesAudit) throws SerException;
+//
+//    /**
+//     * 运营商务部审核
+//     *
+//     * @param id             id
+//     * @param operateSuggest 意见
+//     * @param operateAudit   结果
+//     */
+//    void operateAudit(String id, String operateSuggest, Boolean operateAudit) throws SerException;
+//
+//    /**
+//     * 总经办审核
+//     *
+//     * @param id             id
+//     * @param generalSuggest 意见
+//     * @param generalAudit   结果
+//     */
+//    void generalAudit(String id, String generalSuggest, Boolean generalAudit) throws SerException;
 
     /**
      * 根据Id查询
@@ -104,4 +105,9 @@ public interface RecommendSchemeAPI {
      * @param dto 查询条件
      */
     Long count(RecommendSchemeDTO dto) throws SerException;
+
+    /**
+     * 获取所有推荐岗位
+     */
+    Set<String> findPosition() throws SerException;
 }

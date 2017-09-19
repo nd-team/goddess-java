@@ -1,5 +1,6 @@
 package com.bjike.goddess.recruit.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -266,4 +267,19 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
         super.remove(entity);
     }
 
+    @Override
+    public List<InterviewInforBO> findInterview() throws SerException {
+        List<InterviewInfor> interviewInfors = super.findAll();
+        List<InterviewInforBO> boList = BeanTransform.copyProperties(interviewInfors,InterviewInforBO.class,false);
+        return boList;
+    }
+
+    @Override
+    public InterviewInforBO findByName(String name) throws SerException {
+        InterviewInforDTO dto = new InterviewInforDTO();
+        dto.getConditions().add(Restrict.eq("name",name));
+        InterviewInfor interviewInfor = super.findOne(dto);
+        InterviewInforBO bo = BeanTransform.copyProperties(interviewInfor,InterviewInforBO.class);
+        return bo;
+    }
 }

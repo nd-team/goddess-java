@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 推荐方案
@@ -96,62 +97,62 @@ public class RecommendSchemeAct {
         }
     }
 
-    /**
-     * 综合资源部意见
-     *
-     * @param id               id
-     * @param resourcesSuggest 意见
-     * @param resourcesAudit   结果
-     * @version v1
-     */
-    @LoginAuth
-    @PutMapping("v1/resourcesAudit/{id}")
-    public Result resourcesAudit(@PathVariable String id, @RequestParam String resourcesSuggest, @RequestParam Boolean resourcesAudit) throws ActException {
-        try {
-            recommendSchemeAPI.resourcesAudit(id, resourcesSuggest, resourcesAudit);
-            return new ActResult("审核成功");
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 运营商务部意见
-     *
-     * @param id             推荐方案
-     * @param operateSuggest 意见
-     * @param operateAudit   结果
-     * @version v1
-     */
-    @LoginAuth
-    @PutMapping("v1/operateAudit/{id}")
-    public Result operateAudit(@PathVariable String id, @RequestParam String operateSuggest, @RequestParam Boolean operateAudit) throws ActException {
-        try {
-            recommendSchemeAPI.operateAudit(id, operateSuggest, operateAudit);
-            return new ActResult("审核成功");
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 总经办意见
-     *
-     * @param id             推荐方案
-     * @param generalSuggest 意见
-     * @param generalAudit   结果
-     * @version v1
-     */
-    @LoginAuth
-    @PutMapping("v1/generalAudit/{id}")
-    public Result generalAudit(@PathVariable String id, @RequestParam String generalSuggest, @RequestParam Boolean generalAudit) throws ActException {
-        try {
-            recommendSchemeAPI.generalAudit(id, generalSuggest, generalAudit);
-            return new ActResult("审核成功");
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 综合资源部意见
+//     *
+//     * @param id               id
+//     * @param resourcesSuggest 意见
+//     * @param resourcesAudit   结果
+//     * @version v1
+//     */
+//    @LoginAuth
+//    @PutMapping("v1/resourcesAudit/{id}")
+//    public Result resourcesAudit(@PathVariable String id, @RequestParam String resourcesSuggest, @RequestParam Boolean resourcesAudit) throws ActException {
+//        try {
+//            recommendSchemeAPI.resourcesAudit(id, resourcesSuggest, resourcesAudit);
+//            return new ActResult("审核成功");
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+//
+//    /**
+//     * 运营商务部意见
+//     *
+//     * @param id             推荐方案
+//     * @param operateSuggest 意见
+//     * @param operateAudit   结果
+//     * @version v1
+//     */
+//    @LoginAuth
+//    @PutMapping("v1/operateAudit/{id}")
+//    public Result operateAudit(@PathVariable String id, @RequestParam String operateSuggest, @RequestParam Boolean operateAudit) throws ActException {
+//        try {
+//            recommendSchemeAPI.operateAudit(id, operateSuggest, operateAudit);
+//            return new ActResult("审核成功");
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+//
+//    /**
+//     * 总经办意见
+//     *
+//     * @param id             推荐方案
+//     * @param generalSuggest 意见
+//     * @param generalAudit   结果
+//     * @version v1
+//     */
+//    @LoginAuth
+//    @PutMapping("v1/generalAudit/{id}")
+//    public Result generalAudit(@PathVariable String id, @RequestParam String generalSuggest, @RequestParam Boolean generalAudit) throws ActException {
+//        try {
+//            recommendSchemeAPI.generalAudit(id, generalSuggest, generalAudit);
+//            return new ActResult("审核成功");
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
     /**
      * 删除
@@ -219,5 +220,23 @@ public class RecommendSchemeAct {
             throw new ActException(e.getMessage());
         }
     }
+
+
+    /**
+     * 获取所有推荐岗位
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/position")
+    public Result findPosition() throws ActException{
+        try {
+            Set<String> position = recommendSchemeAPI.findPosition();
+            return ActResult.initialize(position);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
 
 }

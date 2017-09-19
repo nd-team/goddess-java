@@ -3,7 +3,11 @@ package com.bjike.goddess.interiorrecommend.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.interiorrecommend.enums.RecommendType;
+import com.bjike.goddess.interiorrecommend.enums.SolutionStatus;
 import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 推荐方案
@@ -17,72 +21,95 @@ import org.hibernate.validator.constraints.NotBlank;
 public class RecommendSchemeTO extends BaseTO {
 
     /**
-     * 方案制作时间
+     * 方案名称
      */
-    @NotBlank(message = "方案制作时间不能为空", groups = {ADD.class, EDIT.class})
-    private String makeTime;
-
-    /**
-     * 方案类型
-     */
-    @NotBlank(message = "方案类型不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "方案名称不能为空", groups = {ADD.class, EDIT.class})
     private String type;
 
     /**
      * 推荐目的
      */
-    @NotBlank(message = "推荐目的不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "目的不能为空", groups = {ADD.class, EDIT.class})
     private String purpose;
 
     /**
      * 推荐开通时间
      */
-    @NotBlank(message = "推荐开通时间不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "推荐奖开通时间不能为空", groups = {ADD.class, EDIT.class})
     private String openTime;
 
     /**
      * 推荐关闭时间
      */
-    @NotBlank(message = "推荐关闭时间不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "推荐奖关闭时间不能为空", groups = {ADD.class, EDIT.class})
     private String closeTime;
 
     /**
-     * 适用对象
+     * 适用范围
      */
-    @NotBlank(message = "适用对象不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "适用范围不能为空", groups = {ADD.class, EDIT.class})
     private String suitableObj;
 
     /**
-     * 推荐要求明细
+     * 推荐条件
      */
-    @NotBlank(message = "推荐要求明细不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "推荐条件不能为空", groups = {ADD.class, EDIT.class})
     private String requireDetail;
 
     /**
-     * 推荐采纳指标
+     * 招聘负责人职责
      */
-    @NotBlank(message = "推荐采纳指标不能为空", groups = {ADD.class, EDIT.class})
-    private String acceptTarget;
+    @NotBlank(message = "招聘负责人职责不能为空", groups = {ADD.class, EDIT.class})
+    private String hiringDuties;
 
     /**
-     * 奖励标准明细
+     * 推荐人职责
      */
-    @NotBlank(message = "奖励标准明细不能为空", groups = {ADD.class, EDIT.class})
-    private String awardDetail;
+    @NotBlank(message = "推荐人职责不能为空", groups = {ADD.class, EDIT.class})
+    private String recommenderDuty;
 
     /**
-     * 备注
+     * 推荐类型
      */
-    private String remark;
+    @NotNull(message = "招推荐类型不能为空", groups = {ADD.class, EDIT.class})
+    private RecommendType recommendType;
+
+    /**
+     * 推荐岗位
+     */
+    @NotBlank(message = "推荐岗位不能为空", groups = {ADD.class, EDIT.class})
+    private String recommendPosition;
 
 
-    public String getMakeTime() {
-        return makeTime;
-    }
+    /**
+     * 推荐考核内容
+     */
+    @NotBlank(message = "推荐考核内容不能为空", groups = {ADD.class, EDIT.class})
+    private String checkContent;
 
-    public void setMakeTime(String makeTime) {
-        this.makeTime = makeTime;
-    }
+    /**
+     * 内容要求
+     */
+    @NotBlank(message = "内容要求不能为空", groups = {ADD.class, EDIT.class})
+    private String contentRequire;
+
+    /**
+     * 方案状态
+     */
+    @NotNull(message = "方案状态不能为空", groups = {ADD.class, EDIT.class})
+    private SolutionStatus status;
+
+    /**
+     * 预计推荐奖金额
+     */
+    @NotNull(message = "预计推荐奖金额", groups = {ADD.class, EDIT.class})
+    private Integer predictMoney;
+
+    /**
+     * 推荐奖金额
+     */
+    @NotNull(message = "推荐奖金额", groups = {ADD.class, EDIT.class})
+    private Integer awardMoney;
 
     public String getType() {
         return type;
@@ -132,27 +159,75 @@ public class RecommendSchemeTO extends BaseTO {
         this.requireDetail = requireDetail;
     }
 
-    public String getAcceptTarget() {
-        return acceptTarget;
+    public String getHiringDuties() {
+        return hiringDuties;
     }
 
-    public void setAcceptTarget(String acceptTarget) {
-        this.acceptTarget = acceptTarget;
+    public void setHiringDuties(String hiringDuties) {
+        this.hiringDuties = hiringDuties;
     }
 
-    public String getAwardDetail() {
-        return awardDetail;
+    public String getRecommenderDuty() {
+        return recommenderDuty;
     }
 
-    public void setAwardDetail(String awardDetail) {
-        this.awardDetail = awardDetail;
+    public void setRecommenderDuty(String recommenderDuty) {
+        this.recommenderDuty = recommenderDuty;
     }
 
-    public String getRemark() {
-        return remark;
+    public RecommendType getRecommendType() {
+        return recommendType;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setRecommendType(RecommendType recommendType) {
+        this.recommendType = recommendType;
+    }
+
+    public String getRecommendPosition() {
+        return recommendPosition;
+    }
+
+    public void setRecommendPosition(String recommendPosition) {
+        this.recommendPosition = recommendPosition;
+    }
+
+    public String getCheckContent() {
+        return checkContent;
+    }
+
+    public void setCheckContent(String checkContent) {
+        this.checkContent = checkContent;
+    }
+
+    public String getContentRequire() {
+        return contentRequire;
+    }
+
+    public void setContentRequire(String contentRequire) {
+        this.contentRequire = contentRequire;
+    }
+
+    public SolutionStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(SolutionStatus status) {
+        this.status = status;
+    }
+
+    public Integer getPredictMoney() {
+        return predictMoney;
+    }
+
+    public void setPredictMoney(Integer predictMoney) {
+        this.predictMoney = predictMoney;
+    }
+
+    public Integer getAwardMoney() {
+        return awardMoney;
+    }
+
+    public void setAwardMoney(Integer awardMoney) {
+        this.awardMoney = awardMoney;
     }
 }
