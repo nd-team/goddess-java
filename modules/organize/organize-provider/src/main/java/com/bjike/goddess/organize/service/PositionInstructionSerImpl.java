@@ -168,7 +168,7 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
             throw new SerException("数据对象不能为空");
         try {
             super.remove(entity);
-        } catch (SerException e) {
+        } catch (Exception e) {
             throw new SerException("此处已被引用,无法删除");
         }
         return this.transformToBO(entity);
@@ -210,13 +210,13 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
         if (StringUtils.isBlank(classifyId))
             return new ArrayList<>(0);
         PositionInstructionDTO dto = new PositionInstructionDTO();
-        dto.getConditions().add(Restrict.in("reflect.id",
-                reflectSer.findByClassify(classifyId).stream()
-                        .map(ReflectBO::getId)
-                        .collect(Collectors.toList())
-                        .toArray(new String[0])));
-        List<PositionInstruction> list = super.findByCis(dto);
-        return this.transformToBOList(list);
+        Set<String> set = reflectSer.findByClassify(classifyId).stream().map(ReflectBO::getId).collect(Collectors.toSet());
+        if (!set.isEmpty()) {
+            dto.getConditions().add(Restrict.in("reflect.id", set));
+            List<PositionInstruction> list = super.findByCis(dto);
+            return this.transformToBOList(list);
+        }
+        return null;
     }
 
     @Override
@@ -241,6 +241,7 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
         List<PositionInstruction> list = super.findByCis(dto);
         return this.transformToBOList(list);
     }
+
     @Override
     public List<String> getOutCome() throws SerException {
         String[] fields = new String[]{"outcome"};

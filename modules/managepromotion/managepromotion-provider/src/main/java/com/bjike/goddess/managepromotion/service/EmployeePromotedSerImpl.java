@@ -25,10 +25,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -324,8 +321,8 @@ public class EmployeePromotedSerImpl extends ServiceImpl<EmployeePromoted, Emplo
     }
 
     @Override
-    public List<SkillPromotionDetailCollectBO> detailWeekCollect(SkillPromotionDetailCollectTO to) throws SerException {
-        List<SkillPromotionDetailCollectBO> boList = new ArrayList<>();
+    public SkillPromotionDetailCollectABO detailWeekCollect(SkillPromotionDetailCollectTO to) throws SerException {
+        List<SkillPromotionDetailCollectABO> boList = new ArrayList<>();
         LocalDate[] time = null;
         Integer year = to.getYear();
         Integer month = to.getMonth();
@@ -349,29 +346,115 @@ public class EmployeePromotedSerImpl extends ServiceImpl<EmployeePromoted, Emplo
         }
         LocalDate start = time[0];
         LocalDate end = time[1];
-        String sql = " SELECT projectGroup AS projectGroup,name AS name,jobs AS jobs, " +
-                " channel AS channel,times AS times,sum(promotionBefore)AS promotionBefore, " +
-                " sum(promotionAfter) AS promotionAfter,sum(promotionAfter-promotionBefore)as extent " +
-                " FROM managepromotion_employeepromoted WHERE times between '"+start+"' and '"+end+"' " +
-                " GROUP BY projectGroup,name,jobs,channel,times ";
-        String[] fields = new String[]{"projectGroup","name","jobs","channel","times","promotionBefore","promotionAfter","extent"};
-        List<SkillPromotionDetailCollectBO> skillPromotionDetailCollectBOS = super.findBySql(sql,SkillPromotionDetailCollectTO.class,fields);
-        for (SkillPromotionDetailCollectBO collectBO:skillPromotionDetailCollectBOS){
-            collectBO.setCycle(start+"-"+end);
-            boList.add(collectBO);
+
+        String sql = " SELECT a.projectGroup AS department,a.name AS name,a.jobs AS jobs, " +
+                " a.channel AS channel,times AS times,sum(a.promotionBefore)AS promotionBefore, " +
+                " sum(a.promotionAfter) AS promotionAfter,sum(a.promotionAfter-a.promotionBefore)as extent, " +
+                " b.is_pass AS pass,a.status AS remark " +
+                " FROM managepromotion_employeepromoted a,managepromotion_skillpromotionapply b " +
+                " WHERE a.name=b.name AND a.times between '" + start + "' and '" + end + "' " +
+                " GROUP BY a.projectGroup,a.name,a.jobs,a.channel,a.times,b.is_pass,a.status ";
+        String[] fields = new String[]{"department", "name", "jobs", "channel", "times", "promotionBefore", "promotionAfter", "extent", "pass", "remark"};
+        List<SkillPromotionDetailCollectBO> collectBOS = super.findBySql(sql, SkillPromotionDetailCollectBO.class, fields);
+        Set<String> departs = collectBOS.stream().map(SkillPromotionDetailCollectBO::getDepartment).collect(Collectors.toSet());
+        List<SkillPromotionDetailCollectBBO> bbos=new ArrayList<>();
+        List<SkillPromotionDetailCollectCBO> collectCBOS = new ArrayList<>();
+        SkillPromotionDetailCollectABO abo=new SkillPromotionDetailCollectABO();
+        abo.setCycle(start+"-"+end);
+
+        for (String depart : departs) {
+            List<SkillPromotionDetailCollectBO> bos=collectBOS.stream().filter(skillPromotionDetailCollectBO -> depart.equals(skillPromotionDetailCollectBO.getDepartment())).collect(Collectors.toList());
+            collectCBOS=BeanTransform.copyProperties(bos,SkillPromotionDetailCollectCBO.class);
+            SkillPromotionDetailCollectBBO skillPromotionDetailCollectBBO=new SkillPromotionDetailCollectBBO();
+            skillPromotionDetailCollectBBO.setDepartment(depart);
+            skillPromotionDetailCollectBBO.setDepartmentTotal(collectCBOS.size());
+            skillPromotionDetailCollectBBO.setTotalCost(collectCBOS.size());
+            skillPromotionDetailCollectBBO.setSkillPromotionDetailCollectCBOS(collectCBOS);
+            bbos.add(skillPromotionDetailCollectBBO);
         }
-        return boList;
+        abo.setPeople(collectBOS.size());
+        abo.setSkillPromotionDetailCollectBBOS(bbos);
+        return abo;
     }
 
 
     @Override
-    public List<SkillPromotionDetailCollectBO> detailMonthCollect(SkillPromotionDetailCollectTO to) throws SerException {
-        return null;
+    public SkillPromotionDetailCollectABO detailMonthCollect(SkillPromotionDetailCollectTO to) throws SerException {
+        Integer year = 0;
+        Integer month = 0;
+        if (to.getYear() != null && to.getMonth() != null) {
+            year = to.getYear();
+            month = to.getMonth();
+        } else {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+        }
+        String sql = " SELECT a.projectGroup AS department,a.name AS name,a.jobs AS jobs, " +
+                " a.channel AS channel,times AS times,sum(a.promotionBefore)AS promotionBefore, " +
+                " sum(a.promotionAfter) AS promotionAfter,sum(a.promotionAfter-a.promotionBefore)as extent, " +
+                " b.is_pass AS pass,a.status AS remark " +
+                " FROM managepromotion_employeepromoted a,managepromotion_skillpromotionapply b " +
+                " WHERE a.name=b.name AND year(a.times) = '" + year + "' and month(a.times) = '" + month + "' " +
+                " GROUP BY a.projectGroup,a.name,a.jobs,a.channel,a.times,b.is_pass,a.status ";
+        String[] fields = new String[]{"department", "name", "jobs", "channel", "times", "promotionBefore", "promotionAfter", "extent", "pass", "remark"};
+        List<SkillPromotionDetailCollectBO> collectBOS = super.findBySql(sql, SkillPromotionDetailCollectBO.class, fields);
+        Set<String> departs = collectBOS.stream().map(SkillPromotionDetailCollectBO::getDepartment).collect(Collectors.toSet());
+        List<SkillPromotionDetailCollectBBO> bbos=new ArrayList<>();
+        List<SkillPromotionDetailCollectCBO> collectCBOS = new ArrayList<>();
+        SkillPromotionDetailCollectABO abo=new SkillPromotionDetailCollectABO();
+        abo.setCycle(year+"-"+month);
+
+        for (String depart : departs) {
+            List<SkillPromotionDetailCollectBO> bos=collectBOS.stream().filter(skillPromotionDetailCollectBO -> depart.equals(skillPromotionDetailCollectBO.getDepartment())).collect(Collectors.toList());
+            collectCBOS=BeanTransform.copyProperties(bos,SkillPromotionDetailCollectCBO.class);
+            SkillPromotionDetailCollectBBO skillPromotionDetailCollectBBO=new SkillPromotionDetailCollectBBO();
+            skillPromotionDetailCollectBBO.setDepartment(depart);
+            skillPromotionDetailCollectBBO.setDepartmentTotal(collectCBOS.size());
+            skillPromotionDetailCollectBBO.setTotalCost(collectCBOS.size());
+            skillPromotionDetailCollectBBO.setSkillPromotionDetailCollectCBOS(collectCBOS);
+            bbos.add(skillPromotionDetailCollectBBO);
+        }
+        abo.setPeople(collectBOS.size());
+        abo.setSkillPromotionDetailCollectBBOS(bbos);
+        return abo;
     }
 
     @Override
-    public List<SkillPromotionDetailCollectBO> detailTotalCollect(SkillPromotionDetailCollectTO to) throws SerException {
-        return null;
+    public SkillPromotionDetailCollectABO detailTotalCollect(SkillPromotionDetailCollectTO to) throws SerException {
+        LocalDate end = null;
+        if (to.getTime() != null) {
+            end = DateUtil.parseDate(to.getTime());
+        } else {
+            end = LocalDate.now();
+        }
+        String sql = " SELECT a.projectGroup AS department,a.name AS name,a.jobs AS jobs, " +
+                " a.channel AS channel,times AS times,sum(a.promotionBefore)AS promotionBefore, " +
+                " sum(a.promotionAfter) AS promotionAfter,sum(a.promotionAfter-a.promotionBefore)as extent, " +
+                " b.is_pass AS pass,a.status AS remark " +
+                " FROM managepromotion_employeepromoted a,managepromotion_skillpromotionapply b " +
+                " WHERE a.name=b.name AND a.times <= '" + end + "' " +
+                " GROUP BY a.projectGroup,a.name,a.jobs,a.channel,a.times,b.is_pass,a.status ";
+        String[] fields = new String[]{"department", "name", "jobs", "channel", "times", "promotionBefore", "promotionAfter", "extent", "pass", "remark"};
+        List<SkillPromotionDetailCollectBO> collectBOS = super.findBySql(sql, SkillPromotionDetailCollectBO.class, fields);
+        Set<String> departs = collectBOS.stream().map(SkillPromotionDetailCollectBO::getDepartment).collect(Collectors.toSet());
+        List<SkillPromotionDetailCollectBBO> bbos=new ArrayList<>();
+        List<SkillPromotionDetailCollectCBO> collectCBOS = new ArrayList<>();
+        SkillPromotionDetailCollectABO abo=new SkillPromotionDetailCollectABO();
+        abo.setCycle(DateUtil.dateToString(end));
+
+        for (String depart : departs) {
+            List<SkillPromotionDetailCollectBO> bos=collectBOS.stream().filter(skillPromotionDetailCollectBO -> depart.equals(skillPromotionDetailCollectBO.getDepartment())).collect(Collectors.toList());
+            collectCBOS=BeanTransform.copyProperties(bos,SkillPromotionDetailCollectCBO.class);
+            SkillPromotionDetailCollectBBO skillPromotionDetailCollectBBO=new SkillPromotionDetailCollectBBO();
+            skillPromotionDetailCollectBBO.setDepartment(depart);
+            skillPromotionDetailCollectBBO.setDepartmentTotal(collectCBOS.size());
+            skillPromotionDetailCollectBBO.setTotalCost(collectCBOS.size());
+            skillPromotionDetailCollectBBO.setSkillPromotionDetailCollectCBOS(collectCBOS);
+            bbos.add(skillPromotionDetailCollectBBO);
+        }
+        abo.setPeople(collectBOS.size());
+        abo.setSkillPromotionDetailCollectBBOS(bbos);
+        return abo;
     }
 
     @Override
@@ -380,7 +463,7 @@ public class EmployeePromotedSerImpl extends ServiceImpl<EmployeePromoted, Emplo
         if (to.getTime() != null) {
             time = DateUtil.parseDate(to.getTime());
         } else {
-            time =LocalDate.now();
+            time = LocalDate.now();
         }
         List<ProfessionalSkillCollectBO> boList = new ArrayList<>();
         String sql = "SELECT  area AS area ,department AS  department,major AS  major,grade AS grade,count(*) as count " +
@@ -593,7 +676,7 @@ public class EmployeePromotedSerImpl extends ServiceImpl<EmployeePromoted, Emplo
         List<StaffSkillCollectBO> boList = new ArrayList<>();
         String sql = " SELECT area AS area ,department AS  department,name as name, " +
                 " count(*) as skillNum,sum(promotedNumber) AS promotedNumber " +
-                " FROM managepromotion_overviewskilllevel WHERE acquisitionTime <= '"+end+"' GROUP BY area,department,name ";
+                " FROM managepromotion_overviewskilllevel WHERE acquisitionTime <= '" + end + "' GROUP BY area,department,name ";
         String[] fields = new String[]{"area", "department", "name", "skillNum", "promotedNumber"};
         boList = super.findBySql(sql, StaffSkillCollectBO.class, fields);
         return boList;

@@ -34,6 +34,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 招投标信息邮件发送定制业务实现
@@ -491,7 +493,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                     }
                     break;
                 case QUARTER:
-                    if (nowTime.minusMonths(3*sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(3*sendNum.longValue()).isAfter(lastTime)) {
+                    if (nowTime.minusMonths(3 * sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(3 * sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
 //                        str.setLastSendTime(lastTime.plusMonths( 3* sendNum.longValue() ));
                         str.setLastSendTime(LocalDateTime.now());
@@ -528,38 +530,51 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
 
     private String htmlBidding(List<BiddingInfoCollectBO> biddingBOS) throws SerException {
         StringBuffer sb = new StringBuffer("");
-        if (biddingBOS != null && biddingBOS.size() > 0) {
-            sb = new StringBuffer("<h4>招标信息汇总:</h4>");
-            sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
-            //拼表头
-            BiddingInfoCollectBO title = biddingBOS.get(biddingBOS.size() - 1);
+        sb = new StringBuffer("<h4>招标信息汇总:</h4>");
+        sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
+        for (BiddingInfoCollectBO bo : biddingBOS) {
             sb.append("<tr>");
             sb.append("<td>地市</td>");
-            sb.append("<td>邀请招标</td>");
-            sb.append("<td>公开招标</td>");
-            sb.append("<td>移动通信</td>");
-            sb.append("<td>软件开发</td>");
-            sb.append("<td>智能系统集成</td>");
-            sb.append("<td>策划与营销方案</td>");
-            sb.append("<tr>");
-
-            //拼body部分
-            for (BiddingInfoCollectBO bo : biddingBOS) {
-                sb.append("<tr>");
-                sb.append("<td>" + (StringUtils.isBlank(bo.getCities()) ? "" : bo.getCities()) + "</td>");
-                sb.append("<td>" + (null == bo.getInvite() ? "" : bo.getInvite()) + "</td>");
-                sb.append("<td>" + (null == bo.getOpenly() ? "" : bo.getOpenly()) + "</td>");
-                sb.append("<td>" + (null == bo.getMobile() ? "" : bo.getMobile()) + "</td>");
-                sb.append("<td>" + (null == bo.getSoft() ? "" : bo.getSoft()) + "</td>");
-                sb.append("<td>" + (null == bo.getSystem() ? "" : bo.getSystem()) + "</td>");
-                sb.append("<td>" + (null == bo.getPlan() ? "" : bo.getPlan()) + "</td>");
-
-                sb.append("<tr>");
+            Map<String,Integer> biddingMap=bo.getBiddingMap();
+            Set<String> set=biddingMap.keySet();
+            for (String s:set){
+                sb.append("<td>"+s+"</td>");
             }
-
-            //结束
-            sb.append("</table>");
+            Map<String,Integer> businessMap = bo.getBusinessMap();
+            Set<String> businessSet = businessMap.keySet();
+            for(String business:businessSet){
+                sb.append("<td>"+business+"</td>");
+            }
+            //拼表头
+            sb.append("</tr>");
+            sb.append("<tr>");
+            sb.append("<td>"+bo.getCities()+"</td>");
+            for (String s:set){
+                sb.append("<td>"+biddingMap.get(s)+"</td>");
+            }
+            for(String business:businessSet){
+                sb.append("<td>"+businessMap.get(business)+"</td>");
+            }
+            sb.append("</tr>");
         }
+
+        //拼body部分
+//            for (BiddingInfoCollectBO bo : biddingBOS) {
+//                sb.append("<tr>");
+//                sb.append("<td>" + (StringUtils.isBlank(bo.getCities()) ? "" : bo.getCities()) + "</td>");
+//                sb.append("<td>" + (null == bo.getInvite() ? "" : bo.getInvite()) + "</td>");
+//                sb.append("<td>" + (null == bo.getOpenly() ? "" : bo.getOpenly()) + "</td>");
+//                sb.append("<td>" + (null == bo.getMobile() ? "" : bo.getMobile()) + "</td>");
+//                sb.append("<td>" + (null == bo.getSoft() ? "" : bo.getSoft()) + "</td>");
+//                sb.append("<td>" + (null == bo.getSystem() ? "" : bo.getSystem()) + "</td>");
+//                sb.append("<td>" + (null == bo.getPlan() ? "" : bo.getPlan()) + "</td>");
+//
+//                sb.append("<tr>");
+//            }
+
+        //结束
+        sb.append("</table>");
+
         return sb.toString();
     }
 
@@ -600,11 +615,8 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                 String[] condis = bidding.getCondi().split(";");
                 List<BiddingInfoCollectBO> biddingInfoCollectBOS = biddingInfoSer.collectBiddingInfo(condis);
                 //拼表格
-                String content = htmlBidding(biddingInfoCollectBOS);
-                if (StringUtils.isBlank(content)){
-                    throw new SerException("内容要与汇总数据相对应");
-                }
                 MessageTO messageTO = new MessageTO();
+                String content = htmlBidding(biddingInfoCollectBOS);
                 messageTO.setContent(content);
                 messageTO.setTitle("定时发送招标信息汇总");
                 messageTO.setMsgType(MsgType.SYS);
@@ -627,11 +639,8 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                 String[] condis = open.getCondi().split(";");
                 List<BidOpeningCollectBO> bidOpeningCollectBOS = bidOpeningInfoSer.collectBidOpening(condis);
                 //拼表格
-                String content = htmlBidOpen(bidOpeningCollectBOS);
-                if (StringUtils.isBlank(content)){
-                    throw new SerException("内容要与汇总数据相对应");
-                }
                 MessageTO messageTO = new MessageTO();
+                String content = htmlBidOpen(bidOpeningCollectBOS);
                 messageTO.setContent(content);
                 messageTO.setTitle("定时发送开标信息汇总");
                 messageTO.setMsgType(MsgType.SYS);

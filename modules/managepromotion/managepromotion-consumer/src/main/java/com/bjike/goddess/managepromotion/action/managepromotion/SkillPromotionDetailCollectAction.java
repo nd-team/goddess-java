@@ -11,6 +11,7 @@ import com.bjike.goddess.managepromotion.to.ProfessionalSkillTO;
 import com.bjike.goddess.managepromotion.to.SkillPromotionDetailCollectTO;
 import com.bjike.goddess.managepromotion.to.StaffSkillCollectTO;
 import com.bjike.goddess.managepromotion.vo.ProfessionalSkillCollectVO;
+import com.bjike.goddess.managepromotion.vo.SkillPromotionDetailCollectAVO;
 import com.bjike.goddess.managepromotion.vo.SkillPromotionDetailCollectVO;
 import com.bjike.goddess.managepromotion.vo.StaffSkillCollectVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,16 +40,52 @@ public class SkillPromotionDetailCollectAction {
      * 技能晋升明细周汇总
      *
      * @param to to
-     * @return class SkillPromotionDetailCollectVO
+     * @return class SkillPromotionDetailCollectAVO
      * @des 技能晋升明细周汇总
      * @version v1
      */
     @GetMapping("v1/weekCollect")
     public Result weekCollect(SkillPromotionDetailCollectTO to) throws ActException {
         try {
-            List<SkillPromotionDetailCollectVO> skillPromotionDetailCollectVOS =
-                    BeanTransform.copyProperties(employeePromotedAPI.detailWeekCollect(to), SkillPromotionDetailCollectVO.class);
-            return ActResult.initialize(skillPromotionDetailCollectVOS);
+            SkillPromotionDetailCollectAVO collectAVO =
+                    BeanTransform.copyProperties(employeePromotedAPI.detailWeekCollect(to), SkillPromotionDetailCollectAVO.class);
+            return ActResult.initialize(collectAVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 技能晋升明细月汇总
+     *
+     * @param to to
+     * @return class SkillPromotionDetailCollectAVO
+     * @des 技能晋升明细月汇总
+     * @version v1
+     */
+    @GetMapping("v1/monthCollect")
+    public Result monthCollect(SkillPromotionDetailCollectTO to) throws ActException {
+        try {
+            SkillPromotionDetailCollectAVO collectAVO =
+                    BeanTransform.copyProperties(employeePromotedAPI.detailMonthCollect(to), SkillPromotionDetailCollectAVO.class);
+            return ActResult.initialize(collectAVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 技能晋升明细累计汇总
+     *
+     * @param to to
+     * @return class SkillPromotionDetailCollectAVO
+     * @des 技能晋升明细累计汇总
+     * @version v1
+     */
+    @GetMapping("v1/totalCollect")
+    public Result totalCollect(SkillPromotionDetailCollectTO to) throws ActException {
+        try {
+            SkillPromotionDetailCollectAVO collectAVO =
+                    BeanTransform.copyProperties(employeePromotedAPI.detailTotalCollect(to), SkillPromotionDetailCollectAVO.class);
+            return ActResult.initialize(collectAVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

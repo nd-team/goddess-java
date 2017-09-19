@@ -13,10 +13,7 @@ import com.bjike.goddess.managepromotion.dto.SkillGradingADTO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingBDTO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingCDTO;
 import com.bjike.goddess.managepromotion.dto.SkillGradingDTO;
-import com.bjike.goddess.managepromotion.entity.SkillGrading;
-import com.bjike.goddess.managepromotion.entity.SkillGradingA;
-import com.bjike.goddess.managepromotion.entity.SkillGradingB;
-import com.bjike.goddess.managepromotion.entity.SkillGradingC;
+import com.bjike.goddess.managepromotion.entity.*;
 import com.bjike.goddess.managepromotion.enums.GuideAddrStatus;
 import com.bjike.goddess.managepromotion.excel.SonPermissionObject;
 import com.bjike.goddess.managepromotion.to.*;
@@ -66,6 +63,12 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
     private EmployeePromotedSer employeePromotedSer;
     @Autowired
     private EmployeeFunctionLevelSer employeeFunctionLevelSer;
+    @Autowired
+    private ExchangeTemplateSer exchangeTemplateSer;
+    @Autowired
+    private SkillStandardSer skillStandardSer;
+    @Autowired
+    private EmailSer emailSer;
 
     /**
      * 核对查看权限（部门级别）
@@ -197,12 +200,48 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
         }
         list.add(obj);
 
-        Boolean flagSeeEmail = skillPromotionApplySer.sonPermission();
+        Boolean flagSee = skillPromotionApplySer.sonPermission();
         RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("skillpromotionapply");
         obj.setDescribesion("技能晋升申请");
-        if (flagSeeEmail) {
+        if (flagSee) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagExchange = exchangeTemplateSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("exchangetemplate");
+        obj.setDescribesion("各类交流沟通模板");
+        if (flagExchange) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagStandard = skillStandardSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("skillstandard");
+        obj.setDescribesion("技能评定标准");
+        if (flagStandard) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagEmail = emailSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("email");
+        obj.setDescribesion("发送邮件");
+        if (flagEmail) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);

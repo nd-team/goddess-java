@@ -1,5 +1,6 @@
 package com.bjike.goddess.bidding.entity;
 
+import com.bjike.goddess.bidding.enums.BusinessType;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
 import javax.persistence.Column;
@@ -27,13 +28,33 @@ public class BidOpeningInfo extends BaseEntity {
      */
     @Column(name = "biddingNumber", columnDefinition = "VARCHAR(255)   COMMENT '招标编号'")
     private String biddingNumber;
+    /**
+     * 年份
+     */
+    @Column(name = "year", columnDefinition = "INT(11)   COMMENT '年份'")
+    private Integer year;
+    /**
+     * 月份
+     */
+    @Column(name = "month", columnDefinition = "INT(11)   COMMENT '月份'")
+    private Integer month;
 
     /**
      * 项目名称
      */
     @Column(name = "projectName", columnDefinition = "VARCHAR(255)   COMMENT '项目名称'")
     private String projectName;
+    /**
+     * 业务类型
+     */
+    @Column(name = "businessType", columnDefinition = "VARCHAR(255)   COMMENT '业务类型'")
+    private String businessType;
 
+    /**
+     * 业务方向科目
+     */
+    @Column(name = "businessDirectionSubject", columnDefinition = "VARCHAR(255)   COMMENT '业务方向科目'")
+    private String businessDirectionSubject;
     /**
      * 开标时间
      */
@@ -80,7 +101,65 @@ public class BidOpeningInfo extends BaseEntity {
      */
     @Column(name = "ratio", columnDefinition = "DECIMAL(10,2)   COMMENT '比率(%)'")
     private Double ratio;
+    /**
+     * 招标价格
+     */
+    @Column(name = "biddingPrice", columnDefinition = "DECIMAL(10,2)   COMMENT '招标价格'")
+    private Double biddingPrice;
+    /**
+     * 保证金金额
+     */
+    @Column(name = "marginPrice", columnDefinition = "DECIMAL(10,2)   COMMENT '保证金金额'")
+    private Double marginPrice;
+    /**
+     * 保证金退回时间
+     */
+    @Column(name = "backTimeDeposit", columnDefinition = "DATE   COMMENT '保证金退回时间'")
+    private LocalDate backTimeDeposit;
 
+    /**
+     * 退回保证金金额
+     */
+    @Column(name = "returnMarginPrice", columnDefinition = "DECIMAL(10,2)   COMMENT '退回保证金金额'")
+    private Double returnMarginPrice;
+    /**
+     * 是否转为商机
+     */
+    @Column(name = "is_opportunity", columnDefinition = "TINYINT(1)   COMMENT '是否转为商机'")
+    private Boolean opportunity;
+    /**
+     * 是否进行项目测算
+     */
+    @Column(name = "is_projectEstimates", columnDefinition = "TINYINT(1)   COMMENT '是否进行项目测算'")
+    private Boolean projectEstimates;
+    /**
+     * 项目测算是否通过
+     */
+    @Column(name = "is_passProjectEstimates", columnDefinition = "TINYINT(1)   COMMENT '项目测算是否通过'")
+    private Boolean passProjectEstimates;
+    /**
+     * 招标书是否制作完成
+     */
+    @Column(name = "is_finish", columnDefinition = "TINYINT(1)   COMMENT '招标书是否制作完成'")
+    private Boolean finish;
+    /**
+     * 招标是否通过
+     */
+    @Column(name = "is_biddingPass", columnDefinition = "TINYINT(1)   COMMENT '招标是否通过'")
+    private Boolean biddingPass;
+    /**
+     * 更新时间
+     */
+    @Column(name = "updateTime", columnDefinition = "DATE   COMMENT '更新时间'")
+    private LocalDate updateTime;
+
+    public LocalDate getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(LocalDate updateTime) {
+        this.updateTime = updateTime;
+    }
 
     public String getBiddingNumber() {
         return biddingNumber;
@@ -88,6 +167,22 @@ public class BidOpeningInfo extends BaseEntity {
 
     public void setBiddingNumber(String biddingNumber) {
         this.biddingNumber = biddingNumber;
+    }
+
+    public String getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
+    }
+
+    public String getBusinessDirectionSubject() {
+        return businessDirectionSubject;
+    }
+
+    public void setBusinessDirectionSubject(String businessDirectionSubject) {
+        this.businessDirectionSubject = businessDirectionSubject;
     }
 
     public String getProjectName() {
@@ -160,5 +255,93 @@ public class BidOpeningInfo extends BaseEntity {
 
     public void setRatio(Double ratio) {
         this.ratio = ratio;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
+    }
+
+    public Double getBiddingPrice() {
+        return biddingPrice;
+    }
+
+    public void setBiddingPrice(Double biddingPrice) {
+        this.biddingPrice = biddingPrice;
+    }
+
+    public Double getMarginPrice() {
+        return marginPrice;
+    }
+
+    public void setMarginPrice(Double marginPrice) {
+        this.marginPrice = marginPrice;
+    }
+
+    public LocalDate getBackTimeDeposit() {
+        return backTimeDeposit;
+    }
+
+    public void setBackTimeDeposit(LocalDate backTimeDeposit) {
+        this.backTimeDeposit = backTimeDeposit;
+    }
+
+    public Double getReturnMarginPrice() {
+        return returnMarginPrice;
+    }
+
+    public void setReturnMarginPrice(Double returnMarginPrice) {
+        this.returnMarginPrice = returnMarginPrice;
+    }
+
+    public Boolean getOpportunity() {
+        return opportunity;
+    }
+
+    public void setOpportunity(Boolean opportunity) {
+        this.opportunity = opportunity;
+    }
+
+    public Boolean getProjectEstimates() {
+        return projectEstimates;
+    }
+
+    public void setProjectEstimates(Boolean projectEstimates) {
+        this.projectEstimates = projectEstimates;
+    }
+
+    public Boolean getPassProjectEstimates() {
+        return passProjectEstimates;
+    }
+
+    public void setPassProjectEstimates(Boolean passProjectEstimates) {
+        this.passProjectEstimates = passProjectEstimates;
+    }
+
+    public Boolean getFinish() {
+        return finish;
+    }
+
+    public void setFinish(Boolean finish) {
+        this.finish = finish;
+    }
+
+    public Boolean getBiddingPass() {
+        return biddingPass;
+    }
+
+    public void setBiddingPass(Boolean biddingPass) {
+        this.biddingPass = biddingPass;
     }
 }

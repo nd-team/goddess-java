@@ -1,6 +1,7 @@
 package com.bjike.goddess.bidding.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.common.api.type.Status;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -58,9 +59,18 @@ public class BiddingWebInfo extends BaseEntity {
     /**
      * 状态
      */
-    @Column(columnDefinition = "VARCHAR(255)   COMMENT '状态'")
-    private String status;
-
+    @Column(name = "status", columnDefinition = "TINYINT(2)   COMMENT '状态'")
+    private Status status;
+    /**
+     * 检索关键词
+     */
+    @Column(name = "keyWords", columnDefinition = "VARCHAR(255)   COMMENT '检索关键词'")
+    private String keyWords;
+    /**
+     * 检索频率
+     */
+    @Column(name = "retrieveFrequency", columnDefinition = "VARCHAR(255)   COMMENT '检索频率'")
+    private String retrieveFrequency;
 
 
     public String getWebName() {
@@ -111,11 +121,27 @@ public class BiddingWebInfo extends BaseEntity {
         this.registrationInfo = registrationInfo;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getKeyWords() {
+        return keyWords;
+    }
+
+    public void setKeyWords(String keyWords) {
+        this.keyWords = keyWords;
+    }
+
+    public String getRetrieveFrequency() {
+        return retrieveFrequency;
+    }
+
+    public void setRetrieveFrequency(String retrieveFrequency) {
+        this.retrieveFrequency = retrieveFrequency;
     }
 }
