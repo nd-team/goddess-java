@@ -1,14 +1,11 @@
 package com.bjike.goddess.annual.action.annual;
 
-import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.annual.api.AnnualApplyAPI;
 import com.bjike.goddess.annual.dto.AnnualApplyDTO;
 import com.bjike.goddess.annual.to.AnnualApplyAuditTo;
 import com.bjike.goddess.annual.to.AnnualApplyTO;
 import com.bjike.goddess.annual.to.GuidePermissionTO;
 import com.bjike.goddess.annual.vo.AnnualApplyVO;
-import com.bjike.goddess.assemble.api.ModuleAPI;
-import com.bjike.goddess.assistance.api.AgeAssistAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -18,8 +15,6 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
-import com.bjike.goddess.user.api.UserAPI;
-import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;

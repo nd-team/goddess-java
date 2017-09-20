@@ -262,21 +262,20 @@ public class BiddingWebInfoAction {
         }
     }
 
-    /**
-     * 获取网址内的信息
-     * @param url
-     * @param key
-     * @return
-     * @throws ActException
-     */
-    @GetMapping("v1/info")
-    public Result info(String url,String key) throws ActException {
-        try {
-            String string = biddingWebInfoAPI.info(url,key);
-            return ActResult.initialize(string);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 获取网址内的信息
+//     * @param url
+//     * @param key
+//     * @throws ActException
+//     */
+//    @GetMapping("v1/info")
+//    public Result info(String url,String key) throws ActException {
+//        try {
+//            String string = biddingWebInfoAPI.info(url,key);
+//            return ActResult.initialize(string);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
 }

@@ -11,7 +11,9 @@ import com.bjike.goddess.fundcheck.dto.OtherSpendDTO;
 import com.bjike.goddess.fundcheck.entity.OtherSpend;
 import com.bjike.goddess.fundcheck.to.*;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 其他支出业务接口
@@ -129,10 +131,9 @@ public interface OtherSpendSer extends Ser<OtherSpend, OtherSpendDTO> {
      * 汇总
      *
      * @param to
-     * @return OtherSpendBO
      * @throws SerException
      */
-    default List<OtherSpendBO> collect(OtherSpendCollectTO to) throws SerException {
+    default LinkedHashMap<String,String> collect(OtherSpendCollectTO to) throws SerException {
         return null;
     }
     /**

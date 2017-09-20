@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.fundcheck.bo.BackBO;
@@ -381,16 +382,17 @@ public class BackSerImpl extends ServiceImpl<Back, BackDTO> implements BackSer {
     @Override
     public List<BackBO> backinfo(String startTime, String endTime) throws SerException {
         List<ReceivableSubsidiaryBO> receivableSubsidiaryBOS = receivableSubsidiaryAPI.receivable(startTime, endTime);
-        List<BackBO> backBOS = new ArrayList<>();
+        List<Back> backs = new ArrayList<>();
         for (ReceivableSubsidiaryBO r : receivableSubsidiaryBOS) {
-            BackBO bo = new BackBO();
-            bo.setDate(r.getAccountTime());
-            bo.setArea(r.getArea());
-            bo.setAccountMoney(r.getAccountMoney());
-            bo.setInnerName(r.getInnerName());
-            bo.setTaxes(r.getTaxes());
-            backBOS.add(bo);
+            Back entity = new Back();
+            entity.setDate(DateUtil.parseDate(r.getAccountTime()));
+            entity.setArea(r.getArea());
+            entity.setAccountMoney(r.getAccountMoney());
+            entity.setInnerName(r.getInnerName());
+            entity.setTaxes(r.getTaxes());
+            backs.add(entity);
         }
+        List<BackBO> backBOS = BeanTransform.copyProperties(backs,BackBO.class);
         return backBOS;
     }
     @Override
